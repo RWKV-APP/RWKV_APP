@@ -77,6 +77,7 @@ class ModelSelector extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final availableModels = ref.watch(P.fileManager.availableModels);
     final ttsCores = ref.watch(P.fileManager.ttsCores);
+    final unavailableModels = ref.watch(P.fileManager.unavailableModels);
 
     switch (demoType) {
       case DemoType.world:
@@ -97,9 +98,7 @@ class ModelSelector extends ConsumerWidget {
               }),
         ];
       case DemoType.tts:
-        return [
-          for (final fileInfo in ttsCores) TTSGroupItem(fileInfo),
-        ];
+        return [for (final fileInfo in ttsCores) TTSGroupItem(fileInfo)];
       case DemoType.chat:
       case DemoType.sudoku:
         return [
@@ -116,6 +115,8 @@ class ModelSelector extends ConsumerWidget {
                     return (a.tags.contains("npu") ? 0 : 1).compareTo(b.tags.contains("npu") ? 0 : 1);
                   }))
             ModelItem(fileInfo),
+          if (kDebugMode)
+            for (final fileInfo in unavailableModels) ModelItem(fileInfo, isUnavailable: true),
         ];
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:

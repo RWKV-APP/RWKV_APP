@@ -176,25 +176,23 @@ class FileInfo extends Equatable {
 
   @override
   String toString() {
-    return '''
-FileInfo(
-  name: $name,
-  fileName: $fileName,
-  fileType: $fileType,
-  fileSize: $fileSize,
-  raw: $raw,
-  isDebug: $isDebug,
-  availableIn: $availableIn,
-  supportedPlatforms: $supportedPlatforms,
-  backend: $backend,
-  sha256: $sha256,
-  modelSize: $modelSize,
-  ext: $ext,
-  quantization: $quantization,
-  tags: $tags,
-  socLimitations: $socLimitations,
-  unsupportedSocBrand: $unsupportedSocBrand,
-)''';
+    return '''name: $name,
+fileName: $fileName,
+fileType: $fileType,
+fileSize: $fileSize,
+raw: $raw,
+isDebug: $isDebug,
+availableIn: $availableIn,
+supportedPlatforms: $supportedPlatforms,
+backend: $backend,
+sha256: $sha256,
+modelSize: $modelSize,
+ext: $ext,
+quantization: $quantization,
+tags: $tags,
+socLimitations: $socLimitations,
+unsupportedSocBrand: $unsupportedSocBrand,
+''';
   }
 }
 

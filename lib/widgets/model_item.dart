@@ -19,8 +19,9 @@ import 'package:zone/state/p.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
+  final bool isUnavailable;
 
-  const ModelItem(this.fileInfo, {super.key});
+  const ModelItem(this.fileInfo, {super.key, this.isUnavailable = false});
 
   void _onStartTap() async {
     qq;
@@ -146,10 +147,10 @@ class ModelItem extends ConsumerWidget {
         child: Row(
           children: [
             Expanded(
-              child: FileKeyItem(fileInfo),
+              child: FileKeyItem(fileInfo, isUnavailable: isUnavailable),
             ),
             8.w,
-            if (!hasFile && !downloading)
+            if (!hasFile && !downloading && !isUnavailable)
               IconButton(
                 onPressed: _onDownloadTap,
                 icon: const Icon(Icons.download),
@@ -291,8 +292,9 @@ class _Delete extends ConsumerWidget {
 class FileKeyItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final bool showDownloaded;
+  final bool isUnavailable;
 
-  const FileKeyItem(this.fileInfo, {super.key, this.showDownloaded = false});
+  const FileKeyItem(this.fileInfo, {super.key, this.showDownloaded = false, this.isUnavailable = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -336,7 +338,7 @@ class FileKeyItem extends ConsumerWidget {
           ],
         ),
         4.h,
-        _Tags(fileInfo: fileInfo),
+        _Tags(fileInfo: fileInfo, isUnavailable: isUnavailable),
         if (downloading) 8.h,
         if (downloading)
           LayoutBuilder(
@@ -389,9 +391,10 @@ class FileKeyItem extends ConsumerWidget {
 }
 
 class _Tags extends ConsumerWidget {
-  const _Tags({required this.fileInfo});
+  const _Tags({required this.fileInfo, this.isUnavailable = false});
 
   final FileInfo fileInfo;
+  final bool isUnavailable;
 
   static const _blockedTags = ["encoder", "reason", "ENCODER", "REASON"];
   static const _highlightTags = ["NPU", "GPU", "npu", "gpu"];
@@ -429,6 +432,12 @@ class _Tags extends ConsumerWidget {
             decoration: BD(color: kCR, borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T("DEBUG", s: TS(c: qw)),
+          ),
+        if (kDebugMode && isUnavailable)
+          Container(
+            decoration: BD(color: kCR, borderRadius: 4.r),
+            padding: const EI.s(h: 4),
+            child: T("DEBUG: UNAVAILABLE", s: TS(c: qw)),
           ),
         if (quantization != null && quantization.isNotEmpty)
           C(
