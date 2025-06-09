@@ -1,4 +1,6 @@
-# RWKV Demo
+# RWKV App
+
+使用 flutter 实现的 RWKV-LM 端侧推理 App
 
 ## 技术架构
 
