@@ -41,6 +41,8 @@ class _Chat {
 
   late final selectMessageMode = qs(false);
 
+  late final completionMode = qs(false);
+
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 }
 
@@ -202,6 +204,15 @@ extension $Chat on _Chat {
     Alert.success(S.current.new_chat_started);
     P.msg._clear();
     P.rwkv.clearStates();
+  }
+
+  FV completion(String prompt) async {
+    P.rwkv.clearStates();
+    P.rwkv.completion(prompt);
+  }
+
+  FV stopCompletion() async {
+    P.rwkv.stop();
   }
 
   FV send(
@@ -530,6 +541,9 @@ extension _$Chat on _Chat {
     List<double>? ttsPerWavProgress,
     List<String>? ttsFilePaths,
   }) {
+    if (completionMode.q) {
+      return;
+    }
     final msg = P.msg.pool.q[id];
     if (msg == null) {
       qqe("message not found");
@@ -560,7 +574,7 @@ extension _$Chat on _Chat {
       case _RWKVMessageType.isGenerating:
         final isGenerating = event.content == "true";
         receivingTokens.q = isGenerating;
-        if (!isGenerating) _fullyReceived(callingFunction: "_onStreamEvent:isGenerating");
+        if (!isGenerating && !completionMode.q) _fullyReceived(callingFunction: "_onStreamEvent:isGenerating");
         break;
 
       case _RWKVMessageType.streamResponse:
@@ -577,6 +591,9 @@ extension _$Chat on _Chat {
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
+        if(completionMode.q) {
+          return;
+        }
         _sensitiveThrottler.call(() {
           _checkSensitive(res.responseBufferContent);
         });

@@ -54,29 +54,24 @@ class ChatAppBar extends ConsumerWidget {
       displayName = currentModel.name;
     }
 
-    final theme =Theme.of(context);
+    final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     final qb = ref.watch(P.app.qb);
 
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: ClipRRect(
+    return  ClipRRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Theme(
             data: theme.copyWith(
               appBarTheme: theme.appBarTheme.copyWith(
                 backgroundColor: scaffoldBackgroundColor,
-              )
+              ),
             ),
             child: selectMessageMode
                 ? _SelectMessageAppBar() //
                 : _buildAppBar(context, displayName, primary, demoType),
           ),
         ),
-      ),
     );
   }
 
@@ -138,12 +133,52 @@ class ChatAppBar extends ConsumerWidget {
       ),
       actions: [
         if (demoType == DemoType.chat) const _NewConversationButton(),
-        if (demoType != DemoType.sudoku)
+        if (demoType == DemoType.chat) _buildMorePopupMenuButton(context),
+        if (demoType != DemoType.chat && demoType != DemoType.sudoku)
           IconButton(
             onPressed: onSettingsPressed,
             icon: const Icon(Icons.tune),
           ),
       ],
+    );
+  }
+
+  Widget _buildMorePopupMenuButton(BuildContext context) {
+    return PopupMenuButton(
+      onSelected: (v) {
+        switch (v) {
+          case 1:
+            P.chat.completionMode.q = !P.chat.completionMode.q;
+            break;
+          case 2:
+            onSettingsPressed();
+            break;
+        }
+      },
+      itemBuilder: (v) {
+        return [
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                const Icon(Icons.edit_note_rounded),
+                8.w,
+                Text("Completion Mode"),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: Row(
+              children: [
+                const Icon(Icons.settings_rounded),
+                8.w,
+                Text(S.of(context).session_configuration),
+              ],
+            ),
+          ),
+        ];
+      },
     );
   }
 }
