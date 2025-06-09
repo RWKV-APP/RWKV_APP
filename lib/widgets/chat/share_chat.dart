@@ -73,7 +73,7 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
           right: 0,
           child: Material(
             elevation: 16,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
@@ -83,21 +83,21 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
                     child: TextButton.icon(
                       onPressed: onCancelTap,
                       label: Text(S.of(context).cancel),
-                      icon: Icon(Icons.cancel_outlined),
+                      icon: const Icon(Icons.cancel_outlined),
                     ),
                   ),
                   Expanded(
                     child: TextButton.icon(
                       onPressed: selectedCount == 0 ? null : onSaveTap,
                       label: Text(S.of(context).save),
-                      icon: Icon(Icons.save_alt_outlined),
+                      icon: const Icon(Icons.save_alt_outlined),
                     ),
                   ),
                   Expanded(
                     child: TextButton.icon(
                       onPressed: selectedCount == 0 ? null : onShareTap,
                       label: Text(S.of(context).share),
-                      icon: Icon(Icons.share_rounded),
+                      icon: const Icon(Icons.share_rounded),
                     ),
                   ),
                 ],
@@ -133,7 +133,7 @@ class _Preview extends ConsumerStatefulWidget {
 
   final bool share;
 
-  _Preview({
+  const _Preview({
     required this.share,
     required this.messages,
     required this.onCancelTap,
@@ -205,7 +205,7 @@ class _PreviewState extends ConsumerState<_Preview> {
           ),
           Material(
             elevation: 16,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
@@ -213,12 +213,12 @@ class _PreviewState extends ConsumerState<_Preview> {
                 children: [
                   TextButton.icon(
                     onPressed: widget.onCancelTap,
-                    icon: Icon(Icons.close),
+                    icon: const Icon(Icons.close),
                     label: Text(S.of(context).cancel),
                   ),
                   TextButton.icon(
                     onPressed: () => onConfirmTap(context),
-                    icon: Icon(Icons.check),
+                    icon: const Icon(Icons.check),
                     label: Text(S.of(context).confirm),
                   ),
                 ],
@@ -245,12 +245,12 @@ class _PreviewState extends ConsumerState<_Preview> {
                   children: [
                     const SizedBox(height: 12),
                     _buildHeader(),
-                    Divider(height: 28, indent: 16, endIndent: 16, thickness: 0.5),
+                    const Divider(height: 28, indent: 16, endIndent: 16, thickness: 0.5),
                     for (var msg in widget.messages) Message(msg, 1, selectMode: true),
                     const SizedBox(height: 24),
                     Stack(
                       children: [
-                        Divider(indent: 16, endIndent: 16, thickness: 0.5),
+                        const Divider(indent: 16, endIndent: 16, thickness: 0.5),
                         Center(
                           child: Container(
                             width: 50,
@@ -258,7 +258,7 @@ class _PreviewState extends ConsumerState<_Preview> {
                             alignment: Alignment.center,
                             child: Text(
                               S.current.end,
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           ),
                         ),
@@ -295,21 +295,21 @@ class _PreviewState extends ConsumerState<_Preview> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(width: 16),
-        Text(date, style: TextStyle(fontSize: 10, color: Colors.grey)),
-        Spacer(),
+        Text(date, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        const Spacer(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(S.current.scan_qrcode, style: TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
+            Text(S.current.scan_qrcode, style: const TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
             const SizedBox(height: 4),
-            Text(S.current.explore_rwkv, style: TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
+            Text(S.current.explore_rwkv, style: const TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
           ],
         ),
         const SizedBox(width: 8),
         !dark
             ? qrCode
             : ColorFiltered(
-                colorFilter: ColorFilter.mode(Colors.white54, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(Colors.white54, BlendMode.srcIn),
                 child: qrCode,
               ),
         const SizedBox(width: 16),
@@ -334,7 +334,7 @@ class _PreviewState extends ConsumerState<_Preview> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               Config.appTitle,
               style: TextStyle(
                 fontSize: 18,
@@ -343,13 +343,13 @@ class _PreviewState extends ConsumerState<_Preview> {
             ),
             Text(
               sprintf(S.current.from_model, [P.rwkv.currentModel.q?.name ?? ""]),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
               ),
             ),
           ],
         ),
-        Spacer(),
+        const Spacer(),
         const SizedBox(width: 16),
       ],
     );

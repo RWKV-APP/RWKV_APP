@@ -50,12 +50,12 @@ class _Page extends ConsumerWidget {
           const ChatAppBar(),
           const _NavigationBarBottomLine(),
           if (selectMessageMode)
-            Positioned(
+            const Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               top: 0,
-              child: const ShareChatSheet(),
+              child: ShareChatSheet(),
             ),
           if (!selectMessageMode) const Suggestions(),
           if (!selectMessageMode) const BottomBar(),
@@ -179,7 +179,7 @@ class _MessageWrap extends ConsumerWidget {
   final model.Message msg;
   final int finalIndex;
 
-  _MessageWrap({required this.msg, required this.finalIndex});
+  const _MessageWrap({required this.msg, required this.finalIndex});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

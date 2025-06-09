@@ -160,7 +160,7 @@ class BotMessageBottom extends ConsumerWidget {
         if (msg.modelName != null)
           Container(
             alignment: Alignment.centerRight,
-            constraints: BoxConstraints(minHeight: 36),
+            constraints: const BoxConstraints(minHeight: 36),
             child: Expanded(
               child: T(
                 msg.modelName!,

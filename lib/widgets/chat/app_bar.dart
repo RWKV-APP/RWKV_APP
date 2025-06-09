@@ -241,7 +241,7 @@ class _SelectMessageAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      title: T(sprintf(S.of(context).x_message_selected, [selected.length]), s: TS(s: 18)),
+      title: T(sprintf(S.of(context).x_message_selected, [selected.length]), s: const TS(s: 18)),
       leading: leading,
       leadingWidth: 100,
     );
