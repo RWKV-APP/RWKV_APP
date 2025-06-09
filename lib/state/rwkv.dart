@@ -497,6 +497,29 @@ extension $RWKV on _RWKV {
     });
   }
 
+  FV completion(String prompt) async {
+    prefillSpeed.q = 0;
+    decodeSpeed.q = 0;
+    final sendPort = _sendPort;
+    if (sendPort == null) {
+      qqw("sendPort is null");
+      return;
+    }
+    send(to_rwkv.GenerateAsync(prompt));
+
+    if (_getTokensTimer != null) {
+      _getTokensTimer!.cancel();
+    }
+
+    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
+      send(to_rwkv.GetResponseBufferIds());
+      send(to_rwkv.GetPrefillAndDecodeSpeed());
+      send(to_rwkv.GetResponseBufferContent());
+      await Future.delayed(const Duration(milliseconds: 1000));
+      send(to_rwkv.GetIsGenerating());
+    });
+  }
+
   /// 直接在 ffi+cpp 线程中进行推理工作
   FV generate(String prompt) async {
     prefillSpeed.q = 0;
