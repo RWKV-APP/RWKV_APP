@@ -1,0 +1,6 @@
+{
+  "dart.lineLength": 140,
+  "editor.formatOnSave": true,
+  // 为什么? 在做 prompt 时, " " 也是 prompt 的一部分, 而且, 可能出现在行尾. 有一次没注意到, debug 了一整天
+  "editor.renderWhitespace": "all"
+}

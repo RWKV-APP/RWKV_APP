@@ -1,0 +1,108 @@
+lane :all do |params|
+  envString = (params[:env] != 'chat' && params[:env] != nil && params[:env] != '') ? params[:env] : 'chat'
+  increase_version = params[:increase_version] == false ? false : true
+  build_number = raw_increase_build_number()
+  raw_change_analysis_options()
+  dart_fix()
+  raw_change_analysis_options()
+  version_number = raw_get_version_number()
+  if increase_version
+    version_number = raw_increase_version_number()
+  end
+  if envString == 'chat'
+    git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: '*')
+    push_to_git_remote()
+  end
+  global_replace(env: envString) # 替换环境变量
+  build_assets() # 构建 assets
+
+  # 🔥 上传到蒲公英
+  android_pgyer()
+
+  # 🔥 上传到 TestFlight
+  ios_upload(groups: ['External'])
+
+  if envString == 'chat'
+    git_reset()
+  end
+end
+
+lane :ios_upload do |params|
+  run_flutter_build_ipa()
+  build_app(
+    project: './ios/Runner.xcodeproj',
+    skip_build_archive: true,
+    archive_path: './build/ios/archive/Runner.xcarchive',
+  )
+  upload_to_testflight(
+    skip_submission: true,
+    distribute_external: params[:groups].include?('External'),
+    changelog: 'Bug fixes and UI improvements',
+    groups: params[:groups],
+    localized_build_info: {
+      "default": {
+        whats_new: 'Bug fixes and UI improvements',
+      },
+      "zh-Hans": {
+        whats_new: '修复已知问题，提升用户体验',
+      },
+    },
+  )
+end
+
+lane :global_replace do |params|
+  raw_switch_android_files(env: params[:env])
+  global_config_replace(env: params[:env])
+end
+
+lane :switch_env do |params|
+  raw_switch_android_files(env: params[:env])
+  global_replace(env: params[:env])
+  build_assets()
+end
+
+lane :test do |params|
+  ios_upload(groups: ['External'])
+end
+
+lane :lint do |params|
+  raw_change_analysis_options()
+  dart_fix()
+  raw_change_analysis_options()
+end
+
+# ✅ Shared
+
+lane :dart_fix do
+  sh 'cd ..;dart fix --apply;cd fastlane'
+end
+
+lane :git_reset do
+  sh "cd ..;git add .;git add .;git reset --hard;cd #{Dir.pwd}"
+end
+
+lane :build_assets do
+  sh 'cd ..;dart run flutter_native_splash:create --path=flutter_native_splash.yaml;cd fastlane'
+  sh 'cd ..;dart run icons_launcher:create;cd fastlane'
+end
+
+lane :android_pgyer do
+  run_flutter_build_apk()
+  pgyer(
+    api_key: '8d0497fc24901e6b22c8f272d04791bb',
+    apk: './build/app/outputs/flutter-apk/app-release.apk',
+  )
+end
+
+lane :android_play_store do
+  run_flutter_build_aab()
+  upload_to_play_store(
+    aab: './build/app/outputs/bundle/release/app-release.aab',
+    track: 'internal',
+    skip_upload_apk: true,
+    skip_upload_metadata: true,
+    skip_upload_changelogs: true,
+    skip_upload_images: true,
+    skip_upload_screenshots: true,
+  )
+end

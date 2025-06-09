@@ -1,0 +1,138 @@
+[
+  {
+    "display": "Create a PPT Outline",
+    "prompt": "I'm preparing a 15-minute presentation on 'Workplace Communication Skills'. Please help me create a clear outline suitable for a PPT structure."
+  },
+  {
+    "display": "Draft a User Agreement",
+    "prompt": "I'm developing an app and need a concise and clear draft user agreement, including clauses on data usage, privacy protection, and user responsibilities. Please generate a draft of about 400 words."
+  },
+  {
+    "display": "Create a Community Operation Plan",
+    "prompt": "I'm planning to run an 'English Study Check-in Group'. Please design a 4-week operation plan including daily content schedule, user interaction methods, and incentive mechanisms."
+  },
+  {
+    "display": "Generate a Children's Story",
+    "prompt": "Please create an original fairy tale for children aged 5–8, featuring a hedgehog who wants to fly. The story should be educational, vivid, and within 400 words."
+  },
+  {
+    "display": "Write Product Update Notes",
+    "prompt": "Our app has just been updated to version 3.2. Please write concise release notes summarizing new features, fixes, and performance improvements, suitable for the App Store."
+  },
+  {
+    "display": "Design Infographic Content Structure",
+    "prompt": "I want to make a science infographic about 'Global Warming Trends'. Please list the key data points, structural sections, and visual suggestions for the graphic."
+  },
+  {
+    "display": "Write a Resignation Letter",
+    "prompt": "I'm planning to resign next month and need a short but polite resignation letter expressing gratitude and stating my final working day, with a formal tone."
+  },
+  {
+    "display": "Write a JavaScript Animation Code Snippet",
+    "prompt": "Please write a JavaScript code snippet to make a button fade in smoothly on page load and glow when hovered over."
+  },
+  {
+    "display": "Write an Annual Personal Summary",
+    "prompt": "Help me write a personal year-end summary with a warm and positive tone, including learning, career progress, and happy life moments. Keep it under 300 words."
+  },
+  {
+    "display": "Write a Short Video Script",
+    "prompt": "I’m making a 60-second short video on 'How to Boost Focus in 1 Minute'. Please help me write a natural, conversational script for this topic."
+  },
+  {
+    "display": "Design a Voting System Database Model",
+    "prompt": "I’m building an online voting system. Please design a simple database model including tables for users, voting events, options, and vote records, and explain each field."
+  },
+  {
+    "display": "Draft a Crisis PR Statement",
+    "prompt": "One of our ads received negative feedback. Please write a brief PR statement expressing apology, acknowledging the oversight, and describing the improvement measures. Max 150 words."
+  },
+  {
+    "display": "Analyze Industry Trends",
+    "prompt": "Please analyze the development trends of the pet economy in China in 2025, including market size, user behavior changes, major competitors, and potential opportunities."
+  },
+  {
+    "display": "Generate a Regex Expression",
+    "prompt": "Please help me write a regular expression to match email addresses, including username, @ symbol, domain, and TLD, supporting common formats."
+  },
+  {
+    "display": "Develop a Novel Plot Outline",
+    "prompt": "I want to write an urban fantasy novel set in modern Shanghai, where ordinary people can trade something for special powers. Help me design a main plot, three characters, and the initial conflict."
+  },
+  {
+    "display": "Write a Poem with Metaphors",
+    "prompt": "Write four lines of modern Chinese poetry using ‘loneliness’ and ‘moon’ as imagery, incorporating appropriate metaphors."
+  },
+  {
+    "display": "Write an Email Explaining Project Delay",
+    "prompt": "Help me write a formal email to a client explaining a 2-week project delay due to technical issues. Express apology professionally and promise a new delivery date. Limit to around 200 words."
+  },
+  {
+    "display": "Recommend a Travel Itinerary",
+    "prompt": "I’m planning a 10-day trip to Japan in July, focusing on food, culture, and nature. Please design a detailed itinerary including cities, transportation, recommended attractions, and restaurants."
+  },
+  {
+    "display": "Write a Resume Summary",
+    "prompt": "I’m a software engineer with 5 years of Java experience, involved in financial and e-commerce systems. Please write a resume summary highlighting my technical skills and teamwork experience."
+  },
+  {
+    "display": "Translate Contract Clause",
+    "prompt": "Please translate the following English contract clause into accurate and professional Chinese: 'The vendor shall be liable for any damages resulting from non-compliance with data protection regulations.'"
+  },
+  {
+    "display": "Write Python Code for CSV Processing",
+    "prompt": "Write a Python script to read a CSV file, filter users older than 30, sort them by income in descending order, and output the top 10 rows."
+  },
+  {
+    "display": "Explain Quantum Entanglement for High Schoolers",
+    "prompt": "Explain the concept of quantum entanglement in a way that’s easy for high school students to understand, avoiding complex mathematical terms."
+  },
+  {
+    "display": "Simulate a Customer Service Conversation",
+    "prompt": "Simulate a conversation between a user and customer service on an e-commerce platform. The user complains that the product doesn’t match the description. The agent must respond patiently and provide a solution."
+  },
+  {
+    "display": "Write a Skincare Review for Social Media",
+    "prompt": "Write a review of a moisturizing cream suitable for sensitive skin in the style of Xiaohongshu (Little Red Book). Make it casual, authentic, and include a recommendation tone."
+  },
+  {
+    "display": "Design a Beginner Fitness Plan",
+    "prompt": "I’m an office worker who sits all day and want to start working out. Please create a 4-week beginner fitness plan (3 times/week) focused on fat loss and core strength."
+  },
+  {
+    "display": "Write a SQL Query Statement",
+    "prompt": "Write a SQL query to retrieve the names and hire dates of employees from the 'employees' table whose salaries are over 5000 and who joined in 2022."
+  },
+  {
+    "display": "Describe an App Prototype",
+    "prompt": "I want to create an app to help users track sleep and emotions. Please list the core features, page structure, and a textual description of the user flow."
+  },
+  {
+    "display": "Write a LinkedIn Post about Career Change",
+    "prompt": "I recently transitioned from being a product manager to a freelance consultant. I’d like to share a 300-word LinkedIn post expressing gratitude, explaining the change, and offering reflections and hopes."
+  },
+  {
+    "display": "Generate a Mind Map Structure",
+    "prompt": "I'm preparing a talk on 'AI Application Scenarios'. Please help me generate a mind map structure including main branches and key points under each."
+  },
+  {
+    "display": "Evaluate an Ad Copy",
+    "prompt": "Here's an ad copy: 'This face mask makes your skin so hydrated you’ll instantly become a water goddess! Try it now~'. Please analyze it for tone, appeal, and persuasiveness, and suggest improvements."
+  },
+  {
+    "display": "Write a Recommendation Letter",
+    "prompt": "I’m a university professor writing a recommendation letter for a student applying to a computer science graduate program. Use a formal, academic tone and highlight the student's coding ability, attitude, and research potential."
+  },
+  {
+    "display": "Write a Structured API Documentation",
+    "prompt": "Help me write a RESTful API documentation template for an endpoint: Get a user’s order list. Include path, request parameters, response example, and error code explanation."
+  },
+  {
+    "display": "Explain a Logic Puzzle",
+    "prompt": "Puzzle: All cats can dance. Xiaohua is a cat. Therefore? Please analyze the logic of this reasoning and determine whether the conclusion is valid."
+  },
+  {
+    "display": "Compare Two AI Writing Tools",
+    "prompt": "Compare Notion AI and ChatGPT in terms of writing assistance, focusing on features, use cases, and ease of use."
+  }
+]

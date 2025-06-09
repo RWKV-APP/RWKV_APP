@@ -1,0 +1,623 @@
+7767517
+621 765
+MemoryData model_info 0 1 model_info 0=5 21=1
+Input input_0 0 1 token 0=1 1=1 2=1
+Input input_1 0 1 state_0_in 0=320
+Input input_2 0 1 state_1_in 0=64 1=64 2=5
+Input input_3 0 1 state_2_in 0=320
+Input input_4 0 1 state_3_in 0=320
+Input input_5 0 1 state_4_in 0=64 1=64 2=5
+Input input_6 0 1 state_5_in 0=320
+Input input_7 0 1 state_6_in 0=320
+Input input_8 0 1 state_7_in 0=64 1=64 2=5
+Input input_9 0 1 state_8_in 0=320
+Input input_10 0 1 state_9_in 0=320
+Input input_11 0 1 state_10_in 0=64 1=64 2=5
+Input input_12 0 1 state_11_in 0=320
+Input input_13 0 1 state_12_in 0=320
+Input input_14 0 1 state_13_in 0=64 1=64 2=5
+Input input_15 0 1 state_14_in 0=320
+Input input_16 0 1 state_15_in 0=320
+Input input_17 0 1 state_16_in 0=64 1=64 2=5
+Input input_18 0 1 state_17_in 0=320
+Input input_19 0 1 state_18_in 0=320
+Input input_20 0 1 state_19_in 0=64 1=64 2=5
+Input input_21 0 1 state_20_in 0=320
+Input input_22 0 1 state_21_in 0=320
+Input input_23 0 1 state_22_in 0=64 1=64 2=5
+Input input_24 0 1 state_23_in 0=320
+Embed embedding 1 1 token emb 0=320 1=133 3=42560
+Split split_emb 1 2 emb att_0_x_last att_0_x
+LayerNorm layernorm_0 1 1 att_0_x att_0_xx 0=320 1=0.00001 2=1
+Split split_att_0_xx 1 4 att_0_xx att_0_xx_0 att_0_xx_1 att_0_xx_2 state_0_out
+BinaryOp sub_0 2 1 state_0_in att_0_xx_0 att_0_sx 0=1
+Split split_att_0_sx 1 2 att_0_sx att_0_sx_0 att_0_sx_1
+MemoryData data_att_0_maa_x 0 1 att_0_maa_x 0=320 21=0
+BinaryOp mul_0 2 1 att_0_sx_0 att_0_maa_x att_0_maa_xx 0=2
+BinaryOp add_0 2 1 att_0_xx_1 att_0_maa_xx att_0_xxx 0=0
+Gemm gemm_att_0_maa_x_lora 1 1 att_0_xxx att_0_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_0_maa_x_lora 1 1 att_0_maa_x_lora att_0_maa_x_lora_tanh
+Reshape reshape_0 1 1 att_0_maa_x_lora_tanh att_0_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_0_maa_w2 0 1 att_0_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_0_maa_x_post_lora 2 1 att_0_maa_x_lora_tanh_reshape att_0_maa_w2 att_0_maa_x_post_lora 0=0
+MemoryData data_att_0_maa 0 1 att_0_maa 0=320 1=1 2=5 21=0
+BinaryOp add_1 2 1 att_0_maa_x_post_lora att_0_maa att_0_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_0_maa_wkvrg_pre_squeezed 1 1 att_0_maa_wkvrg_pre att_0_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_1 2 1 att_0_sx_1 att_0_maa_wkvrg_pre_squeezed att_0_maa_wkvrg_sx 0=2
+BinaryOp add_2 2 1 att_0_xx_2 att_0_maa_wkvrg_sx att_0_maa_wkvrg 0=0
+Slice slice_att_0_maa_wkvrg 1 5 att_0_maa_wkvrg att_0_mw att_0_mk att_0_mv att_0_mr att_0_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_0_mw_lora 1 1 att_0_mw att_0_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_0_mw_lora 1 1 att_0_mw_lora att_0_mw_lora_tanh
+Gemm gemm_att_0_mw_lora_tanh_linear 1 1 att_0_mw_lora_tanh att_0_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_0_td 0 1 att_0_td 0=320 21=0
+BinaryOp add_3 2 1 att_0_mw_lora_tanh_linear att_0_td att_0_time_decay_pre 0=0
+Split split_att_0_time_decay_pre 1 2 att_0_time_decay_pre att_0_time_decay_pre_0 att_0_time_decay_pre_1
+Exp exp_0 1 1 att_0_time_decay_pre_0 att_0_time_decay_exp0
+Exp exp_1 1 1 att_0_time_decay_exp0 att_0_time_decay 1=-1.0
+Clip clip_0 1 1 att_0_time_decay_pre_1 att_0_time_decay_clip 1=0
+Exp exp_2 1 1 att_0_time_decay_clip att_0_time_decay_clip_exp
+Gemm gemm_att_0_key 1 1 att_0_mk att_0_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_0_value 1 1 att_0_mv att_0_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_0_receptance 1 1 att_0_mr att_0_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_0_gate 1 1 att_0_mg att_0_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_0_gate 1 2 att_0_gate att_0_gate_0 att_0_gate_1
+Sigmoid sigmoid_0 1 1 att_0_gate_0 att_0_gate_sigmoid
+BinaryOp mul_2 2 1 att_0_gate_1 att_0_gate_sigmoid att_0_gate_silu 0=2
+MemoryData data_att_0_time_first 0 1 att_0_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_3 2 1 att_0_key att_0_time_decay_clip_exp att_0_key_extended 0=2
+Reshape reshape_1 1 1 att_0_key_extended att_0_key_reshape 0=1 1=64 2=5
+Reshape reshape_2 1 1 att_0_value att_0_value_reshape 0=64 1=1 2=5
+Reshape reshape_3 1 1 att_0_receptance att_0_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_4 1 1 att_0_time_decay att_0_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_0_kv 2 1 att_0_key_reshape att_0_value_reshape att_0_kv 0=0
+Split split_att_0_kv 1 2 att_0_kv att_0_kv_0 att_0_kv_1
+Split split_state_1_in 1 2 state_1_in att_0_wkv_state_0 att_0_wkv_state_1
+BinaryOp mul_4 2 1 att_0_kv_0 att_0_time_first att_0_kv_time_first 0=2
+BinaryOp add_4 2 1 att_0_kv_time_first att_0_wkv_state_0 att_0_kv_tf_state 0=0
+MatMul matmul_att_0_wkv_out 2 1 att_0_receptance_reshape att_0_kv_tf_state att_0_wkv_out 0=0
+BinaryOp mul_5 2 1 att_0_wkv_state_1 att_0_time_decay_reshape att_0_state_td 0=2
+BinaryOp add_5 2 1 att_0_state_td att_0_kv_1 state_1_out 0=0
+Reshape reshape_5 1 1 att_0_wkv_out att_0_wkv_out_flatten 0=320
+GroupNorm groupnorm_0 1 1 att_0_wkv_out_flatten att_0_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_6 2 1 att_0_x_gn att_0_gate_silu att_0_x_gate 0=2
+Gemm gemm_att_0_x_out 1 1 att_0_x_gate att_0_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_6 2 1 att_0_x_out att_0_x_last time_mixing_0_out 0=0
+Split split_time_mixing_0_out 1 2 time_mixing_0_out ffn_0_x_last ffn_0_x
+LayerNorm layernorm_1 1 1 ffn_0_x ffn_0_xx 0=320 1=0.00001 2=1
+Split split_ffn_0_xx 1 4 ffn_0_xx ffn_0_xx_0 ffn_0_xx_1 ffn_0_xx_2 state_2_out
+BinaryOp sub_1 2 1 state_2_in ffn_0_xx_0 ffn_0_sx 0=1
+Split split_ffn_0_sx 1 2 ffn_0_sx ffn_0_sx_0 ffn_0_sx_1
+MemoryData data_ffn_0_maa_k 0 1 ffn_0_maa_k 0=320 21=0
+MemoryData data_ffn_0_maa_r 0 1 ffn_0_maa_r 0=320 21=0
+BinaryOp mul_7 2 1 ffn_0_sx_0 ffn_0_maa_k ffn_0_xk 0=2
+BinaryOp mul_8 2 1 ffn_0_sx_1 ffn_0_maa_r ffn_0_xr 0=2
+BinaryOp add_7 2 1 ffn_0_xk ffn_0_xx_1 ffn_0_xxk 0=0
+BinaryOp add_8 2 1 ffn_0_xr ffn_0_xx_2 ffn_0_xxr 0=0
+Gemm gemm_ffn_0_key 1 1 ffn_0_xxk ffn_0_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_0_receptance 1 1 ffn_0_xxr ffn_0_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_1 1 1 ffn_0_receptance ffn_0_receptance_sigmoid
+ReLU relu_0 1 1 ffn_0_key ffn_0_key_relu
+UnaryOp square_ffn_0_key_relu 1 1 ffn_0_key_relu ffn_0_key_relu_square 0=4
+Gemm gemm_ffn_0_value 1 1 ffn_0_key_relu_square ffn_0_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_9 2 1 ffn_0_value ffn_0_receptance_sigmoid ffn_0_rv 0=2
+BinaryOp add_9 2 1 ffn_0_rv ffn_0_x_last channel_mixing_0_out 0=0
+Split split_channel_mixing_0_out 1 2 channel_mixing_0_out att_1_x_last att_1_x
+LayerNorm layernorm_2 1 1 att_1_x att_1_xx 0=320 1=0.00001 2=1
+Split split_att_1_xx 1 4 att_1_xx att_1_xx_0 att_1_xx_1 att_1_xx_2 state_3_out
+BinaryOp sub_2 2 1 state_3_in att_1_xx_0 att_1_sx 0=1
+Split split_att_1_sx 1 2 att_1_sx att_1_sx_0 att_1_sx_1
+MemoryData data_att_1_maa_x 0 1 att_1_maa_x 0=320 21=0
+BinaryOp mul_10 2 1 att_1_sx_0 att_1_maa_x att_1_maa_xx 0=2
+BinaryOp add_10 2 1 att_1_xx_1 att_1_maa_xx att_1_xxx 0=0
+Gemm gemm_att_1_maa_x_lora 1 1 att_1_xxx att_1_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_1_maa_x_lora 1 1 att_1_maa_x_lora att_1_maa_x_lora_tanh
+Reshape reshape_6 1 1 att_1_maa_x_lora_tanh att_1_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_1_maa_w2 0 1 att_1_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_1_maa_x_post_lora 2 1 att_1_maa_x_lora_tanh_reshape att_1_maa_w2 att_1_maa_x_post_lora 0=0
+MemoryData data_att_1_maa 0 1 att_1_maa 0=320 1=1 2=5 21=0
+BinaryOp add_11 2 1 att_1_maa_x_post_lora att_1_maa att_1_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_1_maa_wkvrg_pre_squeezed 1 1 att_1_maa_wkvrg_pre att_1_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_11 2 1 att_1_sx_1 att_1_maa_wkvrg_pre_squeezed att_1_maa_wkvrg_sx 0=2
+BinaryOp add_12 2 1 att_1_xx_2 att_1_maa_wkvrg_sx att_1_maa_wkvrg 0=0
+Slice slice_att_1_maa_wkvrg 1 5 att_1_maa_wkvrg att_1_mw att_1_mk att_1_mv att_1_mr att_1_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_1_mw_lora 1 1 att_1_mw att_1_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_1_mw_lora 1 1 att_1_mw_lora att_1_mw_lora_tanh
+Gemm gemm_att_1_mw_lora_tanh_linear 1 1 att_1_mw_lora_tanh att_1_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_1_td 0 1 att_1_td 0=320 21=0
+BinaryOp add_13 2 1 att_1_mw_lora_tanh_linear att_1_td att_1_time_decay_pre 0=0
+Split split_att_1_time_decay_pre 1 2 att_1_time_decay_pre att_1_time_decay_pre_0 att_1_time_decay_pre_1
+Exp exp_3 1 1 att_1_time_decay_pre_0 att_1_time_decay_exp0
+Exp exp_4 1 1 att_1_time_decay_exp0 att_1_time_decay 1=-1.0
+Clip clip_1 1 1 att_1_time_decay_pre_1 att_1_time_decay_clip 1=0
+Exp exp_5 1 1 att_1_time_decay_clip att_1_time_decay_clip_exp
+Gemm gemm_att_1_key 1 1 att_1_mk att_1_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_1_value 1 1 att_1_mv att_1_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_1_receptance 1 1 att_1_mr att_1_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_1_gate 1 1 att_1_mg att_1_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_1_gate 1 2 att_1_gate att_1_gate_0 att_1_gate_1
+Sigmoid sigmoid_2 1 1 att_1_gate_0 att_1_gate_sigmoid
+BinaryOp mul_12 2 1 att_1_gate_1 att_1_gate_sigmoid att_1_gate_silu 0=2
+MemoryData data_att_1_time_first 0 1 att_1_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_13 2 1 att_1_key att_1_time_decay_clip_exp att_1_key_extended 0=2
+Reshape reshape_7 1 1 att_1_key_extended att_1_key_reshape 0=1 1=64 2=5
+Reshape reshape_8 1 1 att_1_value att_1_value_reshape 0=64 1=1 2=5
+Reshape reshape_9 1 1 att_1_receptance att_1_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_10 1 1 att_1_time_decay att_1_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_1_kv 2 1 att_1_key_reshape att_1_value_reshape att_1_kv 0=0
+Split split_att_1_kv 1 2 att_1_kv att_1_kv_0 att_1_kv_1
+Split split_state_4_in 1 2 state_4_in att_1_wkv_state_0 att_1_wkv_state_1
+BinaryOp mul_14 2 1 att_1_kv_0 att_1_time_first att_1_kv_time_first 0=2
+BinaryOp add_14 2 1 att_1_kv_time_first att_1_wkv_state_0 att_1_kv_tf_state 0=0
+MatMul matmul_att_1_wkv_out 2 1 att_1_receptance_reshape att_1_kv_tf_state att_1_wkv_out 0=0
+BinaryOp mul_15 2 1 att_1_wkv_state_1 att_1_time_decay_reshape att_1_state_td 0=2
+BinaryOp add_15 2 1 att_1_state_td att_1_kv_1 state_4_out 0=0
+Reshape reshape_11 1 1 att_1_wkv_out att_1_wkv_out_flatten 0=320
+GroupNorm groupnorm_1 1 1 att_1_wkv_out_flatten att_1_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_16 2 1 att_1_x_gn att_1_gate_silu att_1_x_gate 0=2
+Gemm gemm_att_1_x_out 1 1 att_1_x_gate att_1_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_16 2 1 att_1_x_out att_1_x_last time_mixing_1_out 0=0
+Split split_time_mixing_1_out 1 2 time_mixing_1_out ffn_1_x_last ffn_1_x
+LayerNorm layernorm_3 1 1 ffn_1_x ffn_1_xx 0=320 1=0.00001 2=1
+Split split_ffn_1_xx 1 4 ffn_1_xx ffn_1_xx_0 ffn_1_xx_1 ffn_1_xx_2 state_5_out
+BinaryOp sub_3 2 1 state_5_in ffn_1_xx_0 ffn_1_sx 0=1
+Split split_ffn_1_sx 1 2 ffn_1_sx ffn_1_sx_0 ffn_1_sx_1
+MemoryData data_ffn_1_maa_k 0 1 ffn_1_maa_k 0=320 21=0
+MemoryData data_ffn_1_maa_r 0 1 ffn_1_maa_r 0=320 21=0
+BinaryOp mul_17 2 1 ffn_1_sx_0 ffn_1_maa_k ffn_1_xk 0=2
+BinaryOp mul_18 2 1 ffn_1_sx_1 ffn_1_maa_r ffn_1_xr 0=2
+BinaryOp add_17 2 1 ffn_1_xk ffn_1_xx_1 ffn_1_xxk 0=0
+BinaryOp add_18 2 1 ffn_1_xr ffn_1_xx_2 ffn_1_xxr 0=0
+Gemm gemm_ffn_1_key 1 1 ffn_1_xxk ffn_1_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_1_receptance 1 1 ffn_1_xxr ffn_1_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_3 1 1 ffn_1_receptance ffn_1_receptance_sigmoid
+ReLU relu_1 1 1 ffn_1_key ffn_1_key_relu
+UnaryOp square_ffn_1_key_relu 1 1 ffn_1_key_relu ffn_1_key_relu_square 0=4
+Gemm gemm_ffn_1_value 1 1 ffn_1_key_relu_square ffn_1_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_19 2 1 ffn_1_value ffn_1_receptance_sigmoid ffn_1_rv 0=2
+BinaryOp add_19 2 1 ffn_1_rv ffn_1_x_last channel_mixing_1_out 0=0
+Split split_channel_mixing_1_out 1 2 channel_mixing_1_out att_2_x_last att_2_x
+LayerNorm layernorm_4 1 1 att_2_x att_2_xx 0=320 1=0.00001 2=1
+Split split_att_2_xx 1 4 att_2_xx att_2_xx_0 att_2_xx_1 att_2_xx_2 state_6_out
+BinaryOp sub_4 2 1 state_6_in att_2_xx_0 att_2_sx 0=1
+Split split_att_2_sx 1 2 att_2_sx att_2_sx_0 att_2_sx_1
+MemoryData data_att_2_maa_x 0 1 att_2_maa_x 0=320 21=0
+BinaryOp mul_20 2 1 att_2_sx_0 att_2_maa_x att_2_maa_xx 0=2
+BinaryOp add_20 2 1 att_2_xx_1 att_2_maa_xx att_2_xxx 0=0
+Gemm gemm_att_2_maa_x_lora 1 1 att_2_xxx att_2_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_2_maa_x_lora 1 1 att_2_maa_x_lora att_2_maa_x_lora_tanh
+Reshape reshape_12 1 1 att_2_maa_x_lora_tanh att_2_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_2_maa_w2 0 1 att_2_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_2_maa_x_post_lora 2 1 att_2_maa_x_lora_tanh_reshape att_2_maa_w2 att_2_maa_x_post_lora 0=0
+MemoryData data_att_2_maa 0 1 att_2_maa 0=320 1=1 2=5 21=0
+BinaryOp add_21 2 1 att_2_maa_x_post_lora att_2_maa att_2_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_2_maa_wkvrg_pre_squeezed 1 1 att_2_maa_wkvrg_pre att_2_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_21 2 1 att_2_sx_1 att_2_maa_wkvrg_pre_squeezed att_2_maa_wkvrg_sx 0=2
+BinaryOp add_22 2 1 att_2_xx_2 att_2_maa_wkvrg_sx att_2_maa_wkvrg 0=0
+Slice slice_att_2_maa_wkvrg 1 5 att_2_maa_wkvrg att_2_mw att_2_mk att_2_mv att_2_mr att_2_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_2_mw_lora 1 1 att_2_mw att_2_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_2_mw_lora 1 1 att_2_mw_lora att_2_mw_lora_tanh
+Gemm gemm_att_2_mw_lora_tanh_linear 1 1 att_2_mw_lora_tanh att_2_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_2_td 0 1 att_2_td 0=320 21=0
+BinaryOp add_23 2 1 att_2_mw_lora_tanh_linear att_2_td att_2_time_decay_pre 0=0
+Split split_att_2_time_decay_pre 1 2 att_2_time_decay_pre att_2_time_decay_pre_0 att_2_time_decay_pre_1
+Exp exp_6 1 1 att_2_time_decay_pre_0 att_2_time_decay_exp0
+Exp exp_7 1 1 att_2_time_decay_exp0 att_2_time_decay 1=-1.0
+Clip clip_2 1 1 att_2_time_decay_pre_1 att_2_time_decay_clip 1=0
+Exp exp_8 1 1 att_2_time_decay_clip att_2_time_decay_clip_exp
+Gemm gemm_att_2_key 1 1 att_2_mk att_2_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_2_value 1 1 att_2_mv att_2_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_2_receptance 1 1 att_2_mr att_2_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_2_gate 1 1 att_2_mg att_2_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_2_gate 1 2 att_2_gate att_2_gate_0 att_2_gate_1
+Sigmoid sigmoid_4 1 1 att_2_gate_0 att_2_gate_sigmoid
+BinaryOp mul_22 2 1 att_2_gate_1 att_2_gate_sigmoid att_2_gate_silu 0=2
+MemoryData data_att_2_time_first 0 1 att_2_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_23 2 1 att_2_key att_2_time_decay_clip_exp att_2_key_extended 0=2
+Reshape reshape_13 1 1 att_2_key_extended att_2_key_reshape 0=1 1=64 2=5
+Reshape reshape_14 1 1 att_2_value att_2_value_reshape 0=64 1=1 2=5
+Reshape reshape_15 1 1 att_2_receptance att_2_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_16 1 1 att_2_time_decay att_2_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_2_kv 2 1 att_2_key_reshape att_2_value_reshape att_2_kv 0=0
+Split split_att_2_kv 1 2 att_2_kv att_2_kv_0 att_2_kv_1
+Split split_state_7_in 1 2 state_7_in att_2_wkv_state_0 att_2_wkv_state_1
+BinaryOp mul_24 2 1 att_2_kv_0 att_2_time_first att_2_kv_time_first 0=2
+BinaryOp add_24 2 1 att_2_kv_time_first att_2_wkv_state_0 att_2_kv_tf_state 0=0
+MatMul matmul_att_2_wkv_out 2 1 att_2_receptance_reshape att_2_kv_tf_state att_2_wkv_out 0=0
+BinaryOp mul_25 2 1 att_2_wkv_state_1 att_2_time_decay_reshape att_2_state_td 0=2
+BinaryOp add_25 2 1 att_2_state_td att_2_kv_1 state_7_out 0=0
+Reshape reshape_17 1 1 att_2_wkv_out att_2_wkv_out_flatten 0=320
+GroupNorm groupnorm_2 1 1 att_2_wkv_out_flatten att_2_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_26 2 1 att_2_x_gn att_2_gate_silu att_2_x_gate 0=2
+Gemm gemm_att_2_x_out 1 1 att_2_x_gate att_2_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_26 2 1 att_2_x_out att_2_x_last time_mixing_2_out 0=0
+Split split_time_mixing_2_out 1 2 time_mixing_2_out ffn_2_x_last ffn_2_x
+LayerNorm layernorm_5 1 1 ffn_2_x ffn_2_xx 0=320 1=0.00001 2=1
+Split split_ffn_2_xx 1 4 ffn_2_xx ffn_2_xx_0 ffn_2_xx_1 ffn_2_xx_2 state_8_out
+BinaryOp sub_5 2 1 state_8_in ffn_2_xx_0 ffn_2_sx 0=1
+Split split_ffn_2_sx 1 2 ffn_2_sx ffn_2_sx_0 ffn_2_sx_1
+MemoryData data_ffn_2_maa_k 0 1 ffn_2_maa_k 0=320 21=0
+MemoryData data_ffn_2_maa_r 0 1 ffn_2_maa_r 0=320 21=0
+BinaryOp mul_27 2 1 ffn_2_sx_0 ffn_2_maa_k ffn_2_xk 0=2
+BinaryOp mul_28 2 1 ffn_2_sx_1 ffn_2_maa_r ffn_2_xr 0=2
+BinaryOp add_27 2 1 ffn_2_xk ffn_2_xx_1 ffn_2_xxk 0=0
+BinaryOp add_28 2 1 ffn_2_xr ffn_2_xx_2 ffn_2_xxr 0=0
+Gemm gemm_ffn_2_key 1 1 ffn_2_xxk ffn_2_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_2_receptance 1 1 ffn_2_xxr ffn_2_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_5 1 1 ffn_2_receptance ffn_2_receptance_sigmoid
+ReLU relu_2 1 1 ffn_2_key ffn_2_key_relu
+UnaryOp square_ffn_2_key_relu 1 1 ffn_2_key_relu ffn_2_key_relu_square 0=4
+Gemm gemm_ffn_2_value 1 1 ffn_2_key_relu_square ffn_2_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_29 2 1 ffn_2_value ffn_2_receptance_sigmoid ffn_2_rv 0=2
+BinaryOp add_29 2 1 ffn_2_rv ffn_2_x_last channel_mixing_2_out 0=0
+Split split_channel_mixing_2_out 1 2 channel_mixing_2_out att_3_x_last att_3_x
+LayerNorm layernorm_6 1 1 att_3_x att_3_xx 0=320 1=0.00001 2=1
+Split split_att_3_xx 1 4 att_3_xx att_3_xx_0 att_3_xx_1 att_3_xx_2 state_9_out
+BinaryOp sub_6 2 1 state_9_in att_3_xx_0 att_3_sx 0=1
+Split split_att_3_sx 1 2 att_3_sx att_3_sx_0 att_3_sx_1
+MemoryData data_att_3_maa_x 0 1 att_3_maa_x 0=320 21=0
+BinaryOp mul_30 2 1 att_3_sx_0 att_3_maa_x att_3_maa_xx 0=2
+BinaryOp add_30 2 1 att_3_xx_1 att_3_maa_xx att_3_xxx 0=0
+Gemm gemm_att_3_maa_x_lora 1 1 att_3_xxx att_3_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_3_maa_x_lora 1 1 att_3_maa_x_lora att_3_maa_x_lora_tanh
+Reshape reshape_18 1 1 att_3_maa_x_lora_tanh att_3_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_3_maa_w2 0 1 att_3_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_3_maa_x_post_lora 2 1 att_3_maa_x_lora_tanh_reshape att_3_maa_w2 att_3_maa_x_post_lora 0=0
+MemoryData data_att_3_maa 0 1 att_3_maa 0=320 1=1 2=5 21=0
+BinaryOp add_31 2 1 att_3_maa_x_post_lora att_3_maa att_3_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_3_maa_wkvrg_pre_squeezed 1 1 att_3_maa_wkvrg_pre att_3_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_31 2 1 att_3_sx_1 att_3_maa_wkvrg_pre_squeezed att_3_maa_wkvrg_sx 0=2
+BinaryOp add_32 2 1 att_3_xx_2 att_3_maa_wkvrg_sx att_3_maa_wkvrg 0=0
+Slice slice_att_3_maa_wkvrg 1 5 att_3_maa_wkvrg att_3_mw att_3_mk att_3_mv att_3_mr att_3_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_3_mw_lora 1 1 att_3_mw att_3_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_3_mw_lora 1 1 att_3_mw_lora att_3_mw_lora_tanh
+Gemm gemm_att_3_mw_lora_tanh_linear 1 1 att_3_mw_lora_tanh att_3_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_3_td 0 1 att_3_td 0=320 21=0
+BinaryOp add_33 2 1 att_3_mw_lora_tanh_linear att_3_td att_3_time_decay_pre 0=0
+Split split_att_3_time_decay_pre 1 2 att_3_time_decay_pre att_3_time_decay_pre_0 att_3_time_decay_pre_1
+Exp exp_9 1 1 att_3_time_decay_pre_0 att_3_time_decay_exp0
+Exp exp_10 1 1 att_3_time_decay_exp0 att_3_time_decay 1=-1.0
+Clip clip_3 1 1 att_3_time_decay_pre_1 att_3_time_decay_clip 1=0
+Exp exp_11 1 1 att_3_time_decay_clip att_3_time_decay_clip_exp
+Gemm gemm_att_3_key 1 1 att_3_mk att_3_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_3_value 1 1 att_3_mv att_3_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_3_receptance 1 1 att_3_mr att_3_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_3_gate 1 1 att_3_mg att_3_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_3_gate 1 2 att_3_gate att_3_gate_0 att_3_gate_1
+Sigmoid sigmoid_6 1 1 att_3_gate_0 att_3_gate_sigmoid
+BinaryOp mul_32 2 1 att_3_gate_1 att_3_gate_sigmoid att_3_gate_silu 0=2
+MemoryData data_att_3_time_first 0 1 att_3_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_33 2 1 att_3_key att_3_time_decay_clip_exp att_3_key_extended 0=2
+Reshape reshape_19 1 1 att_3_key_extended att_3_key_reshape 0=1 1=64 2=5
+Reshape reshape_20 1 1 att_3_value att_3_value_reshape 0=64 1=1 2=5
+Reshape reshape_21 1 1 att_3_receptance att_3_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_22 1 1 att_3_time_decay att_3_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_3_kv 2 1 att_3_key_reshape att_3_value_reshape att_3_kv 0=0
+Split split_att_3_kv 1 2 att_3_kv att_3_kv_0 att_3_kv_1
+Split split_state_10_in 1 2 state_10_in att_3_wkv_state_0 att_3_wkv_state_1
+BinaryOp mul_34 2 1 att_3_kv_0 att_3_time_first att_3_kv_time_first 0=2
+BinaryOp add_34 2 1 att_3_kv_time_first att_3_wkv_state_0 att_3_kv_tf_state 0=0
+MatMul matmul_att_3_wkv_out 2 1 att_3_receptance_reshape att_3_kv_tf_state att_3_wkv_out 0=0
+BinaryOp mul_35 2 1 att_3_wkv_state_1 att_3_time_decay_reshape att_3_state_td 0=2
+BinaryOp add_35 2 1 att_3_state_td att_3_kv_1 state_10_out 0=0
+Reshape reshape_23 1 1 att_3_wkv_out att_3_wkv_out_flatten 0=320
+GroupNorm groupnorm_3 1 1 att_3_wkv_out_flatten att_3_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_36 2 1 att_3_x_gn att_3_gate_silu att_3_x_gate 0=2
+Gemm gemm_att_3_x_out 1 1 att_3_x_gate att_3_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_36 2 1 att_3_x_out att_3_x_last time_mixing_3_out 0=0
+Split split_time_mixing_3_out 1 2 time_mixing_3_out ffn_3_x_last ffn_3_x
+LayerNorm layernorm_7 1 1 ffn_3_x ffn_3_xx 0=320 1=0.00001 2=1
+Split split_ffn_3_xx 1 4 ffn_3_xx ffn_3_xx_0 ffn_3_xx_1 ffn_3_xx_2 state_11_out
+BinaryOp sub_7 2 1 state_11_in ffn_3_xx_0 ffn_3_sx 0=1
+Split split_ffn_3_sx 1 2 ffn_3_sx ffn_3_sx_0 ffn_3_sx_1
+MemoryData data_ffn_3_maa_k 0 1 ffn_3_maa_k 0=320 21=0
+MemoryData data_ffn_3_maa_r 0 1 ffn_3_maa_r 0=320 21=0
+BinaryOp mul_37 2 1 ffn_3_sx_0 ffn_3_maa_k ffn_3_xk 0=2
+BinaryOp mul_38 2 1 ffn_3_sx_1 ffn_3_maa_r ffn_3_xr 0=2
+BinaryOp add_37 2 1 ffn_3_xk ffn_3_xx_1 ffn_3_xxk 0=0
+BinaryOp add_38 2 1 ffn_3_xr ffn_3_xx_2 ffn_3_xxr 0=0
+Gemm gemm_ffn_3_key 1 1 ffn_3_xxk ffn_3_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_3_receptance 1 1 ffn_3_xxr ffn_3_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_7 1 1 ffn_3_receptance ffn_3_receptance_sigmoid
+ReLU relu_3 1 1 ffn_3_key ffn_3_key_relu
+UnaryOp square_ffn_3_key_relu 1 1 ffn_3_key_relu ffn_3_key_relu_square 0=4
+Gemm gemm_ffn_3_value 1 1 ffn_3_key_relu_square ffn_3_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_39 2 1 ffn_3_value ffn_3_receptance_sigmoid ffn_3_rv 0=2
+BinaryOp add_39 2 1 ffn_3_rv ffn_3_x_last channel_mixing_3_out 0=0
+Split split_channel_mixing_3_out 1 2 channel_mixing_3_out att_4_x_last att_4_x
+LayerNorm layernorm_8 1 1 att_4_x att_4_xx 0=320 1=0.00001 2=1
+Split split_att_4_xx 1 4 att_4_xx att_4_xx_0 att_4_xx_1 att_4_xx_2 state_12_out
+BinaryOp sub_8 2 1 state_12_in att_4_xx_0 att_4_sx 0=1
+Split split_att_4_sx 1 2 att_4_sx att_4_sx_0 att_4_sx_1
+MemoryData data_att_4_maa_x 0 1 att_4_maa_x 0=320 21=0
+BinaryOp mul_40 2 1 att_4_sx_0 att_4_maa_x att_4_maa_xx 0=2
+BinaryOp add_40 2 1 att_4_xx_1 att_4_maa_xx att_4_xxx 0=0
+Gemm gemm_att_4_maa_x_lora 1 1 att_4_xxx att_4_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_4_maa_x_lora 1 1 att_4_maa_x_lora att_4_maa_x_lora_tanh
+Reshape reshape_24 1 1 att_4_maa_x_lora_tanh att_4_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_4_maa_w2 0 1 att_4_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_4_maa_x_post_lora 2 1 att_4_maa_x_lora_tanh_reshape att_4_maa_w2 att_4_maa_x_post_lora 0=0
+MemoryData data_att_4_maa 0 1 att_4_maa 0=320 1=1 2=5 21=0
+BinaryOp add_41 2 1 att_4_maa_x_post_lora att_4_maa att_4_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_4_maa_wkvrg_pre_squeezed 1 1 att_4_maa_wkvrg_pre att_4_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_41 2 1 att_4_sx_1 att_4_maa_wkvrg_pre_squeezed att_4_maa_wkvrg_sx 0=2
+BinaryOp add_42 2 1 att_4_xx_2 att_4_maa_wkvrg_sx att_4_maa_wkvrg 0=0
+Slice slice_att_4_maa_wkvrg 1 5 att_4_maa_wkvrg att_4_mw att_4_mk att_4_mv att_4_mr att_4_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_4_mw_lora 1 1 att_4_mw att_4_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_4_mw_lora 1 1 att_4_mw_lora att_4_mw_lora_tanh
+Gemm gemm_att_4_mw_lora_tanh_linear 1 1 att_4_mw_lora_tanh att_4_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_4_td 0 1 att_4_td 0=320 21=0
+BinaryOp add_43 2 1 att_4_mw_lora_tanh_linear att_4_td att_4_time_decay_pre 0=0
+Split split_att_4_time_decay_pre 1 2 att_4_time_decay_pre att_4_time_decay_pre_0 att_4_time_decay_pre_1
+Exp exp_12 1 1 att_4_time_decay_pre_0 att_4_time_decay_exp0
+Exp exp_13 1 1 att_4_time_decay_exp0 att_4_time_decay 1=-1.0
+Clip clip_4 1 1 att_4_time_decay_pre_1 att_4_time_decay_clip 1=0
+Exp exp_14 1 1 att_4_time_decay_clip att_4_time_decay_clip_exp
+Gemm gemm_att_4_key 1 1 att_4_mk att_4_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_4_value 1 1 att_4_mv att_4_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_4_receptance 1 1 att_4_mr att_4_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_4_gate 1 1 att_4_mg att_4_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_4_gate 1 2 att_4_gate att_4_gate_0 att_4_gate_1
+Sigmoid sigmoid_8 1 1 att_4_gate_0 att_4_gate_sigmoid
+BinaryOp mul_42 2 1 att_4_gate_1 att_4_gate_sigmoid att_4_gate_silu 0=2
+MemoryData data_att_4_time_first 0 1 att_4_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_43 2 1 att_4_key att_4_time_decay_clip_exp att_4_key_extended 0=2
+Reshape reshape_25 1 1 att_4_key_extended att_4_key_reshape 0=1 1=64 2=5
+Reshape reshape_26 1 1 att_4_value att_4_value_reshape 0=64 1=1 2=5
+Reshape reshape_27 1 1 att_4_receptance att_4_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_28 1 1 att_4_time_decay att_4_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_4_kv 2 1 att_4_key_reshape att_4_value_reshape att_4_kv 0=0
+Split split_att_4_kv 1 2 att_4_kv att_4_kv_0 att_4_kv_1
+Split split_state_13_in 1 2 state_13_in att_4_wkv_state_0 att_4_wkv_state_1
+BinaryOp mul_44 2 1 att_4_kv_0 att_4_time_first att_4_kv_time_first 0=2
+BinaryOp add_44 2 1 att_4_kv_time_first att_4_wkv_state_0 att_4_kv_tf_state 0=0
+MatMul matmul_att_4_wkv_out 2 1 att_4_receptance_reshape att_4_kv_tf_state att_4_wkv_out 0=0
+BinaryOp mul_45 2 1 att_4_wkv_state_1 att_4_time_decay_reshape att_4_state_td 0=2
+BinaryOp add_45 2 1 att_4_state_td att_4_kv_1 state_13_out 0=0
+Reshape reshape_29 1 1 att_4_wkv_out att_4_wkv_out_flatten 0=320
+GroupNorm groupnorm_4 1 1 att_4_wkv_out_flatten att_4_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_46 2 1 att_4_x_gn att_4_gate_silu att_4_x_gate 0=2
+Gemm gemm_att_4_x_out 1 1 att_4_x_gate att_4_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_46 2 1 att_4_x_out att_4_x_last time_mixing_4_out 0=0
+Split split_time_mixing_4_out 1 2 time_mixing_4_out ffn_4_x_last ffn_4_x
+LayerNorm layernorm_9 1 1 ffn_4_x ffn_4_xx 0=320 1=0.00001 2=1
+Split split_ffn_4_xx 1 4 ffn_4_xx ffn_4_xx_0 ffn_4_xx_1 ffn_4_xx_2 state_14_out
+BinaryOp sub_9 2 1 state_14_in ffn_4_xx_0 ffn_4_sx 0=1
+Split split_ffn_4_sx 1 2 ffn_4_sx ffn_4_sx_0 ffn_4_sx_1
+MemoryData data_ffn_4_maa_k 0 1 ffn_4_maa_k 0=320 21=0
+MemoryData data_ffn_4_maa_r 0 1 ffn_4_maa_r 0=320 21=0
+BinaryOp mul_47 2 1 ffn_4_sx_0 ffn_4_maa_k ffn_4_xk 0=2
+BinaryOp mul_48 2 1 ffn_4_sx_1 ffn_4_maa_r ffn_4_xr 0=2
+BinaryOp add_47 2 1 ffn_4_xk ffn_4_xx_1 ffn_4_xxk 0=0
+BinaryOp add_48 2 1 ffn_4_xr ffn_4_xx_2 ffn_4_xxr 0=0
+Gemm gemm_ffn_4_key 1 1 ffn_4_xxk ffn_4_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_4_receptance 1 1 ffn_4_xxr ffn_4_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_9 1 1 ffn_4_receptance ffn_4_receptance_sigmoid
+ReLU relu_4 1 1 ffn_4_key ffn_4_key_relu
+UnaryOp square_ffn_4_key_relu 1 1 ffn_4_key_relu ffn_4_key_relu_square 0=4
+Gemm gemm_ffn_4_value 1 1 ffn_4_key_relu_square ffn_4_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_49 2 1 ffn_4_value ffn_4_receptance_sigmoid ffn_4_rv 0=2
+BinaryOp add_49 2 1 ffn_4_rv ffn_4_x_last channel_mixing_4_out 0=0
+Split split_channel_mixing_4_out 1 2 channel_mixing_4_out att_5_x_last att_5_x
+LayerNorm layernorm_10 1 1 att_5_x att_5_xx 0=320 1=0.00001 2=1
+Split split_att_5_xx 1 4 att_5_xx att_5_xx_0 att_5_xx_1 att_5_xx_2 state_15_out
+BinaryOp sub_10 2 1 state_15_in att_5_xx_0 att_5_sx 0=1
+Split split_att_5_sx 1 2 att_5_sx att_5_sx_0 att_5_sx_1
+MemoryData data_att_5_maa_x 0 1 att_5_maa_x 0=320 21=0
+BinaryOp mul_50 2 1 att_5_sx_0 att_5_maa_x att_5_maa_xx 0=2
+BinaryOp add_50 2 1 att_5_xx_1 att_5_maa_xx att_5_xxx 0=0
+Gemm gemm_att_5_maa_x_lora 1 1 att_5_xxx att_5_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_5_maa_x_lora 1 1 att_5_maa_x_lora att_5_maa_x_lora_tanh
+Reshape reshape_30 1 1 att_5_maa_x_lora_tanh att_5_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_5_maa_w2 0 1 att_5_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_5_maa_x_post_lora 2 1 att_5_maa_x_lora_tanh_reshape att_5_maa_w2 att_5_maa_x_post_lora 0=0
+MemoryData data_att_5_maa 0 1 att_5_maa 0=320 1=1 2=5 21=0
+BinaryOp add_51 2 1 att_5_maa_x_post_lora att_5_maa att_5_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_5_maa_wkvrg_pre_squeezed 1 1 att_5_maa_wkvrg_pre att_5_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_51 2 1 att_5_sx_1 att_5_maa_wkvrg_pre_squeezed att_5_maa_wkvrg_sx 0=2
+BinaryOp add_52 2 1 att_5_xx_2 att_5_maa_wkvrg_sx att_5_maa_wkvrg 0=0
+Slice slice_att_5_maa_wkvrg 1 5 att_5_maa_wkvrg att_5_mw att_5_mk att_5_mv att_5_mr att_5_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_5_mw_lora 1 1 att_5_mw att_5_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_5_mw_lora 1 1 att_5_mw_lora att_5_mw_lora_tanh
+Gemm gemm_att_5_mw_lora_tanh_linear 1 1 att_5_mw_lora_tanh att_5_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_5_td 0 1 att_5_td 0=320 21=0
+BinaryOp add_53 2 1 att_5_mw_lora_tanh_linear att_5_td att_5_time_decay_pre 0=0
+Split split_att_5_time_decay_pre 1 2 att_5_time_decay_pre att_5_time_decay_pre_0 att_5_time_decay_pre_1
+Exp exp_15 1 1 att_5_time_decay_pre_0 att_5_time_decay_exp0
+Exp exp_16 1 1 att_5_time_decay_exp0 att_5_time_decay 1=-1.0
+Clip clip_5 1 1 att_5_time_decay_pre_1 att_5_time_decay_clip 1=0
+Exp exp_17 1 1 att_5_time_decay_clip att_5_time_decay_clip_exp
+Gemm gemm_att_5_key 1 1 att_5_mk att_5_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_5_value 1 1 att_5_mv att_5_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_5_receptance 1 1 att_5_mr att_5_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_5_gate 1 1 att_5_mg att_5_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_5_gate 1 2 att_5_gate att_5_gate_0 att_5_gate_1
+Sigmoid sigmoid_10 1 1 att_5_gate_0 att_5_gate_sigmoid
+BinaryOp mul_52 2 1 att_5_gate_1 att_5_gate_sigmoid att_5_gate_silu 0=2
+MemoryData data_att_5_time_first 0 1 att_5_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_53 2 1 att_5_key att_5_time_decay_clip_exp att_5_key_extended 0=2
+Reshape reshape_31 1 1 att_5_key_extended att_5_key_reshape 0=1 1=64 2=5
+Reshape reshape_32 1 1 att_5_value att_5_value_reshape 0=64 1=1 2=5
+Reshape reshape_33 1 1 att_5_receptance att_5_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_34 1 1 att_5_time_decay att_5_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_5_kv 2 1 att_5_key_reshape att_5_value_reshape att_5_kv 0=0
+Split split_att_5_kv 1 2 att_5_kv att_5_kv_0 att_5_kv_1
+Split split_state_16_in 1 2 state_16_in att_5_wkv_state_0 att_5_wkv_state_1
+BinaryOp mul_54 2 1 att_5_kv_0 att_5_time_first att_5_kv_time_first 0=2
+BinaryOp add_54 2 1 att_5_kv_time_first att_5_wkv_state_0 att_5_kv_tf_state 0=0
+MatMul matmul_att_5_wkv_out 2 1 att_5_receptance_reshape att_5_kv_tf_state att_5_wkv_out 0=0
+BinaryOp mul_55 2 1 att_5_wkv_state_1 att_5_time_decay_reshape att_5_state_td 0=2
+BinaryOp add_55 2 1 att_5_state_td att_5_kv_1 state_16_out 0=0
+Reshape reshape_35 1 1 att_5_wkv_out att_5_wkv_out_flatten 0=320
+GroupNorm groupnorm_5 1 1 att_5_wkv_out_flatten att_5_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_56 2 1 att_5_x_gn att_5_gate_silu att_5_x_gate 0=2
+Gemm gemm_att_5_x_out 1 1 att_5_x_gate att_5_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_56 2 1 att_5_x_out att_5_x_last time_mixing_5_out 0=0
+Split split_time_mixing_5_out 1 2 time_mixing_5_out ffn_5_x_last ffn_5_x
+LayerNorm layernorm_11 1 1 ffn_5_x ffn_5_xx 0=320 1=0.00001 2=1
+Split split_ffn_5_xx 1 4 ffn_5_xx ffn_5_xx_0 ffn_5_xx_1 ffn_5_xx_2 state_17_out
+BinaryOp sub_11 2 1 state_17_in ffn_5_xx_0 ffn_5_sx 0=1
+Split split_ffn_5_sx 1 2 ffn_5_sx ffn_5_sx_0 ffn_5_sx_1
+MemoryData data_ffn_5_maa_k 0 1 ffn_5_maa_k 0=320 21=0
+MemoryData data_ffn_5_maa_r 0 1 ffn_5_maa_r 0=320 21=0
+BinaryOp mul_57 2 1 ffn_5_sx_0 ffn_5_maa_k ffn_5_xk 0=2
+BinaryOp mul_58 2 1 ffn_5_sx_1 ffn_5_maa_r ffn_5_xr 0=2
+BinaryOp add_57 2 1 ffn_5_xk ffn_5_xx_1 ffn_5_xxk 0=0
+BinaryOp add_58 2 1 ffn_5_xr ffn_5_xx_2 ffn_5_xxr 0=0
+Gemm gemm_ffn_5_key 1 1 ffn_5_xxk ffn_5_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_5_receptance 1 1 ffn_5_xxr ffn_5_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_11 1 1 ffn_5_receptance ffn_5_receptance_sigmoid
+ReLU relu_5 1 1 ffn_5_key ffn_5_key_relu
+UnaryOp square_ffn_5_key_relu 1 1 ffn_5_key_relu ffn_5_key_relu_square 0=4
+Gemm gemm_ffn_5_value 1 1 ffn_5_key_relu_square ffn_5_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_59 2 1 ffn_5_value ffn_5_receptance_sigmoid ffn_5_rv 0=2
+BinaryOp add_59 2 1 ffn_5_rv ffn_5_x_last channel_mixing_5_out 0=0
+Split split_channel_mixing_5_out 1 2 channel_mixing_5_out att_6_x_last att_6_x
+LayerNorm layernorm_12 1 1 att_6_x att_6_xx 0=320 1=0.00001 2=1
+Split split_att_6_xx 1 4 att_6_xx att_6_xx_0 att_6_xx_1 att_6_xx_2 state_18_out
+BinaryOp sub_12 2 1 state_18_in att_6_xx_0 att_6_sx 0=1
+Split split_att_6_sx 1 2 att_6_sx att_6_sx_0 att_6_sx_1
+MemoryData data_att_6_maa_x 0 1 att_6_maa_x 0=320 21=0
+BinaryOp mul_60 2 1 att_6_sx_0 att_6_maa_x att_6_maa_xx 0=2
+BinaryOp add_60 2 1 att_6_xx_1 att_6_maa_xx att_6_xxx 0=0
+Gemm gemm_att_6_maa_x_lora 1 1 att_6_xxx att_6_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_6_maa_x_lora 1 1 att_6_maa_x_lora att_6_maa_x_lora_tanh
+Reshape reshape_36 1 1 att_6_maa_x_lora_tanh att_6_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_6_maa_w2 0 1 att_6_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_6_maa_x_post_lora 2 1 att_6_maa_x_lora_tanh_reshape att_6_maa_w2 att_6_maa_x_post_lora 0=0
+MemoryData data_att_6_maa 0 1 att_6_maa 0=320 1=1 2=5 21=0
+BinaryOp add_61 2 1 att_6_maa_x_post_lora att_6_maa att_6_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_6_maa_wkvrg_pre_squeezed 1 1 att_6_maa_wkvrg_pre att_6_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_61 2 1 att_6_sx_1 att_6_maa_wkvrg_pre_squeezed att_6_maa_wkvrg_sx 0=2
+BinaryOp add_62 2 1 att_6_xx_2 att_6_maa_wkvrg_sx att_6_maa_wkvrg 0=0
+Slice slice_att_6_maa_wkvrg 1 5 att_6_maa_wkvrg att_6_mw att_6_mk att_6_mv att_6_mr att_6_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_6_mw_lora 1 1 att_6_mw att_6_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_6_mw_lora 1 1 att_6_mw_lora att_6_mw_lora_tanh
+Gemm gemm_att_6_mw_lora_tanh_linear 1 1 att_6_mw_lora_tanh att_6_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_6_td 0 1 att_6_td 0=320 21=0
+BinaryOp add_63 2 1 att_6_mw_lora_tanh_linear att_6_td att_6_time_decay_pre 0=0
+Split split_att_6_time_decay_pre 1 2 att_6_time_decay_pre att_6_time_decay_pre_0 att_6_time_decay_pre_1
+Exp exp_18 1 1 att_6_time_decay_pre_0 att_6_time_decay_exp0
+Exp exp_19 1 1 att_6_time_decay_exp0 att_6_time_decay 1=-1.0
+Clip clip_6 1 1 att_6_time_decay_pre_1 att_6_time_decay_clip 1=0
+Exp exp_20 1 1 att_6_time_decay_clip att_6_time_decay_clip_exp
+Gemm gemm_att_6_key 1 1 att_6_mk att_6_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_6_value 1 1 att_6_mv att_6_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_6_receptance 1 1 att_6_mr att_6_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_6_gate 1 1 att_6_mg att_6_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_6_gate 1 2 att_6_gate att_6_gate_0 att_6_gate_1
+Sigmoid sigmoid_12 1 1 att_6_gate_0 att_6_gate_sigmoid
+BinaryOp mul_62 2 1 att_6_gate_1 att_6_gate_sigmoid att_6_gate_silu 0=2
+MemoryData data_att_6_time_first 0 1 att_6_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_63 2 1 att_6_key att_6_time_decay_clip_exp att_6_key_extended 0=2
+Reshape reshape_37 1 1 att_6_key_extended att_6_key_reshape 0=1 1=64 2=5
+Reshape reshape_38 1 1 att_6_value att_6_value_reshape 0=64 1=1 2=5
+Reshape reshape_39 1 1 att_6_receptance att_6_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_40 1 1 att_6_time_decay att_6_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_6_kv 2 1 att_6_key_reshape att_6_value_reshape att_6_kv 0=0
+Split split_att_6_kv 1 2 att_6_kv att_6_kv_0 att_6_kv_1
+Split split_state_19_in 1 2 state_19_in att_6_wkv_state_0 att_6_wkv_state_1
+BinaryOp mul_64 2 1 att_6_kv_0 att_6_time_first att_6_kv_time_first 0=2
+BinaryOp add_64 2 1 att_6_kv_time_first att_6_wkv_state_0 att_6_kv_tf_state 0=0
+MatMul matmul_att_6_wkv_out 2 1 att_6_receptance_reshape att_6_kv_tf_state att_6_wkv_out 0=0
+BinaryOp mul_65 2 1 att_6_wkv_state_1 att_6_time_decay_reshape att_6_state_td 0=2
+BinaryOp add_65 2 1 att_6_state_td att_6_kv_1 state_19_out 0=0
+Reshape reshape_41 1 1 att_6_wkv_out att_6_wkv_out_flatten 0=320
+GroupNorm groupnorm_6 1 1 att_6_wkv_out_flatten att_6_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_66 2 1 att_6_x_gn att_6_gate_silu att_6_x_gate 0=2
+Gemm gemm_att_6_x_out 1 1 att_6_x_gate att_6_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_66 2 1 att_6_x_out att_6_x_last time_mixing_6_out 0=0
+Split split_time_mixing_6_out 1 2 time_mixing_6_out ffn_6_x_last ffn_6_x
+LayerNorm layernorm_13 1 1 ffn_6_x ffn_6_xx 0=320 1=0.00001 2=1
+Split split_ffn_6_xx 1 4 ffn_6_xx ffn_6_xx_0 ffn_6_xx_1 ffn_6_xx_2 state_20_out
+BinaryOp sub_13 2 1 state_20_in ffn_6_xx_0 ffn_6_sx 0=1
+Split split_ffn_6_sx 1 2 ffn_6_sx ffn_6_sx_0 ffn_6_sx_1
+MemoryData data_ffn_6_maa_k 0 1 ffn_6_maa_k 0=320 21=0
+MemoryData data_ffn_6_maa_r 0 1 ffn_6_maa_r 0=320 21=0
+BinaryOp mul_67 2 1 ffn_6_sx_0 ffn_6_maa_k ffn_6_xk 0=2
+BinaryOp mul_68 2 1 ffn_6_sx_1 ffn_6_maa_r ffn_6_xr 0=2
+BinaryOp add_67 2 1 ffn_6_xk ffn_6_xx_1 ffn_6_xxk 0=0
+BinaryOp add_68 2 1 ffn_6_xr ffn_6_xx_2 ffn_6_xxr 0=0
+Gemm gemm_ffn_6_key 1 1 ffn_6_xxk ffn_6_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_6_receptance 1 1 ffn_6_xxr ffn_6_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_13 1 1 ffn_6_receptance ffn_6_receptance_sigmoid
+ReLU relu_6 1 1 ffn_6_key ffn_6_key_relu
+UnaryOp square_ffn_6_key_relu 1 1 ffn_6_key_relu ffn_6_key_relu_square 0=4
+Gemm gemm_ffn_6_value 1 1 ffn_6_key_relu_square ffn_6_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_69 2 1 ffn_6_value ffn_6_receptance_sigmoid ffn_6_rv 0=2
+BinaryOp add_69 2 1 ffn_6_rv ffn_6_x_last channel_mixing_6_out 0=0
+Split split_channel_mixing_6_out 1 2 channel_mixing_6_out att_7_x_last att_7_x
+LayerNorm layernorm_14 1 1 att_7_x att_7_xx 0=320 1=0.00001 2=1
+Split split_att_7_xx 1 4 att_7_xx att_7_xx_0 att_7_xx_1 att_7_xx_2 state_21_out
+BinaryOp sub_14 2 1 state_21_in att_7_xx_0 att_7_sx 0=1
+Split split_att_7_sx 1 2 att_7_sx att_7_sx_0 att_7_sx_1
+MemoryData data_att_7_maa_x 0 1 att_7_maa_x 0=320 21=0
+BinaryOp mul_70 2 1 att_7_sx_0 att_7_maa_x att_7_maa_xx 0=2
+BinaryOp add_70 2 1 att_7_xx_1 att_7_maa_xx att_7_xxx 0=0
+Gemm gemm_att_7_maa_x_lora 1 1 att_7_xxx att_7_maa_x_lora 4=0 5=1 6=0 7=0 8=160 9=320 10=-1
+TanH tanh_att_7_maa_x_lora 1 1 att_7_maa_x_lora att_7_maa_x_lora_tanh
+Reshape reshape_42 1 1 att_7_maa_x_lora_tanh att_7_maa_x_lora_tanh_reshape 0=-1 1=1 2=5
+MemoryData data_att_7_maa_w2 0 1 att_7_maa_w2 0=320 1=32 2=5 21=0
+MatMul matmul_att_7_maa_x_post_lora 2 1 att_7_maa_x_lora_tanh_reshape att_7_maa_w2 att_7_maa_x_post_lora 0=0
+MemoryData data_att_7_maa 0 1 att_7_maa 0=320 1=1 2=5 21=0
+BinaryOp add_71 2 1 att_7_maa_x_post_lora att_7_maa att_7_maa_wkvrg_pre 0=0
+Squeeze squeeze_att_7_maa_wkvrg_pre_squeezed 1 1 att_7_maa_wkvrg_pre att_7_maa_wkvrg_pre_squeezed 1=1
+BinaryOp mul_71 2 1 att_7_sx_1 att_7_maa_wkvrg_pre_squeezed att_7_maa_wkvrg_sx 0=2
+BinaryOp add_72 2 1 att_7_xx_2 att_7_maa_wkvrg_sx att_7_maa_wkvrg 0=0
+Slice slice_att_7_maa_wkvrg 1 5 att_7_maa_wkvrg att_7_mw att_7_mk att_7_mv att_7_mr att_7_mg -23300=5,-233,-233,-233,-233,-233 1=0
+Gemm gemm_att_7_mw_lora 1 1 att_7_mw att_7_mw_lora 4=0 5=1 6=0 7=0 8=64 9=320 10=-1
+TanH tanh_att_7_mw_lora 1 1 att_7_mw_lora att_7_mw_lora_tanh
+Gemm gemm_att_7_mw_lora_tanh_linear 1 1 att_7_mw_lora_tanh att_7_mw_lora_tanh_linear 4=0 5=1 6=0 7=0 8=320 9=64 10=-1
+MemoryData data_att_7_td 0 1 att_7_td 0=320 21=0
+BinaryOp add_73 2 1 att_7_mw_lora_tanh_linear att_7_td att_7_time_decay_pre 0=0
+Split split_att_7_time_decay_pre 1 2 att_7_time_decay_pre att_7_time_decay_pre_0 att_7_time_decay_pre_1
+Exp exp_21 1 1 att_7_time_decay_pre_0 att_7_time_decay_exp0
+Exp exp_22 1 1 att_7_time_decay_exp0 att_7_time_decay 1=-1.0
+Clip clip_7 1 1 att_7_time_decay_pre_1 att_7_time_decay_clip 1=0
+Exp exp_23 1 1 att_7_time_decay_clip att_7_time_decay_clip_exp
+Gemm gemm_att_7_key 1 1 att_7_mk att_7_key 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_7_value 1 1 att_7_mv att_7_value 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_7_receptance 1 1 att_7_mr att_7_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Gemm gemm_att_7_gate 1 1 att_7_mg att_7_gate 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Split split_att_7_gate 1 2 att_7_gate att_7_gate_0 att_7_gate_1
+Sigmoid sigmoid_14 1 1 att_7_gate_0 att_7_gate_sigmoid
+BinaryOp mul_72 2 1 att_7_gate_1 att_7_gate_sigmoid att_7_gate_silu 0=2
+MemoryData data_att_7_time_first 0 1 att_7_time_first 0=1 1=64 2=5 21=0
+BinaryOp mul_73 2 1 att_7_key att_7_time_decay_clip_exp att_7_key_extended 0=2
+Reshape reshape_43 1 1 att_7_key_extended att_7_key_reshape 0=1 1=64 2=5
+Reshape reshape_44 1 1 att_7_value att_7_value_reshape 0=64 1=1 2=5
+Reshape reshape_45 1 1 att_7_receptance att_7_receptance_reshape 0=64 1=1 2=5
+Reshape reshape_46 1 1 att_7_time_decay att_7_time_decay_reshape 0=1 1=64 2=5
+MatMul matmul_att_7_kv 2 1 att_7_key_reshape att_7_value_reshape att_7_kv 0=0
+Split split_att_7_kv 1 2 att_7_kv att_7_kv_0 att_7_kv_1
+Split split_state_22_in 1 2 state_22_in att_7_wkv_state_0 att_7_wkv_state_1
+BinaryOp mul_74 2 1 att_7_kv_0 att_7_time_first att_7_kv_time_first 0=2
+BinaryOp add_74 2 1 att_7_kv_time_first att_7_wkv_state_0 att_7_kv_tf_state 0=0
+MatMul matmul_att_7_wkv_out 2 1 att_7_receptance_reshape att_7_kv_tf_state att_7_wkv_out 0=0
+BinaryOp mul_75 2 1 att_7_wkv_state_1 att_7_time_decay_reshape att_7_state_td 0=2
+BinaryOp add_75 2 1 att_7_state_td att_7_kv_1 state_22_out 0=0
+Reshape reshape_47 1 1 att_7_wkv_out att_7_wkv_out_flatten 0=320
+GroupNorm groupnorm_7 1 1 att_7_wkv_out_flatten att_7_x_gn 0=5 1=320 2=0.00001 3=1
+BinaryOp mul_76 2 1 att_7_x_gn att_7_gate_silu att_7_x_gate 0=2
+Gemm gemm_att_7_x_out 1 1 att_7_x_gate att_7_x_out 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+BinaryOp add_76 2 1 att_7_x_out att_7_x_last time_mixing_7_out 0=0
+Split split_time_mixing_7_out 1 2 time_mixing_7_out ffn_7_x_last ffn_7_x
+LayerNorm layernorm_15 1 1 ffn_7_x ffn_7_xx 0=320 1=0.00001 2=1
+Split split_ffn_7_xx 1 4 ffn_7_xx ffn_7_xx_0 ffn_7_xx_1 ffn_7_xx_2 state_23_out
+BinaryOp sub_15 2 1 state_23_in ffn_7_xx_0 ffn_7_sx 0=1
+Split split_ffn_7_sx 1 2 ffn_7_sx ffn_7_sx_0 ffn_7_sx_1
+MemoryData data_ffn_7_maa_k 0 1 ffn_7_maa_k 0=320 21=0
+MemoryData data_ffn_7_maa_r 0 1 ffn_7_maa_r 0=320 21=0
+BinaryOp mul_77 2 1 ffn_7_sx_0 ffn_7_maa_k ffn_7_xk 0=2
+BinaryOp mul_78 2 1 ffn_7_sx_1 ffn_7_maa_r ffn_7_xr 0=2
+BinaryOp add_77 2 1 ffn_7_xk ffn_7_xx_1 ffn_7_xxk 0=0
+BinaryOp add_78 2 1 ffn_7_xr ffn_7_xx_2 ffn_7_xxr 0=0
+Gemm gemm_ffn_7_key 1 1 ffn_7_xxk ffn_7_key 4=0 5=1 6=0 7=0 8=1120 9=320 10=-1
+Gemm gemm_ffn_7_receptance 1 1 ffn_7_xxr ffn_7_receptance 4=0 5=1 6=0 7=0 8=320 9=320 10=-1
+Sigmoid sigmoid_15 1 1 ffn_7_receptance ffn_7_receptance_sigmoid
+ReLU relu_7 1 1 ffn_7_key ffn_7_key_relu
+UnaryOp square_ffn_7_key_relu 1 1 ffn_7_key_relu ffn_7_key_relu_square 0=4
+Gemm gemm_ffn_7_value 1 1 ffn_7_key_relu_square ffn_7_value 4=0 5=1 6=0 7=0 8=320 9=1120 10=-1
+BinaryOp mul_79 2 1 ffn_7_value ffn_7_receptance_sigmoid ffn_7_rv 0=2
+BinaryOp add_79 2 1 ffn_7_rv ffn_7_x_last channel_mixing_7_out 0=0
+LayerNorm layernorm_16 1 1 channel_mixing_7_out norm_head 0=320 1=0.00001 2=1
+Gemm gemm_logits 1 1 norm_head logits 4=0 5=1 6=0 7=0 8=133 9=320 10=-1

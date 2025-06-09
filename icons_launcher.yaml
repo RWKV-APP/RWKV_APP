@@ -1,0 +1,15 @@
+icons_launcher:
+  image_path: 'assets/icon/icon.chat.png'
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+    macos:
+      enable: true
+    windows:
+      enable: true
+    linux:
+      enable: true
+    web:
+      enable: false

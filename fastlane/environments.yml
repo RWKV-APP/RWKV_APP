@@ -1,0 +1,96 @@
+othello:
+  app_icon: assets/icon/icon.othello.png
+  bundle_id_android: com.rwkv.othello
+  bundle_id_ios: com.rwkvothello.ios
+  file_android_path: android/app/src/main/kotlin/com/rwkv/zone/MainActivity.kt
+  app_name: RWKV Othello
+  assets_config_0: assets/model/othello
+  assets_config_1: assets/config/othello
+  assets_config_2: assets/img/othello
+  assets_config_3: assets/lib/othello
+  args: __othello__
+  fp: static final firstPage = PageKey.othello.name;
+
+chat:
+  app_icon: assets/icon/icon.chat.png
+  bundle_id_android: com.rwkvzone.chat
+  bundle_id_ios: com.rwkv.chat.v7.100m
+  file_android_path: android/app/src/main/kotlin/com/rwkvzone/chat/MainActivity.kt
+  app_name: RWKV Chat
+  assets_config_0: assets/model/chat
+  assets_config_1: assets/config/chat
+  assets_config_2: assets/img/chat
+  assets_config_3: assets/lib/chat
+  args: __chat__
+  fp: static final firstPage = PageKey.chat.name;
+
+world:
+  app_icon: assets/icon/icon.world.png
+  bundle_id_android: com.worldrwkv.android
+  bundle_id_ios: com.world.rwkv.ios
+  file_android_path: android/app/src/main/kotlin/com/worldrwkv/android/MainActivity.kt
+  app_name: RWKV See
+  assets_config_0: assets/model/world
+  assets_config_1: assets/config/world
+  assets_config_2: assets/img/world
+  assets_config_3: assets/lib/world
+  args: __world__
+  fp: static final firstPage = PageKey.chat.name;
+
+tts:
+  app_icon: assets/icon/icon.tts.png
+  bundle_id_android: com.rwkv.tts
+  bundle_id_ios: com.rwkvtts.ios
+  file_android_path: android/app/src/main/kotlin/com/rwkv/tts/MainActivity.kt
+  app_name: RWKV Talk
+  assets_config_0: assets/model/tts
+  assets_config_1: assets/config/tts
+  assets_config_2: assets/img/tts
+  assets_config_3: assets/lib/tts
+  args: __tts__
+  fp: static final firstPage = PageKey.chat.name;
+
+sudoku:
+  app_icon: assets/icon/icon.sudoku.png
+  bundle_id_android: com.rwkv.sudoku
+  bundle_id_ios: com.rwkvsudoku.ios
+  file_android_path: android/app/src/main/kotlin/com/rwkv/sudoku/MainActivity.kt
+  app_name: RWKV Sudoku
+  assets_config_0: assets/model/sudoku
+  assets_config_1: assets/config/sudoku
+  assets_config_2: assets/img/sudoku
+  assets_config_3: assets/lib/sudoku
+  args: __sudoku__
+  fp: static final firstPage = PageKey.sudoku.name;
+
+app_icon:
+  [
+    assets/icon/icon.othello.png,
+    assets/icon/icon.chat.png,
+    assets/icon/icon.world.png,
+    assets/icon/icon.tts.png,
+    assets/icon/icon.sudoku.png,
+  ]
+bundle_id_ios: [com.rwkvothello.ios, com.rwkv.chat.v7.100m, com.world.rwkv.ios, com.rwkvtts.ios, com.rwkvsudoku.ios]
+bundle_id_android: [com.rwkv.othello, com.rwkvzone.chat, com.worldrwkv.android, com.rwkv.tts, com.rwkv.sudoku]
+app_name: [RWKV Othello, RWKV Chat, RWKV See, RWKV Talk, RWKV Sudoku]
+file_android_path:
+  [
+    android/app/src/main/kotlin/com/rwkv/zone/MainActivity.kt,
+    android/app/src/main/kotlin/com/rwkvzone/chat/MainActivity.kt,
+    android/app/src/main/kotlin/com/worldrwkv/android/MainActivity.kt,
+    android/app/src/main/kotlin/com/rwkv/tts/MainActivity.kt,
+    android/app/src/main/kotlin/com/rwkv/sudoku/MainActivity.kt,
+  ]
+assets_config_0: [assets/model/othello, assets/model/chat, assets/model/world, assets/model/tts, assets/model/sudoku]
+assets_config_1:
+  [assets/config/othello, assets/config/chat, assets/config/world, assets/config/tts, assets/config/sudoku]
+assets_config_2: [assets/img/othello, assets/img/chat, assets/img/world, assets/img/tts, assets/img/sudoku]
+assets_config_3: [assets/lib/othello, assets/lib/chat, assets/lib/world, assets/lib/tts, assets/lib/sudoku]
+args: [__othello__, __chat__, __world__, __tts__, __sudoku__]
+fp:
+  [
+    static final firstPage = PageKey.chat.name;,
+    static final firstPage = PageKey.othello.name;,
+    static final firstPage = PageKey.sudoku.name;,
+  ]
