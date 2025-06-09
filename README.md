@@ -1,5 +1,11 @@
 # RWKV Demo
 
+## 技术架构
+
+- 前端 (flutter): [本项目](https://github.com/MollySophia/rwkv_mobile_flutter)
+- 后端 (dart ffi): [rwkv_mobile_flutter](https://github.com/MollySophia/rwkv_mobile_flutter)
+- 权重: [mollysama/rwkv-mobile-models](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
+
 ## 准备工作
 
 - 找开发人员索要 `.env` 文件, 将 zip 文件解压后的文件拷贝至目录 `.env`
