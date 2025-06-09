@@ -138,13 +138,15 @@ extension _$App on _App {
 
     lifecycleState.lv(_onLifecycleStateChanged);
 
+    final latency = Platform.isWindows ? 2500 : 1750;
+
     // 目前下面四种 demo 需要选择模型
     switch (demoType.q) {
       case DemoType.chat:
       case DemoType.sudoku:
       case DemoType.tts:
       case DemoType.world:
-        HF.wait(1750).then((_) {
+        HF.wait(latency).then((_) {
           final loaded = P.rwkv.loaded.q;
           if (loaded) return;
           if (!Args.disableAutoShowOfWeightsPanel) ModelSelector.show();
