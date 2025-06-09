@@ -158,16 +158,12 @@ class BotMessageBottom extends ConsumerWidget {
         BranchSwitcher(msg, index),
         if (msg.modelName != null) 4.w,
         if (msg.modelName != null)
-          Container(
-            alignment: Alignment.centerRight,
-            constraints: const BoxConstraints(minHeight: 36),
-            child: Expanded(
-              child: T(
-                msg.modelName!,
-                s: TS(c: primaryColor.q(.8), s: 10),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+          Expanded(
+            child: T(
+              msg.modelName!,
+              s: TS(c: primaryColor.q(.8), s: 10),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         modeWidget,
