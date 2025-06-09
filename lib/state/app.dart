@@ -12,11 +12,11 @@ class _App extends RawApp {
   late final noteZh = qs<List<String>>([]);
   late final noteEn = qs<List<String>>([]);
   late final modelConfig = qs<List<JSON>>([]);
-  late final androidUrl = qsn<String?>(null);
-  late final androidApkUrl = qsn<String?>(null);
-  late final iosUrl = qsn<String>();
-  late final shareChatQrCodeZh = qsn<String?>(null);
-  late final shareChatQrCodeEn = qsn<String?>(null);
+  late final androidUrl = qs<String?>(null);
+  late final androidApkUrl = qs<String?>(null);
+  late final iosUrl = qs<String?>(null);
+  late final shareChatQrCodeZh = qs<String?>(null);
+  late final shareChatQrCodeEn = qs<String?>(null);
 
   late final newVersionDialogShown = qs(false);
 
