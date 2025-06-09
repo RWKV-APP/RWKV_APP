@@ -25,6 +25,16 @@
       ]
     },
     {
+      "name": "debug (NoRemoteConfig)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "args": [
+        "--dart-define=disableRemoteConfig=true"
+      ]
+    },
+    {
       "name": "profile",
       "request": "launch",
       "type": "dart",
