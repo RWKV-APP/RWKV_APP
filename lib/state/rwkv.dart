@@ -288,8 +288,23 @@ extension $RWKVLoad on _RWKV {
     required String modelPath,
     required Backend backend,
     required bool enableReasoning,
+    FileInfo? fileInfo,
   }) async {
     qq;
+
+    if (P.chat.receivingTokens.q) {
+      Alert.warning(S.current.please_wait_for_the_model_to_generate);
+      return;
+    }
+
+    // ignore: unnecessary_this
+    if (this.loading.q) {
+      Alert.info(S.current.please_wait_for_the_model_to_load);
+      return;
+    }
+
+    P.rwkv.clearStates();
+
     _loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -336,6 +351,8 @@ extension $RWKVLoad on _RWKV {
     await resetMaxLength(enableReasoning: enableReasoning);
     send(to_rwkv.GetSamplerParams());
     _loading.q = false;
+
+    if (fileInfo != null) currentModel.q = fileInfo;
   }
 
   FV loadOthello() async {

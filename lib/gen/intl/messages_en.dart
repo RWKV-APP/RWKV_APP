@@ -408,6 +408,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Turn transfer"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Ultra Large (140%)"),
+    "unzipping": MessageLookupByLibrary.simpleMessage("Unzipping..."),
     "update_now": MessageLookupByLibrary.simpleMessage("Update now"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("Use it now"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(

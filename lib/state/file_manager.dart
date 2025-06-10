@@ -29,6 +29,8 @@ class _FileManager {
   late final ttsCores = qs<Set<FileInfo>>({});
 
   late final downloader = bd.FileDownloader();
+
+  late final unzipping = qs(false);
 }
 
 /// Public methods

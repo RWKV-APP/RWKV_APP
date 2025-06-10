@@ -1,9 +1,11 @@
 // ignore: unused_import
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
@@ -16,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/state/p.dart';
+import 'package:archive/archive_io.dart';
+import 'package:path/path.dart' as path;
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -58,18 +62,9 @@ class ModelItem extends ConsumerWidget {
 
   FV _onStartTapInChat() async {
     qq;
-    if (P.chat.receivingTokens.q) {
-      Alert.warning(S.current.please_wait_for_the_model_to_generate);
-      return;
-    }
-
-    if (P.rwkv.loading.q) {
-      Alert.info(S.current.please_wait_for_the_model_to_load);
-      return;
-    }
 
     final modelSize = fileInfo.modelSize ?? 0.1;
-    if (modelSize < 1.5) {
+    if (modelSize < 1.5 && !kDebugMode) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
@@ -84,21 +79,49 @@ class ModelItem extends ConsumerWidget {
     final localFile = P.fileManager.locals(fileInfo).q;
     final modelPath = localFile.targetPath;
     final backend = fileInfo.backend;
+    final modelPathForCoreML = modelPath.replaceAll(".zip", "");
+
+    if (backend == Backend.coreml) {
+      P.fileManager.unzipping.q = true;
+      final from = modelPath;
+      final to = path.dirname(modelPath);
+      final startMS = HF.debugShorterMS;
+      await compute((List<String> args) async {
+        final zipPath = args[0];
+        final targetFolder = args[1];
+        final unzipPath = args[2];
+        final exists = await Directory(unzipPath).exists();
+        if (!exists) {
+          qqw("Unzipped directory not found: $unzipPath");
+          qqw("unzipping...");
+          await extractFileToDisk(zipPath, targetFolder);
+        } else {
+          qqw("Unzipped directory found: $unzipPath");
+          qqw("Skipping unzip");
+        }
+      }, [from, to, modelPathForCoreML]);
+      final endMS = HF.debugShorterMS;
+      qqq("extract time: ${endMS - startMS}");
+      P.fileManager.unzipping.q = false;
+    }
+
+    if (backend == Backend.coreml) {
+      qqr("Using coreml");
+    }
 
     try {
-      P.rwkv.clearStates();
       if (!Config.enableConversation) P.chat.clearMessages();
       await P.rwkv.loadChat(
-        modelPath: modelPath,
+        modelPath: backend == Backend.coreml ? modelPathForCoreML : modelPath,
         backend: backend!,
         enableReasoning: fileInfo.isReasoning,
+        fileInfo: fileInfo,
       );
     } catch (e) {
       Alert.error(e.toString());
       return;
     }
 
-    P.rwkv.currentModel.q = fileInfo;
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     pop();
   }
@@ -118,6 +141,7 @@ class ModelItem extends ConsumerWidget {
     final loading = ref.watch(P.rwkv.loading);
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
+    final unzipping = ref.watch(P.fileManager.unzipping);
 
     late final String startTitle;
 
@@ -130,6 +154,13 @@ class ModelItem extends ConsumerWidget {
       case DemoType.tts:
       case DemoType.world:
         startTitle = s.start_to_chat;
+    }
+
+    late final String loadingTitle;
+    if (unzipping) {
+      loadingTitle = s.unzipping;
+    } else {
+      loadingTitle = s.loading;
     }
 
     final qw = ref.watch(P.app.qw);
@@ -162,12 +193,12 @@ class ModelItem extends ConsumerWidget {
                   onTap: _onStartTap,
                   child: C(
                     decoration: BD(
-                      color: loading ? kCG.q(.5) : kCG,
+                      color: (loading || unzipping) ? kCG.q(.5) : kCG,
                       borderRadius: 8.r,
                     ),
                     padding: const EI.a(8),
                     child: T(
-                      loading ? s.loading : startTitle,
+                      loading || unzipping ? loadingTitle : startTitle,
                       s: TS(c: qw),
                     ),
                   ),

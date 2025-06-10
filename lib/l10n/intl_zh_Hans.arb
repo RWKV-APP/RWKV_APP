@@ -218,5 +218,6 @@
   "download_app": "下载App",
   "end": "完",
   "from_model": "来自模型: %s",
-  "explore_rwkv": "探索RWKV"
+  "explore_rwkv": "探索RWKV",
+  "unzipping": "解压中..."
 }

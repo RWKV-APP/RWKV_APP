@@ -1571,6 +1571,11 @@ class S {
   String get explore_rwkv {
     return Intl.message('探索RWKV', name: 'explore_rwkv', desc: '', args: []);
   }
+
+  /// `解压中...`
+  String get unzipping {
+    return Intl.message('解压中...', name: 'unzipping', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

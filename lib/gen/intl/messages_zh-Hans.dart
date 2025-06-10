@@ -306,6 +306,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "turn_transfer": MessageLookupByLibrary.simpleMessage("落子权转移"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("超大 (140%)"),
+    "unzipping": MessageLookupByLibrary.simpleMessage("解压中..."),
     "update_now": MessageLookupByLibrary.simpleMessage("立即更新"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("立即使用"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(

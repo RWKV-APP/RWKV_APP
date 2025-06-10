@@ -219,5 +219,6 @@
   "end": "End",
   "from_model": "From Model: %s",
   "source_code": "Source Code",
-  "explore_rwkv": "Explore RWKV"
+  "explore_rwkv": "Explore RWKV",
+  "unzipping": "Unzipping..."
 }
