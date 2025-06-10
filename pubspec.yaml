@@ -1,5 +1,5 @@
 name: zone
-description: "A new Flutter project."
+description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
 version: 1.7.5+434
 
