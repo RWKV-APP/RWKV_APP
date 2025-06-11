@@ -293,7 +293,7 @@ extension $RWKVLoad on _RWKV {
     _loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
-    final tokenizerPath = await fromAssetsToTemp(Assets.config.chat.bRwkvVocabV20230424);
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
 
     await _ensureQNNCopied();
 
@@ -345,14 +345,14 @@ extension $RWKVLoad on _RWKV {
     late final String modelPath;
     late final Backend backend;
 
-    final tokenizerPath = await fromAssetsToTemp(Assets.config.othello.bOthelloVocab);
+    final tokenizerPath = await fromAssetsToTemp("assets/config/othello/b_othello_vocab.txt");
 
     if (Platform.isIOS || Platform.isMacOS) {
-      modelPath = await fromAssetsToTemp(Assets.model.othello.rwkv7Othello26mL10D448Extended);
+      modelPath = await fromAssetsToTemp("assets/model/othello/rwkv7_othello_26m_L10_D448_extended.st");
       backend = Backend.webRwkv;
     } else {
-      modelPath = await fromAssetsToTemp(Assets.model.othello.rwkv7Othello26mL10D448ExtendedNcnnBin);
-      await fromAssetsToTemp(Assets.model.othello.rwkv7Othello26mL10D448ExtendedNcnnParam);
+      modelPath = await fromAssetsToTemp("assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.bin");
+      await fromAssetsToTemp("assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.param");
       backend = Backend.ncnn;
     }
 

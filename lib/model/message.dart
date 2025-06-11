@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:convert';
+
+import 'package:zone/db/db.dart';
 
 enum MessageType {
   text,
@@ -112,6 +115,44 @@ final class Message extends Equatable {
       ttsFilePaths: json["ttsFilePaths"] as List<String>?,
       modelName: json["modelName"] as String?,
       runningMode: json["runningMode"] as String?,
+    );
+  }
+
+  factory Message.fromMsgData(MsgData msgData) {
+    List<double>? ttsPerWavProgress;
+    if (msgData.ttsPerWavProgress != null && msgData.ttsPerWavProgress!.isNotEmpty) {
+      final List<dynamic> parsed = json.decode(msgData.ttsPerWavProgress!);
+      ttsPerWavProgress = parsed.cast<double>();
+    }
+
+    List<String>? ttsFilePaths;
+    if (msgData.ttsFilePaths != null && msgData.ttsFilePaths!.isNotEmpty) {
+      final List<dynamic> parsed = json.decode(msgData.ttsFilePaths!);
+      ttsFilePaths = parsed.cast<String>();
+    }
+
+    return Message(
+      id: msgData.id,
+      content: msgData.content,
+      isMine: msgData.isMine,
+      changing: msgData.changing,
+      type: MessageType.values.firstWhere((e) => e.name == msgData.type),
+      imageUrl: msgData.imageUrl,
+      audioUrl: msgData.audioUrl,
+      audioLength: msgData.audioLength,
+      isReasoning: msgData.isReasoning,
+      paused: msgData.paused,
+      ttsTarget: msgData.ttsTarget,
+      ttsSpeakerName: msgData.ttsSpeakerName,
+      ttsSourceAudioPath: msgData.ttsSourceAudioPath,
+      ttsInstruction: msgData.ttsInstruction,
+      ttsCFMSteps: msgData.ttsCFMSteps,
+      isSensitive: msgData.isSensitive,
+      ttsOverallProgress: msgData.ttsOverallProgress,
+      ttsPerWavProgress: ttsPerWavProgress,
+      ttsFilePaths: ttsFilePaths,
+      modelName: msgData.modelName,
+      runningMode: msgData.runningMode,
     );
   }
 

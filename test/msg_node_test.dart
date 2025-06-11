@@ -322,23 +322,23 @@ void main() {
       expect(root.latestMsgIds, [0, 1, 2]);
       expect(root.wholeLatestMsgId, 2);
 
-      // ... (继续你“随机测试 B”的逻辑)
+      // ... (继续你"随机测试 B"的逻辑)
       final userMsg1 = botMsg0.add(MsgNode(3)); // botMsg0.latest = 3
       final botMsg1 = userMsg1.add(MsgNode(4)); // userMsg1.latest = 4
       expect(root.latestMsgIds, [0, 1, 2, 3, 4]);
 
       // 编辑了用户消息 2 (原始测试暗示编辑会在 botMsg1 处创建新分支)
-      // 你的原始“随机测试 B”实际上是通过向先前节点添加来测试分支。
-      // “编辑用户消息 2” -> 假设这意味着向 botMsg1 (节点 4) 添加新的回复
+      // 你的原始"随机测试 B"实际上是通过向先前节点添加来测试分支。
+      // "编辑用户消息 2" -> 假设这意味着向 botMsg1 (节点 4) 添加新的回复
       // 原始序列是: 0-1-2-3-4-5-6-7-8
-      // 然后“编辑用户消息 1” (节点 3) 是节点 4 (botMsg1) 的父节点
+      // 然后"编辑用户消息 1" (节点 3) 是节点 4 (botMsg1) 的父节点
       // 实际操作是: botMsg0.add(MsgNode(9)) -> userMsg4
 
       // 重现类似场景:
       // 原始线: 0 -> 1 -> 2 -> 3 -> 4
       // 此时，root.latest=1, 节点(1).latest=2, 节点(2).latest=3, 节点(3).latest=4
 
-      // 用户通过从节点(2) (botMsg0) 分支进行“编辑”
+      // 用户通过从节点(2) (botMsg0) 分支进行"编辑"
       final userMsg4 = botMsg0.add(MsgNode(9)); // botMsg0.latest = 9。旧子节点(3)仍然存在。
       expect(root.latestMsgIds, [0, 1, 2, 9], reason: "路径应该跟随 botMsg0 的新 latest");
       expect(botMsg0.children.length, 2); // 节点(3) 和 节点(9)
@@ -348,7 +348,7 @@ void main() {
       expect(root.latestMsgIds, [0, 1, 2, 9, 10]);
       expect(root.wholeLatestMsgId, 10);
 
-      // “通过点击第二个用户消息下方的切换按钮，切回了第一条线”
+      // "通过点击第二个用户消息下方的切换按钮，切回了第一条线"
       // 这意味着 botMsg0.latest 被设置回节点(3)
       botMsg0.latest = userMsg1; // userMsg1 是节点(3)
       expect(root.latestMsgIds, [0, 1, 2, 3, 4], reason: "路径恢复到节点(4)之前的原始分支");
@@ -358,6 +358,121 @@ void main() {
       final _ = botMsg1.add(MsgNode(15));
       expect(root.latestMsgIds, [0, 1, 2, 3, 4, 15]);
       expect(root.wholeLatestMsgId, 15);
+    });
+  });
+
+  /// 💾 **序列化和反序列化测试**
+  /// ---
+  group('序列化和反序列化', () {
+    test('复杂的树结构可以被正确序列化和反序列化', () {
+      // 1. 构建一个复杂的树
+      // 结构:
+      // 0 (root)
+      // |- 1 (latest for 0 is 4)
+      // |  |- 2
+      // |  |- 3 (latest for 1)
+      // |     |- 5
+      // |- 4 (latest for 0)
+      final node1 = root.add(MsgNode(1));
+      node1.add(MsgNode(2)); // branch 1
+      final node3 = node1.add(MsgNode(3)); // branch 2, node1.latest=3
+      node3.add(MsgNode(5)); // node3.latest=5
+
+      root.add(MsgNode(4)); // root.latest=4
+
+      // 2. 序列化
+      final jsonString = root.toJson();
+      expect(jsonString, isA<String>());
+
+      // 3. 反序列化
+      final newRoot = MsgNode.fromJson(jsonString);
+
+      // 4. 验证结构
+      expect(newRoot.id, root.id);
+      expect(newRoot.latest?.id, root.latest?.id);
+      expect(newRoot.children.map((e) => e.id).toList(), containsAll([1, 4]));
+
+      // 验证反序列化后的节点
+      final newNode1 = newRoot.findNodeByMsgId(1);
+      final newNode2 = newRoot.findNodeByMsgId(2);
+      final newNode3 = newRoot.findNodeByMsgId(3);
+      final newNode4 = newRoot.findNodeByMsgId(4);
+      final newNode5 = newRoot.findNodeByMsgId(5);
+
+      expect(newNode1, isNotNull);
+      expect(newNode2, isNotNull);
+      expect(newNode3, isNotNull);
+      expect(newNode4, isNotNull);
+      expect(newNode5, isNotNull);
+
+      // 验证 parent-child 关系
+      expect(newNode1?.parent?.id, newRoot.id);
+      expect(newNode4?.parent?.id, newRoot.id);
+      expect(newNode2?.parent?.id, newNode1?.id);
+      expect(newNode3?.parent?.id, newNode1?.id);
+      expect(newNode5?.parent?.id, newNode3?.id);
+
+      // 验证 children
+      expect(newRoot.children.map((c) => c.id).toSet(), {1, 4});
+      expect(newNode1?.children.map((c) => c.id).toSet(), {2, 3});
+      expect(newNode3?.children.map((c) => c.id).toSet(), {5});
+      expect(newNode4?.children, isEmpty);
+
+      // 验证 latest 关系
+      expect(newRoot.latest?.id, 4);
+      expect(newNode1?.latest?.id, 3);
+      expect(newNode3?.latest?.id, 5);
+      expect(newNode2?.latest, isNull);
+      expect(newNode4?.latest, isNull);
+      expect(newNode5?.latest, isNull);
+
+      // 验证 root 关系
+      expect(newNode1?.root?.id, newRoot.id);
+      expect(newNode5?.root?.id, newRoot.id);
+
+      // 验证 wholeLatestNode
+      expect(newRoot.wholeLatestNode.id, 4, reason: "The very last node added to the root was 4");
+    });
+
+    test('单链结构可以被正确序列化和反序列化', () {
+      // 1. 构建一个简单的链
+      // 0 -> 1 -> 2
+      builder.buildChain([1, 2]);
+
+      // 2. 序列化和反序列化
+      final jsonString = root.toJson();
+      final newRoot = MsgNode.fromJson(jsonString);
+
+      // 3. 验证
+      expect(newRoot.id, 0);
+      expect(newRoot.latest?.id, 1);
+      final newNode1 = newRoot.findNodeByMsgId(1);
+      expect(newNode1, isNotNull);
+      expect(newNode1?.latest?.id, 2);
+      final newNode2 = newRoot.findNodeByMsgId(2);
+      expect(newNode2, isNotNull);
+      expect(newNode2?.latest, isNull);
+
+      expect(newRoot.latestMsgIds, [0, 1, 2]);
+      expect(newRoot.wholeLatestMsgId, 2);
+    });
+
+    test('从非根节点调用 toJson 应该序列化整个树', () {
+      // 1. 构建树
+      final node1 = root.add(MsgNode(1));
+      node1.add(MsgNode(2));
+
+      // 2. 从 node1 调用 toJson
+      final jsonStringFromNode1 = node1.toJson();
+      final jsonStringFromRoot = root.toJson();
+
+      expect(jsonStringFromNode1, jsonStringFromRoot);
+
+      // 3. 反序列化并验证
+      final newRoot = MsgNode.fromJson(jsonStringFromNode1);
+      expect(newRoot.id, 0);
+      expect(newRoot.findNodeByMsgId(1), isNotNull);
+      expect(newRoot.findNodeByMsgId(2), isNotNull);
     });
   });
 }
