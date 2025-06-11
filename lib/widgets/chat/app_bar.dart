@@ -57,7 +57,6 @@ class ChatAppBar extends ConsumerWidget {
 
     final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
-    final qb = ref.watch(P.app.qb);
 
     return ClipRRect(
       child: BackdropFilter(

@@ -94,7 +94,6 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
 
     // final changing = true;
     final changing = widget.msg.changing;
-    final primary = Theme.of(context).colorScheme.primary;
 
     final primaryColor = Theme.of(context).colorScheme.primary;
     final length = _length;

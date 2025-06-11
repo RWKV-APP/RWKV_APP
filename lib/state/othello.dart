@@ -374,18 +374,6 @@ extension _$Othello on _Othello {
     qq;
 
     final state = this.state.q;
-    final blackTurn = this.blackTurn.q;
-
-    late final CellType targetCellType;
-    late final CellType currentCellType;
-
-    if (blackTurn) {
-      targetCellType = CellType.white;
-      currentCellType = CellType.black;
-    } else {
-      targetCellType = CellType.black;
-      currentCellType = CellType.white;
-    }
 
     final eatCountMatrixForBlack = List.generate(8, (_) => List.filled(8, 0));
     final eatCountMatrixForWhite = List.generate(8, (_) => List.filled(8, 0));

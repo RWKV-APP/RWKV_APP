@@ -55,7 +55,6 @@ class ThemeSelector extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
     final primary = Theme.of(context).colorScheme.primary;
-    final themeMode = ref.watch(P.preference.themeMode);
 
     final items = <Widget>[
       FormItem(

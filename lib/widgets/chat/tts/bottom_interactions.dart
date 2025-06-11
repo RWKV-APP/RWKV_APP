@@ -260,12 +260,11 @@ class _SpkButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final qw = ref.watch(P.app.qw);
-    final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final primary = Theme.of(context).colorScheme.primary;
     final demoType = ref.watch(P.app.demoType);
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
-    final intonationShown = ref.watch(P.tts.intonationShown);
-    final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
+    ref.watch(P.tts.intonationShown);
+    ref.watch(P.tts.audioInteractorShown);
     final spkShown = ref.watch(P.tts.spkShown);
     return GD(
       onTap: P.tts.onSpkButtonPressed,
@@ -571,7 +570,6 @@ class _Instruction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasFocus = ref.watch(P.tts.hasFocus);
     final interactingInstruction = ref.watch(P.tts.interactingInstruction);
-    final primary = Theme.of(context).colorScheme.primary;
     final selectSpkName = ref.watch(P.tts.selectedSpkName);
     return Stack(
       children: [
@@ -707,8 +705,7 @@ class _InstructOptions extends ConsumerWidget {
     final interactingInstruction = ref.watch(P.tts.interactingInstruction);
     final primary = Theme.of(context).colorScheme.primary;
     final options = interactingInstruction.options;
-    final selectedIndex = ref.watch(P.tts.instructions(interactingInstruction));
-    final selectedInstruction = selectedIndex != null ? options[selectedIndex] : null;
+    ref.watch(P.tts.instructions(interactingInstruction));
     final qb = ref.watch(P.app.qb);
     return GD(
       onTap: () {},

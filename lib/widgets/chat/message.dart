@@ -257,17 +257,6 @@ class Message extends ConsumerWidget {
         break;
     }
 
-    bool showUserEditButton = true;
-    bool showUserCopyButton = true;
-
-    switch (worldType) {
-      case null:
-        break;
-      default:
-        showUserEditButton = false;
-        showUserCopyButton = false;
-    }
-
     EI padding = const EI.o(t: 12, l: 12, r: 12);
     Border? border = Border.all(color: primary.q(.2));
     double radius = 20;
@@ -310,8 +299,6 @@ class Message extends ConsumerWidget {
     final screenWidth = ref.watch(P.app.screenWidth);
     final screenHeight = ref.watch(P.app.screenHeight);
     final rawMaxWidth = math.min(screenWidth, screenHeight);
-
-    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
     // 如果是快速考 <think>\n<think>, 则不展示思考过程
     final isQuickThinking = cotContent.trim().isEmpty;

@@ -344,7 +344,7 @@ void main() {
       expect(botMsg0.children.length, 2); // 节点(3) 和 节点(9)
       expect(botMsg0.latest?.id, 9);
 
-      final botMsg4 = userMsg4.add(MsgNode(10)); // userMsg4.latest = 10
+      userMsg4.add(MsgNode(10)); // userMsg4.latest = 10
       expect(root.latestMsgIds, [0, 1, 2, 9, 10]);
       expect(root.wholeLatestMsgId, 10);
 

@@ -602,7 +602,6 @@ class _Grid extends ConsumerWidget {
     final rulesHorizontalNames = ["a", "b", "c", "d", "e", "f", "g", "h"];
     final rulesVerticalNames = ["1", "2", "3", "4", "5", "6", "7", "8"];
     final labelSize = 16.0;
-    final qb = ref.watch(P.app.qb);
 
     return LayoutBuilder(
       builder: (context, constraints) {

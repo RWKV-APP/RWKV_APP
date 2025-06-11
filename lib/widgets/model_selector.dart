@@ -126,15 +126,9 @@ class ModelSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final memUsed = ref.watch(P.device.memUsed);
-    final memFree = ref.watch(P.device.memFree);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
 
-    final memUsedString = gbDisplay(memUsed);
-    final memFreeString = gbDisplay(memFree);
     final demoType = ref.watch(P.app.demoType);
-    final availableModels = ref.watch(P.fileManager.availableModels);
-    final ttsCores = ref.watch(P.fileManager.ttsCores);
     final qb = ref.watch(P.app.qb);
 
     return ClipRRect(

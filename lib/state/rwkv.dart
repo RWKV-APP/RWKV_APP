@@ -861,7 +861,6 @@ extension _$RWKV on _RWKV {
         final done = res.done;
         final success = res.success;
         final error = res.error;
-        final step = res.step;
 
         if (done) {
           if (success == true) {

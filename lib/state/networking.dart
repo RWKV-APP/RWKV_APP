@@ -367,7 +367,6 @@ dynamic _deal(
   } catch (e) {
     if (ea.contains(_EA.console)) {
       if (kDebugMode) {
-        final body = jsonDecode(res.body);
         qqe("Can not decode json string");
         qqe(res.body);
         print("😡 ${"statusCode".codeToName}: ${res.contentLength}");
@@ -445,28 +444,5 @@ dynamic _sharedDeal(
     return null;
   }
 
-  final signout = ea.contains(_EA.signOut);
-
   return body;
-
-  // if (code == 0) {
-  //   return body;
-  // }
-
-  // switch (code) {
-  //   case 100020:
-  //     if (logError) qqe("Token expired");
-  //   case 100021:
-  //     if (logError) qqe("Token expired");
-  //   default:
-  //     if (alert) {
-  //       final msg = body["msg"];
-  //       if (msg is String) Alert.error(msg);
-  //     }
-  //     if (logError) qqe("Code is not 0");
-  //     if (logError) qqe("Calling: ${res.request?.method} ${res.request?.url.path}");
-  //     if (logError) qqe("$body");
-  // }
-
-  // return null;
 }
