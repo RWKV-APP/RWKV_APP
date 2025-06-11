@@ -345,14 +345,14 @@ extension $RWKVLoad on _RWKV {
     late final String modelPath;
     late final Backend backend;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/othello/b_othello_vocab.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_othello_vocab.txt");
 
     if (Platform.isIOS || Platform.isMacOS) {
-      modelPath = await fromAssetsToTemp("assets/model/othello/rwkv7_othello_26m_L10_D448_extended.st");
+      modelPath = await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended.st");
       backend = Backend.webRwkv;
     } else {
-      modelPath = await fromAssetsToTemp("assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.bin");
-      await fromAssetsToTemp("assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.param");
+      modelPath = await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended-ncnn.bin");
+      await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended-ncnn.param");
       backend = Backend.ncnn;
     }
 

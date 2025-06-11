@@ -123,8 +123,8 @@ class AppDatabase extends _$AppDatabase {
   Future<MsgNode?> getConversationById(int id) async {
     return null;
     // TODO: 为 MsgNode 实现 greateAt 方法, 然后根据 createdAt 查询
-    final conversationData = await (select(conversation)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
-    return conversationData != null ? MsgNode.fromJson(conversationData.data) : null;
+    // final conversationData = await (select(conversation)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    // return conversationData != null ? MsgNode.fromJson(conversationData.data) : null;
   }
 
   Future<bool> saveConversation(MsgNode msgNode) async {
