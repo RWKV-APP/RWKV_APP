@@ -6,4 +6,5 @@ abstract class Args {
   static const disableRemoteConfig = bool.fromEnvironment("disableRemoteConfig", defaultValue: false);
   static const disableAutoShowOfWeightsPanel = bool.fromEnvironment("disableAutoShowOfWeightsPanel", defaultValue: false);
   static const debuggingThemes = bool.fromEnvironment("debuggingThemes", defaultValue: false);
+  static const autoTriggerPage = bool.fromEnvironment("autoTriggerPage", defaultValue: false);
 }

@@ -22,8 +22,10 @@ class ThemeSelector extends ConsumerWidget {
     if (_shown.q) return;
     _shown.q = true;
     final context = getContext();
-    if (context == null) return;
-    if (!context.mounted) return;
+    if (context == null || !context.mounted) {
+      _shown.q = false;
+      return;
+    }
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,

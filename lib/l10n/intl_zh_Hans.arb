@@ -229,5 +229,6 @@
   "stop": "停止",
   "pause": "暂停",
   "more": "更多",
-  "str_model_selection_dialog_hint": "推荐至少选择1.5B模型，更大的2.9B模型更好"
+  "str_model_selection_dialog_hint": "推荐至少选择1.5B模型，更大的2.9B模型更好",
+  "settings": "设置"
 }

@@ -177,6 +177,12 @@ extension _$App on _App {
     preferredThemeMode.lv(_syncTheme, fireImmediately: true);
     light.lv(_syncTheme, fireImmediately: true);
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
+
+    if (Args.autoTriggerPage) {
+      HF.wait(2000).then((_) {
+        Pager.toggle();
+      });
+    }
   }
 
   FV _syncTheme() async {

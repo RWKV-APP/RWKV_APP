@@ -366,6 +366,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "set_the_value_of_grid": MessageLookupByLibrary.simpleMessage(
       "Set Grid Value",
     ),
+    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "share_chat": MessageLookupByLibrary.simpleMessage("Share Chat"),
     "show_stack": MessageLookupByLibrary.simpleMessage("Show Thought Stack"),
