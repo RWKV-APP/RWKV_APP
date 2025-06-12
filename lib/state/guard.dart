@@ -13,6 +13,7 @@ extension $Guard on _Guard {
       final (text, blockedWords) = args;
       for (final word in blockedWords) {
         final contains = text.contains(word);
+        if (contains) qqw(word);
         if (contains) return true;
       }
       return false;

@@ -118,7 +118,7 @@ class _TextField extends ConsumerWidget {
         onTapOutside: _onTapOutside,
         keyboardType: keyboardType,
         enableSuggestions: true,
-        textInputAction: TextInputAction.send,
+        textInputAction: TextInputAction.newline,
         maxLines: 10,
         minLines: 1,
         decoration: InputDecoration(
