@@ -137,7 +137,7 @@ class _CompletionState extends ConsumerState<Completion> {
       return;
     }
     qqq('submit->$prompt');
-    final contains = await checkSensitive(prompt);
+    final contains = P.guard.isSensitiveSync(prompt);
     if (contains) {
       setState(() {
         canResume = false;
@@ -168,6 +168,14 @@ class _CompletionState extends ConsumerState<Completion> {
     final prompt = controllerPrompt.text.trim();
     final output = controllerOutput.text.trim();
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    final contains = P.guard.isSensitiveSync(prompt);
+    if (contains) {
+      setState(() {
+        canResume = false;
+        isSensitive = true;
+      });
+      return;
+    }
     qqq('resume->$prompt');
     P.chat.completion(prompt + output);
   }

@@ -20,6 +20,17 @@ extension $Guard on _Guard {
     }, (text, blockedWords));
     return res;
   }
+
+  bool isSensitiveSync(String text) {
+    final blockedWords = _blockedWords.q;
+    if (blockedWords.isEmpty) return false;
+    for (final word in blockedWords) {
+      final contains = text.contains(word);
+      if (contains) qqw(word);
+      if (contains) return true;
+    }
+    return false;
+  }
 }
 
 /// Private methods
