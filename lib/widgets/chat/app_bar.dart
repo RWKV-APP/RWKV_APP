@@ -46,6 +46,7 @@ class ChatAppBar extends ConsumerWidget {
     final currentModel = ref.watch(P.rwkv.currentModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
     final selectMessageMode = ref.watch(P.chat.selectMessageMode);
+    final completionMode = ref.watch(P.chat.completionMode);
 
     String displayName = s.click_to_select_model;
     if (currentGroupInfo != null) {
@@ -54,33 +55,34 @@ class ChatAppBar extends ConsumerWidget {
       displayName = currentModel.name;
     }
 
-    final theme =Theme.of(context);
+    final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     final qb = ref.watch(P.app.qb);
 
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-          child: Theme(
-            data: theme.copyWith(
-              appBarTheme: theme.appBarTheme.copyWith(
-                backgroundColor: scaffoldBackgroundColor,
-              )
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Theme(
+          data: theme.copyWith(
+            appBarTheme: theme.appBarTheme.copyWith(
+              backgroundColor: scaffoldBackgroundColor,
             ),
-            child: selectMessageMode
-                ? _SelectMessageAppBar() //
-                : _buildAppBar(context, displayName, primary, demoType),
           ),
+          child: selectMessageMode
+              ? _SelectMessageAppBar() //
+              : _buildAppBar(context, displayName, primary, demoType, completionMode),
         ),
       ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context, String displayName, Color primary, DemoType demoType) {
+  Widget _buildAppBar(
+    BuildContext context,
+    String displayName,
+    Color primary,
+    DemoType demoType,
+    bool completionMode,
+  ) {
     return AppBar(
       elevation: 0,
       centerTitle: true,
@@ -137,13 +139,54 @@ class ChatAppBar extends ConsumerWidget {
         ],
       ),
       actions: [
-        if (demoType == DemoType.chat) const _NewConversationButton(),
-        if (demoType != DemoType.sudoku)
+        if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
+        if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
+        if (demoType != DemoType.chat && demoType != DemoType.sudoku)
           IconButton(
             onPressed: onSettingsPressed,
             icon: const Icon(Icons.tune),
           ),
       ],
+    );
+  }
+
+  Widget _buildMorePopupMenuButton(BuildContext context, bool completionMode) {
+    return PopupMenuButton(
+      onSelected: (v) {
+        switch (v) {
+          case 1:
+            if (!checkModelSelection()) return;
+            P.chat.toggleCompletionMode();
+            break;
+          case 2:
+            onSettingsPressed();
+            break;
+        }
+      },
+      itemBuilder: (v) {
+        return [
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                completionMode ? const Icon(Icons.chat_rounded) : const Icon(Icons.edit_note_rounded),
+                8.w,
+                Text(completionMode ? S.current.chat_mode : S.current.completion_mode),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: Row(
+              children: [
+                const Icon(Icons.settings_rounded),
+                8.w,
+                Text(S.of(context).session_configuration),
+              ],
+            ),
+          ),
+        ];
+      },
     );
   }
 }

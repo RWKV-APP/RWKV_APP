@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1570,6 +1569,51 @@ class S {
   /// `探索RWKV`
   String get explore_rwkv {
     return Intl.message('探索RWKV', name: 'explore_rwkv', desc: '', args: []);
+  }
+
+  /// `补全模式`
+  String get completion_mode {
+    return Intl.message('补全模式', name: 'completion_mode', desc: '', args: []);
+  }
+
+  /// `对话模式`
+  String get chat_mode {
+    return Intl.message('对话模式', name: 'chat_mode', desc: '', args: []);
+  }
+
+  /// `提示词`
+  String get prompt {
+    return Intl.message('提示词', name: 'prompt', desc: '', args: []);
+  }
+
+  /// `输出`
+  String get output {
+    return Intl.message('输出', name: 'output', desc: '', args: []);
+  }
+
+  /// `提交`
+  String get submit {
+    return Intl.message('提交', name: 'submit', desc: '', args: []);
+  }
+
+  /// `重新生成`
+  String get regenerate {
+    return Intl.message('重新生成', name: 'regenerate', desc: '', args: []);
+  }
+
+  /// `恢复`
+  String get resume {
+    return Intl.message('恢复', name: 'resume', desc: '', args: []);
+  }
+
+  /// `停止`
+  String get stop {
+    return Intl.message('停止', name: 'stop', desc: '', args: []);
+  }
+
+  /// `暂停`
+  String get pause {
+    return Intl.message('暂停', name: 'pause', desc: '', args: []);
   }
 }
 

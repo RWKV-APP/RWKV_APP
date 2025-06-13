@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chat_empty_message": MessageLookupByLibrary.simpleMessage(
       "Please enter a message",
     ),
+    "chat_mode": MessageLookupByLibrary.simpleMessage("Chat Mode"),
     "chat_model_name": MessageLookupByLibrary.simpleMessage("Model name"),
     "chat_please_select_a_model": MessageLookupByLibrary.simpleMessage(
       "Please select a model",
@@ -106,6 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Follow system appearance",
     ),
+    "completion_mode": MessageLookupByLibrary.simpleMessage("Completion Mode"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Continue Download",
@@ -259,7 +261,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Or start a new empty chat",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
+    "output": MessageLookupByLibrary.simpleMessage("Output"),
     "overseas": MessageLookupByLibrary.simpleMessage(""),
+    "pause": MessageLookupByLibrary.simpleMessage("Pause"),
     "players": MessageLookupByLibrary.simpleMessage("Players"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "Playing partially generated audio",
@@ -316,6 +320,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Prefer Chinese Inference",
     ),
     "prefill": MessageLookupByLibrary.simpleMessage("Prefill"),
+    "prompt": MessageLookupByLibrary.simpleMessage("Prompt"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ Group 2"),
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
@@ -327,9 +332,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "recording_your_voice": MessageLookupByLibrary.simpleMessage(
       "Recording your voice...",
     ),
+    "regenerate": MessageLookupByLibrary.simpleMessage("Regenerate"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining Time:"),
     "reselect_model": MessageLookupByLibrary.simpleMessage("Reselect model"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+    "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
@@ -378,9 +385,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_to_inference": MessageLookupByLibrary.simpleMessage(
       "Start Inference",
     ),
+    "stop": MessageLookupByLibrary.simpleMessage("Stop"),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "Storage permission not granted",
     ),
+    "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Easy"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Hard"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("Medium"),
