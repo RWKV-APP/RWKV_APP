@@ -17,7 +17,6 @@ import 'package:zone/route/router.dart';
 import 'package:zone/state/p.dart';
 import 'package:zone/widgets/form_item.dart';
 
-// TODO: @wangce move it to pages
 class Settings extends ConsumerWidget {
   static final _shown = qs(false);
 

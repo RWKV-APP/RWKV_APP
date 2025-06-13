@@ -78,7 +78,6 @@ class _PagerState extends ConsumerState<Pager> {
   }
 
   void _onPageChanged() async {
-    // TODO: @WangCe fix the bug at the first time
     final rawString = (Pager._newController.q.page ?? 0).toStringAsFixed(2);
     double v = double.tryParse(rawString) ?? .0;
     if (v > 1) v = 1;
