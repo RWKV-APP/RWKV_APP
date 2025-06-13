@@ -147,6 +147,8 @@ class _Preview extends ConsumerStatefulWidget {
 }
 
 class _PreviewState extends ConsumerState<_Preview> {
+  static const topCropForFixBadImage = 300.0;
+
   final keyRepaintBoundary = GlobalKey();
   late QrImage qrImage;
   late final ScrollController controller = ScrollController();
@@ -157,7 +159,10 @@ class _PreviewState extends ConsumerState<_Preview> {
     super.initState();
     final url = P.preference.isZhLang() ? P.app.shareChatQrCodeZh : P.app.shareChatQrCodeEn;
     qrImage = QrImage(QrCode(8, QrErrorCorrectLevel.H)..addData(url.q ?? "https://www.rwkv.com/"));
+    generatePreview();
+  }
 
+  void generatePreview() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         final file = await _generatePreview();
@@ -208,13 +213,22 @@ class _PreviewState extends ConsumerState<_Preview> {
     double lastScrolled = 0;
     while (true) {
       final remain = maxExtent - controller.position.pixels;
-      // FIXME: 尝试添加一个顶部的偏移量，空白区域，解决图片花屏问题
       ui.Image img = await repaintBoundary.toImage(pixelRatio: pixelRatio);
       width = img.width > width ? img.width : width;
       if (remain == 0 && i != 0) {
         final top = (step - lastScrolled) * pixelRatio;
         img = await _cropImage(img, Rect.fromLTRB(0, top, width.toDouble(), img.height.toDouble()));
       }
+      final topOffset = topCropForFixBadImage * pixelRatio;
+      img = await _cropImage(
+        img,
+        Rect.fromLTRB(
+          0,
+          topOffset,
+          img.width.toDouble(),
+          img.height.toDouble(),
+        ),
+      );
       canvas.drawImage(img, Offset(0, offsetY), paint);
       offsetY += img.height;
       i++;
@@ -265,31 +279,7 @@ class _PreviewState extends ConsumerState<_Preview> {
     final dark = ref.watch(P.app.dark);
 
     if (imagePreview == null) {
-      return Container(
-        height: double.infinity,
-        width: double.infinity,
-        color: Colors.black38,
-        child: Stack(
-          children: [
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: theme.colorScheme.surfaceContainer,
-                ),
-                padding: const EdgeInsets.all(24),
-                child: CircularProgressIndicator(strokeWidth: 4),
-              ),
-            ),
-            Positioned(
-              top: 20000,
-              left: 0,
-              right: 0,
-              child: _shot(theme, dark),
-            ),
-          ],
-        ),
-      );
+      return _generating(theme, dark);
     }
 
     return Container(
@@ -335,6 +325,34 @@ class _PreviewState extends ConsumerState<_Preview> {
     );
   }
 
+  Widget _generating(ThemeData theme, bool dark) {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      color: Colors.black38,
+      child: Stack(
+        children: [
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: theme.colorScheme.surfaceContainer,
+              ),
+              padding: const EdgeInsets.all(24),
+              child: CircularProgressIndicator(strokeWidth: 4),
+            ),
+          ),
+          Positioned(
+            top: 20000,
+            left: 0,
+            right: 0,
+            child: _shot(theme, dark),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _shot(ThemeData theme, bool dark) {
     return RepaintBoundary(
       key: keyRepaintBoundary,
@@ -346,6 +364,7 @@ class _PreviewState extends ConsumerState<_Preview> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              SizedBox(height: topCropForFixBadImage),
               const SizedBox(height: 12),
               _buildHeader(),
               Divider(height: 28, indent: 16, endIndent: 16, thickness: 0.5),
@@ -380,6 +399,7 @@ class _PreviewState extends ConsumerState<_Preview> {
   Widget _buildFooter(bool dark) {
     final now = DateTime.now();
     final date = now.toIso8601String().split('T')[0];
+    final version = P.app.version.q;
 
     final qrCode = SizedBox(
       width: 50,
@@ -394,7 +414,7 @@ class _PreviewState extends ConsumerState<_Preview> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(width: 16),
-        Text(date, style: TextStyle(fontSize: 10, color: Colors.grey)),
+        Text("v$version\n$date", style: TextStyle(fontSize: 10, color: Colors.grey)),
         Spacer(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -408,9 +428,9 @@ class _PreviewState extends ConsumerState<_Preview> {
         !dark
             ? qrCode
             : ColorFiltered(
-          colorFilter: ColorFilter.mode(Colors.white54, BlendMode.srcIn),
-          child: qrCode,
-        ),
+                colorFilter: ColorFilter.mode(Colors.white54, BlendMode.srcIn),
+                child: qrCode,
+              ),
         const SizedBox(width: 16),
       ],
     );
