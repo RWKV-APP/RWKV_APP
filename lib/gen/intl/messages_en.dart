@@ -236,6 +236,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
     "memory_used": m4,
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
+    "more": MessageLookupByLibrary.simpleMessage("More"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
     "network_error": MessageLookupByLibrary.simpleMessage("Network Error"),
     "new_chat": MessageLookupByLibrary.simpleMessage("New Chat"),
@@ -388,6 +389,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "stop": MessageLookupByLibrary.simpleMessage("Stop"),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "Storage permission not granted",
+    ),
+    "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
+      "We recommend choosing at least the 1.5B model, 2.9B is preferable.",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Easy"),

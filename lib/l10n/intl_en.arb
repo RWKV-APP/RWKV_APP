@@ -228,5 +228,8 @@
   "regenerate": "Regenerate",
   "resume": "Resume",
   "stop": "Stop",
-  "pause": "Pause"
+  "pause": "Pause",
+  "more": "More",
+  "str_model_selection_dialog_hint": "We recommend choosing at least the 1.5B model, 2.9B is preferable.",
+  "a": ""
 }

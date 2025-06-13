@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1615,6 +1614,21 @@ class S {
   /// `暂停`
   String get pause {
     return Intl.message('暂停', name: 'pause', desc: '', args: []);
+  }
+
+  /// `更多`
+  String get more {
+    return Intl.message('更多', name: 'more', desc: '', args: []);
+  }
+
+  /// `推荐至少选择1.5B模型，更大的2.9B模型更好`
+  String get str_model_selection_dialog_hint {
+    return Intl.message(
+      '推荐至少选择1.5B模型，更大的2.9B模型更好',
+      name: 'str_model_selection_dialog_hint',
+      desc: '',
+      args: [],
+    );
   }
 }
 

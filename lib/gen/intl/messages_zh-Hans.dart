@@ -188,6 +188,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
     "memory_used": m4,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
+    "more": MessageLookupByLibrary.simpleMessage("更多"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),
     "network_error": MessageLookupByLibrary.simpleMessage("网络错误"),
     "new_chat": MessageLookupByLibrary.simpleMessage("新聊天"),
@@ -294,6 +295,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "stop": MessageLookupByLibrary.simpleMessage("停止"),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "存储权限未授予",
+    ),
+    "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
+      "推荐至少选择1.5B模型，更大的2.9B模型更好",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("提交"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入门"),

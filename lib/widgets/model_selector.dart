@@ -163,7 +163,7 @@ class ModelSelector extends ConsumerWidget {
             const _DownloadSource(),
             if (demoType == DemoType.chat)
               T(
-                "👉${s.size_recommendation}👈",
+                "👉${s.str_model_selection_dialog_hint}👈",
                 s: TS(c: qb.q(.7), s: 12, w: FW.w500),
               ),
             ..._buildItems(context, ref),

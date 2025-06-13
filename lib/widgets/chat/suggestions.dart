@@ -131,7 +131,7 @@ class Suggestions extends ConsumerWidget {
           0,
         ),
       ),
-      child: Text(S.of(context).all),
+      child: Text(S.of(context).more),
     );
   }
 
