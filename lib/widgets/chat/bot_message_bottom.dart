@@ -191,6 +191,10 @@ class BotMessageBottom extends ConsumerWidget {
   }
 
   void _onSharePressed() {
+    if (P.chat.receivingTokens.q) {
+      P.chat.onStopButtonPressed();
+    }
+
     final list = P.msg.list.q;
     final index = list.indexOf(msg);
     if (index > 0) {
