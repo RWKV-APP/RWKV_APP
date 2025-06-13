@@ -11,6 +11,8 @@ final class MsgNode {
   /// 创建时间, 单位: 微秒
   late final int createAtInUS;
 
+  String? title;
+
   /// 当前节点, 最新的子节点
   MsgNode? latest;
   MsgNode? parent;
@@ -30,6 +32,7 @@ final class MsgNode {
     // But current logic replaces it, which is fine if intended.
   }
 
+  /// 在当前节点添加 Node
   MsgNode add(MsgNode child, {bool keepLatest = false}) {
     child.parent = this;
     child.root = root ?? this;
@@ -41,17 +44,14 @@ final class MsgNode {
     return child;
   }
 
+  /// 直接在整个消息树的最新节点添加 Node, 不考虑当前节点
   MsgNode rootAdd(MsgNode child, {bool keepLatest = false}) {
-    // Adds child to 'this.children', but parent is 'wholeLatestNode' of 'this'.
-    // This can lead to child.parent.children not containing child if 'this' is not 'wholeLatestNode'.
     child.parent = wholeLatestNode;
-    child.root = root ?? this; // root of 'this' node propagates
     if (children.map((e) => e.id).contains(child.id)) {
-      // This checks 'this.children', not 'wholeLatestNode.children'
       throw AssertionError("child id ${child.id} already exists in current node $id for rootAdd");
     }
-    wholeLatestNode.children.add(child); // Child added to 'this.children'
-    if (!keepLatest) wholeLatestNode.latest = child; // 'this.latest' is updated
+    wholeLatestNode.children.add(child);
+    if (!keepLatest) wholeLatestNode.latest = child;
     return child;
   }
 

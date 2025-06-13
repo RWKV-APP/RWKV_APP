@@ -40,7 +40,7 @@ extension $World on _World {
       return;
     }
 
-    final t = HF.debugShorterMS;
+    final t = HF.milliseconds;
     startTime.q = t;
     recording.q = true;
     _currentStreamController = StreamController<Uint8List>();
@@ -76,7 +76,7 @@ extension $World on _World {
       return false;
     }
 
-    final t = HF.debugShorterMS;
+    final t = HF.milliseconds;
     endTime.q = t;
 
     final audioLengthInMilliseconds = endTime.q - startTime.q;
@@ -91,7 +91,7 @@ extension $World on _World {
     final cacheDir = P.app.cacheDir.q;
     if (cacheDir == null) throw Exception("😡 cacheDir is null");
 
-    final path = "${cacheDir.path}/${HF.debugShorterS}.${S.current.my_voice}.wav";
+    final path = "${cacheDir.path}/${HF.seconds}.${S.current.my_voice}.wav";
     final file = File(path);
 
     List<int> wavHeader = _createWavHeader(

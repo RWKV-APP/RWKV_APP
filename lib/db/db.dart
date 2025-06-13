@@ -13,16 +13,22 @@ import 'dart:convert';
 part 'db.g.dart';
 
 class Conversation extends Table {
-  IntColumn get createdAt => integer()();
-  IntColumn get updatedAt => integer().nullable()();
+  @override
+  Set<Column> get primaryKey => {createdAtUS};
+
+  IntColumn get createdAtUS => integer().unique()();
+  IntColumn get updatedAtUS => integer().nullable()();
   TextColumn get title => text().named('New Conversation')();
   TextColumn get data => text()();
 
-  TextColumn get build => text()();
+  TextColumn get appBuildNumber => text()();
 }
 
 class Msg extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  @override
+  Set<Column> get primaryKey => {id};
+
+  IntColumn get id => integer().unique()();
   TextColumn get content => text()();
   BoolColumn get isMine => boolean()();
   BoolColumn get changing => boolean().withDefault(const Constant(false))();
@@ -123,11 +129,11 @@ class AppDatabase extends _$AppDatabase {
 
   ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode) {
     return ConversationCompanion.insert(
-      createdAt: msgNode.createAtInUS,
+      createdAtUS: Value(msgNode.createAtInUS),
       title: msgNode.toJson(),
       data: msgNode.toJson(),
-      build: P.app.buildNumber.q,
-      updatedAt: Value(HF.microseconds),
+      appBuildNumber: P.app.buildNumber.q,
+      updatedAtUS: Value(HF.microseconds),
     );
   }
 
@@ -151,32 +157,38 @@ class AppDatabase extends _$AppDatabase {
     //     0;
   }
 
-  /// 同步 MsgNode 到数据库
+  /// 将 MsgNode 同步到数据库，使用 UPSERT 机制处理插入或更新。
+  ///
+  /// 1. 如果 msgNode.id == 0 且 children 为空，则不进行任何操作并返回 true。
+  /// 2. 使用 msgNode.createAtInUS 作为冲突键，确保并发调用时的原子性。
+  ///
+  /// 参数:
+  /// - msgNode: 要同步的消息节点树
+  ///
+  /// 返回值:
+  /// - 如果操作成功（插入或更新），则返回 true；否则返回 false。
   Future<bool> syncConv(MsgNode msgNode) async {
+    // 断言 msgNode.id 必须为 0，这通常表示一个新创建的节点或者某个特定状态。
     assert(msgNode.id == 0);
+    // 如果 msgNode.children 为空，则没有需要同步的子节点，直接返回 true。
     if (msgNode.children.isEmpty) return true;
 
+    // 记录节点的创建时间，用作数据库中的唯一标识符。
     qqr("node createAtInUS: ${msgNode.createAtInUS}");
 
-    final convsationKey = msgNode.createAtInUS;
-
-    // 查询是否存在相同创建时间的对话
-    final existingConv = await (select(conversation)..where((tbl) => tbl.createdAt.equals(convsationKey))).getSingleOrNull();
-
-    // 准备要插入/更新的数据
+    // 准备要插入或更新的数据伴侣对象。
+    // _conversationToConversationCompanion 函数负责将 MsgNode 转换为数据库表伴侣对象。
     final convData = _conversationToConversationCompanion(msgNode);
 
-    debugger();
-
-    // 根据是否存在决定插入或更新
-    if (existingConv == null) {
-      // 不存在则插入新记录
-      qqr("insert");
-      return await into(conversation).insert(convData) > 0;
-    } else {
-      qqr("update");
-      // 存在则更新记录
-      return await (update(conversation)..where((tbl) => tbl.createdAt.equals(msgNode.createAtInUS))).write(convData) > 0;
+    try {
+      // 使用 Drift 的 insert 方法，并结合 onConflict 参数实现 UPSERT。
+      // 如果主键唯一，则会触发 DoUpdate 策略
+      await into(conversation).insert(convData, onConflict: DoUpdate((old) => convData));
+      qqr("upsert successful");
+      return true;
+    } catch (e) {
+      qqr("upsert failed: $e");
+      return false;
     }
   }
 
@@ -187,12 +199,12 @@ class AppDatabase extends _$AppDatabase {
   /// 5. limit 默认为 20, offset 默认为 0
   Future<List<ConversationData>> convPage({
     int pageIndex = 0,
-    int pageSize = 20,
+    int pageSize = 40,
   }) async {
     final query = select(conversation)
       ..orderBy([
-        (t) => OrderingTerm.desc(t.updatedAt),
-        (t) => OrderingTerm.desc(t.createdAt),
+        (t) => OrderingTerm.desc(t.updatedAtUS),
+        (t) => OrderingTerm.desc(t.createdAtUS),
       ])
       ..limit(pageSize, offset: pageIndex * pageSize);
 
@@ -201,6 +213,6 @@ class AppDatabase extends _$AppDatabase {
 
   /// 根据 MsgNode.createAt 删除
   Future<bool> deleteConv(int createAtInUS) async {
-    return await (delete(conversation)..where((tbl) => tbl.createdAt.equals(createAtInUS))).go() > 0;
+    return await (delete(conversation)..where((tbl) => tbl.createdAtUS.equals(createAtInUS))).go() > 0;
   }
 }

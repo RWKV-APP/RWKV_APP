@@ -106,7 +106,7 @@ class _Item extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final current = ref.watch(P.conversation.current);
-    final isCurrent = current?.createdAt == conversation.createdAt;
+    final isCurrent = current?.createdAtUS == conversation.createdAtUS;
     final primary = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final qw = ref.watch(P.app.qw);
@@ -130,7 +130,7 @@ class _Item extends ConsumerWidget {
             ),
             padding: const EI.a(8),
             child: T(
-              conversation.createdAt.toString(),
+              conversation.createdAtUS.toString(),
               s: TS(s: 16, w: FW.w600, c: isCurrent ? primary : qb),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,

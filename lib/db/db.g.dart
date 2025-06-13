@@ -9,23 +9,24 @@ class $ConversationTable extends Conversation
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ConversationTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
+  static const VerificationMeta _createdAtUSMeta = const VerificationMeta(
+    'createdAtUS',
   );
   @override
-  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
-    'created_at',
+  late final GeneratedColumn<int> createdAtUS = GeneratedColumn<int>(
+    'created_at_u_s',
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
+  static const VerificationMeta _updatedAtUSMeta = const VerificationMeta(
+    'updatedAtUS',
   );
   @override
-  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
-    'updated_at',
+  late final GeneratedColumn<int> updatedAtUS = GeneratedColumn<int>(
+    'updated_at_u_s',
     aliasedName,
     true,
     type: DriftSqlType.int,
@@ -49,10 +50,12 @@ class $ConversationTable extends Conversation
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _buildMeta = const VerificationMeta('build');
+  static const VerificationMeta _appBuildNumberMeta = const VerificationMeta(
+    'appBuildNumber',
+  );
   @override
-  late final GeneratedColumn<String> build = GeneratedColumn<String>(
-    'build',
+  late final GeneratedColumn<String> appBuildNumber = GeneratedColumn<String>(
+    'app_build_number',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -60,11 +63,11 @@ class $ConversationTable extends Conversation
   );
   @override
   List<GeneratedColumn> get $columns => [
-    createdAt,
-    updatedAt,
+    createdAtUS,
+    updatedAtUS,
     title,
     data,
-    build,
+    appBuildNumber,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -78,18 +81,22 @@ class $ConversationTable extends Conversation
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('created_at_u_s')) {
       context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+        _createdAtUSMeta,
+        createdAtUS.isAcceptableOrUnknown(
+          data['created_at_u_s']!,
+          _createdAtUSMeta,
+        ),
       );
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
-    if (data.containsKey('updated_at')) {
+    if (data.containsKey('updated_at_u_s')) {
       context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+        _updatedAtUSMeta,
+        updatedAtUS.isAcceptableOrUnknown(
+          data['updated_at_u_s']!,
+          _updatedAtUSMeta,
+        ),
       );
     }
     if (data.containsKey('New Conversation')) {
@@ -108,30 +115,33 @@ class $ConversationTable extends Conversation
     } else if (isInserting) {
       context.missing(_dataMeta);
     }
-    if (data.containsKey('build')) {
+    if (data.containsKey('app_build_number')) {
       context.handle(
-        _buildMeta,
-        build.isAcceptableOrUnknown(data['build']!, _buildMeta),
+        _appBuildNumberMeta,
+        appBuildNumber.isAcceptableOrUnknown(
+          data['app_build_number']!,
+          _appBuildNumberMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_buildMeta);
+      context.missing(_appBuildNumberMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {createdAtUS};
   @override
   ConversationData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ConversationData(
-      createdAt: attachedDatabase.typeMapping.read(
+      createdAtUS: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}created_at'],
+        data['${effectivePrefix}created_at_u_s'],
       )!,
-      updatedAt: attachedDatabase.typeMapping.read(
+      updatedAtUS: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}updated_at'],
+        data['${effectivePrefix}updated_at_u_s'],
       ),
       title: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -141,9 +151,9 @@ class $ConversationTable extends Conversation
         DriftSqlType.string,
         data['${effectivePrefix}data'],
       )!,
-      build: attachedDatabase.typeMapping.read(
+      appBuildNumber: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}build'],
+        data['${effectivePrefix}app_build_number'],
       )!,
     );
   }
@@ -156,40 +166,40 @@ class $ConversationTable extends Conversation
 
 class ConversationData extends DataClass
     implements Insertable<ConversationData> {
-  final int createdAt;
-  final int? updatedAt;
+  final int createdAtUS;
+  final int? updatedAtUS;
   final String title;
   final String data;
-  final String build;
+  final String appBuildNumber;
   const ConversationData({
-    required this.createdAt,
-    this.updatedAt,
+    required this.createdAtUS,
+    this.updatedAtUS,
     required this.title,
     required this.data,
-    required this.build,
+    required this.appBuildNumber,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['created_at'] = Variable<int>(createdAt);
-    if (!nullToAbsent || updatedAt != null) {
-      map['updated_at'] = Variable<int>(updatedAt);
+    map['created_at_u_s'] = Variable<int>(createdAtUS);
+    if (!nullToAbsent || updatedAtUS != null) {
+      map['updated_at_u_s'] = Variable<int>(updatedAtUS);
     }
     map['New Conversation'] = Variable<String>(title);
     map['data'] = Variable<String>(data);
-    map['build'] = Variable<String>(build);
+    map['app_build_number'] = Variable<String>(appBuildNumber);
     return map;
   }
 
   ConversationCompanion toCompanion(bool nullToAbsent) {
     return ConversationCompanion(
-      createdAt: Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent
+      createdAtUS: Value(createdAtUS),
+      updatedAtUS: updatedAtUS == null && nullToAbsent
           ? const Value.absent()
-          : Value(updatedAt),
+          : Value(updatedAtUS),
       title: Value(title),
       data: Value(data),
-      build: Value(build),
+      appBuildNumber: Value(appBuildNumber),
     );
   }
 
@@ -199,143 +209,142 @@ class ConversationData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ConversationData(
-      createdAt: serializer.fromJson<int>(json['createdAt']),
-      updatedAt: serializer.fromJson<int?>(json['updatedAt']),
+      createdAtUS: serializer.fromJson<int>(json['createdAtUS']),
+      updatedAtUS: serializer.fromJson<int?>(json['updatedAtUS']),
       title: serializer.fromJson<String>(json['title']),
       data: serializer.fromJson<String>(json['data']),
-      build: serializer.fromJson<String>(json['build']),
+      appBuildNumber: serializer.fromJson<String>(json['appBuildNumber']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'createdAt': serializer.toJson<int>(createdAt),
-      'updatedAt': serializer.toJson<int?>(updatedAt),
+      'createdAtUS': serializer.toJson<int>(createdAtUS),
+      'updatedAtUS': serializer.toJson<int?>(updatedAtUS),
       'title': serializer.toJson<String>(title),
       'data': serializer.toJson<String>(data),
-      'build': serializer.toJson<String>(build),
+      'appBuildNumber': serializer.toJson<String>(appBuildNumber),
     };
   }
 
   ConversationData copyWith({
-    int? createdAt,
-    Value<int?> updatedAt = const Value.absent(),
+    int? createdAtUS,
+    Value<int?> updatedAtUS = const Value.absent(),
     String? title,
     String? data,
-    String? build,
+    String? appBuildNumber,
   }) => ConversationData(
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    createdAtUS: createdAtUS ?? this.createdAtUS,
+    updatedAtUS: updatedAtUS.present ? updatedAtUS.value : this.updatedAtUS,
     title: title ?? this.title,
     data: data ?? this.data,
-    build: build ?? this.build,
+    appBuildNumber: appBuildNumber ?? this.appBuildNumber,
   );
   ConversationData copyWithCompanion(ConversationCompanion data) {
     return ConversationData(
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      createdAtUS: data.createdAtUS.present
+          ? data.createdAtUS.value
+          : this.createdAtUS,
+      updatedAtUS: data.updatedAtUS.present
+          ? data.updatedAtUS.value
+          : this.updatedAtUS,
       title: data.title.present ? data.title.value : this.title,
       data: data.data.present ? data.data.value : this.data,
-      build: data.build.present ? data.build.value : this.build,
+      appBuildNumber: data.appBuildNumber.present
+          ? data.appBuildNumber.value
+          : this.appBuildNumber,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('ConversationData(')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAtUS: $createdAtUS, ')
+          ..write('updatedAtUS: $updatedAtUS, ')
           ..write('title: $title, ')
           ..write('data: $data, ')
-          ..write('build: $build')
+          ..write('appBuildNumber: $appBuildNumber')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(createdAt, updatedAt, title, data, build);
+  int get hashCode =>
+      Object.hash(createdAtUS, updatedAtUS, title, data, appBuildNumber);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ConversationData &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
+          other.createdAtUS == this.createdAtUS &&
+          other.updatedAtUS == this.updatedAtUS &&
           other.title == this.title &&
           other.data == this.data &&
-          other.build == this.build);
+          other.appBuildNumber == this.appBuildNumber);
 }
 
 class ConversationCompanion extends UpdateCompanion<ConversationData> {
-  final Value<int> createdAt;
-  final Value<int?> updatedAt;
+  final Value<int> createdAtUS;
+  final Value<int?> updatedAtUS;
   final Value<String> title;
   final Value<String> data;
-  final Value<String> build;
-  final Value<int> rowid;
+  final Value<String> appBuildNumber;
   const ConversationCompanion({
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    this.createdAtUS = const Value.absent(),
+    this.updatedAtUS = const Value.absent(),
     this.title = const Value.absent(),
     this.data = const Value.absent(),
-    this.build = const Value.absent(),
-    this.rowid = const Value.absent(),
+    this.appBuildNumber = const Value.absent(),
   });
   ConversationCompanion.insert({
-    required int createdAt,
-    this.updatedAt = const Value.absent(),
+    this.createdAtUS = const Value.absent(),
+    this.updatedAtUS = const Value.absent(),
     required String title,
     required String data,
-    required String build,
-    this.rowid = const Value.absent(),
-  }) : createdAt = Value(createdAt),
-       title = Value(title),
+    required String appBuildNumber,
+  }) : title = Value(title),
        data = Value(data),
-       build = Value(build);
+       appBuildNumber = Value(appBuildNumber);
   static Insertable<ConversationData> custom({
-    Expression<int>? createdAt,
-    Expression<int>? updatedAt,
+    Expression<int>? createdAtUS,
+    Expression<int>? updatedAtUS,
     Expression<String>? title,
     Expression<String>? data,
-    Expression<String>? build,
-    Expression<int>? rowid,
+    Expression<String>? appBuildNumber,
   }) {
     return RawValuesInsertable({
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
+      if (createdAtUS != null) 'created_at_u_s': createdAtUS,
+      if (updatedAtUS != null) 'updated_at_u_s': updatedAtUS,
       if (title != null) 'New Conversation': title,
       if (data != null) 'data': data,
-      if (build != null) 'build': build,
-      if (rowid != null) 'rowid': rowid,
+      if (appBuildNumber != null) 'app_build_number': appBuildNumber,
     });
   }
 
   ConversationCompanion copyWith({
-    Value<int>? createdAt,
-    Value<int?>? updatedAt,
+    Value<int>? createdAtUS,
+    Value<int?>? updatedAtUS,
     Value<String>? title,
     Value<String>? data,
-    Value<String>? build,
-    Value<int>? rowid,
+    Value<String>? appBuildNumber,
   }) {
     return ConversationCompanion(
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      createdAtUS: createdAtUS ?? this.createdAtUS,
+      updatedAtUS: updatedAtUS ?? this.updatedAtUS,
       title: title ?? this.title,
       data: data ?? this.data,
-      build: build ?? this.build,
-      rowid: rowid ?? this.rowid,
+      appBuildNumber: appBuildNumber ?? this.appBuildNumber,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (createdAt.present) {
-      map['created_at'] = Variable<int>(createdAt.value);
+    if (createdAtUS.present) {
+      map['created_at_u_s'] = Variable<int>(createdAtUS.value);
     }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<int>(updatedAt.value);
+    if (updatedAtUS.present) {
+      map['updated_at_u_s'] = Variable<int>(updatedAtUS.value);
     }
     if (title.present) {
       map['New Conversation'] = Variable<String>(title.value);
@@ -343,11 +352,8 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
     if (data.present) {
       map['data'] = Variable<String>(data.value);
     }
-    if (build.present) {
-      map['build'] = Variable<String>(build.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
+    if (appBuildNumber.present) {
+      map['app_build_number'] = Variable<String>(appBuildNumber.value);
     }
     return map;
   }
@@ -355,12 +361,11 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
   @override
   String toString() {
     return (StringBuffer('ConversationCompanion(')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
+          ..write('createdAtUS: $createdAtUS, ')
+          ..write('updatedAtUS: $updatedAtUS, ')
           ..write('title: $title, ')
           ..write('data: $data, ')
-          ..write('build: $build, ')
-          ..write('rowid: $rowid')
+          ..write('appBuildNumber: $appBuildNumber')
           ..write(')'))
         .toString();
   }
@@ -377,12 +382,9 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   static const VerificationMeta _contentMeta = const VerificationMeta(
     'content',
@@ -1643,21 +1645,19 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$ConversationTableCreateCompanionBuilder =
     ConversationCompanion Function({
-      required int createdAt,
-      Value<int?> updatedAt,
+      Value<int> createdAtUS,
+      Value<int?> updatedAtUS,
       required String title,
       required String data,
-      required String build,
-      Value<int> rowid,
+      required String appBuildNumber,
     });
 typedef $$ConversationTableUpdateCompanionBuilder =
     ConversationCompanion Function({
-      Value<int> createdAt,
-      Value<int?> updatedAt,
+      Value<int> createdAtUS,
+      Value<int?> updatedAtUS,
       Value<String> title,
       Value<String> data,
-      Value<String> build,
-      Value<int> rowid,
+      Value<String> appBuildNumber,
     });
 
 class $$ConversationTableFilterComposer
@@ -1669,13 +1669,13 @@ class $$ConversationTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnFilters<int> get createdAtUS => $composableBuilder(
+    column: $table.createdAtUS,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
+  ColumnFilters<int> get updatedAtUS => $composableBuilder(
+    column: $table.updatedAtUS,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1689,8 +1689,8 @@ class $$ConversationTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get build => $composableBuilder(
-    column: $table.build,
+  ColumnFilters<String> get appBuildNumber => $composableBuilder(
+    column: $table.appBuildNumber,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1704,13 +1704,13 @@ class $$ConversationTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnOrderings<int> get createdAtUS => $composableBuilder(
+    column: $table.createdAtUS,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
+  ColumnOrderings<int> get updatedAtUS => $composableBuilder(
+    column: $table.updatedAtUS,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1724,8 +1724,8 @@ class $$ConversationTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get build => $composableBuilder(
-    column: $table.build,
+  ColumnOrderings<String> get appBuildNumber => $composableBuilder(
+    column: $table.appBuildNumber,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -1739,11 +1739,15 @@ class $$ConversationTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumn<int> get createdAtUS => $composableBuilder(
+    column: $table.createdAtUS,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+  GeneratedColumn<int> get updatedAtUS => $composableBuilder(
+    column: $table.updatedAtUS,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
@@ -1751,8 +1755,10 @@ class $$ConversationTableAnnotationComposer
   GeneratedColumn<String> get data =>
       $composableBuilder(column: $table.data, builder: (column) => column);
 
-  GeneratedColumn<String> get build =>
-      $composableBuilder(column: $table.build, builder: (column) => column);
+  GeneratedColumn<String> get appBuildNumber => $composableBuilder(
+    column: $table.appBuildNumber,
+    builder: (column) => column,
+  );
 }
 
 class $$ConversationTableTableManager
@@ -1786,35 +1792,31 @@ class $$ConversationTableTableManager
               $$ConversationTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> createdAt = const Value.absent(),
-                Value<int?> updatedAt = const Value.absent(),
+                Value<int> createdAtUS = const Value.absent(),
+                Value<int?> updatedAtUS = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> data = const Value.absent(),
-                Value<String> build = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
+                Value<String> appBuildNumber = const Value.absent(),
               }) => ConversationCompanion(
-                createdAt: createdAt,
-                updatedAt: updatedAt,
+                createdAtUS: createdAtUS,
+                updatedAtUS: updatedAtUS,
                 title: title,
                 data: data,
-                build: build,
-                rowid: rowid,
+                appBuildNumber: appBuildNumber,
               ),
           createCompanionCallback:
               ({
-                required int createdAt,
-                Value<int?> updatedAt = const Value.absent(),
+                Value<int> createdAtUS = const Value.absent(),
+                Value<int?> updatedAtUS = const Value.absent(),
                 required String title,
                 required String data,
-                required String build,
-                Value<int> rowid = const Value.absent(),
+                required String appBuildNumber,
               }) => ConversationCompanion.insert(
-                createdAt: createdAt,
-                updatedAt: updatedAt,
+                createdAtUS: createdAtUS,
+                updatedAtUS: updatedAtUS,
                 title: title,
                 data: data,
-                build: build,
-                rowid: rowid,
+                appBuildNumber: appBuildNumber,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

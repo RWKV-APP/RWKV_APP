@@ -368,8 +368,8 @@ extension $TTS on _TTS {
     if (!P.chat.inputHasContent.q) return;
 
     late final Message? msg;
-    final id = HF.debugShorterMS;
-    final receiveId = HF.debugShorterMS + 1;
+    final id = HF.milliseconds;
+    final receiveId = HF.milliseconds + 1;
     final spkName = selectedSpkName.q;
 
     if (spkName == null && this.selectSourceAudioPath.q == null) {
