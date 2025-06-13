@@ -212,6 +212,11 @@ extension $Chat on _Chat {
   }
 
   void toggleCompletionMode() {
+    final receiving = P.chat.receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
     final r = !completionMode.q;
     completionMode.q = r;
     P.rwkv.setGenerateMode(r);
