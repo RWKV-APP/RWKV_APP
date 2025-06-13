@@ -16,7 +16,7 @@ class Conversation extends Table {
   @override
   Set<Column> get primaryKey => {createdAtUS};
 
-  IntColumn get createdAtUS => integer().unique()();
+  IntColumn get createdAtUS => integer()();
   IntColumn get updatedAtUS => integer().nullable()();
   TextColumn get title => text().named('New Conversation')();
   TextColumn get data => text()();
@@ -28,7 +28,7 @@ class Msg extends Table {
   @override
   Set<Column> get primaryKey => {id};
 
-  IntColumn get id => integer().unique()();
+  IntColumn get id => integer()();
   TextColumn get content => text()();
   BoolColumn get isMine => boolean()();
   BoolColumn get changing => boolean().withDefault(const Constant(false))();
