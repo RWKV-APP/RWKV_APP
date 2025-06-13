@@ -218,5 +218,14 @@
   "download_app": "下载App",
   "end": "完",
   "from_model": "来自模型: %s",
-  "explore_rwkv": "探索RWKV"
+  "explore_rwkv": "探索RWKV",
+  "completion_mode": "补全模式",
+  "chat_mode": "对话模式",
+  "prompt": "提示词",
+  "output": "输出",
+  "submit": "提交",
+  "regenerate": "重新生成",
+  "resume": "恢复",
+  "stop": "停止",
+  "pause": "暂停"
 }

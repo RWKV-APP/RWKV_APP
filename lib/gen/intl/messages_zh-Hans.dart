@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已复制到剪贴板"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("请输入消息内容"),
+    "chat_mode": MessageLookupByLibrary.simpleMessage("对话模式"),
     "chat_model_name": MessageLookupByLibrary.simpleMessage("模型名称"),
     "chat_please_select_a_model": MessageLookupByLibrary.simpleMessage(
       "请选择一个模型",
@@ -88,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "色彩模式跟随系统",
     ),
+    "completion_mode": MessageLookupByLibrary.simpleMessage("补全模式"),
     "confirm": MessageLookupByLibrary.simpleMessage("确认"),
     "continue_download": MessageLookupByLibrary.simpleMessage("继续下载"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
@@ -203,7 +205,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "或开始一个空白聊天",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
+    "output": MessageLookupByLibrary.simpleMessage("输出"),
     "overseas": MessageLookupByLibrary.simpleMessage("(境外)"),
+    "pause": MessageLookupByLibrary.simpleMessage("暂停"),
     "players": MessageLookupByLibrary.simpleMessage("玩家"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "正在播放部分已生成的语音",
@@ -244,6 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
     "prefill": MessageLookupByLibrary.simpleMessage("预填"),
+    "prompt": MessageLookupByLibrary.simpleMessage("提示词"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
@@ -251,9 +256,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "reason": MessageLookupByLibrary.simpleMessage("推理"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推理模式"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("正在录音..."),
+    "regenerate": MessageLookupByLibrary.simpleMessage("重新生成"),
     "remaining": MessageLookupByLibrary.simpleMessage("剩余时间："),
     "reselect_model": MessageLookupByLibrary.simpleMessage("重新选择模型"),
     "reset": MessageLookupByLibrary.simpleMessage("重置"),
+    "resume": MessageLookupByLibrary.simpleMessage("恢复"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
@@ -284,9 +291,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("开始对局"),
     "start_to_chat": MessageLookupByLibrary.simpleMessage("开始聊天"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("开始推理"),
+    "stop": MessageLookupByLibrary.simpleMessage("停止"),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "存储权限未授予",
     ),
+    "submit": MessageLookupByLibrary.simpleMessage("提交"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入门"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("专家"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("普通"),

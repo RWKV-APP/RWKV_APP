@@ -219,5 +219,14 @@
   "end": "End",
   "from_model": "From Model: %s",
   "source_code": "Source Code",
-  "explore_rwkv": "Explore RWKV"
+  "explore_rwkv": "Explore RWKV",
+  "completion_mode": "Completion Mode",
+  "chat_mode": "Chat Mode",
+  "prompt": "Prompt",
+  "output": "Output",
+  "submit": "Submit",
+  "regenerate": "Regenerate",
+  "resume": "Resume",
+  "stop": "Stop",
+  "pause": "Pause"
 }

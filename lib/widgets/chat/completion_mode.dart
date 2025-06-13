@@ -24,13 +24,15 @@ class _CompletionState extends ConsumerState<Completion> {
   late final controllerCheckSensitive = StreamController<String>();
 
   bool generating = false;
+  bool resuming = false;
+
   bool canResume = false;
   bool hasPrompt = false;
   bool isSensitive = false;
 
-  bool get showPause => generating && hasPrompt;
+  bool get showPause => generating && hasPrompt && !resuming;
 
-  bool get showResume => !generating && hasPrompt && canResume;
+  bool get showResume => (!generating && hasPrompt && canResume) || resuming;
 
   bool get showSubmit => !generating && !canResume;
 
@@ -38,9 +40,11 @@ class _CompletionState extends ConsumerState<Completion> {
   void initState() {
     super.initState();
 
-    controllerCheckSensitive.stream.throttleTime(const Duration(seconds: 1)).listen((v) {
-      _checkSensitive(v);
-    });
+    controllerCheckSensitive.stream
+        .throttleTime(const Duration(milliseconds: 100), trailing: true) //
+        .listen((v) {
+          checkSensitive(v);
+        });
 
     controllerPrompt.addListener(() {
       if (generating) {
@@ -67,16 +71,27 @@ class _CompletionState extends ConsumerState<Completion> {
     });
   }
 
-  void listen() {
+  void listenGenEvent() {
     ref.listen(P.chat.receivedTokens, (p, v) {
-      qqq(v);
-      if (isSensitive) {
+      if (isSensitive || v.isEmpty) {
         return;
+      }
+      if (resuming) {
+        setState(() {
+          resuming = false;
+        });
       }
       final max = scrollController.position.maxScrollExtent;
       final remain = max - scrollController.position.pixels;
       final prompt = controllerPrompt.text.trim();
-      controllerOutput.text = v.replaceFirst(prompt, "");
+      var output = v.replaceFirst(prompt, "");
+      if (output.endsWith("<EOD>")) {
+        setState(() {
+          canResume = false;
+        });
+        output = output.substring(0, output.length - 5);
+      }
+      controllerOutput.text = output;
       if (0 < remain && remain < 100) {
         scrollController.jumpTo(max);
       }
@@ -84,7 +99,7 @@ class _CompletionState extends ConsumerState<Completion> {
     });
     ref.listen(P.chat.receivingTokens, (p, v) {
       if (v != generating) {
-        qqq('Stopped');
+        qqq('generating => $v');
         Future.delayed(const Duration(milliseconds: 100), () {
           setState(() {
             generating = v;
@@ -94,7 +109,7 @@ class _CompletionState extends ConsumerState<Completion> {
     });
   }
 
-  Future _checkSensitive(String content) async {
+  Future checkSensitive(String content) async {
     isSensitive = await P.guard.isSensitive(content);
     if (isSensitive) {
       P.chat.stopCompletion();
@@ -116,13 +131,13 @@ class _CompletionState extends ConsumerState<Completion> {
     super.dispose();
   }
 
-  void onSubmitTap() async {
+  void onSubmitTap({bool regenerate = false}) async {
     final prompt = controllerPrompt.text.trim();
     if (prompt.isEmpty) {
       return;
     }
     qqq('submit->$prompt');
-    final contains = await _checkSensitive(prompt);
+    final contains = await checkSensitive(prompt);
     if (contains) {
       setState(() {
         canResume = false;
@@ -138,9 +153,18 @@ class _CompletionState extends ConsumerState<Completion> {
 
   void onStopTap() async {
     P.chat.stopCompletion();
+    setState(() {
+      canResume = true;
+    });
   }
 
   void onResumeTap() async {
+    if (resuming) {
+      return;
+    }
+    setState(() {
+      resuming = true;
+    });
     final prompt = controllerPrompt.text.trim();
     final output = controllerOutput.text.trim();
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
@@ -148,15 +172,25 @@ class _CompletionState extends ConsumerState<Completion> {
     P.chat.completion(prompt + output);
   }
 
-  void onClearTap() async {
-    P.chat.stopCompletion();
-    controllerPrompt.clear();
+  void onClearOutputTap() {
     controllerOutput.clear();
+    setState(() {
+      isSensitive = false;
+      canResume = false;
+    });
+  }
+
+  void onClearInputTap() {
+    controllerPrompt.clear();
+    setState(() {
+      isSensitive = false;
+      canResume = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    listen();
+    listenGenEvent();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       height: double.infinity,
@@ -166,21 +200,14 @@ class _CompletionState extends ConsumerState<Completion> {
         children: [
           Row(
             children: [
-              const Text('Prompt'),
+              Text(S.current.prompt),
               const Spacer(),
               TextButton(
                 style: TextButton.styleFrom(
                   visualDensity: VisualDensity.compact,
                 ),
-                onPressed: generating || !hasPrompt
-                    ? null
-                    : () {
-                        controllerPrompt.clear();
-                        setState(() {
-                          canResume = false;
-                        });
-                      },
-                child: const Text('Clear'),
+                onPressed: generating || !hasPrompt ? null : onClearInputTap,
+                child: Text(S.current.clear),
               ),
             ],
           ),
@@ -197,17 +224,37 @@ class _CompletionState extends ConsumerState<Completion> {
           const SizedBox(height: 12),
           Row(
             children: [
-              if (showSubmit) FilledButton.tonal(onPressed: !hasPrompt ? null : onSubmitTap, child: const Text("Submit")),
+              if (showSubmit)
+                FilledButton.icon(
+                  onPressed: !hasPrompt ? null : onSubmitTap,
+                  label: Text(S.current.submit),
+                ),
 
-              if (showPause) FilledButton.tonal(onPressed: onStopTap, child: const Text("Pause")),
+              if (showPause)
+                FilledButton.icon(
+                  onPressed: onStopTap,
+                  label: Text(S.current.pause),
+                  icon: const Icon(Icons.pause_rounded),
+                ),
 
-              if (showResume) FilledButton.tonal(onPressed: onResumeTap, child: const Text("Resume")),
+              if (showResume)
+                FilledButton.icon(
+                  onPressed: onResumeTap,
+                  label: Text(S.current.resume),
+                  icon: resuming
+                      ? const SizedBox.square(
+                          dimension: 16,
+                          child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white),
+                        )
+                      : const Icon(Icons.play_arrow_rounded),
+                ),
 
               if (showResume || showPause) const SizedBox(width: 8),
               if (showResume || showPause)
-                FilledButton.tonal(
+                OutlinedButton.icon(
                   onPressed: generating ? null : onSubmitTap,
-                  child: const Text("Regenerate"),
+                  label: Text(S.current.regenerate),
+                  icon: const Icon(Icons.refresh_rounded),
                 ),
               const Spacer(),
               const SizedBox(width: 8),
@@ -216,20 +263,13 @@ class _CompletionState extends ConsumerState<Completion> {
           ),
           Row(
             children: [
-              const Expanded(child: Text('Output')),
+              Expanded(child: Text(S.current.output)),
               TextButton(
                 style: TextButton.styleFrom(
                   visualDensity: VisualDensity.compact,
                 ),
-                onPressed: generating || !hasPrompt
-                    ? null
-                    : () {
-                        controllerOutput.clear();
-                        setState(() {
-                          canResume = false;
-                        });
-                      },
-                child: const Text('Clear'),
+                onPressed: generating ? null : onClearOutputTap,
+                child: Text(S.current.clear),
               ),
             ],
           ),
@@ -239,7 +279,7 @@ class _CompletionState extends ConsumerState<Completion> {
               scrollController: scrollController,
               controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
               maxLines: 999999999,
-              enabled: !generating,
+              enabled: !generating && !isSensitive,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),

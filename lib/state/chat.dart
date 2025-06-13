@@ -211,6 +211,16 @@ extension $Chat on _Chat {
     P.rwkv.completion(prompt);
   }
 
+  void toggleCompletionMode() {
+    final r = !completionMode.q;
+    completionMode.q = r;
+    P.rwkv.setGenerateMode(r);
+  }
+
+  FV resumeCompletion() async {
+    P.rwkv.completion('');
+  }
+
   FV stopCompletion() async {
     P.rwkv.stop();
   }
@@ -591,7 +601,7 @@ extension _$Chat on _Chat {
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
-        if(completionMode.q) {
+        if (completionMode.q) {
           return;
         }
         _sensitiveThrottler.call(() {

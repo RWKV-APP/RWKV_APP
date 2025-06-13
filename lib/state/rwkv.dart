@@ -590,6 +590,14 @@ extension $RWKV on _RWKV {
     return _initRuntimeCompleter.future;
   }
 
+  void setGenerateMode(bool isGenerateMode) {
+    if (isGenerateMode) {
+      send(to_rwkv.SetPrompt(""));
+    } else {
+      setModelConfig(thinkingMode: _thinkingMode.q);
+    }
+  }
+
   FV setModelConfig({
     ThinkingMode? thinkingMode,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? enableReasoning,
@@ -940,7 +948,6 @@ enum _RWKVMessageType {
   /// 模型是否正在生成
   @Deprecated("Use FromRWKV instead")
   isGenerating,
-
   @Deprecated("Use FromRWKV instead")
   responseBufferIds,
 }
