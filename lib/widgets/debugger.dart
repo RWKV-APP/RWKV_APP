@@ -54,7 +54,6 @@ class Debugger extends ConsumerWidget {
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final messages = ref.watch(P.msg.list);
     final ids = ref.watch(P.msg.ids);
-    final pool = ref.watch(P.msg.pool);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
     final availableModels = ref.watch(P.fileManager.availableModels);
@@ -65,6 +64,7 @@ class Debugger extends ConsumerWidget {
     final themeMode = ref.watch(P.preference.themeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
     final checkingLatency = ref.watch(P.guard.checkingLatency);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -77,6 +77,17 @@ class Debugger extends ConsumerWidget {
     const showEditingIndex = false;
     const showAtMainPage = false;
     const showPage = false;
+    const showScreenWidth = false;
+    const showThinkingMode = false;
+    const showDisableRemoteConfig = false;
+    const showPreferredThemeMode = false;
+    const showCustomTheme = false;
+    const showThemeMode = false;
+    const showPreferredDarkCustomTheme = false;
+    const showCheckingLatency = false;
+    const showConversation = false;
+    const showCurrentModel = false;
+    const showLoading = false;
 
     return Positioned(
       left: 0,
@@ -104,10 +115,8 @@ class Debugger extends ConsumerWidget {
                       if (currentWorldType != null && !isOthello) T(currentWorldType.toString()),
                       if (currentWorldType != null && !isOthello) T("visualFloatHeight".codeToName),
                       if (currentWorldType != null) T(visualFloatHeight.toString()),
-                      T("currentModel".codeToName),
-                      T(currentModel?.fileName ?? "null"),
-                      T("loading".codeToName),
-                      T(loading.toString()),
+                      if (showCurrentModel) ...[T("currentModel".codeToName), T(currentModel?.fileName ?? "null")],
+                      if (showLoading) ...[T("loading".codeToName), T(loading.toString())],
                       if (currentWorldType != null) T("playing".codeToName),
                       if (currentWorldType != null) T(playing.toString()),
                       if (!isOthello) T("latestClickedMessage".codeToName),
@@ -116,58 +125,32 @@ class Debugger extends ConsumerWidget {
                       T(inputHeight.toString()),
                       if (!isOthello) T("hasFocus".codeToName),
                       T(hasFocus.toString()),
-                      if (showAtMainPage) T("atMainPage".codeToName),
-                      if (showAtMainPage) T(atMainPage.toString()),
-                      if (showPage) T("page".codeToName),
-                      if (showPage) T(page.toString()),
-                      if (Config.enableConversation) T("conversation".codeToName),
-                      if (Config.enableConversation) T(conversation?.title.substring(0, 100) ?? "null"),
-                      // T("receivingTokens".codeToName),
-                      // T(receivingTokens.toString()),
+                      if (showAtMainPage) ...[T("atMainPage".codeToName), T(atMainPage.toString())],
+                      if (showPage) ...[T("page".codeToName), T(page.toString())],
+                      if (showConversation) ...[T("conversation".codeToName), T(conversation?.title.substring(0, 100) ?? "null")],
                       T("receiveId".codeToName),
                       T(receiveId.toString()),
-                      // T("lifecycleState".codeToName),
-                      // T(lifecycleState.toString().split(".").last),
-                      // T("autoPauseId".codeToName),
-                      // T(autoPauseId.toString()),
-                      if (showEditingIndex) T("editingIndex".codeToName),
-                      if (showEditingIndex) T(editingIndex.toString()),
-                      if (showDrawerWidth) T("drawerWidth".codeToName),
-                      if (showDrawerWidth) T(drawerWidth.toString()),
-                      T("screenWidth".codeToName),
-                      T(screenWidth.toString()),
-                      T("thinkingMode".codeToName),
-                      T(thinkingMode.toString()),
-                      if (showEditingBotMessage) T("editingBotMessage".codeToName),
-                      if (showEditingBotMessage) T(editingBotMessage.toString()),
-                      if (showMessages) T("messages length".codeToName),
-                      if (showMessages) T(messages.length.toString()),
-                      if (showMessages) T("messages changing".codeToName),
-                      if (showMessages) T(messages.m((e) => e.changing).join(", ")),
-                      if (showIds) T("ids".codeToName),
-                      if (showIds) T(ids.toString()),
-                      if (showPool) T("pool length".codeToName),
-                      if (showPool) T(pool.length.toString()),
-                      if (showSocName) T("socName".codeToName),
-                      if (showSocName) T(socName),
-                      if (showSocBrand) T("socBrand".codeToName),
-                      if (showSocBrand) T(socBrand.toString()),
-                      if (showAvailableModels) T("availableModels".codeToName),
-                      if (showAvailableModels) T(availableModels.map((e) => e.name).join("\n")),
-                      if (showUnavailableModels) T("unavailableModels".codeToName),
-                      if (showUnavailableModels) T(unavailableModels.map((e) => e.name).join("\n")),
-                      T("disableRemoteConfig".codeToName),
-                      T(disableRemoteConfig.toString()),
-                      T("preferredThemeMode".codeToName),
-                      T(preferredThemeMode.toString()),
-                      T("customTheme".codeToName),
-                      T(customTheme.runtimeType.toString()),
-                      T("themeMode".codeToName),
-                      T(themeMode.toString()),
-                      T("preferredDarkCustomTheme".codeToName),
-                      T(preferredDarkCustomTheme.runtimeType.toString()),
-                      T("checkingLatency".codeToName),
-                      T(checkingLatency.toString()),
+                      if (showEditingIndex) ...[T("editingIndex".codeToName), T(editingIndex.toString())],
+                      if (showDrawerWidth) ...[T("drawerWidth".codeToName), T(drawerWidth.toString())],
+                      if (showScreenWidth) ...[T("screenWidth".codeToName), T(screenWidth.toString())],
+                      if (showThinkingMode) ...[T("thinkingMode".codeToName), T(thinkingMode.toString())],
+                      if (showEditingBotMessage) ...[T("editingBotMessage".codeToName), T(editingBotMessage.toString())],
+                      if (showMessages) ...[T("messages length".codeToName), T(messages.length.toString())],
+                      if (showMessages) ...[T("messages changing".codeToName), T(messages.m((e) => e.changing).join(", "))],
+                      if (showIds) ...[T("ids".codeToName), T(ids.toString())],
+                      if (showSocName) ...[T("socName".codeToName), T(socName)],
+                      if (showSocBrand) ...[T("socBrand".codeToName), T(socBrand.toString())],
+                      if (showAvailableModels) ...[T("availableModels".codeToName), T(availableModels.map((e) => e.name).join("\n"))],
+                      if (showUnavailableModels) ...[T("unavailableModels".codeToName), T(unavailableModels.map((e) => e.name).join("\n"))],
+                      if (showDisableRemoteConfig) ...[T("disableRemoteConfig".codeToName), T(disableRemoteConfig.toString())],
+                      if (showPreferredThemeMode) ...[T("preferredThemeMode".codeToName), T(preferredThemeMode.toString())],
+                      if (showCustomTheme) ...[T("customTheme".codeToName), T(customTheme.runtimeType.toString())],
+                      if (showThemeMode) ...[T("themeMode".codeToName), T(themeMode.toString())],
+                      if (showPreferredDarkCustomTheme) ...[
+                        T("preferredDarkCustomTheme".codeToName),
+                        T(preferredDarkCustomTheme.runtimeType.toString()),
+                      ],
+                      if (showCheckingLatency) ...[T("checkingLatency".codeToName), T(checkingLatency.toString())],
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

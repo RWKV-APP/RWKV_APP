@@ -41,9 +41,6 @@ class ModelSelector extends ConsumerWidget {
       });
     }
 
-    HF.wait(250).then((_) {
-      P.device.sync();
-    });
     final context = getContext();
     if (context == null) {
       P.fileManager.modelSelectorShown.q = false;

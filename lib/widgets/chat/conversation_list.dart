@@ -16,7 +16,6 @@ class ConversationList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    qq;
     final conversations = ref.watch(P.conversation.conversations);
     final isEmpty = conversations.isEmpty;
 

@@ -205,7 +205,6 @@ extension _$App on _App {
   }
 
   FV _statusBarToLightMode() async {
-    qq;
     final scaffold = customTheme.q.scaffold;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -231,10 +230,8 @@ extension _$App on _App {
   FV _onCustomThemeChanged() async {
     await HF.wait(100);
     if (customTheme.q.light) {
-      qqr("Light");
       _statusBarToLightMode();
     } else {
-      qqr("Dark");
       _statusBarToDarkMode();
     }
   }
@@ -242,15 +239,10 @@ extension _$App on _App {
   FV _onLifecycleStateChanged() async {}
 
   FV _showNewVersionDialogIfNeeded() async {
+    if (!Platform.isIOS && !Platform.isAndroid) return;
     qq;
-
     if (Platform.isAndroid && latestBuild.q <= int.parse(buildNumber.q)) return;
     if (Platform.isIOS && latestBuildIos.q <= int.parse(buildNumber.q)) return;
-
-    if (!Platform.isIOS && !Platform.isAndroid) {
-      qqw("This feature is not supported on this platform");
-      return;
-    }
 
     final androidUrl = this.androidUrl.q ?? '';
     final androidApkUrl = this.androidApkUrl.q ?? '';

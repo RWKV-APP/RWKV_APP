@@ -100,6 +100,7 @@ abstract class P {
   static final dump = _Dump();
   static final msg = _Msg();
   static final db = _DB();
+
   static FV init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await preference._init();

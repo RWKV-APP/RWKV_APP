@@ -9,8 +9,6 @@ class _Conversation {
 /// Private methods
 extension _$Conversation on _Conversation {
   FV _init() async {
-    if (!Config.enableConversation) return;
-    qq;
     await load();
   }
 
@@ -24,7 +22,9 @@ extension _$Conversation on _Conversation {
 /// Public methods
 extension $Conversation on _Conversation {
   FV load() async {
-    conversations.q = await P.db._db.convPage();
+    final list = await P.db._db.convPage();
+    qqq("${list.length}");
+    conversations.q = list;
   }
 
   FV delete(int createAtInUS) async {
@@ -32,7 +32,6 @@ extension $Conversation on _Conversation {
   }
 
   FV onTapInList(ConversationData conversation) async {
-    if (!Config.enableConversation) return;
     current.q = conversation;
     Pager.toggle();
   }

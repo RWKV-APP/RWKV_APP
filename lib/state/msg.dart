@@ -5,6 +5,8 @@ class _Msg {
   late final pool = qs<Map<int, Message>>({});
 
   /// All message ids rendering in the chat page message list
+  ///
+  /// Source from _msgNode
   late final ids = qs<List<int>>([]);
 
   /// The latest clicked message
@@ -59,6 +61,12 @@ extension _$Msg on _Msg {
     P.conversation._syncNode();
     ids.q = [];
     _msgNode = MsgNode(0);
+  }
+
+  Future<bool> syncMsg(int id, Message msg) async {
+    pool.q = {...pool.q, id: msg};
+    // TODO: sync to db
+    return true;
   }
 }
 

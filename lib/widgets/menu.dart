@@ -71,13 +71,17 @@ class _Info extends ConsumerWidget {
                       Row(
                         // mainAxisAlignment: MAA.center,
                         children: [
-                          T(
-                            version,
-                            s: const TS(s: 12),
+                          Flexible(
+                            child: T(
+                              version,
+                              s: const TS(s: 12),
+                            ),
                           ),
-                          T(
-                            " ($buildNumber)",
-                            s: const TS(s: 12),
+                          Flexible(
+                            child: T(
+                              " ($buildNumber)",
+                              s: const TS(s: 12),
+                            ),
                           ),
                         ],
                       ),

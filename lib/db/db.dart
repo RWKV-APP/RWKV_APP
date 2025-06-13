@@ -168,14 +168,6 @@ class AppDatabase extends _$AppDatabase {
   /// 返回值:
   /// - 如果操作成功（插入或更新），则返回 true；否则返回 false。
   Future<bool> syncConv(MsgNode msgNode) async {
-    // 断言 msgNode.id 必须为 0，这通常表示一个新创建的节点或者某个特定状态。
-    assert(msgNode.id == 0);
-    // 如果 msgNode.children 为空，则没有需要同步的子节点，直接返回 true。
-    if (msgNode.children.isEmpty) return true;
-
-    // 记录节点的创建时间，用作数据库中的唯一标识符。
-    qqr("node createAtInUS: ${msgNode.createAtInUS}");
-
     // 准备要插入或更新的数据伴侣对象。
     // _conversationToConversationCompanion 函数负责将 MsgNode 转换为数据库表伴侣对象。
     final convData = _conversationToConversationCompanion(msgNode);
@@ -185,6 +177,17 @@ class AppDatabase extends _$AppDatabase {
       // 如果主键唯一，则会触发 DoUpdate 策略
       await into(conversation).insert(convData, onConflict: DoUpdate((old) => convData));
       qqr("upsert successful");
+      return true;
+    } catch (e) {
+      qqr("upsert failed: $e");
+      return false;
+    }
+  }
+
+  Future<bool> syncMessage(Message message) async {
+    final msgData = _messageToMsgCompanion(message);
+    try {
+      await into(msg).insert(msgData, onConflict: DoUpdate((old) => msgData));
       return true;
     } catch (e) {
       qqr("upsert failed: $e");
