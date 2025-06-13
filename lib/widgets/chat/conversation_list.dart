@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/conversation.dart';
 import 'package:zone/state/p.dart';
@@ -16,7 +17,22 @@ class ConversationList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     qq;
-    final conversations = ref.watch(P.conversation.sorted);
+    final conversations = ref.watch(P.conversation.conversations);
+    final isEmpty = conversations.isEmpty;
+
+    if (isEmpty) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: constraints.maxHeight,
+              child: const _Empty(),
+            ),
+          );
+        },
+      );
+    }
 
     return RefreshIndicator.adaptive(
       onRefresh: () async {
@@ -24,17 +40,15 @@ class ConversationList extends ConsumerWidget {
         await P.conversation.load();
       },
       child: ListView.builder(
+        shrinkWrap: isEmpty,
         padding: const EI.a(8),
-        itemCount: conversations.isEmpty ? 1 : conversations.length,
+        itemCount: isEmpty ? 0 : conversations.length,
         itemBuilder: (context, index) {
-          if (conversations.isEmpty) {
-            return const _Empty();
-          }
           final conversation = conversations[index];
           return _Item(conversation: conversation);
         },
-      ),
-    );
+      ).debug,
+    ).debug;
   }
 }
 
@@ -49,23 +63,32 @@ class _Empty extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
-    return Column(
-      mainAxisAlignment: MAA.center,
-      crossAxisAlignment: CAA.stretch,
-      children: [
-        IconButton(
-          onPressed: _onPressed,
-          icon: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CAA.center,
-            children: [
-              const Icon(Icons.add),
-              T(s.new_chat, s: const TS(s: 20)),
-              T(s.create_a_new_one_by_clicking_the_button_above, s: TS(s: 10, c: qb.q(.5))),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Column(
+        children: [
+          const Spacer(),
+          IconButton(
+            onPressed: _onPressed,
+            icon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CAA.stretch,
+              children: [
+                12.h,
+                const Icon(Icons.add),
+                T(s.new_chat, s: const TS(s: 20), textAlign: TextAlign.center),
+                T(
+                  s.create_a_new_one_by_clicking_the_button_above,
+                  s: TS(s: 10, c: qb.q(.5)),
+                  textAlign: TextAlign.center,
+                ),
+                12.h,
+              ],
+            ),
           ),
-        ),
-      ],
+          const Spacer(),
+        ],
+      ),
     );
   }
 }
@@ -73,7 +96,7 @@ class _Empty extends ConsumerWidget {
 class _Item extends ConsumerWidget {
   const _Item({required this.conversation});
 
-  final Conversation conversation;
+  final ConversationData conversation;
 
   void _onTap() async {
     await P.conversation.onTapInList(conversation);
@@ -83,7 +106,7 @@ class _Item extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final current = ref.watch(P.conversation.current);
-    final isCurrent = current?.id == conversation.id;
+    final isCurrent = current?.createdAt == conversation.createdAt;
     final primary = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final qw = ref.watch(P.app.qw);
@@ -107,8 +130,10 @@ class _Item extends ConsumerWidget {
             ),
             padding: const EI.a(8),
             child: T(
-              conversation.name,
+              conversation.createdAt.toString(),
               s: TS(s: 16, w: FW.w600, c: isCurrent ? primary : qb),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ),

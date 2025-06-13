@@ -1,15 +1,20 @@
+import 'dart:developer';
+
 import 'package:drift/drift.dart';
+import 'package:drift_flutter/drift_flutter.dart';
+import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:zone/model/message.dart';
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/state/p.dart';
 import 'dart:convert';
-import '../model/message.dart';
 
 part 'db.g.dart';
 
 class Conversation extends Table {
-  DateTimeColumn get createdAt => dateTime().nullable()();
-  DateTimeColumn get updatedAt => dateTime().nullable()();
+  IntColumn get createdAt => integer()();
+  IntColumn get updatedAt => integer().nullable()();
   TextColumn get title => text().named('New Conversation')();
   TextColumn get data => text()();
 
@@ -47,10 +52,19 @@ class Msg extends Table {
 
 @DriftDatabase(tables: [Conversation, Msg])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(super.executor);
+  AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
   int get schemaVersion => 1;
+
+  static QueryExecutor _openConnection() {
+    return driftDatabase(
+      name: 'rwkv_db',
+      native: const DriftNativeOptions(
+        databaseDirectory: getApplicationSupportDirectory,
+      ),
+    );
+  }
 
   // Convert Message to Msg data for insertion
   MsgCompanion _messageToMsgCompanion(Message message) {
@@ -58,7 +72,7 @@ class AppDatabase extends _$AppDatabase {
       id: Value(message.id),
       content: message.content,
       isMine: message.isMine,
-      changing: Value(false),
+      changing: const Value(false),
       type: message.type.name,
       isReasoning: message.isReasoning,
       paused: message.paused,
@@ -109,15 +123,12 @@ class AppDatabase extends _$AppDatabase {
 
   ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode) {
     return ConversationCompanion.insert(
+      createdAt: msgNode.createAtInUS,
       title: msgNode.toJson(),
       data: msgNode.toJson(),
       build: P.app.buildNumber.q,
+      updatedAt: Value(HF.microseconds),
     );
-  }
-
-  Future<List<MsgNode>> getConversations() async {
-    final conversationDataList = await select(conversation).get();
-    return conversationDataList.map((conversationData) => MsgNode.fromJson(conversationData.data)).toList();
   }
 
   Future<MsgNode?> getConversationById(int id) async {
@@ -138,5 +149,58 @@ class AppDatabase extends _$AppDatabase {
     //       conversation,
     //     )..where((tbl) => tbl.createdAt.equals(msgNode.createdAt))).write(_conversationToConversationCompanion(msgNode)) >
     //     0;
+  }
+
+  /// 同步 MsgNode 到数据库
+  Future<bool> syncConv(MsgNode msgNode) async {
+    assert(msgNode.id == 0);
+    if (msgNode.children.isEmpty) return true;
+
+    qqr("node createAtInUS: ${msgNode.createAtInUS}");
+
+    final convsationKey = msgNode.createAtInUS;
+
+    // 查询是否存在相同创建时间的对话
+    final existingConv = await (select(conversation)..where((tbl) => tbl.createdAt.equals(convsationKey))).getSingleOrNull();
+
+    // 准备要插入/更新的数据
+    final convData = _conversationToConversationCompanion(msgNode);
+
+    debugger();
+
+    // 根据是否存在决定插入或更新
+    if (existingConv == null) {
+      // 不存在则插入新记录
+      qqr("insert");
+      return await into(conversation).insert(convData) > 0;
+    } else {
+      qqr("update");
+      // 存在则更新记录
+      return await (update(conversation)..where((tbl) => tbl.createdAt.equals(msgNode.createAtInUS))).write(convData) > 0;
+    }
+  }
+
+  /// 1. 最近更新的(updatedAt)在最前面, 第二排序顺位是 createdAt
+  /// 2. 如果 limit 为 null, 则返回所有
+  /// 3. 如果 offset 为 null, 则从 0 开始
+  /// 4. 如果 limit 和 offset 都为 null, 则返回所有
+  /// 5. limit 默认为 20, offset 默认为 0
+  Future<List<ConversationData>> convPage({
+    int pageIndex = 0,
+    int pageSize = 20,
+  }) async {
+    final query = select(conversation)
+      ..orderBy([
+        (t) => OrderingTerm.desc(t.updatedAt),
+        (t) => OrderingTerm.desc(t.createdAt),
+      ])
+      ..limit(pageSize, offset: pageIndex * pageSize);
+
+    return await query.get();
+  }
+
+  /// 根据 MsgNode.createAt 删除
+  Future<bool> deleteConv(int createAtInUS) async {
+    return await (delete(conversation)..where((tbl) => tbl.createdAt.equals(createAtInUS))).go() > 0;
   }
 }

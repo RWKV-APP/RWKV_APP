@@ -64,7 +64,7 @@ class Debugger extends ConsumerWidget {
     final customTheme = ref.watch(P.app.customTheme);
     final themeMode = ref.watch(P.preference.themeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
-
+    final checkingLatency = ref.watch(P.guard.checkingLatency);
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -121,7 +121,7 @@ class Debugger extends ConsumerWidget {
                       if (showPage) T("page".codeToName),
                       if (showPage) T(page.toString()),
                       if (Config.enableConversation) T("conversation".codeToName),
-                      if (Config.enableConversation) T(conversation?.name ?? "null"),
+                      if (Config.enableConversation) T(conversation?.title.substring(0, 100) ?? "null"),
                       // T("receivingTokens".codeToName),
                       // T(receivingTokens.toString()),
                       T("receiveId".codeToName),
@@ -166,6 +166,8 @@ class Debugger extends ConsumerWidget {
                       T(themeMode.toString()),
                       T("preferredDarkCustomTheme".codeToName),
                       T(preferredDarkCustomTheme.runtimeType.toString()),
+                      T("checkingLatency".codeToName),
+                      T(checkingLatency.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

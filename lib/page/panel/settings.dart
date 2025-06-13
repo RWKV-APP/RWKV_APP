@@ -112,6 +112,31 @@ class Settings extends ConsumerWidget {
           ),
           controller: scrollController,
           children: [
+            Row(
+              mainAxisAlignment: MAA.center,
+              children: [iconWidget],
+            ),
+            16.h,
+            const Row(
+              mainAxisAlignment: MAA.center,
+              children: [
+                Expanded(
+                  child: T(
+                    Config.appTitle,
+                    s: TS(s: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+            4.h,
+            Row(
+              mainAxisAlignment: MAA.center,
+              children: [
+                T(version, s: const TS(s: 12)),
+                T(" ($buildNumber)", s: const TS(s: 12)),
+              ],
+            ),
             16.h,
             Row(
               mainAxisAlignment: MAA.start,

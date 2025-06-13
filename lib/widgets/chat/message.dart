@@ -93,7 +93,7 @@ class Message extends ConsumerWidget {
 
     // 由 message 对象是否正在 changing 来决定是否根据 receivedTokens 渲染消息内容
     final received = ref.watch(P.chat.receivedTokens.select((v) => msg.changing ? v : ""));
-    final cotDisplayState = ref.watch(P.chat.cotDisplayState(msg.id));
+    final cotDisplayState = ref.watch(P.msg.cotDisplayState(msg.id));
 
     final editingIndex = ref.watch(P.msg.editingOrRegeneratingIndex);
 
@@ -360,9 +360,9 @@ class Message extends ConsumerWidget {
                   GD(
                     onTap: () {
                       if (showingCotContent) {
-                        ref.read(P.chat.cotDisplayState(msg.id).notifier).state = CoTDisplayState.hideCotHeader;
+                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.hideCotHeader;
                       } else {
-                        ref.read(P.chat.cotDisplayState(msg.id).notifier).state = CoTDisplayState.showCotHeaderAndCotContent;
+                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.showCotHeaderAndCotContent;
                       }
                     },
                     child: C(

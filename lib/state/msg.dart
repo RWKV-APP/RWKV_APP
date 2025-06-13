@@ -1,14 +1,22 @@
 part of 'p.dart';
 
 class _Msg {
+  /// The pool of messages
   late final pool = qs<Map<int, Message>>({});
+
+  /// All message ids rendering in the chat page message list
   late final ids = qs<List<int>>([]);
+
+  /// The latest clicked message
   late final latestClicked = qs<Message?>(null);
 
+  /// The index of the message being edited or regenerating
   late final editingOrRegeneratingIndex = qs<int?>(null);
 
+  /// The node of the message list
   MsgNode _msgNode = MsgNode(0);
 
+  /// The list of messages rendering in the chat page message list
   late final list = qp<List<Message>>((ref) {
     final ids = ref.watch(this.ids);
     final pool = ref.watch(this.pool);
@@ -21,6 +29,9 @@ class _Msg {
     final list = ref.watch(this.list);
     return list[editingIndex].isMine == false;
   });
+
+  /// The key of it is the id of the message
+  late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
 }
 
 /// Private methods
@@ -45,6 +56,7 @@ extension _$Msg on _Msg {
   }
 
   void _clear() {
+    P.conversation._syncNode();
     ids.q = [];
     _msgNode = MsgNode(0);
   }
@@ -91,5 +103,6 @@ extension $Msg on _Msg {
     }
     parent.latest = parent.children[newIndex];
     ids.q = _msgNode.latestMsgIdsWithoutRoot;
+    P.conversation._syncNode();
   }
 }

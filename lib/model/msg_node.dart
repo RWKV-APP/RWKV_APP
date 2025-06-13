@@ -1,9 +1,15 @@
 import 'dart:convert';
 
+import 'package:halo/halo.dart';
+
 // msg_node.dart
 final class MsgNode {
+  /// 所代表的 Message 的 ID
   int id;
   List<MsgNode> children;
+
+  /// 创建时间, 单位: 微秒
+  late final int createAtInUS;
 
   /// 当前节点, 最新的子节点
   MsgNode? latest;
@@ -17,6 +23,7 @@ final class MsgNode {
     this.parent,
     this.root,
   }) : children = List<MsgNode>.empty(growable: true) {
+    createAtInUS = HF.microseconds;
     // Initialized here
     // If you intended to use the passed 'children' parameter, you'd do:
     // this.children = List<MsgNode>.from(children, growable: true);

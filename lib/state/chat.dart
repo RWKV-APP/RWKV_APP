@@ -1,9 +1,6 @@
 part of 'p.dart';
 
 class _Chat {
-  /// The key of it is the id of the message
-  late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
-
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
 
@@ -35,10 +32,14 @@ class _Chat {
 
   late final hasFocus = qs(false);
 
-  late final autoPauseId = qs<int?>(null);
+  late final _autoPauseId = qs<int?>(null);
 
+  // TODO: Should be moved to state/msg.dart in the future
+  // TODO: Should be renamed to share related state
   late final selectedMessages = qs<Set<int>>({});
 
+  // TODO: Should be moved to state/msg.dart in the future
+  // TODO: Should be renamed to share related state
   late final selectMessageMode = qs(false);
 
   late final completionMode = qs(false);
@@ -92,6 +93,7 @@ extension $Chat on _Chat {
       }
       userMsgNode.add(MsgNode(id));
       P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+      P.conversation._syncNode();
       P.msg.editingOrRegeneratingIndex.q = null;
       Alert.success(S.current.bot_message_edited);
       return;
@@ -290,6 +292,7 @@ extension $Chat on _Chat {
 
     // 更新消息 id 列表
     P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+    P.conversation._syncNode();
 
     Future.delayed(34.ms).then((_) {
       scrollToBottom();
@@ -338,6 +341,7 @@ extension $Chat on _Chat {
     P.msg.pool.q[receiveId] = receiveMsg;
     parentNode.add(MsgNode(receiveId));
     P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+    P.conversation._syncNode();
 
     _checkSensitive(message);
   }
@@ -420,17 +424,17 @@ extension _$Chat on _Chat {
     if (P.app.isDesktop.q) return;
     final isToBackground = next == AppLifecycleState.paused || next == AppLifecycleState.hidden;
     if (isToBackground) {
-      if (receiveId.q != null && autoPauseId.q == null && receivingTokens.q == true) {
-        autoPauseId.q = receiveId.q!;
+      if (receiveId.q != null && _autoPauseId.q == null && receivingTokens.q == true) {
+        _autoPauseId.q = receiveId.q!;
         _pauseMessageById(id: receiveId.q!);
       }
     } else {
-      if (autoPauseId.q != null) {
-        resumeMessageById(id: autoPauseId.q!, withHaptic: false);
-        autoPauseId.uc();
+      if (_autoPauseId.q != null) {
+        resumeMessageById(id: _autoPauseId.q!, withHaptic: false);
+        _autoPauseId.uc();
       }
     }
-    qqq("autoPauseId: ${autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
+    qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
   }
 
   List<String> _history() {

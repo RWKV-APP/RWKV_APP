@@ -13,22 +13,22 @@ class $ConversationTable extends Conversation
     'createdAt',
   );
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
     'created_at',
     aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
     'updated_at',
     aliasedName,
     true,
-    type: DriftSqlType.dateTime,
+    type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -83,6 +83,8 @@ class $ConversationTable extends Conversation
         _createdAtMeta,
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -124,11 +126,11 @@ class $ConversationTable extends Conversation
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ConversationData(
       createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
+        DriftSqlType.int,
         data['${effectivePrefix}created_at'],
-      ),
+      )!,
       updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
+        DriftSqlType.int,
         data['${effectivePrefix}updated_at'],
       ),
       title: attachedDatabase.typeMapping.read(
@@ -154,13 +156,13 @@ class $ConversationTable extends Conversation
 
 class ConversationData extends DataClass
     implements Insertable<ConversationData> {
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final int createdAt;
+  final int? updatedAt;
   final String title;
   final String data;
   final String build;
   const ConversationData({
-    this.createdAt,
+    required this.createdAt,
     this.updatedAt,
     required this.title,
     required this.data,
@@ -169,11 +171,9 @@ class ConversationData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
-    }
+    map['created_at'] = Variable<int>(createdAt);
     if (!nullToAbsent || updatedAt != null) {
-      map['updated_at'] = Variable<DateTime>(updatedAt);
+      map['updated_at'] = Variable<int>(updatedAt);
     }
     map['New Conversation'] = Variable<String>(title);
     map['data'] = Variable<String>(data);
@@ -183,9 +183,7 @@ class ConversationData extends DataClass
 
   ConversationCompanion toCompanion(bool nullToAbsent) {
     return ConversationCompanion(
-      createdAt: createdAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAt),
+      createdAt: Value(createdAt),
       updatedAt: updatedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(updatedAt),
@@ -201,8 +199,8 @@ class ConversationData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ConversationData(
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int?>(json['updatedAt']),
       title: serializer.fromJson<String>(json['title']),
       data: serializer.fromJson<String>(json['data']),
       build: serializer.fromJson<String>(json['build']),
@@ -212,8 +210,8 @@ class ConversationData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
-      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int?>(updatedAt),
       'title': serializer.toJson<String>(title),
       'data': serializer.toJson<String>(data),
       'build': serializer.toJson<String>(build),
@@ -221,13 +219,13 @@ class ConversationData extends DataClass
   }
 
   ConversationData copyWith({
-    Value<DateTime?> createdAt = const Value.absent(),
-    Value<DateTime?> updatedAt = const Value.absent(),
+    int? createdAt,
+    Value<int?> updatedAt = const Value.absent(),
     String? title,
     String? data,
     String? build,
   }) => ConversationData(
-    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     title: title ?? this.title,
     data: data ?? this.data,
@@ -269,8 +267,8 @@ class ConversationData extends DataClass
 }
 
 class ConversationCompanion extends UpdateCompanion<ConversationData> {
-  final Value<DateTime?> createdAt;
-  final Value<DateTime?> updatedAt;
+  final Value<int> createdAt;
+  final Value<int?> updatedAt;
   final Value<String> title;
   final Value<String> data;
   final Value<String> build;
@@ -284,18 +282,19 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
     this.rowid = const Value.absent(),
   });
   ConversationCompanion.insert({
-    this.createdAt = const Value.absent(),
+    required int createdAt,
     this.updatedAt = const Value.absent(),
     required String title,
     required String data,
     required String build,
     this.rowid = const Value.absent(),
-  }) : title = Value(title),
+  }) : createdAt = Value(createdAt),
+       title = Value(title),
        data = Value(data),
        build = Value(build);
   static Insertable<ConversationData> custom({
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
     Expression<String>? title,
     Expression<String>? data,
     Expression<String>? build,
@@ -312,8 +311,8 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
   }
 
   ConversationCompanion copyWith({
-    Value<DateTime?>? createdAt,
-    Value<DateTime?>? updatedAt,
+    Value<int>? createdAt,
+    Value<int?>? updatedAt,
     Value<String>? title,
     Value<String>? data,
     Value<String>? build,
@@ -333,10 +332,10 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+      map['created_at'] = Variable<int>(createdAt.value);
     }
     if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+      map['updated_at'] = Variable<int>(updatedAt.value);
     }
     if (title.present) {
       map['New Conversation'] = Variable<String>(title.value);
@@ -1644,8 +1643,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$ConversationTableCreateCompanionBuilder =
     ConversationCompanion Function({
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
+      required int createdAt,
+      Value<int?> updatedAt,
       required String title,
       required String data,
       required String build,
@@ -1653,8 +1652,8 @@ typedef $$ConversationTableCreateCompanionBuilder =
     });
 typedef $$ConversationTableUpdateCompanionBuilder =
     ConversationCompanion Function({
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
+      Value<int> createdAt,
+      Value<int?> updatedAt,
       Value<String> title,
       Value<String> data,
       Value<String> build,
@@ -1670,12 +1669,12 @@ class $$ConversationTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+  ColumnFilters<int> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+  ColumnFilters<int> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
@@ -1705,12 +1704,12 @@ class $$ConversationTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+  ColumnOrderings<int> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
@@ -1740,10 +1739,10 @@ class $$ConversationTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<DateTime> get createdAt =>
+  GeneratedColumn<int> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get updatedAt =>
+  GeneratedColumn<int> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   GeneratedColumn<String> get title =>
@@ -1787,8 +1786,8 @@ class $$ConversationTableTableManager
               $$ConversationTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<DateTime?> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<int?> updatedAt = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> data = const Value.absent(),
                 Value<String> build = const Value.absent(),
@@ -1803,8 +1802,8 @@ class $$ConversationTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<DateTime?> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                required int createdAt,
+                Value<int?> updatedAt = const Value.absent(),
                 required String title,
                 required String data,
                 required String build,

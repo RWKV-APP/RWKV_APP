@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/config.dart';
 import 'package:zone/state/p.dart';
-import 'package:zone/widgets/app_info.dart';
 import 'package:zone/page/panel/settings.dart';
 import 'package:zone/widgets/chat/conversation_list.dart';
 
@@ -49,51 +48,56 @@ class _Info extends ConsumerWidget {
 
     return Material(
       color: kC,
-      child: Column(
-        children: [
-          12.h,
-          Row(
-            children: [
-              12.w,
-              iconWidget,
-              8.w,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CAA.stretch,
-                  children: [
-                    const T(
-                      Config.appTitle,
-                      s: TS(s: 20),
-                    ),
-                    Row(
-                      // mainAxisAlignment: MAA.center,
-                      children: [
-                        T(
-                          version,
-                          s: const TS(s: 12),
-                        ),
-                        T(
-                          " ($buildNumber)",
-                          s: const TS(s: 12),
-                        ),
-                      ],
-                    ),
-                  ],
+      child: GD(
+        onTap: () {
+          Settings.show();
+        },
+        child: Column(
+          children: [
+            12.h,
+            Row(
+              children: [
+                12.w,
+                iconWidget,
+                8.w,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CAA.stretch,
+                    children: [
+                      const T(
+                        Config.appTitle,
+                        s: TS(s: 20),
+                      ),
+                      Row(
+                        // mainAxisAlignment: MAA.center,
+                        children: [
+                          T(
+                            version,
+                            s: const TS(s: 12),
+                          ),
+                          T(
+                            " ($buildNumber)",
+                            s: const TS(s: 12),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              8.w,
-              IconButton(
-                onPressed: () {
-                  Settings.show();
-                },
-                icon: (Platform.isIOS || Platform.isMacOS) ? const Icon(CupertinoIcons.ellipsis) : const Icon(Icons.more_vert),
-              ),
-              8.w,
-            ],
-          ),
-          12.h,
-          paddingBottom.h,
-        ],
+                8.w,
+                IconButton(
+                  onPressed: () {
+                    Settings.show();
+                  },
+                  icon: (Platform.isIOS || Platform.isMacOS) ? const Icon(CupertinoIcons.ellipsis) : const Icon(Icons.more_vert),
+                ),
+                8.w,
+              ],
+            ),
+            12.h,
+            paddingBottom.h,
+          ],
+        ),
       ),
     );
   }

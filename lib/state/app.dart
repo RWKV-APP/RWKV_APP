@@ -189,7 +189,6 @@ extension _$App on _App {
     final light = this.light.q;
     final preferredThemeMode = this.preferredThemeMode.q;
     final preferredDarkCustomTheme = P.preference.preferredDarkCustomTheme.q;
-    qqr("syncTheme: light: $light, preferredThemeMode: $preferredThemeMode");
     switch (preferredThemeMode) {
       case ThemeMode.light:
         customTheme.q = custom_theme.Light();
