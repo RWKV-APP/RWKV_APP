@@ -155,6 +155,7 @@ class ChatAppBar extends ConsumerWidget {
       onSelected: (v) {
         switch (v) {
           case 1:
+            if (!checkModelSelection()) return;
             P.chat.toggleCompletionMode();
             break;
           case 2:
