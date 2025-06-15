@@ -1,6 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.dart text eol=lf # 确保Dart文件使用LF换行符
+*.dart text eol=lf
 
 /**/*.freezed.dart linguist-generated=true
 /**/*.g.dart linguist-generated=true
