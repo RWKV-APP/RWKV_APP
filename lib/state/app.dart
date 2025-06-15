@@ -36,6 +36,7 @@ class _App extends RawApp {
       systemNavigationBarColor: scaffold,
       systemNavigationBarIconBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
     );
   }
 
@@ -45,6 +46,7 @@ class _App extends RawApp {
       systemNavigationBarColor: scaffold,
       systemNavigationBarIconBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
     );
   }
 
