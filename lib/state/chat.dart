@@ -85,7 +85,7 @@ extension $Chat on _Chat {
         runningMode: currentMessage.runningMode,
       );
 
-      P.msg.syncMsg(id, newMsg);
+      P.msg._syncMsg(id, newMsg);
       final userMsgNode = P.msg._msgNode.findParentByMsgId(currentMessage.id);
       if (userMsgNode == null) {
         qqe("We should found a user message node before a bot message node");
@@ -286,7 +286,7 @@ extension $Chat on _Chat {
         isReasoning: false,
         paused: false,
       );
-      P.msg.syncMsg(id, msg);
+      P.msg._syncMsg(id, msg);
       parentNode = parentNode.add(MsgNode(id));
     }
 
@@ -468,7 +468,7 @@ extension _$Chat on _Chat {
     }
 
     final newMsg = msg.copyWith(paused: true, isSensitive: isSensitive);
-    P.msg.syncMsg(id, newMsg);
+    P.msg._syncMsg(id, newMsg);
   }
 
   FV _onFocusNodeChanged() async {
@@ -584,7 +584,7 @@ extension _$Chat on _Chat {
       ttsPerWavProgress: ttsPerWavProgress,
       ttsFilePaths: ttsFilePaths,
     );
-    P.msg.syncMsg(id, newMsg);
+    P.msg._syncMsg(id, newMsg);
   }
 
   @Deprecated("Use _onStreamEvent instead")

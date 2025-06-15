@@ -122,7 +122,7 @@ class AppDatabase extends _$AppDatabase {
     return msgData != null ? Message.fromMsgData(msgData) : null;
   }
 
-  Future<List<Message>> getMessagesByIds(List<int> ids) async {
+  Future<List<Message>> getMessagesByIds(Iterable<int> ids) async {
     final msgDataList = await (select(msg)..where((tbl) => tbl.id.isIn(ids))).get();
     return msgDataList.map((msgData) => Message.fromMsgData(msgData)).toList();
   }
@@ -167,10 +167,10 @@ class AppDatabase extends _$AppDatabase {
   ///
   /// 返回值:
   /// - 如果操作成功（插入或更新），则返回 true；否则返回 false。
-  Future<bool> syncConv(MsgNode msgNode) async {
-    // 准备要插入或更新的数据伴侣对象。
-    // _conversationToConversationCompanion 函数负责将 MsgNode 转换为数据库表伴侣对象。
+  Future<bool> upsertConv(MsgNode msgNode) async {
     final convData = _conversationToConversationCompanion(msgNode);
+
+    qqr("msgNode.createAtInUS: ${msgNode.createAtInUS}");
 
     try {
       // 使用 Drift 的 insert 方法，并结合 onConflict 参数实现 UPSERT。
@@ -184,7 +184,7 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
-  Future<bool> syncMessage(Message message) async {
+  Future<bool> upsertMsg(Message message) async {
     final msgData = _messageToMsgCompanion(message);
     try {
       await into(msg).insert(msgData, onConflict: DoUpdate((old) => msgData));

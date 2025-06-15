@@ -418,7 +418,7 @@ extension $TTS on _TTS {
       ttsCFMSteps: cfmSteps.q,
     );
 
-    P.msg.syncMsg(id, msg);
+    P.msg._syncMsg(id, msg);
     P.msg._msgNode.rootAdd(MsgNode(id));
 
     Future.delayed(34.ms).then((_) {

@@ -14,7 +14,15 @@ extension _$Conversation on _Conversation {
 
   FV _syncNode() async {
     qq;
-    await P.db._db.syncConv(P.msg._msgNode);
+
+    final msgNode = P.msg._msgNode;
+
+    if (msgNode.isEmpty) {
+      qqq("msgNode is empty, skip upsert");
+      return;
+    }
+
+    await P.db._db.upsertConv(msgNode);
     await load();
   }
 }
@@ -32,7 +40,13 @@ extension $Conversation on _Conversation {
   }
 
   FV onTapInList(ConversationData conversation) async {
+    qq;
     current.q = conversation;
     Pager.toggle();
+    final msgNode = MsgNode.fromJson(conversation.data);
+    final ids = msgNode.latestMsgIdsWithoutRoot;
+    await P.msg._loadMessages(ids);
+    P.msg._msgNode = msgNode;
+    P.msg.ids.q = ids;
   }
 }

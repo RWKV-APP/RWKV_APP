@@ -96,6 +96,8 @@ final class MsgNode {
     return msgIds;
   }
 
+  bool get isEmpty => id == 0 && children.isEmpty;
+
   List<int> get latestMsgIdsWithoutRoot {
     return latestMsgIds.where((e) => e != 0).toList();
   }

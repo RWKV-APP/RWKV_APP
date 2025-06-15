@@ -34,6 +34,8 @@ class _Msg {
 
   /// The key of it is the id of the message
   late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
+
+  late final loading = qs(false);
 }
 
 /// Private methods
@@ -63,10 +65,28 @@ extension _$Msg on _Msg {
     _msgNode = MsgNode(0);
   }
 
-  Future<bool> syncMsg(int id, Message msg) async {
+  Future<bool> _syncMsg(int id, Message msg) async {
+    // 在内存中更新消息
     pool.q = {...pool.q, id: msg};
-    // TODO: sync to db
+    final db = P.db._db;
+    await db.upsertMsg(msg);
     return true;
+  }
+
+  /// Load messages from db. Then add them to the pool
+  FV _loadMessages(Iterable<int> ids) async {
+    loading.q = true;
+    try {
+      final db = P.db._db;
+      final messages = await db.getMessagesByIds(ids);
+      for (var message in messages) {
+        pool.q = {...pool.q, message.id: message};
+      }
+    } catch (e) {
+      qqr("Failed to load messages: $e");
+    } finally {
+      loading.q = false;
+    }
   }
 }
 
@@ -88,7 +108,7 @@ extension $Msg on _Msg {
     int index, {
     required bool isBack,
     required Message msg,
-  }) {
+  }) async {
     final parent = _msgNode.findParentByMsgId(msg.id);
     if (parent == null) {
       qqe("parent is null");

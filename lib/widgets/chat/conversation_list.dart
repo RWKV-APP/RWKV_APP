@@ -46,8 +46,8 @@ class ConversationList extends ConsumerWidget {
           final conversation = conversations[index];
           return _Item(conversation: conversation);
         },
-      ).debug,
-    ).debug;
+      ),
+    );
   }
 }
 

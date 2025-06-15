@@ -85,12 +85,11 @@ class ChatAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
+      backgroundColor: Colors.transparent,
       title: GD(
         onTap: _onTitlePressed,
         child: C(
-          decoration: const BD(
-            color: kC,
-          ),
+          decoration: const BD(color: kC),
           child: Column(
             crossAxisAlignment: CAA.center,
             children: [
