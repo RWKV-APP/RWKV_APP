@@ -86,13 +86,13 @@ extension $Chat on _Chat {
       );
 
       P.msg._syncMsg(id, newMsg);
-      final userMsgNode = P.msg._msgNode.findParentByMsgId(currentMessage.id);
+      final userMsgNode = P.msg.msgNode.q.findParentByMsgId(currentMessage.id);
       if (userMsgNode == null) {
         qqe("We should found a user message node before a bot message node");
         return;
       }
       userMsgNode.add(MsgNode(id));
-      P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+      P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
       P.conversation._syncNode();
       P.msg.editingOrRegeneratingIndex.q = null;
       Alert.success(S.current.bot_message_edited);
@@ -241,7 +241,7 @@ extension $Chat on _Chat {
     bool withHistory = true,
     bool isRegenerate = false,
   }) async {
-    MsgNode? parentNode = P.msg._msgNode.wholeLatestNode;
+    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
 
     final editingOrRegeneratingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (editingOrRegeneratingIndex != null) {
@@ -252,10 +252,10 @@ extension $Chat on _Chat {
       }
 
       if (isRegenerate) {
-        parentNode = P.msg._msgNode.findParentByMsgId(currentMessage.id);
+        parentNode = P.msg.msgNode.q.findParentByMsgId(currentMessage.id);
       } else {
         // 以该消息的父节点作为新消息的父结点
-        parentNode = P.msg._msgNode.findParentByMsgId(currentMessage.id);
+        parentNode = P.msg.msgNode.q.findParentByMsgId(currentMessage.id);
       }
 
       if (parentNode == null) {
@@ -291,7 +291,7 @@ extension $Chat on _Chat {
     }
 
     // 更新消息 id 列表
-    P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
 
     Future.delayed(34.ms).then((_) {
@@ -340,7 +340,7 @@ extension $Chat on _Chat {
 
     P.msg.pool.q[receiveId] = receiveMsg;
     parentNode.add(MsgNode(receiveId));
-    P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
 
     _checkSensitive(message);

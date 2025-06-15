@@ -2,11 +2,13 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zone/args.dart';
 import 'package:zone/func/merge_wav.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
@@ -317,6 +319,11 @@ class Message extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: isMine ? CAA.end : CAA.start,
             children: [
+              if (kDebugMode && Args.debugMsgId)
+                C(
+                  decoration: BD(color: kCR.q(1)),
+                  child: T("Debug: ${msg.id}", s: TS(c: kW)),
+                ),
               if (isMine) ...[
                 // 🔥 User message
                 if (!isUserImage && !isUserAudio && finalContent.isNotEmpty) T(finalContent, s: userMessageStyle),

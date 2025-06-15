@@ -1,3 +1,4 @@
+// ignore: unused_import
 import 'dart:developer';
 
 import 'package:drift/drift.dart';
@@ -5,7 +6,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:zone/model/message.dart';
+import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/state/p.dart';
 import 'dart:convert';
@@ -31,7 +32,6 @@ class Msg extends Table {
   IntColumn get id => integer()();
   TextColumn get content => text()();
   BoolColumn get isMine => boolean()();
-  BoolColumn get changing => boolean().withDefault(const Constant(false))();
   TextColumn get type => text()();
   BoolColumn get isReasoning => boolean()();
   BoolColumn get paused => boolean()();
@@ -73,12 +73,11 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // Convert Message to Msg data for insertion
-  MsgCompanion _messageToMsgCompanion(Message message) {
+  MsgCompanion _messageToMsgCompanion(model.Message message) {
     return MsgCompanion.insert(
       id: Value(message.id),
       content: message.content,
       isMine: message.isMine,
-      changing: const Value(false),
       type: message.type.name,
       isReasoning: message.isReasoning,
       paused: message.paused,
@@ -96,15 +95,15 @@ class AppDatabase extends _$AppDatabase {
       ttsFilePaths: Value(message.ttsFilePaths != null ? json.encode(message.ttsFilePaths) : null),
       modelName: Value(message.modelName),
       runningMode: Value(message.runningMode),
-      build: '', // Set appropriate value for build field
+      build: P.app.buildNumber.q,
     );
   }
 
-  Future<bool> saveMessage(Message message) async {
+  Future<bool> saveMessage(model.Message message) async {
     return await into(msg).insert(_messageToMsgCompanion(message)) > 0;
   }
 
-  Future<bool> updateMessage(Message message) async {
+  Future<bool> updateMessage(model.Message message) async {
     return await (update(msg)..where((tbl) => tbl.id.equals(message.id))).write(_messageToMsgCompanion(message)) > 0;
   }
 
@@ -112,19 +111,19 @@ class AppDatabase extends _$AppDatabase {
     return await (delete(msg)..where((tbl) => tbl.id.equals(id))).go() > 0;
   }
 
-  Future<List<Message>> getAllMessages() async {
+  Future<List<model.Message>> getAllMessages() async {
     final msgDataList = await select(msg).get();
-    return msgDataList.map((msgData) => Message.fromMsgData(msgData)).toList();
+    return msgDataList.map((msgData) => model.Message.fromMsgData(msgData)).toList();
   }
 
-  Future<Message?> getMessageById(int id) async {
+  Future<model.Message?> getMessageById(int id) async {
     final msgData = await (select(msg)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
-    return msgData != null ? Message.fromMsgData(msgData) : null;
+    return msgData != null ? model.Message.fromMsgData(msgData) : null;
   }
 
-  Future<List<Message>> getMessagesByIds(Iterable<int> ids) async {
+  Future<List<model.Message>> getMessagesByIds(Iterable<int> ids) async {
     final msgDataList = await (select(msg)..where((tbl) => tbl.id.isIn(ids))).get();
-    return msgDataList.map((msgData) => Message.fromMsgData(msgData)).toList();
+    return msgDataList.map((msgData) => model.Message.fromMsgData(msgData)).toList();
   }
 
   ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode) {
@@ -175,8 +174,8 @@ class AppDatabase extends _$AppDatabase {
     try {
       // 使用 Drift 的 insert 方法，并结合 onConflict 参数实现 UPSERT。
       // 如果主键唯一，则会触发 DoUpdate 策略
-      await into(conversation).insert(convData, onConflict: DoUpdate((old) => convData));
-      qqr("upsert successful");
+      final res = await into(conversation).insert(convData, onConflict: DoUpdate((old) => convData));
+      qqr("upsert successful: insert result: $res");
       return true;
     } catch (e) {
       qqr("upsert failed: $e");
@@ -184,7 +183,7 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
-  Future<bool> upsertMsg(Message message) async {
+  Future<bool> upsertMsg(model.Message message) async {
     final msgData = _messageToMsgCompanion(message);
     try {
       await into(msg).insert(msgData, onConflict: DoUpdate((old) => msgData));

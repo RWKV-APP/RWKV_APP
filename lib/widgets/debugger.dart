@@ -15,7 +15,7 @@ class Debugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // return const SizedBox.shrink();
+    if (!Args.showHaloDebugger) return const SizedBox.shrink();
     if (!kDebugMode) return const SizedBox.shrink();
     final demoType = ref.watch(P.app.demoType);
 
@@ -44,7 +44,7 @@ class Debugger extends ConsumerWidget {
     final paddingTop = ref.watch(P.app.paddingTop);
     final page = ref.watch(Pager.page);
     final atMainPage = ref.watch(Pager.atMainPage);
-    final conversation = ref.watch(P.conversation.current);
+    final currentCreatedAtUS = ref.watch(P.conversation.currentCreatedAtUS);
     final editingIndex = ref.watch(P.msg.editingOrRegeneratingIndex);
     final receiveId = ref.watch(P.chat.receiveId);
     final qb = ref.watch(P.app.qb);
@@ -64,6 +64,8 @@ class Debugger extends ConsumerWidget {
     final themeMode = ref.watch(P.preference.themeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
     final checkingLatency = ref.watch(P.guard.checkingLatency);
+    final msgNode = ref.watch(P.msg.msgNode);
+    final pool = ref.watch(P.msg.pool);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -72,7 +74,7 @@ class Debugger extends ConsumerWidget {
     const showSocName = false;
     const showSocBrand = false;
     const showIds = false;
-    const showPool = false;
+    const showPool = true;
     const showMessages = false;
     const showEditingIndex = false;
     const showAtMainPage = false;
@@ -85,9 +87,10 @@ class Debugger extends ConsumerWidget {
     const showThemeMode = false;
     const showPreferredDarkCustomTheme = false;
     const showCheckingLatency = false;
-    const showConversation = false;
+    const showConversation = true;
     const showCurrentModel = false;
     const showLoading = false;
+    const showMsgNode = true;
 
     return Positioned(
       left: 0,
@@ -127,7 +130,7 @@ class Debugger extends ConsumerWidget {
                       T(hasFocus.toString()),
                       if (showAtMainPage) ...[T("atMainPage".codeToName), T(atMainPage.toString())],
                       if (showPage) ...[T("page".codeToName), T(page.toString())],
-                      if (showConversation) ...[T("conversation".codeToName), T(conversation?.title.substring(0, 100) ?? "null")],
+
                       T("receiveId".codeToName),
                       T(receiveId.toString()),
                       if (showEditingIndex) ...[T("editingIndex".codeToName), T(editingIndex.toString())],
@@ -151,6 +154,9 @@ class Debugger extends ConsumerWidget {
                         T(preferredDarkCustomTheme.runtimeType.toString()),
                       ],
                       if (showCheckingLatency) ...[T("checkingLatency".codeToName), T(checkingLatency.toString())],
+                      if (showConversation) ...[T("currentCreatedAtUS".codeToName), T(currentCreatedAtUS.toString())],
+                      if (showMsgNode) ...[T("msgNode.createAtInUS".codeToName), T(msgNode.createAtInUS.toString())],
+                      if (showPool) ...[T("pool".codeToName), T((pool.values.m((e) => e.id)).toString())],
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

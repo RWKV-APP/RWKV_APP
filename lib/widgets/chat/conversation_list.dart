@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/conversation.dart';
 import 'package:zone/state/p.dart';
 import 'package:zone/widgets/pager.dart';
 
@@ -33,6 +32,8 @@ class ConversationList extends ConsumerWidget {
       );
     }
 
+    final paddingTop = ref.watch(P.app.paddingTop);
+
     return RefreshIndicator.adaptive(
       onRefresh: () async {
         P.app.hapticLight();
@@ -40,7 +41,12 @@ class ConversationList extends ConsumerWidget {
       },
       child: ListView.builder(
         shrinkWrap: isEmpty,
-        padding: const EI.a(8),
+        padding: EI.o(
+          t: paddingTop + 8,
+          b: 8,
+          l: 8,
+          r: 8,
+        ),
         itemCount: isEmpty ? 0 : conversations.length,
         itemBuilder: (context, index) {
           final conversation = conversations[index];
@@ -104,8 +110,8 @@ class _Item extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final current = ref.watch(P.conversation.current);
-    final isCurrent = current?.createdAtUS == conversation.createdAtUS;
+    final currentCreatedAtUS = ref.watch(P.conversation.currentCreatedAtUS);
+    final isCurrent = currentCreatedAtUS == conversation.createdAtUS;
     final primary = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final qw = ref.watch(P.app.qw);

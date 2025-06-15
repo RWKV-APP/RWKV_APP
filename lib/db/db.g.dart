@@ -19,7 +19,6 @@ class $ConversationTable extends Conversation
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   static const VerificationMeta _updatedAtUSMeta = const VerificationMeta(
     'updatedAtUS',
@@ -384,7 +383,6 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   static const VerificationMeta _contentMeta = const VerificationMeta(
     'content',
@@ -408,21 +406,6 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("is_mine" IN (0, 1))',
     ),
-  );
-  static const VerificationMeta _changingMeta = const VerificationMeta(
-    'changing',
-  );
-  @override
-  late final GeneratedColumn<bool> changing = GeneratedColumn<bool>(
-    'changing',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("changing" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
   );
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
@@ -632,7 +615,6 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
     id,
     content,
     isMine,
-    changing,
     type,
     isReasoning,
     paused,
@@ -682,12 +664,6 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
       );
     } else if (isInserting) {
       context.missing(_isMineMeta);
-    }
-    if (data.containsKey('changing')) {
-      context.handle(
-        _changingMeta,
-        changing.isAcceptableOrUnknown(data['changing']!, _changingMeta),
-      );
     }
     if (data.containsKey('type')) {
       context.handle(
@@ -859,10 +835,6 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_mine'],
       )!,
-      changing: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}changing'],
-      )!,
       type: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}type'],
@@ -948,7 +920,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
   final int id;
   final String content;
   final bool isMine;
-  final bool changing;
   final String type;
   final bool isReasoning;
   final bool paused;
@@ -971,7 +942,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     required this.id,
     required this.content,
     required this.isMine,
-    required this.changing,
     required this.type,
     required this.isReasoning,
     required this.paused,
@@ -997,7 +967,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     map['id'] = Variable<int>(id);
     map['content'] = Variable<String>(content);
     map['is_mine'] = Variable<bool>(isMine);
-    map['changing'] = Variable<bool>(changing);
     map['type'] = Variable<String>(type);
     map['is_reasoning'] = Variable<bool>(isReasoning);
     map['paused'] = Variable<bool>(paused);
@@ -1050,7 +1019,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
       id: Value(id),
       content: Value(content),
       isMine: Value(isMine),
-      changing: Value(changing),
       type: Value(type),
       isReasoning: Value(isReasoning),
       paused: Value(paused),
@@ -1107,7 +1075,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
       id: serializer.fromJson<int>(json['id']),
       content: serializer.fromJson<String>(json['content']),
       isMine: serializer.fromJson<bool>(json['isMine']),
-      changing: serializer.fromJson<bool>(json['changing']),
       type: serializer.fromJson<String>(json['type']),
       isReasoning: serializer.fromJson<bool>(json['isReasoning']),
       paused: serializer.fromJson<bool>(json['paused']),
@@ -1141,7 +1108,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
       'id': serializer.toJson<int>(id),
       'content': serializer.toJson<String>(content),
       'isMine': serializer.toJson<bool>(isMine),
-      'changing': serializer.toJson<bool>(changing),
       'type': serializer.toJson<String>(type),
       'isReasoning': serializer.toJson<bool>(isReasoning),
       'paused': serializer.toJson<bool>(paused),
@@ -1167,7 +1133,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     int? id,
     String? content,
     bool? isMine,
-    bool? changing,
     String? type,
     bool? isReasoning,
     bool? paused,
@@ -1190,7 +1155,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     id: id ?? this.id,
     content: content ?? this.content,
     isMine: isMine ?? this.isMine,
-    changing: changing ?? this.changing,
     type: type ?? this.type,
     isReasoning: isReasoning ?? this.isReasoning,
     paused: paused ?? this.paused,
@@ -1225,7 +1189,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
       id: data.id.present ? data.id.value : this.id,
       content: data.content.present ? data.content.value : this.content,
       isMine: data.isMine.present ? data.isMine.value : this.isMine,
-      changing: data.changing.present ? data.changing.value : this.changing,
       type: data.type.present ? data.type.value : this.type,
       isReasoning: data.isReasoning.present
           ? data.isReasoning.value
@@ -1275,7 +1238,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
           ..write('id: $id, ')
           ..write('content: $content, ')
           ..write('isMine: $isMine, ')
-          ..write('changing: $changing, ')
           ..write('type: $type, ')
           ..write('isReasoning: $isReasoning, ')
           ..write('paused: $paused, ')
@@ -1303,7 +1265,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     id,
     content,
     isMine,
-    changing,
     type,
     isReasoning,
     paused,
@@ -1330,7 +1291,6 @@ class MsgData extends DataClass implements Insertable<MsgData> {
           other.id == this.id &&
           other.content == this.content &&
           other.isMine == this.isMine &&
-          other.changing == this.changing &&
           other.type == this.type &&
           other.isReasoning == this.isReasoning &&
           other.paused == this.paused &&
@@ -1355,7 +1315,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
   final Value<int> id;
   final Value<String> content;
   final Value<bool> isMine;
-  final Value<bool> changing;
   final Value<String> type;
   final Value<bool> isReasoning;
   final Value<bool> paused;
@@ -1378,7 +1337,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     this.id = const Value.absent(),
     this.content = const Value.absent(),
     this.isMine = const Value.absent(),
-    this.changing = const Value.absent(),
     this.type = const Value.absent(),
     this.isReasoning = const Value.absent(),
     this.paused = const Value.absent(),
@@ -1402,7 +1360,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     this.id = const Value.absent(),
     required String content,
     required bool isMine,
-    this.changing = const Value.absent(),
     required String type,
     required bool isReasoning,
     required bool paused,
@@ -1431,7 +1388,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     Expression<int>? id,
     Expression<String>? content,
     Expression<bool>? isMine,
-    Expression<bool>? changing,
     Expression<String>? type,
     Expression<bool>? isReasoning,
     Expression<bool>? paused,
@@ -1455,7 +1411,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
       if (id != null) 'id': id,
       if (content != null) 'content': content,
       if (isMine != null) 'is_mine': isMine,
-      if (changing != null) 'changing': changing,
       if (type != null) 'type': type,
       if (isReasoning != null) 'is_reasoning': isReasoning,
       if (paused != null) 'paused': paused,
@@ -1483,7 +1438,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     Value<int>? id,
     Value<String>? content,
     Value<bool>? isMine,
-    Value<bool>? changing,
     Value<String>? type,
     Value<bool>? isReasoning,
     Value<bool>? paused,
@@ -1507,7 +1461,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
       id: id ?? this.id,
       content: content ?? this.content,
       isMine: isMine ?? this.isMine,
-      changing: changing ?? this.changing,
       type: type ?? this.type,
       isReasoning: isReasoning ?? this.isReasoning,
       paused: paused ?? this.paused,
@@ -1540,9 +1493,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     }
     if (isMine.present) {
       map['is_mine'] = Variable<bool>(isMine.value);
-    }
-    if (changing.present) {
-      map['changing'] = Variable<bool>(changing.value);
     }
     if (type.present) {
       map['type'] = Variable<String>(type.value);
@@ -1607,7 +1557,6 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
           ..write('id: $id, ')
           ..write('content: $content, ')
           ..write('isMine: $isMine, ')
-          ..write('changing: $changing, ')
           ..write('type: $type, ')
           ..write('isReasoning: $isReasoning, ')
           ..write('paused: $paused, ')
@@ -1848,7 +1797,6 @@ typedef $$MsgTableCreateCompanionBuilder =
       Value<int> id,
       required String content,
       required bool isMine,
-      Value<bool> changing,
       required String type,
       required bool isReasoning,
       required bool paused,
@@ -1873,7 +1821,6 @@ typedef $$MsgTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> content,
       Value<bool> isMine,
-      Value<bool> changing,
       Value<String> type,
       Value<bool> isReasoning,
       Value<bool> paused,
@@ -1914,11 +1861,6 @@ class $$MsgTableFilterComposer extends Composer<_$AppDatabase, $MsgTable> {
 
   ColumnFilters<bool> get isMine => $composableBuilder(
     column: $table.isMine,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get changing => $composableBuilder(
-    column: $table.changing,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2036,11 +1978,6 @@ class $$MsgTableOrderingComposer extends Composer<_$AppDatabase, $MsgTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get changing => $composableBuilder(
-    column: $table.changing,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get type => $composableBuilder(
     column: $table.type,
     builder: (column) => ColumnOrderings(column),
@@ -2148,9 +2085,6 @@ class $$MsgTableAnnotationComposer extends Composer<_$AppDatabase, $MsgTable> {
 
   GeneratedColumn<bool> get isMine =>
       $composableBuilder(column: $table.isMine, builder: (column) => column);
-
-  GeneratedColumn<bool> get changing =>
-      $composableBuilder(column: $table.changing, builder: (column) => column);
 
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
@@ -2260,7 +2194,6 @@ class $$MsgTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> content = const Value.absent(),
                 Value<bool> isMine = const Value.absent(),
-                Value<bool> changing = const Value.absent(),
                 Value<String> type = const Value.absent(),
                 Value<bool> isReasoning = const Value.absent(),
                 Value<bool> paused = const Value.absent(),
@@ -2283,7 +2216,6 @@ class $$MsgTableTableManager
                 id: id,
                 content: content,
                 isMine: isMine,
-                changing: changing,
                 type: type,
                 isReasoning: isReasoning,
                 paused: paused,
@@ -2308,7 +2240,6 @@ class $$MsgTableTableManager
                 Value<int> id = const Value.absent(),
                 required String content,
                 required bool isMine,
-                Value<bool> changing = const Value.absent(),
                 required String type,
                 required bool isReasoning,
                 required bool paused,
@@ -2331,7 +2262,6 @@ class $$MsgTableTableManager
                 id: id,
                 content: content,
                 isMine: isMine,
-                changing: changing,
                 type: type,
                 isReasoning: isReasoning,
                 paused: paused,

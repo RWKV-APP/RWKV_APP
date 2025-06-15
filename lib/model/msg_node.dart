@@ -24,8 +24,9 @@ final class MsgNode {
     this.latest,
     this.parent,
     this.root,
+    int? createAtInUS,
   }) : children = List<MsgNode>.empty(growable: true) {
-    createAtInUS = HF.microseconds;
+    this.createAtInUS = createAtInUS ?? HF.microseconds;
     // Initialized here
     // If you intended to use the passed 'children' parameter, you'd do:
     // this.children = List<MsgNode>.from(children, growable: true);
@@ -102,6 +103,13 @@ final class MsgNode {
     return latestMsgIds.where((e) => e != 0).toList();
   }
 
+  /// 从根节点获取全部的消息列表，排除 id 为 0 的根节点
+  Set<int> get allMsgIdsFromRoot {
+    final rootNode = root ?? this;
+    final allNodes = rootNode._getAllNodes();
+    return allNodes.where((node) => node.id != 0).map((node) => node.id).toSet();
+  }
+
   int get wholeLatestMsgId {
     // Changed to non-nullable as wholeLatestNode ensures a node.
     return wholeLatestNode.id;
@@ -163,7 +171,7 @@ final class MsgNode {
     return jsonEncode(jsonMap);
   }
 
-  static MsgNode fromJson(String jsonString) {
+  static MsgNode fromJson(String jsonString, {int? createAtInUS}) {
     final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
     final int rootId = jsonMap['root_id'];
     final List<dynamic> nodeList = jsonMap['nodes'];
@@ -172,7 +180,7 @@ final class MsgNode {
 
     for (final nodeData in nodeList) {
       final int id = nodeData['id'];
-      nodesById[id] = MsgNode(id);
+      nodesById[id] = MsgNode(id, createAtInUS: createAtInUS);
     }
 
     for (final nodeData in nodeList) {

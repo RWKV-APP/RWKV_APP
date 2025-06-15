@@ -419,7 +419,7 @@ extension $TTS on _TTS {
     );
 
     P.msg._syncMsg(id, msg);
-    P.msg._msgNode.rootAdd(MsgNode(id));
+    P.msg.msgNode.q.rootAdd(MsgNode(id));
 
     Future.delayed(34.ms).then((_) {
       P.chat.scrollToBottom();
@@ -441,7 +441,7 @@ extension $TTS on _TTS {
 
     P.chat.receiveId.q = receiveId;
     P.msg.pool.q[receiveId] = receiveMsg;
-    P.msg._msgNode.rootAdd(MsgNode(receiveId));
+    P.msg.msgNode.q.rootAdd(MsgNode(receiveId));
 
     qqr("""ttsText: $ttsText
 instructionText: $instructionText

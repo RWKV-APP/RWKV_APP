@@ -16,7 +16,7 @@ class _Msg {
   late final editingOrRegeneratingIndex = qs<int?>(null);
 
   /// The node of the message list
-  MsgNode _msgNode = MsgNode(0);
+  late final msgNode = qs<MsgNode>(MsgNode(0));
 
   /// The list of messages rendering in the chat page message list
   late final list = qp<List<Message>>((ref) {
@@ -62,7 +62,7 @@ extension _$Msg on _Msg {
   void _clear() {
     P.conversation._syncNode();
     ids.q = [];
-    _msgNode = MsgNode(0);
+    msgNode.q = MsgNode(0);
   }
 
   Future<bool> _syncMsg(int id, Message msg) async {
@@ -88,18 +88,22 @@ extension _$Msg on _Msg {
       loading.q = false;
     }
   }
+
+  void _logMsgNode() {
+    qqr("msgNode.createAtInUS: ${msgNode.q.createAtInUS}");
+  }
 }
 
 /// Public methods
 extension $Msg on _Msg {
   int siblingCount(Message msg) {
-    final parent = _msgNode.findParentByMsgId(msg.id);
+    final parent = msgNode.q.findParentByMsgId(msg.id);
     if (parent == null) return 1;
     return parent.children.length;
   }
 
   List<int> siblingIds(Message msg) {
-    final parent = _msgNode.findParentByMsgId(msg.id);
+    final parent = msgNode.q.findParentByMsgId(msg.id);
     if (parent == null) return [];
     return parent.children.map((e) => e.id).toList();
   }
@@ -109,7 +113,7 @@ extension $Msg on _Msg {
     required bool isBack,
     required Message msg,
   }) async {
-    final parent = _msgNode.findParentByMsgId(msg.id);
+    final parent = msgNode.q.findParentByMsgId(msg.id);
     if (parent == null) {
       qqe("parent is null");
       return;
@@ -130,7 +134,7 @@ extension $Msg on _Msg {
       return;
     }
     parent.latest = parent.children[newIndex];
-    ids.q = _msgNode.latestMsgIdsWithoutRoot;
+    ids.q = msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
   }
 }

@@ -7,4 +7,6 @@ abstract class Args {
   static const disableAutoShowOfWeightsPanel = bool.fromEnvironment("disableAutoShowOfWeightsPanel", defaultValue: false);
   static const debuggingThemes = bool.fromEnvironment("debuggingThemes", defaultValue: false);
   static const autoTriggerPage = bool.fromEnvironment("autoTriggerPage", defaultValue: false);
+  static const debugMsgId = bool.fromEnvironment("debugMsgId", defaultValue: false);
+  static const showHaloDebugger = bool.fromEnvironment("showHaloDebugger", defaultValue: false);
 }

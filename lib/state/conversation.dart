@@ -3,7 +3,7 @@ part of 'p.dart';
 class _Conversation {
   final conversations = qs<List<ConversationData>>([]);
 
-  final current = qs<ConversationData?>(null);
+  final currentCreatedAtUS = qs<int?>(null);
 }
 
 /// Private methods
@@ -15,7 +15,7 @@ extension _$Conversation on _Conversation {
   FV _syncNode() async {
     qq;
 
-    final msgNode = P.msg._msgNode;
+    final msgNode = P.msg.msgNode.q;
 
     if (msgNode.isEmpty) {
       qqq("msgNode is empty, skip upsert");
@@ -41,12 +41,16 @@ extension $Conversation on _Conversation {
 
   FV onTapInList(ConversationData conversation) async {
     qq;
-    current.q = conversation;
+    currentCreatedAtUS.q = conversation.createdAtUS;
     Pager.toggle();
-    final msgNode = MsgNode.fromJson(conversation.data);
+    final msgNode = MsgNode.fromJson(
+      conversation.data,
+      createAtInUS: conversation.createdAtUS,
+    );
     final ids = msgNode.latestMsgIdsWithoutRoot;
     await P.msg._loadMessages(ids);
-    P.msg._msgNode = msgNode;
+    P.msg.msgNode.q = msgNode;
     P.msg.ids.q = ids;
+    P.msg._loadMessages(msgNode.allMsgIdsFromRoot);
   }
 }

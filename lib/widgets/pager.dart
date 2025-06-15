@@ -53,6 +53,7 @@ class _PagerState extends ConsumerState<Pager> {
   void initState() {
     super.initState();
     ref.listenManual(P.app.screenWidth, _onScreenWidthChanged, fireImmediately: true);
+    ref.listenManual(Pager.atMainPage, _onAtMainPageChanged);
   }
 
   void _onScreenWidthChanged(double? previous, double? screenWidth) async {
@@ -76,6 +77,8 @@ class _PagerState extends ConsumerState<Pager> {
 
     Pager.drawerWidth.q = wantedWidth;
   }
+
+  void _onAtMainPageChanged(bool? previous, bool? atMainPage) async {}
 
   void _onPageChanged() async {
     final rawString = (Pager._newController.q.page ?? 0).toStringAsFixed(2);
@@ -144,7 +147,7 @@ class _PagerState extends ConsumerState<Pager> {
     );
   }
 
-  bool _onNotification(notification) {
+  bool _onNotification(ScrollNotification notification) {
     if (notification is ScrollStartNotification) {
       if (notification.depth == 0) {
         if (P.chat.focusNode.hasFocus) P.chat.focusNode.unfocus();

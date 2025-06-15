@@ -137,7 +137,7 @@ final class Message extends Equatable {
       id: msgData.id,
       content: msgData.content,
       isMine: msgData.isMine,
-      changing: msgData.changing,
+      changing: false,
       type: MessageType.values.firstWhere((e) => e.name == msgData.type),
       imageUrl: msgData.imageUrl,
       audioUrl: msgData.audioUrl,

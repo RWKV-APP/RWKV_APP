@@ -58,18 +58,23 @@ class ChatAppBar extends ConsumerWidget {
     final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
 
-    return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-        child: Theme(
-          data: theme.copyWith(
-            appBarTheme: theme.appBarTheme.copyWith(
-              backgroundColor: scaffoldBackgroundColor,
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: Theme(
+            data: theme.copyWith(
+              appBarTheme: theme.appBarTheme.copyWith(
+                backgroundColor: scaffoldBackgroundColor,
+              ),
             ),
+            child: selectMessageMode
+                ? _SelectMessageAppBar() //
+                : _buildAppBar(context, displayName, primary, demoType, completionMode, ref),
           ),
-          child: selectMessageMode
-              ? _SelectMessageAppBar() //
-              : _buildAppBar(context, displayName, primary, demoType, completionMode),
         ),
       ),
     );
@@ -81,11 +86,15 @@ class ChatAppBar extends ConsumerWidget {
     Color primary,
     DemoType demoType,
     bool completionMode,
+    WidgetRef ref,
   ) {
+    final customTheme = ref.watch(P.app.customTheme);
+    final scaffold = customTheme.scaffold;
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: scaffold.q(.7),
+      systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GD(
         onTap: _onTitlePressed,
         child: C(
@@ -196,18 +205,14 @@ class _NewConversationButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     late final Widget icon;
 
-    // if (Platform.isIOS || Platform.isMacOS) {
-    //   icon = const Icon(CupertinoIcons.news_solid);
-    // } else {
-    // }
-
     icon = const Icon(Icons.add_comment_outlined);
     final loaded = ref.watch(P.rwkv.loaded);
     final isEmpty = ref.watch(P.msg.list.select((v) => v.isEmpty));
 
     return IconButton(
-      onPressed: loaded && !isEmpty
+      onPressed: !isEmpty
           ? () {
+              if (!checkModelSelection()) return;
               P.chat.startNewChat();
             }
           : null,
