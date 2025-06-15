@@ -76,6 +76,19 @@
         "tags": ["reason", "cpu"]
       },
       {
+        "name": "RWKV7-G1 2.9B",
+        "type": "gguf",
+        "modelSize": 2.9,
+        "fileName": "rwkv7-g1-2.9b-20250519-ctx4096-Q6_K-apple.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1-2.9b-20250519-ctx4096-Q6_K-apple.gguf",
+        "fileSize": 2567852800,
+        "sha256": "81b9d3b06f1a5955bbe6a6490967a11e67666e68236a96b788172241cb8d4476",
+        "quantization": "Q6_K",
+        "platforms": ["ios"],
+        "backends": ["llamacpp"],
+        "tags": ["reason", "gpu"]
+      },
+      {
         "name": "RWKV7-G1 0.1B",
         "type": "st",
         "modelSize": 0.1,
