@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/db/db.dart';
+import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/state/p.dart';
 import 'package:zone/widgets/pager.dart';
@@ -62,6 +63,8 @@ class _Empty extends ConsumerWidget {
 
   void _onPressed() {
     Pager.toggle();
+    if (!checkModelSelection()) return;
+    P.chat.startNewChat();
   }
 
   @override
@@ -120,7 +123,9 @@ class _Item extends ConsumerWidget {
       actions: [
         CupertinoContextMenuAction(
           child: T(s.delete),
-          onPressed: () {},
+          onPressed: () {
+            P.conversation.delete(conversation.createdAtUS);
+          },
         ),
       ],
       enableHapticFeedback: true,
@@ -135,7 +140,7 @@ class _Item extends ConsumerWidget {
             ),
             padding: const EI.a(8),
             child: T(
-              conversation.createdAtUS.toString(),
+              conversation.title,
               s: TS(s: 16, w: FW.w600, c: isCurrent ? primary : qb),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,

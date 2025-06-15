@@ -23,7 +23,7 @@ class _Conversation extends Table {
 
   IntColumn get createdAtUS => integer()();
   IntColumn get updatedAtUS => integer().nullable()();
-  TextColumn get title => text().named('New Conversation')();
+  TextColumn get title => text().withDefault(const Constant("New Conversation"))();
   TextColumn get data => text()();
 
   TextColumn get appBuildNumber => text()();
@@ -134,34 +134,14 @@ class AppDatabase extends _$AppDatabase {
     return msgDataList.map((msgData) => _msgDataToMessage(msgData)).toList();
   }
 
-  _ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode) {
+  _ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode, {required String title}) {
     return _ConversationCompanion.insert(
       createdAtUS: Value(msgNode.createAtInUS),
-      title: msgNode.toJson(),
+      title: Value(title),
       data: msgNode.toJson(),
       appBuildNumber: P.app.buildNumber.q,
       updatedAtUS: Value(HF.microseconds),
     );
-  }
-
-  Future<MsgNode?> getConversationById(int id) async {
-    return null;
-    // TODO: 为 MsgNode 实现 greateAt 方法, 然后根据 createdAt 查询
-    // final conversationData = await (select(conversation)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
-    // return conversationData != null ? MsgNode.fromJson(conversationData.data) : null;
-  }
-
-  Future<bool> saveConversation(MsgNode msgNode) async {
-    return await into(conversation).insert(_conversationToConversationCompanion(msgNode)) > 0;
-  }
-
-  Future<bool> updateConversation(MsgNode msgNode) async {
-    return false;
-    // TODO: 为 MsgNode 实现 greateAt 方法, 然后根据 createdAt 查询
-    // return await (update(
-    //       conversation,
-    //     )..where((tbl) => tbl.createdAt.equals(msgNode.createdAt))).write(_conversationToConversationCompanion(msgNode)) >
-    //     0;
   }
 
   /// 将 MsgNode 同步到数据库，使用 UPSERT 机制处理插入或更新。
@@ -175,7 +155,18 @@ class AppDatabase extends _$AppDatabase {
   /// 返回值:
   /// - 如果操作成功（插入或更新），则返回 true；否则返回 false。
   Future<bool> upsertConv(MsgNode msgNode) async {
-    final convData = _conversationToConversationCompanion(msgNode);
+    final firstMsgId = msgNode.latestMsgIdsWithoutRoot.firstOrNull;
+
+    late final String title;
+    if (firstMsgId != null) {
+      final firstMsg = P.msg.pool.q[firstMsgId];
+      final firstMsgContent = firstMsg?.content ?? "";
+      title = firstMsgContent.length > 200 ? firstMsgContent.substring(0, 200) : firstMsgContent;
+    } else {
+      title = P.preference.isZhLang() ? "新会话" : "New Conversation";
+    }
+
+    final convData = _conversationToConversationCompanion(msgNode, title: title);
 
     qqr("msgNode.createAtInUS: ${msgNode.createAtInUS}");
 
@@ -221,9 +212,19 @@ class AppDatabase extends _$AppDatabase {
     return await query.get();
   }
 
+  Future<ConversationData?> findConvByCreateAtInUS(int createAtInUS) async {
+    final query = select(conversation)..where((tbl) => tbl.createdAtUS.equals(createAtInUS));
+    final res = await query.getSingleOrNull();
+    return res;
+  }
+
   /// 根据 MsgNode.createAt 删除
   Future<bool> deleteConv(int createAtInUS) async {
     return await (delete(conversation)..where((tbl) => tbl.createdAtUS.equals(createAtInUS))).go() > 0;
+  }
+
+  Future<bool> deleteMsgsByCreateAtInUS(Iterable<int> ids) async {
+    return await (delete(msg)..where((tbl) => tbl.id.isIn(ids))).go() > 0;
   }
 }
 

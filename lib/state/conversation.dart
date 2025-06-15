@@ -25,6 +25,15 @@ extension _$Conversation on _Conversation {
     await P.db._db.upsertConv(msgNode);
     await load();
   }
+
+  Future<Set<int>> _getAllMsgIdsFromConv(int createAtInUS) async {
+    final db = P.db._db;
+    final msgDataList = await db.findConvByCreateAtInUS(createAtInUS);
+    if (msgDataList == null) return {};
+    final msgNode = MsgNode.fromJson(msgDataList.data, createAtInUS: createAtInUS);
+    final ids = msgNode.allMsgIdsFromRoot;
+    return ids;
+  }
 }
 
 /// Public methods
@@ -37,6 +46,19 @@ extension $Conversation on _Conversation {
 
   FV delete(int createAtInUS) async {
     await P.db._db.deleteConv(createAtInUS);
+    await load();
+
+    _getAllMsgIdsFromConv(createAtInUS).then((ids) async {
+      await P.db._db.deleteMsgsByCreateAtInUS(ids);
+    });
+
+    if (currentCreatedAtUS.q == createAtInUS) {
+      currentCreatedAtUS.q = null;
+      Pager.toggle();
+      if (checkModelSelection(showModelSelector: false, showAlert: false)) {
+        P.chat.startNewChat();
+      }
+    }
   }
 
   FV onTapInList(ConversationData conversation) async {
