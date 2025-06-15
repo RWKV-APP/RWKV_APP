@@ -13,9 +13,13 @@ import 'dart:convert';
 
 part 'db.g.dart';
 
-class Conversation extends Table {
+@DataClassName("ConversationData")
+class _Conversation extends Table {
   @override
   Set<Column> get primaryKey => {createdAtUS};
+
+  @override
+  String? get tableName => "conv";
 
   IntColumn get createdAtUS => integer()();
   IntColumn get updatedAtUS => integer().nullable()();
@@ -25,9 +29,13 @@ class Conversation extends Table {
   TextColumn get appBuildNumber => text()();
 }
 
-class Msg extends Table {
+@DataClassName("_MsgData")
+class _Msg extends Table {
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  String? get tableName => "msg";
 
   IntColumn get id => integer()();
   TextColumn get content => text()();
@@ -56,7 +64,7 @@ class Msg extends Table {
   TextColumn get build => text()();
 }
 
-@DriftDatabase(tables: [Conversation, Msg])
+@DriftDatabase(tables: [_Conversation, _Msg])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
@@ -73,8 +81,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // Convert Message to Msg data for insertion
-  MsgCompanion _messageToMsgCompanion(model.Message message) {
-    return MsgCompanion.insert(
+  _MsgCompanion _messageToMsgCompanion(model.Message message) {
+    return _MsgCompanion.insert(
       id: Value(message.id),
       content: message.content,
       isMine: message.isMine,
@@ -113,21 +121,21 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<model.Message>> getAllMessages() async {
     final msgDataList = await select(msg).get();
-    return msgDataList.map((msgData) => model.Message.fromMsgData(msgData)).toList();
+    return msgDataList.map((msgData) => _msgDataToMessage(msgData)).toList();
   }
 
   Future<model.Message?> getMessageById(int id) async {
     final msgData = await (select(msg)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
-    return msgData != null ? model.Message.fromMsgData(msgData) : null;
+    return msgData != null ? _msgDataToMessage(msgData) : null;
   }
 
   Future<List<model.Message>> getMessagesByIds(Iterable<int> ids) async {
     final msgDataList = await (select(msg)..where((tbl) => tbl.id.isIn(ids))).get();
-    return msgDataList.map((msgData) => model.Message.fromMsgData(msgData)).toList();
+    return msgDataList.map((msgData) => _msgDataToMessage(msgData)).toList();
   }
 
-  ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode) {
-    return ConversationCompanion.insert(
+  _ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode) {
+    return _ConversationCompanion.insert(
       createdAtUS: Value(msgNode.createAtInUS),
       title: msgNode.toJson(),
       data: msgNode.toJson(),
@@ -217,4 +225,42 @@ class AppDatabase extends _$AppDatabase {
   Future<bool> deleteConv(int createAtInUS) async {
     return await (delete(conversation)..where((tbl) => tbl.createdAtUS.equals(createAtInUS))).go() > 0;
   }
+}
+
+model.Message _msgDataToMessage(_MsgData msgData) {
+  List<double>? ttsPerWavProgress;
+  if (msgData.ttsPerWavProgress != null && msgData.ttsPerWavProgress!.isNotEmpty) {
+    final List<dynamic> parsed = json.decode(msgData.ttsPerWavProgress!);
+    ttsPerWavProgress = parsed.cast<double>();
+  }
+
+  List<String>? ttsFilePaths;
+  if (msgData.ttsFilePaths != null && msgData.ttsFilePaths!.isNotEmpty) {
+    final List<dynamic> parsed = json.decode(msgData.ttsFilePaths!);
+    ttsFilePaths = parsed.cast<String>();
+  }
+
+  return model.Message(
+    id: msgData.id,
+    content: msgData.content,
+    isMine: msgData.isMine,
+    changing: false,
+    type: model.MessageType.values.firstWhere((e) => e.name == msgData.type),
+    imageUrl: msgData.imageUrl,
+    audioUrl: msgData.audioUrl,
+    audioLength: msgData.audioLength,
+    isReasoning: msgData.isReasoning,
+    paused: msgData.paused,
+    ttsTarget: msgData.ttsTarget,
+    ttsSpeakerName: msgData.ttsSpeakerName,
+    ttsSourceAudioPath: msgData.ttsSourceAudioPath,
+    ttsInstruction: msgData.ttsInstruction,
+    ttsCFMSteps: msgData.ttsCFMSteps,
+    isSensitive: msgData.isSensitive,
+    ttsOverallProgress: msgData.ttsOverallProgress,
+    ttsPerWavProgress: ttsPerWavProgress,
+    ttsFilePaths: ttsFilePaths,
+    modelName: msgData.modelName,
+    runningMode: msgData.runningMode,
+  );
 }

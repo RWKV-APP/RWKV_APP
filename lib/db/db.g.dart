@@ -3,12 +3,12 @@
 part of 'db.dart';
 
 // ignore_for_file: type=lint
-class $ConversationTable extends Conversation
-    with TableInfo<$ConversationTable, ConversationData> {
+class $_ConversationTable extends _Conversation
+    with TableInfo<$_ConversationTable, ConversationData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ConversationTable(this.attachedDatabase, [this._alias]);
+  $_ConversationTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _createdAtUSMeta = const VerificationMeta(
     'createdAtUS',
   );
@@ -72,7 +72,7 @@ class $ConversationTable extends Conversation
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'conversation';
+  static const String $name = 'conv';
   @override
   VerificationContext validateIntegrity(
     Insertable<ConversationData> instance, {
@@ -158,8 +158,8 @@ class $ConversationTable extends Conversation
   }
 
   @override
-  $ConversationTable createAlias(String alias) {
-    return $ConversationTable(attachedDatabase, alias);
+  $_ConversationTable createAlias(String alias) {
+    return $_ConversationTable(attachedDatabase, alias);
   }
 }
 
@@ -190,8 +190,8 @@ class ConversationData extends DataClass
     return map;
   }
 
-  ConversationCompanion toCompanion(bool nullToAbsent) {
-    return ConversationCompanion(
+  _ConversationCompanion toCompanion(bool nullToAbsent) {
+    return _ConversationCompanion(
       createdAtUS: Value(createdAtUS),
       updatedAtUS: updatedAtUS == null && nullToAbsent
           ? const Value.absent()
@@ -240,7 +240,7 @@ class ConversationData extends DataClass
     data: data ?? this.data,
     appBuildNumber: appBuildNumber ?? this.appBuildNumber,
   );
-  ConversationData copyWithCompanion(ConversationCompanion data) {
+  ConversationData copyWithCompanion(_ConversationCompanion data) {
     return ConversationData(
       createdAtUS: data.createdAtUS.present
           ? data.createdAtUS.value
@@ -282,20 +282,20 @@ class ConversationData extends DataClass
           other.appBuildNumber == this.appBuildNumber);
 }
 
-class ConversationCompanion extends UpdateCompanion<ConversationData> {
+class _ConversationCompanion extends UpdateCompanion<ConversationData> {
   final Value<int> createdAtUS;
   final Value<int?> updatedAtUS;
   final Value<String> title;
   final Value<String> data;
   final Value<String> appBuildNumber;
-  const ConversationCompanion({
+  const _ConversationCompanion({
     this.createdAtUS = const Value.absent(),
     this.updatedAtUS = const Value.absent(),
     this.title = const Value.absent(),
     this.data = const Value.absent(),
     this.appBuildNumber = const Value.absent(),
   });
-  ConversationCompanion.insert({
+  _ConversationCompanion.insert({
     this.createdAtUS = const Value.absent(),
     this.updatedAtUS = const Value.absent(),
     required String title,
@@ -320,14 +320,14 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
     });
   }
 
-  ConversationCompanion copyWith({
+  _ConversationCompanion copyWith({
     Value<int>? createdAtUS,
     Value<int?>? updatedAtUS,
     Value<String>? title,
     Value<String>? data,
     Value<String>? appBuildNumber,
   }) {
-    return ConversationCompanion(
+    return _ConversationCompanion(
       createdAtUS: createdAtUS ?? this.createdAtUS,
       updatedAtUS: updatedAtUS ?? this.updatedAtUS,
       title: title ?? this.title,
@@ -359,7 +359,7 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
 
   @override
   String toString() {
-    return (StringBuffer('ConversationCompanion(')
+    return (StringBuffer('_ConversationCompanion(')
           ..write('createdAtUS: $createdAtUS, ')
           ..write('updatedAtUS: $updatedAtUS, ')
           ..write('title: $title, ')
@@ -370,11 +370,11 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
   }
 }
 
-class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
+class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MsgTable(this.attachedDatabase, [this._alias]);
+  $_MsgTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -641,7 +641,7 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
   static const String $name = 'msg';
   @override
   VerificationContext validateIntegrity(
-    Insertable<MsgData> instance, {
+    Insertable<_MsgData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -820,9 +820,9 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  MsgData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  _MsgData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MsgData(
+    return _MsgData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -911,12 +911,12 @@ class $MsgTable extends Msg with TableInfo<$MsgTable, MsgData> {
   }
 
   @override
-  $MsgTable createAlias(String alias) {
-    return $MsgTable(attachedDatabase, alias);
+  $_MsgTable createAlias(String alias) {
+    return $_MsgTable(attachedDatabase, alias);
   }
 }
 
-class MsgData extends DataClass implements Insertable<MsgData> {
+class _MsgData extends DataClass implements Insertable<_MsgData> {
   final int id;
   final String content;
   final bool isMine;
@@ -938,7 +938,7 @@ class MsgData extends DataClass implements Insertable<MsgData> {
   final String? modelName;
   final String? runningMode;
   final String build;
-  const MsgData({
+  const _MsgData({
     required this.id,
     required this.content,
     required this.isMine,
@@ -1014,8 +1014,8 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     return map;
   }
 
-  MsgCompanion toCompanion(bool nullToAbsent) {
-    return MsgCompanion(
+  _MsgCompanion toCompanion(bool nullToAbsent) {
+    return _MsgCompanion(
       id: Value(id),
       content: Value(content),
       isMine: Value(isMine),
@@ -1066,12 +1066,12 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     );
   }
 
-  factory MsgData.fromJson(
+  factory _MsgData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MsgData(
+    return _MsgData(
       id: serializer.fromJson<int>(json['id']),
       content: serializer.fromJson<String>(json['content']),
       isMine: serializer.fromJson<bool>(json['isMine']),
@@ -1129,7 +1129,7 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     };
   }
 
-  MsgData copyWith({
+  _MsgData copyWith({
     int? id,
     String? content,
     bool? isMine,
@@ -1151,7 +1151,7 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     Value<String?> modelName = const Value.absent(),
     Value<String?> runningMode = const Value.absent(),
     String? build,
-  }) => MsgData(
+  }) => _MsgData(
     id: id ?? this.id,
     content: content ?? this.content,
     isMine: isMine ?? this.isMine,
@@ -1184,8 +1184,8 @@ class MsgData extends DataClass implements Insertable<MsgData> {
     runningMode: runningMode.present ? runningMode.value : this.runningMode,
     build: build ?? this.build,
   );
-  MsgData copyWithCompanion(MsgCompanion data) {
-    return MsgData(
+  _MsgData copyWithCompanion(_MsgCompanion data) {
+    return _MsgData(
       id: data.id.present ? data.id.value : this.id,
       content: data.content.present ? data.content.value : this.content,
       isMine: data.isMine.present ? data.isMine.value : this.isMine,
@@ -1234,7 +1234,7 @@ class MsgData extends DataClass implements Insertable<MsgData> {
 
   @override
   String toString() {
-    return (StringBuffer('MsgData(')
+    return (StringBuffer('_MsgData(')
           ..write('id: $id, ')
           ..write('content: $content, ')
           ..write('isMine: $isMine, ')
@@ -1287,7 +1287,7 @@ class MsgData extends DataClass implements Insertable<MsgData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is MsgData &&
+      (other is _MsgData &&
           other.id == this.id &&
           other.content == this.content &&
           other.isMine == this.isMine &&
@@ -1311,7 +1311,7 @@ class MsgData extends DataClass implements Insertable<MsgData> {
           other.build == this.build);
 }
 
-class MsgCompanion extends UpdateCompanion<MsgData> {
+class _MsgCompanion extends UpdateCompanion<_MsgData> {
   final Value<int> id;
   final Value<String> content;
   final Value<bool> isMine;
@@ -1333,7 +1333,7 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
   final Value<String?> modelName;
   final Value<String?> runningMode;
   final Value<String> build;
-  const MsgCompanion({
+  const _MsgCompanion({
     this.id = const Value.absent(),
     this.content = const Value.absent(),
     this.isMine = const Value.absent(),
@@ -1356,7 +1356,7 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     this.runningMode = const Value.absent(),
     this.build = const Value.absent(),
   });
-  MsgCompanion.insert({
+  _MsgCompanion.insert({
     this.id = const Value.absent(),
     required String content,
     required bool isMine,
@@ -1384,7 +1384,7 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
        isReasoning = Value(isReasoning),
        paused = Value(paused),
        build = Value(build);
-  static Insertable<MsgData> custom({
+  static Insertable<_MsgData> custom({
     Expression<int>? id,
     Expression<String>? content,
     Expression<bool>? isMine,
@@ -1434,7 +1434,7 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     });
   }
 
-  MsgCompanion copyWith({
+  _MsgCompanion copyWith({
     Value<int>? id,
     Value<String>? content,
     Value<bool>? isMine,
@@ -1457,7 +1457,7 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
     Value<String?>? runningMode,
     Value<String>? build,
   }) {
-    return MsgCompanion(
+    return _MsgCompanion(
       id: id ?? this.id,
       content: content ?? this.content,
       isMine: isMine ?? this.isMine,
@@ -1553,7 +1553,7 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
 
   @override
   String toString() {
-    return (StringBuffer('MsgCompanion(')
+    return (StringBuffer('_MsgCompanion(')
           ..write('id: $id, ')
           ..write('content: $content, ')
           ..write('isMine: $isMine, ')
@@ -1583,8 +1583,8 @@ class MsgCompanion extends UpdateCompanion<MsgData> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $ConversationTable conversation = $ConversationTable(this);
-  late final $MsgTable msg = $MsgTable(this);
+  late final $_ConversationTable conversation = $_ConversationTable(this);
+  late final $_MsgTable msg = $_MsgTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1592,16 +1592,16 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [conversation, msg];
 }
 
-typedef $$ConversationTableCreateCompanionBuilder =
-    ConversationCompanion Function({
+typedef $$_ConversationTableCreateCompanionBuilder =
+    _ConversationCompanion Function({
       Value<int> createdAtUS,
       Value<int?> updatedAtUS,
       required String title,
       required String data,
       required String appBuildNumber,
     });
-typedef $$ConversationTableUpdateCompanionBuilder =
-    ConversationCompanion Function({
+typedef $$_ConversationTableUpdateCompanionBuilder =
+    _ConversationCompanion Function({
       Value<int> createdAtUS,
       Value<int?> updatedAtUS,
       Value<String> title,
@@ -1609,9 +1609,9 @@ typedef $$ConversationTableUpdateCompanionBuilder =
       Value<String> appBuildNumber,
     });
 
-class $$ConversationTableFilterComposer
-    extends Composer<_$AppDatabase, $ConversationTable> {
-  $$ConversationTableFilterComposer({
+class $$_ConversationTableFilterComposer
+    extends Composer<_$AppDatabase, $_ConversationTable> {
+  $$_ConversationTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1644,9 +1644,9 @@ class $$ConversationTableFilterComposer
   );
 }
 
-class $$ConversationTableOrderingComposer
-    extends Composer<_$AppDatabase, $ConversationTable> {
-  $$ConversationTableOrderingComposer({
+class $$_ConversationTableOrderingComposer
+    extends Composer<_$AppDatabase, $_ConversationTable> {
+  $$_ConversationTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1679,9 +1679,9 @@ class $$ConversationTableOrderingComposer
   );
 }
 
-class $$ConversationTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ConversationTable> {
-  $$ConversationTableAnnotationComposer({
+class $$_ConversationTableAnnotationComposer
+    extends Composer<_$AppDatabase, $_ConversationTable> {
+  $$_ConversationTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1710,35 +1710,39 @@ class $$ConversationTableAnnotationComposer
   );
 }
 
-class $$ConversationTableTableManager
+class $$_ConversationTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ConversationTable,
+          $_ConversationTable,
           ConversationData,
-          $$ConversationTableFilterComposer,
-          $$ConversationTableOrderingComposer,
-          $$ConversationTableAnnotationComposer,
-          $$ConversationTableCreateCompanionBuilder,
-          $$ConversationTableUpdateCompanionBuilder,
+          $$_ConversationTableFilterComposer,
+          $$_ConversationTableOrderingComposer,
+          $$_ConversationTableAnnotationComposer,
+          $$_ConversationTableCreateCompanionBuilder,
+          $$_ConversationTableUpdateCompanionBuilder,
           (
             ConversationData,
-            BaseReferences<_$AppDatabase, $ConversationTable, ConversationData>,
+            BaseReferences<
+              _$AppDatabase,
+              $_ConversationTable,
+              ConversationData
+            >,
           ),
           ConversationData,
           PrefetchHooks Function()
         > {
-  $$ConversationTableTableManager(_$AppDatabase db, $ConversationTable table)
+  $$_ConversationTableTableManager(_$AppDatabase db, $_ConversationTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ConversationTableFilterComposer($db: db, $table: table),
+              $$_ConversationTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ConversationTableOrderingComposer($db: db, $table: table),
+              $$_ConversationTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ConversationTableAnnotationComposer($db: db, $table: table),
+              $$_ConversationTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> createdAtUS = const Value.absent(),
@@ -1746,7 +1750,7 @@ class $$ConversationTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String> data = const Value.absent(),
                 Value<String> appBuildNumber = const Value.absent(),
-              }) => ConversationCompanion(
+              }) => _ConversationCompanion(
                 createdAtUS: createdAtUS,
                 updatedAtUS: updatedAtUS,
                 title: title,
@@ -1760,7 +1764,7 @@ class $$ConversationTableTableManager
                 required String title,
                 required String data,
                 required String appBuildNumber,
-              }) => ConversationCompanion.insert(
+              }) => _ConversationCompanion.insert(
                 createdAtUS: createdAtUS,
                 updatedAtUS: updatedAtUS,
                 title: title,
@@ -1775,25 +1779,25 @@ class $$ConversationTableTableManager
       );
 }
 
-typedef $$ConversationTableProcessedTableManager =
+typedef $$_ConversationTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ConversationTable,
+      $_ConversationTable,
       ConversationData,
-      $$ConversationTableFilterComposer,
-      $$ConversationTableOrderingComposer,
-      $$ConversationTableAnnotationComposer,
-      $$ConversationTableCreateCompanionBuilder,
-      $$ConversationTableUpdateCompanionBuilder,
+      $$_ConversationTableFilterComposer,
+      $$_ConversationTableOrderingComposer,
+      $$_ConversationTableAnnotationComposer,
+      $$_ConversationTableCreateCompanionBuilder,
+      $$_ConversationTableUpdateCompanionBuilder,
       (
         ConversationData,
-        BaseReferences<_$AppDatabase, $ConversationTable, ConversationData>,
+        BaseReferences<_$AppDatabase, $_ConversationTable, ConversationData>,
       ),
       ConversationData,
       PrefetchHooks Function()
     >;
-typedef $$MsgTableCreateCompanionBuilder =
-    MsgCompanion Function({
+typedef $$_MsgTableCreateCompanionBuilder =
+    _MsgCompanion Function({
       Value<int> id,
       required String content,
       required bool isMine,
@@ -1816,8 +1820,8 @@ typedef $$MsgTableCreateCompanionBuilder =
       Value<String?> runningMode,
       required String build,
     });
-typedef $$MsgTableUpdateCompanionBuilder =
-    MsgCompanion Function({
+typedef $$_MsgTableUpdateCompanionBuilder =
+    _MsgCompanion Function({
       Value<int> id,
       Value<String> content,
       Value<bool> isMine,
@@ -1841,8 +1845,8 @@ typedef $$MsgTableUpdateCompanionBuilder =
       Value<String> build,
     });
 
-class $$MsgTableFilterComposer extends Composer<_$AppDatabase, $MsgTable> {
-  $$MsgTableFilterComposer({
+class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
+  $$_MsgTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1955,8 +1959,8 @@ class $$MsgTableFilterComposer extends Composer<_$AppDatabase, $MsgTable> {
   );
 }
 
-class $$MsgTableOrderingComposer extends Composer<_$AppDatabase, $MsgTable> {
-  $$MsgTableOrderingComposer({
+class $$_MsgTableOrderingComposer extends Composer<_$AppDatabase, $_MsgTable> {
+  $$_MsgTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2069,8 +2073,9 @@ class $$MsgTableOrderingComposer extends Composer<_$AppDatabase, $MsgTable> {
   );
 }
 
-class $$MsgTableAnnotationComposer extends Composer<_$AppDatabase, $MsgTable> {
-  $$MsgTableAnnotationComposer({
+class $$_MsgTableAnnotationComposer
+    extends Composer<_$AppDatabase, $_MsgTable> {
+  $$_MsgTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2163,32 +2168,32 @@ class $$MsgTableAnnotationComposer extends Composer<_$AppDatabase, $MsgTable> {
       $composableBuilder(column: $table.build, builder: (column) => column);
 }
 
-class $$MsgTableTableManager
+class $$_MsgTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $MsgTable,
-          MsgData,
-          $$MsgTableFilterComposer,
-          $$MsgTableOrderingComposer,
-          $$MsgTableAnnotationComposer,
-          $$MsgTableCreateCompanionBuilder,
-          $$MsgTableUpdateCompanionBuilder,
-          (MsgData, BaseReferences<_$AppDatabase, $MsgTable, MsgData>),
-          MsgData,
+          $_MsgTable,
+          _MsgData,
+          $$_MsgTableFilterComposer,
+          $$_MsgTableOrderingComposer,
+          $$_MsgTableAnnotationComposer,
+          $$_MsgTableCreateCompanionBuilder,
+          $$_MsgTableUpdateCompanionBuilder,
+          (_MsgData, BaseReferences<_$AppDatabase, $_MsgTable, _MsgData>),
+          _MsgData,
           PrefetchHooks Function()
         > {
-  $$MsgTableTableManager(_$AppDatabase db, $MsgTable table)
+  $$_MsgTableTableManager(_$AppDatabase db, $_MsgTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$MsgTableFilterComposer($db: db, $table: table),
+              $$_MsgTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$MsgTableOrderingComposer($db: db, $table: table),
+              $$_MsgTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$MsgTableAnnotationComposer($db: db, $table: table),
+              $$_MsgTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -2212,7 +2217,7 @@ class $$MsgTableTableManager
                 Value<String?> modelName = const Value.absent(),
                 Value<String?> runningMode = const Value.absent(),
                 Value<String> build = const Value.absent(),
-              }) => MsgCompanion(
+              }) => _MsgCompanion(
                 id: id,
                 content: content,
                 isMine: isMine,
@@ -2258,7 +2263,7 @@ class $$MsgTableTableManager
                 Value<String?> modelName = const Value.absent(),
                 Value<String?> runningMode = const Value.absent(),
                 required String build,
-              }) => MsgCompanion.insert(
+              }) => _MsgCompanion.insert(
                 id: id,
                 content: content,
                 isMine: isMine,
@@ -2289,25 +2294,25 @@ class $$MsgTableTableManager
       );
 }
 
-typedef $$MsgTableProcessedTableManager =
+typedef $$_MsgTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $MsgTable,
-      MsgData,
-      $$MsgTableFilterComposer,
-      $$MsgTableOrderingComposer,
-      $$MsgTableAnnotationComposer,
-      $$MsgTableCreateCompanionBuilder,
-      $$MsgTableUpdateCompanionBuilder,
-      (MsgData, BaseReferences<_$AppDatabase, $MsgTable, MsgData>),
-      MsgData,
+      $_MsgTable,
+      _MsgData,
+      $$_MsgTableFilterComposer,
+      $$_MsgTableOrderingComposer,
+      $$_MsgTableAnnotationComposer,
+      $$_MsgTableCreateCompanionBuilder,
+      $$_MsgTableUpdateCompanionBuilder,
+      (_MsgData, BaseReferences<_$AppDatabase, $_MsgTable, _MsgData>),
+      _MsgData,
       PrefetchHooks Function()
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$ConversationTableTableManager get conversation =>
-      $$ConversationTableTableManager(_db, _db.conversation);
-  $$MsgTableTableManager get msg => $$MsgTableTableManager(_db, _db.msg);
+  $$_ConversationTableTableManager get conversation =>
+      $$_ConversationTableTableManager(_db, _db.conversation);
+  $$_MsgTableTableManager get msg => $$_MsgTableTableManager(_db, _db.msg);
 }
