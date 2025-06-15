@@ -206,6 +206,7 @@ extension $Chat on _Chat {
     Alert.success(S.current.new_chat_started);
     P.msg._clear();
     P.rwkv.clearStates();
+    P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
   }
 
   FV completion(String prompt) async {

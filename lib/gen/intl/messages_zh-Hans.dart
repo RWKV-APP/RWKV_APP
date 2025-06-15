@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已复制到剪贴板"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("请输入消息内容"),
+    "chat_history": MessageLookupByLibrary.simpleMessage("聊天记录"),
     "chat_mode": MessageLookupByLibrary.simpleMessage("对话模式"),
     "chat_model_name": MessageLookupByLibrary.simpleMessage("模型名称"),
     "chat_please_select_a_model": MessageLookupByLibrary.simpleMessage(

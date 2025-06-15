@@ -1636,6 +1636,11 @@ class S {
   String get settings {
     return Intl.message('设置', name: 'settings', desc: '', args: []);
   }
+
+  /// `聊天记录`
+  String get chat_history {
+    return Intl.message('聊天记录', name: 'chat_history', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

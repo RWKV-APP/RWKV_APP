@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/config.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/state/p.dart';
 import 'package:zone/page/panel/settings.dart';
 import 'package:zone/widgets/chat/conversation_list.dart';

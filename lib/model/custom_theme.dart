@@ -60,13 +60,13 @@ final class Dim extends CustomTheme {
   final bool light = false;
 
   @override
-  final Color scaffold = const Color.fromARGB(255, 16, 21, 17);
+  final Color scaffold = const Color(0xFF151515);
 
   @override
-  final Color setting = const Color.fromARGB(255, 21, 27, 22);
+  final Color setting = const Color(0xFF252525);
 
   @override
-  final Color settingItem = const Color.fromARGB(255, 29, 35, 28);
+  final Color settingItem = const Color(0xFF353535);
 
   @override
   final Color pagerDim = const Color(0xFFFFFFFF);

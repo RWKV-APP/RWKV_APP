@@ -20,39 +20,42 @@ class ConversationList extends ConsumerWidget {
     final isEmpty = conversations.isEmpty;
 
     if (isEmpty) {
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: SizedBox(
-              height: constraints.maxHeight,
-              child: const _Empty(),
-            ),
-          );
-        },
+      return _HeaderWrapper(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
+                height: constraints.maxHeight,
+                child: const _Empty(),
+              ),
+            );
+          },
+        ),
       );
     }
 
-    final paddingTop = ref.watch(P.app.paddingTop);
-
-    return RefreshIndicator.adaptive(
-      onRefresh: () async {
-        P.app.hapticLight();
-        await P.conversation.load();
-      },
-      child: ListView.builder(
-        shrinkWrap: isEmpty,
-        padding: EI.o(
-          t: paddingTop + 8,
-          b: 8,
-          l: 8,
-          r: 8,
-        ),
-        itemCount: isEmpty ? 0 : conversations.length,
-        itemBuilder: (context, index) {
-          final conversation = conversations[index];
-          return _Item(conversation: conversation);
+    return _HeaderWrapper(
+      child: RefreshIndicator.adaptive(
+        onRefresh: () async {
+          P.app.hapticLight();
+          await P.conversation.load();
         },
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          shrinkWrap: isEmpty,
+          padding: EI.o(
+            t: 8,
+            b: 8,
+            l: 8,
+            r: 8,
+          ),
+          itemCount: isEmpty ? 0 : conversations.length,
+          itemBuilder: (context, index) {
+            final conversation = conversations[index];
+            return _Item(conversation: conversation);
+          },
+        ),
       ),
     );
   }
@@ -117,8 +120,9 @@ class _Item extends ConsumerWidget {
     final isCurrent = currentCreatedAtUS == conversation.createdAtUS;
     final primary = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
-    final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
+    final customTheme = ref.watch(P.app.customTheme);
+
     return CupertinoContextMenu(
       actions: [
         CupertinoContextMenuAction(
@@ -130,12 +134,12 @@ class _Item extends ConsumerWidget {
       ],
       enableHapticFeedback: true,
       child: Material(
-        color: qw,
+        color: customTheme.scaffold,
         child: GD(
           onTap: _onTap,
           child: C(
             decoration: BD(
-              color: isCurrent ? primaryContainer : qw,
+              color: isCurrent ? primaryContainer : customTheme.scaffold,
               borderRadius: 8.r,
             ),
             padding: const EI.a(8),
@@ -147,6 +151,35 @@ class _Item extends ConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _HeaderWrapper extends ConsumerWidget {
+  const _HeaderWrapper({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final paddingTop = ref.watch(P.app.paddingTop);
+    return Material(
+      color: kC,
+      child: Column(
+        children: [
+          (paddingTop + 12).h,
+          Row(
+            mainAxisAlignment: MAA.start,
+            children: [
+              12.w,
+              T(s.chat_history),
+            ],
+          ),
+          8.h,
+          Expanded(child: child),
+        ],
       ),
     );
   }
