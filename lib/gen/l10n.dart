@@ -1617,6 +1617,21 @@ class S {
     return Intl.message('暂停', name: 'pause', desc: '', args: []);
   }
 
+  /// `更多`
+  String get more {
+    return Intl.message('更多', name: 'more', desc: '', args: []);
+  }
+
+  /// `推荐至少选择1.5B模型，更大的2.9B模型更好`
+  String get str_model_selection_dialog_hint {
+    return Intl.message(
+      '推荐至少选择1.5B模型，更大的2.9B模型更好',
+      name: 'str_model_selection_dialog_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `设置`
   String get settings {
     return Intl.message('设置', name: 'settings', desc: '', args: []);
