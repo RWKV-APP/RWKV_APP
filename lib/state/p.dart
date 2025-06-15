@@ -24,6 +24,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart' as ar;
 import 'package:rwkv_mobile_flutter/from_rwkv.dart' as from_rwkv;
 import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
+import 'package:zone/db/db.dart';
 import 'package:zone/model/custom_theme.dart' as custom_theme;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -35,7 +36,6 @@ import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
-import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/io.dart';
 import 'package:zone/model/argument.dart';
@@ -60,6 +60,8 @@ import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/pager.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/func/sudoku.dart' as func_sudoku;
+import 'package:zone/db/db.dart' as db;
+import 'package:drift/drift.dart' as drift;
 
 part "app.dart";
 part "chat.dart";
@@ -78,6 +80,7 @@ part "sudoku.dart";
 part "suggestion.dart";
 part "dump.dart";
 part "msg.dart";
+part "db.dart";
 
 abstract class P {
   static final app = _App();
@@ -96,10 +99,13 @@ abstract class P {
   static final suggestion = _Suggestion();
   static final dump = _Dump();
   static final msg = _Msg();
+  static final db = _DB();
 
   static FV init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await preference._init();
+    await db._init();
+
     await app._init();
     await _unorderedInit();
   }

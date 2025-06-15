@@ -21,7 +21,7 @@ enum DemoType {
   world;
 
   Color get seedColor => switch (this) {
-    DemoType.chat => Colors.deepPurple,
+    DemoType.chat => Colors.green,
     DemoType.tts => Colors.green,
     DemoType.world => Colors.blue,
     DemoType.fifthteenPuzzle => Colors.blue,

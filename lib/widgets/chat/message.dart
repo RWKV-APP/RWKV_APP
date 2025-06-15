@@ -2,11 +2,13 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zone/args.dart';
 import 'package:zone/func/merge_wav.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +95,7 @@ class Message extends ConsumerWidget {
 
     // 由 message 对象是否正在 changing 来决定是否根据 receivedTokens 渲染消息内容
     final received = ref.watch(P.chat.receivedTokens.select((v) => msg.changing ? v : ""));
-    final cotDisplayState = ref.watch(P.chat.cotDisplayState(msg.id));
+    final cotDisplayState = ref.watch(P.msg.cotDisplayState(msg.id));
 
     final editingIndex = ref.watch(P.msg.editingOrRegeneratingIndex);
 
@@ -257,17 +259,6 @@ class Message extends ConsumerWidget {
         break;
     }
 
-    bool showUserEditButton = true;
-    bool showUserCopyButton = true;
-
-    switch (worldType) {
-      case null:
-        break;
-      default:
-        showUserEditButton = false;
-        showUserCopyButton = false;
-    }
-
     EI padding = const EI.o(t: 12, l: 12, r: 12);
     Border? border = Border.all(color: primary.q(.2));
     double radius = 20;
@@ -311,8 +302,6 @@ class Message extends ConsumerWidget {
     final screenHeight = ref.watch(P.app.screenHeight);
     final rawMaxWidth = math.min(screenWidth, screenHeight);
 
-    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
-
     // 如果是快速考 <think>\n<think>, 则不展示思考过程
     final isQuickThinking = cotContent.trim().isEmpty;
 
@@ -330,6 +319,11 @@ class Message extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: isMine ? CAA.end : CAA.start,
             children: [
+              if (kDebugMode && Args.debugMsgId)
+                C(
+                  decoration: BD(color: kCR.q(1)),
+                  child: T("Debug: ${msg.id}", s: TS(c: kW)),
+                ),
               if (isMine) ...[
                 // 🔥 User message
                 if (!isUserImage && !isUserAudio && finalContent.isNotEmpty) T(finalContent, s: userMessageStyle),
@@ -373,9 +367,9 @@ class Message extends ConsumerWidget {
                   GD(
                     onTap: () {
                       if (showingCotContent) {
-                        ref.read(P.chat.cotDisplayState(msg.id).notifier).state = CoTDisplayState.hideCotHeader;
+                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.hideCotHeader;
                       } else {
-                        ref.read(P.chat.cotDisplayState(msg.id).notifier).state = CoTDisplayState.showCotHeaderAndCotContent;
+                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.showCotHeaderAndCotContent;
                       }
                     },
                     child: C(

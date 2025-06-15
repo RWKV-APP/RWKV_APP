@@ -22,8 +22,10 @@ class ThemeSelector extends ConsumerWidget {
     if (_shown.q) return;
     _shown.q = true;
     final context = getContext();
-    if (context == null) return;
-    if (!context.mounted) return;
+    if (context == null || !context.mounted) {
+      _shown.q = false;
+      return;
+    }
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -55,7 +57,6 @@ class ThemeSelector extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
     final primary = Theme.of(context).colorScheme.primary;
-    final themeMode = ref.watch(P.preference.themeMode);
 
     final items = <Widget>[
       FormItem(

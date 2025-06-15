@@ -14,9 +14,6 @@ class $AssetsConfigGen {
 
   /// Directory path: assets/config/chat
   $AssetsConfigChatGen get chat => const $AssetsConfigChatGen();
-
-  /// Directory path: assets/config/othello
-  $AssetsConfigOthelloGen get othello => const $AssetsConfigOthelloGen();
 }
 
 class $AssetsImgGen {
@@ -24,9 +21,16 @@ class $AssetsImgGen {
 
   /// Directory path: assets/img/chat
   $AssetsImgChatGen get chat => const $AssetsImgChatGen();
+}
 
-  /// Directory path: assets/img/othello
-  $AssetsImgOthelloGen get othello => const $AssetsImgOthelloGen();
+class $AssetsLibGen {
+  const $AssetsLibGen();
+
+  /// Directory path: assets/lib/chat
+  $AssetsLibChatGen get chat => const $AssetsLibChatGen();
+
+  /// Directory path: assets/lib/qnn
+  $AssetsLibQnnGen get qnn => const $AssetsLibQnnGen();
 }
 
 class $AssetsModelGen {
@@ -34,9 +38,6 @@ class $AssetsModelGen {
 
   /// Directory path: assets/model/chat
   $AssetsModelChatGen get chat => const $AssetsModelChatGen();
-
-  /// Directory path: assets/model/othello
-  $AssetsModelOthelloGen get othello => const $AssetsModelOthelloGen();
 }
 
 class $AssetsConfigChatGen {
@@ -46,120 +47,175 @@ class $AssetsConfigChatGen {
   String get bRwkvVocabV20230424 =>
       'assets/config/chat/b_rwkv_vocab_v20230424.txt';
 
-  /// File path: assets/config/chat/prompts.en-US.json
-  String get promptsEnUS => 'assets/config/chat/prompts.en-US.json';
+  /// File path: assets/config/chat/suggestions.en-US.debug.json
+  String get suggestionsEnUSDebug =>
+      'assets/config/chat/suggestions.en-US.debug.json';
 
-  /// File path: assets/config/chat/prompts.zh-hans.json
-  String get promptsZhHans => 'assets/config/chat/prompts.zh-hans.json';
+  /// File path: assets/config/chat/suggestions.en-US.json
+  String get suggestionsEnUS => 'assets/config/chat/suggestions.en-US.json';
 
-  /// File path: assets/config/chat/weights.json
-  String get weights => 'assets/config/chat/weights.json';
+  /// File path: assets/config/chat/suggestions.zh-hans.debug.json
+  String get suggestionsZhHansDebug =>
+      'assets/config/chat/suggestions.zh-hans.debug.json';
 
-  /// List of all assets
-  List<String> get values =>
-      [bRwkvVocabV20230424, promptsEnUS, promptsZhHans, weights];
-}
-
-class $AssetsConfigOthelloGen {
-  const $AssetsConfigOthelloGen();
-
-  /// File path: assets/config/othello/b_othello_vocab.txt
-  String get bOthelloVocab => 'assets/config/othello/b_othello_vocab.txt';
+  /// File path: assets/config/chat/suggestions.zh-hans.json
+  String get suggestionsZhHans => 'assets/config/chat/suggestions.zh-hans.json';
 
   /// List of all assets
-  List<String> get values => [bOthelloVocab];
+  List<String> get values => [
+    bRwkvVocabV20230424,
+    suggestionsEnUSDebug,
+    suggestionsEnUS,
+    suggestionsZhHansDebug,
+    suggestionsZhHans,
+  ];
 }
 
 class $AssetsImgChatGen {
   const $AssetsImgChatGen();
 
-  /// File path: assets/img/chat/logo.png
-  AssetGenImage get logo => const AssetGenImage('assets/img/chat/logo.png');
+  /// File path: assets/img/chat/download_qrcode.png
+  AssetGenImage get downloadQrcode =>
+      const AssetGenImage('assets/img/chat/download_qrcode.png');
+
+  /// File path: assets/img/chat/icon.png
+  AssetGenImage get icon => const AssetGenImage('assets/img/chat/icon.png');
 
   /// File path: assets/img/chat/logo.square.png
   AssetGenImage get logoSquare =>
       const AssetGenImage('assets/img/chat/logo.square.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [logo, logoSquare];
+  List<AssetGenImage> get values => [downloadQrcode, icon, logoSquare];
 }
 
-class $AssetsImgOthelloGen {
-  const $AssetsImgOthelloGen();
+class $AssetsLibChatGen {
+  const $AssetsLibChatGen();
 
-  /// File path: assets/img/othello/logo.png
-  AssetGenImage get logo => const AssetGenImage('assets/img/othello/logo.png');
-
-  /// File path: assets/img/othello/logo.square.png
-  AssetGenImage get logoSquare =>
-      const AssetGenImage('assets/img/othello/logo.square.png');
+  /// File path: assets/lib/chat/.gitkeep
+  String get aGitkeep => 'assets/lib/chat/.gitkeep';
 
   /// List of all assets
-  List<AssetGenImage> get values => [logo, logoSquare];
+  List<String> get values => [aGitkeep];
+}
+
+class $AssetsLibQnnGen {
+  const $AssetsLibQnnGen();
+
+  /// File path: assets/lib/qnn/libQnnHtp.so
+  String get libQnnHtp => 'assets/lib/qnn/libQnnHtp.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpNetRunExtensions.so
+  String get libQnnHtpNetRunExtensions =>
+      'assets/lib/qnn/libQnnHtpNetRunExtensions.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpPrepare.so
+  String get libQnnHtpPrepare => 'assets/lib/qnn/libQnnHtpPrepare.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV68Skel.so
+  String get libQnnHtpV68Skel => 'assets/lib/qnn/libQnnHtpV68Skel.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV68Stub.so
+  String get libQnnHtpV68Stub => 'assets/lib/qnn/libQnnHtpV68Stub.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV69Skel.so
+  String get libQnnHtpV69Skel => 'assets/lib/qnn/libQnnHtpV69Skel.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV69Stub.so
+  String get libQnnHtpV69Stub => 'assets/lib/qnn/libQnnHtpV69Stub.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV73Skel.so
+  String get libQnnHtpV73Skel => 'assets/lib/qnn/libQnnHtpV73Skel.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV73Stub.so
+  String get libQnnHtpV73Stub => 'assets/lib/qnn/libQnnHtpV73Stub.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV75Skel.so
+  String get libQnnHtpV75Skel => 'assets/lib/qnn/libQnnHtpV75Skel.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV75Stub.so
+  String get libQnnHtpV75Stub => 'assets/lib/qnn/libQnnHtpV75Stub.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV79Skel.so
+  String get libQnnHtpV79Skel => 'assets/lib/qnn/libQnnHtpV79Skel.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV79Stub.so
+  String get libQnnHtpV79Stub => 'assets/lib/qnn/libQnnHtpV79Stub.so';
+
+  /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV68.so
+  String get libQnnRwkvWkvOpPackageV68 =>
+      'assets/lib/qnn/libQnnRwkvWkvOpPackageV68.so';
+
+  /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV69.so
+  String get libQnnRwkvWkvOpPackageV69 =>
+      'assets/lib/qnn/libQnnRwkvWkvOpPackageV69.so';
+
+  /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV73.so
+  String get libQnnRwkvWkvOpPackageV73 =>
+      'assets/lib/qnn/libQnnRwkvWkvOpPackageV73.so';
+
+  /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV75.so
+  String get libQnnRwkvWkvOpPackageV75 =>
+      'assets/lib/qnn/libQnnRwkvWkvOpPackageV75.so';
+
+  /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV79.so
+  String get libQnnRwkvWkvOpPackageV79 =>
+      'assets/lib/qnn/libQnnRwkvWkvOpPackageV79.so';
+
+  /// File path: assets/lib/qnn/libQnnSystem.so
+  String get libQnnSystem => 'assets/lib/qnn/libQnnSystem.so';
+
+  /// List of all assets
+  List<String> get values => [
+    libQnnHtp,
+    libQnnHtpNetRunExtensions,
+    libQnnHtpPrepare,
+    libQnnHtpV68Skel,
+    libQnnHtpV68Stub,
+    libQnnHtpV69Skel,
+    libQnnHtpV69Stub,
+    libQnnHtpV73Skel,
+    libQnnHtpV73Stub,
+    libQnnHtpV75Skel,
+    libQnnHtpV75Stub,
+    libQnnHtpV79Skel,
+    libQnnHtpV79Stub,
+    libQnnRwkvWkvOpPackageV68,
+    libQnnRwkvWkvOpPackageV69,
+    libQnnRwkvWkvOpPackageV73,
+    libQnnRwkvWkvOpPackageV75,
+    libQnnRwkvWkvOpPackageV79,
+    libQnnSystem,
+  ];
 }
 
 class $AssetsModelChatGen {
   const $AssetsModelChatGen();
 
-  /// File path: assets/model/chat/q
-  String get q => 'assets/model/chat/q';
+  /// File path: assets/model/chat/.gitkeep
+  String get aGitkeep => 'assets/model/chat/.gitkeep';
 
   /// List of all assets
-  List<String> get values => [q];
-}
-
-class $AssetsModelOthelloGen {
-  const $AssetsModelOthelloGen();
-
-  /// File path: assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.bin
-  String get rwkv7Othello26mL10D448ExtendedNcnnBin =>
-      'assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.bin';
-
-  /// File path: assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.param
-  String get rwkv7Othello26mL10D448ExtendedNcnnParam =>
-      'assets/model/othello/rwkv7_othello_26m_L10_D448_extended-ncnn.param';
-
-  /// File path: assets/model/othello/rwkv7_othello_26m_L10_D448_extended.st
-  String get rwkv7Othello26mL10D448Extended =>
-      'assets/model/othello/rwkv7_othello_26m_L10_D448_extended.st';
-
-  /// File path: assets/model/othello/rwkv7_othello_9m_L10_D256_extended-ncnn.bin
-  String get rwkv7Othello9mL10D256ExtendedNcnnBin =>
-      'assets/model/othello/rwkv7_othello_9m_L10_D256_extended-ncnn.bin';
-
-  /// File path: assets/model/othello/rwkv7_othello_9m_L10_D256_extended-ncnn.param
-  String get rwkv7Othello9mL10D256ExtendedNcnnParam =>
-      'assets/model/othello/rwkv7_othello_9m_L10_D256_extended-ncnn.param';
-
-  /// File path: assets/model/othello/rwkv7_othello_9m_L10_D256_extended.st
-  String get rwkv7Othello9mL10D256Extended =>
-      'assets/model/othello/rwkv7_othello_9m_L10_D256_extended.st';
-
-  /// List of all assets
-  List<String> get values => [
-        rwkv7Othello26mL10D448ExtendedNcnnBin,
-        rwkv7Othello26mL10D448ExtendedNcnnParam,
-        rwkv7Othello26mL10D448Extended,
-        rwkv7Othello9mL10D256ExtendedNcnnBin,
-        rwkv7Othello9mL10D256ExtendedNcnnParam,
-        rwkv7Othello9mL10D256Extended
-      ];
+  List<String> get values => [aGitkeep];
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
+  static const String aEnv = '.env';
   static const $AssetsConfigGen config = $AssetsConfigGen();
+  static const String filter = 'assets/filter.txt';
   static const $AssetsImgGen img = $AssetsImgGen();
+  static const $AssetsLibGen lib = $AssetsLibGen();
   static const $AssetsModelGen model = $AssetsModelGen();
+  static const String demoConfig = 'demo-config.json';
+
+  /// List of all assets
+  static List<String> get values => [aEnv, filter, demoConfig];
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -187,7 +243,7 @@ class AssetGenImage {
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -219,15 +275,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;

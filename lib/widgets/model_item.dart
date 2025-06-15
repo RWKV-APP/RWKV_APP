@@ -5,6 +5,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/config.dart';
+import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
@@ -86,7 +87,6 @@ class ModelItem extends ConsumerWidget {
 
     try {
       P.rwkv.clearStates();
-      if (!Config.enableConversation) P.chat.clearMessages();
       await P.rwkv.loadChat(
         modelPath: modelPath,
         backend: backend!,
@@ -301,15 +301,11 @@ class FileKeyItem extends ConsumerWidget {
     final fileSize = fileInfo.fileSize;
     final progress = localFile.progress;
     final downloading = localFile.downloading;
-    final modelSize = fileInfo.modelSize ?? 0;
-    final quantization = fileInfo.quantization;
     double networkSpeed = localFile.networkSpeed;
     if (networkSpeed < 0) networkSpeed = 0;
     Duration timeRemaining = localFile.timeRemaining;
     if (timeRemaining.isNegative) timeRemaining = Duration.zero;
-    final tags = fileInfo.tags;
     final primary = Theme.of(getContext()!).colorScheme.primary;
-    final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
 
     return Column(

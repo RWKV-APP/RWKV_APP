@@ -30,6 +30,24 @@ class _App extends RawApp {
   /// 当前应用的主题
   late final customTheme = qs<custom_theme.CustomTheme>(custom_theme.Light());
 
+  SystemUiOverlayStyle get systemOverlayStyleLight {
+    final scaffold = customTheme.q.scaffold;
+    return SystemUiOverlayStyle(
+      systemNavigationBarColor: scaffold,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+    );
+  }
+
+  SystemUiOverlayStyle get systemOverlayStyleDark {
+    final scaffold = customTheme.q.scaffold;
+    return SystemUiOverlayStyle(
+      systemNavigationBarColor: scaffold,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light,
+    );
+  }
+
   @override
   BuildContext? get context => getContext();
 }
@@ -87,6 +105,15 @@ extension $App on _App {
 
   void hapticMedium() {
     if (_isMobile.q) Gaimon.medium();
+  }
+
+  FV customThemeChanged() async {
+    await HF.wait(100);
+    if (customTheme.q.light) {
+      _statusBarToLightMode();
+    } else {
+      _statusBarToDarkMode();
+    }
   }
 }
 
@@ -173,17 +200,22 @@ extension _$App on _App {
 
     preferredThemeMode.q = P.preference.themeMode.q;
     customTheme.q = P.preference.preferredDarkCustomTheme.q;
-    customTheme.lv(_onCustomThemeChanged, fireImmediately: true);
+    customTheme.lv(customThemeChanged, fireImmediately: true);
     preferredThemeMode.lv(_syncTheme, fireImmediately: true);
     light.lv(_syncTheme, fireImmediately: true);
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
+
+    if (Args.autoTriggerPage) {
+      HF.wait(2000).then((_) {
+        Pager.toggle();
+      });
+    }
   }
 
   FV _syncTheme() async {
     final light = this.light.q;
     final preferredThemeMode = this.preferredThemeMode.q;
     final preferredDarkCustomTheme = P.preference.preferredDarkCustomTheme.q;
-    qqr("syncTheme: light: $light, preferredThemeMode: $preferredThemeMode");
     switch (preferredThemeMode) {
       case ThemeMode.light:
         customTheme.q = custom_theme.Light();
@@ -201,51 +233,21 @@ extension _$App on _App {
 
   FV _statusBarToLightMode() async {
     qq;
-    final scaffold = customTheme.q.scaffold;
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        systemNavigationBarColor: scaffold,
-        systemNavigationBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-      ),
-    );
+    SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleLight);
   }
 
   FV _statusBarToDarkMode() async {
     qq;
-    final scaffold = customTheme.q.scaffold;
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        systemNavigationBarColor: scaffold,
-        systemNavigationBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
-    );
-  }
-
-  FV _onCustomThemeChanged() async {
-    await HF.wait(100);
-    if (customTheme.q.light) {
-      qqr("Light");
-      _statusBarToLightMode();
-    } else {
-      qqr("Dark");
-      _statusBarToDarkMode();
-    }
+    SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleDark);
   }
 
   FV _onLifecycleStateChanged() async {}
 
   FV _showNewVersionDialogIfNeeded() async {
+    if (!Platform.isIOS && !Platform.isAndroid) return;
     qq;
-
     if (Platform.isAndroid && latestBuild.q <= int.parse(buildNumber.q)) return;
     if (Platform.isIOS && latestBuildIos.q <= int.parse(buildNumber.q)) return;
-
-    if (!Platform.isIOS && !Platform.isAndroid) {
-      qqw("This feature is not supported on this platform");
-      return;
-    }
 
     final androidUrl = this.androidUrl.q ?? '';
     final androidApkUrl = this.androidApkUrl.q ?? '';

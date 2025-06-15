@@ -7,25 +7,28 @@ import 'package:zone/state/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 /// Return true if the model is selected
-bool checkModelSelection() {
+bool checkModelSelection({
+  bool showAlert = true,
+  bool showModelSelector = true,
+}) {
   final currentModel = P.rwkv.currentModel.q;
 
   if (currentModel == null) {
-    Alert.info(S.current.please_load_model_first);
-    ModelSelector.show();
+    if (showAlert) Alert.info(S.current.please_load_model_first);
+    if (showModelSelector) ModelSelector.show();
     return false;
   }
 
   final loaded = P.rwkv.loaded.q;
 
   if (!loaded) {
-    Alert.info(S.current.please_load_model_first);
+    if (showAlert) Alert.info(S.current.please_load_model_first);
     return false;
   }
 
   final loading = P.rwkv.loading.q;
   if (loading) {
-    Alert.info(S.current.please_wait_for_the_model_to_load);
+    if (showAlert) Alert.info(S.current.please_wait_for_the_model_to_load);
     return false;
   }
 

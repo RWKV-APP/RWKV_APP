@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已复制到剪贴板"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("请输入消息内容"),
+    "chat_history": MessageLookupByLibrary.simpleMessage("聊天记录"),
     "chat_mode": MessageLookupByLibrary.simpleMessage("对话模式"),
     "chat_model_name": MessageLookupByLibrary.simpleMessage("模型名称"),
     "chat_please_select_a_model": MessageLookupByLibrary.simpleMessage(
@@ -278,6 +279,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "server_error": MessageLookupByLibrary.simpleMessage("服务器错误"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("会话配置"),
     "set_the_value_of_grid": MessageLookupByLibrary.simpleMessage("设置网格值"),
+    "settings": MessageLookupByLibrary.simpleMessage("设置"),
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "share_chat": MessageLookupByLibrary.simpleMessage("分享聊天"),
     "show_stack": MessageLookupByLibrary.simpleMessage("显示思维链堆栈"),

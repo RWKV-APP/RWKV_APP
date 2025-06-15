@@ -18,10 +18,14 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        // "--dart-define=disableRemoteConfig=true",
+        "--dart-define=autoTriggerPage=true",
+        "--dart-define=debugMsgId=true",
         "--dart-define=logLevel=3",
-        "--dart-define=disableAutoShowOfWeightsPanel=true",
+        "--dart-define=maxTokens=100",
+        "--dart-define=showHaloDebugger=true",
         // "--dart-define=debuggingThemes=true",
+        // "--dart-define=disableAutoShowOfWeightsPanel=true",
+        // "--dart-define=disableRemoteConfig=true",
       ]
     },
     {

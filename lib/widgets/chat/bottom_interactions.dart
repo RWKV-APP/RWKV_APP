@@ -65,7 +65,6 @@ class _ThinkingModeButton extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final loading = ref.watch(P.rwkv.loading);
     final qw = ref.watch(P.app.qw);
-    final qb = ref.watch(P.app.qb);
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
 
     final color = switch (thinkingMode) {

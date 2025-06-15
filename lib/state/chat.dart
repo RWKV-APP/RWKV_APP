@@ -1,9 +1,6 @@
 part of 'p.dart';
 
 class _Chat {
-  /// The key of it is the id of the message
-  late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
-
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
 
@@ -35,10 +32,14 @@ class _Chat {
 
   late final hasFocus = qs(false);
 
-  late final autoPauseId = qs<int?>(null);
+  late final _autoPauseId = qs<int?>(null);
 
+  // TODO: Should be moved to state/msg.dart in the future
+  // TODO: Should be renamed to share related state
   late final selectedMessages = qs<Set<int>>({});
 
+  // TODO: Should be moved to state/msg.dart in the future
+  // TODO: Should be renamed to share related state
   late final selectMessageMode = qs(false);
 
   late final completionMode = qs(false);
@@ -68,7 +69,7 @@ extension $Chat on _Chat {
     final _editingBotMessage = P.msg.editingBotMessage.q;
 
     if (_editingBotMessage) {
-      final id = HF.debugShorterMS;
+      final id = HF.milliseconds;
       final currentMessages = [...P.msg.list.q];
       final _editingIndex = P.msg.editingOrRegeneratingIndex.q!;
       final currentMessage = currentMessages[_editingIndex];
@@ -84,14 +85,15 @@ extension $Chat on _Chat {
         runningMode: currentMessage.runningMode,
       );
 
-      P.msg.pool.q = {...P.msg.pool.q, id: newMsg};
-      final userMsgNode = P.msg._msgNode.findParentByMsgId(currentMessage.id);
+      P.msg._syncMsg(id, newMsg);
+      final userMsgNode = P.msg.msgNode.q.findParentByMsgId(currentMessage.id);
       if (userMsgNode == null) {
         qqe("We should found a user message node before a bot message node");
         return;
       }
       userMsgNode.add(MsgNode(id));
-      P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+      P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
+      P.conversation._syncNode();
       P.msg.editingOrRegeneratingIndex.q = null;
       Alert.success(S.current.bot_message_edited);
       return;
@@ -204,6 +206,7 @@ extension $Chat on _Chat {
     Alert.success(S.current.new_chat_started);
     P.msg._clear();
     P.rwkv.clearStates();
+    P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
   }
 
   FV completion(String prompt) async {
@@ -239,7 +242,7 @@ extension $Chat on _Chat {
     bool withHistory = true,
     bool isRegenerate = false,
   }) async {
-    MsgNode? parentNode = P.msg._msgNode.wholeLatestNode;
+    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
 
     final editingOrRegeneratingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (editingOrRegeneratingIndex != null) {
@@ -250,10 +253,10 @@ extension $Chat on _Chat {
       }
 
       if (isRegenerate) {
-        parentNode = P.msg._msgNode.findParentByMsgId(currentMessage.id);
+        parentNode = P.msg.msgNode.q.findParentByMsgId(currentMessage.id);
       } else {
         // 以该消息的父节点作为新消息的父结点
-        parentNode = P.msg._msgNode.findParentByMsgId(currentMessage.id);
+        parentNode = P.msg.msgNode.q.findParentByMsgId(currentMessage.id);
       }
 
       if (parentNode == null) {
@@ -264,7 +267,7 @@ extension $Chat on _Chat {
 
     late final Message? msg;
 
-    final id = HF.debugShorterMS;
+    final id = HF.milliseconds;
 
     if (isRegenerate) {
       // 重新生成 Bot 消息, 所以, 不添加新的用户消息
@@ -284,12 +287,13 @@ extension $Chat on _Chat {
         isReasoning: false,
         paused: false,
       );
-      P.msg.pool.q = {...P.msg.pool.q, id: msg};
+      P.msg._syncMsg(id, msg);
       parentNode = parentNode.add(MsgNode(id));
     }
 
     // 更新消息 id 列表
-    P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
+    P.conversation._syncNode();
 
     Future.delayed(34.ms).then((_) {
       scrollToBottom();
@@ -321,7 +325,7 @@ extension $Chat on _Chat {
     receivedTokens.q = "";
     receivingTokens.q = true;
 
-    final receiveId = HF.debugShorterMS + 1;
+    final receiveId = HF.milliseconds + 1;
 
     this.receiveId.q = receiveId;
     final receiveMsg = Message(
@@ -337,7 +341,8 @@ extension $Chat on _Chat {
 
     P.msg.pool.q[receiveId] = receiveMsg;
     parentNode.add(MsgNode(receiveId));
-    P.msg.ids.q = P.msg._msgNode.latestMsgIdsWithoutRoot;
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
+    P.conversation._syncNode();
 
     _checkSensitive(message);
   }
@@ -420,17 +425,17 @@ extension _$Chat on _Chat {
     if (P.app.isDesktop.q) return;
     final isToBackground = next == AppLifecycleState.paused || next == AppLifecycleState.hidden;
     if (isToBackground) {
-      if (receiveId.q != null && autoPauseId.q == null && receivingTokens.q == true) {
-        autoPauseId.q = receiveId.q!;
+      if (receiveId.q != null && _autoPauseId.q == null && receivingTokens.q == true) {
+        _autoPauseId.q = receiveId.q!;
         _pauseMessageById(id: receiveId.q!);
       }
     } else {
-      if (autoPauseId.q != null) {
-        resumeMessageById(id: autoPauseId.q!, withHaptic: false);
-        autoPauseId.uc();
+      if (_autoPauseId.q != null) {
+        resumeMessageById(id: _autoPauseId.q!, withHaptic: false);
+        _autoPauseId.uc();
       }
     }
-    qqq("autoPauseId: ${autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
+    qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
   }
 
   List<String> _history() {
@@ -464,7 +469,7 @@ extension _$Chat on _Chat {
     }
 
     final newMsg = msg.copyWith(paused: true, isSensitive: isSensitive);
-    P.msg.pool.q = {...P.msg.pool.q, id: newMsg};
+    P.msg._syncMsg(id, newMsg);
   }
 
   FV _onFocusNodeChanged() async {
@@ -479,12 +484,12 @@ extension _$Chat on _Chat {
 
       qqq("new file received: $path, length: $length");
 
-      final t0 = HF.debugShorterMS;
+      final t0 = HF.milliseconds;
       P.rwkv.setAudioPrompt(path: path);
-      final t1 = HF.debugShorterMS;
+      final t1 = HF.milliseconds;
       qqq("setAudioPrompt done in ${t1 - t0}ms");
       send("", type: MessageType.userAudio, audioUrl: path, withHistory: false, audioLength: length);
-      final t2 = HF.debugShorterMS;
+      final t2 = HF.milliseconds;
       qqq("send done in ${t2 - t1}ms");
     }
 
@@ -580,7 +585,7 @@ extension _$Chat on _Chat {
       ttsPerWavProgress: ttsPerWavProgress,
       ttsFilePaths: ttsFilePaths,
     );
-    P.msg.pool.q = {...P.msg.pool.q, id: newMsg};
+    P.msg._syncMsg(id, newMsg);
   }
 
   @Deprecated("Use _onStreamEvent instead")

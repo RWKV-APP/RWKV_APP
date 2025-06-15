@@ -100,9 +100,9 @@ extension $RWKVLoad on _RWKV {
       try {
         send(to_rwkv.ReleaseWhisperEncoder());
         send(to_rwkv.ReleaseModel());
-        final startMS = HF.debugShorterMS;
+        final startMS = HF.milliseconds;
         await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-        final endMS = HF.debugShorterMS;
+        final endMS = HF.milliseconds;
         qqr("initRuntime done in ${endMS - startMS}ms");
       } catch (e) {
         qqe("initRuntime failed: $e");
@@ -160,9 +160,9 @@ extension $RWKVLoad on _RWKV {
     if (_sendPort != null) {
       send(to_rwkv.ReleaseVisionEncoder());
       send(to_rwkv.ReleaseModel());
-      final startMS = HF.debugShorterMS;
+      final startMS = HF.milliseconds;
       await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-      final endMS = HF.debugShorterMS;
+      final endMS = HF.milliseconds;
       qqr("initRuntime done in ${endMS - startMS}ms");
     } else {
       final options = StartOptions(
@@ -222,9 +222,9 @@ extension $RWKVLoad on _RWKV {
     if (_sendPort != null) {
       try {
         send(to_rwkv.ReleaseTTSModels());
-        final startMS = HF.debugShorterMS;
+        final startMS = HF.milliseconds;
         await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-        final endMS = HF.debugShorterMS;
+        final endMS = HF.milliseconds;
         qqr("initRuntime done in ${endMS - startMS}ms");
       } catch (e) {
         qqe("initRuntime failed: $e");
@@ -293,7 +293,7 @@ extension $RWKVLoad on _RWKV {
     _loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
-    final tokenizerPath = await fromAssetsToTemp(Assets.config.chat.bRwkvVocabV20230424);
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
 
     await _ensureQNNCopied();
 
@@ -301,9 +301,9 @@ extension $RWKVLoad on _RWKV {
 
     if (_sendPort != null) {
       try {
-        final startMS = HF.debugShorterMS;
+        final startMS = HF.milliseconds;
         await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-        final endMS = HF.debugShorterMS;
+        final endMS = HF.milliseconds;
         qqr("initRuntime done in ${endMS - startMS}ms");
       } catch (e) {
         qqe("initRuntime failed: $e");
@@ -345,14 +345,14 @@ extension $RWKVLoad on _RWKV {
     late final String modelPath;
     late final Backend backend;
 
-    final tokenizerPath = await fromAssetsToTemp(Assets.config.othello.bOthelloVocab);
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_othello_vocab.txt");
 
     if (Platform.isIOS || Platform.isMacOS) {
-      modelPath = await fromAssetsToTemp(Assets.model.othello.rwkv7Othello26mL10D448Extended);
+      modelPath = await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended.st");
       backend = Backend.webRwkv;
     } else {
-      modelPath = await fromAssetsToTemp(Assets.model.othello.rwkv7Othello26mL10D448ExtendedNcnnBin);
-      await fromAssetsToTemp(Assets.model.othello.rwkv7Othello26mL10D448ExtendedNcnnParam);
+      modelPath = await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended-ncnn.bin");
+      await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended-ncnn.param");
       backend = Backend.ncnn;
     }
 
@@ -861,7 +861,6 @@ extension _$RWKV on _RWKV {
         final done = res.done;
         final success = res.success;
         final error = res.error;
-        final step = res.step;
 
         if (done) {
           if (success == true) {

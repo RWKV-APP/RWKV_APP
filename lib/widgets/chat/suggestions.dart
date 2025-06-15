@@ -137,7 +137,6 @@ class Suggestions extends ConsumerWidget {
 
   Widget _buildTag(String text, {required Color color, required VoidCallback? onTap}) {
     final qw = P.app.qw.q;
-    final qb = P.app.qb.q;
     final customTheme = P.app.customTheme.q;
     return GD(
       onTap: onTap,
@@ -230,7 +229,6 @@ class _AllSuggestionDialogState extends State<AllSuggestionDialog> implements Ti
 
   @override
   Widget build(BuildContext context) {
-    final qb = P.app.qb.q;
     return SB(
       width: double.infinity,
       child: Column(

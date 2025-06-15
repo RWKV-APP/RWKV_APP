@@ -683,7 +683,6 @@ class _Terminal extends ConsumerWidget {
     final padding = MediaQuery.of(context).padding;
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final isDesktop = ref.watch(P.app.isDesktop);
-    final qw = ref.watch(P.app.qw);
     return SelectionArea(
       child: C(
         decoration: const BD(color: _kGridBGColor),

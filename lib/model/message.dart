@@ -12,6 +12,7 @@ enum MessageType {
 
 @immutable
 final class Message extends Equatable {
+  /// 消息创建时间, 单位: 毫秒
   final int id;
   final String content;
   final bool isMine;
@@ -39,6 +40,7 @@ final class Message extends Equatable {
 
   bool get ttsHasContent => ttsFilePaths?.isNotEmpty ?? false;
   bool get ttsIsDone => (ttsOverallProgress ?? 0.0) >= 1.0;
+  int get createAtInMS => id;
 
   const Message({
     required this.id,

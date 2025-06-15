@@ -1,8 +1,6 @@
-import 'package:zone/args.dart';
 import 'package:zone/route/page_key.dart';
 
 abstract class Config {
-  // TODO: 根据 args 决定
   static final firstPage = PageKey.chat.name;
 
   static const prompt = """<EOD>User: hi
@@ -18,7 +16,6 @@ Assistant: 你好，我是你的助手，我会提供专家级的完整回答。
 """;
 
   static const reasonTag = "reason";
-  static const enableConversation = false && Args.demoType == "__chat__";
 
   static const domain = "https://api-model.rwkvos.com";
 
