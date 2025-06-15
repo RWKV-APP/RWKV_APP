@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:convert';
-
-import 'package:zone/db/db.dart';
 
 enum MessageType {
   text,

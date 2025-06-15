@@ -206,7 +206,6 @@ class _NewConversationButton extends ConsumerWidget {
     late final Widget icon;
 
     icon = const Icon(Icons.add_comment_outlined);
-    final loaded = ref.watch(P.rwkv.loaded);
     final isEmpty = ref.watch(P.msg.list.select((v) => v.isEmpty));
 
     return IconButton(

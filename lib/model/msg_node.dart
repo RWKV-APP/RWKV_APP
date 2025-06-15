@@ -11,8 +11,6 @@ final class MsgNode {
   /// 创建时间, 单位: 微秒
   late final int createAtInUS;
 
-  String? title;
-
   /// 当前节点, 最新的子节点
   MsgNode? latest;
   MsgNode? parent;

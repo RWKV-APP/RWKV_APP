@@ -34,11 +34,12 @@ class $_ConversationTable extends _Conversation
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
-    'New Conversation',
+    'title',
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant("New Conversation"),
   );
   static const VerificationMeta _dataMeta = const VerificationMeta('data');
   @override
@@ -98,13 +99,11 @@ class $_ConversationTable extends _Conversation
         ),
       );
     }
-    if (data.containsKey('New Conversation')) {
+    if (data.containsKey('title')) {
       context.handle(
         _titleMeta,
-        title.isAcceptableOrUnknown(data['New Conversation']!, _titleMeta),
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
       );
-    } else if (isInserting) {
-      context.missing(_titleMeta);
     }
     if (data.containsKey('data')) {
       context.handle(
@@ -144,7 +143,7 @@ class $_ConversationTable extends _Conversation
       ),
       title: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}New Conversation'],
+        data['${effectivePrefix}title'],
       )!,
       data: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -184,7 +183,7 @@ class ConversationData extends DataClass
     if (!nullToAbsent || updatedAtUS != null) {
       map['updated_at_u_s'] = Variable<int>(updatedAtUS);
     }
-    map['New Conversation'] = Variable<String>(title);
+    map['title'] = Variable<String>(title);
     map['data'] = Variable<String>(data);
     map['app_build_number'] = Variable<String>(appBuildNumber);
     return map;
@@ -298,11 +297,10 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
   _ConversationCompanion.insert({
     this.createdAtUS = const Value.absent(),
     this.updatedAtUS = const Value.absent(),
-    required String title,
+    this.title = const Value.absent(),
     required String data,
     required String appBuildNumber,
-  }) : title = Value(title),
-       data = Value(data),
+  }) : data = Value(data),
        appBuildNumber = Value(appBuildNumber);
   static Insertable<ConversationData> custom({
     Expression<int>? createdAtUS,
@@ -314,7 +312,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
     return RawValuesInsertable({
       if (createdAtUS != null) 'created_at_u_s': createdAtUS,
       if (updatedAtUS != null) 'updated_at_u_s': updatedAtUS,
-      if (title != null) 'New Conversation': title,
+      if (title != null) 'title': title,
       if (data != null) 'data': data,
       if (appBuildNumber != null) 'app_build_number': appBuildNumber,
     });
@@ -346,7 +344,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
       map['updated_at_u_s'] = Variable<int>(updatedAtUS.value);
     }
     if (title.present) {
-      map['New Conversation'] = Variable<String>(title.value);
+      map['title'] = Variable<String>(title.value);
     }
     if (data.present) {
       map['data'] = Variable<String>(data.value);
@@ -1596,7 +1594,7 @@ typedef $$_ConversationTableCreateCompanionBuilder =
     _ConversationCompanion Function({
       Value<int> createdAtUS,
       Value<int?> updatedAtUS,
-      required String title,
+      Value<String> title,
       required String data,
       required String appBuildNumber,
     });
@@ -1761,7 +1759,7 @@ class $$_ConversationTableTableManager
               ({
                 Value<int> createdAtUS = const Value.absent(),
                 Value<int?> updatedAtUS = const Value.absent(),
-                required String title,
+                Value<String> title = const Value.absent(),
                 required String data,
                 required String appBuildNumber,
               }) => _ConversationCompanion.insert(
