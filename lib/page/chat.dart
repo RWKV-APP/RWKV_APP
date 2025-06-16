@@ -64,7 +64,12 @@ class _Page extends ConsumerWidget {
           const Empty(),
           const VisualEmpty(),
           const AudioEmpty(),
-          const ChatAppBar(),
+          const Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ChatAppBar(),
+          ),
           const _NavigationBarBottomLine(),
           if (selectMessageMode)
             const Positioned(

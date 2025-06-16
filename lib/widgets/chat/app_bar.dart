@@ -58,23 +58,18 @@ class ChatAppBar extends ConsumerWidget {
     final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
 
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-          child: Theme(
-            data: theme.copyWith(
-              appBarTheme: theme.appBarTheme.copyWith(
-                backgroundColor: scaffoldBackgroundColor,
-              ),
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Theme(
+          data: theme.copyWith(
+            appBarTheme: theme.appBarTheme.copyWith(
+              backgroundColor: scaffoldBackgroundColor,
             ),
-            child: selectMessageMode
-                ? _SelectMessageAppBar() //
-                : _buildAppBar(context, displayName, primary, demoType, completionMode, ref),
           ),
+          child: selectMessageMode
+              ? _SelectMessageAppBar() //
+              : _buildAppBar(context, displayName, primary, demoType, completionMode, ref),
         ),
       ),
     );
