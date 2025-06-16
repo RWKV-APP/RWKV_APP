@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
@@ -20,11 +22,12 @@ Future<void> showImageSelector() async {
     message: S.current.please_select_an_image_from_the_following_options,
     cancelLabel: S.current.cancel,
     actions: [
-      SheetAction(
-        label: S.current.take_photo,
-        icon: Icons.camera,
-        key: "take_photo",
-      ),
+      if (Platform.isAndroid || Platform.isIOS)
+        SheetAction(
+          label: S.current.take_photo,
+          icon: Icons.camera,
+          key: "take_photo",
+        ),
       SheetAction(
         label: S.current.select_from_library,
         icon: Icons.photo,

@@ -44,7 +44,7 @@ class ConversationList extends ConsumerWidget {
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           shrinkWrap: isEmpty,
-          padding: EI.o(
+          padding: const EI.o(
             t: 8,
             b: 8,
             l: 8,
