@@ -29,6 +29,7 @@ class _CompletionState extends ConsumerState<Completion> {
   bool canResume = false;
   bool hasPrompt = false;
   bool isSensitive = false;
+  bool isTouchingOutput = false;
 
   bool get showPause => generating && hasPrompt && !resuming;
 
@@ -92,7 +93,7 @@ class _CompletionState extends ConsumerState<Completion> {
         output = output.substring(0, output.length - 5);
       }
       controllerOutput.text = output;
-      if (0 < remain && remain < 100) {
+      if (0 < remain && remain < 80 && !isTouchingOutput) {
         scrollController.jumpTo(max);
       }
       controllerCheckSensitive.add(v);
@@ -230,45 +231,7 @@ class _CompletionState extends ConsumerState<Completion> {
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              if (showSubmit)
-                FilledButton.icon(
-                  onPressed: !hasPrompt ? null : onSubmitTap,
-                  label: Text(S.current.submit),
-                ),
-
-              if (showPause)
-                FilledButton.icon(
-                  onPressed: onStopTap,
-                  label: Text(S.current.pause),
-                  icon: const Icon(Icons.pause_rounded),
-                ),
-
-              if (showResume)
-                FilledButton.icon(
-                  onPressed: onResumeTap,
-                  label: Text(S.current.resume),
-                  icon: resuming
-                      ? const SizedBox.square(
-                          dimension: 16,
-                          child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white),
-                        )
-                      : const Icon(Icons.play_arrow_rounded),
-                ),
-
-              if (showResume || showPause) const SizedBox(width: 8),
-              if (showResume || showPause)
-                OutlinedButton.icon(
-                  onPressed: generating ? null : onSubmitTap,
-                  label: Text(S.current.regenerate),
-                  icon: const Icon(Icons.refresh_rounded),
-                ),
-              const Spacer(),
-              const SizedBox(width: 8),
-              const PerformanceInfo(),
-            ],
-          ),
+          _buildActions(),
           Row(
             children: [
               Expanded(child: Text(S.current.output)),
@@ -283,19 +246,72 @@ class _CompletionState extends ConsumerState<Completion> {
           ),
           Expanded(
             flex: 2,
-            child: TextField(
-              scrollController: scrollController,
-              controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
-              maxLines: 999999999,
-              enabled: !generating && !isSensitive,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+            child: Listener(
+              onPointerDown: (event) {
+                isTouchingOutput = true;
+              },
+              onPointerUp: (event) {
+                isTouchingOutput = false;
+              },
+              onPointerCancel: (event) {
+                isTouchingOutput = false;
+              },
+              child: TextField(
+                scrollController: scrollController,
+                controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
+                maxLines: 999999999,
+                readOnly: generating || isSensitive,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
               ),
             ),
           ),
           const SizedBox(height: 50),
         ],
       ),
+    );
+  }
+
+  Widget _buildActions() {
+    return Row(
+      children: [
+        if (showSubmit)
+          FilledButton.icon(
+            onPressed: !hasPrompt ? null : onSubmitTap,
+            label: Text(S.current.submit),
+          ),
+
+        if (showPause)
+          FilledButton.icon(
+            onPressed: onStopTap,
+            label: Text(S.current.pause),
+            icon: const Icon(Icons.pause_rounded),
+          ),
+
+        if (showResume)
+          FilledButton.icon(
+            onPressed: onResumeTap,
+            label: Text(S.current.resume),
+            icon: resuming
+                ? const SizedBox.square(
+                    dimension: 16,
+                    child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white),
+                  )
+                : const Icon(Icons.play_arrow_rounded),
+          ),
+
+        if (showResume || showPause) const SizedBox(width: 8),
+        if (showResume || showPause)
+          OutlinedButton.icon(
+            onPressed: generating ? null : onSubmitTap,
+            label: Text(S.current.regenerate),
+            icon: const Icon(Icons.refresh_rounded),
+          ),
+        const Spacer(),
+        const SizedBox(width: 8),
+        const PerformanceInfo(),
+      ],
     );
   }
 }
