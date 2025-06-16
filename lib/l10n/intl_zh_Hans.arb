@@ -219,7 +219,7 @@
   "end": "完",
   "from_model": "来自模型: %s",
   "explore_rwkv": "探索RWKV",
-  "completion_mode": "补全模式",
+  "completion_mode": "续写模式",
   "chat_mode": "对话模式",
   "prompt": "提示词",
   "output": "输出",

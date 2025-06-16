@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1572,9 +1571,9 @@ class S {
     return Intl.message('探索RWKV', name: 'explore_rwkv', desc: '', args: []);
   }
 
-  /// `补全模式`
+  /// `续写模式`
   String get completion_mode {
-    return Intl.message('补全模式', name: 'completion_mode', desc: '', args: []);
+    return Intl.message('续写模式', name: 'completion_mode', desc: '', args: []);
   }
 
   /// `对话模式`
