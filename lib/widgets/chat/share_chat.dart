@@ -399,7 +399,7 @@ class _PreviewState extends ConsumerState<_Preview> {
   Widget _buildFooter(bool dark) {
     final now = DateTime.now();
     final date = now.toIso8601String().split('T')[0];
-    final version = P.app.version.q;
+    final version = "${P.app.version.q} (${P.app.buildNumber.q})";
 
     final qrCode = SizedBox(
       width: 50,
