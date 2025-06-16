@@ -107,28 +107,6 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<bool> saveMessage(model.Message message) async {
-    return await into(msg).insert(_messageToMsgCompanion(message)) > 0;
-  }
-
-  Future<bool> updateMessage(model.Message message) async {
-    return await (update(msg)..where((tbl) => tbl.id.equals(message.id))).write(_messageToMsgCompanion(message)) > 0;
-  }
-
-  Future<bool> deleteMessage(int id) async {
-    return await (delete(msg)..where((tbl) => tbl.id.equals(id))).go() > 0;
-  }
-
-  Future<List<model.Message>> getAllMessages() async {
-    final msgDataList = await select(msg).get();
-    return msgDataList.map((msgData) => _msgDataToMessage(msgData)).toList();
-  }
-
-  Future<model.Message?> getMessageById(int id) async {
-    final msgData = await (select(msg)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
-    return msgData != null ? _msgDataToMessage(msgData) : null;
-  }
-
   Future<List<model.Message>> getMessagesByIds(Iterable<int> ids) async {
     final msgDataList = await (select(msg)..where((tbl) => tbl.id.isIn(ids))).get();
     return msgDataList.map((msgData) => _msgDataToMessage(msgData)).toList();
