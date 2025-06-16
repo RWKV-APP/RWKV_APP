@@ -4,6 +4,8 @@ flutter_native_splash:
   color: "#ffffff"
   color_dark: "#000000"
   image: assets/icon/icon.chat.png
+  image_dark: assets/icon/dark/chat.png
+  branding_dark: assets/icon/dark/logo.png
 
   android_12:
     branding: assets/icon/logo.png
@@ -11,5 +13,7 @@ flutter_native_splash:
     branding_mode: bottom
     color_dark: "#000000"
     color: "#ffffff"
+    image_dark: assets/icon/dark/chat.png
+    branding_dark: assets/icon/dark/logo.png
 
   web: false
