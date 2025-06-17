@@ -202,11 +202,14 @@ class _PreviewState extends ConsumerState<_Preview> {
   Future<File?> _generatePreview() async {
     final repaintBoundary = kSharingRepaintBoundary.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-    final Size imageSize = repaintBoundary.size;
-    const double maxHeightInPixel = 16384.0;
-    double currentDPI = MediaQuery.devicePixelRatioOf(context);
-
+    final imageSize = repaintBoundary.size;
+    const maxHeightInPixel = 16384.0;
+    final currentDPI = MediaQuery.devicePixelRatioOf(context);
     final wantedHeightInPixel = imageSize.height * currentDPI;
+    double finalDPI = currentDPI;
+    if (wantedHeightInPixel > maxHeightInPixel) {
+      finalDPI = maxHeightInPixel / imageSize.height;
+    }
 
     // 发现如下现象:
     // 当, 图片高度超过 16384 时, 如果, 我们使用原始的 pixelRatio, 那么, 溢出部分会被裁切
@@ -221,16 +224,12 @@ class _PreviewState extends ConsumerState<_Preview> {
     qqr(overflowed);
     qqr(count);
 
-    final List<ui.Image> imgs = [];
-    await Future.forEach(List.generate(count, (i) => i), (i) async {
-      final image = await (repaintBoundary.layer! as OffsetLayer).toImage(
-        Offset(i * 16384.0, (i + 1) * 16384.0) & imageSize,
-        pixelRatio: currentDPI,
-      );
-      imgs.add(image);
-    });
+    // FIXME: 如果, 图片高度超过 16384, 那么, 我们需要将图片分成多张, 然后, 将多张图片合并成一张图片
+    // FIXME: 注意, 新和成的图片尺寸仍然无法超过 16384, 需要找到新的方法
 
-    final image = await (repaintBoundary.layer! as OffsetLayer).toImage(Offset(0, 0) & imageSize, pixelRatio: currentDPI);
+    // ignore: invalid_use_of_protected_member
+    final OffsetLayer offsetLayer = repaintBoundary.layer! as OffsetLayer;
+    final image = await offsetLayer.toImage(Offset(0, 0) & imageSize, pixelRatio: finalDPI);
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
     final bytes = byteData!.buffer.asUint8List();
