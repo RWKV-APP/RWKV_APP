@@ -64,22 +64,6 @@ class _Page extends ConsumerWidget {
     }
 
     return Scaffold(
-      floatingActionButton: kDebugMode
-          ? FloatingActionButton(
-              onPressed: () async {
-                qr;
-                final rb = kSharingRepaintBoundary.currentContext!.findRenderObject() as RenderRepaintBoundary;
-                final image = await rb.toImage();
-                final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-                final bytes = byteData!.buffer.asUint8List();
-                // 写入应用程序沙盒,名称为时间戳 + png
-                final dir = await getApplicationCacheDirectory();
-                final file = File("${dir.path}${Platform.pathSeparator}tmp_${HF.milliseconds}.png");
-                await file.writeAsBytes(bytes);
-              },
-              child: const Icon(Icons.bug_report),
-            )
-          : null,
       body: Stack(
         children: [
           const _List(),
