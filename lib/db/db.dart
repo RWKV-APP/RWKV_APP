@@ -18,8 +18,9 @@ class _Conversation extends Table {
   @override
   Set<Column> get primaryKey => {createdAtUS};
 
+  // TODO: I think it's a bug of drift, the table name is not correct, when I set it to "conv", it will be "conversations" on Android.
   @override
-  String? get tableName => "conv";
+  String? get tableName => "conversation";
 
   IntColumn get createdAtUS => integer()();
   IntColumn get updatedAtUS => integer().nullable()();
