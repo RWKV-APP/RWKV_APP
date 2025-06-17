@@ -149,7 +149,7 @@ class BotMessageBottom extends ConsumerWidget {
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),
               child: C(
-                decoration: BD(color: kC),
+                decoration: const BD(color: kC),
                 child: Icon(
                   Icons.share_rounded,
                   color: primaryColor.q(.8),

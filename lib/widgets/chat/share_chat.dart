@@ -1,5 +1,4 @@
 import 'dart:io' show File, Platform;
-import 'dart:typed_data' show ByteData;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -225,7 +224,7 @@ class _PreviewState extends ConsumerState<_Preview> {
 
     // ignore: invalid_use_of_protected_member
     final OffsetLayer offsetLayer = repaintBoundary.layer! as OffsetLayer;
-    final image = await offsetLayer.toImage(Offset(0, 0) & imageSize, pixelRatio: finalDPI);
+    final image = await offsetLayer.toImage(const Offset(0, 0) & imageSize, pixelRatio: finalDPI);
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
     final bytes = byteData!.buffer.asUint8List();
