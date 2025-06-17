@@ -1,19 +1,19 @@
 flutter_native_splash:
   branding: assets/icon/logo.png
   branding_bottom_padding: 24
+  branding_dark: assets/icon/dark/logo.png
   color: "#ffffff"
   color_dark: "#000000"
   image: assets/icon/icon.chat.png
   image_dark: assets/icon/dark/chat.png
-  branding_dark: assets/icon/dark/logo.png
 
   android_12:
     branding: assets/icon/logo.png
     branding_bottom_padding: 24
-    branding_mode: bottom
-    color_dark: "#000000"
-    color: "#ffffff"
-    image_dark: assets/icon/dark/chat.png
     branding_dark: assets/icon/dark/logo.png
+    color: "#ffffff"
+    color_dark: "#000000"
+    image: assets/icon/icon.chat.png
+    image_dark: assets/icon/dark/chat.png
 
   web: false
