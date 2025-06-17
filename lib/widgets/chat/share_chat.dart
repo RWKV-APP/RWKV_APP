@@ -216,13 +216,9 @@ class _PreviewState extends ConsumerState<_Preview> {
     // 所以, 此处限制了最大 dpi, 保证图片不会被裁切
     // 已知, xiaomi14 dpi 为 3
 
-    final overflowed = wantedHeightInPixel > maxHeightInPixel;
-    final count = (wantedHeightInPixel / maxHeightInPixel).ceil();
-
-    qqr(imageSize.height);
-    qqr(wantedHeightInPixel);
-    qqr(overflowed);
-    qqr(count);
+    qqr("imageSize.height: ${imageSize.height}");
+    qqr("wantedHeightInPixel: $wantedHeightInPixel");
+    qqr("finalDPI: $finalDPI");
 
     // FIXME: 如果, 图片高度超过 16384, 那么, 我们需要将图片分成多张, 然后, 将多张图片合并成一张图片
     // FIXME: 注意, 新和成的图片尺寸仍然无法超过 16384, 需要找到新的方法
