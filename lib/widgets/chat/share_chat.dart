@@ -3,7 +3,7 @@ import 'dart:typed_data' show ByteData;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+import 'package:flutter/rendering.dart' show RenderRepaintBoundary, OffsetLayer;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gal/gal.dart' show Gal;
 import 'package:halo/halo.dart';
@@ -34,16 +34,16 @@ enum _PreviewType {
 
 class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
   _PreviewType previewType = _PreviewType.none;
-  List<model.Message> messages = [];
+  List<model.Message> selectedMessages = [];
 
   void onCancelTap() {
-    P.chat.selectedMessages.q = {};
-    P.chat.selectMessageMode.q = false;
+    P.chat.sharingSelectedMsgIds.q = {};
+    P.chat.isSharing.q = false;
   }
 
   void onShareTap() {
-    final selected = P.chat.selectedMessages.q;
-    messages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
+    final selected = P.chat.sharingSelectedMsgIds.q;
+    selectedMessages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
 
     setState(() {
       previewType = _PreviewType.share;
@@ -51,8 +51,8 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
   }
 
   void onSaveTap() {
-    final selected = P.chat.selectedMessages.q;
-    messages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
+    final selected = P.chat.sharingSelectedMsgIds.q;
+    selectedMessages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
 
     setState(() {
       previewType = _PreviewType.save;
@@ -65,12 +65,13 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedCount = ref.watch(P.chat.selectedMessages).length;
+    final selectedCount = ref.watch(P.chat.sharingSelectedMsgIds).length;
+    final paddingBottom = ref.watch(P.app.paddingBottom);
 
     return Stack(
       children: [
         Positioned(
-          bottom: 0,
+          bottom: paddingBottom,
           left: 0,
           right: 0,
           child: Material(
@@ -110,16 +111,16 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
         if (previewType != _PreviewType.none)
           _Preview(
             share: previewType == _PreviewType.share,
-            messages: messages,
+            messages: selectedMessages,
             onCancelTap: () {
               setState(() {
-                messages = [];
+                selectedMessages = [];
                 previewType = _PreviewType.none;
               });
             },
             onComplete: () {
               onCancelTap();
-              messages = [];
+              selectedMessages = [];
               previewType = _PreviewType.none;
             },
           ),
@@ -146,10 +147,11 @@ class _Preview extends ConsumerStatefulWidget {
   ConsumerState<_Preview> createState() => _PreviewState();
 }
 
+final kSharingRepaintBoundary = GlobalKey();
+
 class _PreviewState extends ConsumerState<_Preview> {
   static const topCropForFixBadImage = 300.0;
 
-  final keyRepaintBoundary = GlobalKey();
   late QrImage qrImage;
   late final ScrollController controller = ScrollController();
   File? imagePreview;
@@ -198,62 +200,39 @@ class _PreviewState extends ConsumerState<_Preview> {
   }
 
   Future<File?> _generatePreview() async {
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final rb = keyRepaintBoundary.currentContext!.findRenderObject() as RenderBox;
-    final step = rb.size.height.toDouble();
-    final maxExtent = controller.position.maxScrollExtent;
-    final repaintBoundary = keyRepaintBoundary.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final repaintBoundary = kSharingRepaintBoundary.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-    int width = 0;
-    double offsetY = 0;
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    final paint = Paint()..filterQuality = FilterQuality.high;
-    int i = 0;
-    double lastScrolled = 0;
-    while (true) {
-      final remain = maxExtent - controller.position.pixels;
-      ui.Image img = await repaintBoundary.toImage(pixelRatio: pixelRatio);
-      width = img.width > width ? img.width : width;
-      if (remain == 0 && i != 0) {
-        final top = (step - lastScrolled) * pixelRatio;
-        img = await _cropImage(img, Rect.fromLTRB(0, top, width.toDouble(), img.height.toDouble()));
-      }
-      final topOffset = topCropForFixBadImage * pixelRatio;
-      img = await _cropImage(
-        img,
-        Rect.fromLTRB(
-          0,
-          topOffset,
-          img.width.toDouble(),
-          img.height.toDouble(),
-        ),
-      );
-      canvas.drawImage(img, Offset(0, offsetY), paint);
-      offsetY += img.height;
-      i++;
-      if (remain <= 0) {
-        break;
-      } else {
-        final offset = remain > step ? i * step : maxExtent;
-        lastScrolled = remain;
-        controller.jumpTo(offset);
-        await Future.delayed(const Duration(milliseconds: 50));
-      }
+    final imageSize = repaintBoundary.size;
+    const maxHeightInPixel = 16384.0;
+    final currentDPI = MediaQuery.devicePixelRatioOf(context);
+    final wantedHeightInPixel = imageSize.height * currentDPI;
+    double finalDPI = currentDPI;
+    if (wantedHeightInPixel > maxHeightInPixel) {
+      finalDPI = maxHeightInPixel / imageSize.height;
     }
 
-    final image = await recorder.endRecording().toImage(width, offsetY.toInt());
+    // 发现如下现象:
+    // 当, 图片高度超过 16384 时, 如果, 我们使用原始的 pixelRatio, 那么, 溢出部分会被裁切
+    // 所以, 此处限制了最大 dpi, 保证图片不会被裁切
+    // 已知, xiaomi14 dpi 为 3
 
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final dir = await getApplicationCacheDirectory();
-    final file = File("${dir.path}${Platform.pathSeparator}tmp_$timestamp.png");
+    qqr("imageSize.height: ${imageSize.height}");
+    qqr("wantedHeightInPixel: $wantedHeightInPixel");
+    qqr("finalDPI: $finalDPI");
 
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    // FIXME: 如果, 图片高度超过 16384, 那么, 我们需要将图片分成多张, 然后, 将多张图片合并成一张图片
+    // FIXME: 注意, 新和成的图片尺寸仍然无法超过 16384, 需要找到新的方法
+
+    // ignore: invalid_use_of_protected_member
+    final OffsetLayer offsetLayer = repaintBoundary.layer! as OffsetLayer;
+    final image = await offsetLayer.toImage(Offset(0, 0) & imageSize, pixelRatio: finalDPI);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
     final bytes = byteData!.buffer.asUint8List();
-    if (await file.exists()) await file.delete();
-    await file.create();
+    final dir = await getApplicationCacheDirectory();
+    final milliseconds = HF.milliseconds;
+    final file = File("${dir.path}${Platform.pathSeparator}tmp_$milliseconds.png");
     await file.writeAsBytes(bytes);
-
     return file;
   }
 
@@ -279,8 +258,15 @@ class _PreviewState extends ConsumerState<_Preview> {
     final dark = ref.watch(P.app.dark);
 
     if (imagePreview == null) {
-      return _generating(theme, dark);
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          qqr(constraints.maxWidth);
+          return _generating(theme, dark);
+        },
+      );
     }
+
+    final paddingBottom = ref.watch(P.app.paddingBottom);
 
     return Container(
       height: double.infinity,
@@ -320,6 +306,7 @@ class _PreviewState extends ConsumerState<_Preview> {
               ),
             ),
           ),
+          paddingBottom.h,
         ],
       ),
     );
@@ -343,10 +330,14 @@ class _PreviewState extends ConsumerState<_Preview> {
             ),
           ),
           Positioned(
-            top: 20000,
-            left: 0,
-            right: 0,
-            child: _shot(theme, dark),
+            top: 0,
+            width: P.app.screenWidth.q,
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: 0.01,
+                child: _shot(theme, dark),
+              ),
+            ),
           ),
         ],
       ),
@@ -354,17 +345,14 @@ class _PreviewState extends ConsumerState<_Preview> {
   }
 
   Widget _shot(ThemeData theme, bool dark) {
-    return RepaintBoundary(
-      key: keyRepaintBoundary,
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: controller,
+    final customTheme = ref.watch(P.app.customTheme);
+    return SingleChildScrollView(
+      child: RepaintBoundary(
+        key: kSharingRepaintBoundary,
         child: ColoredBox(
-          color: theme.scaffoldBackgroundColor,
+          color: customTheme.scaffold,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: topCropForFixBadImage),
               const SizedBox(height: 12),
               _buildHeader(),
               const Divider(height: 28, indent: 16, endIndent: 16, thickness: 0.5),

@@ -1,7 +1,13 @@
 // ignore: unused_import
 import 'dart:developer';
+import 'dart:io';
 
+import 'dart:ui' as ui;
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/world_type.dart';
@@ -40,7 +46,7 @@ class _Page extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final completionMode = ref.watch(P.chat.completionMode);
-    final selectMessageMode = ref.watch(P.chat.selectMessageMode);
+    final selectMessageMode = ref.watch(P.chat.isSharing);
 
     if (completionMode) {
       final qb = ref.watch(P.app.qb);
@@ -71,14 +77,7 @@ class _Page extends ConsumerWidget {
             child: ChatAppBar(),
           ),
           const _NavigationBarBottomLine(),
-          if (selectMessageMode)
-            const Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              top: 0,
-              child: ShareChatSheet(),
-            ),
+          if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
           if (!selectMessageMode) const Suggestions(),
           if (!selectMessageMode) const BottomBar(),
           if (!selectMessageMode) const AudioInput(),
@@ -205,25 +204,25 @@ class _MessageWrap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectMessageMode = ref.watch(P.chat.selectMessageMode);
+    final selectMessageMode = ref.watch(P.chat.isSharing);
 
     if (!selectMessageMode) {
       return Message(msg, finalIndex, selectMode: false);
     }
-    final selectedIds = ref.watch(P.chat.selectedMessages);
+    final selectedIds = ref.watch(P.chat.sharingSelectedMsgIds);
     final selected = selectedIds.contains(msg.id);
 
     void toggle() async {
-      final ids = P.chat.selectedMessages.q;
+      final ids = P.chat.sharingSelectedMsgIds.q;
       final messages = P.msg.list.q;
       final index = messages.indexOf(msg);
       final previous = index > 0 ? messages[index - 1] : null;
       final next = index < messages.length - 1 ? messages[index + 1] : null;
       final pair = msg.isMine ? next : previous;
       if (selected) {
-        P.chat.selectedMessages.q = ids.where((id) => id != msg.id && id != pair?.id).toSet();
+        P.chat.sharingSelectedMsgIds.q = ids.where((id) => id != msg.id && id != pair?.id).toSet();
       } else {
-        P.chat.selectedMessages.q = {...ids, msg.id, ?pair?.id};
+        P.chat.sharingSelectedMsgIds.q = {...ids, msg.id, ?pair?.id};
       }
     }
 

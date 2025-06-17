@@ -29,7 +29,7 @@ class BotMessageBottom extends ConsumerWidget {
     if (demoType == DemoType.tts) return const SizedBox.shrink();
 
     final receiveId = ref.watch(P.chat.receiveId);
-    final selectMessageMode = ref.watch(P.chat.selectMessageMode);
+    final selectMessageMode = ref.watch(P.chat.isSharing);
 
     final paused = msg.paused;
 
@@ -201,9 +201,9 @@ class BotMessageBottom extends ConsumerWidget {
     final list = P.msg.list.q;
     final index = list.indexOf(msg);
     if (index > 0) {
-      P.chat.selectedMessages.q = {list[index - 1].id, msg.id};
+      P.chat.sharingSelectedMsgIds.q = {list[index - 1].id, msg.id};
     }
-    P.chat.selectMessageMode.q = true;
+    P.chat.isSharing.q = true;
   }
 
   void _onResumePressed() {
