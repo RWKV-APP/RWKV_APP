@@ -9,6 +9,7 @@ class _Guard {
 /// Public methods
 extension $Guard on _Guard {
   Future<bool> isSensitive(String text) async {
+    if (_maxLength == 0) return false;
     // only use substring to check long words, from the end
     final index = text.length - _maxLength;
     final subString = index >= 0 ? text.substring(index) : text;
@@ -65,6 +66,7 @@ extension _$Guard on _Guard {
     final (res, maxLength) = await compute((filter) async {
       final lines = filter.split("\n");
       final words = lines.map((e) => e.trim()).where((e) => e.isNotEmpty).toSet();
+      if (words.isEmpty) return (words, 0);
       final maxLength = words.map((e) => e.length).reduce((a, b) => a > b ? a : b);
       return (words, maxLength);
     }, filter);

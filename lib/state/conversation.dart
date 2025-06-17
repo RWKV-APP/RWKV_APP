@@ -16,18 +16,19 @@ extension _$Conversation on _Conversation {
     qq;
 
     final msgNode = P.msg.msgNode.q;
+    final db = P.app._db;
 
     if (msgNode.isEmpty) {
       qqq("msgNode is empty, skip upsert");
       return;
     }
 
-    await P.db._db.upsertConv(msgNode);
+    await db.upsertConv(msgNode);
     await load();
   }
 
   Future<Set<int>> _getAllMsgIdsFromConv(int createAtInUS) async {
-    final db = P.db._db;
+    final db = P.app._db;
     final msgDataList = await db.findConvByCreateAtInUS(createAtInUS);
     if (msgDataList == null) return {};
     final msgNode = MsgNode.fromJson(msgDataList.data, createAtInUS: createAtInUS);
@@ -39,17 +40,19 @@ extension _$Conversation on _Conversation {
 /// Public methods
 extension $Conversation on _Conversation {
   FV load() async {
-    final list = await P.db._db.convPage();
+    final db = P.app._db;
+    final list = await db.convPage();
     qqq("${list.length}");
     conversations.q = list;
   }
 
   FV delete(int createAtInUS) async {
-    await P.db._db.deleteConv(createAtInUS);
+    final db = P.app._db;
+    await db.deleteConv(createAtInUS);
     await load();
 
     _getAllMsgIdsFromConv(createAtInUS).then((ids) async {
-      await P.db._db.deleteMsgsByCreateAtInUS(ids);
+      await db.deleteMsgsByCreateAtInUS(ids);
     });
 
     if (currentCreatedAtUS.q == createAtInUS) {

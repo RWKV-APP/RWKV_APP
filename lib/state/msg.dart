@@ -68,7 +68,7 @@ extension _$Msg on _Msg {
   Future<bool> _syncMsg(int id, Message msg) async {
     // 在内存中更新消息
     pool.q = {...pool.q, id: msg};
-    final db = P.db._db;
+    final db = P.app._db;
     await db.upsertMsg(msg);
     return true;
   }
@@ -77,7 +77,7 @@ extension _$Msg on _Msg {
   FV _loadMessages(Iterable<int> ids) async {
     loading.q = true;
     try {
-      final db = P.db._db;
+      final db = P.app._db;
       final messages = await db.getMessagesByIds(ids);
       for (var message in messages) {
         pool.q = {...pool.q, message.id: message};
@@ -87,10 +87,6 @@ extension _$Msg on _Msg {
     } finally {
       loading.q = false;
     }
-  }
-
-  void _logMsgNode() {
-    qqr("msgNode.createAtInUS: ${msgNode.q.createAtInUS}");
   }
 }
 
