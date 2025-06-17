@@ -257,12 +257,7 @@ class _PreviewState extends ConsumerState<_Preview> {
     final dark = ref.watch(P.app.dark);
 
     if (imagePreview == null) {
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          qqr(constraints.maxWidth);
-          return _generating(theme, dark);
-        },
-      );
+      return _generating(theme, dark);
     }
 
     final paddingBottom = ref.watch(P.app.paddingBottom);
