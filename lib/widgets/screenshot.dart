@@ -376,7 +376,6 @@ class _ScreenshotState extends ConsumerState<Screenshot> {
               onPressed: _onShareTap,
               child: const Icon(Icons.share_rounded),
             ),
-
             6.h,
             FloatingActionButton(
               mini: true,

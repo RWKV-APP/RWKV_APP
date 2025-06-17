@@ -148,10 +148,13 @@ class BotMessageBottom extends ConsumerWidget {
             onTap: _onSharePressed,
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),
-              child: Icon(
-                Icons.share_rounded,
-                color: primaryColor.q(.8),
-                size: 20,
+              child: C(
+                decoration: BD(color: kC),
+                child: Icon(
+                  Icons.share_rounded,
+                  color: primaryColor.q(.8),
+                  size: 20,
+                ),
               ),
             ),
           ),
