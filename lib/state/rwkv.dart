@@ -40,6 +40,8 @@ class _RWKV {
 
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
+  late final webSearch = qs(false);
+  late final searchingOnWeb = qs(false);
   late final _thinkingMode = qs<ThinkingMode>(const thinking_mode.Lighting());
 
   ThinkingMode reasoningOnOrder = const thinking_mode.Free();
@@ -471,7 +473,7 @@ extension $RWKV on _RWKV {
     send(to_rwkv.SetAudioPrompt(path));
   }
 
-  FV sendMessages(List<String> messages) async {
+  Future<RefInfo?> sendMessages(List<String> messages) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
@@ -481,10 +483,35 @@ extension $RWKV on _RWKV {
 
     if (sendPort == null) {
       qqw("sendPort is null");
-      return;
+      return null;
     }
 
-    send(to_rwkv.ChatAsync(messages, reasoning: thinkingMode.q.hasThinkTag));
+    final allMessage = messages.toList();
+
+    RefInfo ref = RefInfo.empty();
+
+    if (webSearch.q) {
+      ref = ref.copyWith(enable: true);
+      try {
+        final last = allMessage.removeLast();
+        final resp =
+            await _post(
+                  'https://auth.rwkvos.com/api/internet_search',
+                  token: 'x8rYbL3KfGp2Nq1zT9wVvJ0iQ5sUoAeX7HcM4',
+                  body: {"query": last, "top_n": 3},
+                ).timeout(const Duration(seconds: 3))
+                as dynamic;
+        final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
+        ref = ref.copyWith(list: refs);
+        final r = refs.map((e) => e.summary).join("\n");
+        allMessage.add("$r\n$last");
+      } catch (e) {
+        ref = ref.copyWith(error: e.toString());
+        qqe(e);
+      }
+    }
+
+    send(to_rwkv.ChatAsync(allMessage, reasoning: thinkingMode.q.hasThinkTag));
 
     if (_getTokensTimer != null) {
       _getTokensTimer!.cancel();
@@ -495,6 +522,7 @@ extension $RWKV on _RWKV {
       if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
       if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
     });
+    return ref;
   }
 
   FV completion(String prompt) async {
@@ -679,6 +707,16 @@ extension $RWKV on _RWKV {
   FV syncMaxLength({num? maxLength}) async {
     if (maxLength != null) arguments(Argument.maxLength).q = maxLength.toDouble();
     send(to_rwkv.SetMaxLength(_intIfFixedDecimalsIsZero(Argument.maxLength).toInt()));
+  }
+
+  void onWebSearchModeTap() async {
+    final receiving = P.chat.receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+    final enabled = webSearch.q;
+    webSearch.q = !enabled;
   }
 
   void onThinkModeTyped() async {

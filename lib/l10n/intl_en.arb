@@ -233,5 +233,9 @@
   "str_model_selection_dialog_hint": "We recommend choosing at least the 1.5B model, 2.9B is preferable.",
   "a": "",
   "settings": "Settings",
-  "chat_history": "Chat History"
+  "chat_history": "Chat History",
+  "search": "Search",
+  "reference_source": "Reference Source",
+  "analysing_result": "Analysing Search Result",
+  "x_pages_found": "%d Pages Found"
 }

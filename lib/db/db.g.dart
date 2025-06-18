@@ -440,6 +440,17 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
       'CHECK ("paused" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _referenceMeta = const VerificationMeta(
+    'reference',
+  );
+  @override
+  late final GeneratedColumn<String> reference = GeneratedColumn<String>(
+    'reference',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -616,6 +627,7 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     type,
     isReasoning,
     paused,
+    reference,
     imageUrl,
     audioUrl,
     audioLength,
@@ -689,6 +701,12 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
       );
     } else if (isInserting) {
       context.missing(_pausedMeta);
+    }
+    if (data.containsKey('reference')) {
+      context.handle(
+        _referenceMeta,
+        reference.isAcceptableOrUnknown(data['reference']!, _referenceMeta),
+      );
     }
     if (data.containsKey('image_url')) {
       context.handle(
@@ -845,6 +863,10 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         DriftSqlType.bool,
         data['${effectivePrefix}paused'],
       )!,
+      reference: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference'],
+      ),
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -921,6 +943,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   final String type;
   final bool isReasoning;
   final bool paused;
+  final String? reference;
   final String? imageUrl;
   final String? audioUrl;
   final int? audioLength;
@@ -943,6 +966,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     required this.type,
     required this.isReasoning,
     required this.paused,
+    this.reference,
     this.imageUrl,
     this.audioUrl,
     this.audioLength,
@@ -968,6 +992,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     map['type'] = Variable<String>(type);
     map['is_reasoning'] = Variable<bool>(isReasoning);
     map['paused'] = Variable<bool>(paused);
+    if (!nullToAbsent || reference != null) {
+      map['reference'] = Variable<String>(reference);
+    }
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
     }
@@ -1020,6 +1047,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       type: Value(type),
       isReasoning: Value(isReasoning),
       paused: Value(paused),
+      reference: reference == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reference),
       imageUrl: imageUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(imageUrl),
@@ -1076,6 +1106,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       type: serializer.fromJson<String>(json['type']),
       isReasoning: serializer.fromJson<bool>(json['isReasoning']),
       paused: serializer.fromJson<bool>(json['paused']),
+      reference: serializer.fromJson<String?>(json['reference']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
       audioUrl: serializer.fromJson<String?>(json['audioUrl']),
       audioLength: serializer.fromJson<int?>(json['audioLength']),
@@ -1109,6 +1140,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       'type': serializer.toJson<String>(type),
       'isReasoning': serializer.toJson<bool>(isReasoning),
       'paused': serializer.toJson<bool>(paused),
+      'reference': serializer.toJson<String?>(reference),
       'imageUrl': serializer.toJson<String?>(imageUrl),
       'audioUrl': serializer.toJson<String?>(audioUrl),
       'audioLength': serializer.toJson<int?>(audioLength),
@@ -1134,6 +1166,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     String? type,
     bool? isReasoning,
     bool? paused,
+    Value<String?> reference = const Value.absent(),
     Value<String?> imageUrl = const Value.absent(),
     Value<String?> audioUrl = const Value.absent(),
     Value<int?> audioLength = const Value.absent(),
@@ -1156,6 +1189,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     type: type ?? this.type,
     isReasoning: isReasoning ?? this.isReasoning,
     paused: paused ?? this.paused,
+    reference: reference.present ? reference.value : this.reference,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
     audioUrl: audioUrl.present ? audioUrl.value : this.audioUrl,
     audioLength: audioLength.present ? audioLength.value : this.audioLength,
@@ -1192,6 +1226,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           ? data.isReasoning.value
           : this.isReasoning,
       paused: data.paused.present ? data.paused.value : this.paused,
+      reference: data.reference.present ? data.reference.value : this.reference,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       audioUrl: data.audioUrl.present ? data.audioUrl.value : this.audioUrl,
       audioLength: data.audioLength.present
@@ -1239,6 +1274,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           ..write('type: $type, ')
           ..write('isReasoning: $isReasoning, ')
           ..write('paused: $paused, ')
+          ..write('reference: $reference, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('audioUrl: $audioUrl, ')
           ..write('audioLength: $audioLength, ')
@@ -1266,6 +1302,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     type,
     isReasoning,
     paused,
+    reference,
     imageUrl,
     audioUrl,
     audioLength,
@@ -1292,6 +1329,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           other.type == this.type &&
           other.isReasoning == this.isReasoning &&
           other.paused == this.paused &&
+          other.reference == this.reference &&
           other.imageUrl == this.imageUrl &&
           other.audioUrl == this.audioUrl &&
           other.audioLength == this.audioLength &&
@@ -1316,6 +1354,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   final Value<String> type;
   final Value<bool> isReasoning;
   final Value<bool> paused;
+  final Value<String?> reference;
   final Value<String?> imageUrl;
   final Value<String?> audioUrl;
   final Value<int?> audioLength;
@@ -1338,6 +1377,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     this.type = const Value.absent(),
     this.isReasoning = const Value.absent(),
     this.paused = const Value.absent(),
+    this.reference = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.audioUrl = const Value.absent(),
     this.audioLength = const Value.absent(),
@@ -1361,6 +1401,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     required String type,
     required bool isReasoning,
     required bool paused,
+    this.reference = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.audioUrl = const Value.absent(),
     this.audioLength = const Value.absent(),
@@ -1389,6 +1430,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Expression<String>? type,
     Expression<bool>? isReasoning,
     Expression<bool>? paused,
+    Expression<String>? reference,
     Expression<String>? imageUrl,
     Expression<String>? audioUrl,
     Expression<int>? audioLength,
@@ -1412,6 +1454,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       if (type != null) 'type': type,
       if (isReasoning != null) 'is_reasoning': isReasoning,
       if (paused != null) 'paused': paused,
+      if (reference != null) 'reference': reference,
       if (imageUrl != null) 'image_url': imageUrl,
       if (audioUrl != null) 'audio_url': audioUrl,
       if (audioLength != null) 'audio_length': audioLength,
@@ -1439,6 +1482,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Value<String>? type,
     Value<bool>? isReasoning,
     Value<bool>? paused,
+    Value<String?>? reference,
     Value<String?>? imageUrl,
     Value<String?>? audioUrl,
     Value<int?>? audioLength,
@@ -1462,6 +1506,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       type: type ?? this.type,
       isReasoning: isReasoning ?? this.isReasoning,
       paused: paused ?? this.paused,
+      reference: reference ?? this.reference,
       imageUrl: imageUrl ?? this.imageUrl,
       audioUrl: audioUrl ?? this.audioUrl,
       audioLength: audioLength ?? this.audioLength,
@@ -1500,6 +1545,9 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     }
     if (paused.present) {
       map['paused'] = Variable<bool>(paused.value);
+    }
+    if (reference.present) {
+      map['reference'] = Variable<String>(reference.value);
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
@@ -1558,6 +1606,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
           ..write('type: $type, ')
           ..write('isReasoning: $isReasoning, ')
           ..write('paused: $paused, ')
+          ..write('reference: $reference, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('audioUrl: $audioUrl, ')
           ..write('audioLength: $audioLength, ')
@@ -1802,6 +1851,7 @@ typedef $$_MsgTableCreateCompanionBuilder =
       required String type,
       required bool isReasoning,
       required bool paused,
+      Value<String?> reference,
       Value<String?> imageUrl,
       Value<String?> audioUrl,
       Value<int?> audioLength,
@@ -1826,6 +1876,7 @@ typedef $$_MsgTableUpdateCompanionBuilder =
       Value<String> type,
       Value<bool> isReasoning,
       Value<bool> paused,
+      Value<String?> reference,
       Value<String?> imageUrl,
       Value<String?> audioUrl,
       Value<int?> audioLength,
@@ -1878,6 +1929,11 @@ class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
 
   ColumnFilters<bool> get paused => $composableBuilder(
     column: $table.paused,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reference => $composableBuilder(
+    column: $table.reference,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1995,6 +2051,11 @@ class $$_MsgTableOrderingComposer extends Composer<_$AppDatabase, $_MsgTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
@@ -2100,6 +2161,9 @@ class $$_MsgTableAnnotationComposer
   GeneratedColumn<bool> get paused =>
       $composableBuilder(column: $table.paused, builder: (column) => column);
 
+  GeneratedColumn<String> get reference =>
+      $composableBuilder(column: $table.reference, builder: (column) => column);
+
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
 
@@ -2200,6 +2264,7 @@ class $$_MsgTableTableManager
                 Value<String> type = const Value.absent(),
                 Value<bool> isReasoning = const Value.absent(),
                 Value<bool> paused = const Value.absent(),
+                Value<String?> reference = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
                 Value<String?> audioUrl = const Value.absent(),
                 Value<int?> audioLength = const Value.absent(),
@@ -2222,6 +2287,7 @@ class $$_MsgTableTableManager
                 type: type,
                 isReasoning: isReasoning,
                 paused: paused,
+                reference: reference,
                 imageUrl: imageUrl,
                 audioUrl: audioUrl,
                 audioLength: audioLength,
@@ -2246,6 +2312,7 @@ class $$_MsgTableTableManager
                 required String type,
                 required bool isReasoning,
                 required bool paused,
+                Value<String?> reference = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
                 Value<String?> audioUrl = const Value.absent(),
                 Value<int?> audioLength = const Value.absent(),
@@ -2268,6 +2335,7 @@ class $$_MsgTableTableManager
                 type: type,
                 isReasoning: isReasoning,
                 paused: paused,
+                reference: reference,
                 imageUrl: imageUrl,
                 audioUrl: audioUrl,
                 audioLength: audioLength,

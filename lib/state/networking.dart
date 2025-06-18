@@ -57,6 +57,7 @@ Future<Object?> _post(
   List<_EA>? ea = const [_EA.signOut, _EA.console],
   Duration timeout = Config.timeout,
   bool requireSigned = false,
+  String token = "",
 }) async {
   if (requireSigned) {
     await HF.wait(1);
@@ -65,19 +66,24 @@ Future<Object?> _post(
   }
 
   ea = ea ?? [];
-
-  while (url.startsWith("/")) {
-    url = url.substring(1);
+  Uri uri;
+  if (url.startsWith("https://") || url.startsWith("http://")) {
+    uri = Uri.parse(url);
+  } else {
+    while (url.startsWith("/")) {
+      url = url.substring(1);
+    }
+    final r = Config.domain.split("://");
+    uri = Uri(
+      scheme: r[0],
+      host: r[1],
+      path: url,
+      queryParameters: query.isNotEmpty ? query.allString : null,
+    );
   }
-  final r = Config.domain.split("://");
-  final uri = Uri(
-    scheme: r[0],
-    host: r[1],
-    path: url,
-    queryParameters: query.isNotEmpty ? query.allString : null,
-  );
 
   final headers = _buildHeaders();
+  headers['Token'] = token;
   late final Object? findlBody;
   switch (contentType) {
     case ContentType.json:

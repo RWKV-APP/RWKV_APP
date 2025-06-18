@@ -7,6 +7,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/args.dart';
 import 'package:zone/func/merge_wav.dart';
@@ -22,6 +23,7 @@ import 'package:zone/route/router.dart';
 import 'package:zone/state/p.dart';
 import 'package:zone/widgets/chat/audio_bubble.dart';
 import 'package:zone/widgets/chat/bot_message_bottom.dart';
+import 'package:zone/widgets/chat/search_reference_dialog.dart';
 import 'package:zone/widgets/chat/tts/bot_tts_content.dart';
 import 'package:zone/widgets/chat/photo_viewer_overlay.dart';
 import 'package:zone/widgets/chat/user_message_bottom.dart';
@@ -111,6 +113,7 @@ class Message extends ConsumerWidget {
 
     final content = msg.content;
     final changing = msg.changing;
+    final reference = msg.reference;
 
     String finalContent = changing ? (received.isEmpty ? content : received) : content;
     if (msg.isSensitive) finalContent = s.filter;
@@ -346,6 +349,7 @@ class Message extends ConsumerWidget {
                 UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
+                if (reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
                 // 🔥 Bot message audio recognition result
                 if (worldDemoMessageHeader.isNotEmpty)
                   T(
@@ -431,6 +435,110 @@ class Message extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ReferenceInfo extends ConsumerStatefulWidget {
+  final model.RefInfo refInfo;
+  final bool generating;
+
+  const _ReferenceInfo({required this.refInfo, required this.generating});
+
+  @override
+  ConsumerState<_ReferenceInfo> createState() => _ReferenceInfoState();
+}
+
+class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
+  double? prefill;
+  bool showProgress = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.generating) {
+      updatePrefill();
+    } else {
+      prefill = 1;
+    }
+  }
+
+  void updatePrefill() async {
+    final progress = Stream.periodic(const Duration(milliseconds: 30), (i) => i / 100).take(101);
+    progress.listen(
+      (e) {
+        setState(() {
+          showProgress = true;
+          prefill = e;
+        });
+      },
+      onDone: () {
+        setState(() {
+          prefill = 1;
+        });
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.refInfo.enable)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: AnimatedOpacity(
+              opacity: widget.refInfo.list.isEmpty ? 0 : 1,
+              duration: Duration(milliseconds: 500),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: primary.q(.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
+                    style: TextStyle(color: primary, fontSize: 12),
+                  ),
+                ),
+                onTap: () {
+                  SearchReferenceDialog.show(context, widget.refInfo);
+                },
+              ),
+            ),
+          ),
+        const SizedBox(height: 8),
+        AnimatedOpacity(
+          opacity: (prefill ?? 0) >= 1 ? 0 : 1,
+          curve: Curves.linear,
+          duration: Duration(milliseconds: 200),
+          child: AnimatedSize(
+            duration: Duration(milliseconds: 200),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 6),
+              height: (prefill ?? 0) >= 1 ? 0 : 20,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox.square(
+                    dimension: 20,
+                    child: CircularProgressIndicator(value: prefill),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(S.current.analysing_result),
+                  const SizedBox(width: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

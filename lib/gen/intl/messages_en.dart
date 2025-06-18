@@ -43,6 +43,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "all_done": MessageLookupByLibrary.simpleMessage("All Done"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("All Prompt"),
+    "analysing_result": MessageLookupByLibrary.simpleMessage(
+      "Analysing Search Result",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "Application Internal Test Group",
@@ -334,6 +337,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "recording_your_voice": MessageLookupByLibrary.simpleMessage(
       "Recording your voice...",
     ),
+    "reference_source": MessageLookupByLibrary.simpleMessage(
+      "Reference Source",
+    ),
     "regenerate": MessageLookupByLibrary.simpleMessage("Regenerate"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining Time:"),
     "reselect_model": MessageLookupByLibrary.simpleMessage("Reselect model"),
@@ -344,6 +350,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
+    "search": MessageLookupByLibrary.simpleMessage("Search"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("Search Breadth"),
     "search_depth": MessageLookupByLibrary.simpleMessage("Search Depth"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Select a Model"),
@@ -437,6 +444,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
     "you_are_now_using": m5,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",

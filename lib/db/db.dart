@@ -11,6 +11,8 @@ import 'package:zone/model/msg_node.dart';
 import 'package:zone/state/p.dart';
 import 'dart:convert';
 
+import 'db.steps.dart';
+
 part 'db.g.dart';
 
 @DataClassName("ConversationData")
@@ -22,8 +24,11 @@ class _Conversation extends Table {
   String? get tableName => "conv";
 
   IntColumn get createdAtUS => integer()();
+
   IntColumn get updatedAtUS => integer().nullable()();
+
   TextColumn get title => text().withDefault(const Constant("New Conversation"))();
+
   TextColumn get data => text()();
 
   TextColumn get appBuildNumber => text()();
@@ -69,7 +74,18 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onUpgrade: stepByStep(
+        from1To2: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.reference);
+        },
+      ),
+    );
+  }
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
@@ -89,6 +105,7 @@ class AppDatabase extends _$AppDatabase {
       type: message.type.name,
       isReasoning: message.isReasoning,
       paused: message.paused,
+      reference: Value(message.reference.serialize()),
       imageUrl: Value(message.imageUrl),
       audioUrl: Value(message.audioUrl),
       audioLength: Value(message.audioLength),
@@ -246,6 +263,7 @@ model.Message _msgDataToMessage(_MsgData msgData) {
     content: msgData.content,
     isMine: msgData.isMine,
     changing: false,
+    reference: model.RefInfo.deserialize(msgData.reference),
     type: model.MessageType.values.firstWhere((e) => e.name == msgData.type),
     imageUrl: msgData.imageUrl,
     audioUrl: msgData.audioUrl,

@@ -44,10 +44,66 @@ class _Interactions extends ConsumerWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: _SelectImageButton()),
+        if (demoType == DemoType.chat) const _WebSearchModeButton(),
         if (demoType == DemoType.chat) const _ThinkingModeButton(),
         if (demoType == DemoType.chat) const _SecondaryOptionsButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
+    );
+  }
+}
+
+class _WebSearchModeButton extends ConsumerWidget {
+  const _WebSearchModeButton();
+
+  void _onTap() {
+    P.rwkv.onWebSearchModeTap();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final primary = Theme.of(context).colorScheme.primary;
+    final loading = ref.watch(P.rwkv.loading);
+    final qw = ref.watch(P.app.qw);
+    final webSearch = ref.watch(P.rwkv.webSearch);
+
+    final color = webSearch ? primary : kC;
+    final borderColor = webSearch ? primary : primary.q(.5);
+    final textColor = webSearch ? qw : primary.q(.5);
+
+    final textScaleFactor = MediaQuery.textScalerOf(context);
+    final height = textScaleFactor.scale(14) + 20;
+    final padding = const EI.s(h: 8);
+    return IntrinsicWidth(
+      child: AnimatedOpacity(
+        opacity: loading ? .33 : 1,
+        duration: 250.ms,
+        child: GD(
+          onTap: _onTap,
+          child: SB(
+            height: height,
+            child: C(
+              padding: padding,
+              decoration: BD(
+                color: color,
+                border: Border.all(color: borderColor),
+                borderRadius: 10.r,
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.travel_explore, color: textColor, size: 18),
+                  2.w,
+                  T(
+                    s.search,
+                    s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

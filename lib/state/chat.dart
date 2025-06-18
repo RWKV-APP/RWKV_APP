@@ -23,6 +23,8 @@ class _Chat {
   @Deprecated("Use P.rwkv.receiving instead")
   late final receivingTokens = qs(false);
 
+  late final prefillPercentage = qs(0.0);
+
   /// TODO: Should be moved to state/rwkv.dart
   late final receivedTokens = qs("");
 
@@ -305,21 +307,16 @@ extension $Chat on _Chat {
     }
 
     // TODO: @WangCe: Use _history() instead
-    final historyMessage = P.msg.list.q
-        .where((e) {
-          return e.type != MessageType.userImage;
-        })
-        .m((e) {
-          if (!e.isReasoning) return e.content;
-          if (!e.isCotFormat) return e.content;
-          if (!e.containsCotEndMark) return e.content;
-          final (cotContent, cotResult) = e.cotContentAndResult;
-          return cotResult;
-        });
+    final historyMessage = _history();
 
     final history = withHistory ? historyMessage : [message];
 
-    P.rwkv.sendMessages(history);
+    P.rwkv.sendMessages(history).then((e) {
+      final msgId = this.receiveId.q;
+      if (e != null && msgId != null) {
+        _updateMessageById(id: msgId, reference: e);
+      }
+    });
     P.msg.editingOrRegeneratingIndex.q = null;
 
     receivedTokens.q = "";
@@ -439,6 +436,27 @@ extension _$Chat on _Chat {
   }
 
   List<String> _history() {
+    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
+
+    if (messages.isEmpty) {
+      return [];
+    }
+
+    final result = <String>[];
+    final iterator = messages.iterator;
+    Message mine;
+    Message? bot;
+    while (iterator.moveNext()) {
+      mine = iterator.current;
+      bot = iterator.moveNext() ? iterator.current : null;
+      final content = mine.getContentForHistoryWithRef(bot?.reference);
+      result.add(content);
+      if (bot == null) break;
+      result.add(bot.getContentForHistory());
+      mine = bot;
+    }
+    return result;
+
     final history = P.msg.list.q.where((msg) => msg.type == MessageType.text).m((e) {
       if (!e.isReasoning) return e.content;
       if (!e.isCotFormat) return e.content;
@@ -560,6 +578,7 @@ extension _$Chat on _Chat {
     double? ttsOverallProgress,
     List<double>? ttsPerWavProgress,
     List<String>? ttsFilePaths,
+    RefInfo? reference,
   }) {
     if (completionMode.q) {
       return;
@@ -575,6 +594,7 @@ extension _$Chat on _Chat {
       isMine: isMine,
       changing: changing,
       type: type,
+      reference: reference,
       imageUrl: imageUrl,
       audioUrl: audioUrl,
       audioLength: audioLength,

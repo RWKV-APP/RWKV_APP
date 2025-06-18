@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("全部 Prompt"),
+    "analysing_result": MessageLookupByLibrary.simpleMessage("正在分析搜索结果"),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "应用内测群",
@@ -258,6 +259,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reason": MessageLookupByLibrary.simpleMessage("推理"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推理模式"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("正在录音..."),
+    "reference_source": MessageLookupByLibrary.simpleMessage("参考源"),
     "regenerate": MessageLookupByLibrary.simpleMessage("重新生成"),
     "remaining": MessageLookupByLibrary.simpleMessage("剩余时间："),
     "reselect_model": MessageLookupByLibrary.simpleMessage("重新选择模型"),
@@ -268,6 +270,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("扫描二维码"),
+    "search": MessageLookupByLibrary.simpleMessage("搜索"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("搜索宽度"),
     "search_depth": MessageLookupByLibrary.simpleMessage("搜索深度"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("选择模型"),
@@ -333,6 +336,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
     "you_are_now_using": m5,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",

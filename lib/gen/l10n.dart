@@ -1640,6 +1640,36 @@ class S {
   String get chat_history {
     return Intl.message('聊天记录', name: 'chat_history', desc: '', args: []);
   }
+
+  /// `搜索`
+  String get search {
+    return Intl.message('搜索', name: 'search', desc: '', args: []);
+  }
+
+  /// `参考源`
+  String get reference_source {
+    return Intl.message('参考源', name: 'reference_source', desc: '', args: []);
+  }
+
+  /// `正在分析搜索结果`
+  String get analysing_result {
+    return Intl.message(
+      '正在分析搜索结果',
+      name: 'analysing_result',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已找到 %d 个相关网页`
+  String get x_pages_found {
+    return Intl.message(
+      '已找到 %d 个相关网页',
+      name: 'x_pages_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
