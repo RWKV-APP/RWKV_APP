@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:tools/gen_version_string_img.dart';
-import 'package:tools/tools.dart' as tools;
 
 void main(List<String> arguments) async {
   final file = await gen();
