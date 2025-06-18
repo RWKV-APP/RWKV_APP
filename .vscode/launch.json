@@ -21,12 +21,31 @@
         "--dart-define=disableRemoteConfig=true",
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true"
+        // "--dart-define=nativeSplashPreserveDurationInMS=9999999"
         // "--dart-define=autoTriggerPage=true",
         // "--dart-define=debugMsgId=true",
         // "--dart-define=debuggingThemes=true",
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
         // "--dart-define=maxTokens=200",
       ]
+    },
+    {
+      "name": "debug (Halo) - Android",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "args": ["--dart-define=nativeSplashPreserveDurationInMS=9999999"],
+      "deviceId": "90313e34"
+    },
+    {
+      "name": "debug (Halo) - iOS",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "args": ["--dart-define=nativeSplashPreserveDurationInMS=9999999"],
+      "deviceId": "00008140-000641E02EDB001C"
     },
     {
       "name": "debug (NoRemoteConfig)",
@@ -62,7 +81,7 @@
   "compounds": [
     {
       "name": "All",
-      "configurations": []
+      "configurations": ["debug (Halo) - iOS", "debug (Halo) - Android"]
     }
   ]
 }

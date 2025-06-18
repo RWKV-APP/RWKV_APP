@@ -9,4 +9,5 @@ abstract class Args {
   static const autoTriggerPage = bool.fromEnvironment("autoTriggerPage", defaultValue: false);
   static const debugMsgId = bool.fromEnvironment("debugMsgId", defaultValue: false);
   static const showHaloDebugger = bool.fromEnvironment("showHaloDebugger", defaultValue: false);
+  static const nativeSplashPreserveDurationInMS = int.fromEnvironment("nativeSplashPreserveDurationInMS", defaultValue: 50);
 }

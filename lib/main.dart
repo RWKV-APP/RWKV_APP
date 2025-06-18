@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,7 +29,7 @@ void main() async {
     await _sentryAppRunner();
   }
   // runApp(const _TestApp());
-  await HF.wait(50);
+  await HF.wait(Args.nativeSplashPreserveDurationInMS);
   FlutterNativeSplash.remove();
 }
 
