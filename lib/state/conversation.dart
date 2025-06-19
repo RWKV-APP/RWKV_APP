@@ -4,6 +4,8 @@ class _Conversation {
   final conversations = qs<List<ConversationData>>([]);
 
   final currentCreatedAtUS = qs<int?>(null);
+
+  final interactingCreatedAtUS = qs<int?>(null);
 }
 
 /// Private methods

@@ -1,10 +1,11 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
@@ -113,30 +114,168 @@ class _Item extends ConsumerWidget {
     await P.conversation.onTapInList(conversation);
   }
 
+  void _onLongPressStart(LongPressStartDetails details, BuildContext context) async {
+    // 在长按开始时显示菜单
+
+    P.conversation.interactingCreatedAtUS.q = conversation.createdAtUS;
+
+    P.app.hapticLight();
+
+    // 使用showMenu在特定位置显示菜单
+    final res = await showMenu<String>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      color: Theme.of(context).colorScheme.surface,
+      context: context,
+      position: RelativeRect.fromLTRB(
+        details.globalPosition.dx, // 菜单的左侧位置
+        details.globalPosition.dy + 10, // 菜单的顶部位置
+        MediaQuery.sizeOf(context).width - details.globalPosition.dx, // 菜单的右侧位置 (这里只是一个占位符，实际会根据菜单宽度调整)
+        MediaQuery.sizeOf(context).height - details.globalPosition.dy, // 菜单的底部位置
+      ),
+      items: <PopupMenuEntry<String>>[
+        PopupMenuItem(
+          value: 'rename',
+          child: Row(
+            children: [
+              Icon(Icons.edit_outlined),
+              SB(
+                width: 8,
+              ),
+              Text('重命名'),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(indent: 8, endIndent: 8),
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: [
+              Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+              SB(
+                width: 8,
+              ),
+              Text(
+                '删除会话',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(indent: 8, endIndent: 8),
+        PopupMenuItem(
+          value: 'export',
+          child: Row(
+            children: [
+              Icon(Icons.download_outlined),
+              SB(
+                width: 8,
+              ),
+              Text("导出数据"),
+            ],
+          ),
+        ),
+      ],
+      elevation: 8.0,
+    );
+
+    // if (res == 'rename') {
+    //   await P.conversation.rename(conversation.createdAtUS);
+    // } else if (res == 'delete') {
+    //   await P.conversation.delete(conversation.createdAtUS);
+    // }
+
+    if (!context.mounted) {
+      return;
+    }
+
+    switch (res) {
+      case 'rename':
+        await _onRenameClicked(context);
+      case 'delete':
+        await _onDeleteClicked(context);
+      case 'export':
+        await _onExportClicked(context);
+      default:
+        break;
+    }
+
+    P.conversation.interactingCreatedAtUS.q = null;
+  }
+
+  Future<void> _onRenameClicked(BuildContext context) async {
+    final res = await showTextInputDialog(
+      context: context,
+      title: '重命名',
+      textFields: [
+        DialogTextField(
+          initialText: "",
+          hintText: '请输入会话名称',
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return '请输入会话名称';
+            }
+            if (value.length > 50) {
+              return '会话名称不能超过50个字符';
+            }
+            return null;
+          },
+          maxLength: 50,
+        ),
+      ],
+    );
+
+    if (res == null || res.isEmpty) {
+      return;
+    }
+
+    final newTitle = res[0];
+    // TODO: rename
+  }
+
+  Future<void> _onDeleteClicked(BuildContext context) async {
+    final res = await showOkCancelAlertDialog(
+      context: context,
+      title: '删除会话',
+      message: '确定要删除会话吗？',
+      okLabel: '删除',
+      cancelLabel: '取消',
+      isDestructiveAction: true,
+    );
+
+    switch (res) {
+      case OkCancelResult.ok:
+      // TODO: delete
+      case OkCancelResult.cancel:
+        break;
+    }
+  }
+
+  Future<void> _onExportClicked(BuildContext context) async {
+    // TODO: export
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final currentCreatedAtUS = ref.watch(P.conversation.currentCreatedAtUS);
+    final interactingCreatedAtUS = ref.watch(P.conversation.interactingCreatedAtUS);
     final isCurrent = currentCreatedAtUS == conversation.createdAtUS;
+    final shouldDim = interactingCreatedAtUS != null && interactingCreatedAtUS != conversation.createdAtUS;
     final primary = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final qb = ref.watch(P.app.qb);
     final customTheme = ref.watch(P.app.customTheme);
 
-    return CupertinoContextMenu(
-      actions: [
-        CupertinoContextMenuAction(
-          child: T(s.delete),
-          onPressed: () {
-            P.conversation.delete(conversation.createdAtUS);
-          },
-        ),
-      ],
-      enableHapticFeedback: true,
-      child: Material(
-        color: customTheme.scaffold,
-        child: GD(
-          onTap: _onTap,
+    return Material(
+      color: customTheme.scaffold,
+      child: GD(
+        onLongPressStart: (details) => _onLongPressStart(details, context),
+        onTap: _onTap,
+        child: AnimatedOpacity(
+          opacity: shouldDim ? 0.2 : 1,
+          duration: const Duration(milliseconds: 200),
           child: C(
             decoration: BD(
               color: isCurrent ? primaryContainer : customTheme.scaffold,
@@ -147,7 +286,7 @@ class _Item extends ConsumerWidget {
               conversation.title,
               s: TS(s: 16, w: FW.w600, c: isCurrent ? primary : qb),
               overflow: TextOverflow.ellipsis,
-              maxLines: 1,
+              // maxLines: 10,
             ),
           ),
         ),
