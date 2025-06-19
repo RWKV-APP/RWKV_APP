@@ -57,7 +57,7 @@ class _WebSearchModeButton extends ConsumerWidget {
   const _WebSearchModeButton();
 
   void _onTap() {
-    P.rwkv.onWebSearchModeTap(null);
+    P.chat.onSwitchWebSearchMode(null);
   }
 
   @override
@@ -66,7 +66,7 @@ class _WebSearchModeButton extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final loading = ref.watch(P.rwkv.loading);
     final qw = ref.watch(P.app.qw);
-    final webSearch = ref.watch(P.rwkv.webSearch);
+    final webSearch = ref.watch(P.chat.webSearch);
 
     final enabled = webSearch != WebSearchMode.off;
     final color = enabled ? primary : kC;
@@ -111,7 +111,7 @@ class _WebSearchModeButton extends ConsumerWidget {
                       ];
                     },
                     onSelected: (mode) {
-                      P.rwkv.onWebSearchModeTap(mode);
+                      P.chat.onSwitchWebSearchMode(mode);
                     },
                     initialValue: webSearch,
                     popUpAnimationStyle: AnimationStyle(
