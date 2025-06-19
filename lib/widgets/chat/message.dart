@@ -325,7 +325,7 @@ class Message extends ConsumerWidget {
               if (kDebugMode && Args.debugMsgId)
                 C(
                   decoration: BD(color: kCR.q(1)),
-                  child: T("Debug: ${msg.id}", s: TS(c: kW)),
+                  child: T("Debug: ${msg.id}", s: const TS(c: kW)),
                 ),
               if (isMine) ...[
                 // 🔥 User message

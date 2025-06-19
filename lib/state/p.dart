@@ -41,7 +41,6 @@ import 'package:zone/io.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/cell_type.dart';
 import 'package:zone/model/cot_display_state.dart';
-import 'package:zone/model/conversation.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/group_info.dart';
@@ -62,26 +61,24 @@ import 'package:zone/widgets/pager.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/func/sudoku.dart' as func_sudoku;
 import 'package:zone/db/db.dart' as db;
-import 'package:drift/drift.dart' as drift;
 
+part "adapter.dart";
 part "app.dart";
 part "chat.dart";
-part "rwkv.dart";
-part "othello.dart";
-part "file_manager.dart";
-part "device.dart";
-part "adapter.dart";
-part "world.dart";
 part "conversation.dart";
-part "networking.dart";
-part "tts.dart";
-part "preference.dart";
+part "device.dart";
+part "dump.dart";
+part "file_manager.dart";
 part "guard.dart";
+part "msg.dart";
+part "networking.dart";
+part "othello.dart";
+part "preference.dart";
+part "rwkv.dart";
 part "sudoku.dart";
 part "suggestion.dart";
-part "dump.dart";
-part "msg.dart";
-part "db.dart";
+part "tts.dart";
+part "world.dart";
 
 abstract class P {
   static final app = _App();
@@ -100,13 +97,10 @@ abstract class P {
   static final suggestion = _Suggestion();
   static final dump = _Dump();
   static final msg = _Msg();
-  static final db = _DB();
 
   static FV init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await preference._init();
-    await db._init();
-
     await app._init();
     await _unorderedInit();
   }

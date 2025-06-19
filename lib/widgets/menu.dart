@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/config.dart';
-import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/demo_type.dart';
 import 'package:zone/state/p.dart';
 import 'package:zone/page/panel/settings.dart';
 import 'package:zone/widgets/chat/conversation_list.dart';
@@ -17,6 +17,19 @@ class Menu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final demoType = ref.watch(P.app.demoType);
+
+    switch (demoType) {
+      case DemoType.fifthteenPuzzle:
+      case DemoType.othello:
+      case DemoType.sudoku:
+      case DemoType.tts:
+      case DemoType.world:
+        return const Settings(isInDrawerMenu: true);
+      case DemoType.chat:
+        break;
+    }
+
     return const Column(
       mainAxisAlignment: MAA.center,
       children: [

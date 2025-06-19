@@ -37,12 +37,10 @@ class _Chat {
   late final _autoPauseId = qs<int?>(null);
 
   // TODO: Should be moved to state/msg.dart in the future
-  // TODO: Should be renamed to share related state
-  late final selectedMessages = qs<Set<int>>({});
+  late final sharingSelectedMsgIds = qs<Set<int>>({});
 
   // TODO: Should be moved to state/msg.dart in the future
-  // TODO: Should be renamed to share related state
-  late final selectMessageMode = qs(false);
+  late final isSharing = qs(false);
 
   late final completionMode = qs(false);
 

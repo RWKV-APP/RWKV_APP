@@ -45,7 +45,7 @@ class ChatAppBar extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final currentModel = ref.watch(P.rwkv.currentModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
-    final selectMessageMode = ref.watch(P.chat.selectMessageMode);
+    final selectMessageMode = ref.watch(P.chat.isSharing);
     final completionMode = ref.watch(P.chat.completionMode);
 
     String displayName = s.click_to_select_model;
@@ -255,13 +255,13 @@ class _TrianglePainter extends CustomPainter {
 class _SelectMessageAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selected = ref.watch(P.chat.selectedMessages);
+    final selected = ref.watch(P.chat.sharingSelectedMsgIds);
     final allMessage = ref.watch(P.msg.list);
 
     final all = allMessage.length == selected.length;
 
     void onAllTap() {
-      P.chat.selectedMessages.q = all ? {} : allMessage.map((e) => e.id).toSet();
+      P.chat.sharingSelectedMsgIds.q = all ? {} : allMessage.map((e) => e.id).toSet();
     }
 
     final leading = Row(

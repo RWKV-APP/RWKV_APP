@@ -4,6 +4,8 @@ class _App extends RawApp {
   final _pageKey = qs(PageKey.first);
   late final pageKey = qp((ref) => ref.watch(_pageKey));
 
+  late final db.AppDatabase _db;
+
   /// 当前正在运行的任务
   late final demoType = qs(DemoType.chat);
 
@@ -124,6 +126,8 @@ extension _$App on _App {
   FV _init() async {
     qq;
 
+    _initDB();
+
     _isDesktop.q = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
     _isMobile.q = Platform.isAndroid || Platform.isIOS;
 
@@ -211,6 +215,15 @@ extension _$App on _App {
       HF.wait(2000).then((_) {
         Pager.toggle();
       });
+    }
+  }
+
+  void _initDB() async {
+    try {
+      _db = db.AppDatabase();
+    } catch (e) {
+      qqe("Failed to open database");
+      qqe(e);
     }
   }
 

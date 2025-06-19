@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/config.dart';
-import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';

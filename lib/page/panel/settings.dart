@@ -50,7 +50,13 @@ class Settings extends ConsumerWidget {
 
   final ScrollController? scrollController;
 
-  const Settings({super.key, this.scrollController});
+  final bool isInDrawerMenu;
+
+  const Settings({
+    super.key,
+    this.scrollController,
+    this.isInDrawerMenu = false,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,10 +85,12 @@ class Settings extends ConsumerWidget {
     );
 
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(16),
-        topRight: Radius.circular(16),
-      ),
+      borderRadius: isInDrawerMenu
+          ? BorderRadius.zero
+          : const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
       child: Scaffold(
         backgroundColor: customTheme.setting,
         appBar: AppBar(

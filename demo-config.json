@@ -97,7 +97,7 @@
         "fileSize": 382140880,
         "sha256": "6527eca32fe7eb64c655e81d5ad523cc02b03676b59975ca9be6be4f1fa7ed65",
         "quantization": "fp16",
-        "platforms": ["ios", "macos", "web", "windows", "android"],
+        "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu"]
@@ -111,7 +111,7 @@
         "fileSize": 901609208,
         "sha256": "f1f3995ae13f5663406c9046a64ae330adbee4bc6b77761f3d8fbcff5b4a9a62",
         "quantization": "fp16",
-        "platforms": ["ios", "macos", "web", "windows", "android"],
+        "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu"]
@@ -125,7 +125,7 @@
         "fileSize": 1355373866,
         "sha256": "29f21ea1dea4d41eb633c54ada4c1a05e815b7b2ee0a2bd33ddfcb9cae980d56",
         "quantization": "NF4",
-        "platforms": ["ios", "macos", "web", "windows", "android"],
+        "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu"]
@@ -139,7 +139,7 @@
         "fileSize": 2315788802,
         "sha256": "004093a6dfa36233fa119a0fbede3422b8639eca7caab88575d7527fe214cb4f",
         "quantization": "NF4",
-        "platforms": ["macos", "web", "windows", "android"],
+        "platforms": ["macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu"]
@@ -153,7 +153,7 @@
         "fileSize": 1355373866,
         "sha256": "cf958431cbb5032ac6d953b75015258feda62b3120b7ffeb0314b2d9809b3210",
         "quantization": "NF4",
-        "platforms": ["ios", "macos", "web", "windows", "android"],
+        "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu"]
@@ -913,7 +913,7 @@
         "fileName": "sudoku_rwkv-v7-L10-D320-webrwkv.st",
         "fileSize": 26948008,
         "quantization": "fp16",
-        "platforms": ["ios", "macos", "windows", "linux", "android"],
+        "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["gpu"]

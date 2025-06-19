@@ -1,9 +1,8 @@
 import 'dart:io' show File, Platform;
-import 'dart:typed_data' show ByteData;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+import 'package:flutter/rendering.dart' show RenderRepaintBoundary, OffsetLayer;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gal/gal.dart' show Gal;
 import 'package:halo/halo.dart';
@@ -34,16 +33,16 @@ enum _PreviewType {
 
 class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
   _PreviewType previewType = _PreviewType.none;
-  List<model.Message> messages = [];
+  List<model.Message> selectedMessages = [];
 
   void onCancelTap() {
-    P.chat.selectedMessages.q = {};
-    P.chat.selectMessageMode.q = false;
+    P.chat.sharingSelectedMsgIds.q = {};
+    P.chat.isSharing.q = false;
   }
 
   void onShareTap() {
-    final selected = P.chat.selectedMessages.q;
-    messages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
+    final selected = P.chat.sharingSelectedMsgIds.q;
+    selectedMessages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
 
     setState(() {
       previewType = _PreviewType.share;
@@ -51,8 +50,8 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
   }
 
   void onSaveTap() {
-    final selected = P.chat.selectedMessages.q;
-    messages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
+    final selected = P.chat.sharingSelectedMsgIds.q;
+    selectedMessages = P.msg.list.q.where((m) => selected.contains(m.id)).toList();
 
     setState(() {
       previewType = _PreviewType.save;
@@ -65,17 +64,18 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedCount = ref.watch(P.chat.selectedMessages).length;
+    final selectedCount = ref.watch(P.chat.sharingSelectedMsgIds).length;
+    final paddingBottom = ref.watch(P.app.paddingBottom);
 
     return Stack(
       children: [
         Positioned(
-          bottom: 0,
+          bottom: paddingBottom,
           left: 0,
           right: 0,
           child: Material(
             elevation: 16,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
@@ -85,21 +85,21 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
                     child: TextButton.icon(
                       onPressed: onCancelTap,
                       label: Text(S.of(context).cancel),
-                      icon: Icon(Icons.cancel_outlined),
+                      icon: const Icon(Icons.cancel_outlined),
                     ),
                   ),
                   Expanded(
                     child: TextButton.icon(
                       onPressed: selectedCount == 0 ? null : onSaveTap,
                       label: Text(S.of(context).save),
-                      icon: Icon(Icons.save_alt_outlined),
+                      icon: const Icon(Icons.save_alt_outlined),
                     ),
                   ),
                   Expanded(
                     child: TextButton.icon(
                       onPressed: selectedCount == 0 ? null : onShareTap,
                       label: Text(S.of(context).share),
-                      icon: Icon(Icons.share_rounded),
+                      icon: const Icon(Icons.share_rounded),
                     ),
                   ),
                 ],
@@ -110,16 +110,16 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
         if (previewType != _PreviewType.none)
           _Preview(
             share: previewType == _PreviewType.share,
-            messages: messages,
+            messages: selectedMessages,
             onCancelTap: () {
               setState(() {
-                messages = [];
+                selectedMessages = [];
                 previewType = _PreviewType.none;
               });
             },
             onComplete: () {
               onCancelTap();
-              messages = [];
+              selectedMessages = [];
               previewType = _PreviewType.none;
             },
           ),
@@ -135,7 +135,7 @@ class _Preview extends ConsumerStatefulWidget {
 
   final bool share;
 
-  _Preview({
+  const _Preview({
     required this.share,
     required this.messages,
     required this.onCancelTap,
@@ -146,10 +146,11 @@ class _Preview extends ConsumerStatefulWidget {
   ConsumerState<_Preview> createState() => _PreviewState();
 }
 
+final kSharingRepaintBoundary = GlobalKey();
+
 class _PreviewState extends ConsumerState<_Preview> {
   static const topCropForFixBadImage = 300.0;
 
-  final keyRepaintBoundary = GlobalKey();
   late QrImage qrImage;
   late final ScrollController controller = ScrollController();
   File? imagePreview;
@@ -198,62 +199,39 @@ class _PreviewState extends ConsumerState<_Preview> {
   }
 
   Future<File?> _generatePreview() async {
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final rb = keyRepaintBoundary.currentContext!.findRenderObject() as RenderBox;
-    final step = rb.size.height.toDouble();
-    final maxExtent = controller.position.maxScrollExtent;
-    final repaintBoundary = keyRepaintBoundary.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final repaintBoundary = kSharingRepaintBoundary.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-    int width = 0;
-    double offsetY = 0;
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    final paint = Paint()..filterQuality = FilterQuality.high;
-    int i = 0;
-    double lastScrolled = 0;
-    while (true) {
-      final remain = maxExtent - controller.position.pixels;
-      ui.Image img = await repaintBoundary.toImage(pixelRatio: pixelRatio);
-      width = img.width > width ? img.width : width;
-      if (remain == 0 && i != 0) {
-        final top = (step - lastScrolled) * pixelRatio;
-        img = await _cropImage(img, Rect.fromLTRB(0, top, width.toDouble(), img.height.toDouble()));
-      }
-      final topOffset = topCropForFixBadImage * pixelRatio;
-      img = await _cropImage(
-        img,
-        Rect.fromLTRB(
-          0,
-          topOffset,
-          img.width.toDouble(),
-          img.height.toDouble(),
-        ),
-      );
-      canvas.drawImage(img, Offset(0, offsetY), paint);
-      offsetY += img.height;
-      i++;
-      if (remain <= 0) {
-        break;
-      } else {
-        final offset = remain > step ? i * step : maxExtent;
-        lastScrolled = remain;
-        controller.jumpTo(offset);
-        await Future.delayed(const Duration(milliseconds: 50));
-      }
+    final imageSize = repaintBoundary.size;
+    const maxHeightInPixel = 16384.0;
+    final currentDPI = MediaQuery.devicePixelRatioOf(context);
+    final wantedHeightInPixel = imageSize.height * currentDPI;
+    double finalDPI = currentDPI;
+    if (wantedHeightInPixel > maxHeightInPixel) {
+      finalDPI = maxHeightInPixel / imageSize.height;
     }
 
-    final image = await recorder.endRecording().toImage(width, offsetY.toInt());
+    // 发现如下现象:
+    // 当, 图片高度超过 16384 时, 如果, 我们使用原始的 pixelRatio, 那么, 溢出部分会被裁切
+    // 所以, 此处限制了最大 dpi, 保证图片不会被裁切
+    // 已知, xiaomi14 dpi 为 3
 
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final dir = await getApplicationCacheDirectory();
-    final file = File("${dir.path}${Platform.pathSeparator}tmp_$timestamp.png");
+    qqr("imageSize.height: ${imageSize.height}");
+    qqr("wantedHeightInPixel: $wantedHeightInPixel");
+    qqr("finalDPI: $finalDPI");
 
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    // FIXME: 如果, 图片高度超过 16384, 那么, 我们需要将图片分成多张, 然后, 将多张图片合并成一张图片
+    // FIXME: 注意, 新和成的图片尺寸仍然无法超过 16384, 需要找到新的方法
+
+    // ignore: invalid_use_of_protected_member
+    final OffsetLayer offsetLayer = repaintBoundary.layer! as OffsetLayer;
+    final image = await offsetLayer.toImage(const Offset(0, 0) & imageSize, pixelRatio: finalDPI);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
     final bytes = byteData!.buffer.asUint8List();
-    if (await file.exists()) await file.delete();
-    await file.create();
+    final dir = await getApplicationCacheDirectory();
+    final milliseconds = HF.milliseconds;
+    final file = File("${dir.path}${Platform.pathSeparator}tmp_$milliseconds.png");
     await file.writeAsBytes(bytes);
-
     return file;
   }
 
@@ -282,6 +260,8 @@ class _PreviewState extends ConsumerState<_Preview> {
       return _generating(theme, dark);
     }
 
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -292,7 +272,7 @@ class _PreviewState extends ConsumerState<_Preview> {
             child: Center(
               child: SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 36, vertical: 100),
+                  margin: const EdgeInsets.symmetric(horizontal: 36, vertical: 100),
                   child: Image.file(imagePreview!, fit: BoxFit.cover),
                 ),
               ),
@@ -300,7 +280,7 @@ class _PreviewState extends ConsumerState<_Preview> {
           ),
           Material(
             elevation: 16,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
@@ -308,18 +288,19 @@ class _PreviewState extends ConsumerState<_Preview> {
                 children: [
                   TextButton.icon(
                     onPressed: widget.onCancelTap,
-                    icon: Icon(Icons.close),
+                    icon: const Icon(Icons.close),
                     label: Text(S.of(context).cancel),
                   ),
                   TextButton.icon(
                     onPressed: () => onConfirmTap(context),
-                    icon: Icon(Icons.check),
+                    icon: const Icon(Icons.check),
                     label: Text(S.of(context).confirm),
                   ),
                 ],
               ),
             ),
           ),
+          paddingBottom.h,
         ],
       ),
     );
@@ -339,14 +320,18 @@ class _PreviewState extends ConsumerState<_Preview> {
                 color: theme.colorScheme.surfaceContainer,
               ),
               padding: const EdgeInsets.all(24),
-              child: CircularProgressIndicator(strokeWidth: 4),
+              child: const CircularProgressIndicator(strokeWidth: 4),
             ),
           ),
           Positioned(
-            top: 20000,
-            left: 0,
-            right: 0,
-            child: _shot(theme, dark),
+            top: 0,
+            width: P.app.screenWidth.q,
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: 0.01,
+                child: _shot(theme, dark),
+              ),
+            ),
           ),
         ],
       ),
@@ -354,25 +339,22 @@ class _PreviewState extends ConsumerState<_Preview> {
   }
 
   Widget _shot(ThemeData theme, bool dark) {
-    return RepaintBoundary(
-      key: keyRepaintBoundary,
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: controller,
+    final customTheme = ref.watch(P.app.customTheme);
+    return SingleChildScrollView(
+      child: RepaintBoundary(
+        key: kSharingRepaintBoundary,
         child: ColoredBox(
-          color: theme.scaffoldBackgroundColor,
+          color: customTheme.scaffold,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: topCropForFixBadImage),
               const SizedBox(height: 12),
               _buildHeader(),
-              Divider(height: 28, indent: 16, endIndent: 16, thickness: 0.5),
+              const Divider(height: 28, indent: 16, endIndent: 16, thickness: 0.5),
               for (var msg in widget.messages) Message(msg, 1, selectMode: true),
               const SizedBox(height: 24),
               Stack(
                 children: [
-                  Divider(indent: 16, endIndent: 16, thickness: 0.5),
+                  const Divider(indent: 16, endIndent: 16, thickness: 0.5),
                   Center(
                     child: Container(
                       width: 50,
@@ -380,7 +362,7 @@ class _PreviewState extends ConsumerState<_Preview> {
                       alignment: Alignment.center,
                       child: Text(
                         S.current.end,
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ),
                   ),
@@ -414,21 +396,21 @@ class _PreviewState extends ConsumerState<_Preview> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(width: 16),
-        Text("v$version\n$date", style: TextStyle(fontSize: 10, color: Colors.grey)),
-        Spacer(),
+        Text("v$version\n$date", style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        const Spacer(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(S.current.scan_qrcode, style: TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
+            Text(S.current.scan_qrcode, style: const TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
             const SizedBox(height: 4),
-            Text(S.current.explore_rwkv, style: TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
+            Text(S.current.explore_rwkv, style: const TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
           ],
         ),
         const SizedBox(width: 8),
         !dark
             ? qrCode
             : ColorFiltered(
-                colorFilter: ColorFilter.mode(Colors.white54, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(Colors.white54, BlendMode.srcIn),
                 child: qrCode,
               ),
         const SizedBox(width: 16),
@@ -453,7 +435,7 @@ class _PreviewState extends ConsumerState<_Preview> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               Config.appTitle,
               style: TextStyle(
                 fontSize: 18,
@@ -462,13 +444,13 @@ class _PreviewState extends ConsumerState<_Preview> {
             ),
             Text(
               sprintf(S.current.from_model, [P.rwkv.currentModel.q?.name ?? ""]),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
               ),
             ),
           ],
         ),
-        Spacer(),
+        const Spacer(),
         const SizedBox(width: 16),
       ],
     );
