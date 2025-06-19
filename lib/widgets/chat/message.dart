@@ -456,8 +456,9 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
   @override
   void initState() {
     super.initState();
-    if (widget.generating) {
-      updatePrefill();
+    if (widget.generating && widget.refInfo.error.isEmpty) {
+      // updatePrefill(); TODO: prefill progress
+      prefill = 1;
     } else {
       prefill = 1;
     }
@@ -482,6 +483,9 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.refInfo.error.isNotEmpty) {
+      return const SizedBox();
+    }
     final primary = Theme.of(context).colorScheme.primary;
 
     return Column(
@@ -497,7 +501,7 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: primary.q(.1),
                     borderRadius: BorderRadius.circular(20),
