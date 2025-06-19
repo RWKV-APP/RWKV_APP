@@ -237,5 +237,8 @@
   "search": "Search",
   "reference_source": "Reference Source",
   "analysing_result": "Analysing Search Result",
-  "x_pages_found": "%d Pages Found"
+  "x_pages_found": "%d Pages Found",
+  "off": "Off",
+  "web_search": "Search",
+  "deep_web_search": "DeepSearch"
 }

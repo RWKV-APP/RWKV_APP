@@ -57,7 +57,7 @@ class _WebSearchModeButton extends ConsumerWidget {
   const _WebSearchModeButton();
 
   void _onTap() {
-    P.rwkv.onWebSearchModeTap();
+    P.rwkv.onWebSearchModeTap(null);
   }
 
   @override
@@ -68,13 +68,14 @@ class _WebSearchModeButton extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final webSearch = ref.watch(P.rwkv.webSearch);
 
-    final color = webSearch ? primary : kC;
-    final borderColor = webSearch ? primary : primary.q(.5);
-    final textColor = webSearch ? qw : primary.q(.5);
+    final enabled = webSearch != WebSearchMode.off;
+    final color = enabled ? primary : kC;
+    final borderColor = enabled ? primary : primary.q(.5);
+    final textColor = enabled ? qw : primary.q(.5);
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
-    final padding = const EI.s(h: 8);
+    final padding = const EI.o(l: 8);
     return IntrinsicWidth(
       child: AnimatedOpacity(
         opacity: loading ? .33 : 1,
@@ -95,8 +96,36 @@ class _WebSearchModeButton extends ConsumerWidget {
                   Icon(Icons.travel_explore, color: textColor, size: 18),
                   2.w,
                   T(
-                    s.search,
+                    webSearch == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
                     s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                  ),
+                  4.w,
+                  VerticalDivider(width: 1),
+                  PopupMenuButton(
+                    offset: Offset(-30, -80),
+                    itemBuilder: (c) {
+                      return [
+                        PopupMenuItem(value: WebSearchMode.off, child: Text(s.off)),
+                        PopupMenuItem(value: WebSearchMode.search, child: Text(s.web_search)),
+                        PopupMenuItem(value: WebSearchMode.deepSearch, child: Text(s.deep_web_search)),
+                      ];
+                    },
+                    onSelected: (mode) {
+                      P.rwkv.onWebSearchModeTap(mode);
+                    },
+                    initialValue: webSearch,
+                    popUpAnimationStyle: AnimationStyle(
+                      curve: Curves.linear,
+                      duration: 250.ms,
+                      reverseCurve: Curves.linear,
+                      reverseDuration: 250.ms,
+                    ),
+                    child: Container(
+                      height: height,
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      alignment: Alignment.center,
+                      child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
+                    ),
                   ),
                 ],
               ),

@@ -130,6 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("Dark Mode Theme"),
     "decode": MessageLookupByLibrary.simpleMessage("Decode"),
+    "deep_web_search": MessageLookupByLibrary.simpleMessage("DeepSearch"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
     "difficulty": MessageLookupByLibrary.simpleMessage("Difficulty"),
@@ -257,6 +258,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_data": MessageLookupByLibrary.simpleMessage("No Data"),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("No Sudoku"),
     "number": MessageLookupByLibrary.simpleMessage("Number"),
+    "off": MessageLookupByLibrary.simpleMessage("Off"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
@@ -437,6 +439,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("Very Small (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("Voice Cloning"),
+    "web_search": MessageLookupByLibrary.simpleMessage("Search"),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV",
     ),

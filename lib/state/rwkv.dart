@@ -1,5 +1,11 @@
 part of 'p.dart';
 
+enum WebSearchMode {
+  off,
+  search,
+  deepSearch,
+}
+
 class _RWKV {
   /// Send message to RWKV isolate
   SendPort? _sendPort;
@@ -40,8 +46,7 @@ class _RWKV {
 
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
-  late final webSearch = qs(false);
-  late final searchingOnWeb = qs(false);
+  late final webSearch = qs(WebSearchMode.off);
   late final _thinkingMode = qs<ThinkingMode>(const thinking_mode.Lighting());
 
   ThinkingMode reasoningOnOrder = const thinking_mode.Free();
@@ -490,7 +495,7 @@ extension $RWKV on _RWKV {
 
     RefInfo ref = RefInfo.empty();
 
-    if (webSearch.q) {
+    if (webSearch.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
         final last = allMessage.removeLast();
@@ -498,9 +503,14 @@ extension $RWKV on _RWKV {
             await _post(
                   'https://auth.rwkvos.com/api/internet_search',
                   token: 'x8rYbL3KfGp2Nq1zT9wVvJ0iQ5sUoAeX7HcM4',
-                  body: {"query": last, "top_n": 3},
+                  body: {
+                    "query": last,
+                    "top_n": 3,
+                    'is_deepsearch': webSearch.q == WebSearchMode.deepSearch,
+                  },
                 ).timeout(const Duration(seconds: 3))
                 as dynamic;
+        qqq('web search mode: ${webSearch.q}');
         final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
         ref = ref.copyWith(list: refs);
         final r = refs.map((e) => e.summary).join("\n");
@@ -709,14 +719,18 @@ extension $RWKV on _RWKV {
     send(to_rwkv.SetMaxLength(_intIfFixedDecimalsIsZero(Argument.maxLength).toInt()));
   }
 
-  void onWebSearchModeTap() async {
+  void onWebSearchModeTap(WebSearchMode? mode) async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    final enabled = webSearch.q;
-    webSearch.q = !enabled;
+    if (mode != null) {
+      webSearch.q = mode;
+      return;
+    }
+    final enabled = webSearch.q != WebSearchMode.off;
+    webSearch.q = enabled ? WebSearchMode.off : WebSearchMode.search;
   }
 
   void onThinkModeTyped() async {

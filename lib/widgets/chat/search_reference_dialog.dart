@@ -64,7 +64,7 @@ class SearchReferenceDialog extends StatelessWidget {
                         children: [
                           Text(ref.title),
                           const SizedBox(height: 4),
-                          Text(ref.summary, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall),
+                          Text(ref.summary.replaceAll("\n", ' '), maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall),
                           const SizedBox(height: 4),
                         ],
                       ),

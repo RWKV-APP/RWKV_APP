@@ -235,5 +235,8 @@
   "search": "搜索",
   "reference_source": "参考源",
   "analysing_result": "正在分析搜索结果",
-  "x_pages_found": "已找到 %d 个相关网页"
+  "x_pages_found": "已找到 %d 个相关网页",
+  "off": "关闭",
+  "web_search": "联网",
+  "deep_web_search": "深度联网"
 }

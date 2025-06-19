@@ -104,6 +104,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode": MessageLookupByLibrary.simpleMessage("深色模式"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("深色模式主题"),
     "decode": MessageLookupByLibrary.simpleMessage("解码"),
+    "deep_web_search": MessageLookupByLibrary.simpleMessage("深度联网"),
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("全部删除"),
     "difficulty": MessageLookupByLibrary.simpleMessage("难度"),
@@ -201,6 +202,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_data": MessageLookupByLibrary.simpleMessage("无数据"),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("没有数独"),
     "number": MessageLookupByLibrary.simpleMessage("数字"),
+    "off": MessageLookupByLibrary.simpleMessage("关闭"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage("或者选择一个 wav 文件，让 RWKV 模仿它。"),
@@ -331,6 +333,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("非常小 (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
+    "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage("欢迎使用 RWKV"),
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),

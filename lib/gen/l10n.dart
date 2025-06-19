@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1670,6 +1669,21 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `关闭`
+  String get off {
+    return Intl.message('关闭', name: 'off', desc: '', args: []);
+  }
+
+  /// `联网`
+  String get web_search {
+    return Intl.message('联网', name: 'web_search', desc: '', args: []);
+  }
+
+  /// `深度联网`
+  String get deep_web_search {
+    return Intl.message('深度联网', name: 'deep_web_search', desc: '', args: []);
   }
 }
 
