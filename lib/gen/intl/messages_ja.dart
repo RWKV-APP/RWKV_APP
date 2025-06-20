@@ -22,12 +22,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(demoName) => "${demoName} へようこそ";
 
-  static String m2(flag, nameCN, nameEN) =>
+  static String m3(flag, nameCN, nameEN) =>
       "${flag} ${nameCN}(${nameEN}) の声を模倣";
 
-  static String m4(memUsed, memFree) => "使用済みメモリ：${memUsed}、空きメモリ：${memFree}";
+  static String m5(memUsed, memFree) => "使用済みメモリ：${memUsed}、空きメモリ：${memFree}";
 
-  static String m5(modelName) => "現在 ${modelName} を使用しています";
+  static String m6(modelName) => "現在 ${modelName} を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -143,7 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKV に言わせたいことは...",
     ),
-    "imitate": m2,
+    "imitate": m3,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -169,7 +169,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "license": MessageLookupByLibrary.simpleMessage("オープンソースライセンス"),
     "loading": MessageLookupByLibrary.simpleMessage("ロード中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m4,
+    "memory_used": m5,
     "model_settings": MessageLookupByLibrary.simpleMessage("モデル設定"),
     "my_voice": MessageLookupByLibrary.simpleMessage("私の声"),
     "network_error": MessageLookupByLibrary.simpleMessage("ネットワークエラー"),
@@ -287,7 +287,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白"),
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
-    "you_are_now_using": m5,
+    "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "RWKV とチャットを開始できます",
     ),

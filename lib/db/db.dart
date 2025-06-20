@@ -6,6 +6,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:zone/config.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/state/p.dart';
@@ -140,9 +141,9 @@ class AppDatabase extends _$AppDatabase {
     if (firstMsgId != null) {
       final firstMsg = P.msg.pool.q[firstMsgId];
       final firstMsgContent = firstMsg?.content ?? "";
-      title = firstMsgContent.length > 200 ? firstMsgContent.substring(0, 200) : firstMsgContent;
+      title = firstMsgContent.length > Config.maxTitleLength ? firstMsgContent.substring(0, Config.maxTitleLength) : firstMsgContent;
     } else {
-      title = P.preference.isZhLang() ? "新会话" : "New Conversation";
+      title = P.preference.currentLangIsZh ? "新会话" : "New Conversation";
     }
 
     final convData = _conversationToConversationCompanion(msgNode, title: title);
@@ -159,6 +160,22 @@ class AppDatabase extends _$AppDatabase {
       qqr("upsert failed: $e");
       return false;
     }
+  }
+
+  /// 根据会话的创建时间找到会话，并重命名会话，如果会话不存在，则返回 false
+  Future<bool> renameConv(int createAtInUS, String title) async {
+    final success =
+        await (update(conversation)..where((tbl) {
+              return tbl.createdAtUS.equals(createAtInUS);
+            }))
+            .write(
+              _ConversationCompanion(
+                title: Value(title),
+                updatedAtUS: Value(HF.microseconds),
+              ),
+            ) >
+        0;
+    return success;
   }
 
   Future<bool> upsertMsg(model.Message message) async {
@@ -179,7 +196,7 @@ class AppDatabase extends _$AppDatabase {
   /// 5. limit 默认为 20, offset 默认为 0
   Future<List<ConversationData>> convPage({
     int pageIndex = 0,
-    int pageSize = 40,
+    int pageSize = 999,
   }) async {
     final query = select(conversation)
       ..orderBy([

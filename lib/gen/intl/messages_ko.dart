@@ -22,13 +22,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(demoName) => "${demoName} 에 오신 것을 환영합니다";
 
-  static String m2(flag, nameCN, nameEN) =>
+  static String m3(flag, nameCN, nameEN) =>
       "${flag} ${nameCN}(${nameEN}) 의 음성 모방";
 
-  static String m4(memUsed, memFree) =>
+  static String m5(memUsed, memFree) =>
       "사용된 메모리: ${memUsed}, 남은 메모리: ${memFree}";
 
-  static String m5(modelName) => "현재 ${modelName} 을 사용 중입니다";
+  static String m6(modelName) => "현재 ${modelName} 을 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -140,7 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKV가 말하게 하고 싶습니다...",
     ),
-    "imitate": m2,
+    "imitate": m3,
     "imitate_target": MessageLookupByLibrary.simpleMessage("사용"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -164,7 +164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "license": MessageLookupByLibrary.simpleMessage("오픈소스 라이선스"),
     "loading": MessageLookupByLibrary.simpleMessage("로드 중..."),
     "medium": MessageLookupByLibrary.simpleMessage("중간 (110%)"),
-    "memory_used": m4,
+    "memory_used": m5,
     "model_settings": MessageLookupByLibrary.simpleMessage("모델 설정"),
     "my_voice": MessageLookupByLibrary.simpleMessage("내 음성"),
     "network_error": MessageLookupByLibrary.simpleMessage("네트워크 오류"),
@@ -284,7 +284,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("백"),
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백 승리!"),
-    "you_are_now_using": m5,
+    "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV 와 채팅을 시작할 수 있습니다",
     ),

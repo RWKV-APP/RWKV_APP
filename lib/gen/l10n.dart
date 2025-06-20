@@ -55,6 +55,68 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `重命名`
+  String get rename {
+    return Intl.message('重命名', name: 'rename', desc: '', args: []);
+  }
+
+  /// `请输入会话名称`
+  String get please_enter_conversation_name {
+    return Intl.message(
+      '请输入会话名称',
+      name: 'please_enter_conversation_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `会话名称不能为空`
+  String get conversation_name_cannot_be_empty {
+    return Intl.message(
+      '会话名称不能为空',
+      name: 'conversation_name_cannot_be_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `会话名称不能超过{maxLength}个字符`
+  String conversation_name_cannot_be_longer_than_30_characters(
+    Object maxLength,
+  ) {
+    return Intl.message(
+      '会话名称不能超过$maxLength个字符',
+      name: 'conversation_name_cannot_be_longer_than_30_characters',
+      desc: '',
+      args: [maxLength],
+    );
+  }
+
+  /// `删除会话`
+  String get delete_conversation {
+    return Intl.message(
+      '删除会话',
+      name: 'delete_conversation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确定要删除会话吗？`
+  String get delete_conversation_message {
+    return Intl.message(
+      '确定要删除会话吗？',
+      name: 'delete_conversation_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导出数据`
+  String get export_data {
+    return Intl.message('导出数据', name: 'export_data', desc: '', args: []);
+  }
+
   /// `RWKV Chat`
   String get chat_title {
     return Intl.message('RWKV Chat', name: 'chat_title', desc: '', args: []);

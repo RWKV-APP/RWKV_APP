@@ -1,7 +1,7 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
@@ -121,6 +121,8 @@ class _Item extends ConsumerWidget {
 
     P.app.hapticLight();
 
+    final s = S.of(context);
+
     // 使用showMenu在特定位置显示菜单
     final res = await showMenu<String>(
       shape: RoundedRectangleBorder(
@@ -143,7 +145,7 @@ class _Item extends ConsumerWidget {
               SB(
                 width: 8,
               ),
-              Text('重命名'),
+              Text(s.rename),
             ],
           ),
         ),
@@ -157,7 +159,7 @@ class _Item extends ConsumerWidget {
                 width: 8,
               ),
               Text(
-                '删除会话',
+                s.delete_conversation,
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ],
@@ -172,7 +174,7 @@ class _Item extends ConsumerWidget {
               SB(
                 width: 8,
               ),
-              Text("导出数据"),
+              Text(s.export_data),
             ],
           ),
         ),
@@ -192,68 +194,16 @@ class _Item extends ConsumerWidget {
 
     switch (res) {
       case 'rename':
-        await _onRenameClicked(context);
+        await P.conversation.onRenameClicked(context, conversation);
       case 'delete':
-        await _onDeleteClicked(context);
+        await P.conversation.onDeleteClicked(context, conversation);
       case 'export':
-        await _onExportClicked(context);
+        await P.conversation.onExportClicked(context, conversation);
       default:
         break;
     }
 
     P.conversation.interactingCreatedAtUS.q = null;
-  }
-
-  Future<void> _onRenameClicked(BuildContext context) async {
-    final res = await showTextInputDialog(
-      context: context,
-      title: '重命名',
-      textFields: [
-        DialogTextField(
-          initialText: "",
-          hintText: '请输入会话名称',
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return '请输入会话名称';
-            }
-            if (value.length > 50) {
-              return '会话名称不能超过50个字符';
-            }
-            return null;
-          },
-          maxLength: 50,
-        ),
-      ],
-    );
-
-    if (res == null || res.isEmpty) {
-      return;
-    }
-
-    final newTitle = res[0];
-    // TODO: rename
-  }
-
-  Future<void> _onDeleteClicked(BuildContext context) async {
-    final res = await showOkCancelAlertDialog(
-      context: context,
-      title: '删除会话',
-      message: '确定要删除会话吗？',
-      okLabel: '删除',
-      cancelLabel: '取消',
-      isDestructiveAction: true,
-    );
-
-    switch (res) {
-      case OkCancelResult.ok:
-      // TODO: delete
-      case OkCancelResult.cancel:
-        break;
-    }
-  }
-
-  Future<void> _onExportClicked(BuildContext context) async {
-    // TODO: export
   }
 
   @override
@@ -281,12 +231,25 @@ class _Item extends ConsumerWidget {
               color: isCurrent ? primaryContainer : customTheme.scaffold,
               borderRadius: 8.r,
             ),
-            padding: const EI.a(8),
-            child: T(
-              conversation.title,
-              s: TS(s: 16, w: FW.w600, c: isCurrent ? primary : qb),
-              overflow: TextOverflow.ellipsis,
-              // maxLines: 10,
+            child: Stack(
+              children: [
+                C(
+                  padding: const EI.a(8),
+                  child: T(
+                    conversation.title,
+                    s: TS(s: 16, w: FW.w600, c: isCurrent ? primary : qb),
+                    overflow: TextOverflow.ellipsis,
+                    // maxLines: 10,
+                  ),
+                ),
+                if (kDebugMode)
+                  IgnorePointer(
+                    child: T(
+                      conversation.createdAtUS.toString(),
+                      s: TS(s: 10, c: kCR.q(.5)),
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
