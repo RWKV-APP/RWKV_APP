@@ -1,5 +1,5 @@
 {
-  "@@locale": "zh-Hans",
+  "@@locale": "ja",
   "rename": "名前を変更",
   "please_enter_conversation_name": "会話名を入力してください",
   "conversation_name_cannot_be_empty": "会話名は空にできません",

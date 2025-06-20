@@ -1,5 +1,5 @@
 {
-  "@@locale": "zh-Hans",
+  "@@locale": "zh-Hant",
   "rename": "重新命名",
   "please_enter_conversation_name": "請輸入對話名稱",
   "conversation_name_cannot_be_empty": "對話名稱不能為空",

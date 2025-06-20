@@ -55,6 +55,71 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `没有消息可导出`
+  String get no_message_to_export {
+    return Intl.message(
+      '没有消息可导出',
+      name: 'no_message_to_export',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导出会话为 .txt 文件`
+  String get export_conversation_to_txt {
+    return Intl.message(
+      '导出会话为 .txt 文件',
+      name: 'export_conversation_to_txt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创建时间`
+  String get created_at {
+    return Intl.message('创建时间', name: 'created_at', desc: '', args: []);
+  }
+
+  /// `更新时间`
+  String get updated_at {
+    return Intl.message('更新时间', name: 'updated_at', desc: '', args: []);
+  }
+
+  /// `消息内容`
+  String get message_content {
+    return Intl.message('消息内容', name: 'message_content', desc: '', args: []);
+  }
+
+  /// `会话标题:`
+  String get export_title {
+    return Intl.message('会话标题:', name: 'export_title', desc: '', args: []);
+  }
+
+  /// `用户:`
+  String get user {
+    return Intl.message('用户:', name: 'user', desc: '', args: []);
+  }
+
+  /// `RWKV:`
+  String get assistant {
+    return Intl.message('RWKV:', name: 'assistant', desc: '', args: []);
+  }
+
+  /// `导出会话失败`
+  String get export_conversation_failed {
+    return Intl.message(
+      '导出会话失败',
+      name: 'export_conversation_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get unknown {
+    return Intl.message('未知', name: 'unknown', desc: '', args: []);
+  }
+
   /// `重命名`
   String get rename {
     return Intl.message('重命名', name: 'rename', desc: '', args: []);

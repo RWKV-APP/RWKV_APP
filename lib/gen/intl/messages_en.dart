@@ -59,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Are you sure you want to delete this model?",
         ),
+    "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
     "black": MessageLookupByLibrary.simpleMessage("Black"),
@@ -127,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Create a new one by clicking the button above",
         ),
+    "created_at": MessageLookupByLibrary.simpleMessage("Created at"),
     "current_turn": MessageLookupByLibrary.simpleMessage("Current Turn"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
       "Custom Difficulty",
@@ -179,7 +181,14 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Explore RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("Exploring..."),
+    "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
+      "Export conversation failed",
+    ),
+    "export_conversation_to_txt": MessageLookupByLibrary.simpleMessage(
+      "Export conversation to .txt file",
+    ),
     "export_data": MessageLookupByLibrary.simpleMessage("Export Data"),
+    "export_title": MessageLookupByLibrary.simpleMessage("Conversation title:"),
     "extra_large": MessageLookupByLibrary.simpleMessage("Extra Large (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "filter": MessageLookupByLibrary.simpleMessage(
@@ -250,6 +259,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
     "memory_used": m5,
+    "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
@@ -266,6 +276,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No cell available",
     ),
     "no_data": MessageLookupByLibrary.simpleMessage("No Data"),
+    "no_message_to_export": MessageLookupByLibrary.simpleMessage(
+      "No message to export",
+    ),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("No Sudoku"),
     "number": MessageLookupByLibrary.simpleMessage("Number"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
@@ -441,8 +454,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Turn transfer"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Ultra Large (140%)"),
+    "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
     "update_now": MessageLookupByLibrary.simpleMessage("Update now"),
+    "updated_at": MessageLookupByLibrary.simpleMessage("Updated at"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("Use it now"),
+    "user": MessageLookupByLibrary.simpleMessage("User:"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(
       "Value must be between 0 and 9",
     ),
