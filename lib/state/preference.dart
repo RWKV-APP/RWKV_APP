@@ -46,7 +46,7 @@ class _Preference {
 
   late final dumpping = qs(false);
 
-  bool isZhLang() => preferredLanguage.q.resolved.locale.languageCode == "zh";
+  bool get currentLangIsZh => preferredLanguage.q.resolved.locale.languageCode == "zh";
 }
 
 /// Private methods

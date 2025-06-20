@@ -33,4 +33,6 @@ Assistant: 你好，我是你的助手，我会提供专家级的完整回答。
     'miui',
     'mipro',
   ];
+
+  static const maxTitleLength = 60;
 }

@@ -158,7 +158,7 @@ class _PreviewState extends ConsumerState<_Preview> {
   @override
   void initState() {
     super.initState();
-    final url = P.preference.isZhLang() ? P.app.shareChatQrCodeZh : P.app.shareChatQrCodeEn;
+    final url = P.preference.currentLangIsZh ? P.app.shareChatQrCodeZh : P.app.shareChatQrCodeEn;
     qrImage = QrImage(QrCode(8, QrErrorCorrectLevel.H)..addData(url.q ?? "https://www.rwkv.com/"));
     generatePreview();
   }

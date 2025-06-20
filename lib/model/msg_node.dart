@@ -124,7 +124,7 @@ final class MsgNode {
 
   @override
   String toString() {
-    return "MsgNode(id: $id, children ids: [${children.map((e) => e.id).join(", ")}], latest: ${latest?.id}, root: ${root?.id})";
+    return "MsgNode(id: $id, children ids: [${children.map((e) => e.id).join(", ")}], latest: ${latest?.id}, root: ${root?.id}, createAtInUS: $createAtInUS)";
   }
 
   // 为 MsgNode 设计序列化和反序列化方法

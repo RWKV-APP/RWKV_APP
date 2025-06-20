@@ -22,16 +22,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(demoName) => "欢迎探索 ${demoName}";
 
-  static String m1(path) => "消息记录会存储在该文件夹下\n ${path}";
+  static String m1(maxLength) => "会话名称不能超过${maxLength}个字符";
 
-  static String m2(flag, nameCN, nameEN) =>
+  static String m2(path) => "消息记录会存储在该文件夹下\n ${path}";
+
+  static String m3(flag, nameCN, nameEN) =>
       "模仿 ${flag} ${nameCN}(${nameEN}) 的声音";
 
-  static String m3(fileName) => "模仿 ${fileName}";
+  static String m4(fileName) => "模仿 ${fileName}";
 
-  static String m4(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
+  static String m5(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
 
-  static String m5(modelName) => "您当前正在使用 ${modelName}";
+  static String m6(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -50,6 +52,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "apply": MessageLookupByLibrary.simpleMessage("应用"),
     "are_you_sure_you_want_to_delete_this_model":
         MessageLookupByLibrary.simpleMessage("确定要删除这个模型吗？"),
+    "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("返回聊天"),
     "black": MessageLookupByLibrary.simpleMessage("黑方"),
@@ -96,8 +99,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "继续使用较小模型",
     ),
+    "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
+      "会话名称不能为空",
+    ),
+    "conversation_name_cannot_be_longer_than_30_characters": m1,
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("点击上方按钮创建新会话"),
+    "created_at": MessageLookupByLibrary.simpleMessage("创建时间"),
     "current_turn": MessageLookupByLibrary.simpleMessage("当前回合"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("自定义难度"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("深色模式"),
@@ -105,6 +113,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode": MessageLookupByLibrary.simpleMessage("解码"),
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("全部删除"),
+    "delete_conversation": MessageLookupByLibrary.simpleMessage("删除会话"),
+    "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
+      "确定要删除会话吗？",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("难度"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "难度必须大于 0",
@@ -123,7 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "downloading": MessageLookupByLibrary.simpleMessage("下载中"),
     "draw": MessageLookupByLibrary.simpleMessage("平局！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自动 Dump 消息记录"),
-    "dump_see_files_alert_message": m1,
+    "dump_see_files_alert_message": m2,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage("协助我们改进算法"),
     "dump_started": MessageLookupByLibrary.simpleMessage("自动 dump 已开启"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自动 dump 已关闭"),
@@ -132,6 +144,14 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("探索RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("探索中..."),
+    "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
+      "导出会话失败",
+    ),
+    "export_conversation_to_txt": MessageLookupByLibrary.simpleMessage(
+      "导出会话为 .txt 文件",
+    ),
+    "export_data": MessageLookupByLibrary.simpleMessage("导出数据"),
+    "export_title": MessageLookupByLibrary.simpleMessage("会话标题:"),
     "extra_large": MessageLookupByLibrary.simpleMessage("特大 (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("反馈问题"),
     "filter": MessageLookupByLibrary.simpleMessage(
@@ -162,8 +182,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "human": MessageLookupByLibrary.simpleMessage("人类"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想让 RWKV 说..."),
-    "imitate": m2,
-    "imitate_fle": m3,
+    "imitate": m3,
+    "imitate_fle": m4,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage("当搜索深度和宽度都大于 2 时，将激活上下文搜索"),
@@ -187,7 +207,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("浅色模式"),
     "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m4,
+    "memory_used": m5,
+    "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),
@@ -198,6 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "new_version_found": MessageLookupByLibrary.simpleMessage("发现新版本"),
     "no_cell_available": MessageLookupByLibrary.simpleMessage("无子可下"),
     "no_data": MessageLookupByLibrary.simpleMessage("无数据"),
+    "no_message_to_export": MessageLookupByLibrary.simpleMessage("没有消息可导出"),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("没有数独"),
     "number": MessageLookupByLibrary.simpleMessage("数字"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
@@ -217,6 +239,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_check_the_result": MessageLookupByLibrary.simpleMessage("请检查结果"),
     "please_enter_a_number_0_means_empty": MessageLookupByLibrary.simpleMessage(
       "请输入一个数字。0 表示空。",
+    ),
+    "please_enter_conversation_name": MessageLookupByLibrary.simpleMessage(
+      "请输入会话名称",
     ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "请输入难度",
@@ -260,6 +285,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("正在录音..."),
     "regenerate": MessageLookupByLibrary.simpleMessage("重新生成"),
     "remaining": MessageLookupByLibrary.simpleMessage("剩余时间："),
+    "rename": MessageLookupByLibrary.simpleMessage("重命名"),
     "reselect_model": MessageLookupByLibrary.simpleMessage("重新选择模型"),
     "reset": MessageLookupByLibrary.simpleMessage("重置"),
     "resume": MessageLookupByLibrary.simpleMessage("恢复"),
@@ -321,8 +347,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "turn_transfer": MessageLookupByLibrary.simpleMessage("落子权转移"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("超大 (140%)"),
+    "unknown": MessageLookupByLibrary.simpleMessage("未知"),
     "update_now": MessageLookupByLibrary.simpleMessage("立即更新"),
+    "updated_at": MessageLookupByLibrary.simpleMessage("更新时间"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("立即使用"),
+    "user": MessageLookupByLibrary.simpleMessage("用户:"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(
       "值必须在 0 和 9 之间",
     ),
@@ -333,7 +362,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
-    "you_are_now_using": m5,
+    "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

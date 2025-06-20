@@ -22,18 +22,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(demoName) => "Welcome to ${demoName}";
 
-  static String m1(path) =>
+  static String m1(maxLength) =>
+      "Conversation name cannot be longer than ${maxLength} characters";
+
+  static String m2(path) =>
       "Message records will be stored in the following folder\n ${path}";
 
-  static String m2(flag, nameCN, nameEN) =>
+  static String m3(flag, nameCN, nameEN) =>
       "Imitate ${flag} ${nameCN}(${nameEN})\'s voice";
 
-  static String m3(fileName) => "Imitate ${fileName}";
+  static String m4(fileName) => "Imitate ${fileName}";
 
-  static String m4(memUsed, memFree) =>
+  static String m5(memUsed, memFree) =>
       "Memory Used: ${memUsed}, Memory Free: ${memFree}";
 
-  static String m5(modelName) => "You are now using ${modelName}";
+  static String m6(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -56,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Are you sure you want to delete this model?",
         ),
+    "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
     "black": MessageLookupByLibrary.simpleMessage("Black"),
@@ -116,10 +120,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "Continue using smaller model",
     ),
+    "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
+      "Conversation name cannot be empty",
+    ),
+    "conversation_name_cannot_be_longer_than_30_characters": m1,
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage(
           "Create a new one by clicking the button above",
         ),
+    "created_at": MessageLookupByLibrary.simpleMessage("Created at"),
     "current_turn": MessageLookupByLibrary.simpleMessage("Current Turn"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
       "Custom Difficulty",
@@ -129,6 +138,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode": MessageLookupByLibrary.simpleMessage("Decode"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
+    "delete_conversation": MessageLookupByLibrary.simpleMessage(
+      "Delete Conversation",
+    ),
+    "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete this conversation?",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("Difficulty"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "Difficulty must be greater than 0",
@@ -153,7 +168,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_see_files": MessageLookupByLibrary.simpleMessage(
       "Dump Message Records",
     ),
-    "dump_see_files_alert_message": m1,
+    "dump_see_files_alert_message": m2,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "Help us improve the algorithm",
     ),
@@ -166,6 +181,14 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Explore RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("Exploring..."),
+    "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
+      "Export conversation failed",
+    ),
+    "export_conversation_to_txt": MessageLookupByLibrary.simpleMessage(
+      "Export conversation to .txt file",
+    ),
+    "export_data": MessageLookupByLibrary.simpleMessage("Export Data"),
+    "export_title": MessageLookupByLibrary.simpleMessage("Conversation title:"),
     "extra_large": MessageLookupByLibrary.simpleMessage("Extra Large (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "filter": MessageLookupByLibrary.simpleMessage(
@@ -202,8 +225,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to say...",
     ),
-    "imitate": m2,
-    "imitate_fle": m3,
+    "imitate": m3,
+    "imitate_fle": m4,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Use"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -235,7 +258,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
-    "memory_used": m4,
+    "memory_used": m5,
+    "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
@@ -252,6 +276,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No cell available",
     ),
     "no_data": MessageLookupByLibrary.simpleMessage("No Data"),
+    "no_message_to_export": MessageLookupByLibrary.simpleMessage(
+      "No message to export",
+    ),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("No Sudoku"),
     "number": MessageLookupByLibrary.simpleMessage("Number"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
@@ -275,6 +302,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_enter_a_number_0_means_empty": MessageLookupByLibrary.simpleMessage(
       "Please enter a number. 0 means empty.",
+    ),
+    "please_enter_conversation_name": MessageLookupByLibrary.simpleMessage(
+      "Please enter conversation name",
     ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "Please enter the difficulty",
@@ -336,6 +366,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "regenerate": MessageLookupByLibrary.simpleMessage("Regenerate"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining Time:"),
+    "rename": MessageLookupByLibrary.simpleMessage("Rename"),
     "reselect_model": MessageLookupByLibrary.simpleMessage("Reselect model"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
@@ -423,8 +454,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Turn transfer"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Ultra Large (140%)"),
+    "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
     "update_now": MessageLookupByLibrary.simpleMessage("Update now"),
+    "updated_at": MessageLookupByLibrary.simpleMessage("Updated at"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("Use it now"),
+    "user": MessageLookupByLibrary.simpleMessage("User:"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(
       "Value must be between 0 and 9",
     ),
@@ -437,7 +471,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
-    "you_are_now_using": m5,
+    "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),
