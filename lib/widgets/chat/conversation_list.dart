@@ -141,8 +141,8 @@ class _Item extends ConsumerWidget {
           value: 'rename',
           child: Row(
             children: [
-              Icon(Icons.edit_outlined),
-              SB(
+              const Icon(Icons.edit_outlined),
+              const SB(
                 width: 8,
               ),
               Text(s.rename),
@@ -155,7 +155,7 @@ class _Item extends ConsumerWidget {
           child: Row(
             children: [
               Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
-              SB(
+              const SB(
                 width: 8,
               ),
               Text(
@@ -170,8 +170,8 @@ class _Item extends ConsumerWidget {
           value: 'export',
           child: Row(
             children: [
-              Icon(Icons.download_outlined),
-              SB(
+              const Icon(Icons.download_outlined),
+              const SB(
                 width: 8,
               ),
               Text(s.export_data),
