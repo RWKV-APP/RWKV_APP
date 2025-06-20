@@ -19,6 +19,12 @@ dependencies:
   #      url: https://github.com/MollySophia/rwkv_mobile_flutter
   #      ref: dev
 
+  rwkv_downloader:
+    path: ../rwkv_downloader
+  #    git:
+  #      url: https://github.com/RWKV-APP/rwkv_downloader.git
+  #      ref: master
+
   photo_viewer:
     git:
       url: https://github.com/HaloWang/photo_viewer

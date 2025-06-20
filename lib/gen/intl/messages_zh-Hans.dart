@@ -115,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
     "download_all": MessageLookupByLibrary.simpleMessage("下载全部"),
     "download_app": MessageLookupByLibrary.simpleMessage("下载App"),
+    "download_failed": MessageLookupByLibrary.simpleMessage("下载失败"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage("从浏览器下载"),
     "download_missing": MessageLookupByLibrary.simpleMessage("下载缺失文件"),
     "download_model": MessageLookupByLibrary.simpleMessage("下载模型"),

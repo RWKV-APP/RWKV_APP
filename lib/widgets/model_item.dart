@@ -1,13 +1,16 @@
 // ignore: unused_import
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/model/local_file.dart';
 import 'package:zone/route/method.dart';
 import 'package:zone/route/router.dart';
 import 'package:halo_alert/halo_alert.dart';
@@ -147,12 +150,7 @@ class ModelItem extends ConsumerWidget {
               child: FileKeyItem(fileInfo),
             ),
             8.w,
-            if (!hasFile && !downloading)
-              IconButton(
-                onPressed: _onDownloadTap,
-                icon: const Icon(Icons.download),
-              ),
-            if (downloading) _DownloadIndicator(fileInfo),
+            _DownloadActions(file: fileInfo, state: localFile.state),
             if (hasFile) ...[
               if (!isCurrentModel)
                 GD(
@@ -191,13 +189,13 @@ class ModelItem extends ConsumerWidget {
   }
 }
 
-class _DownloadIndicator extends ConsumerWidget {
-  final FileInfo fileInfo;
+class _DownloadActions extends StatelessWidget {
+  final TaskState state;
+  final FileInfo file;
 
-  const _DownloadIndicator(this.fileInfo);
+  const _DownloadActions({required this.file, required this.state});
 
-  void _onTap() async {
-    qq;
+  void onCancelTap() async {
     final result = await showOkCancelAlertDialog(
       context: getContext()!,
       title: S.current.cancel_download + "?",
@@ -206,40 +204,55 @@ class _DownloadIndicator extends ConsumerWidget {
       cancelLabel: S.current.continue_download,
     );
     if (result == OkCancelResult.ok) {
-      await P.fileManager.cancelDownload(fileInfo: fileInfo);
+      await P.fileManager.cancelDownload(fileInfo: file);
+    }
+  }
+
+  void onDownloadTap() async {
+    try {
+      await P.fileManager.getFile(fileInfo: file);
+    } catch (e) {
+      qqe(e);
+      Alert.error(S.current.download_failed);
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    return GD(
-      onTap: _onTap,
-      child: C(
-        margin: const EI.o(r: 8),
-        child: Stack(
-          children: [
-            const SB(
-              height: 24,
-              width: 24,
-              child: CircularProgressIndicator(
-                strokeWidth: 3,
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              child: Icon(
-                Icons.stop,
-                size: 16,
-                color: qb.q(.7),
-              ),
-            ),
-          ],
-        ),
-      ),
+  Widget build(BuildContext context) {
+    final showDownload = state == TaskState.idle;
+    final showResume = state == TaskState.stopped;
+    final showPause = state == TaskState.running;
+    final showCancel = showPause || showResume;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (showDownload)
+          IconButton(
+            onPressed: onDownloadTap,
+            icon: Icon(Icons.download_rounded),
+            visualDensity: VisualDensity.compact,
+          ),
+        if (showCancel)
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            onPressed: onCancelTap,
+            icon: Icon(Icons.stop_rounded),
+          ),
+        if (showPause)
+          IconButton(
+            onPressed: () {
+              P.fileManager.pauseDownload(fileInfo: file);
+            },
+            visualDensity: VisualDensity.compact,
+            icon: Icon(Icons.pause),
+          ),
+        if (showResume)
+          IconButton(
+            onPressed: onDownloadTap,
+            visualDensity: VisualDensity.compact,
+            icon: Icon(Icons.play_arrow_rounded),
+          ),
+      ],
     );
   }
 }
@@ -297,7 +310,7 @@ class FileKeyItem extends ConsumerWidget {
     final s = S.of(context);
     final localFile = ref.watch(P.fileManager.locals(fileInfo));
     final fileSize = fileInfo.fileSize;
-    final progress = localFile.progress;
+    final progress = localFile.progress / 100;
     final downloading = localFile.downloading;
     double networkSpeed = localFile.networkSpeed;
     if (networkSpeed < 0) networkSpeed = 0;
@@ -333,37 +346,12 @@ class FileKeyItem extends ConsumerWidget {
         _Tags(fileInfo: fileInfo),
         if (downloading) 8.h,
         if (downloading)
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final width = constraints.maxWidth;
-              return SB(
-                width: width - 100,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: (100 * progress).toInt(),
-                      child: C(
-                        decoration: BD(
-                          borderRadius: BorderRadius.only(topLeft: 8.rr, bottomLeft: 8.rr),
-                          color: kCG,
-                        ),
-                        height: 4,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 100 - (100 * progress).toInt(),
-                      child: C(
-                        decoration: BD(
-                          borderRadius: BorderRadius.only(topRight: 8.rr, bottomRight: 8.rr),
-                          color: kG.q(.5),
-                        ),
-                        height: 4,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+          Padding(
+            padding: const EdgeInsetsGeometry.only(right: 40),
+            child: LinearProgressIndicator(
+              value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
+              borderRadius: 8.r,
+            ),
           ),
         if (downloading) 4.h,
         if (downloading)

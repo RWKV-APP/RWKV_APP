@@ -139,6 +139,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
     "download_all": MessageLookupByLibrary.simpleMessage("Download All"),
     "download_app": MessageLookupByLibrary.simpleMessage("Download App"),
+    "download_failed": MessageLookupByLibrary.simpleMessage("Download Failed"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage(
       "Download from browser",
     ),

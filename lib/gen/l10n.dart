@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1640,6 +1639,11 @@ class S {
   /// `聊天记录`
   String get chat_history {
     return Intl.message('聊天记录', name: 'chat_history', desc: '', args: []);
+  }
+
+  /// `下载失败`
+  String get download_failed {
+    return Intl.message('下载失败', name: 'download_failed', desc: '', args: []);
   }
 }
 
