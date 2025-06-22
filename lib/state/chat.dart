@@ -71,6 +71,7 @@ extension $Chat on _Chat {
       final currentMessages = [...P.msg.list.q];
       final _editingIndex = P.msg.editingOrRegeneratingIndex.q!;
       final currentMessage = currentMessages[_editingIndex];
+      receiveId.q = id;
 
       final newMsg = Message(
         id: id,
