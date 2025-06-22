@@ -55,6 +55,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Github 仓库`
+  String get github_repository {
+    return Intl.message(
+      'Github 仓库',
+      name: 'github_repository',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `在 Github 上报告问题`
+  String get report_an_issue_on_github {
+    return Intl.message(
+      '在 Github 上报告问题',
+      name: 'report_an_issue_on_github',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `没有消息可导出`
   String get no_message_to_export {
     return Intl.message(

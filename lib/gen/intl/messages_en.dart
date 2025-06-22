@@ -217,6 +217,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Generate Random Sudoku Puzzle",
     ),
     "generating": MessageLookupByLibrary.simpleMessage("Generating..."),
+    "github_repository": MessageLookupByLibrary.simpleMessage(
+      "Github Repository",
+    ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("Hide Thought Stack"),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "Hold to record, release to send",
@@ -367,6 +370,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "regenerate": MessageLookupByLibrary.simpleMessage("Regenerate"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining Time:"),
     "rename": MessageLookupByLibrary.simpleMessage("Rename"),
+    "report_an_issue_on_github": MessageLookupByLibrary.simpleMessage(
+      "Report an issue on Github",
+    ),
     "reselect_model": MessageLookupByLibrary.simpleMessage("Reselect model"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),

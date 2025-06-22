@@ -1,5 +1,7 @@
 {
   "@@locale": "zh-Hans",
+  "github_repository": "Github 仓库",
+  "report_an_issue_on_github": "在 Github 上报告问题",
   "no_message_to_export": "没有消息可导出",
   "export_conversation_to_txt": "导出会话为 .txt 文件",
   "created_at": "创建时间",

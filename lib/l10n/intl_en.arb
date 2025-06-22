@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "github_repository": "Github Repository",
+  "report_an_issue_on_github": "Report an issue on Github",
   "no_message_to_export": "No message to export",
   "export_conversation_to_txt": "Export conversation to .txt file",
   "created_at": "Created at",

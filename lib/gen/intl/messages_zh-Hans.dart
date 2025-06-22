@@ -176,6 +176,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "生成随机数独",
     ),
     "generating": MessageLookupByLibrary.simpleMessage("生成中..."),
+    "github_repository": MessageLookupByLibrary.simpleMessage("Github 仓库"),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隐藏思维链堆栈"),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "按住录音，松开发送",
@@ -286,6 +287,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "regenerate": MessageLookupByLibrary.simpleMessage("重新生成"),
     "remaining": MessageLookupByLibrary.simpleMessage("剩余时间："),
     "rename": MessageLookupByLibrary.simpleMessage("重命名"),
+    "report_an_issue_on_github": MessageLookupByLibrary.simpleMessage(
+      "在 Github 上报告问题",
+    ),
     "reselect_model": MessageLookupByLibrary.simpleMessage("重新选择模型"),
     "reset": MessageLookupByLibrary.simpleMessage("重置"),
     "resume": MessageLookupByLibrary.simpleMessage("恢复"),
