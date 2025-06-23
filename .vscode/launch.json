@@ -35,7 +35,9 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "args": ["--dart-define=nativeSplashPreserveDurationInMS=9999999"],
+      "args": [
+        //"--dart-define=nativeSplashPreserveDurationInMS=50",
+      ],
       "deviceId": "90313e34"
     },
     {
@@ -44,7 +46,9 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "args": ["--dart-define=nativeSplashPreserveDurationInMS=9999999"],
+      "args": [
+        //"--dart-define=nativeSplashPreserveDurationInMS=50",
+      ],
       "deviceId": "00008140-000641E02EDB001C"
     },
     {
@@ -68,19 +72,11 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "release"
-    },
-    {
-      "name": "macos",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "flutterMode": "debug",
-      "deviceId": "macos"
     }
   ],
   "compounds": [
     {
-      "name": "All",
+      "name": "All (Halo)",
       "configurations": ["debug (Halo) - iOS", "debug (Halo) - Android"]
     }
   ]

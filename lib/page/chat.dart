@@ -1,7 +1,6 @@
 // ignore: unused_import
 import 'dart:developer';
 
-
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
@@ -42,10 +41,12 @@ class _Page extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final completionMode = ref.watch(P.chat.completionMode);
     final selectMessageMode = ref.watch(P.chat.isSharing);
+    final atMainPage = ref.watch(Pager.atMainPage);
 
     if (completionMode) {
       final qb = ref.watch(P.app.qb);
       return Scaffold(
+        resizeToAvoidBottomInset: atMainPage,
         body: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -59,6 +60,7 @@ class _Page extends ConsumerWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: atMainPage,
       body: Stack(
         children: [
           const _List(),

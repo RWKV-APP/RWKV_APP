@@ -73,7 +73,7 @@ class Debugger extends ConsumerWidget {
     const showSocName = false;
     const showSocBrand = false;
     const showIds = false;
-    const showPool = true;
+    const showPool = false;
     const showMessages = false;
     const showEditingIndex = false;
     const showAtMainPage = false;

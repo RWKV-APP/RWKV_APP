@@ -66,55 +66,60 @@ class _Info extends ConsumerWidget {
         onTap: () {
           Settings.show();
         },
-        child: Column(
-          children: [
-            12.h,
-            Row(
-              children: [
-                12.w,
-                iconWidget,
-                8.w,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CAA.stretch,
-                    children: [
-                      const T(
-                        Config.appTitle,
-                        s: TS(s: 20),
-                      ),
-                      Row(
-                        // mainAxisAlignment: MAA.center,
-                        children: [
-                          Flexible(
-                            child: T(
-                              version,
-                              s: const TS(s: 12),
+        child: C(
+          decoration: BoxDecoration(
+            color: kC,
+          ),
+          child: Column(
+            children: [
+              12.h,
+              Row(
+                children: [
+                  12.w,
+                  iconWidget,
+                  8.w,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CAA.stretch,
+                      children: [
+                        const T(
+                          Config.appTitle,
+                          s: TS(s: 20),
+                        ),
+                        Row(
+                          // mainAxisAlignment: MAA.center,
+                          children: [
+                            Flexible(
+                              child: T(
+                                version,
+                                s: const TS(s: 12),
+                              ),
                             ),
-                          ),
-                          Flexible(
-                            child: T(
-                              " ($buildNumber)",
-                              s: const TS(s: 12),
+                            Flexible(
+                              child: T(
+                                " ($buildNumber)",
+                                s: const TS(s: 12),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                8.w,
-                IconButton(
-                  onPressed: () {
-                    Settings.show();
-                  },
-                  icon: (Platform.isIOS || Platform.isMacOS) ? const Icon(CupertinoIcons.ellipsis) : const Icon(Icons.more_vert),
-                ),
-                8.w,
-              ],
-            ),
-            12.h,
-            paddingBottom.h,
-          ],
+                  8.w,
+                  IconButton(
+                    onPressed: () {
+                      Settings.show();
+                    },
+                    icon: (Platform.isIOS || Platform.isMacOS) ? const Icon(CupertinoIcons.ellipsis) : const Icon(Icons.more_vert),
+                  ),
+                  8.w,
+                ],
+              ),
+              12.h,
+              paddingBottom.h,
+            ],
+          ),
         ),
       ),
     );
