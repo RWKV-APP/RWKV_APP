@@ -179,7 +179,7 @@ extension $Preference on _Preference {
   }
 
   FV tryShowBatteryOptimizationDialog(BuildContext context) async {
-    if (!_showBatteryOptimization) {
+    if (!_showBatteryOptimization || !Platform.isAndroid) {
       return;
     }
     final isBatteryOptimizationDisabled = await DisableBatteryOptimization.isBatteryOptimizationDisabled;
