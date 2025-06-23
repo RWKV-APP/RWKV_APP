@@ -7,10 +7,12 @@ icons_launcher:
       enable: true
     macos:
       enable: true
-      image_path: "assets/design/light/icon/desktop/chat.png"
+      image_path: "assets/design/light/icon/macos/chat.png"
     windows:
       enable: true
+      image_path: "assets/design/light/icon/windows/chat.png"
     linux:
       enable: true
+      image_path: "assets/design/light/icon/linux/chat.png"
     web:
       enable: false
