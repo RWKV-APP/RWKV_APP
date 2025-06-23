@@ -1,22 +1,20 @@
 // ignore: unused_import
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
-import 'package:zone/model/local_file.dart';
 import 'package:zone/route/method.dart';
 import 'package:zone/route/router.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 import 'package:zone/state/p.dart';
 
 class ModelItem extends ConsumerWidget {
@@ -101,10 +99,6 @@ class ModelItem extends ConsumerWidget {
     P.rwkv.currentModel.q = fileInfo;
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     pop();
-  }
-
-  void _onDownloadTap() async {
-    P.fileManager.getFile(fileInfo: fileInfo);
   }
 
   @override
@@ -208,7 +202,9 @@ class _DownloadActions extends StatelessWidget {
     }
   }
 
-  void onDownloadTap() async {
+  void onDownloadTap(BuildContext context) async {
+    await P.preference.tryShowBatteryOptimizationDialog(context);
+
     try {
       await P.fileManager.getFile(fileInfo: file);
     } catch (e) {
@@ -228,7 +224,7 @@ class _DownloadActions extends StatelessWidget {
       children: [
         if (showDownload)
           IconButton(
-            onPressed: onDownloadTap,
+            onPressed: () => onDownloadTap(context),
             icon: Icon(Icons.download_rounded),
             visualDensity: VisualDensity.compact,
           ),
@@ -248,7 +244,7 @@ class _DownloadActions extends StatelessWidget {
           ),
         if (showResume)
           IconButton(
-            onPressed: onDownloadTap,
+            onPressed: () => onDownloadTap(context),
             visualDensity: VisualDensity.compact,
             icon: Icon(Icons.play_arrow_rounded),
           ),

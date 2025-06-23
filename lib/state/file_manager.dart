@@ -171,7 +171,12 @@ extension $FileManager on _FileManager {
           },
         );
 
-    await task.start();
+    try {
+      await task.start();
+    } catch (e) {
+      state.q = state.q.copyWith(state: TaskState.stopped);
+      rethrow;
+    }
   }
 
   FV pauseDownload({required FileInfo fileInfo}) async {
