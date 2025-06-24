@@ -20,10 +20,10 @@ dependencies:
   #      ref: dev
 
   rwkv_downloader:
-    path: ../rwkv_downloader
-  #    git:
-  #      url: https://github.com/RWKV-APP/rwkv_downloader.git
-  #      ref: master
+    # path: ../rwkv_downloader
+    git:
+      url: https://github.com/RWKV-APP/rwkv_downloader.git
+      ref: master
 
   photo_viewer:
     git:
