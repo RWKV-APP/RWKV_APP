@@ -83,10 +83,10 @@ class _Page extends ConsumerWidget {
                 children: [
                   const Suggestions(),
                   const BottomBar(),
-                  const AudioInput(),
                 ],
               ),
             ),
+          const AudioInput(),
         ],
       ),
     );

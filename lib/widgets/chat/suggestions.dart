@@ -69,9 +69,9 @@ class Suggestions extends ConsumerWidget {
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Row(
                 children: [
-                  const SizedBox(width: 8),
                   for (var item in suggestions)
                     Padding(
                       padding: EdgeInsets.only(right: 4),
@@ -90,7 +90,6 @@ class Suggestions extends ConsumerWidget {
                         ),
                       ),
                     ),
-                  const SizedBox(width: 8),
                 ],
               ),
             ),
