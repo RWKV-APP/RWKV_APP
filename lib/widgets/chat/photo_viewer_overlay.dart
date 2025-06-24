@@ -25,7 +25,7 @@ class PhotoViewerOverlay extends ConsumerWidget {
             },
             icon: Icon(
               Icons.close,
-              color: qb,
+              color: kW,
             ),
           ),
         ),

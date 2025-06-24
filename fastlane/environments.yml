@@ -1,6 +1,9 @@
 othello:
   app_icon: assets/design/light/icon/othello.png
   app_icon_dark: assets/design/dark/icon/othello.png
+  app_icon_macos: assets/design/light/icon/macos/othello.png
+  app_icon_windows: assets/design/light/icon/windows/othello.png
+  app_icon_linux: assets/design/light/icon/linux/othello.png
   app_splash: assets/design/light/splash/othello.png
   app_splash_dark: assets/design/dark/splash/othello.png
   bundle_id_android: com.rwkv.othello
@@ -17,6 +20,9 @@ othello:
 chat:
   app_icon: assets/design/light/icon/chat.png
   app_icon_dark: assets/design/dark/icon/chat.png
+  app_icon_macos: assets/design/light/icon/macos/chat.png
+  app_icon_windows: assets/design/light/icon/windows/chat.png
+  app_icon_linux: assets/design/light/icon/linux/chat.png
   app_splash: assets/design/light/splash/chat.png
   app_splash_dark: assets/design/dark/splash/chat.png
   bundle_id_android: com.rwkvzone.chat
@@ -33,6 +39,9 @@ chat:
 world:
   app_icon: assets/design/light/icon/world.png
   app_icon_dark: assets/design/dark/icon/world.png
+  app_icon_macos: assets/design/light/icon/macos/world.png
+  app_icon_windows: assets/design/light/icon/windows/world.png
+  app_icon_linux: assets/design/light/icon/linux/world.png
   app_splash: assets/design/light/splash/world.png
   app_splash_dark: assets/design/dark/splash/world.png
   bundle_id_android: com.worldrwkv.android
@@ -49,6 +58,9 @@ world:
 tts:
   app_icon: assets/design/light/icon/tts.png
   app_icon_dark: assets/design/dark/icon/tts.png
+  app_icon_macos: assets/design/light/icon/macos/tts.png
+  app_icon_windows: assets/design/light/icon/windows/tts.png
+  app_icon_linux: assets/design/light/icon/linux/tts.png
   app_splash: assets/design/light/splash/tts.png
   app_splash_dark: assets/design/dark/splash/tts.png
   bundle_id_android: com.rwkv.tts
@@ -65,6 +77,9 @@ tts:
 sudoku:
   app_icon: assets/design/light/icon/sudoku.png
   app_icon_dark: assets/design/dark/icon/sudoku.png
+  app_icon_macos: assets/design/light/icon/macos/sudoku.png
+  app_icon_windows: assets/design/light/icon/windows/sudoku.png
+  app_icon_linux: assets/design/light/icon/linux/sudoku.png
   app_splash: assets/design/light/splash/sudoku.png
   app_splash_dark: assets/design/dark/splash/sudoku.png
   bundle_id_android: com.rwkv.sudoku
@@ -93,6 +108,30 @@ app_icon_dark:
     assets/design/dark/icon/world.png,
     assets/design/dark/icon/tts.png,
     assets/design/dark/icon/sudoku.png
+  ]
+app_icon_macos:
+  [
+    assets/design/light/icon/macos/othello.png,
+    assets/design/light/icon/macos/chat.png,
+    assets/design/light/icon/macos/world.png,
+    assets/design/light/icon/macos/tts.png,
+    assets/design/light/icon/macos/sudoku.png
+  ]
+app_icon_windows:
+  [
+    assets/design/light/icon/windows/othello.png,
+    assets/design/light/icon/windows/chat.png,
+    assets/design/light/icon/windows/world.png,
+    assets/design/light/icon/windows/tts.png,
+    assets/design/light/icon/windows/sudoku.png
+  ]
+app_icon_linux:
+  [
+    assets/design/light/icon/linux/othello.png,
+    assets/design/light/icon/linux/chat.png,
+    assets/design/light/icon/linux/world.png,
+    assets/design/light/icon/linux/tts.png,
+    assets/design/light/icon/linux/sudoku.png
   ]
 app_splash:
   [

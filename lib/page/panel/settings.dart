@@ -93,23 +93,25 @@ class Settings extends ConsumerWidget {
             ),
       child: Scaffold(
         backgroundColor: customTheme.setting,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: T(s.settings),
-          centerTitle: false,
-          backgroundColor: customTheme.setting,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton(
-                onPressed: () {
-                  pop();
-                },
-                icon: const Icon(Icons.close),
+        appBar: isInDrawerMenu
+            ? null
+            : AppBar(
+                automaticallyImplyLeading: false,
+                title: T(s.settings),
+                centerTitle: false,
+                backgroundColor: customTheme.setting,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      onPressed: () {
+                        pop();
+                      },
+                      icon: const Icon(Icons.close),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
         body: ListView(
           padding: EI.o(
             t: paddingTop,
