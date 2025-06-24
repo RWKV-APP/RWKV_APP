@@ -225,14 +225,14 @@ class _DownloadActions extends StatelessWidget {
         if (showDownload)
           IconButton(
             onPressed: () => onDownloadTap(context),
-            icon: Icon(Icons.download_rounded),
+            icon: const Icon(Icons.download_rounded),
             visualDensity: VisualDensity.compact,
           ),
         if (showCancel)
           IconButton(
             visualDensity: VisualDensity.compact,
             onPressed: onCancelTap,
-            icon: Icon(Icons.stop_rounded),
+            icon: const Icon(Icons.stop_rounded),
           ),
         if (showPause)
           IconButton(
@@ -240,13 +240,13 @@ class _DownloadActions extends StatelessWidget {
               P.fileManager.pauseDownload(fileInfo: file);
             },
             visualDensity: VisualDensity.compact,
-            icon: Icon(Icons.pause),
+            icon: const Icon(Icons.pause),
           ),
         if (showResume)
           IconButton(
             onPressed: () => onDownloadTap(context),
             visualDensity: VisualDensity.compact,
-            icon: Icon(Icons.play_arrow_rounded),
+            icon: const Icon(Icons.play_arrow_rounded),
           ),
       ],
     );

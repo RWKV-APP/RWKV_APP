@@ -76,7 +76,7 @@ class _Page extends ConsumerWidget {
           const _NavigationBarBottomLine(),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
           if (!selectMessageMode)
-            Positioned(
+            const Positioned(
               bottom: 0,
               right: 0,
               left: 0,
@@ -84,8 +84,8 @@ class _Page extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Suggestions(),
-                  const BottomBar(),
+                  Suggestions(),
+                  BottomBar(),
                 ],
               ),
             ),

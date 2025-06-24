@@ -157,7 +157,7 @@ extension $FileManager on _FileManager {
 
     task
         .events()
-        .throttleTime(Duration(milliseconds: 1000), trailing: true, leading: false)
+        .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
         .listen(
           (e) {
             qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s');

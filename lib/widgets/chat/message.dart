@@ -491,11 +491,11 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
         AnimatedOpacity(
           opacity: showProgress ? 1 : 0,
           curve: Curves.linear,
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           child: AnimatedSize(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             child: Container(
-              margin: EdgeInsets.only(bottom: 6),
+              margin: const EdgeInsets.only(bottom: 6),
               height: showProgress ? 20 : 0,
               child: Stack(
                 children: [
@@ -508,7 +508,7 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
                         child: CircularProgressIndicator(value: prefill, color: primary, backgroundColor: primary.q(.1)),
                       ),
                       const SizedBox(width: 10),
-                      Text(S.current.analysing_result, style: TextStyle(fontSize: 12)),
+                      Text(S.current.analysing_result, style: const TextStyle(fontSize: 12)),
                       const SizedBox(width: 10),
                     ],
                   ),

@@ -101,9 +101,9 @@ class _WebSearchModeButton extends ConsumerWidget {
                     s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
                   ),
                   4.w,
-                  VerticalDivider(width: 1),
+                  const VerticalDivider(width: 1),
                   PopupMenuButton(
-                    offset: Offset(-30, -80),
+                    offset: const Offset(-30, -80),
                     itemBuilder: (c) {
                       return [
                         PopupMenuItem(value: WebSearchMode.off, child: Text(s.off)),
@@ -123,7 +123,7 @@ class _WebSearchModeButton extends ConsumerWidget {
                     ),
                     child: Container(
                       height: height,
-                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       alignment: Alignment.center,
                       child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
                     ),

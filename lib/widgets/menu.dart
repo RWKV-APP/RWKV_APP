@@ -67,7 +67,7 @@ class _Info extends ConsumerWidget {
           Settings.show();
         },
         child: C(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: kC,
           ),
           child: Column(

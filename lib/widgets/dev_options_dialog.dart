@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/feature_rollout.dart';
 import 'package:zone/state/p.dart' show P;
@@ -55,7 +54,7 @@ class _DevOptionsDialog extends StatefulWidget {
           expand: false,
           snap: true,
           builder: (BuildContext context, ScrollController scrollController) {
-            return _DevOptionsDialog();
+            return const _DevOptionsDialog();
           },
         );
       },
@@ -77,25 +76,25 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 8),
-          Row(
+          const Row(
             children: [
               Expanded(
-                child: const Text(
+                child: Text(
                   "Dev Options",
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                 ),
               ),
-              const CloseButton(),
+              CloseButton(),
             ],
           ),
           const SizedBox(height: 16),
           ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
             leading: const Text('Web Search', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             trailing: Switch(
               value: featureRollout.webSearch,

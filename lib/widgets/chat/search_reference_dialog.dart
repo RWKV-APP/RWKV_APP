@@ -31,7 +31,7 @@ class SearchReferenceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 16),
+      padding: const EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 16),
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -41,7 +41,7 @@ class SearchReferenceDialog extends StatelessWidget {
             children: [
               const SizedBox(width: 6),
               Expanded(child: Text(S.of(context).reference_source, style: theme.textTheme.titleMedium)),
-              CloseButton(),
+              const CloseButton(),
             ],
           ),
           const SizedBox(height: 6),

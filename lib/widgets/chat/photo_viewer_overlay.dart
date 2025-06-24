@@ -23,7 +23,7 @@ class PhotoViewerOverlay extends ConsumerWidget {
             onPressed: () {
               pop();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.close,
               color: kW,
             ),
