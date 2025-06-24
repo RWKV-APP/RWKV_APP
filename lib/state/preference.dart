@@ -17,6 +17,8 @@ class _Preference {
   /// 偏好的深色模式主题
   late final preferredDarkCustomTheme = qs<custom_theme.CustomTheme>(custom_theme.LightsOut());
 
+  bool _showBatteryOptimization = true;
+
   final textScaleFactorSystem = -1.0;
 
   // late final availableTextScaleFactors = [_textScaleFactorSystem, .8, .9, 1.0, 1.1, 1.2, 1.3, 1.4];
@@ -53,6 +55,8 @@ class _Preference {
 extension _$Preference on _Preference {
   FV _init() async {
     final sp = await SharedPreferences.getInstance();
+
+    _showBatteryOptimization = sp.getBool("halo_state.showBatteryOptimizationDialog") ?? true;
 
     final language = sp.getString("halo_state.language");
     if (language != null) {
@@ -172,5 +176,30 @@ extension $Preference on _Preference {
     if (context == null) return;
     if (!context.mounted) return;
     await ThemeSelector.show();
+  }
+
+  FV tryShowBatteryOptimizationDialog(BuildContext context) async {
+    if (!_showBatteryOptimization || !Platform.isAndroid) {
+      return;
+    }
+    final isBatteryOptimizationDisabled = await DisableBatteryOptimization.isBatteryOptimizationDisabled;
+    if (isBatteryOptimizationDisabled == false && context.mounted) {
+      final result = await showOkCancelAlertDialog(
+        context: context,
+        title: S.current.allow_background_downloads,
+        message: S.current.str_please_disable_battery_opt_,
+        okLabel: S.current.go_to_settings,
+        cancelLabel: S.current.dont_ask_again,
+        barrierDismissible: false,
+      );
+      if (result == OkCancelResult.ok) {
+        DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+      }
+      if (result == OkCancelResult.cancel) {
+        _showBatteryOptimization = false;
+        final sp = await SharedPreferences.getInstance();
+        await sp.setBool("halo_state.showBatteryOptimizationDialog", false);
+      }
+    }
   }
 }

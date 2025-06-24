@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1787,6 +1786,41 @@ class S {
   /// `聊天记录`
   String get chat_history {
     return Intl.message('聊天记录', name: 'chat_history', desc: '', args: []);
+  }
+
+  /// `下载失败`
+  String get download_failed {
+    return Intl.message('下载失败', name: 'download_failed', desc: '', args: []);
+  }
+
+  /// `允许后台下载`
+  String get allow_background_downloads {
+    return Intl.message(
+      '允许后台下载',
+      name: 'allow_background_downloads',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停`
+  String get str_please_disable_battery_opt_ {
+    return Intl.message(
+      '请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停',
+      name: 'str_please_disable_battery_opt_',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `去设置`
+  String get go_to_settings {
+    return Intl.message('去设置', name: 'go_to_settings', desc: '', args: []);
+  }
+
+  /// `不再询问`
+  String get dont_ask_again {
+    return Intl.message('不再询问', name: 'dont_ask_again', desc: '', args: []);
   }
 }
 

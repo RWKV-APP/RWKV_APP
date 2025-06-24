@@ -19,6 +19,12 @@ dependencies:
   #      url: https://github.com/MollySophia/rwkv_mobile_flutter
   #      ref: dev
 
+  rwkv_downloader:
+    path: ../rwkv_downloader
+  #    git:
+  #      url: https://github.com/RWKV-APP/rwkv_downloader.git
+  #      ref: master
+
   photo_viewer:
     git:
       url: https://github.com/HaloWang/photo_viewer
@@ -63,6 +69,10 @@ dependencies:
   sprintf: ^7.0.0
   pretty_qr_code: ^3.4.0
   rxdart: ^0.28.0
+  disable_battery_optimization:
+    git:
+      url: https://github.com/pvsvamsi/Disable-Battery-Optimizations
+      ref: 3bd744d
 
 dev_dependencies:
   build_runner: ^2.4.15

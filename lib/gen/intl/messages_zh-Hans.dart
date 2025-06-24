@@ -43,6 +43,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("全部 Prompt"),
+    "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
+      "允许后台下载",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "应用内测群",
@@ -125,8 +128,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "难度必须小于 81",
     ),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "dont_ask_again": MessageLookupByLibrary.simpleMessage("不再询问"),
     "download_all": MessageLookupByLibrary.simpleMessage("下载全部"),
     "download_app": MessageLookupByLibrary.simpleMessage("下载App"),
+    "download_failed": MessageLookupByLibrary.simpleMessage("下载失败"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage("从浏览器下载"),
     "download_missing": MessageLookupByLibrary.simpleMessage("下载缺失文件"),
     "download_model": MessageLookupByLibrary.simpleMessage("下载模型"),
@@ -176,6 +181,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "生成随机数独",
     ),
     "generating": MessageLookupByLibrary.simpleMessage("生成中..."),
+    "go_to_settings": MessageLookupByLibrary.simpleMessage("去设置"),
     "github_repository": MessageLookupByLibrary.simpleMessage("Github 仓库"),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隐藏思维链堆栈"),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
@@ -330,6 +336,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "推荐至少选择1.5B模型，更大的2.9B模型更好",
+    ),
+    "str_please_disable_battery_opt_": MessageLookupByLibrary.simpleMessage(
+      "请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("提交"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入门"),

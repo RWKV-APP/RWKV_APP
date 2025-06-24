@@ -250,5 +250,10 @@
   "more": "更多",
   "str_model_selection_dialog_hint": "推荐至少选择1.5B模型，更大的2.9B模型更好",
   "settings": "设置",
-  "chat_history": "聊天记录"
+  "chat_history": "聊天记录",
+  "download_failed": "下载失败",
+  "allow_background_downloads": "允许后台下载",
+  "str_please_disable_battery_opt_": "请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停",
+  "go_to_settings": "去设置",
+  "dont_ask_again": "不再询问"
 }

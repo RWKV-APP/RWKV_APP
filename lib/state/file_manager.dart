@@ -4,7 +4,7 @@ part of 'p.dart';
 
 class _FileManager {
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
-    return LocalFile(fileInfo: key, targetPath: ref.watch(paths(key)));
+    return LocalFile(targetPath: ref.watch(paths(key)));
   });
 
   late final paths = qsff<FileInfo, String>((ref, key) {
@@ -28,7 +28,8 @@ class _FileManager {
 
   late final ttsCores = qs<Set<FileInfo>>({});
 
-  late final downloader = bd.FileDownloader();
+  // model-name to download-task map
+  late final downloadTasks = <String, DownloadTask>{};
 }
 
 /// Public methods
@@ -101,86 +102,95 @@ extension $FileManager on _FileManager {
       final state = locals(fileInfo);
       state.q = state.q.copyWith(hasFile: fileSizeVerified);
     }
+    await _initModelDownloadTaskState();
+  }
+
+  FV _initModelDownloadTaskState() async {
+    await HF.wait(17);
+    final availableFiles = availableModels.q;
+    final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
+    for (final fileInfo in availableFiles) {
+      final taskId = fileInfo.fileName;
+
+      if (downloadTasks.containsKey(taskId)) {
+        continue;
+      }
+      final path = paths(fileInfo).q;
+      final url = fileInfo.raw.startsWith("http://") || fileInfo.raw.startsWith("https://")
+          ? fileInfo.raw
+          : sprintf(urlFmt, [fileInfo.raw]);
+      final fileState = locals(fileInfo);
+      try {
+        final task = await DownloadTask.create(url: url, path: path);
+        qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
+        fileState.q = fileState.q.copyWith(
+          hasFile: task.state == TaskState.completed,
+          state: task.state,
+        );
+        downloadTasks[taskId] = task;
+      } catch (e) {
+        qqe(e);
+        fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
+      }
+    }
   }
 
   FV getFile({required FileInfo fileInfo}) async {
-    /// resume download if needed
-    try {
-      bd.Task? task;
-      final records = await downloader.database.allRecords();
-      final r = records.firstWhereOrNull((e) => e.task.filename == fileInfo.fileName);
-      task = r?.task;
-      qqq("try resume task: $task");
-
-      if (task != null) {
-        final canResume = await downloader.taskCanResume(task);
-        if (canResume) {
-          await downloader.resume(task as bd.DownloadTask);
-          qqq("#### resume download ####: ${fileInfo.fileName}");
-          return;
-        }
-        await downloader.database.deleteRecordWithId(task.taskId);
-        qqq('task cannot resume');
-      }
-    } catch (e) {
-      qqe(e);
-    }
-
-    final fileName = fileInfo.fileName;
     final url = downloadSource.q.prefix + fileInfo.raw + downloadSource.q.suffix;
+    final path = paths(fileInfo).q;
+
+    qqq('start download file: \n>>url:$url\n>>path:$path');
+
+    DownloadTask? task = downloadTasks[fileInfo.fileName];
+    if (task == null) {
+      task = await DownloadTask.create(url: url, path: path);
+      downloadTasks[fileInfo.fileName] = task;
+    }
     final state = locals(fileInfo);
-    qqq("fileKey: $fileInfo\nfileName: $fileName\nurl: $url");
+
+    task
+        .events()
+        .throttleTime(Duration(milliseconds: 1000), trailing: true, leading: false)
+        .listen(
+          (e) {
+            qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s');
+            state.q = state.q.copyWith(
+              timeRemaining: Duration(seconds: e.remainSeconds.round().clamp(0, 60 * 60 * 24)),
+              progress: e.progress,
+              state: e.state,
+              networkSpeed: e.speedInMB,
+              hasFile: e.state == TaskState.completed,
+            );
+          },
+          onError: (e) {
+            qqe(e);
+            Alert.error(S.current.download_failed);
+          },
+          onDone: () {
+            qqq('event done');
+          },
+        );
 
     try {
-      state.q = state.q.copyWith(state: DownloadLoadState.none);
-
-      final task = bd.DownloadTask(
-        taskId: url,
-        url: url,
-        baseDirectory: bd.BaseDirectory.applicationDocuments,
-        filename: fileName,
-        updates: bd.Updates.statusAndProgress,
-        // request status and progress updates
-        requiresWiFi: false,
-        retries: 5,
-        allowPause: true,
-        metaData: fileInfo.fileName,
-        httpRequestMethod: "GET",
-      );
-
-      state.q = state.q.copyWith(downloadTaskId: task.taskId);
-
-      final success = await downloader.enqueue(task);
-
-      if (!success) {
-        throw Exception("Enqueue failed");
-      }
+      await task.start();
     } catch (e) {
-      qqe("getFile error: $e");
-      state.q = state.q.copyWith(state: DownloadLoadState.none);
+      state.q = state.q.copyWith(state: TaskState.stopped);
+      rethrow;
     }
   }
 
   FV pauseDownload({required FileInfo fileInfo}) async {
-    final taskId = locals(fileInfo).q.downloadTaskId;
-    if (taskId == null) throw Exception("😡 TaskId is null");
-    final task = await downloader.taskForId(taskId);
-    if (task == null) throw Exception("😡 Task not found");
-    await downloader.pause(task as bd.DownloadTask);
+    final task = downloadTasks[fileInfo.fileName];
+    task?.stop();
+    final state = locals(fileInfo);
+    state.q = state.q.copyWith(state: TaskState.stopped);
   }
 
   FV cancelDownload({required FileInfo fileInfo}) async {
+    final task = downloadTasks[fileInfo.fileName];
+    await task?.cancel();
     final state = locals(fileInfo);
-    final value = state.q;
-
-    if (value.state != DownloadLoadState.downloading) throw Exception("😡 Download not in progress");
-
-    final taskId = value.downloadTaskId;
-
-    if (taskId == null) throw Exception("😡 Task ID not found");
-
-    await downloader.cancelTaskWithId(taskId);
-    state.q = value.copyWith(state: DownloadLoadState.none, downloadTaskId: null);
+    state.q = state.q.copyWith(state: TaskState.idle);
   }
 
   FV deleteFile({required FileInfo fileInfo}) async {
@@ -196,7 +206,7 @@ extension $FileManager on _FileManager {
     }
     final path = paths(fileInfo).q;
     await File(path).delete();
-    state.q = value.copyWith(hasFile: false);
+    state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
   }
 }
 
@@ -206,80 +216,7 @@ extension _$FileManager on _FileManager {
     // 1. check file
     // 2. check zip file
     await syncAvailableModels();
-    await downloader.ready;
-    downloader.updates.listen(_onTaskUpdate);
-    await _updateTaskRecord();
-    await downloader.trackTasks();
-    await checkLocal();
-    downloader.pauseAll();
-  }
-
-  FV _updateTaskRecord() async {
-    try {
-      final allRecords = await downloader.database.allRecords();
-      for (final record in allRecords) {
-        qqq("check record: ${record.status}, ${record.progress.toStringAsFixed(2)}, ${record.task.filename}");
-        switch (record.status) {
-          case bd.TaskStatus.waitingToRetry:
-          case bd.TaskStatus.failed:
-          case bd.TaskStatus.running:
-            await downloader.database.updateRecord(
-              record.copyWith(status: bd.TaskStatus.paused),
-            );
-            break;
-          case bd.TaskStatus.enqueued:
-          case bd.TaskStatus.complete:
-          case bd.TaskStatus.notFound:
-          case bd.TaskStatus.canceled:
-            await downloader.database.deleteRecordWithId(record.taskId);
-            break;
-          case bd.TaskStatus.paused:
-          // do nothing
-        }
-      }
-    } catch (e) {
-      qqe(e);
-    }
-  }
-
-  void _onTaskUpdate(bd.TaskUpdate taskUpdate) async {
-    final task = taskUpdate.task;
-    final taskId = task.taskId;
-
-    final pair = _all.q.firstWhereOrNull((e) {
-      final lf = locals(e).q;
-      return lf.fileName == task.metaData || lf.downloadTaskId == taskId;
-    });
-
-    if (pair == null) {
-      final task = await downloader.taskForId(taskId);
-      qqe("_onTaskUpdate: taskId: $taskId not found, ${task?.toJson()}");
-      downloader.cancelTaskWithId(taskId);
-      return;
-    }
-    final state = locals(pair);
-
-    switch (taskUpdate) {
-      case bd.TaskProgressUpdate update:
-        qqq("task_update_progress: ${update.progress.toStringAsFixed(2)} => ${task.filename}");
-        final progress = update.progress;
-        final networkSpeed = update.networkSpeed;
-        final timeRemaining = update.timeRemaining;
-        final done = progress >= 1.0;
-        state.q = state.q.copyWith(
-          progress: progress,
-          downloadTaskId: taskId,
-          state: DownloadLoadState.downloading,
-          networkSpeed: done ? state.q.networkSpeed : networkSpeed,
-          timeRemaining: done ? state.q.timeRemaining : timeRemaining,
-        );
-        return;
-      case bd.TaskStatusUpdate update:
-        qqq("task_update_status:  ${update.status}, ${task.filename}, ${update.exception}");
-        state.q = state.q.copyWith(state: DownloadLoadState.from(update));
-        checkLocal();
-        return;
-    }
+    //
   }
 }
 

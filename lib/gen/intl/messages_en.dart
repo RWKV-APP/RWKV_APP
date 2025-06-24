@@ -46,6 +46,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "all_done": MessageLookupByLibrary.simpleMessage("All Done"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("All Prompt"),
+    "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
+      "Allow background downloads",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "Application Internal Test Group",
@@ -152,8 +155,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Difficulty must be less than 81",
     ),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "dont_ask_again": MessageLookupByLibrary.simpleMessage("Don\'t ask again"),
     "download_all": MessageLookupByLibrary.simpleMessage("Download All"),
     "download_app": MessageLookupByLibrary.simpleMessage("Download App"),
+    "download_failed": MessageLookupByLibrary.simpleMessage("Download Failed"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage(
       "Download from browser",
     ),
@@ -217,6 +222,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Generate Random Sudoku Puzzle",
     ),
     "generating": MessageLookupByLibrary.simpleMessage("Generating..."),
+    "go_to_settings": MessageLookupByLibrary.simpleMessage("Go to settings"),
     "github_repository": MessageLookupByLibrary.simpleMessage(
       "Github Repository",
     ),
@@ -431,6 +437,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "We recommend choosing at least the 1.5B model, 2.9B is preferable.",
+    ),
+    "str_please_disable_battery_opt_": MessageLookupByLibrary.simpleMessage(
+      "Please disable battery optimization to allow background downloads, otherwise downloads may pause when switching to other apps",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Easy"),
