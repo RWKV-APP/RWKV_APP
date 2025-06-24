@@ -52,11 +52,16 @@ extension _$Conversation on _Conversation {
 /// Public methods
 extension $Conversation on _Conversation {
   FV load() async {
-    qqq(HF.microseconds);
-    final db = P.app._db;
-    final list = await db.convPage();
-    qqq("${list.length}");
-    conversations.q = list;
+    try {
+      qqq(HF.microseconds);
+      final db = P.app._db;
+      final list = await db.convPage();
+      qqq("${list.length}");
+      conversations.q = list;
+    } catch (e) {
+      qqq(e);
+      Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
   }
 
   FV onTapInList(ConversationData conversation) async {

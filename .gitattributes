@@ -9,3 +9,5 @@
 /**/*.g.dart -diff
 /lib/gen/intl/* -diff
 /lib/gen/l10n.dart -diff
+
+lib/db/db.g.dart diff
