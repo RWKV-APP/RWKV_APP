@@ -121,7 +121,11 @@ extension $FileManager on _FileManager {
           : sprintf(urlFmt, [fileInfo.raw]);
       final fileState = locals(fileInfo);
       try {
-        final task = await DownloadTask.create(url: url, path: path);
+        final task = await DownloadTask.create(
+          url: url,
+          path: path,
+          acceptedSize: fileInfo.fileSize,
+        );
         qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
         fileState.q = fileState.q.copyWith(
           hasFile: task.state == TaskState.completed,
@@ -146,6 +150,9 @@ extension $FileManager on _FileManager {
       task = await DownloadTask.create(url: url, path: path);
       downloadTasks[fileInfo.fileName] = task;
     }
+
+    if (task.state == TaskState.running) return;
+
     final state = locals(fileInfo);
 
     task
@@ -170,6 +177,8 @@ extension $FileManager on _FileManager {
             qqq('event done');
           },
         );
+
+    state.q = state.q.copyWith(progress: 0, state: TaskState.running);
 
     try {
       await task.start();

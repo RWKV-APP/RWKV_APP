@@ -691,7 +691,7 @@ extension _$Chat on _Chat {
                     "top_n": 3,
                     'is_deepsearch': deepSearch,
                   },
-                ).timeout(const Duration(seconds: 3))
+                ).timeout(const Duration(seconds: 10))
                 as dynamic;
         qqq('web search mode: ${webSearch.q}');
         final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
