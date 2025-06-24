@@ -86,7 +86,7 @@ extension $Chat on _Chat {
 
     focusNode.unfocus();
     final textToSend = textInInput.q.trim();
-    textInInput.uc();
+    textInInput.q = "";
 
     final _editingBotMessage = P.msg.editingBotMessage.q;
 
@@ -95,6 +95,7 @@ extension $Chat on _Chat {
       final currentMessages = [...P.msg.list.q];
       final _editingIndex = P.msg.editingOrRegeneratingIndex.q!;
       final currentMessage = currentMessages[_editingIndex];
+      receiveId.q = id;
 
       final newMsg = Message(
         id: id,
@@ -145,7 +146,7 @@ extension $Chat on _Chat {
 
     final textToSend = textInInput.q.trim();
     if (textToSend.isEmpty) return;
-    textInInput.uc();
+    textInInput.q = "";
     focusNode.unfocus();
     await send(textToSend);
   }
@@ -163,7 +164,7 @@ extension $Chat on _Chat {
   FV onTapClearInput() async {
     qq;
     textEditingController.clear();
-    textInInput.uc();
+    textInInput.q = "";
     P.msg.editingOrRegeneratingIndex.q = null;
   }
 
@@ -189,7 +190,7 @@ extension $Chat on _Chat {
 
     final userMessage = P.msg.list.q[index - 1];
     P.msg.editingOrRegeneratingIndex.q = index;
-    textInInput.uc();
+    textInInput.q = "";
     focusNode.unfocus();
     if (userMessage.type == MessageType.userAudio) {
       await send(
@@ -441,7 +442,7 @@ extension _$Chat on _Chat {
     } else {
       if (_autoPauseId.q != null) {
         resumeMessageById(id: _autoPauseId.q!, withHaptic: false);
-        _autoPauseId.uc();
+        _autoPauseId.q = null;
       }
     }
     qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
@@ -517,7 +518,7 @@ extension _$Chat on _Chat {
       final path = file.path;
       qqq("new file received: $path, length: $length");
       P.tts.selectSourceAudioPath.q = path;
-      P.tts.selectedSpkName.uc();
+      P.tts.selectedSpkName.q = null;
     }
   }
 

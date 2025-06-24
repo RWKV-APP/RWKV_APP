@@ -1,0 +1,17 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    avoid_function_literals_in_foreach_calls: false
+    no_leading_underscores_for_local_identifiers: false
+    prefer_adjacent_string_concatenation: false
+    prefer_function_declarations_over_variables: false
+    prefer_interpolation_to_compose_strings: false
+
+    prefer_const_constructors: false
+    prefer_const_constructors_in_immutables: false
+    prefer_const_literals_to_create_immutables: false
+
+formatter:
+  page_width: 140
+  trailing_commas: preserve

@@ -167,8 +167,8 @@ extension _$World on _World {
     qq;
 
     imagePath.q = null;
-    imageHeight.uc();
-    visualFloatHeight.uc();
+    imageHeight.q = null;
+    visualFloatHeight.q = null;
     startTime.q = 0;
     endTime.q = 0;
     audioDuration.q = 0;
@@ -237,8 +237,8 @@ extension _$World on _World {
 
     P.chat.clearMessages();
     imagePath.q = null;
-    imageHeight.uc();
-    visualFloatHeight.uc();
+    imageHeight.q = null;
+    visualFloatHeight.q = null;
     startTime.q = 0;
     endTime.q = 0;
     audioDuration.q = 0;

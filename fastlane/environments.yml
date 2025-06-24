@@ -1,6 +1,8 @@
 othello:
-  app_icon: assets/icon/icon.othello.png
-  app_icon_dark: assets/icon/dark/othello.png
+  app_icon: assets/design/light/icon/othello.png
+  app_icon_dark: assets/design/dark/icon/othello.png
+  app_splash: assets/design/light/splash/othello.png
+  app_splash_dark: assets/design/dark/splash/othello.png
   bundle_id_android: com.rwkv.othello
   bundle_id_ios: com.rwkvothello.ios
   file_android_path: android/app/src/main/kotlin/com/rwkv/zone/MainActivity.kt
@@ -13,8 +15,10 @@ othello:
   fp: static final firstPage = PageKey.othello.name;
 
 chat:
-  app_icon: assets/icon/icon.chat.png
-  app_icon_dark: assets/icon/dark/chat.png
+  app_icon: assets/design/light/icon/chat.png
+  app_icon_dark: assets/design/dark/icon/chat.png
+  app_splash: assets/design/light/splash/chat.png
+  app_splash_dark: assets/design/dark/splash/chat.png
   bundle_id_android: com.rwkvzone.chat
   bundle_id_ios: com.rwkv.chat.v7.100m
   file_android_path: android/app/src/main/kotlin/com/rwkvzone/chat/MainActivity.kt
@@ -27,8 +31,10 @@ chat:
   fp: static final firstPage = PageKey.chat.name;
 
 world:
-  app_icon: assets/icon/icon.world.png
-  app_icon_dark: assets/icon/dark/world.png
+  app_icon: assets/design/light/icon/world.png
+  app_icon_dark: assets/design/dark/icon/world.png
+  app_splash: assets/design/light/splash/world.png
+  app_splash_dark: assets/design/dark/splash/world.png
   bundle_id_android: com.worldrwkv.android
   bundle_id_ios: com.world.rwkv.ios
   file_android_path: android/app/src/main/kotlin/com/worldrwkv/android/MainActivity.kt
@@ -41,8 +47,10 @@ world:
   fp: static final firstPage = PageKey.chat.name;
 
 tts:
-  app_icon: assets/icon/icon.tts.png
-  app_icon_dark: assets/icon/dark/tts.png
+  app_icon: assets/design/light/icon/tts.png
+  app_icon_dark: assets/design/dark/icon/tts.png
+  app_splash: assets/design/light/splash/tts.png
+  app_splash_dark: assets/design/dark/splash/tts.png
   bundle_id_android: com.rwkv.tts
   bundle_id_ios: com.rwkvtts.ios
   file_android_path: android/app/src/main/kotlin/com/rwkv/tts/MainActivity.kt
@@ -55,8 +63,10 @@ tts:
   fp: static final firstPage = PageKey.chat.name;
 
 sudoku:
-  app_icon: assets/icon/icon.sudoku.png
-  app_icon_dark: assets/icon/dark/sudoku.png
+  app_icon: assets/design/light/icon/sudoku.png
+  app_icon_dark: assets/design/dark/icon/sudoku.png
+  app_splash: assets/design/light/splash/sudoku.png
+  app_splash_dark: assets/design/dark/splash/sudoku.png
   bundle_id_android: com.rwkv.sudoku
   bundle_id_ios: com.rwkvsudoku.ios
   file_android_path: android/app/src/main/kotlin/com/rwkv/sudoku/MainActivity.kt
@@ -70,19 +80,35 @@ sudoku:
 
 app_icon:
   [
-    assets/icon/icon.othello.png,
-    assets/icon/icon.chat.png,
-    assets/icon/icon.world.png,
-    assets/icon/icon.tts.png,
-    assets/icon/icon.sudoku.png
+    assets/design/light/icon/othello.png,
+    assets/design/light/icon/chat.png,
+    assets/design/light/icon/world.png,
+    assets/design/light/icon/tts.png,
+    assets/design/light/icon/sudoku.png
   ]
 app_icon_dark:
   [
-    assets/icon/dark/othello.png,
-    assets/icon/dark/chat.png,
-    assets/icon/dark/world.png,
-    assets/icon/dark/tts.png,
-    assets/icon/dark/sudoku.png
+    assets/design/dark/icon/othello.png,
+    assets/design/dark/icon/chat.png,
+    assets/design/dark/icon/world.png,
+    assets/design/dark/icon/tts.png,
+    assets/design/dark/icon/sudoku.png
+  ]
+app_splash:
+  [
+    assets/design/light/splash/othello.png,
+    assets/design/light/splash/chat.png,
+    assets/design/light/splash/world.png,
+    assets/design/light/splash/tts.png,
+    assets/design/light/splash/sudoku.png
+  ]
+app_splash_dark:
+  [
+    assets/design/dark/splash/othello.png,
+    assets/design/dark/splash/chat.png,
+    assets/design/dark/splash/world.png,
+    assets/design/dark/splash/tts.png,
+    assets/design/dark/splash/sudoku.png
   ]
 bundle_id_ios:
   [

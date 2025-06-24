@@ -250,6 +250,16 @@ class Settings extends ConsumerWidget {
                 showArrow: false,
               ),
             FormItem(
+              title: s.github_repository,
+              icon: Icon(Icons.code, color: qb.q(.667), size: 16),
+              onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP", mode: LaunchMode.externalApplication),
+            ),
+            FormItem(
+              title: s.report_an_issue_on_github,
+              icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
+              onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP/issues/new", mode: LaunchMode.externalApplication),
+            ),
+            FormItem(
               isSectionEnd: true,
               title: s.license,
               icon: Icon(Icons.contact_page_outlined, color: qb.q(.667), size: 16),

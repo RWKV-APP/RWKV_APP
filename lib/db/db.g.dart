@@ -73,7 +73,7 @@ class $_ConversationTable extends _Conversation
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'conv';
+  static const String $name = 'conversation';
   @override
   VerificationContext validateIntegrity(
     Insertable<ConversationData> instance, {

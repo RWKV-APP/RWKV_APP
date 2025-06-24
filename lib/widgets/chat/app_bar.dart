@@ -17,6 +17,7 @@ import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/pager.dart';
 import 'package:sprintf/sprintf.dart';
 
+// TODO: rename the file name to chat_app_bar.dart
 class ChatAppBar extends ConsumerWidget {
   const ChatAppBar({super.key});
 
