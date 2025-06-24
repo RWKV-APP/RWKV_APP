@@ -32,6 +32,7 @@ class _RWKV {
 
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
+  late final prefillProgress = qs<double>(.0);
   late final argumentsPanelShown = qs(false);
 
   late final arguments = qsff<Argument, double>((ref, argument) {
@@ -483,7 +484,6 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-
     send(to_rwkv.ChatAsync(messages, reasoning: thinkingMode.q.hasThinkTag));
 
     if (_getTokensTimer != null) {
@@ -890,6 +890,7 @@ extension _$RWKV on _RWKV {
       case from_rwkv.Speed response:
         prefillSpeed.q = response.prefillSpeed;
         decodeSpeed.q = response.decodeSpeed;
+        prefillProgress.q = response.prefillProgress;
 
       case from_rwkv.StreamResponse response:
         final decodeSpeed = response.decodeSpeed;

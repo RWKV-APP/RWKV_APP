@@ -1,5 +1,11 @@
 part of 'p.dart';
 
+enum WebSearchMode {
+  off,
+  search,
+  deepSearch,
+}
+
 class _Chat {
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
@@ -23,6 +29,8 @@ class _Chat {
   @Deprecated("Use P.rwkv.receiving instead")
   late final receivingTokens = qs(false);
 
+  late final prefillPercentage = qs(0.0);
+
   /// TODO: Should be moved to state/rwkv.dart
   late final receivedTokens = qs("");
 
@@ -42,6 +50,8 @@ class _Chat {
 
   late final completionMode = qs(false);
 
+  late final webSearch = qs(WebSearchMode.off);
+
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 }
 
@@ -49,6 +59,20 @@ class _Chat {
 extension $Chat on _Chat {
   void clearMessages() {
     P.msg._clear();
+  }
+
+  void onSwitchWebSearchMode(WebSearchMode? mode) async {
+    final receiving = receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+    if (mode != null) {
+      webSearch.q = mode;
+      return;
+    }
+    final enabled = webSearch.q != WebSearchMode.off;
+    webSearch.q = enabled ? WebSearchMode.off : WebSearchMode.search;
   }
 
   FV onSendButtonPressed() async {
@@ -303,30 +327,16 @@ extension $Chat on _Chat {
       return;
     }
 
-    // TODO: @WangCe: Use _history() instead
-    final historyMessage = P.msg.list.q
-        .where((e) {
-          return e.type != MessageType.userImage;
-        })
-        .m((e) {
-          if (!e.isReasoning) return e.content;
-          if (!e.isCotFormat) return e.content;
-          if (!e.containsCotEndMark) return e.content;
-          final (cotContent, cotResult) = e.cotContentAndResult;
-          return cotResult;
-        });
+    final receiveId = HF.milliseconds + 1;
+    this.receiveId.q = receiveId;
 
-    final history = withHistory ? historyMessage : [message];
+    var history = withHistory ? _history() : <String>[];
 
-    P.rwkv.sendMessages(history);
     P.msg.editingOrRegeneratingIndex.q = null;
 
     receivedTokens.q = "";
     receivingTokens.q = true;
 
-    final receiveId = HF.milliseconds + 1;
-
-    this.receiveId.q = receiveId;
     final receiveMsg = Message(
       id: receiveId,
       content: "",
@@ -342,6 +352,9 @@ extension $Chat on _Chat {
     parentNode.add(MsgNode(receiveId));
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
+
+    history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
+    P.rwkv.sendMessages(history);
 
     _checkSensitive(message);
   }
@@ -438,15 +451,25 @@ extension _$Chat on _Chat {
   }
 
   List<String> _history() {
-    final history = P.msg.list.q.where((msg) => msg.type == MessageType.text).m((e) {
-      if (!e.isReasoning) return e.content;
-      if (!e.isCotFormat) return e.content;
-      if (!e.containsCotEndMark) return e.content;
-      if (e.paused) return e.content;
-      final (cotContent, cotResult) = e.cotContentAndResult;
-      return cotResult;
-    });
-    return history;
+    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
+
+    if (messages.isEmpty) {
+      return [];
+    }
+
+    final result = <String>[];
+    final iterator = messages.iterator;
+    Message mine;
+    Message? bot;
+    while (iterator.moveNext()) {
+      mine = iterator.current;
+      bot = iterator.moveNext() ? iterator.current : null;
+      final content = mine.getContentForHistoryWithRef(bot?.reference);
+      result.add(content);
+      if (bot == null) break;
+      result.add(bot.getContentForHistory());
+    }
+    return result;
   }
 
   void _onReceivingTokensChanged(bool next) async {}
@@ -559,6 +582,7 @@ extension _$Chat on _Chat {
     double? ttsOverallProgress,
     List<double>? ttsPerWavProgress,
     List<String>? ttsFilePaths,
+    RefInfo? reference,
   }) {
     if (completionMode.q) {
       return;
@@ -574,6 +598,7 @@ extension _$Chat on _Chat {
       isMine: isMine,
       changing: changing,
       type: type,
+      reference: reference,
       imageUrl: imageUrl,
       audioUrl: audioUrl,
       audioLength: audioLength,
@@ -646,5 +671,42 @@ extension _$Chat on _Chat {
     final demoType = P.app.demoType.q;
     if (demoType != DemoType.chat && demoType != DemoType.world) return;
     receivingTokens.q = false;
+  }
+
+  Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
+    RefInfo ref = RefInfo.empty();
+
+    if (webSearch.q != WebSearchMode.off) {
+      ref = ref.copyWith(enable: true);
+      try {
+        final last = allMessage.removeLast();
+        final deepSearch = webSearch.q == WebSearchMode.deepSearch;
+        _updateMessageById(id: receiveId, reference: ref);
+        final resp =
+            await _post(
+                  'https://auth.rwkvos.com/api/internet_search',
+                  token: 'x8rYbL3KfGp2Nq1zT9wVvJ0iQ5sUoAeX7HcM4',
+                  body: {
+                    "query": last,
+                    "top_n": 3,
+                    'is_deepsearch': deepSearch,
+                  },
+                ).timeout(const Duration(seconds: 3))
+                as dynamic;
+        qqq('web search mode: ${webSearch.q}');
+        final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
+        ref = ref.copyWith(list: refs);
+        final r = refs.map((e) => e.summary).join("\n");
+        allMessage.add("$r\n$last");
+      } catch (e) {
+        ref = ref.copyWith(error: e.toString());
+        qqe(e);
+      }
+    }
+    Future.delayed(50.ms, () {
+      _updateMessageById(id: receiveId, reference: ref);
+    });
+
+    return allMessage;
   }
 }

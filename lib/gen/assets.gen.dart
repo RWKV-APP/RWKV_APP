@@ -192,11 +192,11 @@ class $AssetsLibQnnGen {
 class $AssetsModelChatGen {
   const $AssetsModelChatGen();
 
-  /// File path: assets/model/chat/.gitkeep
-  String get aGitkeep => 'assets/model/chat/.gitkeep';
+  /// File path: assets/model/chat/q
+  String get q => 'assets/model/chat/q';
 
   /// List of all assets
-  List<String> get values => [aGitkeep];
+  List<String> get values => [q];
 }
 
 class Assets {

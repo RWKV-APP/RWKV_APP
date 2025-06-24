@@ -9,6 +9,9 @@
     "share_chat_qrcode_zh": "https://rwkvos.com/",
     "share_chat_qrcode_en": "https://github.com/MollySophia/rwkv_mobile_flutter",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
+    "controlled_rollout": {
+      "web_search": false
+    },
     "model_config": [
       {
         "name": "RWKV7-G1 0.1B",

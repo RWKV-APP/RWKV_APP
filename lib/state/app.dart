@@ -29,6 +29,8 @@ class _App extends RawApp {
   late final isMobile = qp((ref) => ref.watch(_isMobile));
   final _isMobile = qs(true);
 
+  late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
+
   /// 当前应用的主题
   late final customTheme = qs<custom_theme.CustomTheme>(custom_theme.Light());
 
@@ -356,6 +358,8 @@ extension _$App on _App {
     shareChatQrCodeEn.q = config["share_chat_qrcode_en"];
     shareChatQrCodeZh.q = config["share_chat_qrcode_zh"];
     iosUrl.q = config["ios_url"].toString();
+    featureRollout.q = FeatureRollout.fromMap(config["controlled_rollout"]);
+
     await P.fileManager.syncAvailableModels();
     await P.fileManager.checkLocal();
   }

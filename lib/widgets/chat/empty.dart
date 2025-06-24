@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/state/p.dart';
+import 'package:zone/widgets/dev_options_dialog.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class Empty extends ConsumerWidget {
@@ -56,7 +57,7 @@ class Empty extends ConsumerWidget {
                   crossAxisAlignment: CAA.center,
                   children: [
                     const Spacer(),
-                    Image.asset(logoPath, width: 140),
+                    WithDevOption(child: Image.asset(logoPath, width: 140)),
                     12.h,
                     T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
                     12.h,

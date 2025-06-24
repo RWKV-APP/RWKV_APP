@@ -49,9 +49,6 @@ class Suggestions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
-    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final inputHeight = ref.watch(P.chat.inputHeight);
-
     List<dynamic> suggestions = ref.watch(P.suggestion.suggestion);
     final config = ref.watch(P.suggestion.config);
 
@@ -59,53 +56,49 @@ class Suggestions extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    double bottom = paddingBottom + 114;
-
-    if (demoType == DemoType.tts) {
-      bottom += inputHeight - 114 - paddingBottom;
-    }
-
     final showAllPromptButton = demoType == DemoType.chat && config.chat.length > 1;
+    final primary = Theme.of(context).colorScheme.primary;
+    final qb = P.app.qb.q;
+    final qw = P.app.qw.q;
 
-    return Positioned(
-      bottom: bottom,
-      left: 0,
-      right: 0,
-      height: Suggestions.defaultHeight,
+    return SizedBox(
+      width: double.infinity,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            child: _buildRndPromptList(context, suggestions),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Row(
+                children: [
+                  for (var item in suggestions)
+                    Padding(
+                      padding: EdgeInsets.only(right: 4),
+                      child: OutlinedButton(
+                        onPressed: () => _onSuggestionTap(item),
+                        style: TextButton.styleFrom(
+                          foregroundColor: primary,
+                          backgroundColor: Platform.isIOS ? qw.q(.9) : qw,
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                          visualDensity: VisualDensity.compact,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
+                        child: Text(
+                          item is Suggestion ? item.display : item.toString(),
+                          style: TextStyle(fontSize: 14, color: qb, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
           if (showAllPromptButton) 8.w,
           if (showAllPromptButton) _buildAllButton(context),
           if (showAllPromptButton) 8.w,
         ],
       ),
-    );
-  }
-
-  Widget _buildRndPromptList(
-    BuildContext context,
-    List suggestions,
-  ) {
-    final primary = Theme.of(context).colorScheme.primary;
-    return ListView(
-      padding: const EI.o(l: 8, b: 8, t: 2),
-      scrollDirection: Axis.horizontal,
-      children: suggestions.map((e) {
-        String displayText = '';
-        if (e is Suggestion) {
-          displayText = e.display;
-        } else {
-          displayText = e.toString();
-        }
-        return _buildTag(
-          displayText,
-          color: primary,
-          onTap: () => _onSuggestionTap(e),
-        );
-      }).toList(),
     );
   }
 
@@ -121,46 +114,9 @@ class Suggestions extends ConsumerWidget {
       style: TextButton.styleFrom(
         visualDensity: VisualDensity.compact,
         padding: const EI.s(v: 0, h: 8),
-        shape: OutlinedBorder.lerp(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          0,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Text(S.of(context).more),
-    );
-  }
-
-  Widget _buildTag(String text, {required Color color, required VoidCallback? onTap}) {
-    final qw = P.app.qw.q;
-    final customTheme = P.app.customTheme.q;
-    return GD(
-      onTap: onTap,
-      child: C(
-        alignment: Alignment.center,
-        decoration: BD(
-          color: Platform.isIOS ? qw.q(.9) : qw,
-          borderRadius: 6.r,
-          border: Border.all(
-            color: color,
-            width: .5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: customTheme.scaffold,
-              blurRadius: 10,
-              offset: const Offset(0, 0),
-            ),
-          ],
-        ),
-        margin: const EI.o(r: 8, t: 4),
-        padding: const EI.s(v: 4, h: 8),
-        child: T(text, s: const TS(s: 16)),
-      ),
     );
   }
 }

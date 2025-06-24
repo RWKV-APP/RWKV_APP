@@ -26,42 +26,37 @@ class BottomBar extends ConsumerWidget {
 
     final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: MeasureSize(
-        onChange: (size) {
-          P.chat.inputHeight.q = size.height;
-        },
-        child: ClipRRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-            child: C(
-              decoration: BD(
-                color: scaffoldBackgroundColor.q(.8),
-                border: Border(
-                  top: BorderSide(
-                    color: primary.q(.33),
-                    width: .5,
-                  ),
+    return MeasureSize(
+      onChange: (size) {
+        P.chat.inputHeight.q = size.height;
+      },
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: C(
+            decoration: BD(
+              color: scaffoldBackgroundColor.q(.8),
+              border: Border(
+                top: BorderSide(
+                  color: primary.q(.33),
+                  width: .5,
                 ),
               ),
-              padding: EI.o(
-                l: 10,
-                r: 10,
-                b: paddingBottom + 12,
-                t: 12,
-              ),
-              child: AnimatedSize(
-                duration: 250.ms,
-                child: Column(
-                  children: [
-                    const _TextField(),
-                    if (demoType != DemoType.tts) const BottomInteractions(),
-                    if (demoType == DemoType.tts) const TTSBottomInteractions(),
-                  ],
-                ),
+            ),
+            padding: EI.o(
+              l: 10,
+              r: 10,
+              b: paddingBottom + 12,
+              t: 12,
+            ),
+            child: AnimatedSize(
+              duration: 250.ms,
+              child: Column(
+                children: [
+                  const _TextField(),
+                  if (demoType != DemoType.tts) const BottomInteractions(),
+                  if (demoType == DemoType.tts) const TTSBottomInteractions(),
+                ],
               ),
             ),
           ),

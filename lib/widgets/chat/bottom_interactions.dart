@@ -38,16 +38,102 @@ class _Interactions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final demoType = ref.watch(P.app.demoType);
+    final features = ref.watch(P.app.featureRollout);
     return Wrap(
       spacing: 4,
       runSpacing: 4,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: _SelectImageButton()),
+        if (features.webSearch && demoType == DemoType.chat) const _WebSearchModeButton(),
         if (demoType == DemoType.chat) const _ThinkingModeButton(),
         if (demoType == DemoType.chat) const _SecondaryOptionsButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
+    );
+  }
+}
+
+class _WebSearchModeButton extends ConsumerWidget {
+  const _WebSearchModeButton();
+
+  void _onTap() {
+    P.chat.onSwitchWebSearchMode(null);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final primary = Theme.of(context).colorScheme.primary;
+    final loading = ref.watch(P.rwkv.loading);
+    final qw = ref.watch(P.app.qw);
+    final webSearch = ref.watch(P.chat.webSearch);
+
+    final enabled = webSearch != WebSearchMode.off;
+    final color = enabled ? primary : kC;
+    final borderColor = enabled ? primary : primary.q(.5);
+    final textColor = enabled ? qw : primary.q(.5);
+
+    final textScaleFactor = MediaQuery.textScalerOf(context);
+    final height = textScaleFactor.scale(14) + 20;
+    final padding = const EI.o(l: 8);
+    return IntrinsicWidth(
+      child: AnimatedOpacity(
+        opacity: loading ? .33 : 1,
+        duration: 250.ms,
+        child: GD(
+          onTap: _onTap,
+          child: SB(
+            height: height,
+            child: C(
+              padding: padding,
+              decoration: BD(
+                color: color,
+                border: Border.all(color: borderColor),
+                borderRadius: 10.r,
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.travel_explore, color: textColor, size: 18),
+                  2.w,
+                  T(
+                    webSearch == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
+                    s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                  ),
+                  4.w,
+                  VerticalDivider(width: 1),
+                  PopupMenuButton(
+                    offset: Offset(-30, -80),
+                    itemBuilder: (c) {
+                      return [
+                        PopupMenuItem(value: WebSearchMode.off, child: Text(s.off)),
+                        PopupMenuItem(value: WebSearchMode.search, child: Text(s.web_search)),
+                        PopupMenuItem(value: WebSearchMode.deepSearch, child: Text(s.deep_web_search)),
+                      ];
+                    },
+                    onSelected: (mode) {
+                      P.chat.onSwitchWebSearchMode(mode);
+                    },
+                    initialValue: webSearch,
+                    popUpAnimationStyle: AnimationStyle(
+                      curve: Curves.linear,
+                      duration: 250.ms,
+                      reverseCurve: Curves.linear,
+                      reverseDuration: 250.ms,
+                    ),
+                    child: Container(
+                      height: height,
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      alignment: Alignment.center,
+                      child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

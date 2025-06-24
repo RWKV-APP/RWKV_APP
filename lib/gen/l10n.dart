@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1789,6 +1788,51 @@ class S {
     return Intl.message('聊天记录', name: 'chat_history', desc: '', args: []);
   }
 
+  /// `搜索`
+  String get search {
+    return Intl.message('搜索', name: 'search', desc: '', args: []);
+  }
+
+  /// `参考源`
+  String get reference_source {
+    return Intl.message('参考源', name: 'reference_source', desc: '', args: []);
+  }
+
+  /// `正在分析搜索结果`
+  String get analysing_result {
+    return Intl.message(
+      '正在分析搜索结果',
+      name: 'analysing_result',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已找到 %d 个相关网页`
+  String get x_pages_found {
+    return Intl.message(
+      '已找到 %d 个相关网页',
+      name: 'x_pages_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `关闭`
+  String get off {
+    return Intl.message('关闭', name: 'off', desc: '', args: []);
+  }
+
+  /// `联网`
+  String get web_search {
+    return Intl.message('联网', name: 'web_search', desc: '', args: []);
+  }
+
+  /// `深度联网`
+  String get deep_web_search {
+    return Intl.message('深度联网', name: 'deep_web_search', desc: '', args: []);
+  }
+
   /// `下载失败`
   String get download_failed {
     return Intl.message('下载失败', name: 'download_failed', desc: '', args: []);
@@ -1822,6 +1866,11 @@ class S {
   /// `不再询问`
   String get dont_ask_again {
     return Intl.message('不再询问', name: 'dont_ask_again', desc: '', args: []);
+  }
+
+  /// `搜索中...`
+  String get searching {
+    return Intl.message('搜索中...', name: 'searching', desc: '', args: []);
   }
 }
 

@@ -49,6 +49,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
       "Allow background downloads",
     ),
+    "analysing_result": MessageLookupByLibrary.simpleMessage(
+      "Analysing Search Result",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "Application Internal Test Group",
@@ -139,6 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("Dark Mode Theme"),
     "decode": MessageLookupByLibrary.simpleMessage("Decode"),
+    "deep_web_search": MessageLookupByLibrary.simpleMessage("DeepSearch"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
@@ -290,6 +294,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("No Sudoku"),
     "number": MessageLookupByLibrary.simpleMessage("Number"),
+    "off": MessageLookupByLibrary.simpleMessage("Off"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
@@ -373,6 +378,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "recording_your_voice": MessageLookupByLibrary.simpleMessage(
       "Recording your voice...",
     ),
+    "reference_source": MessageLookupByLibrary.simpleMessage(
+      "Reference Source",
+    ),
     "regenerate": MessageLookupByLibrary.simpleMessage("Regenerate"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining Time:"),
     "rename": MessageLookupByLibrary.simpleMessage("Rename"),
@@ -387,8 +395,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
+    "search": MessageLookupByLibrary.simpleMessage("Search"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("Search Breadth"),
     "search_depth": MessageLookupByLibrary.simpleMessage("Search Depth"),
+    "searching": MessageLookupByLibrary.simpleMessage("Searching..."),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Select a Model"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Select a World Type",
@@ -479,6 +489,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("Very Small (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("Voice Cloning"),
+    "web_search": MessageLookupByLibrary.simpleMessage("Search"),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV",
     ),
@@ -486,6 +497,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
+    "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
     "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",

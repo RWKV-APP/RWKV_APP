@@ -251,9 +251,17 @@
   "str_model_selection_dialog_hint": "推荐至少选择1.5B模型，更大的2.9B模型更好",
   "settings": "设置",
   "chat_history": "聊天记录",
+  "search": "搜索",
+  "reference_source": "参考源",
+  "analysing_result": "正在分析搜索结果",
+  "x_pages_found": "已找到 %d 个相关网页",
+  "off": "关闭",
+  "web_search": "联网",
+  "deep_web_search": "深度联网",
   "download_failed": "下载失败",
   "allow_background_downloads": "允许后台下载",
   "str_please_disable_battery_opt_": "请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停",
   "go_to_settings": "去设置",
-  "dont_ask_again": "不再询问"
+  "dont_ask_again": "不再询问",
+  "searching": "搜索中..."
 }
