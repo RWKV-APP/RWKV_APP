@@ -1,7 +1,6 @@
 // ignore: unused_import
 import 'dart:developer';
 
-
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
@@ -73,9 +72,21 @@ class _Page extends ConsumerWidget {
           ),
           const _NavigationBarBottomLine(),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
-          if (!selectMessageMode) const Suggestions(),
-          if (!selectMessageMode) const BottomBar(),
-          if (!selectMessageMode) const AudioInput(),
+          if (!selectMessageMode)
+            Positioned(
+              bottom: 0,
+              right: 0,
+              left: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Suggestions(),
+                  const BottomBar(),
+                  const AudioInput(),
+                ],
+              ),
+            ),
         ],
       ),
     );
