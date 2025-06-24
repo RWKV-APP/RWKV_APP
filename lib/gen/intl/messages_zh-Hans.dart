@@ -181,8 +181,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "生成随机数独",
     ),
     "generating": MessageLookupByLibrary.simpleMessage("生成中..."),
-    "go_to_settings": MessageLookupByLibrary.simpleMessage("去设置"),
     "github_repository": MessageLookupByLibrary.simpleMessage("Github 仓库"),
+    "go_to_settings": MessageLookupByLibrary.simpleMessage("去设置"),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隐藏思维链堆栈"),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "按住录音，松开发送",

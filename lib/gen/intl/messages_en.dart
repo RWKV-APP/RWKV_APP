@@ -222,10 +222,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Generate Random Sudoku Puzzle",
     ),
     "generating": MessageLookupByLibrary.simpleMessage("Generating..."),
-    "go_to_settings": MessageLookupByLibrary.simpleMessage("Go to settings"),
     "github_repository": MessageLookupByLibrary.simpleMessage(
       "Github Repository",
     ),
+    "go_to_settings": MessageLookupByLibrary.simpleMessage("Go to settings"),
     "hide_stack": MessageLookupByLibrary.simpleMessage("Hide Thought Stack"),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "Hold to record, release to send",
