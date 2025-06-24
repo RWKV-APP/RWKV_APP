@@ -51,6 +51,7 @@ import 'package:zone/model/argument.dart';
 import 'package:zone/model/cell_type.dart';
 import 'package:zone/model/cot_display_state.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/feature_rollout.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/group_info.dart';
 import 'package:zone/model/language.dart';

@@ -1786,7 +1786,8 @@ class S {
   /// `聊天记录`
   String get chat_history {
     return Intl.message('聊天记录', name: 'chat_history', desc: '', args: []);
-  
+  }
+
   /// `搜索`
   String get search {
     return Intl.message('搜索', name: 'search', desc: '', args: []);
@@ -1801,36 +1802,22 @@ class S {
   String get analysing_result {
     return Intl.message(
       '正在分析搜索结果',
-
-  /// `下载失败`
-  String get download_failed {
-    return Intl.message('下载失败', name: 'download_failed', desc: '', args: []);
-  }
-
-  /// `允许后台下载`
-  String get allow_background_downloads {
-    return Intl.message(
-      '允许后台下载',
-      name: 'allow_background_downloads',
-
+      name: 'analysing_result',
       desc: '',
       args: [],
     );
   }
+
   /// `已找到 %d 个相关网页`
   String get x_pages_found {
     return Intl.message(
       '已找到 %d 个相关网页',
       name: 'x_pages_found',
-
-  /// `请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停`
-  String get str_please_disable_battery_opt_ {
-    return Intl.message(
-      '请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停',
       desc: '',
       args: [],
     );
   }
+
   /// `关闭`
   String get off {
     return Intl.message('关闭', name: 'off', desc: '', args: []);
@@ -1844,6 +1831,33 @@ class S {
   /// `深度联网`
   String get deep_web_search {
     return Intl.message('深度联网', name: 'deep_web_search', desc: '', args: []);
+  }
+
+  /// `下载失败`
+  String get download_failed {
+    return Intl.message('下载失败', name: 'download_failed', desc: '', args: []);
+  }
+
+  /// `允许后台下载`
+  String get allow_background_downloads {
+    return Intl.message(
+      '允许后台下载',
+      name: 'allow_background_downloads',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停`
+  String get str_please_disable_battery_opt_ {
+    return Intl.message(
+      '请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停',
+      name: 'str_please_disable_battery_opt_',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `去设置`
   String get go_to_settings {
     return Intl.message('去设置', name: 'go_to_settings', desc: '', args: []);

@@ -43,10 +43,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("全部 Prompt"),
-    "analysing_result": MessageLookupByLibrary.simpleMessage("正在分析搜索结果"),
     "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
       "允许后台下载",
     ),
+    "analysing_result": MessageLookupByLibrary.simpleMessage("正在分析搜索结果"),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "应用内测群",

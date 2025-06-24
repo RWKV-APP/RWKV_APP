@@ -1386,9 +1386,11 @@ packages:
   rwkv_downloader:
     dependency: "direct main"
     description:
-      path: "../rwkv_downloader"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: d4b90eaf5185cd15325d18f4ddff5c06224568b0
+      url: "https://github.com/RWKV-APP/rwkv_downloader.git"
+    source: git
     version: "0.0.1"
   rwkv_mobile_flutter:
     dependency: "direct main"

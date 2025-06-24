@@ -46,10 +46,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "all_done": MessageLookupByLibrary.simpleMessage("All Done"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("All Prompt"),
-    "analysing_result": MessageLookupByLibrary.simpleMessage(
-      "Analysing Search Result",
     "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
       "Allow background downloads",
+    ),
+    "analysing_result": MessageLookupByLibrary.simpleMessage(
+      "Analysing Search Result",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
@@ -496,7 +497,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "you_are_now_using": m6
+    "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

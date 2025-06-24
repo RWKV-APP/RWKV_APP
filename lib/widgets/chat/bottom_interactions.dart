@@ -38,13 +38,14 @@ class _Interactions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final demoType = ref.watch(P.app.demoType);
+    final features = ref.watch(P.app.featureRollout);
     return Wrap(
       spacing: 4,
       runSpacing: 4,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: _SelectImageButton()),
-        if (demoType == DemoType.chat) const _WebSearchModeButton(),
+        if (features.webSearch && demoType == DemoType.chat) const _WebSearchModeButton(),
         if (demoType == DemoType.chat) const _ThinkingModeButton(),
         if (demoType == DemoType.chat) const _SecondaryOptionsButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
