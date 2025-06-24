@@ -112,6 +112,8 @@ class Shape1 extends i0.VersionedTable {
       columnsByName['id']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get content =>
       columnsByName['content']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get reference =>
+      columnsByName['reference']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<bool> get isMine =>
       columnsByName['is_mine']! as i1.GeneratedColumn<bool>;
   i1.GeneratedColumn<String> get type =>
@@ -120,8 +122,6 @@ class Shape1 extends i0.VersionedTable {
       columnsByName['is_reasoning']! as i1.GeneratedColumn<bool>;
   i1.GeneratedColumn<bool> get paused =>
       columnsByName['paused']! as i1.GeneratedColumn<bool>;
-  i1.GeneratedColumn<String> get reference =>
-      columnsByName['reference']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get imageUrl =>
       columnsByName['image_url']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get audioUrl =>
@@ -168,7 +168,14 @@ i1.GeneratedColumn<String> _column_6(String aliasedName) =>
       false,
       type: i1.DriftSqlType.string,
     );
-i1.GeneratedColumn<bool> _column_7(String aliasedName) =>
+i1.GeneratedColumn<String> _column_7(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'reference',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+    );
+i1.GeneratedColumn<bool> _column_8(String aliasedName) =>
     i1.GeneratedColumn<bool>(
       'is_mine',
       aliasedName,
@@ -178,14 +185,14 @@ i1.GeneratedColumn<bool> _column_7(String aliasedName) =>
         'CHECK ("is_mine" IN (0, 1))',
       ),
     );
-i1.GeneratedColumn<String> _column_8(String aliasedName) =>
+i1.GeneratedColumn<String> _column_9(String aliasedName) =>
     i1.GeneratedColumn<String>(
       'type',
       aliasedName,
       false,
       type: i1.DriftSqlType.string,
     );
-i1.GeneratedColumn<bool> _column_9(String aliasedName) =>
+i1.GeneratedColumn<bool> _column_10(String aliasedName) =>
     i1.GeneratedColumn<bool>(
       'is_reasoning',
       aliasedName,
@@ -195,7 +202,7 @@ i1.GeneratedColumn<bool> _column_9(String aliasedName) =>
         'CHECK ("is_reasoning" IN (0, 1))',
       ),
     );
-i1.GeneratedColumn<bool> _column_10(String aliasedName) =>
+i1.GeneratedColumn<bool> _column_11(String aliasedName) =>
     i1.GeneratedColumn<bool>(
       'paused',
       aliasedName,
@@ -204,13 +211,6 @@ i1.GeneratedColumn<bool> _column_10(String aliasedName) =>
       defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
         'CHECK ("paused" IN (0, 1))',
       ),
-    );
-i1.GeneratedColumn<String> _column_11(String aliasedName) =>
-    i1.GeneratedColumn<String>(
-      'reference',
-      aliasedName,
-      true,
-      type: i1.DriftSqlType.string,
     );
 i1.GeneratedColumn<String> _column_12(String aliasedName) =>
     i1.GeneratedColumn<String>(

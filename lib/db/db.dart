@@ -23,7 +23,7 @@ class _Conversation extends Table {
 
   // TODO: I think it's a bug of drift, the table name is not correct, when I set it to "conv", it will be "conversations" on Android.
   @override
-  String? get tableName => "conversation";
+  String? get tableName => "conv";
 
   IntColumn get createdAtUS => integer()();
 
@@ -45,27 +45,45 @@ class _Msg extends Table {
   String? get tableName => "msg";
 
   IntColumn get id => integer()();
+
   TextColumn get content => text()();
+
+  TextColumn get reference => text().nullable()();
+
   BoolColumn get isMine => boolean()();
+
   TextColumn get type => text()();
+
   BoolColumn get isReasoning => boolean()();
+
   BoolColumn get paused => boolean()();
 
   TextColumn get imageUrl => text().nullable()();
+
   TextColumn get audioUrl => text().nullable()();
+
   IntColumn get audioLength => integer().nullable()();
+
   BoolColumn get isSensitive => boolean().withDefault(const Constant(false))();
 
   IntColumn get ttsCFMSteps => integer().nullable()();
+
   TextColumn get ttsTarget => text().nullable()();
+
   TextColumn get ttsSpeakerName => text().nullable()();
+
   TextColumn get ttsSourceAudioPath => text().nullable()();
+
   TextColumn get ttsInstruction => text().nullable()();
+
   RealColumn get ttsOverallProgress => real().nullable()();
+
   TextColumn get ttsPerWavProgress => text().nullable()();
+
   TextColumn get ttsFilePaths => text().nullable()();
 
   TextColumn get modelName => text().nullable()();
+
   TextColumn get runningMode => text().nullable()();
 
   TextColumn get build => text()();

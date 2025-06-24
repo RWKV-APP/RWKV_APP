@@ -73,7 +73,7 @@ class $_ConversationTable extends _Conversation
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'conversation';
+  static const String $name = 'conv';
   @override
   VerificationContext validateIntegrity(
     Insertable<ConversationData> instance, {
@@ -393,6 +393,17 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _referenceMeta = const VerificationMeta(
+    'reference',
+  );
+  @override
+  late final GeneratedColumn<String> reference = GeneratedColumn<String>(
+    'reference',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isMineMeta = const VerificationMeta('isMine');
   @override
   late final GeneratedColumn<bool> isMine = GeneratedColumn<bool>(
@@ -439,17 +450,6 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("paused" IN (0, 1))',
     ),
-  );
-  static const VerificationMeta _referenceMeta = const VerificationMeta(
-    'reference',
-  );
-  @override
-  late final GeneratedColumn<String> reference = GeneratedColumn<String>(
-    'reference',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
   );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
@@ -623,11 +623,11 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
   List<GeneratedColumn> get $columns => [
     id,
     content,
+    reference,
     isMine,
     type,
     isReasoning,
     paused,
-    reference,
     imageUrl,
     audioUrl,
     audioLength,
@@ -667,6 +667,12 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     } else if (isInserting) {
       context.missing(_contentMeta);
     }
+    if (data.containsKey('reference')) {
+      context.handle(
+        _referenceMeta,
+        reference.isAcceptableOrUnknown(data['reference']!, _referenceMeta),
+      );
+    }
     if (data.containsKey('is_mine')) {
       context.handle(
         _isMineMeta,
@@ -701,12 +707,6 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
       );
     } else if (isInserting) {
       context.missing(_pausedMeta);
-    }
-    if (data.containsKey('reference')) {
-      context.handle(
-        _referenceMeta,
-        reference.isAcceptableOrUnknown(data['reference']!, _referenceMeta),
-      );
     }
     if (data.containsKey('image_url')) {
       context.handle(
@@ -847,6 +847,10 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         DriftSqlType.string,
         data['${effectivePrefix}content'],
       )!,
+      reference: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference'],
+      ),
       isMine: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_mine'],
@@ -863,10 +867,6 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         DriftSqlType.bool,
         data['${effectivePrefix}paused'],
       )!,
-      reference: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}reference'],
-      ),
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -939,11 +939,11 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
 class _MsgData extends DataClass implements Insertable<_MsgData> {
   final int id;
   final String content;
+  final String? reference;
   final bool isMine;
   final String type;
   final bool isReasoning;
   final bool paused;
-  final String? reference;
   final String? imageUrl;
   final String? audioUrl;
   final int? audioLength;
@@ -962,11 +962,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   const _MsgData({
     required this.id,
     required this.content,
+    this.reference,
     required this.isMine,
     required this.type,
     required this.isReasoning,
     required this.paused,
-    this.reference,
     this.imageUrl,
     this.audioUrl,
     this.audioLength,
@@ -988,13 +988,13 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['content'] = Variable<String>(content);
+    if (!nullToAbsent || reference != null) {
+      map['reference'] = Variable<String>(reference);
+    }
     map['is_mine'] = Variable<bool>(isMine);
     map['type'] = Variable<String>(type);
     map['is_reasoning'] = Variable<bool>(isReasoning);
     map['paused'] = Variable<bool>(paused);
-    if (!nullToAbsent || reference != null) {
-      map['reference'] = Variable<String>(reference);
-    }
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
     }
@@ -1043,13 +1043,13 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     return _MsgCompanion(
       id: Value(id),
       content: Value(content),
+      reference: reference == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reference),
       isMine: Value(isMine),
       type: Value(type),
       isReasoning: Value(isReasoning),
       paused: Value(paused),
-      reference: reference == null && nullToAbsent
-          ? const Value.absent()
-          : Value(reference),
       imageUrl: imageUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(imageUrl),
@@ -1102,11 +1102,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     return _MsgData(
       id: serializer.fromJson<int>(json['id']),
       content: serializer.fromJson<String>(json['content']),
+      reference: serializer.fromJson<String?>(json['reference']),
       isMine: serializer.fromJson<bool>(json['isMine']),
       type: serializer.fromJson<String>(json['type']),
       isReasoning: serializer.fromJson<bool>(json['isReasoning']),
       paused: serializer.fromJson<bool>(json['paused']),
-      reference: serializer.fromJson<String?>(json['reference']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
       audioUrl: serializer.fromJson<String?>(json['audioUrl']),
       audioLength: serializer.fromJson<int?>(json['audioLength']),
@@ -1136,11 +1136,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'content': serializer.toJson<String>(content),
+      'reference': serializer.toJson<String?>(reference),
       'isMine': serializer.toJson<bool>(isMine),
       'type': serializer.toJson<String>(type),
       'isReasoning': serializer.toJson<bool>(isReasoning),
       'paused': serializer.toJson<bool>(paused),
-      'reference': serializer.toJson<String?>(reference),
       'imageUrl': serializer.toJson<String?>(imageUrl),
       'audioUrl': serializer.toJson<String?>(audioUrl),
       'audioLength': serializer.toJson<int?>(audioLength),
@@ -1162,11 +1162,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   _MsgData copyWith({
     int? id,
     String? content,
+    Value<String?> reference = const Value.absent(),
     bool? isMine,
     String? type,
     bool? isReasoning,
     bool? paused,
-    Value<String?> reference = const Value.absent(),
     Value<String?> imageUrl = const Value.absent(),
     Value<String?> audioUrl = const Value.absent(),
     Value<int?> audioLength = const Value.absent(),
@@ -1185,11 +1185,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   }) => _MsgData(
     id: id ?? this.id,
     content: content ?? this.content,
+    reference: reference.present ? reference.value : this.reference,
     isMine: isMine ?? this.isMine,
     type: type ?? this.type,
     isReasoning: isReasoning ?? this.isReasoning,
     paused: paused ?? this.paused,
-    reference: reference.present ? reference.value : this.reference,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
     audioUrl: audioUrl.present ? audioUrl.value : this.audioUrl,
     audioLength: audioLength.present ? audioLength.value : this.audioLength,
@@ -1220,13 +1220,13 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     return _MsgData(
       id: data.id.present ? data.id.value : this.id,
       content: data.content.present ? data.content.value : this.content,
+      reference: data.reference.present ? data.reference.value : this.reference,
       isMine: data.isMine.present ? data.isMine.value : this.isMine,
       type: data.type.present ? data.type.value : this.type,
       isReasoning: data.isReasoning.present
           ? data.isReasoning.value
           : this.isReasoning,
       paused: data.paused.present ? data.paused.value : this.paused,
-      reference: data.reference.present ? data.reference.value : this.reference,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       audioUrl: data.audioUrl.present ? data.audioUrl.value : this.audioUrl,
       audioLength: data.audioLength.present
@@ -1270,11 +1270,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     return (StringBuffer('_MsgData(')
           ..write('id: $id, ')
           ..write('content: $content, ')
+          ..write('reference: $reference, ')
           ..write('isMine: $isMine, ')
           ..write('type: $type, ')
           ..write('isReasoning: $isReasoning, ')
           ..write('paused: $paused, ')
-          ..write('reference: $reference, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('audioUrl: $audioUrl, ')
           ..write('audioLength: $audioLength, ')
@@ -1298,11 +1298,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   int get hashCode => Object.hashAll([
     id,
     content,
+    reference,
     isMine,
     type,
     isReasoning,
     paused,
-    reference,
     imageUrl,
     audioUrl,
     audioLength,
@@ -1325,11 +1325,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       (other is _MsgData &&
           other.id == this.id &&
           other.content == this.content &&
+          other.reference == this.reference &&
           other.isMine == this.isMine &&
           other.type == this.type &&
           other.isReasoning == this.isReasoning &&
           other.paused == this.paused &&
-          other.reference == this.reference &&
           other.imageUrl == this.imageUrl &&
           other.audioUrl == this.audioUrl &&
           other.audioLength == this.audioLength &&
@@ -1350,11 +1350,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
 class _MsgCompanion extends UpdateCompanion<_MsgData> {
   final Value<int> id;
   final Value<String> content;
+  final Value<String?> reference;
   final Value<bool> isMine;
   final Value<String> type;
   final Value<bool> isReasoning;
   final Value<bool> paused;
-  final Value<String?> reference;
   final Value<String?> imageUrl;
   final Value<String?> audioUrl;
   final Value<int?> audioLength;
@@ -1373,11 +1373,11 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   const _MsgCompanion({
     this.id = const Value.absent(),
     this.content = const Value.absent(),
+    this.reference = const Value.absent(),
     this.isMine = const Value.absent(),
     this.type = const Value.absent(),
     this.isReasoning = const Value.absent(),
     this.paused = const Value.absent(),
-    this.reference = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.audioUrl = const Value.absent(),
     this.audioLength = const Value.absent(),
@@ -1397,11 +1397,11 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   _MsgCompanion.insert({
     this.id = const Value.absent(),
     required String content,
+    this.reference = const Value.absent(),
     required bool isMine,
     required String type,
     required bool isReasoning,
     required bool paused,
-    this.reference = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.audioUrl = const Value.absent(),
     this.audioLength = const Value.absent(),
@@ -1426,11 +1426,11 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   static Insertable<_MsgData> custom({
     Expression<int>? id,
     Expression<String>? content,
+    Expression<String>? reference,
     Expression<bool>? isMine,
     Expression<String>? type,
     Expression<bool>? isReasoning,
     Expression<bool>? paused,
-    Expression<String>? reference,
     Expression<String>? imageUrl,
     Expression<String>? audioUrl,
     Expression<int>? audioLength,
@@ -1450,11 +1450,11 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (content != null) 'content': content,
+      if (reference != null) 'reference': reference,
       if (isMine != null) 'is_mine': isMine,
       if (type != null) 'type': type,
       if (isReasoning != null) 'is_reasoning': isReasoning,
       if (paused != null) 'paused': paused,
-      if (reference != null) 'reference': reference,
       if (imageUrl != null) 'image_url': imageUrl,
       if (audioUrl != null) 'audio_url': audioUrl,
       if (audioLength != null) 'audio_length': audioLength,
@@ -1478,11 +1478,11 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   _MsgCompanion copyWith({
     Value<int>? id,
     Value<String>? content,
+    Value<String?>? reference,
     Value<bool>? isMine,
     Value<String>? type,
     Value<bool>? isReasoning,
     Value<bool>? paused,
-    Value<String?>? reference,
     Value<String?>? imageUrl,
     Value<String?>? audioUrl,
     Value<int?>? audioLength,
@@ -1502,11 +1502,11 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     return _MsgCompanion(
       id: id ?? this.id,
       content: content ?? this.content,
+      reference: reference ?? this.reference,
       isMine: isMine ?? this.isMine,
       type: type ?? this.type,
       isReasoning: isReasoning ?? this.isReasoning,
       paused: paused ?? this.paused,
-      reference: reference ?? this.reference,
       imageUrl: imageUrl ?? this.imageUrl,
       audioUrl: audioUrl ?? this.audioUrl,
       audioLength: audioLength ?? this.audioLength,
@@ -1534,6 +1534,9 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
+    if (reference.present) {
+      map['reference'] = Variable<String>(reference.value);
+    }
     if (isMine.present) {
       map['is_mine'] = Variable<bool>(isMine.value);
     }
@@ -1545,9 +1548,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     }
     if (paused.present) {
       map['paused'] = Variable<bool>(paused.value);
-    }
-    if (reference.present) {
-      map['reference'] = Variable<String>(reference.value);
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
@@ -1602,11 +1602,11 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     return (StringBuffer('_MsgCompanion(')
           ..write('id: $id, ')
           ..write('content: $content, ')
+          ..write('reference: $reference, ')
           ..write('isMine: $isMine, ')
           ..write('type: $type, ')
           ..write('isReasoning: $isReasoning, ')
           ..write('paused: $paused, ')
-          ..write('reference: $reference, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('audioUrl: $audioUrl, ')
           ..write('audioLength: $audioLength, ')
@@ -1847,11 +1847,11 @@ typedef $$_MsgTableCreateCompanionBuilder =
     _MsgCompanion Function({
       Value<int> id,
       required String content,
+      Value<String?> reference,
       required bool isMine,
       required String type,
       required bool isReasoning,
       required bool paused,
-      Value<String?> reference,
       Value<String?> imageUrl,
       Value<String?> audioUrl,
       Value<int?> audioLength,
@@ -1872,11 +1872,11 @@ typedef $$_MsgTableUpdateCompanionBuilder =
     _MsgCompanion Function({
       Value<int> id,
       Value<String> content,
+      Value<String?> reference,
       Value<bool> isMine,
       Value<String> type,
       Value<bool> isReasoning,
       Value<bool> paused,
-      Value<String?> reference,
       Value<String?> imageUrl,
       Value<String?> audioUrl,
       Value<int?> audioLength,
@@ -1912,6 +1912,11 @@ class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isMine => $composableBuilder(
     column: $table.isMine,
     builder: (column) => ColumnFilters(column),
@@ -1929,11 +1934,6 @@ class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
 
   ColumnFilters<bool> get paused => $composableBuilder(
     column: $table.paused,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get reference => $composableBuilder(
-    column: $table.reference,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2031,6 +2031,11 @@ class $$_MsgTableOrderingComposer extends Composer<_$AppDatabase, $_MsgTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isMine => $composableBuilder(
     column: $table.isMine,
     builder: (column) => ColumnOrderings(column),
@@ -2048,11 +2053,6 @@ class $$_MsgTableOrderingComposer extends Composer<_$AppDatabase, $_MsgTable> {
 
   ColumnOrderings<bool> get paused => $composableBuilder(
     column: $table.paused,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get reference => $composableBuilder(
-    column: $table.reference,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2147,6 +2147,9 @@ class $$_MsgTableAnnotationComposer
   GeneratedColumn<String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
 
+  GeneratedColumn<String> get reference =>
+      $composableBuilder(column: $table.reference, builder: (column) => column);
+
   GeneratedColumn<bool> get isMine =>
       $composableBuilder(column: $table.isMine, builder: (column) => column);
 
@@ -2160,9 +2163,6 @@ class $$_MsgTableAnnotationComposer
 
   GeneratedColumn<bool> get paused =>
       $composableBuilder(column: $table.paused, builder: (column) => column);
-
-  GeneratedColumn<String> get reference =>
-      $composableBuilder(column: $table.reference, builder: (column) => column);
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
@@ -2260,11 +2260,11 @@ class $$_MsgTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> content = const Value.absent(),
+                Value<String?> reference = const Value.absent(),
                 Value<bool> isMine = const Value.absent(),
                 Value<String> type = const Value.absent(),
                 Value<bool> isReasoning = const Value.absent(),
                 Value<bool> paused = const Value.absent(),
-                Value<String?> reference = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
                 Value<String?> audioUrl = const Value.absent(),
                 Value<int?> audioLength = const Value.absent(),
@@ -2283,11 +2283,11 @@ class $$_MsgTableTableManager
               }) => _MsgCompanion(
                 id: id,
                 content: content,
+                reference: reference,
                 isMine: isMine,
                 type: type,
                 isReasoning: isReasoning,
                 paused: paused,
-                reference: reference,
                 imageUrl: imageUrl,
                 audioUrl: audioUrl,
                 audioLength: audioLength,
@@ -2308,11 +2308,11 @@ class $$_MsgTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String content,
+                Value<String?> reference = const Value.absent(),
                 required bool isMine,
                 required String type,
                 required bool isReasoning,
                 required bool paused,
-                Value<String?> reference = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
                 Value<String?> audioUrl = const Value.absent(),
                 Value<int?> audioLength = const Value.absent(),
@@ -2331,11 +2331,11 @@ class $$_MsgTableTableManager
               }) => _MsgCompanion.insert(
                 id: id,
                 content: content,
+                reference: reference,
                 isMine: isMine,
                 type: type,
                 isReasoning: isReasoning,
                 paused: paused,
-                reference: reference,
                 imageUrl: imageUrl,
                 audioUrl: audioUrl,
                 audioLength: audioLength,
