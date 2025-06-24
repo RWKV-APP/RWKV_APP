@@ -263,5 +263,6 @@
   "allow_background_downloads": "Allow background downloads",
   "str_please_disable_battery_opt_": "Please disable battery optimization to allow background downloads, otherwise downloads may pause when switching to other apps",
   "go_to_settings": "Go to settings",
-  "dont_ask_again": "Don't ask again"
+  "dont_ask_again": "Don't ask again",
+  "searching": "Searching..."
 }

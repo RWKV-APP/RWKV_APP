@@ -330,9 +330,8 @@ extension $Chat on _Chat {
     final receiveId = HF.milliseconds + 1;
     this.receiveId.q = receiveId;
 
-    final history = withHistory ? await _historyWithWebSearch(receiveId) : [message];
+    var history = withHistory ? _history() : <String>[];
 
-    P.rwkv.sendMessages(history);
     P.msg.editingOrRegeneratingIndex.q = null;
 
     receivedTokens.q = "";
@@ -353,6 +352,9 @@ extension $Chat on _Chat {
     parentNode.add(MsgNode(receiveId));
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
+
+    history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
+    P.rwkv.sendMessages(history);
 
     _checkSensitive(message);
   }
@@ -671,15 +673,15 @@ extension _$Chat on _Chat {
     receivingTokens.q = false;
   }
 
-  Future<List<String>> _historyWithWebSearch(int receiveId) async {
+  Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
     RefInfo ref = RefInfo.empty();
-    final allMessage = _history();
 
     if (webSearch.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
         final last = allMessage.removeLast();
         final deepSearch = webSearch.q == WebSearchMode.deepSearch;
+        _updateMessageById(id: receiveId, reference: ref);
         final resp =
             await _post(
                   'https://auth.rwkvos.com/api/internet_search',

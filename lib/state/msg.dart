@@ -29,6 +29,7 @@ class _Msg {
     final editingIndex = ref.watch(editingOrRegeneratingIndex);
     if (editingIndex == null) return false;
     final list = ref.watch(this.list);
+    if (editingIndex < 0 || editingIndex >= list.length) return false;
     return list[editingIndex].isMine == false;
   });
 

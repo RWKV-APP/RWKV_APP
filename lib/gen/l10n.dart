@@ -1867,6 +1867,11 @@ class S {
   String get dont_ask_again {
     return Intl.message('不再询问', name: 'dont_ask_again', desc: '', args: []);
   }
+
+  /// `搜索中...`
+  String get searching {
+    return Intl.message('搜索中...', name: 'searching', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

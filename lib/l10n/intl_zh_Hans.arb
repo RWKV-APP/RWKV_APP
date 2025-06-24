@@ -262,5 +262,6 @@
   "allow_background_downloads": "允许后台下载",
   "str_please_disable_battery_opt_": "请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停",
   "go_to_settings": "去设置",
-  "dont_ask_again": "不再询问"
+  "dont_ask_again": "不再询问",
+  "searching": "搜索中..."
 }
