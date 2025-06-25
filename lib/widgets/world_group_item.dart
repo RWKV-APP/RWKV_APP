@@ -113,13 +113,6 @@ class WorldGroupItem extends ConsumerWidget {
     final allMissing = files.every((e) => !e.hasFile);
     final downloading = files.any((e) => e.downloading);
 
-    qqr("""worldType: $worldType
-fileInfos: ${fileInfos.map((e) => e.fileName).join(", ")}
-hasFile: ${fileInfos.map((e) => P.fileManager.locals(e).q.hasFile).join(", ")}
-allDownloaded: $allDownloaded
-allMissing: $allMissing
-downloading: $downloading""");
-
     final isCurrentModel = P.rwkv.currentModel.q?.fileName == socPair.$2;
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);

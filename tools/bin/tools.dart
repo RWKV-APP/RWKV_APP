@@ -10,25 +10,6 @@ void main(List<String> arguments) async {
   } else {
     print('版本号图片生成失败');
   }
-
-  // // 调用黑色像素转透明的函数
-
-  // final white = img.ColorRgba8(255, 255, 255, 255);
-  // final black = img.ColorRgba8(0, 0, 0, 255);
-
-  // // print(Directory.current.path);
-  // // return;
-
-  // f1('../assets/design/light/icon/chat.png', size: 960, color: white, outputPath: '../assets/design/light/splash/chat.png');
-  // f1('../assets/design/dark/icon/chat.png', size: 960, color: black, outputPath: '../assets/design/dark/splash/chat.png');
-  // f1('../assets/design/light/icon/chat.png', size: 960, color: white, outputPath: '../assets/design/light/splash/chat.png');
-  // f1('../assets/design/dark/icon/chat.png', size: 960, color: black, outputPath: '../assets/design/dark/splash/chat.png');
-  // f1('../assets/design/light/icon/chat.png', size: 960, color: white, outputPath: '../assets/design/light/splash/chat.png');
-  // f1('../assets/design/dark/icon/chat.png', size: 960, color: black, outputPath: '../assets/design/dark/splash/chat.png');
-  // f1('../assets/design/light/icon/chat.png', size: 960, color: white, outputPath: '../assets/design/light/splash/chat.png');
-  // f1('../assets/design/dark/icon/chat.png', size: 960, color: black, outputPath: '../assets/design/dark/splash/chat.png');
-  // f1('../assets/design/light/icon/chat.png', size: 960, color: white, outputPath: '../assets/design/light/splash/chat.png');
-  // f1('../assets/design/dark/icon/chat.png', size: 960, color: black, outputPath: '../assets/design/dark/splash/chat.png');
 }
 
 /// 将一张图片的尺寸改为 960 * 960

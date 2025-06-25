@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 enum DemoType {
-  /// RWKV Chat
+  /// RWKV See
   chat,
 
   /// RWKV_Fiffthteen_Puzzle

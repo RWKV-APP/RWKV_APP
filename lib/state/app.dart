@@ -139,7 +139,7 @@ extension _$App on _App {
     if (kDebugMode) {
       name = (Args.demoType).replaceAll("__", "");
     } else {
-      name = "__chat__".replaceAll("__", "");
+      name = "__world__".replaceAll("__", "");
     }
     demoType.q = DemoType.values.byName(name);
 

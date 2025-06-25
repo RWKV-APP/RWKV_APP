@@ -91,7 +91,7 @@ extension $RWKVLoad on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/world/b_rwkv_vocab_v20230424.txt");
 
     await _ensureQNNCopied();
 
@@ -154,7 +154,7 @@ extension $RWKVLoad on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/world/b_rwkv_vocab_v20230424.txt");
 
     final rootIsolateToken = RootIsolateToken.instance;
 
@@ -214,7 +214,7 @@ extension $RWKVLoad on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/world/b_rwkv_vocab_v20230424.txt");
 
     await _ensureQNNCopied();
 
@@ -261,7 +261,7 @@ extension $RWKVLoad on _RWKV {
       send(to_rwkv.GetPrefillAndDecodeSpeed());
     });
 
-    final ttsTokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424_tts.txt");
+    final ttsTokenizerPath = await fromAssetsToTemp("assets/config/world/b_rwkv_vocab_v20230424_tts.txt");
 
     send(
       to_rwkv.LoadTTSModels(
@@ -274,9 +274,9 @@ extension $RWKVLoad on _RWKV {
       ),
     );
 
-    final ttsTextNormalizerDatePath = await fromAssetsToTemp("assets/config/chat/date-zh.fst");
-    final ttsTextNormalizerNumberPath = await fromAssetsToTemp("assets/config/chat/number-zh.fst");
-    final ttsTextNormalizerPhonePath = await fromAssetsToTemp("assets/config/chat/phone-zh.fst");
+    final ttsTextNormalizerDatePath = await fromAssetsToTemp("assets/config/world/date-zh.fst");
+    final ttsTextNormalizerNumberPath = await fromAssetsToTemp("assets/config/world/number-zh.fst");
+    final ttsTextNormalizerPhonePath = await fromAssetsToTemp("assets/config/world/phone-zh.fst");
     // note: order matters here
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerDatePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
@@ -294,7 +294,7 @@ extension $RWKVLoad on _RWKV {
     _loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/world/b_rwkv_vocab_v20230424.txt");
 
     await _ensureQNNCopied();
 
@@ -346,14 +346,14 @@ extension $RWKVLoad on _RWKV {
     late final String modelPath;
     late final Backend backend;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_othello_vocab.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/world/b_othello_vocab.txt");
 
     if (Platform.isIOS || Platform.isMacOS) {
-      modelPath = await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended.st");
+      modelPath = await fromAssetsToTemp("assets/model/world/rwkv7_othello_26m_L10_D448_extended.st");
       backend = Backend.webRwkv;
     } else {
-      modelPath = await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended-ncnn.bin");
-      await fromAssetsToTemp("assets/model/chat/rwkv7_othello_26m_L10_D448_extended-ncnn.param");
+      modelPath = await fromAssetsToTemp("assets/model/world/rwkv7_othello_26m_L10_D448_extended-ncnn.bin");
+      await fromAssetsToTemp("assets/model/world/rwkv7_othello_26m_L10_D448_extended-ncnn.param");
       backend = Backend.ncnn;
     }
 
@@ -411,8 +411,8 @@ extension $RWKVLoad on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_sudoku_vocab.txt");
-    final data = await rootBundle.load("assets/config/chat/sudoku_rwkv_20241120_ncnn.param");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/world/b_sudoku_vocab.txt");
+    final data = await rootBundle.load("assets/config/world/sudoku_rwkv_20241120_ncnn.param");
     final paramFile = File(P.app.documentsDir.q!.path + "/sudoku_rwkv_20241120_ncnn.param");
     await paramFile.writeAsBytes(data.buffer.asUint8List());
 

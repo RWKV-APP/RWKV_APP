@@ -7,8 +7,8 @@ flutter_native_splash:
   branding: assets/design/light/branding.png
   branding_dark: assets/design/dark/branding.png
 
-  image: assets/design/light/icon/chat.png
-  image_dark: assets/design/dark/icon/chat.png
+  image: assets/design/light/icon/world.png
+  image_dark: assets/design/dark/icon/world.png
 
   android_12:
     color: "#FFFFFF" # 浅色模式下的背景颜色
@@ -17,8 +17,8 @@ flutter_native_splash:
     branding: assets/design/light/branding.png
     branding_dark: assets/design/dark/branding.png
 
-    image: assets/design/light/splash/chat.png
-    image_dark: assets/design/dark/splash/chat.png
+    image: assets/design/light/splash/world.png
+    image_dark: assets/design/dark/splash/world.png
 
   android: true
   ios: true

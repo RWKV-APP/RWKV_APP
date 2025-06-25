@@ -540,7 +540,6 @@
         "tags": ["npu", "core", "reason"],
         "socLimitations": ["8 Gen 3"]
       },
-
       {
         "name": "ModRWKV7-V-0.4B Encoder",
         "type": "gguf",

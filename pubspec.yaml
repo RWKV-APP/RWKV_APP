@@ -91,10 +91,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/lib/chat/
-    - assets/model/chat/
-    - assets/config/chat/
-    - assets/img/chat/
+    - assets/lib/world/
+    - assets/model/world/
+    - assets/config/world/
+    - assets/img/world/
     - assets/lib/qnn/
     - demo-config.json
     - .env
