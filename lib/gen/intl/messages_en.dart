@@ -398,6 +398,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("Search Breadth"),
     "search_depth": MessageLookupByLibrary.simpleMessage("Search Depth"),
+    "search_failed": MessageLookupByLibrary.simpleMessage("Search Failed"),
     "searching": MessageLookupByLibrary.simpleMessage("Searching..."),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Select a Model"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(

@@ -679,7 +679,7 @@ extension _$Chat on _Chat {
     if (webSearch.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
-        final last = allMessage.removeLast();
+        final last = allMessage.last;
         final deepSearch = webSearch.q == WebSearchMode.deepSearch;
         _updateMessageById(id: receiveId, reference: ref);
         final resp =
@@ -697,6 +697,7 @@ extension _$Chat on _Chat {
         final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
         ref = ref.copyWith(list: refs);
         final r = refs.map((e) => e.summary).join("\n");
+        allMessage.removeLast();
         allMessage.add("$r\n$last");
       } catch (e) {
         ref = ref.copyWith(error: e.toString());

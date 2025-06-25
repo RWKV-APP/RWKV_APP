@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1872,6 +1871,11 @@ class S {
   /// `搜索中...`
   String get searching {
     return Intl.message('搜索中...', name: 'searching', desc: '', args: []);
+  }
+
+  /// `搜索失败`
+  String get search_failed {
+    return Intl.message('搜索失败', name: 'search_failed', desc: '', args: []);
   }
 }
 

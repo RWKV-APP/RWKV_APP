@@ -311,6 +311,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("搜索"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("搜索宽度"),
     "search_depth": MessageLookupByLibrary.simpleMessage("搜索深度"),
+    "search_failed": MessageLookupByLibrary.simpleMessage("搜索失败"),
     "searching": MessageLookupByLibrary.simpleMessage("搜索中..."),
     "select_a_model": MessageLookupByLibrary.simpleMessage("选择模型"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("选择任务类型"),

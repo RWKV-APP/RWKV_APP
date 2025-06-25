@@ -453,14 +453,12 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
   @override
   Widget build(BuildContext context) {
     final prefill = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
-    final showProgress = prefill > 0 && prefill < 1 && widget.generating && widget.refInfo.error.isEmpty;
 
-    if (widget.refInfo.error.isNotEmpty) {
-      return const SizedBox();
-    }
+    final hasError = widget.refInfo.error.isNotEmpty;
+    final showProgress = prefill > 0 && prefill < 1 && widget.generating && !hasError;
+
     final primary = Theme.of(context).colorScheme.primary;
-
-    final searching = widget.refInfo.list.isEmpty && widget.generating && widget.refInfo.error.isEmpty;
+    final searching = widget.refInfo.list.isEmpty && widget.generating && !hasError;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -471,7 +469,7 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
             alignment: Alignment.centerLeft,
             child: InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: searching ? null : () => SearchReferenceDialog.show(context, widget.refInfo),
+              onTap: hasError || searching ? null : () => SearchReferenceDialog.show(context, widget.refInfo),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
@@ -481,37 +479,33 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
                 child: searching
                     ? _AdvancedBlinkText(text: S.current.searching, color: primary)
                     : Text(
-                        sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
+                        hasError ? S.current.search_failed : sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
                         style: TextStyle(color: primary, fontSize: 12),
                       ),
               ),
             ),
           ),
-        const SizedBox(height: 8),
+        if (showProgress) const SizedBox(height: 8),
         AnimatedOpacity(
           opacity: showProgress ? 1 : 0,
           curve: Curves.linear,
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 100),
           child: AnimatedSize(
             duration: const Duration(milliseconds: 200),
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
               height: showProgress ? 20 : 0,
-              child: Stack(
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(value: prefill, color: primary, backgroundColor: primary.q(.1)),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(S.current.analysing_result, style: const TextStyle(fontSize: 12)),
-                      const SizedBox(width: 10),
-                    ],
+                  SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(value: prefill, color: primary, backgroundColor: primary.q(.1)),
                   ),
+                  const SizedBox(width: 10),
+                  Text(S.current.analysing_result, style: const TextStyle(fontSize: 12)),
+                  const SizedBox(width: 10),
                 ],
               ),
             ),
