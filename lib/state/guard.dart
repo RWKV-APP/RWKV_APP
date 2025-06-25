@@ -55,7 +55,11 @@ extension _$Guard on _Guard {
       case DemoType.world:
     }
     qq;
-    await _loadFilter();
+    try {
+      await _loadFilter();
+    } catch (_) {
+      qqw('sensitive words load failed');
+    }
   }
 
   FV _loadFilter() async {
