@@ -45,9 +45,6 @@ app.*.map.json
 /android/app/release
 
 assets/model/othello
-assets/model/sudoku
-assets/model/tts
-assets/model/world
 
 sentry.properties
 
