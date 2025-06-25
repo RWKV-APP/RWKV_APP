@@ -141,6 +141,7 @@ class _List extends ConsumerWidget {
       case WorldType.qa:
       case WorldType.reasoningQA:
       case WorldType.ocr:
+      case WorldType.modrwkvV2:
         if (messages.length == 1 && messages.first.type == model.MessageType.userImage) {
           bottom += 46;
         }

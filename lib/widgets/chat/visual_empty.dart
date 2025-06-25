@@ -37,6 +37,7 @@ class VisualEmpty extends ConsumerWidget {
       case WorldType.qa:
       case WorldType.reasoningQA:
       case WorldType.ocr:
+      case WorldType.modrwkvV2:
         break;
       case null:
       case WorldType.engAudioQA:

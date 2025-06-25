@@ -253,12 +253,7 @@ class Message extends ConsumerWidget {
         } else {
           worldDemoMessageHeader = "Voice recognition result";
         }
-      case null:
-      case WorldType.engVisualQA:
-      case WorldType.qa:
-      case WorldType.reasoningQA:
-      case WorldType.engAudioQA:
-      case WorldType.ocr:
+      default:
         break;
     }
 

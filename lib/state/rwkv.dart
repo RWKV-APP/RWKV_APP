@@ -85,6 +85,7 @@ extension $RWKVLoad on _RWKV {
     required String encoderPath,
     required Backend backend,
     required bool enableReasoning,
+    required String? adapterPath,
   }) async {
     qq;
     _loading.q = true;
@@ -130,7 +131,12 @@ extension $RWKVLoad on _RWKV {
 
     send(to_rwkv.GetLatestRuntimeAddress());
 
-    send(to_rwkv.LoadVisionEncoder(encoderPath));
+    if (adapterPath != null) {
+      send(to_rwkv.LoadVisionEncoderAndAdapter(encoderPath, adapterPath));
+    } else {
+      send(to_rwkv.LoadVisionEncoder(encoderPath));
+    }
+
     await setModelConfig(
       enableReasoning: enableReasoning,
       preferChinese: false,

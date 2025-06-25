@@ -39,7 +39,6 @@ class FormItem extends ConsumerWidget {
     final customTheme = ref.watch(P.app.customTheme);
     final qb = ref.watch(P.app.qb);
     final screenWidth = ref.watch(P.app.screenWidth);
-    qqr(screenWidth);
 
     return GD(
       onTap: onTap,
