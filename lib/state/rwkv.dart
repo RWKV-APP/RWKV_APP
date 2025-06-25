@@ -91,6 +91,7 @@ extension $RWKVLoad on _RWKV {
     _loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+    _thinkingMode.q = enableReasoning ? const thinking_mode.Free() : const thinking_mode.None();
 
     final tokenizerPath = await fromAssetsToTemp("assets/config/world/b_rwkv_vocab_v20230424.txt");
 
@@ -490,7 +491,7 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-    send(to_rwkv.ChatAsync(messages, reasoning: thinkingMode.q.hasThinkTag));
+    send(to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag));
 
     if (_getTokensTimer != null) {
       _getTokensTimer!.cancel();
