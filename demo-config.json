@@ -663,6 +663,34 @@
         "isDebug": true
       },
       {
+        "name": "ModRWKV V2 1.5B (8 Gen 3)",
+        "type": "bin",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin",
+        "fileName": "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin",
+        "fileSize": 1705305928,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Gen 3"],
+        "isDebug": true
+      },
+      {
+        "name": "ModRWKV V2 1.5B (8 Elite)",
+        "type": "bin",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin",
+        "fileName": "modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin",
+        "fileSize": 1701332936,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Elite"],
+        "isDebug": true
+      },
+      {
         "name": "RWKV7 WhisperB ENASR 0.1B",
         "type": "gguf",
         "modelSize": 0.1,
