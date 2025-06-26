@@ -4,7 +4,7 @@ import 'package:path/path.dart' as path;
 
 /// 生成版本号图片
 ///
-/// 创建一个图片，图片的内容是 "RWKV See 1.8.0 (440)"
+/// 创建一个图片，图片的内容是 "RWKV Chat 1.8.0 (440)"
 ///
 /// 白底黑字，或者黑底白字，图片的尺寸为，1000 * 400
 ///
@@ -14,7 +14,7 @@ import 'package:path/path.dart' as path;
 Future<File?> gen() async {
   try {
     // 从主项目的pubspec.yaml读取版本信息
-    final pubspecFile = File('../pubspec.yaml');
+    final pubspecFile = File('pubspec.yaml');
     if (!await pubspecFile.exists()) {
       print('错误：找不到 pubspec.yaml 文件');
       return null;
@@ -28,10 +28,10 @@ Future<File?> gen() async {
     final version = versionParts[0]; // 例如 "1.8.1"
     final buildNumber = versionParts[1]; // 例如 "439"
 
-    final text = "RWKV See $version ($buildNumber)";
+    final text = "RWKV Chat $version ($buildNumber)";
 
     // 创建输出目录
-    final outputDir = Directory('output');
+    final outputDir = Directory('tools/output');
     if (!await outputDir.exists()) {
       await outputDir.create();
     }

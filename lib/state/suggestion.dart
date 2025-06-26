@@ -191,7 +191,7 @@ class _Suggestion {
     // TODO load suggestions from server
 
     if (demoType == DemoType.chat) {
-      const head = "assets/config/world/suggestions";
+      const head = "assets/config/chat/suggestions";
       final lang = shouldUseEn ? ".en-US" : ".zh-hans";
       final suffix = kDebugMode ? ".debug" : "";
       final assetPath = "$head$lang$suffix.json";
