@@ -166,10 +166,17 @@ class FileInfo extends Equatable {
     "RWKV7-0.4B-G1-SigLIP2-Q8_0.gguf" => WorldType.ocr,
     "RWKV7-0.4B-G1-SigLIP2-a16w8_8elite_combined_embedding.bin" => WorldType.ocr,
     "RWKV7-0.4B-G1-SigLIP2-a16w8_8gen3_combined_embedding.bin" => WorldType.ocr,
+    "siglip2-encoder-patch16-384-q8_0.gguf" => WorldType.modrwkvV2,
+    "modrwkv-v2-vision-adapter-1B5-step4-f16.gguf" => WorldType.modrwkvV2,
+    "modrwkv-v2-1B5-step4-q6_K.gguf" => WorldType.modrwkvV2,
+    "modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin" => WorldType.modrwkvV2,
+    "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin" => WorldType.modrwkvV2,
     _ => null,
   };
 
   bool get isEncoder => tags.contains('encoder');
+
+  bool get isAdapter => tags.contains('adapter');
 
   @override
   List<Object?> get props => [raw];

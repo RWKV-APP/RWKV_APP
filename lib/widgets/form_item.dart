@@ -38,6 +38,7 @@ class FormItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final customTheme = ref.watch(P.app.customTheme);
     final qb = ref.watch(P.app.qb);
+    final screenWidth = ref.watch(P.app.screenWidth);
 
     return GD(
       onTap: onTap,
@@ -84,7 +85,6 @@ class FormItem extends ConsumerWidget {
                 ],
               ),
             ),
-            if (info != null) 8.w,
             if (info != null)
               Expanded(
                 child: T(

@@ -71,28 +71,56 @@ module Fastlane
           'assets/config/**',
         ]
 
-        # 遍历 key 值
+        # 获取所有符合条件的文件
+        all_files = Dir.glob(target_files, File::FNM_CASEFOLD).reject do |file|
+          exclude_patterns.any? { |pattern| File.fnmatch?(pattern, file) }
+        end
+
+        # 遍历 key 值 (保持顺序处理配置项，避免依赖问题)
         config.each do |key, value|
           froms = environments[key]
           to = value
 
-          # Perform safe replacement
-          Dir.glob(target_files, File::FNM_CASEFOLD).each do |file|
-            next if exclude_patterns.any? { |pattern| File.fnmatch?(pattern, file) }
-            replace_in_file(file, froms, to)
-          end
+          # 多线程处理文件
+          process_files_parallel(all_files, froms, to)
         end
 
         UI.success("✅ Global replacement complete for #{env} environment")
       end
 
-      def self.replace_in_file(path, from, to)
-        content = File.read(path)
-        original = content.dup
-        from.each do |from|
-          content.gsub!(from, to)
+      def self.process_files_parallel(files, from_patterns, to_value)
+        # 确定线程数量，避免创建过多线程
+        thread_count = [files.size, 10].min
+        return if thread_count == 0
+
+        # 将文件分组
+        file_groups = files.each_slice((files.size / thread_count.to_f).ceil).to_a
+
+        threads = []
+
+        file_groups.each do |file_group|
+          threads << Thread.new do
+            file_group.each do |file|
+              replace_in_file(file, from_patterns, to_value)
+            end
+          end
         end
-        File.write(path, content) if content != original
+
+        # 等待所有线程完成
+        threads.each(&:join)
+      end
+
+      def self.replace_in_file(path, from_patterns, to)
+        begin
+          content = File.read(path)
+          original = content.dup
+          from_patterns.each do |from_pattern|
+            content.gsub!(from_pattern, to)
+          end
+          File.write(path, content) if content != original
+        rescue => e
+          UI.error("Failed to process file #{path}: #{e.message}")
+        end
       end
 
       def self.is_supported?(platform)

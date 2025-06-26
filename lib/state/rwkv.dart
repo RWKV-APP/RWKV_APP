@@ -85,11 +85,13 @@ extension $RWKVLoad on _RWKV {
     required String encoderPath,
     required Backend backend,
     required bool enableReasoning,
+    required String? adapterPath,
   }) async {
     qq;
     _loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+    _thinkingMode.q = enableReasoning ? const thinking_mode.Free() : const thinking_mode.None();
 
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
 
@@ -130,11 +132,17 @@ extension $RWKVLoad on _RWKV {
 
     send(to_rwkv.GetLatestRuntimeAddress());
 
-    send(to_rwkv.LoadVisionEncoder(encoderPath));
+    if (adapterPath != null) {
+      send(to_rwkv.LoadVisionEncoderAndAdapter(encoderPath, adapterPath));
+    } else {
+      send(to_rwkv.LoadVisionEncoder(encoderPath));
+    }
+
     await setModelConfig(
       enableReasoning: enableReasoning,
       preferChinese: false,
       setPrompt: false,
+      thinkingMode: _thinkingMode.q,
     );
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
@@ -484,7 +492,7 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-    send(to_rwkv.ChatAsync(messages, reasoning: thinkingMode.q.hasThinkTag));
+    send(to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag));
 
     if (_getTokensTimer != null) {
       _getTokensTimer!.cancel();

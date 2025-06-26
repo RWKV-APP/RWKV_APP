@@ -34,6 +34,7 @@ class AudioEmpty extends ConsumerWidget {
       case WorldType.qa:
       case WorldType.reasoningQA:
       case WorldType.ocr:
+      case WorldType.modrwkvV2:
       case null:
         return Positioned(child: IgnorePointer(child: C()));
     }
@@ -52,6 +53,7 @@ class AudioEmpty extends ConsumerWidget {
       case WorldType.qa:
       case WorldType.reasoningQA:
       case WorldType.ocr:
+      case WorldType.modrwkvV2:
         message = "";
       case WorldType.engAudioQA:
         message = "Press and hold the microphone button below to start recording.\nRelease to send it to RWKV.";

@@ -14,7 +14,7 @@ import 'package:path/path.dart' as path;
 Future<File?> gen() async {
   try {
     // 从主项目的pubspec.yaml读取版本信息
-    final pubspecFile = File('../pubspec.yaml');
+    final pubspecFile = File('pubspec.yaml');
     if (!await pubspecFile.exists()) {
       print('错误：找不到 pubspec.yaml 文件');
       return null;
@@ -31,7 +31,7 @@ Future<File?> gen() async {
     final text = "RWKV Chat $version ($buildNumber)";
 
     // 创建输出目录
-    final outputDir = Directory('output');
+    final outputDir = Directory('tools/output');
     if (!await outputDir.exists()) {
       await outputDir.create();
     }
@@ -49,8 +49,8 @@ Future<File?> gen() async {
     print('生成黑底白字版本: ${darkFile.path}');
 
     // 复制到目标位置
-    await _copyToTarget(lightFile, '../assets/design/light/branding.png');
-    await _copyToTarget(darkFile, '../assets/design/dark/branding.png');
+    await _copyToTarget(lightFile, 'assets/design/light/branding.png');
+    await _copyToTarget(darkFile, 'assets/design/dark/branding.png');
 
     return lightFile; // 返回白底黑字版本作为默认
   } catch (e) {

@@ -1,7 +1,7 @@
 {
   "chat": {
-    "latest_build": 439,
-    "latest_build_ios": 439,
+    "latest_build": 440,
+    "latest_build_ios": 440,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
     "android_url": "https://www.pgyer.com/rwkvchat",
@@ -483,7 +483,7 @@
     ]
   },
   "world": {
-    "latest_build": 420,
+    "latest_build": 440,
     "latest_build_ios": 422,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
@@ -540,7 +540,6 @@
         "tags": ["npu", "core", "reason"],
         "socLimitations": ["8 Gen 3"]
       },
-
       {
         "name": "ModRWKV7-V-0.4B Encoder",
         "type": "gguf",
@@ -625,6 +624,66 @@
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
         "tags": ["encoder"]
+      },
+      {
+        "name": "SigLIP2 Encoder",
+        "type": "gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/vision_encoder/siglip2-encoder-patch16-384-q8_0.gguf",
+        "fileName": "siglip2-encoder-patch16-384-q8_0.gguf",
+        "fileSize": 99950656,
+        "quantization": "q8_0",
+        "platforms": ["macos", "linux", "android", "ios"],
+        "backends": ["llamacpp"],
+        "tags": ["encoder"]
+      },
+      {
+        "name": "ModRWKV V2 Vision Adapter",
+        "type": "gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v2-vision-adapter-1B5-step4-f16.gguf",
+        "fileName": "modrwkv-v2-vision-adapter-1B5-step4-f16.gguf",
+        "fileSize": 46195200,
+        "quantization": "fp16",
+        "platforms": ["macos", "linux", "android", "ios"],
+        "backends": ["llamacpp"],
+        "tags": ["adapter"]
+      },
+      {
+        "name": "ModRWKV V2 1.5B",
+        "type": "gguf",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v2-1B5-step4-q6_K.gguf",
+        "fileName": "modrwkv-v2-1B5-step4-q6_K.gguf",
+        "fileSize": 1336081344,
+        "quantization": "q6_K",
+        "platforms": ["macos", "linux", "android", "ios"],
+        "backends": ["llamacpp"],
+        "tags": ["core"]
+      },
+      {
+        "name": "ModRWKV V2 1.5B (8 Gen 3)",
+        "type": "bin",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin",
+        "fileName": "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin",
+        "fileSize": 1705305928,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Gen 3"]
+      },
+      {
+        "name": "ModRWKV V2 1.5B (8 Elite)",
+        "type": "bin",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin",
+        "fileName": "modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin",
+        "fileSize": 1701332936,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Elite"]
       },
       {
         "name": "RWKV7 WhisperB ENASR 0.1B",

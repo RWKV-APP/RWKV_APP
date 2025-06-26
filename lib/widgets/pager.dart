@@ -73,7 +73,14 @@ class _PagerState extends ConsumerState<Pager> {
     Pager._newController.q = PageController(
       viewportFraction: viewportFraction,
       initialPage: 1,
-    )..addListener(_onPageChanged);
+      onAttach: (position) async {
+        await Future.delayed(100.ms);
+        if (!mounted) return;
+        if (Pager._newController.q.page == 1) return;
+        await Pager._newController.q.animateToPage(1, duration: 200.ms, curve: Curves.easeOutCubic);
+      },
+    );
+    Pager._newController.q.addListener(_onPageChanged);
 
     Pager.drawerWidth.q = wantedWidth;
   }

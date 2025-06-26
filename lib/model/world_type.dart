@@ -1,4 +1,5 @@
 enum WorldType {
+  modrwkvV2,
   reasoningQA,
   ocr,
   @Deprecated("")
@@ -14,8 +15,9 @@ enum WorldType {
 
   String get displayName => switch (this) {
     WorldType.reasoningQA => "Visual QA Reasoning (🇨🇳 Chinese & 🇺🇸 English)",
-    WorldType.qa => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
     WorldType.ocr => "Visual + OCR (🇨🇳 Chinese & 🇺🇸 English)",
+    WorldType.modrwkvV2 => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
+    WorldType.qa => "Visual QA (🇨🇳 Chinese & 🇺🇸 English)",
     WorldType.engVisualQA => "Visual QA (🇺🇸 English)",
     WorldType.engAudioQA => "Audio QA (🇺🇸 English)",
     WorldType.chineseASR => "ASR (🇨🇳 Chinese)",
@@ -24,8 +26,9 @@ enum WorldType {
 
   String get taskDescription => switch (this) {
     WorldType.reasoningQA => "Visual Question Answering (Reasoning)",
-    WorldType.qa => "Visual Question Answering",
+    WorldType.modrwkvV2 => "Visual Question Answering",
     WorldType.ocr => "Visual + OCR",
+    WorldType.qa => "Visual Question Answering",
     WorldType.engVisualQA => "Visual Question Answering",
     WorldType.engAudioQA => "Audio Question Answering",
     WorldType.chineseASR => "Automatic Speech Recognition",
@@ -34,11 +37,11 @@ enum WorldType {
 
   bool get isAudioDemo => switch (this) {
     WorldType.engAudioQA || WorldType.chineseASR || WorldType.engASR => true,
-    WorldType.engVisualQA || WorldType.reasoningQA || WorldType.qa || WorldType.ocr => false,
+    WorldType.engVisualQA || WorldType.reasoningQA || WorldType.qa || WorldType.ocr || WorldType.modrwkvV2 => false,
   };
 
   bool get isVisualDemo => switch (this) {
-    WorldType.engVisualQA || WorldType.reasoningQA || WorldType.qa || WorldType.ocr => true,
+    WorldType.engVisualQA || WorldType.reasoningQA || WorldType.qa || WorldType.ocr || WorldType.modrwkvV2 => true,
     WorldType.engAudioQA || WorldType.chineseASR || WorldType.engASR => false,
   };
 
@@ -48,7 +51,7 @@ enum WorldType {
   };
 
   bool get available => switch (this) {
-    WorldType.reasoningQA || WorldType.qa || WorldType.ocr => true,
+    WorldType.reasoningQA || WorldType.qa || WorldType.ocr || WorldType.modrwkvV2 => true,
     _ => false,
   };
 
@@ -67,6 +70,11 @@ enum WorldType {
       ("", "RWKV7-0.4B-G1-SigLIP2-Q8_0.gguf"),
       ("8 Elite", "RWKV7-0.4B-G1-SigLIP2-a16w8_8elite_combined_embedding.bin"),
       ("8 Gen 3", "RWKV7-0.4B-G1-SigLIP2-a16w8_8gen3_combined_embedding.bin"),
+    ],
+    WorldType.modrwkvV2 => [
+      ("", "modrwkv-v2-1B5-step4-q6_K.gguf"),
+      ("8 Elite", "modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin"),
+      ("8 Gen 3", "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin"),
     ],
     _ => [],
   };

@@ -1,11 +1,13 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/model/file_info.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/route/method.dart';
 import 'package:zone/route/router.dart';
@@ -19,21 +21,17 @@ class WorldGroupItem extends ConsumerWidget {
 
   const WorldGroupItem(this.worldType, {super.key, required this.socPair});
 
+  List<FileInfo> get _fileInfos => P.fileManager.availableModels.q.where((e) => e.worldType == worldType).where((file) {
+    return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == socPair.$2);
+  }).toList();
+
   void _onDownloadAllTap() async {
-    final availableModels = P.fileManager.availableModels.q;
-    final fileInfos = availableModels.where((e) => e.worldType == worldType).where((file) {
-      return file.isEncoder || (!file.isEncoder && file.fileName == socPair.$2);
-    }).toList();
-    final missingFileInfos = fileInfos.where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
+    final missingFileInfos = _fileInfos.where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
     missingFileInfos.forEach((e) => P.fileManager.getFile(fileInfo: e));
   }
 
   void _onDeleteAllTap() async {
-    final availableModels = P.fileManager.availableModels.q;
-    final fileInfos = availableModels.where((e) => e.worldType == worldType).where((file) {
-      return file.isEncoder || (!file.isEncoder && file.fileName == socPair.$2);
-    }).toList();
-    fileInfos.forEach((e) => P.fileManager.deleteFile(fileInfo: e));
+    _fileInfos.forEach((e) => P.fileManager.deleteFile(fileInfo: e));
   }
 
   void _onStartToChatTap() async {
@@ -45,8 +43,10 @@ class WorldGroupItem extends ConsumerWidget {
     final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
     final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
     final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == socPair.$2);
+    final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
     final encoderLocalFile = P.fileManager.locals(encoderFileKey).q;
     final modelLocalFile = P.fileManager.locals(modelFileKey).q;
+    final adapterLocalFile = adapterFileKey != null ? P.fileManager.locals(adapterFileKey).q : null;
 
     P.rwkv.currentWorldType.q = worldType;
 
@@ -74,8 +74,16 @@ class WorldGroupItem extends ConsumerWidget {
             encoderPath: encoderLocalFile.targetPath,
             backend: modelFileKey.backend!,
             enableReasoning: worldType.isReasoning,
+            adapterPath: null,
           );
-        // throw "Not implemented";
+        case WorldType.modrwkvV2:
+          await P.rwkv.loadWorldVision(
+            modelPath: modelLocalFile.targetPath,
+            encoderPath: encoderLocalFile.targetPath,
+            backend: modelFileKey.backend!,
+            enableReasoning: worldType.isReasoning,
+            adapterPath: adapterLocalFile?.targetPath,
+          );
       }
       Navigator.pop(getContext()!);
     } catch (e) {
@@ -98,27 +106,19 @@ class WorldGroupItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final availableModels = P.fileManager.availableModels.q;
-    final fileInfos = availableModels.where((e) => e.worldType == worldType).where((file) {
-      return file.isEncoder || (!file.isEncoder && file.fileName == socPair.$2);
-    }).toList();
-    if (fileInfos.isEmpty) return const SizedBox.shrink();
+    if (_fileInfos.isEmpty) {
+      qqw("fileInfos is empty, worldType: $worldType");
+      return const SizedBox.shrink();
+    }
     final primaryColor = Theme.of(context).colorScheme.primaryContainer;
 
-    final files = fileInfos.m((e) {
+    final files = _fileInfos.m((e) {
       return ref.watch(P.fileManager.locals(e));
     });
 
     final allDownloaded = files.every((e) => e.hasFile);
     final allMissing = files.every((e) => !e.hasFile);
     final downloading = files.any((e) => e.downloading);
-
-    qqr("""worldType: $worldType
-fileInfos: ${fileInfos.map((e) => e.fileName).join(", ")}
-hasFile: ${fileInfos.map((e) => P.fileManager.locals(e).q.hasFile).join(", ")}
-allDownloaded: $allDownloaded
-allMissing: $allMissing
-downloading: $downloading""");
 
     final isCurrentModel = P.rwkv.currentModel.q?.fileName == socPair.$2;
 
@@ -150,7 +150,7 @@ downloading: $downloading""");
                 T(worldType.taskDescription, s: const TS(s: 12, w: FW.w400)),
               ],
             ),
-            ...fileInfos.m(
+            ..._fileInfos.m(
               (e) => C(
                 decoration: BD(
                   color: kC,

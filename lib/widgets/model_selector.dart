@@ -74,49 +74,48 @@ class ModelSelector extends ConsumerWidget {
     final availableModels = ref.watch(P.fileManager.availableModels);
     final ttsCores = ref.watch(P.fileManager.ttsCores);
 
-    switch (demoType) {
-      case DemoType.world:
-        return [
-          ...WorldType.values
-              .where((e) => e.available)
-              .map((e) {
-                return e.socPairs
-                    .where((pair) {
-                      return pair.$1 == "" || pair.$1 == P.rwkv.socName.q;
-                    })
-                    .map((pair) {
-                      return WorldGroupItem(e, socPair: pair);
-                    });
-              })
-              .reduce((v, e) {
-                return [...v, ...e];
-              }),
-        ];
-      case DemoType.tts:
-        return [
-          for (final fileInfo in ttsCores) TTSGroupItem(fileInfo),
-        ];
-      case DemoType.chat:
-      case DemoType.sudoku:
-        return [
-          for (final fileInfo
-              in availableModels
-                  .sorted((a, b) {
-                    /// 模型尺寸大的在上面
-                    return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
+    return switch (demoType) {
+      DemoType.world => [
+        ...WorldType.values
+            .where((e) {
+              return e.available;
+            })
+            .map((e) {
+              return e.socPairs
+                  .where((pair) {
+                    return pair.$1 == "" || pair.$1 == P.rwkv.socName.q;
                   })
                   .sorted((a, b) {
-                    return (a.tags.contains("gpu") ? 0 : 1).compareTo(b.tags.contains("gpu") ? 0 : 1);
+                    return b.$1.length.compareTo(a.$1.length);
                   })
-                  .sorted((a, b) {
-                    return (a.tags.contains("npu") ? 0 : 1).compareTo(b.tags.contains("npu") ? 0 : 1);
-                  }))
-            ModelItem(fileInfo),
-        ];
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-        return [];
-    }
+                  .map((pair) {
+                    return WorldGroupItem(e, socPair: pair);
+                  });
+            })
+            .reduce((v, e) {
+              return [...v, ...e];
+            }),
+      ],
+      DemoType.tts => [
+        for (final fileInfo in ttsCores) TTSGroupItem(fileInfo),
+      ],
+      DemoType.chat || DemoType.sudoku => [
+        for (final fileInfo
+            in availableModels
+                .sorted((a, b) {
+                  /// 模型尺寸大的在上面
+                  return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
+                })
+                .sorted((a, b) {
+                  return (a.tags.contains("gpu") ? 0 : 1).compareTo(b.tags.contains("gpu") ? 0 : 1);
+                })
+                .sorted((a, b) {
+                  return (a.tags.contains("npu") ? 0 : 1).compareTo(b.tags.contains("npu") ? 0 : 1);
+                }))
+          ModelItem(fileInfo),
+      ],
+      DemoType.fifthteenPuzzle || DemoType.othello => [],
+    };
   }
 
   @override

@@ -126,7 +126,7 @@ extension $FileManager on _FileManager {
           path: path,
           acceptedSize: fileInfo.fileSize,
         );
-        qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
+        // qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
         fileState.q = fileState.q.copyWith(
           hasFile: task.state == TaskState.completed,
           state: task.state,
