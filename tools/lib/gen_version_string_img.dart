@@ -49,8 +49,8 @@ Future<File?> gen() async {
     print('生成黑底白字版本: ${darkFile.path}');
 
     // 复制到目标位置
-    await _copyToTarget(lightFile, '../assets/design/light/branding.png');
-    await _copyToTarget(darkFile, '../assets/design/dark/branding.png');
+    await _copyToTarget(lightFile, 'assets/design/light/branding.png');
+    await _copyToTarget(darkFile, 'assets/design/dark/branding.png');
 
     return lightFile; // 返回白底黑字版本作为默认
   } catch (e) {
