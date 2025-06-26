@@ -249,7 +249,6 @@ extension _$App on _App {
   }
 
   FV _statusBarToLightMode() async {
-    qq;
     SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleLight);
   }
 

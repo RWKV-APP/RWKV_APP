@@ -79,7 +79,7 @@ class Debugger extends ConsumerWidget {
     const showAtMainPage = false;
     const showPage = true;
     const showScreenWidth = false;
-    const showThinkingMode = false;
+    const showThinkingMode = true;
     const showDisableRemoteConfig = false;
     const showPreferredThemeMode = false;
     const showCustomTheme = false;

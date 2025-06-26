@@ -85,6 +85,9 @@ class ModelSelector extends ConsumerWidget {
                   .where((pair) {
                     return pair.$1 == "" || pair.$1 == P.rwkv.socName.q;
                   })
+                  .sorted((a, b) {
+                    return b.$1.length.compareTo(a.$1.length);
+                  })
                   .map((pair) {
                     return WorldGroupItem(e, socPair: pair);
                   });

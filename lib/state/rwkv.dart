@@ -142,6 +142,7 @@ extension $RWKVLoad on _RWKV {
       enableReasoning: enableReasoning,
       preferChinese: false,
       setPrompt: false,
+      thinkingMode: _thinkingMode.q,
     );
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
