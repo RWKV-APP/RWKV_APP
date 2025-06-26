@@ -73,6 +73,8 @@ enum WorldType {
     ],
     WorldType.modrwkvV2 => [
       ("", "modrwkv-v2-1B5-step4-q6_K.gguf"),
+      ("8 Elite", "modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin"),
+      ("8 Gen 3", "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin"),
     ],
     _ => [],
   };

@@ -169,6 +169,8 @@ class FileInfo extends Equatable {
     "siglip2-encoder-patch16-384-q8_0.gguf" => WorldType.modrwkvV2,
     "modrwkv-v2-vision-adapter-1B5-step4-f16.gguf" => WorldType.modrwkvV2,
     "modrwkv-v2-1B5-step4-q6_K.gguf" => WorldType.modrwkvV2,
+    "modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin" => WorldType.modrwkvV2,
+    "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin" => WorldType.modrwkvV2,
     _ => null,
   };
 
