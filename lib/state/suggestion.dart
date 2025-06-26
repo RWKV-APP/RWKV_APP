@@ -117,7 +117,12 @@ class _Suggestion {
             return s2.take(5).toList();
           case WorldType.modrwkvV2:
             return [...config.seeReasoningQa, ...config.seeOcr].shuffled.take(5).toList();
-          default:
+          case null:
+          case WorldType.qa:
+          case WorldType.engVisualQA:
+          case WorldType.engAudioQA:
+          case WorldType.chineseASR:
+          case WorldType.engASR:
             break;
         }
         break;
