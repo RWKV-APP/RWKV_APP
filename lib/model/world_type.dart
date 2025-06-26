@@ -27,8 +27,8 @@ enum WorldType {
   String get taskDescription => switch (this) {
     WorldType.reasoningQA => "Visual Question Answering (Reasoning)",
     WorldType.modrwkvV2 => "Visual Question Answering",
-    WorldType.qa => "Visual Question Answering",
     WorldType.ocr => "Visual + OCR",
+    WorldType.qa => "Visual Question Answering",
     WorldType.engVisualQA => "Visual Question Answering",
     WorldType.engAudioQA => "Audio Question Answering",
     WorldType.chineseASR => "Automatic Speech Recognition",

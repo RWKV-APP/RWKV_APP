@@ -15,8 +15,7 @@
       "name": "debug (Halo)",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart",1
-      
+      "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
         "--dart-define=disableRemoteConfig=true",
