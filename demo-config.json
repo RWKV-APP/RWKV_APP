@@ -634,8 +634,7 @@
         "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["encoder"],
-        "isDebug": true
+        "tags": ["encoder"]
       },
       {
         "name": "ModRWKV V2 Vision Adapter",
@@ -646,8 +645,7 @@
         "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["adapter"],
-        "isDebug": true
+        "tags": ["adapter"]
       },
       {
         "name": "ModRWKV V2 1.5B",
@@ -659,8 +657,7 @@
         "quantization": "q6_K",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["core"],
-        "isDebug": true
+        "tags": ["core"]
       },
       {
         "name": "ModRWKV V2 1.5B (8 Gen 3)",
@@ -673,8 +670,7 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Gen 3"],
-        "isDebug": true
+        "socLimitations": ["8 Gen 3"]
       },
       {
         "name": "ModRWKV V2 1.5B (8 Elite)",
@@ -687,8 +683,7 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Elite"],
-        "isDebug": true
+        "socLimitations": ["8 Elite"]
       },
       {
         "name": "RWKV7 WhisperB ENASR 0.1B",
