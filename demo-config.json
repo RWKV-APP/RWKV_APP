@@ -89,7 +89,8 @@
         "quantization": "Q6_K",
         "platforms": ["ios"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu"]
+        "tags": ["reason", "gpu"],
+        "isDebug": true
       },
       {
         "name": "RWKV7-G1 0.1B",
