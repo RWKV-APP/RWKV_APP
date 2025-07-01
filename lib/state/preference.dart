@@ -48,6 +48,8 @@ class _Preference {
 
   late final dumpping = qs(false);
 
+  var featureRollout = FeatureRollout();
+
   bool get currentLangIsZh => preferredLanguage.q.resolved.locale.languageCode == "zh";
 }
 
@@ -100,6 +102,13 @@ extension _$Preference on _Preference {
       if (this.preferredDarkCustomTheme.q is custom_theme.Light) {
         this.preferredDarkCustomTheme.q = custom_theme.LightsOut();
       }
+    }
+
+    final ft = sp.getString('app.dev.feat');
+    if (ft != null && ft.isNotEmpty) {
+      try {
+        featureRollout = FeatureRollout.fromMap(jsonDecode(ft));
+      } catch (_) {}
     }
   }
 
@@ -201,5 +210,11 @@ extension $Preference on _Preference {
         await sp.setBool("halo_state.showBatteryOptimizationDialog", false);
       }
     }
+  }
+
+  void setFeatureRollout(FeatureRollout featureRollout) async {
+    this.featureRollout = featureRollout;
+    final sp = await SharedPreferences.getInstance();
+    sp.setString('app.dev.feat', jsonEncode(featureRollout.toMap()));
   }
 }

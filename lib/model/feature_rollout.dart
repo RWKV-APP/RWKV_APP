@@ -11,6 +11,12 @@ class FeatureRollout {
     );
   }
 
+  FeatureRollout merge(FeatureRollout other) {
+    return FeatureRollout(
+      webSearch: webSearch || other.webSearch,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'web_search': webSearch,

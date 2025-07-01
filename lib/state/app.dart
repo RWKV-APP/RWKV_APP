@@ -357,7 +357,9 @@ extension _$App on _App {
     shareChatQrCodeEn.q = config["share_chat_qrcode_en"];
     shareChatQrCodeZh.q = config["share_chat_qrcode_zh"];
     iosUrl.q = config["ios_url"].toString();
-    featureRollout.q = FeatureRollout.fromMap(config["controlled_rollout"]);
+    featureRollout.q =
+        FeatureRollout.fromMap(config["controlled_rollout"]) // merge with dev options
+            .merge(P.preference.featureRollout);
 
     await P.fileManager.syncAvailableModels();
     await P.fileManager.checkLocal();

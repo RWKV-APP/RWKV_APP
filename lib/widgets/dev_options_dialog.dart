@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/feature_rollout.dart';
-import 'package:zone/state/p.dart' show P;
+import 'package:zone/state/p.dart' show P, $Preference;
 
 class WithDevOption extends StatefulWidget {
   final Widget child;
@@ -100,6 +100,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
               value: featureRollout.webSearch,
               onChanged: (v) {
                 featureRollout = featureRollout.copyWith(webSearch: v);
+                P.preference.setFeatureRollout(featureRollout);
                 P.app.featureRollout.q = featureRollout;
                 setState(() {});
               },
