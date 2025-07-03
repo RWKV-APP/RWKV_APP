@@ -5,13 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zone/router/page_key.dart';
 
-BuildContext? getContext() {
-  return getNavigatorKey().currentState?.context;
-}
+BuildContext? getContext() => _getNavigatorKey().currentState?.context;
 
-GlobalKey<NavigatorState> getNavigatorKey() {
-  return _navigatorKey;
-}
+GlobalKey<NavigatorState> _getNavigatorKey() => _navigatorKey;
 
 final _navigatorKey = GlobalKey<NavigatorState>(debugLabel: "root");
 
