@@ -9,6 +9,8 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/pager.dart';
 
@@ -66,8 +68,8 @@ class _Empty extends ConsumerWidget {
   const _Empty();
 
   void _onPressed() {
-    Pager.toggle();
     if (!checkModelSelection()) return;
+    push(PageKey.chat);
     P.chat.startNewChat();
   }
 

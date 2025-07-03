@@ -27,10 +27,7 @@ class PageChat extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Pager(
-      drawer: Menu(),
-      child: _Page(),
-    );
+    return const _Page();
   }
 }
 

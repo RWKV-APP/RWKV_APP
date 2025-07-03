@@ -136,11 +136,11 @@ class ChatAppBar extends ConsumerWidget {
           ),
         ),
       ),
-      leading: const Row(
-        children: [
-          _MenuButton(),
-        ],
-      ),
+      // leading: const Row(
+      //   children: [
+      //     _MenuButton(),
+      //   ],
+      // ),
       actions: [
         if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
         if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),

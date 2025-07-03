@@ -776,8 +776,7 @@ extension _$RWKV on _RWKV {
       case PageKey.othello:
         await loadOthello();
         break;
-      case PageKey.chat:
-      case PageKey.sudoku:
+      default:
         break;
     }
   }

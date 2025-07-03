@@ -525,12 +525,13 @@ extension _$Chat on _Chat {
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
-    qqq("_onPageKeyChanged: $pageKey");
-    Future.delayed(200.ms).then((_) {
-      P.msg._clear();
-    });
+    // TODO: 根据路由状态执行逻辑
+    // qqq("_onPageKeyChanged: $pageKey");
+    // Future.delayed(200.ms).then((_) {
+    //   P.msg._clear();
+    // });
 
-    if (!checkModelSelection()) return;
+    // if (!checkModelSelection()) return;
   }
 
   void _onTextEditingControllerValueChanged() {

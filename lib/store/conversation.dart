@@ -67,7 +67,7 @@ extension $Conversation on _Conversation {
   FV onTapInList(ConversationData conversation) async {
     qq;
     currentCreatedAtUS.q = conversation.createdAtUS;
-    Pager.toggle();
+    // Pager.toggle();
     final msgNode = MsgNode.fromJson(
       conversation.data,
       createAtInUS: conversation.createdAtUS,
@@ -77,6 +77,7 @@ extension $Conversation on _Conversation {
     P.msg.msgNode.q = msgNode;
     P.msg.ids.q = ids;
     P.msg._loadMessages(msgNode.allMsgIdsFromRoot);
+    push(PageKey.chat);
   }
 
   FV onDeleteClicked(BuildContext context, ConversationData conversation) async {
