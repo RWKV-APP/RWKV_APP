@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:zone/config.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/msg_node.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 import 'dart:convert';
 
 import 'db.steps.dart';

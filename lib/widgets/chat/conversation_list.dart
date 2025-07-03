@@ -9,7 +9,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/pager.dart';
 
 class ConversationList extends ConsumerWidget {

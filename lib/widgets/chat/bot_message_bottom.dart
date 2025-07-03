@@ -12,7 +12,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/thinking_mode.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
 
 class BotMessageBottom extends ConsumerWidget {

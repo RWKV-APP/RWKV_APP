@@ -8,9 +8,9 @@ import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/route/method.dart';
-import 'package:zone/route/router.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/router.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/form_item.dart';
 import 'package:zone/model/custom_theme.dart' as custom_theme;
 

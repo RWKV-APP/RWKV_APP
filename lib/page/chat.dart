@@ -8,7 +8,7 @@ import 'package:zone/model/world_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
 import 'package:zone/widgets/chat/audio_empty.dart';
 import 'package:zone/widgets/chat/audio_input.dart';

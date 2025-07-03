@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/feature_rollout.dart';
-import 'package:zone/state/p.dart' show P, $Preference;
+import 'package:zone/store/p.dart' show P, $Preference;
 
 class WithDevOption extends StatefulWidget {
   final Widget child;

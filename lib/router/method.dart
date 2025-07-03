@@ -1,7 +1,7 @@
-import 'package:zone/route/page_key.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:go_router/go_router.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/route/router.dart';
+import 'package:zone/router/router.dart';
 
 /// # 直接替换导航堆栈, 可能?
 ///

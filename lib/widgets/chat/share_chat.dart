@@ -15,7 +15,7 @@ import 'package:sprintf/sprintf.dart';
 import 'package:zone/config.dart' show Config;
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
-import 'package:zone/state/p.dart' show P;
+import 'package:zone/store/p.dart' show P;
 import 'package:zone/widgets/chat/message.dart';
 
 class ShareChatSheet extends ConsumerStatefulWidget {

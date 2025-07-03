@@ -9,9 +9,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/group_info.dart';
-import 'package:zone/route/method.dart';
-import 'package:zone/route/router.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/router.dart';
+import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/widgets/model_item.dart';
 

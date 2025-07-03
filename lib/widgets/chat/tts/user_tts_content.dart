@@ -7,7 +7,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 
 class UserTTSContent extends ConsumerWidget {
   const UserTTSContent(this.msg, this.index, {super.key});

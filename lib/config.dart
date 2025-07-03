@@ -1,4 +1,4 @@
-import 'package:zone/route/page_key.dart';
+import 'package:zone/router/page_key.dart';
 
 abstract class Config {
   static final firstPage = PageKey.chat.name;

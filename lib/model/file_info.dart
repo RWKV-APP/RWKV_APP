@@ -7,7 +7,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/config.dart';
 import 'package:zone/model/world_type.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 
 @immutable
 class FileInfo extends Equatable {

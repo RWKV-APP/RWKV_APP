@@ -10,7 +10,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/is_chinese.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 
 class Suggestions extends ConsumerWidget {
   static const defaultHeight = 46.0;

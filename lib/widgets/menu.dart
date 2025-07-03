@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/config.dart';
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/page/panel/settings.dart';
 import 'package:zone/widgets/chat/conversation_list.dart';
 

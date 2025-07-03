@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/route/method.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/store/p.dart';
 
 class PhotoViewerOverlay extends ConsumerWidget {
   const PhotoViewerOverlay({super.key});

@@ -16,7 +16,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/model/tts_instruction.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:zone/widgets/performance_info.dart';
 

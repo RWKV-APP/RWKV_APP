@@ -8,7 +8,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/world_type.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 
 class VisualEmpty extends ConsumerWidget {
   const VisualEmpty({super.key});

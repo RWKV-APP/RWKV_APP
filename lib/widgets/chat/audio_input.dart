@@ -10,7 +10,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/world_type.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 
 const _kButtonSize = 72.0;
 const _kButtonBottom = 36.0;

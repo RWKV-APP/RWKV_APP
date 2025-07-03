@@ -9,8 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/route/method.dart';
-import 'package:zone/state/p.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/store/p.dart';
 
 // TODO: @wangce move it to pages/panel
 class AppInfo extends ConsumerWidget {

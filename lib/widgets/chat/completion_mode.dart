@@ -6,7 +6,7 @@ import 'package:halo/halo.dart' show qqq;
 import 'package:halo_state/halo_state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:zone/gen/l10n.dart' show S;
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/performance_info.dart' show PerformanceInfo;
 
 class Completion extends ConsumerStatefulWidget {

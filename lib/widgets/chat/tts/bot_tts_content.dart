@@ -12,7 +12,7 @@ import 'package:zone/func/merge_wav.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
-import 'package:zone/state/p.dart';
+import 'package:zone/store/p.dart';
 
 class BotTtsContent extends ConsumerStatefulWidget {
   final model.Message msg;
