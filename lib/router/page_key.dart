@@ -12,26 +12,15 @@ enum PageKey {
 
   String get path => "/$name";
 
-  Widget get scaffold {
-    switch (this) {
-      case PageKey.chat:
-        return const PageChat();
-      case PageKey.othello:
-        return const PageOthello();
-      case PageKey.sudoku:
-        return const PageSudoku();
-    }
-  }
+  Widget get scaffold => switch (this) {
+    PageKey.chat => const PageChat(),
+    PageKey.othello => const PageOthello(),
+    PageKey.sudoku => const PageSudoku(),
+  };
 
-  GoRoute get route => GoRoute(path: path, builder: (_, __) => scaffold);
+  GoRoute get route => GoRoute(path: path, builder: (_, _) => scaffold);
 
-  static String get initialLocation {
-    return first.path;
-    // return PageKey.test.path;
-  }
+  static String get initialLocation => first.path;
 
-  static PageKey get first {
-    final pageKey = PageKey.values.byName(Config.firstPage);
-    return pageKey;
-  }
+  static PageKey get first => PageKey.values.byName(Config.firstPage);
 }
