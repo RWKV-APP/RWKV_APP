@@ -66,6 +66,8 @@ class Debugger extends ConsumerWidget {
     final msgNode = ref.watch(P.msg.msgNode);
     final pool = ref.watch(P.msg.pool);
     final pageKey = ref.watch(P.app.pageKey);
+    final source = ref.watch(P.translator.source);
+    final result = ref.watch(P.translator.result);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -159,6 +161,10 @@ class Debugger extends ConsumerWidget {
                       if (showPool) ...[T("pool".codeToName), T((pool.values.m((e) => e.id)).toString())],
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
+                      T("source".codeToName),
+                      T(source),
+                      T("result".codeToName),
+                      T(result),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

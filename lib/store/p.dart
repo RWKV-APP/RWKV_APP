@@ -35,6 +35,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
@@ -71,6 +73,7 @@ import 'package:zone/widgets/pager.dart';
 
 part "adapter.dart";
 part "app.dart";
+part "backend.dart";
 part "chat.dart";
 part "conversation.dart";
 part "device.dart";
@@ -84,6 +87,7 @@ part "preference.dart";
 part "rwkv.dart";
 part "sudoku.dart";
 part "suggestion.dart";
+part "translator.dart";
 part "tts.dart";
 part "world.dart";
 
@@ -104,6 +108,8 @@ abstract class P {
   static final suggestion = _Suggestion();
   static final dump = _Dump();
   static final msg = _Msg();
+  static final backend = _Backend();
+  static final translator = _Translator();
 
   static FV init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -128,6 +134,8 @@ abstract class P {
       suggestion._init(),
       dump._init(),
       msg._init(),
+      backend._init(),
+      translator._init(),
     ]);
   }
 }
