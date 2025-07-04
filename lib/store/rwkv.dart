@@ -634,18 +634,20 @@ extension $RWKV on _RWKV {
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferChinese,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferPseudo,
     bool setPrompt = true,
+    String? prompt,
   }) async {
     qqr(thinkingMode);
     _thinkingMode.q = thinkingMode ?? const thinking_mode.Lighting();
 
     final finalPrompt = switch (_thinkingMode) {
-      thinking_mode.PreferChinese() => Config.promptCN,
-      _ => Config.prompt,
+      thinking_mode.PreferChinese() => prompt ?? Config.promptCN,
+      _ => prompt ?? Config.prompt,
     };
 
     if (setPrompt) {
-      qqq("setPrompt: $finalPrompt");
-      send(to_rwkv.SetPrompt(_thinkingMode.q.hasThinkTag ? "<EOD>" : finalPrompt));
+      final prompt = _thinkingMode.q.hasThinkTag ? "<EOD>" : finalPrompt;
+      send(to_rwkv.SetPrompt(prompt));
+      qqw("setPrompt: $prompt");
     }
 
     switch (_thinkingMode.q) {

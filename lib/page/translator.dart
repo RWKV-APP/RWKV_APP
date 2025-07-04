@@ -52,6 +52,7 @@ class _Source extends ConsumerWidget {
     return C(
       decoration: BD(color: kCR.q(.2)),
       child: TextField(
+        maxLines: 10,
         controller: P.translator.textEditingController,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
@@ -72,6 +73,7 @@ class _Result extends ConsumerWidget {
     return C(
       decoration: BD(color: kCB.q(.2)),
       child: TextField(
+        maxLines: 10,
         controller: TextEditingController(text: result),
         enabled: false,
         decoration: InputDecoration(

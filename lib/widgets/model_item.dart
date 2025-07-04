@@ -104,23 +104,7 @@ class ModelItem extends ConsumerWidget {
     if (tags.contains("translate")) {
       P.rwkv.send(SetUserRole("English"));
       P.rwkv.send(SetResponseRole("Chinese"));
-      await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None());
-      HF.wait(100 * 10).then((_) {
-        qqw("那我肯定是设定了的");
-        P.rwkv.send(SetPrompt(""));
-      });
-      HF.wait(200 * 10).then((_) {
-        qqw("那我肯定是设定了的");
-        P.rwkv.send(SetPrompt(""));
-      });
-      HF.wait(300 * 10).then((_) {
-        qqw("那我肯定是设定了的");
-        P.rwkv.send(SetPrompt(""));
-      });
-      HF.wait(400 * 10).then((_) {
-        qqw("那我肯定是设定了的");
-        P.rwkv.send(SetPrompt(""));
-      });
+      await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "");
     } else {
       P.rwkv.send(SetUserRole("User"));
       P.rwkv.send(SetResponseRole("Assistant"));
