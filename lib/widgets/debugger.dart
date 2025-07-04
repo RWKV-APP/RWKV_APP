@@ -65,6 +65,8 @@ class Debugger extends ConsumerWidget {
     final checkingLatency = ref.watch(P.guard.checkingLatency);
     final msgNode = ref.watch(P.msg.msgNode);
     final pool = ref.watch(P.msg.pool);
+    final source = ref.watch(P.translator.source);
+    final result = ref.watch(P.translator.result);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -156,6 +158,10 @@ class Debugger extends ConsumerWidget {
                       if (showConversation) ...[T("currentCreatedAtUS".codeToName), T(currentCreatedAtUS.toString())],
                       if (showMsgNode) ...[T("msgNode.createAtInUS".codeToName), T(msgNode.createAtInUS.toString())],
                       if (showPool) ...[T("pool".codeToName), T((pool.values.m((e) => e.id)).toString())],
+                      T("source".codeToName),
+                      T(source),
+                      T("result".codeToName),
+                      T(result),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
