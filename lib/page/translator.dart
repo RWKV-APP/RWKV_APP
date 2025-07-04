@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -113,6 +114,11 @@ class _Dashboard extends ConsumerWidget {
     P.translator.onPressTest();
   }
 
+  FV _onPressSetPrompt() async {
+    qq;
+    P.rwkv.send(SetPrompt(""));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final backendState = ref.watch(P.backend.state);
@@ -143,6 +149,14 @@ class _Dashboard extends ConsumerWidget {
             TextButton(
               onPressed: _onPressTest,
               child: Text("Translation Test"),
+            ),
+            TextButton(
+              onPressed: _onPressSetPrompt,
+              style: TextButton.styleFrom(
+                backgroundColor: kCR.q(1),
+                foregroundColor: kW.q(1),
+              ),
+              child: Text("Set Prompt to \"\""),
             ),
           ],
         ),
