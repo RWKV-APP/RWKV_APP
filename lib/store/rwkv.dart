@@ -521,7 +521,7 @@ extension $RWKV on _RWKV {
     }
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferContent());
+      send(to_rwkv.GetResponseBufferContent(messages));
       if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
       if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
     });
