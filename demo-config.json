@@ -547,9 +547,9 @@
         "name": "RWKV7-G1 1.5B Neko (8 Elite)",
         "type": "bin",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-LonelyNeko-a16w8-8elite_combined.bin",
-        "fileName": "rwkv7-g1-1.5b-LonelyNeko-a16w8-8elite_combined.bin",
-        "fileSize": 1690015368,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-Lonely-Neko-a16w8-8elite_combined.bin",
+        "fileName": "rwkv7-g1-1.5b-Lonely-Neko-a16w8-8elite_combined.bin",
+        "fileSize": 1690045312,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -569,9 +569,9 @@
         "name": "RWKV7-G1 1.5B Neko (8 Gen 3)",
         "type": "bin",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-LonelyNeko-a16w8-8gen3_combined.bin",
-        "fileName": "rwkv7-g1-1.5b-LonelyNeko-a16w8-8gen3_combined.bin",
-        "fileSize": 1692362312,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-Lonely-Neko-a16w8-8gen3_combined.bin",
+        "fileName": "rwkv7-g1-1.5b-Lonely-Neko-a16w8-8gen3_combined.bin",
+        "fileSize": 1692511104,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -591,9 +591,9 @@
         "name": "RWKV7-G1 1.5B Neko (8s Gen 3)",
         "type": "bin",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-LonelyNeko-a16w8-8sgen3_combined.bin",
-        "fileName": "rwkv7-g1-1.5b-LonelyNeko-a16w8-8sgen3_combined.bin",
-        "fileSize": 1693804024,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-Lonely-Neko-a16w8-8sgen3_combined.bin",
+        "fileName": "rwkv7-g1-1.5b-Lonely-Neko-a16w8-8sgen3_combined.bin",
+        "fileSize": 1692687224,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -613,9 +613,9 @@
         "name": "RWKV7-G1 1.5B Neko (8 Gen 2)",
         "type": "bin",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-LonelyNeko-a16w8-8gen2_combined.bin",
-        "fileName": "rwkv7-g1-1.5b-LonelyNeko-a16w8-8gen2_combined.bin",
-        "fileSize": 1692382728,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-1.5b-Lonely-Neko-a16w8-8gen2_combined.bin",
+        "fileName": "rwkv7-g1-1.5b-Lonely-Neko-a16w8-8gen2_combined.bin",
+        "fileSize": 1692498816,
         "quantization": "a16w8",
         "platforms": [
           "android"
