@@ -23,14 +23,27 @@ extension _$Backend on _Backend {
     qq;
   }
 
-  shelf.Response _echoRequest(shelf.Request request) {
+  Future<shelf.Response> _echoRequest(shelf.Request request) async {
     qr;
+
     final headers = {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+      'Access-Control-Allow-Headers': 'X-Requested-With,content-type,Authorization',
     };
+
+    if (request.method == 'OPTIONS') {
+      return shelf.Response.ok(null, headers: headers);
+    }
+
+    final requestBody = await request.readAsString();
+    qqr("requestBody: $requestBody");
+    final body = jsonEncode({
+      'message': 'Hello, world!',
+    });
     return shelf.Response.ok(
-      '{"message": "Hello, world!"}',
+      body,
       headers: headers,
       encoding: utf8,
     );
