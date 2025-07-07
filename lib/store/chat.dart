@@ -226,7 +226,7 @@ extension $Chat on _Chat {
   FV startNewChat() async {
     if (receivingTokens.q) await onStopButtonPressed();
     await Future.delayed(100.ms);
-    Alert.success(S.current.new_chat_started);
+    // Alert.success(S.current.new_chat_started);
     P.msg._clear();
     P.rwkv.clearStates();
     P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
@@ -404,7 +404,19 @@ extension _$Chat on _Chat {
     P.app.pageKey.l(_onPageKeyChanged);
 
     P.rwkv.oldBroadcastStream.listen(_onOldStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
-    P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    final event = P.rwkv.broadcastStream;
+    event.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+
+    /// update the conversation subtitle
+    event
+        .whereType<from_rwkv.ResponseBufferContent>()
+        .where((e) => P.msg.list.q.length <= 2)
+        .throttleTime(Duration(milliseconds: 500), trailing: true, leading: true)
+        .take(10)
+        .listen((e) {
+          final r = e.responseBufferContent.replaceAll('\n', '').replaceAll('</think>', '').replaceAll('<think>', '');
+          P.conversation.updateCurrentConvSubtitle(r);
+        });
 
     P.world.audioFileStreamController.stream.listen(_onNewFileReceived);
     focusNode.addListener(_onFocusNodeChanged);

@@ -85,8 +85,11 @@ class $AssetsImgChatGen {
   AssetGenImage get logoSquare =>
       const AssetGenImage('assets/img/chat/logo.square.png');
 
+  /// File path: assets/img/chat/rwkv.png
+  AssetGenImage get rwkv => const AssetGenImage('assets/img/chat/rwkv.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [downloadQrcode, icon, logoSquare];
+  List<AssetGenImage> get values => [downloadQrcode, icon, logoSquare, rwkv];
 }
 
 class $AssetsLibChatGen {
@@ -192,11 +195,11 @@ class $AssetsLibQnnGen {
 class $AssetsModelChatGen {
   const $AssetsModelChatGen();
 
-  /// File path: assets/model/chat/q
-  String get q => 'assets/model/chat/q';
+  /// File path: assets/model/chat/.gitkeep
+  String get aGitkeep => 'assets/model/chat/.gitkeep';
 
   /// List of all assets
-  List<String> get values => [q];
+  List<String> get values => [aGitkeep];
 }
 
 class Assets {

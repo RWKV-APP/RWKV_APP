@@ -143,8 +143,8 @@ class ChatAppBar extends ConsumerWidget {
       // ),
       actions: [
         if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
-        if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
-        if (demoType != DemoType.chat && demoType != DemoType.sudoku)
+        // if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
+        if (demoType != DemoType.sudoku)
           IconButton(
             onPressed: onSettingsPressed,
             icon: const Icon(Icons.tune),
