@@ -859,9 +859,9 @@
         "name": "ModRWKV7-V-0.4B-thinking (8 Elite)",
         "type": "qnn",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8_8elite_combined_embedding.bin",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/qnn2.35-250705/RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8-8elite_combined_embedding.bin",
         "fileName": "RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8_8elite_combined_embedding.bin",
-        "fileSize": 540646248,
+        "fileSize": 541247248,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -882,9 +882,9 @@
         "name": "ModRWKV7-V-0.4B-thinking (8 Gen 3)",
         "type": "qnn",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8_8gen3_combined_embedding.bin",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/qnn2.35-250705/RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8-8gen3_combined_embedding.bin",
         "fileName": "RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8_8gen3_combined_embedding.bin",
-        "fileSize": 543718120,
+        "fileSize": 544364304,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -902,56 +902,12 @@
         ]
       },
       {
-        "name": "ModRWKV7-V-0.4B Encoder",
-        "type": "gguf",
-        "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/RWKV7-0.4B-G1-SigLIP2-encoder-f16.gguf",
-        "fileName": "RWKV7-0.4B-G1-SigLIP2-encoder-f16.gguf",
-        "fileSize": 197526912,
-        "quantization": "fp16",
-        "platforms": [
-          "macos",
-          "linux",
-          "android",
-          "ios"
-        ],
-        "backends": [
-          "llamacpp"
-        ],
-        "tags": [
-          "encoder"
-        ]
-      },
-      {
-        "name": "ModRWKV7-V-0.4B",
-        "type": "gguf",
-        "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/RWKV7-0.4B-G1-SigLIP2-Q8_0.gguf",
-        "fileName": "RWKV7-0.4B-G1-SigLIP2-Q8_0.gguf",
-        "fileSize": 501496768,
-        "quantization": "Q8_0",
-        "platforms": [
-          "macos",
-          "linux",
-          "android",
-          "ios"
-        ],
-        "backends": [
-          "llamacpp"
-        ],
-        "tags": [
-          "cpu",
-          "core",
-          "OCR"
-        ]
-      },
-      {
-        "name": "ModRWKV7-V-0.4B (8 Elite)",
+        "name": "ModRWKV7-V-0.4B-thinking (8 Gen 2)",
         "type": "qnn",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/RWKV7-0.4B-G1-SigLIP2-a16w8_8elite_combined_embedding.bin",
-        "fileName": "RWKV7-0.4B-G1-SigLIP2-a16w8_8elite_combined_embedding.bin",
-        "fileSize": 540597016,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/qnn2.35-250705/RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8-8gen2_combined_embedding.bin",
+        "fileName": "RWKV7-0.4B-G1-SigLIP2-ColdStart-a16w8_8gen2_combined_embedding.bin",
+        "fileSize": 544458512,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -962,33 +918,10 @@
         "tags": [
           "npu",
           "core",
-          "OCR"
+          "reason"
         ],
         "socLimitations": [
-          "8 Elite"
-        ]
-      },
-      {
-        "name": "ModRWKV7-V-0.4B (8 Gen 3)",
-        "type": "qnn",
-        "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/RWKV7-0.4B-G1-SigLIP2-a16w8_8gen3_combined_embedding.bin",
-        "fileName": "RWKV7-0.4B-G1-SigLIP2-a16w8_8gen3_combined_embedding.bin",
-        "fileSize": 543664792,
-        "quantization": "a16w8",
-        "platforms": [
-          "android"
-        ],
-        "backends": [
-          "qnn"
-        ],
-        "tags": [
-          "npu",
-          "core",
-          "OCR"
-        ],
-        "socLimitations": [
-          "8 Gen 3"
+          "8 Gen 2"
         ]
       },
       {
