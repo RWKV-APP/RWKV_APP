@@ -2,6 +2,13 @@ part of 'p.dart';
 
 const _port = 52345;
 
+const _headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+  'Access-Control-Allow-Headers': 'X-Requested-With,content-type,Authorization',
+};
+
 enum BackendState {
   starting,
   running,
@@ -24,17 +31,8 @@ extension _$Backend on _Backend {
   }
 
   Future<shelf.Response> _echoRequest(shelf.Request request) async {
-    qr;
-
-    final headers = {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-      'Access-Control-Allow-Headers': 'X-Requested-With,content-type,Authorization',
-    };
-
     if (request.method == 'OPTIONS') {
-      return shelf.Response.ok(null, headers: headers);
+      return shelf.Response.ok(null, headers: _headers);
     }
 
     final requestBody = await request.readAsString();
@@ -49,13 +47,13 @@ extension _$Backend on _Backend {
       });
       return shelf.Response.ok(
         body,
-        headers: headers,
+        headers: _headers,
         encoding: utf8,
       );
     } catch (e) {
       return shelf.Response.internalServerError(
         body: e.toString(),
-        headers: headers,
+        headers: _headers,
         encoding: utf8,
       );
     }
