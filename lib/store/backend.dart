@@ -38,15 +38,27 @@ extension _$Backend on _Backend {
     }
 
     final requestBody = await request.readAsString();
-    qqr("requestBody: $requestBody");
-    final body = jsonEncode({
-      'message': 'Hello, world!',
-    });
-    return shelf.Response.ok(
-      body,
-      headers: headers,
-      encoding: utf8,
-    );
+    try {
+      final json = jsonDecode(requestBody);
+      final text = json['text'];
+      final translation = P.translator._getTranslation(text);
+      final body = jsonEncode({
+        'text': text,
+        'translation': translation,
+        'timestamp': HF.microseconds,
+      });
+      return shelf.Response.ok(
+        body,
+        headers: headers,
+        encoding: utf8,
+      );
+    } catch (e) {
+      return shelf.Response.internalServerError(
+        body: e.toString(),
+        headers: headers,
+        encoding: utf8,
+      );
+    }
   }
 }
 
