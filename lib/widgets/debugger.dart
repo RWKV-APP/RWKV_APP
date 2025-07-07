@@ -68,6 +68,9 @@ class Debugger extends ConsumerWidget {
     final pageKey = ref.watch(P.app.pageKey);
     final source = ref.watch(P.translator.source);
     final result = ref.watch(P.translator.result);
+    final pageKey = ref.watch(P.app.pageKey);
+    final runningTaskKey = ref.watch(P.translator.runningTaskKey);
+    final translations = ref.watch(P.translator.translations);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -165,6 +168,12 @@ class Debugger extends ConsumerWidget {
                       T(source),
                       T("result".codeToName),
                       T(result),
+                      T("pageKey".codeToName),
+                      T(pageKey.toString()),
+                      T("runningTaskKey".codeToName),
+                      T(runningTaskKey.toString()),
+                      T("translations.length".codeToName),
+                      T(translations.length.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
