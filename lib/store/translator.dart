@@ -3,7 +3,7 @@ part of 'p.dart';
 const _initialSource = "This is a test.";
 const _initialResult = "";
 const _endString = "hlcc_[END]_hlcc";
-const _maxCachedPairsCount = 1;
+const _maxCachedPairsCount = 10000;
 
 class _Translator {
   late final source = qs(_initialSource);
