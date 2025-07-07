@@ -2,6 +2,8 @@ part of 'p.dart';
 
 const _initialSource = "This is a test.";
 const _initialResult = "";
+const _endString = "hlcc_[END]_hlcc";
+const _maxCachedPairsCount = 1;
 
 class _Translator {
   late final source = qs(_initialSource);
@@ -9,6 +11,7 @@ class _Translator {
   late final result = qs(_initialResult);
   late final translations = qs<LinkedHashMap<String, String>>(LinkedHashMap());
   late final runningTaskKey = qs<String?>(null);
+  late final isGenerating = qs(false);
 }
 
 /// Private methods
@@ -35,14 +38,47 @@ extension _$Translator on _Translator {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
-    qq;
+    // qqq("onStreamEvent: $event");
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
+        // 得到的翻译
         final content = res.responseBufferContent;
+        // 更新 result
         result.q = content;
-        final key = runningTaskKey.q;
+        // TODO: 复杂任务的准确映射?
+        // 更新 caches
+        final request = res.toRWKV as to_rwkv.GetResponseBufferContent;
+        final key = request.messages.firstOrNull;
         if (key == null) return;
-        translations.q[key] = content;
+        // 更新 translations
+        translations.q = LinkedHashMap.from({...translations.q, key: content});
+        qqr("translations: ${translations.q.toString()}");
+        break;
+      case from_rwkv.IsGenerating res:
+        final isGenerating = res.isGenerating;
+
+        final currentIsGenerating = this.isGenerating.q;
+        final isStopEvent = currentIsGenerating && !isGenerating;
+        if (isStopEvent) {
+          // 拼接完结末尾
+          final key = runningTaskKey.q;
+          final translation = translations.q[key];
+          if (translation != null) {
+            translations.q = LinkedHashMap.from({
+              ...translations.q,
+              key: translation + _endString,
+            });
+          }
+
+          runningTaskKey.q = null;
+
+          // 如果 translations 超过最大缓存数量, 移除最早的条目
+          if (translations.q.length > _maxCachedPairsCount) {
+            translations.q.remove(translations.q.keys.first);
+          }
+        }
+
+        this.isGenerating.q = isGenerating;
         break;
       default:
         break;
@@ -53,9 +89,8 @@ extension _$Translator on _Translator {
     qq;
     final key = runningTaskKey.q;
     if (key != null && translations.q.containsKey(key)) {
-      translations.q[key] = (translations.q[key] ?? "") + "_[END]_";
+      translations.q[key] = (translations.q[key] ?? "") + _endString;
     }
-    runningTaskKey.q = null;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
@@ -74,47 +109,27 @@ extension _$Translator on _Translator {
   /// 4. 如果 runningTaskKey 是 null, 如果 `translations.q[sourceKey]` 未完结, 开启新的任务
   /// 5. 如果 runningTaskKey 是 null, 如果 `translations.q[sourceKey]` 已完结, 返回字符串
   ///
-  /// 对 [完结] 的定义: 字符串末尾拼接了 `"_[END]_"`
+  /// 对 [完结] 的定义: 字符串末尾拼接了 `_endString`
   String _getTranslation(String sourceKey) {
     final currentRunningTask = runningTaskKey.q;
     final existingTranslation = translations.q[sourceKey];
 
-    // 1. 如果 runningTaskKey 不是 sourceKey, 停止 LLM, 开启新的任务
-    if (currentRunningTask != null && currentRunningTask != sourceKey) {
-      _startNewTask(sourceKey);
-      return "";
-    }
+    final isEnded = existingTranslation?.endsWith(_endString) ?? false;
+    if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
 
-    // TODO: 还是需要真正的 "完结" 字符串, 建议直接沿用, 可以问一下 @Molly
+    final isRunning = currentRunningTask == sourceKey;
+    if (isRunning) return existingTranslation?.replaceAll(_endString, "") ?? "";
 
-    // 2. 如果 runningTaskKey 是 sourceKey, `translations.q[sourceKey]`
-    if (currentRunningTask == sourceKey) {
-      // 对于正在进行的任务，不显示结束标记
-      return existingTranslation?.replaceAll("_[END]_", "") ?? "";
-    }
+    // not running, not ended
+    _startNewTask(sourceKey);
 
-    // 3. 如果 runningTaskKey 是 null, 如果 `translations.q[sourceKey]` 为空, 开启新的任务
-    if (existingTranslation == null || existingTranslation.isEmpty) {
-      _startNewTask(sourceKey);
-      return "";
-    }
-
-    // 4. 如果 runningTaskKey 是 null, 如果 `translations.q[sourceKey]` 未完结, 开启新的任务
-    if (!existingTranslation.endsWith("_[END]_")) {
-      _startNewTask(sourceKey);
-      return "";
-    }
-
-    // 5. 如果 runningTaskKey 是 null, 如果 `translations.q[sourceKey]` 已完结, 返回字符串
-    return existingTranslation.replaceAll("_[END]_", "");
+    return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 }
 
 /// Public methods
 extension $Translator on _Translator {
   FV onPressTest() async {
-    qq;
-    P.rwkv.send(to_rwkv.SetPrompt(""));
-    P.rwkv.sendMessages([source.q]);
+    _startNewTask(source.q);
   }
 }

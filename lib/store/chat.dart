@@ -561,6 +561,8 @@ extension _$Chat on _Chat {
   }
 
   void _fullyReceived({String? callingFunction}) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
     qqq("callingFunction: $callingFunction");
 
     final id = receiveId.q;
@@ -647,6 +649,9 @@ extension _$Chat on _Chat {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
+
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
@@ -674,6 +679,8 @@ extension _$Chat on _Chat {
   }
 
   void _onStreamDone() async {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
     qq;
     final demoType = P.app.demoType.q;
     if (demoType != DemoType.chat && demoType != DemoType.world) return;
@@ -681,6 +688,8 @@ extension _$Chat on _Chat {
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
