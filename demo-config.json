@@ -1051,7 +1051,7 @@
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/qnn2.35-250705/modrwkv-v2-1B5-step4-a16w8-8gen2_combined_embedding.bin",
         "fileName": "modrwkv-v2-1B5-step4-a16w8-8gen2_combined_embedding.bin",
-        "fileSize": 1705555672,
+        "fileSize": 1705506056,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -1073,7 +1073,7 @@
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/qnn2.35-250705/modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin",
         "fileName": "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin",
-        "fileSize": 1705629400,
+        "fileSize": 1705542920,
         "quantization": "a16w8",
         "platforms": [
           "android"
@@ -1095,7 +1095,7 @@
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/qnn2.35-250705/modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin",
         "fileName": "modrwkv-v2-1B5-step4-a16w8-8elite_combined_embedding.bin",
-        "fileSize": 1701324504,
+        "fileSize": 1701303560,
         "quantization": "a16w8",
         "platforms": [
           "android"
