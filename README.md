@@ -1,62 +1,85 @@
 # RWKV App
 
-使用 flutter 实现的 RWKV-LM 端侧推理 App
+[English](./README.md) | [中文](./README.zh.md)
 
-## 技术架构
+This is a cross-platform mobile application for RWKV-LM, built with Flutter. It allows for on-device inference of the RWKV language model.
 
-- 前端 (flutter): [本项目](https://github.com/MollySophia/rwkv_mobile_flutter)
-- 后端 (dart ffi): [rwkv_mobile_flutter](https://github.com/MollySophia/rwkv_mobile_flutter)
-- 权重: [mollysama/rwkv-mobile-models](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
+## Features
 
-## 准备工作
+- **Cross-Platform:** Works on both Android and iOS.
+- **On-Device Inference:** All computations are done locally on your device.
+- **Modular Design:** Easily switch between different RWKV models (Chat, TTS, Visual Understanding, Othello, Sudoku).
+- **Open Source:** The entire project is open source and available on GitHub.
 
-- 找开发人员索要 `.env` 文件, 将 zip 文件解压后的文件拷贝至目录 `.env`
-- 找开发人员索要 `assets/filter.txt` 文件, 将 zip 文件解压后的文件拷贝至目录 `assets/filter.txt`
-- 找开发人员索要 `assets/model` 文件夹, 将 zip 文件解压后的文件夹拷贝至目录 `assets/model`
+## Architecture
 
-### flutter env
+- **Frontend (Flutter):** [rwkv_mobile_flutter](https://github.com/MollySophia/rwkv_mobile_flutter)
+- **Backend (Dart FFI):** [rwkv_mobile_flutter](https://github.com/MollySophia/rwkv_mobile_flutter)
+- **Models:** [mollysama/rwkv-mobile-models](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 
-```
-flutter doctor
-```
+## Getting Started
 
-```
-Doctor summary (to see all details, run flutter doctor -v):
-[✓] Flutter (Channel stable, 3.32.2, on macOS 15.5 24F74 darwin-arm64, locale en-CN)
-[✓] Android toolchain - develop for Android devices (Android SDK version 35.0.0)
-[✓] Xcode - develop for iOS and macOS (Xcode 16.4)
-[✓] Chrome - develop for the web
-[✓] Android Studio (version 2024.3)
-[✓] VS Code (version 1.100.2)
-```
+## Development
 
-## 开发
+### Prerequisites
 
-### 设置环境
+- **Flutter:** Ensure you have Flutter installed and configured. See the [official documentation](https://flutter.dev/docs/get-started/install) for instructions.
+- **Environment Setup:**
+  - Obtain the `.env` file from the developers and place its contents in the `.env` directory.
+  - Obtain the `assets/filter.txt` file from the developers and place it in the `assets/` directory.
+  - Obtain the `assets/model` folder from the developers and place it in the `assets/` directory.
 
-- 使用 `fastlane switch_env env:chat` 切换至 chat app (RWKV Chat)
-- 使用 `fastlane switch_env env:tts` 切换至 tts app (RWKV Talk)
-- 使用 `fastlane switch_env env:world` 切换至 world app (RWKV See)
-- 使用 `fastlane switch_env env:othello` 切换至 world app (RWKV Othello)
-- 使用 `fastlane switch_env env:sudoku` 切换至 world app (RWKV Sudoku)
+### Installation
 
-### 运行
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/MollySophia/rwkv_mobile_flutter.git
+    cd rwkv_mobile_flutter
+    ```
+2.  **Install dependencies:**
+    ```bash
+    flutter pub get
+    ```
 
-- 在 vscode / cursor 中运行 "Debug: Start Debugging" (`workbench.action.debug.start`)
+### Switching Environments
 
-## 聊天页面逻辑
+Use the following `fastlane` commands to switch between different app environments:
 
-### 主要涉及的代码
+- **RWKV Chat:** `fastlane switch_env env:chat`
+- **RWKV Talk (TTS):** `fastlane switch_env env:tts`
+- **RWKV See (World):** `fastlane switch_env env:world`
+- **RWKV Othello:** `fastlane switch_env env:othello`
+- **RWKV Sudoku:** `fastlane switch_env env:sudoku`
 
-- 页面 UI: `lib/page/chat.dart`
-- 消息 UI: `lib/widgets/chat/message.dart`
-- 状态: `lib/state/chat.dart`
-- 模型: `lib/model/message.dart`
-- 后端: RWKV
+### Running the App
 
-### 业务逻辑
+- **VS Code / Cursor:** Launch the "Debug: Start Debugging" command (`workbench.action.debug.start`).
+- **Command Line:**
+  ```bash
+  flutter run
+  ```
 
-- 使用 ListView.separated 来渲染消息列表, `ListView.reverse = true`
-- 使用 `late final messages = qs<List<Message>>([]);` 作为数据源
-- 使用 `P.chat.send` 方法发送消息, 主要逻辑为先发送用户消息, 同步至状态, 再发送 bot message, 同步至状态. 而后, 向 Backend 发送消息, 最后, 周期性地从 backend 接收新生成的字符串.
-- 从 backend 接收到新生成的字符串后, 更新 bot message 的状态, 触发 UI 更新
+## Chat Page Logic
+
+### Key Files
+
+- **UI:** `lib/page/chat.dart`
+- **Message UI:** `lib/widgets/chat/message.dart`
+- **State Management:** `lib/state/chat.dart`
+- **Data Model:** `lib/model/message.dart`
+- **Backend Communication:** `RWKV`
+
+### Business Logic
+
+- The chat interface uses a `ListView.separated` with `reverse = true` to display messages.
+- The data source for the message list is `late final messages = qs<List<Message>>([]);`.
+- The `P.chat.send` method handles sending messages. It first sends the user's message and updates the state, then sends a bot message and updates the state. Finally, it sends the message to the backend and periodically receives newly generated strings.
+- When a new string is received from the backend, the bot's message state is updated, triggering a UI refresh.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request.
+
+## License
+
+This project is licensed under the [LICENSE](LICENSE) file.
