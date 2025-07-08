@@ -1,6 +1,10 @@
 lane :all do |params|
-  envString = (params[:env] != 'chat' && params[:env] != nil && params[:env] != '') ? params[:env] : 'chat'
+  env = (params[:env] != 'chat' && params[:env] != nil && params[:env] != '') ? params[:env] : 'chat'
   increase_version = params[:increase_version] == false ? false : true
+  upload_to_testflight = params[:upload_to_testflight] == false ? false : true
+  upload_to_pgyer = params[:upload_to_pgyer] == false ? false : true
+  skip_git_reset = params[:skip_git_reset] == true ? true : false
+
   build_number = raw_increase_build_number()
   raw_change_analysis_options()
   dart_fix()
@@ -9,20 +13,24 @@ lane :all do |params|
   if increase_version
     version_number = raw_increase_version_number()
   end
-  if envString == 'chat'
+  if env == 'chat'
     git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: '*')
     push_to_git_remote()
   end
-  global_replace(env: envString) # 替换环境变量
+  global_replace(env: env) # 替换环境变量
   build_assets() # 构建 assets
 
   # 🔥 上传到蒲公英
-  android_pgyer()
+  if upload_to_pgyer
+    android_pgyer()
+  end
 
   # 🔥 上传到 TestFlight
-  ios_upload(groups: ['External'])
+  if upload_to_testflight
+    ios_upload(groups: ['External'])
+  end
 
-  if envString == 'chat'
+  if env == 'chat' && !skip_git_reset
     git_reset()
   end
 end
