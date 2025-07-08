@@ -84,7 +84,9 @@ When you first open the app, a model selection panel will appear. Please choose 
 
 ```bash
 git clone https://github.com/MollySophia/rwkv_mobile_flutter.git
-cd rwkv_mobile_flutter
+# Make sure the rwkv_mobile_flutter and RWKV_APP are in the same directory
+git clone https://github.com/RWKV-APP/RWKV_APP.git
+cd RWKV_APP
 ```
 
 2. **Install dependencies:**

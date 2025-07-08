@@ -84,7 +84,9 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 
 ```bash
 git clone https://github.com/MollySophia/rwkv_mobile_flutter.git
-cd rwkv_mobile_flutter
+# 确保 rwkv_mobile_flutter 和 RWKV_APP 在同一目录下
+git clone https://github.com/RWKV-APP/RWKV_APP.git
+cd RWKV_APP
 ```
 
 2. **安装依赖：**
