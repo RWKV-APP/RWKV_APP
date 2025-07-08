@@ -96,7 +96,7 @@ flutter:
     - assets/config/chat/
     - assets/img/chat/
     - assets/lib/qnn/
-    - demo-config.json
+    - remote/latest.json
     - .env
     - assets/filter.txt
 
