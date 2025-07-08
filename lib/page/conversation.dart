@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
@@ -72,43 +73,47 @@ class _PageConversationState extends ConsumerState<PageConversation> {
               itemCount: conversations.length,
               itemBuilder: (context, index) {
                 final conversation = conversations[index % conversations.length];
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  margin: EdgeInsets.only(top: index == 0 ? 12 : 8, left: 12, right: 12),
-                  child: Dismissible(
-                    key: Key(conversation.createdAtUS.toString()),
-                    background: Container(
-                      color: Colors.red,
-                      padding: const EdgeInsets.only(right: 24),
-                      alignment: Alignment.centerRight,
-                      child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    confirmDismiss: (d) async {
-                      final s = S.of(context);
-                      final res = await showOkCancelAlertDialog(
-                        context: context,
-                        title: s.delete_conversation,
-                        message: s.delete_conversation_message,
-                        okLabel: s.delete,
-                        cancelLabel: s.cancel,
-                        isDestructiveAction: true,
-                      );
-                      return res == OkCancelResult.ok;
-                    },
-                    onDismissed: (d) async {
-                      await P.conversation.onDeleteClicked(context, conversation);
-                    },
-                    child: ConversationItem(conversation: conversation),
-                  ),
-                );
+                return buildConversationItem(conversation, index);
               },
             ),
           if (!isEmpty) const SliverToBoxAdapter(child: SizedBox(height: 60)),
         ],
+      ),
+    );
+  }
+
+  Widget buildConversationItem(ConversationData conversation, int index) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.only(top: index == 0 ? 12 : 8, left: 12, right: 12),
+      child: Dismissible(
+        key: Key(conversation.createdAtUS.toString()),
+        background: Container(
+          color: Colors.red,
+          padding: const EdgeInsets.only(right: 24),
+          alignment: Alignment.centerRight,
+          child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
+        ),
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (d) async {
+          final s = S.of(context);
+          final res = await showOkCancelAlertDialog(
+            context: context,
+            title: s.delete_conversation,
+            message: s.delete_conversation_message,
+            okLabel: s.delete,
+            cancelLabel: s.cancel,
+            isDestructiveAction: true,
+          );
+          return res == OkCancelResult.ok;
+        },
+        onDismissed: (d) async {
+          await P.conversation.onDeleteClicked(context, conversation);
+        },
+        child: ConversationItem(conversation: conversation),
       ),
     );
   }
@@ -130,7 +135,12 @@ class _Empty extends ConsumerWidget {
       children: [
         Text('No Conversations Yet', style: TextStyle(fontSize: 16)),
         16.h,
-        FilledButton(onPressed: _onPressed, child: Text('New Conversation')),
+        FilledButton.icon(
+          onPressed: _onPressed,
+          label: Text('New Conversation'),
+          icon: FaIcon(FontAwesomeIcons.plus),
+          style: ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16, vertical: 12))),
+        ),
       ],
     );
   }

@@ -217,46 +217,48 @@ class ConversationItem extends ConsumerWidget {
     return Material(
       child: GD(
         onLongPressStart: (details) => _onLongPressStart(details, context),
-        onTap: _onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(top: 4),
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(100),
+        child: InkWell(
+          onTap: _onTap,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 4),
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white),
                   ),
-                  child: FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CAA.stretch,
-                  children: [
-                    T(
-                      conversation.title,
-                      s: TS(s: 16, w: FW.w500, c: qb),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    4.h,
-                    T(
-                      conversation.subtitle ?? '-',
-                      s: TS(s: 12, c: Colors.grey),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                  ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CAA.stretch,
+                    children: [
+                      T(
+                        conversation.title,
+                        s: TS(s: 16, w: FW.w500, c: qb),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      4.h,
+                      T(
+                        conversation.subtitle ?? '-',
+                        s: TS(s: 12, c: Colors.grey),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Text(getDisplayTime(conversation.createdAtUS), style: TextStyle(fontSize: 12, color: Colors.grey)),
-            ],
+                const SizedBox(width: 12),
+                Text(getDisplayTime(conversation.createdAtUS), style: TextStyle(fontSize: 12, color: Colors.grey)),
+              ],
+            ),
           ),
         ),
       ),
