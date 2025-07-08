@@ -22,7 +22,7 @@ class _App extends RawApp {
 
   late final newVersionDialogShown = qs(false);
 
-  static const String _remoteDemoConfigKey = "demo-config.json";
+  static const String _remoteDemoConfigKey = "latest.json";
 
   late final isDesktop = qp((ref) => ref.watch(_isDesktop));
   final _isDesktop = qs(false);

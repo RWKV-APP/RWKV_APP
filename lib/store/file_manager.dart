@@ -49,16 +49,21 @@ extension $FileManager on _FileManager {
     qq;
     late final List<JSON> json;
 
-    if (P.app.modelConfig.q.isEmpty) {
-      final demoType = P.app.demoType.q;
-      final jsonPath = "demo-config.json";
-      qqq("jsonPath: $jsonPath");
-      final jsonString = await rootBundle.loadString(jsonPath);
-      final rawJSON = jsonDecode(jsonString);
-      final data = rawJSON[demoType.name]["model_config"];
-      json = HF.listJSON(data);
-    } else {
-      json = P.app.modelConfig.q;
+    try {
+      if (P.app.modelConfig.q.isEmpty) {
+        final demoType = P.app.demoType.q;
+        final jsonPath = "remote/latest.json";
+        qqq("jsonPath: $jsonPath");
+        final jsonString = await rootBundle.loadString(jsonPath);
+        final rawJSON = jsonDecode(jsonString);
+        final data = rawJSON[demoType.name]["model_config"];
+        json = HF.listJSON(data);
+      } else {
+        json = P.app.modelConfig.q;
+      }
+    } catch (e) {
+      qqe(e);
+      Sentry.captureException(e, stackTrace: StackTrace.current);
     }
 
     try {
@@ -71,6 +76,7 @@ extension $FileManager on _FileManager {
       }
     } catch (e) {
       qqe(e);
+      Sentry.captureException(e, stackTrace: StackTrace.current);
     }
   }
 
@@ -222,10 +228,11 @@ extension $FileManager on _FileManager {
 /// Private methods
 extension _$FileManager on _FileManager {
   FV _init() async {
-    // 1. check file
-    // 2. check zip file
-    await syncAvailableModels();
-    //
+    try {
+      await syncAvailableModels();
+    } catch (e) {
+      Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
   }
 }
 
