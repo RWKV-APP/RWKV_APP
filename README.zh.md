@@ -40,12 +40,12 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">Android</td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkvchat">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-sudoku">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-othello">apk</a></td>
+<td style="text-align: center;">Android APK 下载链接</td>
+<td style="text-align: center;"><a href="https://www.pgyer.com/rwkvchat">蒲公英</a></td>
+<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">蒲公英</a></td>
+<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">蒲公英</a></td>
+<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-sudoku">蒲公英</a></td>
+<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-othello">蒲公英</a></td>
 </tr>
 <tr>
 <td style="text-align: center;">iOS</td>

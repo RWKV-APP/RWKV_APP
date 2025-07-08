@@ -40,12 +40,12 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">Android</td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkvchat">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-sudoku">apk</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-othello">apk</a></td>
+<td style="text-align: center;">Android APK Download Link</td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-See/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-see">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Talk/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-see">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Sudoku/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-sudoku">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Othello/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-othello">pgyer</a></td>
 </tr>
 <tr>
 <td style="text-align: center;">iOS</td>
