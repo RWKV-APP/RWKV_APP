@@ -82,6 +82,7 @@ lane :git_reset do
 end
 
 lane :build_assets do
+  sh 'cd ..;dart run tools/bin/tools.dart;cd fastlane'
   sh 'cd ..;dart run flutter_native_splash:create --path=flutter_native_splash.yaml;cd fastlane'
   sh 'cd ..;dart run icons_launcher:create;cd fastlane'
 end
