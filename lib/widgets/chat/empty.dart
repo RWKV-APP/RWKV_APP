@@ -31,6 +31,7 @@ class Empty extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
 
     final inputHeight = demoType == DemoType.tts ? ref.watch(P.chat.inputHeight) : 0;
+    final version = ref.watch(P.app.version);
 
     return AnimatedPositioned(
       duration: 200.ms,
@@ -59,7 +60,24 @@ class Empty extends ConsumerWidget {
                     const Spacer(),
                     WithDevOption(child: Image.asset(logoPath, width: 140)),
                     12.h,
-                    T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
+                    Wrap(
+                      spacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      children: [
+                        Opacity(
+                          opacity: 0.0,
+                          child: T(version, s: TS(s: 10)),
+                        ),
+                        T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
+                        Opacity(
+                          opacity: 0.5,
+                          child: Padding(
+                            padding: EI.o(b: 4),
+                            child: T(version, s: TS(s: 10)),
+                          ),
+                        ),
+                      ],
+                    ),
                     12.h,
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 500),

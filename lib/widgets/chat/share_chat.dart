@@ -435,12 +435,22 @@ class _PreviewState extends ConsumerState<_Preview> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              Config.appTitle,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Text(
+                  Config.appTitle,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                4.w,
+                Padding(
+                  padding: EI.o(b: 3),
+                  child: Text(P.app.version.q, style: const TextStyle(fontSize: 10)),
+                ),
+              ],
             ),
             Text(
               sprintf(S.current.from_model, [P.rwkv.currentModel.q?.name ?? ""]),
