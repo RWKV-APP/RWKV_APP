@@ -143,7 +143,7 @@
         "fileSize": 2315788802,
         "sha256": "004093a6dfa36233fa119a0fbede3422b8639eca7caab88575d7527fe214cb4f",
         "quantization": "NF4",
-        "platforms": ["macos", "web", "windows"],
+        "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu"]
