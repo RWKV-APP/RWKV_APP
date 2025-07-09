@@ -10,33 +10,45 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar,
+      body: AppGradientBackground(child: body),
+    );
+  }
+}
+
+class AppGradientBackground extends StatelessWidget {
+  final Widget child;
+
+  const AppGradientBackground({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isBlack = isDark && P.app.customTheme.q.toString() == "LightsOut";
 
-    return Scaffold(
-      appBar: appBar,
-      body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: isBlack ? Colors.black : null,
-          gradient: isBlack
-              ? null
-              : LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomCenter,
-                  colors: isDark
-                      ? [
-                          Color(0xFF152D57),
-                          Color(0xFF0B1528),
-                        ]
-                      : [
-                          Color(0xFFF0F4FC),
-                          Color(0xFFD6E3F8),
-                        ],
-                ),
-        ),
-        child: body,
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: isBlack ? Colors.black : null,
+        gradient: isBlack
+            ? null
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomCenter,
+                colors: isDark
+                    ? [
+                        Color(0xFF152D57),
+                        Color(0xFF0B1528),
+                      ]
+                    : [
+                        Color(0xFFF0F4FC),
+                        Color(0xFFD6E3F8),
+                      ],
+              ),
       ),
+      child: child,
     );
   }
 }

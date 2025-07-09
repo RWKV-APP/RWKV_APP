@@ -28,22 +28,28 @@ class _PageHomeState extends State<PageHome> {
                 clipBehavior: Clip.antiAlias,
                 child: Image.asset(
                   'assets/img/chat/rwkv.png',
-                  height: 100,
-                  width: 100,
+                  height: 80,
+                  width: 80,
                 ),
               ),
             ),
             const SizedBox(height: 24),
             Text(
-              "Welcome to RWKV",
+              "Welcome to RWKV Chat",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'v1.0.0',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 100),
             buildRow([
               buildButton(
                 title: "Chat",
-                subtitle: "Chat with various model",
+                subtitle: "Chat with RWKV",
                 onTap: () async {
                   P.chat.startNewChat();
                   push(PageKey.chat);

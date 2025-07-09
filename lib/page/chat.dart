@@ -9,6 +9,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
 import 'package:zone/widgets/chat/audio_empty.dart';
 import 'package:zone/widgets/chat/audio_input.dart';
@@ -59,6 +60,7 @@ class _Page extends ConsumerWidget {
     final completionMode = ref.watch(P.chat.completionMode);
     final selectMessageMode = ref.watch(P.chat.isSharing);
     final atMainPage = ref.watch(Pager.atMainPage);
+    final demoType = ref.watch(P.app.demoType);
 
     if (completionMode) {
       final qb = ref.watch(P.app.qb);
@@ -80,6 +82,7 @@ class _Page extends ConsumerWidget {
       resizeToAvoidBottomInset: atMainPage,
       body: Stack(
         children: [
+          if (DemoType.chat == demoType) AppGradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
           const VisualEmpty(),
