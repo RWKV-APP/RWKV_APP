@@ -13,6 +13,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
+import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/pager.dart';
 import 'package:sprintf/sprintf.dart';
@@ -86,10 +87,11 @@ class ChatAppBar extends ConsumerWidget {
   ) {
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
+    final isChat = demoType == DemoType.chat;
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: scaffold.q(.7),
+      backgroundColor: isChat ? Colors.transparent : scaffold.q(.7),
       systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GD(
         onTap: _onTitlePressed,
@@ -98,40 +100,47 @@ class ChatAppBar extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CAA.center,
             children: [
-              const T(
-                Config.appTitle,
-                s: TS(s: 18),
-              ),
-              2.h,
-              C(
-                padding: const EI.o(l: 4, r: 4, t: 1, b: 1),
-                decoration: BD(
-                  color: kB.q(.1),
-                  borderRadius: 10.r,
+              if (isChat)
+                T(
+                  Config.appTitle,
+                  s: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CAA.center,
-                  mainAxisAlignment: MAA.center,
-                  children: [
-                    T(
-                      displayName,
-                      s: TS(s: 10, c: primary),
-                    ),
-                    4.w,
-                    Transform.rotate(
-                      angle: 0, // 90度
-                      child: SB(
-                        width: 10,
-                        height: 5,
-                        child: CustomPaint(
-                          painter: _TrianglePainter(),
+              if (!isChat)
+                const T(
+                  Config.appTitle,
+                  s: TS(s: 18),
+                ),
+              if (isChat) ModelSelectButton(),
+              if (!isChat)
+                C(
+                  padding: const EI.o(l: 4, r: 4, t: 1, b: 1),
+                  decoration: BD(
+                    color: kB.q(.1),
+                    borderRadius: 10.r,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CAA.center,
+                    mainAxisAlignment: MAA.center,
+                    children: [
+                      T(
+                        displayName,
+                        s: TS(s: 10, c: primary),
+                      ),
+                      4.w,
+                      Transform.rotate(
+                        angle: 0, // 90度
+                        child: SB(
+                          width: 10,
+                          height: 5,
+                          child: CustomPaint(
+                            painter: _TrianglePainter(),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
         ),

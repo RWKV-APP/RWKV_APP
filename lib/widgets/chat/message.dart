@@ -105,6 +105,7 @@ class Message extends ConsumerWidget {
     final receiving = ref.watch(P.chat.receivingTokens);
 
     final isMine = msg.isMine;
+    final isChat = demoType == DemoType.chat;
     final alignment = isMine ? Alignment.centerRight : Alignment.centerLeft;
     const marginHorizontal = 12.0;
     const marginVertical = .0;
@@ -303,6 +304,12 @@ class Message extends ConsumerWidget {
     // 如果是快速考 <think>\n<think>, 则不展示思考过程
     final isQuickThinking = cotContent.trim().isEmpty;
 
+    if (isChat) {
+      border = null;
+      padding = const EI.o(t: 12, l: 12, r: 12, b: 12);
+      borderRadius = BorderRadius.circular(16);
+    }
+
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
@@ -310,7 +317,7 @@ class Message extends ConsumerWidget {
         child: C(
           padding: padding,
           decoration: BD(
-            color: isMine ? primaryContainer : null,
+            color: isMine ? primaryContainer : (isChat ? Colors.white : null),
             border: border,
             borderRadius: borderRadius,
           ),
@@ -341,10 +348,9 @@ class Message extends ConsumerWidget {
                 // 🔥 User message audio
                 if (isUserAudio) AudioBubble(msg),
                 UserTTSContent(msg, index),
-                UserMessageBottom(msg, index),
+                if (!isChat) UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
-                if (reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
                 // 🔥 Bot message audio recognition result
                 if (worldDemoMessageHeader.isNotEmpty)
                   T(
@@ -426,7 +432,12 @@ class Message extends ConsumerWidget {
           duration: 250.ms,
           child: Padding(
             padding: const EI.s(h: marginHorizontal, v: marginVertical),
-            child: GD(onTap: _onTap, child: bubbleContent),
+            child: Column(
+              children: [
+                if (reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
+                GD(onTap: _onTap, child: bubbleContent),
+              ],
+            ),
           ),
         ),
       ),

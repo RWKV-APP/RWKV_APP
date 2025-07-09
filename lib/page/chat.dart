@@ -93,7 +93,7 @@ class _Page extends ConsumerWidget {
             right: 0,
             child: ChatAppBar(),
           ),
-          const _NavigationBarBottomLine(),
+          if (DemoType.chat != demoType) const _NavigationBarBottomLine(),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
           if (!selectMessageMode)
             const Positioned(

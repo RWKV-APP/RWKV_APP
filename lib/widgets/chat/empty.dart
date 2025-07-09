@@ -32,7 +32,7 @@ class Empty extends ConsumerWidget {
 
     final primary = Theme.of(context).colorScheme.primary;
 
-    final inputHeight = demoType == DemoType.tts ? ref.watch(P.chat.inputHeight) : 0;
+    final inputHeight = ref.watch(P.chat.inputHeight);
 
     return AnimatedPositioned(
       duration: 200.ms,
@@ -52,7 +52,21 @@ class Empty extends ConsumerWidget {
           },
           child: Stack(
             children: [
-              if (demoType == DemoType.chat) Positioned.fill(child: _EmptyV2()),
+              if (demoType == DemoType.chat)
+                Positioned.fill(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 90),
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: _EmptyV2(),
+                        ),
+                      ),
+                      SizedBox(height: inputHeight.toDouble()),
+                    ],
+                  ),
+                ),
               if (demoType != DemoType.chat)
                 Positioned.fill(
                   left: 32,
@@ -128,6 +142,7 @@ class _EmptyV2 extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        16.h,
         Text(
           // 'Hello, Ask Me \nAnything...',
           'Hello, 请随意\n向我提问...',
@@ -140,7 +155,6 @@ class _EmptyV2 extends ConsumerWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Material(
-              color: Colors.white,
               borderRadius: 60.r,
               child: InkWell(
                 borderRadius: 60.r,
@@ -173,6 +187,7 @@ class _EmptyV2 extends ConsumerWidget {
             ),
           ),
         ],
+        16.h,
       ],
     );
   }
