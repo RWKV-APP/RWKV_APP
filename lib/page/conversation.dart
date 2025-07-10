@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
@@ -44,18 +47,20 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ref.watch(P.app.customTheme);
     final conversations = ref.watch(P.conversation.conversations);
     final isEmpty = conversations.isEmpty;
 
     return AppScaffold(
-      body: CustomScrollView(
-        controller: controller,
-        slivers: [
-          SliverAppBar(
+      body: Column(
+        children: [
+          AppBar(
             title: const Text('Conversation'),
+            backgroundColor: Colors.transparent,
             // backgroundColor: P.app.qw.q.withAlpha(appBarAlpha),
-            floating: true,
-            pinned: true,
+            systemOverlayStyle: theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
+            // floating: true,
+            // pinned: true,
             primary: true,
             actions: [
               IconButton(
@@ -67,16 +72,19 @@ class _PageConversationState extends ConsumerState<PageConversation> {
               ),
             ],
           ),
-          if (isEmpty) SliverFillRemaining(child: _Empty()),
+
+          if (isEmpty) Expanded(child: _Empty()),
           if (!isEmpty)
-            SliverList.builder(
-              itemCount: conversations.length,
-              itemBuilder: (context, index) {
-                final conversation = conversations[index % conversations.length];
-                return buildConversationItem(conversation, index);
-              },
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.only(bottom: 60),
+                itemCount: conversations.length,
+                itemBuilder: (context, index) {
+                  final conversation = conversations[index % conversations.length];
+                  return buildConversationItem(conversation, index);
+                },
+              ),
             ),
-          if (!isEmpty) const SliverToBoxAdapter(child: SizedBox(height: 60)),
         ],
       ),
     );
@@ -88,11 +96,11 @@ class _PageConversationState extends ConsumerState<PageConversation> {
         borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(top: index == 0 ? 12 : 8, left: 12, right: 12),
+      margin: EdgeInsets.only(top: 8, left: 12, right: 12),
       child: Dismissible(
         key: Key(conversation.createdAtUS.toString()),
         background: Container(
-          color: Colors.red,
+          color: Colors.redAccent,
           padding: const EdgeInsets.only(right: 24),
           alignment: Alignment.centerRight,
           child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),

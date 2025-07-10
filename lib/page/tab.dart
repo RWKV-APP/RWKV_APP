@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 
@@ -15,6 +16,7 @@ class PageTab extends StatefulWidget {
 
 class _PageTabState extends State<PageTab> {
   int _selectedIndex = 0;
+  late final theme = Theme.of(context);
 
   void _onTabSelected(int index) async {
     _selectedIndex = index;
@@ -40,26 +42,21 @@ class _PageTabState extends State<PageTab> {
     final verticalLayout = Column(
       children: <Widget>[
         Expanded(child: widget.content),
-        BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble_outline),
-              activeIcon: Icon(Icons.chat_bubble),
-              label: 'Conversation',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_outlined),
-              activeIcon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onTabSelected,
+        SafeArea(
+          top: false,
+          child: Row(
+            children: [
+              Expanded(
+                child: buildItem('Home', FontAwesomeIcons.house, 0),
+              ),
+              Expanded(
+                child: buildItem('Conversation', FontAwesomeIcons.solidMessage, 1),
+              ),
+              Expanded(
+                child: buildItem('Settings', FontAwesomeIcons.gear, 2),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -95,5 +92,22 @@ class _PageTabState extends State<PageTab> {
     );
 
     return Scaffold(body: useBottomNavigationBar ? verticalLayout : horizontalLayout);
+  }
+
+  Widget buildItem(String label, IconData icon, int index) {
+    final color = _selectedIndex == index ? theme.primaryColor : Colors.grey;
+    return InkWell(
+      onTap: () => _onTabSelected(index),
+      borderRadius: BorderRadius.circular(100),
+      child: Column(
+        children: [
+          const SizedBox(height: 12),
+          FaIcon(icon, size: 20, color: color),
+          const SizedBox(height: 2),
+          Text(label, style: TextStyle(fontSize: 12, color: color)),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
   }
 }

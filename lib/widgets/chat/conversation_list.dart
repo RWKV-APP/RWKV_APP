@@ -201,7 +201,7 @@ class ConversationItem extends ConsumerWidget {
     final diff = datetime.difference(DateTime.now());
     final span = diff.inDays;
     if (span == -1) {
-      showTime = 'Yesterday $showTime';
+      showTime = 'Yesterday';
     } else if (span == 0) {
       showTime = showTime;
     } else {
