@@ -9,12 +9,7 @@ const _headers = {
   'Access-Control-Allow-Headers': 'X-Requested-With,content-type,Authorization',
 };
 
-enum BackendState {
-  starting,
-  running,
-  stopping,
-  stopped,
-}
+enum BackendState { starting, running, stopping, stopped }
 
 class _Backend {
   late final port = qs(_port);
@@ -36,26 +31,35 @@ extension _$Backend on _Backend {
     }
 
     final requestBody = await request.readAsString();
+    final json = jsonDecode(requestBody);
+    final text = json['text'];
+    final logic = json['logic'];
+
     try {
-      final json = jsonDecode(requestBody);
-      final text = json['text'];
-      final translation = P.translator._getTranslation(text);
-      final body = jsonEncode({
-        'text': text,
-        'translation': translation,
-        'timestamp': HF.microseconds,
-      });
-      return shelf.Response.ok(
-        body,
-        headers: _headers,
-        encoding: utf8,
-      );
+      switch (logic) {
+        case 'translate':
+          // TODO: 加入翻译队列
+          // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
+          await HF.wait(HF.randomInt(min: 100, max: 500));
+          final responseBody = jsonEncode({
+            'text': text,
+            'translation': '✅',
+            'timestamp': HF.microseconds,
+          });
+          return shelf.Response.ok(responseBody, headers: _headers, encoding: utf8);
+        case 'loop':
+          final translation = P.translator._getOnTimeTranslation(text);
+          final body = jsonEncode({
+            'text': text,
+            'translation': translation,
+            'timestamp': HF.microseconds,
+          });
+          return shelf.Response.ok(body, headers: _headers, encoding: utf8);
+        default:
+          return shelf.Response.badRequest(body: 'Invalid logic: $logic', headers: _headers, encoding: utf8);
+      }
     } catch (e) {
-      return shelf.Response.internalServerError(
-        body: e.toString(),
-        headers: _headers,
-        encoding: utf8,
-      );
+      return shelf.Response.internalServerError(body: 'logic failed: $logic', headers: _headers, encoding: utf8);
     }
   }
 }

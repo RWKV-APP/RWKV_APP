@@ -5,6 +5,11 @@ const _initialResult = "";
 const _endString = "hlcc_[END]_hlcc";
 const _maxCachedPairsCount = 10000;
 
+enum ServeMode {
+  hoverLoop,
+  full,
+}
+
 class _Translator {
   late final source = qs(_initialSource);
   late final textEditingController = TextEditingController(text: _initialSource);
@@ -12,6 +17,9 @@ class _Translator {
   late final translations = qs<LinkedHashMap<String, String>>(LinkedHashMap());
   late final runningTaskKey = qs<String?>(null);
   late final isGenerating = qs(false);
+  late final serveMode = qs(ServeMode.hoverLoop);
+  late final _requestPool = <String, Completer<String>>{};
+  Completer<String>? _highPriorityRequest;
 }
 
 /// Private methods
@@ -68,6 +76,9 @@ extension _$Translator on _Translator {
               ...translations.q,
               key: translation + _endString,
             });
+            final c = _requestPool[key];
+            if (c != null) c.complete(translation + _endString);
+            _requestPool.remove(key);
           }
 
           runningTaskKey.q = null;
@@ -110,7 +121,7 @@ extension _$Translator on _Translator {
   /// 5. 如果 runningTaskKey 是 null, 如果 `translations.q[sourceKey]` 已完结, 返回字符串
   ///
   /// 对 [完结] 的定义: 字符串末尾拼接了 `_endString`
-  String _getTranslation(String sourceKey) {
+  String _getOnTimeTranslation(String sourceKey) {
     final currentRunningTask = runningTaskKey.q;
     final existingTranslation = translations.q[sourceKey];
 
@@ -124,6 +135,23 @@ extension _$Translator on _Translator {
     _startNewTask(sourceKey);
 
     return existingTranslation?.replaceAll(_endString, "") ?? "";
+  }
+
+  Future<String> _getFullTranslation(String sourceKey, {bool highPriority = false}) async {
+    final existingTranslation = translations.q[sourceKey];
+
+    final isEnded = existingTranslation?.endsWith(_endString) ?? false;
+    if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
+
+    final c = _requestPool[sourceKey];
+    if (c != null) return await c.future;
+
+    final completer = Completer<String>();
+    _requestPool[sourceKey] = completer;
+
+    if (highPriority) _highPriorityRequest = completer;
+
+    return completer.future;
   }
 }
 
