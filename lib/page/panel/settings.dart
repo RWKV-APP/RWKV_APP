@@ -75,6 +75,7 @@ class Settings extends ConsumerWidget {
     final customTheme = ref.watch(P.app.customTheme);
     final isLightMode = customTheme.light;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
+    final isChat = demoType == DemoType.chat;
 
     final iconWidget = SB(
       width: 64,
@@ -122,6 +123,7 @@ class Settings extends ConsumerWidget {
           ),
           controller: scrollController,
           children: [
+            if (isChat) SizedBox(height: 40),
             Row(
               mainAxisAlignment: MAA.center,
               children: [iconWidget],
