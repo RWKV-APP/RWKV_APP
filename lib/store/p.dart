@@ -59,6 +59,7 @@ import 'package:zone/model/reference.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/model/tts_instruction.dart';
+import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/page/panel/theme_selector.dart';
 import 'package:zone/router/method.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/router/method.dart';
@@ -6,16 +7,13 @@ import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart' show P, $Chat;
 import 'package:zone/widgets/app_scaffold.dart';
 
-class PageHome extends StatefulWidget {
+class PageHome extends ConsumerWidget {
   const PageHome({super.key});
 
   @override
-  State<PageHome> createState() => _PageHomeState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final version = ref.watch(P.app.version);
 
-class _PageHomeState extends State<PageHome> {
-  @override
-  Widget build(BuildContext context) {
     return AppScaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -42,7 +40,7 @@ class _PageHomeState extends State<PageHome> {
             ),
             const SizedBox(height: 12),
             Text(
-              'v1.0.0',
+              "v$version",
               style: TextStyle(fontSize: 14, color: Colors.grey),
               textAlign: TextAlign.center,
             ),

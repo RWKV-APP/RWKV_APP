@@ -10,6 +10,7 @@ import 'package:zone/config.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/user_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
@@ -88,6 +89,9 @@ class ChatAppBar extends ConsumerWidget {
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
     final isChat = demoType == DemoType.chat;
+
+    final userType = ref.watch(P.preference.userType);
+
     return AppBar(
       elevation: 0,
       centerTitle: true,
@@ -153,7 +157,7 @@ class ChatAppBar extends ConsumerWidget {
       actions: [
         if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
         // if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
-        if (demoType != DemoType.sudoku)
+        if (demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
             onPressed: onSettingsPressed,
             icon: const Icon(Icons.tune),

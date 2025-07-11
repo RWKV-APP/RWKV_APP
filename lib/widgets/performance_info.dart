@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/model/user_type.dart';
 import 'package:zone/store/p.dart';
 
 class PerformanceInfo extends ConsumerWidget {
@@ -10,6 +11,11 @@ class PerformanceInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userType = ref.watch(P.preference.userType);
+    if (!userType.isGreaterThan(UserType.user)) {
+      return const SizedBox.shrink();
+    }
+
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final qb = ref.watch(P.app.qb);

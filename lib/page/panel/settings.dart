@@ -69,6 +69,7 @@ class Settings extends ConsumerWidget {
     final version = ref.watch(P.app.version);
     final buildNumber = ref.watch(P.app.buildNumber);
     final preferredTextScaleFactor = ref.watch(P.preference.preferredTextScaleFactor);
+    final userType = ref.watch(P.preference.userType);
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final qb = ref.watch(P.app.qb);
@@ -164,6 +165,12 @@ class Settings extends ConsumerWidget {
             8.h,
             FormItem(
               isSectionStart: true,
+              icon: Icon(Icons.settings_suggest_rounded, color: qb.q(.667), size: 16),
+              title: "模应用式",
+              info: userType.displayName(),
+              onTap: P.preference.showUserTypeDialog,
+            ),
+            FormItem(
               icon: Icon(Icons.format_size_outlined, color: qb.q(.667), size: 16),
               title: s.font_size,
               info: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
