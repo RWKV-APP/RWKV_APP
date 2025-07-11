@@ -95,7 +95,7 @@ class _TextField extends ConsumerWidget {
         hintText = s.i_want_rwkv_to_say;
     }
     if (isChat) {
-      hintText = 'Ask me anything...';
+      hintText = s.ask_me_anything;
     }
 
     bool textFieldEnabled = loaded && !loading;

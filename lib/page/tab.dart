@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 
@@ -47,13 +48,13 @@ class _PageTabState extends State<PageTab> {
           child: Row(
             children: [
               Expanded(
-                child: buildItem('Home', FontAwesomeIcons.house, 0),
+                child: buildItem(S.of(context).home, FontAwesomeIcons.house, 0),
               ),
               Expanded(
-                child: buildItem('Conversation', FontAwesomeIcons.solidMessage, 1),
+                child: buildItem(S.of(context).conversations, FontAwesomeIcons.solidMessage, 1),
               ),
               Expanded(
-                child: buildItem('Settings', FontAwesomeIcons.gear, 2),
+                child: buildItem(S.of(context).settings, FontAwesomeIcons.gear, 2),
               ),
             ],
           ),
@@ -67,21 +68,21 @@ class _PageTabState extends State<PageTab> {
           selectedIndex: _selectedIndex,
           onDestinationSelected: _onTabSelected,
           labelType: NavigationRailLabelType.all,
-          destinations: const <NavigationRailDestination>[
+          destinations: <NavigationRailDestination>[
             NavigationRailDestination(
               icon: Icon(Icons.home_outlined),
               selectedIcon: Icon(Icons.home),
-              label: Text('Home'),
+              label: Text(S.of(context).home),
             ),
             NavigationRailDestination(
               icon: Icon(Icons.chat_bubble_outline),
               selectedIcon: Icon(Icons.chat_bubble),
-              label: Text('Conversation'),
+              label: Text(S.of(context).conversations),
             ),
             NavigationRailDestination(
               icon: Icon(Icons.settings_outlined),
               selectedIcon: Icon(Icons.settings),
-              label: Text('Settings'),
+              label: Text(S.of(context).settings),
             ),
           ],
         ),

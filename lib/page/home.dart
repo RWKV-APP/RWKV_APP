@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart' show P, $Chat;
@@ -35,7 +36,7 @@ class _PageHomeState extends State<PageHome> {
             ),
             const SizedBox(height: 24),
             Text(
-              "Welcome to RWKV Chat",
+              S.of(context).welcome_to_rwkv_chat,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -48,8 +49,8 @@ class _PageHomeState extends State<PageHome> {
             const SizedBox(height: 100),
             buildRow([
               buildButton(
-                title: "Chat",
-                subtitle: "Chat with RWKV",
+                title: S.of(context).chat,
+                subtitle: S.of(context).chat_with_rwkv_model,
                 onTap: () async {
                   P.chat.startNewChat();
                   push(PageKey.chat);
@@ -58,8 +59,8 @@ class _PageHomeState extends State<PageHome> {
                 icon: FontAwesomeIcons.comments,
               ),
               buildButton(
-                title: "Neko",
-                subtitle: "Nyan~~, Nyan~~",
+                title: S.of(context).neko,
+                subtitle: S.of(context).nyan_nyan,
                 onTap: () {
                   push(PageKey.chat);
                 },
@@ -70,8 +71,8 @@ class _PageHomeState extends State<PageHome> {
             const SizedBox(height: 16),
             buildRow([
               buildButton(
-                title: "Completion",
-                subtitle: "Text completion mode",
+                title: S.of(context).completion_mode,
+                subtitle: S.of(context).text_completion_mode,
                 onTap: () {
                   push(PageKey.completion);
                 },

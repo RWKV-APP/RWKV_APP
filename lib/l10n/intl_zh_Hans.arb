@@ -264,5 +264,17 @@
   "go_to_settings": "去设置",
   "dont_ask_again": "不再询问",
   "searching": "搜索中...",
-  "search_failed": "搜索失败"
+  "search_failed": "搜索失败",
+  "welcome_to_rwkv_chat": "欢迎探索 RWKV Chat",
+  "chat": "开始对话",
+  "neko": "猫娘陪聊",
+  "Completion": "续写模式",
+  "chat_with_rwkv_model": "与 RWKV 模型对话",
+  "text_completion_mode": "文本补全模式",
+  "home": "主页",
+  "conversations": "会话",
+  "hello_ask_me_anything": "Hello, 请随意 \n向我提问...",
+  "no_conversation_yet": "目前还没有对话",
+  "nyan_nyan": "Nyan~~,Nyan~~",
+  "ask_me_anything": "随意向我提问..."
 }

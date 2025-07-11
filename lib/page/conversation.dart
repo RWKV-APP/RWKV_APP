@@ -55,7 +55,7 @@ class _PageConversationState extends ConsumerState<PageConversation> {
       body: Column(
         children: [
           AppBar(
-            title: const Text('Conversation'),
+            title: Text(S.of(context).conversations),
             backgroundColor: Colors.transparent,
             // backgroundColor: P.app.qw.q.withAlpha(appBarAlpha),
             systemOverlayStyle: theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,

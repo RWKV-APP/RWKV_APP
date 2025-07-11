@@ -144,8 +144,7 @@ class _EmptyV2 extends ConsumerWidget {
       children: [
         16.h,
         Text(
-          // 'Hello, Ask Me \nAnything...',
-          'Hello, 请随意\n向我提问...',
+          S.of(context).hello_ask_me_anything,
           style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
