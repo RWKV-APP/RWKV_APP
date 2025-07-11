@@ -94,7 +94,7 @@ class Settings extends ConsumerWidget {
               topRight: Radius.circular(16),
             ),
       child: Scaffold(
-        backgroundColor: customTheme.setting,
+        backgroundColor: demoType == DemoType.chat ? Colors.transparent : customTheme.setting,
         appBar: isInDrawerMenu
             ? null
             : AppBar(
