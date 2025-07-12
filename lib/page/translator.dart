@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
@@ -15,7 +17,6 @@ class PageTranslator extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
 
     final paddingTop = ref.watch(P.app.paddingTop);
-    final paddingBottom = ref.watch(P.app.paddingBottom);
 
     return Scaffold(
       appBar: AppBar(
@@ -121,6 +122,16 @@ class _Dashboard extends ConsumerWidget {
     P.rwkv.send(SetPrompt(""));
   }
 
+  FV _onPressClearCompleterPool() async {
+    qq;
+    P.translator.translations.q = LinkedHashMap.from({});
+    P.backend.runningTasks.q = {};
+    P.translator.completerPool.q = {};
+    P.translator.runningTaskKey.q = null;
+    P.translator.isGenerating.q = false;
+    P.rwkv.stop();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final backendState = ref.watch(P.backend.state);
@@ -159,6 +170,10 @@ class _Dashboard extends ConsumerWidget {
                 foregroundColor: kW.q(1),
               ),
               child: Text("Set Prompt to \"\""),
+            ),
+            TextButton(
+              onPressed: _onPressClearCompleterPool,
+              child: Text("Clear Completer Pool"),
             ),
           ],
         ),

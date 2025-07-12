@@ -19,7 +19,7 @@
       "flutterMode": "debug",
       "args": [
         "--dart-define=disableRemoteConfig=true",
-        // "--dart-define=logLevel=3",
+        "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true"
         // "--dart-define=nativeSplashPreserveDurationInMS=9999999"
         // "--dart-define=autoTriggerPage=true",

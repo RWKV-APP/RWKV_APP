@@ -15,6 +15,9 @@ class _Backend {
   late final port = qs(_port);
   late final state = qs(BackendState.stopped);
   late final server = qs<HttpServer?>(null);
+  late final runningTasks = qs<Set<String>>({});
+  late final taskHandledCount = qs(0);
+  late final taskReceivedCount = qs(0);
 }
 
 /// Private methods
@@ -30,6 +33,8 @@ extension _$Backend on _Backend {
       return shelf.Response.ok(null, headers: _headers);
     }
 
+    taskReceivedCount.q++;
+
     final requestBody = await request.readAsString();
     final json = jsonDecode(requestBody);
     final text = json['text'];
@@ -40,25 +45,32 @@ extension _$Backend on _Backend {
         case 'translate':
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
-          await HF.wait(HF.randomInt(min: 100, max: 500));
+          runningTasks.q = {...runningTasks.q, text};
+          final translation = await P.translator._getFullTranslation(text);
           final responseBody = jsonEncode({
-            'text': text,
-            'translation': '✅',
+            'source': text,
+            'translation': translation.replaceAll(_endString, ""),
             'timestamp': HF.microseconds,
           });
+          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          taskHandledCount.q++;
           return shelf.Response.ok(responseBody, headers: _headers, encoding: utf8);
         case 'loop':
+          runningTasks.q = {...runningTasks.q, text};
           final translation = P.translator._getOnTimeTranslation(text);
           final body = jsonEncode({
-            'text': text,
-            'translation': translation,
+            'source': text,
+            'translation': translation.replaceAll(_endString, ""),
             'timestamp': HF.microseconds,
           });
+          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          taskHandledCount.q++;
           return shelf.Response.ok(body, headers: _headers, encoding: utf8);
         default:
           return shelf.Response.badRequest(body: 'Invalid logic: $logic', headers: _headers, encoding: utf8);
       }
     } catch (e) {
+      qqe(e);
       return shelf.Response.internalServerError(body: 'logic failed: $logic', headers: _headers, encoding: utf8);
     }
   }
