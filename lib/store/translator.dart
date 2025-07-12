@@ -149,7 +149,7 @@ extension _$Translator on _Translator {
     return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 
-  Future<String> _getFullTranslation(String sourceKey, {bool highPriority = false}) async {
+  Future<String> _getFullTranslation(String sourceKey) async {
     final existingTranslation = translations.q[sourceKey];
     qqq(0);
 
