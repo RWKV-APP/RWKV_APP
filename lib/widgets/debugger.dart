@@ -71,6 +71,11 @@ class Debugger extends ConsumerWidget {
     final pageKey = ref.watch(P.app.pageKey);
     final runningTaskKey = ref.watch(P.translator.runningTaskKey);
     final translations = ref.watch(P.translator.translations);
+    final runningTasks = ref.watch(P.backend.runningTasks);
+    final completerPool = ref.watch(P.translator.completerPool);
+    final isGenerating = ref.watch(P.translator.isGenerating);
+    final taskHandledCount = ref.watch(P.backend.taskHandledCount);
+    final taskReceivedCount = ref.watch(P.backend.taskReceivedCount);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -174,6 +179,16 @@ class Debugger extends ConsumerWidget {
                       T(runningTaskKey.toString()),
                       T("translations.length".codeToName),
                       T(translations.length.toString()),
+                      T("runningTasks.length".codeToName),
+                      T(runningTasks.length.toString()),
+                      T("completerPool.length".codeToName),
+                      T(completerPool.length.toString()),
+                      T("isGenerating".codeToName),
+                      T(isGenerating.toString()),
+                      T("taskHandledCount".codeToName),
+                      T(taskHandledCount.toString()),
+                      T("taskReceivedCount".codeToName),
+                      T(taskReceivedCount.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

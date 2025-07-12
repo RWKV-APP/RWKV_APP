@@ -18,8 +18,8 @@ class _Translator {
   late final runningTaskKey = qs<String?>(null);
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
-  late final _requestPool = <String, Completer<String>>{};
-  Completer<String>? _highPriorityRequest;
+
+  late final completerPool = qs(<String, Completer<String>>{});
 }
 
 /// Private methods
@@ -60,36 +60,48 @@ extension _$Translator on _Translator {
         if (key == null) return;
         // 更新 translations
         translations.q = LinkedHashMap.from({...translations.q, key: content});
-        qqr("translations: ${translations.q.toString()}");
         break;
       case from_rwkv.IsGenerating res:
         final isGenerating = res.isGenerating;
-
         final currentIsGenerating = this.isGenerating.q;
+
+        this.isGenerating.q = isGenerating;
+
         final isStopEvent = currentIsGenerating && !isGenerating;
-        if (isStopEvent) {
-          // 拼接完结末尾
-          final key = runningTaskKey.q;
-          final translation = translations.q[key];
-          if (translation != null) {
-            translations.q = LinkedHashMap.from({
-              ...translations.q,
-              key: translation + _endString,
-            });
-            final c = _requestPool[key];
-            if (c != null) c.complete(translation + _endString);
-            _requestPool.remove(key);
-          }
+        if (!isStopEvent) return;
 
-          runningTaskKey.q = null;
+        // 拼接完结末尾
+        final key = runningTaskKey.q;
+        final translation = translations.q[key];
 
-          // 如果 translations 超过最大缓存数量, 移除最早的条目
-          if (translations.q.length > _maxCachedPairsCount) {
-            translations.q.remove(translations.q.keys.first);
+        if (translation != null) {
+          translations.q = LinkedHashMap.from({
+            ...translations.q,
+            key: translation + _endString,
+          });
+
+          final c = completerPool.q[key];
+          if (c != null) {
+            c.complete(translation + _endString);
+            completerPool.q = completerPool.q..removeWhere((k, v) => k == key);
           }
         }
 
-        this.isGenerating.q = isGenerating;
+        runningTaskKey.q = null;
+
+        // 如果 translations 超过最大缓存数量, 移除最早的条目
+        if (translations.q.length > _maxCachedPairsCount) {
+          translations.q.remove(translations.q.keys.first);
+        }
+
+        final hasUnfinishedCompleter = completerPool.q.isNotEmpty;
+        if (hasUnfinishedCompleter) {
+          final nextKey = completerPool.q.keys.firstOrNull;
+          if (nextKey != null) {
+            HF.wait(50).then((_) => _startNewTask(nextKey));
+          }
+        }
+
         break;
       default:
         break;
@@ -109,6 +121,7 @@ extension _$Translator on _Translator {
   }
 
   void _startNewTask(String sourceKey) {
+    qqr("startNewTask: $sourceKey");
     P.rwkv.stop();
     runningTaskKey.q = sourceKey;
     P.rwkv.sendMessages([sourceKey]);
@@ -139,17 +152,18 @@ extension _$Translator on _Translator {
 
   Future<String> _getFullTranslation(String sourceKey, {bool highPriority = false}) async {
     final existingTranslation = translations.q[sourceKey];
+    qqq(0);
 
     final isEnded = existingTranslation?.endsWith(_endString) ?? false;
     if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
 
-    final c = _requestPool[sourceKey];
-    if (c != null) return await c.future;
+    final existCompleter = completerPool.q[sourceKey];
+    if (existCompleter != null) return await existCompleter.future;
 
     final completer = Completer<String>();
-    _requestPool[sourceKey] = completer;
+    completerPool.q = Map.from(completerPool.q)..[sourceKey] = completer;
 
-    if (highPriority) _highPriorityRequest = completer;
+    if (runningTaskKey.q == null) _startNewTask(sourceKey);
 
     return completer.future;
   }
