@@ -1,6 +1,7 @@
 part of 'p.dart';
 
-const _port = 52345;
+const _httpPort = 52345;
+const _websocketPort = 52346;
 
 const _headers = {
   'Content-Type': 'application/json',
@@ -12,7 +13,7 @@ const _headers = {
 enum BackendState { starting, running, stopping, stopped }
 
 class _Backend {
-  late final port = qs(_port);
+  late final port = qs(_httpPort);
   late final state = qs(BackendState.stopped);
   late final server = qs<HttpServer?>(null);
   late final runningTasks = qs<Set<String>>({});
@@ -112,6 +113,7 @@ extension $Backend on _Backend {
       // final handler = shelf.Pipeline().addHandler(_echoRequest);
       server.q = await shelf_io.serve(_echoRequest, 'localhost', port);
       server.q?.autoCompress = true;
+
       state.q = BackendState.running;
       qqr("Backend started at $url");
       Alert.success("Backend started");

@@ -38,6 +38,8 @@ import 'package:system_info2/system_info2.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:shelf_web_socket/shelf_web_socket.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
