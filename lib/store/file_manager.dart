@@ -20,7 +20,7 @@ class _FileManager {
 
   late final unavailableModels = qs<Set<FileInfo>>({});
 
-  late final downloadSource = qs(FileDownloadSource.hfmirror);
+  late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
 
   late final hasDownloadedModels = qs(false);
 
