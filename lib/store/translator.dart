@@ -98,7 +98,7 @@ extension _$Translator on _Translator {
         if (hasUnfinishedCompleter) {
           final nextKey = completerPool.q.keys.firstOrNull;
           if (nextKey != null) {
-            HF.wait(50).then((_) => _startNewTask(nextKey));
+            HF.wait(1).then((_) => _startNewTask(nextKey));
           }
         }
 
@@ -121,7 +121,6 @@ extension _$Translator on _Translator {
   }
 
   void _startNewTask(String sourceKey) {
-    qqr("startNewTask: $sourceKey");
     P.rwkv.stop();
     runningTaskKey.q = sourceKey;
     P.rwkv.sendMessages([sourceKey]);
