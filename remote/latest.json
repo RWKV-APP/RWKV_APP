@@ -149,6 +149,21 @@
         "tags": ["reason", "gpu"]
       },
       {
+        "name": "RWKV7-G1 0.4B Translate",
+        "type": "st",
+        "modelSize": 0.4,
+        "fileName": "WebRWKV/RWKV_v7_G1_0.4B_Translate_ctx4096_20250620-fp16.st",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/RWKV_v7_G1_0.4B_Translate_ctx4096_20250620-fp16.st",
+        "fileSize": 901609208,
+        "sha256": "ac194e3ec80e90d731b16db44a40e32628f60ac01e54ca82926f3552b04f6ba1",
+        "quantization": "fp16",
+        "platforms": ["ios", "macos", "web", "windows"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["gpu", "translate"],
+        "isDebug": true
+      },
+      {
         "name": "RWKV7-G1 1.5B Translate",
         "type": "prefab",
         "modelSize": 1.5,
