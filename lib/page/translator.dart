@@ -20,10 +20,10 @@ class PageTranslator extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Translator'),
+        title: const Text('Translator'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           children: [
             SB(height: paddingTop),
@@ -31,13 +31,13 @@ class PageTranslator extends ConsumerWidget {
               Expanded(
                 child: Row(
                   children: [
-                    Expanded(child: _Source()),
+                    const Expanded(child: _Source()),
                     12.w,
-                    Expanded(child: _Result()),
+                    const Expanded(child: _Result()),
                   ],
                 ).debug,
               ),
-            if (isDesktop) _Dashboard(),
+            if (isDesktop) const _Dashboard(),
           ],
         ),
       ),
@@ -55,7 +55,7 @@ class _Source extends ConsumerWidget {
       child: TextField(
         maxLines: 10,
         controller: P.translator.textEditingController,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Source',
           hintText: 'Enter your text here',
@@ -77,7 +77,7 @@ class _Result extends ConsumerWidget {
         maxLines: 10,
         controller: TextEditingController(text: result),
         enabled: false,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Translation Result',
           hintText: 'Result will be shown here',
@@ -157,11 +157,11 @@ class _Dashboard extends ConsumerWidget {
             ),
             TextButton(
               onPressed: _onPressPanel,
-              child: Text("Panel"),
+              child: const Text("Panel"),
             ),
             TextButton(
               onPressed: _onPressTest,
-              child: Text("Translation Test"),
+              child: const Text("Translation Test"),
             ),
             TextButton(
               onPressed: _onPressSetPrompt,
@@ -169,11 +169,11 @@ class _Dashboard extends ConsumerWidget {
                 backgroundColor: kCR.q(1),
                 foregroundColor: kW.q(1),
               ),
-              child: Text("Set Prompt to \"\""),
+              child: const Text("Set Prompt to \"\""),
             ),
             TextButton(
               onPressed: _onPressClearCompleterPool,
-              child: Text("Clear Completer Pool"),
+              child: const Text("Clear Completer Pool"),
             ),
           ],
         ),
