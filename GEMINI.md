@@ -1,3 +1,14 @@
+## 输出
+
+- qq;
+- qw;
+- qr;
+- qe;
+- qqq(String message);
+- qqe(String message);
+- qqw(String message);
+- qqr(String message);
+
 ## 状态管理
 
 - 整个项目在使用 riverpods 管理状态
@@ -25,6 +36,11 @@ extension HaloStateProvider<V> on StateProvider<V> {
   }
 }
 ```
+
+### 文件
+
+- 绝大部分的全局状态都在 `lib/store` 文件夹中
+- 我们只在 `lib/store/p.dart` 中使用 import 来导入其他文件, 因为所有 `lib/store` 中的其他文件, 均通过 `part of 'p.dart';` 共享了这些引用, 所以你只用考虑在 `lib/store/p.dart` 中导入其他文件即可
 
 ## rwkv_mobile_flutter
 
