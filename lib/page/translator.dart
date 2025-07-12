@@ -92,7 +92,7 @@ class _Dashboard extends ConsumerWidget {
 
   FV _onPressed() async {
     qq;
-    final state = P.backend.state.q;
+    final state = P.backend.httpState.q;
     switch (state) {
       case BackendState.starting:
         return;
@@ -134,7 +134,7 @@ class _Dashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final backendState = ref.watch(P.backend.state);
+    final backendState = ref.watch(P.backend.httpState);
 
     final title = switch (backendState) {
       BackendState.starting => "Starting...",

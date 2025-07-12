@@ -13,12 +13,25 @@ const _headers = {
 enum BackendState { starting, running, stopping, stopped }
 
 class _Backend {
-  late final port = qs(_httpPort);
-  late final state = qs(BackendState.stopped);
-  late final server = qs<HttpServer?>(null);
+  late final httpPort = qs(_httpPort);
+  late final httpServer = qs<HttpServer?>(null);
+  late final httpState = qs(BackendState.stopped);
+
+  late final websocketPort = qs(_websocketPort);
+  late final websocketServer = qs<HttpServer?>(null);
+  late final websocketState = qs(BackendState.stopped);
+
   late final runningTasks = qs<Set<String>>({});
   late final taskHandledCount = qs(0);
   late final taskReceivedCount = qs(0);
+
+  late final _webSocketHandler = webSocketHandler((webSocket, _) {
+    webSocket.stream.listen(
+      (message) => _onData(webSocket, message),
+      onDone: () => _onDone(webSocket),
+      onError: (error, stackTrace) => _onError(webSocket, error, stackTrace),
+    );
+  });
 }
 
 /// Private methods
@@ -75,6 +88,12 @@ extension _$Backend on _Backend {
       return shelf.Response.internalServerError(body: 'logic failed: $logic', headers: _headers, encoding: utf8);
     }
   }
+
+  void _onData(WebSocketChannel channel, dynamic data) async {}
+
+  void _onDone(WebSocketChannel channel) async {}
+
+  void _onError(WebSocketChannel channel, Object error, StackTrace stackTrace) async {}
 }
 
 /// Public methods
@@ -83,19 +102,19 @@ extension $Backend on _Backend {
     final isDesktop = P.app.isDesktop.q;
     if (!isDesktop) return;
 
-    if (state.q == BackendState.running) {
+    if (httpState.q == BackendState.running) {
       qqw("Backend is running");
       Alert.warning("Backend is running");
       return;
     }
 
-    if (state.q == BackendState.starting) {
+    if (httpState.q == BackendState.starting) {
       qqw("Backend is already starting");
       Alert.warning("Backend is already starting");
       return;
     }
 
-    if (state.q == BackendState.stopping) {
+    if (httpState.q == BackendState.stopping) {
       qqw("Backend is stopping");
       Alert.warning("Backend is stopping");
       return;
@@ -103,23 +122,36 @@ extension $Backend on _Backend {
 
     qq;
 
-    final port = this.port.q;
-
+    final port = httpPort.q;
     final url = "http://localhost:$port";
-
-    state.q = BackendState.starting;
+    httpState.q = BackendState.starting;
 
     try {
       // final handler = shelf.Pipeline().addHandler(_echoRequest);
-      server.q = await shelf_io.serve(_echoRequest, 'localhost', port);
-      server.q?.autoCompress = true;
+      httpServer.q = await shelf_io.serve(_echoRequest, 'localhost', port);
+      httpServer.q?.autoCompress = true;
 
-      state.q = BackendState.running;
+      httpState.q = BackendState.running;
       qqr("Backend started at $url");
       Alert.success("Backend started");
     } catch (e) {
       qqe(e);
-      state.q = BackendState.stopped;
+      httpState.q = BackendState.stopped;
+      Alert.error("Failed to start backend");
+    }
+
+    try {
+      final port = websocketPort.q;
+      final url = "ws://localhost:$port";
+      websocketState.q = BackendState.starting;
+      websocketServer.q = await shelf_io.serve(_webSocketHandler, 'localhost', port);
+      websocketServer.q?.autoCompress = true;
+      websocketState.q = BackendState.running;
+      qqr("Backend started at $url");
+      Alert.success("Backend started");
+    } catch (e) {
+      qqe(e);
+      websocketState.q = BackendState.stopped;
       Alert.error("Failed to start backend");
     }
   }
@@ -128,15 +160,15 @@ extension $Backend on _Backend {
     final isDesktop = P.app.isDesktop.q;
     if (!isDesktop) return;
     qq;
-    if (server.q == null) {
+    if (httpServer.q == null) {
       qqw("Backend is not running");
       Alert.warning("Backend is not running");
       return;
     }
-    server.q!.close();
-    server.q = null;
-    state.q = BackendState.stopped;
-    server.q = null;
+    httpServer.q!.close();
+    httpServer.q = null;
+    httpState.q = BackendState.stopped;
+    httpServer.q = null;
     qqr("Backend stopped");
     Alert.success("Backend stopped");
   }
