@@ -25,11 +25,11 @@ class _Backend {
   late final taskHandledCount = qs(0);
   late final taskReceivedCount = qs(0);
 
-  late final _webSocketHandler = webSocketHandler((webSocket, _) {
-    webSocket.stream.listen(
-      (message) => _onData(webSocket, message),
-      onDone: () => _onDone(webSocket),
-      onError: (error, stackTrace) => _onError(webSocket, error, stackTrace),
+  late final _webSocketHandler = shelf_ws.webSocketHandler((ws_channel.WebSocketChannel channel, _) {
+    channel.stream.listen(
+      (message) => _onData(channel, message),
+      onDone: () => _onDone(channel),
+      onError: (error, stackTrace) => _onError(channel, error, stackTrace),
     );
   });
 }
@@ -42,7 +42,7 @@ extension _$Backend on _Backend {
     qq;
   }
 
-  Future<shelf.Response> _echoRequest(shelf.Request request) async {
+  Future<shelf.Response> _onHttpRequest(shelf.Request request) async {
     if (request.method == 'OPTIONS') {
       return shelf.Response.ok(null, headers: _headers);
     }
@@ -89,11 +89,15 @@ extension _$Backend on _Backend {
     }
   }
 
-  void _onData(WebSocketChannel channel, dynamic data) async {}
+  void _onData(ws_channel.WebSocketChannel channel, dynamic data) async {}
 
-  void _onDone(WebSocketChannel channel) async {}
+  void _onDone(ws_channel.WebSocketChannel channel) async {
+    qqw("WebSocket done");
+  }
 
-  void _onError(WebSocketChannel channel, Object error, StackTrace stackTrace) async {}
+  void _onError(ws_channel.WebSocketChannel channel, Object error, StackTrace stackTrace) async {
+    qqe(error);
+  }
 }
 
 /// Public methods
@@ -128,7 +132,7 @@ extension $Backend on _Backend {
 
     try {
       // final handler = shelf.Pipeline().addHandler(_echoRequest);
-      httpServer.q = await shelf_io.serve(_echoRequest, 'localhost', port);
+      httpServer.q = await shelf_io.serve(_onHttpRequest, 'localhost', port);
       httpServer.q?.autoCompress = true;
 
       httpState.q = BackendState.running;

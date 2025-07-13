@@ -14,33 +14,38 @@ class PageTranslator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
-    final isDesktop = ref.watch(P.app.isDesktop);
 
     final paddingTop = ref.watch(P.app.paddingTop);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Translator'),
+        title: const Text('Chrome Offline Translator'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          children: [
-            SB(height: paddingTop),
-            if (!isPortrait)
-              Expanded(
-                child: Row(
-                  children: [
-                    const Expanded(child: _Source()),
-                    12.w,
-                    const Expanded(child: _Result()),
-                  ],
-                ).debug,
-              ),
-            if (isDesktop) const _Dashboard(),
-          ],
-        ),
+      body: ListView(
+        children: [
+          32.h,
+          SB(height: paddingTop),
+          const _Dashboard(),
+          const _Source(),
+          const _Result(),
+          const _TabInfo(),
+        ],
       ),
+    );
+  }
+}
+
+class _TabInfo extends ConsumerWidget {
+  const _TabInfo();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("所有打开的标签页"),
+        Text("正在交互中的标签页"),
+      ],
     );
   }
 }
@@ -51,14 +56,14 @@ class _Source extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return C(
-      decoration: BD(color: kCR.q(.2)),
+      decoration: BD(color: kC),
+      padding: const EdgeInsets.all(8),
       child: TextField(
-        maxLines: 10,
+        minLines: 1,
+        maxLines: 8,
         controller: P.translator.textEditingController,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Source',
-          hintText: 'Enter your text here',
         ),
       ),
     );
@@ -72,15 +77,15 @@ class _Result extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final result = ref.watch(P.translator.result);
     return C(
-      decoration: BD(color: kCB.q(.2)),
+      decoration: BD(color: kC),
+      padding: const EdgeInsets.all(8),
       child: TextField(
-        maxLines: 10,
+        minLines: 1,
+        maxLines: 8,
         controller: TextEditingController(text: result),
         enabled: false,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Translation Result',
-          hintText: 'Result will be shown here',
         ),
       ),
     );
@@ -137,10 +142,10 @@ class _Dashboard extends ConsumerWidget {
     final backendState = ref.watch(P.backend.httpState);
 
     final title = switch (backendState) {
-      BackendState.starting => "Starting...",
-      BackendState.running => "Stop Server",
-      BackendState.stopping => "Stopping...",
-      BackendState.stopped => "Start Server",
+      BackendState.starting => "正在启动...",
+      BackendState.running => "停止服务",
+      BackendState.stopping => "正在停止...",
+      BackendState.stopped => "启动服务",
     };
 
     // 设置地址
@@ -157,23 +162,15 @@ class _Dashboard extends ConsumerWidget {
             ),
             TextButton(
               onPressed: _onPressPanel,
-              child: const Text("Panel"),
+              child: const Text("选择不同模型"),
             ),
             TextButton(
               onPressed: _onPressTest,
-              child: const Text("Translation Test"),
-            ),
-            TextButton(
-              onPressed: _onPressSetPrompt,
-              style: TextButton.styleFrom(
-                backgroundColor: kCR.q(1),
-                foregroundColor: kW.q(1),
-              ),
-              child: const Text("Set Prompt to \"\""),
+              child: const Text("翻译当前文本框中的文本"),
             ),
             TextButton(
               onPressed: _onPressClearCompleterPool,
-              child: const Text("Clear Completer Pool"),
+              child: const Text("清除缓存"),
             ),
           ],
         ),
