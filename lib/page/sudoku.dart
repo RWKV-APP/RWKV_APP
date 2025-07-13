@@ -487,7 +487,6 @@ class _Stack extends ConsumerWidget {
     ref.watch(P.app.screenWidth);
     ref.watch(Pager.atMainPage);
 
-    // debugger();
     return IgnorePointer(
       child: Stack(
         children: [
