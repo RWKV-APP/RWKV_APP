@@ -26,9 +26,9 @@ class PageTranslator extends ConsumerWidget {
           32.h,
           SB(height: paddingTop),
           const _Dashboard(),
+          const _TabInfo(),
           const _Source(),
           const _Result(),
-          const _TabInfo(),
         ],
       ),
     );

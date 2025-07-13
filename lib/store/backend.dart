@@ -51,7 +51,7 @@ extension _$Backend on _Backend {
 
     final requestBody = await request.readAsString();
     final json = jsonDecode(requestBody);
-    final text = json['text'];
+    final source = json['source'];
     final logic = json['logic'];
 
     try {
@@ -59,25 +59,25 @@ extension _$Backend on _Backend {
         case 'translate':
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
-          runningTasks.q = {...runningTasks.q, text};
-          final translation = await P.translator._getFullTranslation(text);
+          runningTasks.q = {...runningTasks.q, source};
+          final translation = await P.translator._getFullTranslation(source);
           final responseBody = jsonEncode({
-            'source': text,
+            'source': source,
             'translation': translation.replaceAll(_endString, ""),
             'timestamp': HF.microseconds,
           });
-          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           return shelf.Response.ok(responseBody, headers: _headers, encoding: utf8);
         case 'loop':
-          runningTasks.q = {...runningTasks.q, text};
-          final translation = P.translator._getOnTimeTranslation(text);
+          runningTasks.q = {...runningTasks.q, source};
+          final translation = P.translator._getOnTimeTranslation(source);
           final body = jsonEncode({
-            'source': text,
+            'source': source,
             'translation': translation.replaceAll(_endString, ""),
             'timestamp': HF.microseconds,
           });
-          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           return shelf.Response.ok(body, headers: _headers, encoding: utf8);
         default:
@@ -91,33 +91,36 @@ extension _$Backend on _Backend {
 
   void _onData(ws_channel.WebSocketChannel channel, dynamic data) async {
     final json = jsonDecode(data);
-    final text = json['text'];
+    final source = json['source'];
     final logic = json['logic'];
+    final url = json['url'];
 
     try {
       switch (logic) {
         case 'translate':
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
-          runningTasks.q = {...runningTasks.q, text};
-          final translation = await P.translator._getFullTranslation(text);
+          runningTasks.q = {...runningTasks.q, source};
+          final translation = await P.translator._getFullTranslation(source);
           final responseBody = jsonEncode({
-            'source': text,
+            'source': source,
             'translation': translation.replaceAll(_endString, ""),
+            'url': url,
             'timestamp': HF.microseconds,
           });
-          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           channel.sink.add(responseBody);
         case 'loop':
-          runningTasks.q = {...runningTasks.q, text};
-          final translation = P.translator._getOnTimeTranslation(text);
+          runningTasks.q = {...runningTasks.q, source};
+          final translation = P.translator._getOnTimeTranslation(source);
           final body = jsonEncode({
-            'source': text,
+            'source': source,
             'translation': translation.replaceAll(_endString, ""),
+            'url': url,
             'timestamp': HF.microseconds,
           });
-          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           channel.sink.add(body);
         default:
