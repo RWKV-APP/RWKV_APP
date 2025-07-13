@@ -2,7 +2,7 @@ part of 'p.dart';
 
 const _initialSource = "This is a test.";
 const _initialResult = "";
-const _endString = "hlcc_[END]_hlcc";
+const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
 const _maxCachedPairsCount = 10000;
 
 enum ServeMode {
@@ -29,6 +29,7 @@ extension _$Translator on _Translator {
     source.l(_onTextChanged);
     P.app.pageKey.l(_onPageKeyChanged);
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    P.translator.runningTaskKey.l(_onRunningTaskKeyChanged);
   }
 
   void _onTextEditingControllerValueChanged() {
@@ -43,6 +44,12 @@ extension _$Translator on _Translator {
 
   void _onPageKeyChanged(PageKey pageKey) {
     qq;
+  }
+
+  void _onRunningTaskKeyChanged(String? next) {
+    qq;
+    final textInController = textEditingController.text;
+    if (next != null && next != textInController) textEditingController.text = next;
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
