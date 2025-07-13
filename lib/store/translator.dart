@@ -20,6 +20,8 @@ class _Translator {
   late final serveMode = qs(ServeMode.hoverLoop);
 
   late final completerPool = qs(<String, Completer<String>>{});
+
+  late final highlightUrl = qs<String?>(null);
 }
 
 /// Private methods

@@ -40,11 +40,12 @@ class _TabInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final highlightUrl = ref.watch(P.translator.highlightUrl);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("所有打开的标签页"),
-        Text("正在交互中的标签页"),
+        Text("正在交互中的标签页: $highlightUrl"),
       ],
     );
   }

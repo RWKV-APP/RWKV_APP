@@ -123,6 +123,8 @@ extension _$Backend on _Backend {
           runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           channel.sink.add(body);
+        case "url_highlighted":
+          P.translator.highlightUrl.q = url;
         default:
           channel.sink.add(jsonEncode({'error': 'Invalid logic: $logic'}));
       }
