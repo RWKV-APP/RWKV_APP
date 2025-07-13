@@ -175,8 +175,6 @@ class Debugger extends ConsumerWidget {
                       T(result),
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
-                      T("runningTaskKey".codeToName),
-                      T(runningTaskKey.toString()),
                       T("translations.length".codeToName),
                       T(translations.length.toString()),
                       T("runningTasks.length".codeToName),
@@ -189,6 +187,8 @@ class Debugger extends ConsumerWidget {
                       T(taskHandledCount.toString()),
                       T("taskReceivedCount".codeToName),
                       T(taskReceivedCount.toString()),
+                      T("runningTaskKey".codeToName),
+                      T(runningTaskKey.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

@@ -89,7 +89,45 @@ extension _$Backend on _Backend {
     }
   }
 
-  void _onData(ws_channel.WebSocketChannel channel, dynamic data) async {}
+  void _onData(ws_channel.WebSocketChannel channel, dynamic data) async {
+    final json = jsonDecode(data);
+    final text = json['text'];
+    final logic = json['logic'];
+
+    try {
+      switch (logic) {
+        case 'translate':
+          // TODO: 加入翻译队列
+          // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
+          runningTasks.q = {...runningTasks.q, text};
+          final translation = await P.translator._getFullTranslation(text);
+          final responseBody = jsonEncode({
+            'source': text,
+            'translation': translation.replaceAll(_endString, ""),
+            'timestamp': HF.microseconds,
+          });
+          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          taskHandledCount.q++;
+          channel.sink.add(responseBody);
+        case 'loop':
+          runningTasks.q = {...runningTasks.q, text};
+          final translation = P.translator._getOnTimeTranslation(text);
+          final body = jsonEncode({
+            'source': text,
+            'translation': translation.replaceAll(_endString, ""),
+            'timestamp': HF.microseconds,
+          });
+          runningTasks.q = runningTasks.q.where((e) => e != text).toSet();
+          taskHandledCount.q++;
+          channel.sink.add(body);
+        default:
+          channel.sink.add(jsonEncode({'error': 'Invalid logic: $logic'}));
+      }
+    } catch (e) {
+      qqe(e);
+      channel.sink.add(jsonEncode({'error': 'logic failed: $logic'}));
+    }
+  }
 
   void _onDone(ws_channel.WebSocketChannel channel) async {
     qqw("WebSocket done");

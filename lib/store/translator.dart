@@ -158,7 +158,6 @@ extension _$Translator on _Translator {
 
   Future<String> _getFullTranslation(String sourceKey) async {
     final existingTranslation = translations.q[sourceKey];
-    qqq(0);
 
     final isEnded = existingTranslation?.endsWith(_endString) ?? false;
     if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
