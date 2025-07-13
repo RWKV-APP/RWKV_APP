@@ -53,6 +53,7 @@ extension _$Backend on _Backend {
     final json = jsonDecode(requestBody);
     final source = json['source'];
     final logic = json['logic'];
+    final url = json['url'];
 
     try {
       switch (logic) {
@@ -60,7 +61,7 @@ extension _$Backend on _Backend {
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
           runningTasks.q = {...runningTasks.q, source};
-          final translation = await P.translator._getFullTranslation(source);
+          final translation = await P.translator._getFullTranslation(source, url: url);
           final responseBody = jsonEncode({
             'source': source,
             'translation': translation.replaceAll(_endString, ""),
@@ -71,7 +72,7 @@ extension _$Backend on _Backend {
           return shelf.Response.ok(responseBody, headers: _headers, encoding: utf8);
         case 'loop':
           runningTasks.q = {...runningTasks.q, source};
-          final translation = P.translator._getOnTimeTranslation(source);
+          final translation = P.translator._getOnTimeTranslation(source, url: url);
           final body = jsonEncode({
             'source': source,
             'translation': translation.replaceAll(_endString, ""),
@@ -101,7 +102,7 @@ extension _$Backend on _Backend {
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
           runningTasks.q = {...runningTasks.q, source};
-          final translation = await P.translator._getFullTranslation(source);
+          final translation = await P.translator._getFullTranslation(source, url: url);
           final responseBody = jsonEncode({
             'source': source,
             'translation': translation.replaceAll(_endString, ""),

@@ -10,6 +10,13 @@ enum ServeMode {
   full,
 }
 
+class _URLCompleter {
+  final String? url;
+  final Completer<String> completer;
+
+  _URLCompleter({required this.url, required this.completer});
+}
+
 class _Translator {
   late final source = qs(_initialSource);
   late final textEditingController = TextEditingController(text: _initialSource);
@@ -19,7 +26,7 @@ class _Translator {
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
 
-  late final completerPool = qs(<String, Completer<String>>{});
+  late final completerPool = qs(<String, _URLCompleter>{});
 
   late final highlightUrl = qs<String?>(null);
 }
@@ -91,7 +98,7 @@ extension _$Translator on _Translator {
 
           final c = completerPool.q[key];
           if (c != null) {
-            c.complete(translation + _endString);
+            c.completer.complete(translation + _endString);
             completerPool.q = completerPool.q..removeWhere((k, v) => k == key);
           }
         }
@@ -105,7 +112,11 @@ extension _$Translator on _Translator {
 
         final hasUnfinishedCompleter = completerPool.q.isNotEmpty;
         if (hasUnfinishedCompleter) {
-          final nextKey = completerPool.q.keys.firstOrNull;
+          final currentUrl = highlightUrl.q;
+          final pool = completerPool.q;
+          // 优先执行当前 url 的请求
+          // 因为用户肯定是对当前 url 的翻译感兴趣
+          final nextKey = pool.keys.firstWhereOrNull((k) => pool[k]?.url == currentUrl) ?? pool.keys.firstOrNull;
           if (nextKey != null) {
             HF.wait(1).then((_) => _startNewTask(nextKey));
           }
@@ -142,7 +153,7 @@ extension _$Translator on _Translator {
   /// 5. 如果 runningTaskKey 是 null, 如果 `translations.q[sourceKey]` 已完结, 返回字符串
   ///
   /// 对 [完结] 的定义: 字符串末尾拼接了 `_endString`
-  String _getOnTimeTranslation(String sourceKey) {
+  String _getOnTimeTranslation(String sourceKey, {String? url}) {
     final currentRunningTask = runningTaskKey.q;
     final existingTranslation = translations.q[sourceKey];
 
@@ -158,17 +169,17 @@ extension _$Translator on _Translator {
     return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 
-  Future<String> _getFullTranslation(String sourceKey) async {
+  Future<String> _getFullTranslation(String sourceKey, {String? url}) async {
     final existingTranslation = translations.q[sourceKey];
 
     final isEnded = existingTranslation?.endsWith(_endString) ?? false;
     if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
 
     final existCompleter = completerPool.q[sourceKey];
-    if (existCompleter != null) return await existCompleter.future;
+    if (existCompleter != null) return await existCompleter.completer.future;
 
     final completer = Completer<String>();
-    completerPool.q = Map.from(completerPool.q)..[sourceKey] = completer;
+    completerPool.q = Map.from(completerPool.q)..[sourceKey] = _URLCompleter(url: url, completer: completer);
 
     if (runningTaskKey.q == null) _startNewTask(sourceKey);
 

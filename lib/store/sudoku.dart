@@ -277,7 +277,6 @@ extension $Sudoku on _Sudoku {
     }
 
     staticData.q = newPuzzle;
-    // debugger();
   }
 
   void onClearPressed(BuildContext context) async {
@@ -358,7 +357,6 @@ extension $Sudoku on _Sudoku {
           return _kStackMap[token]!;
         })
         .toList();
-    // debugger();
 
     // 最大深度为 10
     // 如果超过最大深度，则只保留最后的 10 个
