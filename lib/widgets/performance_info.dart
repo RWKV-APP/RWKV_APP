@@ -21,12 +21,12 @@ class PerformanceInfo extends ConsumerWidget {
           style: TS(c: qb.q(.6), s: 10),
           TextSpan(
             children: [
-              TextSpan(text: "Prefill: "),
+              const TextSpan(text: "Prefill: "),
               TextSpan(
                 text: prefillSpeed.toStringAsFixed(1),
-                style: TS(ff: "monospace"),
+                style: const TS(ff: "monospace"),
               ),
-              TextSpan(text: "t/s"),
+              const TextSpan(text: "t/s"),
             ],
           ),
         ),
@@ -34,12 +34,12 @@ class PerformanceInfo extends ConsumerWidget {
           style: TS(c: qb.q(.6), s: 10),
           TextSpan(
             children: [
-              TextSpan(text: "Decode: "),
+              const TextSpan(text: "Decode: "),
               TextSpan(
                 text: decodeSpeed.toStringAsFixed(1),
-                style: TS(ff: "monospace"),
+                style: const TS(ff: "monospace"),
               ),
-              TextSpan(text: "t/s"),
+              const TextSpan(text: "t/s"),
             ],
           ),
         ),

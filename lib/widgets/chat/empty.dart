@@ -66,14 +66,14 @@ class Empty extends ConsumerWidget {
                       children: [
                         Opacity(
                           opacity: 0.0,
-                          child: T(version, s: TS(s: 10)),
+                          child: T(version, s: const TS(s: 10)),
                         ),
                         T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
                         Opacity(
                           opacity: 0.5,
                           child: Padding(
-                            padding: EI.o(b: 4),
-                            child: T(version, s: TS(s: 10)),
+                            padding: const EI.o(b: 4),
+                            child: T(version, s: const TS(s: 10)),
                           ),
                         ),
                       ],

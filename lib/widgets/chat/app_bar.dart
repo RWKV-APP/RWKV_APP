@@ -104,12 +104,12 @@ class ChatAppBar extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text: version,
-                      style: TS(s: 10, c: kC),
+                      style: const TS(s: 10, c: kC),
                     ),
-                    TextSpan(text: Config.appTitle, style: TS(s: 18)),
+                    const TextSpan(text: Config.appTitle, style: TS(s: 18)),
                     TextSpan(
                       text: ' $version',
-                      style: TS(s: 8),
+                      style: const TS(s: 8),
                     ),
                   ],
                 ),
@@ -185,7 +185,7 @@ class ChatAppBar extends ConsumerWidget {
             value: -1,
             enabled: false,
             height: 20,
-            child: T(Config.appTitle + " " + version, s: TS(s: 10)),
+            child: T(Config.appTitle + " " + version, s: const TS(s: 10)),
           ),
           PopupMenuItem(
             value: 1,
