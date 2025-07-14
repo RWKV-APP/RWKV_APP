@@ -675,11 +675,12 @@ extension _$Chat on _Chat {
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
     RefInfo ref = RefInfo.empty();
+    final isZh = P.preference.currentLangIsZh;
 
     if (webSearch.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
-        final last = allMessage.last;
+        final prompt = allMessage.last;
         final deepSearch = webSearch.q == WebSearchMode.deepSearch;
         _updateMessageById(id: receiveId, reference: ref);
         final resp =
@@ -687,7 +688,7 @@ extension _$Chat on _Chat {
                   'https://auth.rwkvos.com/api/internet_search',
                   token: 'x8rYbL3KfGp2Nq1zT9wVvJ0iQ5sUoAeX7HcM4',
                   body: {
-                    "query": last,
+                    "query": prompt,
                     "top_n": 3,
                     'is_deepsearch': deepSearch,
                   },
@@ -696,9 +697,10 @@ extension _$Chat on _Chat {
         qqq('web search mode: ${webSearch.q}');
         final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
         ref = ref.copyWith(list: refs);
-        final r = refs.map((e) => e.summary).join("\n");
+        final searchResult = refs.map((e) => e.summary).join("\n");
         allMessage.removeLast();
-        allMessage.add("$r\n$last");
+        final msg = sprintf(isZh ? Config.promptSearchTemplateZh : Config.promptSearchTemplateEn, [searchResult, prompt]);
+        allMessage.add(msg);
       } catch (e) {
         ref = ref.copyWith(error: e.toString());
         qqe(e);

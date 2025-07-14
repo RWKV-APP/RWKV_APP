@@ -13,6 +13,10 @@ abstract class Config {
 
   static const timeout = Duration(seconds: 60);
 
+  static const promptSearchTemplateZh = '%s\n请根据以上信息回答:\n%s';
+
+  static const promptSearchTemplateEn = '%s\nPlease answer according to the above information:\n%s';
+
   static late final String xApiKey;
 
   static const appTitle = "RWKV Chat";
