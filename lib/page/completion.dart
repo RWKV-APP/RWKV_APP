@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/completion_mode.dart';
 import 'package:zone/widgets/model_select_button.dart';
 
@@ -20,6 +22,15 @@ class CompletionPage extends ConsumerWidget {
           ],
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              if (!checkModelSelection()) return;
+              await ArgumentsPanel.show(context);
+            },
+            icon: const Icon(Icons.tune_rounded),
+          ),
+        ],
       ),
       body: Completion(),
     );
