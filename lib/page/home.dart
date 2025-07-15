@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
-import 'package:zone/store/p.dart' show P, $Chat;
+import 'package:zone/store/p.dart' show P, $Chat, $FileManager, $RWKVLoad;
 import 'package:zone/widgets/app_scaffold.dart';
 
 class PageHome extends ConsumerWidget {
   const PageHome({super.key});
+
+  void onNekoTap() async {
+    final current = P.rwkv.currentModel.q;
+    if (current == null || !current.isNeko) {
+      final nekoList = P.fileManager.getNekoModel();
+      if (nekoList.isNotEmpty) {
+        await P.rwkv.switchChatModel(nekoList.first);
+      }
+    }
+    P.chat.startNewChat();
+    push(PageKey.chat);
+  }
+
+  void onChatTap() async {
+    P.chat.startNewChat();
+    push(PageKey.chat);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,19 +67,14 @@ class PageHome extends ConsumerWidget {
               buildButton(
                 title: S.of(context).chat,
                 subtitle: S.of(context).chat_with_rwkv_model,
-                onTap: () async {
-                  P.chat.startNewChat();
-                  push(PageKey.chat);
-                },
+                onTap: onChatTap,
                 color: Colors.blueAccent,
                 icon: FontAwesomeIcons.comments,
               ),
               buildButton(
                 title: S.of(context).neko,
                 subtitle: S.of(context).nyan_nyan,
-                onTap: () {
-                  push(PageKey.chat);
-                },
+                onTap: onNekoTap,
                 color: Colors.pinkAccent,
                 icon: FontAwesomeIcons.cat,
               ),

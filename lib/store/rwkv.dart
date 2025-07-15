@@ -293,6 +293,28 @@ extension $RWKVLoad on _RWKV {
     _loading.q = false;
   }
 
+  Future switchChatModel(FileInfo fileInfo) async {
+    final current = P.rwkv.currentModel.q;
+    if (current == fileInfo) {
+      return;
+    }
+    final localFile = P.fileManager.locals(fileInfo).q;
+    final modelPath = localFile.targetPath;
+    final backend = fileInfo.backend;
+    try {
+      P.rwkv.clearStates();
+      await P.rwkv.loadChat(
+        modelPath: modelPath,
+        backend: backend!,
+        enableReasoning: fileInfo.isReasoning,
+      );
+      P.rwkv.currentModel.q = fileInfo;
+    } catch (e) {
+      Alert.error(e.toString());
+      return;
+    }
+  }
+
   FV loadChat({
     required String modelPath,
     required Backend backend,
