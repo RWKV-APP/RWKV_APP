@@ -13,8 +13,6 @@ class PageTranslator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
-
     final paddingTop = ref.watch(P.app.paddingTop);
 
     return Scaffold(
@@ -130,7 +128,7 @@ class _Dashboard extends ConsumerWidget {
 
   FV _onPressClearCompleterPool() async {
     qq;
-    P.translator.translations.q = LinkedHashMap.from({});
+    P.translator.translations.q = {};
     P.backend.runningTasks.q = {};
     P.translator.completerPool.q = {};
     P.translator.runningTaskKey.q = null;
@@ -172,6 +170,10 @@ class _Dashboard extends ConsumerWidget {
             TextButton(
               onPressed: _onPressClearCompleterPool,
               child: const Text("清除缓存"),
+            ),
+            TextButton(
+              onPressed: P.translator.debugCheck,
+              child: const Text("检查"),
             ),
           ],
         ),

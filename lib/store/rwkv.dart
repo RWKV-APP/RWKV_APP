@@ -506,8 +506,6 @@ extension $RWKV on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    qqq("message lengths: ${messages.m((e) => e.length)}");
-
     final sendPort = _sendPort;
 
     if (sendPort == null) {

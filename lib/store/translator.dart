@@ -21,7 +21,7 @@ class _Translator {
   late final source = qs(_initialSource);
   late final textEditingController = TextEditingController(text: _initialSource);
   late final result = qs(_initialResult);
-  late final translations = qs<LinkedHashMap<String, String>>(LinkedHashMap());
+  late final translations = qs<Map<String, String>>({});
   late final runningTaskKey = qs<String?>(null);
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
@@ -56,7 +56,6 @@ extension _$Translator on _Translator {
   }
 
   void _onRunningTaskKeyChanged(String? next) {
-    qq;
     final textInController = textEditingController.text;
     if (next != null && next != textInController) textEditingController.text = next;
   }
@@ -78,31 +77,42 @@ extension _$Translator on _Translator {
         translations.q = LinkedHashMap.from({...translations.q, key: content});
         break;
       case from_rwkv.IsGenerating res:
-        final isGenerating = res.isGenerating;
-        final currentIsGenerating = this.isGenerating.q;
+        final generatingStateFromEvent = res.isGenerating;
+        final generatingStateInFrontend = isGenerating.q;
 
-        this.isGenerating.q = isGenerating;
+        isGenerating.q = generatingStateFromEvent;
 
-        final isStopEvent = currentIsGenerating && !isGenerating;
+        // 状态由生成中变为非生成中, 则认为是结束信号
+        // FIXME: 有时候, 还有未完成的数据, 但是得到了非 stop 信号, 模型尺寸越小, 越容易发生
+        final isStopEvent = generatingStateInFrontend && !generatingStateFromEvent;
+        qqq(6);
+        qqq(generatingStateInFrontend);
+        qqq(generatingStateFromEvent);
+        qqq(isStopEvent);
         if (!isStopEvent) return;
+        qqq(7);
 
         // 拼接完结末尾
         final key = runningTaskKey.q;
         final translation = translations.q[key];
 
-        if (translation != null) {
-          translations.q = LinkedHashMap.from({
-            ...translations.q,
-            key: translation + _endString,
-          });
-
-          final c = completerPool.q[key];
-          if (c != null) {
-            c.completer.complete(translation + _endString);
-            completerPool.q = completerPool.q..removeWhere((k, v) => k == key);
-          }
+        if (key == null) {
+          qqw("key is null");
+          return;
         }
 
+        if (translation == null) {
+          qqw("translation is null");
+          return;
+        }
+
+        translations.q = {...translations.q, key: translation + _endString};
+
+        final c = completerPool.q[key];
+        if (c != null) {
+          c.completer.complete(translation + _endString);
+          completerPool.q = completerPool.q..removeWhere((k, v) => k == key);
+        }
         runningTaskKey.q = null;
 
         // 如果 translations 超过最大缓存数量, 移除最早的条目
@@ -170,6 +180,7 @@ extension _$Translator on _Translator {
   }
 
   Future<String> _getFullTranslation(String sourceKey, {String? url}) async {
+    qq;
     final existingTranslation = translations.q[sourceKey];
 
     final isEnded = existingTranslation?.endsWith(_endString) ?? false;
@@ -191,5 +202,14 @@ extension _$Translator on _Translator {
 extension $Translator on _Translator {
   FV onPressTest() async {
     _startNewTask(source.q);
+  }
+
+  FV debugCheck() async {
+    final runningTaskKey = this.runningTaskKey.q;
+    final translations = this.translations.q;
+    final completerPool = this.completerPool.q;
+    final highlightUrl = this.highlightUrl.q;
+
+    debugger();
   }
 }

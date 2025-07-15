@@ -16,6 +16,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 
@@ -71,7 +72,8 @@ class ModelItem extends ConsumerWidget {
     }
 
     final modelSize = fileInfo.modelSize ?? 0.1;
-    if (modelSize < 1.5) {
+    final pageKey = P.app.pageKey.q;
+    if (modelSize < 1.5 && pageKey == PageKey.chat) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
