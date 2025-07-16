@@ -208,7 +208,7 @@ class ChatAppBar extends ConsumerWidget {
             value: -1,
             enabled: false,
             height: 20,
-            child: T(Config.appTitle + " " + version, s: TS(s: 10)),
+            child: T(Config.appTitle + " " + version, s: const TS(s: 10)),
           ),
           PopupMenuItem(
             value: 1,
