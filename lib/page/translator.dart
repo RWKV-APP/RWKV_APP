@@ -28,20 +28,24 @@ class PageTranslator extends ConsumerWidget {
       ),
       body: ListView(
         children: [
-          32.h,
-          const _InferenceInfo(),
-          const _TranslatiorInfo(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: const _ServiceInfo(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const _InferenceInfo(),
+                    const _BrowserInfo(),
+                  ],
+                ),
               ),
               Expanded(
-                child: const _BrowserInfo(),
+                child: const _ServiceInfo(),
               ),
             ],
           ),
+          const _TranslatiorInfo(),
           const _Dashboard(),
         ],
       ),
