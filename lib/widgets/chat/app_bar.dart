@@ -109,6 +109,7 @@ class ChatAppBar extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MAA.center,
                   crossAxisAlignment: CAA.end,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     T(
                       Config.appTitle,
