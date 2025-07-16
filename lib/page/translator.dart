@@ -151,7 +151,11 @@ class _BrowserInfo extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
     final qw = ref.watch(P.app.qw);
-    final allUrls = [];
+    final browserTabs = ref.watch(P.translator.browserTabs);
+    final activeBrowserTab = ref.watch(P.translator.activeBrowserTab);
+    final activeUrl = activeBrowserTab?.url ?? "";
+    final activeTitle = activeBrowserTab?.title ?? "";
+    final activeFavicon = activeBrowserTab?.favIconUrl ?? "";
     return C(
       decoration: BD(
         color: kC,
@@ -168,9 +172,28 @@ class _BrowserInfo extends ConsumerWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
           ),
           8.h,
-          Text("正在交互中的标签页: $highlightUrl"),
-          Text("优先翻译已打开的标签页", style: TextStyle(fontSize: 10, color: qb.q(.5))),
-          Text("所有打开的标签页: $allUrls"),
+          Wrap(
+            runAlignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text("当前标签页"),
+              8.w,
+              Text("优先翻译已打开的标签页", style: TextStyle(fontSize: 10, color: qb.q(.5))),
+            ],
+          ),
+          Text(
+            "URL: $activeUrl",
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            "标题: $activeTitle",
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          8.h,
+          Text("其他标签页"),
+          Text("总数: ${browserTabs.length}"),
         ],
       ),
     );

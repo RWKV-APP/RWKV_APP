@@ -140,6 +140,26 @@ extension _$Backend on _Backend {
           channel.sink.add(body);
         case "url_highlighted":
           P.translator.highlightUrl.q = url;
+        case "tab_actived":
+          final tab = HF.json(json["tab"]);
+          final id = tab["id"].toString();
+          final url = tab["url"];
+          final title = tab["title"] ?? "";
+          final favIconUrl = tab["favIconUrl"] ?? "";
+          P.translator.activeBrowserTab.q = BrowserTab(id: id, url: url, title: title, favIconUrl: favIconUrl);
+        case "tabs_all":
+          final tabs = HF.listJSON(json["tabs"]);
+          final _tabs = tabs
+              .map(
+                (e) => BrowserTab(
+                  id: e["id"].toString(),
+                  url: e["url"],
+                  title: e["title"] ?? "",
+                  favIconUrl: e["favIconUrl"] ?? "",
+                ),
+              )
+              .toList();
+          P.translator.browserTabs.q = _tabs;
         default:
           channel.sink.add(jsonEncode({'error': 'Invalid logic: $logic'}));
       }
