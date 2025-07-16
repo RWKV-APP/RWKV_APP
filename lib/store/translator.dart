@@ -30,6 +30,9 @@ class _Translator {
   late final completerPool = qs(<String, _URLCompleter>{});
 
   late final highlightUrl = qs<String?>(null);
+
+  late final browserTabs = qs<List<BrowserTab>>([]);
+  late final activeBrowserTab = qs<BrowserTab?>(null);
 }
 
 /// Private methods
@@ -218,6 +221,8 @@ extension $Translator on _Translator {
     final translations = this.translations.q;
     final completerPool = this.completerPool.q;
     final highlightUrl = this.highlightUrl.q;
+    final browserTabs = this.browserTabs.q;
+    final activeBrowserTab = this.activeBrowserTab.q;
 
     debugger();
   }
