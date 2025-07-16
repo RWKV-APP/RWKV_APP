@@ -92,6 +92,7 @@ class PageHome extends ConsumerWidget {
               ),
               SizedBox(),
             ]),
+            const SizedBox(height: 16),
           ],
         ),
       ),
