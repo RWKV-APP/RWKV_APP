@@ -502,7 +502,11 @@ extension $RWKV on _RWKV {
     send(to_rwkv.SetAudioPrompt(path));
   }
 
-  FV sendMessages(List<String> messages) async {
+  FV sendMessages(
+    List<String> messages, {
+    double getIsGeneratingRate = .5,
+    double getResponseBufferContentRate = .5,
+  }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
@@ -520,8 +524,8 @@ extension $RWKV on _RWKV {
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
       send(to_rwkv.GetResponseBufferContent(messages));
-      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
-      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
+      if (HF.randomBool(truePercentage: getIsGeneratingRate)) send(to_rwkv.GetIsGenerating());
+      if (HF.randomBool(truePercentage: getResponseBufferContentRate)) send(to_rwkv.GetPrefillAndDecodeSpeed());
     });
   }
 
