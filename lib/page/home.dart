@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart' show S;
+import 'package:zone/page/chat.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $FileManager, $RWKVLoad;
 import 'package:zone/widgets/app_scaffold.dart';
+import 'package:zone/widgets/model_selector.dart';
 
 class PageHome extends ConsumerWidget {
   const PageHome({super.key});
@@ -15,12 +18,20 @@ class PageHome extends ConsumerWidget {
     final current = P.rwkv.currentModel.q;
     if (current == null || !current.isNeko) {
       final nekoList = P.fileManager.getNekoModel();
-      if (nekoList.isNotEmpty) {
-        await P.rwkv.switchChatModel(nekoList.first);
+      final downloaded = nekoList.where((e) => P.fileManager.locals(e).q.hasFile).toList();
+      if (downloaded.isNotEmpty) {
+        await P.rwkv.switchChatModel(downloaded.first);
+      } else if (nekoList.isNotEmpty) {
+        Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
+        ModelSelector.show(nekoOnly: true);
+        return;
+      } else {
+        Alert.error('Neko is not available');
+        return;
       }
     }
     P.chat.startNewChat();
-    push(PageKey.chat);
+    push(PageKey.chat, extra: PageChatParam(isNeko: true));
   }
 
   void onChatTap() async {

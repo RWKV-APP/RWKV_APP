@@ -22,7 +22,9 @@ import 'package:zone/widgets/model_item.dart';
 
 // TODO: move it to pages/panel
 class ModelSelector extends ConsumerWidget {
-  static FV show() async {
+  final bool nekoOnly;
+
+  static FV show({bool nekoOnly = false}) async {
     qq;
 
     if (P.fileManager.modelSelectorShown.q) return;
@@ -58,7 +60,7 @@ class ModelSelector extends ConsumerWidget {
           snap: false,
 
           builder: (BuildContext context, ScrollController scrollController) {
-            return ModelSelector(scrollController: scrollController);
+            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly);
           },
         );
       },
@@ -68,7 +70,7 @@ class ModelSelector extends ConsumerWidget {
 
   final ScrollController scrollController;
 
-  const ModelSelector({super.key, required this.scrollController});
+  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly});
 
   List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
@@ -104,6 +106,9 @@ class ModelSelector extends ConsumerWidget {
       DemoType.chat || DemoType.sudoku => [
         for (final fileInfo
             in availableModels
+                .where((e) {
+                  return !nekoOnly || e.isNeko;
+                })
                 .sorted((a, b) {
                   /// 模型尺寸大的在上面
                   return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);

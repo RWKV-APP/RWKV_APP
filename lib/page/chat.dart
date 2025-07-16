@@ -23,8 +23,16 @@ import 'package:zone/widgets/chat/visual_empty.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/pager.dart';
 
+class PageChatParam {
+  final bool isNeko;
+
+  PageChatParam({required this.isNeko});
+}
+
 class PageChat extends StatefulWidget {
-  const PageChat({super.key});
+  final dynamic param;
+
+  const PageChat({super.key, this.param});
 
   @override
   State<PageChat> createState() => _PageChatState();

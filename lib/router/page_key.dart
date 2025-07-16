@@ -41,9 +41,10 @@ enum PageKey {
         child: scaffold,
       );
     }
+    final page = this == chat ? PageChat(param: state.extra) : scaffold;
     return CustomTransitionPage(
       key: state.pageKey,
-      child: scaffold,
+      child: page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return SlideTransition(
           position: Tween<Offset>(
