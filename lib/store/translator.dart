@@ -69,9 +69,12 @@ extension _$Translator on _Translator {
     // 更新 caches
     final request = res.toRWKV as to_rwkv.GetResponseBufferContent;
     final key = request.messages.firstOrNull;
-    if (key == null) return;
+    if (key == null) {
+      qqw("key is null");
+      return;
+    }
     // 更新 translations
-    translations.q = LinkedHashMap.from({...translations.q, key: content});
+    translations.q = {...translations.q, key: content};
   }
 
   void _handleIsGenerating(from_rwkv.IsGenerating res) {
@@ -81,14 +84,8 @@ extension _$Translator on _Translator {
     isGenerating.q = generatingStateFromEvent;
 
     // 状态由生成中变为非生成中, 则认为是结束信号
-    // FIXME: 有时候, 还有未完成的数据, 但是得到了非 stop 信号, 模型尺寸越小, 越容易发生
     final isStopEvent = generatingStateInFrontend && !generatingStateFromEvent;
-    qqq(6);
-    qqq(generatingStateInFrontend);
-    qqq(generatingStateFromEvent);
-    qqq(isStopEvent);
     if (!isStopEvent) return;
-    qqq(7);
     _appendEndStringAndStartNewTask();
   }
 
@@ -160,7 +157,11 @@ extension _$Translator on _Translator {
   void _startNewTask(String sourceKey) {
     P.rwkv.stop();
     runningTaskKey.q = sourceKey;
-    P.rwkv.sendMessages([sourceKey]);
+    P.rwkv.sendMessages(
+      [sourceKey],
+      getIsGeneratingRate: 1,
+      getResponseBufferContentRate: .0,
+    );
   }
 
   /// 1. 如果 runningTaskKey 不是 sourceKey, 停止 LLM, 开启新的任务
