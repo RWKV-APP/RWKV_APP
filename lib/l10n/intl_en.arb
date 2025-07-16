@@ -277,5 +277,10 @@
   "hello_ask_me_anything": "Hello, Ask Me \nAnything...",
   "no_conversation_yet": "No conversation yet",
   "nyan_nyan": "Nyan~~,Nyan~~",
-  "ask_me_anything": "Ask me anything..."
+  "ask_me_anything": "Ask me anything...",
+  "application_mode": "Application Mode",
+  "str_please_select_app_mode_": "Choose an app mode according to your familiarity with AI and LLMs.",
+  "beginner": "Beginner",
+  "power_user": "Power User",
+  "expert": "Expert"
 }

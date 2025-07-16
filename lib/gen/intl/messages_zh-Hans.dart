@@ -53,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "应用内测群",
     ),
     "application_language": MessageLookupByLibrary.simpleMessage("应用语言"),
+    "application_mode": MessageLookupByLibrary.simpleMessage("应用模式"),
     "application_settings": MessageLookupByLibrary.simpleMessage("应用设置"),
     "apply": MessageLookupByLibrary.simpleMessage("应用"),
     "are_you_sure_you_want_to_delete_this_model":
@@ -61,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("返回聊天"),
+    "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "black": MessageLookupByLibrary.simpleMessage("黑方"),
     "black_score": MessageLookupByLibrary.simpleMessage("黑方得分"),
     "black_wins": MessageLookupByLibrary.simpleMessage("黑方获胜！"),
@@ -154,6 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "end": MessageLookupByLibrary.simpleMessage("完"),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
+    "expert": MessageLookupByLibrary.simpleMessage("专家模式"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("探索RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("探索中..."),
     "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
@@ -293,6 +296,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_wait_for_the_model_to_load": MessageLookupByLibrary.simpleMessage(
       "请等待模型加载",
     ),
+    "power_user": MessageLookupByLibrary.simpleMessage("高级模式"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("预设声音"),
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
@@ -358,6 +362,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "str_please_disable_battery_opt_": MessageLookupByLibrary.simpleMessage(
       "请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停",
+    ),
+    "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
+      "请根据你对 AI 和 LLM 的了解程度选择应用模式.",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("提交"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入门"),

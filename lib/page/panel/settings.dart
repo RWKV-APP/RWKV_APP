@@ -166,7 +166,7 @@ class Settings extends ConsumerWidget {
             FormItem(
               isSectionStart: true,
               icon: Icon(Icons.settings_suggest_rounded, color: qb.q(.667), size: 16),
-              title: "模应用式",
+              title: s.application_mode,
               info: userType.displayName(),
               onTap: P.preference.showUserTypeDialog,
             ),

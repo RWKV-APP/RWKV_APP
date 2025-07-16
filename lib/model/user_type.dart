@@ -1,3 +1,5 @@
+import 'package:zone/gen/l10n.dart';
+
 enum UserType {
   user,
   powerUser,
@@ -10,11 +12,11 @@ enum UserType {
   String displayName() {
     switch (this) {
       case UserType.user:
-        return "普通用户";
+        return S.current.beginner;
       case UserType.powerUser:
-        return "高级用户";
+        return S.current.power_user;
       case UserType.expert:
-        return "专家用户";
+        return S.current.expert;
     }
   }
 }

@@ -143,13 +143,13 @@ extension $Preference on _Preference {
     final currentQ = userType.q;
     final res = await showConfirmationDialog<UserType?>(
       context: context,
-      title: '应用模式',
-      message: '请根据您对 LLM 的熟悉程度选择您的用户类型',
+      title: S.current.application_mode,
+      message: S.current.str_please_select_app_mode_,
       initialSelectedActionKey: currentQ,
       actions: [
-        AlertDialogAction<UserType>(label: '普通模式', key: UserType.user),
-        AlertDialogAction<UserType>(label: '高级模式', key: UserType.powerUser),
-        AlertDialogAction<UserType>(label: '专家模式', key: UserType.expert),
+        AlertDialogAction<UserType>(label: S.current.beginner, key: UserType.user),
+        AlertDialogAction<UserType>(label: S.current.power_user, key: UserType.powerUser),
+        AlertDialogAction<UserType>(label: S.current.expert, key: UserType.expert),
       ]
     );
     if (res == null) return;

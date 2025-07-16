@@ -1967,6 +1967,36 @@ class S {
       args: [],
     );
   }
+
+  /// `应用模式`
+  String get application_mode {
+    return Intl.message('应用模式', name: 'application_mode', desc: '', args: []);
+  }
+
+  /// `请根据你对 AI 和 LLM 的了解程度选择应用模式.`
+  String get str_please_select_app_mode_ {
+    return Intl.message(
+      '请根据你对 AI 和 LLM 的了解程度选择应用模式.',
+      name: 'str_please_select_app_mode_',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新手模式`
+  String get beginner {
+    return Intl.message('新手模式', name: 'beginner', desc: '', args: []);
+  }
+
+  /// `高级模式`
+  String get power_user {
+    return Intl.message('高级模式', name: 'power_user', desc: '', args: []);
+  }
+
+  /// `专家模式`
+  String get expert {
+    return Intl.message('专家模式', name: 'expert', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -58,6 +58,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Application Internal Test Group",
     ),
     "application_language": MessageLookupByLibrary.simpleMessage("Language"),
+    "application_mode": MessageLookupByLibrary.simpleMessage(
+      "Application Mode",
+    ),
     "application_settings": MessageLookupByLibrary.simpleMessage(
       "Application Settings",
     ),
@@ -72,6 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
+    "beginner": MessageLookupByLibrary.simpleMessage("Beginner"),
     "black": MessageLookupByLibrary.simpleMessage("Black"),
     "black_score": MessageLookupByLibrary.simpleMessage("Black Score"),
     "black_wins": MessageLookupByLibrary.simpleMessage("Black Wins!"),
@@ -197,6 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Please ensure your device has enough memory, otherwise the application might crash",
         ),
+    "expert": MessageLookupByLibrary.simpleMessage("Expert"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Explore RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("Exploring..."),
     "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
@@ -378,6 +383,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_wait_for_the_model_to_load": MessageLookupByLibrary.simpleMessage(
       "Please wait for the model to load",
     ),
+    "power_user": MessageLookupByLibrary.simpleMessage("Power User"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("Prebuilt Voices"),
     "prefer": MessageLookupByLibrary.simpleMessage("Prefer"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage(
@@ -469,6 +475,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "str_please_disable_battery_opt_": MessageLookupByLibrary.simpleMessage(
       "Please disable battery optimization to allow background downloads, otherwise downloads may pause when switching to other apps",
+    ),
+    "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
+      "Choose an app mode according to your familiarity with AI and LLMs.",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Easy"),
