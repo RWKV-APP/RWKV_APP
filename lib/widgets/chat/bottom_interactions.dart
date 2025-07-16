@@ -64,73 +64,64 @@ class _WebSearchModeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final primary = Theme.of(context).colorScheme.primary;
-    final loading = ref.watch(P.rwkv.loading);
-    final qw = ref.watch(P.app.qw);
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     final webSearch = ref.watch(P.chat.webSearch);
 
     final enabled = webSearch != WebSearchMode.off;
-    final color = enabled ? primary : kC;
-    final borderColor = enabled ? primary : primary.q(.5);
-    final textColor = enabled ? qw : primary.q(.5);
+    final color = enabled ? primary : theme.colorScheme.surfaceContainer;
+    final textColor = enabled ? theme.colorScheme.onPrimary : Colors.grey;
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
     final padding = const EI.o(l: 8);
     return IntrinsicWidth(
-      child: AnimatedOpacity(
-        opacity: loading ? .33 : 1,
-        duration: 250.ms,
-        child: GD(
-          onTap: _onTap,
-          child: SB(
-            height: height,
-            child: C(
-              padding: padding,
-              decoration: BD(
-                color: color,
-                border: Border.all(color: borderColor),
-                borderRadius: 10.r,
+      child: GD(
+        onTap: _onTap,
+        child: C(
+          height: height,
+          padding: padding,
+          decoration: BD(
+            color: color,
+            borderRadius: 60.r,
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.travel_explore, color: textColor, size: 16),
+              2.w,
+              T(
+                webSearch == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
+                s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.travel_explore, color: textColor, size: 18),
-                  2.w,
-                  T(
-                    webSearch == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
-                    s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
-                  ),
-                  4.w,
-                  const VerticalDivider(width: 1),
-                  PopupMenuButton(
-                    offset: const Offset(-30, -80),
-                    itemBuilder: (c) {
-                      return [
-                        PopupMenuItem(value: WebSearchMode.off, child: Text(s.off)),
-                        PopupMenuItem(value: WebSearchMode.search, child: Text(s.web_search)),
-                        PopupMenuItem(value: WebSearchMode.deepSearch, child: Text(s.deep_web_search)),
-                      ];
-                    },
-                    onSelected: (mode) {
-                      P.chat.onSwitchWebSearchMode(mode);
-                    },
-                    initialValue: webSearch,
-                    popUpAnimationStyle: AnimationStyle(
-                      curve: Curves.linear,
-                      duration: 250.ms,
-                      reverseCurve: Curves.linear,
-                      reverseDuration: 250.ms,
-                    ),
-                    child: Container(
-                      height: height,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      alignment: Alignment.center,
-                      child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
-                    ),
-                  ),
-                ],
+              4.w,
+              VerticalDivider(width: 2, indent: 8, endIndent: 8, color: textColor),
+              PopupMenuButton(
+                offset: const Offset(-30, -80),
+                itemBuilder: (c) {
+                  return [
+                    PopupMenuItem(value: WebSearchMode.off, child: Text(s.off)),
+                    PopupMenuItem(value: WebSearchMode.search, child: Text(s.web_search)),
+                    PopupMenuItem(value: WebSearchMode.deepSearch, child: Text(s.deep_web_search)),
+                  ];
+                },
+                onSelected: (mode) {
+                  P.chat.onSwitchWebSearchMode(mode);
+                },
+                initialValue: webSearch,
+                popUpAnimationStyle: AnimationStyle(
+                  curve: Curves.linear,
+                  duration: 250.ms,
+                  reverseCurve: Curves.linear,
+                  reverseDuration: 250.ms,
+                ),
+                child: Container(
+                  height: height,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -148,30 +139,24 @@ class _ThinkingModeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     final loading = ref.watch(P.rwkv.loading);
     final qw = ref.watch(P.app.qw);
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
 
     final color = switch (thinkingMode) {
-      thinking_mode.Lighting() => kC,
-      thinking_mode.None() => kC,
+      thinking_mode.Lighting() => theme.colorScheme.surfaceContainer,
+      thinking_mode.None() => theme.colorScheme.surfaceContainer,
       thinking_mode.Free() => primary,
       thinking_mode.PreferChinese() => primary,
     };
 
-    final borderColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => primary.q(.33),
-      thinking_mode.None() => primary.q(.33),
-      thinking_mode.Free() => primary.q(.5),
-      thinking_mode.PreferChinese() => primary.q(.5),
-    };
-
     final textColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => primary.q(.5),
-      thinking_mode.None() => primary.q(.5),
-      thinking_mode.Free() => qw,
-      thinking_mode.PreferChinese() => qw,
+      thinking_mode.Lighting() => Colors.grey,
+      thinking_mode.None() => Colors.grey,
+      thinking_mode.Free() => theme.colorScheme.onPrimary,
+      thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
     };
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
@@ -190,8 +175,7 @@ class _ThinkingModeButton extends ConsumerWidget {
               padding: padding,
               decoration: BD(
                 color: color,
-                border: Border.all(color: borderColor),
-                borderRadius: 10.r,
+                borderRadius: 60.r,
               ),
               child: Row(
                 children: [
@@ -201,6 +185,7 @@ class _ThinkingModeButton extends ConsumerWidget {
                     s.reason,
                     s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
                   ),
+                  4.w,
                 ],
               ),
             ),
@@ -221,31 +206,24 @@ class _SecondaryOptionsButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     final loading = ref.watch(P.rwkv.loading);
 
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
-    final qw = ref.watch(P.app.qw);
 
     final color = switch (thinkingMode) {
-      thinking_mode.Lighting() => kC,
-      thinking_mode.Free() => kC,
+      thinking_mode.Lighting() => theme.colorScheme.surfaceContainer,
+      thinking_mode.Free() => theme.colorScheme.surfaceContainer,
       thinking_mode.None() => primary,
       thinking_mode.PreferChinese() => primary,
     };
 
-    final borderColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => primary.q(.33),
-      thinking_mode.Free() => primary.q(.33),
-      thinking_mode.PreferChinese() => primary.q(.33),
-      thinking_mode.None() => primary.q(.33),
-    };
-
     final textColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => primary.q(.5),
-      thinking_mode.None() => qw,
-      thinking_mode.Free() => primary.q(.5),
-      thinking_mode.PreferChinese() => qw,
+      thinking_mode.Lighting() => Colors.grey,
+      thinking_mode.None() => theme.colorScheme.onPrimary,
+      thinking_mode.Free() => Colors.grey,
+      thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
     };
 
     final iconWidget = switch (thinkingMode) {
@@ -289,14 +267,15 @@ class _SecondaryOptionsButton extends ConsumerWidget {
               padding: padding,
               decoration: BD(
                 color: color,
-                border: Border.all(color: borderColor),
-                borderRadius: 10.r,
+                borderRadius: 60.r,
               ),
               child: Row(
                 children: [
+                  4.w,
                   iconWidget,
                   if (textWidget != null) 4.w,
                   ?textWidget,
+                  4.w,
                 ],
               ),
             ),
@@ -379,7 +358,7 @@ class _MessageButton extends ConsumerWidget {
                         : CupertinoIcons.arrow_up_circle_fill
                   : editingBotMessage
                   ? Icons.edit
-                  : Icons.send,
+                  : Icons.send_rounded,
               color: color,
             ),
           ),

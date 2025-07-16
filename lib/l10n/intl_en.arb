@@ -265,5 +265,22 @@
   "go_to_settings": "Go to settings",
   "dont_ask_again": "Don't ask again",
   "searching": "Searching...",
-  "search_failed": "Search Failed"
+  "search_failed": "Search Failed",
+  "welcome_to_rwkv_chat": "Welcome to RWKV Chat",
+  "chat": "Chat",
+  "neko": "Neko",
+  "Completion": "Completion",
+  "chat_with_rwkv_model": "Chat with RWKV models",
+  "text_completion_mode": "Text completion mode",
+  "home": "Home",
+  "conversations": "Conversations",
+  "hello_ask_me_anything": "Hello, Ask Me \nAnything...",
+  "no_conversation_yet": "No conversation yet",
+  "nyan_nyan": "Nyan~~,Nyan~~",
+  "ask_me_anything": "Ask me anything...",
+  "application_mode": "Application Mode",
+  "str_please_select_app_mode_": "Choose an app mode according to your familiarity with AI and LLMs.",
+  "beginner": "Beginner",
+  "power_user": "Power User",
+  "expert": "Expert"
 }

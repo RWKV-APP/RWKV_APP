@@ -6,6 +6,8 @@ class _Preference {
   /// 非空表示使用指定的 locale
   late final preferredLanguage = qs<Language>(Language.none);
 
+  late final userType = qs<UserType>(UserType.user);
+
   /// 空表示根据系统当前的 textScaleFactor 来设置应用的 textScaleFactor
   ///
   /// 非空表示使用指定的 textScaleFactor
@@ -78,6 +80,11 @@ extension _$Preference on _Preference {
       preferredTextScaleFactor.q = -1;
     }
 
+    final userType = sp.getInt("halo_state.user_type");
+    if (userType != null) {
+      this.userType.q = UserType.values.firstWhereOrNull((e) => e.index == userType) ?? UserType.user;
+    }
+
     final latestRuntimeAddress = sp.getInt("halo_state.latestRuntimeAddress");
     if (latestRuntimeAddress != null) this.latestRuntimeAddress.q = latestRuntimeAddress;
 
@@ -129,6 +136,28 @@ extension _$Preference on _Preference {
 
 /// Public methods
 extension $Preference on _Preference {
+
+  void showUserTypeDialog() async {
+    final context = getContext();
+    if (context == null || !context.mounted) return;
+    final currentQ = userType.q;
+    final res = await showConfirmationDialog<UserType?>(
+      context: context,
+      title: S.current.application_mode,
+      message: S.current.str_please_select_app_mode_,
+      initialSelectedActionKey: currentQ,
+      actions: [
+        AlertDialogAction<UserType>(label: S.current.beginner, key: UserType.user),
+        AlertDialogAction<UserType>(label: S.current.power_user, key: UserType.powerUser),
+        AlertDialogAction<UserType>(label: S.current.expert, key: UserType.expert),
+      ]
+    );
+    if (res == null) return;
+    userType.q = res;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt("halo_state.user_type", res.index);
+  }
+
   FV showTextScaleFactorDialog() async {
     final context = getContext();
     if (context == null) return;

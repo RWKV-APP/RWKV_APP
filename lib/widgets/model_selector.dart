@@ -8,6 +8,7 @@ import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class ModelSelector extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final availableModels = ref.watch(P.fileManager.availableModels);
     final ttsCores = ref.watch(P.fileManager.ttsCores);
+    final userType = ref.watch(P.preference.userType);
 
     return switch (demoType) {
       DemoType.world => [
@@ -112,7 +114,7 @@ class ModelSelector extends ConsumerWidget {
                 .sorted((a, b) {
                   return (a.tags.contains("npu") ? 0 : 1).compareTo(b.tags.contains("npu") ? 0 : 1);
                 }))
-          ModelItem(fileInfo),
+          ModelItem(fileInfo, userType.isGreaterThan(UserType.user)),
       ],
       DemoType.fifthteenPuzzle || DemoType.othello => [],
     };

@@ -23,25 +23,30 @@ class BottomBar extends ConsumerWidget {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final primary = Theme.of(context).colorScheme.primary;
     final demoType = ref.watch(P.app.demoType);
+    final isChat = demoType == DemoType.chat;
 
-    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final theme = Theme.of(context);
+    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
 
     return MeasureSize(
       onChange: (size) {
         P.chat.inputHeight.q = size.height;
       },
       child: ClipRRect(
+        borderRadius: !isChat ? BorderRadius.zero : BorderRadius.vertical(top: Radius.circular(16)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: C(
             decoration: BD(
-              color: scaffoldBackgroundColor.q(.8),
-              border: Border(
-                top: BorderSide(
-                  color: primary.q(.33),
-                  width: .5,
-                ),
-              ),
+              color: isChat ? theme.cardColor : scaffoldBackgroundColor.q(.8),
+              border: isChat
+                  ? null
+                  : Border(
+                      top: BorderSide(
+                        color: primary.q(.33),
+                        width: .5,
+                      ),
+                    ),
             ),
             padding: EI.o(
               l: 10,
@@ -76,8 +81,9 @@ class _TextField extends ConsumerWidget {
     final loaded = ref.watch(P.rwkv.loaded);
     final loading = ref.watch(P.rwkv.loading);
     final demoType = ref.watch(P.app.demoType);
+    final isChat = demoType == DemoType.chat;
 
-    late final String hintText;
+    String hintText;
     switch (demoType) {
       case DemoType.chat:
       case DemoType.fifthteenPuzzle:
@@ -87,6 +93,9 @@ class _TextField extends ConsumerWidget {
         hintText = s.send_message_to_rwkv;
       case DemoType.tts:
         hintText = s.i_want_rwkv_to_say;
+    }
+    if (isChat) {
+      hintText = s.ask_me_anything;
     }
 
     bool textFieldEnabled = loaded && !loading;
@@ -127,24 +136,33 @@ class _TextField extends ConsumerWidget {
           focusColor: qw,
           hoverColor: qw,
           iconColor: qw,
-          border: OutlineInputBorder(
-            borderRadius: borderRadius,
-            borderSide: BorderSide(color: primary.q(.33)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: borderRadius,
-            borderSide: BorderSide(color: primary.q(.33)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: borderRadius,
-            borderSide: BorderSide(color: primary.q(.33)),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: borderRadius,
-            borderSide: BorderSide(color: primary.q(.33)),
-          ),
+          border: isChat
+              ? InputBorder.none
+              : OutlineInputBorder(
+                  borderRadius: borderRadius,
+                  borderSide: BorderSide(color: primary.q(.33)),
+                ),
+          enabledBorder: isChat
+              ? InputBorder.none
+              : OutlineInputBorder(
+                  borderRadius: borderRadius,
+                  borderSide: BorderSide(color: primary.q(.33)),
+                ),
+          focusedBorder: isChat
+              ? InputBorder.none
+              : OutlineInputBorder(
+                  borderRadius: borderRadius,
+                  borderSide: BorderSide(color: primary.q(.33)),
+                ),
+          focusedErrorBorder: isChat
+              ? InputBorder.none
+              : OutlineInputBorder(
+                  borderRadius: borderRadius,
+                  borderSide: BorderSide(color: primary.q(.33)),
+                ),
           hintText: hintText,
-          suffixIcon: textInInput.isEmpty
+          hintStyle: !isChat ? null : TextStyle(color: Colors.grey),
+          suffixIcon: textInInput.isEmpty || isChat
               ? null
               : GD(
                   onTap: P.chat.onTapClearInput,

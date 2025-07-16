@@ -37,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Completion": MessageLookupByLibrary.simpleMessage("续写模式"),
     "about": MessageLookupByLibrary.simpleMessage("关于"),
     "according_to_the_following_audio_file":
         MessageLookupByLibrary.simpleMessage("根据: "),
@@ -52,13 +53,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "应用内测群",
     ),
     "application_language": MessageLookupByLibrary.simpleMessage("应用语言"),
+    "application_mode": MessageLookupByLibrary.simpleMessage("应用模式"),
     "application_settings": MessageLookupByLibrary.simpleMessage("应用设置"),
     "apply": MessageLookupByLibrary.simpleMessage("应用"),
     "are_you_sure_you_want_to_delete_this_model":
         MessageLookupByLibrary.simpleMessage("确定要删除这个模型吗？"),
+    "ask_me_anything": MessageLookupByLibrary.simpleMessage("随意向我提问..."),
     "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("返回聊天"),
+    "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "black": MessageLookupByLibrary.simpleMessage("黑方"),
     "black_score": MessageLookupByLibrary.simpleMessage("黑方得分"),
     "black_wins": MessageLookupByLibrary.simpleMessage("黑方获胜！"),
@@ -69,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
     "cancel_download": MessageLookupByLibrary.simpleMessage("取消下载"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
+    "chat": MessageLookupByLibrary.simpleMessage("开始对话"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已复制到剪贴板"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("请输入消息内容"),
     "chat_history": MessageLookupByLibrary.simpleMessage("聊天记录"),
@@ -80,6 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chat_resume": MessageLookupByLibrary.simpleMessage("继续"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
     "chat_welcome_to_use": m0,
+    "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage("与 RWKV 模型对话"),
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage("您需要先下载模型才能使用"),
     "chatting": MessageLookupByLibrary.simpleMessage("聊天中"),
@@ -107,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "会话名称不能为空",
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m1,
+    "conversations": MessageLookupByLibrary.simpleMessage("会话"),
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("点击上方按钮创建新会话"),
     "created_at": MessageLookupByLibrary.simpleMessage("创建时间"),
@@ -149,6 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "end": MessageLookupByLibrary.simpleMessage("完"),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
+    "expert": MessageLookupByLibrary.simpleMessage("专家模式"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("探索RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("探索中..."),
     "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
@@ -185,10 +193,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "generating": MessageLookupByLibrary.simpleMessage("生成中..."),
     "github_repository": MessageLookupByLibrary.simpleMessage("Github 仓库"),
     "go_to_settings": MessageLookupByLibrary.simpleMessage("去设置"),
+    "hello_ask_me_anything": MessageLookupByLibrary.simpleMessage(
+      "Hello, 请随意 \n向我提问...",
+    ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隐藏思维链堆栈"),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "按住录音，松开发送",
     ),
+    "home": MessageLookupByLibrary.simpleMessage("主页"),
     "human": MessageLookupByLibrary.simpleMessage("人类"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想让 RWKV 说..."),
     "imitate": m3,
@@ -221,16 +233,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),
+    "neko": MessageLookupByLibrary.simpleMessage("猫娘陪聊"),
     "network_error": MessageLookupByLibrary.simpleMessage("网络错误"),
     "new_chat": MessageLookupByLibrary.simpleMessage("新聊天"),
     "new_chat_started": MessageLookupByLibrary.simpleMessage("开始新聊天"),
     "new_game": MessageLookupByLibrary.simpleMessage("新游戏"),
     "new_version_found": MessageLookupByLibrary.simpleMessage("发现新版本"),
     "no_cell_available": MessageLookupByLibrary.simpleMessage("无子可下"),
+    "no_conversation_yet": MessageLookupByLibrary.simpleMessage("目前还没有对话"),
     "no_data": MessageLookupByLibrary.simpleMessage("无数据"),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("没有消息可导出"),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("没有数独"),
     "number": MessageLookupByLibrary.simpleMessage("数字"),
+    "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
     "off": MessageLookupByLibrary.simpleMessage("关闭"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
@@ -281,6 +296,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_wait_for_the_model_to_load": MessageLookupByLibrary.simpleMessage(
       "请等待模型加载",
     ),
+    "power_user": MessageLookupByLibrary.simpleMessage("高级模式"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("预设声音"),
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
@@ -347,6 +363,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_disable_battery_opt_": MessageLookupByLibrary.simpleMessage(
       "请关闭电池优化已允许后台下载，否则切换到其他应用时下载可能会被暂停",
     ),
+    "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
+      "请根据你对 AI 和 LLM 的了解程度选择应用模式.",
+    ),
     "submit": MessageLookupByLibrary.simpleMessage("提交"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入门"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("专家"),
@@ -354,6 +373,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "system_mode": MessageLookupByLibrary.simpleMessage("跟随系统"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技术研发群"),
+    "text_completion_mode": MessageLookupByLibrary.simpleMessage("文本补全模式"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage("数独无效"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("深色"),
     "theme_light": MessageLookupByLibrary.simpleMessage("浅色"),
@@ -378,6 +398,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "very_small": MessageLookupByLibrary.simpleMessage("非常小 (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
+    "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
+      "欢迎探索 RWKV Chat",
+    ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage("欢迎使用 RWKV"),
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),

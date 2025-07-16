@@ -40,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Completion": MessageLookupByLibrary.simpleMessage("Completion"),
     "about": MessageLookupByLibrary.simpleMessage("About"),
     "according_to_the_following_audio_file":
         MessageLookupByLibrary.simpleMessage("According to: "),
@@ -57,6 +58,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Application Internal Test Group",
     ),
     "application_language": MessageLookupByLibrary.simpleMessage("Language"),
+    "application_mode": MessageLookupByLibrary.simpleMessage(
+      "Application Mode",
+    ),
     "application_settings": MessageLookupByLibrary.simpleMessage(
       "Application Settings",
     ),
@@ -65,9 +69,13 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Are you sure you want to delete this model?",
         ),
+    "ask_me_anything": MessageLookupByLibrary.simpleMessage(
+      "Ask me anything...",
+    ),
     "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
+    "beginner": MessageLookupByLibrary.simpleMessage("Beginner"),
     "black": MessageLookupByLibrary.simpleMessage("Black"),
     "black_score": MessageLookupByLibrary.simpleMessage("Black Score"),
     "black_wins": MessageLookupByLibrary.simpleMessage("Black Wins!"),
@@ -78,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancel_download": MessageLookupByLibrary.simpleMessage("Cancel Download"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("Not now"),
+    "chat": MessageLookupByLibrary.simpleMessage("Chat"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "Copied to clipboard",
     ),
@@ -93,6 +102,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "chat_resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
     "chat_welcome_to_use": m0,
+    "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage(
+      "Chat with RWKV models",
+    ),
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage(
           "You need to download the model first, before you can use it.",
@@ -130,6 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Conversation name cannot be empty",
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m1,
+    "conversations": MessageLookupByLibrary.simpleMessage("Conversations"),
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage(
           "Create a new one by clicking the button above",
@@ -188,6 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Please ensure your device has enough memory, otherwise the application might crash",
         ),
+    "expert": MessageLookupByLibrary.simpleMessage("Expert"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Explore RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("Exploring..."),
     "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
@@ -230,10 +244,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Github Repository",
     ),
     "go_to_settings": MessageLookupByLibrary.simpleMessage("Go to settings"),
+    "hello_ask_me_anything": MessageLookupByLibrary.simpleMessage(
+      "Hello, Ask Me \nAnything...",
+    ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("Hide Thought Stack"),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "Hold to record, release to send",
     ),
+    "home": MessageLookupByLibrary.simpleMessage("Home"),
     "human": MessageLookupByLibrary.simpleMessage("Human"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to say...",
@@ -276,6 +294,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
+    "neko": MessageLookupByLibrary.simpleMessage("Neko"),
     "network_error": MessageLookupByLibrary.simpleMessage("Network Error"),
     "new_chat": MessageLookupByLibrary.simpleMessage("New Chat"),
     "new_chat_started": MessageLookupByLibrary.simpleMessage(
@@ -288,12 +307,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_cell_available": MessageLookupByLibrary.simpleMessage(
       "No cell available",
     ),
+    "no_conversation_yet": MessageLookupByLibrary.simpleMessage(
+      "No conversation yet",
+    ),
     "no_data": MessageLookupByLibrary.simpleMessage("No Data"),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "No message to export",
     ),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("No Sudoku"),
     "number": MessageLookupByLibrary.simpleMessage("Number"),
+    "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
     "off": MessageLookupByLibrary.simpleMessage("Off"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
@@ -360,6 +383,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_wait_for_the_model_to_load": MessageLookupByLibrary.simpleMessage(
       "Please wait for the model to load",
     ),
+    "power_user": MessageLookupByLibrary.simpleMessage("Power User"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("Prebuilt Voices"),
     "prefer": MessageLookupByLibrary.simpleMessage("Prefer"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage(
@@ -452,6 +476,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_disable_battery_opt_": MessageLookupByLibrary.simpleMessage(
       "Please disable battery optimization to allow background downloads, otherwise downloads may pause when switching to other apps",
     ),
+    "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
+      "Choose an app mode according to your familiarity with AI and LLMs.",
+    ),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Easy"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Hard"),
@@ -460,6 +487,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "take_photo": MessageLookupByLibrary.simpleMessage("Take Photo"),
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "Technical Research Group",
+    ),
+    "text_completion_mode": MessageLookupByLibrary.simpleMessage(
+      "Text completion mode",
     ),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage(
       "The Sudoku puzzle is not valid",
@@ -491,6 +521,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "very_small": MessageLookupByLibrary.simpleMessage("Very Small (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("Voice Cloning"),
     "web_search": MessageLookupByLibrary.simpleMessage("Search"),
+    "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
+      "Welcome to RWKV Chat",
+    ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV",
     ),

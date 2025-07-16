@@ -1,36 +1,54 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/world_type.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
 import 'package:zone/widgets/chat/audio_empty.dart';
 import 'package:zone/widgets/chat/audio_input.dart';
+import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/completion_mode.dart';
 import 'package:zone/widgets/chat/empty.dart';
-import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/message.dart';
 import 'package:zone/widgets/chat/share_chat.dart';
 import 'package:zone/widgets/chat/suggestions.dart';
 import 'package:zone/widgets/chat/visual_empty.dart';
-import 'package:zone/widgets/menu.dart';
+import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/pager.dart';
 
-class PageChat extends ConsumerWidget {
+class PageChat extends StatefulWidget {
   const PageChat({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return const Pager(
-      drawer: Menu(),
-      child: _Page(),
-    );
+  State<PageChat> createState() => _PageChatState();
+}
+
+class _PageChatState extends State<PageChat> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (P.app.demoType.q == DemoType.chat) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+        final loaded = P.rwkv.currentModel.q != null;
+        if (!loaded) {
+          await Future.delayed(const Duration(milliseconds: 200));
+          ModelSelector.show();
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const _Page();
   }
 }
 
@@ -42,6 +60,7 @@ class _Page extends ConsumerWidget {
     final completionMode = ref.watch(P.chat.completionMode);
     final selectMessageMode = ref.watch(P.chat.isSharing);
     final atMainPage = ref.watch(Pager.atMainPage);
+    final demoType = ref.watch(P.app.demoType);
 
     if (completionMode) {
       final qb = ref.watch(P.app.qb);
@@ -63,6 +82,7 @@ class _Page extends ConsumerWidget {
       resizeToAvoidBottomInset: atMainPage,
       body: Stack(
         children: [
+          if (DemoType.chat == demoType) AppGradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
           const VisualEmpty(),
@@ -73,7 +93,7 @@ class _Page extends ConsumerWidget {
             right: 0,
             child: ChatAppBar(),
           ),
-          const _NavigationBarBottomLine(),
+          if (DemoType.chat != demoType) const _NavigationBarBottomLine(),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
           if (!selectMessageMode)
             const Positioned(

@@ -30,6 +30,8 @@ class _Conversation extends Table {
 
   TextColumn get title => text().withDefault(const Constant("New Conversation"))();
 
+  TextColumn get subtitle => text().nullable()();
+
   TextColumn get data => text()();
 
   TextColumn get appBuildNumber => text()();
@@ -93,7 +95,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -102,7 +104,38 @@ class AppDatabase extends _$AppDatabase {
         from1To2: (m, schema) async {
           await m.addColumn(schema.msg, schema.msg.reference);
         },
+        from2To3: (m, schema) async {
+          await m.addColumn(schema.conv, schema.conv.subtitle);
+        },
       ),
+      beforeOpen: (details) async {
+        if (!details.hadUpgrade) {
+          return;
+        }
+        if (details.versionNow == 3) {
+          final conversations = await select(conversation).get();
+          for (final conv in conversations) {
+            if (conv.subtitle != null && conv.subtitle!.isNotEmpty) {
+              continue;
+            }
+            final msgNode = MsgNode.fromJson(conv.data, createAtInUS: conv.createdAtUS);
+            final ids = msgNode.latestMsgIdsWithoutRoot;
+            final id = ids.length >= 2 ? ids[1] : null;
+            if (id == null) {
+              continue;
+            }
+            final m = await (select(msg)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+            if (m == null) {
+              continue;
+            }
+            String subtitle = m.content.replaceAll('\n', '').replaceAll('</think>', '').replaceAll('<think>', '');
+            if (subtitle.length > 200) {
+              subtitle = subtitle.substring(0, 200);
+            }
+            await updateConv(conv.createdAtUS, subtitle: subtitle);
+          }
+        }
+      },
     );
   }
 
@@ -196,16 +229,16 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
-  /// 根据会话的创建时间找到会话，并重命名会话，如果会话不存在，则返回 false
-  Future<bool> renameConv(int createAtInUS, String title) async {
+  /// 根据会话的创建时间找到会话，并更新会话，如果会话不存在，则返回 false
+  Future<bool> updateConv(int createAtInUS, {String? title, String? subtitle}) async {
     final success =
         await (update(conversation)..where((tbl) {
               return tbl.createdAtUS.equals(createAtInUS);
             }))
             .write(
-              _ConversationCompanion(
-                title: Value(title),
-                updatedAtUS: Value(HF.microseconds),
+              _ConversationCompanion(updatedAtUS: Value(HF.microseconds)).copyWith(
+                title: title == null ? null : Value(title),
+                subtitle: subtitle == null ? null : Value(subtitle),
               ),
             ) >
         0;

@@ -41,6 +41,17 @@ class $_ConversationTable extends _Conversation
     requiredDuringInsert: false,
     defaultValue: const Constant("New Conversation"),
   );
+  static const VerificationMeta _subtitleMeta = const VerificationMeta(
+    'subtitle',
+  );
+  @override
+  late final GeneratedColumn<String> subtitle = GeneratedColumn<String>(
+    'subtitle',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _dataMeta = const VerificationMeta('data');
   @override
   late final GeneratedColumn<String> data = GeneratedColumn<String>(
@@ -66,6 +77,7 @@ class $_ConversationTable extends _Conversation
     createdAtUS,
     updatedAtUS,
     title,
+    subtitle,
     data,
     appBuildNumber,
   ];
@@ -103,6 +115,12 @@ class $_ConversationTable extends _Conversation
       context.handle(
         _titleMeta,
         title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('subtitle')) {
+      context.handle(
+        _subtitleMeta,
+        subtitle.isAcceptableOrUnknown(data['subtitle']!, _subtitleMeta),
       );
     }
     if (data.containsKey('data')) {
@@ -145,6 +163,10 @@ class $_ConversationTable extends _Conversation
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
+      subtitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subtitle'],
+      ),
       data: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}data'],
@@ -167,12 +189,14 @@ class ConversationData extends DataClass
   final int createdAtUS;
   final int? updatedAtUS;
   final String title;
+  final String? subtitle;
   final String data;
   final String appBuildNumber;
   const ConversationData({
     required this.createdAtUS,
     this.updatedAtUS,
     required this.title,
+    this.subtitle,
     required this.data,
     required this.appBuildNumber,
   });
@@ -184,6 +208,9 @@ class ConversationData extends DataClass
       map['updated_at_u_s'] = Variable<int>(updatedAtUS);
     }
     map['title'] = Variable<String>(title);
+    if (!nullToAbsent || subtitle != null) {
+      map['subtitle'] = Variable<String>(subtitle);
+    }
     map['data'] = Variable<String>(data);
     map['app_build_number'] = Variable<String>(appBuildNumber);
     return map;
@@ -196,6 +223,9 @@ class ConversationData extends DataClass
           ? const Value.absent()
           : Value(updatedAtUS),
       title: Value(title),
+      subtitle: subtitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subtitle),
       data: Value(data),
       appBuildNumber: Value(appBuildNumber),
     );
@@ -210,6 +240,7 @@ class ConversationData extends DataClass
       createdAtUS: serializer.fromJson<int>(json['createdAtUS']),
       updatedAtUS: serializer.fromJson<int?>(json['updatedAtUS']),
       title: serializer.fromJson<String>(json['title']),
+      subtitle: serializer.fromJson<String?>(json['subtitle']),
       data: serializer.fromJson<String>(json['data']),
       appBuildNumber: serializer.fromJson<String>(json['appBuildNumber']),
     );
@@ -221,6 +252,7 @@ class ConversationData extends DataClass
       'createdAtUS': serializer.toJson<int>(createdAtUS),
       'updatedAtUS': serializer.toJson<int?>(updatedAtUS),
       'title': serializer.toJson<String>(title),
+      'subtitle': serializer.toJson<String?>(subtitle),
       'data': serializer.toJson<String>(data),
       'appBuildNumber': serializer.toJson<String>(appBuildNumber),
     };
@@ -230,12 +262,14 @@ class ConversationData extends DataClass
     int? createdAtUS,
     Value<int?> updatedAtUS = const Value.absent(),
     String? title,
+    Value<String?> subtitle = const Value.absent(),
     String? data,
     String? appBuildNumber,
   }) => ConversationData(
     createdAtUS: createdAtUS ?? this.createdAtUS,
     updatedAtUS: updatedAtUS.present ? updatedAtUS.value : this.updatedAtUS,
     title: title ?? this.title,
+    subtitle: subtitle.present ? subtitle.value : this.subtitle,
     data: data ?? this.data,
     appBuildNumber: appBuildNumber ?? this.appBuildNumber,
   );
@@ -248,6 +282,7 @@ class ConversationData extends DataClass
           ? data.updatedAtUS.value
           : this.updatedAtUS,
       title: data.title.present ? data.title.value : this.title,
+      subtitle: data.subtitle.present ? data.subtitle.value : this.subtitle,
       data: data.data.present ? data.data.value : this.data,
       appBuildNumber: data.appBuildNumber.present
           ? data.appBuildNumber.value
@@ -261,6 +296,7 @@ class ConversationData extends DataClass
           ..write('createdAtUS: $createdAtUS, ')
           ..write('updatedAtUS: $updatedAtUS, ')
           ..write('title: $title, ')
+          ..write('subtitle: $subtitle, ')
           ..write('data: $data, ')
           ..write('appBuildNumber: $appBuildNumber')
           ..write(')'))
@@ -268,8 +304,14 @@ class ConversationData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(createdAtUS, updatedAtUS, title, data, appBuildNumber);
+  int get hashCode => Object.hash(
+    createdAtUS,
+    updatedAtUS,
+    title,
+    subtitle,
+    data,
+    appBuildNumber,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -277,6 +319,7 @@ class ConversationData extends DataClass
           other.createdAtUS == this.createdAtUS &&
           other.updatedAtUS == this.updatedAtUS &&
           other.title == this.title &&
+          other.subtitle == this.subtitle &&
           other.data == this.data &&
           other.appBuildNumber == this.appBuildNumber);
 }
@@ -285,12 +328,14 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
   final Value<int> createdAtUS;
   final Value<int?> updatedAtUS;
   final Value<String> title;
+  final Value<String?> subtitle;
   final Value<String> data;
   final Value<String> appBuildNumber;
   const _ConversationCompanion({
     this.createdAtUS = const Value.absent(),
     this.updatedAtUS = const Value.absent(),
     this.title = const Value.absent(),
+    this.subtitle = const Value.absent(),
     this.data = const Value.absent(),
     this.appBuildNumber = const Value.absent(),
   });
@@ -298,6 +343,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
     this.createdAtUS = const Value.absent(),
     this.updatedAtUS = const Value.absent(),
     this.title = const Value.absent(),
+    this.subtitle = const Value.absent(),
     required String data,
     required String appBuildNumber,
   }) : data = Value(data),
@@ -306,6 +352,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
     Expression<int>? createdAtUS,
     Expression<int>? updatedAtUS,
     Expression<String>? title,
+    Expression<String>? subtitle,
     Expression<String>? data,
     Expression<String>? appBuildNumber,
   }) {
@@ -313,6 +360,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
       if (createdAtUS != null) 'created_at_u_s': createdAtUS,
       if (updatedAtUS != null) 'updated_at_u_s': updatedAtUS,
       if (title != null) 'title': title,
+      if (subtitle != null) 'subtitle': subtitle,
       if (data != null) 'data': data,
       if (appBuildNumber != null) 'app_build_number': appBuildNumber,
     });
@@ -322,6 +370,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
     Value<int>? createdAtUS,
     Value<int?>? updatedAtUS,
     Value<String>? title,
+    Value<String?>? subtitle,
     Value<String>? data,
     Value<String>? appBuildNumber,
   }) {
@@ -329,6 +378,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
       createdAtUS: createdAtUS ?? this.createdAtUS,
       updatedAtUS: updatedAtUS ?? this.updatedAtUS,
       title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
       data: data ?? this.data,
       appBuildNumber: appBuildNumber ?? this.appBuildNumber,
     );
@@ -346,6 +396,9 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
+    if (subtitle.present) {
+      map['subtitle'] = Variable<String>(subtitle.value);
+    }
     if (data.present) {
       map['data'] = Variable<String>(data.value);
     }
@@ -361,6 +414,7 @@ class _ConversationCompanion extends UpdateCompanion<ConversationData> {
           ..write('createdAtUS: $createdAtUS, ')
           ..write('updatedAtUS: $updatedAtUS, ')
           ..write('title: $title, ')
+          ..write('subtitle: $subtitle, ')
           ..write('data: $data, ')
           ..write('appBuildNumber: $appBuildNumber')
           ..write(')'))
@@ -1644,6 +1698,7 @@ typedef $$_ConversationTableCreateCompanionBuilder =
       Value<int> createdAtUS,
       Value<int?> updatedAtUS,
       Value<String> title,
+      Value<String?> subtitle,
       required String data,
       required String appBuildNumber,
     });
@@ -1652,6 +1707,7 @@ typedef $$_ConversationTableUpdateCompanionBuilder =
       Value<int> createdAtUS,
       Value<int?> updatedAtUS,
       Value<String> title,
+      Value<String?> subtitle,
       Value<String> data,
       Value<String> appBuildNumber,
     });
@@ -1677,6 +1733,11 @@ class $$_ConversationTableFilterComposer
 
   ColumnFilters<String> get title => $composableBuilder(
     column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subtitle => $composableBuilder(
+    column: $table.subtitle,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1715,6 +1776,11 @@ class $$_ConversationTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get subtitle => $composableBuilder(
+    column: $table.subtitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get data => $composableBuilder(
     column: $table.data,
     builder: (column) => ColumnOrderings(column),
@@ -1747,6 +1813,9 @@ class $$_ConversationTableAnnotationComposer
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get subtitle =>
+      $composableBuilder(column: $table.subtitle, builder: (column) => column);
 
   GeneratedColumn<String> get data =>
       $composableBuilder(column: $table.data, builder: (column) => column);
@@ -1795,12 +1864,14 @@ class $$_ConversationTableTableManager
                 Value<int> createdAtUS = const Value.absent(),
                 Value<int?> updatedAtUS = const Value.absent(),
                 Value<String> title = const Value.absent(),
+                Value<String?> subtitle = const Value.absent(),
                 Value<String> data = const Value.absent(),
                 Value<String> appBuildNumber = const Value.absent(),
               }) => _ConversationCompanion(
                 createdAtUS: createdAtUS,
                 updatedAtUS: updatedAtUS,
                 title: title,
+                subtitle: subtitle,
                 data: data,
                 appBuildNumber: appBuildNumber,
               ),
@@ -1809,12 +1880,14 @@ class $$_ConversationTableTableManager
                 Value<int> createdAtUS = const Value.absent(),
                 Value<int?> updatedAtUS = const Value.absent(),
                 Value<String> title = const Value.absent(),
+                Value<String?> subtitle = const Value.absent(),
                 required String data,
                 required String appBuildNumber,
               }) => _ConversationCompanion.insert(
                 createdAtUS: createdAtUS,
                 updatedAtUS: updatedAtUS,
                 title: title,
+                subtitle: subtitle,
                 data: data,
                 appBuildNumber: appBuildNumber,
               ),

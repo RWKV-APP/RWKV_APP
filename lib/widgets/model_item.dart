@@ -19,8 +19,9 @@ import 'package:zone/store/p.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
+  final bool showTags;
 
-  const ModelItem(this.fileInfo, {super.key});
+  const ModelItem(this.fileInfo, this.showTags, {super.key});
 
   void _onStartTap() async {
     qq;
@@ -141,7 +142,7 @@ class ModelItem extends ConsumerWidget {
         child: Row(
           children: [
             Expanded(
-              child: FileKeyItem(fileInfo),
+              child: FileKeyItem(fileInfo, showTags: showTags),
             ),
             8.w,
             _DownloadActions(file: fileInfo, state: localFile.state),
@@ -298,8 +299,9 @@ class _Delete extends ConsumerWidget {
 class FileKeyItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final bool showDownloaded;
+  final bool showTags;
 
-  const FileKeyItem(this.fileInfo, {super.key, this.showDownloaded = false});
+  const FileKeyItem(this.fileInfo, {super.key, this.showDownloaded = false, this.showTags = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -317,6 +319,7 @@ class FileKeyItem extends ConsumerWidget {
 
     return Column(
       crossAxisAlignment: CAA.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Wrap(
           spacing: 8,
@@ -338,8 +341,8 @@ class FileKeyItem extends ConsumerWidget {
               ),
           ],
         ),
-        4.h,
-        _Tags(fileInfo: fileInfo),
+        if (showTags) 4.h,
+        if (showTags) _Tags(fileInfo: fileInfo),
         if (downloading) 8.h,
         if (downloading)
           Padding(
