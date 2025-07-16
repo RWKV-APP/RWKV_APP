@@ -105,21 +105,37 @@ class ChatAppBar extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CAA.center,
             children: [
-              Text.rich(
-                TextSpan(
+              if (isChat)
+                Row(
+                  mainAxisAlignment: MAA.center,
+                  crossAxisAlignment: CAA.end,
                   children: [
-                    TextSpan(
-                      text: version,
-                      style: TS(s: 10, c: kC),
+                    T(
+                      Config.appTitle,
+                      s: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
-                    TextSpan(text: Config.appTitle, style: TS(s: 18)),
-                    TextSpan(
-                      text: ' $version',
-                      style: TS(s: 8),
+                    T(
+                      ' $version',
+                      s: TS(s: 8),
                     ),
                   ],
                 ),
-              ),
+              if (!isChat)
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: version,
+                        style: TS(s: 10, c: kC),
+                      ),
+                      TextSpan(text: Config.appTitle, style: TS(s: 18)),
+                      TextSpan(
+                        text: ' $version',
+                        style: TS(s: 8),
+                      ),
+                    ],
+                  ),
+                ),
               if (isChat) ModelSelectButton(),
               if (!isChat)
                 C(
