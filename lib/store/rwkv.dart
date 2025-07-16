@@ -548,7 +548,7 @@ extension $RWKV on _RWKV {
     });
   }
 
-  /// 直接在 ffi+cpp 线程中进行推理工作
+  /// 直接在 ffi+cpp 线程中进行推理工作, 也就是说, 会让 ffi 线程不接受任何新的 event
   FV generate(String prompt) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;

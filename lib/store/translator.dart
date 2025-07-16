@@ -60,79 +60,86 @@ extension _$Translator on _Translator {
     if (next != null && next != textInController) textEditingController.text = next;
   }
 
+  void _handleResponseBufferContent(from_rwkv.ResponseBufferContent res) {
+    // 得到的翻译
+    final content = res.responseBufferContent;
+    // 更新 result
+    result.q = content;
+    // TODO: 复杂任务的准确映射?
+    // 更新 caches
+    final request = res.toRWKV as to_rwkv.GetResponseBufferContent;
+    final key = request.messages.firstOrNull;
+    if (key == null) return;
+    // 更新 translations
+    translations.q = LinkedHashMap.from({...translations.q, key: content});
+  }
+
+  void _handleIsGenerating(from_rwkv.IsGenerating res) {
+    final generatingStateFromEvent = res.isGenerating;
+    final generatingStateInFrontend = isGenerating.q;
+
+    isGenerating.q = generatingStateFromEvent;
+
+    // 状态由生成中变为非生成中, 则认为是结束信号
+    // FIXME: 有时候, 还有未完成的数据, 但是得到了非 stop 信号, 模型尺寸越小, 越容易发生
+    final isStopEvent = generatingStateInFrontend && !generatingStateFromEvent;
+    qqq(6);
+    qqq(generatingStateInFrontend);
+    qqq(generatingStateFromEvent);
+    qqq(isStopEvent);
+    if (!isStopEvent) return;
+    qqq(7);
+    _appendEndStringAndStartNewTask();
+  }
+
+  void _appendEndStringAndStartNewTask() {
+    // 拼接完结末尾
+    final key = runningTaskKey.q;
+    final translation = translations.q[key];
+
+    if (key == null) {
+      qqw("key is null");
+      return;
+    }
+
+    if (translation == null) {
+      qqw("translation is null");
+      return;
+    }
+
+    translations.q = {...translations.q, key: translation + _endString};
+
+    final c = completerPool.q[key];
+    if (c != null) {
+      c.completer.complete(translation + _endString);
+      completerPool.q = completerPool.q..removeWhere((k, v) => k == key);
+    }
+    runningTaskKey.q = null;
+
+    // 如果 translations 超过最大缓存数量, 移除最早的条目
+    if (translations.q.length > _maxCachedPairsCount) {
+      translations.q.remove(translations.q.keys.first);
+    }
+
+    final hasUnfinishedCompleter = completerPool.q.isNotEmpty;
+    if (hasUnfinishedCompleter) {
+      final currentUrl = highlightUrl.q;
+      final pool = completerPool.q;
+      // 优先执行当前 url 的请求
+      // 因为用户肯定是对当前 url 的翻译感兴趣
+      final nextKey = pool.keys.firstWhereOrNull((k) => pool[k]?.url == currentUrl) ?? pool.keys.firstOrNull;
+      if (nextKey != null) {
+        HF.wait(1).then((_) => _startNewTask(nextKey));
+      }
+    }
+  }
+
   void _onStreamEvent(from_rwkv.FromRWKV event) {
-    // qqq("onStreamEvent: $event");
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
-        // 得到的翻译
-        final content = res.responseBufferContent;
-        // 更新 result
-        result.q = content;
-        // TODO: 复杂任务的准确映射?
-        // 更新 caches
-        final request = res.toRWKV as to_rwkv.GetResponseBufferContent;
-        final key = request.messages.firstOrNull;
-        if (key == null) return;
-        // 更新 translations
-        translations.q = LinkedHashMap.from({...translations.q, key: content});
-        break;
+        _handleResponseBufferContent(res);
       case from_rwkv.IsGenerating res:
-        final generatingStateFromEvent = res.isGenerating;
-        final generatingStateInFrontend = isGenerating.q;
-
-        isGenerating.q = generatingStateFromEvent;
-
-        // 状态由生成中变为非生成中, 则认为是结束信号
-        // FIXME: 有时候, 还有未完成的数据, 但是得到了非 stop 信号, 模型尺寸越小, 越容易发生
-        final isStopEvent = generatingStateInFrontend && !generatingStateFromEvent;
-        qqq(6);
-        qqq(generatingStateInFrontend);
-        qqq(generatingStateFromEvent);
-        qqq(isStopEvent);
-        if (!isStopEvent) return;
-        qqq(7);
-
-        // 拼接完结末尾
-        final key = runningTaskKey.q;
-        final translation = translations.q[key];
-
-        if (key == null) {
-          qqw("key is null");
-          return;
-        }
-
-        if (translation == null) {
-          qqw("translation is null");
-          return;
-        }
-
-        translations.q = {...translations.q, key: translation + _endString};
-
-        final c = completerPool.q[key];
-        if (c != null) {
-          c.completer.complete(translation + _endString);
-          completerPool.q = completerPool.q..removeWhere((k, v) => k == key);
-        }
-        runningTaskKey.q = null;
-
-        // 如果 translations 超过最大缓存数量, 移除最早的条目
-        if (translations.q.length > _maxCachedPairsCount) {
-          translations.q.remove(translations.q.keys.first);
-        }
-
-        final hasUnfinishedCompleter = completerPool.q.isNotEmpty;
-        if (hasUnfinishedCompleter) {
-          final currentUrl = highlightUrl.q;
-          final pool = completerPool.q;
-          // 优先执行当前 url 的请求
-          // 因为用户肯定是对当前 url 的翻译感兴趣
-          final nextKey = pool.keys.firstWhereOrNull((k) => pool[k]?.url == currentUrl) ?? pool.keys.firstOrNull;
-          if (nextKey != null) {
-            HF.wait(1).then((_) => _startNewTask(nextKey));
-          }
-        }
-
-        break;
+        _handleIsGenerating(res);
       default:
         break;
     }
