@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
@@ -7,6 +5,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/widgets/performance_info.dart';
 
 class PageTranslator extends ConsumerWidget {
   const PageTranslator({super.key});
@@ -17,34 +16,222 @@ class PageTranslator extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chrome Offline Translator'),
+        title: const Text('RWKV 离线翻译服务器'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              P.translator.debugCheck();
+            },
+            icon: const Icon(Icons.help),
+          ),
+        ],
       ),
       body: ListView(
         children: [
           32.h,
-          SB(height: paddingTop),
+          const _InferenceInfo(),
+          const _TranslatiorInfo(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: const _ServiceInfo(),
+              ),
+              Expanded(
+                child: const _BrowserInfo(),
+              ),
+            ],
+          ),
           const _Dashboard(),
-          const _TabInfo(),
-          const _Source(),
-          const _Result(),
         ],
       ),
     );
   }
 }
 
-class _TabInfo extends ConsumerWidget {
-  const _TabInfo();
+class _ServiceInfo extends ConsumerWidget {
+  const _ServiceInfo();
+
+  FV _onPressBackend() async {
+    qq;
+    P.backend.start();
+  }
+
+  FV _onPressWebsocket() async {
+    qq;
+    P.backend.start();
+  }
+
+  FV _onPressed() async {
+    qq;
+    final state = P.backend.httpState.q;
+    switch (state) {
+      case BackendState.starting:
+        return;
+      case BackendState.running:
+        await P.backend.stop();
+        return;
+      case BackendState.stopping:
+        return;
+      case BackendState.stopped:
+        await P.backend.start();
+        return;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final backendState = ref.watch(P.backend.httpState);
+    final websocketState = ref.watch(P.backend.websocketState);
+    final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
+    final httpPort = ref.watch(P.backend.httpPort);
+    final websocketPort = ref.watch(P.backend.websocketPort);
+    final taskReceivedCount = ref.watch(P.backend.taskReceivedCount);
+    final taskHandledCount = ref.watch(P.backend.taskHandledCount);
+    final runningTasks = ref.watch(P.backend.runningTasks);
+    final websocketReceivedCount = ref.watch(P.backend.websocketReceivedCount);
+    final websocketSentCount = ref.watch(P.backend.websocketSentCount);
+
+    final title = switch (backendState) {
+      BackendState.starting => "正在启动...",
+      BackendState.running => "停止服务",
+      BackendState.stopping => "正在停止...",
+      BackendState.stopped => "启动服务",
+    };
+
+    return C(
+      decoration: BD(
+        color: kC,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: qb.q(0.67), width: 1),
+      ),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8).copyWith(right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "局域网服务器信息",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
+          ),
+          8.h,
+          Text("HTTP 服务 (端口号: $httpPort): ${backendState.name}"),
+          TextButton(
+            onPressed: _onPressBackend,
+            child: Text("操作"),
+          ),
+          Text("WebSocket 服务 (端口号: $websocketPort): ${websocketState.name}"),
+          TextButton(
+            onPressed: _onPressWebsocket,
+            child: Text("操作"),
+          ),
+          Text("HTTP 请求接收数量: $taskReceivedCount"),
+          Text("HTTP 请求处理数量: $taskHandledCount"),
+          Text("HTTP 请求处理中(并发): ${runningTasks.length}"),
+          Text("WebSocket 消息接收数量: $websocketReceivedCount"),
+          Text("WebSocket 消息发送数量: $websocketSentCount"),
+
+          TextButton(
+            onPressed: _onPressed,
+            child: Text(title),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BrowserInfo extends ConsumerWidget {
+  const _BrowserInfo();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final highlightUrl = ref.watch(P.translator.highlightUrl);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("所有打开的标签页"),
-        Text("正在交互中的标签页: $highlightUrl"),
-      ],
+    final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
+    final qw = ref.watch(P.app.qw);
+    final allUrls = [];
+    return C(
+      decoration: BD(
+        color: kC,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: qb.q(0.67), width: 1),
+      ),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8).copyWith(left: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "浏览器运行状态信息",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
+          ),
+          8.h,
+          Text("正在交互中的标签页: $highlightUrl"),
+          Text("优先翻译已打开的标签页", style: TextStyle(fontSize: 10, color: qb.q(.5))),
+          Text("所有打开的标签页: $allUrls"),
+        ],
+      ),
+    );
+  }
+}
+
+class _TranslatiorInfo extends ConsumerWidget {
+  const _TranslatiorInfo();
+
+  FV _onPressTest() async {
+    qq;
+    P.translator.onPressTest();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
+    final runningTaskKey = ref.watch(P.translator.runningTaskKey);
+    final translations = ref.watch(P.translator.translations);
+    final completerPool = ref.watch(P.translator.completerPool);
+    return C(
+      decoration: BD(
+        color: kC,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: qb.q(0.67), width: 1),
+      ),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "翻译器信息",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
+          ),
+          8.h,
+          Text("已经缓存的翻译结果数量: ${translations.length}"),
+          Text("等待中的翻译任务数量: ${completerPool.length}"),
+          Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
+          8.h,
+          Text("翻译测试"),
+          4.h,
+          Row(
+            children: [
+              Expanded(
+                child: _Source(),
+              ),
+              8.w,
+              Expanded(
+                child: _Result(),
+              ),
+            ],
+          ),
+          4.h,
+          TextButton(
+            onPressed: _onPressTest,
+            child: const Text("翻译当前文本框中的文本"),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -56,7 +243,6 @@ class _Source extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return C(
       decoration: BD(color: kC),
-      padding: const EdgeInsets.all(8),
       child: TextField(
         minLines: 1,
         maxLines: 8,
@@ -77,7 +263,6 @@ class _Result extends ConsumerWidget {
     final result = ref.watch(P.translator.result);
     return C(
       decoration: BD(color: kC),
-      padding: const EdgeInsets.all(8),
       child: TextField(
         minLines: 1,
         maxLines: 8,
@@ -91,40 +276,56 @@ class _Result extends ConsumerWidget {
   }
 }
 
+class _InferenceInfo extends ConsumerWidget {
+  const _InferenceInfo();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
+    final isGenerating = ref.watch(P.translator.isGenerating);
+    final currentModel = ref.watch(P.rwkv.currentModel);
+    return C(
+      decoration: BD(
+        color: kC,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: qb.q(0.67), width: 1),
+      ),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "RWKV 推理引擎信息",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
+          ),
+          8.h,
+          Wrap(
+            runSpacing: 8,
+            spacing: 8,
+            alignment: WrapAlignment.center,
+            runAlignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text("当前模型: ${currentModel?.name}"),
+              Text("请选择模型"),
+              TextButton(
+                onPressed: () => ModelSelector.show(),
+                child: const Text("选择不同模型"),
+              ),
+            ],
+          ),
+          Text("推理器状态: ${isGenerating ? "推理中" : "空闲"}"),
+          const PerformanceInfo(),
+        ],
+      ),
+    );
+  }
+}
+
 class _Dashboard extends ConsumerWidget {
   const _Dashboard();
-
-  FV _onPressed() async {
-    qq;
-    final state = P.backend.httpState.q;
-    switch (state) {
-      case BackendState.starting:
-        return;
-      case BackendState.running:
-        await P.backend.stop();
-        return;
-      case BackendState.stopping:
-        return;
-      case BackendState.stopped:
-        await P.backend.start();
-        return;
-    }
-  }
-
-  FV _onPressPanel() async {
-    qq;
-    ModelSelector.show();
-  }
-
-  FV _onPressTest() async {
-    qq;
-    P.translator.onPressTest();
-  }
-
-  FV _onPressSetPrompt() async {
-    qq;
-    P.rwkv.send(SetPrompt(""));
-  }
 
   FV _onPressClearCompleterPool() async {
     qq;
@@ -155,18 +356,6 @@ class _Dashboard extends ConsumerWidget {
       children: [
         Row(
           children: [
-            TextButton(
-              onPressed: _onPressed,
-              child: Text(title),
-            ),
-            TextButton(
-              onPressed: _onPressPanel,
-              child: const Text("选择不同模型"),
-            ),
-            TextButton(
-              onPressed: _onPressTest,
-              child: const Text("翻译当前文本框中的文本"),
-            ),
             TextButton(
               onPressed: _onPressClearCompleterPool,
               child: const Text("清除缓存"),
