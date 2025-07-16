@@ -9,6 +9,16 @@
 
 import 'package:flutter/widgets.dart';
 
+class $RemoteGen {
+  const $RemoteGen();
+
+  /// File path: remote/latest.json
+  String get latest => 'remote/latest.json';
+
+  /// List of all assets
+  List<String> get values => [latest];
+}
+
 class $AssetsConfigGen {
   const $AssetsConfigGen();
 
@@ -211,10 +221,10 @@ class Assets {
   static const $AssetsImgGen img = $AssetsImgGen();
   static const $AssetsLibGen lib = $AssetsLibGen();
   static const $AssetsModelGen model = $AssetsModelGen();
-  static const String demoConfig = 'demo-config.json';
+  static const $RemoteGen remote = $RemoteGen();
 
   /// List of all assets
-  static List<String> get values => [aEnv, filter, demoConfig];
+  static List<String> get values => [aEnv, filter];
 }
 
 class AssetGenImage {

@@ -92,6 +92,7 @@ class ChatAppBar extends ConsumerWidget {
 
     final userType = ref.watch(P.preference.userType);
 
+    final version = ref.watch(P.app.version);
     return AppBar(
       elevation: 0,
       centerTitle: true,
@@ -104,16 +105,21 @@ class ChatAppBar extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CAA.center,
             children: [
-              if (isChat)
-                T(
-                  Config.appTitle,
-                  s: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: version,
+                      style: TS(s: 10, c: kC),
+                    ),
+                    TextSpan(text: Config.appTitle, style: TS(s: 18)),
+                    TextSpan(
+                      text: ' $version',
+                      style: TS(s: 8),
+                    ),
+                  ],
                 ),
-              if (!isChat)
-                const T(
-                  Config.appTitle,
-                  s: TS(s: 18),
-                ),
+              ),
               if (isChat) ModelSelectButton(),
               if (!isChat)
                 C(
@@ -167,6 +173,7 @@ class ChatAppBar extends ConsumerWidget {
   }
 
   Widget _buildMorePopupMenuButton(BuildContext context, bool completionMode) {
+    final version = P.app.version.q;
     return PopupMenuButton(
       onSelected: (v) {
         switch (v) {
@@ -181,6 +188,12 @@ class ChatAppBar extends ConsumerWidget {
       },
       itemBuilder: (v) {
         return [
+          PopupMenuItem(
+            value: -1,
+            enabled: false,
+            height: 20,
+            child: T(Config.appTitle + " " + version, s: TS(s: 10)),
+          ),
           PopupMenuItem(
             value: 1,
             child: Row(

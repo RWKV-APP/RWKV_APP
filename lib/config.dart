@@ -3,23 +3,19 @@ import 'package:zone/router/page_key.dart';
 abstract class Config {
   static final firstPage = PageKey.chat.name;
 
-  static const prompt = """<EOD>User: hi
+  static const prompt = """<EOD>""";
 
-Assistant: Hi. I am your assistant and I will provide expert full response in full details. Please feel free to ask any question and I will always answer it.
-
-""";
-
-  static const promptCN = """<EOD>User: 你好
-
-Assistant: 你好，我是你的助手，我会提供专家级的完整回答。请随时提问，我会一直回答。
-
-""";
+  static const promptCN = """<EOD>""";
 
   static const reasonTag = "reason";
 
   static const domain = "https://api-model.rwkvos.com";
 
   static const timeout = Duration(seconds: 60);
+
+  static const promptSearchTemplateZh = '%s\n请根据以上信息回答:\n%s';
+
+  static const promptSearchTemplateEn = '%s\nPlease answer according to the above information:\n%s';
 
   static late final String xApiKey;
 

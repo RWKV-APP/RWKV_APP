@@ -1,62 +1,137 @@
-# RWKV App
+# RWKV App ✨
 
-使用 flutter 实现的 RWKV-LM 端侧推理 App
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![English](https://img.shields.io/badge/README-English-blue.svg)](./README.md)
+[![Chinese](https://img.shields.io/badge/README-中文-blue.svg)](./README.zh.md)
 
-## 技术架构
+**Explore and experience running Large Language Models offline on your edge devices with the RWKV App.**
 
-- 前端 (flutter): [本项目](https://github.com/MollySophia/rwkv_mobile_flutter)
-- 后端 (dart ffi): [rwkv_mobile_flutter](https://github.com/MollySophia/rwkv_mobile_flutter)
-- 权重: [mollysama/rwkv-mobile-models](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
+RWKV App is an experimental application that brings Large Language Models (LLMs) directly to your Android/iOS devices. You can experiment with different models, engage in chats, generate speech, perform visual understanding, and more! All computations are performed locally, and no internet connection is required after loading the model.
 
-## 准备工作
+**Overview**
 
-- 找开发人员索要 `.env` 文件, 将 zip 文件解压后的文件拷贝至目录 `.env`
-- 找开发人员索要 `assets/filter.txt` 文件, 将 zip 文件解压后的文件拷贝至目录 `assets/filter.txt`
-- 找开发人员索要 `assets/model` 文件夹, 将 zip 文件解压后的文件夹拷贝至目录 `assets/model`
+The RWKV App supports multi-turn conversations, text-to-speech, visual understanding, and various other tasks.
 
-### flutter env
+![RWKV App Screenshot](.github/images/readme/gallery.png)
 
+## ✨ Core Features
+
+- **📱 Run Locally, Fully Offline:** Experience the magic of generative AI without an internet connection. All processing is done directly on your device.
+- **🤖 Switch Models Freely:** Easily download and switch between different models from Hugging Face to compare their performance.
+- **💬 AI Chat:** Engage in fluent multi-turn conversations.
+- **🔊 Text-to-Speech (TTS):** Convert text into natural-sounding speech.
+- **🖼️ Visual Understanding:** Explore image-based AI use cases.
+- **🌓 Dark Mode:** Supports comfortable use in various lighting conditions.
+
+## 🧭 Download and Experience
+
+### Downloads
+
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">RWKV Chat</th>
+<th style="text-align: center;">RWKV See</th>
+<th style="text-align: center;">RWKV Talk</th>
+<th style="text-align: center;">RWKV Sudoku</th>
+<th style="text-align: center;">RWKV Othello</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Android APK Download Link</td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-See/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-see">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Talk/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-see">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Sudoku/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-sudoku">pgyer</a></td>
+<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Othello/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-othello">pgyer</a></td>
+</tr>
+<tr>
+<td style="text-align: center;">iOS</td>
+<td style="text-align: center;"><a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
+<td style="text-align: center;"><a href="https://testflight.apple.com/join/vAjawMJc">testflight</a></td>
+<td style="text-align: center;"><a href="https://testflight.apple.com/join/mfsdWS4b">testflight</a></td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;"><a href="https://testflight.apple.com/join/f5SVf76c">testflight</a></td>
+</tr>
+<tr>
+<td style="text-align: center;" rowspan="2">Windows</td>
+<td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+</tr>
+<tr></tr>
+<tr>
+<td style="text-align: center;" rowspan="2">macOS</td>
+<td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+</tr>
+<tr></tr>
+</tbody>
+</table>
+
+> [!NOTE]
+> In the future, we will integrate all separate features into the RWKV Chat app to provide a unified experience.
+
+### Usage
+
+When you first open the app, a model selection panel will appear. Please choose the model weights you want to use based on your needs.
+
+> [!WARNING]
+> Devices older than the iPhone 14 may not be able to smoothly run models with 1.5B / 2.9B parameters.
+
+## 💻 Development
+
+1. **Clone the repository:**
+
+```bash
+git clone https://github.com/MollySophia/rwkv_mobile_flutter.git
+# Make sure the rwkv_mobile_flutter and RWKV_APP are in the same directory
+git clone https://github.com/RWKV-APP/RWKV_APP.git
+cd RWKV_APP
 ```
-flutter doctor
+
+2. **Install dependencies:**
+
+```bash
+flutter pub get
 ```
 
-```
-Doctor summary (to see all details, run flutter doctor -v):
-[✓] Flutter (Channel stable, 3.32.2, on macOS 15.5 24F74 darwin-arm64, locale en-CN)
-[✓] Android toolchain - develop for Android devices (Android SDK version 35.0.0)
-[✓] Xcode - develop for iOS and macOS (Xcode 16.4)
-[✓] Chrome - develop for the web
-[✓] Android Studio (version 2024.3)
-[✓] VS Code (version 1.100.2)
+3. **Run the application:**
+
+```bash
+flutter run
 ```
 
-## 开发
+## 🛠️ Technical Highlights
 
-### 设置环境
+- **Flutter:** An open-source framework for building cross-platform user interfaces, supporting Android, iOS, Windows, and macOS.
+- **Dart FFI (Foreign Function Interface):** Used for efficient communication between Dart and the C++ inference engine.
+- **C++ Inference Engine:** The core on-device inference engine, built with C++, supporting multiple model formats and hardware acceleration (CPU/GPU/NPU).
+- **Hugging Face:** An open-source community providing models, datasets, and tools; used here as the source for model weights.
 
-- 使用 `fastlane switch_env env:chat` 切换至 chat app (RWKV Chat)
-- 使用 `fastlane switch_env env:tts` 切换至 tts app (RWKV Talk)
-- 使用 `fastlane switch_env env:world` 切换至 world app (RWKV See)
-- 使用 `fastlane switch_env env:othello` 切换至 world app (RWKV Othello)
-- 使用 `fastlane switch_env env:sudoku` 切换至 world app (RWKV Sudoku)
+## 🗺️ Roadmap
 
-### 运行
+- [ ] UI Refactoring
+- [ ] Integrate all features into the RWKV Chat app
+- [ ] Support more model weights
+- [ ] Support more hardware
+- [ ] Support more operating systems
+- [ ] Support more devices (e.g., watches, VR glasses)
 
-- 在 vscode / cursor 中运行 "Debug: Start Debugging" (`workbench.action.debug.start`)
+## 🤝 Feedback and Contribution
 
-## 聊天页面逻辑
+This is an **experimental early-stage version**, and your feedback is crucial to us!
 
-### 主要涉及的代码
+- 🐞 **Found a bug or issue?** [Report it here!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D)
+- 💡 **Have a suggestion?** [Suggest a feature!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D)
 
-- 页面 UI: `lib/page/chat.dart`
-- 消息 UI: `lib/widgets/chat/message.dart`
-- 状态: `lib/state/chat.dart`
-- 模型: `lib/model/message.dart`
-- 后端: RWKV
+## 📄 License
 
-### 业务逻辑
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
 
-- 使用 ListView.separated 来渲染消息列表, `ListView.reverse = true`
-- 使用 `late final messages = qs<List<Message>>([]);` 作为数据源
-- 使用 `P.chat.send` 方法发送消息, 主要逻辑为先发送用户消息, 同步至状态, 再发送 bot message, 同步至状态. 而后, 向 Backend 发送消息, 最后, 周期性地从 backend 接收新生成的字符串.
-- 从 backend 接收到新生成的字符串后, 更新 bot message 的状态, 触发 UI 更新
+## 🔗 Related Links
+
+- [**Flutter Wrapper**](https://github.com/MollySophia/rwkv_mobile_flutter)
+- [**C++ Inference Engine**](https://github.com/MollySophia/rwkv-mobile)
+- [**Available Models**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
+- [**Want to Train Your Own Model?**](https://github.com/RWKV-Vibe/RWKV-LM-V7)
+- [**What is RWKV?**](https://rwkv.cn/)

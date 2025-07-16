@@ -24,9 +24,9 @@ class _WithDevOptionState extends State<WithDevOption> {
           firstTap = DateTime.now().millisecondsSinceEpoch;
         }
         count++;
-        if (count >= 10) {
+        if (count >= 6) {
           final span = DateTime.now().millisecondsSinceEpoch - firstTap;
-          if (span < 1500) {
+          if (span < 1300) {
             _DevOptionsDialog.show(context);
             count = 0;
           } else {

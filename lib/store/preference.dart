@@ -50,7 +50,7 @@ class _Preference {
 
   late final dumpping = qs(false);
 
-  var featureRollout = FeatureRollout();
+  var featureRollout = const FeatureRollout();
 
   bool get currentLangIsZh => preferredLanguage.q.resolved.locale.languageCode == "zh";
 }

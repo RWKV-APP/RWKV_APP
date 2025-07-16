@@ -23,8 +23,32 @@ class PerformanceInfo extends ConsumerWidget {
       crossAxisAlignment: CAA.start,
       mainAxisAlignment: MAA.center,
       children: [
-        T("Prefill: ${prefillSpeed.toStringAsFixed(1)} t/s", s: TS(c: qb.q(.6), s: 10)),
-        T("Decode: ${decodeSpeed.toStringAsFixed(1)} t/s", s: TS(c: qb.q(.6), s: 10)),
+        Text.rich(
+          style: TS(c: qb.q(.6), s: 10),
+          TextSpan(
+            children: [
+              TextSpan(text: "Prefill: "),
+              TextSpan(
+                text: prefillSpeed.toStringAsFixed(1),
+                style: TS(ff: "monospace"),
+              ),
+              TextSpan(text: "t/s"),
+            ],
+          ),
+        ),
+        Text.rich(
+          style: TS(c: qb.q(.6), s: 10),
+          TextSpan(
+            children: [
+              TextSpan(text: "Decode: "),
+              TextSpan(
+                text: decodeSpeed.toStringAsFixed(1),
+                style: TS(ff: "monospace"),
+              ),
+              TextSpan(text: "t/s"),
+            ],
+          ),
+        ),
       ],
     );
   }

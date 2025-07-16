@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'dart:math' as math;
 
@@ -329,7 +330,7 @@ class _UI extends ConsumerWidget {
     final List<Widget> buttons = [
       const SB(width: 12, height: 12),
       T(
-        "RWKV Chat",
+        Config.appTitle,
         textAlign: TextAlign.center,
         s: TS(s: 14 * magnification, w: FontWeight.w500),
       ),

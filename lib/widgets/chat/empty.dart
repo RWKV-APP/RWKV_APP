@@ -32,7 +32,8 @@ class Empty extends ConsumerWidget {
 
     final primary = Theme.of(context).colorScheme.primary;
 
-    final inputHeight = ref.watch(P.chat.inputHeight);
+    final inputHeight = demoType == DemoType.tts ? ref.watch(P.chat.inputHeight) : 0;
+    final version = ref.watch(P.app.version);
 
     return AnimatedPositioned(
       duration: 200.ms,
@@ -113,6 +114,68 @@ class Empty extends ConsumerWidget {
                     ],
                   ),
                 ),
+              Positioned.fill(
+                left: 32,
+                right: 32,
+                child: Column(
+                  crossAxisAlignment: CAA.center,
+                  children: [
+                    const Spacer(),
+                    WithDevOption(child: Image.asset(logoPath, width: 140)),
+                    12.h,
+                    Wrap(
+                      spacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      children: [
+                        Opacity(
+                          opacity: 0.0,
+                          child: T(version, s: TS(s: 10)),
+                        ),
+                        T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
+                        Opacity(
+                          opacity: 0.5,
+                          child: Padding(
+                            padding: EI.o(b: 4),
+                            child: T(version, s: TS(s: 10)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    12.h,
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 500),
+                      child: T(s.intro),
+                    ),
+                    12.h,
+                    if (!loaded) T(s.start_a_new_chat_by_clicking_the_button_below),
+                    if (!loaded) 12.h,
+                    if (!loaded)
+                      TextButton(
+                        onPressed: () async {
+                          ModelSelector.show();
+                        },
+                        child: T(demoType == DemoType.world ? s.select_a_world_type : s.select_a_model, s: const TS(s: 16, w: FW.w600)),
+                      ),
+                    if (!loaded) 12.h,
+                    if (loaded) T(s.you_are_now_using("")),
+                    4.h,
+                    if (loaded)
+                      C(
+                        padding: const EI.s(h: 4, v: 2),
+                        decoration: BD(
+                          border: Border.all(color: primary),
+                          borderRadius: 4.r,
+                        ),
+                        child: T(
+                          currentModel?.name ?? "",
+                          s: TS(s: 16, w: FW.w600, c: primary),
+                        ),
+                      ),
+                    const Spacer(),
+                    if (demoType == DemoType.tts) (inputHeight / 1.5).h,
+                  ],
+                ),
+              ),
             ],
           ),
         ),
