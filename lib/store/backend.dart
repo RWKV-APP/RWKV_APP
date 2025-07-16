@@ -10,7 +10,19 @@ const _headers = {
   'Access-Control-Allow-Headers': 'X-Requested-With,content-type,Authorization',
 };
 
-enum BackendState { starting, running, stopping, stopped }
+enum BackendState {
+  starting,
+  running,
+  stopping,
+  stopped;
+
+  String get name => switch (this) {
+    starting => "启动中",
+    running => "运行中",
+    stopping => "停止中",
+    stopped => "已停止",
+  };
+}
 
 class _Backend {
   late final httpPort = qs(_httpPort);
@@ -20,6 +32,8 @@ class _Backend {
   late final websocketPort = qs(_websocketPort);
   late final websocketServer = qs<HttpServer?>(null);
   late final websocketState = qs(BackendState.stopped);
+  late final websocketReceivedCount = qs(0);
+  late final websocketSentCount = qs(0);
 
   late final runningTasks = qs<Set<String>>({});
   late final taskHandledCount = qs(0);

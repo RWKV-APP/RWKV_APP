@@ -213,9 +213,9 @@ extension _$App on _App {
     light.lv(_syncTheme, fireImmediately: true);
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
 
-    if (Args.autoTriggerPage) {
-      HF.wait(2000).then((_) {
-        Pager.toggle();
+    if (Args.autoShowTranslator) {
+      HF.wait(1500).then((_) {
+        push(PageKey.translator);
       });
     }
   }

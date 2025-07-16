@@ -6,7 +6,7 @@ abstract class Args {
   static const disableRemoteConfig = bool.fromEnvironment("disableRemoteConfig", defaultValue: false);
   static const disableAutoShowOfWeightsPanel = bool.fromEnvironment("disableAutoShowOfWeightsPanel", defaultValue: false);
   static const debuggingThemes = bool.fromEnvironment("debuggingThemes", defaultValue: false);
-  static const autoTriggerPage = bool.fromEnvironment("autoTriggerPage", defaultValue: false);
+  static const autoShowTranslator = bool.fromEnvironment("autoShowTranslator", defaultValue: false);
   static const debugMsgId = bool.fromEnvironment("debugMsgId", defaultValue: false);
   static const showHaloDebugger = bool.fromEnvironment("showHaloDebugger", defaultValue: false);
   static const nativeSplashPreserveDurationInMS = int.fromEnvironment("nativeSplashPreserveDurationInMS", defaultValue: 50);

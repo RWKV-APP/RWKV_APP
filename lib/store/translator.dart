@@ -26,6 +26,7 @@ class _Translator {
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
 
+  /// 等待中的翻译任务
   late final completerPool = qs(<String, _URLCompleter>{});
 
   late final highlightUrl = qs<String?>(null);
@@ -160,7 +161,7 @@ extension _$Translator on _Translator {
     P.rwkv.sendMessages(
       [sourceKey],
       getIsGeneratingRate: 1,
-      getResponseBufferContentRate: .0,
+      getResponseBufferContentRate: .1,
     );
   }
 
