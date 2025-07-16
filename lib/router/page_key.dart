@@ -32,10 +32,18 @@ enum PageKey {
     PageKey.translator => const PageTranslator(),
   };
 
-  GoRoute get route => GoRoute(
-    path: path,
-    pageBuilder: (context, state) => _page(state),
-  );
+  //
+
+  GoRoute get route => switch (this) {
+    PageKey.translator => GoRoute(
+      path: path,
+      builder: (context, state) => scaffold,
+    ),
+    _ => GoRoute(
+      path: path,
+      pageBuilder: (context, state) => _page(state),
+    ),
+  };
 
   Page _page(GoRouterState state) {
     if (!{chat, completion}.contains(this)) {

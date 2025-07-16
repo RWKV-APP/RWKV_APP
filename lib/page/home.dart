@@ -53,6 +53,7 @@ class PageHome extends ConsumerWidget {
 
     return AppScaffold(
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
@@ -113,6 +114,15 @@ class PageHome extends ConsumerWidget {
                             },
                             color: Colors.lightGreen,
                             icon: FontAwesomeIcons.feather,
+                          ),
+                          buildButton(
+                            title: "离线翻译",
+                            subtitle: "离线翻译文本",
+                            onTap: () {
+                              push(PageKey.translator);
+                            },
+                            color: Colors.blue,
+                            icon: Icons.translate,
                           ),
                         ]
                         .map(

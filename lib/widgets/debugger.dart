@@ -68,7 +68,6 @@ class Debugger extends ConsumerWidget {
     final pageKey = ref.watch(P.app.pageKey);
     final source = ref.watch(P.translator.source);
     final result = ref.watch(P.translator.result);
-    final pageKey = ref.watch(P.app.pageKey);
     final runningTaskKey = ref.watch(P.translator.runningTaskKey);
     final translations = ref.watch(P.translator.translations);
     final runningTasks = ref.watch(P.backend.runningTasks);
