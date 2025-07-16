@@ -6,7 +6,7 @@ class _Preference {
   /// 非空表示使用指定的 locale
   late final preferredLanguage = qs<Language>(Language.none);
 
-  late final userType = qs<UserType>(UserType.user);
+  late final userType = qs<UserType>(UserType.powerUser);
 
   /// 空表示根据系统当前的 textScaleFactor 来设置应用的 textScaleFactor
   ///
