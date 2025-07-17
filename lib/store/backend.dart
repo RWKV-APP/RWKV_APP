@@ -110,13 +110,20 @@ extension _$Backend on _Backend {
     final logic = json['logic'];
     final url = json['url'];
 
+    websocketReceivedCount.q++;
+
     try {
       switch (logic) {
         case 'translate':
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
           runningTasks.q = {...runningTasks.q, source};
-          final translation = await P.translator._getFullTranslation(source, url: url);
+          final tabId = json["tabId"];
+          final translation = await P.translator._getFullTranslation(
+            source,
+            url: url,
+            tabId: tabId,
+          );
           final responseBody = jsonEncode({
             'source': source,
             'translation': translation.replaceAll(_endString, ""),
@@ -126,6 +133,7 @@ extension _$Backend on _Backend {
           runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           channel.sink.add(responseBody);
+          websocketSentCount.q++;
         case 'loop':
           runningTasks.q = {...runningTasks.q, source};
           final translation = P.translator._getOnTimeTranslation(source);
@@ -138,11 +146,10 @@ extension _$Backend on _Backend {
           runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
           taskHandledCount.q++;
           channel.sink.add(body);
-        case "url_highlighted":
-          P.translator.highlightUrl.q = url;
+          websocketSentCount.q++;
         case "tab_actived":
           final tab = HF.json(json["tab"]);
-          final id = tab["id"].toString();
+          final id = tab["id"];
           final url = tab["url"];
           final title = tab["title"] ?? "";
           final favIconUrl = tab["favIconUrl"] ?? "";
@@ -152,7 +159,7 @@ extension _$Backend on _Backend {
           final _tabs = tabs
               .map(
                 (e) => BrowserTab(
-                  id: e["id"].toString(),
+                  id: e["id"],
                   url: e["url"],
                   title: e["title"] ?? "",
                   favIconUrl: e["favIconUrl"] ?? "",
@@ -162,10 +169,12 @@ extension _$Backend on _Backend {
           P.translator.browserTabs.q = _tabs;
         default:
           channel.sink.add(jsonEncode({'error': 'Invalid logic: $logic'}));
+          websocketSentCount.q++;
       }
     } catch (e) {
       qqe(e);
       channel.sink.add(jsonEncode({'error': 'logic failed: $logic'}));
+      websocketSentCount.q++;
     }
   }
 

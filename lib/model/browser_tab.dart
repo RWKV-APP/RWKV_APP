@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class BrowserTab extends Equatable {
-  final String id;
+  final int id;
   final String url;
   final String title;
   final String favIconUrl;

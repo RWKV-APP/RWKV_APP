@@ -12,9 +12,14 @@ enum ServeMode {
 
 class _URLCompleter {
   final String? url;
+  final int? tabId;
   final Completer<String> completer;
 
-  _URLCompleter({required this.url, required this.completer});
+  _URLCompleter({
+    required this.url,
+    required this.tabId,
+    required this.completer,
+  });
 }
 
 class _Translator {
@@ -28,8 +33,6 @@ class _Translator {
 
   /// 等待中的翻译任务
   late final completerPool = qs(<String, _URLCompleter>{});
-
-  late final highlightUrl = qs<String?>(null);
 
   late final browserTabs = qs<List<BrowserTab>>([]);
   late final activeBrowserTab = qs<BrowserTab?>(null);
@@ -123,15 +126,15 @@ extension _$Translator on _Translator {
     }
 
     final hasUnfinishedCompleter = completerPool.q.isNotEmpty;
-    if (hasUnfinishedCompleter) {
-      final currentUrl = highlightUrl.q;
-      final pool = completerPool.q;
-      // 优先执行当前 url 的请求
-      // 因为用户肯定是对当前 url 的翻译感兴趣
-      final nextKey = pool.keys.firstWhereOrNull((k) => pool[k]?.url == currentUrl) ?? pool.keys.firstOrNull;
-      if (nextKey != null) {
-        HF.wait(1).then((_) => _startNewTask(nextKey));
-      }
+    if (!hasUnfinishedCompleter) return;
+
+    final currentTabId = activeBrowserTab.q?.id;
+    final pool = completerPool.q;
+    // 优先执行当前 url 的请求
+    // 因为用户肯定是对当前 url 的翻译感兴趣
+    final nextKey = pool.keys.firstWhereOrNull((k) => pool[k]?.tabId == currentTabId) ?? pool.keys.firstOrNull;
+    if (nextKey != null) {
+      HF.wait(1).then((_) => _startNewTask(nextKey));
     }
   }
 
@@ -191,7 +194,7 @@ extension _$Translator on _Translator {
     return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 
-  Future<String> _getFullTranslation(String sourceKey, {String? url}) async {
+  Future<String> _getFullTranslation(String sourceKey, {String? url, int? tabId}) async {
     qq;
     final existingTranslation = translations.q[sourceKey];
 
@@ -202,7 +205,12 @@ extension _$Translator on _Translator {
     if (existCompleter != null) return await existCompleter.completer.future;
 
     final completer = Completer<String>();
-    completerPool.q = Map.from(completerPool.q)..[sourceKey] = _URLCompleter(url: url, completer: completer);
+    completerPool.q = Map.from(completerPool.q)
+      ..[sourceKey] = _URLCompleter(
+        url: url,
+        tabId: tabId,
+        completer: completer,
+      );
 
     if (runningTaskKey.q == null) _startNewTask(sourceKey);
 
@@ -220,7 +228,6 @@ extension $Translator on _Translator {
     final runningTaskKey = this.runningTaskKey.q;
     final translations = this.translations.q;
     final completerPool = this.completerPool.q;
-    final highlightUrl = this.highlightUrl.q;
     final browserTabs = this.browserTabs.q;
     final activeBrowserTab = this.activeBrowserTab.q;
 
