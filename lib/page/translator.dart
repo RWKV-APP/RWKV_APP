@@ -151,7 +151,6 @@ class _BrowserInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final highlightUrl = ref.watch(P.translator.highlightUrl);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
     final qw = ref.watch(P.app.qw);
