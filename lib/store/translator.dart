@@ -60,6 +60,12 @@ extension _$Translator on _Translator {
 
   void _onPageKeyChanged(PageKey pageKey) {
     qq;
+    if (pageKey == PageKey.translator) {
+      HF.wait(1000).then((_) {
+        final currentModel = P.rwkv.currentModel.q;
+        if (currentModel == null) ModelSelector.show();
+      });
+    }
   }
 
   void _onRunningTaskKeyChanged(String? next) {
