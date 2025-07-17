@@ -45,6 +45,7 @@ class PageHome extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final version = ref.watch(P.app.version);
+    final isDesktop = ref.watch(P.app.isDesktop);
 
     final width = MediaQuery.of(context).size.width;
 
