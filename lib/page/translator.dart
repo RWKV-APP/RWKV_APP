@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/performance_info.dart';
@@ -58,6 +57,11 @@ class _ServiceInfo extends ConsumerWidget {
 
   FV _onPressBackend() async {
     qq;
+    final currentModel = P.rwkv.currentModel.q;
+    if (currentModel == null) {
+      ModelSelector.show();
+      return;
+    }
     P.backend.start();
   }
 
