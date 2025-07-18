@@ -38,6 +38,7 @@ class _Translator {
   late final runningTaskNodeName = qs<String?>(null);
   late final runningTaskPriority = qs<int?>(null);
   late final runningTaskTick = qs<int?>(null);
+  late final runningTaskUrl = qs<String?>(null);
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
 
@@ -170,6 +171,7 @@ extension _$Translator on _Translator {
             runningTaskNodeName.q = pool[k]?.nodeName;
             runningTaskPriority.q = pool[k]?.priority;
             runningTaskTick.q = pool[k]?.tick;
+            runningTaskUrl.q = pool[k]?.url;
           }
           return matched;
         }) ??
