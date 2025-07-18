@@ -1,11 +1,8 @@
-import 'dart:ui';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
@@ -32,9 +29,8 @@ class _PageConversationState extends ConsumerState<PageConversation> {
       final offset = controller.offset;
       final alpha = offset.clamp(0, 255).toInt();
       if (alpha != appBarAlpha) {
-        setState(() {
-          appBarAlpha = alpha;
-        });
+        appBarAlpha = alpha;
+        setState(() {});
       }
     });
   }
