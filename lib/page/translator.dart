@@ -231,6 +231,7 @@ class _TranslatiorInfo extends ConsumerWidget {
     final runningTaskPriority = ref.watch(P.translator.runningTaskPriority);
     final runningTaskTick = ref.watch(P.translator.runningTaskTick);
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
+    final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     return C(
       decoration: BD(
         color: kC,
@@ -254,6 +255,7 @@ class _TranslatiorInfo extends ConsumerWidget {
           Text("正在翻译的优先级: $runningTaskPriority"),
           Text("正在翻译的 tick: $runningTaskTick"),
           Text("正在翻译的 URL: $runningTaskUrl"),
+          Text("正在翻译的标签页 ID: $runningTaskTabId"),
           8.h,
           Text("翻译测试"),
           4.h,
