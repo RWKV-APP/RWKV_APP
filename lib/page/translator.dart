@@ -44,7 +44,7 @@ class PageTranslator extends ConsumerWidget {
               ),
             ],
           ),
-          const _TranslatiorInfo(),
+          SelectionArea(child: const _TranslatiorInfo()),
           const _Dashboard(),
         ],
       ),
