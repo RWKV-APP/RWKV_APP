@@ -146,34 +146,32 @@ extension _$Translator on _Translator {
     if (!hasUnfinishedCompleter) return;
 
     final currentTabId = activeBrowserTab.q?.id;
+    final currentUrl = activeBrowserTab.q?.url;
     final pool = completerPool.q;
     // 优先执行当前 url 的请求
     // 因为用户肯定是对当前 url 的翻译感兴趣
-    final keys = pool.keys
-        .toList()
-        .sorted((a, b) {
-          final aTick = pool[a]?.tick;
-          final bTick = pool[b]?.tick;
-          if (aTick == null || bTick == null) return 0;
-          return bTick.compareTo(aTick);
-        })
-        .sorted((a, b) {
-          final aPriority = pool[a]?.priority;
-          final bPriority = pool[b]?.priority;
-          if (aPriority == null || bPriority == null) return 0;
-          return bPriority.compareTo(aPriority);
-        });
+    final keys = pool.keys.toList();
     final nextKey =
         keys.firstWhereOrNull((k) {
-          final matched = pool[k]?.tabId == currentTabId;
-          if (matched) {
+          final urlMatched = pool[k]?.url == currentUrl;
+          if (urlMatched) {
             runningTaskTabId.q = pool[k]?.tabId;
             runningTaskNodeName.q = pool[k]?.nodeName;
             runningTaskPriority.q = pool[k]?.priority;
             runningTaskTick.q = pool[k]?.tick;
             runningTaskUrl.q = pool[k]?.url;
+            return urlMatched;
           }
-          return matched;
+          final matchedId = pool[k]?.tabId == currentTabId;
+          if (matchedId) {
+            runningTaskTabId.q = pool[k]?.tabId;
+            runningTaskNodeName.q = pool[k]?.nodeName;
+            runningTaskPriority.q = pool[k]?.priority;
+            runningTaskTick.q = pool[k]?.tick;
+            runningTaskUrl.q = pool[k]?.url;
+            return matchedId;
+          }
+          return matchedId;
         }) ??
         pool.keys.firstOrNull;
     if (nextKey != null) {
