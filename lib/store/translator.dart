@@ -14,11 +14,17 @@ class _URLCompleter {
   final String? url;
   final int? tabId;
   final Completer<String> completer;
+  final int? priority;
+  final String? nodeName;
+  final int? tick;
 
   _URLCompleter({
     required this.url,
     required this.tabId,
     required this.completer,
+    required this.priority,
+    required this.nodeName,
+    required this.tick,
   });
 }
 
@@ -29,6 +35,9 @@ class _Translator {
   late final translations = qs<Map<String, String>>({});
   late final runningTaskKey = qs<String?>(null);
   late final runningTaskTabId = qs<int?>(null);
+  late final runningTaskNodeName = qs<String?>(null);
+  late final runningTaskPriority = qs<int?>(null);
+  late final runningTaskTick = qs<int?>(null);
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
 
@@ -139,12 +148,28 @@ extension _$Translator on _Translator {
     final pool = completerPool.q;
     // 优先执行当前 url 的请求
     // 因为用户肯定是对当前 url 的翻译感兴趣
+    final keys = pool.keys
+        .toList()
+        .sorted((a, b) {
+          final aTick = pool[a]?.tick;
+          final bTick = pool[b]?.tick;
+          if (aTick == null || bTick == null) return 0;
+          return bTick.compareTo(aTick);
+        })
+        .sorted((a, b) {
+          final aPriority = pool[a]?.priority;
+          final bPriority = pool[b]?.priority;
+          if (aPriority == null || bPriority == null) return 0;
+          return bPriority.compareTo(aPriority);
+        });
     final nextKey =
-        pool.keys.firstWhereOrNull((k) {
+        keys.firstWhereOrNull((k) {
           final matched = pool[k]?.tabId == currentTabId;
           if (matched) {
-            qqw("matched: $k");
             runningTaskTabId.q = pool[k]?.tabId;
+            runningTaskNodeName.q = pool[k]?.nodeName;
+            runningTaskPriority.q = pool[k]?.priority;
+            runningTaskTick.q = pool[k]?.tick;
           }
           return matched;
         }) ??
@@ -210,10 +235,15 @@ extension _$Translator on _Translator {
     return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 
-  Future<String> _getFullTranslation(String sourceKey, {String? url, int? tabId}) async {
-    qq;
+  Future<String> _getFullTranslation(
+    String sourceKey, {
+    String? url,
+    int? tabId,
+    int? priority,
+    String? nodeName,
+    int? tick,
+  }) async {
     final existingTranslation = translations.q[sourceKey];
-
     final isEnded = existingTranslation?.endsWith(_endString) ?? false;
     if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
 
@@ -226,6 +256,9 @@ extension _$Translator on _Translator {
         url: url,
         tabId: tabId,
         completer: completer,
+        priority: priority,
+        nodeName: nodeName,
+        tick: tick,
       );
 
     if (runningTaskKey.q == null) _startNewTask(sourceKey);

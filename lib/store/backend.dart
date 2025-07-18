@@ -75,7 +75,16 @@ extension _$Backend on _Backend {
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
           runningTasks.q = {...runningTasks.q, source};
-          final translation = await P.translator._getFullTranslation(source, url: url);
+          final priority = json['priority'];
+          final nodeName = json['nodeName'];
+          final tick = json['tick'];
+          final translation = await P.translator._getFullTranslation(
+            source,
+            url: url,
+            priority: priority,
+            nodeName: nodeName,
+            tick: tick,
+          );
           final responseBody = jsonEncode({
             'source': source,
             'translation': translation.replaceAll(_endString, ""),
@@ -119,10 +128,16 @@ extension _$Backend on _Backend {
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
           runningTasks.q = {...runningTasks.q, source};
           final tabId = json["tabId"];
+          final priority = json['priority'];
+          final nodeName = json['nodeName'];
+          final tick = json['tick'];
           final translation = await P.translator._getFullTranslation(
             source,
             url: url,
             tabId: tabId,
+            priority: priority,
+            nodeName: nodeName,
+            tick: tick,
           );
           final responseBody = jsonEncode({
             'source': source,
