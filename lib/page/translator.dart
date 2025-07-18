@@ -163,6 +163,8 @@ class _BrowserInfo extends ConsumerWidget {
     final activeUrl = activeBrowserTab?.url ?? "";
     final activeTitle = activeBrowserTab?.title ?? "";
     final activeFavicon = activeBrowserTab?.favIconUrl ?? "";
+    final activeTabId = activeBrowserTab?.id;
+    final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     return C(
       decoration: BD(
         color: kC,
@@ -198,6 +200,8 @@ class _BrowserInfo extends ConsumerWidget {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
+          Text("当前标签页 ID: $activeTabId"),
+          Text("正在翻译的标签页 ID: $runningTaskTabId"),
           8.h,
           Text("其他标签页"),
           Text("总数: ${browserTabs.length}"),

@@ -28,6 +28,7 @@ class _Translator {
   late final result = qs(_initialResult);
   late final translations = qs<Map<String, String>>({});
   late final runningTaskKey = qs<String?>(null);
+  late final runningTaskTabId = qs<int?>(null);
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
 
@@ -138,7 +139,16 @@ extension _$Translator on _Translator {
     final pool = completerPool.q;
     // 优先执行当前 url 的请求
     // 因为用户肯定是对当前 url 的翻译感兴趣
-    final nextKey = pool.keys.firstWhereOrNull((k) => pool[k]?.tabId == currentTabId) ?? pool.keys.firstOrNull;
+    final nextKey =
+        pool.keys.firstWhereOrNull((k) {
+          final matched = pool[k]?.tabId == currentTabId;
+          if (matched) {
+            qqw("matched: $k");
+            runningTaskTabId.q = pool[k]?.tabId;
+          }
+          return matched;
+        }) ??
+        pool.keys.firstOrNull;
     if (nextKey != null) {
       HF.wait(1).then((_) => _startNewTask(nextKey));
     }
