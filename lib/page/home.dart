@@ -43,6 +43,11 @@ class PageHome extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final version = ref.watch(P.app.version);
 
+    final width = MediaQuery.of(context).size.width;
+
+    final isLandscape = width > 600;
+    final maxWidth = width / (isLandscape ? 3 : 2) - (isLandscape ? 60 : 24);
+
     return AppScaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -74,57 +79,51 @@ class PageHome extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 100),
-            buildRow([
-              buildButton(
-                title: S.of(context).chat,
-                subtitle: S.of(context).chat_with_rwkv_model,
-                onTap: onChatTap,
-                color: Colors.blueAccent,
-                icon: FontAwesomeIcons.comments,
+
+            Center(
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.center,
+                children:
+                    [
+                          buildButton(
+                            title: S.of(context).chat,
+                            subtitle: S.of(context).chat_with_rwkv_model,
+                            onTap: onChatTap,
+                            color: Colors.blueAccent,
+                            icon: FontAwesomeIcons.comments,
+                          ),
+                          buildButton(
+                            title: S.of(context).neko,
+                            subtitle: S.of(context).nyan_nyan,
+                            onTap: onNekoTap,
+                            color: Colors.pinkAccent,
+                            icon: FontAwesomeIcons.cat,
+                          ),
+                          buildButton(
+                            title: S.of(context).completion_mode,
+                            subtitle: S.of(context).text_completion_mode,
+                            onTap: () {
+                              push(PageKey.completion);
+                            },
+                            color: Colors.lightGreen,
+                            icon: FontAwesomeIcons.feather,
+                          ),
+                        ]
+                        .map(
+                          (e) => ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: maxWidth),
+                            child: e,
+                          ),
+                        )
+                        .toList(),
               ),
-              buildButton(
-                title: S.of(context).neko,
-                subtitle: S.of(context).nyan_nyan,
-                onTap: onNekoTap,
-                color: Colors.pinkAccent,
-                icon: FontAwesomeIcons.cat,
-              ),
-            ]),
-            const SizedBox(height: 16),
-            buildRow([
-              buildButton(
-                title: S.of(context).completion_mode,
-                subtitle: S.of(context).text_completion_mode,
-                onTap: () {
-                  push(PageKey.completion);
-                },
-                color: Colors.lightGreen,
-                icon: FontAwesomeIcons.feather,
-              ),
-              SizedBox(),
-            ]),
-            const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildRow(List<Widget> children) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(width: 16),
-          Expanded(
-            child: children[0],
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: children[1],
-          ),
-          const SizedBox(width: 16),
-        ],
       ),
     );
   }
