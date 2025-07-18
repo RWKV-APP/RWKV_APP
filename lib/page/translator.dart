@@ -165,6 +165,7 @@ class _BrowserInfo extends ConsumerWidget {
     final activeFavicon = activeBrowserTab?.favIconUrl ?? "";
     final activeTabId = activeBrowserTab?.id;
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
+
     return C(
       decoration: BD(
         color: kC,
@@ -226,6 +227,9 @@ class _TranslatiorInfo extends ConsumerWidget {
     final runningTaskKey = ref.watch(P.translator.runningTaskKey);
     final translations = ref.watch(P.translator.translations);
     final completerPool = ref.watch(P.translator.completerPool);
+    final runningTaskNodeName = ref.watch(P.translator.runningTaskNodeName);
+    final runningTaskPriority = ref.watch(P.translator.runningTaskPriority);
+    final runningTaskTick = ref.watch(P.translator.runningTaskTick);
     return C(
       decoration: BD(
         color: kC,
@@ -245,6 +249,9 @@ class _TranslatiorInfo extends ConsumerWidget {
           Text("已经缓存的翻译结果数量: ${translations.length}"),
           Text("等待中的翻译任务数量: ${completerPool.length}"),
           Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
+          Text("正在翻译的节点名称: $runningTaskNodeName"),
+          Text("正在翻译的优先级: $runningTaskPriority"),
+          Text("正在翻译的 tick: $runningTaskTick"),
           8.h,
           Text("翻译测试"),
           4.h,
