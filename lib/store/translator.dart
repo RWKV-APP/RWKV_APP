@@ -144,13 +144,16 @@ extension _$Translator on _Translator {
 
     final hasUnfinishedCompleter = completerPool.q.isNotEmpty;
     if (!hasUnfinishedCompleter) return;
+    final nextKey = _selectNextTaskKey();
+    if (nextKey == null) return;
+    HF.wait(0).then((_) => _startNewTask(nextKey));
+  }
 
+  String? _selectNextTaskKey() {
+    final pool = completerPool.q;
+    final keys = pool.keys.toList();
     final currentTabId = activeBrowserTab.q?.id;
     final currentUrl = activeBrowserTab.q?.url;
-    final pool = completerPool.q;
-    // 优先执行当前 url 的请求
-    // 因为用户肯定是对当前 url 的翻译感兴趣
-    final keys = pool.keys.toList();
     final nextKey =
         keys.firstWhereOrNull((k) {
           final urlMatched = pool[k]?.url == currentUrl;
@@ -174,9 +177,7 @@ extension _$Translator on _Translator {
           return matchedId;
         }) ??
         pool.keys.firstOrNull;
-    if (nextKey != null) {
-      HF.wait(1).then((_) => _startNewTask(nextKey));
-    }
+    return nextKey;
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
