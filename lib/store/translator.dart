@@ -48,6 +48,9 @@ class _Translator {
 
   late final browserTabs = qs<List<BrowserTab>>([]);
   late final activeBrowserTab = qs<BrowserTab?>(null);
+  late final browserTabOuterSize = qs<Map<int, Size>>({});
+  late final browserTabInnerSize = qs<Map<int, Size>>({});
+  late final browserTabScrollRect = qs<Map<int, Rect>>({});
 }
 
 /// Private methods

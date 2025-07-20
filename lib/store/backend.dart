@@ -166,8 +166,37 @@ extension _$Backend on _Backend {
           final tab = HF.json(json["tab"]);
           final id = tab["id"];
           final url = tab["url"];
-          final title = tab["title"] ?? "";
+          final title = tab["title"];
+          if (id == null && url == null && title == null) return;
           P.translator.activeBrowserTab.q = BrowserTab(id: id, url: url, title: title);
+        case "tab_size_change":
+          final tab = HF.json(json["tab"]);
+          final id = tab["id"];
+          final innerHeight = tab["innerHeight"];
+          final outerHeight = tab["outerHeight"];
+          final innerWidth = tab["innerWidth"];
+          final outerWidth = tab["outerWidth"];
+          final scrollTop = tab["scrollTop"];
+          final scrollLeft = tab["scrollLeft"];
+          final scrollHeight = tab["scrollHeight"];
+          final scrollWidth = tab["scrollWidth"];
+          P.translator.browserTabOuterSize.q = {
+            ...P.translator.browserTabOuterSize.q,
+            id: Size(outerWidth.toDouble(), outerHeight.toDouble()),
+          };
+          P.translator.browserTabInnerSize.q = {
+            ...P.translator.browserTabInnerSize.q,
+            id: Size(innerWidth.toDouble(), innerHeight.toDouble()),
+          };
+          P.translator.browserTabScrollRect.q = {
+            ...P.translator.browserTabScrollRect.q,
+            id: Rect.fromLTWH(
+              scrollLeft.toDouble(),
+              scrollTop.toDouble(),
+              scrollWidth.toDouble(),
+              scrollHeight.toDouble(),
+            ),
+          };
         case "tabs_all":
           final tabs = HF.listJSON(json["tabs"]);
           final _tabs = tabs
@@ -186,6 +215,8 @@ extension _$Backend on _Backend {
       }
     } catch (e) {
       qqe(e);
+      qqe(json);
+      qqe(logic);
       channel.sink.add(jsonEncode({'error': 'logic failed: $logic'}));
       websocketSentCount.q++;
     }

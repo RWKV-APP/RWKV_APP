@@ -155,7 +155,6 @@ class _BrowserInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
-    final qw = ref.watch(P.app.qw);
     final browserTabs = ref.watch(P.translator.browserTabs);
     final activeBrowserTab = ref.watch(P.translator.activeBrowserTab);
     final activeUrl = activeBrowserTab?.url ?? "";
@@ -222,6 +221,9 @@ class _BrowserTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
     final url = tab.url.replaceAll("https://", "").replaceAll("http://", "").replaceAll("www.", "");
+    final innerSize = ref.watch(P.translator.browserTabInnerSize.select((v) => v[tab.id]));
+    final outerSize = ref.watch(P.translator.browserTabOuterSize.select((v) => v[tab.id]));
+    final scrollRect = ref.watch(P.translator.browserTabScrollRect.select((v) => v[tab.id]));
     return DefaultTextStyle(
       style: TextStyle(fontSize: 12, color: qb.q(1)),
       child: C(
@@ -230,12 +232,16 @@ class _BrowserTab extends ConsumerWidget {
           color: qb.q(0.1),
           borderRadius: 4.r,
         ),
-        padding: EI.o(t: 3, l: 4, b: 3, r: 4),
+        padding: EI.o(t: 5, l: 6, b: 5, r: 6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(tab.title, maxLines: 1, overflow: TextOverflow.ellipsis),
             Text(url, maxLines: 1, overflow: TextOverflow.ellipsis),
+            Text("inner: ${innerSize?.width.toStringAsFixed(0)} x ${innerSize?.height.toStringAsFixed(0)}"),
+            Text("outer: ${outerSize?.width.toStringAsFixed(0)} x ${outerSize?.height.toStringAsFixed(0)}"),
+            Text("scroll: ${scrollRect?.left.toStringAsFixed(0)} x ${scrollRect?.top.toStringAsFixed(0)}"),
+            Text("full: ${scrollRect?.width.toStringAsFixed(0)} x ${scrollRect?.height.toStringAsFixed(0)}"),
           ],
         ),
       ),
