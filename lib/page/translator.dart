@@ -318,6 +318,7 @@ class _TranslatiorInfo extends ConsumerWidget {
     final runningTaskTick = ref.watch(P.translator.runningTaskTick);
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
+    final translationCountInSandbox = ref.watch(P.translator.translationCountInSandbox);
     return C(
       decoration: BD(
         color: kC,
@@ -335,6 +336,7 @@ class _TranslatiorInfo extends ConsumerWidget {
           ),
           8.h,
           Text("已经缓存的翻译结果数量: ${translations.length}"),
+          Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
           Text("等待中的翻译任务数量: ${completerPool.length}"),
           Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
           Text("正在翻译的节点名称: $runningTaskNodeName"),

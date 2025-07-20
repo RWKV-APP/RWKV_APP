@@ -29,11 +29,16 @@ class _URLCompleter {
 }
 
 class _Translator {
+  // TODO: 性能问题, 需要优化
+  /// 翻译结果内存缓存
+  late final translations = qs<Map<String, String>>({});
+  late final translationCountInSandbox = qs(0);
+  late final _saveTranslationsThrottler = Throttler(milliseconds: 1000, trailing: true);
+
   late final source = qs(_initialSource);
   late final textEditingController = TextEditingController(text: _initialSource);
   late final result = qs(_initialResult);
   late final resultTextEditingController = TextEditingController(text: _initialResult);
-  late final translations = qs<Map<String, String>>({});
   late final runningTaskKey = qs<String?>(null);
   late final runningTaskTabId = qs<int?>(null);
   late final runningTaskNodeName = qs<String?>(null);
@@ -63,7 +68,24 @@ extension _$Translator on _Translator {
     result.l(_onResultChanged);
     P.app.pageKey.l(_onPageKeyChanged);
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
-    P.translator.runningTaskKey.l(_onRunningTaskKeyChanged);
+    runningTaskKey.l(_onRunningTaskKeyChanged);
+    this.translations.l(_onTranslationsChanged);
+
+    final sp = await SharedPreferences.getInstance();
+    final translations = sp.getString("halo_state.translator.translations");
+    if (translations != null) {
+      this.translations.q = jsonDecode(translations).cast<String, String>();
+      translationCountInSandbox.q = this.translations.q.length;
+    }
+  }
+
+  void _onTranslationsChanged(Map<String, String> next) async {
+    _saveTranslationsThrottler.call(() async {
+      final sp = await SharedPreferences.getInstance();
+      final translations = this.translations.q;
+      sp.setString("halo_state.translator.translations", jsonEncode(translations));
+      translationCountInSandbox.q = translations.length;
+    });
   }
 
   void _onTextEditingControllerValueChanged() {
