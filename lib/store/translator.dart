@@ -49,7 +49,13 @@ class _Translator {
   late final serveMode = qs(ServeMode.hoverLoop);
 
   /// 等待中的翻译任务
-  late final completerPool = qs(<String, _URLCompleter>{});
+  late final oldCompleterPool = qs(<String, _URLCompleter>{});
+
+  /// 所有曾经存在过的 tab, 用于清理缓存
+  late final allTabs = qs<List<BrowserTab>>([]);
+
+  /// 每个 tab 中, 等待翻译的翻译任务, 以需要被翻译的原始字符串为 key, 以 _URLCompleter 为 value
+  late final pool = qsf<BrowserTab, Map<String, _URLCompleter>>({});
 
   late final browserTabs = qs<List<BrowserTab>>([]);
   late final activeBrowserTab = qs<BrowserTab?>(null);
@@ -195,10 +201,10 @@ extension _$Translator on _Translator {
 
     translations.q = {...translations.q, key: translation + _endString};
 
-    final c = completerPool.q[key];
+    final c = oldCompleterPool.q[key];
     if (c != null) {
       c.completer.complete(translation + _endString);
-      completerPool.q = completerPool.q..removeWhere((k, v) => k == key);
+      oldCompleterPool.q = oldCompleterPool.q..removeWhere((k, v) => k == key);
     }
     runningTaskKey.q = null;
 
@@ -207,7 +213,7 @@ extension _$Translator on _Translator {
       translations.q.remove(translations.q.keys.first);
     }
 
-    final hasUnfinishedCompleter = completerPool.q.isNotEmpty;
+    final hasUnfinishedCompleter = oldCompleterPool.q.isNotEmpty;
     if (!hasUnfinishedCompleter) return;
     final nextKey = _selectNextTaskKey();
     if (nextKey == null) return;
@@ -215,7 +221,7 @@ extension _$Translator on _Translator {
   }
 
   String? _selectNextTaskKey() {
-    final pool = completerPool.q;
+    final pool = oldCompleterPool.q;
     final keys = pool.keys.toList();
     final currentTabId = activeBrowserTab.q?.id;
     final currentUrl = activeBrowserTab.q?.url;
@@ -301,23 +307,25 @@ extension _$Translator on _Translator {
     return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 
-  Future<String> _getFullTranslation(
-    String sourceKey, {
-    String? url,
-    int? tabId,
-    int? priority,
-    String? nodeName,
-    int? tick,
-  }) async {
+  Future<String> _getFullTranslation(JSON json) async {
+    final sourceKey = json['source'] as String;
+    final url = json['url'] as String;
+    final tabId = json['tabId'] as int;
+    final priority = json['priority'] as int;
+    final nodeName = json['nodeName'] as String;
+    final tick = json['tick'] as int;
+    final windowId = json['windowId'] as int;
+
+    // 如果内存缓存中已存在
     final existingTranslation = translations.q[sourceKey];
     final isEnded = existingTranslation?.endsWith(_endString) ?? false;
     if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
 
-    final existCompleter = completerPool.q[sourceKey];
+    final existCompleter = oldCompleterPool.q[sourceKey];
     if (existCompleter != null) return await existCompleter.completer.future;
 
     final completer = Completer<String>();
-    completerPool.q = Map.from(completerPool.q)
+    oldCompleterPool.q = Map.from(oldCompleterPool.q)
       ..[sourceKey] = _URLCompleter(
         url: url,
         tabId: tabId,
@@ -342,7 +350,7 @@ extension $Translator on _Translator {
   FV debugCheck() async {
     final runningTaskKey = this.runningTaskKey.q;
     final translations = this.translations.q;
-    final completerPool = this.completerPool.q;
+    final completerPool = this.oldCompleterPool.q;
     final browserTabs = this.browserTabs.q;
     final activeBrowserTab = this.activeBrowserTab.q;
 

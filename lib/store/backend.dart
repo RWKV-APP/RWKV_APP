@@ -72,27 +72,7 @@ extension _$Backend on _Backend {
     try {
       switch (logic) {
         case 'translate':
-          // TODO: 加入翻译队列
-          // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
-          runningTasks.q = {...runningTasks.q, source};
-          final priority = json['priority'];
-          final nodeName = json['nodeName'];
-          final tick = json['tick'];
-          final translation = await P.translator._getFullTranslation(
-            source,
-            url: url,
-            priority: priority,
-            nodeName: nodeName,
-            tick: tick,
-          );
-          final responseBody = jsonEncode({
-            'source': source,
-            'translation': translation.replaceAll(_endString, ""),
-            'timestamp': HF.microseconds,
-          });
-          runningTasks.q = runningTasks.q.where((e) => e != source).toSet();
-          taskHandledCount.q++;
-          return shelf.Response.ok(responseBody, headers: _headers, encoding: utf8);
+          return shelf.Response.badRequest(body: 'Not implemented: $logic', headers: _headers, encoding: utf8);
         case 'loop':
           runningTasks.q = {...runningTasks.q, source};
           final translation = P.translator._getOnTimeTranslation(source, url: url);
@@ -127,18 +107,7 @@ extension _$Backend on _Backend {
           // TODO: 加入翻译队列
           // TODO: 队列元素的选择逻辑应该是: 先选择屏幕中间的元素
           runningTasks.q = {...runningTasks.q, source};
-          final tabId = json["tabId"];
-          final priority = json['priority'];
-          final nodeName = json['nodeName'];
-          final tick = json['tick'];
-          final translation = await P.translator._getFullTranslation(
-            source,
-            url: url,
-            tabId: tabId,
-            priority: priority,
-            nodeName: nodeName,
-            tick: tick,
-          );
+          final translation = await P.translator._getFullTranslation(json);
           final responseBody = jsonEncode({
             'source': source,
             'translation': translation.replaceAll(_endString, ""),

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
@@ -175,11 +176,12 @@ class _BrowserInfo extends ConsumerWidget {
           ),
           8.h,
           Text("窗口 - 标签页"),
-          Wrap(
-            runSpacing: 4,
-            spacing: 4,
-            children: browserWindows.map((e) => _BrowserWindow(window: e)).toList(),
-          ),
+          if (browserWindows.isNotEmpty)
+            Wrap(
+              runSpacing: 4,
+              spacing: 4,
+              children: browserWindows.map((e) => _BrowserWindow(window: e)).toList(),
+            ),
         ],
       ),
     );
@@ -194,7 +196,7 @@ class _BrowserWindow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final browserTabs = ref.watch(P.translator.browserTabs.select((v) => v.where((e) => e.windowId == window.id).toList()));
-    final latestTab = browserTabs.firstWhere(
+    final latestTab = browserTabs.firstWhereOrNull(
       (e) => e.lastAccessed == browserTabs.map((e) => e.lastAccessed).reduce((a, b) => a > b ? a : b),
     );
     final qb = ref.watch(P.app.qb);
@@ -220,7 +222,7 @@ class _BrowserWindow extends ConsumerWidget {
               return _BrowserTab(
                 tab: e,
                 isActive: e.id == activeTabId?.id && focused,
-                isLatestInWindow: e.id == latestTab.id,
+                isLatestInWindow: e.id == latestTab?.id,
               );
             }).toList(),
           ),
@@ -314,7 +316,7 @@ class _TranslatiorInfo extends ConsumerWidget {
     P.translator.browserTabScrollRect.q = {};
     P.translator.browserTabs.q = [];
     P.translator.browserWindows.q = [];
-    P.translator.completerPool.q = {};
+    P.translator.oldCompleterPool.q = {};
     P.translator.isGenerating.q = false;
     P.translator.runningTaskKey.q = null;
     P.translator.translations.q = {};
@@ -338,7 +340,7 @@ class _TranslatiorInfo extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final runningTaskKey = ref.watch(P.translator.runningTaskKey);
     final translations = ref.watch(P.translator.translations);
-    final completerPool = ref.watch(P.translator.completerPool);
+    final completerPool = ref.watch(P.translator.oldCompleterPool);
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     final translationCountInSandbox = ref.watch(P.translator.translationCountInSandbox);
