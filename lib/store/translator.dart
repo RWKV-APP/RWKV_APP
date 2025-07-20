@@ -32,6 +32,7 @@ class _Translator {
   late final source = qs(_initialSource);
   late final textEditingController = TextEditingController(text: _initialSource);
   late final result = qs(_initialResult);
+  late final resultTextEditingController = TextEditingController(text: _initialResult);
   late final translations = qs<Map<String, String>>({});
   late final runningTaskKey = qs<String?>(null);
   late final runningTaskTabId = qs<int?>(null);
@@ -54,6 +55,7 @@ extension _$Translator on _Translator {
   FV _init() async {
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     source.l(_onTextChanged);
+    result.l(_onResultChanged);
     P.app.pageKey.l(_onPageKeyChanged);
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
     P.translator.runningTaskKey.l(_onRunningTaskKeyChanged);
@@ -67,6 +69,11 @@ extension _$Translator on _Translator {
   void _onTextChanged(String next) {
     final textInController = textEditingController.text;
     if (next != textInController) textEditingController.text = next;
+  }
+
+  void _onResultChanged(String next) {
+    final textInController = resultTextEditingController.text;
+    if (next != textInController) resultTextEditingController.text = next;
   }
 
   void _onPageKeyChanged(PageKey pageKey) {

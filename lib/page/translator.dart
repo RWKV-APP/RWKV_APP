@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/model/browser_tab.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/performance_info.dart';
@@ -11,8 +12,6 @@ class PageTranslator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paddingTop = ref.watch(P.app.paddingTop);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('RWKV 离线翻译服务器'),
@@ -35,16 +34,16 @@ class PageTranslator extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const _InferenceInfo(),
+                    const _ServiceInfo(),
                     const _BrowserInfo(),
                   ],
                 ),
               ),
               Expanded(
-                child: const _ServiceInfo(),
+                child: const _TranslatiorInfo(),
               ),
             ],
           ),
-          SelectionArea(child: const _TranslatiorInfo()),
           const _Dashboard(),
         ],
       ),
@@ -115,7 +114,7 @@ class _ServiceInfo extends ConsumerWidget {
         border: Border.all(color: qb.q(0.67), width: 1),
       ),
       padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(8).copyWith(right: 4),
+      margin: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -125,25 +124,24 @@ class _ServiceInfo extends ConsumerWidget {
           ),
           8.h,
           Text("HTTP 服务 (端口号: $httpPort): ${backendState.name}"),
-          TextButton(
-            onPressed: _onPressBackend,
-            child: Text("操作"),
-          ),
+          if (backendState != BackendState.running)
+            TextButton(
+              onPressed: _onPressBackend,
+              child: Text("启动"),
+            ),
           Text("WebSocket 服务 (端口号: $websocketPort): ${websocketState.name}"),
-          TextButton(
-            onPressed: _onPressWebsocket,
-            child: Text("操作"),
-          ),
-          Text("HTTP 请求接收数量: $taskReceivedCount"),
-          Text("HTTP 请求处理数量: $taskHandledCount"),
-          Text("HTTP 请求处理中(并发): ${runningTasks.length}"),
+          if (websocketState != BackendState.running)
+            TextButton(
+              onPressed: _onPressWebsocket,
+              child: Text("启动"),
+            ),
           Text("WebSocket 消息接收数量: $websocketReceivedCount"),
           Text("WebSocket 消息发送数量: $websocketSentCount"),
-
-          TextButton(
-            onPressed: _onPressed,
-            child: Text(title),
-          ),
+          if (backendState == BackendState.running)
+            TextButton(
+              onPressed: _onPressed,
+              child: Text(title),
+            ),
         ],
       ),
     );
@@ -162,7 +160,6 @@ class _BrowserInfo extends ConsumerWidget {
     final activeBrowserTab = ref.watch(P.translator.activeBrowserTab);
     final activeUrl = activeBrowserTab?.url ?? "";
     final activeTitle = activeBrowserTab?.title ?? "";
-    final activeFavicon = activeBrowserTab?.favIconUrl ?? "";
     final activeTabId = activeBrowserTab?.id;
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
 
@@ -173,7 +170,7 @@ class _BrowserInfo extends ConsumerWidget {
         border: Border.all(color: qb.q(0.67), width: 1),
       ),
       padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(8).copyWith(left: 4),
+      margin: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -204,9 +201,43 @@ class _BrowserInfo extends ConsumerWidget {
           Text("当前标签页 ID: $activeTabId"),
           Text("正在翻译的标签页 ID: $runningTaskTabId"),
           8.h,
-          Text("其他标签页"),
-          Text("总数: ${browserTabs.length}"),
+          Text("所有标签页"),
+          Wrap(
+            runSpacing: 4,
+            spacing: 4,
+            children: browserTabs.map((e) => _BrowserTab(tab: e)).toList(),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _BrowserTab extends ConsumerWidget {
+  const _BrowserTab({required this.tab});
+
+  final BrowserTab tab;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+    final url = tab.url.replaceAll("https://", "").replaceAll("http://", "").replaceAll("www.", "");
+    return DefaultTextStyle(
+      style: TextStyle(fontSize: 12, color: qb.q(1)),
+      child: C(
+        constraints: BoxConstraints(maxWidth: 120),
+        decoration: BD(
+          color: qb.q(0.1),
+          borderRadius: 4.r,
+        ),
+        padding: EI.o(t: 3, l: 4, b: 3, r: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(tab.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+            Text(url, maxLines: 1, overflow: TextOverflow.ellipsis),
+          ],
+        ),
       ),
     );
   }
@@ -306,12 +337,20 @@ class _Result extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final result = ref.watch(P.translator.result);
+
+    // 使用 useEffect 来更新控制器的文本，而不是创建新的控制器
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (P.translator.resultTextEditingController.text != result) {
+        P.translator.resultTextEditingController.text = result;
+      }
+    });
+
     return C(
       decoration: BD(color: kC),
       child: TextField(
         minLines: 1,
         maxLines: 8,
-        controller: TextEditingController(text: result),
+        controller: P.translator.resultTextEditingController,
         enabled: false,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),

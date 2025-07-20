@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+---
+
+## 介绍
+
+- 这是一个 flutter / dart 项目
+- 我们会将这个项目部署到 iOS / Android / Windows / macOS 上
+
+## 架构解释
+
+- lib/store 管理全局状态
+- 我们使用的是 riverpods
+  - 但是我们并没有使用 riverpods 自带的 annotation 来管理状态
+  - 我们使用的是 qs/qp 来管理状态
+    - qs 声明了一个原子化的状态
+      - 整个项目的大部分状态是原子化的
+        - 通过 P.{业务分组}.{状态名} 来在 UI 层快速获取一个 `Riverpod.StateProvider`
+
+## 不要做以下行为
+
+- 不要使用 `MediaQuery.of(context).size.width` 来获取屏幕宽度, 除非你被显示要求了
+- 不要自动使用 `then` 来获取异步结果, 除非你被显示要求了
+
+## 建议做以下的行为
+
+- 尽量使用 for 循环, 尽量不使用 forEach
+- 使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度

@@ -167,8 +167,7 @@ extension _$Backend on _Backend {
           final id = tab["id"];
           final url = tab["url"];
           final title = tab["title"] ?? "";
-          final favIconUrl = tab["favIconUrl"] ?? "";
-          P.translator.activeBrowserTab.q = BrowserTab(id: id, url: url, title: title, favIconUrl: favIconUrl);
+          P.translator.activeBrowserTab.q = BrowserTab(id: id, url: url, title: title);
         case "tabs_all":
           final tabs = HF.listJSON(json["tabs"]);
           final _tabs = tabs
@@ -177,7 +176,6 @@ extension _$Backend on _Backend {
                   id: e["id"],
                   url: e["url"],
                   title: e["title"] ?? "",
-                  favIconUrl: e["favIconUrl"] ?? "",
                 ),
               )
               .toList();
