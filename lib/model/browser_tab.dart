@@ -10,8 +10,8 @@ class BrowserTab extends Equatable {
   const BrowserTab({
     required this.id,
     required this.url,
-    required this.title,
     required this.windowId,
+    required this.title,
     required this.lastAccessed,
   });
 

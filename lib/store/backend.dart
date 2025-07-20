@@ -139,7 +139,7 @@ extension _$Backend on _Backend {
           final windowId = tab["windowId"];
           final lastAccessed = tab["lastAccessed"] ?? -1.0;
           if (id == null && url == null && title == null && windowId == null && windowId == null && lastAccessed == null) return;
-          P.translator.activeBrowserTab.q = BrowserTab(
+          P.translator.activedTab.q = BrowserTab(
             id: id,
             url: url,
             title: title,
@@ -157,14 +157,17 @@ extension _$Backend on _Backend {
           final scrollLeft = tab["scrollLeft"];
           final scrollHeight = tab["scrollHeight"];
           final scrollWidth = tab["scrollWidth"];
+
           P.translator.browserTabOuterSize.q = {
             ...P.translator.browserTabOuterSize.q,
             id: Size(outerWidth.toDouble(), outerHeight.toDouble()),
           };
+
           P.translator.browserTabInnerSize.q = {
             ...P.translator.browserTabInnerSize.q,
             id: Size(innerWidth.toDouble(), innerHeight.toDouble()),
           };
+
           P.translator.browserTabScrollRect.q = {
             ...P.translator.browserTabScrollRect.q,
             id: Rect.fromLTWH(

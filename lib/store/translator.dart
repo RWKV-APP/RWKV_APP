@@ -3,7 +3,6 @@ part of 'p.dart';
 const _initialSource = "This is a test.";
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
-const _maxCachedPairsCount = 10000;
 
 enum ServeMode {
   hoverLoop,
@@ -41,29 +40,30 @@ class _Translator {
   late final resultTextEditingController = TextEditingController(text: _initialResult);
   late final runningTaskKey = qs<String?>(null);
   late final runningTaskTabId = qs<int?>(null);
-  late final runningTaskNodeName = qs<String?>(null);
-  late final runningTaskPriority = qs<int?>(null);
-  late final runningTaskTick = qs<int?>(null);
   late final runningTaskUrl = qs<String?>(null);
   late final isGenerating = qs(false);
   late final serveMode = qs(ServeMode.hoverLoop);
 
-  /// 等待中的翻译任务
-  late final oldCompleterPool = qs(<String, _URLCompleter>{});
-
-  /// 所有曾经存在过的 tab, 用于清理缓存
-  late final allTabs = qs<List<BrowserTab>>([]);
-
   /// 每个 tab 中, 等待翻译的翻译任务, 以需要被翻译的原始字符串为 key, 以 _URLCompleter 为 value
   late final pool = qsf<BrowserTab, Map<String, _URLCompleter>>({});
 
+  /// 所有已经打开了的标签页
   late final browserTabs = qs<List<BrowserTab>>([]);
-  late final activeBrowserTab = qs<BrowserTab?>(null);
+
+  /// 当前激活的标签页
+  late final activedTab = qs<BrowserTab?>(null);
+
+  /// 每个 Window 中, 最新的标签页
+  late final latestTabs = qs<Map<int, BrowserTab>>({});
+
   late final browserTabOuterSize = qs<Map<int, Size>>({});
   late final browserTabInnerSize = qs<Map<int, Size>>({});
   late final browserTabScrollRect = qs<Map<int, Rect>>({});
 
   late final browserWindows = qs<List<BrowserWindow>>([]);
+  late final latestTaskTag = qs<int>(0);
+
+  late final Timer _taskCheckingTimer;
 }
 
 /// Private methods
@@ -77,7 +77,57 @@ extension _$Translator on _Translator {
     runningTaskKey.l(_onRunningTaskKeyChanged);
     translations.l(_onTranslationsChanged);
 
+    isGenerating.l(_onIsGeneratingChanged);
+    latestTaskTag.l(_onLatestTaskTagChanged);
+
+    browserTabs.l(_onBrowserTabsChanged);
+
     await _loadTranslationsFromFile();
+
+    _taskCheckingTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      _checkTask();
+    });
+  }
+
+  void _checkTask() async {
+    final model = P.rwkv.currentModel.q;
+    if (model == null) return;
+    final wsRunning = P.backend.websocketState.q == BackendState.running;
+    if (!wsRunning) return;
+    final httpRunning = P.backend.httpState.q == BackendState.running;
+    if (!httpRunning) return;
+    final isGenerating = this.isGenerating.q;
+    if (isGenerating) return;
+    await HF.wait(100);
+    final isGenerating2 = this.isGenerating.q;
+    if (isGenerating2) return;
+    final key = _selectNextTaskKey();
+    if (key == null) return;
+    _startNewTask(key);
+  }
+
+  void _onBrowserTabsChanged(List<BrowserTab> next) {
+    final Map<int, BrowserTab> latestTabs = {};
+    for (final tab in next) {
+      final windowId = tab.windowId;
+      latestTabs[windowId] = tab;
+    }
+    this.latestTabs.q = latestTabs;
+  }
+
+  void _onIsGeneratingChanged(bool next) {
+    if (next) return;
+    final key = _selectNextTaskKey();
+    if (key == null) return;
+    _startNewTask(key);
+  }
+
+  void _onLatestTaskTagChanged(int next) {
+    final isGenerating = this.isGenerating.q;
+    if (isGenerating) return;
+    final key = _selectNextTaskKey();
+    if (key == null) return;
+    _startNewTask(key);
   }
 
   void _onTranslationsChanged(Map<String, String> next) async {
@@ -199,56 +249,70 @@ extension _$Translator on _Translator {
       return;
     }
 
-    translations.q = {...translations.q, key: translation + _endString};
+    translations.q = {
+      ...translations.q,
+      key: translation + _endString,
+    };
 
-    final c = oldCompleterPool.q[key];
-    if (c != null) {
-      c.completer.complete(translation + _endString);
-      oldCompleterPool.q = oldCompleterPool.q..removeWhere((k, v) => k == key);
+    // 在所有任务中, 寻找指定的 completer, 并完成它
+    final browserTabs = this.browserTabs.q;
+    for (final tab in browserTabs) {
+      final pool = this.pool(tab).q;
+      final urlCompleter = pool[key];
+      if (urlCompleter == null) continue;
+      urlCompleter.completer.complete(translation + _endString);
+      final newPool = Map.from(pool)..remove(key);
+      this.pool(tab).q = {...newPool};
     }
+
     runningTaskKey.q = null;
 
-    // 如果 translations 超过最大缓存数量, 移除最早的条目
-    if (translations.q.length > _maxCachedPairsCount) {
-      translations.q.remove(translations.q.keys.first);
-    }
-
-    final hasUnfinishedCompleter = oldCompleterPool.q.isNotEmpty;
-    if (!hasUnfinishedCompleter) return;
     final nextKey = _selectNextTaskKey();
     if (nextKey == null) return;
     HF.wait(0).then((_) => _startNewTask(nextKey));
   }
 
   String? _selectNextTaskKey() {
-    final pool = oldCompleterPool.q;
-    final keys = pool.keys.toList();
-    final currentTabId = activeBrowserTab.q?.id;
-    final currentUrl = activeBrowserTab.q?.url;
-    final nextKey =
-        keys.firstWhereOrNull((k) {
-          final urlMatched = pool[k]?.url == currentUrl;
-          if (urlMatched) {
-            runningTaskTabId.q = pool[k]?.tabId;
-            runningTaskNodeName.q = pool[k]?.nodeName;
-            runningTaskPriority.q = pool[k]?.priority;
-            runningTaskTick.q = pool[k]?.tick;
-            runningTaskUrl.q = pool[k]?.url;
-            return urlMatched;
-          }
-          final matchedId = pool[k]?.tabId == currentTabId;
-          if (matchedId) {
-            runningTaskTabId.q = pool[k]?.tabId;
-            runningTaskNodeName.q = pool[k]?.nodeName;
-            runningTaskPriority.q = pool[k]?.priority;
-            runningTaskTick.q = pool[k]?.tick;
-            runningTaskUrl.q = pool[k]?.url;
-            return matchedId;
-          }
-          return matchedId;
-        }) ??
-        pool.keys.firstOrNull;
-    return nextKey;
+    final activedTab = this.activedTab.q;
+    if (activedTab != null) {
+      final pool = this.pool(activedTab).q;
+      if (pool.isNotEmpty) {
+        final result = pool.keys.first;
+        final urlCompleter = pool[result];
+        runningTaskUrl.q = urlCompleter?.url;
+        runningTaskTabId.q = urlCompleter?.tabId;
+        return result;
+      }
+    }
+
+    final latestTabs = this.latestTabs.q;
+    for (final entry in latestTabs.entries) {
+      final tab = entry.value;
+      final pool = this.pool(tab).q;
+      if (pool.isNotEmpty) {
+        final result = pool.keys.first;
+        final urlCompleter = pool[result];
+        runningTaskUrl.q = urlCompleter?.url;
+        runningTaskTabId.q = urlCompleter?.tabId;
+        return result;
+      }
+    }
+
+    final browserTabs = this.browserTabs.q;
+    for (final tab in browserTabs) {
+      final pool = this.pool(tab).q;
+      if (pool.isNotEmpty) {
+        final result = pool.keys.first;
+        final urlCompleter = pool[result];
+        runningTaskUrl.q = urlCompleter?.url;
+        runningTaskTabId.q = urlCompleter?.tabId;
+        return result;
+      }
+    }
+
+    runningTaskUrl.q = null;
+    runningTaskTabId.q = null;
+    return null;
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
@@ -274,11 +338,11 @@ extension _$Translator on _Translator {
     qq;
   }
 
-  void _startNewTask(String sourceKey) {
+  void _startNewTask(String source) {
     P.rwkv.stop();
-    runningTaskKey.q = sourceKey;
+    runningTaskKey.q = source;
     P.rwkv.sendMessages(
-      [sourceKey],
+      [source],
       getIsGeneratingRate: 1,
       getResponseBufferContentRate: .1,
     );
@@ -308,7 +372,7 @@ extension _$Translator on _Translator {
   }
 
   Future<String> _getFullTranslation(JSON json) async {
-    final sourceKey = json['source'] as String;
+    final source = json['source'] as String;
     final url = json['url'] as String;
     final tabId = json['tabId'] as int;
     final priority = json['priority'] as int;
@@ -317,27 +381,40 @@ extension _$Translator on _Translator {
     final windowId = json['windowId'] as int;
 
     // 如果内存缓存中已存在
-    final existingTranslation = translations.q[sourceKey];
+    final existingTranslation = translations.q[source];
     final isEnded = existingTranslation?.endsWith(_endString) ?? false;
     if (isEnded) return existingTranslation?.replaceAll(_endString, "") ?? "";
 
-    final existCompleter = oldCompleterPool.q[sourceKey];
-    if (existCompleter != null) return await existCompleter.completer.future;
+    final key = BrowserTab(
+      id: tabId,
+      url: url,
+      windowId: windowId,
+      title: "",
+      lastAccessed: -1,
+    );
 
-    final completer = Completer<String>();
-    oldCompleterPool.q = Map.from(oldCompleterPool.q)
-      ..[sourceKey] = _URLCompleter(
-        url: url,
-        tabId: tabId,
-        completer: completer,
-        priority: priority,
-        nodeName: nodeName,
-        tick: tick,
-      );
+    _URLCompleter? urlCompleter = pool(key).q[source];
+    if (urlCompleter != null) {
+      latestTaskTag.q++;
+      return await urlCompleter.completer.future;
+    }
 
-    if (runningTaskKey.q == null) _startNewTask(sourceKey);
+    urlCompleter = _URLCompleter(
+      url: url,
+      tabId: tabId,
+      completer: Completer<String>(),
+      priority: priority,
+      nodeName: nodeName,
+      tick: tick,
+    );
 
-    return completer.future;
+    pool(key).q = {
+      ...pool(key).q,
+      source: urlCompleter,
+    };
+
+    latestTaskTag.q++;
+    return await urlCompleter.completer.future;
   }
 }
 
@@ -347,12 +424,12 @@ extension $Translator on _Translator {
     _startNewTask(source.q);
   }
 
-  FV debugCheck() async {
+  void debugCheck() {
     final runningTaskKey = this.runningTaskKey.q;
     final translations = this.translations.q;
-    final completerPool = this.oldCompleterPool.q;
     final browserTabs = this.browserTabs.q;
-    final activeBrowserTab = this.activeBrowserTab.q;
+    final activeBrowserTab = this.activedTab.q;
+    final pools = browserTabs.map((tab) => pool(tab).q).where((pool) => pool.isNotEmpty).toList();
 
     debugger();
   }

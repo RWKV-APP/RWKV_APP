@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
@@ -37,16 +36,15 @@ class PageTranslator extends ConsumerWidget {
                   children: [
                     const _InferenceInfo(),
                     const _ServiceInfo(),
-                    const _BrowserInfo(),
+                    const _TranslatiorInfo(),
                   ],
                 ),
               ),
               Expanded(
-                child: const _TranslatiorInfo(),
+                child: const _BrowserInfo(),
               ),
             ],
           ),
-          const _Dashboard(),
         ],
       ),
     );
@@ -158,7 +156,7 @@ class _BrowserInfo extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
     final browserWindows = ref.watch(P.translator.browserWindows);
-
+    final browserTabs = ref.watch(P.translator.browserTabs);
     return C(
       decoration: BD(
         color: kC,
@@ -175,7 +173,8 @@ class _BrowserInfo extends ConsumerWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
           ),
           8.h,
-          Text("窗口 - 标签页"),
+          Text("窗口 - 标签页 (${browserTabs.length})"),
+          8.h,
           if (browserWindows.isNotEmpty)
             Wrap(
               runSpacing: 4,
@@ -196,13 +195,9 @@ class _BrowserWindow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final browserTabs = ref.watch(P.translator.browserTabs.select((v) => v.where((e) => e.windowId == window.id).toList()));
-    final latestTab = browserTabs.firstWhereOrNull(
-      (e) => e.lastAccessed == browserTabs.map((e) => e.lastAccessed).reduce((a, b) => a > b ? a : b),
-    );
     final qb = ref.watch(P.app.qb);
     final focused = window.focused;
     final border = Border.all(color: focused ? kCR.q(1) : qb.q(0.33), width: 2);
-    final activeTabId = ref.watch(P.translator.activeBrowserTab);
     return C(
       decoration: BD(
         color: kC,
@@ -219,11 +214,7 @@ class _BrowserWindow extends ConsumerWidget {
             runSpacing: 4,
             spacing: 4,
             children: browserTabs.map((e) {
-              return _BrowserTab(
-                tab: e,
-                isActive: e.id == activeTabId?.id && focused,
-                isLatestInWindow: e.id == latestTab?.id,
-              );
+              return _BrowserTab(tab: e);
             }).toList(),
           ),
         ],
@@ -233,26 +224,23 @@ class _BrowserWindow extends ConsumerWidget {
 }
 
 class _BrowserTab extends ConsumerWidget {
-  const _BrowserTab({
-    required this.tab,
-    required this.isActive,
-    required this.isLatestInWindow,
-  });
+  const _BrowserTab({required this.tab});
 
   final BrowserTab tab;
-
-  final bool isActive;
-  final bool isLatestInWindow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
     final url = tab.url.replaceAll("https://", "").replaceAll("http://", "").replaceAll("www.", "");
     final innerSize = ref.watch(P.translator.browserTabInnerSize.select((v) => v[tab.id]));
-    final outerSize = ref.watch(P.translator.browserTabOuterSize.select((v) => v[tab.id]));
     final scrollRect = ref.watch(P.translator.browserTabScrollRect.select((v) => v[tab.id]));
     final lastAccessed = tab.lastAccessed;
     final timeDisplay = DateTime.fromMillisecondsSinceEpoch(lastAccessed.toInt()).toString();
+    final pool = ref.watch(P.translator.pool(tab));
+    final isActive = ref.watch(P.translator.activedTab.select((v) => v?.id == tab.id));
+    final latestTab = ref.watch(P.translator.latestTabs.select((v) => v[tab.windowId]));
+    final isLatestInWindow = latestTab == tab;
+    final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
 
     late final Color color;
     if (isActive) {
@@ -264,6 +252,7 @@ class _BrowserTab extends ConsumerWidget {
     }
 
     final border = Border.all(color: color, width: 2);
+
     return DefaultTextStyle(
       style: TextStyle(fontSize: 10, color: qb.q(.5)),
       child: C(
@@ -274,25 +263,45 @@ class _BrowserTab extends ConsumerWidget {
           borderRadius: 4.r,
         ),
         padding: EI.o(t: 5, l: 6, b: 5, r: 6),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Text(
-              tab.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14, color: qb.q(1)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tab.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14, color: qb.q(1)),
+                ),
+                Text(
+                  url,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14, color: qb.q(1)),
+                ),
+                if (pool.isNotEmpty) Text("Waiting requests: ${pool.length}"),
+                // TODO: 这里还没对齐
+                Text(timeDisplay, style: TextStyle(fontSize: 10, color: qb.q(.5))),
+                Text("full: ${scrollRect?.width.toStringAsFixed(0)} x ${scrollRect?.height.toStringAsFixed(0)}"),
+                Text("inner: ${innerSize?.width.toStringAsFixed(0)} x ${innerSize?.height.toStringAsFixed(0)}"),
+                Text("scroll: ${scrollRect?.left.toStringAsFixed(0)} x ${scrollRect?.top.toStringAsFixed(0)}"),
+              ],
             ),
-            Text(
-              url,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14, color: qb.q(1)),
-            ),
-            Text(timeDisplay, style: TextStyle(fontSize: 10, color: qb.q(.5))),
-            Text("full: ${scrollRect?.width.toStringAsFixed(0)} x ${scrollRect?.height.toStringAsFixed(0)}"),
-            Text("inner: ${innerSize?.width.toStringAsFixed(0)} x ${innerSize?.height.toStringAsFixed(0)}"),
-            Text("scroll: ${scrollRect?.left.toStringAsFixed(0)} x ${scrollRect?.top.toStringAsFixed(0)}"),
+            if (runningTaskTabId == tab.id)
+              Positioned(
+                height: 20,
+                width: 20,
+                right: 0,
+                bottom: 0,
+                child: SB(
+                  child: CircularProgressIndicator(
+                    color: kCG.q(1),
+                    strokeWidth: 3,
+                    strokeCap: StrokeCap.round,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -316,21 +325,17 @@ class _TranslatiorInfo extends ConsumerWidget {
     P.translator.browserTabScrollRect.q = {};
     P.translator.browserTabs.q = [];
     P.translator.browserWindows.q = [];
-    P.translator.oldCompleterPool.q = {};
     P.translator.isGenerating.q = false;
     P.translator.runningTaskKey.q = null;
     P.translator.translations.q = {};
-    P.translator.activeBrowserTab.q = null;
+    P.translator.activedTab.q = null;
     P.translator.browserTabOuterSize.q = {};
     P.translator.browserTabInnerSize.q = {};
     P.translator.browserTabScrollRect.q = {};
     P.translator.browserWindows.q = [];
-    P.translator.activeBrowserTab.q = null;
+    P.translator.activedTab.q = null;
     P.translator.runningTaskTabId.q = null;
     P.translator.runningTaskUrl.q = null;
-    P.translator.runningTaskNodeName.q = null;
-    P.translator.runningTaskPriority.q = null;
-    P.translator.runningTaskTick.q = null;
     P.rwkv.stop();
   }
 
@@ -340,7 +345,6 @@ class _TranslatiorInfo extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final runningTaskKey = ref.watch(P.translator.runningTaskKey);
     final translations = ref.watch(P.translator.translations);
-    final completerPool = ref.watch(P.translator.oldCompleterPool);
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     final translationCountInSandbox = ref.watch(P.translator.translationCountInSandbox);
@@ -362,7 +366,6 @@ class _TranslatiorInfo extends ConsumerWidget {
           8.h,
           Text("已经缓存的翻译结果数量: ${translations.length}"),
           Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
-          Text("等待中的翻译任务数量: ${completerPool.length}"),
           Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
           Text("正在翻译的 URL: $runningTaskUrl"),
           Text("正在翻译的标签页 ID: $runningTaskTabId"),
@@ -419,15 +422,6 @@ class _Result extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final result = ref.watch(P.translator.result);
-
-    // 使用 useEffect 来更新控制器的文本，而不是创建新的控制器
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (P.translator.resultTextEditingController.text != result) {
-        P.translator.resultTextEditingController.text = result;
-      }
-    });
-
     return C(
       decoration: BD(color: kC),
       child: TextField(
@@ -487,39 +481,6 @@ class _InferenceInfo extends ConsumerWidget {
           const PerformanceInfo(),
         ],
       ),
-    );
-  }
-}
-
-class _Dashboard extends ConsumerWidget {
-  const _Dashboard();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final backendState = ref.watch(P.backend.httpState);
-
-    final title = switch (backendState) {
-      BackendState.starting => "正在启动...",
-      BackendState.running => "停止服务",
-      BackendState.stopping => "正在停止...",
-      BackendState.stopped => "启动服务",
-    };
-
-    // 设置地址
-    // 展示运行状态, prefill & decode
-    // 选择模型
-    // test translation calling
-    return Column(
-      children: [
-        Row(
-          children: [
-            TextButton(
-              onPressed: P.translator.debugCheck,
-              child: const Text("检查"),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
