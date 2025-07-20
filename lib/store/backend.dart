@@ -175,7 +175,7 @@ extension _$Backend on _Backend {
             url: url,
             title: title,
             windowId: windowId ?? -1,
-            lastAccessed: lastAccessed ?? -1.0,
+            lastAccessed: (lastAccessed ?? -1.0).toDouble(),
           );
         case "tab_size_change":
           final tab = HF.json(json["tab"]);

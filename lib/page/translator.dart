@@ -156,12 +156,6 @@ class _BrowserInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
-    final browserTabs = ref.watch(P.translator.browserTabs);
-    final activeBrowserTab = ref.watch(P.translator.activeBrowserTab);
-    final activeUrl = activeBrowserTab?.url ?? "";
-    final activeTitle = activeBrowserTab?.title ?? "";
-    final activeTabId = activeBrowserTab?.id;
-    final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     final browserWindows = ref.watch(P.translator.browserWindows);
 
     return C(
@@ -255,10 +249,12 @@ class _BrowserTab extends ConsumerWidget {
     final innerSize = ref.watch(P.translator.browserTabInnerSize.select((v) => v[tab.id]));
     final outerSize = ref.watch(P.translator.browserTabOuterSize.select((v) => v[tab.id]));
     final scrollRect = ref.watch(P.translator.browserTabScrollRect.select((v) => v[tab.id]));
+    final lastAccessed = tab.lastAccessed;
+    final timeDisplay = DateTime.fromMillisecondsSinceEpoch(lastAccessed.toInt()).toString();
 
     late final Color color;
     if (isActive) {
-      color = kCR.q(1);
+      color = kCG.q(1);
     } else if (isLatestInWindow) {
       color = kCG.q(0.5);
     } else {
@@ -291,6 +287,7 @@ class _BrowserTab extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 14, color: qb.q(1)),
             ),
+            Text(timeDisplay, style: TextStyle(fontSize: 10, color: qb.q(.5))),
             Text("full: ${scrollRect?.width.toStringAsFixed(0)} x ${scrollRect?.height.toStringAsFixed(0)}"),
             Text("inner: ${innerSize?.width.toStringAsFixed(0)} x ${innerSize?.height.toStringAsFixed(0)}"),
             Text("scroll: ${scrollRect?.left.toStringAsFixed(0)} x ${scrollRect?.top.toStringAsFixed(0)}"),
