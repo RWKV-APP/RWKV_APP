@@ -32,6 +32,7 @@ import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/db/db.dart';
 import 'package:zone/model/browser_tab.dart';
+import 'package:zone/model/browser_window.dart';
 import 'package:zone/model/custom_theme.dart' as custom_theme;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';

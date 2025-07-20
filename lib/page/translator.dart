@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/browser_tab.dart';
+import 'package:zone/model/browser_window.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/performance_info.dart';
@@ -161,6 +162,7 @@ class _BrowserInfo extends ConsumerWidget {
     final activeTitle = activeBrowserTab?.title ?? "";
     final activeTabId = activeBrowserTab?.id;
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
+    final browserWindows = ref.watch(P.translator.browserWindows);
 
     return C(
       decoration: BD(
@@ -178,33 +180,55 @@ class _BrowserInfo extends ConsumerWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
           ),
           8.h,
-          Wrap(
-            runAlignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text("当前标签页"),
-              8.w,
-              Text("优先翻译已打开的标签页", style: TextStyle(fontSize: 10, color: qb.q(.5))),
-            ],
-          ),
-          Text(
-            "URL: $activeUrl",
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            "标题: $activeTitle",
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text("当前标签页 ID: $activeTabId"),
-          Text("正在翻译的标签页 ID: $runningTaskTabId"),
-          8.h,
-          Text("所有标签页"),
+          Text("窗口 - 标签页"),
           Wrap(
             runSpacing: 4,
             spacing: 4,
-            children: browserTabs.map((e) => _BrowserTab(tab: e)).toList(),
+            children: browserWindows.map((e) => _BrowserWindow(window: e)).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BrowserWindow extends ConsumerWidget {
+  const _BrowserWindow({required this.window});
+
+  final BrowserWindow window;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final browserTabs = ref.watch(P.translator.browserTabs.select((v) => v.where((e) => e.windowId == window.id).toList()));
+    final latestTab = browserTabs.firstWhere(
+      (e) => e.lastAccessed == browserTabs.map((e) => e.lastAccessed).reduce((a, b) => a > b ? a : b),
+    );
+    final qb = ref.watch(P.app.qb);
+    final focused = window.focused;
+    final border = Border.all(color: focused ? kCR.q(1) : qb.q(0.33), width: 2);
+    final activeTabId = ref.watch(P.translator.activeBrowserTab);
+    return C(
+      decoration: BD(
+        color: kC,
+        borderRadius: BorderRadius.circular(8),
+        border: border,
+      ),
+      padding: const EdgeInsets.all(4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Window: ${window.id}", style: TextStyle(color: focused ? kCR.q(1) : qb.q(1))),
+          4.h,
+          Wrap(
+            runSpacing: 4,
+            spacing: 4,
+            children: browserTabs.map((e) {
+              return _BrowserTab(
+                tab: e,
+                isActive: e.id == activeTabId?.id && focused,
+                isLatestInWindow: e.id == latestTab.id,
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -213,9 +237,16 @@ class _BrowserInfo extends ConsumerWidget {
 }
 
 class _BrowserTab extends ConsumerWidget {
-  const _BrowserTab({required this.tab});
+  const _BrowserTab({
+    required this.tab,
+    required this.isActive,
+    required this.isLatestInWindow,
+  });
 
   final BrowserTab tab;
+
+  final bool isActive;
+  final bool isLatestInWindow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -224,24 +255,45 @@ class _BrowserTab extends ConsumerWidget {
     final innerSize = ref.watch(P.translator.browserTabInnerSize.select((v) => v[tab.id]));
     final outerSize = ref.watch(P.translator.browserTabOuterSize.select((v) => v[tab.id]));
     final scrollRect = ref.watch(P.translator.browserTabScrollRect.select((v) => v[tab.id]));
+
+    late final Color color;
+    if (isActive) {
+      color = kCR.q(1);
+    } else if (isLatestInWindow) {
+      color = kCG.q(0.5);
+    } else {
+      color = qb.q(0.33);
+    }
+
+    final border = Border.all(color: color, width: 2);
     return DefaultTextStyle(
-      style: TextStyle(fontSize: 12, color: qb.q(1)),
+      style: TextStyle(fontSize: 10, color: qb.q(.5)),
       child: C(
-        constraints: BoxConstraints(maxWidth: 120),
+        constraints: BoxConstraints(maxWidth: 180, minWidth: 120),
         decoration: BD(
           color: qb.q(0.1),
+          border: border,
           borderRadius: 4.r,
         ),
         padding: EI.o(t: 5, l: 6, b: 5, r: 6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(tab.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-            Text(url, maxLines: 1, overflow: TextOverflow.ellipsis),
-            Text("inner: ${innerSize?.width.toStringAsFixed(0)} x ${innerSize?.height.toStringAsFixed(0)}"),
-            Text("outer: ${outerSize?.width.toStringAsFixed(0)} x ${outerSize?.height.toStringAsFixed(0)}"),
-            Text("scroll: ${scrollRect?.left.toStringAsFixed(0)} x ${scrollRect?.top.toStringAsFixed(0)}"),
+            Text(
+              tab.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 14, color: qb.q(1)),
+            ),
+            Text(
+              url,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 14, color: qb.q(1)),
+            ),
             Text("full: ${scrollRect?.width.toStringAsFixed(0)} x ${scrollRect?.height.toStringAsFixed(0)}"),
+            Text("inner: ${innerSize?.width.toStringAsFixed(0)} x ${innerSize?.height.toStringAsFixed(0)}"),
+            Text("scroll: ${scrollRect?.left.toStringAsFixed(0)} x ${scrollRect?.top.toStringAsFixed(0)}"),
           ],
         ),
       ),

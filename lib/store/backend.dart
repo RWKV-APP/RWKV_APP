@@ -167,8 +167,16 @@ extension _$Backend on _Backend {
           final id = tab["id"];
           final url = tab["url"];
           final title = tab["title"];
-          if (id == null && url == null && title == null) return;
-          P.translator.activeBrowserTab.q = BrowserTab(id: id, url: url, title: title);
+          final windowId = tab["windowId"];
+          final lastAccessed = tab["lastAccessed"] ?? -1.0;
+          if (id == null && url == null && title == null && windowId == null && windowId == null && lastAccessed == null) return;
+          P.translator.activeBrowserTab.q = BrowserTab(
+            id: id,
+            url: url,
+            title: title,
+            windowId: windowId ?? -1,
+            lastAccessed: lastAccessed ?? -1.0,
+          );
         case "tab_size_change":
           final tab = HF.json(json["tab"]);
           final id = tab["id"];
@@ -197,14 +205,33 @@ extension _$Backend on _Backend {
               scrollHeight.toDouble(),
             ),
           };
+        case "windows_all":
+          final windows = HF.listJSON(json["windows"]);
+          final _windows = windows
+              .map(
+                (e) => BrowserWindow(
+                  id: e["id"],
+                  left: e["left"],
+                  top: e["top"],
+                  width: e["width"],
+                  height: e["height"],
+                  state: e["state"],
+                  type: e["type"],
+                  focused: e["focused"],
+                ),
+              )
+              .toList();
+          P.translator.browserWindows.q = _windows;
         case "tabs_all":
           final tabs = HF.listJSON(json["tabs"]);
           final _tabs = tabs
               .map(
                 (e) => BrowserTab(
-                  id: e["id"],
-                  url: e["url"],
+                  id: e["id"] ?? -1,
+                  url: e["url"] ?? "",
                   title: e["title"] ?? "",
+                  windowId: e["windowId"] ?? -1,
+                  lastAccessed: e["lastAccessed"] ?? -1,
                 ),
               )
               .toList();
