@@ -69,23 +69,48 @@ extension _$Translator on _Translator {
     P.app.pageKey.l(_onPageKeyChanged);
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
     runningTaskKey.l(_onRunningTaskKeyChanged);
-    this.translations.l(_onTranslationsChanged);
+    translations.l(_onTranslationsChanged);
 
-    final sp = await SharedPreferences.getInstance();
-    final translations = sp.getString("halo_state.translator.translations");
-    if (translations != null) {
-      this.translations.q = jsonDecode(translations).cast<String, String>();
-      translationCountInSandbox.q = this.translations.q.length;
-    }
+    await _loadTranslationsFromFile();
   }
 
   void _onTranslationsChanged(Map<String, String> next) async {
     _saveTranslationsThrottler.call(() async {
-      final sp = await SharedPreferences.getInstance();
-      final translations = this.translations.q;
-      sp.setString("halo_state.translator.translations", jsonEncode(translations));
-      translationCountInSandbox.q = translations.length;
+      await _saveTranslationsToFile();
+      translationCountInSandbox.q = translations.q.length;
     });
+  }
+
+  Future<void> _loadTranslationsFromFile() async {
+    try {
+      final documentsDir = await getApplicationDocumentsDirectory();
+      final file = File('${documentsDir.path}/translator_cache.json');
+
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        final translations = jsonDecode(content).cast<String, String>();
+        this.translations.q = translations;
+        translationCountInSandbox.q = translations.length;
+      }
+    } catch (e) {
+      // 如果文件读取失败，使用空缓存
+      translations.q = {};
+      translationCountInSandbox.q = 0;
+    }
+  }
+
+  Future<void> _saveTranslationsToFile() async {
+    try {
+      final documentsDir = await getApplicationDocumentsDirectory();
+      final file = File('${documentsDir.path}/translator_cache.json');
+
+      final translations = this.translations.q;
+      final jsonContent = jsonEncode(translations);
+      await file.writeAsString(jsonContent);
+    } catch (e) {
+      // 保存失败时的错误处理
+      qqw("Failed to save translations to file: $e");
+    }
   }
 
   void _onTextEditingControllerValueChanged() {
