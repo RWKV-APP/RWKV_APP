@@ -33,7 +33,7 @@ class _Translator {
   /// 翻译结果内存缓存
   late final translations = qs<Map<String, String>>({});
   late final translationCountInSandbox = qs(0);
-  late final _saveTranslationsThrottler = Throttler(milliseconds: 1000, trailing: true);
+  late final _saveTranslationsThrottler = Throttler(milliseconds: 10000, trailing: true);
 
   late final source = qs(_initialSource);
   late final textEditingController = TextEditingController(text: _initialSource);
@@ -77,7 +77,6 @@ extension _$Translator on _Translator {
   void _onTranslationsChanged(Map<String, String> next) async {
     _saveTranslationsThrottler.call(() async {
       await _saveTranslationsToFile();
-      translationCountInSandbox.q = translations.q.length;
     });
   }
 
@@ -103,10 +102,17 @@ extension _$Translator on _Translator {
     try {
       final documentsDir = await getApplicationDocumentsDirectory();
       final file = File('${documentsDir.path}/translator_cache.json');
+      Map<String, String> existTranslation = {};
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        existTranslation = jsonDecode(content).cast<String, String>();
+      }
 
       final translations = this.translations.q;
-      final jsonContent = jsonEncode(translations);
+      final newTranslations = {...existTranslation, ...translations};
+      final jsonContent = jsonEncode(newTranslations);
       await file.writeAsString(jsonContent);
+      translationCountInSandbox.q = newTranslations.length;
     } catch (e) {
       // 保存失败时的错误处理
       qqw("Failed to save translations to file: $e");

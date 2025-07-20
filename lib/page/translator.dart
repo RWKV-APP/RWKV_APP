@@ -306,6 +306,32 @@ class _TranslatiorInfo extends ConsumerWidget {
     P.translator.onPressTest();
   }
 
+  FV _onPressClearCompleterPool() async {
+    qq;
+    P.backend.runningTasks.q = {};
+    P.translator.browserTabInnerSize.q = {};
+    P.translator.browserTabOuterSize.q = {};
+    P.translator.browserTabScrollRect.q = {};
+    P.translator.browserTabs.q = [];
+    P.translator.browserWindows.q = [];
+    P.translator.completerPool.q = {};
+    P.translator.isGenerating.q = false;
+    P.translator.runningTaskKey.q = null;
+    P.translator.translations.q = {};
+    P.translator.activeBrowserTab.q = null;
+    P.translator.browserTabOuterSize.q = {};
+    P.translator.browserTabInnerSize.q = {};
+    P.translator.browserTabScrollRect.q = {};
+    P.translator.browserWindows.q = [];
+    P.translator.activeBrowserTab.q = null;
+    P.translator.runningTaskTabId.q = null;
+    P.translator.runningTaskUrl.q = null;
+    P.translator.runningTaskNodeName.q = null;
+    P.translator.runningTaskPriority.q = null;
+    P.translator.runningTaskTick.q = null;
+    P.rwkv.stop();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
@@ -313,9 +339,6 @@ class _TranslatiorInfo extends ConsumerWidget {
     final runningTaskKey = ref.watch(P.translator.runningTaskKey);
     final translations = ref.watch(P.translator.translations);
     final completerPool = ref.watch(P.translator.completerPool);
-    final runningTaskNodeName = ref.watch(P.translator.runningTaskNodeName);
-    final runningTaskPriority = ref.watch(P.translator.runningTaskPriority);
-    final runningTaskTick = ref.watch(P.translator.runningTaskTick);
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     final translationCountInSandbox = ref.watch(P.translator.translationCountInSandbox);
@@ -339,13 +362,14 @@ class _TranslatiorInfo extends ConsumerWidget {
           Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
           Text("等待中的翻译任务数量: ${completerPool.length}"),
           Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
-          Text("正在翻译的节点名称: $runningTaskNodeName"),
-          Text("正在翻译的优先级: $runningTaskPriority"),
-          Text("正在翻译的 tick: $runningTaskTick"),
           Text("正在翻译的 URL: $runningTaskUrl"),
           Text("正在翻译的标签页 ID: $runningTaskTabId"),
+          TextButton(
+            onPressed: _onPressClearCompleterPool,
+            child: Text("清除内存缓存", style: TextStyle(color: kCR.q(1))),
+          ),
           8.h,
-          Text("翻译测试"),
+          Text("翻译状态 / 测试"),
           4.h,
           Row(
             children: [
@@ -468,16 +492,6 @@ class _InferenceInfo extends ConsumerWidget {
 class _Dashboard extends ConsumerWidget {
   const _Dashboard();
 
-  FV _onPressClearCompleterPool() async {
-    qq;
-    P.translator.translations.q = {};
-    P.backend.runningTasks.q = {};
-    P.translator.completerPool.q = {};
-    P.translator.runningTaskKey.q = null;
-    P.translator.isGenerating.q = false;
-    P.rwkv.stop();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final backendState = ref.watch(P.backend.httpState);
@@ -497,10 +511,6 @@ class _Dashboard extends ConsumerWidget {
       children: [
         Row(
           children: [
-            TextButton(
-              onPressed: _onPressClearCompleterPool,
-              child: const Text("清除缓存"),
-            ),
             TextButton(
               onPressed: P.translator.debugCheck,
               child: const Text("检查"),
