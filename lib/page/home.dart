@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart' show S;
+import 'package:zone/model/file_info.dart';
 import 'package:zone/page/chat.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
@@ -14,13 +16,14 @@ import 'package:zone/widgets/model_selector.dart';
 class PageHome extends ConsumerWidget {
   const PageHome({super.key});
 
-  void onNekoTap() async {
+  void onNekoTap(BuildContext context) async {
     final current = P.rwkv.currentModel.q;
     if (current == null || !current.isNeko) {
       final nekoList = P.fileManager.getNekoModel();
       final downloaded = nekoList.where((e) => P.fileManager.locals(e).q.hasFile).toList();
       if (downloaded.isNotEmpty) {
-        await P.rwkv.switchChatModel(downloaded.first);
+        final loaded = await _ModelLoadingDialog.show(context, downloaded.first);
+        if (!loaded) return;
       } else if (nekoList.isNotEmpty) {
         Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
         ModelSelector.show(nekoOnly: true);
@@ -98,7 +101,7 @@ class PageHome extends ConsumerWidget {
                           buildButton(
                             title: S.of(context).neko,
                             subtitle: S.of(context).nyan_nyan,
-                            onTap: onNekoTap,
+                            onTap: () => onNekoTap(context),
                             color: Colors.pinkAccent,
                             icon: FontAwesomeIcons.cat,
                           ),
@@ -163,6 +166,61 @@ class PageHome extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ModelLoadingDialog extends StatefulWidget {
+  final FileInfo file;
+
+  const _ModelLoadingDialog({super.key, required this.file});
+
+  static Future<bool> show(BuildContext context, FileInfo file) async {
+    final r = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => _ModelLoadingDialog(file: file),
+    );
+    return r ?? false;
+  }
+
+  @override
+  State<_ModelLoadingDialog> createState() => _ModelLoadingDialogState();
+}
+
+class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        // await Future<void>.delayed(const Duration(milliseconds: 10000));
+        await P.rwkv.switchChatModel(widget.file).timeout(const Duration(seconds: 10));
+        if (mounted) Navigator.pop(context, true);
+      } catch (e) {
+        qqe('load model failed: $e');
+        if (mounted) Navigator.pop(context, false);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Material(
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 36, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(S.current.model_loading),
             ],
           ),
         ),

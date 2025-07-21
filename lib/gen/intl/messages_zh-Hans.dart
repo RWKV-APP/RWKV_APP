@@ -230,6 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
     "memory_used": m5,
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
+    "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_questions": MessageLookupByLibrary.simpleMessage("更多问题"),

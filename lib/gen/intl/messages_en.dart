@@ -291,6 +291,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
     "memory_used": m5,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
+    "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "more_questions": MessageLookupByLibrary.simpleMessage("More Questions"),

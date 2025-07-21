@@ -2002,6 +2002,11 @@ class S {
   String get more_questions {
     return Intl.message('更多问题', name: 'more_questions', desc: '', args: []);
   }
+
+  /// `模型加载中...`
+  String get model_loading {
+    return Intl.message('模型加载中...', name: 'model_loading', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -283,5 +283,6 @@
   "beginner": "Beginner",
   "power_user": "Power User",
   "expert": "Expert",
-  "more_questions": "More Questions"
+  "more_questions": "More Questions",
+  "model_loading": "Model Loading..."
 }

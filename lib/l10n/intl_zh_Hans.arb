@@ -282,5 +282,6 @@
   "beginner": "新手模式",
   "power_user": "高级模式",
   "expert": "专家模式",
-  "more_questions": "更多问题"
+  "more_questions": "更多问题",
+  "model_loading": "模型加载中..."
 }
