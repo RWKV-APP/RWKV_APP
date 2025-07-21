@@ -7,8 +7,10 @@ import 'package:zone/page/home.dart';
 import 'package:zone/page/othello.dart';
 import 'package:zone/page/settings.dart';
 import 'package:zone/page/sudoku.dart';
+import 'package:zone/page/translator.dart';
 
 enum PageKey {
+  translator,
   chat,
   completion,
   conversation,
@@ -27,12 +29,21 @@ enum PageKey {
     PageKey.home => const PageHome(),
     PageKey.conversation => const PageConversation(),
     PageKey.settings => const PageSettings(),
+    PageKey.translator => const PageTranslator(),
   };
 
-  GoRoute get route => GoRoute(
-    path: path,
-    pageBuilder: (context, state) => _page(state),
-  );
+  //
+
+  GoRoute get route => switch (this) {
+    PageKey.translator => GoRoute(
+      path: path,
+      builder: (context, state) => scaffold,
+    ),
+    _ => GoRoute(
+      path: path,
+      pageBuilder: (context, state) => _page(state),
+    ),
+  };
 
   Page _page(GoRouterState state) {
     if (!{chat, completion}.contains(this)) {

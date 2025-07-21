@@ -14,6 +14,7 @@ import 'package:zone/router/method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/tts_group_item.dart';
@@ -74,9 +75,16 @@ class ModelSelector extends ConsumerWidget {
 
   List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
-    final availableModels = ref.watch(P.fileManager.availableModels);
+    var availableModels = ref.watch(P.fileManager.availableModels);
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
+    final pageKey = ref.watch(P.app.pageKey);
+
+    if (pageKey == PageKey.translator) {
+      availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
+    } else {
+      availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
+    }
 
     return switch (demoType) {
       DemoType.world => [

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 // ignore: unused_import
 import 'dart:developer';
@@ -26,8 +27,12 @@ import 'package:rwkv_downloader/downloader.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart' as from_rwkv;
 import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 import 'package:rxdart/rxdart.dart';
+import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
+import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/db/db.dart';
+import 'package:zone/model/browser_tab.dart';
+import 'package:zone/model/browser_window.dart';
 import 'package:zone/model/custom_theme.dart' as custom_theme;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -35,6 +40,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
@@ -71,6 +78,7 @@ import 'package:zone/widgets/pager.dart';
 
 part "adapter.dart";
 part "app.dart";
+part "backend.dart";
 part "chat.dart";
 part "conversation.dart";
 part "device.dart";
@@ -84,6 +92,7 @@ part "preference.dart";
 part "rwkv.dart";
 part "sudoku.dart";
 part "suggestion.dart";
+part "translator.dart";
 part "tts.dart";
 part "world.dart";
 
@@ -104,6 +113,8 @@ abstract class P {
   static final suggestion = _Suggestion();
   static final dump = _Dump();
   static final msg = _Msg();
+  static final backend = _Backend();
+  static final translator = _Translator();
 
   static FV init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -128,6 +139,8 @@ abstract class P {
       suggestion._init(),
       dump._init(),
       msg._init(),
+      backend._init(),
+      translator._init(),
     ]);
   }
 }

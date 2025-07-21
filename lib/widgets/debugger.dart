@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:zone/args.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,8 +18,16 @@ class Debugger extends ConsumerWidget {
     if (!Args.showHaloDebugger) return const SizedBox.shrink();
     if (!kDebugMode) return const SizedBox.shrink();
     final demoType = ref.watch(P.app.demoType);
+    final pageKey = ref.watch(P.app.pageKey);
 
     final qw = ref.watch(P.app.qw);
+
+    switch (pageKey) {
+      case PageKey.translator:
+        return const _TranslatorDebugger();
+      default:
+        break;
+    }
 
     switch (demoType) {
       case DemoType.sudoku:
@@ -65,7 +74,6 @@ class Debugger extends ConsumerWidget {
     final checkingLatency = ref.watch(P.guard.checkingLatency);
     final msgNode = ref.watch(P.msg.msgNode);
     final pool = ref.watch(P.msg.pool);
-    final pageKey = ref.watch(P.app.pageKey);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -157,6 +165,8 @@ class Debugger extends ConsumerWidget {
                       if (showConversation) ...[T("currentCreatedAtUS".codeToName), T(currentCreatedAtUS.toString())],
                       if (showMsgNode) ...[T("msgNode.createAtInUS".codeToName), T(msgNode.createAtInUS.toString())],
                       if (showPool) ...[T("pool".codeToName), T((pool.values.m((e) => e.id)).toString())],
+                      T("pageKey".codeToName),
+                      T(pageKey.toString()),
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
                     ].indexMap((index, e) {
@@ -341,6 +351,56 @@ class _TTSDebugger extends ConsumerWidget {
                       T(selectedInstruction.toString()),
                       T("recording".codeToName),
                       T(recording.toString()),
+                    ].indexMap((index, e) {
+                      return C(
+                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        decoration: BD(color: qb.q(.66)),
+                        child: e,
+                      );
+                    }),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TranslatorDebugger extends ConsumerWidget {
+  const _TranslatorDebugger();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final paddingTop = ref.watch(P.app.paddingTop);
+    final pageKey = ref.watch(P.app.pageKey);
+
+    return Positioned(
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      child: IgnorePointer(
+        child: Material(
+          textStyle: TS(
+            ff: "Monospace",
+            c: qw,
+            s: 8,
+          ),
+          color: kC,
+          child: SB(
+            child: C(
+              decoration: const BD(color: kC),
+              child: Column(
+                mainAxisAlignment: MAA.start,
+                crossAxisAlignment: CAA.end,
+                children:
+                    [
+                      paddingTop.h,
+                      T("pageKey".codeToName),
+                      T(pageKey.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

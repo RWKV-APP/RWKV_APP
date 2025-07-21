@@ -9,11 +9,14 @@ import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
+import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 
@@ -69,7 +72,8 @@ class ModelItem extends ConsumerWidget {
     }
 
     final modelSize = fileInfo.modelSize ?? 0.1;
-    if (modelSize < 1.5) {
+    final pageKey = P.app.pageKey.q;
+    if (modelSize < 1.5 && pageKey == PageKey.chat) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
@@ -95,6 +99,18 @@ class ModelItem extends ConsumerWidget {
     } catch (e) {
       Alert.error(e.toString());
       return;
+    }
+
+    final tags = fileInfo.tags;
+
+    if (tags.contains("translate")) {
+      P.rwkv.send(SetUserRole("English"));
+      P.rwkv.send(SetResponseRole("Chinese"));
+      await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "");
+      P.backend.start();
+    } else {
+      P.rwkv.send(SetUserRole("User"));
+      P.rwkv.send(SetResponseRole("Assistant"));
     }
 
     P.rwkv.currentModel.q = fileInfo;

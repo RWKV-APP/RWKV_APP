@@ -45,6 +45,7 @@ class PageHome extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final version = ref.watch(P.app.version);
+    final isDesktop = ref.watch(P.app.isDesktop);
 
     final width = MediaQuery.of(context).size.width;
 
@@ -53,6 +54,7 @@ class PageHome extends ConsumerWidget {
 
     return AppScaffold(
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
@@ -114,6 +116,16 @@ class PageHome extends ConsumerWidget {
                             color: Colors.lightGreen,
                             icon: FontAwesomeIcons.feather,
                           ),
+                          if (isDesktop)
+                            buildButton(
+                              title: "离线翻译",
+                              subtitle: "离线翻译文本",
+                              onTap: () {
+                                push(PageKey.translator);
+                              },
+                              color: Colors.blue,
+                              icon: Icons.translate,
+                            ),
                         ]
                         .map(
                           (e) => ConstrainedBox(

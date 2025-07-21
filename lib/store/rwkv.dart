@@ -502,11 +502,13 @@ extension $RWKV on _RWKV {
     send(to_rwkv.SetAudioPrompt(path));
   }
 
-  FV sendMessages(List<String> messages) async {
+  FV sendMessages(
+    List<String> messages, {
+    double getIsGeneratingRate = .5,
+    double getResponseBufferContentRate = .5,
+  }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
-
-    qqq("message lengths: ${messages.m((e) => e.length)}");
 
     final sendPort = _sendPort;
 
@@ -521,9 +523,9 @@ extension $RWKV on _RWKV {
     }
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferContent());
-      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
-      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
+      send(to_rwkv.GetResponseBufferContent(messages));
+      if (HF.randomBool(truePercentage: getIsGeneratingRate)) send(to_rwkv.GetIsGenerating());
+      if (HF.randomBool(truePercentage: getResponseBufferContentRate)) send(to_rwkv.GetPrefillAndDecodeSpeed());
     });
   }
 
@@ -550,7 +552,7 @@ extension $RWKV on _RWKV {
     });
   }
 
-  /// 直接在 ffi+cpp 线程中进行推理工作
+  /// 直接在 ffi+cpp 线程中进行推理工作, 也就是说, 会让 ffi 线程不接受任何新的 event
   FV generate(String prompt) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -634,18 +636,20 @@ extension $RWKV on _RWKV {
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferChinese,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferPseudo,
     bool setPrompt = true,
+    String? prompt,
   }) async {
     qqr(thinkingMode);
     _thinkingMode.q = thinkingMode ?? const thinking_mode.Lighting();
 
     final finalPrompt = switch (_thinkingMode) {
-      thinking_mode.PreferChinese() => Config.promptCN,
-      _ => Config.prompt,
+      thinking_mode.PreferChinese() => prompt ?? Config.promptCN,
+      _ => prompt ?? Config.prompt,
     };
 
     if (setPrompt) {
-      qqq("setPrompt: $finalPrompt");
-      send(to_rwkv.SetPrompt(_thinkingMode.q.hasThinkTag ? "<EOD>" : finalPrompt));
+      final prompt = _thinkingMode.q.hasThinkTag ? "<EOD>" : finalPrompt;
+      send(to_rwkv.SetPrompt(prompt));
+      qqw("setPrompt: $prompt");
     }
 
     switch (_thinkingMode.q) {

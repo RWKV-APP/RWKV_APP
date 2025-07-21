@@ -38,7 +38,7 @@ enum DemoType {
   };
 
   List<DeviceOrientation>? get mobileOrientations => switch (this) {
-    _ => [DeviceOrientation.portraitUp],
+    _ => null,
   };
 
   List<DeviceOrientation>? get desktopOrientations => switch (this) {
