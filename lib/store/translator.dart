@@ -84,7 +84,7 @@ extension _$Translator on _Translator {
 
     await _loadTranslationsFromFile();
 
-    _taskCheckingTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    _taskCheckingTimer = Timer.periodic(Duration(milliseconds: 200), (timer) {
       _checkTask();
     });
   }
@@ -96,6 +96,7 @@ extension _$Translator on _Translator {
     if (!wsRunning) return;
     final httpRunning = P.backend.httpState.q == BackendState.running;
     if (!httpRunning) return;
+
     final isGenerating = this.isGenerating.q;
     if (isGenerating) return;
     await HF.wait(100);
@@ -274,6 +275,15 @@ extension _$Translator on _Translator {
 
   String? _selectNextTaskKey() {
     final activedTab = this.activedTab.q;
+    final latestTabs = this.latestTabs.q;
+    final browserTabs = this.browserTabs.q;
+
+    if (browserTabs.isEmpty) {
+      runningTaskUrl.q = null;
+      runningTaskTabId.q = null;
+      return null;
+    }
+
     if (activedTab != null) {
       final pool = this.pool(activedTab).q;
       if (pool.isNotEmpty) {
@@ -285,7 +295,6 @@ extension _$Translator on _Translator {
       }
     }
 
-    final latestTabs = this.latestTabs.q;
     for (final entry in latestTabs.entries) {
       final tab = entry.value;
       final pool = this.pool(tab).q;
@@ -298,7 +307,6 @@ extension _$Translator on _Translator {
       }
     }
 
-    final browserTabs = this.browserTabs.q;
     for (final tab in browserTabs) {
       final pool = this.pool(tab).q;
       if (pool.isNotEmpty) {
