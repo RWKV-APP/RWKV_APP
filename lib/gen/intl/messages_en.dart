@@ -293,6 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
+    "more_questions": MessageLookupByLibrary.simpleMessage("More Questions"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
     "neko": MessageLookupByLibrary.simpleMessage("Neko"),
     "network_error": MessageLookupByLibrary.simpleMessage("Network Error"),

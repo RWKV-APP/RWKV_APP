@@ -167,6 +167,19 @@ class ConversationItem extends ConsumerWidget {
             ],
           ),
         ),
+        const PopupMenuDivider(indent: 8, endIndent: 8),
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: [
+              const Icon(Icons.delete_outline),
+              const SB(
+                width: 8,
+              ),
+              Text(s.delete_conversation),
+            ],
+          ),
+        ),
       ],
       elevation: 8.0,
     );

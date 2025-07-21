@@ -56,7 +56,15 @@ class _PageChatState extends State<PageChat> {
 
   @override
   Widget build(BuildContext context) {
-    return const _Page();
+    return PopScope(
+      child: const _Page(),
+      onPopInvokedWithResult: (pop, c) async {
+        if (pop) {
+          P.chat.isSharing.q = false;
+          P.chat.onStopButtonPressed();
+        }
+      },
+    );
   }
 }
 
@@ -65,26 +73,9 @@ class _Page extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final completionMode = ref.watch(P.chat.completionMode);
     final selectMessageMode = ref.watch(P.chat.isSharing);
     final atMainPage = ref.watch(Pager.atMainPage);
     final demoType = ref.watch(P.app.demoType);
-
-    if (completionMode) {
-      final qb = ref.watch(P.app.qb);
-      return Scaffold(
-        resizeToAvoidBottomInset: atMainPage,
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const ChatAppBar(),
-            Divider(color: qb.q(.1), thickness: .5),
-            const Expanded(child: Completion()),
-          ],
-        ),
-      );
-    }
 
     return Scaffold(
       resizeToAvoidBottomInset: atMainPage,

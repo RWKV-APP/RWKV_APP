@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/suggestions.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -171,41 +172,62 @@ class _EmptyV2 extends ConsumerWidget {
           12.h,
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Material(
+            child: buildSuggestion(item),
+          ),
+        ],
+        if (suggestions.isNotEmpty) 12.h,
+        if (suggestions.isNotEmpty)
+          Material(
+            borderRadius: 60.r,
+            child: InkWell(
               borderRadius: 60.r,
-              child: InkWell(
-                borderRadius: 60.r,
-                onTap: () => onTap(item),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: 10,
-                        width: 10,
-                        decoration: BoxDecoration(
-                          color: _rndColor(),
-                          borderRadius: 60.r,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        child: Text(
-                          item is Suggestion ? item.display : item.toString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
+              onTap: () => AllSuggestionDialog.show(context),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                child: Text(
+                  S.current.more_questions,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
           ),
-        ],
         16.h,
       ],
+    );
+  }
+
+  Widget buildSuggestion(dynamic item) {
+    return Material(
+      borderRadius: 60.r,
+      child: InkWell(
+        borderRadius: 60.r,
+        onTap: () => onTap(item),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 10,
+                width: 10,
+                decoration: BoxDecoration(
+                  color: _rndColor(),
+                  borderRadius: 60.r,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  item is Suggestion ? item.display : item.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

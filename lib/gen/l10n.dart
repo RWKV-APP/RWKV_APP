@@ -1997,6 +1997,11 @@ class S {
   String get expert {
     return Intl.message('专家模式', name: 'expert', desc: '', args: []);
   }
+
+  /// `更多问题`
+  String get more_questions {
+    return Intl.message('更多问题', name: 'more_questions', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

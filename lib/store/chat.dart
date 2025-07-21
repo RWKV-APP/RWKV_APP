@@ -368,6 +368,9 @@ extension $Chat on _Chat {
       qqw("message id is null");
       return;
     }
+    if (!receivingTokens.q) {
+      return;
+    }
     _pauseMessageById(id: id);
   }
 
@@ -412,7 +415,6 @@ extension _$Chat on _Chat {
         .whereType<from_rwkv.ResponseBufferContent>()
         .where((e) => P.msg.list.q.length <= 2)
         .throttleTime(Duration(milliseconds: 500), trailing: true, leading: true)
-        .take(10)
         .listen((e) {
           final r = e.responseBufferContent.replaceAll('\n', '').replaceAll('</think>', '').replaceAll('<think>', '');
           P.conversation.updateCurrentConvSubtitle(r);

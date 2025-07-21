@@ -282,5 +282,6 @@
   "str_please_select_app_mode_": "Choose an app mode according to your familiarity with AI and LLMs.",
   "beginner": "Beginner",
   "power_user": "Power User",
-  "expert": "Expert"
+  "expert": "Expert",
+  "more_questions": "More Questions"
 }

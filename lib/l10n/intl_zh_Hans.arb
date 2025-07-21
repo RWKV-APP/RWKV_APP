@@ -281,5 +281,6 @@
   "str_please_select_app_mode_": "请根据你对 AI 和 LLM 的了解程度选择应用模式.",
   "beginner": "新手模式",
   "power_user": "高级模式",
-  "expert": "专家模式"
+  "expert": "专家模式",
+  "more_questions": "更多问题"
 }

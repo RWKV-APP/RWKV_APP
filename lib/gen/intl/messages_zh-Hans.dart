@@ -232,6 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
+    "more_questions": MessageLookupByLibrary.simpleMessage("更多问题"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),
     "neko": MessageLookupByLibrary.simpleMessage("猫娘陪聊"),
     "network_error": MessageLookupByLibrary.simpleMessage("网络错误"),
