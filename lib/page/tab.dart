@@ -17,7 +17,6 @@ class PageTab extends StatefulWidget {
 
 class _PageTabState extends State<PageTab> {
   int _selectedIndex = 0;
-  late final theme = Theme.of(context);
 
   void _onTabSelected(int index) async {
     _selectedIndex = index;
@@ -96,7 +95,11 @@ class _PageTabState extends State<PageTab> {
   }
 
   Widget buildItem(String label, IconData icon, int index) {
-    final color = _selectedIndex == index ? theme.primaryColor : Colors.grey;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final color = _selectedIndex == index
+        ? (isDark ? Colors.grey.shade400 : theme.primaryColor) //
+        : (isDark ? Colors.grey.shade800 : Colors.grey);
     return InkWell(
       onTap: () => _onTabSelected(index),
       borderRadius: BorderRadius.circular(100),
