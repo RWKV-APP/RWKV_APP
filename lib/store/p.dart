@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
 // ignore: unused_import
 import 'dart:developer';
@@ -74,7 +73,6 @@ import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/widgets/app_update_dialog.dart' show AppUpdateDialog;
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/widgets/pager.dart';
 
 part "adapter.dart";
 part "app.dart";

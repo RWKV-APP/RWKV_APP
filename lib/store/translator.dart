@@ -84,7 +84,7 @@ extension _$Translator on _Translator {
 
     await _loadTranslationsFromFile();
 
-    _taskCheckingTimer = Timer.periodic(Duration(milliseconds: 200), (timer) {
+    _taskCheckingTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       _checkTask();
     });
   }
@@ -436,7 +436,7 @@ extension $Translator on _Translator {
     final runningTaskKey = this.runningTaskKey.q;
     final translations = this.translations.q;
     final browserTabs = this.browserTabs.q;
-    final activeBrowserTab = this.activedTab.q;
+    final activeBrowserTab = activedTab.q;
     final pools = browserTabs.map((tab) => pool(tab).q).where((pool) => pool.isNotEmpty).toList();
 
     debugger();

@@ -21,7 +21,7 @@ enum DemoType {
   world;
 
   Color get seedColor => switch (this) {
-    DemoType.chat => Color(0xFF365FD9),
+    DemoType.chat => const Color(0xFF365FD9),
     DemoType.tts => Colors.green,
     DemoType.world => Colors.blue,
     DemoType.fifthteenPuzzle => Colors.blue,

@@ -74,13 +74,13 @@ class PageHome extends ConsumerWidget {
             const SizedBox(height: 24),
             Text(
               S.of(context).welcome_to_rwkv_chat,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               "v$version",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 100),
@@ -156,7 +156,7 @@ class PageHome extends ConsumerWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -174,9 +174,9 @@ class PageHome extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),
@@ -189,7 +189,7 @@ class PageHome extends ConsumerWidget {
 class _ModelLoadingDialog extends StatefulWidget {
   final FileInfo file;
 
-  const _ModelLoadingDialog({super.key, required this.file});
+  const _ModelLoadingDialog({required this.file});
 
   static Future<bool> show(BuildContext context, FileInfo file) async {
     final r = await showDialog(
@@ -226,11 +226,11 @@ class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
       child: Material(
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 36, vertical: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
+              const CircularProgressIndicator(),
               const SizedBox(height: 16),
               Text(S.current.model_loading),
             ],

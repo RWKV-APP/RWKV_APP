@@ -25,11 +25,11 @@ class ModelSelectButton extends ConsumerWidget {
           ModelSelector.show();
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(modelDisplay, style: TextStyle(color: Colors.grey, fontSize: 10, height: 1)),
+              Text(modelDisplay, style: const TextStyle(color: Colors.grey, fontSize: 10, height: 1)),
               const SizedBox(width: 6),
               SizedBox(
                 height: 5,

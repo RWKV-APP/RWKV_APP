@@ -70,18 +70,18 @@ class _PageTabState extends State<PageTab> {
           labelType: NavigationRailLabelType.all,
           destinations: <NavigationRailDestination>[
             NavigationRailDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: const Icon(Icons.home),
               label: Text(S.of(context).home),
             ),
             NavigationRailDestination(
-              icon: Icon(Icons.chat_bubble_outline),
-              selectedIcon: Icon(Icons.chat_bubble),
+              icon: const Icon(Icons.chat_bubble_outline),
+              selectedIcon: const Icon(Icons.chat_bubble),
               label: Text(S.of(context).conversations),
             ),
             NavigationRailDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings_outlined),
+              selectedIcon: const Icon(Icons.settings),
               label: Text(S.of(context).settings),
             ),
           ],

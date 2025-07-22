@@ -39,12 +39,12 @@ class AppGradientBackground extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: isDark
                     ? [
-                        Color(0xFF152D57),
-                        Color(0xFF0B1528),
+                        const Color(0xFF152D57),
+                        const Color(0xFF0B1528),
                       ]
                     : [
-                        Color(0xFFF0F4FC),
-                        Color(0xFFD6E3F8),
+                        const Color(0xFFF0F4FC),
+                        const Color(0xFFD6E3F8),
                       ],
               ),
       ),

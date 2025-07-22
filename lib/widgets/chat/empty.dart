@@ -60,7 +60,7 @@ class Empty extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 90),
-                      Flexible(
+                      const Flexible(
                         child: SingleChildScrollView(
                           child: _EmptyV2(),
                         ),
@@ -85,14 +85,14 @@ class Empty extends ConsumerWidget {
                         children: [
                           Opacity(
                             opacity: 0.0,
-                            child: T(version, s: TS(s: 10)),
+                            child: T(version, s: const TS(s: 10)),
                           ),
                           T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
                           Opacity(
                             opacity: 0.5,
                             child: Padding(
-                              padding: EI.o(b: 4),
-                              child: T(version, s: TS(s: 10)),
+                              padding: const EI.o(b: 4),
+                              child: T(version, s: const TS(s: 10)),
                             ),
                           ),
                         ],
@@ -164,14 +164,14 @@ class _EmptyV2 extends ConsumerWidget {
         16.h,
         Text(
           S.of(context).hello_ask_me_anything,
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         36.h,
         for (final item in suggestions) ...[
           12.h,
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: buildSuggestion(item),
           ),
         ],
@@ -183,7 +183,7 @@ class _EmptyV2 extends ConsumerWidget {
               borderRadius: 60.r,
               onTap: () => AllSuggestionDialog.show(context),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
                 child: Text(
                   S.current.more_questions,
                   maxLines: 1,
@@ -204,7 +204,7 @@ class _EmptyV2 extends ConsumerWidget {
         borderRadius: 60.r,
         onTap: () => onTap(item),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

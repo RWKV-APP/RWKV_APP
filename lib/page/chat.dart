@@ -14,7 +14,6 @@ import 'package:zone/widgets/chat/app_bar.dart';
 import 'package:zone/widgets/chat/audio_empty.dart';
 import 'package:zone/widgets/chat/audio_input.dart';
 import 'package:zone/widgets/chat/bottom_bar.dart';
-import 'package:zone/widgets/chat/completion_mode.dart';
 import 'package:zone/widgets/chat/empty.dart';
 import 'package:zone/widgets/chat/message.dart';
 import 'package:zone/widgets/chat/share_chat.dart';
@@ -81,7 +80,7 @@ class _Page extends ConsumerWidget {
       resizeToAvoidBottomInset: atMainPage,
       body: Stack(
         children: [
-          if (DemoType.chat == demoType) AppGradientBackground(child: SizedBox()),
+          if (DemoType.chat == demoType) const AppGradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
           const VisualEmpty(),

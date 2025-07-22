@@ -59,7 +59,7 @@ enum PageKey {
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return SlideTransition(
           position: Tween<Offset>(
-            begin: Offset(1.0, 0.0),
+            begin: const Offset(1.0, 0.0),
             end: Offset.zero,
           ).animate(animation),
           child: child,

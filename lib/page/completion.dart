@@ -21,9 +21,9 @@ class CompletionPage extends ConsumerWidget {
       appBar: AppBar(
         title: Column(
           children: [
-            Text(S.current.completion_mode, style: TextStyle(fontSize: 18)),
+            Text(S.current.completion_mode, style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 4),
-            ModelSelectButton(),
+            const ModelSelectButton(),
           ],
         ),
         centerTitle: true,
@@ -39,7 +39,7 @@ class CompletionPage extends ConsumerWidget {
         ],
       ),
       body: PopScope(
-        child: Completion(),
+        child: const Completion(),
         onPopInvokedWithResult: (pop, _) {
           if (pop & P.chat.receivingTokens.q) {
             P.rwkv.stop();

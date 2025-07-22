@@ -111,13 +111,13 @@ class ChatAppBar extends ConsumerWidget {
                   crossAxisAlignment: CAA.end,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    T(
+                    const T(
                       Config.appTitle,
                       s: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     T(
                       ' $version',
-                      s: TS(s: 8),
+                      s: const TS(s: 8),
                     ),
                   ],
                 ),
@@ -127,17 +127,17 @@ class ChatAppBar extends ConsumerWidget {
                     children: [
                       TextSpan(
                         text: version,
-                        style: TS(s: 10, c: kC),
+                        style: const TS(s: 10, c: kC),
                       ),
-                      TextSpan(text: Config.appTitle, style: TS(s: 18)),
+                      const TextSpan(text: Config.appTitle, style: TS(s: 18)),
                       TextSpan(
                         text: ' $version',
-                        style: TS(s: 8),
+                        style: const TS(s: 8),
                       ),
                     ],
                   ),
                 ),
-              if (isChat) ModelSelectButton(),
+              if (isChat) const ModelSelectButton(),
               if (!isChat)
                 C(
                   padding: const EI.o(l: 4, r: 4, t: 1, b: 1),

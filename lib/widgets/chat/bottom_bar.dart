@@ -33,7 +33,7 @@ class BottomBar extends ConsumerWidget {
         P.chat.inputHeight.q = size.height;
       },
       child: ClipRRect(
-        borderRadius: !isChat ? BorderRadius.zero : BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: !isChat ? BorderRadius.zero : const BorderRadius.vertical(top: Radius.circular(16)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: C(
@@ -161,7 +161,7 @@ class _TextField extends ConsumerWidget {
                   borderSide: BorderSide(color: primary.q(.33)),
                 ),
           hintText: hintText,
-          hintStyle: !isChat ? null : TextStyle(color: Colors.grey),
+          hintStyle: !isChat ? null : const TextStyle(color: Colors.grey),
           suffixIcon: textInInput.isEmpty || isChat
               ? null
               : GD(

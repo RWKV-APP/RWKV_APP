@@ -124,7 +124,7 @@ class Settings extends ConsumerWidget {
           ),
           controller: scrollController,
           children: [
-            if (isChat) SizedBox(height: 40),
+            if (isChat) const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MAA.center,
               children: [iconWidget],

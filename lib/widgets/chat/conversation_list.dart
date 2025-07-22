@@ -1,7 +1,6 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,7 +13,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/pager.dart';
 
 class ConversationList extends ConsumerWidget {
   const ConversationList({super.key});
@@ -233,19 +231,19 @@ class ConversationItem extends ConsumerWidget {
         child: InkWell(
           onTap: _onTap,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: Container(
-                    margin: EdgeInsets.only(top: 4),
-                    padding: EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: color,
                       borderRadius: BorderRadius.circular(100),
                     ),
-                    child: FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white),
+                    child: const FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -261,7 +259,7 @@ class ConversationItem extends ConsumerWidget {
                       4.h,
                       T(
                         conversation.subtitle ?? '-',
-                        s: TS(s: 12, c: Colors.grey),
+                        s: const TS(s: 12, c: Colors.grey),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       ),
@@ -269,7 +267,7 @@ class ConversationItem extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Text(getDisplayTime(conversation.createdAtUS), style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(getDisplayTime(conversation.createdAtUS), style: const TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
           ),

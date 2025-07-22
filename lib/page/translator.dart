@@ -26,7 +26,7 @@ class PageTranslator extends ConsumerWidget {
         ],
       ),
       body: ListView(
-        children: [
+        children: const [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,14 +34,14 @@ class PageTranslator extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const _InferenceInfo(),
-                    const _ServiceInfo(),
-                    const _TranslatiorInfo(),
+                    _InferenceInfo(),
+                    _ServiceInfo(),
+                    _TranslatiorInfo(),
                   ],
                 ),
               ),
               Expanded(
-                child: const _BrowserInfo(),
+                child: _BrowserInfo(),
               ),
             ],
           ),
@@ -127,13 +127,13 @@ class _ServiceInfo extends ConsumerWidget {
           if (backendState != BackendState.running)
             TextButton(
               onPressed: _onPressBackend,
-              child: Text("启动"),
+              child: const Text("启动"),
             ),
           Text("WebSocket 服务 (端口号: $websocketPort): ${websocketState.name}"),
           if (websocketState != BackendState.running)
             TextButton(
               onPressed: _onPressWebsocket,
-              child: Text("启动"),
+              child: const Text("启动"),
             ),
           Text("WebSocket 消息接收数量: $websocketReceivedCount"),
           Text("WebSocket 消息发送数量: $websocketSentCount"),
@@ -256,13 +256,13 @@ class _BrowserTab extends ConsumerWidget {
     return DefaultTextStyle(
       style: TextStyle(fontSize: 10, color: qb.q(.5)),
       child: C(
-        constraints: BoxConstraints(maxWidth: 180, minWidth: 120),
+        constraints: const BoxConstraints(maxWidth: 180, minWidth: 120),
         decoration: BD(
           color: qb.q(0.1),
           border: border,
           borderRadius: 4.r,
         ),
-        padding: EI.o(t: 5, l: 6, b: 5, r: 6),
+        padding: const EI.o(t: 5, l: 6, b: 5, r: 6),
         child: Stack(
           children: [
             Column(
@@ -374,15 +374,15 @@ class _TranslatiorInfo extends ConsumerWidget {
             child: Text("清除内存缓存", style: TextStyle(color: kCR.q(1))),
           ),
           8.h,
-          Text("翻译状态 / 测试"),
+          const Text("翻译状态 / 测试"),
           4.h,
           Row(
             children: [
-              Expanded(
+              const Expanded(
                 child: _Source(),
               ),
               8.w,
-              Expanded(
+              const Expanded(
                 child: _Result(),
               ),
             ],
@@ -404,7 +404,7 @@ class _Source extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return C(
-      decoration: BD(color: kC),
+      decoration: const BD(color: kC),
       child: TextField(
         minLines: 1,
         maxLines: 8,
@@ -423,7 +423,7 @@ class _Result extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return C(
-      decoration: BD(color: kC),
+      decoration: const BD(color: kC),
       child: TextField(
         minLines: 1,
         maxLines: 8,
@@ -470,7 +470,7 @@ class _InferenceInfo extends ConsumerWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text("当前模型: ${currentModel?.name}"),
-              Text("请选择模型"),
+              const Text("请选择模型"),
               TextButton(
                 onPressed: () => ModelSelector.show(),
                 child: const Text("选择不同模型"),

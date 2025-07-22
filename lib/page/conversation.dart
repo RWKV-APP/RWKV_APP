@@ -64,16 +64,16 @@ class _PageConversationState extends ConsumerState<PageConversation> {
                   await P.chat.startNewChat();
                   push(PageKey.chat);
                 },
-                icon: FaIcon(FontAwesomeIcons.squarePlus),
+                icon: const FaIcon(FontAwesomeIcons.squarePlus),
               ),
             ],
           ),
 
-          if (isEmpty) Expanded(child: _Empty()),
+          if (isEmpty) const Expanded(child: _Empty()),
           if (!isEmpty)
             Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.only(bottom: 60),
+                padding: const EdgeInsets.only(bottom: 60),
                 itemCount: conversations.length,
                 itemBuilder: (context, index) {
                   final conversation = conversations[index % conversations.length];
@@ -92,14 +92,14 @@ class _PageConversationState extends ConsumerState<PageConversation> {
         borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(top: 8, left: 12, right: 12),
+      margin: const EdgeInsets.only(top: 8, left: 12, right: 12),
       child: Dismissible(
         key: Key(conversation.createdAtUS.toString()),
         background: Container(
           color: Colors.redAccent,
           padding: const EdgeInsets.only(right: 24),
           alignment: Alignment.centerRight,
-          child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
+          child: const FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
         ),
         direction: DismissDirection.endToStart,
         confirmDismiss: (d) async {
@@ -137,13 +137,13 @@ class _Empty extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Text('No Conversations Yet', style: TextStyle(fontSize: 16)),
+        const Text('No Conversations Yet', style: TextStyle(fontSize: 16)),
         16.h,
         FilledButton.icon(
           onPressed: _onPressed,
-          label: Text('New Conversation'),
-          icon: FaIcon(FontAwesomeIcons.plus),
-          style: ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16, vertical: 12))),
+          label: const Text('New Conversation'),
+          icon: const FaIcon(FontAwesomeIcons.plus),
+          style: const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16, vertical: 12))),
         ),
       ],
     );
