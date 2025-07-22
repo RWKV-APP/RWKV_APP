@@ -105,9 +105,6 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(schema.msg, schema.msg.reference);
         },
         from2To3: (m, schema) async {
-          if (schema.conv.columnsByName.containsKey('subtitle')) {
-            return;
-          }
           await m.addColumn(schema.conv, schema.conv.subtitle);
         },
       ),
@@ -115,6 +112,7 @@ class AppDatabase extends _$AppDatabase {
         if (!details.hadUpgrade) {
           return;
         }
+        qqq('check');
         if (details.versionNow == 3) {
           final conversations = await select(conversation).get();
           for (final conv in conversations) {

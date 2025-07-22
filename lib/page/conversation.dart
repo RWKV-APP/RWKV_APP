@@ -25,6 +25,9 @@ class _PageConversationState extends ConsumerState<PageConversation> {
   @override
   void initState() {
     super.initState();
+
+    P.conversation.load();
+
     controller.addListener(() {
       final offset = controller.offset;
       final alpha = offset.clamp(0, 255).toInt();
