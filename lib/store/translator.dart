@@ -69,6 +69,7 @@ class _Translator {
 /// Private methods
 extension _$Translator on _Translator {
   FV _init() async {
+    if (!P.app.isDesktop.q) return;
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     source.l(_onTextChanged);
     result.l(_onResultChanged);
