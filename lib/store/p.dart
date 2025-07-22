@@ -116,29 +116,48 @@ abstract class P {
 
   static FV init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await preference._init();
-    await app._init();
+
+    try {
+      await preference._init();
+    } catch (e) {
+      qqe('Error initializing preference: $e');
+    }
+
+    try {
+      await app._init();
+    } catch (e) {
+      qqe('Error initializing app: $e');
+    }
+
     await _unorderedInit();
   }
 
   static FV _unorderedInit() async {
     await Future.wait([
-      rwkv._init(),
-      chat._init(),
-      othello._init(),
-      fileManager._init(),
-      device._init(),
-      adapter._init(),
-      world._init(),
-      conversation._init(),
-      tts._init(),
-      guard._init(),
-      sudoku._init(),
-      suggestion._init(),
-      dump._init(),
-      msg._init(),
-      backend._init(),
-      translator._init(),
+      _safeInit(() => rwkv._init(), 'rwkv'),
+      _safeInit(() => chat._init(), 'chat'),
+      _safeInit(() => othello._init(), 'othello'),
+      _safeInit(() => fileManager._init(), 'fileManager'),
+      _safeInit(() => device._init(), 'device'),
+      _safeInit(() => adapter._init(), 'adapter'),
+      _safeInit(() => world._init(), 'world'),
+      _safeInit(() => conversation._init(), 'conversation'),
+      _safeInit(() => tts._init(), 'tts'),
+      _safeInit(() => guard._init(), 'guard'),
+      _safeInit(() => sudoku._init(), 'sudoku'),
+      _safeInit(() => suggestion._init(), 'suggestion'),
+      _safeInit(() => dump._init(), 'dump'),
+      _safeInit(() => msg._init(), 'msg'),
+      _safeInit(() => backend._init(), 'backend'),
+      _safeInit(() => translator._init(), 'translator'),
     ]);
+  }
+
+  static Future<void> _safeInit(Future<void> Function() initFunc, String name) async {
+    try {
+      await initFunc();
+    } catch (e) {
+      qqe('Error initializing $name: $e');
+    }
   }
 }
