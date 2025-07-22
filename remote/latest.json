@@ -712,6 +712,19 @@
         "socLimitations": ["8 Gen 3"]
       },
       {
+        "name": "RWKV7 SparkTTS 0.4B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
+        "type": "gguf",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/respark-0.4B-210ksteps-a16w8-8gen3_combined.bin",
+        "fileName": "respark-0.4B-210ksteps-a16w8-8gen3_combined.bin",
+        "fileSize": 501238632,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Gen 3"]
+      },
+      {
         "name": "RWKV7 TTS 0.4B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
         "type": "gguf",
         "modelSize": 0.4,
