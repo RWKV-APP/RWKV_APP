@@ -317,7 +317,7 @@ class Message extends ConsumerWidget {
         child: C(
           padding: padding,
           decoration: BD(
-            color: isMine ? primaryContainer : (isChat ? Colors.white : null),
+            color: isMine ? primaryContainer : (isChat ? Theme.of(context).colorScheme.surface : null),
             border: border,
             borderRadius: borderRadius,
           ),

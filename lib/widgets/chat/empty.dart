@@ -181,7 +181,10 @@ class _EmptyV2 extends ConsumerWidget {
             borderRadius: 60.r,
             child: InkWell(
               borderRadius: 60.r,
-              onTap: () => AllSuggestionDialog.show(context),
+              onTap: () async {
+                final suggestion = await AllSuggestionDialog.show(context);
+                if (suggestion != null) onTap(suggestion);
+              },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
                 child: Text(
