@@ -503,6 +503,7 @@ outputWavPath: $outputWavPath""");
     textEditingController.text = instruction;
   }
 
+  @Deprecated("Use sparktts instead")
   FV setTTSCFMSteps(int steps) async {
     qq;
     cfmSteps.q = steps;

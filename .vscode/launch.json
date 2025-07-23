@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+    
     {
       "name": "debug",
       "request": "launch",
@@ -18,7 +19,7 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        // "--dart-define=disableRemoteConfig=true",
+        "--dart-define=disableRemoteConfig=true",
         // "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true"
         // "--dart-define=nativeSplashPreserveDurationInMS=9999999"

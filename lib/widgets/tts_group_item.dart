@@ -71,6 +71,32 @@ class TTSGroupItem extends ConsumerWidget {
     final modelLocalFile = P.fileManager.locals(fileInfo).q;
     final localWav2vec2File = P.fileManager.locals(wav2vec2FileKey).q;
     final localDetokenizeFile = P.fileManager.locals(detokenizeFileKey).q;
+    final localTokenizeFile = P.fileManager.locals(tokenizeFileKey).q;
+
+    P.rwkv.clearStates();
+    P.chat.clearMessages();
+
+    try {
+      await P.rwkv.loadSparkTTS(
+        modelPath: modelLocalFile.targetPath,
+        backend: fileInfo.backend!,
+        wav2vec2Path: localWav2vec2File.targetPath,
+        detokenizePath: localDetokenizeFile.targetPath,
+        tokenizePath: localTokenizeFile.targetPath,
+      );
+      P.tts.getTTSSpkNames();
+      Navigator.pop(getContext()!);
+    } catch (e) {
+      qqe("$e");
+      Alert.error(e.toString());
+      P.rwkv.currentGroupInfo.q = null;
+      return;
+    }
+
+    P.rwkv.currentGroupInfo.q = GroupInfo(displayName: fileInfo.name);
+    P.rwkv.currentModel.q = fileInfo;
+    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    pop();
   }
 
   void _onStartToChatTap() async {

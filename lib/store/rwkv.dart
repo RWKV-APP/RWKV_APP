@@ -212,10 +212,76 @@ extension $RWKVLoad on _RWKV {
     required String wav2vec2Path,
     required String detokenizePath,
     required String tokenizePath,
+    required Backend backend,
   }) async {
-    // TODO: Implement
+    qq;
+    _loading.q = true;
+    prefillSpeed.q = 0;
+    decodeSpeed.q = 0;
+
+    final tokenizerPath = await fromAssetsToTemp("assets/config/tts/b_rwkv_vocab_v20230424_sparktts.txt");
+    await _ensureQNNCopied();
+    final rootIsolateToken = RootIsolateToken.instance;
+
+    if (_sendPort != null) {
+      try {
+        send(to_rwkv.ReleaseTTSModels());
+        final startMS = HF.milliseconds;
+        await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
+        final endMS = HF.milliseconds;
+        qqr("initRuntime done in ${endMS - startMS}ms");
+      } catch (e) {
+        qqe("initRuntime failed: $e");
+        if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
+        Alert.error("Failed to load model: $e");
+        return;
+      }
+    } else {
+      final options = StartOptions(
+        modelPath: modelPath,
+        tokenizerPath: tokenizerPath,
+        backend: backend,
+        sendPort: _receivePort.sendPort,
+        rootIsolateToken: rootIsolateToken!,
+        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
+      );
+      await RWKVMobile().runIsolate(options);
+    }
+
+    while (_sendPort == null) {
+      qqq("waiting for sendPort...");
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+
+    if (_ttsPerformanceTimer != null) {
+      _ttsPerformanceTimer!.cancel();
+      _ttsPerformanceTimer = null;
+    }
+
+    _ttsPerformanceTimer = Timer.periodic(225.ms, (timer) async {
+      send(to_rwkv.GetPrefillAndDecodeSpeed());
+    });
+
+    send(
+      to_rwkv.LoadSparkTTSModels(
+        wav2vec2Path: wav2vec2Path,
+        bicodecTokenizerPath: tokenizerPath,
+        bicodecDetokenizerPath: detokenizePath,
+      ),
+    );
+
+    final ttsTextNormalizerDatePath = await fromAssetsToTemp("assets/config/tts/date-zh.fst");
+    final ttsTextNormalizerNumberPath = await fromAssetsToTemp("assets/config/tts/number-zh.fst");
+    final ttsTextNormalizerPhonePath = await fromAssetsToTemp("assets/config/tts/phone-zh.fst");
+    // note: order matters here
+    send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerDatePath));
+    send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
+    send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerNumberPath));
+
+    _loading.q = false;
   }
 
+  @Deprecated("Use loadSparkTTS instead")
   FV loadTTSModels({
     required String modelPath,
     required Backend backend,
