@@ -721,7 +721,7 @@
         "quantization": "a16w8",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["npu", "core"],
+        "tags": ["npu", "core", "spark"],
         "socLimitations": ["8 Gen 3"]
       },
       {
@@ -846,6 +846,27 @@
         "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["mnn"],
         "tags": ["speech.tokenizer"]
+      },
+      {
+        "name": "wav2vec2-large-xlsr-53.mnn",
+        "type": "mnn",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/wav2vec2-large-xlsr-53.mnn",
+        "fileSize": 858931436,
+        "tags": ["spark", "wav2vec2"]
+      },
+      {
+        "name": "BiCodecDetokenize.mnn",
+        "type": "mnn",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/BiCodecDetokenize.mnn",
+        "fileSize": 193038036,
+        "tags": ["spark", "detokenize"]
+      },
+      {
+        "name": "BiCodecTokenize.mnn",
+        "type": "mnn",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/BiCodecTokenize.mnn",
+        "fileSize": 146010460,
+        "tags": ["spark", "tokenize"]
       }
     ]
   },

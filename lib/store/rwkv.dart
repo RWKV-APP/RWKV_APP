@@ -207,6 +207,15 @@ extension $RWKVLoad on _RWKV {
     _loading.q = false;
   }
 
+  FV loadSparkTTS({
+    required String modelPath,
+    required String wav2vec2Path,
+    required String detokenizePath,
+    required String tokenizePath,
+  }) async {
+    // TODO: Implement
+  }
+
   FV loadTTSModels({
     required String modelPath,
     required Backend backend,

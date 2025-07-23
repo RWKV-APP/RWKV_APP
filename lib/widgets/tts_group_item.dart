@@ -36,12 +36,55 @@ class TTSGroupItem extends ConsumerWidget {
     [...helperModels, core].forEach((e) => P.fileManager.deleteFile(fileInfo: e));
   }
 
+  FV _onSparkTap() async {
+    final availableModels = P.fileManager.availableModels.q;
+    final fileInfos = availableModels.toList();
+    final sparkFileKeys = fileInfos.where((e) => e.tags.contains("spark")).toList();
+    if (sparkFileKeys.isEmpty) {
+      Alert.error("Spark file not found");
+      qqe;
+      return;
+    }
+
+    final wav2vec2FileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("wav2vec2"));
+    final detokenizeFileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("detokenize"));
+    final tokenizeFileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("tokenize"));
+
+    if (wav2vec2FileKey == null) {
+      Alert.error("Wav2vec2 file not found");
+      qqe;
+      return;
+    }
+
+    if (detokenizeFileKey == null) {
+      Alert.error("Detokenize file not found");
+      qqe;
+      return;
+    }
+
+    if (tokenizeFileKey == null) {
+      Alert.error("Tokenize file not found");
+      qqe;
+      return;
+    }
+
+    final modelLocalFile = P.fileManager.locals(fileInfo).q;
+    final localWav2vec2File = P.fileManager.locals(wav2vec2FileKey).q;
+    final localDetokenizeFile = P.fileManager.locals(detokenizeFileKey).q;
+  }
+
   void _onStartToChatTap() async {
     if (P.rwkv.loading.q) {
       Alert.warning("Please wait for the model to load...");
       return;
     }
     final availableModels = P.fileManager.availableModels.q;
+    final isSpark = fileInfo.tags.contains("spark");
+    if (isSpark) {
+      await _onSparkTap();
+      return;
+    }
+
     final fileInfos = availableModels.toList();
 
     final campPlusFileKey = fileInfos.firstWhereOrNull((e) => e.tags.contains("campplus"));
@@ -127,7 +170,10 @@ class TTSGroupItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final availableModels = P.fileManager.availableModels.q;
-    final fileInfos = availableModels.toList().where((e) => !e.tags.contains("core")).toList();
+    final isSpark = fileInfo.tags.contains("spark");
+    final fileInfos = availableModels.toList().where((e) {
+      return !e.tags.contains("core") && (isSpark ? e.tags.contains("spark") : !e.tags.contains("spark"));
+    }).toList();
     fileInfos.insert(0, fileInfo);
     if (fileInfos.isEmpty) return const SizedBox.shrink();
     final primaryColor = Theme.of(context).colorScheme.primaryContainer;
