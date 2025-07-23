@@ -92,8 +92,10 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
       if (mounted) setState(() {});
     });
 
+    final generating = ref.watch(P.tts.generating);
+
     // final changing = true;
-    final changing = widget.msg.changing;
+    final changing = generating;
 
     final primaryColor = Theme.of(context).colorScheme.primary;
     final length = _length;

@@ -56,6 +56,8 @@ class _TTS {
   late final perWavProgress = qs<List<double>>([]);
   late final filePaths = qs<List<String>>([]);
 
+  late final generating = qs(false);
+
   Timer? _queryTimer;
 }
 
@@ -201,8 +203,8 @@ extension _$TTS on _TTS {
         // TODO: 录入 player 中
         final buffer = res.ttsStreamingBuffer;
         final length = res.ttsStreamingBufferLength;
-        qqr("buffer.length: ${buffer.length}, length: $length, buffer.runtimeType: ${buffer.runtimeType}");
-        debugger();
+        // qqr("buffer.length: ${buffer.length}, length: $length, buffer.runtimeType: ${buffer.runtimeType}");
+        _onTTSStreamingBuffer(res);
         break;
       case from_rwkv.TTSResult res:
         _onTTSResult(res);
@@ -218,6 +220,14 @@ extension _$TTS on _TTS {
     }
   }
 
+  void _onTTSStreamingBuffer(from_rwkv.TTSStreamingBuffer res) async {
+    final buffer = res.ttsStreamingBuffer;
+    final length = res.ttsStreamingBufferLength;
+    final generating = res.generating;
+    this.generating.q = generating;
+  }
+
+  @Deprecated("")
   void _onTTSResult(from_rwkv.TTSResult res) async {
     final filePaths = res.filePaths;
     final perWavProgress = res.perWavProgress.map((e) => (e * 100).round() / 100.0).toList();
