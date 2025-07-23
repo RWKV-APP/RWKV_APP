@@ -211,7 +211,7 @@ extension $RWKVLoad on _RWKV {
     required String modelPath,
     required String wav2vec2Path,
     required String detokenizePath,
-    required String tokenizePath,
+    required String bicodecTokenzerPath,
     required Backend backend,
   }) async {
     qq;
@@ -265,7 +265,7 @@ extension $RWKVLoad on _RWKV {
     send(
       to_rwkv.LoadSparkTTSModels(
         wav2vec2Path: wav2vec2Path,
-        bicodecTokenizerPath: tokenizerPath,
+        bicodecTokenizerPath: bicodecTokenzerPath,
         bicodecDetokenizerPath: detokenizePath,
       ),
     );

@@ -32,6 +32,7 @@ extension _TTSStatic on _TTS {
 
 class _TTS {
   late final audioInteractorShown = qs(false);
+  @Deprecated("Use sparktts instead")
   late final cfmSteps = qs(_TTSStatic._defaultCfmSteps);
   late final focusNode = FocusNode();
   late final hasFocus = qs(false);
@@ -139,9 +140,10 @@ extension _$TTS on _TTS {
   }
 
   void _pulse() {
-    P.rwkv.send(to_rwkv.GetTTSGenerationProgress());
+    // P.rwkv.send(to_rwkv.GetTTSGenerationProgress());
     P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
-    P.rwkv.send(to_rwkv.GetTTSOutputFileList());
+    P.rwkv.send(to_rwkv.GetTTSStreamingBuffer());
+    // P.rwkv.send(to_rwkv.GetTTSOutputFileList());
   }
 
   void _stopQueryTimer() {
@@ -195,6 +197,9 @@ extension _$TTS on _TTS {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     switch (event) {
+      case from_rwkv.TTSStreamingBuffer res:
+        // TODO: 录入 player 中
+        break;
       case from_rwkv.TTSResult res:
         _onTTSResult(res);
       case from_rwkv.TTSGenerationProgress res:

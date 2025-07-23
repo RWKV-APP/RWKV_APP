@@ -48,7 +48,7 @@ class TTSGroupItem extends ConsumerWidget {
 
     final wav2vec2FileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("wav2vec2"));
     final detokenizeFileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("detokenize"));
-    final tokenizeFileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("tokenize"));
+    final bicodecTokenizeFileKey = sparkFileKeys.firstWhereOrNull((e) => e.tags.contains("tokenize"));
 
     if (wav2vec2FileKey == null) {
       Alert.error("Wav2vec2 file not found");
@@ -62,7 +62,7 @@ class TTSGroupItem extends ConsumerWidget {
       return;
     }
 
-    if (tokenizeFileKey == null) {
+    if (bicodecTokenizeFileKey == null) {
       Alert.error("Tokenize file not found");
       qqe;
       return;
@@ -71,7 +71,7 @@ class TTSGroupItem extends ConsumerWidget {
     final modelLocalFile = P.fileManager.locals(fileInfo).q;
     final localWav2vec2File = P.fileManager.locals(wav2vec2FileKey).q;
     final localDetokenizeFile = P.fileManager.locals(detokenizeFileKey).q;
-    final localTokenizeFile = P.fileManager.locals(tokenizeFileKey).q;
+    final localTokenizeFile = P.fileManager.locals(bicodecTokenizeFileKey).q;
 
     P.rwkv.clearStates();
     P.chat.clearMessages();
@@ -82,7 +82,7 @@ class TTSGroupItem extends ConsumerWidget {
         backend: fileInfo.backend!,
         wav2vec2Path: localWav2vec2File.targetPath,
         detokenizePath: localDetokenizeFile.targetPath,
-        tokenizePath: localTokenizeFile.targetPath,
+        bicodecTokenzerPath: localTokenizeFile.targetPath,
       );
       P.tts.getTTSSpkNames();
       Navigator.pop(getContext()!);
