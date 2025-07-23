@@ -199,6 +199,10 @@ extension _$TTS on _TTS {
     switch (event) {
       case from_rwkv.TTSStreamingBuffer res:
         // TODO: 录入 player 中
+        final buffer = res.ttsStreamingBuffer;
+        final length = res.ttsStreamingBufferLength;
+        qqr("buffer.length: ${buffer.length}, length: $length, buffer.runtimeType: ${buffer.runtimeType}");
+        debugger();
         break;
       case from_rwkv.TTSResult res:
         _onTTSResult(res);
@@ -447,6 +451,13 @@ extension $TTS on _TTS {
     P.chat.receiveId.q = receiveId;
     P.msg.pool.q[receiveId] = receiveMsg;
     P.msg.msgNode.q.rootAdd(MsgNode(receiveId));
+
+    final checkPool = P.msg.pool.q;
+    final checkIds = P.msg.ids.q;
+    final checkList = P.msg.list.q;
+    final checkNode = P.msg.msgNode.q;
+
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
 
     qqr("""ttsText: $ttsText
 instructionText: $instructionText
