@@ -102,7 +102,7 @@ extension _$TTS on _TTS {
     final res = audioStream.init(
       sampleRate: 16000,
       channels: 1,
-      bufferMilliSec: 1000,
+      bufferMilliSec: 100000,
       waitingBufferMilliSec: 100,
     );
 
@@ -223,22 +223,21 @@ extension _$TTS on _TTS {
     final generating = res.generating;
     final allReceived = !generating && this.generating.q;
     final addedLength = length - latestBufferLength.q;
-    final rawFloatList = res.rawFloatList;
+    final rawFloatList = res.rawFloatList.map((e) => e.toDouble() * 1).toList();
 
     if (addedLength == 0) {
       qqq("no new data");
-      return;
+    } else {
+      final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
+      if (kDebugMode) {
+        qqr("float32Data.length: ${float32Data.length}");
+        qqr("length: $length");
+        qqr("latestBufferLength.q: ${latestBufferLength.q}");
+        // TODO: 有点怪
+        // debugger();
+      }
+      audioStream.push(float32Data);
     }
-
-    final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
-    if (kDebugMode) {
-      qqr(float32Data.length);
-      qqr(length);
-      qqr(latestBufferLength.q);
-      // TODO: 有点怪
-      // debugger();
-    }
-    audioStream.push(float32Data);
 
     this.generating.q = generating;
     latestBufferLength.q = length;
@@ -616,8 +615,34 @@ outputWavPath: $outputWavPath""");
 
     return (flag, nameCN, nameEN);
   }
+
+  void test() async {
+    audioStream.resume();
+
+    const noteDuration = Duration(seconds: 1);
+    const pushFreq = 60; // Hz
+
+    for (double noteFreq in [261.626, 293.665, 329.628, 123, 456, 789, 10]) {
+      final wave = _synthSineWave(noteFreq, 16000, noteDuration);
+      // debugger();
+      // push wave data to audio stream in specified interval (pushFreq)
+      const step = 16000 ~/ pushFreq;
+      // await Future.delayed(Duration(milliseconds: 500));
+      for (int pos = 0; pos < wave.length; pos += step) {
+        audioStream.push(wave.sublist(pos, math.min(wave.length, pos + step)));
+        await Future.delayed(noteDuration ~/ pushFreq);
+      }
+    }
+  }
 }
 
 JSON _parseSpkNames(String message) {
   return HF.json(jsonDecode(message));
+}
+
+Float32List _synthSineWave(double freq, int sampleRate, Duration duration) {
+  final length = duration.inMilliseconds * sampleRate ~/ 1000;
+  final sineWave = List.generate(length, (i) => math.sin(2 * math.pi * ((i * freq) % sampleRate) / sampleRate));
+
+  return Float32List.fromList(sineWave);
 }
