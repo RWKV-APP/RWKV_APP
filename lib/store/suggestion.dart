@@ -71,6 +71,8 @@ class _Suggestion {
   /// All suggestion config
   final config = qs<SuggestionConfig>(_DefaultSuggestion.zh);
 
+  final ttsTicker = qs<int>(0);
+
   /// suggestion prompt list at top of the text input
   /// item type: [String] or [Suggestion]
   final suggestion = qp<List<dynamic>>((ref) {
@@ -81,6 +83,7 @@ class _Suggestion {
     final lang = ref.watch(P.preference.preferredLanguage);
     final en = lang.resolved.locale.languageCode != "zh";
     final maxLen = en ? 30 : 14;
+    ref.watch(P.suggestion.ttsTicker);
 
     final hideCases = [
       demoType == DemoType.chat && (messages.isNotEmpty || currentModel == null),
