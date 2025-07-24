@@ -236,7 +236,7 @@ extension _$TTS on _TTS {
       qqr(length);
       qqr(latestBufferLength.q);
       // TODO: 有点怪
-      debugger();
+      // debugger();
     }
     audioStream.push(float32Data);
 
@@ -437,9 +437,8 @@ extension $TTS on _TTS {
 
     if (instructionText.isEmpty) instructionText = selectedLanguage.q._ttsSpkInstruct;
 
-    final outputWavPrefix = P.app.cacheDir.q!.path + "/$receiveId.output";
-    // TODO: handle multiple wav output via getTTSOutputFileList
-    final outputWavPath = P.app.cacheDir.q!.path + "/$receiveId.output.0.wav";
+    // final outputWavPath = P.app.cacheDir.q!.path + "/$receiveId.output.wav";
+    final outputWavPath = "/sdcard/Download/$receiveId.output.wav";
 
     if (ttsText.isEmpty) {
       Alert.warning("Please enter text to generate TTS");
@@ -512,8 +511,9 @@ outputWavPath: $outputWavPath""");
       ttsText: ttsText,
       instructionText: instructionText,
       promptWavPath: selectSourceAudioPath,
-      promptSpeechText: promptSpeechText,
-      outputWavPath: outputWavPrefix,
+      // promptSpeechText: promptSpeechText,
+      promptSpeechText: "", // lets disable it for now
+      outputWavPath: outputWavPath,
     );
   }
 
