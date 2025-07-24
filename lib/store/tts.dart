@@ -54,7 +54,7 @@ class _TTS {
   late final generating = qs(false);
   late final latestBufferLength = qs(0);
 
-  late final mp_audio_stream.AudioStream audioStream;
+  mp_audio_stream.AudioStream? audioStream;
   late final asFull = qs(0);
   late final asExhaust = qs(0);
   Timer? _asTimer;
@@ -96,26 +96,6 @@ extension _$TTS on _TTS {
     spkShown.l(_onSpkShownChanged, fireImmediately: true);
 
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
-
-    audioStream = mp_audio_stream.getAudioStream();
-    final res = audioStream.init(
-      sampleRate: 16000,
-      channels: 1,
-      bufferMilliSec: 100000,
-      waitingBufferMilliSec: 500,
-    );
-    audioStream.resetStat();
-    if (res != 0) {
-      qqe("audioStream init failed: $res");
-    } else {
-      audioStream.resume();
-    }
-
-    _asTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      final stat = audioStream.stat();
-      asFull.q = stat.full;
-      asExhaust.q = stat.exhaust;
-    });
   }
 
   void _onSpkShownChanged(bool next) {
@@ -183,6 +163,30 @@ extension _$TTS on _TTS {
   }) async {
     qq;
 
+    final audioStream = mp_audio_stream.getAudioStream();
+    final res = audioStream.init(
+      sampleRate: 16000,
+      channels: 1,
+      bufferMilliSec: 100000,
+      waitingBufferMilliSec: 500,
+    );
+    audioStream.resetStat();
+    if (res != 0) {
+      qqe("audioStream init failed: $res");
+    } else {
+      audioStream.resume();
+    }
+
+    _asTimer?.cancel();
+    _asTimer = null;
+    _asTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      final stat = audioStream.stat();
+      asFull.q = stat.full;
+      asExhaust.q = stat.exhaust;
+    });
+
+    this.audioStream = audioStream;
+
     P.rwkv.send(
       to_rwkv.StartTTS(
         ttsText: ttsText,
@@ -238,16 +242,24 @@ extension _$TTS on _TTS {
         // TODO: 有点怪
         // debugger();
       }
-      audioStream.push(float32Data);
+      audioStream?.push(float32Data);
     }
+
+    final receiveId = P.chat.receiveId.q;
+    if (receiveId == null) {
+      qqw("receiveId is null");
+      return;
+    }
+
+    P.chat._updateMessageById(
+      id: receiveId,
+      changing: !allReceived,
+      ttsOverallProgress: allReceived ? 1.0 : 0.5,
+    );
 
     this.generating.q = generating;
     latestBufferLength.q = length;
     qqq("TTSStreamingBuffer buffer length: ${buffer.length}, length: $length, generating: $generating");
-
-    // 0. Cut the buffer into chunks
-    // 1. Play the buffer
-    // 2. Update the message rendering
 
     if (!allReceived) return;
     _stopQueryTimer();
@@ -385,8 +397,8 @@ extension $TTS on _TTS {
       return;
     }
 
-    audioStream.resetStat();
-    audioStream.resume();
+    audioStream?.resetStat();
+    audioStream?.resume();
 
     late final Message? msg;
     final id = HF.milliseconds;
@@ -587,7 +599,7 @@ outputWavPath: $outputWavPath""");
   }
 
   void test() async {
-    audioStream.resume();
+    audioStream?.resume();
 
     const noteDuration = Duration(seconds: 1);
     const pushFreq = 60; // Hz
@@ -599,7 +611,7 @@ outputWavPath: $outputWavPath""");
       const step = 16000 ~/ pushFreq;
       // await Future.delayed(Duration(milliseconds: 500));
       for (int pos = 0; pos < wave.length; pos += step) {
-        audioStream.push(wave.sublist(pos, math.min(wave.length, pos + step)));
+        audioStream?.push(wave.sublist(pos, math.min(wave.length, pos + step)));
         await Future.delayed(noteDuration ~/ pushFreq);
       }
     }

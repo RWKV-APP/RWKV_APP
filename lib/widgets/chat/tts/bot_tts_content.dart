@@ -9,7 +9,6 @@ import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:zone/func/merge_wav.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
@@ -95,8 +94,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
 
     final generating = ref.watch(P.tts.generating);
 
-    // final changing = true;
-    final changing = generating;
+    final changing = widget.msg.changing;
 
     final primaryColor = Theme.of(context).colorScheme.primary;
     final length = _length;

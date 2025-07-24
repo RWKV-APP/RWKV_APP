@@ -78,16 +78,16 @@ class _Suggestion {
   final suggestion = qp<List<dynamic>>((ref) {
     final imagePath = ref.watch(P.world.imagePath);
     final demoType = ref.watch(P.app.demoType);
-    final messages = ref.watch(P.msg.list);
+    final length = ref.watch(P.msg.length);
     final currentModel = ref.watch(P.rwkv.currentModel);
     final lang = ref.watch(P.preference.preferredLanguage);
     final en = lang.resolved.locale.languageCode != "zh";
     final maxLen = en ? 30 : 14;
-    ref.watch(P.suggestion.ttsTicker);
+    final _ = ref.watch(P.suggestion.ttsTicker);
 
     final hideCases = [
-      demoType == DemoType.chat && (messages.isNotEmpty || currentModel == null),
-      demoType == DemoType.world && (imagePath == null || imagePath.isEmpty || messages.length != 1),
+      demoType == DemoType.chat && (length > 0 || currentModel == null),
+      demoType == DemoType.world && (imagePath == null || imagePath.isEmpty || length != 1),
     ];
     if (hideCases.any((e) => e)) {
       return [];
