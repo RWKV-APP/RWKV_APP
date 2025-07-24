@@ -266,6 +266,8 @@ class _TTSDebugger extends ConsumerWidget {
     final startTime = ref.watch(P.world.startTime);
     final textInInput = ref.watch(P.tts.textInInput);
     final qw = ref.watch(P.app.qw);
+    final isDesktop = ref.watch(P.app.isDesktop);
+    final generating = ref.watch(P.tts.generating);
 
     return Positioned(
       left: 0,
@@ -277,7 +279,7 @@ class _TTSDebugger extends ConsumerWidget {
           textStyle: TS(
             ff: "Monospace",
             c: qw,
-            s: 8,
+            s: isDesktop ? 20 : 8,
           ),
           color: kC,
           child: SB(
@@ -289,12 +291,6 @@ class _TTSDebugger extends ConsumerWidget {
                 children:
                     [
                       paddingTop.h,
-                      T("paddingTop".codeToName),
-                      T(paddingTop.toString()),
-                      T("overallProgress".codeToName),
-                      T(overallProgress.toString()),
-                      T("perWavProgress".codeToName),
-                      T(perWavProgress.toString()),
                       T("filePaths".codeToName),
                       Column(
                         children: filePaths.map((e) => T(e)).toList(),
@@ -309,8 +305,6 @@ class _TTSDebugger extends ConsumerWidget {
                       T(startTime.toString()),
                       T("endTime".codeToName),
                       T(endTime.toString()),
-                      T("selectedSpkName".codeToName),
-                      T(selectedSpkName.toString()),
                       T("selectSourceAudioPath".codeToName),
                       T(selectSourceAudioPath.toString()),
                       T("spkNames length".codeToName),
@@ -335,6 +329,8 @@ class _TTSDebugger extends ConsumerWidget {
                       T(selectedInstruction.toString()),
                       T("recording".codeToName),
                       T(recording.toString()),
+                      T("generating".codeToName),
+                      T(generating.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

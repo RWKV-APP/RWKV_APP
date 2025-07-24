@@ -161,11 +161,6 @@ extension _$TTS on _TTS {
     required String promptSpeechText,
   }) async {
     qq;
-    if (!generating.q) {
-      qqq("Generating is true");
-      Alert.warning("TTS is running, please wait for it to finish");
-      return;
-    }
 
     P.rwkv.send(
       to_rwkv.StartTTS(
@@ -201,15 +196,6 @@ extension _$TTS on _TTS {
       case from_rwkv.TTSStreamingBuffer res:
         _onTTSStreamingBuffer(res);
         break;
-      case from_rwkv.TTSResult res:
-        _onTTSResult(res);
-      case from_rwkv.TTSGenerationProgress res:
-        qqq("overallProgress: ${res.overallProgress}");
-        qqq("perWavProgress: ${res.perWavProgress}");
-      case from_rwkv.TTSGenerationStart res:
-        qqq(res);
-      case from_rwkv.TTSOutputFileList res:
-        qqq(res.outputFileList);
       default:
         break;
     }
@@ -221,6 +207,7 @@ extension _$TTS on _TTS {
     final generating = res.generating;
     final allReceived = !generating && this.generating.q;
     this.generating.q = generating;
+    qqq("TTSStreamingBuffer buffer length: ${buffer.length}, length: $length, generating: $generating");
 
     // 0. Cut the buffer into chunks
     // 1. Play the buffer
@@ -387,6 +374,12 @@ extension $TTS on _TTS {
     if (!checkModelSelection()) return;
 
     if (!P.chat.inputHasContent.q) return;
+
+    if (generating.q) {
+      qqq("Generating is true");
+      Alert.warning("TTS is running, please wait for it to finish");
+      return;
+    }
 
     late final Message? msg;
     final id = HF.milliseconds;
