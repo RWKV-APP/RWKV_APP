@@ -239,7 +239,6 @@ extension _$TTS on _TTS {
         qqr("float32Data.length: ${float32Data.length}");
         qqr("length: $length");
         qqr("latestBufferLength.q: ${latestBufferLength.q}");
-        // TODO: 有点怪
         // debugger();
       }
       audioStream?.push(float32Data);
@@ -492,8 +491,7 @@ outputWavPath: $outputWavPath""");
       ttsText: ttsText,
       instructionText: instructionText,
       promptWavPath: selectSourceAudioPath,
-      // promptSpeechText: promptSpeechText,
-      promptSpeechText: "", // lets disable it for now
+      promptSpeechText: promptSpeechText,
       outputWavPath: outputWavPath,
     );
   }
