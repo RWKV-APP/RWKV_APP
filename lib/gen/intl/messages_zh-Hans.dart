@@ -226,6 +226,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "new_chat_started": MessageLookupByLibrary.simpleMessage("开始新聊天"),
     "new_game": MessageLookupByLibrary.simpleMessage("新游戏"),
     "new_version_found": MessageLookupByLibrary.simpleMessage("发现新版本"),
+    "no_audio_file": MessageLookupByLibrary.simpleMessage("没有音频文件"),
     "no_cell_available": MessageLookupByLibrary.simpleMessage("无子可下"),
     "no_data": MessageLookupByLibrary.simpleMessage("无数据"),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("没有消息可导出"),

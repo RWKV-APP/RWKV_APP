@@ -265,6 +265,8 @@ class _TTSDebugger extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final isDesktop = ref.watch(P.app.isDesktop);
     final generating = ref.watch(P.tts.generating);
+    final asFull = ref.watch(P.tts.asFull);
+    final asExhaust = ref.watch(P.tts.asExhaust);
 
     return Positioned(
       left: 0,
@@ -324,6 +326,10 @@ class _TTSDebugger extends ConsumerWidget {
                       T(recording.toString()),
                       T("generating".codeToName),
                       T(generating.toString()),
+                      T("asFull".codeToName),
+                      T(asFull.toString()),
+                      T("asExhaust".codeToName),
+                      T(asExhaust.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

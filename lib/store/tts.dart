@@ -27,7 +27,7 @@ extension _TTSStatic on _TTS {
     "Korean": Language.ko,
     "Chinese(PRC)": Language.zh_Hans,
   };
-  static const _defaultSpkName = "Chinese(PRC)_Aventurine_4";
+  static const _defaultSpkName = "Chinese(PRC)_Firefly_9";
 }
 
 class _TTS {
@@ -55,6 +55,9 @@ class _TTS {
   late final latestBufferLength = qs(0);
 
   late final mp_audio_stream.AudioStream audioStream;
+  late final asFull = qs(0);
+  late final asExhaust = qs(0);
+  Timer? _asTimer;
 
   Timer? _queryTimer;
 }
@@ -99,14 +102,20 @@ extension _$TTS on _TTS {
       sampleRate: 16000,
       channels: 1,
       bufferMilliSec: 100000,
-      waitingBufferMilliSec: 100,
+      waitingBufferMilliSec: 500,
     );
-
+    audioStream.resetStat();
     if (res != 0) {
       qqe("audioStream init failed: $res");
     } else {
       audioStream.resume();
     }
+
+    _asTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      final stat = audioStream.stat();
+      asFull.q = stat.full;
+      asExhaust.q = stat.exhaust;
+    });
   }
 
   void _onSpkShownChanged(bool next) {
@@ -397,8 +406,8 @@ extension $TTS on _TTS {
 
     if (instructionText.isEmpty) instructionText = selectedLanguage.q._ttsSpkInstruct;
 
-    // final outputWavPath = P.app.cacheDir.q!.path + "/$receiveId.output.wav";
-    final outputWavPath = "/sdcard/Download/$receiveId.output.wav";
+    final outputWavPath = P.app.cacheDir.q!.path + "/$receiveId.output.wav";
+    // final outputWavPath = "/sdcard/Download/$receiveId.output.wav";
 
     if (ttsText.isEmpty) {
       Alert.warning("Please enter text to generate TTS");

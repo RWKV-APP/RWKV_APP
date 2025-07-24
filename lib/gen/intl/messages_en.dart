@@ -285,6 +285,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "new_version_found": MessageLookupByLibrary.simpleMessage(
       "New version found",
     ),
+    "no_audio_file": MessageLookupByLibrary.simpleMessage("No audio file"),
     "no_cell_available": MessageLookupByLibrary.simpleMessage(
       "No cell available",
     ),

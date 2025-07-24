@@ -88,8 +88,11 @@ final class Message extends Equatable {
   final String? ttsSpeakerName;
   final String? ttsSourceAudioPath;
   final String? ttsInstruction;
+  @Deprecated("")
   final double? ttsOverallProgress;
+  @Deprecated("")
   final List<double>? ttsPerWavProgress;
+  @Deprecated("")
   final List<String>? ttsFilePaths;
 
   final String? modelName;

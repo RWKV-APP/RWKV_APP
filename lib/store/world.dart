@@ -122,11 +122,15 @@ extension $World on _World {
     playing.q = true;
     P.app.hapticLight();
     await _audioPlayer.play(source);
+    P.tts.audioStream.resetStat();
+    P.tts.audioStream.uninit();
   }
 
   FV stopPlaying() async {
     playing.q = false;
     await _audioPlayer.stop();
+    P.tts.audioStream.resetStat();
+    P.tts.audioStream.uninit();
   }
 }
 
