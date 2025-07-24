@@ -58,6 +58,8 @@ class _TTS {
   late final generating = qs(false);
   late final latestBufferLength = qs(0);
 
+  late final mp_audio_stream.AudioStream audioStream;
+
   Timer? _queryTimer;
 }
 
@@ -95,6 +97,20 @@ extension _$TTS on _TTS {
     spkShown.l(_onSpkShownChanged, fireImmediately: true);
 
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+
+    audioStream = mp_audio_stream.getAudioStream();
+    final res = audioStream.init(
+      sampleRate: 16000,
+      channels: 1,
+      bufferMilliSec: 1000,
+      waitingBufferMilliSec: 100,
+    );
+
+    if (res != 0) {
+      qqe("audioStream init failed: $res");
+    } else {
+      audioStream.resume();
+    }
   }
 
   void _onSpkShownChanged(bool next) {
@@ -206,7 +222,26 @@ extension _$TTS on _TTS {
     final length = res.ttsStreamingBufferLength;
     final generating = res.generating;
     final allReceived = !generating && this.generating.q;
+    final addedLength = length - latestBufferLength.q;
+    final rawFloatList = res.rawFloatList;
+
+    if (addedLength == 0) {
+      qqq("no new data");
+      return;
+    }
+
+    final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
+    if (kDebugMode) {
+      qqr(float32Data.length);
+      qqr(length);
+      qqr(latestBufferLength.q);
+      // TODO: 有点怪
+      debugger();
+    }
+    audioStream.push(float32Data);
+
     this.generating.q = generating;
+    latestBufferLength.q = length;
     qqq("TTSStreamingBuffer buffer length: ${buffer.length}, length: $length, generating: $generating");
 
     // 0. Cut the buffer into chunks
@@ -380,6 +415,9 @@ extension $TTS on _TTS {
       Alert.warning("TTS is running, please wait for it to finish");
       return;
     }
+
+    audioStream.resetStat();
+    audioStream.resume();
 
     late final Message? msg;
     final id = HF.milliseconds;
