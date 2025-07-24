@@ -81,8 +81,9 @@ extension $World on _World {
 
     final audioLengthInMilliseconds = endTime.q - startTime.q;
 
-    if (audioLengthInMilliseconds < 1000_000) {
+    if (audioLengthInMilliseconds < 1000) {
       Alert.warning(S.current.your_voice_is_too_short);
+      qqw("audioLengthInMilliseconds: $audioLengthInMilliseconds");
       return false;
     }
 
