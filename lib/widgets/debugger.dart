@@ -245,13 +245,10 @@ class _TTSDebugger extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
     final endTime = ref.watch(P.world.endTime);
-    final filePaths = ref.watch(P.tts.filePaths);
     final interactingInstruction = ref.watch(P.tts.interactingInstruction);
     final intonationShown = ref.watch(P.tts.intonationShown);
     final qb = ref.watch(P.app.qb);
-    final overallProgress = ref.watch(P.tts.overallProgress);
     final paddingTop = ref.watch(P.app.paddingTop);
-    final perWavProgress = ref.watch(P.tts.perWavProgress);
     final receiveId = ref.watch(P.chat.receiveId);
     final recording = ref.watch(P.world.recording);
     final selectSourceAudioPath = ref.watch(P.tts.selectSourceAudioPath);
@@ -291,10 +288,6 @@ class _TTSDebugger extends ConsumerWidget {
                 children:
                     [
                       paddingTop.h,
-                      T("filePaths".codeToName),
-                      Column(
-                        children: filePaths.map((e) => T(e)).toList(),
-                      ),
                       T("receiveId".codeToName),
                       T(receiveId.toString()),
                       T("selectedSpkPanelFilter".codeToName),

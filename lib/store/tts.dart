@@ -51,10 +51,6 @@ class _TTS {
   late final textEditingController = TextEditingController(text: _TTSStatic._defaultTextInInput);
   late final textInInput = qs(_TTSStatic._defaultTextInInput);
 
-  late final overallProgress = qs(0.0);
-  late final perWavProgress = qs<List<double>>([]);
-  late final filePaths = qs<List<String>>([]);
-
   late final generating = qs(false);
   late final latestBufferLength = qs(0);
 
@@ -188,9 +184,6 @@ extension _$TTS on _TTS {
       ),
     );
 
-    filePaths.q = [];
-    perWavProgress.q = [];
-    overallProgress.q = 0.0;
     latestBufferLength.q = 0;
     generating.q = true;
 
@@ -249,38 +242,6 @@ extension _$TTS on _TTS {
 
     if (!allReceived) return;
     _stopQueryTimer();
-  }
-
-  @Deprecated("")
-  void _onTTSResult(from_rwkv.TTSResult res) async {
-    final filePaths = res.filePaths;
-    final perWavProgress = res.perWavProgress.map((e) => (e * 100).round() / 100.0).toList();
-    final overallProgress = (res.overallProgress * 100).round() / 100.0;
-
-    this.filePaths.q = filePaths;
-    this.perWavProgress.q = perWavProgress;
-    this.overallProgress.q = overallProgress;
-
-    final allReceived = overallProgress >= 1.0;
-    final receiveId = P.chat.receiveId.q;
-
-    if (receiveId == null) {
-      qqw("receiveId is null");
-      return;
-    }
-
-    P.chat._updateMessageById(
-      id: receiveId,
-      changing: !allReceived,
-      ttsOverallProgress: overallProgress,
-      ttsPerWavProgress: perWavProgress,
-      ttsFilePaths: filePaths,
-    );
-
-    if (allReceived) {
-      _stopQueryTimer();
-      return;
-    }
   }
 
   void _onStreamDone() {
