@@ -50,13 +50,13 @@ class _TTS {
   late final spkShown = qs(false);
   late final textEditingController = TextEditingController(text: _TTSStatic._defaultTextInInput);
   late final textInInput = qs(_TTSStatic._defaultTextInInput);
-  late final ttsDone = qs(true);
 
   late final overallProgress = qs(0.0);
   late final perWavProgress = qs<List<double>>([]);
   late final filePaths = qs<List<String>>([]);
 
   late final generating = qs(false);
+  late final latestBufferLength = qs(0);
 
   Timer? _queryTimer;
 }
@@ -161,13 +161,11 @@ extension _$TTS on _TTS {
     required String promptSpeechText,
   }) async {
     qq;
-    if (!ttsDone.q) {
-      qqe("ttsDone is true");
+    if (!generating.q) {
+      qqq("Generating is true");
       Alert.warning("TTS is running, please wait for it to finish");
       return;
     }
-
-    ttsDone.q = false;
 
     P.rwkv.send(
       to_rwkv.StartTTS(
@@ -182,7 +180,8 @@ extension _$TTS on _TTS {
     filePaths.q = [];
     perWavProgress.q = [];
     overallProgress.q = 0.0;
-    ttsDone.q = false;
+    latestBufferLength.q = 0;
+    generating.q = true;
 
     final receiveId = P.chat.receiveId.q;
 
@@ -200,10 +199,6 @@ extension _$TTS on _TTS {
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     switch (event) {
       case from_rwkv.TTSStreamingBuffer res:
-        // TODO: 录入 player 中
-        final buffer = res.ttsStreamingBuffer;
-        final length = res.ttsStreamingBufferLength;
-        // qqr("buffer.length: ${buffer.length}, length: $length, buffer.runtimeType: ${buffer.runtimeType}");
         _onTTSStreamingBuffer(res);
         break;
       case from_rwkv.TTSResult res:
@@ -224,7 +219,15 @@ extension _$TTS on _TTS {
     final buffer = res.ttsStreamingBuffer;
     final length = res.ttsStreamingBufferLength;
     final generating = res.generating;
+    final allReceived = !generating && this.generating.q;
     this.generating.q = generating;
+
+    // 0. Cut the buffer into chunks
+    // 1. Play the buffer
+    // 2. Update the message rendering
+
+    if (!allReceived) return;
+    _stopQueryTimer();
   }
 
   @Deprecated("")
@@ -255,7 +258,6 @@ extension _$TTS on _TTS {
 
     if (allReceived) {
       _stopQueryTimer();
-      ttsDone.q = true;
       return;
     }
   }

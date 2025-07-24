@@ -322,7 +322,6 @@ class _Actions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final ttsDone = ref.watch(P.tts.ttsDone);
     final generating = ref.watch(P.tts.generating);
     final canSend = ref.watch(P.chat.inputHasContent);
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);

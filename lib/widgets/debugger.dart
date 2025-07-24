@@ -265,7 +265,6 @@ class _TTSDebugger extends ConsumerWidget {
     final spkShown = ref.watch(P.tts.spkShown);
     final startTime = ref.watch(P.world.startTime);
     final textInInput = ref.watch(P.tts.textInInput);
-    final ttsDone = ref.watch(P.tts.ttsDone);
     final qw = ref.watch(P.app.qw);
 
     return Positioned(
@@ -314,8 +313,6 @@ class _TTSDebugger extends ConsumerWidget {
                       T(selectedSpkName.toString()),
                       T("selectSourceAudioPath".codeToName),
                       T(selectSourceAudioPath.toString()),
-                      T("ttsDone".codeToName),
-                      T(ttsDone.toString()),
                       T("spkNames length".codeToName),
                       T(spkNames.length.toString()),
                       T("spkShown".codeToName),
