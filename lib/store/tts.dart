@@ -231,16 +231,8 @@ extension _$TTS on _TTS {
     final addedLength = length - latestBufferLength.q;
     final rawFloatList = res.rawFloatList.map((e) => e.toDouble() * 1).toList();
 
-    if (addedLength == 0) {
-      qqq("no new data");
-    } else {
+    if (addedLength != 0) {
       final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
-      if (kDebugMode) {
-        qqr("float32Data.length: ${float32Data.length}");
-        qqr("length: $length");
-        qqr("latestBufferLength.q: ${latestBufferLength.q}");
-        // debugger();
-      }
       audioStream?.push(float32Data);
     }
 
@@ -258,7 +250,6 @@ extension _$TTS on _TTS {
 
     this.generating.q = generating;
     latestBufferLength.q = length;
-    qqq("TTSStreamingBuffer buffer length: ${buffer.length}, length: $length, generating: $generating");
 
     if (!allReceived) return;
     _stopQueryTimer();
