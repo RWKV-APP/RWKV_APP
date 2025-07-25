@@ -27,7 +27,7 @@ extension _TTSStatic on _TTS {
     "Korean": Language.ko,
     "Chinese(PRC)": Language.zh_Hans,
   };
-  static const _defaultSpkName = "Chinese(PRC)_Firefly_9";
+  static const _defaultSpkName = "Chinese(PRC)_Kafka_8";
 }
 
 class _TTS {
