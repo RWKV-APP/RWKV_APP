@@ -1,7 +1,7 @@
 import 'package:zone/router/page_key.dart';
 
 abstract class Config {
-  static final firstPage = PageKey.chat.name;
+  static final firstPage = PageKey.home.name;
 
   static const prompt = """<EOD>""";
 
@@ -19,7 +19,7 @@ abstract class Config {
 
   static late final String xApiKey;
 
-  static const appTitle = "RWKV Chat";
+  static const appTitle = "RWKV Talk";
 
   static const fontFamilyFallback = [
     'Microsoft YaHei',

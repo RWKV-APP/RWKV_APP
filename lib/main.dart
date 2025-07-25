@@ -18,6 +18,7 @@ import 'package:zone/widgets/debugger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
+  debugPrint("main");
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await _loadEnv();
