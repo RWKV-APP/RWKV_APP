@@ -138,7 +138,6 @@ extension _$TTS on _TTS {
   }
 
   void _startQueryTimer() {
-    qq;
     _queryTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) => _pulse());
   }
 
