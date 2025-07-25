@@ -135,6 +135,20 @@
         "tags": ["reason", "gpu"]
       },
       {
+        "name": "RWKV7-G0 7.2B",
+        "type": "prefab",
+        "modelSize": 7.2,
+        "fileName": "rwkv7-g0-7.2b-20250722-ctx4096-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g0-7.2b-20250722-ctx4096-nf4.prefab",
+        "fileSize": 5233791490,
+        "sha256": "d8212a7d97f8526d62f0fd6158a794000c725fff0bca3282089079fe12d3fcd9",
+        "quantization": "NF4",
+        "platforms": ["macos", "web", "windows"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["reason", "gpu"]
+      },
+      {
         "name": "RWKV7-G1 1.5B Neko",
         "type": "st",
         "modelSize": 1.5,
