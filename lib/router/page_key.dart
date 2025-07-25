@@ -70,5 +70,5 @@ enum PageKey {
 
   static String get initialLocation => first.path;
 
-  static PageKey get first => PageKey.home;
+  static PageKey get first => PageKey.sudoku;
 }
