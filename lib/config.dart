@@ -1,7 +1,7 @@
 import 'package:zone/router/page_key.dart';
 
 abstract class Config {
-  static final firstPage = PageKey.home.name;
+  static final firstPage = PageKey.sudoku.name;
 
   static const prompt = """<EOD>""";
 
@@ -19,7 +19,7 @@ abstract class Config {
 
   static late final String xApiKey;
 
-  static const appTitle = "RWKV Talk";
+  static const appTitle = "RWKV Sudoku";
 
   static const fontFamilyFallback = [
     'Microsoft YaHei',

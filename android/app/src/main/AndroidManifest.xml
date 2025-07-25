@@ -11,7 +11,7 @@
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="RWKV Chat"
+        android:label="RWKV Sudoku"
         android:requestLegacyExternalStorage="true">
 
         <provider

@@ -65,7 +65,7 @@ class PageHome extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(50),
                 clipBehavior: Clip.antiAlias,
                 child: Image.asset(
-                  'assets/img/chat/rwkv.png',
+                  'assets/img/sudoku/rwkv.png',
                   height: 80,
                   width: 80,
                 ),

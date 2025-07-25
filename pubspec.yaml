@@ -95,10 +95,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/lib/chat/
-    - assets/model/chat/
-    - assets/config/chat/
-    - assets/img/chat/
+    - assets/lib/sudoku/
+    - assets/model/sudoku/
+    - assets/config/sudoku/
+    - assets/img/sudoku/
     - assets/lib/qnn/
     - remote/latest.json
     - .env
