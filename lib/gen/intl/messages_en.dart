@@ -302,6 +302,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "new_chat_started": MessageLookupByLibrary.simpleMessage(
       "New chat started",
     ),
+    "new_conversation": MessageLookupByLibrary.simpleMessage(
+      "New Conversation",
+    ),
     "new_game": MessageLookupByLibrary.simpleMessage("New Game"),
     "new_version_found": MessageLookupByLibrary.simpleMessage(
       "New version found",
@@ -311,6 +314,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_conversation_yet": MessageLookupByLibrary.simpleMessage(
       "No conversation yet",
+    ),
+    "no_conversations_yet": MessageLookupByLibrary.simpleMessage(
+      "No Conversations Yet",
     ),
     "no_data": MessageLookupByLibrary.simpleMessage("No Data"),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(

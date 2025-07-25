@@ -2007,6 +2007,21 @@ class S {
   String get model_loading {
     return Intl.message('模型加载中...', name: 'model_loading', desc: '', args: []);
   }
+
+  /// `暂时还没有任何对话`
+  String get no_conversations_yet {
+    return Intl.message(
+      '暂时还没有任何对话',
+      name: 'no_conversations_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开始新对话`
+  String get new_conversation {
+    return Intl.message('开始新对话', name: 'new_conversation', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

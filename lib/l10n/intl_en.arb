@@ -284,5 +284,7 @@
   "power_user": "Power User",
   "expert": "Expert",
   "more_questions": "More Questions",
-  "model_loading": "Model Loading..."
+  "model_loading": "Model Loading...",
+  "no_conversations_yet": "No Conversations Yet",
+  "new_conversation": "New Conversation"
 }

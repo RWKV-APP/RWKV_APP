@@ -283,5 +283,7 @@
   "power_user": "高级模式",
   "expert": "专家模式",
   "more_questions": "更多问题",
-  "model_loading": "模型加载中..."
+  "model_loading": "模型加载中...",
+  "no_conversations_yet": "暂时还没有任何对话",
+  "new_conversation": "开始新对话"
 }
