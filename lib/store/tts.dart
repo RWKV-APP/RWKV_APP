@@ -139,7 +139,7 @@ extension _$TTS on _TTS {
 
   void _startQueryTimer() {
     qq;
-    _queryTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) => _pulse());
+    _queryTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) => _pulse());
   }
 
   void _pulse() {
@@ -167,8 +167,8 @@ extension _$TTS on _TTS {
     final res = audioStream.init(
       sampleRate: 16000,
       channels: 1,
-      bufferMilliSec: 100000,
-      waitingBufferMilliSec: 500,
+      bufferMilliSec: 60000,
+      waitingBufferMilliSec: 200,
     );
     audioStream.resetStat();
     if (res != 0) {
