@@ -142,7 +142,7 @@ class Message extends ConsumerWidget {
     String cotContent = "";
     String cotResult = "";
 
-    final subStringCount = worldType == WorldType.reasoningQA ? 8 : 9;
+    final subStringCount = worldType == WorldType.reasoningQA ? 8 : 8;
 
     if (reasoning) {
       assert(!msg.isMine);
@@ -348,7 +348,7 @@ class Message extends ConsumerWidget {
                 // 🔥 User message audio
                 if (isUserAudio) AudioBubble(msg),
                 UserTTSContent(msg, index),
-                if (!isChat) UserMessageBottom(msg, index),
+                UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
                 // 🔥 Bot message audio recognition result
