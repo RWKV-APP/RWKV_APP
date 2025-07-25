@@ -235,7 +235,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_questions": MessageLookupByLibrary.simpleMessage("更多问题"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),
-    "neko": MessageLookupByLibrary.simpleMessage("猫娘陪聊"),
+    "neko": MessageLookupByLibrary.simpleMessage("Neko"),
     "network_error": MessageLookupByLibrary.simpleMessage("网络错误"),
     "new_chat": MessageLookupByLibrary.simpleMessage("新聊天"),
     "new_chat_started": MessageLookupByLibrary.simpleMessage("开始新聊天"),

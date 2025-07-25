@@ -1893,9 +1893,9 @@ class S {
     return Intl.message('开始对话', name: 'chat', desc: '', args: []);
   }
 
-  /// `猫娘陪聊`
+  /// `Neko`
   String get neko {
-    return Intl.message('猫娘陪聊', name: 'neko', desc: '', args: []);
+    return Intl.message('Neko', name: 'neko', desc: '', args: []);
   }
 
   /// `续写模式`
