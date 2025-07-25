@@ -24,35 +24,34 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart' as ar;
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart' as from_rwkv;
+import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 import 'package:rxdart/rxdart.dart';
-import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
-import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
-import 'package:sprintf/sprintf.dart' show sprintf;
-import 'package:zone/db/db.dart';
-import 'package:zone/model/browser_tab.dart';
-import 'package:zone/model/browser_window.dart';
-import 'package:zone/model/custom_theme.dart' as custom_theme;
-import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:system_info2/system_info2.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
-
+import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
+import 'package:sprintf/sprintf.dart' show sprintf;
+import 'package:system_info2/system_info2.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/db/db.dart' as db;
+import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/io.dart';
 import 'package:zone/model/argument.dart';
+import 'package:zone/model/browser_tab.dart';
+import 'package:zone/model/browser_window.dart';
 import 'package:zone/model/cell_type.dart';
 import 'package:zone/model/cot_display_state.dart';
+import 'package:zone/model/custom_theme.dart' as custom_theme;
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/feature_rollout.dart';
 import 'package:zone/model/file_info.dart';
@@ -71,6 +70,7 @@ import 'package:zone/page/panel/theme_selector.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
+import 'package:zone/store/rag.dart';
 import 'package:zone/widgets/app_update_dialog.dart' show AppUpdateDialog;
 import 'package:zone/widgets/model_selector.dart';
 
@@ -111,6 +111,7 @@ abstract class P {
   static final suggestion = _Suggestion();
   static final dump = _Dump();
   static final msg = _Msg();
+  static final rag = RAG();
   static final backend = _Backend();
   static final translator = _Translator();
 
@@ -150,6 +151,7 @@ abstract class P {
       _safeInit(() => msg._init(), 'msg'),
       _safeInit(() => backend._init(), 'backend'),
       _safeInit(() => translator._init(), 'translator'),
+      _safeInit(() => rag.init(), 'rag'),
     ]);
   }
 

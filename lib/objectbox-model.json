@@ -1,0 +1,135 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:9050756299533494181",
+      "lastPropertyId": "12:6663247131076862501",
+      "name": "Document",
+      "properties": [
+        {
+          "id": "1:2663277142123545006",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7792431084536884749",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3490872785072763137",
+          "name": "path",
+          "type": 9
+        },
+        {
+          "id": "4:7914938823217454250",
+          "name": "length",
+          "type": 6
+        },
+        {
+          "id": "5:1885726183315426123",
+          "name": "parsed",
+          "type": 6
+        },
+        {
+          "id": "6:885649435951606089",
+          "name": "tags",
+          "type": 30
+        },
+        {
+          "id": "7:1075066480903116717",
+          "name": "chunks",
+          "type": 6
+        },
+        {
+          "id": "8:905421107360809929",
+          "name": "modelName",
+          "type": 9
+        },
+        {
+          "id": "9:4309183185114881544",
+          "name": "lines",
+          "type": 6
+        },
+        {
+          "id": "10:6693480902182153074",
+          "name": "words",
+          "type": 6
+        },
+        {
+          "id": "11:3324245000496020868",
+          "name": "tokens",
+          "type": 6
+        },
+        {
+          "id": "12:6663247131076862501",
+          "name": "time",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:9040188549526098184",
+      "lastPropertyId": "8:1703067598575696374",
+      "name": "Embedding",
+      "properties": [
+        {
+          "id": "1:7383642888205552793",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:715763136792720490",
+          "name": "documentId",
+          "type": 6
+        },
+        {
+          "id": "4:2529462370363360507",
+          "name": "offset",
+          "type": 6
+        },
+        {
+          "id": "5:2848111422213662443",
+          "name": "length",
+          "type": 6
+        },
+        {
+          "id": "6:3285724021795709819",
+          "name": "segment",
+          "type": 28,
+          "flags": 8,
+          "indexId": "1:8294141658394176224"
+        },
+        {
+          "id": "7:5144852761575768587",
+          "name": "content",
+          "type": 9
+        },
+        {
+          "id": "8:1703067598575696374",
+          "name": "worlds",
+          "type": 6
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:9040188549526098184",
+  "lastIndexId": "1:8294141658394176224",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    7945762670151713382
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

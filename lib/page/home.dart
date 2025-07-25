@@ -126,6 +126,15 @@ class PageHome extends ConsumerWidget {
                               color: Colors.blue,
                               icon: Icons.translate,
                             ),
+                          buildButton(
+                            title: '知识库',
+                            subtitle: '私人知识库',
+                            onTap: () {
+                              push(PageKey.documents);
+                            },
+                            color: Colors.amberAccent,
+                            icon: FontAwesomeIcons.solidFileLines,
+                          ),
                         ]
                         .map(
                           (e) => ConstrainedBox(

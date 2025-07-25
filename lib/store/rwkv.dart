@@ -315,6 +315,39 @@ extension $RWKVLoad on _RWKV {
     }
   }
 
+  FV loadEmbeddingModel(String modelPath) async {
+    if (_sendPort == null) {
+      final options = StartOptions(
+        modelPath: '',
+        tokenizerPath: '',
+        backend: Backend.llamacpp,
+        sendPort: _receivePort.sendPort,
+        rootIsolateToken: RootIsolateToken.instance!,
+        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
+      );
+      await RWKVMobile().runIsolate(options);
+    }
+    while (_sendPort == null) {
+      qqq("waiting for sendPort...");
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+    send(to_rwkv.LoadEmbeddingModel(path: modelPath));
+    final r =
+        await broadcastStream.firstWhere((event) => event is from_rwkv.LoadEmbeddingModelResult) as from_rwkv.LoadEmbeddingModelResult;
+    if (!r.success) {
+      throw Exception('Failed to load embedding model');
+    }
+  }
+
+  Future<List<List<double>>> embed(List<String> sentences) async {
+    final to = to_rwkv.TextEmbedding(sentences: sentences);
+    send(to);
+    final r =
+        await broadcastStream.firstWhere((event) => event is from_rwkv.TextEmbeddingResult || event.toRWKV == to)
+            as from_rwkv.TextEmbeddingResult;
+    return r.embeddings;
+  }
+
   FV loadChat({
     required String modelPath,
     required Backend backend,
@@ -588,6 +621,10 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
+    if (currentModel.q == null) {
+      qqw("currentModel is null, clean states ignored");
+      return;
+    }
     send(to_rwkv.ClearStates());
   }
 
@@ -819,6 +856,7 @@ extension _$RWKV on _RWKV {
 
   void _onMessage(message) {
     if (message is SendPort) {
+      qqq('rwkv isolate initialized');
       _sendPort = message;
       return;
     }
