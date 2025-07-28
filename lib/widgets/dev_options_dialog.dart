@@ -106,6 +106,20 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
               },
             ),
           ),
+          const SizedBox(height: 16),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+            leading: const Text('RAG', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            trailing: Switch(
+              value: featureRollout.rag,
+              onChanged: (v) {
+                featureRollout = featureRollout.copyWith(rag: v);
+                P.preference.setFeatureRollout(featureRollout);
+                P.app.featureRollout.q = featureRollout;
+                setState(() {});
+              },
+            ),
+          ),
         ],
       ),
     );

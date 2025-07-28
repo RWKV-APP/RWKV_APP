@@ -46,6 +46,7 @@ class _Interactions extends ConsumerWidget {
       children: [
         if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: _SelectImageButton()),
         if (features.webSearch && demoType == DemoType.chat) const _WebSearchModeButton(),
+        if (features.rag && demoType == DemoType.chat) const _RagButton(),
         if (demoType == DemoType.chat) const _ThinkingModeButton(),
         if (demoType == DemoType.chat) const _SecondaryOptionsButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
@@ -183,6 +184,64 @@ class _ThinkingModeButton extends ConsumerWidget {
                   2.w,
                   T(
                     s.reason,
+                    s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                  ),
+                  4.w,
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RagButton extends ConsumerWidget {
+  const _RagButton();
+
+  void _onTap() async {
+    if (!await P.rag.checkLoadModel()) {
+      return;
+    }
+    P.chat.knowledgeBase.q = !P.chat.knowledgeBase.q;
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final loading = ref.watch(P.rwkv.loading);
+    final knowledgeBase = ref.watch(P.chat.knowledgeBase);
+
+    final color = knowledgeBase ? primary : theme.colorScheme.surfaceContainer;
+    final textColor = knowledgeBase ? theme.colorScheme.onPrimary : Colors.grey;
+
+    final textScaleFactor = MediaQuery.textScalerOf(context);
+    final height = textScaleFactor.scale(14) + 20;
+    final padding = const EI.s(h: 8);
+
+    return IntrinsicWidth(
+      child: AnimatedOpacity(
+        opacity: loading ? .33 : 1,
+        duration: 250.ms,
+        child: GD(
+          onTap: _onTap,
+          child: SB(
+            height: height,
+            child: C(
+              padding: padding,
+              decoration: BD(
+                color: color,
+                borderRadius: 60.r,
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.document_scanner_outlined, color: textColor, size: 18),
+                  2.w,
+                  T(
+                    s.knowledge_base,
                     s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
                   ),
                   4.w,

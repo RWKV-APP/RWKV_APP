@@ -286,5 +286,8 @@
   "more_questions": "More Questions",
   "model_loading": "Model Loading...",
   "no_conversations_yet": "No Conversations Yet",
-  "new_conversation": "New Conversation"
+  "new_conversation": "New Conversation",
+  "knowledge_base": "KnowledgeBase",
+  "knowledge_base_is_initializing": "knowledge base is initializing...",
+  "x_related_information_has_been_found": "%d related information has been found"
 }

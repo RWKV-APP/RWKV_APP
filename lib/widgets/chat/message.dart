@@ -485,7 +485,9 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
                 child: searching
                     ? _AdvancedBlinkText(text: S.current.searching, color: primary)
                     : Text(
-                        hasError ? S.current.search_failed : sprintf(S.current.x_pages_found, [widget.refInfo.list.length]),
+                        hasError
+                            ? S.current.search_failed
+                            : sprintf(S.current.x_related_information_has_been_found, [widget.refInfo.list.length]),
                         style: TextStyle(color: primary, fontSize: 12),
                       ),
               ),

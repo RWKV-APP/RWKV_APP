@@ -52,6 +52,8 @@ class _Chat {
 
   late final webSearch = qs(WebSearchMode.off);
 
+  late final knowledgeBase = qs(false);
+
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 }
 
@@ -353,7 +355,7 @@ extension $Chat on _Chat {
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
 
-    history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
+    history = withHistory ? await _historyWithSearch(receiveId, history) : [message];
     P.rwkv.sendMessages(history);
 
     _checkSensitive(message);
@@ -697,11 +699,28 @@ extension _$Chat on _Chat {
     receivingTokens.q = false;
   }
 
-  Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
+  /// Web or Document search
+  Future<List<String>> _historyWithSearch(int receiveId, List<String> allMessage) async {
     RefInfo ref = RefInfo.empty();
     final isZh = P.preference.currentLangIsZh;
 
-    if (webSearch.q != WebSearchMode.off) {
+    if (knowledgeBase.q) {
+      ref = ref.copyWith(enable: true);
+      try {
+        final prompt = allMessage.last;
+        _updateMessageById(id: receiveId, reference: ref);
+        final result = await P.rag.query(prompt);
+        final refs = result.map((e) => Reference.fromDocSearch(e)).toList();
+        ref = ref.copyWith(list: refs);
+        final searchResult = refs.map((e) => e.summary).join("\n");
+        allMessage.removeLast();
+        final msg = sprintf(isZh ? Config.promptSearchTemplateZh : Config.promptSearchTemplateEn, [searchResult, prompt]);
+        allMessage.add(msg);
+      } catch (e) {
+        ref = ref.copyWith(error: e.toString());
+      }
+
+    } else if (webSearch.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
         final prompt = allMessage.last;

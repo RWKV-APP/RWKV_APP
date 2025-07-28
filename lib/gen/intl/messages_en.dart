@@ -283,6 +283,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Join the Community",
     ),
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 Watch me!"),
+    "knowledge_base": MessageLookupByLibrary.simpleMessage("KnowledgeBase"),
+    "knowledge_base_is_initializing": MessageLookupByLibrary.simpleMessage(
+      "knowledge base is initializing...",
+    ),
     "large": MessageLookupByLibrary.simpleMessage("Large (120%)"),
     "lazy": MessageLookupByLibrary.simpleMessage("Lazy"),
     "license": MessageLookupByLibrary.simpleMessage("Open Source License"),
@@ -540,6 +544,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
+    "x_related_information_has_been_found":
+        MessageLookupByLibrary.simpleMessage(
+          "%d related information has been found",
+        ),
     "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",

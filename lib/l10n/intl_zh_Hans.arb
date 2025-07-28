@@ -285,5 +285,8 @@
   "more_questions": "更多问题",
   "model_loading": "模型加载中...",
   "no_conversations_yet": "暂时还没有任何对话",
-  "new_conversation": "开始新对话"
+  "new_conversation": "开始新对话",
+  "knowledge_base": "知识库",
+  "knowledge_base_is_initializing": "知识库初始化中...",
+  "x_related_information_has_been_found": "已找到 %d 个相关资料"
 }

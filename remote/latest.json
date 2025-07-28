@@ -10,7 +10,8 @@
     "share_chat_qrcode_en": "https://github.com/MollySophia/rwkv_mobile_flutter",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "controlled_rollout": {
-      "web_search": false
+      "web_search": false,
+      "rag": false
     },
     "model_config": [
       {

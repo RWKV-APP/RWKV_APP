@@ -4,13 +4,17 @@ import 'dart:io';
 import 'dart:math' show sqrt;
 
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:zone/db/objectbox.dart';
 import 'package:zone/objectbox.g.dart';
+import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/rag_init_dialog.dart';
 
 class ChunkQueryResult {
   final String text;
@@ -39,10 +43,17 @@ class RAG {
     }
   }
 
+  Future<bool> checkLoadModel() async {
+    if (!embeddingModelLoaded) {
+      await RagInitDialog.show(getContext()!);
+    }
+    return true;
+  }
+
   Future loadEmbeddingModel() async {
     if (!embeddingModelLoaded) {
-      final dir = r"D:\tmp\";
-      // final dir = (await getApplicationDocumentsDirectory()).path + "/";
+      // final dir = r"D:\tmp\";
+      final dir = (await getApplicationDocumentsDirectory()).path + "/";
       // final file = File("${dir}Qwen3-Embedding-0.6B-Q8_0.gguf");
       // final file = File("${dir}Qwen3-Embedding-0.6B-bf16.gguf");
       final file = File("${dir}bge-m3-F16.gguf");

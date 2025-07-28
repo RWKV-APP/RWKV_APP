@@ -2022,6 +2022,31 @@ class S {
   String get new_conversation {
     return Intl.message('开始新对话', name: 'new_conversation', desc: '', args: []);
   }
+
+  /// `知识库`
+  String get knowledge_base {
+    return Intl.message('知识库', name: 'knowledge_base', desc: '', args: []);
+  }
+
+  /// `知识库初始化中...`
+  String get knowledge_base_is_initializing {
+    return Intl.message(
+      '知识库初始化中...',
+      name: 'knowledge_base_is_initializing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已找到 %d 个相关资料`
+  String get x_related_information_has_been_found {
+    return Intl.message(
+      '已找到 %d 个相关资料',
+      name: 'x_related_information_has_been_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

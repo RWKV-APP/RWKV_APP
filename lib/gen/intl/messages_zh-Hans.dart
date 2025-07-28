@@ -222,6 +222,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "join_the_community": MessageLookupByLibrary.simpleMessage("加入社区"),
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 看我表演！"),
+    "knowledge_base": MessageLookupByLibrary.simpleMessage("知识库"),
+    "knowledge_base_is_initializing": MessageLookupByLibrary.simpleMessage(
+      "知识库初始化中...",
+    ),
     "large": MessageLookupByLibrary.simpleMessage("大 (120%)"),
     "lazy": MessageLookupByLibrary.simpleMessage("懒"),
     "license": MessageLookupByLibrary.simpleMessage("开源许可证"),
@@ -411,6 +415,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
+    "x_related_information_has_been_found":
+        MessageLookupByLibrary.simpleMessage("已找到 %d 个相关资料"),
     "you_are_now_using": m6,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
