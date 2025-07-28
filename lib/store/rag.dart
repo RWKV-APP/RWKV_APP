@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math' show sqrt;
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart';
@@ -20,8 +18,18 @@ class ChunkQueryResult {
   final String text;
   final String documentName;
   final double score;
+  final int dimension;
+  final String model;
+  final List<double> embedding;
 
-  ChunkQueryResult({required this.text, required this.documentName, required this.score});
+  ChunkQueryResult({
+    required this.text,
+    required this.documentName,
+    required this.score,
+    required this.dimension,
+    required this.model,
+    required this.embedding,
+  });
 }
 
 class RAG {
@@ -54,12 +62,13 @@ class RAG {
     if (!embeddingModelLoaded) {
       // final dir = r"D:\tmp\";
       final dir = (await getApplicationDocumentsDirectory()).path + "/";
-      // final file = File("${dir}Qwen3-Embedding-0.6B-Q8_0.gguf");
+      final file = File("${dir}Qwen3-Embedding-0.6B-Q8_0.gguf");
       // final file = File("${dir}Qwen3-Embedding-0.6B-bf16.gguf");
-      final file = File("${dir}bge-m3-F16.gguf");
+      // final file = File("${dir}bge-m3-F16.gguf");
       // final file = File("${dir}bge-m3-Q6_K.gguf");
       if (!file.existsSync()) {
         qqe('embedding model not found');
+        return;
       }
       _modelName = file.path.split(Platform.pathSeparator).last;
       await P.rwkv.loadEmbeddingModel(file.path).timeout(Duration(seconds: 30));
@@ -83,20 +92,25 @@ class RAG {
     _isQuerying = true;
     final box = ObjectBox.instance.store.box<DocumentChunk>();
     final queryVector = await P.rwkv.embed([text]);
-    final condition = DocumentChunk_.embedding.nearestNeighborsF32(queryVector[0], 10);
-    // final condition2 = DocumentChunk_.content.contains(text);
+    final condition = DocumentChunk_
+        .embedding //
+        .nearestNeighborsF32(queryVector[0], 100)
+        .and(DocumentChunk_.embedding.notNull());
     final result = await box.query(condition).build().findWithScoresAsync();
     qqq('rag query done: ${result.length}');
     _isQuerying = false;
-    final id2doc = <int, String>{
-      for (var doc in documents.q) doc.id: doc.name,
+    final id2doc = <int, Document>{
+      for (var doc in documents.q) doc.id: doc,
     };
     return result
         .map(
           (e) => ChunkQueryResult(
             text: e.object.content,
-            documentName: id2doc[e.object.documentId] ?? '-',
+            documentName: id2doc[e.object.documentId]?.name ?? '-',
+            dimension: e.object.embedding!.length,
+            model: id2doc[e.object.documentId]?.modelName ?? '-',
             score: e.score,
+            embedding: e.object.embedding!,
           ),
         )
         .sortedBy((e) => -e.score)
@@ -113,7 +127,7 @@ class RAG {
       // final p = (await getApplicationCacheDirectory()).path + "/FAQ.mdx";
       qqq('parseFile: $path');
       await for (var doc in _parseFile(path)) {
-        qqq('update=>${doc.name}, ${doc.chunks}');
+        qqq('update=>${doc.name}, ${doc.parsed}/${doc.chunks}');
         final docs = documents.q;
         final exist = docs.any((e) => e.id == doc.id);
         documents.q = [if (!exist) doc, ...docs];
@@ -258,57 +272,56 @@ class DocumentParser {
   final String path;
 
   List<String> _chunks = [];
-  final List<int> _buffer = [];
+  final List<String> _buffer = [];
 
-  late final _splitRunes = '\n\r,.;:?!。，、；：？！'.runes;
+  late final _splitRunes = '!。；？！'.runes;
 
   DocumentParser({required this.path});
 
-  Stream<ParseResult> parse({int offset = 0}) async* {
+  Stream<ParseResult> parse() async* {
     if (path.toLowerCase().endsWith('.pdf')) {
       yield* _parsePdf();
       return;
     }
-    yield* _parseText(offset: offset);
+    yield* _parseText();
   }
 
-  Stream<ParseResult> _parseText({int offset = 0}) async* {
+  Stream<ParseResult> _parseText() async* {
     final file = File(path);
     final rndFile = file.openSync();
     final len = await rndFile.length();
-    final parseLength = len - offset;
-    await rndFile.setPosition(offset);
 
-    var _offset = offset;
-    while (_offset < len) {
-      final byte = await rndFile.readByte();
-      final chunks = _parseByte(byte);
+    final text = await file.readAsString();
+
+    for (var i = 0; i < text.length; i++) {
+      final char = text[i];
+      final chunks = _parseByte(char);
       if (chunks != null) {
-        yield ParseResult(chunks: chunks, offset: _offset, length: parseLength);
+        yield ParseResult(chunks: chunks, offset: i, length: len);
       }
-      _offset++;
     }
   }
 
   Stream<ParseResult> _parsePdf() async* {
     final bytes = await File(path).readAsBytes();
     final PdfDocument document = PdfDocument(inputBytes: bytes);
-    final ext = PdfTextExtractor(document).extractText();
+    final ext = PdfTextExtractor(document).extractTextLines().map((e) => e.text).join('\n');
+
     document.dispose();
-    final bts = utf8.encode(ext);
-    for (int i = 0; i < bts.length; i++) {
-      final chunks = _parseByte(bts[i]);
+    for (var i = 0; i < ext.length; i++) {
+      final char = ext[i];
+      final chunks = _parseByte(char);
       if (chunks != null) {
-        yield ParseResult(chunks: chunks, offset: i, length: bts.length);
+        yield ParseResult(chunks: chunks, offset: i, length: ext.length);
       }
     }
   }
 
-  List<String>? _parseByte(int byte) {
-    _buffer.add(byte);
+  List<String>? _parseByte(String char) {
+    _buffer.add(char);
 
-    if (_splitRunes.contains(byte)) {
-      final chunk = utf8.decode(_buffer).trim();
+    if (_splitRunes.contains(char.runes.first)) {
+      final chunk = _buffer.join().trim();
       if (chunk.isEmpty) {
         return null;
       }

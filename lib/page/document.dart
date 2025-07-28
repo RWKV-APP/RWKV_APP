@@ -154,16 +154,22 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              chunk.text,
-              style: TextStyle(),
-              maxLines: 100,
+            InkWell(
+              child: Text(
+                chunk.text,
+                style: TextStyle(),
+                maxLines: 100,
+              ),
             ),
             Row(
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  "score:${chunk.score}, document:${chunk.documentName}, length: ${chunk.text.length}",
+                  "score:${chunk.score}, \ndimension:${chunk.dimension}, "
+                  "document:${chunk.documentName}, \nlength: ${chunk.text.length}\n "
+                  "model:${chunk.model}",
                   style: TextStyle(color: Colors.grey),
+                  maxLines: 100,
                 ),
                 Spacer(),
               ],
