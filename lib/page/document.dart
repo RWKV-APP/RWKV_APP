@@ -22,7 +22,7 @@ class PageDocuments extends ConsumerStatefulWidget {
 }
 
 class _PageDocumentsState extends ConsumerState<PageDocuments> {
-  List<EmbeddingQueryResult> searchResults = [];
+  List<ChunkQueryResult> searchResults = [];
 
   bool isSearch = false;
   final searchFocus = FocusNode();
@@ -150,19 +150,19 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
       padding: EdgeInsets.all(16),
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
-        final embedding = searchResults[index];
+        final chunk = searchResults[index];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              embedding.text,
+              chunk.text,
               style: TextStyle(),
               maxLines: 100,
             ),
             Row(
               children: [
                 Text(
-                  embedding.documentName,
+                  "${chunk.documentName}  length: ${chunk.text.length}",
                   style: TextStyle(color: Colors.grey),
                 ),
                 Spacer(),
@@ -245,7 +245,6 @@ class _Document extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final progress = (document.parsed / document.length) * 100;
     final theme = Theme.of(context);
 
     final ext = document.name.split('.').last.toLowerCase();
@@ -255,51 +254,84 @@ class _Document extends ConsumerWidget {
     String time = "";
 
     if (seconds > 60) {
-      time = "${(seconds / 60).toInt()} min";
+      time = "${(seconds / 60).toInt()} min ${(seconds % 60).toInt()} sec";
     } else {
       time = "${seconds.toInt()} sec";
     }
+
+    final parsed = document.chunks <= document.parsed;
 
     return Padding(
       padding: EdgeInsets.only(bottom: 12),
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 56,
-                width: 56,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: FaIcon(icon),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            if (!parsed)
+              Positioned.fill(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(document.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                    SizedBox(height: 4),
-                    Text("分块: ${document.chunks}, 字数: ${document.words}\n耗时：$time"),
-                    if (progress < 100) Text("进度: ${progress.toStringAsFixed(2)}%"),
+                    Expanded(
+                      flex: document.parsed,
+                      child: Container(
+                        color: Colors.lightGreen.withAlpha(100),
+                      ),
+                    ),
+                    Expanded(
+                      flex: document.chunks - document.parsed,
+                      child: SizedBox(),
+                    ),
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  P.rag.deleteDocument(document.id);
-                },
-                icon: FaIcon(FontAwesomeIcons.trashCan),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 56,
+                    width: 56,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: FaIcon(icon),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(document.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                        SizedBox(height: 4),
+                        Text("分块: ${document.chunks}, 字数: ${document.characters}"),
+                        Text("${parsed ? '' : '${document.parsed}/${document.chunks}'}   耗时: $time".trim()),
+                      ],
+                    ),
+                  ),
+                  if (!parsed)
+                    IconButton(
+                      onPressed: () {
+                        P.rag.parseDocument(document);
+                      },
+                      icon: FaIcon(FontAwesomeIcons.fileImport),
+                    ),
+                  IconButton(
+                    onPressed: () {
+                      P.rag.deleteDocument(document.id);
+                    },
+                    icon: FaIcon(FontAwesomeIcons.trashCan),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

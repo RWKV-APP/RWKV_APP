@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:objectbox/objectbox.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zone/objectbox.g.dart' show openStore;
 
 @Entity()
-class Embedding {
+class DocumentChunk {
   @Id()
   int id = 0;
 
@@ -11,15 +13,15 @@ class Embedding {
 
   String content = '';
 
-  int worlds = 0;
+  int length = 0;
 
   int offset = 0;
 
-  int length = 0;
+  List<String> tags = [];
 
   @HnswIndex(dimensions: 1024, distanceType: VectorDistanceType.cosine)
   @Property(type: PropertyType.floatVector)
-  List<double>? segment;
+  List<double>? embedding;
 }
 
 @Entity()
@@ -35,7 +37,7 @@ class Document {
 
   int lines = 0;
 
-  int words = 0;
+  int characters = 0;
 
   int tokens = 0;
 
@@ -59,8 +61,16 @@ class ObjectBox {
 
   static Future<ObjectBox> init() async {
     final docsDir = await getApplicationDocumentsDirectory();
-    final store = await openStore(directory: "${docsDir.path}\\embeddings.obx");
+    final store = await openStore(directory: "${docsDir.path}${Platform.pathSeparator}embeddings.obx");
     instance = ObjectBox._create(store);
     return instance;
+  }
+
+  static Future cleanup() async {
+    final docsDir = await getApplicationDocumentsDirectory();
+    final file = "${docsDir.path}${Platform.pathSeparator}embeddings.obx";
+    if (await File(file).exists()) {
+      await File(file).delete();
+    }
   }
 }

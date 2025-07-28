@@ -22,7 +22,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 9050756299533494181),
     name: 'Document',
-    lastPropertyId: const obx_int.IdUid(12, 6663247131076862501),
+    lastPropertyId: const obx_int.IdUid(13, 8950696459568157375),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -80,12 +80,6 @@ final _entities = <obx_int.ModelEntity>[
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(10, 6693480902182153074),
-        name: 'words',
-        type: 6,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
         id: const obx_int.IdUid(11, 3324245000496020868),
         name: 'tokens',
         type: 6,
@@ -97,59 +91,65 @@ final _entities = <obx_int.ModelEntity>[
         type: 6,
         flags: 0,
       ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 8950696459568157375),
+        name: 'characters',
+        type: 6,
+        flags: 0,
+      ),
     ],
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
   obx_int.ModelEntity(
-    id: const obx_int.IdUid(2, 9040188549526098184),
-    name: 'Embedding',
-    lastPropertyId: const obx_int.IdUid(8, 1703067598575696374),
+    id: const obx_int.IdUid(3, 7494708861948236679),
+    name: 'DocumentChunk',
+    lastPropertyId: const obx_int.IdUid(7, 7621660568695857611),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(1, 7383642888205552793),
+        id: const obx_int.IdUid(1, 385920591795847325),
         name: 'id',
         type: 6,
         flags: 1,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(2, 715763136792720490),
+        id: const obx_int.IdUid(2, 3526320533653921916),
         name: 'documentId',
         type: 6,
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(4, 2529462370363360507),
-        name: 'offset',
-        type: 6,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(5, 2848111422213662443),
-        name: 'length',
-        type: 6,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(6, 3285724021795709819),
-        name: 'segment',
-        type: 28,
-        flags: 8,
-        indexId: const obx_int.IdUid(1, 8294141658394176224),
-        hnswParams: obx_int.ModelHnswParams(dimensions: 1024, distanceType: 2),
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(7, 5144852761575768587),
+        id: const obx_int.IdUid(3, 4829892742788174861),
         name: 'content',
         type: 9,
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(8, 1703067598575696374),
-        name: 'worlds',
+        id: const obx_int.IdUid(4, 6519734770467666302),
+        name: 'length',
         type: 6,
         flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 4657586527933538278),
+        name: 'offset',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 7065832917335527966),
+        name: 'tags',
+        type: 30,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 7621660568695857611),
+        name: 'embedding',
+        type: 28,
+        flags: 8,
+        indexId: const obx_int.IdUid(2, 5075093324013003195),
+        hnswParams: obx_int.ModelHnswParams(dimensions: 1024, distanceType: 2),
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -195,13 +195,23 @@ Future<obx.Store> openStore({
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(2, 9040188549526098184),
-    lastIndexId: const obx_int.IdUid(1, 8294141658394176224),
+    lastEntityId: const obx_int.IdUid(3, 7494708861948236679),
+    lastIndexId: const obx_int.IdUid(2, 5075093324013003195),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
-    retiredEntityUids: const [],
+    retiredEntityUids: const [9040188549526098184],
     retiredIndexUids: const [],
-    retiredPropertyUids: const [7945762670151713382],
+    retiredPropertyUids: const [
+      7945762670151713382,
+      6693480902182153074,
+      7383642888205552793,
+      715763136792720490,
+      2529462370363360507,
+      2848111422213662443,
+      3285724021795709819,
+      5144852761575768587,
+      1703067598575696374,
+    ],
     retiredRelationUids: const [],
     modelVersion: 5,
     modelVersionParserMinimum: 5,
@@ -224,7 +234,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.tags.map(fbb.writeString).toList(growable: false),
         );
         final modelNameOffset = fbb.writeString(object.modelName);
-        fbb.startTable(13);
+        fbb.startTable(14);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, nameOffset);
         fbb.addOffset(2, pathOffset);
@@ -234,9 +244,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(6, object.chunks);
         fbb.addOffset(7, modelNameOffset);
         fbb.addInt64(8, object.lines);
-        fbb.addInt64(9, object.words);
         fbb.addInt64(10, object.tokens);
         fbb.addInt64(11, object.time);
+        fbb.addInt64(12, object.characters);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -263,34 +273,42 @@ obx_int.ModelDefinition getObjectBoxModel() {
             asciiOptimization: true,
           ).vTableGet(buffer, rootOffset, 18, '')
           ..lines = const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0)
-          ..words = const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0)
           ..tokens = const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0)
-          ..time = const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0);
+          ..time = const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0)
+          ..characters = const fb.Int64Reader().vTableGet(
+            buffer,
+            rootOffset,
+            28,
+            0,
+          );
 
         return object;
       },
     ),
-    Embedding: obx_int.EntityDefinition<Embedding>(
+    DocumentChunk: obx_int.EntityDefinition<DocumentChunk>(
       model: _entities[1],
-      toOneRelations: (Embedding object) => [],
-      toManyRelations: (Embedding object) => {},
-      getId: (Embedding object) => object.id,
-      setId: (Embedding object, int id) {
+      toOneRelations: (DocumentChunk object) => [],
+      toManyRelations: (DocumentChunk object) => {},
+      getId: (DocumentChunk object) => object.id,
+      setId: (DocumentChunk object, int id) {
         object.id = id;
       },
-      objectToFB: (Embedding object, fb.Builder fbb) {
-        final segmentOffset = object.segment == null
-            ? null
-            : fbb.writeListFloat32(object.segment!);
+      objectToFB: (DocumentChunk object, fb.Builder fbb) {
         final contentOffset = fbb.writeString(object.content);
-        fbb.startTable(9);
+        final tagsOffset = fbb.writeList(
+          object.tags.map(fbb.writeString).toList(growable: false),
+        );
+        final embeddingOffset = object.embedding == null
+            ? null
+            : fbb.writeListFloat32(object.embedding!);
+        fbb.startTable(8);
         fbb.addInt64(0, object.id);
         fbb.addInt64(1, object.documentId);
-        fbb.addInt64(3, object.offset);
-        fbb.addInt64(4, object.length);
-        fbb.addOffset(5, segmentOffset);
-        fbb.addOffset(6, contentOffset);
-        fbb.addInt64(7, object.worlds);
+        fbb.addOffset(2, contentOffset);
+        fbb.addInt64(3, object.length);
+        fbb.addInt64(4, object.offset);
+        fbb.addOffset(5, tagsOffset);
+        fbb.addOffset(6, embeddingOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -298,7 +316,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final buffer = fb.BufferContext(fbData);
         final rootOffset = buffer.derefObject(0);
 
-        final object = Embedding()
+        final object = DocumentChunk()
           ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
           ..documentId = const fb.Int64Reader().vTableGet(
             buffer,
@@ -306,21 +324,19 @@ obx_int.ModelDefinition getObjectBoxModel() {
             6,
             0,
           )
-          ..offset = const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)
-          ..length = const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0)
-          ..segment = const fb.ListReader<double>(
-            fb.Float32Reader(),
-            lazy: false,
-          ).vTableGetNullable(buffer, rootOffset, 14)
           ..content = const fb.StringReader(
             asciiOptimization: true,
-          ).vTableGet(buffer, rootOffset, 16, '')
-          ..worlds = const fb.Int64Reader().vTableGet(
-            buffer,
-            rootOffset,
-            18,
-            0,
-          );
+          ).vTableGet(buffer, rootOffset, 8, '')
+          ..length = const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)
+          ..offset = const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0)
+          ..tags = const fb.ListReader<String>(
+            fb.StringReader(asciiOptimization: true),
+            lazy: false,
+          ).vTableGet(buffer, rootOffset, 14, [])
+          ..embedding = const fb.ListReader<double>(
+            fb.Float32Reader(),
+            lazy: false,
+          ).vTableGetNullable(buffer, rootOffset, 16);
 
         return object;
       },
@@ -377,56 +393,56 @@ class Document_ {
     _entities[0].properties[8],
   );
 
-  /// See [Document.words].
-  static final words = obx.QueryIntegerProperty<Document>(
-    _entities[0].properties[9],
-  );
-
   /// See [Document.tokens].
   static final tokens = obx.QueryIntegerProperty<Document>(
-    _entities[0].properties[10],
+    _entities[0].properties[9],
   );
 
   /// See [Document.time].
   static final time = obx.QueryIntegerProperty<Document>(
+    _entities[0].properties[10],
+  );
+
+  /// See [Document.characters].
+  static final characters = obx.QueryIntegerProperty<Document>(
     _entities[0].properties[11],
   );
 }
 
-/// [Embedding] entity fields to define ObjectBox queries.
-class Embedding_ {
-  /// See [Embedding.id].
-  static final id = obx.QueryIntegerProperty<Embedding>(
+/// [DocumentChunk] entity fields to define ObjectBox queries.
+class DocumentChunk_ {
+  /// See [DocumentChunk.id].
+  static final id = obx.QueryIntegerProperty<DocumentChunk>(
     _entities[1].properties[0],
   );
 
-  /// See [Embedding.documentId].
-  static final documentId = obx.QueryIntegerProperty<Embedding>(
+  /// See [DocumentChunk.documentId].
+  static final documentId = obx.QueryIntegerProperty<DocumentChunk>(
     _entities[1].properties[1],
   );
 
-  /// See [Embedding.offset].
-  static final offset = obx.QueryIntegerProperty<Embedding>(
+  /// See [DocumentChunk.content].
+  static final content = obx.QueryStringProperty<DocumentChunk>(
     _entities[1].properties[2],
   );
 
-  /// See [Embedding.length].
-  static final length = obx.QueryIntegerProperty<Embedding>(
+  /// See [DocumentChunk.length].
+  static final length = obx.QueryIntegerProperty<DocumentChunk>(
     _entities[1].properties[3],
   );
 
-  /// See [Embedding.segment].
-  static final segment = obx.QueryHnswProperty<Embedding>(
+  /// See [DocumentChunk.offset].
+  static final offset = obx.QueryIntegerProperty<DocumentChunk>(
     _entities[1].properties[4],
   );
 
-  /// See [Embedding.content].
-  static final content = obx.QueryStringProperty<Embedding>(
+  /// See [DocumentChunk.tags].
+  static final tags = obx.QueryStringVectorProperty<DocumentChunk>(
     _entities[1].properties[5],
   );
 
-  /// See [Embedding.worlds].
-  static final worlds = obx.QueryIntegerProperty<Embedding>(
+  /// See [DocumentChunk.embedding].
+  static final embedding = obx.QueryHnswProperty<DocumentChunk>(
     _entities[1].properties[6],
   );
 }

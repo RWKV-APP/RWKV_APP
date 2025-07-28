@@ -7,17 +7,16 @@ import 'package:collection/collection.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:zone/db/objectbox.dart';
 import 'package:zone/objectbox.g.dart';
 import 'package:zone/store/p.dart';
 
-class EmbeddingQueryResult {
+class ChunkQueryResult {
   final String text;
   final String documentName;
 
-  EmbeddingQueryResult({required this.text, required this.documentName});
+  ChunkQueryResult({required this.text, required this.documentName});
 }
 
 class RAG {
@@ -25,6 +24,9 @@ class RAG {
   bool _isQuerying = false;
   final documents = qs<List<Document>>([]);
   String _modelName = '';
+  final Stopwatch _stopwatchParse = Stopwatch();
+
+  StreamSubscription? _parsingSubscription;
 
   Future init() async {
     try {
@@ -32,13 +34,14 @@ class RAG {
       documents.q = await loadDocumentList();
     } catch (e) {
       qqe('init error: $e');
+      // await ObjectBox.cleanup();
     }
   }
 
   Future loadEmbeddingModel() async {
     if (!embeddingModelLoaded) {
-      // final dir = r"D:\tmp\";
-      final dir = (await getApplicationDocumentsDirectory()).path + "/";
+      final dir = r"D:\tmp\";
+      // final dir = (await getApplicationDocumentsDirectory()).path + "/";
       // final file = File("${dir}Qwen3-Embedding-0.6B-Q8_0.gguf");
       // final file = File("${dir}Qwen3-Embedding-0.6B-bf16.gguf");
       final file = File("${dir}bge-m3-F16.gguf");
@@ -52,7 +55,7 @@ class RAG {
     }
   }
 
-  Future<List<EmbeddingQueryResult>> query(String text) async {
+  Future<List<ChunkQueryResult>> query(String text) async {
     qqq('rag query: $text');
     if (text.isEmpty) {
       return [];
@@ -66,17 +69,17 @@ class RAG {
     }).timeout(Duration(seconds: 10));
 
     _isQuerying = true;
-    final box = ObjectBox.instance.store.box<Embedding>();
+    final box = ObjectBox.instance.store.box<DocumentChunk>();
     final queryVector = await P.rwkv.embed([text]);
-    final condition = Embedding_.segment.nearestNeighborsF32(queryVector[0], 10);
-    // final condition2 = Embedding_.content.contains(text);
+    final condition = DocumentChunk_.embedding.nearestNeighborsF32(queryVector[0], 10);
+    // final condition2 = DocumentChunk_.content.contains(text);
     final result = await box.query(condition).build().findAsync();
     qqq('rag query done: ${result.length}');
     _isQuerying = false;
     final id2doc = <int, String>{
       for (var doc in documents.q) doc.id: doc.name,
     };
-    return result.map((e) => EmbeddingQueryResult(text: e.content, documentName: id2doc[e.documentId] ?? '-')).toList();
+    return result.map((e) => ChunkQueryResult(text: e.content, documentName: id2doc[e.documentId] ?? '-')).toList();
   }
 
   Future<List<Document>> loadDocumentList() async {
@@ -102,6 +105,7 @@ class RAG {
       rethrow;
     } finally {
       qqq('parseFile done');
+      _stopwatchParse.stop();
     }
   }
 
@@ -109,8 +113,8 @@ class RAG {
     if (id == null) {
       return;
     }
-    final boxEmbedding = ObjectBox.instance.store.box<Embedding>();
-    final condition = Embedding_.documentId.equals(id);
+    final boxEmbedding = ObjectBox.instance.store.box<DocumentChunk>();
+    final condition = DocumentChunk_.documentId.equals(id);
     final ids = await boxEmbedding.query(condition).build().findIdsAsync();
     await boxEmbedding.removeManyAsync(ids);
 
@@ -120,19 +124,18 @@ class RAG {
   }
 
   Stream<Document> _parseFile(String path) async* {
+    final boxEmbedding = ObjectBox.instance.store.box<DocumentChunk>();
     final file = File(path);
 
-    final boxEmbedding = ObjectBox.instance.store.box<Embedding>();
-
-    final fileName = file.path.split(separator).last;
-    final startAt = DateTime.now().millisecondsSinceEpoch;
-
+    _stopwatchParse.reset();
+    _stopwatchParse.start();
     var doc = Document()
-      ..name = fileName
+      ..name = file.path.split(separator).last
       ..path = path
       ..chunks = 0
       ..parsed = 0
       ..modelName = _modelName
+      ..time = 0
       ..length = await file.length();
 
     final boxDocument = ObjectBox.instance.store.box<Document>();
@@ -140,35 +143,67 @@ class RAG {
 
     yield doc;
 
+    /// parse and store document chunk
     final stream = DocumentParser(path: path).parse();
     await for (var parsed in stream) {
-      final chunk = await _embedText(parsed.chunks.join('\n'));
+      final chunk = parsed.chunks.join('\n');
       await boxEmbedding.putAsync(
-        Embedding()
-          ..segment = chunk.embedding
+        DocumentChunk()
           ..documentId = doc.id
-          ..content = chunk.content,
+          ..content = chunk,
       );
       doc.chunks += 1;
-      doc.time = DateTime.now().millisecondsSinceEpoch - startAt;
+      doc.time = _stopwatchParse.elapsed.inMilliseconds;
       doc.lines += parsed.chunks.length;
-      doc.parsed = parsed.offset;
-      doc.words += chunk.content.length;
+      doc.characters += chunk.length;
       yield doc;
     }
-    doc.parsed = doc.length;
-    doc.time = DateTime.now().millisecondsSinceEpoch - startAt;
+    doc.time = _stopwatchParse.elapsed.inMilliseconds;
     await boxDocument.putAsync(doc);
     yield doc;
+    _stopwatchParse.stop();
+
+    yield* _parseDocumentInternal(doc);
   }
 
-  Future<_EmbeddedChunk> _embedText(String chunk) async {
-    final embedding = await P.rwkv.embed([chunk]);
-    final _chunk = _EmbeddedChunk(content: chunk, embedding: embedding[0]);
-    return _chunk;
+  void parseDocument(Document doc) async {
+    _parsingSubscription?.cancel();
+    _parsingSubscription = _parseDocumentInternal(doc).listen((e) {
+      documents.q = [e, ...documents.q.where((d) => d.id != e.id)];
+    });
   }
 
-  double _similarity(List<double> a, List<double> b) {
+  Stream<Document> _parseDocumentInternal(Document doc) async* {
+    final boxDocument = ObjectBox.instance.store.box<Document>();
+    final boxChunk = ObjectBox.instance.store.box<DocumentChunk>();
+    Condition<DocumentChunk> condition = DocumentChunk_
+        .documentId //
+        .equals(doc.id)
+        .and(DocumentChunk_.embedding.isNull());
+    final chunks = await boxChunk.query(condition).build().findAsync();
+
+    if (chunks.isEmpty) {
+      qqq('no chunks need to parse');
+      return;
+    }
+
+    _stopwatchParse.reset();
+    _stopwatchParse.start();
+    int time = doc.time;
+    for (var i = 0; i < chunks.length; i++) {
+      final chunk = chunks[i];
+      final embedding = await P.rwkv.embed([chunk.content]);
+      chunk.embedding = embedding[0];
+      doc.time = time + _stopwatchParse.elapsed.inMilliseconds;
+      doc.parsed += 1;
+      yield doc;
+      boxDocument.put(doc);
+      await boxChunk.putAsync(chunk);
+    }
+    _stopwatchParse.stop();
+  }
+
+  static double similarity(List<double> a, List<double> b) {
     if (a.length != b.length || a.isEmpty) {
       throw Exception("Invalid embedding length");
     }
@@ -187,13 +222,6 @@ class RAG {
   }
 }
 
-class _EmbeddedChunk {
-  final String content;
-  final List<double> embedding;
-
-  _EmbeddedChunk({required this.content, required this.embedding});
-}
-
 class ParseResult {
   final List<String> chunks;
   final int offset;
@@ -203,8 +231,8 @@ class ParseResult {
 }
 
 class DocumentParser {
-  final int minChunkSize = 200;
-  final int maxChunkSize = 300;
+  final int minChunkSize = 50;
+  final int maxChunkSize = 150;
 
   final String path;
 
