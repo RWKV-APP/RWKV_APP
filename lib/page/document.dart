@@ -162,7 +162,7 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
             Row(
               children: [
                 Text(
-                  "${chunk.documentName}  length: ${chunk.text.length}",
+                  "score:${chunk.score}, document:${chunk.documentName}, length: ${chunk.text.length}",
                   style: TextStyle(color: Colors.grey),
                 ),
                 Spacer(),

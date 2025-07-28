@@ -15,8 +15,9 @@ import 'package:zone/store/p.dart';
 class ChunkQueryResult {
   final String text;
   final String documentName;
+  final double score;
 
-  ChunkQueryResult({required this.text, required this.documentName});
+  ChunkQueryResult({required this.text, required this.documentName, required this.score});
 }
 
 class RAG {
@@ -73,13 +74,22 @@ class RAG {
     final queryVector = await P.rwkv.embed([text]);
     final condition = DocumentChunk_.embedding.nearestNeighborsF32(queryVector[0], 10);
     // final condition2 = DocumentChunk_.content.contains(text);
-    final result = await box.query(condition).build().findAsync();
+    final result = await box.query(condition).build().findWithScoresAsync();
     qqq('rag query done: ${result.length}');
     _isQuerying = false;
     final id2doc = <int, String>{
       for (var doc in documents.q) doc.id: doc.name,
     };
-    return result.map((e) => ChunkQueryResult(text: e.content, documentName: id2doc[e.documentId] ?? '-')).toList();
+    return result
+        .map(
+          (e) => ChunkQueryResult(
+            text: e.object.content,
+            documentName: id2doc[e.object.documentId] ?? '-',
+            score: e.score,
+          ),
+        )
+        .sortedBy((e) => -e.score)
+        .toList();
   }
 
   Future<List<Document>> loadDocumentList() async {
