@@ -54,6 +54,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `没有音频文件`
+  String get no_audio_file {
+    return Intl.message('没有音频文件', name: 'no_audio_file', desc: '', args: []);
+  }
+
   /// `Github 仓库`
   String get github_repository {
     return Intl.message(

@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -10,7 +8,6 @@ import 'package:photo_viewer/photo_viewer.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/args.dart';
-import 'package:zone/func/merge_wav.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,14 +69,13 @@ class Message extends ConsumerWidget {
 
     if (msg.type == model.MessageType.ttsGeneration) {
       final start = DateTime.now().millisecondsSinceEpoch;
-      final audioUrl = await mergeWavFiles(msg.ttsFilePaths!);
       final end = DateTime.now().millisecondsSinceEpoch;
       qqq("mergeWavFiles: ${end - start}ms");
       if (P.world.playing.q) {
         P.world.stopPlaying();
       } else {
         if (!msg.ttsIsDone) Alert.info(S.current.playing_partial_generated_audio);
-        P.world.play(path: audioUrl);
+        P.world.play(path: msg.audioUrl!);
       }
       return;
     }

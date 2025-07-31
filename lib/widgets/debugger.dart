@@ -258,13 +258,10 @@ class _TTSDebugger extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
     final endTime = ref.watch(P.world.endTime);
-    final filePaths = ref.watch(P.tts.filePaths);
     final interactingInstruction = ref.watch(P.tts.interactingInstruction);
     final intonationShown = ref.watch(P.tts.intonationShown);
     final qb = ref.watch(P.app.qb);
-    final overallProgress = ref.watch(P.tts.overallProgress);
     final paddingTop = ref.watch(P.app.paddingTop);
-    final perWavProgress = ref.watch(P.tts.perWavProgress);
     final receiveId = ref.watch(P.chat.receiveId);
     final recording = ref.watch(P.world.recording);
     final selectSourceAudioPath = ref.watch(P.tts.selectSourceAudioPath);
@@ -278,8 +275,11 @@ class _TTSDebugger extends ConsumerWidget {
     final spkShown = ref.watch(P.tts.spkShown);
     final startTime = ref.watch(P.world.startTime);
     final textInInput = ref.watch(P.tts.textInInput);
-    final ttsDone = ref.watch(P.tts.ttsDone);
     final qw = ref.watch(P.app.qw);
+    final isDesktop = ref.watch(P.app.isDesktop);
+    final generating = ref.watch(P.tts.generating);
+    final asFull = ref.watch(P.tts.asFull);
+    final asExhaust = ref.watch(P.tts.asExhaust);
 
     return Positioned(
       left: 0,
@@ -291,7 +291,7 @@ class _TTSDebugger extends ConsumerWidget {
           textStyle: TS(
             ff: "Monospace",
             c: qw,
-            s: 8,
+            s: isDesktop ? 20 : 8,
           ),
           color: kC,
           child: SB(
@@ -303,16 +303,6 @@ class _TTSDebugger extends ConsumerWidget {
                 children:
                     [
                       paddingTop.h,
-                      T("paddingTop".codeToName),
-                      T(paddingTop.toString()),
-                      T("overallProgress".codeToName),
-                      T(overallProgress.toString()),
-                      T("perWavProgress".codeToName),
-                      T(perWavProgress.toString()),
-                      T("filePaths".codeToName),
-                      Column(
-                        children: filePaths.map((e) => T(e)).toList(),
-                      ),
                       T("receiveId".codeToName),
                       T(receiveId.toString()),
                       T("selectedSpkPanelFilter".codeToName),
@@ -323,12 +313,8 @@ class _TTSDebugger extends ConsumerWidget {
                       T(startTime.toString()),
                       T("endTime".codeToName),
                       T(endTime.toString()),
-                      T("selectedSpkName".codeToName),
-                      T(selectedSpkName.toString()),
                       T("selectSourceAudioPath".codeToName),
                       T(selectSourceAudioPath.toString()),
-                      T("ttsDone".codeToName),
-                      T(ttsDone.toString()),
                       T("spkNames length".codeToName),
                       T(spkNames.length.toString()),
                       T("spkShown".codeToName),
@@ -351,6 +337,12 @@ class _TTSDebugger extends ConsumerWidget {
                       T(selectedInstruction.toString()),
                       T("recording".codeToName),
                       T(recording.toString()),
+                      T("generating".codeToName),
+                      T(generating.toString()),
+                      T("asFull".codeToName),
+                      T(asFull.toString()),
+                      T("asExhaust".codeToName),
+                      T(asExhaust.toString()),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

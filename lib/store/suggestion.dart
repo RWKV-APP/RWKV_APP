@@ -71,12 +71,17 @@ class _Suggestion {
   /// All suggestion config
   final config = qs<SuggestionConfig>(_DefaultSuggestion.zh);
 
+  final ttsTicker = qs<int>(0);
+
   /// suggestion prompt list at top of the text input
   /// item type: [String] or [Suggestion]
   final suggestion = qp<List<dynamic>>((ref) {
     final imagePath = ref.watch(P.world.imagePath);
     final demoType = ref.watch(P.app.demoType);
     final messages = ref.watch(P.msg.list);
+    final _ = ref.watch(P.suggestion.ttsTicker);
+    final _ = ref.watch(P.rwkv.currentModel);
+    final _ = ref.watch(P.msg.length);
 
     final hideCases = [
       demoType == DemoType.chat && messages.isNotEmpty,

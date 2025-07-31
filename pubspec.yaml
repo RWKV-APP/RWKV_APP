@@ -73,6 +73,7 @@ dependencies:
     git:
       url: https://github.com/pvsvamsi/Disable-Battery-Optimizations
       ref: 3bd744d
+  mp_audio_stream: ^0.2.2
   font_awesome_flutter: ^10.8.0
   shelf: ^1.4.2
   shelf_web_socket: ^3.0.0

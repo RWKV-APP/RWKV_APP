@@ -28,6 +28,7 @@ class Suggestions extends ConsumerWidget {
       case DemoType.world:
         P.chat.send(suggestion);
       case DemoType.tts:
+        P.suggestion.ttsTicker.q += 1;
         final current = P.chat.textEditingController.text;
         if (current.isEmpty) {
           P.chat.textEditingController.text = suggestion;

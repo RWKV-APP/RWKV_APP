@@ -1046,6 +1046,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
+  mp_audio_stream:
+    dependency: "direct main"
+    description:
+      name: mp_audio_stream
+      sha256: "078f9b9118056618707617bb6e853ac457389b9b90a7b5a75b90686aefdf2343"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.2"
   node_preamble:
     dependency: transitive
     description:

@@ -27,11 +27,12 @@ extension _TTSStatic on _TTS {
     "Korean": Language.ko,
     "Chinese(PRC)": Language.zh_Hans,
   };
-  static const _defaultSpkName = "Chinese(PRC)_Aventurine_4";
+  static const _defaultSpkName = "Chinese(PRC)_Kafka_8";
 }
 
 class _TTS {
   late final audioInteractorShown = qs(false);
+  @Deprecated("Use sparktts instead")
   late final cfmSteps = qs(_TTSStatic._defaultCfmSteps);
   late final focusNode = FocusNode();
   late final hasFocus = qs(false);
@@ -49,11 +50,14 @@ class _TTS {
   late final spkShown = qs(false);
   late final textEditingController = TextEditingController(text: _TTSStatic._defaultTextInInput);
   late final textInInput = qs(_TTSStatic._defaultTextInInput);
-  late final ttsDone = qs(true);
 
-  late final overallProgress = qs(0.0);
-  late final perWavProgress = qs<List<double>>([]);
-  late final filePaths = qs<List<String>>([]);
+  late final generating = qs(false);
+  late final latestBufferLength = qs(0);
+
+  mp_audio_stream.AudioStream? audioStream;
+  late final asFull = qs(0);
+  late final asExhaust = qs(0);
+  Timer? _asTimer;
 
   Timer? _queryTimer;
 }
@@ -134,14 +138,14 @@ extension _$TTS on _TTS {
   }
 
   void _startQueryTimer() {
-    qq;
-    _queryTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) => _pulse());
+    _queryTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) => _pulse());
   }
 
   void _pulse() {
-    P.rwkv.send(to_rwkv.GetTTSGenerationProgress());
+    // P.rwkv.send(to_rwkv.GetTTSGenerationProgress());
     P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
-    P.rwkv.send(to_rwkv.GetTTSOutputFileList());
+    P.rwkv.send(to_rwkv.GetTTSStreamingBuffer());
+    // P.rwkv.send(to_rwkv.GetTTSOutputFileList());
   }
 
   void _stopQueryTimer() {
@@ -157,13 +161,30 @@ extension _$TTS on _TTS {
     required String promptSpeechText,
   }) async {
     qq;
-    if (!ttsDone.q) {
-      qqe("ttsDone is true");
-      Alert.warning("TTS is running, please wait for it to finish");
-      return;
+
+    final audioStream = mp_audio_stream.getAudioStream();
+    final res = audioStream.init(
+      sampleRate: 16000,
+      channels: 1,
+      bufferMilliSec: 60000,
+      waitingBufferMilliSec: 200,
+    );
+    audioStream.resetStat();
+    if (res != 0) {
+      qqe("audioStream init failed: $res");
+    } else {
+      audioStream.resume();
     }
 
-    ttsDone.q = false;
+    _asTimer?.cancel();
+    _asTimer = null;
+    _asTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      final stat = audioStream.stat();
+      asFull.q = stat.full;
+      asExhaust.q = stat.exhaust;
+    });
+
+    this.audioStream = audioStream;
 
     P.rwkv.send(
       to_rwkv.StartTTS(
@@ -175,10 +196,8 @@ extension _$TTS on _TTS {
       ),
     );
 
-    filePaths.q = [];
-    perWavProgress.q = [];
-    overallProgress.q = 0.0;
-    ttsDone.q = false;
+    latestBufferLength.q = 0;
+    generating.q = true;
 
     final receiveId = P.chat.receiveId.q;
 
@@ -195,32 +214,28 @@ extension _$TTS on _TTS {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     switch (event) {
-      case from_rwkv.TTSResult res:
-        _onTTSResult(res);
-      case from_rwkv.TTSGenerationProgress res:
-        qqq("overallProgress: ${res.overallProgress}");
-        qqq("perWavProgress: ${res.perWavProgress}");
-      case from_rwkv.TTSGenerationStart res:
-        qqq(res);
-      case from_rwkv.TTSOutputFileList res:
-        qqq(res.outputFileList);
+      case from_rwkv.TTSStreamingBuffer res:
+        _onTTSStreamingBuffer(res);
+        break;
       default:
         break;
     }
   }
 
-  void _onTTSResult(from_rwkv.TTSResult res) async {
-    final filePaths = res.filePaths;
-    final perWavProgress = res.perWavProgress.map((e) => (e * 100).round() / 100.0).toList();
-    final overallProgress = (res.overallProgress * 100).round() / 100.0;
+  void _onTTSStreamingBuffer(from_rwkv.TTSStreamingBuffer res) async {
+    final buffer = res.ttsStreamingBuffer;
+    final length = res.ttsStreamingBufferLength;
+    final generating = res.generating;
+    final allReceived = !generating && this.generating.q;
+    final addedLength = length - latestBufferLength.q;
+    final rawFloatList = res.rawFloatList.map((e) => e.toDouble() * 1).toList();
 
-    this.filePaths.q = filePaths;
-    this.perWavProgress.q = perWavProgress;
-    this.overallProgress.q = overallProgress;
+    if (addedLength != 0) {
+      final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
+      audioStream?.push(float32Data);
+    }
 
-    final allReceived = overallProgress >= 1.0;
     final receiveId = P.chat.receiveId.q;
-
     if (receiveId == null) {
       qqw("receiveId is null");
       return;
@@ -229,16 +244,14 @@ extension _$TTS on _TTS {
     P.chat._updateMessageById(
       id: receiveId,
       changing: !allReceived,
-      ttsOverallProgress: overallProgress,
-      ttsPerWavProgress: perWavProgress,
-      ttsFilePaths: filePaths,
+      ttsOverallProgress: allReceived ? 1.0 : 0.5,
     );
 
-    if (allReceived) {
-      _stopQueryTimer();
-      ttsDone.q = true;
-      return;
-    }
+    this.generating.q = generating;
+    latestBufferLength.q = length;
+
+    if (!allReceived) return;
+    _stopQueryTimer();
   }
 
   void _onStreamDone() {
@@ -367,6 +380,15 @@ extension $TTS on _TTS {
 
     if (!P.chat.inputHasContent.q) return;
 
+    if (generating.q) {
+      qqq("Generating is true");
+      Alert.warning("TTS is running, please wait for it to finish");
+      return;
+    }
+
+    audioStream?.resetStat();
+    audioStream?.resume();
+
     late final Message? msg;
     final id = HF.milliseconds;
     final receiveId = HF.milliseconds + 1;
@@ -385,9 +407,8 @@ extension $TTS on _TTS {
 
     if (instructionText.isEmpty) instructionText = selectedLanguage.q._ttsSpkInstruct;
 
-    final outputWavPrefix = P.app.cacheDir.q!.path + "/$receiveId.output";
-    // TODO: handle multiple wav output via getTTSOutputFileList
-    final outputWavPath = P.app.cacheDir.q!.path + "/$receiveId.output.0.wav";
+    final outputWavPath = P.app.cacheDir.q!.path + "/$receiveId.output.wav";
+    // final outputWavPath = "/sdcard/Download/$receiveId.output.wav";
 
     if (ttsText.isEmpty) {
       Alert.warning("Please enter text to generate TTS");
@@ -443,6 +464,13 @@ extension $TTS on _TTS {
     P.msg.pool.q[receiveId] = receiveMsg;
     P.msg.msgNode.q.rootAdd(MsgNode(receiveId));
 
+    final checkPool = P.msg.pool.q;
+    final checkIds = P.msg.ids.q;
+    final checkList = P.msg.list.q;
+    final checkNode = P.msg.msgNode.q;
+
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
+
     qqr("""ttsText: $ttsText
 instructionText: $instructionText
 promptWavPath: $selectSourceAudioPath
@@ -454,7 +482,7 @@ outputWavPath: $outputWavPath""");
       instructionText: instructionText,
       promptWavPath: selectSourceAudioPath,
       promptSpeechText: promptSpeechText,
-      outputWavPath: outputWavPrefix,
+      outputWavPath: outputWavPath,
     );
   }
 
@@ -503,6 +531,7 @@ outputWavPath: $outputWavPath""");
     textEditingController.text = instruction;
   }
 
+  @Deprecated("Use sparktts instead")
   FV setTTSCFMSteps(int steps) async {
     qq;
     cfmSteps.q = steps;
@@ -556,8 +585,34 @@ outputWavPath: $outputWavPath""");
 
     return (flag, nameCN, nameEN);
   }
+
+  void test() async {
+    audioStream?.resume();
+
+    const noteDuration = Duration(seconds: 1);
+    const pushFreq = 60; // Hz
+
+    for (double noteFreq in [261.626, 293.665, 329.628, 123, 456, 789, 10]) {
+      final wave = _synthSineWave(noteFreq, 16000, noteDuration);
+      // debugger();
+      // push wave data to audio stream in specified interval (pushFreq)
+      const step = 16000 ~/ pushFreq;
+      // await Future.delayed(Duration(milliseconds: 500));
+      for (int pos = 0; pos < wave.length; pos += step) {
+        audioStream?.push(wave.sublist(pos, math.min(wave.length, pos + step)));
+        await Future.delayed(noteDuration ~/ pushFreq);
+      }
+    }
+  }
 }
 
 JSON _parseSpkNames(String message) {
   return HF.json(jsonDecode(message));
+}
+
+Float32List _synthSineWave(double freq, int sampleRate, Duration duration) {
+  final length = duration.inMilliseconds * sampleRate ~/ 1000;
+  final sineWave = List.generate(length, (i) => math.sin(2 * math.pi * ((i * freq) % sampleRate) / sampleRate));
+
+  return Float32List.fromList(sineWave);
 }
