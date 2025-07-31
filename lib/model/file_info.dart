@@ -178,6 +178,8 @@ class FileInfo extends Equatable {
 
   bool get isAdapter => tags.contains('adapter');
 
+  bool get isNeko => name.contains('Neko');
+
   @override
   List<Object?> get props => [raw];
 

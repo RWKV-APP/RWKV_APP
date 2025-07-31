@@ -8,11 +8,13 @@ import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/tts_group_item.dart';
@@ -21,7 +23,9 @@ import 'package:zone/widgets/model_item.dart';
 
 // TODO: move it to pages/panel
 class ModelSelector extends ConsumerWidget {
-  static FV show() async {
+  final bool nekoOnly;
+
+  static FV show({bool nekoOnly = false}) async {
     qq;
 
     if (P.fileManager.modelSelectorShown.q) return;
@@ -57,7 +61,7 @@ class ModelSelector extends ConsumerWidget {
           snap: false,
 
           builder: (BuildContext context, ScrollController scrollController) {
-            return ModelSelector(scrollController: scrollController);
+            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly);
           },
         );
       },
@@ -67,12 +71,20 @@ class ModelSelector extends ConsumerWidget {
 
   final ScrollController scrollController;
 
-  const ModelSelector({super.key, required this.scrollController});
+  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly});
 
   List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
-    final availableModels = ref.watch(P.fileManager.availableModels);
+    var availableModels = ref.watch(P.fileManager.availableModels);
     final ttsCores = ref.watch(P.fileManager.ttsCores);
+    final userType = ref.watch(P.preference.userType);
+    final pageKey = ref.watch(P.app.pageKey);
+
+    if (pageKey == PageKey.translator) {
+      availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
+    } else {
+      availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
+    }
 
     return switch (demoType) {
       DemoType.world => [
@@ -102,6 +114,9 @@ class ModelSelector extends ConsumerWidget {
       DemoType.chat || DemoType.sudoku => [
         for (final fileInfo
             in availableModels
+                .where((e) {
+                  return !nekoOnly || e.isNeko;
+                })
                 .sorted((a, b) {
                   /// 模型尺寸大的在上面
                   return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
@@ -112,7 +127,7 @@ class ModelSelector extends ConsumerWidget {
                 .sorted((a, b) {
                   return (a.tags.contains("npu") ? 0 : 1).compareTo(b.tags.contains("npu") ? 0 : 1);
                 }))
-          ModelItem(fileInfo),
+          ModelItem(fileInfo, userType.isGreaterThan(UserType.user)),
       ],
       DemoType.fifthteenPuzzle || DemoType.othello => [],
     };

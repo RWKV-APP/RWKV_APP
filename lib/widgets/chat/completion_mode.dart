@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart' show qqq;
 import 'package:halo_state/halo_state.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:zone/func/check_model_selection.dart' show checkModelSelection;
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/performance_info.dart' show PerformanceInfo;
@@ -133,6 +134,8 @@ class _CompletionState extends ConsumerState<Completion> {
   }
 
   void onSubmitTap({bool regenerate = false}) async {
+    if (!checkModelSelection()) return;
+
     final prompt = controllerPrompt.text.trim();
     if (prompt.isEmpty) {
       return;

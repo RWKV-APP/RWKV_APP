@@ -95,8 +95,11 @@ class $AssetsImgChatGen {
   AssetGenImage get logoSquare =>
       const AssetGenImage('assets/img/chat/logo.square.png');
 
+  /// File path: assets/img/chat/rwkv.png
+  AssetGenImage get rwkv => const AssetGenImage('assets/img/chat/rwkv.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [downloadQrcode, icon, logoSquare];
+  List<AssetGenImage> get values => [downloadQrcode, icon, logoSquare, rwkv];
 }
 
 class $AssetsLibChatGen {

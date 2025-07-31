@@ -21,7 +21,7 @@ enum DemoType {
   world;
 
   Color get seedColor => switch (this) {
-    DemoType.chat => Colors.green,
+    DemoType.chat => const Color(0xFF365FD9),
     DemoType.tts => Colors.green,
     DemoType.world => Colors.blue,
     DemoType.fifthteenPuzzle => Colors.blue,
@@ -38,7 +38,7 @@ enum DemoType {
   };
 
   List<DeviceOrientation>? get mobileOrientations => switch (this) {
-    _ => [DeviceOrientation.portraitUp],
+    _ => null,
   };
 
   List<DeviceOrientation>? get desktopOrientations => switch (this) {

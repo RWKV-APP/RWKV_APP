@@ -226,7 +226,7 @@ extension $Chat on _Chat {
   FV startNewChat() async {
     if (receivingTokens.q) await onStopButtonPressed();
     await Future.delayed(100.ms);
-    Alert.success(S.current.new_chat_started);
+    // Alert.success(S.current.new_chat_started);
     P.msg._clear();
     P.rwkv.clearStates();
     P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
@@ -368,6 +368,9 @@ extension $Chat on _Chat {
       qqw("message id is null");
       return;
     }
+    if (!receivingTokens.q) {
+      return;
+    }
     _pauseMessageById(id: id);
   }
 
@@ -404,7 +407,18 @@ extension _$Chat on _Chat {
     P.app.pageKey.l(_onPageKeyChanged);
 
     P.rwkv.oldBroadcastStream.listen(_onOldStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
-    P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+    final event = P.rwkv.broadcastStream;
+    event.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+
+    /// update the conversation subtitle
+    event
+        .whereType<from_rwkv.ResponseBufferContent>()
+        .where((e) => P.msg.list.q.length <= 2)
+        .throttleTime(const Duration(milliseconds: 500), trailing: true, leading: true)
+        .listen((e) {
+          final r = e.responseBufferContent.replaceAll('\n', '').replaceAll('</think>', '').replaceAll('<think>', '');
+          P.conversation.updateCurrentConvSubtitle(r);
+        });
 
     P.world.audioFileStreamController.stream.listen(_onNewFileReceived);
     focusNode.addListener(_onFocusNodeChanged);
@@ -525,12 +539,13 @@ extension _$Chat on _Chat {
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
-    qqq("_onPageKeyChanged: $pageKey");
-    Future.delayed(200.ms).then((_) {
-      P.msg._clear();
-    });
+    // TODO: 根据路由状态执行逻辑
+    // qqq("_onPageKeyChanged: $pageKey");
+    // Future.delayed(200.ms).then((_) {
+    //   P.msg._clear();
+    // });
 
-    if (!checkModelSelection()) return;
+    // if (!checkModelSelection()) return;
   }
 
   void _onTextEditingControllerValueChanged() {
@@ -546,6 +561,8 @@ extension _$Chat on _Chat {
   }
 
   void _fullyReceived({String? callingFunction}) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
     qqq("callingFunction: $callingFunction");
 
     final id = receiveId.q;
@@ -632,6 +649,9 @@ extension _$Chat on _Chat {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
+
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
@@ -659,6 +679,8 @@ extension _$Chat on _Chat {
   }
 
   void _onStreamDone() async {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
     qq;
     final demoType = P.app.demoType.q;
     if (demoType != DemoType.chat && demoType != DemoType.world) return;
@@ -666,6 +688,8 @@ extension _$Chat on _Chat {
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.translator) return;
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;

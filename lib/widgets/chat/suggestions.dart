@@ -53,7 +53,7 @@ class Suggestions extends ConsumerWidget {
     List<dynamic> suggestions = ref.watch(P.suggestion.suggestion);
     final config = ref.watch(P.suggestion.config);
 
-    if (suggestions.isEmpty) {
+    if (suggestions.isEmpty || demoType == DemoType.chat) {
       return const SizedBox.shrink();
     }
 

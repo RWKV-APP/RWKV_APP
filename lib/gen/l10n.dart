@@ -1882,6 +1882,151 @@ class S {
   String get search_failed {
     return Intl.message('搜索失败', name: 'search_failed', desc: '', args: []);
   }
+
+  /// `欢迎探索 RWKV Chat`
+  String get welcome_to_rwkv_chat {
+    return Intl.message(
+      '欢迎探索 RWKV Chat',
+      name: 'welcome_to_rwkv_chat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开始对话`
+  String get chat {
+    return Intl.message('开始对话', name: 'chat', desc: '', args: []);
+  }
+
+  /// `Neko`
+  String get neko {
+    return Intl.message('Neko', name: 'neko', desc: '', args: []);
+  }
+
+  /// `续写模式`
+  String get Completion {
+    return Intl.message('续写模式', name: 'Completion', desc: '', args: []);
+  }
+
+  /// `与 RWKV 模型对话`
+  String get chat_with_rwkv_model {
+    return Intl.message(
+      '与 RWKV 模型对话',
+      name: 'chat_with_rwkv_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文本补全模式`
+  String get text_completion_mode {
+    return Intl.message(
+      '文本补全模式',
+      name: 'text_completion_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `主页`
+  String get home {
+    return Intl.message('主页', name: 'home', desc: '', args: []);
+  }
+
+  /// `会话`
+  String get conversations {
+    return Intl.message('会话', name: 'conversations', desc: '', args: []);
+  }
+
+  /// `Hello, 请随意 \n向我提问...`
+  String get hello_ask_me_anything {
+    return Intl.message(
+      'Hello, 请随意 \n向我提问...',
+      name: 'hello_ask_me_anything',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `目前还没有对话`
+  String get no_conversation_yet {
+    return Intl.message(
+      '目前还没有对话',
+      name: 'no_conversation_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nyan~~,Nyan~~`
+  String get nyan_nyan {
+    return Intl.message('Nyan~~,Nyan~~', name: 'nyan_nyan', desc: '', args: []);
+  }
+
+  /// `随意向我提问...`
+  String get ask_me_anything {
+    return Intl.message(
+      '随意向我提问...',
+      name: 'ask_me_anything',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `应用模式`
+  String get application_mode {
+    return Intl.message('应用模式', name: 'application_mode', desc: '', args: []);
+  }
+
+  /// `请根据你对 AI 和 LLM 的了解程度选择应用模式.`
+  String get str_please_select_app_mode_ {
+    return Intl.message(
+      '请根据你对 AI 和 LLM 的了解程度选择应用模式.',
+      name: 'str_please_select_app_mode_',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新手模式`
+  String get beginner {
+    return Intl.message('新手模式', name: 'beginner', desc: '', args: []);
+  }
+
+  /// `高级模式`
+  String get power_user {
+    return Intl.message('高级模式', name: 'power_user', desc: '', args: []);
+  }
+
+  /// `专家模式`
+  String get expert {
+    return Intl.message('专家模式', name: 'expert', desc: '', args: []);
+  }
+
+  /// `更多问题`
+  String get more_questions {
+    return Intl.message('更多问题', name: 'more_questions', desc: '', args: []);
+  }
+
+  /// `模型加载中...`
+  String get model_loading {
+    return Intl.message('模型加载中...', name: 'model_loading', desc: '', args: []);
+  }
+
+  /// `暂时还没有任何对话`
+  String get no_conversations_yet {
+    return Intl.message(
+      '暂时还没有任何对话',
+      name: 'no_conversations_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开始新对话`
+  String get new_conversation {
+    return Intl.message('开始新对话', name: 'new_conversation', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

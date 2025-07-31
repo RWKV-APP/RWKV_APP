@@ -69,12 +69,14 @@ class Settings extends ConsumerWidget {
     final version = ref.watch(P.app.version);
     final buildNumber = ref.watch(P.app.buildNumber);
     final preferredTextScaleFactor = ref.watch(P.preference.preferredTextScaleFactor);
+    final userType = ref.watch(P.preference.userType);
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final qb = ref.watch(P.app.qb);
     final customTheme = ref.watch(P.app.customTheme);
     final isLightMode = customTheme.light;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
+    final isChat = demoType == DemoType.chat;
 
     final iconWidget = SB(
       width: 64,
@@ -93,7 +95,7 @@ class Settings extends ConsumerWidget {
               topRight: Radius.circular(16),
             ),
       child: Scaffold(
-        backgroundColor: customTheme.setting,
+        backgroundColor: demoType == DemoType.chat ? Colors.transparent : customTheme.setting,
         appBar: isInDrawerMenu
             ? null
             : AppBar(
@@ -122,6 +124,7 @@ class Settings extends ConsumerWidget {
           ),
           controller: scrollController,
           children: [
+            if (isChat) const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MAA.center,
               children: [iconWidget],
@@ -162,6 +165,12 @@ class Settings extends ConsumerWidget {
             8.h,
             FormItem(
               isSectionStart: true,
+              icon: Icon(Icons.settings_suggest_rounded, color: qb.q(.667), size: 16),
+              title: s.application_mode,
+              info: userType.displayName(),
+              onTap: P.preference.showUserTypeDialog,
+            ),
+            FormItem(
               icon: Icon(Icons.format_size_outlined, color: qb.q(.667), size: 16),
               title: s.font_size,
               info: "${P.preference.textScalePairs[preferredTextScaleFactor]}",

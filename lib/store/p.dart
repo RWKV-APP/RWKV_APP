@@ -27,8 +27,12 @@ import 'package:rwkv_downloader/downloader.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart' as from_rwkv;
 import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 import 'package:rxdart/rxdart.dart';
+import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
+import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/db/db.dart';
+import 'package:zone/model/browser_tab.dart';
+import 'package:zone/model/browser_window.dart';
 import 'package:zone/model/custom_theme.dart' as custom_theme;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -37,6 +41,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
+import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
@@ -61,16 +67,18 @@ import 'package:zone/model/reference.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/model/tts_instruction.dart';
+import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/page/panel/theme_selector.dart';
+import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/widgets/app_update_dialog.dart' show AppUpdateDialog;
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/widgets/pager.dart';
 
 part "adapter.dart";
 part "app.dart";
+part "backend.dart";
 part "chat.dart";
 part "conversation.dart";
 part "device.dart";
@@ -84,6 +92,7 @@ part "preference.dart";
 part "rwkv.dart";
 part "sudoku.dart";
 part "suggestion.dart";
+part "translator.dart";
 part "tts.dart";
 part "world.dart";
 
@@ -104,30 +113,53 @@ abstract class P {
   static final suggestion = _Suggestion();
   static final dump = _Dump();
   static final msg = _Msg();
+  static final backend = _Backend();
+  static final translator = _Translator();
 
   static FV init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await preference._init();
-    await app._init();
+
+    try {
+      await preference._init();
+    } catch (e) {
+      qqe('Error initializing preference: $e');
+    }
+
+    try {
+      await app._init();
+    } catch (e) {
+      qqe('Error initializing app: $e');
+    }
+
     await _unorderedInit();
   }
 
   static FV _unorderedInit() async {
     await Future.wait([
-      rwkv._init(),
-      chat._init(),
-      othello._init(),
-      fileManager._init(),
-      device._init(),
-      adapter._init(),
-      world._init(),
-      conversation._init(),
-      tts._init(),
-      guard._init(),
-      sudoku._init(),
-      suggestion._init(),
-      dump._init(),
-      msg._init(),
+      _safeInit(() => rwkv._init(), 'rwkv'),
+      _safeInit(() => chat._init(), 'chat'),
+      _safeInit(() => othello._init(), 'othello'),
+      _safeInit(() => fileManager._init(), 'fileManager'),
+      _safeInit(() => device._init(), 'device'),
+      _safeInit(() => adapter._init(), 'adapter'),
+      _safeInit(() => world._init(), 'world'),
+      _safeInit(() => conversation._init(), 'conversation'),
+      _safeInit(() => tts._init(), 'tts'),
+      _safeInit(() => guard._init(), 'guard'),
+      _safeInit(() => sudoku._init(), 'sudoku'),
+      _safeInit(() => suggestion._init(), 'suggestion'),
+      _safeInit(() => dump._init(), 'dump'),
+      _safeInit(() => msg._init(), 'msg'),
+      _safeInit(() => backend._init(), 'backend'),
+      _safeInit(() => translator._init(), 'translator'),
     ]);
+  }
+
+  static Future<void> _safeInit(Future<void> Function() initFunc, String name) async {
+    try {
+      await initFunc();
+    } catch (e) {
+      qqe('Error initializing $name: $e');
+    }
   }
 }

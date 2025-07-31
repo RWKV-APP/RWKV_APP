@@ -9,18 +9,22 @@ import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
+import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
+  final bool showTags;
 
-  const ModelItem(this.fileInfo, {super.key});
+  const ModelItem(this.fileInfo, this.showTags, {super.key});
 
   void _onStartTap() async {
     qq;
@@ -68,7 +72,8 @@ class ModelItem extends ConsumerWidget {
     }
 
     final modelSize = fileInfo.modelSize ?? 0.1;
-    if (modelSize < 1.5) {
+    final pageKey = P.app.pageKey.q;
+    if (modelSize < 1.5 && pageKey == PageKey.chat) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
@@ -94,6 +99,18 @@ class ModelItem extends ConsumerWidget {
     } catch (e) {
       Alert.error(e.toString());
       return;
+    }
+
+    final tags = fileInfo.tags;
+
+    if (tags.contains("translate")) {
+      P.rwkv.send(SetUserRole("English"));
+      P.rwkv.send(SetResponseRole("Chinese"));
+      await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "");
+      P.backend.start();
+    } else {
+      P.rwkv.send(SetUserRole("User"));
+      P.rwkv.send(SetResponseRole("Assistant"));
     }
 
     P.rwkv.currentModel.q = fileInfo;
@@ -141,7 +158,7 @@ class ModelItem extends ConsumerWidget {
         child: Row(
           children: [
             Expanded(
-              child: FileKeyItem(fileInfo),
+              child: FileKeyItem(fileInfo, showTags: showTags),
             ),
             8.w,
             _DownloadActions(file: fileInfo, state: localFile.state),
@@ -298,8 +315,9 @@ class _Delete extends ConsumerWidget {
 class FileKeyItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final bool showDownloaded;
+  final bool showTags;
 
-  const FileKeyItem(this.fileInfo, {super.key, this.showDownloaded = false});
+  const FileKeyItem(this.fileInfo, {super.key, this.showDownloaded = false, this.showTags = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -317,6 +335,7 @@ class FileKeyItem extends ConsumerWidget {
 
     return Column(
       crossAxisAlignment: CAA.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Wrap(
           spacing: 8,
@@ -338,8 +357,8 @@ class FileKeyItem extends ConsumerWidget {
               ),
           ],
         ),
-        4.h,
-        _Tags(fileInfo: fileInfo),
+        if (showTags) 4.h,
+        if (showTags) _Tags(fileInfo: fileInfo),
         if (downloading) 8.h,
         if (downloading)
           Padding(

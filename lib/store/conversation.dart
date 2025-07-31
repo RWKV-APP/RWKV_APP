@@ -6,6 +6,10 @@ class _Conversation {
   final currentCreatedAtUS = qs<int?>(null);
 
   final interactingCreatedAtUS = qs<int?>(null);
+
+  static final _conversationColors = [
+    for (int i = 0; i < 12; i++) HSLColor.fromAHSL(1.0, 30.0 * i, 0.4, 0.7).toColor(),
+  ];
 }
 
 /// Private methods
@@ -64,10 +68,16 @@ extension $Conversation on _Conversation {
     }
   }
 
+  Color getConversationColor(ConversationData conversation) {
+    final createAtInUS = conversation.createdAtUS;
+    final index = createAtInUS % _Conversation._conversationColors.length;
+    return _Conversation._conversationColors[index];
+  }
+
   FV onTapInList(ConversationData conversation) async {
     qq;
     currentCreatedAtUS.q = conversation.createdAtUS;
-    Pager.toggle();
+    // Pager.toggle();
     final msgNode = MsgNode.fromJson(
       conversation.data,
       createAtInUS: conversation.createdAtUS,
@@ -77,20 +87,21 @@ extension $Conversation on _Conversation {
     P.msg.msgNode.q = msgNode;
     P.msg.ids.q = ids;
     P.msg._loadMessages(msgNode.allMsgIdsFromRoot);
+    push(PageKey.chat);
   }
 
   FV onDeleteClicked(BuildContext context, ConversationData conversation) async {
-    final s = S.of(context);
-    final res = await showOkCancelAlertDialog(
-      context: context,
-      title: s.delete_conversation,
-      message: s.delete_conversation_message,
-      okLabel: s.delete,
-      cancelLabel: s.cancel,
-      isDestructiveAction: true,
-    );
-
-    if (res != OkCancelResult.ok) return;
+    // final s = S.of(context);
+    // final res = await showOkCancelAlertDialog(
+    //   context: context,
+    //   title: s.delete_conversation,
+    //   message: s.delete_conversation_message,
+    //   okLabel: s.delete,
+    //   cancelLabel: s.cancel,
+    //   isDestructiveAction: true,
+    // );
+    //
+    // if (res != OkCancelResult.ok) return;
 
     final db = P.app._db;
     final createAtInUS = conversation.createdAtUS;
@@ -143,8 +154,23 @@ extension $Conversation on _Conversation {
 
     final db = P.app._db;
     final newTitle = res[0];
-    final success = await db.renameConv(conversation.createdAtUS, newTitle);
+    final success = await db.updateConv(conversation.createdAtUS, title: newTitle);
     if (!success) return;
+    await P.conversation.load();
+  }
+
+  void updateCurrentConvSubtitle(String subtitle) async {
+    final id = P.conversation.currentCreatedAtUS.q;
+    if (id == null) {
+      return;
+    }
+    final c = P.conversation.conversations.q.firstWhereOrNull((e) => e.createdAtUS == id);
+    if (c == null) return;
+    if (c.subtitle != null && c.subtitle!.length > 100) {
+      return;
+    }
+    qqq('update conversation subtitle');
+    P.app._db.updateConv(id, subtitle: subtitle);
     await P.conversation.load();
   }
 

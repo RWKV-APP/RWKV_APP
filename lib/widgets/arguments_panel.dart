@@ -69,7 +69,7 @@ class ArgumentsPanel extends ConsumerWidget {
                       const Icon(Icons.tune),
                       12.w,
                       T(
-                        s.session_configuration,
+                        s.model_settings,
                         s: const TS(s: 16, w: FW.w500),
                       ),
                     ],

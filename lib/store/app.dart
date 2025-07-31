@@ -177,7 +177,6 @@ extension _$App on _App {
 
     // 目前下面四种 demo 需要选择模型
     switch (demoType.q) {
-      case DemoType.chat:
       case DemoType.sudoku:
       case DemoType.tts:
       case DemoType.world:
@@ -188,6 +187,7 @@ extension _$App on _App {
         });
       case DemoType.fifthteenPuzzle:
       // Other demos don't need to select model, weights are already built in
+      case DemoType.chat:
       case DemoType.othello:
         break;
     }
@@ -213,9 +213,9 @@ extension _$App on _App {
     light.lv(_syncTheme, fireImmediately: true);
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
 
-    if (Args.autoTriggerPage) {
-      HF.wait(2000).then((_) {
-        Pager.toggle();
+    if (Args.autoShowTranslator) {
+      HF.wait(1500).then((_) {
+        push(PageKey.translator);
       });
     }
   }

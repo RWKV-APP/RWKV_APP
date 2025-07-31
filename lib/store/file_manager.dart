@@ -111,6 +111,11 @@ extension $FileManager on _FileManager {
     await _initModelDownloadTaskState();
   }
 
+  List<FileInfo> getNekoModel() {
+    final nekos = _all.q.where((e) => e.available && e.isNeko).toList();
+    return nekos;
+  }
+
   FV _initModelDownloadTaskState() async {
     await HF.wait(17);
     final availableFiles = availableModels.q;
