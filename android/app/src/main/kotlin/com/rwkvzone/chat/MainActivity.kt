@@ -1,4 +1,4 @@
-package com.rwkv.tts
+package com.rwkvzone.chat
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

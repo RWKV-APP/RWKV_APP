@@ -19,7 +19,7 @@ abstract class Config {
 
   static late final String xApiKey;
 
-  static const appTitle = "RWKV Talk";
+  static const appTitle = "RWKV Chat";
 
   static const fontFamilyFallback = [
     'Microsoft YaHei',

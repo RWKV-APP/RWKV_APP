@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 1.10.2+452
+version: 1.9.9+449
 
 environment:
   sdk: ^3.8.0
@@ -92,10 +92,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/lib/tts/
-    - assets/model/tts/
-    - assets/config/tts/
-    - assets/img/tts/
+    - assets/lib/chat/
+    - assets/model/chat/
+    - assets/config/chat/
+    - assets/img/chat/
     - assets/lib/qnn/
     - remote/latest.json
     - .env
