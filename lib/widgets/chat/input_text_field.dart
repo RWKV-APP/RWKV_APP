@@ -1,5 +1,6 @@
 // ignore: unused_import
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +48,9 @@ class InputTextField extends ConsumerWidget {
 
     final qw = ref.watch(P.app.qw);
 
-    return GD(
+    final isDesktop = ref.watch(P.app.isDesktop);
+
+    final textFieldWidget = GD(
       onTap: textFieldEnabled ? null : _onTapTextFieldWhenItsDisabled,
       child: TextField(
         focusNode: P.chat.focusNode,
@@ -110,6 +113,25 @@ class InputTextField extends ConsumerWidget {
         ),
       ),
     );
+
+    if (!isDesktop) {
+      return textFieldWidget;
+    }
+
+    return Focus(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+          if (HardwareKeyboard.instance.isShiftPressed) {
+            return KeyEventResult.ignored;
+          } else {
+            P.chat.onSendButtonPressed();
+            return KeyEventResult.handled;
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+      child: textFieldWidget,
+    );
   }
 
   void _onChanged(String value) {}
@@ -123,24 +145,6 @@ class InputTextField extends ConsumerWidget {
   void _onAppPrivateCommand(String action, Map<String, dynamic> data) {}
 
   void _onTapOutside(PointerDownEvent event) {}
-
-  void _onKeyEvent(KeyEvent event) {
-    final character = event.character;
-    final isShiftPressed = HardwareKeyboard.instance.isShiftPressed;
-    final isEnterPressed = event.logicalKey == LogicalKeyboardKey.enter && character != null;
-    if (!isEnterPressed) return;
-    if (isShiftPressed) {
-      final currentValue = P.chat.textEditingController.value;
-      if (currentValue.text.trim().isNotEmpty) {
-        P.chat.textEditingController.value = TextEditingValue(text: P.chat.textEditingController.value.text);
-      } else {
-        Alert.warning(S.current.chat_empty_message);
-        P.chat.textEditingController.value = const TextEditingValue(text: "");
-      }
-    } else {
-      P.chat.onSendButtonPressed();
-    }
-  }
 
   void _onTapTextFieldWhenItsDisabled() {
     qq;
