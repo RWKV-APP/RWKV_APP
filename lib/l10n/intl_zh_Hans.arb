@@ -253,7 +253,7 @@
   "chat_history": "聊天记录",
   "search": "搜索",
   "reference_source": "参考源",
-  "analysing_result": "正在分析搜索结果",
+  "analysing_result": "正在分析材料",
   "x_pages_found": "已找到 %d 个相关网页",
   "off": "关闭",
   "web_search": "联网",
@@ -288,5 +288,13 @@
   "new_conversation": "开始新对话",
   "knowledge_base": "知识库",
   "knowledge_base_is_initializing": "知识库初始化中...",
-  "x_related_information_has_been_found": "已找到 %d 个相关资料"
+  "x_related_information_has_been_found": "已找到 %d 个相关资料",
+  "documents": "文档",
+  "parsed_chunks": "已处理/总分块: %s/%s",
+  "chars_x": "字符数: %d",
+  "took_x": "花费 %s",
+  "manage_model": "模型管理",
+  "load_model": "加载模型",
+  "please_download_the_required_models_first": "请先下载必要的模型",
+  "personal_local_knowledge_base": "私人本地知识库"
 }

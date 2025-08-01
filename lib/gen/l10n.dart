@@ -1798,14 +1798,9 @@ class S {
     return Intl.message('参考源', name: 'reference_source', desc: '', args: []);
   }
 
-  /// `正在分析搜索结果`
+  /// `正在分析材料`
   String get analysing_result {
-    return Intl.message(
-      '正在分析搜索结果',
-      name: 'analysing_result',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('正在分析材料', name: 'analysing_result', desc: '', args: []);
   }
 
   /// `已找到 %d 个相关网页`
@@ -2043,6 +2038,61 @@ class S {
     return Intl.message(
       '已找到 %d 个相关资料',
       name: 'x_related_information_has_been_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文档`
+  String get documents {
+    return Intl.message('文档', name: 'documents', desc: '', args: []);
+  }
+
+  /// `已处理/总分块: %s/%s`
+  String get parsed_chunks {
+    return Intl.message(
+      '已处理/总分块: %s/%s',
+      name: 'parsed_chunks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `字符数: %d`
+  String get chars_x {
+    return Intl.message('字符数: %d', name: 'chars_x', desc: '', args: []);
+  }
+
+  /// `花费 %s`
+  String get took_x {
+    return Intl.message('花费 %s', name: 'took_x', desc: '', args: []);
+  }
+
+  /// `模型管理`
+  String get manage_model {
+    return Intl.message('模型管理', name: 'manage_model', desc: '', args: []);
+  }
+
+  /// `加载模型`
+  String get load_model {
+    return Intl.message('加载模型', name: 'load_model', desc: '', args: []);
+  }
+
+  /// `请先下载必要的模型`
+  String get please_download_the_required_models_first {
+    return Intl.message(
+      '请先下载必要的模型',
+      name: 'please_download_the_required_models_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `私人本地知识库`
+  String get personal_local_knowledge_base {
+    return Intl.message(
+      '私人本地知识库',
+      name: 'personal_local_knowledge_base',
       desc: '',
       args: [],
     );

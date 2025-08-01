@@ -19,6 +19,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/rag_init_dialog.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -26,8 +27,15 @@ class ModelItem extends ConsumerWidget {
 
   const ModelItem(this.fileInfo, this.showTags, {super.key});
 
-  void _onStartTap() async {
+  void _onStartTap(BuildContext context) async {
     qq;
+
+    if (fileInfo.isEmbedding) {
+      Navigator.of(context).pop();
+      await Future.delayed(const Duration(milliseconds: 100));
+      RagInitDialog.show(getContext()!);
+      return;
+    }
 
     switch (P.app.demoType.q) {
       case DemoType.sudoku:
@@ -130,7 +138,7 @@ class ModelItem extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
 
-    late final String startTitle;
+    String startTitle;
 
     switch (demoType) {
       case DemoType.fifthteenPuzzle:
@@ -141,6 +149,9 @@ class ModelItem extends ConsumerWidget {
       case DemoType.tts:
       case DemoType.world:
         startTitle = s.start_to_chat;
+    }
+    if (fileInfo.isEmbedding) {
+      startTitle = s.load_model;
     }
 
     final qw = ref.watch(P.app.qw);
@@ -165,7 +176,7 @@ class ModelItem extends ConsumerWidget {
             if (hasFile) ...[
               if (!isCurrentModel)
                 GD(
-                  onTap: _onStartTap,
+                  onTap: () => _onStartTap(context),
                   child: C(
                     decoration: BD(
                       color: loading ? kCG.q(.5) : kCG,

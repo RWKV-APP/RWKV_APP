@@ -116,6 +116,18 @@ extension $FileManager on _FileManager {
     return nekos;
   }
 
+  FileInfo? getEmbeddingModel() {
+    final embedding = _all.q.firstWhereOrNull((e) => e.available && e.isEmbedding);
+    if(embedding == null) {
+      return null;
+    }
+    final file = locals(embedding);
+    if (!file.q.hasFile) {
+      return null;
+    }
+    return embedding;
+  }
+
   FV _initModelDownloadTaskState() async {
     await HF.wait(17);
     final availableFiles = availableModels.q;
@@ -235,6 +247,7 @@ extension _$FileManager on _FileManager {
   FV _init() async {
     try {
       await syncAvailableModels();
+      checkLocal();
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);
     }

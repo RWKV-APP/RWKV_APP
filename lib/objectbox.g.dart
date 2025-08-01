@@ -22,7 +22,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 9050756299533494181),
     name: 'Document',
-    lastPropertyId: const obx_int.IdUid(13, 8950696459568157375),
+    lastPropertyId: const obx_int.IdUid(14, 5815169116564199452),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -97,6 +97,12 @@ final _entities = <obx_int.ModelEntity>[
         type: 6,
         flags: 0,
       ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 5815169116564199452),
+        name: 'timestamp',
+        type: 6,
+        flags: 0,
+      ),
     ],
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
@@ -149,7 +155,12 @@ final _entities = <obx_int.ModelEntity>[
         type: 28,
         flags: 8,
         indexId: const obx_int.IdUid(2, 5075093324013003195),
-        hnswParams: obx_int.ModelHnswParams(dimensions: 1024, distanceType: 2),
+        hnswParams: obx_int.ModelHnswParams(
+          dimensions: 1024,
+          neighborsPerNode: 64,
+          indexingSearchCount: 200,
+          distanceType: 2,
+        ),
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -234,7 +245,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.tags.map(fbb.writeString).toList(growable: false),
         );
         final modelNameOffset = fbb.writeString(object.modelName);
-        fbb.startTable(14);
+        fbb.startTable(15);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, nameOffset);
         fbb.addOffset(2, pathOffset);
@@ -247,6 +258,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(10, object.tokens);
         fbb.addInt64(11, object.time);
         fbb.addInt64(12, object.characters);
+        fbb.addInt64(13, object.timestamp);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -279,6 +291,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
             buffer,
             rootOffset,
             28,
+            0,
+          )
+          ..timestamp = const fb.Int64Reader().vTableGet(
+            buffer,
+            rootOffset,
+            30,
             0,
           );
 
@@ -406,6 +424,11 @@ class Document_ {
   /// See [Document.characters].
   static final characters = obx.QueryIntegerProperty<Document>(
     _entities[0].properties[11],
+  );
+
+  /// See [Document.timestamp].
+  static final timestamp = obx.QueryIntegerProperty<Document>(
+    _entities[0].properties[12],
   );
 }
 

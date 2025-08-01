@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 
@@ -42,7 +41,7 @@ class _RagInitDialogState extends State<RagInitDialog> {
           if (error == null) CircularProgressIndicator(),
           const SizedBox(height: 16),
           Text(
-            error == null ? S.of(context).knowledge_base_is_initializing : error!,
+            error == null ? S.of(context).model_loading : error!,
             textAlign: TextAlign.center,
           ),
         ],

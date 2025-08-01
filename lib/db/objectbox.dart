@@ -19,9 +19,38 @@ class DocumentChunk {
 
   List<String> tags = [];
 
-  @HnswIndex(dimensions: 1024, distanceType: VectorDistanceType.cosine)
+  @HnswIndex(
+    dimensions: 1024,
+    distanceType: VectorDistanceType.cosine,
+    neighborsPerNode: 64,
+    flags: null,
+    indexingSearchCount: 200, // reduce value to speed up indexing
+  )
   @Property(type: PropertyType.floatVector)
   List<double>? embedding;
+
+  static DocumentChunk fromMap(Map<String, dynamic> map) {
+    return DocumentChunk()
+      ..id = map['id']
+      ..documentId = map['documentId']
+      ..content = map['content']
+      ..length = map['length']
+      ..offset = map['offset']
+      ..tags = map['tags']
+      ..embedding = map['embedding'];
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'documentId': documentId,
+      'content': content,
+      'length': length,
+      'offset': offset,
+      'tags': tags,
+      'embedding': embedding,
+    };
+  }
 }
 
 @Entity()
@@ -49,7 +78,44 @@ class Document {
 
   int chunks = 0;
 
+  int timestamp = 0;
+
   List<String> tags = [];
+
+  static Document fromMap(Map<String, dynamic> map) {
+    return Document()
+      ..id = map['id']
+      ..name = map['name']
+      ..path = map['path']
+      ..modelName = map['model_name']
+      ..lines = map['lines']
+      ..characters = map['characters']
+      ..tokens = map['tokens']
+      ..time = map['time']
+      ..length = map['length']
+      ..parsed = map['parsed']
+      ..chunks = map['chunks']
+      ..timestamp = map['timestamp']
+      ..tags = map['tags'];
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'path': path,
+      'model_name': modelName,
+      'lines': lines,
+      'characters': characters,
+      'tokens': tokens,
+      'time': time,
+      'length': length,
+      'parsed': parsed,
+      'chunks': chunks,
+      'timestamp': timestamp,
+      'tags': tags,
+    };
+  }
 }
 
 class ObjectBox {

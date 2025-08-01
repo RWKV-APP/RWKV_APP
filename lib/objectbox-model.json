@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:9050756299533494181",
-      "lastPropertyId": "13:8950696459568157375",
+      "lastPropertyId": "14:5815169116564199452",
       "name": "Document",
       "properties": [
         {
@@ -67,6 +67,11 @@
         {
           "id": "13:8950696459568157375",
           "name": "characters",
+          "type": 6
+        },
+        {
+          "id": "14:5815169116564199452",
+          "name": "timestamp",
           "type": 6
         }
       ],

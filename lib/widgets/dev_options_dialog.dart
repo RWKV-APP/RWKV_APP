@@ -109,7 +109,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
           const SizedBox(height: 16),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-            leading: const Text('RAG', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            leading: const Text('RAG (alpha)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             trailing: Switch(
               value: featureRollout.rag,
               onChanged: (v) {

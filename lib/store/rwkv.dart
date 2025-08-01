@@ -315,7 +315,7 @@ extension $RWKVLoad on _RWKV {
     }
   }
 
-  FV loadEmbeddingModel(String modelPath) async {
+  FV loadEmbeddingModel(FileInfo fileInfo) async {
     if (_sendPort == null) {
       final options = StartOptions(
         modelPath: '',
@@ -331,7 +331,8 @@ extension $RWKVLoad on _RWKV {
       qqq("waiting for sendPort...");
       await Future.delayed(const Duration(milliseconds: 50));
     }
-    send(to_rwkv.LoadEmbeddingModel(path: modelPath));
+    final localFile = P.fileManager.locals(fileInfo).q;
+    send(to_rwkv.LoadEmbeddingModel(path: localFile.targetPath));
     final r =
         await broadcastStream.firstWhere((event) => event is from_rwkv.LoadEmbeddingModelResult) as from_rwkv.LoadEmbeddingModelResult;
     if (!r.success) {

@@ -47,7 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
       "允许后台下载",
     ),
-    "analysing_result": MessageLookupByLibrary.simpleMessage("正在分析搜索结果"),
+    "analysing_result": MessageLookupByLibrary.simpleMessage("正在分析材料"),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "应用内测群",
@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
     "cancel_download": MessageLookupByLibrary.simpleMessage("取消下载"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
+    "chars_x": MessageLookupByLibrary.simpleMessage("字符数: %d"),
     "chat": MessageLookupByLibrary.simpleMessage("开始对话"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已复制到剪贴板"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("请输入消息内容"),
@@ -137,6 +138,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "难度必须小于 81",
     ),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "documents": MessageLookupByLibrary.simpleMessage("文档"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("不再询问"),
     "download_all": MessageLookupByLibrary.simpleMessage("下载全部"),
     "download_app": MessageLookupByLibrary.simpleMessage("下载App"),
@@ -230,7 +232,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "lazy": MessageLookupByLibrary.simpleMessage("懒"),
     "license": MessageLookupByLibrary.simpleMessage("开源许可证"),
     "light_mode": MessageLookupByLibrary.simpleMessage("浅色模式"),
+    "load_model": MessageLookupByLibrary.simpleMessage("加载模型"),
     "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
+    "manage_model": MessageLookupByLibrary.simpleMessage("模型管理"),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
     "memory_used": m5,
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
@@ -264,12 +268,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
     "output": MessageLookupByLibrary.simpleMessage("输出"),
     "overseas": MessageLookupByLibrary.simpleMessage("(境外)"),
+    "parsed_chunks": MessageLookupByLibrary.simpleMessage("已处理/总分块: %s/%s"),
     "pause": MessageLookupByLibrary.simpleMessage("暂停"),
+    "personal_local_knowledge_base": MessageLookupByLibrary.simpleMessage(
+      "私人本地知识库",
+    ),
     "players": MessageLookupByLibrary.simpleMessage("玩家"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "正在播放部分已生成的语音",
     ),
     "please_check_the_result": MessageLookupByLibrary.simpleMessage("请检查结果"),
+    "please_download_the_required_models_first":
+        MessageLookupByLibrary.simpleMessage("请先下载必要的模型"),
     "please_enter_a_number_0_means_empty": MessageLookupByLibrary.simpleMessage(
       "请输入一个数字。0 表示空。",
     ),
@@ -392,6 +402,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考结果"),
+    "took_x": MessageLookupByLibrary.simpleMessage("花费 %s"),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("落子权转移"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("超大 (140%)"),

@@ -28,6 +28,19 @@
         "tags": ["reason", "cpu"]
       },
       {
+        "name": "Qwen3-Embedding-0.6B",
+        "type": "gguf",
+        "modelSize": 0.6,
+        "fileName": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+        "url": "Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf",
+        "fileSize": 639150592,
+        "sha256": "",
+        "quantization": "Q8_0",
+        "platforms": ["windows", "linux", "android"],
+        "backends": ["llamacpp"],
+        "tags": ["cpu", "embedding"]
+      },
+      {
         "name": "RWKV7-G1 0.4B",
         "type": "gguf",
         "modelSize": 0.4,

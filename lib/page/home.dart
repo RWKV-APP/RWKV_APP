@@ -52,6 +52,8 @@ class PageHome extends ConsumerWidget {
     final isLandscape = width > 600;
     final maxWidth = width / (isLandscape ? 3 : 2) - (isLandscape ? 60 : 24);
 
+    final ragEnabled = ref.watch(P.app.featureRollout).rag;
+
     return AppScaffold(
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -126,9 +128,9 @@ class PageHome extends ConsumerWidget {
                               color: Colors.blue,
                               icon: Icons.translate,
                             ),
-                          buildButton(
-                            title: '知识库',
-                            subtitle: '私人知识库',
+                          if(ragEnabled) buildButton(
+                            title: S.current.knowledge_base,
+                            subtitle: S.current.personal_local_knowledge_base,
                             onTap: () {
                               push(PageKey.documents);
                             },

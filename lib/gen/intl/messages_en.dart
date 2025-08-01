@@ -86,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancel_download": MessageLookupByLibrary.simpleMessage("Cancel Download"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("Not now"),
+    "chars_x": MessageLookupByLibrary.simpleMessage("Chars: %s"),
     "chat": MessageLookupByLibrary.simpleMessage("Chat"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "Copied to clipboard",
@@ -172,6 +173,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Difficulty must be less than 81",
     ),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+    "documents": MessageLookupByLibrary.simpleMessage("Documents"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("Don\'t ask again"),
     "download_all": MessageLookupByLibrary.simpleMessage("Download All"),
     "download_app": MessageLookupByLibrary.simpleMessage("Download App"),
@@ -283,7 +285,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Join the Community",
     ),
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 Watch me!"),
-    "knowledge_base": MessageLookupByLibrary.simpleMessage("KnowledgeBase"),
+    "knowledge_base": MessageLookupByLibrary.simpleMessage("Knowledge Base"),
     "knowledge_base_is_initializing": MessageLookupByLibrary.simpleMessage(
       "knowledge base is initializing...",
     ),
@@ -291,7 +293,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "lazy": MessageLookupByLibrary.simpleMessage("Lazy"),
     "license": MessageLookupByLibrary.simpleMessage("Open Source License"),
     "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
+    "load_model": MessageLookupByLibrary.simpleMessage("Load Model"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+    "manage_model": MessageLookupByLibrary.simpleMessage("Model Management"),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
     "memory_used": m5,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
@@ -341,7 +345,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
     "output": MessageLookupByLibrary.simpleMessage("Output"),
     "overseas": MessageLookupByLibrary.simpleMessage(""),
+    "parsed_chunks": MessageLookupByLibrary.simpleMessage(
+      "Parsed/Chunks: %s/%s",
+    ),
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
+    "personal_local_knowledge_base": MessageLookupByLibrary.simpleMessage(
+      "Personal local knowledge base",
+    ),
     "players": MessageLookupByLibrary.simpleMessage("Players"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "Playing partially generated audio",
@@ -349,6 +359,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_check_the_result": MessageLookupByLibrary.simpleMessage(
       "Please check the result",
     ),
+    "please_download_the_required_models_first":
+        MessageLookupByLibrary.simpleMessage(
+          "Please download the required models first",
+        ),
     "please_enter_a_number_0_means_empty": MessageLookupByLibrary.simpleMessage(
       "Please enter a number. 0 means empty.",
     ),
@@ -519,6 +533,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "This is the hardest Sudoku in the world",
         ),
     "thought_result": MessageLookupByLibrary.simpleMessage("Thought Result"),
+    "took_x": MessageLookupByLibrary.simpleMessage("Took %s"),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Turn transfer"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Ultra Large (140%)"),

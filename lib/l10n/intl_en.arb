@@ -287,7 +287,15 @@
   "model_loading": "Model Loading...",
   "no_conversations_yet": "No Conversations Yet",
   "new_conversation": "New Conversation",
-  "knowledge_base": "KnowledgeBase",
+  "knowledge_base": "Knowledge Base",
+  "personal_local_knowledge_base": "Personal local knowledge base",
   "knowledge_base_is_initializing": "knowledge base is initializing...",
-  "x_related_information_has_been_found": "%d related information has been found"
+  "x_related_information_has_been_found": "%d related information has been found",
+  "documents": "Documents",
+  "parsed_chunks": "Parsed/Chunks: %s/%s",
+  "chars_x": "Chars: %s",
+  "took_x": "Took %s",
+  "manage_model": "Model Management",
+  "load_model": "Load Model",
+  "please_download_the_required_models_first": "Please download the required models first"
 }

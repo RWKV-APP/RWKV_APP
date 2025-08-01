@@ -166,6 +166,7 @@ class _PreviewState extends ConsumerState<_Preview> {
   void generatePreview() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
+        await Future<void>.delayed(const Duration(milliseconds: 500));
         final file = await _generatePreview();
         setState(() {
           imagePreview = file;
