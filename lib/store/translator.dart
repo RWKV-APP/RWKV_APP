@@ -439,7 +439,5 @@ extension $Translator on _Translator {
     final browserTabs = this.browserTabs.q;
     final activeBrowserTab = activedTab.q;
     final pools = browserTabs.map((tab) => pool(tab).q).where((pool) => pool.isNotEmpty).toList();
-
-    debugger();
   }
 }

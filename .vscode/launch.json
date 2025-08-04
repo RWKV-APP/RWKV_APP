@@ -18,9 +18,9 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        "--dart-define=disableRemoteConfig=true",
+        // "--dart-define=disableRemoteConfig=true",
         "--dart-define=logLevel=3",
-        "--dart-define=autoShowTranslator=true",
+        // "--dart-define=autoShowTranslator=true",
         "--dart-define=showHaloDebugger=true"
         // "--dart-define=nativeSplashPreserveDurationInMS=9999999"
         // "--dart-define=debugMsgId=true",

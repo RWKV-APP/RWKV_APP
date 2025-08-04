@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/browser_tab.dart';
 import 'package:zone/model/browser_window.dart';
 import 'package:zone/store/p.dart';
@@ -13,9 +14,12 @@ class PageTranslator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final isDesktop = ref.watch(P.app.isDesktop);
+    final title = isDesktop ? s.rwkv_offline_translator_server : s.rwkv_offline_translator;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('RWKV 离线翻译服务器'),
+        title: Text(title),
         actions: [
           IconButton(
             onPressed: () {

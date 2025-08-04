@@ -326,6 +326,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "resume": MessageLookupByLibrary.simpleMessage("恢复"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
+    "rwkv_offline_translator": MessageLookupByLibrary.simpleMessage(
+      "RWKV 离线翻译",
+    ),
+    "rwkv_offline_translator_server": MessageLookupByLibrary.simpleMessage(
+      "RWKV 离线翻译服务器",
+    ),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("扫描二维码"),
