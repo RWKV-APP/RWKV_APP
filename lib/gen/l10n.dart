@@ -2097,6 +2097,16 @@ class S {
       args: [],
     );
   }
+
+  /// `暂无文档, 点击右上角加号添加`
+  String get no_document_found {
+    return Intl.message(
+      '暂无文档, 点击右上角加号添加',
+      name: 'no_document_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

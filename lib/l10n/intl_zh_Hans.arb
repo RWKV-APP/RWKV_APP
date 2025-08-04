@@ -296,5 +296,6 @@
   "manage_model": "模型管理",
   "load_model": "加载模型",
   "please_download_the_required_models_first": "请先下载必要的模型",
-  "personal_local_knowledge_base": "私人本地知识库"
+  "personal_local_knowledge_base": "私人本地知识库",
+  "no_document_found": "暂无文档, 点击右上角加号添加"
 }

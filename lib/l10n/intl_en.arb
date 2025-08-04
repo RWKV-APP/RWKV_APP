@@ -297,5 +297,6 @@
   "took_x": "Took %s",
   "manage_model": "Model Management",
   "load_model": "Load Model",
-  "please_download_the_required_models_first": "Please download the required models first"
+  "please_download_the_required_models_first": "Please download the required models first",
+  "no_document_found": "No document yet"
 }

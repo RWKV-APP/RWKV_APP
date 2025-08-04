@@ -327,6 +327,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No Conversations Yet",
     ),
     "no_data": MessageLookupByLibrary.simpleMessage("No Data"),
+    "no_document_found": MessageLookupByLibrary.simpleMessage(
+      "No document yet",
+    ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "No message to export",
     ),

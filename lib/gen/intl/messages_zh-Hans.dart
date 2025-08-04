@@ -254,6 +254,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_conversation_yet": MessageLookupByLibrary.simpleMessage("目前还没有对话"),
     "no_conversations_yet": MessageLookupByLibrary.simpleMessage("暂时还没有任何对话"),
     "no_data": MessageLookupByLibrary.simpleMessage("无数据"),
+    "no_document_found": MessageLookupByLibrary.simpleMessage(
+      "暂无文档, 点击右上角加号添加",
+    ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("没有消息可导出"),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("没有数独"),
     "number": MessageLookupByLibrary.simpleMessage("数字"),
