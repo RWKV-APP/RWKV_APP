@@ -18,7 +18,7 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        // "--dart-define=disableRemoteConfig=true",
+        "--dart-define=disableRemoteConfig=true",
         "--dart-define=logLevel=3",
         // "--dart-define=autoShowTranslator=true",
         "--dart-define=showHaloDebugger=true"
@@ -57,7 +57,10 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "args": ["--dart-define=disableRemoteConfig=true"]
+      "args": [
+        //
+        "--dart-define=disableRemoteConfig=true"
+      ]
     },
     {
       "name": "profile",
