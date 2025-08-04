@@ -30,7 +30,7 @@ class PageTranslator extends ConsumerWidget {
         ],
       ),
       body: ListView(
-        children: const [
+        children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,14 +39,15 @@ class PageTranslator extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _InferenceInfo(),
-                    _ServiceInfo(),
+                    if (isDesktop) _ServiceInfo(),
                     _TranslatiorInfo(),
                   ],
                 ),
               ),
-              Expanded(
-                child: _BrowserInfo(),
-              ),
+              if (isDesktop)
+                Expanded(
+                  child: _BrowserInfo(),
+                ),
             ],
           ),
         ],
@@ -352,6 +353,7 @@ class _TranslatiorInfo extends ConsumerWidget {
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     final translationCountInSandbox = ref.watch(P.translator.translationCountInSandbox);
+    final isDesktop = ref.watch(P.app.isDesktop);
     return C(
       decoration: BD(
         color: kC,
@@ -360,43 +362,53 @@ class _TranslatiorInfo extends ConsumerWidget {
       ),
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "翻译器信息",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
-          ),
-          8.h,
-          Text("已经缓存的翻译结果数量: ${translations.length}"),
-          Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
-          Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
-          Text("正在翻译的 URL: $runningTaskUrl"),
-          Text("正在翻译的标签页 ID: $runningTaskTabId"),
-          TextButton(
-            onPressed: _onPressClearCompleterPool,
-            child: Text("清除内存缓存", style: TextStyle(color: kCR.q(1))),
-          ),
-          8.h,
-          const Text("翻译状态 / 测试"),
-          4.h,
-          Row(
-            children: [
-              const Expanded(
-                child: _Source(),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "翻译器信息",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
+            ),
+            8.h,
+            Text("已经缓存的翻译结果数量: ${translations.length}"),
+            Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
+            Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
+            if (isDesktop) Text("正在翻译的 URL: $runningTaskUrl"),
+            if (isDesktop) Text("正在翻译的标签页 ID: $runningTaskTabId"),
+            TextButton(
+              onPressed: _onPressClearCompleterPool,
+              child: Text("清除内存缓存", style: TextStyle(color: kCR.q(1))),
+            ),
+            8.h,
+            const Text("翻译状态 / 测试"),
+            4.h,
+            if (isDesktop)
+              Row(
+                children: [
+                  const Expanded(child: _Source()),
+                  8.w,
+                  const Expanded(child: _Result()),
+                ],
               ),
-              8.w,
-              const Expanded(
-                child: _Result(),
+            if (!isDesktop)
+              SizedBox(
+                height: 300,
+                child: Column(
+                  children: [
+                    const Expanded(child: _Source()),
+                    8.w,
+                    const Expanded(child: _Result()),
+                  ],
+                ),
               ),
-            ],
-          ),
-          4.h,
-          TextButton(
-            onPressed: _onPressTest,
-            child: const Text("翻译当前文本框中的文本"),
-          ),
-        ],
+            4.h,
+            TextButton(
+              onPressed: _onPressTest,
+              child: const Text("翻译当前文本框中的文本"),
+            ),
+          ],
+        ),
       ),
     );
   }

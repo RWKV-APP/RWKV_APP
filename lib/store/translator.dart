@@ -38,6 +38,7 @@ class _Translator {
   late final textEditingController = TextEditingController(text: _initialSource);
   late final result = qs(_initialResult);
   late final resultTextEditingController = TextEditingController(text: _initialResult);
+
   late final runningTaskKey = qs<String?>(null);
   late final runningTaskTabId = qs<int?>(null);
   late final runningTaskUrl = qs<String?>(null);
