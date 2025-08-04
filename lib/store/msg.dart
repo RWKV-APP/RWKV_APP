@@ -25,6 +25,11 @@ class _Msg {
     return ids.m((id) => pool[id]).withoutNull;
   });
 
+  late final length = qp<int>((ref) {
+    final list = ref.watch(this.list);
+    return list.length;
+  });
+
   late final editingBotMessage = qp<bool>((ref) {
     final editingIndex = ref.watch(editingOrRegeneratingIndex);
     if (editingIndex == null) return false;

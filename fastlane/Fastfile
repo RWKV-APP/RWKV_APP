@@ -79,6 +79,11 @@ lane :lint do |params|
   raw_change_analysis_options()
 end
 
+lane :bump_version_and_build_number do |params|
+  version_number = raw_increase_build_number()
+  version_number = raw_increase_version_number()
+end
+
 # ✅ Shared
 
 lane :dart_fix do

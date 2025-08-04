@@ -140,7 +140,7 @@ class _Empty extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Text(S.of(context).no_conversations_yet, style: TextStyle(fontSize: 16)),
+        Text(S.of(context).no_conversations_yet, style: const TextStyle(fontSize: 16)),
         16.h,
         FilledButton.icon(
           onPressed: _onPressed,

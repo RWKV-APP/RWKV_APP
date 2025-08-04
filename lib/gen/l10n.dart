@@ -54,6 +54,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `没有音频文件`
+  String get no_audio_file {
+    return Intl.message('没有音频文件', name: 'no_audio_file', desc: '', args: []);
+  }
+
   /// `Github 仓库`
   String get github_repository {
     return Intl.message(
@@ -1888,9 +1893,9 @@ class S {
     return Intl.message('开始对话', name: 'chat', desc: '', args: []);
   }
 
-  /// `猫娘陪聊`
+  /// `Neko`
   String get neko {
-    return Intl.message('猫娘陪聊', name: 'neko', desc: '', args: []);
+    return Intl.message('Neko', name: 'neko', desc: '', args: []);
   }
 
   /// `续写模式`

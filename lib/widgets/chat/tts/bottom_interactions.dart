@@ -322,7 +322,7 @@ class _Actions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ttsDone = ref.watch(P.tts.ttsDone);
+    final generating = ref.watch(P.tts.generating);
     final canSend = ref.watch(P.chat.inputHasContent);
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
@@ -347,7 +347,7 @@ class _Actions extends ConsumerWidget {
             ],
           ),
         ),
-        if (!ttsDone)
+        if (generating)
           C(
             decoration: const BD(color: kC),
             child: Stack(
@@ -381,7 +381,7 @@ class _Actions extends ConsumerWidget {
               ],
             ),
           ),
-        if (ttsDone)
+        if (!generating)
           AnimatedOpacity(
             opacity: (canSend && loaded) ? 1 : .333,
             duration: 250.ms,

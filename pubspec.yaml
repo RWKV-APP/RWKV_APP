@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 1.9.8+448
+version: 2.0.0+510
 
 environment:
   sdk: ^3.8.0
@@ -73,6 +73,7 @@ dependencies:
     git:
       url: https://github.com/pvsvamsi/Disable-Battery-Optimizations
       ref: 3bd744d
+  mp_audio_stream: ^0.2.2
   font_awesome_flutter: ^10.8.0
   shelf: ^1.4.2
   shelf_web_socket: ^3.0.0

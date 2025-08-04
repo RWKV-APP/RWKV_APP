@@ -78,6 +78,13 @@ class _Page extends ConsumerWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: atMainPage,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     P.tts.test();
+      //   },
+      //   child: const Icon(Icons.play_arrow),
+      // ),
       body: Stack(
         children: [
           if (DemoType.chat == demoType) const AppGradientBackground(child: SizedBox()),
