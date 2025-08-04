@@ -17,7 +17,8 @@ class PageTranslator extends ConsumerWidget {
     final s = S.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
     final title = isDesktop ? s.rwkv_offline_translator_server : s.rwkv_offline_translator;
-    return GestureDetector(
+
+    return GD(
       onTap: isDesktop ? null : () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
@@ -464,7 +465,7 @@ class _Result extends ConsumerWidget {
         minLines: 1,
         maxLines: 4,
         controller: P.translator.resultTextEditingController,
-        enabled: false,
+        readOnly: true,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
         ),

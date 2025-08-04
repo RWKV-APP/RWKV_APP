@@ -454,6 +454,8 @@ extension $Translator on _Translator {
       ModelSelector.show();
       return;
     }
+    result.q = "";
+    resultTextEditingController.text = "";
     _startNewTask(source.q);
   }
 

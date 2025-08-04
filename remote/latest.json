@@ -238,7 +238,7 @@
         "modelSize": 0.4,
         "fileName": "RWKV_v7_G1_0.4B_Translate_ctx4096_20250721_latest-Q8_0.gguf",
         "url": "mollysama/rwkv-mobile-models/resolve/main/demos/translate/RWKV_v7_G1_0.4B_Translate_ctx4096_20250721_latest-Q8_0.gguf",
-        "fileSize": 501909600,
+        "fileSize": 501498016,
         "sha256": "7c487e64e62db3e4d0b6c87873f019fa80bde4328b118bb4cf45deaea2574813",
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android", "ios"],
