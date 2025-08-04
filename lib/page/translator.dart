@@ -17,40 +17,43 @@ class PageTranslator extends ConsumerWidget {
     final s = S.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
     final title = isDesktop ? s.rwkv_offline_translator_server : s.rwkv_offline_translator;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: [
-          IconButton(
-            onPressed: () {
-              P.translator.debugCheck();
-            },
-            icon: const Icon(Icons.help),
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _InferenceInfo(),
-                    if (isDesktop) _ServiceInfo(),
-                    _TranslatiorInfo(),
-                  ],
-                ),
-              ),
-              if (isDesktop)
+    return GestureDetector(
+      onTap: isDesktop ? null : () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          actions: [
+            IconButton(
+              onPressed: () {
+                P.translator.debugCheck();
+              },
+              icon: const Icon(Icons.help),
+            ),
+          ],
+        ),
+        body: ListView(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Expanded(
-                  child: _BrowserInfo(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _InferenceInfo(),
+                      if (isDesktop) _ServiceInfo(),
+                      _TranslatiorInfo(),
+                    ],
+                  ),
                 ),
-            ],
-          ),
-        ],
+                if (isDesktop)
+                  Expanded(
+                    child: _BrowserInfo(),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -395,9 +398,14 @@ class _TranslatiorInfo extends ConsumerWidget {
               SizedBox(
                 height: 300,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    T("翻译目标", s: TS(s: 10)),
+                    2.h,
                     const Expanded(child: _Source()),
-                    8.w,
+                    4.h,
+                    T("翻译结果", s: TS(s: 8)),
+                    2.h,
                     const Expanded(child: _Result()),
                   ],
                 ),
