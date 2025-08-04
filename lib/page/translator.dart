@@ -454,17 +454,53 @@ class _Source extends ConsumerWidget {
   }
 }
 
-class _Result extends ConsumerWidget {
+class _Result extends ConsumerStatefulWidget {
   const _Result();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_Result> createState() => _ResultState();
+}
+
+class _ResultState extends ConsumerState<_Result> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // 添加监听器
+    P.translator.resultTextEditingController.addListener(() {
+      // 确保 ScrollController 已经附着到可滚动视图
+      if (_scrollController.hasClients) {
+        // 延迟一帧，确保布局更新
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          );
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    P.translator.resultTextEditingController.removeListener(() {});
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return C(
       decoration: const BD(color: kC),
       child: TextField(
         minLines: 1,
         maxLines: 4,
         controller: P.translator.resultTextEditingController,
+        scrollController: _scrollController,
         readOnly: true,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
