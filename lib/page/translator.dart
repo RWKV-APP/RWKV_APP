@@ -23,12 +23,13 @@ class PageTranslator extends ConsumerWidget {
         appBar: AppBar(
           title: Text(title),
           actions: [
-            IconButton(
-              onPressed: () {
-                P.translator.debugCheck();
-              },
-              icon: const Icon(Icons.help),
-            ),
+            if (isDesktop)
+              IconButton(
+                onPressed: () {
+                  P.translator.debugCheck();
+                },
+                icon: const Icon(Icons.help),
+              ),
           ],
         ),
         body: ListView(

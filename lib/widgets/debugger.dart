@@ -368,6 +368,7 @@ class _TranslatorDebugger extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final paddingTop = ref.watch(P.app.paddingTop);
     final pageKey = ref.watch(P.app.pageKey);
+    final currentModel = ref.watch(P.rwkv.currentModel);
 
     return Positioned(
       left: 0,
@@ -393,6 +394,8 @@ class _TranslatorDebugger extends ConsumerWidget {
                       paddingTop.h,
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
+                      T("currentModel".codeToName),
+                      T(currentModel?.fileName ?? "null"),
                     ].indexMap((index, e) {
                       return C(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

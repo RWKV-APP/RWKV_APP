@@ -70,7 +70,7 @@ class _Translator {
 /// Private methods
 extension _$Translator on _Translator {
   FV _init() async {
-    if (!P.app.isDesktop.q) return;
+    final isDesktop = P.app.isDesktop.q;
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     source.l(_onTextChanged);
     result.l(_onResultChanged);
@@ -82,13 +82,15 @@ extension _$Translator on _Translator {
     isGenerating.l(_onIsGeneratingChanged);
     latestTaskTag.l(_onLatestTaskTagChanged);
 
-    browserTabs.l(_onBrowserTabsChanged);
+    if (isDesktop) browserTabs.l(_onBrowserTabsChanged);
 
     await _loadTranslationsFromFile();
 
-    _taskCheckingTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
-      _checkTask();
-    });
+    if (isDesktop) {
+      _taskCheckingTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+        _checkTask();
+      });
+    }
   }
 
   void _checkTask() async {
@@ -195,11 +197,26 @@ extension _$Translator on _Translator {
 
   void _onPageKeyChanged(PageKey pageKey) {
     qq;
-    if (pageKey == PageKey.translator) {
-      HF.wait(1000).then((_) {
+    switch (pageKey) {
+      case PageKey.translator:
         final currentModel = P.rwkv.currentModel.q;
-        if (currentModel == null) ModelSelector.show();
-      });
+        if (currentModel == null) {
+          HF.wait(500).then((_) {
+            ModelSelector.show();
+          });
+        } else {
+          if (!currentModel.tags.contains("translate")) {
+            P.rwkv.currentModel.q = null;
+            Alert.info(S.current.please_load_model_first);
+            HF.wait(500).then((_) {
+              ModelSelector.show();
+            });
+            return;
+          }
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -431,6 +448,12 @@ extension _$Translator on _Translator {
 /// Public methods
 extension $Translator on _Translator {
   FV onPressTest() async {
+    final s = S.current;
+    if (!P.rwkv.loaded.q) {
+      Alert.info(s.please_load_model_first);
+      ModelSelector.show();
+      return;
+    }
     _startNewTask(source.q);
   }
 
