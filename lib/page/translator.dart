@@ -403,7 +403,16 @@ class _TranslatiorInfo extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    T("翻译目标", s: TS(s: 10)),
+                    Row(
+                      children: [
+                        T("翻译目标", s: TS(s: 10)),
+                        Spacer(),
+                        TextButton(
+                          onPressed: () => P.translator.textEditingController.clear(),
+                          child: const Text("清空翻译目标文本"),
+                        ),
+                      ],
+                    ),
                     2.h,
                     const Expanded(child: _Source()),
                     4.h,
@@ -434,7 +443,7 @@ class _Source extends ConsumerWidget {
       decoration: const BD(color: kC),
       child: TextField(
         minLines: 1,
-        maxLines: 8,
+        maxLines: 4,
         controller: P.translator.textEditingController,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
@@ -453,7 +462,7 @@ class _Result extends ConsumerWidget {
       decoration: const BD(color: kC),
       child: TextField(
         minLines: 1,
-        maxLines: 8,
+        maxLines: 4,
         controller: P.translator.resultTextEditingController,
         enabled: false,
         decoration: const InputDecoration(
