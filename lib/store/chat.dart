@@ -705,11 +705,16 @@ extension _$Chat on _Chat {
     final isZh = P.preference.currentLangIsZh;
 
     if (knowledgeBase.q) {
-      ref = ref.copyWith(enable: true);
+      ref = ref.copyWith(enable: true, source: 2);
       try {
         final prompt = allMessage.last;
         _updateMessageById(id: receiveId, reference: ref);
         final result = await P.rag.query(prompt);
+        if (result.isEmpty) {
+          ref = ref.copyWith(enable: false);
+          _updateMessageById(id: receiveId, reference: ref);
+          return allMessage;
+        }
         final refs = result.map((e) => Reference.fromDocSearch(e)).toList();
         ref = ref.copyWith(list: refs);
         final searchResult = refs.map((e) => e.summary).join("\n");
@@ -721,7 +726,7 @@ extension _$Chat on _Chat {
       }
 
     } else if (webSearch.q != WebSearchMode.off) {
-      ref = ref.copyWith(enable: true);
+      ref = ref.copyWith(enable: true, source: 1);
       try {
         final prompt = allMessage.last;
         final deepSearch = webSearch.q == WebSearchMode.deepSearch;

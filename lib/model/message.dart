@@ -19,9 +19,17 @@ final class RefInfo {
   final bool enable;
   final String error;
 
-  const RefInfo({required this.list, required this.enable, required this.error});
+  // 1 web search, 2 rag
+  final int source;
 
-  factory RefInfo.empty() => const RefInfo(list: [], enable: false, error: "");
+  const RefInfo({
+    required this.list,
+    required this.enable,
+    required this.error,
+    required this.source,
+  });
+
+  factory RefInfo.empty() => const RefInfo(list: [], enable: false, error: "", source: 0);
 
   factory RefInfo.deserialize(String? json) => json == null || json.isEmpty ? RefInfo.empty() : RefInfo.fromJson(jsonDecode(json));
 
@@ -29,6 +37,7 @@ final class RefInfo {
     if (json == null) return RefInfo.empty();
     try {
       return RefInfo(
+        source: json["source"] ?? 0,
         list: (json["list"] as Iterable).map((e) => Reference.fromJson(e)).toList(),
         enable: json["enable"] as bool,
         error: json["error"] as String,
@@ -49,6 +58,7 @@ final class RefInfo {
     return {
       "list": list.map((e) => e.toJson()).toList(),
       "enable": enable,
+      "source": source,
       "error": error,
     };
   }
@@ -57,8 +67,10 @@ final class RefInfo {
     List<Reference>? list,
     bool? enable,
     String? error,
+    int? source,
   }) {
     return RefInfo(
+      source: source ?? this.source,
       list: list ?? this.list,
       enable: enable ?? this.enable,
       error: error ?? this.error,
@@ -107,7 +119,7 @@ final class Message extends Equatable {
     required this.isMine,
     required this.isReasoning,
     required this.paused,
-    this.reference = const RefInfo(list: [], enable: false, error: ''),
+    this.reference = const RefInfo(list: [], enable: false, error: '', source: 0),
     this.changing = false,
     this.type = MessageType.text,
     this.imageUrl,
