@@ -1,3 +1,4 @@
+import 'package:zone/page/advanced_settings.dart' show PageAdvancedSettings;
 import 'package:zone/page/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,13 +18,14 @@ enum PageKey {
   conversation,
   settings,
   documents,
+  advanced_settings,
   othello,
   sudoku,
   home;
 
   String get path => "/$name";
 
-  bool get hasTransition => {chat, completion, documents}.contains(this);
+  bool get hasTransition => {chat, completion, documents, advanced_settings}.contains(this);
 
   Widget get scaffold => switch (this) {
     PageKey.chat => const PageChat(),
@@ -35,6 +37,7 @@ enum PageKey {
     PageKey.conversation => const PageConversation(),
     PageKey.settings => const PageSettings(),
     PageKey.translator => const PageTranslator(),
+    PageKey.advanced_settings => const PageAdvancedSettings(),
   };
 
   //

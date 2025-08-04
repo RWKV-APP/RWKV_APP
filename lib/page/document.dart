@@ -4,16 +4,13 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:halo/halo.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/db/objectbox.dart';
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/model/user_type.dart';
-import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/store/rag.dart';
 import 'package:zone/widgets/app_scaffold.dart';
@@ -83,12 +80,27 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
     if (!await P.rag.checkLoadModel()) {
       return;
     }
+    if (P.rag.parsing.q) {
+      Alert.warning('Please wait for the previous parsing to complete.');
+      return;
+    }
     final XFile? xFile = await openFile(
       acceptedTypeGroups: <XTypeGroup>[
-        XTypeGroup(extensions: ['md', 'pdf', 'txt', 'doc']),
+        XTypeGroup(extensions: ['md', 'pdf', 'txt', 'docx', 'json']),
       ],
     );
     if (xFile == null) {
+      return;
+    }
+    if (xFile.path.endsWith('.json')) {
+      P.rag.importDocument(xFile.path);
+      return;
+    }
+
+    final len = await xFile.length();
+    final mb = len / 1024 / 1024;
+    if (mb > 10) {
+      Alert.error('File size too large (max 5MB)');
       return;
     }
     P.rag.parseFile(xFile.path).listen((e) {});
@@ -348,20 +360,18 @@ class _Document extends ConsumerWidget {
                             sprintf(S.current.parsed_chunks, [document.parsed, document.chunks]),
                             style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
-                        if (parsing) Text(sprintf(S.current.took_x, [time.trim()]), style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        // if (parsing) Text(sprintf(S.current.took_x, [time.trim()]), style: TextStyle(color: Colors.grey, fontSize: 12)),
                         Row(
                           children: [
-                            SizedBox(
-                              width: 80,
+                            Text(getDisplayTime(document.timestamp), style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            SizedBox(width: 6),
+                            SizedBox(height: 12, child: VerticalDivider()),
+                            SizedBox(width: 6),
+                            Flexible(
                               child: Text(
                                 sprintf(S.current.chars_x, [document.characters]),
                                 style: TextStyle(color: Colors.grey, fontSize: 12),
                               ),
-                            ),
-                            SizedBox(height: 12, child: VerticalDivider()),
-                            SizedBox(width: 6),
-                            Flexible(
-                              child: Text(getDisplayTime(document.timestamp), style: TextStyle(color: Colors.grey, fontSize: 12)),
                             ),
                           ],
                         ),
@@ -381,6 +391,13 @@ class _Document extends ConsumerWidget {
                         P.rag.parseDocument(document);
                       },
                       icon: FaIcon(FontAwesomeIcons.fileImport),
+                    ),
+                  if (parsing)
+                    IconButton(
+                      onPressed: () {
+                        P.rag.stopParsing(document);
+                      },
+                      icon: Icon(Icons.close),
                     ),
                   // if (parsed)
                   //   IconButton(
@@ -434,9 +451,9 @@ class _BlinkAnimationState extends State<_BlinkAnimation> with SingleTickerProvi
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                primary.withAlpha(200),
-                primary.withAlpha(100),
-                primary.withAlpha(200),
+                primary.withAlpha(150),
+                primary.withAlpha(40),
+                primary.withAlpha(150),
               ],
               stops: [0, _controller.value, 1],
             ),

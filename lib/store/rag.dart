@@ -4,13 +4,13 @@ import 'dart:io';
 import 'dart:math' show sqrt;
 
 import 'package:collection/collection.dart';
+import 'package:doc_text_extractor/doc_text_extractor.dart' show TextExtractor;
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:zone/db/objectbox.dart';
 import 'package:zone/objectbox.g.dart';
 import 'package:zone/router/router.dart';
@@ -43,6 +43,8 @@ class RAG {
 
   final documents = qs<List<Document>>([]);
   final documentParsing = qs<Set<int>>({});
+  final parsing = qs(false);
+
   String _modelName = '';
   final Stopwatch _stopwatchParse = Stopwatch();
   late final boxChunk = ObjectBox.instance.store.box<DocumentChunk>();
@@ -56,6 +58,13 @@ class RAG {
       qqe('init error: $e');
       // await ObjectBox.cleanup();
     }
+  }
+
+  void stopParsing(Document document) async {
+    deleteDocument(document.id);
+    documentParsing.q.remove(document.id);
+    documents.q = documents.q.where((e) => e.id != document.id).toList();
+    parsing.q = false;
   }
 
   Future<bool> checkLoadModel() async {
@@ -98,8 +107,9 @@ class RAG {
     final condition = DocumentChunk_
         .embedding //
         .nearestNeighborsF32(queryVector, 200)
+        .or(DocumentChunk_.content.contains(text))
         .and(DocumentChunk_.documentId.oneOf(availableDoc));
-    final query = boxChunk.query(condition).build()..limit = count ?? 10;
+    final query = boxChunk.query(condition).build()..limit = 200;
     final result = await query.findWithScoresAsync();
     query.close();
     final id2doc = <int, Document>{
@@ -112,7 +122,8 @@ class RAG {
             documentName: id2doc[e.object.documentId]?.name ?? '-',
             dimension: e.object.embedding!.length,
             model: id2doc[e.object.documentId]?.modelName ?? '-',
-            score: e.score,
+            // score: e.score,
+            score: similarity(queryVector, e.object.embedding!),
             embedding: e.object.embedding!,
           ),
         )
@@ -124,8 +135,12 @@ class RAG {
   Stream<Document> parseFile(String path) async* {
     int id = -1;
     try {
+      parsing.q = true;
       qqq('parseFile: $path');
       await for (var doc in _chunkFile(path)) {
+        if (!parsing.q) {
+          break;
+        }
         qqq('update=>${doc.name}, ${doc.parsed}/${doc.chunks}');
         documents.q = [if (id == -1) doc, ...documents.q];
         if (id == -1) {
@@ -141,6 +156,7 @@ class RAG {
       rethrow;
     } finally {
       qqq('parseFile done');
+      parsing.q = false;
       _stopwatchParse.stop();
       documentParsing.q = documentParsing.q.where((e) => e != id).toSet();
     }
@@ -195,20 +211,22 @@ class RAG {
     _stopwatchParse.reset();
     _stopwatchParse.start();
     final stream = DocumentParser(path: path).parse();
+    final updated = <DocumentChunk>[];
     await for (var parsed in stream) {
       final chunk = parsed.chunks.join(' ').replaceAll('\n', '');
       if (chunk.length < 5) continue;
-      await boxChunk.putAsync(
+      updated.add(
         DocumentChunk()
           ..documentId = doc.id
           ..content = chunk,
       );
-      doc.time = _stopwatchParse.elapsed.inMilliseconds;
       doc.chunks += 1;
       doc.lines += parsed.chunks.length;
       doc.characters += chunk.length;
       yield doc;
     }
+    doc.time = _stopwatchParse.elapsed.inMilliseconds;
+    await boxChunk.putManyAsync(updated);
     await boxDoc.putAsync(doc);
     yield doc;
     _stopwatchParse.stop();
@@ -240,11 +258,12 @@ class RAG {
     query.close();
 
     final docMap = doc.toMap();
-    docMap['chunks'] = chunks.map((e) => e.toMap()).toList();
+    docMap['chunk_list'] = chunks.map((e) => e.toMap()).toList();
     final json = jsonEncode(docMap);
 
     final tempDir = await getTemporaryDirectory();
     final file = File('${tempDir.path}${Platform.pathSeparator}${doc.name}.json');
+    qqq('share created: ${file.path}');
     if (file.existsSync()) await file.delete();
     await file.writeAsString(json);
 
@@ -252,6 +271,45 @@ class RAG {
     await SharePlus.instance.share(
       ShareParams(previewThumbnail: xFile, files: [xFile]),
     );
+  }
+
+  Future importDocument(String path) async {
+    final file = File(path);
+    final json = jsonDecode(await file.readAsString());
+    Document doc = Document.fromMap(json);
+
+    doc
+      ..id = 0
+      ..path = ''
+      ..parsed = 0
+      ..timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    doc = await boxDoc.putAndGetAsync(doc);
+    documents.q = [doc, ...documents.q.where((d) => d.id != doc.id)];
+    documentParsing.q = {doc.id, ...documentParsing.q};
+
+    _stopwatchParse.reset();
+    _stopwatchParse.start();
+    try {
+      final jsons = json['chunk_list'] as Iterable;
+      final chunks = <DocumentChunk>[];
+      for (final c in jsons) {
+        final chunk = DocumentChunk.fromMap(c);
+        chunk.documentId = doc.id;
+        chunk.id = 0;
+        chunks.add(chunk);
+        doc.parsed += 1;
+        doc.time = _stopwatchParse.elapsed.inMilliseconds;
+        documents.q = [doc, ...documents.q.where((d) => d.id != doc.id)];
+      }
+      await boxChunk.putManyAsync(chunks);
+      await boxDoc.putAsync(doc);
+    } catch (e) {
+      qqe(e);
+    } finally {
+      _stopwatchParse.stop();
+      documentParsing.q = documentParsing.q.where((e) => e != doc.id).toSet();
+    }
   }
 
   Stream<Document> _parseDocumentInternal(Document doc) async* {
@@ -264,15 +322,19 @@ class RAG {
     _stopwatchParse.reset();
     _stopwatchParse.start();
     int time = doc.time;
+
+    final updated = <DocumentChunk>[];
     await for (final chunk in chunks) {
+      qqq('embedding: ${chunk.content}');
       final embedding = await P.rwkv.embed([chunk.content]);
       chunk.embedding = embedding[0];
+      updated.add(chunk);
       doc.time = time + _stopwatchParse.elapsed.inMilliseconds;
       doc.parsed += 1;
       yield doc;
-      await boxDoc.putAsync(doc);
-      await boxChunk.putAsync(chunk);
     }
+    await boxChunk.putManyAsync(updated);
+    await boxDoc.putAsync(doc);
     _stopwatchParse.stop();
   }
 
@@ -313,11 +375,12 @@ class DocumentParser {
   final List<String> _buffer = [];
   final Runes separators;
 
-  DocumentParser({required this.path, String separators = '!。；？！'}) : separators = separators.runes;
+  DocumentParser({required this.path, String separators = '!。；？！\n,;.!'}) : separators = separators.runes;
 
   Stream<ParseResult> parse() async* {
-    if (path.toLowerCase().endsWith('.pdf')) {
-      yield* _parsePdf();
+    final ext = path.split('.').last.toLowerCase();
+    if ({'pdf', 'docx', 'doc'}.contains(ext)) {
+      yield* _parseDoc();
       return;
     }
     yield* _parseText();
@@ -339,12 +402,11 @@ class DocumentParser {
     }
   }
 
-  Stream<ParseResult> _parsePdf() async* {
-    final bytes = await File(path).readAsBytes();
-    final PdfDocument document = PdfDocument(inputBytes: bytes);
-    final ext = PdfTextExtractor(document).extractTextLines().map((e) => e.text).join('\n');
+  Stream<ParseResult> _parseDoc() async* {
+    final extractor = TextExtractor();
+    final res = await extractor.extractText(path, isUrl: false);
+    final ext = res.text;
 
-    document.dispose();
     for (var i = 0; i < ext.length; i++) {
       final char = ext[i];
       final chunks = _parseByte(char);

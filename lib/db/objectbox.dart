@@ -36,8 +36,8 @@ class DocumentChunk {
       ..content = map['content']
       ..length = map['length']
       ..offset = map['offset']
-      ..tags = map['tags']
-      ..embedding = map['embedding'];
+      ..tags = [...map['tags']]
+      ..embedding = [...map['embedding']];
   }
 
   Map<String, dynamic> toMap() {
@@ -96,7 +96,7 @@ class Document {
       ..parsed = map['parsed']
       ..chunks = map['chunks']
       ..timestamp = map['timestamp']
-      ..tags = map['tags'];
+      ..tags = [...map['tags']];
   }
 
   Map<String, dynamic> toMap() {
