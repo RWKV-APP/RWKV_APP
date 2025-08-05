@@ -17,7 +17,7 @@ class _URLCompleter {
   final String? nodeName;
   final int? tick;
 
-  _URLCompleter({
+  const _URLCompleter({
     required this.url,
     required this.tabId,
     required this.completer,
