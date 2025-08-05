@@ -176,6 +176,8 @@ class FileInfo extends Equatable {
 
   bool get isEmbedding => tags.contains('embedding');
 
+  bool get isReranker => tags.contains('reranker');
+
   bool get isEncoder => tags.contains('encoder');
 
   bool get isAdapter => tags.contains('adapter');

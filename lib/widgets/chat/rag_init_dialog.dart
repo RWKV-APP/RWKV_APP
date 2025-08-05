@@ -21,7 +21,7 @@ class _RagInitDialogState extends State<RagInitDialog> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        await P.rag.loadEmbeddingModel();
+        await P.rag.loadModel();
         // await Future.delayed(4000.ms);
         if (mounted) Navigator.of(context).pop();
       } catch (e) {

@@ -30,7 +30,7 @@ class ModelItem extends ConsumerWidget {
   void _onStartTap(BuildContext context) async {
     qq;
 
-    if (fileInfo.isEmbedding) {
+    if (fileInfo.isEmbedding || fileInfo.isReranker) {
       Navigator.of(context).pop();
       await Future.delayed(const Duration(milliseconds: 100));
       RagInitDialog.show(getContext()!);
@@ -150,7 +150,7 @@ class ModelItem extends ConsumerWidget {
       case DemoType.world:
         startTitle = s.start_to_chat;
     }
-    if (fileInfo.isEmbedding) {
+    if (fileInfo.isEmbedding || fileInfo.isReranker) {
       startTitle = s.load_model;
     }
 

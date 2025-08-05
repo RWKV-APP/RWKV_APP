@@ -390,7 +390,7 @@ extension $RWKVLoad on _RWKV {
     }
   }
 
-  FV loadEmbeddingModel(FileInfo fileInfo) async {
+  FV loadRAGModel(FileInfo embedding, FileInfo reranker) async {
     if (_sendPort == null) {
       final options = StartOptions(
         modelPath: '',
@@ -406,8 +406,14 @@ extension $RWKVLoad on _RWKV {
       qqq("waiting for sendPort...");
       await Future.delayed(const Duration(milliseconds: 50));
     }
-    final localFile = P.fileManager.locals(fileInfo).q;
-    send(to_rwkv.LoadEmbeddingModel(path: localFile.targetPath));
+    final localFile = P.fileManager.locals(embedding).q;
+    final localFile2 = P.fileManager.locals(reranker).q;
+    send(
+      to_rwkv.LoadEmbeddingModel(
+        embeddingModelPath: localFile.targetPath,
+        rerankerModelPath: localFile2.targetPath,
+      ),
+    );
     final r =
         await broadcastStream.firstWhere((event) => event is from_rwkv.LoadEmbeddingModelResult) as from_rwkv.LoadEmbeddingModelResult;
     if (!r.success) {
@@ -415,13 +421,22 @@ extension $RWKVLoad on _RWKV {
     }
   }
 
-  Future<List<List<double>>> embed(List<String> sentences) async {
+  Future<List<List<double>>> getEmbeddings(List<String> sentences) async {
     final to = to_rwkv.TextEmbedding(sentences: sentences);
     send(to);
     final r =
-        await broadcastStream.firstWhere((event) => event is from_rwkv.TextEmbeddingResult || event.toRWKV == to)
-            as from_rwkv.TextEmbeddingResult;
+    await broadcastStream.firstWhere((event) => event is from_rwkv.TextEmbeddingResult || event.toRWKV == to)
+    as from_rwkv.TextEmbeddingResult;
     return r.embeddings;
+  }
+
+  Future<List<num>> rerank(String query, List<String> documents) async {
+    final to = to_rwkv.RerankDocument(query: query, documents: documents);
+    send(to);
+    final r =
+    await broadcastStream.firstWhere((event) => event is from_rwkv.RerankDocumentResult || event.toRWKV == to)
+    as from_rwkv.RerankDocumentResult;
+    return r.scores;
   }
 
   FV loadChat({

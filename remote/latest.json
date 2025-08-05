@@ -41,6 +41,19 @@
         "tags": ["cpu", "embedding"]
       },
       {
+        "name": "bge-reranker-v2-m3",
+        "type": "gguf",
+        "modelSize": 0.6,
+        "fileName": "bge-reranker-v2-m3-Q8_0.gguf",
+        "url": "gpustack/bge-reranker-v2-m3-GGUF/resolve/main/bge-reranker-v2-m3-Q8_0.gguf",
+        "fileSize": 635676416,
+        "sha256": "",
+        "quantization": "Q8_0",
+        "platforms": ["windows", "linux", "android"],
+        "backends": ["llamacpp"],
+        "tags": ["cpu", "reranker"]
+      },
+      {
         "name": "RWKV7-G1 0.4B",
         "type": "gguf",
         "modelSize": 0.4,

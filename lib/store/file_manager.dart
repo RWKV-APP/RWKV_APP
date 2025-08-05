@@ -128,6 +128,18 @@ extension $FileManager on _FileManager {
     return embedding;
   }
 
+  FileInfo? getRerankerModel() {
+    final reranker = _all.q.firstWhereOrNull((e) => e.available && e.isReranker);
+    if(reranker == null) {
+      return null;
+    }
+    final file = locals(reranker);
+    if (!file.q.hasFile) {
+      return null;
+    }
+    return reranker;
+  }
+
   FV _initModelDownloadTaskState() async {
     await HF.wait(17);
     final availableFiles = availableModels.q;

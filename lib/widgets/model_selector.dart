@@ -24,9 +24,9 @@ import 'package:zone/widgets/model_item.dart';
 // TODO: move it to pages/panel
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
-  final bool embedding;
+  final bool rag;
 
-  static FV show({bool nekoOnly = false, bool embedding = false}) async {
+  static FV show({bool nekoOnly = false, bool rag = false}) async {
     qq;
 
     if (P.fileManager.modelSelectorShown.q) return;
@@ -62,7 +62,7 @@ class ModelSelector extends ConsumerWidget {
           snap: false,
 
           builder: (BuildContext context, ScrollController scrollController) {
-            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly, embedding: embedding);
+            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly, rag: rag);
           },
         );
       },
@@ -72,7 +72,7 @@ class ModelSelector extends ConsumerWidget {
 
   final ScrollController scrollController;
 
-  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly, required this.embedding});
+  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly, required this.rag});
 
   List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
@@ -116,10 +116,10 @@ class ModelSelector extends ConsumerWidget {
         for (final fileInfo
             in availableModels
                 .where((e) {
-                  if (embedding) {
-                    return e.isEmbedding;
+                  if (rag) {
+                    return e.isEmbedding || e.isReranker;
                   }
-                  return (!nekoOnly || e.isNeko) && !e.isEmbedding;
+                  return (!nekoOnly || e.isNeko) && !e.isEmbedding && !e.isReranker;
                 })
                 .sorted((a, b) {
                   /// 模型尺寸大的在上面
@@ -169,7 +169,7 @@ class ModelSelector extends ConsumerWidget {
             if (demoType == DemoType.world) T(s.please_select_a_world_type, s: const TS(s: 16, w: FW.w500)),
             // T(s.memory_used(memUsedString, memFreeString), s: TS(c: qb.q(.7), s: 12)),
             const _DownloadSource(),
-            if (demoType == DemoType.chat && !embedding)
+            if (demoType == DemoType.chat && !rag)
               T(
                 "👉${s.str_model_selection_dialog_hint}👈",
                 s: TS(c: qb.q(.7), s: 12, w: FW.w500),

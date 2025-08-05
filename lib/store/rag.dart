@@ -39,7 +39,7 @@ class ChunkQueryResult {
 }
 
 class RAG {
-  bool embeddingModelLoaded = false;
+  bool _modelLoaded = false;
 
   final documents = qs<List<Document>>([]);
   final documentParsing = qs<Set<int>>({});
@@ -68,27 +68,29 @@ class RAG {
   }
 
   Future<bool> checkLoadModel() async {
-    if (P.fileManager.getEmbeddingModel() == null) {
+    if (P.fileManager.getEmbeddingModel() == null || P.fileManager.getRerankerModel() == null) {
       Alert.warning(S.current.please_download_the_required_models_first);
-      ModelSelector.show(embedding: true);
+      ModelSelector.show(rag: true);
       return false;
     }
 
-    if (!embeddingModelLoaded) {
+    if (!_modelLoaded) {
       await RagInitDialog.show(getContext()!);
     }
-    return embeddingModelLoaded;
+    return _modelLoaded;
   }
 
-  Future loadEmbeddingModel() async {
-    if (!embeddingModelLoaded) {
-      final file = P.fileManager.getEmbeddingModel();
-      if (file == null) {
+  Future loadModel() async {
+    if (!_modelLoaded) {
+      final embedding = P.fileManager.getEmbeddingModel();
+      final reranker = P.fileManager.getRerankerModel();
+      if (embedding == null || reranker == null) {
+        Alert.error('Model file not found');
         return;
       }
-      _modelName = file.name;
-      await P.rwkv.loadEmbeddingModel(file).timeout(Duration(seconds: 30));
-      embeddingModelLoaded = true;
+      _modelName = embedding.name;
+      await P.rwkv.loadRAGModel(embedding, reranker).timeout(Duration(seconds: 30));
+      _modelLoaded = true;
     }
   }
 
@@ -103,31 +105,44 @@ class RAG {
         .map((e) => e.id)
         .toList();
 
-    final queryVector = (await P.rwkv.embed([text]))[0];
+    _stopwatchParse.reset();
+    _stopwatchParse.start();
+    final queryVector = (await P.rwkv.getEmbeddings([text]))[0];
+    qqq('query embedding: ${_stopwatchParse.elapsed.inMilliseconds}ms');
+    _stopwatchParse.reset();
     final condition = DocumentChunk_
         .embedding //
         .nearestNeighborsF32(queryVector, 200)
-        .or(DocumentChunk_.content.contains(text))
         .and(DocumentChunk_.documentId.oneOf(availableDoc));
-    final query = boxChunk.query(condition).build()..limit = 200;
+    final query = boxChunk.query(condition).build()..limit = count ?? 10;
+    qqq('vector db: ${_stopwatchParse.elapsed.inMilliseconds}ms');
     final result = await query.findWithScoresAsync();
     query.close();
     final id2doc = <int, Document>{
       for (var doc in documents.q) doc.id: doc,
     };
+    _stopwatchParse.reset();
+    final scores = await P.rwkv.rerank(text, result.map((e) => e.object.content).toList());
+    if (scores.length != result.length) {
+      Alert.error('Rerank query result error');
+      return [];
+    }
+    qqq('result rerank: ${_stopwatchParse.elapsed.inMilliseconds}ms');
+    _stopwatchParse.stop();
+
     final r = result
-        .map(
-          (e) => ChunkQueryResult(
+        .mapIndexed(
+          (idx, e) => ChunkQueryResult(
             text: e.object.content,
             documentName: id2doc[e.object.documentId]?.name ?? '-',
             dimension: e.object.embedding!.length,
             model: id2doc[e.object.documentId]?.modelName ?? '-',
-            // score: e.score,
-            score: similarity(queryVector, e.object.embedding!),
+            score: scores[idx].toDouble(),
+            // score: similarity(queryVector, e.object.embedding!),
             embedding: e.object.embedding!,
           ),
         )
-        .sortedBy((e) => -e.score)
+        .sortedBy((e) => e.score)
         .toList();
     return r;
   }
@@ -239,6 +254,7 @@ class RAG {
       return;
     }
 
+    parsing.q = true;
     documentParsing.q = {doc.id, ...documentParsing.q};
     try {
       await for (var e in _parseDocumentInternal(doc)) {
@@ -247,6 +263,7 @@ class RAG {
     } catch (e) {
       qqe(e);
     } finally {
+      parsing.q = false;
       documentParsing.q = documentParsing.q.where((e) => e != doc.id).toSet();
     }
   }
@@ -326,7 +343,7 @@ class RAG {
     final updated = <DocumentChunk>[];
     await for (final chunk in chunks) {
       qqq('embedding: ${chunk.content}');
-      final embedding = await P.rwkv.embed([chunk.content]);
+      final embedding = await P.rwkv.getEmbeddings([chunk.content]);
       chunk.embedding = embedding[0];
       updated.add(chunk);
       doc.time = time + _stopwatchParse.elapsed.inMilliseconds;

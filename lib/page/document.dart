@@ -27,6 +27,7 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
 
   bool isSearch = false;
   bool showClearButton = false;
+  bool querying = false;
   final searchFocus = FocusNode();
 
   final TextEditingController searchTextController = TextEditingController();
@@ -45,15 +46,21 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
         .distinct((p, n) => p == n)
         .where((typing) => !typing)
         .skip(1)
-        .listen((event) async {
-      final text = searchTextController.text;
-      setState(() {
-        showClearButton = text.isNotEmpty;
-      });
-      final results = await P.rag.query(text);
-      setState(() {
-        searchResults = results;
-      });
+        .listen((event) {
+          onSearchSubmit();
+        });
+  }
+
+  void onSearchSubmit() async {
+    final text = searchTextController.text;
+    setState(() {
+      showClearButton = text.isNotEmpty;
+      querying = true;
+    });
+    final results = await P.rag.query(text);
+    setState(() {
+      searchResults = results;
+      querying = false;
     });
   }
 
@@ -114,14 +121,14 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
       appBar: isSearch ? buildSearchAppBar() : buildDocumentAppBar(),
       body: isSearch
           ? PopScope(
-        onPopInvokedWithResult: (pop, c) {
-          setState(() {
-            isSearch = false;
-          });
-        },
-        canPop: false,
-        child: buildSearchBody(),
-      )
+              onPopInvokedWithResult: (pop, c) {
+                setState(() {
+                  isSearch = false;
+                });
+              },
+              canPop: false,
+              child: buildSearchBody(),
+            )
           : buildDocumentBody(docs),
     );
   }
@@ -131,16 +138,22 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
       child: docs.isEmpty
           ? Center(child: Text(S.current.no_document_found))
           : ListView.builder(
-        padding: EdgeInsets.all(16),
-        itemCount: docs.length,
-        itemBuilder: (context, index) {
-          return _Document(document: docs[index]);
-        },
-      ),
+              padding: EdgeInsets.all(16),
+              itemCount: docs.length,
+              itemBuilder: (context, index) {
+                return _Document(document: docs[index]);
+              },
+            ),
     );
   }
 
   Widget buildSearchBody() {
+    if (querying) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return ListView.builder(
       key: ValueKey(searchResults),
       padding: EdgeInsets.all(16),
@@ -161,7 +174,7 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
               children: [
                 Text(
                   "Score: ${chunk.score}\n"
-                      "${chunk.documentName},  Length: ${chunk.text.length}",
+                  "${chunk.documentName},  Length: ${chunk.text.length}",
                   style: TextStyle(color: Colors.grey, fontSize: 12),
                   maxLines: 100,
                 ),
@@ -209,13 +222,12 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
             child: SearchBar(
               elevation: WidgetStatePropertyAll(0),
               controller: searchTextController,
-              onChanged: onSearchChanged,
+              // onChanged: onSearchChanged,
+              onSubmitted: (v) => searchText.add(v),
               focusNode: searchFocus,
               leading: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
-                child: FaIcon(
-                    FontAwesomeIcons.magnifyingGlass, color: Colors.grey,
-                    size: 18),
+                child: FaIcon(FontAwesomeIcons.magnifyingGlass, color: Colors.grey, size: 18),
               ),
               trailing: [
                 if (showClearButton)
@@ -227,14 +239,12 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
                         showClearButton = false;
                       });
                     },
-                    icon: FaIcon(FontAwesomeIcons.circleXmark, size: 18,
-                        color: Colors.grey),
+                    icon: FaIcon(FontAwesomeIcons.circleXmark, size: 18, color: Colors.grey),
                   ),
               ],
               constraints: BoxConstraints(minHeight: 46),
               scrollPadding: EdgeInsets.zero,
-              padding: WidgetStatePropertyAll(
-                  EdgeInsets.symmetric(horizontal: 6)),
+              padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 6)),
               shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
@@ -283,10 +293,7 @@ class _Document extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final userType = ref.watch(P.preference.userType);
-    final ext = document.name
-        .split('.')
-        .last
-        .toLowerCase();
+    final ext = document.name.split('.').last.toLowerCase();
     final docParsing = ref.watch(P.rag.documentParsing);
     IconData icon = fileIcons[ext] ?? FontAwesomeIcons.file;
 
@@ -355,35 +362,27 @@ class _Document extends ConsumerWidget {
                       children: [
                         Text(
                           document.name,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight
-                              .w500),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 4),
                         if (isExpertUser)
                           Text(
-                            sprintf(S.current.parsed_chunks, [
-                              document.parsed,
-                              document.chunks
-                            ]),
+                            sprintf(S.current.parsed_chunks, [document.parsed, document.chunks]),
                             style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                         // if (parsing) Text(sprintf(S.current.took_x, [time.trim()]), style: TextStyle(color: Colors.grey, fontSize: 12)),
                         Row(
                           children: [
-                            Text(getDisplayTime(document.timestamp),
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
+                            Text(getDisplayTime(document.timestamp), style: TextStyle(color: Colors.grey, fontSize: 12)),
                             SizedBox(width: 6),
                             SizedBox(height: 12, child: VerticalDivider()),
                             SizedBox(width: 6),
                             Flexible(
                               child: Text(
-                                sprintf(
-                                    S.current.chars_x, [document.characters]),
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 12),
+                                sprintf(S.current.chars_x, [document.characters]),
+                                style: TextStyle(color: Colors.grey, fontSize: 12),
                               ),
                             ),
                           ],
@@ -441,8 +440,7 @@ class _BlinkAnimation extends StatefulWidget {
   State<_BlinkAnimation> createState() => _BlinkAnimationState();
 }
 
-class _BlinkAnimationState extends State<_BlinkAnimation>
-    with SingleTickerProviderStateMixin {
+class _BlinkAnimationState extends State<_BlinkAnimation> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -451,15 +449,12 @@ class _BlinkAnimationState extends State<_BlinkAnimation>
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
-    )
-      ..repeat(reverse: true);
+    )..repeat(reverse: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final primary = isDark ? Colors.grey : Colors.lightGreen;
     return AnimatedBuilder(
       animation: _controller,
