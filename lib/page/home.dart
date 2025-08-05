@@ -116,16 +116,15 @@ class PageHome extends ConsumerWidget {
                             color: Colors.lightGreen,
                             icon: FontAwesomeIcons.feather,
                           ),
-                          if (isDesktop)
-                            buildButton(
-                              title: "离线翻译",
-                              subtitle: "离线翻译文本",
-                              onTap: () {
-                                push(PageKey.translator);
-                              },
-                              color: Colors.blue,
-                              icon: Icons.translate,
-                            ),
+                          buildButton(
+                            title: "离线翻译",
+                            subtitle: "离线翻译文本",
+                            onTap: () {
+                              push(PageKey.translator);
+                            },
+                            color: Colors.blue,
+                            icon: Icons.translate,
+                          ),
                         ]
                         .map(
                           (e) => ConstrainedBox(

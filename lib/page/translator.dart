@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/browser_tab.dart';
 import 'package:zone/model/browser_window.dart';
 import 'package:zone/store/p.dart';
@@ -13,39 +14,48 @@ class PageTranslator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('RWKV 离线翻译服务器'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              P.translator.debugCheck();
-            },
-            icon: const Icon(Icons.help),
-          ),
-        ],
-      ),
-      body: ListView(
-        children: const [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _InferenceInfo(),
-                    _ServiceInfo(),
-                    _TranslatiorInfo(),
-                  ],
+    final s = S.of(context);
+    final isDesktop = ref.watch(P.app.isDesktop);
+    final title = isDesktop ? s.rwkv_offline_translator_server : s.rwkv_offline_translator;
+
+    return GD(
+      onTap: isDesktop ? null : () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          actions: [
+            if (isDesktop)
+              IconButton(
+                onPressed: () {
+                  P.translator.debugCheck();
+                },
+                icon: const Icon(Icons.help),
+              ),
+          ],
+        ),
+        body: ListView(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _InferenceInfo(),
+                      if (isDesktop) _ServiceInfo(),
+                      _TranslatiorInfo(),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: _BrowserInfo(),
-              ),
-            ],
-          ),
-        ],
+                if (isDesktop)
+                  Expanded(
+                    child: _BrowserInfo(),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -348,6 +358,7 @@ class _TranslatiorInfo extends ConsumerWidget {
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     final translationCountInSandbox = ref.watch(P.translator.translationCountInSandbox);
+    final isDesktop = ref.watch(P.app.isDesktop);
     return C(
       decoration: BD(
         color: kC,
@@ -356,43 +367,69 @@ class _TranslatiorInfo extends ConsumerWidget {
       ),
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "翻译器信息",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
-          ),
-          8.h,
-          Text("已经缓存的翻译结果数量: ${translations.length}"),
-          Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
-          Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
-          Text("正在翻译的 URL: $runningTaskUrl"),
-          Text("正在翻译的标签页 ID: $runningTaskTabId"),
-          TextButton(
-            onPressed: _onPressClearCompleterPool,
-            child: Text("清除内存缓存", style: TextStyle(color: kCR.q(1))),
-          ),
-          8.h,
-          const Text("翻译状态 / 测试"),
-          4.h,
-          Row(
-            children: [
-              const Expanded(
-                child: _Source(),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "翻译器信息",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
+            ),
+            8.h,
+            if (!isDesktop) Text("暂未在移动平台启用缓存功能, 可随时启用, 性能消耗可忽略不计"),
+            if (isDesktop) Text("已经缓存的翻译结果数量: ${translations.length}"),
+            if (isDesktop) Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
+            Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
+            if (isDesktop) Text("正在翻译的 URL: $runningTaskUrl"),
+            if (isDesktop) Text("正在翻译的标签页 ID: $runningTaskTabId"),
+            if (isDesktop)
+              TextButton(
+                onPressed: _onPressClearCompleterPool,
+                child: Text("清除内存缓存", style: TextStyle(color: kCR.q(1))),
               ),
-              8.w,
-              const Expanded(
-                child: _Result(),
+            8.h,
+            const Text("翻译状态 / 测试"),
+            4.h,
+            if (isDesktop)
+              Row(
+                children: [
+                  const Expanded(child: _Source()),
+                  8.w,
+                  const Expanded(child: _Result()),
+                ],
               ),
-            ],
-          ),
-          4.h,
-          TextButton(
-            onPressed: _onPressTest,
-            child: const Text("翻译当前文本框中的文本"),
-          ),
-        ],
+            if (!isDesktop)
+              SizedBox(
+                height: 300,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        T("翻译目标", s: TS(s: 10)),
+                        Spacer(),
+                        TextButton(
+                          onPressed: () => P.translator.textEditingController.clear(),
+                          child: const Text("清空翻译目标文本"),
+                        ),
+                      ],
+                    ),
+                    2.h,
+                    const Expanded(child: _Source()),
+                    4.h,
+                    T("翻译结果", s: TS(s: 8)),
+                    2.h,
+                    const Expanded(child: _Result()),
+                  ],
+                ),
+              ),
+            4.h,
+            TextButton(
+              onPressed: _onPressTest,
+              child: const Text("翻译当前文本框中的文本"),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -407,9 +444,10 @@ class _Source extends ConsumerWidget {
       decoration: const BD(color: kC),
       child: TextField(
         minLines: 1,
-        maxLines: 8,
+        maxLines: 4,
         controller: P.translator.textEditingController,
         decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           border: OutlineInputBorder(),
         ),
       ),
@@ -417,19 +455,56 @@ class _Source extends ConsumerWidget {
   }
 }
 
-class _Result extends ConsumerWidget {
+class _Result extends ConsumerStatefulWidget {
   const _Result();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_Result> createState() => _ResultState();
+}
+
+class _ResultState extends ConsumerState<_Result> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // 添加监听器
+    P.translator.resultTextEditingController.addListener(() {
+      // 确保 ScrollController 已经附着到可滚动视图
+      if (_scrollController.hasClients) {
+        // 延迟一帧，确保布局更新
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          );
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    P.translator.resultTextEditingController.removeListener(() {});
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return C(
       decoration: const BD(color: kC),
       child: TextField(
         minLines: 1,
-        maxLines: 8,
+        maxLines: 4,
         controller: P.translator.resultTextEditingController,
-        enabled: false,
+        scrollController: _scrollController,
+        readOnly: true,
         decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           border: OutlineInputBorder(),
         ),
       ),

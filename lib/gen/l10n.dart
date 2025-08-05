@@ -54,6 +54,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `RWKV 离线翻译服务器`
+  String get rwkv_offline_translator_server {
+    return Intl.message(
+      'RWKV 离线翻译服务器',
+      name: 'rwkv_offline_translator_server',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `RWKV 离线翻译`
+  String get rwkv_offline_translator {
+    return Intl.message(
+      'RWKV 离线翻译',
+      name: 'rwkv_offline_translator',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `没有音频文件`
   String get no_audio_file {
     return Intl.message('没有音频文件', name: 'no_audio_file', desc: '', args: []);
