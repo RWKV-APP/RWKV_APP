@@ -447,6 +447,7 @@ class _Source extends ConsumerWidget {
         maxLines: 4,
         controller: P.translator.textEditingController,
         decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           border: OutlineInputBorder(),
         ),
       ),
@@ -503,6 +504,7 @@ class _ResultState extends ConsumerState<_Result> {
         scrollController: _scrollController,
         readOnly: true,
         decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           border: OutlineInputBorder(),
         ),
       ),

@@ -181,7 +181,7 @@ def update_qnn_filesizes(config_file: str, max_workers: int = 5):
 
 def main():
     """主函数"""
-    config_file = "demo-config.json"
+    config_file = "remote/latest.json"
     max_workers = 5  # 可以根据需要调整线程数
     
     safe_print("开始更新QNN模型文件大小（多线程版本）...")
