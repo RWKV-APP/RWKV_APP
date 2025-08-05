@@ -42,14 +42,14 @@ class PageTranslator extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _InferenceInfo(),
-                      if (isDesktop) _ServiceInfo(),
-                      _TranslatiorInfo(),
+                      const _InferenceInfo(),
+                      if (isDesktop) const _ServiceInfo(),
+                      const _TranslatiorInfo(),
                     ],
                   ),
                 ),
                 if (isDesktop)
-                  Expanded(
+                  const Expanded(
                     child: _BrowserInfo(),
                   ),
               ],
@@ -376,7 +376,7 @@ class _TranslatiorInfo extends ConsumerWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
             ),
             8.h,
-            if (!isDesktop) Text("暂未在移动平台启用缓存功能, 可随时启用, 性能消耗可忽略不计"),
+            if (!isDesktop) const Text("暂未在移动平台启用缓存功能, 可随时启用, 性能消耗可忽略不计"),
             if (isDesktop) Text("已经缓存的翻译结果数量: ${translations.length}"),
             if (isDesktop) Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
             Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
@@ -406,8 +406,8 @@ class _TranslatiorInfo extends ConsumerWidget {
                   children: [
                     Row(
                       children: [
-                        T("翻译目标", s: TS(s: 10)),
-                        Spacer(),
+                        const T("翻译目标", s: TS(s: 10)),
+                        const Spacer(),
                         TextButton(
                           onPressed: () => P.translator.textEditingController.clear(),
                           child: const Text("清空翻译目标文本"),
@@ -417,7 +417,7 @@ class _TranslatiorInfo extends ConsumerWidget {
                     2.h,
                     const Expanded(child: _Source()),
                     4.h,
-                    T("翻译结果", s: TS(s: 8)),
+                    const T("翻译结果", s: TS(s: 8)),
                     2.h,
                     const Expanded(child: _Result()),
                   ],

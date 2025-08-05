@@ -1,11 +1,9 @@
 // ignore: unused_import
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
