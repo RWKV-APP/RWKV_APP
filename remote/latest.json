@@ -38,7 +38,8 @@
         "quantization": "Q8_0",
         "platforms": ["windows", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["cpu", "embedding"]
+        "tags": ["cpu", "embedding"],
+        "isDebug": true
       },
       {
         "name": "bge-reranker-v2-m3",
@@ -51,7 +52,8 @@
         "quantization": "Q8_0",
         "platforms": ["windows", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["cpu", "reranker"]
+        "tags": ["cpu", "reranker"],
+        "isDebug": true
       },
       {
         "name": "RWKV7-G1 0.4B",
