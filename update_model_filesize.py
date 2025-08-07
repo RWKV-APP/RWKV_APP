@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-脚本用于遍历demo-config.json中的QNN后端模型配置，
+脚本用于遍历demo-config.json中的模型配置，
 从HuggingFace获取文件大小并更新fileSize字段（多线程版本）
 """
 
@@ -74,33 +74,23 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int]:
         safe_print(f"\033[91m  获取文件大小时出错: {e}\033[0m")
         return url, 0
 
-def find_qnn_models(config: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """
-    递归查找所有QNN后端的模型配置
-    
-    Args:
-        config: 配置字典
-        
-    Returns:
-        QNN模型配置列表
-    """
-    qnn_models = []
+def find_models(config: Dict[str, Any]) -> List[Dict[str, Any]]:
+    models = []
     
     for section_name, section_data in config.items():
         if isinstance(section_data, dict) and 'model_config' in section_data:
             for model in section_data['model_config']:
                 if isinstance(model, dict) and 'backends' in model:
-                    if 'qnn' in model['backends']:
-                        qnn_models.append({
-                            'section': section_name,
-                            'model': model
-                        })
+                    models.append({
+                        'section': section_name,
+                        'model': model
+                    })
     
-    return qnn_models
+    return models
 
-def update_qnn_filesizes(config_file: str, max_workers: int = 5):
+def update_filesizes(config_file: str, max_workers: int = 5):
     """
-    更新QNN模型的文件大小（多线程版本）
+    更新模型的文件大小（多线程版本）
     
     Args:
         config_file: 配置文件路径
@@ -110,15 +100,15 @@ def update_qnn_filesizes(config_file: str, max_workers: int = 5):
     with open(config_file, 'r', encoding='utf-8') as f:
         config = json.load(f)
     
-    # 查找所有QNN模型
-    qnn_models = find_qnn_models(config)
+    # 查找所有模型
+    models = find_models(config)
     
-    safe_print(f"找到 {len(qnn_models)} 个QNN模型配置")
+    safe_print(f"找到 {len(models)} 个模型配置")
     safe_print(f"使用 {max_workers} 个线程并发处理")
     
     # 创建URL到模型的映射
     url_to_model = {}
-    for item in qnn_models:
+    for item in models:
         model = item['model']
         if 'url' in model:
             url_to_model[model['url']] = item
@@ -154,7 +144,7 @@ def update_qnn_filesizes(config_file: str, max_workers: int = 5):
     safe_print(f"\n开始更新模型配置...")
     updated_count = 0
     
-    for item in qnn_models:
+    for item in models:
         model = item['model']
         model_name = model.get('name', 'Unknown')
         
@@ -163,10 +153,13 @@ def update_qnn_filesizes(config_file: str, max_workers: int = 5):
             new_size = results[model['url']]
             
             if new_size > 0:
-                model['fileSize'] = new_size
-                safe_print(f"  更新: {model_name}")
-                safe_print(f"    文件大小: {old_size:,} -> {new_size:,} 字节 ({new_size / 1024 / 1024:.2f} MB)")
-                updated_count += 1
+                if old_size != new_size:
+                    model['fileSize'] = new_size
+                    safe_print(f"  更新: {model_name}")
+                    safe_print(f"    文件大小: {old_size:,} -> {new_size:,} 字节 ({new_size / 1024 / 1024:.2f} MB)")
+                    updated_count += 1
+                else:
+                    safe_print(f"  跳过: {model_name}（文件大小未变化）")
             else:
                 safe_print(f"\033[91m  跳过: {model_name}（无法获取文件大小）\033[0m")
         else:
@@ -177,18 +170,18 @@ def update_qnn_filesizes(config_file: str, max_workers: int = 5):
         json.dump(config, f, ensure_ascii=False, indent=2)
     
     safe_print(f"\n配置文件已更新: {config_file}")
-    safe_print(f"成功更新了 {updated_count}/{len(qnn_models)} 个模型")
+    safe_print(f"成功更新了 {updated_count}/{len(models)} 个模型")
 
 def main():
     """主函数"""
     config_file = "remote/latest.json"
     max_workers = 5  # 可以根据需要调整线程数
     
-    safe_print("开始更新QNN模型文件大小（多线程版本）...")
+    safe_print("开始更新模型文件大小（多线程版本）...")
     safe_print("=" * 60)
     
     try:
-        update_qnn_filesizes(config_file, max_workers)
+        update_filesizes(config_file, max_workers)
         safe_print("\n更新完成！")
     except Exception as e:
         safe_print(f"\033[91m更新过程中出错: {e}\033[0m")
