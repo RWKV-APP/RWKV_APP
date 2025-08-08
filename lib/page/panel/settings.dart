@@ -12,7 +12,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/user_type.dart';
 import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
@@ -91,30 +93,30 @@ class Settings extends ConsumerWidget {
       borderRadius: isInDrawerMenu
           ? BorderRadius.zero
           : const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
+        topLeft: Radius.circular(16),
+        topRight: Radius.circular(16),
+      ),
       child: Scaffold(
         backgroundColor: demoType == DemoType.chat ? Colors.transparent : customTheme.setting,
         appBar: isInDrawerMenu
             ? null
             : AppBar(
-                automaticallyImplyLeading: false,
-                title: T(s.settings),
-                centerTitle: false,
-                backgroundColor: customTheme.setting,
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: IconButton(
-                      onPressed: () {
-                        pop();
-                      },
-                      icon: const Icon(Icons.close),
-                    ),
-                  ),
-                ],
+          automaticallyImplyLeading: false,
+          title: T(s.settings),
+          centerTitle: false,
+          backgroundColor: customTheme.setting,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                onPressed: () {
+                  pop();
+                },
+                icon: const Icon(Icons.close),
               ),
+            ),
+          ],
+        ),
         body: ListView(
           padding: EI.o(
             t: paddingTop,
@@ -165,7 +167,7 @@ class Settings extends ConsumerWidget {
             8.h,
             FormItem(
               isSectionStart: true,
-              icon: Icon(Icons.settings_suggest_rounded, color: qb.q(.667), size: 16),
+              icon: Icon(Icons.manage_accounts, color: qb.q(.667), size: 16),
               title: s.application_mode,
               info: userType.displayName(),
               onTap: P.preference.showUserTypeDialog,
@@ -182,6 +184,12 @@ class Settings extends ConsumerWidget {
               info: preferredLanguage.display ?? s.follow_system,
               onTap: P.preference.showLocaleDialog,
             ),
+            if (isChat && userType.isGreaterThan(UserType.user))
+              FormItem(
+                icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
+                title: '高级设置',
+                onTap: () => push(PageKey.advancedSettings),
+              ),
             FormItem(
               isSectionEnd: true,
               icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.q(.667), size: 16),
@@ -316,11 +324,11 @@ class Settings extends ConsumerWidget {
   }
 
   void _showLicensePage(
-    BuildContext context,
-    String version,
-    String buildNumber,
-    Widget iconWidget,
-  ) {
+      BuildContext context,
+      String version,
+      String buildNumber,
+      Widget iconWidget,
+      ) {
     showLicensePage(
       context: context,
       applicationName: Config.appTitle,
