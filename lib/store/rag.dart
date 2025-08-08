@@ -121,13 +121,13 @@ class RAG {
     final id2doc = <int, Document>{
       for (var doc in documents.q) doc.id: doc,
     };
-    _stopwatchParse.reset();
-    final scores = await P.rwkv.rerank(text, result.map((e) => e.object.content).toList());
-    if (scores.length != result.length) {
-      Alert.error('Rerank query result error');
-      return [];
-    }
-    qqq('result rerank: ${_stopwatchParse.elapsed.inMilliseconds}ms');
+    // _stopwatchParse.reset();
+    // final scores = await P.rwkv.rerank(text, result.map((e) => e.object.content).toList());
+    // if (scores.length != result.length) {
+    //   Alert.error('Rerank query result error');
+    //   return [];
+    // }
+    // qqq('result rerank: ${_stopwatchParse.elapsed.inMilliseconds}ms');
     _stopwatchParse.stop();
 
     final r = result
@@ -137,8 +137,8 @@ class RAG {
             documentName: id2doc[e.object.documentId]?.name ?? '-',
             dimension: e.object.embedding!.length,
             model: id2doc[e.object.documentId]?.modelName ?? '-',
-            score: scores[idx].toDouble(),
-            // score: similarity(queryVector, e.object.embedding!),
+            // score: scores[idx].toDouble(),
+            score: similarity(queryVector, e.object.embedding!),
             embedding: e.object.embedding!,
           ),
         )
@@ -348,10 +348,10 @@ class RAG {
       updated.add(chunk);
       doc.time = time + _stopwatchParse.elapsed.inMilliseconds;
       doc.parsed += 1;
+      boxChunk.putQueued(chunk);
+      boxDoc.putQueued(doc);
       yield doc;
     }
-    await boxChunk.putManyAsync(updated);
-    await boxDoc.putAsync(doc);
     _stopwatchParse.stop();
   }
 

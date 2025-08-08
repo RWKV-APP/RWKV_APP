@@ -154,6 +154,12 @@ class _PageDocumentsState extends ConsumerState<PageDocuments> {
       );
     }
 
+    if (searchResults.isEmpty) {
+      return Center(
+        child: Text('No results found'),
+      );
+    }
+
     return ListView.builder(
       key: ValueKey(searchResults),
       padding: EdgeInsets.all(16),
@@ -372,7 +378,7 @@ class _Document extends ConsumerWidget {
                             sprintf(S.current.parsed_chunks, [document.parsed, document.chunks]),
                             style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
-                        // if (parsing) Text(sprintf(S.current.took_x, [time.trim()]), style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        if (parsing) Text(sprintf(S.current.took_x, [time.trim()]), style: TextStyle(color: Colors.grey, fontSize: 12)),
                         Row(
                           children: [
                             Text(getDisplayTime(document.timestamp), style: TextStyle(color: Colors.grey, fontSize: 12)),
