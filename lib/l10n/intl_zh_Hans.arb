@@ -288,5 +288,15 @@
   "more_questions": "更多问题",
   "model_loading": "模型加载中...",
   "no_conversations_yet": "暂时还没有任何对话",
-  "new_conversation": "开始新对话"
+  "new_conversation": "开始新对话",
+  "advance_settings": "高级设置",
+  "prompt_template": "Prompt 模板",
+  "system_prompt": "系统提示词",
+  "web_search_template": "联网搜索模板",
+  "chinese_web_search_template": "中文联网搜索模板",
+  "thinking_mode_template": "思考模式模板",
+  "chinese_thinking_mode_template": "中文思考模板",
+  "lazy_thinking_mode_template": "懒思考模板",
+  "new_chat_template": "新对话模板",
+  "new_chat_template_helper_text": "每次新对话将插入此内容, 用两个换行分隔, 例子:\n你好，你是谁？\n\n你好，我是RWKV，有什么我可以帮助你的吗"
 }

@@ -472,6 +472,15 @@ extension _$Chat on _Chat {
     }
 
     final result = <String>[];
+
+    if (messages.length == 1) {
+      final template = P.preference.promptTemplate.newChatTemplate.trim();
+      if (template.isNotEmpty) {
+        final msgs = template.split("\n\n").where((e) => e.isNotEmpty);
+        result.addAll(msgs);
+      }
+    }
+
     final iterator = messages.iterator;
     Message mine;
     Message? bot;
@@ -723,7 +732,8 @@ extension _$Chat on _Chat {
         ref = ref.copyWith(list: refs);
         final searchResult = refs.map((e) => e.summary).join("\n");
         allMessage.removeLast();
-        final msg = sprintf(isZh ? Config.promptSearchTemplateZh : Config.promptSearchTemplateEn, [searchResult, prompt]);
+        final template = P.preference.promptTemplate;
+        final msg = sprintf(isZh ? template.webSearchChineseTemplate : template.webSearchTemplate, [searchResult, prompt]);
         allMessage.add(msg);
       } catch (e) {
         ref = ref.copyWith(error: e.toString());

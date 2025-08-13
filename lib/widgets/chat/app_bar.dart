@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/config.dart';
@@ -11,6 +12,8 @@ import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/user_type.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
@@ -180,7 +183,9 @@ class ChatAppBar extends ConsumerWidget {
       actions: [
         if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
         // if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
-        if (demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
+        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user))
+          _buildMorePopupMenuButton(context, completionMode),
+        if (demoType != DemoType.chat && demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
             onPressed: onSettingsPressed,
             icon: const Icon(Icons.tune),
@@ -195,8 +200,7 @@ class ChatAppBar extends ConsumerWidget {
       onSelected: (v) {
         switch (v) {
           case 1:
-            if (!checkModelSelection()) return;
-            P.chat.toggleCompletionMode();
+            push(PageKey.advancedSettings);
             break;
           case 2:
             onSettingsPressed();
@@ -215,9 +219,9 @@ class ChatAppBar extends ConsumerWidget {
             value: 1,
             child: Row(
               children: [
-                completionMode ? const Icon(Icons.chat_rounded) : const Icon(Icons.edit_note_rounded),
+                FaIcon(FontAwesomeIcons.screwdriverWrench, size: 14),
                 8.w,
-                Text(completionMode ? S.current.chat_mode : S.current.completion_mode),
+                Text(S.current.advance_settings),
               ],
             ),
           ),
@@ -225,7 +229,7 @@ class ChatAppBar extends ConsumerWidget {
             value: 2,
             child: Row(
               children: [
-                const Icon(Icons.settings_rounded),
+                FaIcon(FontAwesomeIcons.sliders, size: 14),
                 8.w,
                 Text(S.of(context).session_configuration),
               ],

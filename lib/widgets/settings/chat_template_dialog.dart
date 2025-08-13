@@ -1,0 +1,215 @@
+import 'package:flutter/material.dart';
+import 'package:halo_alert/halo_alert.dart';
+import 'package:zone/model/prompt_template.dart' show PromptTemplate;
+import 'package:zone/store/p.dart' show P, $Preference;
+
+import '../../gen/l10n.dart' show S;
+
+class ChatTemplateDialog extends StatefulWidget {
+  final bool newChat;
+  final bool webSearch;
+  final bool thinking;
+  final bool systemPrompt;
+
+  const ChatTemplateDialog({
+    super.key,
+    this.newChat = false,
+    this.webSearch = false,
+    this.thinking = false,
+    this.systemPrompt = false,
+  });
+
+  static void show(
+    BuildContext context, {
+    bool newChat = false,
+    bool webSearch = false,
+    bool thinking = false,
+    bool systemPrompt = false,
+  }) async {
+    return await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (c) => ChatTemplateDialog(
+        newChat: newChat,
+        webSearch: webSearch,
+        thinking: thinking,
+        systemPrompt: systemPrompt,
+      ),
+    );
+  }
+
+  @override
+  State<ChatTemplateDialog> createState() => _ChatTemplateDialogState();
+}
+
+class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
+  late final TextEditingController _controllerFree;
+  late final TextEditingController _controllerPreferChinese;
+  late final TextEditingController _controllerLighting;
+  late final TextEditingController _controllerNewChat;
+  late final TextEditingController _controllerWebSearch;
+  late final TextEditingController _controllerWebSearchChinese;
+  late final TextEditingController _controllerSystemPrompt;
+
+  @override
+  void initState() {
+    super.initState();
+    final template = P.preference.promptTemplate;
+    _controllerFree = TextEditingController(text: template.thinkingFree);
+    _controllerPreferChinese = TextEditingController(text: template.thinkingWithChinese);
+    _controllerLighting = TextEditingController(text: template.thinkingLighting);
+    _controllerNewChat = TextEditingController(text: template.newChatTemplate);
+    _controllerWebSearch = TextEditingController(text: template.webSearchTemplate);
+    _controllerWebSearchChinese = TextEditingController(text: template.webSearchChineseTemplate);
+    _controllerSystemPrompt = TextEditingController(text: template.systemPrompt);
+  }
+
+  void onApplyTap() async {
+    final template = PromptTemplate(
+      thinkingWithChinese: _controllerPreferChinese.text.trim(),
+      thinkingLighting: _controllerLighting.text.trim(),
+      thinkingFree: _controllerFree.text.trim(),
+      newChatTemplate: _controllerNewChat.text.trim(),
+      webSearchTemplate: _controllerWebSearch.text.trim(),
+      webSearchChineseTemplate: _controllerWebSearchChinese.text.trim(),
+      systemPrompt: _controllerSystemPrompt.text.trim(),
+    );
+    if (!template.webSearchTemplate.startsWith("%s") || !template.webSearchTemplate.endsWith("%s")) {
+      Alert.warning('联网搜索模板格式错误');
+      return;
+    }
+    if (!template.webSearchChineseTemplate.startsWith("%s") || !template.webSearchChineseTemplate.endsWith("%s")) {
+      Alert.warning('联网搜索模板格式错误');
+      return;
+    }
+    P.preference.setThinkingModeUserTemplate(template);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controllerFree.dispose();
+    _controllerPreferChinese.dispose();
+    _controllerLighting.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    String title = '';
+    if (widget.newChat) {
+      title = S.current.new_chat_template;
+    } else if (widget.webSearch) {
+      title = S.current.web_search_template;
+    } else if (widget.thinking) {
+      title = S.current.thinking_mode_template;
+    } else if (widget.systemPrompt) {
+      title = S.current.system_prompt;
+    }
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AppBar(
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            title: Text(title, style: theme.textTheme.titleMedium),
+            actions: [TextButton(onPressed: onApplyTap, child: Text(S.current.apply))],
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsetsGeometry.symmetric(horizontal: 12),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  if (widget.systemPrompt)
+                    TextField(
+                      controller: _controllerSystemPrompt,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        labelText: S.current.system_prompt,
+                        labelStyle: TextStyle(fontSize: 16),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  if (widget.newChat)
+                    TextField(
+                      controller: _controllerNewChat,
+                      maxLines: 10,
+                      decoration: InputDecoration(
+                        labelText: S.current.new_chat_template,
+                        labelStyle: TextStyle(fontSize: 16),
+                        border: const OutlineInputBorder(),
+                        helperMaxLines: 10,
+                        helperText: S.current.new_chat_template_helper_text,
+                      ),
+                    ),
+                  if (widget.newChat) const SizedBox(height: 16),
+                  if (widget.webSearch) ...[
+                    TextField(
+                      controller: _controllerWebSearch,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        labelText: S.current.web_search_template,
+                        labelStyle: TextStyle(fontSize: 16),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _controllerWebSearchChinese,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        labelText: S.current.chinese_web_search_template,
+                        labelStyle: TextStyle(fontSize: 16),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (widget.thinking) ...[
+                    TextField(
+                      controller: _controllerFree,
+                      maxLines: 2,
+                      decoration: InputDecoration(
+                        labelText: S.current.thinking_mode_template,
+                        labelStyle: TextStyle(fontSize: 16),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _controllerPreferChinese,
+                      maxLines: 2,
+                      decoration: InputDecoration(
+                        labelText: S.current.chinese_thinking_mode_template,
+                        labelStyle: TextStyle(fontSize: 16),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _controllerLighting,
+                      maxLines: 2,
+                      decoration: InputDecoration(
+                        labelText: S.current.lazy_thinking_mode_template,
+                        labelStyle: TextStyle(fontSize: 16),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

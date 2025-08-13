@@ -44,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("About"),
     "according_to_the_following_audio_file":
         MessageLookupByLibrary.simpleMessage("According to: "),
+    "advance_settings": MessageLookupByLibrary.simpleMessage(
+      "Advanced Settings",
+    ),
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "all_done": MessageLookupByLibrary.simpleMessage("All Done"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("All Prompt"),
@@ -111,6 +114,12 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "chatting": MessageLookupByLibrary.simpleMessage("Chatting"),
     "chinese": MessageLookupByLibrary.simpleMessage("Chinese"),
+    "chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "Chinese Thinking Mode Template",
+    ),
+    "chinese_web_search_template": MessageLookupByLibrary.simpleMessage(
+      "Chinese Web Search Template",
+    ),
     "choose_prebuilt_character": MessageLookupByLibrary.simpleMessage(
       "Choose prebuilt character",
     ),
@@ -285,6 +294,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 Watch me!"),
     "large": MessageLookupByLibrary.simpleMessage("Large (120%)"),
     "lazy": MessageLookupByLibrary.simpleMessage("Lazy"),
+    "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "Lazy Thinking Mode Template",
+    ),
     "license": MessageLookupByLibrary.simpleMessage("Open Source License"),
     "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
@@ -301,6 +313,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "new_chat": MessageLookupByLibrary.simpleMessage("New Chat"),
     "new_chat_started": MessageLookupByLibrary.simpleMessage(
       "New chat started",
+    ),
+    "new_chat_template": MessageLookupByLibrary.simpleMessage(
+      "New Chat Template",
+    ),
+    "new_chat_template_helper_text": MessageLookupByLibrary.simpleMessage(
+      "This will be inserted with each new conversation, separated by two line breaks, for example: \nHello, who are you? \n\nHello, I\'m RWKV, is there anything I can help you with?",
     ),
     "new_conversation": MessageLookupByLibrary.simpleMessage(
       "New Conversation",
@@ -400,6 +418,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "prefill": MessageLookupByLibrary.simpleMessage("Prefill"),
     "prompt": MessageLookupByLibrary.simpleMessage("Prompt"),
+    "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ Group 2"),
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
@@ -493,6 +512,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Hard"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("Medium"),
     "system_mode": MessageLookupByLibrary.simpleMessage("System Mode"),
+    "system_prompt": MessageLookupByLibrary.simpleMessage("System Prompt"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Take Photo"),
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "Technical Research Group",
@@ -511,6 +531,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "Then you can start to chat with RWKV",
         ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
+    "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "Thinking Mode Template",
+    ),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage(
           "This is the hardest Sudoku in the world",
@@ -530,6 +553,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "very_small": MessageLookupByLibrary.simpleMessage("Very Small (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("Voice Cloning"),
     "web_search": MessageLookupByLibrary.simpleMessage("Search"),
+    "web_search_template": MessageLookupByLibrary.simpleMessage(
+      "Web Search Template",
+    ),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV Chat",
     ),

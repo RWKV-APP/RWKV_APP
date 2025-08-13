@@ -287,5 +287,16 @@
   "more_questions": "More Questions",
   "model_loading": "Model Loading...",
   "no_conversations_yet": "No Conversations Yet",
-  "new_conversation": "New Conversation"
+  "new_conversation": "New Conversation",
+  "advance_settings": "Advanced Settings",
+  "prompt_template": "Prompt Template",
+  "system_prompt": "System Prompt",
+  "web_search_template": "Web Search Template",
+  "chinese_web_search_template": "Chinese Web Search Template",
+  "thinking_mode_template": "Thinking Mode Template",
+  "chinese_thinking_mode_template": "Chinese Thinking Mode Template",
+  "lazy_thinking_mode_template": "Lazy Thinking Mode Template",
+  "new_chat_template": "New Chat Template",
+  "new_chat_template_helper_text": "This will be inserted with each new conversation, separated by two line breaks, for example: \nHello, who are you? \n\nHello, I'm RWKV, is there anything I can help you with?"
+
 }

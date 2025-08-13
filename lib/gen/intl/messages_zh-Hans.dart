@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("关于"),
     "according_to_the_following_audio_file":
         MessageLookupByLibrary.simpleMessage("根据: "),
+    "advance_settings": MessageLookupByLibrary.simpleMessage("高级设置"),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("全部 Prompt"),
@@ -90,6 +91,12 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("您需要先下载模型才能使用"),
     "chatting": MessageLookupByLibrary.simpleMessage("聊天中"),
     "chinese": MessageLookupByLibrary.simpleMessage("中文"),
+    "chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "中文思考模板",
+    ),
+    "chinese_web_search_template": MessageLookupByLibrary.simpleMessage(
+      "中文联网搜索模板",
+    ),
     "choose_prebuilt_character": MessageLookupByLibrary.simpleMessage("选择预设角色"),
     "clear": MessageLookupByLibrary.simpleMessage("清除"),
     "click_here_to_select_a_new_model": MessageLookupByLibrary.simpleMessage(
@@ -224,6 +231,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 看我表演！"),
     "large": MessageLookupByLibrary.simpleMessage("大 (120%)"),
     "lazy": MessageLookupByLibrary.simpleMessage("懒"),
+    "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "懒思考模板",
+    ),
     "license": MessageLookupByLibrary.simpleMessage("开源许可证"),
     "light_mode": MessageLookupByLibrary.simpleMessage("浅色模式"),
     "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
@@ -239,6 +249,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "network_error": MessageLookupByLibrary.simpleMessage("网络错误"),
     "new_chat": MessageLookupByLibrary.simpleMessage("新聊天"),
     "new_chat_started": MessageLookupByLibrary.simpleMessage("开始新聊天"),
+    "new_chat_template": MessageLookupByLibrary.simpleMessage("新对话模板"),
+    "new_chat_template_helper_text": MessageLookupByLibrary.simpleMessage(
+      "每次新对话将插入此内容, 用两个换行分隔, 例子:\n你好，你是谁？\n\n你好，我是RWKV，有什么我可以帮助你的吗",
+    ),
     "new_conversation": MessageLookupByLibrary.simpleMessage("开始新对话"),
     "new_game": MessageLookupByLibrary.simpleMessage("新游戏"),
     "new_version_found": MessageLookupByLibrary.simpleMessage("发现新版本"),
@@ -307,6 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
     "prefill": MessageLookupByLibrary.simpleMessage("预填"),
     "prompt": MessageLookupByLibrary.simpleMessage("提示词"),
+    "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 模板"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
@@ -382,6 +397,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("专家"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("普通"),
     "system_mode": MessageLookupByLibrary.simpleMessage("跟随系统"),
+    "system_prompt": MessageLookupByLibrary.simpleMessage("系统提示词"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技术研发群"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("文本补全模式"),
@@ -392,6 +408,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
+    "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考结果"),
@@ -409,6 +426,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "very_small": MessageLookupByLibrary.simpleMessage("非常小 (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
+    "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV Chat",
     ),
