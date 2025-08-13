@@ -187,7 +187,7 @@ class Settings extends ConsumerWidget {
             if (isChat && userType.isGreaterThan(UserType.user))
               FormItem(
                 icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
-                title: '高级设置',
+                title: S.current.advance_settings,
                 onTap: () => push(PageKey.advancedSettings),
               ),
             FormItem(

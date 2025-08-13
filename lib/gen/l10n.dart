@@ -2047,6 +2047,91 @@ class S {
   String get new_conversation {
     return Intl.message('开始新对话', name: 'new_conversation', desc: '', args: []);
   }
+
+  /// `高级设置`
+  String get advance_settings {
+    return Intl.message('高级设置', name: 'advance_settings', desc: '', args: []);
+  }
+
+  /// `Prompt 模板`
+  String get prompt_template {
+    return Intl.message(
+      'Prompt 模板',
+      name: 'prompt_template',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `系统提示词`
+  String get system_prompt {
+    return Intl.message('系统提示词', name: 'system_prompt', desc: '', args: []);
+  }
+
+  /// `联网搜索模板`
+  String get web_search_template {
+    return Intl.message(
+      '联网搜索模板',
+      name: 'web_search_template',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `中文联网搜索模板`
+  String get chinese_web_search_template {
+    return Intl.message(
+      '中文联网搜索模板',
+      name: 'chinese_web_search_template',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `思考模式模板`
+  String get thinking_mode_template {
+    return Intl.message(
+      '思考模式模板',
+      name: 'thinking_mode_template',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `中文思考模板`
+  String get chinese_thinking_mode_template {
+    return Intl.message(
+      '中文思考模板',
+      name: 'chinese_thinking_mode_template',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `懒思考模板`
+  String get lazy_thinking_mode_template {
+    return Intl.message(
+      '懒思考模板',
+      name: 'lazy_thinking_mode_template',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新对话模板`
+  String get new_chat_template {
+    return Intl.message('新对话模板', name: 'new_chat_template', desc: '', args: []);
+  }
+
+  /// `每次新对话将插入此内容, 用两个换行分隔, 例子:\n你好，你是谁？\n\n你好，我是RWKV，有什么我可以帮助你的吗`
+  String get new_chat_template_helper_text {
+    return Intl.message(
+      '每次新对话将插入此内容, 用两个换行分隔, 例子:\n你好，你是谁？\n\n你好，我是RWKV，有什么我可以帮助你的吗',
+      name: 'new_chat_template_helper_text',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

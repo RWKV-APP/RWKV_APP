@@ -716,13 +716,13 @@ extension $RWKV on _RWKV {
     qqr(thinkingMode);
     _thinkingMode.q = thinkingMode ?? const thinking_mode.Lighting();
 
-    final finalPrompt = switch (_thinkingMode) {
-      thinking_mode.PreferChinese() => prompt ?? Config.promptCN,
-      _ => prompt ?? Config.prompt,
-    };
+    final systemPrompt = P.preference.promptTemplate.systemPrompt.trim();
 
     if (setPrompt) {
-      final prompt = _thinkingMode.q.hasThinkTag ? "<EOD>" : finalPrompt;
+      String prompt = "<EOD>";
+      if (systemPrompt.isNotEmpty && !_thinkingMode.q.hasThinkTag) {
+        prompt = "<EOD>\nSystem: $systemPrompt\n\n";
+      }
       send(to_rwkv.SetPrompt(prompt));
       qqw("setPrompt: $prompt");
     }
@@ -731,7 +731,8 @@ extension $RWKV on _RWKV {
       case thinking_mode.Lighting():
       case thinking_mode.Free():
       case thinking_mode.PreferChinese():
-        final thinkingToken = _thinkingMode.q.header;
+        final custom = P.preference.promptTemplate;
+        final thinkingToken = custom.apply(_thinkingMode.q);
         qqq("setThinkingToken: $thinkingToken");
         send(to_rwkv.SetThinkingToken(thinkingToken));
       case thinking_mode.None():

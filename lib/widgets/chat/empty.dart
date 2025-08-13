@@ -58,11 +58,16 @@ class Empty extends ConsumerWidget {
                 Positioned.fill(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 90),
                       const Flexible(
-                        child: SingleChildScrollView(
-                          child: _EmptyV2(),
+                        child: Scrollbar(
+                          thumbVisibility: false,
+                          trackVisibility: false,
+                          child: SingleChildScrollView(
+                            child: _EmptyV2(),
+                          ),
                         ),
                       ),
                       SizedBox(height: inputHeight.toDouble()),

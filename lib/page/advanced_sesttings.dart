@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:zone/model/thinking_mode.dart';
+import 'package:zone/widgets/settings/chat_template_dialog.dart';
+
+import '../gen/l10n.dart' show S;
 
 class PageAdvancedSettings extends StatelessWidget {
   const PageAdvancedSettings({super.key});
@@ -8,81 +12,104 @@ class PageAdvancedSettings extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('高级设置'),
+        title: Text(S.current.advance_settings),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            buildGroupTitle('Prompt 模板'),
+            buildGroupTitle(S.current.prompt_template),
             item(
-              title: '联网搜索模板',
+              title: S.current.system_prompt,
               child: SizedBox(
                 height: 56,
                 width: 18,
                 child: Icon(Icons.arrow_forward_ios, size: 18),
               ),
-              onTap: () {},
+              onTap: () {
+                ChatTemplateDialog.show(context, systemPrompt: true);
+              },
+            ),
+            item(
+              title: S.current.web_search_template,
+              child: SizedBox(
+                height: 56,
+                width: 18,
+                child: Icon(Icons.arrow_forward_ios, size: 18),
+              ),
+              onTap: () {
+                ChatTemplateDialog.show(context, webSearch: true);
+              },
             ),
             const SizedBox(height: 8),
             item(
-              title: '思考模式模板',
+              title: S.current.thinking_mode_template,
               child: SizedBox(
                 height: 56,
                 width: 18,
                 child: Icon(Icons.arrow_forward_ios, size: 18),
               ),
-              onTap: () {},
+              onTap: () {
+                ChatTemplateDialog.show(context, thinking: true);
+              },
             ),
             const SizedBox(height: 8),
             item(
-              title: '新对话模板',
+              title: S.current.new_chat_template,
               child: SizedBox(
                 height: 56,
                 width: 18,
                 child: Icon(Icons.arrow_forward_ios, size: 18),
               ),
-              onTap: () {},
+              onTap: () {
+                ChatTemplateDialog.show(context, newChat: true);
+              },
             ),
             const SizedBox(height: 16),
-            buildGroupTitle('App 行为'),
-            item(
-              title: '启动时自动加载上次模型',
-              child: SizedBox(
-                height: 56,
-                child: Switch(value: false, onChanged: (v) {}),
-              ),
-            ),
-            const SizedBox(height: 8),
-            item(
-              title: '回车键发送消息',
-              child: SizedBox(
-                height: 56,
-                child: Switch(value: false, onChanged: (v) {}),
-              ),
-            ),
-            const SizedBox(height: 8),
-            item(
-              title: '启动时检查更新',
-              child: SizedBox(
-                height: 56,
-                child: Switch(value: true, onChanged: (v) {}),
-              ),
-            ),
-            const SizedBox(height: 8),
-            item(
-              title: '打开模型列表时自动更新',
-              child: SizedBox(
-                height: 56,
-                child: Switch(value: true, onChanged: (v) {}),
-              ),
-            ),
+            // ...buildAppBehaviorGroup(),
             // const SizedBox(height: 16),
             // ...buildRagGroup(),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> buildAppBehaviorGroup() {
+    return [
+      buildGroupTitle('App 行为'),
+      item(
+        title: '启动时自动加载上次模型',
+        child: SizedBox(
+          height: 56,
+          child: Switch(value: false, onChanged: (v) {}),
+        ),
+      ),
+      const SizedBox(height: 8),
+      item(
+        title: '回车键发送消息',
+        child: SizedBox(
+          height: 56,
+          child: Switch(value: false, onChanged: (v) {}),
+        ),
+      ),
+      const SizedBox(height: 8),
+      item(
+        title: '启动时检查更新',
+        child: SizedBox(
+          height: 56,
+          child: Switch(value: true, onChanged: (v) {}),
+        ),
+      ),
+      const SizedBox(height: 8),
+      item(
+        title: '打开模型列表时自动更新',
+        child: SizedBox(
+          height: 56,
+          child: Switch(value: true, onChanged: (v) {}),
+        ),
+      ),
+    ];
   }
 
   Widget item({required String title, required Widget child, VoidCallback? onTap}) {

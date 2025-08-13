@@ -52,6 +52,8 @@ class _Preference {
 
   var featureRollout = const FeatureRollout();
 
+  var promptTemplate = PromptTemplate.empty();
+
   bool get currentLangIsZh => preferredLanguage.q.resolved.locale.languageCode == "zh";
 }
 
@@ -117,6 +119,13 @@ extension _$Preference on _Preference {
         featureRollout = FeatureRollout.fromMap(jsonDecode(ft));
       } catch (_) {}
     }
+
+    final tt = sp.getString('app.promptTemplate');
+    if (tt != null && tt.isNotEmpty) {
+      try {
+        promptTemplate = PromptTemplate.deserialize(tt);
+      } finally {}
+    }
   }
 
   FV _saveDumpping(bool dumpping) async {
@@ -136,7 +145,6 @@ extension _$Preference on _Preference {
 
 /// Public methods
 extension $Preference on _Preference {
-
   void showUserTypeDialog() async {
     final context = getContext();
     if (context == null || !context.mounted) return;
@@ -150,7 +158,7 @@ extension $Preference on _Preference {
         AlertDialogAction<UserType>(label: S.current.beginner, key: UserType.user),
         AlertDialogAction<UserType>(label: S.current.power_user, key: UserType.powerUser),
         AlertDialogAction<UserType>(label: S.current.expert, key: UserType.expert),
-      ]
+      ],
     );
     if (res == null) return;
     userType.q = res;
@@ -245,5 +253,11 @@ extension $Preference on _Preference {
     this.featureRollout = featureRollout;
     final sp = await SharedPreferences.getInstance();
     sp.setString('app.dev.feat', jsonEncode(featureRollout.toMap()));
+  }
+
+  void setThinkingModeUserTemplate(PromptTemplate template) async {
+    promptTemplate = template;
+    final sp = await SharedPreferences.getInstance();
+    sp.setString('app.promptTemplate', template.serialize());
   }
 }
