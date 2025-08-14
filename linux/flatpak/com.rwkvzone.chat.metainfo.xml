@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.rwkvzone.chat</id>
+  
+  <name>RWKV Chat</name>
+  <summary>Chat with RWKV models</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>Apache-2.0</project_license>
+  
+  <developer id="com.rwkv">
+    <name>RWKV</name>
+  </developer>
+  <description>
+    <p>
+      A fast, lightweight, and extensible RWKV chat UI powered by Flutter. Offline-ready, multi-backend support, ideal for local RWKV inference.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">com.rwkvzone.chat.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/RWKV_APP/RWKV_APP/3b13aaf2c0f2da3642ade5f77db8a3e6c853c71c/linux/flatpak/screenshots/screenshot1.png</image>
+      <caption>Main window</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/RWKV_APP/RWKV_APP/3b13aaf2c0f2da3642ade5f77db8a3e6c853c71c/linux/flatpak/screenshots/screenshot2.png</image>
+      <caption>A list of RWKV models</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/RWKV_APP/RWKV_APP/3b13aaf2c0f2da3642ade5f77db8a3e6c853c71c/linux/flatpak/screenshots/screenshot3.png</image>
+      <caption>Chatting with RWKV models</caption>
+    </screenshot>
+  </screenshots>
+  
+  <content_rating type="oars-1.1" />
+  
+  <url type="homepage">https://rwkv.com/</url>
+  <url type="bugtracker">https://github.com/RWKV-APP/RWKV_APP/issues</url>
+  <url type="vcs-browser">https://github.com/RWKV-APP/RWKV_APP</url>
+  
+  <icon type="stock">com.rwkvzone.chat</icon>
+  <categories>
+    <category>Utility</category>
+    <category>Development</category>
+    <category>Chat</category>
+  </categories>
+  <provides>
+    <binary>zone</binary>
+  </provides>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <releases>
+    <release version="2.0.1" date="2025-08-05">
+      <description></description>
+    </release>
+  </releases>
+</component>
