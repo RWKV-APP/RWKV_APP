@@ -297,6 +297,7 @@
   "chinese_thinking_mode_template": "Chinese Thinking Mode Template",
   "lazy_thinking_mode_template": "Lazy Thinking Mode Template",
   "new_chat_template": "New Chat Template",
-  "new_chat_template_helper_text": "This will be inserted with each new conversation, separated by two line breaks, for example: \nHello, who are you? \n\nHello, I'm RWKV, is there anything I can help you with?"
-
+  "new_chat_template_helper_text": "This will be inserted with each new conversation, separated by two line breaks, for example: \nHello, who are you? \n\nHello, I'm RWKV, is there anything I can help you with?",
+  "check_for_updates": "Check for updates",
+  "app_is_already_up_to_date": "App is already up to date"
 }

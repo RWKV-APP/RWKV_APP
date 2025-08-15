@@ -93,30 +93,30 @@ class Settings extends ConsumerWidget {
       borderRadius: isInDrawerMenu
           ? BorderRadius.zero
           : const BorderRadius.only(
-        topLeft: Radius.circular(16),
-        topRight: Radius.circular(16),
-      ),
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
       child: Scaffold(
         backgroundColor: demoType == DemoType.chat ? Colors.transparent : customTheme.setting,
         appBar: isInDrawerMenu
             ? null
             : AppBar(
-          automaticallyImplyLeading: false,
-          title: T(s.settings),
-          centerTitle: false,
-          backgroundColor: customTheme.setting,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton(
-                onPressed: () {
-                  pop();
-                },
-                icon: const Icon(Icons.close),
+                automaticallyImplyLeading: false,
+                title: T(s.settings),
+                centerTitle: false,
+                backgroundColor: customTheme.setting,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      onPressed: () {
+                        pop();
+                      },
+                      icon: const Icon(Icons.close),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
         body: ListView(
           padding: EI.o(
             t: paddingTop,
@@ -253,6 +253,13 @@ class Settings extends ConsumerWidget {
               icon: Icon(Icons.feedback_outlined, color: qb.q(.667), size: 16),
               onTap: _openFeedback,
             ),
+            FormItem(
+              title: S.current.check_for_updates,
+              icon: Icon(Icons.update, color: qb.q(.667), size: 16),
+              onTap: () {
+                P.app.checkUpdates();
+              },
+            ),
             if (demoType == DemoType.world && Platform.isAndroid)
               FormItem(
                 isSectionStart: false,
@@ -324,11 +331,11 @@ class Settings extends ConsumerWidget {
   }
 
   void _showLicensePage(
-      BuildContext context,
-      String version,
-      String buildNumber,
-      Widget iconWidget,
-      ) {
+    BuildContext context,
+    String version,
+    String buildNumber,
+    Widget iconWidget,
+  ) {
     showLicensePage(
       context: context,
       applicationName: Config.appTitle,

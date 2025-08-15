@@ -77,6 +77,17 @@ extension $App on _App {
 
     await HF.wait(17);
 
+    final config = await _pullRemoteConfig();
+    if (config == null) {
+      return;
+    }
+
+    await _parseConfig(config);
+    // 将 res 写入本地沙盒文件
+    sp.setString(_App._remoteDemoConfigKey, jsonEncode(config));
+  }
+
+  Future<dynamic> _pullRemoteConfig() async {
     try {
       final res = await _get("get-demo-config", timeout: 10000.ms);
       if (res is! Map) {
@@ -88,17 +99,14 @@ extension $App on _App {
       final data = res["data"];
       if (success != true) throw "success is false, success: $success, message: $message";
       if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
-      final config = data[demoType.q.name];
-      await _parseConfig(config);
-
-      // 将 res 写入本地沙盒文件
-
-      sp.setString(_App._remoteDemoConfigKey, jsonEncode(config));
+      qqq("pull remote config success");
+      return data[demoType.q.name];
     } catch (e) {
       qe;
       qqe("e: $e");
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
+    return null;
   }
 
   void hapticLight() {
@@ -120,6 +128,24 @@ extension $App on _App {
     } else {
       _statusBarToDarkMode();
     }
+  }
+
+  void checkUpdates() async {
+    final config = await _pullRemoteConfig();
+    if (config == null) {
+      return;
+    }
+    latestBuild.q = config["latest_build"] as int;
+    latestBuildIos.q = config["latest_build_ios"] as int;
+    if (Platform.isIOS && latestBuildIos.q <= int.parse(buildNumber.q)) {
+      Alert.info(S.current.app_is_already_up_to_date);
+      return;
+    }
+    if (latestBuild.q <= int.parse(buildNumber.q)) {
+      Alert.info(S.current.app_is_already_up_to_date);
+      return;
+    }
+    await _showNewVersionDialogIfNeeded();
   }
 }
 
@@ -259,7 +285,7 @@ extension _$App on _App {
 
   FV _onLifecycleStateChanged() async {}
 
-  FV _showNewVersionDialogIfNeeded() async {
+  Future _showNewVersionDialogIfNeeded() async {
     if (!Platform.isIOS && !Platform.isAndroid) return;
     qq;
     if (Platform.isAndroid && latestBuild.q <= int.parse(buildNumber.q)) return;

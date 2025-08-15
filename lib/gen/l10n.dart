@@ -2132,6 +2132,21 @@ class S {
       args: [],
     );
   }
+
+  /// `检查更新`
+  String get check_for_updates {
+    return Intl.message('检查更新', name: 'check_for_updates', desc: '', args: []);
+  }
+
+  /// `已经是最新版本`
+  String get app_is_already_up_to_date {
+    return Intl.message(
+      '已经是最新版本',
+      name: 'app_is_already_up_to_date',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

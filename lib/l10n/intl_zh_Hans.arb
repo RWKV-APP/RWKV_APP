@@ -298,5 +298,7 @@
   "chinese_thinking_mode_template": "中文思考模板",
   "lazy_thinking_mode_template": "懒思考模板",
   "new_chat_template": "新对话模板",
-  "new_chat_template_helper_text": "每次新对话将插入此内容, 用两个换行分隔, 例子:\n你好，你是谁？\n\n你好，我是RWKV，有什么我可以帮助你的吗"
+  "new_chat_template_helper_text": "每次新对话将插入此内容, 用两个换行分隔, 例子:\n你好，你是谁？\n\n你好，我是RWKV，有什么我可以帮助你的吗",
+  "check_for_updates": "检查更新",
+  "app_is_already_up_to_date": "已经是最新版本"
 }

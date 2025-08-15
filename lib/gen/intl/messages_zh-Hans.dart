@@ -49,6 +49,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "允许后台下载",
     ),
     "analysing_result": MessageLookupByLibrary.simpleMessage("正在分析搜索结果"),
+    "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage(
+      "已经是最新版本",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "应用内测群",
@@ -90,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage("您需要先下载模型才能使用"),
     "chatting": MessageLookupByLibrary.simpleMessage("聊天中"),
+    "check_for_updates": MessageLookupByLibrary.simpleMessage("检查更新"),
     "chinese": MessageLookupByLibrary.simpleMessage("中文"),
     "chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "中文思考模板",

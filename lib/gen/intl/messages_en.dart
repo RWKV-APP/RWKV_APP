@@ -56,6 +56,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "analysing_result": MessageLookupByLibrary.simpleMessage(
       "Analysing Search Result",
     ),
+    "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage(
+      "App is already up to date",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "Application Internal Test Group",
@@ -113,6 +116,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "You need to download the model first, before you can use it.",
         ),
     "chatting": MessageLookupByLibrary.simpleMessage("Chatting"),
+    "check_for_updates": MessageLookupByLibrary.simpleMessage(
+      "Check for updates",
+    ),
     "chinese": MessageLookupByLibrary.simpleMessage("Chinese"),
     "chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Chinese Thinking Mode Template",
