@@ -101,10 +101,11 @@ lane :build_assets do
 end
 
 lane :android_pgyer do
-  run_flutter_build_apk()
+  apk_path = run_flutter_build_apk()
   pgyer(
     api_key: '8d0497fc24901e6b22c8f272d04791bb',
-    apk: './build/app/outputs/flutter-apk/app-release.apk',
+    apk: apk_path,
+    user_download_file_name: apk_path.split('/').last,
   )
 end
 
