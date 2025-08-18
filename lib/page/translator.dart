@@ -147,7 +147,7 @@ class _Source extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Text(s.auto_detect, style: theme.textTheme.labelLarge),
+              Text(s.input_english_text_here, style: theme.textTheme.labelLarge),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.clear),
@@ -225,7 +225,7 @@ class _ResultState extends ConsumerState<_Result> {
         children: [
           Row(
             children: [
-              Text(s.translation, style: theme.textTheme.labelLarge),
+              Text(s.chinese_translation_result, style: theme.textTheme.labelLarge),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.copy_all_outlined, size: 20),

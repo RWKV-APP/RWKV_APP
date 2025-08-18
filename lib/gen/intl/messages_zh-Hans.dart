@@ -117,6 +117,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "中文思考模板",
     ),
+    "chinese_translation_result": MessageLookupByLibrary.simpleMessage(
+      "中文翻译结果",
+    ),
     "chinese_web_search_template": MessageLookupByLibrary.simpleMessage(
       "中文联网搜索模板",
     ),
@@ -254,6 +257,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "inference_engine": MessageLookupByLibrary.simpleMessage("推理引擎"),
     "inference_is_done": MessageLookupByLibrary.simpleMessage("🎉 推理完成"),
     "inference_is_running": MessageLookupByLibrary.simpleMessage("推理中"),
+    "input_english_text_here": MessageLookupByLibrary.simpleMessage("输入英文文本"),
     "intonations": MessageLookupByLibrary.simpleMessage("语气词"),
     "intro": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV v7 系列大语言模型，包含 0.1B/0.4B/1.5B/2.9B 参数版本，专为移动设备优化，加载后可完全离线运行，无需服务器通信",

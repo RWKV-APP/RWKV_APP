@@ -142,6 +142,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Chinese Thinking Mode Template",
     ),
+    "chinese_translation_result": MessageLookupByLibrary.simpleMessage(
+      "Chinese Translation Result",
+    ),
     "chinese_web_search_template": MessageLookupByLibrary.simpleMessage(
       "Chinese Web Search Template",
     ),
@@ -325,6 +328,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inference_is_running": MessageLookupByLibrary.simpleMessage(
       "Inference Running",
     ),
+    "input_english_text_here": MessageLookupByLibrary.simpleMessage(
+      "Input English text here",
+    ),
     "intonations": MessageLookupByLibrary.simpleMessage("Intonations"),
     "intro": MessageLookupByLibrary.simpleMessage(
       "Explore the RWKV v7 series large language models, including 0.1B/0.4B/1.5B/2.9B parameter versions. Optimized for mobile devices, they run completely offline after loading, no server communication required.",
@@ -500,6 +506,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
+    "rwkv_offline_translator": MessageLookupByLibrary.simpleMessage(
+      "RWKV Offline Translator",
+    ),
+    "rwkv_offline_translator_server": MessageLookupByLibrary.simpleMessage(
+      "RWKV Offline Translator Server",
+    ),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),

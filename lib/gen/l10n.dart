@@ -2158,6 +2158,16 @@ class S {
     return Intl.message('自动检测', name: 'auto_detect', desc: '', args: []);
   }
 
+  /// `输入英文文本`
+  String get input_english_text_here {
+    return Intl.message(
+      '输入英文文本',
+      name: 'input_english_text_here',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `清除文本`
   String get clear_text {
     return Intl.message('清除文本', name: 'clear_text', desc: '', args: []);
@@ -2176,6 +2186,16 @@ class S {
   /// `翻译结果`
   String get translation {
     return Intl.message('翻译结果', name: 'translation', desc: '', args: []);
+  }
+
+  /// `中文翻译结果`
+  String get chinese_translation_result {
+    return Intl.message(
+      '中文翻译结果',
+      name: 'chinese_translation_result',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `复制文本`
