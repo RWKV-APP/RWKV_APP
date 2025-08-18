@@ -113,7 +113,7 @@ class _TranslatorInterface extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _Source(),
-          Divider(height: 1, color: theme.colorScheme.outline.withOpacity(0.2)),
+          Divider(height: 1, color: theme.colorScheme.outline.q(0.2)),
           const _Result(),
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -219,7 +219,7 @@ class _ResultState extends ConsumerState<_Result> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -269,7 +269,7 @@ class _InferenceInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -353,7 +353,7 @@ class _ServiceInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -403,7 +403,7 @@ class _BrowserInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -445,7 +445,7 @@ class _BrowserWindow extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(
-          color: focused ? theme.colorScheme.primary : theme.colorScheme.outline.withOpacity(0.5),
+          color: focused ? theme.colorScheme.primary : theme.colorScheme.outline.q(0.5),
           width: focused ? 2 : 1,
         ),
       ),
@@ -481,7 +481,7 @@ class _BrowserTab extends ConsumerWidget {
       trailing: isThisTabRunningTask
           ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
           : (pool.isNotEmpty ? Text(s.queued_x(pool.length)) : null),
-      tileColor: isActive ? theme.colorScheme.primaryContainer.withOpacity(0.4) : null,
+      tileColor: isActive ? theme.colorScheme.primaryContainer.q(0.4) : null,
     );
   }
 }
@@ -523,7 +523,7 @@ class _TranslatorDebugInfo extends ConsumerWidget {
 
     return Card(
       elevation: 0,
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.q(0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
