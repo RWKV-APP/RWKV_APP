@@ -26,14 +26,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(path) => "メッセージ履歴は以下のフォルダに保存されます:\n ${path}";
 
-  static String m3(flag, nameCN, nameEN) =>
+  static String m4(flag, nameCN, nameEN) =>
       "${flag} ${nameCN}(${nameEN})の音声を模倣";
 
-  static String m4(fileName) => "${fileName}を模倣";
+  static String m5(fileName) => "${fileName}を模倣";
 
-  static String m5(memUsed, memFree) => "使用メモリ：${memUsed}、残りメモリ：${memFree}";
+  static String m6(memUsed, memFree) => "使用メモリ：${memUsed}、残りメモリ：${memFree}";
 
-  static String m6(modelName) => "現在、${modelName}を使用しています";
+  static String m11(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -193,8 +193,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKVに言わせたいのは...",
     ),
-    "imitate": m3,
-    "imitate_fle": m4,
+    "imitate": m4,
+    "imitate_fle": m5,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -222,7 +222,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("ライトモード"),
     "loading": MessageLookupByLibrary.simpleMessage("ロード中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m5,
+    "memory_used": m6,
     "model_settings": MessageLookupByLibrary.simpleMessage("モデル設定"),
     "more": MessageLookupByLibrary.simpleMessage("その他"),
     "my_voice": MessageLookupByLibrary.simpleMessage("私の声"),
@@ -388,7 +388,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
-    "you_are_now_using": m6,
+    "you_are_now_using": m11,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

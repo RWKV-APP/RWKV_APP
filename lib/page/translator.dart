@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
@@ -18,7 +19,7 @@ class PageTranslator extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
     final title = isDesktop ? s.rwkv_offline_translator_server : s.rwkv_offline_translator;
 
-    return GD(
+    return GestureDetector(
       onTap: isDesktop ? null : () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
@@ -29,30 +30,277 @@ class PageTranslator extends ConsumerWidget {
                 onPressed: () {
                   P.translator.debugCheck();
                 },
-                icon: const Icon(Icons.help),
+                icon: const Icon(Icons.help_outline),
               ),
           ],
         ),
-        body: ListView(
+        body: isDesktop ? const _DesktopLayout() : const _MobileLayout(),
+      ),
+    );
+  }
+}
+
+class _MobileLayout extends ConsumerWidget {
+  const _MobileLayout();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: const [
+        _TranslatorInterface(),
+        SizedBox(height: 16),
+        _InferenceInfo(),
+      ],
+    );
+  }
+}
+
+class _DesktopLayout extends ConsumerWidget {
+  const _DesktopLayout();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: const [
+              _TranslatorInterface(),
+              SizedBox(height: 16),
+              _InferenceInfo(),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: const [
+              _ServiceInfo(),
+              SizedBox(height: 16),
+              _BrowserInfo(),
+              SizedBox(height: 16),
+              _TranslatorDebugInfo(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TranslatorInterface extends ConsumerWidget {
+  const _TranslatorInterface();
+
+  FV _onPressTest() async {
+    qq;
+    P.translator.onPressTest();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const _Source(),
+          Divider(height: 1, color: theme.colorScheme.outline.withOpacity(0.2)),
+          const _Result(),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: FilledButton.icon(
+              onPressed: _onPressTest,
+              icon: const Icon(Icons.translate),
+              label: Text(s.translate),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                textStyle: theme.textTheme.titleSmall,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Source extends ConsumerWidget {
+  const _Source();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(s.auto_detect, style: theme.textTheme.labelLarge),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () => P.translator.textEditingController.clear(),
+                tooltip: s.clear_text,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: P.translator.textEditingController,
+            decoration: InputDecoration.collapsed(
+              hintText: s.enter_text_to_translate,
+            ),
+            minLines: 4,
+            maxLines: 8,
+            style: theme.textTheme.bodyLarge,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Result extends ConsumerStatefulWidget {
+  const _Result();
+
+  @override
+  ConsumerState<_Result> createState() => _ResultState();
+}
+
+class _ResultState extends ConsumerState<_Result> {
+  late final ScrollController _scrollController;
+  late final VoidCallback _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    _listener = () {
+      if (_scrollController.hasClients) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      }
+    };
+
+    P.translator.resultTextEditingController.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    P.translator.resultTextEditingController.removeListener(_listener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(s.translation, style: theme.textTheme.labelLarge),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.copy_all_outlined, size: 20),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: P.translator.resultTextEditingController.text));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(s.chat_copied_to_clipboard)),
+                  );
+                },
+                tooltip: s.copy_text,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: P.translator.resultTextEditingController,
+            scrollController: _scrollController,
+            decoration: const InputDecoration.collapsed(hintText: ""),
+            readOnly: true,
+            minLines: 4,
+            maxLines: 8,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InferenceInfo extends ConsumerWidget {
+  const _InferenceInfo();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final isGenerating = ref.watch(P.translator.isGenerating);
+    final currentModel = ref.watch(P.rwkv.currentModel);
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const _InferenceInfo(),
-                      if (isDesktop) const _ServiceInfo(),
-                      const _TranslatiorInfo(),
-                    ],
-                  ),
-                ),
-                if (isDesktop)
-                  const Expanded(
-                    child: _BrowserInfo(),
-                  ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: Text(
+                s.inference_engine,
+                style: theme.textTheme.titleMedium,
+              ),
+            ),
+            ListTile(
+              title: Text(s.model),
+              subtitle: Text(currentModel?.name ?? s.no_model_selected),
+              trailing: FilledButton.tonal(
+                onPressed: () => ModelSelector.show(),
+                child: Text(s.change),
+              ),
+            ),
+            ListTile(
+              title: Text(s.status),
+              subtitle: Text(isGenerating ? s.translating : s.idle),
+              trailing: isGenerating
+                  ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.check_circle, color: Colors.green),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: PerformanceInfo(),
             ),
           ],
         ),
@@ -63,21 +311,6 @@ class PageTranslator extends ConsumerWidget {
 
 class _ServiceInfo extends ConsumerWidget {
   const _ServiceInfo();
-
-  FV _onPressBackend() async {
-    qq;
-    final currentModel = P.rwkv.currentModel.q;
-    if (currentModel == null) {
-      ModelSelector.show();
-      return;
-    }
-    P.backend.start();
-  }
-
-  FV _onPressWebsocket() async {
-    qq;
-    P.backend.start();
-  }
 
   FV _onPressed() async {
     qq;
@@ -91,6 +324,11 @@ class _ServiceInfo extends ConsumerWidget {
       case BackendState.stopping:
         return;
       case BackendState.stopped:
+        final currentModel = P.rwkv.currentModel.q;
+        if (currentModel == null) {
+          ModelSelector.show();
+          return;
+        }
         await P.backend.start();
         return;
     }
@@ -98,61 +336,57 @@ class _ServiceInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
     final backendState = ref.watch(P.backend.httpState);
     final websocketState = ref.watch(P.backend.websocketState);
-    final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
     final httpPort = ref.watch(P.backend.httpPort);
     final websocketPort = ref.watch(P.backend.websocketPort);
-    final taskReceivedCount = ref.watch(P.backend.taskReceivedCount);
-    final taskHandledCount = ref.watch(P.backend.taskHandledCount);
-    final runningTasks = ref.watch(P.backend.runningTasks);
-    final websocketReceivedCount = ref.watch(P.backend.websocketReceivedCount);
-    final websocketSentCount = ref.watch(P.backend.websocketSentCount);
 
-    final title = switch (backendState) {
-      BackendState.starting => "正在启动...",
-      BackendState.running => "停止服务",
-      BackendState.stopping => "正在停止...",
-      BackendState.stopped => "启动服务",
+    final buttonText = switch (backendState) {
+      BackendState.starting => s.starting,
+      BackendState.running => s.stop_service,
+      BackendState.stopping => s.stopping,
+      BackendState.stopped => s.start_service,
     };
+    final canPress = backendState == BackendState.running || backendState == BackendState.stopped;
 
-    return C(
-      decoration: BD(
-        color: kC,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: qb.q(0.67), width: 1),
-      ),
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "局域网服务器信息",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
-          ),
-          8.h,
-          Text("HTTP 服务 (端口号: $httpPort): ${backendState.name}"),
-          if (backendState != BackendState.running)
-            TextButton(
-              onPressed: _onPressBackend,
-              child: const Text("启动"),
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: Text(s.lan_server, style: theme.textTheme.titleMedium),
             ),
-          Text("WebSocket 服务 (端口号: $websocketPort): ${websocketState.name}"),
-          if (websocketState != BackendState.running)
-            TextButton(
-              onPressed: _onPressWebsocket,
-              child: const Text("启动"),
+            ListTile(
+              title: Text(s.http_service_port(httpPort)),
+              subtitle: Text(backendState.name),
+              trailing: backendState == BackendState.running
+                  ? const Icon(Icons.check_circle, color: Colors.green)
+                  : const Icon(Icons.cancel_outlined, color: Colors.red),
             ),
-          Text("WebSocket 消息接收数量: $websocketReceivedCount"),
-          Text("WebSocket 消息发送数量: $websocketSentCount"),
-          if (backendState == BackendState.running)
-            TextButton(
-              onPressed: _onPressed,
-              child: Text(title),
+            ListTile(
+              title: Text(s.websocket_service_port(websocketPort)),
+              subtitle: Text(websocketState.name),
+              trailing: websocketState == BackendState.running
+                  ? const Icon(Icons.check_circle, color: Colors.green)
+                  : const Icon(Icons.cancel_outlined, color: Colors.red),
             ),
-        ],
+            const SizedBox(height: 8),
+            Center(
+              child: FilledButton.tonal(
+                onPressed: canPress ? _onPressed : null,
+                child: Text(buttonText),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -163,35 +397,32 @@ class _BrowserInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final s = S.of(context);
     final browserWindows = ref.watch(P.translator.browserWindows);
-    final browserTabs = ref.watch(P.translator.browserTabs);
-    return C(
-      decoration: BD(
-        color: kC,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: qb.q(0.67), width: 1),
-      ),
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "浏览器运行状态信息",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
-          ),
-          8.h,
-          Text("窗口 - 标签页 (${browserTabs.length})"),
-          8.h,
-          if (browserWindows.isNotEmpty)
-            Wrap(
-              runSpacing: 4,
-              spacing: 4,
-              children: browserWindows.map((e) => _BrowserWindow(window: e)).toList(),
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: Text(s.browser_status, style: theme.textTheme.titleMedium),
             ),
-        ],
+            if (browserWindows.isEmpty)
+              ListTile(
+                title: Text(s.no_browser_windows_connected),
+                subtitle: Text(s.start_service_and_open_browser),
+              )
+            else
+              ...browserWindows.map((e) => _BrowserWindow(window: e)).toList(),
+          ],
+        ),
       ),
     );
   }
@@ -204,30 +435,26 @@ class _BrowserWindow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
     final browserTabs = ref.watch(P.translator.browserTabs.select((v) => v.where((e) => e.windowId == window.id).toList()));
-    final qb = ref.watch(P.app.qb);
     final focused = window.focused;
-    final border = Border.all(color: focused ? kCR.q(1) : qb.q(0.33), width: 2);
-    return C(
-      decoration: BD(
-        color: kC,
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        border: border,
+        side: BorderSide(
+          color: focused ? theme.colorScheme.primary : theme.colorScheme.outline.withOpacity(0.5),
+          width: focused ? 2 : 1,
+        ),
       ),
-      padding: const EdgeInsets.all(4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Window: ${window.id}", style: TextStyle(color: focused ? kCR.q(1) : qb.q(1))),
-          4.h,
-          Wrap(
-            runSpacing: 4,
-            spacing: 4,
-            children: browserTabs.map((e) {
-              return _BrowserTab(tab: e);
-            }).toList(),
-          ),
-        ],
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: ExpansionTile(
+        title: Text(s.window_id(window.id), style: TextStyle(fontWeight: focused ? FontWeight.bold : FontWeight.normal)),
+        subtitle: Text(s.x_tabs(browserTabs.length)),
+        initiallyExpanded: focused,
+        children: browserTabs.map((e) => _BrowserTab(tab: e)).toList(),
       ),
     );
   }
@@ -240,92 +467,27 @@ class _BrowserTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    final url = tab.url.replaceAll("https://", "").replaceAll("http://", "").replaceAll("www.", "");
-    final innerSize = ref.watch(P.translator.browserTabInnerSize.select((v) => v[tab.id]));
-    final scrollRect = ref.watch(P.translator.browserTabScrollRect.select((v) => v[tab.id]));
-    final lastAccessed = tab.lastAccessed;
-    final timeDisplay = DateTime.fromMillisecondsSinceEpoch(lastAccessed.toInt()).toString();
+    final theme = Theme.of(context);
+    final s = S.of(context);
     final pool = ref.watch(P.translator.pool(tab));
     final isActive = ref.watch(P.translator.activedTab.select((v) => v?.id == tab.id));
-    final latestTab = ref.watch(P.translator.latestTabs.select((v) => v[tab.windowId]));
-    final isLatestInWindow = latestTab == tab;
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
+    final isThisTabRunningTask = runningTaskTabId == tab.id;
 
-    late final Color color;
-    if (isActive) {
-      color = kCG.q(1);
-    } else if (isLatestInWindow) {
-      color = kCG.q(0.5);
-    } else {
-      color = qb.q(0.33);
-    }
-
-    final border = Border.all(color: color, width: 2);
-
-    return DefaultTextStyle(
-      style: TextStyle(fontSize: 10, color: qb.q(.5)),
-      child: C(
-        constraints: const BoxConstraints(maxWidth: 180, minWidth: 120),
-        decoration: BD(
-          color: qb.q(0.1),
-          border: border,
-          borderRadius: 4.r,
-        ),
-        padding: const EI.o(t: 5, l: 6, b: 5, r: 6),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tab.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14, color: qb.q(1)),
-                ),
-                Text(
-                  url,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14, color: qb.q(1)),
-                ),
-                if (pool.isNotEmpty) Text("Waiting requests: ${pool.length}"),
-                // TODO: 这里还没对齐
-                Text(timeDisplay, style: TextStyle(fontSize: 10, color: qb.q(.5))),
-                Text("full: ${scrollRect?.width.toStringAsFixed(0)} x ${scrollRect?.height.toStringAsFixed(0)}"),
-                Text("inner: ${innerSize?.width.toStringAsFixed(0)} x ${innerSize?.height.toStringAsFixed(0)}"),
-                Text("scroll: ${scrollRect?.left.toStringAsFixed(0)} x ${scrollRect?.top.toStringAsFixed(0)}"),
-              ],
-            ),
-            if (runningTaskTabId == tab.id)
-              Positioned(
-                height: 20,
-                width: 20,
-                right: 0,
-                bottom: 0,
-                child: SB(
-                  child: CircularProgressIndicator(
-                    color: kCG.q(1),
-                    strokeWidth: 3,
-                    strokeCap: StrokeCap.round,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return ListTile(
+      leading: isActive ? Icon(Icons.gps_fixed, color: theme.colorScheme.primary) : const Icon(Icons.tab_unselected),
+      title: Text(tab.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Text(tab.url, maxLines: 1, overflow: TextOverflow.ellipsis),
+      trailing: isThisTabRunningTask
+          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+          : (pool.isNotEmpty ? Text(s.queued_x(pool.length)) : null),
+      tileColor: isActive ? theme.colorScheme.primaryContainer.withOpacity(0.4) : null,
     );
   }
 }
 
-class _TranslatiorInfo extends ConsumerWidget {
-  const _TranslatiorInfo();
-
-  FV _onPressTest() async {
-    qq;
-    P.translator.onPressTest();
-  }
+class _TranslatorDebugInfo extends ConsumerWidget {
+  const _TranslatorDebugInfo();
 
   FV _onPressClearCompleterPool() async {
     qq;
@@ -351,210 +513,58 @@ class _TranslatiorInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final s = S.of(context);
     final runningTaskKey = ref.watch(P.translator.runningTaskKey);
     final translations = ref.watch(P.translator.translations);
     final runningTaskUrl = ref.watch(P.translator.runningTaskUrl);
     final runningTaskTabId = ref.watch(P.translator.runningTaskTabId);
     final translationCountInSandbox = ref.watch(P.translator.translationCountInSandbox);
-    final isDesktop = ref.watch(P.app.isDesktop);
-    return C(
-      decoration: BD(
-        color: kC,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: qb.q(0.67), width: 1),
-      ),
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(8),
-      child: SingleChildScrollView(
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "翻译器信息",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: Text(s.translator_debug_info, style: theme.textTheme.titleMedium),
             ),
-            8.h,
-            if (!isDesktop) const Text("暂未在移动平台启用缓存功能, 可随时启用, 性能消耗可忽略不计"),
-            if (isDesktop) Text("已经缓存的翻译结果数量: ${translations.length}"),
-            if (isDesktop) Text("已经持久化的翻译结果数量: $translationCountInSandbox"),
-            Text("正在翻译的文本长度: ${runningTaskKey?.length ?? 0}"),
-            if (isDesktop) Text("正在翻译的 URL: $runningTaskUrl"),
-            if (isDesktop) Text("正在翻译的标签页 ID: $runningTaskTabId"),
-            if (isDesktop)
-              TextButton(
+            ListTile(
+              title: Text(s.cached_translations_memory),
+              subtitle: Text("${translations.length}"),
+            ),
+            ListTile(
+              title: Text(s.cached_translations_disk),
+              subtitle: Text("$translationCountInSandbox"),
+            ),
+            ListTile(
+              title: Text(s.current_task_text_length),
+              subtitle: Text("${runningTaskKey?.length ?? 0}"),
+            ),
+            ListTile(
+              title: Text(s.current_task_url),
+              subtitle: Text("$runningTaskUrl"),
+            ),
+            ListTile(
+              title: Text(s.current_task_tab_id),
+              subtitle: Text("$runningTaskTabId"),
+            ),
+            const SizedBox(height: 8),
+            Center(
+              child: TextButton.icon(
                 onPressed: _onPressClearCompleterPool,
-                child: Text("清除内存缓存", style: TextStyle(color: kCR.q(1))),
+                icon: const Icon(Icons.delete_sweep),
+                label: Text(s.clear_memory_cache),
+                style: TextButton.styleFrom(foregroundColor: theme.colorScheme.error),
               ),
-            8.h,
-            const Text("翻译状态 / 测试"),
-            4.h,
-            if (isDesktop)
-              Row(
-                children: [
-                  const Expanded(child: _Source()),
-                  8.w,
-                  const Expanded(child: _Result()),
-                ],
-              ),
-            if (!isDesktop)
-              SizedBox(
-                height: 300,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        const T("翻译目标", s: TS(s: 10)),
-                        const Spacer(),
-                        TextButton(
-                          onPressed: () => P.translator.textEditingController.clear(),
-                          child: const Text("清空翻译目标文本"),
-                        ),
-                      ],
-                    ),
-                    2.h,
-                    const Expanded(child: _Source()),
-                    4.h,
-                    const T("翻译结果", s: TS(s: 8)),
-                    2.h,
-                    const Expanded(child: _Result()),
-                  ],
-                ),
-              ),
-            4.h,
-            TextButton(
-              onPressed: _onPressTest,
-              child: const Text("翻译当前文本框中的文本"),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _Source extends ConsumerWidget {
-  const _Source();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return C(
-      decoration: const BD(color: kC),
-      child: TextField(
-        minLines: 1,
-        maxLines: 4,
-        controller: P.translator.textEditingController,
-        decoration: const InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          border: OutlineInputBorder(),
-        ),
-      ),
-    );
-  }
-}
-
-class _Result extends ConsumerStatefulWidget {
-  const _Result();
-
-  @override
-  ConsumerState<_Result> createState() => _ResultState();
-}
-
-class _ResultState extends ConsumerState<_Result> {
-  late final ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-
-    // 添加监听器
-    P.translator.resultTextEditingController.addListener(() {
-      // 确保 ScrollController 已经附着到可滚动视图
-      if (_scrollController.hasClients) {
-        // 延迟一帧，确保布局更新
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOut,
-          );
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    P.translator.resultTextEditingController.removeListener(() {});
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return C(
-      decoration: const BD(color: kC),
-      child: TextField(
-        minLines: 1,
-        maxLines: 4,
-        controller: P.translator.resultTextEditingController,
-        scrollController: _scrollController,
-        readOnly: true,
-        decoration: const InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          border: OutlineInputBorder(),
-        ),
-      ),
-    );
-  }
-}
-
-class _InferenceInfo extends ConsumerWidget {
-  const _InferenceInfo();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
-    final isGenerating = ref.watch(P.translator.isGenerating);
-    final currentModel = ref.watch(P.rwkv.currentModel);
-    return C(
-      decoration: BD(
-        color: kC,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: qb.q(0.67), width: 1),
-      ),
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "RWKV 推理引擎信息",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primary),
-          ),
-          8.h,
-          Wrap(
-            runSpacing: 8,
-            spacing: 8,
-            alignment: WrapAlignment.center,
-            runAlignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text("当前模型: ${currentModel?.name}"),
-              const Text("请选择模型"),
-              TextButton(
-                onPressed: () => ModelSelector.show(),
-                child: const Text("选择不同模型"),
-              ),
-            ],
-          ),
-          Text("推理器状态: ${isGenerating ? "推理中" : "空闲"}"),
-          const PerformanceInfo(),
-        ],
       ),
     );
   }

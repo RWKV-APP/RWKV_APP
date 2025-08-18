@@ -1,6 +1,7 @@
 part of 'p.dart';
 
-const _initialSource = "This is a test.";
+const _initialSource =
+    "RWKV (pronounced RwaKuv) is an RNN with great LLM performance, which can also be directly trained like a GPT transformer (parallelizable). We are at RWKV-7 \"Goose\". So it's combining the best of RNN and transformer - great performance, linear time, constant space (no kv-cache), fast training, infinite ctx_len, and free sentence embedding.";
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
 

@@ -299,5 +299,63 @@
   "new_chat_template": "New Chat Template",
   "new_chat_template_helper_text": "This will be inserted with each new conversation, separated by two line breaks, for example: \nHello, who are you? \n\nHello, I'm RWKV, is there anything I can help you with?",
   "check_for_updates": "Check for updates",
-  "app_is_already_up_to_date": "App is already up to date"
+  "app_is_already_up_to_date": "App is already up to date",
+  "translate": "Translate",
+  "auto_detect": "Auto Detect",
+  "clear_text": "Clear text",
+  "enter_text_to_translate": "Enter text to translate...",
+  "translation": "Translation",
+  "copy_text": "Copy text",
+  "inference_engine": "Inference Engine",
+  "model": "Model",
+  "no_model_selected": "No model selected",
+  "change": "Change",
+  "status": "Status",
+  "translating": "Translating...",
+  "idle": "Idle",
+  "starting": "Starting...",
+  "stop_service": "Stop Service",
+  "stopping": "Stopping...",
+  "start_service": "Start Service",
+  "lan_server": "LAN Server",
+  "http_service_port": "HTTP Service (Port: {port})",
+  "@http_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
+  "websocket_service_port": "WebSocket Service (Port: {port})",
+  "@websocket_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
+  "browser_status": "Browser Status",
+  "no_browser_windows_connected": "No browser windows connected",
+  "start_service_and_open_browser": "Start the service and open a supported browser page.",
+  "window_id": "Window {id}",
+  "@window_id": {
+    "placeholders": {
+      "id": {}
+    }
+  },
+  "x_tabs": "{count} tabs",
+  "@x_tabs": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "queued_x": "Queued: {count}",
+  "@queued_x": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "translator_debug_info": "Translator Debug Info",
+  "cached_translations_memory": "Cached translations (memory)",
+  "cached_translations_disk": "Cached translations (disk)",
+  "current_task_text_length": "Current task text length",
+  "current_task_url": "Current task URL",
+  "current_task_tab_id": "Current task Tab ID",
+  "clear_memory_cache": "Clear Memory Cache"
 }

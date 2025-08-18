@@ -2147,6 +2147,236 @@ class S {
       args: [],
     );
   }
+
+  /// `翻译`
+  String get translate {
+    return Intl.message('翻译', name: 'translate', desc: '', args: []);
+  }
+
+  /// `自动检测`
+  String get auto_detect {
+    return Intl.message('自动检测', name: 'auto_detect', desc: '', args: []);
+  }
+
+  /// `清除文本`
+  String get clear_text {
+    return Intl.message('清除文本', name: 'clear_text', desc: '', args: []);
+  }
+
+  /// `输入要翻译的文本...`
+  String get enter_text_to_translate {
+    return Intl.message(
+      '输入要翻译的文本...',
+      name: 'enter_text_to_translate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `翻译结果`
+  String get translation {
+    return Intl.message('翻译结果', name: 'translation', desc: '', args: []);
+  }
+
+  /// `复制文本`
+  String get copy_text {
+    return Intl.message('复制文本', name: 'copy_text', desc: '', args: []);
+  }
+
+  /// `推理引擎`
+  String get inference_engine {
+    return Intl.message('推理引擎', name: 'inference_engine', desc: '', args: []);
+  }
+
+  /// `模型`
+  String get model {
+    return Intl.message('模型', name: 'model', desc: '', args: []);
+  }
+
+  /// `未选择模型`
+  String get no_model_selected {
+    return Intl.message('未选择模型', name: 'no_model_selected', desc: '', args: []);
+  }
+
+  /// `更改`
+  String get change {
+    return Intl.message('更改', name: 'change', desc: '', args: []);
+  }
+
+  /// `状态`
+  String get status {
+    return Intl.message('状态', name: 'status', desc: '', args: []);
+  }
+
+  /// `翻译中...`
+  String get translating {
+    return Intl.message('翻译中...', name: 'translating', desc: '', args: []);
+  }
+
+  /// `空闲`
+  String get idle {
+    return Intl.message('空闲', name: 'idle', desc: '', args: []);
+  }
+
+  /// `启动中...`
+  String get starting {
+    return Intl.message('启动中...', name: 'starting', desc: '', args: []);
+  }
+
+  /// `停止服务`
+  String get stop_service {
+    return Intl.message('停止服务', name: 'stop_service', desc: '', args: []);
+  }
+
+  /// `停止中...`
+  String get stopping {
+    return Intl.message('停止中...', name: 'stopping', desc: '', args: []);
+  }
+
+  /// `启动服务`
+  String get start_service {
+    return Intl.message('启动服务', name: 'start_service', desc: '', args: []);
+  }
+
+  /// `局域网服务器`
+  String get lan_server {
+    return Intl.message('局域网服务器', name: 'lan_server', desc: '', args: []);
+  }
+
+  /// `HTTP 服务 (端口: {port})`
+  String http_service_port(Object port) {
+    return Intl.message(
+      'HTTP 服务 (端口: $port)',
+      name: 'http_service_port',
+      desc: '',
+      args: [port],
+    );
+  }
+
+  /// `WebSocket 服务 (端口: {port})`
+  String websocket_service_port(Object port) {
+    return Intl.message(
+      'WebSocket 服务 (端口: $port)',
+      name: 'websocket_service_port',
+      desc: '',
+      args: [port],
+    );
+  }
+
+  /// `浏览器状态`
+  String get browser_status {
+    return Intl.message('浏览器状态', name: 'browser_status', desc: '', args: []);
+  }
+
+  /// `没有连接的浏览器窗口`
+  String get no_browser_windows_connected {
+    return Intl.message(
+      '没有连接的浏览器窗口',
+      name: 'no_browser_windows_connected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `启动服务并打开支持的浏览器页面。`
+  String get start_service_and_open_browser {
+    return Intl.message(
+      '启动服务并打开支持的浏览器页面。',
+      name: 'start_service_and_open_browser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `窗口 {id}`
+  String window_id(Object id) {
+    return Intl.message('窗口 $id', name: 'window_id', desc: '', args: [id]);
+  }
+
+  /// `{count} 个标签页`
+  String x_tabs(Object count) {
+    return Intl.message('$count 个标签页', name: 'x_tabs', desc: '', args: [count]);
+  }
+
+  /// `排队中: {count}`
+  String queued_x(Object count) {
+    return Intl.message(
+      '排队中: $count',
+      name: 'queued_x',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `翻译器调试信息`
+  String get translator_debug_info {
+    return Intl.message(
+      '翻译器调试信息',
+      name: 'translator_debug_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缓存的翻译 (内存)`
+  String get cached_translations_memory {
+    return Intl.message(
+      '缓存的翻译 (内存)',
+      name: 'cached_translations_memory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缓存的翻译 (磁盘)`
+  String get cached_translations_disk {
+    return Intl.message(
+      '缓存的翻译 (磁盘)',
+      name: 'cached_translations_disk',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前任务文本长度`
+  String get current_task_text_length {
+    return Intl.message(
+      '当前任务文本长度',
+      name: 'current_task_text_length',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前任务 URL`
+  String get current_task_url {
+    return Intl.message(
+      '当前任务 URL',
+      name: 'current_task_url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前任务标签页 ID`
+  String get current_task_tab_id {
+    return Intl.message(
+      '当前任务标签页 ID',
+      name: 'current_task_tab_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `清除内存缓存`
+  String get clear_memory_cache {
+    return Intl.message(
+      '清除内存缓存',
+      name: 'clear_memory_cache',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

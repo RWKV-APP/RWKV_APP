@@ -23,11 +23,12 @@ alwaysApply: true
 - 不要自动使用 `then` 来获取异步结果, 除非你被显示要求了
 - 禁止使用 `Widget _build` 来构建 UI
 
-## 建议做以下的行为
+## 做以下的行为
 
 - 尽量使用 for 循环, 尽量不使用 forEach
 - 使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度
 - 使用 `class _WidgetName extends ConsumerWidget` 来构建 UI
+- 所有的 `.withOpacity(0.x)`, 都使用 `.q(.x)` 来替代
 
 ## 输出
 

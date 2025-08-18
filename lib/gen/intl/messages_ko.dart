@@ -26,15 +26,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(path) => "메시지 기록은 다음 폴더에 저장됩니다:\n ${path}";
 
-  static String m3(flag, nameCN, nameEN) =>
+  static String m4(flag, nameCN, nameEN) =>
       "${flag} ${nameCN}(${nameEN})의 목소리를 모방";
 
-  static String m4(fileName) => "${fileName} 모방";
+  static String m5(fileName) => "${fileName} 모방";
 
-  static String m5(memUsed, memFree) =>
+  static String m6(memUsed, memFree) =>
       "사용된 메모리: ${memUsed}, 남은 메모리: ${memFree}";
 
-  static String m6(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
+  static String m11(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -194,8 +194,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKV가 말하게 하고 싶어요...",
     ),
-    "imitate": m3,
-    "imitate_fle": m4,
+    "imitate": m4,
+    "imitate_fle": m5,
     "imitate_target": MessageLookupByLibrary.simpleMessage("사용"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -221,7 +221,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("라이트 모드"),
     "loading": MessageLookupByLibrary.simpleMessage("로드 중..."),
     "medium": MessageLookupByLibrary.simpleMessage("중간 (110%)"),
-    "memory_used": m5,
+    "memory_used": m6,
     "model_settings": MessageLookupByLibrary.simpleMessage("모델 설정"),
     "more": MessageLookupByLibrary.simpleMessage("더 보기"),
     "my_voice": MessageLookupByLibrary.simpleMessage("내 목소리"),
@@ -389,7 +389,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
-    "you_are_now_using": m6,
+    "you_are_now_using": m11,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV와 채팅을 시작할 수 있습니다",
     ),

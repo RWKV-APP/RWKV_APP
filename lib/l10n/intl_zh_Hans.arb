@@ -300,5 +300,63 @@
   "new_chat_template": "新对话模板",
   "new_chat_template_helper_text": "每次新对话将插入此内容, 用两个换行分隔, 例子:\n你好，你是谁？\n\n你好，我是RWKV，有什么我可以帮助你的吗",
   "check_for_updates": "检查更新",
-  "app_is_already_up_to_date": "已经是最新版本"
+  "app_is_already_up_to_date": "已经是最新版本",
+  "translate": "翻译",
+  "auto_detect": "自动检测",
+  "clear_text": "清除文本",
+  "enter_text_to_translate": "输入要翻译的文本...",
+  "translation": "翻译结果",
+  "copy_text": "复制文本",
+  "inference_engine": "推理引擎",
+  "model": "模型",
+  "no_model_selected": "未选择模型",
+  "change": "更改",
+  "status": "状态",
+  "translating": "翻译中...",
+  "idle": "空闲",
+  "starting": "启动中...",
+  "stop_service": "停止服务",
+  "stopping": "停止中...",
+  "start_service": "启动服务",
+  "lan_server": "局域网服务器",
+  "http_service_port": "HTTP 服务 (端口: {port})",
+  "@http_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
+  "websocket_service_port": "WebSocket 服务 (端口: {port})",
+  "@websocket_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
+  "browser_status": "浏览器状态",
+  "no_browser_windows_connected": "没有连接的浏览器窗口",
+  "start_service_and_open_browser": "启动服务并打开支持的浏览器页面。",
+  "window_id": "窗口 {id}",
+  "@window_id": {
+    "placeholders": {
+      "id": {}
+    }
+  },
+  "x_tabs": "{count} 个标签页",
+  "@x_tabs": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "queued_x": "排队中: {count}",
+  "@queued_x": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "translator_debug_info": "翻译器调试信息",
+  "cached_translations_memory": "缓存的翻译 (内存)",
+  "cached_translations_disk": "缓存的翻译 (磁盘)",
+  "current_task_text_length": "当前任务文本长度",
+  "current_task_url": "当前任务 URL",
+  "current_task_tab_id": "当前任务标签页 ID",
+  "clear_memory_cache": "清除内存缓存"
 }

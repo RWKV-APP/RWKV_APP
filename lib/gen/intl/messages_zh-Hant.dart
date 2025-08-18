@@ -26,14 +26,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(path) => "訊息記錄會儲存在該資料夾下\n ${path}";
 
-  static String m3(flag, nameCN, nameEN) =>
+  static String m4(flag, nameCN, nameEN) =>
       "模仿 ${flag} ${nameCN}(${nameEN}) 的聲音";
 
-  static String m4(fileName) => "模仿 ${fileName}";
+  static String m5(fileName) => "模仿 ${fileName}";
 
-  static String m5(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
+  static String m6(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
 
-  static String m6(modelName) => "您目前正在使用 ${modelName}";
+  static String m11(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -175,8 +175,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "human": MessageLookupByLibrary.simpleMessage("人類"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想讓 RWKV 說..."),
-    "imitate": m3,
-    "imitate_fle": m4,
+    "imitate": m4,
+    "imitate_fle": m5,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage("當搜尋深度和寬度都大於 2 時，將啟用上下文搜尋"),
@@ -200,7 +200,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("淺色模式"),
     "loading": MessageLookupByLibrary.simpleMessage("載入中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m5,
+    "memory_used": m6,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型設定"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的聲音"),
@@ -350,7 +350,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
-    "you_are_now_using": m6,
+    "you_are_now_using": m11,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),
