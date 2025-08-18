@@ -18,11 +18,10 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        "--dart-define=disableRemoteConfig=true",
+        // "--dart-define=disableRemoteConfig=true",
         "--dart-define=logLevel=3",
         // "--dart-define=autoShowTranslator=true",
         "--dart-define=showHaloDebugger=true"
-        // "--dart-define=nativeSplashPreserveDurationInMS=9999999"
         // "--dart-define=debugMsgId=true",
         // "--dart-define=debuggingThemes=true",
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
@@ -36,7 +35,9 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        //"--dart-define=nativeSplashPreserveDurationInMS=50",
+        //
+        "--dart-define=logLevel=3",
+        "--dart-define=showHaloDebugger=true"
       ],
       "deviceId": "90313e34"
     },
@@ -47,9 +48,24 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        //"--dart-define=nativeSplashPreserveDurationInMS=50",
+        //
+        "--dart-define=logLevel=3",
+        "--dart-define=showHaloDebugger=true"
       ],
       "deviceId": "00008140-000641E02EDB001C"
+    },
+    {
+      "name": "debug (Halo) - macOS",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "args": [
+        //
+        "--dart-define=logLevel=3",
+        "--dart-define=showHaloDebugger=true"
+      ],
+      "deviceId": "macos"
     },
     {
       "name": "debug (NoRemoteConfig)",
@@ -80,7 +96,11 @@
   "compounds": [
     {
       "name": "All (Halo)",
-      "configurations": ["debug (Halo) - iOS", "debug (Halo) - Android"]
+      "configurations": [
+        //,
+        "debug (Halo) - Android",
+        "debug (Halo) - macOS"
+      ]
     }
   ]
 }

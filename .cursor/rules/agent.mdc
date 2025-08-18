@@ -21,11 +21,13 @@ alwaysApply: true
 
 - 不要使用 `MediaQuery.of(context).size.width` 来获取屏幕宽度, 除非你被显示要求了
 - 不要自动使用 `then` 来获取异步结果, 除非你被显示要求了
+- 禁止使用 `Widget _build` 来构建 UI
 
 ## 建议做以下的行为
 
 - 尽量使用 for 循环, 尽量不使用 forEach
 - 使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度
+- 使用 `class _WidgetName extends ConsumerWidget` 来构建 UI
 
 ## 输出
 
