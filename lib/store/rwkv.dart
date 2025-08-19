@@ -719,11 +719,15 @@ extension $RWKV on _RWKV {
     final systemPrompt = P.preference.promptTemplate.systemPrompt.trim();
 
     if (setPrompt) {
-      String prompt = "<EOD>";
-      if (systemPrompt.isNotEmpty && !_thinkingMode.q.hasThinkTag) {
-        prompt = "<EOD>\nSystem: $systemPrompt\n\n";
+      if (prompt != null) {
+        send(to_rwkv.SetPrompt(prompt));
+      } else {
+        String p = prompt ?? "<EOD>";
+        if (systemPrompt.isNotEmpty && !_thinkingMode.q.hasThinkTag) {
+          p = "$systemPrompt\n\n";
+        }
+        send(to_rwkv.SetPrompt(p));
       }
-      send(to_rwkv.SetPrompt(prompt));
       qqw("setPrompt: $prompt");
     }
 

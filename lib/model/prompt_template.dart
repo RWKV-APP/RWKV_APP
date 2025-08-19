@@ -26,10 +26,10 @@ class PromptTemplate {
       thinkingWithChinese: '<think>嗯',
       thinkingLighting: '<think>\n</think>',
       thinkingFree: '<think',
-      newChatTemplate: ' ',
+      newChatTemplate: '',
       webSearchTemplate: '%s\nPlease answer according to the above information:\n%s',
       webSearchChineseTemplate: '%s\n请根据以上信息回答:\n%s',
-      systemPrompt: ' ',
+      systemPrompt: '',
     );
   }
 
