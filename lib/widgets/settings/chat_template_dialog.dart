@@ -133,7 +133,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       maxLines: 4,
                       decoration: InputDecoration(
                         labelText: S.current.system_prompt,
-                        labelStyle: TextStyle(fontSize: 16),
+                        labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -143,7 +143,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       maxLines: 10,
                       decoration: InputDecoration(
                         labelText: S.current.new_chat_template,
-                        labelStyle: TextStyle(fontSize: 16),
+                        labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
                         helperMaxLines: 10,
                         helperText: S.current.new_chat_template_helper_text,
@@ -156,7 +156,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       maxLines: 4,
                       decoration: InputDecoration(
                         labelText: S.current.web_search_template,
-                        labelStyle: TextStyle(fontSize: 16),
+                        labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -166,7 +166,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       maxLines: 4,
                       decoration: InputDecoration(
                         labelText: S.current.chinese_web_search_template,
-                        labelStyle: TextStyle(fontSize: 16),
+                        labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -178,7 +178,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       maxLines: 2,
                       decoration: InputDecoration(
                         labelText: S.current.thinking_mode_template,
-                        labelStyle: TextStyle(fontSize: 16),
+                        labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -188,7 +188,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       maxLines: 2,
                       decoration: InputDecoration(
                         labelText: S.current.chinese_thinking_mode_template,
-                        labelStyle: TextStyle(fontSize: 16),
+                        labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -198,7 +198,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                       maxLines: 2,
                       decoration: InputDecoration(
                         labelText: S.current.lazy_thinking_mode_template,
-                        labelStyle: TextStyle(fontSize: 16),
+                        labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
                       ),
                     ),

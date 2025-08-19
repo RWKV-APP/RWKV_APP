@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/widgets/settings/chat_template_dialog.dart';
 
 import '../gen/l10n.dart' show S;
@@ -21,7 +20,7 @@ class PageAdvancedSettings extends StatelessWidget {
             buildGroupTitle(S.current.prompt_template),
             item(
               title: S.current.system_prompt,
-              child: SizedBox(
+              child: const SizedBox(
                 height: 56,
                 width: 18,
                 child: Icon(Icons.arrow_forward_ios, size: 18),
@@ -32,7 +31,7 @@ class PageAdvancedSettings extends StatelessWidget {
             ),
             item(
               title: S.current.web_search_template,
-              child: SizedBox(
+              child: const SizedBox(
                 height: 56,
                 width: 18,
                 child: Icon(Icons.arrow_forward_ios, size: 18),
@@ -44,7 +43,7 @@ class PageAdvancedSettings extends StatelessWidget {
             const SizedBox(height: 8),
             item(
               title: S.current.thinking_mode_template,
-              child: SizedBox(
+              child: const SizedBox(
                 height: 56,
                 width: 18,
                 child: Icon(Icons.arrow_forward_ios, size: 18),
@@ -56,7 +55,7 @@ class PageAdvancedSettings extends StatelessWidget {
             const SizedBox(height: 8),
             item(
               title: S.current.new_chat_template,
-              child: SizedBox(
+              child: const SizedBox(
                 height: 56,
                 width: 18,
                 child: Icon(Icons.arrow_forward_ios, size: 18),
@@ -150,7 +149,7 @@ class PageAdvancedSettings extends StatelessWidget {
       ),
       item(
         title: "知识库搜索结果数量",
-        child: DropdownMenu(
+        child: const DropdownMenu(
           initialSelection: 10,
           dropdownMenuEntries: [
             DropdownMenuEntry(value: 3, label: '3'),
@@ -163,7 +162,7 @@ class PageAdvancedSettings extends StatelessWidget {
       const SizedBox(height: 12),
       item(
         title: "文本切割长度范围",
-        child: DropdownMenu(
+        child: const DropdownMenu(
           initialSelection: 0,
           enableFilter: false,
           dropdownMenuEntries: [
@@ -177,10 +176,10 @@ class PageAdvancedSettings extends StatelessWidget {
       const SizedBox(height: 12),
       item(
         title: "切割字符",
-        child: Row(
+        child: const Row(
           children: [
             Text('，。？！\\n'),
-            const SizedBox(width: 12, height: 56),
+            SizedBox(width: 12, height: 56),
             Icon(Icons.arrow_forward_ios, size: 18),
           ],
         ),

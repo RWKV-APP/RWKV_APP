@@ -420,7 +420,7 @@ class _BrowserInfo extends ConsumerWidget {
                 subtitle: Text(s.start_service_and_open_browser),
               )
             else
-              ...browserWindows.map((e) => _BrowserWindow(window: e)).toList(),
+              ...browserWindows.map((e) => _BrowserWindow(window: e)),
           ],
         ),
       ),

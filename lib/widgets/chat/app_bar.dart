@@ -219,7 +219,7 @@ class ChatAppBar extends ConsumerWidget {
             value: 1,
             child: Row(
               children: [
-                FaIcon(FontAwesomeIcons.screwdriverWrench, size: 14),
+                const FaIcon(FontAwesomeIcons.screwdriverWrench, size: 14),
                 8.w,
                 Text(S.current.advance_settings),
               ],
@@ -229,7 +229,7 @@ class ChatAppBar extends ConsumerWidget {
             value: 2,
             child: Row(
               children: [
-                FaIcon(FontAwesomeIcons.sliders, size: 14),
+                const FaIcon(FontAwesomeIcons.sliders, size: 14),
                 8.w,
                 Text(S.of(context).session_configuration),
               ],
