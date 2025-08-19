@@ -110,7 +110,6 @@ flutter run
 
 ## 🗺️ Roadmap
 
-- [ ] UI Refactoring
 - [ ] Integrate all features into the RWKV Chat app
 - [ ] Support more model weights
 - [ ] Support more hardware
