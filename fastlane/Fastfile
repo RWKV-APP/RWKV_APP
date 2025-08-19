@@ -58,6 +58,23 @@ lane :ios_upload do |params|
   )
 end
 
+lane :ios_upload_to_testflight do |params|
+  upload_to_testflight(
+    skip_submission: true,
+    distribute_external: true,
+    changelog: 'Bug fixes and UI improvements',
+    groups: ['External'],
+    localized_build_info: {
+      "default": {
+        whats_new: 'Bug fixes and UI improvements',
+      },
+      "zh-Hans": {
+        whats_new: '修复已知问题，提升用户体验',
+      },
+    },
+  )
+end
+
 lane :global_replace do |params|
   raw_switch_android_files(env: params[:env])
   global_config_replace(env: params[:env])
