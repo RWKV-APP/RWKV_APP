@@ -6,6 +6,7 @@ alwaysApply: true
 
 - 这是一个 flutter / dart 项目
 - 我们会将这个项目部署到 iOS / Android / Windows / macOS 上
+- 这是一个在本地运行大语言模型的 App
 
 ## 架构解释
 
