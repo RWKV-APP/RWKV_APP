@@ -2397,6 +2397,16 @@ class S {
       args: [],
     );
   }
+
+  /// `例子: System: 你是秦始皇，使用文言文，以居高临下的态度与人沟通.`
+  String get hint_system_prompt {
+    return Intl.message(
+      '例子: System: 你是秦始皇，使用文言文，以居高临下的态度与人沟通.',
+      name: 'hint_system_prompt',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

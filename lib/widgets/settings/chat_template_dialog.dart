@@ -135,6 +135,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                         labelText: S.current.system_prompt,
                         labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
+                        hintText: S.current.hint_system_prompt
                       ),
                     ),
                   if (widget.newChat)

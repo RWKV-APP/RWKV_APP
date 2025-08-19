@@ -241,6 +241,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hello, 请随意 \n向我提问...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隐藏思维链堆栈"),
+    "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
+      "例子: System: 你是秦始皇，使用文言文，以居高临下的态度与人沟通.",
+    ),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "按住录音，松开发送",
     ),

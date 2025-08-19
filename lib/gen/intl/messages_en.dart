@@ -302,6 +302,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hello, Ask Me \nAnything...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("Hide Thought Stack"),
+    "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
+      "Example: System: You are a powerful RWKV large language model, and you always patiently answer users\' questions.",
+    ),
     "hold_to_record_release_to_send": MessageLookupByLibrary.simpleMessage(
       "Hold to record, release to send",
     ),

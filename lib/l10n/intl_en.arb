@@ -361,5 +361,6 @@
   "current_task_text_length": "Current task text length",
   "current_task_url": "Current task URL",
   "current_task_tab_id": "Current task Tab ID",
-  "clear_memory_cache": "Clear Memory Cache"
+  "clear_memory_cache": "Clear Memory Cache",
+  "hint_system_prompt": "Example: System: You are a powerful RWKV large language model, and you always patiently answer users' questions."
 }

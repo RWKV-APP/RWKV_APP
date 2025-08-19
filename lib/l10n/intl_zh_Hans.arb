@@ -360,5 +360,6 @@
   "current_task_text_length": "当前任务文本长度",
   "current_task_url": "当前任务 URL",
   "current_task_tab_id": "当前任务标签页 ID",
-  "clear_memory_cache": "清除内存缓存"
+  "clear_memory_cache": "清除内存缓存",
+  "hint_system_prompt": "例子: System: 你是秦始皇，使用文言文，以居高临下的态度与人沟通."
 }

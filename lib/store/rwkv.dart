@@ -723,7 +723,7 @@ extension $RWKV on _RWKV {
         send(to_rwkv.SetPrompt(prompt));
       } else {
         String p = prompt ?? "<EOD>";
-        if (systemPrompt.isNotEmpty && !_thinkingMode.q.hasThinkTag) {
+        if (systemPrompt.isNotEmpty) {
           p = "$systemPrompt\n\n";
         }
         send(to_rwkv.SetPrompt(p));
