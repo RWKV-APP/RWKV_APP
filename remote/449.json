@@ -14,6 +14,20 @@
     },
     "model_config": [
       {
+        "name": "RWKV7-G1a 0.1B",
+        "type": "st",
+        "modelSize": 0.1,
+        "fileName": "rwkv7-g1a-0.1b-20250728-ctx4096.st",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a-0.1b-20250728-ctx4096.st",
+        "fileSize": 382205264,
+        "sha256": "6527eca32fe7eb64c655e81d5ad523cc02b03676b59975ca9be6be4f1fa7ed65",
+        "quantization": "fp16",
+        "platforms": ["ios", "macos", "web", "windows"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["reason", "gpu"]
+      },
+      {
         "name": "RWKV7-G1 0.1B",
         "type": "gguf",
         "modelSize": 0.1,
@@ -115,7 +129,7 @@
         "fileSize": 1355373866,
         "sha256": "29f21ea1dea4d41eb633c54ada4c1a05e815b7b2ee0a2bd33ddfcb9cae980d56",
         "quantization": "NF4",
-        "platforms": ["ios", "macos", "web", "windows"],
+        "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu"]
