@@ -548,13 +548,15 @@ extension _$Chat on _Chat {
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
-    // TODO: 根据路由状态执行逻辑
-    // qqq("_onPageKeyChanged: $pageKey");
-    // Future.delayed(200.ms).then((_) {
-    //   P.msg._clear();
-    // });
-
-    // if (!checkModelSelection()) return;
+    switch (pageKey) {
+      case PageKey.chat:
+        if (P.rwkv.currentModel.q?.tags.contains("translate") == true) {
+          P.rwkv.currentModel.q = null;
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   void _onTextEditingControllerValueChanged() {

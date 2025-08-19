@@ -197,7 +197,6 @@ extension _$Translator on _Translator {
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
-    qq;
     switch (pageKey) {
       case PageKey.translator:
         final currentModel = P.rwkv.currentModel.q;
