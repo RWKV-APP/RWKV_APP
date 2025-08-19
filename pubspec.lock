@@ -636,6 +636,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.6.1"
+  flutter_roleplay:
+    dependency: "direct main"
+    description:
+      path: "../flutter_roleplay"
+      relative: true
+    source: path
+    version: "0.0.1"
   flutter_test:
     dependency: transitive
     description: flutter
@@ -694,6 +701,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.2"
+  get:
+    dependency: transitive
+    description:
+      name: get
+      sha256: c79eeb4339f1f3deffd9ec912f8a923834bec55f7b49c9e882b8fef2c139d425
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.7.2"
   glob:
     dependency: transitive
     description:

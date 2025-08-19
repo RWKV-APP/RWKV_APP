@@ -125,6 +125,15 @@ class PageHome extends ConsumerWidget {
                             color: Colors.blue,
                             icon: Icons.translate,
                           ),
+                          buildButton(
+                            title: "角色扮演",
+                            subtitle: "扮演你喜欢的角色",
+                            onTap: () {
+                              push(PageKey.rolePlaying);
+                            },
+                            color: Colors.amberAccent,
+                            icon: Icons.emoji_emotions_outlined,
+                          ),
                         ]
                         .map(
                           (e) => ConstrainedBox(

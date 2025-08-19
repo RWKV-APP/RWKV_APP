@@ -13,6 +13,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  flutter_roleplay:
+    path: ../flutter_roleplay
+
   rwkv_mobile_flutter:
     path: ../rwkv_mobile_flutter
   #    git:

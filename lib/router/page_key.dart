@@ -1,3 +1,4 @@
+import 'package:flutter_roleplay/hometabs/jingxuan_page.dart';
 import 'package:zone/page/advanced_sesttings.dart' show PageAdvancedSettings;
 import 'package:zone/page/chat.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,12 @@ enum PageKey {
   advancedSettings,
   othello,
   sudoku,
+  rolePlaying,
   home;
 
   String get path => "/$name";
 
-  bool get hasTransition => {chat, completion, advancedSettings}.contains(this);
+  bool get hasTransition => {chat, completion, advancedSettings, rolePlaying}.contains(this);
 
   Widget get scaffold => switch (this) {
     PageKey.chat => const PageChat(),
@@ -35,6 +37,7 @@ enum PageKey {
     PageKey.settings => const PageSettings(),
     PageKey.translator => const PageTranslator(),
     PageKey.advancedSettings => const PageAdvancedSettings(),
+    PageKey.rolePlaying => const JingxuanPage(),
   };
 
   //
