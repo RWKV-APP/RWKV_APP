@@ -80,7 +80,7 @@ extension $FileManager on _FileManager {
 
   Future<void> checkLocal() async {
     qq;
-    await HF.wait(17);
+    await Future.delayed(const Duration(milliseconds: 17));
     final all = _all.q;
     final _fileInfos = all.where((e) => e.available).toList();
 
@@ -205,7 +205,7 @@ extension _$FileManager on _FileManager {
   }
 
   Future<void> _initModelDownloadTaskState() async {
-    await HF.wait(17);
+    await Future.delayed(const Duration(milliseconds: 17));
     final availableFiles = availableModels.q;
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
     for (final fileInfo in availableFiles) {

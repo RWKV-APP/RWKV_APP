@@ -23,7 +23,7 @@ class Pager extends ConsumerStatefulWidget {
     final targetPage = currentPage == 0 ? 1 : 0;
     qqq("currentPage: $currentPage, targetPage: $targetPage");
     _CustomPageScrollPhysics.disableGaimon = true;
-    HF.wait(20).then((_) {
+    Future.delayed(const Duration(milliseconds: 20)).then((_) {
       if (Platform.isAndroid) P.app.hapticLight();
       if (Platform.isIOS) P.app.hapticSoft();
     });

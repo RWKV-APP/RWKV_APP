@@ -75,7 +75,7 @@ extension $App on _App {
       await _parseConfig(jsonDecode(sp.getString(_App._remoteDemoConfigKey)!));
     }
 
-    await HF.wait(17);
+    await Future.delayed(const Duration(milliseconds: 17));
 
     final config = await _pullRemoteConfig();
     if (config == null) {
@@ -100,7 +100,7 @@ extension $App on _App {
   }
 
   Future<void> customThemeChanged() async {
-    await HF.wait(100);
+    await Future.delayed(const Duration(milliseconds: 100));
     if (customTheme.q.light) {
       _statusBarToLightMode();
     } else {
@@ -170,7 +170,7 @@ extension _$App on _App {
 
     if (!Args.disableRemoteConfig) {
       getConfig().then((_) async {
-        await HF.wait(1000);
+        await Future.delayed(const Duration(milliseconds: 1000));
         _showNewVersionDialogIfNeeded();
       });
     }
@@ -218,7 +218,7 @@ extension _$App on _App {
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
 
     if (Args.autoShowTranslator) {
-      HF.wait(1500).then((_) {
+      Future.delayed(const Duration(milliseconds: 1500)).then((_) {
         push(PageKey.translator);
       });
     }
@@ -277,7 +277,7 @@ extension _$App on _App {
 
     if (Platform.isIOS && (iosUrl == null || iosUrl.isEmpty)) return;
 
-    await HF.wait(1);
+    await Future.delayed(const Duration(milliseconds: 1));
 
     final noteZh = this.noteZh.q;
     final noteEn = this.noteEn.q;
@@ -368,7 +368,7 @@ extension _$App on _App {
     final matchedLocation = currentConfiguration.last.matchedLocation;
     final pageKey = PageKey.values.byName(matchedLocation.replaceAll("/", ""));
     qqr("navigate to page: ${pageKey.toString().split(".").last}");
-    HF.wait(0).then((_) {
+    Future.delayed(const Duration(milliseconds: 0)).then((_) {
       _pageKey.q = pageKey;
     });
   }
