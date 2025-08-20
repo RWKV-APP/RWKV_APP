@@ -19,6 +19,7 @@ class _App extends RawApp {
   late final shareChatQrCodeZh = qs<String?>(null);
   late final shareChatQrCodeEn = qs<String?>(null);
 
+  @Deprecated("use P.fileManager.availableModelsInCurrentDemoType instead")
   late final _modelConfigInCurrentDemoType = qs<List<Map<String, dynamic>>>([]);
 
   late final _newVersionDialogShown = qs(false);

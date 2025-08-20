@@ -50,18 +50,10 @@ extension $FileManager on _FileManager {
       } else {
         modelConfigInCurrentDemoType = P.app._modelConfigInCurrentDemoType.q;
       }
-    } catch (e) {
-      qqe(e);
-      Sentry.captureException(e, stackTrace: StackTrace.current);
-    }
-
-    try {
       final weights = modelConfigInCurrentDemoType.map((e) => FileInfo.fromJSON(e)).toSet();
       _allInCurrentDemoType.q = weights;
       availableModelsInCurrentDemoType.q = weights.where((e) => e.available).toSet();
-      if (P.app.demoType.q == DemoType.tts) {
-        ttsCores.q = availableModelsInCurrentDemoType.q.where((e) => e.tags.contains("core")).toSet();
-      }
+      ttsCores.q = availableModelsInCurrentDemoType.q.where((e) => e.tags.contains("core")).toSet();
     } catch (e) {
       qqe(e);
       Sentry.captureException(e, stackTrace: StackTrace.current);
