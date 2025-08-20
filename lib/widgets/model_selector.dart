@@ -75,7 +75,7 @@ class ModelSelector extends ConsumerWidget {
 
   List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
-    var availableModels = ref.watch(P.fileManager.availableModels);
+    var availableModels = ref.watch(P.fileManager.availableModelsInCurrentDemoType);
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);

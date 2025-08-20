@@ -64,7 +64,7 @@ class Debugger extends ConsumerWidget {
     final ids = ref.watch(P.msg.ids);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
-    final availableModels = ref.watch(P.fileManager.availableModels);
+    final availableModels = ref.watch(P.fileManager.availableModelsInCurrentDemoType);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);

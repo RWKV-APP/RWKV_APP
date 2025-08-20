@@ -24,20 +24,20 @@ class TTSGroupItem extends ConsumerWidget {
   }) : assert(fileInfo.tags.contains("core"), "fileInfo must be a core model");
 
   void _onDownloadAllTap() async {
-    final helperModels = P.fileManager.availableModels.q.where((e) => !e.tags.contains("core")).toList();
+    final helperModels = P.fileManager.availableModelsInCurrentDemoType.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
     final missingFileInfos = [...helperModels, core].where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
     missingFileInfos.forEach((e) => P.fileManager.getFile(fileInfo: e));
   }
 
   void _onDeleteAllTap() async {
-    final helperModels = P.fileManager.availableModels.q.where((e) => !e.tags.contains("core")).toList();
+    final helperModels = P.fileManager.availableModelsInCurrentDemoType.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
     [...helperModels, core].forEach((e) => P.fileManager.deleteFile(fileInfo: e));
   }
 
   Future<void> _onSparkTap() async {
-    final availableModels = P.fileManager.availableModels.q;
+    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
     final fileInfos = availableModels.toList();
     final sparkFileKeys = fileInfos.where((e) => e.tags.contains("spark")).toList();
     if (sparkFileKeys.isEmpty) {
@@ -104,7 +104,7 @@ class TTSGroupItem extends ConsumerWidget {
       Alert.warning("Please wait for the model to load...");
       return;
     }
-    final availableModels = P.fileManager.availableModels.q;
+    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
     final isSpark = fileInfo.tags.contains("spark");
     if (isSpark) {
       await _onSparkTap();
@@ -195,7 +195,7 @@ class TTSGroupItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final availableModels = P.fileManager.availableModels.q;
+    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
     final isSpark = fileInfo.tags.contains("spark");
     final fileInfos = availableModels.toList().where((e) {
       return !e.tags.contains("core") && (isSpark ? e.tags.contains("spark") : !e.tags.contains("spark"));

@@ -12,9 +12,9 @@ class _FileManager {
     return "$dirPath/$fileName";
   });
 
-  late final _all = qs<Set<FileInfo>>({});
+  late final _allInCurrentDemoType = qs<Set<FileInfo>>({});
 
-  late final availableModels = qs<Set<FileInfo>>({});
+  late final availableModelsInCurrentDemoType = qs<Set<FileInfo>>({});
 
   late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
 
@@ -36,7 +36,7 @@ extension $FileManager on _FileManager {
     }
 
     qq;
-    late final List<Map<String, dynamic>> json;
+    late final List<Map<String, dynamic>> modelConfigInCurrentDemoType;
 
     try {
       if (P.app._modelConfig.q.isEmpty) {
@@ -46,9 +46,9 @@ extension $FileManager on _FileManager {
         final jsonString = await rootBundle.loadString(jsonPath);
         final rawJSON = jsonDecode(jsonString);
         final data = rawJSON[demoType.name]["model_config"];
-        json = HF.listJSON(data);
+        modelConfigInCurrentDemoType = HF.listJSON(data);
       } else {
-        json = P.app._modelConfig.q;
+        modelConfigInCurrentDemoType = P.app._modelConfig.q;
       }
     } catch (e) {
       qqe(e);
@@ -56,11 +56,11 @@ extension $FileManager on _FileManager {
     }
 
     try {
-      final weights = json.map((e) => FileInfo.fromJSON(e)).toSet();
-      _all.q = weights;
-      availableModels.q = weights.where((e) => e.available).toSet();
+      final weights = modelConfigInCurrentDemoType.map((e) => FileInfo.fromJSON(e)).toSet();
+      _allInCurrentDemoType.q = weights;
+      availableModelsInCurrentDemoType.q = weights.where((e) => e.available).toSet();
       if (P.app.demoType.q == DemoType.tts) {
-        ttsCores.q = availableModels.q.where((e) => e.tags.contains("core")).toSet();
+        ttsCores.q = availableModelsInCurrentDemoType.q.where((e) => e.tags.contains("core")).toSet();
       }
     } catch (e) {
       qqe(e);
@@ -71,7 +71,7 @@ extension $FileManager on _FileManager {
   Future<void> checkLocal() async {
     qq;
     await Future.delayed(const Duration(milliseconds: 17));
-    final all = _all.q;
+    final all = _allInCurrentDemoType.q;
     final _fileInfos = all.where((e) => e.available).toList();
 
     for (final fileInfo in _fileInfos) {
@@ -100,7 +100,7 @@ extension $FileManager on _FileManager {
   }
 
   List<FileInfo> getNekoModel() {
-    final nekos = _all.q.where((e) => e.available && e.isNeko).toList();
+    final nekos = _allInCurrentDemoType.q.where((e) => e.available && e.isNeko).toList();
     return nekos;
   }
 
@@ -196,7 +196,7 @@ extension _$FileManager on _FileManager {
 
   Future<void> _initModelDownloadTaskState() async {
     await Future.delayed(const Duration(milliseconds: 17));
-    final availableFiles = availableModels.q;
+    final availableFiles = availableModelsInCurrentDemoType.q;
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
     for (final fileInfo in availableFiles) {
       final taskId = fileInfo.fileName;
