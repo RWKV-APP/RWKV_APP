@@ -46,7 +46,7 @@ class _TTS {
   late final selectedSpkName = qs<String?>(null);
 
   late final selectedSpkPanelFilter = qs(Language.none);
-  late final spkPairs = qs<JSON>({});
+  late final spkPairs = qs<Map<String, dynamic>>({});
   late final spkShown = qs(false);
   late final textEditingController = TextEditingController(text: _TTSStatic._defaultTextInInput);
   late final textInInput = qs(_TTSStatic._defaultTextInInput);
@@ -606,7 +606,7 @@ outputWavPath: $outputWavPath""");
   }
 }
 
-JSON _parseSpkNames(String message) {
+Map<String, dynamic> _parseSpkNames(String message) {
   return HF.json(jsonDecode(message));
 }
 

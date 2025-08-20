@@ -1,4 +1,3 @@
-
 import 'package:background_downloader/background_downloader.dart' as bd;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

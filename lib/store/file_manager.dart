@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 part of 'p.dart';
 
 class _FileManager {
@@ -47,7 +45,7 @@ extension $FileManager on _FileManager {
     }
 
     qq;
-    late final List<JSON> json;
+    late final List<Map<String, dynamic>> json;
 
     try {
       if (P.app.modelConfig.q.isEmpty) {
@@ -114,40 +112,6 @@ extension $FileManager on _FileManager {
   List<FileInfo> getNekoModel() {
     final nekos = _all.q.where((e) => e.available && e.isNeko).toList();
     return nekos;
-  }
-
-  FV _initModelDownloadTaskState() async {
-    await HF.wait(17);
-    final availableFiles = availableModels.q;
-    final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
-    for (final fileInfo in availableFiles) {
-      final taskId = fileInfo.fileName;
-
-      if (downloadTasks.containsKey(taskId)) {
-        continue;
-      }
-      final path = paths(fileInfo).q;
-      final url = fileInfo.raw.startsWith("http://") || fileInfo.raw.startsWith("https://")
-          ? fileInfo.raw
-          : sprintf(urlFmt, [fileInfo.raw]);
-      final fileState = locals(fileInfo);
-      try {
-        final task = await DownloadTask.create(
-          url: url,
-          path: path,
-          acceptedSize: fileInfo.fileSize,
-        );
-        // qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
-        fileState.q = fileState.q.copyWith(
-          hasFile: task.state == TaskState.completed,
-          state: task.state,
-        );
-        downloadTasks[taskId] = task;
-      } catch (e) {
-        qqe(e);
-        fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
-      }
-    }
   }
 
   FV getFile({required FileInfo fileInfo}) async {
@@ -237,6 +201,40 @@ extension _$FileManager on _FileManager {
       await syncAvailableModels();
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+  }
+
+  FV _initModelDownloadTaskState() async {
+    await HF.wait(17);
+    final availableFiles = availableModels.q;
+    final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
+    for (final fileInfo in availableFiles) {
+      final taskId = fileInfo.fileName;
+
+      if (downloadTasks.containsKey(taskId)) {
+        continue;
+      }
+      final path = paths(fileInfo).q;
+      final url = fileInfo.raw.startsWith("http://") || fileInfo.raw.startsWith("https://")
+          ? fileInfo.raw
+          : sprintf(urlFmt, [fileInfo.raw]);
+      final fileState = locals(fileInfo);
+      try {
+        final task = await DownloadTask.create(
+          url: url,
+          path: path,
+          acceptedSize: fileInfo.fileSize,
+        );
+        // qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
+        fileState.q = fileState.q.copyWith(
+          hasFile: task.state == TaskState.completed,
+          state: task.state,
+        );
+        downloadTasks[taskId] = task;
+      } catch (e) {
+        qqe(e);
+        fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
+      }
     }
   }
 }

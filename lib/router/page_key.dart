@@ -1,4 +1,3 @@
-import 'package:halo_state/halo_state.dart';
 import 'package:zone/page/advanced_sesttings.dart' show PageAdvancedSettings;
 import 'package:zone/page/chat.dart';
 import 'package:flutter/material.dart';

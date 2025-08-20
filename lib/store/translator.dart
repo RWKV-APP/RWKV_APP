@@ -398,7 +398,7 @@ extension _$Translator on _Translator {
     return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 
-  Future<String> _getFullTranslation(JSON json) async {
+  Future<String> _getFullTranslation(Map<String, dynamic> json) async {
     final source = json['source'] as String;
     final url = json['url'] as String;
     final tabId = json['tabId'] as int;

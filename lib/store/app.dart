@@ -13,7 +13,7 @@ class _App extends RawApp {
   late final latestBuildIos = qs(-1);
   late final noteZh = qs<List<String>>([]);
   late final noteEn = qs<List<String>>([]);
-  late final modelConfig = qs<List<JSON>>([]);
+  late final modelConfig = qs<List<Map<String, dynamic>>>([]);
   late final androidUrl = qs<String?>(null);
   late final androidApkUrl = qs<String?>(null);
   late final iosUrl = qs<String?>(null);
@@ -85,28 +85,6 @@ extension $App on _App {
     await _parseConfig(config);
     // 将 res 写入本地沙盒文件
     sp.setString(_App._remoteDemoConfigKey, jsonEncode(config));
-  }
-
-  Future<dynamic> _pullRemoteConfig() async {
-    try {
-      final res = await _get("get-demo-config", timeout: 10000.ms);
-      if (res is! Map) {
-        qqe("res is not a Map, res: ${res.runtimeType}");
-        return;
-      }
-      final success = res["success"];
-      final message = res["message"];
-      final data = res["data"];
-      if (success != true) throw "success is false, success: $success, message: $message";
-      if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
-      qqq("pull remote config success");
-      return data[demoType.q.name];
-    } catch (e) {
-      qe;
-      qqe("e: $e");
-      if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
-    }
-    return null;
   }
 
   void hapticLight() {
@@ -351,13 +329,7 @@ extension _$App on _App {
     }
   }
 
-  FV _parseConfig(dynamic config) async {
-    if (config is! Map) {
-      qqe("config is not a Map, config: ${config.runtimeType}");
-      Sentry.captureException(Exception("config is not a Map, config: ${config.runtimeType}"), stackTrace: StackTrace.current);
-      return;
-    }
-
+  FV _parseConfig(Map config) async {
     final build = config["latest_build"];
     final buildIos = config["latest_build_ios"];
 
@@ -399,5 +371,27 @@ extension _$App on _App {
     HF.wait(0).then((_) {
       _pageKey.q = pageKey;
     });
+  }
+
+  Future<dynamic> _pullRemoteConfig() async {
+    try {
+      final res = await _get("get-demo-config", timeout: 10000.ms);
+      if (res is! Map) {
+        qqe("res is not a Map, res: ${res.runtimeType}");
+        return;
+      }
+      final success = res["success"];
+      final message = res["message"];
+      final data = res["data"];
+      if (success != true) throw "success is false, success: $success, message: $message";
+      if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
+      qqq("pull remote config success");
+      return data[demoType.q.name];
+    } catch (e) {
+      qe;
+      qqe("e: $e");
+      if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+    return null;
   }
 }
