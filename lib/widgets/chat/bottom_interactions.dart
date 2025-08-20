@@ -169,7 +169,7 @@ class _ThinkingModeButton extends ConsumerWidget {
         duration: 250.ms,
         child: GestureDetector(
           onTap: _onTap,
-          child: SB(
+          child: SizedBox(
             height: height,
             child: Container(
               padding: padding,
@@ -383,11 +383,11 @@ class _MessageButton extends ConsumerWidget {
                 ),
               ),
             ),
-            SB(
+            SizedBox(
               width: 46,
               height: 34,
               child: Center(
-                child: SB(
+                child: SizedBox(
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(

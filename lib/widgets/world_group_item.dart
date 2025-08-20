@@ -146,8 +146,8 @@ class WorldGroupItem extends ConsumerWidget {
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                T(worldType.displayName, s: const TS(s: 18, w: FW.w600)),
-                T(worldType.taskDescription, s: const TS(s: 12, w: FW.w400)),
+                T(worldType.displayName, s: const TS(s: 18, w: FontWeight.w600)),
+                T(worldType.taskDescription, s: const TS(s: 12, w: FontWeight.w400)),
               ],
             ),
             ..._fileInfos.m(
@@ -171,7 +171,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.download_all,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -181,7 +181,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.download_missing,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -191,7 +191,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.delete_all,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -201,7 +201,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.exploring,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -212,7 +212,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.start_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -222,7 +222,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.back_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),

@@ -72,14 +72,14 @@ class FormItem extends ConsumerWidget {
                   T(
                     title,
                     textAlign: titleTextAlign,
-                    s: TS(w: FW.w500, s: 16, c: titleColor),
+                    s: TS(w: FontWeight.w500, s: 16, c: titleColor),
                   ),
                   if (subtitle != null)
                     Opacity(
                       opacity: 0.5,
                       child: T(
                         subtitle!,
-                        s: const TS(w: FW.w500, s: 12),
+                        s: const TS(w: FontWeight.w500, s: 12),
                       ),
                     ),
                 ],
@@ -89,7 +89,7 @@ class FormItem extends ConsumerWidget {
               Expanded(
                 child: T(
                   info,
-                  s: const TS(w: FW.w500, s: 12),
+                  s: const TS(w: FontWeight.w500, s: 12),
                   textAlign: TextAlign.right,
                 ),
               ),

@@ -160,7 +160,7 @@ class ChatAppBar extends ConsumerWidget {
                       4.w,
                       Transform.rotate(
                         angle: 0, // 90度
-                        child: SB(
+                        child: SizedBox(
                           width: 10,
                           height: 5,
                           child: CustomPaint(

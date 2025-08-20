@@ -52,7 +52,7 @@ class AppInfo extends ConsumerWidget {
     final version = ref.watch(P.app.version);
     final buildNumber = ref.watch(P.app.buildNumber);
 
-    final iconWidget = SB(
+    final iconWidget = SizedBox(
       width: 64,
       height: 64,
       child: ClipRRect(

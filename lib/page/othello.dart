@@ -130,7 +130,7 @@ class _Title extends ConsumerWidget {
         if (usePortrait) const Spacer(),
         T(
           s.rwkv_othello,
-          s: const TS(s: 20, w: FW.w700),
+          s: const TS(s: 20, w: FontWeight.w700),
         ),
         if (usePortrait) const Spacer(),
         if (!usePortrait) 32.w,
@@ -161,7 +161,7 @@ class _ModelSettings extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MAA.center,
       children: [
-        SB(
+        SizedBox(
           width: 32,
           height: 32,
           child: IconButton(
@@ -260,7 +260,7 @@ class _ModelSettings extends ConsumerWidget {
           children: [
             T(
               s.model_settings,
-              s: const TS(w: FW.w700),
+              s: const TS(w: FontWeight.w700),
             ),
             8.h,
             T(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, s: TS(c: qb.q(.5), s: 10)),
@@ -327,7 +327,7 @@ class _Players extends ConsumerWidget {
           T(
             s.black + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: FW.w700),
+            s: const TS(w: FontWeight.w700),
           ),
           Wrap(
             children: [
@@ -376,7 +376,7 @@ class _Players extends ConsumerWidget {
           T(
             s.white + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: FW.w700),
+            s: const TS(w: FontWeight.w700),
           ),
           Wrap(
             children: [
@@ -428,7 +428,7 @@ class _Players extends ConsumerWidget {
           children: [
             T(
               s.players,
-              s: const TS(w: FW.w700),
+              s: const TS(w: FontWeight.w700),
             ),
             12.h,
             if (usePortrait && !playerShouldAtSameColumnWithSettings && !settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
@@ -495,16 +495,16 @@ class _Score extends ConsumerWidget {
           duration: const Duration(milliseconds: 150),
           child: T(
             s.thinking,
-            s: TS(s: 10, w: thinking ? FW.w400 : FW.w400),
+            s: TS(s: 10, w: thinking ? FontWeight.w400 : FontWeight.w400),
           ),
         ),
         T(
           "${s.prefill}: ${prefillSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: FW.w400),
+          s: const TS(s: 10, w: FontWeight.w400),
         ),
         T(
           "${s.decode}: ${decodeSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: FW.w400),
+          s: const TS(s: 10, w: FontWeight.w400),
         ),
       ],
     );
@@ -517,7 +517,7 @@ class _Score extends ConsumerWidget {
             },
       child: T(
         s.new_game,
-        s: const TS(s: 10, w: FW.w500),
+        s: const TS(s: 10, w: FontWeight.w500),
       ),
     );
 
@@ -652,7 +652,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: T(
                 e,
-                s: const TS(s: 10, w: FW.w700),
+                s: const TS(s: 10, w: FontWeight.w700),
               ),
             ),
           );
@@ -668,7 +668,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: T(
                 e,
-                s: const TS(s: 10, w: FW.w700),
+                s: const TS(s: 10, w: FontWeight.w700),
               ),
             ),
           );
@@ -894,7 +894,7 @@ class _Console extends ConsumerWidget {
                   }),
               ],
             ),
-            style: TS(c: qw, s: 12, w: FW.w500),
+            style: TS(c: qw, s: 12, w: FontWeight.w500),
           );
         },
       ),

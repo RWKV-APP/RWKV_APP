@@ -102,7 +102,7 @@ class AudioInput extends ConsumerWidget {
           }
           P.chat.inputHeight.q = size.height + 30;
         },
-        child: SB(
+        child: SizedBox(
           height: _kWidgetSize + bottomAdjust,
           width: screenWidth,
           child: Stack(

@@ -351,7 +351,7 @@ class Message extends ConsumerWidget {
                 if (worldDemoMessageHeader.isNotEmpty)
                   T(
                     worldDemoMessageHeader,
-                    s: TS(c: qb.q(.5), w: FW.w700, s: 10),
+                    s: TS(c: qb.q(.5), w: FontWeight.w700, s: 10),
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
@@ -379,7 +379,7 @@ class Message extends ConsumerWidget {
                         children: [
                           T(
                             thisMessageIsReceiving ? s.thinking : s.thought_result,
-                            s: TS(c: qb.q(.5), w: FW.w600),
+                            s: TS(c: qb.q(.5), w: FontWeight.w600),
                           ),
                           showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
                         ],

@@ -105,7 +105,7 @@ class _ButtonGenerate extends ConsumerWidget {
     final running = ref.watch(P.sudoku.running);
     return Container(
       padding: const EI.o(b: _kButtonPadding),
-      child: SB(
+      child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
@@ -160,7 +160,7 @@ class _ButtonGenerateHardest extends ConsumerWidget {
     final running = ref.watch(P.sudoku.running);
     return Container(
       padding: const EI.o(b: _kButtonPadding),
-      child: SB(
+      child: SizedBox(
         height: 48,
         child: FilledButton(
           style: ButtonStyle(
@@ -202,7 +202,7 @@ class _ButtonInference extends ConsumerWidget {
     final hasPuzzle = ref.watch(P.sudoku.hasPuzzle);
     return Container(
       padding: const EI.o(b: _kButtonPadding),
-      child: SB(
+      child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
@@ -217,7 +217,7 @@ class _ButtonInference extends ConsumerWidget {
               ? Row(
                   mainAxisAlignment: MAA.center,
                   children: [
-                    SB(
+                    SizedBox(
                       width: 12,
                       height: 12,
                       child: CircularProgressIndicator(
@@ -225,7 +225,7 @@ class _ButtonInference extends ConsumerWidget {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    const SB(width: 8, height: 8),
+                    const SizedBox(width: 8, height: 8),
                     T(s.thinking),
                   ],
                 )
@@ -251,7 +251,7 @@ class _ButtonClear extends ConsumerWidget {
     final running = ref.watch(P.sudoku.running);
     return Container(
       padding: const EI.o(b: _kButtonPadding),
-      child: SB(
+      child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
@@ -284,7 +284,7 @@ class _ButtonShowStack extends ConsumerWidget {
     final enable = currentStack.isNotEmpty;
     return Container(
       padding: const EI.o(b: _kButtonPadding),
-      child: SB(
+      child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
@@ -328,7 +328,7 @@ class _UI extends ConsumerWidget {
     final shouldUseVerticalLayout = isDesktop && ratio < 1.9 && !isPortrait;
 
     final List<Widget> buttons = [
-      const SB(width: 12, height: 12),
+      const SizedBox(width: 12, height: 12),
       T(
         Config.appTitle,
         textAlign: TextAlign.center,
@@ -368,11 +368,11 @@ class _UI extends ConsumerWidget {
         ),
       if (!shouldUseVerticalLayout) ...[
         const Padding(padding: EI.o(h: 12, v: 0), child: _ButtonGenerate()),
-        if (isDesktop) const SB(width: 6, height: 6),
+        if (isDesktop) const SizedBox(width: 6, height: 6),
         const Padding(padding: EI.s(h: 12, v: 0), child: _ButtonInference()),
-        if (isDesktop) const SB(width: 6, height: 6),
+        if (isDesktop) const SizedBox(width: 6, height: 6),
         const Padding(padding: EI.s(h: 12, v: 0), child: _ButtonClear()),
-        if (isDesktop) const SB(width: 6, height: 6),
+        if (isDesktop) const SizedBox(width: 6, height: 6),
         const Padding(padding: EI.s(h: 12, v: 0), child: _ButtonShowStack()),
       ],
     ];
@@ -566,14 +566,14 @@ class _TokensInfo extends ConsumerWidget {
                 textAlign: TextAlign.center,
                 s: const TS(s: 10, c: Color(0xFF888888)),
               ),
-              const SB(width: 4, height: 4),
+              const SizedBox(width: 4, height: 4),
               T(
                 "${tokensPerSecond.toStringAsFixed(2)} tokens/s",
                 textAlign: TextAlign.center,
                 s: const TS(s: 10, c: Color(0xFF888888)),
               ),
               if (difficulty != null) ...[
-                const SB(width: 4, height: 4),
+                const SizedBox(width: 4, height: 4),
                 T(
                   "Unknown grid count: $difficulty",
                   textAlign: TextAlign.center,

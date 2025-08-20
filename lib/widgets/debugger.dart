@@ -112,7 +112,7 @@ class Debugger extends ConsumerWidget {
             s: 8,
           ),
           color: kC,
-          child: SB(
+          child: SizedBox(
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
@@ -212,7 +212,7 @@ class _SudokuDebugger extends ConsumerWidget {
             s: 8,
           ),
           color: kC,
-          child: SB(
+          child: SizedBox(
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
@@ -292,7 +292,7 @@ class _TTSDebugger extends ConsumerWidget {
             s: isDesktop ? 20 : 8,
           ),
           color: kC,
-          child: SB(
+          child: SizedBox(
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
@@ -381,7 +381,7 @@ class _TranslatorDebugger extends ConsumerWidget {
             s: 8,
           ),
           color: kC,
-          child: SB(
+          child: SizedBox(
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(

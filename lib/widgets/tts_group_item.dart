@@ -230,8 +230,8 @@ class TTSGroupItem extends ConsumerWidget {
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                T(fileInfo.name, s: const TS(s: 18, w: FW.w600)),
-                const T("TTS", s: TS(s: 12, w: FW.w400)),
+                T(fileInfo.name, s: const TS(s: 18, w: FontWeight.w600)),
+                const T("TTS", s: TS(s: 12, w: FontWeight.w400)),
               ],
             ),
             Row(
@@ -243,7 +243,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: const T(
                       "Download All",
                       s: TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -253,7 +253,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       s.download_missing,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -263,7 +263,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       s.delete_all,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -273,7 +273,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       s.exploring,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -284,7 +284,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.start_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -294,7 +294,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.back_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),

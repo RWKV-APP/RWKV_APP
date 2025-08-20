@@ -39,7 +39,7 @@ class BranchSwitcher extends ConsumerWidget {
             child: Center(
               child: T(
                 "${index + 1} / $siblingCount",
-                s: TS(c: primary, s: 12, w: FW.w600),
+                s: TS(c: primary, s: 12, w: FontWeight.w600),
               ),
             ),
           ),

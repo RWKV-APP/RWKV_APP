@@ -152,7 +152,7 @@ class ModelSelector extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
+                  child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
                 ),
                 IconButton(
                   onPressed: () {
@@ -162,13 +162,13 @@ class ModelSelector extends ConsumerWidget {
                 ),
               ],
             ),
-            if (demoType == DemoType.world) T(s.please_select_a_world_type, s: const TS(s: 16, w: FW.w500)),
+            if (demoType == DemoType.world) T(s.please_select_a_world_type, s: const TS(s: 16, w: FontWeight.w500)),
             // T(s.memory_used(memUsedString, memFreeString), s: TS(c: qb.q(.7), s: 12)),
             const _DownloadSource(),
             if (demoType == DemoType.chat)
               T(
                 "👉${s.str_model_selection_dialog_hint}👈",
-                s: TS(c: qb.q(.7), s: 12, w: FW.w500),
+                s: TS(c: qb.q(.7), s: 12, w: FontWeight.w500),
               ),
             ..._buildItems(context, ref),
             16.h,
@@ -195,7 +195,7 @@ class _DownloadSource extends ConsumerWidget {
         4.h,
         T(
           S.current.download_server_,
-          s: TS(c: qb.q(.7), s: 12, w: FW.w600),
+          s: TS(c: qb.q(.7), s: 12, w: FontWeight.w600),
         ),
         4.h,
         Wrap(

@@ -130,7 +130,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       if (e < 1)
                         T(
                           (e * 100).toStringAsFixed(0) + "%",
-                          s: TS(c: qb.q(.8), w: FW.w600, s: 10),
+                          s: TS(c: qb.q(.8), w: FontWeight.w600, s: 10),
                         ),
                       if (e >= 1) Icon(Icons.check, color: primaryColor, size: 12),
                     ],
@@ -160,7 +160,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   8.w,
                   T(
                     s.generating + " " + (overallProgress * 100).toStringAsFixed(0) + "%",
-                    s: TS(c: qb.q(.8), w: FW.w500),
+                    s: TS(c: qb.q(.8), w: FontWeight.w500),
                   ),
                 ],
               ),
@@ -189,7 +189,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   8.w,
                   T(
                     (length / 1000).toStringAsFixed(0) + "s",
-                    s: TS(c: qb.q(.8), w: FW.w600),
+                    s: TS(c: qb.q(.8), w: FontWeight.w600),
                   ),
                   if (allDone)
                     GestureDetector(

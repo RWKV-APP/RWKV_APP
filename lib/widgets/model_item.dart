@@ -343,11 +343,11 @@ class FileKeyItem extends ConsumerWidget {
           children: [
             T(
               fileInfo.name,
-              s: const TS(w: FW.w600),
+              s: const TS(w: FontWeight.w600),
             ),
             T(
               gbDisplay(fileSize),
-              s: TS(c: qb.q(.7), w: FW.w500),
+              s: TS(c: qb.q(.7), w: FontWeight.w500),
             ),
             if (showDownloaded && localFile.hasFile)
               Icon(
@@ -416,7 +416,7 @@ class _Tags extends ConsumerWidget {
               tag.toUpperCase(),
               s: TS(
                 c: showHighlight ? qw : qb,
-                w: showHighlight ? FW.w500 : FW.w400,
+                w: showHighlight ? FontWeight.w500 : FontWeight.w400,
               ),
             ),
           );

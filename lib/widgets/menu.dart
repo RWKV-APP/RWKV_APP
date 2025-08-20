@@ -51,7 +51,7 @@ class _Info extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final iconPath = "assets/img/${demoType.name}/icon.png";
 
-    final iconWidget = SB(
+    final iconWidget = SizedBox(
       width: 48,
       height: 48,
       child: ClipRRect(

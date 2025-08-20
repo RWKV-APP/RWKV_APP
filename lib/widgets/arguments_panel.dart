@@ -70,7 +70,7 @@ class ArgumentsPanel extends ConsumerWidget {
                       12.w,
                       T(
                         s.model_settings,
-                        s: const TS(s: 16, w: FW.w500),
+                        s: const TS(s: 16, w: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -229,11 +229,11 @@ class _Value extends ConsumerWidget {
                 argument.name.codeToName,
                 s: const TS(
                   s: 14,
-                  w: FW.w500,
+                  w: FontWeight.w500,
                 ),
               ),
             ),
-            T(value.toStringAsFixed(argument.fixedDecimals), s: const TS(s: 14, w: FW.w600)),
+            T(value.toStringAsFixed(argument.fixedDecimals), s: const TS(s: 14, w: FontWeight.w600)),
             12.w,
           ],
         ),

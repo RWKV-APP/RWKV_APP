@@ -57,7 +57,7 @@ class TTSBottomInteractions extends ConsumerWidget {
                 padding: const EI.s(v: 4),
                 child: T(
                   target,
-                  s: TS(c: primary, w: FW.w600),
+                  s: TS(c: primary, w: FontWeight.w600),
                 ),
               ),
             if (selectSourceAudioPath != null)
@@ -65,7 +65,7 @@ class TTSBottomInteractions extends ConsumerWidget {
                 padding: const EI.s(v: 4),
                 child: T(
                   s.imitate_target + ": " + (sourceWavName ?? ""),
-                  s: TS(c: primary, w: FW.w600),
+                  s: TS(c: primary, w: FontWeight.w600),
                 ),
               ),
             const _Actions(),
@@ -114,7 +114,7 @@ class _AudioInteractor extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final primary = Theme.of(context).colorScheme.primary;
-    return SB(
+    return SizedBox(
       height: 250,
       child: Column(
         children: [
@@ -130,14 +130,14 @@ class _AudioInteractor extends ConsumerWidget {
                         text: s.you_can_record_your_voice_and_let_rwkv_to_copy_it,
                         style: TS(
                           c: primary,
-                          w: FW.w600,
+                          w: FontWeight.w600,
                         ),
                       ),
                       TextSpan(
                         text: s.or_select_a_wav_file_to_let_rwkv_to_copy_it,
                         style: const TS(
                           c: Colors.blue,
-                          w: FW.w600,
+                          w: FontWeight.w600,
                         ),
                         recognizer: TapGestureRecognizer()..onTap = _onUploadFilePressed,
                       ),
@@ -192,7 +192,7 @@ class _IntonationPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
-    return SB(
+    return SizedBox(
       height: 250,
       child: Padding(
         padding: const EI.o(t: 12, b: 12),
@@ -363,11 +363,11 @@ class _Actions extends ConsumerWidget {
                     ),
                   ),
                 ),
-                SB(
+                SizedBox(
                   width: 46,
                   height: 34,
                   child: Center(
-                    child: SB(
+                    child: SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
@@ -442,7 +442,7 @@ class _SpkPanel extends ConsumerWidget {
 
     final qb = ref.watch(P.app.qb);
 
-    return SB(
+    return SizedBox(
       height: 250,
       child: Column(
         crossAxisAlignment: CAA.stretch,
@@ -521,7 +521,7 @@ class _SpkPanel extends ConsumerWidget {
                                 Expanded(
                                   child: T(
                                     display,
-                                    s: TS(c: selected ? primary : primary.q(.8), w: selected ? FW.w600 : FW.w400),
+                                    s: TS(c: selected ? primary : primary.q(.8), w: selected ? FontWeight.w600 : FontWeight.w400),
                                   ),
                                 ),
                                 if (selected)

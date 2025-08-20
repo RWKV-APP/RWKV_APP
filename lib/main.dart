@@ -49,7 +49,7 @@ class _TestApp extends StatelessWidget {
   }
 }
 
-FV _loadEnv() async {
+Future<void> _loadEnv() async {
   try {
     await dotenv.load(fileName: ".env");
     Config.xApiKey = dotenv.env["x-api-key"] ?? "";
@@ -59,7 +59,7 @@ FV _loadEnv() async {
   }
 }
 
-FV _sentryAppRunner() async {
+Future<void> _sentryAppRunner() async {
   await SentryFlutter.init(
     _configureSentry,
     appRunner: () {
@@ -68,7 +68,7 @@ FV _sentryAppRunner() async {
   );
 }
 
-FV _debugAppRunner() async {
+Future<void> _debugAppRunner() async {
   runApp(const _StateWrapper());
 }
 

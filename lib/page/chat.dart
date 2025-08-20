@@ -222,7 +222,7 @@ class _List extends ConsumerWidget {
               return _MessageWrap(msg: msg, finalIndex: finalIndex);
             },
             separatorBuilder: (context, index) {
-              return const SB(height: 15);
+              return const SizedBox(height: 15);
             },
           ),
         ),
@@ -271,7 +271,7 @@ class _MessageWrap extends ConsumerWidget {
             value: selected,
             onChanged: (checked) => toggle(),
           ),
-          Exp(
+          Expanded(
             child: IgnorePointer(
               child: Message(msg, finalIndex, selectMode: true),
             ),

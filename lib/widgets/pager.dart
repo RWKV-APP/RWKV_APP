@@ -110,7 +110,7 @@ class _PagerState extends ConsumerState<Pager> {
     final screenWidth = ref.watch(P.app.screenWidth);
     final screenHeight = ref.watch(P.app.screenHeight);
 
-    if (screenWidth == 0) return const SB();
+    if (screenWidth == 0) return const SizedBox();
 
     final ignorePointer = ref.watch(Pager.atMainPage);
 
@@ -127,19 +127,19 @@ class _PagerState extends ConsumerState<Pager> {
           controller: Pager._newController.q,
           physics: recording ? const NeverScrollableScrollPhysics() : const _CustomPageScrollPhysics(parent: ClampingScrollPhysics()),
           scrollDirection: Axis.horizontal,
-          child: SB(
+          child: SizedBox(
             width: screenWidth + drawerWidth,
             height: screenHeight,
             child: Row(
               children: [
-                SB(
+                SizedBox(
                   width: drawerWidth,
                   height: screenHeight,
                   child: widget.drawer,
                 ),
                 Stack(
                   children: [
-                    SB(
+                    SizedBox(
                       width: screenWidth,
                       height: screenHeight,
                       child: widget.child,

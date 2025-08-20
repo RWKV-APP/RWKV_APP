@@ -184,7 +184,7 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
                 child: T(
                   s.chat_resume,
-                  s: TS(c: primaryColor, w: FW.w600, s: 16),
+                  s: TS(c: primaryColor, w: FontWeight.w600, s: 16),
                 ),
               ),
             ),

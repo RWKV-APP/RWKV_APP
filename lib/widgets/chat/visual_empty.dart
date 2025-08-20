@@ -83,7 +83,7 @@ class VisualEmpty extends ConsumerWidget {
                     children: [
                       if (imagePath == null) const Icon(Icons.image),
                       if (imagePath == null) 8.h,
-                      if (imagePath == null) T(s.click_to_load_image, s: const TS(w: FW.w500, s: 20)),
+                      if (imagePath == null) T(s.click_to_load_image, s: const TS(w: FontWeight.w500, s: 20)),
                       if (imagePath == null) 8.h,
                       if (imagePath == null) T(s.then_you_can_start_to_chat_with_rwkv),
                     ],
