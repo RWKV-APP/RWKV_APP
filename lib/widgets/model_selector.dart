@@ -25,7 +25,7 @@ import 'package:zone/widgets/model_item.dart';
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
 
-  static FV show({bool nekoOnly = false}) async {
+  static Future<void> show({bool nekoOnly = false}) async {
     qq;
 
     if (P.fileManager.modelSelectorShown.q) return;

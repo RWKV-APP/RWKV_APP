@@ -129,7 +129,7 @@ class _Suggestion {
     return [];
   });
 
-  FV loadSuggestions() async {
+  Future<void> loadSuggestions() async {
     final shouldUseEn = P.preference.preferredLanguage.q.resolved.locale.languageCode != "zh";
     final lang = shouldUseEn ? "en" : "zh";
     dynamic config;
@@ -183,7 +183,7 @@ class _Suggestion {
   }
 
   @Deprecated('Deprecated')
-  FV _loadSuggestions() async {
+  Future<void> _loadSuggestions() async {
     final demoType = P.app.demoType.q;
     final shouldUseEn = P.preference.preferredLanguage.q.resolved.locale.languageCode != "zh";
     config.q = shouldUseEn ? _DefaultSuggestion.en : _DefaultSuggestion.zh;
@@ -213,7 +213,7 @@ class _Suggestion {
 
 /// Private methods
 extension _$Suggestion on _Suggestion {
-  FV _init() async {
+  Future<void> _init() async {
     qq;
   }
 }

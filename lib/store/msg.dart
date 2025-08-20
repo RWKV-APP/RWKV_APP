@@ -46,7 +46,7 @@ class _Msg {
 
 /// Private methods
 extension _$Msg on _Msg {
-  FV _init() async {
+  Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
@@ -80,7 +80,7 @@ extension _$Msg on _Msg {
   }
 
   /// Load messages from db. Then add them to the pool
-  FV _loadMessages(Iterable<int> ids) async {
+  Future<void> _loadMessages(Iterable<int> ids) async {
     loading.q = true;
     try {
       final db = P.app._db;

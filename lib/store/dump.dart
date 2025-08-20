@@ -7,7 +7,7 @@ class _Dump {
 
 /// Private methods
 extension _$Dump on _Dump {
-  FV _init() async {
+  Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.chat:
       case DemoType.fifthteenPuzzle:
@@ -21,7 +21,7 @@ extension _$Dump on _Dump {
     P.msg.list.lv(_onMessagesChanged);
   }
 
-  FV _onMessagesChanged() async {
+  Future<void> _onMessagesChanged() async {
     qr;
     final dumpping = P.preference.dumpping.q;
     if (!dumpping) return;
@@ -37,7 +37,7 @@ extension _$Dump on _Dump {
     _dumpChatMessages(alertPermission: false);
   }
 
-  FV _dumpChatMessages({bool alertPermission = true}) async {
+  Future<void> _dumpChatMessages({bool alertPermission = true}) async {
     final status = await Permission.storage.status;
     if (!status.isGranted) {
       // Handle the case where permission is not granted
@@ -124,7 +124,7 @@ extension _$Dump on _Dump {
 
 /// Public methods
 extension $Dump on _Dump {
-  FV startDump() async {
+  Future<void> startDump() async {
     P.app.hapticLight();
     final status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -143,7 +143,7 @@ extension $Dump on _Dump {
     _dumpChatMessages();
   }
 
-  FV stopDump() async {
+  Future<void> stopDump() async {
     P.app.hapticLight();
     await P.preference._saveDumpping(false);
     Alert.info(S.current.dump_stopped);

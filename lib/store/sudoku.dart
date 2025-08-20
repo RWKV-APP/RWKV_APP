@@ -56,7 +56,7 @@ extension $Sudoku on _Sudoku {
     return (solved, puzzle);
   }
 
-  FV onGeneratePressed(BuildContext context) async {
+  Future<void> onGeneratePressed(BuildContext context) async {
     final _running = running.q;
     if (_running) {
       await showOkAlertDialog(
@@ -106,7 +106,7 @@ extension $Sudoku on _Sudoku {
     this.difficulty.q = difficulty;
   }
 
-  FV onInferencePressed(BuildContext context) async {
+  Future<void> onInferencePressed(BuildContext context) async {
     qq;
     final _running = running.q;
     if (_running) {
@@ -134,7 +134,7 @@ extension $Sudoku on _Sudoku {
     );
   }
 
-  FV onCustomDifficultyPressed(BuildContext context) async {
+  Future<void> onCustomDifficultyPressed(BuildContext context) async {
     final _running = running.q;
     if (_running) {
       await showOkAlertDialog(
@@ -407,7 +407,7 @@ extension $Sudoku on _Sudoku {
 
 /// Private methods
 extension _$Sudoku on _Sudoku {
-  FV _init() async {
+  Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.sudoku:
         break;

@@ -36,7 +36,7 @@ class TTSGroupItem extends ConsumerWidget {
     [...helperModels, core].forEach((e) => P.fileManager.deleteFile(fileInfo: e));
   }
 
-  FV _onSparkTap() async {
+  Future<void> _onSparkTap() async {
     final availableModels = P.fileManager.availableModels.q;
     final fileInfos = availableModels.toList();
     final sparkFileKeys = fileInfos.where((e) => e.tags.contains("spark")).toList();

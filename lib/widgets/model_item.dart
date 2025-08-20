@@ -41,7 +41,7 @@ class ModelItem extends ConsumerWidget {
     }
   }
 
-  FV _onStartTapInSudoku() async {
+  Future<void> _onStartTapInSudoku() async {
     qq;
     final localFile = P.fileManager.locals(fileInfo).q;
     final modelPath = localFile.targetPath;
@@ -59,7 +59,7 @@ class ModelItem extends ConsumerWidget {
     pop();
   }
 
-  FV _onStartTapInChat() async {
+  Future<void> _onStartTapInChat() async {
     qq;
     if (P.chat.receivingTokens.q) {
       Alert.warning(S.current.please_wait_for_the_model_to_generate);

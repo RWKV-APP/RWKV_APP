@@ -18,7 +18,7 @@ extension $Adapter on _Adapter {
     }
   }
 
-  FV _onCall(MethodCall call) async {
+  Future<void> _onCall(MethodCall call) async {
     final method = FromNative.values.byName(call.method);
     if (kDebugMode && !_registry.containsKey(method)) {
       qqw("Engine: HUD: Native calling received but there is no listener in adapter");
@@ -46,7 +46,7 @@ extension $Adapter on _Adapter {
 
 /// Private methods
 extension _$Adapter on _Adapter {
-  FV _init() async {
+  Future<void> _init() async {
     _channel.setMethodCallHandler(_onCall);
   }
 }

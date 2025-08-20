@@ -70,7 +70,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
     qqq(r);
   }
 
-  FV downloadAppUpdate(String url) async {
+  Future<void> downloadAppUpdate(String url) async {
     final ts = DateTime.now().millisecondsSinceEpoch;
     final fileName = "$ts.apk";
     task = bd.DownloadTask(

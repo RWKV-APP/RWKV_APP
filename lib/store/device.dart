@@ -8,7 +8,7 @@ class _Device {
 
 /// Public methods
 extension $Device on _Device {
-  FV sync() async {
+  Future<void> sync() async {
     if (Platform.isIOS) {
       final result = await P.adapter.call(ToNative.checkMemory);
       if (result == null) return;
@@ -36,7 +36,7 @@ extension $Device on _Device {
 
 /// Private methods
 extension _$Device on _Device {
-  FV _init() async {
+  Future<void> _init() async {
     if (Platform.isIOS) {
     } else {
       // totalMemory.value = 0;

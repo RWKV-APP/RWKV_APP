@@ -32,7 +32,7 @@ class _FileManager {
 
 /// Public methods
 extension $FileManager on _FileManager {
-  FV syncAvailableModels() async {
+  Future<void> syncAvailableModels() async {
     switch (P.app.demoType.q) {
       case DemoType.othello:
         qqw("othello game does not need to sync available models");
@@ -78,7 +78,7 @@ extension $FileManager on _FileManager {
     }
   }
 
-  FV checkLocal() async {
+  Future<void> checkLocal() async {
     qq;
     await HF.wait(17);
     final all = _all.q;
@@ -114,7 +114,7 @@ extension $FileManager on _FileManager {
     return nekos;
   }
 
-  FV getFile({required FileInfo fileInfo}) async {
+  Future<void> getFile({required FileInfo fileInfo}) async {
     final url = downloadSource.q.prefix + fileInfo.raw + downloadSource.q.suffix;
     final path = paths(fileInfo).q;
 
@@ -163,21 +163,21 @@ extension $FileManager on _FileManager {
     }
   }
 
-  FV pauseDownload({required FileInfo fileInfo}) async {
+  Future<void> pauseDownload({required FileInfo fileInfo}) async {
     final task = downloadTasks[fileInfo.fileName];
     task?.stop();
     final state = locals(fileInfo);
     state.q = state.q.copyWith(state: TaskState.stopped);
   }
 
-  FV cancelDownload({required FileInfo fileInfo}) async {
+  Future<void> cancelDownload({required FileInfo fileInfo}) async {
     final task = downloadTasks[fileInfo.fileName];
     await task?.cancel();
     final state = locals(fileInfo);
     state.q = state.q.copyWith(state: TaskState.idle);
   }
 
-  FV deleteFile({required FileInfo fileInfo}) async {
+  Future<void> deleteFile({required FileInfo fileInfo}) async {
     final state = locals(fileInfo);
     final value = state.q;
 
@@ -196,7 +196,7 @@ extension $FileManager on _FileManager {
 
 /// Private methods
 extension _$FileManager on _FileManager {
-  FV _init() async {
+  Future<void> _init() async {
     try {
       await syncAvailableModels();
     } catch (e) {
@@ -204,7 +204,7 @@ extension _$FileManager on _FileManager {
     }
   }
 
-  FV _initModelDownloadTaskState() async {
+  Future<void> _initModelDownloadTaskState() async {
     await HF.wait(17);
     final availableFiles = availableModels.q;
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";

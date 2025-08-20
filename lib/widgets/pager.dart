@@ -18,7 +18,7 @@ class Pager extends ConsumerStatefulWidget {
   static final _newController = qs<PageController>(PageController());
   static final drawerWidth = qs(100.0);
 
-  static FV toggle() async {
+  static Future<void> toggle() async {
     final currentPage = Pager.page.q;
     final targetPage = currentPage == 0 ? 1 : 0;
     qqq("currentPage: $currentPage, targetPage: $targetPage");

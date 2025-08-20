@@ -60,7 +60,7 @@ class _App extends RawApp {
 
 /// Public methods
 extension $App on _App {
-  FV getConfig() async {
+  Future<void> getConfig() async {
     if (Args.disableRemoteConfig) {
       qqw("Remote config is disabled");
       return;
@@ -99,7 +99,7 @@ extension $App on _App {
     if (_isMobile.q) Gaimon.medium();
   }
 
-  FV customThemeChanged() async {
+  Future<void> customThemeChanged() async {
     await HF.wait(100);
     if (customTheme.q.light) {
       _statusBarToLightMode();
@@ -129,7 +129,7 @@ extension $App on _App {
 
 /// Private methods
 extension _$App on _App {
-  FV _init() async {
+  Future<void> _init() async {
     qq;
 
     _initDB();
@@ -233,7 +233,7 @@ extension _$App on _App {
     }
   }
 
-  FV _syncTheme() async {
+  Future<void> _syncTheme() async {
     final light = this.light.q;
     final preferredThemeMode = this.preferredThemeMode.q;
     final preferredDarkCustomTheme = P.preference.preferredDarkCustomTheme.q;
@@ -252,16 +252,16 @@ extension _$App on _App {
     }
   }
 
-  FV _statusBarToLightMode() async {
+  Future<void> _statusBarToLightMode() async {
     SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleLight);
   }
 
-  FV _statusBarToDarkMode() async {
+  Future<void> _statusBarToDarkMode() async {
     qq;
     SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleDark);
   }
 
-  FV _onLifecycleStateChanged() async {}
+  Future<void> _onLifecycleStateChanged() async {}
 
   Future _showNewVersionDialogIfNeeded() async {
     if (!Platform.isIOS && !Platform.isAndroid) return;
@@ -329,7 +329,7 @@ extension _$App on _App {
     }
   }
 
-  FV _parseConfig(Map config) async {
+  Future<void> _parseConfig(Map config) async {
     final build = config["latest_build"];
     final buildIos = config["latest_build_ios"];
 

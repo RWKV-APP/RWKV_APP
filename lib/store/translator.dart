@@ -70,7 +70,7 @@ class _Translator {
 
 /// Private methods
 extension _$Translator on _Translator {
-  FV _init() async {
+  Future<void> _init() async {
     final isDesktop = P.app.isDesktop.q;
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     source.l(_onTextChanged);
@@ -447,7 +447,7 @@ extension _$Translator on _Translator {
 
 /// Public methods
 extension $Translator on _Translator {
-  FV onPressTest() async {
+  Future<void> onPressTest() async {
     final s = S.current;
     if (!P.rwkv.loaded.q) {
       Alert.info(s.please_load_model_first);

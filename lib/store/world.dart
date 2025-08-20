@@ -31,7 +31,7 @@ class _World {
 
 /// Public methods
 extension $World on _World {
-  FV startRecord() async {
+  Future<void> startRecord() async {
     qq;
     await stopPlaying();
     final hasPermission = await _recorder.hasPermission();
@@ -115,7 +115,7 @@ extension $World on _World {
     return true;
   }
 
-  FV play({required String path}) async {
+  Future<void> play({required String path}) async {
     if (path.isEmpty) return;
     await stopPlaying();
     ap.Source source = ap.DeviceFileSource(path);
@@ -126,7 +126,7 @@ extension $World on _World {
     P.tts.audioStream?.uninit();
   }
 
-  FV stopPlaying() async {
+  Future<void> stopPlaying() async {
     playing.q = false;
     await _audioPlayer.stop();
     P.tts.audioStream?.resetStat();
@@ -136,7 +136,7 @@ extension $World on _World {
 
 /// Private methods
 extension _$World on _World {
-  FV _init() async {
+  Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
@@ -193,7 +193,7 @@ extension _$World on _World {
     await _startStream();
   }
 
-  FV _startStream() async {
+  Future<void> _startStream() async {
     qr;
     final hasPermission = await _recorder.hasPermission();
 
