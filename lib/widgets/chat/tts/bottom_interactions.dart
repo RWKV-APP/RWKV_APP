@@ -45,10 +45,10 @@ class TTSBottomInteractions extends ConsumerWidget {
       if (flag != null) target += " " + flag;
     }
 
-    return GD(
+    return GestureDetector(
       onTap: P.tts.dismissAllShown,
       child: Container(
-        decoration: const BD(color: kC),
+        decoration: const BoxDecoration(color: kC),
         child: Column(
           crossAxisAlignment: CAA.stretch,
           children: [
@@ -142,10 +142,10 @@ class _AudioInteractor extends ConsumerWidget {
                         recognizer: TapGestureRecognizer()..onTap = _onUploadFilePressed,
                       ),
                       WidgetSpan(
-                        child: GD(
+                        child: GestureDetector(
                           onTap: _onUploadFilePressed,
                           child: Container(
-                            decoration: const BD(color: kC),
+                            decoration: const BoxDecoration(color: kC),
                             child: const Icon(
                               Icons.upload_file,
                               color: Colors.blue,
@@ -201,12 +201,12 @@ class _IntonationPanel extends ConsumerWidget {
           runSpacing: 4,
           children: TTSInstruction.intonation.options.indexMap((index, e) {
             final emoji = TTSInstruction.intonation.emojiOptions[index];
-            return GD(
+            return GestureDetector(
               onTap: () {
                 _onTap(e);
               },
               child: Container(
-                decoration: BD(
+                decoration: BoxDecoration(
                   color: kC,
                   border: Border.all(color: qb.q(.5), width: .5),
                   borderRadius: 4.r,
@@ -233,13 +233,13 @@ class _AudioButton extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
     final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
-    return GD(
+    return GestureDetector(
       onTap: P.tts.onAudioInteractorButtonPressed,
       child: Padding(
         padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
         child: Container(
           padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
-          decoration: BD(
+          decoration: BoxDecoration(
             color: primary.q(audioInteractorShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
@@ -266,13 +266,13 @@ class _SpkButton extends ConsumerWidget {
     ref.watch(P.tts.intonationShown);
     ref.watch(P.tts.audioInteractorShown);
     final spkShown = ref.watch(P.tts.spkShown);
-    return GD(
+    return GestureDetector(
       onTap: P.tts.onSpkButtonPressed,
       child: Padding(
         padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
         child: Container(
           padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
-          decoration: BD(
+          decoration: BoxDecoration(
             color: primary.q(spkShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
@@ -297,13 +297,13 @@ class _IntonationButton extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
     final intonationShown = ref.watch(P.tts.intonationShown);
-    return GD(
+    return GestureDetector(
       onTap: P.tts.onIntonationButtonPressed,
       child: Padding(
         padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
         child: Container(
           padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
-          decoration: BD(
+          decoration: BoxDecoration(
             color: primary.q(intonationShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
@@ -349,7 +349,7 @@ class _Actions extends ConsumerWidget {
         ),
         if (generating)
           Container(
-            decoration: const BD(color: kC),
+            decoration: const BoxDecoration(color: kC),
             child: Stack(
               children: [
                 SizedBox(
@@ -357,7 +357,7 @@ class _Actions extends ConsumerWidget {
                   height: 34,
                   child: Center(
                     child: Container(
-                      decoration: BD(color: kC, borderRadius: 2.r),
+                      decoration: BoxDecoration(color: kC, borderRadius: 2.r),
                       width: 12,
                       height: 12,
                     ),
@@ -385,7 +385,7 @@ class _Actions extends ConsumerWidget {
           AnimatedOpacity(
             opacity: (canSend && loaded) ? 1 : .333,
             duration: 250.ms,
-            child: GD(
+            child: GestureDetector(
               onTap: _onRightButtonPressed,
               child: Container(
                 padding: const EI.s(h: 10, v: 5),
@@ -457,7 +457,7 @@ class _SpkPanel extends ConsumerWidget {
                 final selected = selectedLanguage == e;
                 final filtered = selectedSpkPanelFilter == e;
 
-                return GD(
+                return GestureDetector(
                   onTap: () {
                     P.tts.selectedSpkPanelFilter.q = e;
                     P.app.hapticLight();
@@ -465,7 +465,7 @@ class _SpkPanel extends ConsumerWidget {
                   child: Container(
                     padding: const EI.s(h: 4, v: 2),
                     margin: const EI.o(r: 4),
-                    decoration: BD(
+                    decoration: BoxDecoration(
                       color: filtered ? primary.q(.1) : kC,
                       borderRadius: 4.r,
                       border: Border.all(color: qb.q(.5), width: .5),
@@ -500,7 +500,7 @@ class _SpkPanel extends ConsumerWidget {
 
                   final display = P.tts.safe(k) + " " + P.tts.safe(v) + " " + (language?.flag ?? "");
 
-                  return GD(
+                  return GestureDetector(
                     onTap: () {
                       qq;
                       P.tts.selectedSpkName.q = k;
@@ -512,7 +512,7 @@ class _SpkPanel extends ConsumerWidget {
                         Expanded(
                           child: Container(
                             padding: const EI.o(t: 4, b: 4, l: 8, r: 8),
-                            decoration: BD(
+                            decoration: BoxDecoration(
                               color: selected ? primary.q(.1) : kC,
                               borderRadius: 6.r,
                             ),
@@ -534,7 +534,7 @@ class _SpkPanel extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        GD(
+                        GestureDetector(
                           onTap: () async {
                             final path = await P.tts.getPrebuiltSpkAudioPathFromTemp(k);
                             P.msg.latestClicked.q = null;
@@ -542,7 +542,7 @@ class _SpkPanel extends ConsumerWidget {
                           },
                           child: Container(
                             padding: const EI.a(6.5),
-                            decoration: const BD(color: kC),
+                            decoration: const BoxDecoration(color: kC),
                             child: Icon(
                               Icons.volume_up,
                               color: primary,
@@ -643,7 +643,7 @@ class _InstructTabs extends ConsumerWidget {
                 case TTSInstruction.intonation:
               }
 
-              return GD(
+              return GestureDetector(
                 onTap: () {
                   if (!enabled) return;
                   _onTap(e);
@@ -654,7 +654,7 @@ class _InstructTabs extends ConsumerWidget {
                   child: Container(
                     margin: const EI.o(t: 4),
                     padding: const EI.o(l: 8, r: 8, t: 4, b: 4),
-                    decoration: BD(
+                    decoration: BoxDecoration(
                       color: isSelected ? primary.q(.2) : kC,
                       border: Border.all(color: qb.q(.5), width: .5),
                       borderRadius: 4.r,
@@ -707,13 +707,13 @@ class _InstructOptions extends ConsumerWidget {
     final options = interactingInstruction.options;
     ref.watch(P.tts.instructions(interactingInstruction));
     final qb = ref.watch(P.app.qb);
-    return GD(
+    return GestureDetector(
       onTap: () {},
       child: AnimatedContainer(
         duration: 250.ms,
         height: interactingInstruction == TTSInstruction.none ? 0 : 150,
         margin: const EI.o(t: 4),
-        decoration: BD(
+        decoration: BoxDecoration(
           border: Border(top: BorderSide(color: qb.q(.5), width: .5)),
         ),
         child: Wrap(
@@ -725,14 +725,14 @@ class _InstructOptions extends ConsumerWidget {
               selected = P.tts.instructions(interactingInstruction).q == index;
             }
 
-            return GD(
+            return GestureDetector(
               onTap: () {
                 _onTap(index);
               },
               child: Container(
                 padding: const EI.o(l: 8, r: 8, t: 4, b: 4),
                 margin: const EI.o(t: 4),
-                decoration: BD(
+                decoration: BoxDecoration(
                   color: selected ? primary.q(.2) : kC,
                   border: Border.all(color: qb.q(.5), width: .5),
                   borderRadius: 4.r,
@@ -777,7 +777,7 @@ class _TextField extends ConsumerWidget {
 
     final qw = ref.watch(P.app.qw);
 
-    return GD(
+    return GestureDetector(
       onTap: textFieldEnabled ? null : _onTapTextFieldWhenItsDisabled,
       child: KeyboardListener(
         onKeyEvent: _onKeyEvent,
@@ -800,7 +800,7 @@ class _TextField extends ConsumerWidget {
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                GD(
+                GestureDetector(
                   onTap: P.tts.onClearButtonPressed,
                   child: AnimatedOpacity(
                     opacity: textInInput.trim().isNotEmpty ? 1 : .5,
@@ -811,7 +811,7 @@ class _TextField extends ConsumerWidget {
                     ),
                   ),
                 ),
-                GD(
+                GestureDetector(
                   onTap: P.tts.onRefreshButtonPressed,
                   child: Container(
                     padding: const EI.s(v: 6, h: 4),

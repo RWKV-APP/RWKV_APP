@@ -249,7 +249,7 @@ class _ModelSettings extends ConsumerWidget {
       child: Container(
         padding: const EI.a(4),
         margin: const EI.a(4),
-        decoration: BD(
+        decoration: BoxDecoration(
           color: qb.q(.0),
           borderRadius: 4.r,
           border: Border.all(color: qb.q(.5), width: .5),
@@ -315,7 +315,7 @@ class _Players extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     final blackOptions = Container(
-      decoration: BD(
+      decoration: BoxDecoration(
         color: kC,
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
@@ -364,7 +364,7 @@ class _Players extends ConsumerWidget {
     );
 
     final whiteOptions = Container(
-      decoration: BD(
+      decoration: BoxDecoration(
         color: kC,
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
@@ -418,7 +418,7 @@ class _Players extends ConsumerWidget {
       child: Container(
         margin: const EI.a(4),
         padding: const EI.a(4),
-        decoration: BD(
+        decoration: BoxDecoration(
           color: qb.q(.0),
           borderRadius: 4.r,
           border: Border.all(color: qb.q(.5), width: .5),
@@ -534,7 +534,7 @@ class _Score extends ConsumerWidget {
         16.w,
         Container(
           padding: const EI.o(t: 0, b: 8, l: 8, r: 8),
-          decoration: BD(
+          decoration: BoxDecoration(
             color: kC,
             borderRadius: 8.r,
             border: Border.all(color: qb.q(.5), width: .5),
@@ -622,12 +622,12 @@ class _Grid extends ConsumerWidget {
                   top: top + labelSize,
                   width: sizeForCell,
                   height: sizeForCell,
-                  child: GD(
+                  child: GestureDetector(
                     onTap: () {
                       _onCellTap(row: row, col: col);
                     },
                     child: Container(
-                      decoration: BD(color: const Color(0xFF808080).q(.5)),
+                      decoration: BoxDecoration(color: const Color(0xFF808080).q(.5)),
                       child: _Cell(
                         row: row,
                         col: col,
@@ -677,7 +677,7 @@ class _Grid extends ConsumerWidget {
         return Container(
           width: size,
           height: size,
-          decoration: const BD(color: kC),
+          decoration: const BoxDecoration(color: kC),
           child: Stack(
             children: [
               ...cells,
@@ -725,7 +725,7 @@ class _Cell extends StatelessWidget {
                     maxWidth: maxAvailableSize,
                     maxHeight: maxAvailableSize,
                   ),
-                  decoration: BD(color: Colors.green, borderRadius: 100.r),
+                  decoration: BoxDecoration(color: Colors.green, borderRadius: 100.r),
                 ),
               ],
             ),
@@ -769,7 +769,7 @@ class _White extends StatelessWidget {
         maxWidth: maxSize,
         maxHeight: maxSize,
       ),
-      decoration: BD(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.black.q(.3),
@@ -808,7 +808,7 @@ class _Black extends StatelessWidget {
         maxWidth: maxSize,
         maxHeight: maxSize,
       ),
-      decoration: BD(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.black.q(.3),
@@ -926,7 +926,7 @@ class _ConsoleCell extends ConsumerWidget {
       height: 12,
       width: 12,
       margin: const EI.s(h: 1),
-      decoration: BD(color: qw.q(.33)),
+      decoration: BoxDecoration(color: qw.q(.33)),
       child: Center(
         child: Icon(
           Icons.circle,

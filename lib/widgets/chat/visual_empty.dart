@@ -67,10 +67,10 @@ class VisualEmpty extends ConsumerWidget {
           Center(
             child: ClipRRect(
               borderRadius: 12.r,
-              child: GD(
+              child: GestureDetector(
                 onTap: _onTapImageSelector,
                 child: Container(
-                  decoration: BD(
+                  decoration: BoxDecoration(
                     color: primaryContainer.q(.5),
                     border: Border.all(color: primary.q(.5)),
                     borderRadius: 12.r,

@@ -115,7 +115,7 @@ class Debugger extends ConsumerWidget {
           color: kC,
           child: SB(
             child: Container(
-              decoration: const BD(color: kC),
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -172,7 +172,7 @@ class Debugger extends ConsumerWidget {
                     ].indexMap((index, e) {
                       return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.55)),
+                        decoration: BoxDecoration(color: qb.q(.55)),
                         child: e,
                       );
                     }),
@@ -216,7 +216,7 @@ class _SudokuDebugger extends ConsumerWidget {
           color: kC,
           child: SB(
             child: Container(
-              decoration: const BD(color: kC),
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -238,7 +238,7 @@ class _SudokuDebugger extends ConsumerWidget {
                     ].indexMap((index, e) {
                       return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.66)),
+                        decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
                     }),
@@ -296,7 +296,7 @@ class _TTSDebugger extends ConsumerWidget {
           color: kC,
           child: SB(
             child: Container(
-              decoration: const BD(color: kC),
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -346,7 +346,7 @@ class _TTSDebugger extends ConsumerWidget {
                     ].indexMap((index, e) {
                       return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.66)),
+                        decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
                     }),
@@ -385,7 +385,7 @@ class _TranslatorDebugger extends ConsumerWidget {
           color: kC,
           child: SB(
             child: Container(
-              decoration: const BD(color: kC),
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -399,7 +399,7 @@ class _TranslatorDebugger extends ConsumerWidget {
                     ].indexMap((index, e) {
                       return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.66)),
+                        decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
                     }),

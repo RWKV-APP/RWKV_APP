@@ -77,7 +77,7 @@ class AudioEmpty extends ConsumerWidget {
           duration: 200.ms,
           curve: Curves.easeInOutBack,
           child: Container(
-            decoration: const BD(color: kC),
+            decoration: const BoxDecoration(color: kC),
             child: Column(
               crossAxisAlignment: CAA.center,
               mainAxisAlignment: MAA.center,

@@ -76,7 +76,7 @@ class UserTTSContent extends ConsumerWidget {
             children: [
               Expanded(
                 child: Container(
-                  decoration: BD(
+                  decoration: BoxDecoration(
                     color: qw.q(.5),
                     borderRadius: 8.r,
                     border: Border.all(color: primary, width: .5),
@@ -115,7 +115,7 @@ class UserTTSContent extends ConsumerWidget {
               ),
               // Spacer(),
               if (playing && isCurrentMessage)
-                GD(
+                GestureDetector(
                   onTap: _onTTSPausePressed,
                   child: Padding(
                     padding: buttonPadding,
@@ -123,14 +123,14 @@ class UserTTSContent extends ConsumerWidget {
                   ),
                 ),
               if (!playing || !isCurrentMessage)
-                GD(
+                GestureDetector(
                   onTap: _onTTSPlayPressed,
                   child: Padding(
                     padding: buttonPadding,
                     child: Icon(Icons.play_arrow, color: primary.q(.8), size: buttonSize),
                   ),
                 ),
-              GD(
+              GestureDetector(
                 onTap: _onCopyPressed,
                 child: Padding(
                   padding: buttonPadding,

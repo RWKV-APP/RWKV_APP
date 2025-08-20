@@ -111,7 +111,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final qb = ref.watch(P.app.qb);
 
     return Container(
-      decoration: const BD(color: kC),
+      decoration: const BoxDecoration(color: kC),
       padding: const EI.o(),
       width: changing ? 130 : width,
       // height: 50,
@@ -192,10 +192,10 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                     s: TS(c: qb.q(.8), w: FW.w600),
                   ),
                   if (allDone)
-                    GD(
+                    GestureDetector(
                       onTap: _onSharePressed,
                       child: Container(
-                        decoration: const BD(color: kC),
+                        decoration: const BoxDecoration(color: kC),
                         padding: const EI.o(l: 8, r: 4),
                         child: const Icon(Icons.share),
                       ),
@@ -208,10 +208,10 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
             Row(
               mainAxisAlignment: MAA.start,
               children: [
-                GD(
+                GestureDetector(
                   onTap: _onSharePressed,
                   child: Container(
-                    decoration: const BD(color: kC),
+                    decoration: const BoxDecoration(color: kC),
                     padding: const EI.s(
                       v: 12,
                       h: 3,

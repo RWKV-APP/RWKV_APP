@@ -123,7 +123,7 @@ class _SamplerOptions extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     return Container(
       margin: const EI.s(h: 12),
-      decoration: BD(color: qb.q(.1), borderRadius: 8.r),
+      decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
           12.w,
@@ -154,7 +154,7 @@ class _CompletionOptions extends ConsumerWidget {
     final reasoning = ref.watch(P.rwkv.reasoning);
     return Container(
       margin: const EI.s(h: 12),
-      decoration: BD(color: qb.q(.1), borderRadius: 8.r),
+      decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
           12.w,

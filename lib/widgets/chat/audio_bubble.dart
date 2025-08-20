@@ -56,7 +56,7 @@ class _AudioBubbleState extends ConsumerState<AudioBubble> {
     final isLatestClickedMessage = latestClickedMessage?.id == widget.msg.id;
     final qb = ref.watch(P.app.qb);
     return Container(
-      decoration: const BD(color: kC),
+      decoration: const BoxDecoration(color: kC),
       width: width,
       child: Row(
         mainAxisAlignment: MAA.end,

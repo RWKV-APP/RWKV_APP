@@ -184,7 +184,7 @@ class _Dim extends ConsumerWidget {
 
     return IgnorePointer(
       ignoring: ignorePointer,
-      child: GD(
+      child: GestureDetector(
         onTap: _onTap,
         child: Opacity(
           opacity: drawerOpacity.clamp(0, 1),
@@ -193,7 +193,7 @@ class _Dim extends ConsumerWidget {
             child: Container(
               width: screenWidth,
               height: screenHeight,
-              decoration: BD(color: qb.q(dark ? .1 : .3)),
+              decoration: BoxDecoration(color: qb.q(dark ? .1 : .3)),
             ),
           ),
         ),

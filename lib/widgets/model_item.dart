@@ -148,7 +148,7 @@ class ModelItem extends ConsumerWidget {
     return ClipRRect(
       borderRadius: 8.r,
       child: Container(
-        decoration: BD(
+        decoration: BoxDecoration(
           color: customTheme.settingItem,
           borderRadius: 8.r,
           border: Border.all(color: qw.q(.1), width: .5),
@@ -164,10 +164,10 @@ class ModelItem extends ConsumerWidget {
             _DownloadActions(file: fileInfo, state: localFile.state),
             if (hasFile) ...[
               if (!isCurrentModel)
-                GD(
+                GestureDetector(
                   onTap: _onStartTap,
                   child: Container(
-                    decoration: BD(
+                    decoration: BoxDecoration(
                       color: loading ? kCG.q(.5) : kCG,
                       borderRadius: 8.r,
                     ),
@@ -179,10 +179,10 @@ class ModelItem extends ConsumerWidget {
                   ),
                 ),
               if (isCurrentModel)
-                GD(
+                GestureDetector(
                   onTap: null,
                   child: Container(
-                    decoration: BD(
+                    decoration: BoxDecoration(
                       color: kG.q(.5),
                       borderRadius: 8.r,
                     ),
@@ -292,10 +292,10 @@ class _Delete extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final primary = Theme.of(context).colorScheme.primary;
-    return GD(
+    return GestureDetector(
       onTap: _onTap,
       child: Container(
-        decoration: BD(
+        decoration: BoxDecoration(
           color: kC,
           borderRadius: 8.r,
           border: Border.all(
@@ -407,7 +407,7 @@ class _Tags extends ConsumerWidget {
         ...tags.map((tag) {
           final showHighlight = _highlightTags.contains(tag);
           return Container(
-            decoration: BD(
+            decoration: BoxDecoration(
               borderRadius: 4.r,
               color: showHighlight ? kCG : kG.q(.2),
             ),
@@ -423,13 +423,13 @@ class _Tags extends ConsumerWidget {
         }),
         if (kDebugMode && fileInfo.isDebug)
           Container(
-            decoration: BD(color: kCR, borderRadius: 4.r),
+            decoration: BoxDecoration(color: kCR, borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T("DEBUG", s: TS(c: qw)),
           ),
         if (quantization != null && quantization.isNotEmpty)
           Container(
-            decoration: BD(color: kG.q(.2), borderRadius: 4.r),
+            decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T(quantization),
           ),

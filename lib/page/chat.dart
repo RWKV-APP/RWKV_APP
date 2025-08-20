@@ -197,7 +197,7 @@ class _List extends ConsumerWidget {
     // return Positioned.fill(child: Container());
 
     return Positioned.fill(
-      child: GD(
+      child: GestureDetector(
         onTap: P.chat.onTapMessageList,
         child: RawScrollbar(
           radius: 100.rr,

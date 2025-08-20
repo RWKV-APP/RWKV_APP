@@ -226,7 +226,7 @@ class ConversationItem extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final color = P.conversation.getConversationColor(conversation);
     return Material(
-      child: GD(
+      child: GestureDetector(
         onLongPressStart: (details) => _onLongPressStart(details, context),
         child: InkWell(
           onTap: _onTap,

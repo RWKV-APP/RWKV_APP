@@ -62,7 +62,7 @@ class _Info extends ConsumerWidget {
 
     return Material(
       color: kC,
-      child: GD(
+      child: GestureDetector(
         onTap: () {
           Settings.show();
         },

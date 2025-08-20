@@ -202,12 +202,12 @@ class _DownloadSource extends ConsumerWidget {
           runSpacing: 4,
           spacing: 4,
           children: FileDownloadSource.values.where((e) => kDebugMode || !e.isDebug).map((e) {
-            return GD(
+            return GestureDetector(
               onTap: () {
                 P.fileManager.downloadSource.q = e;
               },
               child: Container(
-                decoration: BD(
+                decoration: BoxDecoration(
                   color: e == currentSource ? primary : kC,
                   borderRadius: 4.r,
                   border: Border.all(

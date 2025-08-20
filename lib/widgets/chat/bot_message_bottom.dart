@@ -108,7 +108,7 @@ class BotMessageBottom extends ConsumerWidget {
             ),
           ),
         if (showBotCopyButton)
-          GD(
+          GestureDetector(
             onTap: _onCopyPressed,
             child: Padding(
               padding: const EI.o(v: 12, r: 4, l: 4),
@@ -120,7 +120,7 @@ class BotMessageBottom extends ConsumerWidget {
             ),
           ),
         if (showBotRegenerateButton)
-          GD(
+          GestureDetector(
             onTap: _onRegeneratePressed,
             child: Padding(
               padding: const EI.o(v: 12, r: 4, l: 4),
@@ -132,7 +132,7 @@ class BotMessageBottom extends ConsumerWidget {
             ),
           ),
         if (showBotEditButton)
-          GD(
+          GestureDetector(
             onTap: _onBotEditPressed,
             child: Padding(
               padding: const EI.o(v: 12, r: 4, l: 4),
@@ -144,12 +144,12 @@ class BotMessageBottom extends ConsumerWidget {
             ),
           ),
         if (showShareButton)
-          GD(
+          GestureDetector(
             onTap: _onSharePressed,
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),
               child: Container(
-                decoration: const BD(color: kC),
+                decoration: const BoxDecoration(color: kC),
                 child: Icon(
                   Icons.share_rounded,
                   color: primaryColor.q(.8),
@@ -171,13 +171,13 @@ class BotMessageBottom extends ConsumerWidget {
           ),
         modeWidget,
         if (showResumeButton && paused && receiveId == msg.id)
-          GD(
+          GestureDetector(
             onTap: _onResumePressed,
             child: Container(
               padding: const EI.o(v: 9, l: 12),
               child: Container(
                 padding: const EI.s(v: 1, h: 8),
-                decoration: BD(
+                decoration: BoxDecoration(
                   color: kC,
                   border: Border.all(color: primaryColor.q(.67)),
                   borderRadius: 4.r,

@@ -40,10 +40,10 @@ class FormItem extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final screenWidth = ref.watch(P.app.screenWidth);
 
-    return GD(
+    return GestureDetector(
       onTap: onTap,
       child: Container(
-        decoration: BD(
+        decoration: BoxDecoration(
           color: customTheme.settingItem,
           borderRadius: BorderRadius.only(
             topLeft: isSectionStart ? 12.rr : Radius.zero,

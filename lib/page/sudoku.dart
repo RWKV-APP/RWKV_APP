@@ -337,7 +337,7 @@ class _UI extends ConsumerWidget {
       Container(
         height: 1,
         width: 1,
-        decoration: BD(color: const Color(0xFF888888).q(0.33)),
+        decoration: BoxDecoration(color: const Color(0xFF888888).q(0.33)),
         margin: const EI.s(v: 4, h: 4),
       ),
       const _TokensInfo(),
@@ -381,7 +381,7 @@ class _UI extends ConsumerWidget {
     return Container(
       width: shouldUseVerticalLayout ? min / 1.428 : min * (isPortrait ? 1 : 1.428),
       height: shouldUseVerticalLayout ? min : min * (isPortrait ? 0.7 : 1),
-      decoration: BD(color: qw),
+      decoration: BoxDecoration(color: qw),
       margin: !isPortrait ? EI.o(t: paddingTop) : null,
       child: shouldUseVerticalLayout
           ? Column(
@@ -415,7 +415,7 @@ class _Sudoku extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
     final double magnification = isDesktop ? 4 : 1;
     return Container(
-      decoration: const BD(color: _kGridBGColor),
+      decoration: const BoxDecoration(color: _kGridBGColor),
       padding: EI.a(4 * magnification.toDouble()),
       child: const Stack(
         children: [
@@ -502,7 +502,7 @@ class _Stack extends ConsumerWidget {
                   child: Container(
                     height: _kStackPointSize,
                     width: _kStackPointSize,
-                    decoration: BD(
+                    decoration: BoxDecoration(
                       color: _kStackColor,
                       borderRadius: 100.r,
                     ),
@@ -648,11 +648,11 @@ class _Grid extends ConsumerWidget {
     });
 
     final double magnification = isDesktop ? 2 : 1;
-    return GD(
+    return GestureDetector(
       onTap: () => _onPressed(context, ref),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        decoration: BD(color: bg, borderRadius: (2 * magnification).r),
+        decoration: BoxDecoration(color: bg, borderRadius: (2 * magnification).r),
         child: LayoutBuilder(
           builder: (context, constraints) {
             final maxWidth = constraints.maxWidth;
@@ -685,7 +685,7 @@ class _Terminal extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
     return SelectionArea(
       child: Container(
-        decoration: const BD(color: _kGridBGColor),
+        decoration: const BoxDecoration(color: _kGridBGColor),
         child: ListView.builder(
           controller: P.sudoku.scrollController,
           padding: EI.o(

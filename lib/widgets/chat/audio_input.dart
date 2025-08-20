@@ -113,7 +113,7 @@ class AudioInput extends ConsumerWidget {
                 height: 50,
                 bottom: 0,
                 child: Container(
-                  decoration: BD(
+                  decoration: BoxDecoration(
                     gradient: showGradient
                         ? LinearGradient(
                             colors: [
@@ -133,7 +133,7 @@ class AudioInput extends ConsumerWidget {
                 right: 0,
                 child: Column(
                   children: [
-                    GD(
+                    GestureDetector(
                       onTapDown: _onTapDown,
                       onTapUp: _onTapUp,
                       onTapCancel: _onTapCancel,
@@ -144,7 +144,7 @@ class AudioInput extends ConsumerWidget {
                           child: Container(
                             height: _kButtonSize,
                             width: _kButtonSize,
-                            decoration: BD(
+                            decoration: BoxDecoration(
                               color: primary.q(.2),
                               border: Border.all(color: primary.q(.5)),
                               borderRadius: 1000.r,

@@ -34,7 +34,7 @@ class BottomBar extends ConsumerWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
-            decoration: BD(
+            decoration: BoxDecoration(
               color: isChat ? theme.cardColor : scaffoldBackgroundColor.q(.8),
               border: isChat
                   ? null

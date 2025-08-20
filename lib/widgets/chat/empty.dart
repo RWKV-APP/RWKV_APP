@@ -47,7 +47,7 @@ class Empty extends ConsumerWidget {
         opacity: hasSpecificEmpty ? 0 : 1,
         duration: 200.ms,
         curve: Curves.easeInOutBack,
-        child: GD(
+        child: GestureDetector(
           onTap: () {
             P.chat.focusNode.unfocus();
             P.tts.dismissAllShown();
@@ -123,7 +123,7 @@ class Empty extends ConsumerWidget {
                       if (loaded)
                         Container(
                           padding: const EI.s(h: 4, v: 2),
-                          decoration: BD(
+                          decoration: BoxDecoration(
                             border: Border.all(color: primary),
                             borderRadius: 4.r,
                           ),

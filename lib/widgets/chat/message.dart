@@ -312,7 +312,7 @@ class Message extends ConsumerWidget {
         borderRadius: clipBorderRadius,
         child: Container(
           padding: padding,
-          decoration: BD(
+          decoration: BoxDecoration(
             color: isMine ? primaryContainer : (isChat ? Theme.of(context).colorScheme.surface : null),
             border: border,
             borderRadius: borderRadius,
@@ -322,7 +322,7 @@ class Message extends ConsumerWidget {
             children: [
               if (kDebugMode && Args.debugMsgId)
                 Container(
-                  decoration: BD(color: kCR.q(1)),
+                  decoration: BoxDecoration(color: kCR.q(1)),
                   child: T("Debug: ${msg.id}", s: const TS(c: kW)),
                 ),
               if (isMine) ...[
@@ -365,7 +365,7 @@ class Message extends ConsumerWidget {
                   ),
                 // 🔥 Bot message cot header
                 if (reasoning && !isQuickThinking)
-                  GD(
+                  GestureDetector(
                     onTap: () {
                       if (showingCotContent) {
                         P.msg.cotDisplayState(msg.id).q = CoTDisplayState.hideCotHeader;
@@ -374,7 +374,7 @@ class Message extends ConsumerWidget {
                       }
                     },
                     child: Container(
-                      decoration: const BD(color: kC),
+                      decoration: const BoxDecoration(color: kC),
                       child: Row(
                         children: [
                           T(
@@ -431,7 +431,7 @@ class Message extends ConsumerWidget {
             child: Column(
               children: [
                 if (reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                GD(onTap: _onTap, child: bubbleContent),
+                GestureDetector(onTap: _onTap, child: bubbleContent),
               ],
             ),
           ),
