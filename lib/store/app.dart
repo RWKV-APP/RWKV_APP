@@ -77,7 +77,7 @@ extension $App on _App {
 
     await Future.delayed(const Duration(milliseconds: 17));
 
-    final config = await _pullRemoteConfig();
+    final config = await _getRemoteConfig();
     if (config == null) {
       return;
     }
@@ -109,7 +109,7 @@ extension $App on _App {
   }
 
   void checkUpdates() async {
-    final config = await _pullRemoteConfig();
+    final config = await _getRemoteConfig();
     if (config == null) {
       return;
     }
@@ -373,23 +373,20 @@ extension _$App on _App {
     });
   }
 
-  Future<dynamic> _pullRemoteConfig() async {
+  Future<Map<String, dynamic>?> _getRemoteConfig() async {
     try {
       final res = await _get("get-demo-config", timeout: 10000.ms);
-      if (res is! Map) {
-        qqe("res is not a Map, res: ${res.runtimeType}");
-        return;
-      }
+      if (res is! Map) throw "res is not a Map, res: ${res.runtimeType}";
       final success = res["success"];
       final message = res["message"];
       final data = res["data"];
       if (success != true) throw "success is false, success: $success, message: $message";
       if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
-      qqq("pull remote config success");
+      qqr("pull remote config success");
       return data[demoType.q.name];
     } catch (e) {
       qe;
-      qqe("e: $e");
+      qqe(e);
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
     return null;
