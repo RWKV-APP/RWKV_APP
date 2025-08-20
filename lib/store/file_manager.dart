@@ -28,7 +28,7 @@ class _FileManager {
 
   late final ttsCores = qs<Set<FileInfo>>({});
 
-  // model-name to download-task map
+  /// model-name to download-task map
   late final downloadTasks = <String, DownloadTask>{};
 }
 
