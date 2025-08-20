@@ -148,7 +148,7 @@ class BotMessageBottom extends ConsumerWidget {
             onTap: _onSharePressed,
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),
-              child: C(
+              child: Container(
                 decoration: const BD(color: kC),
                 child: Icon(
                   Icons.share_rounded,
@@ -173,9 +173,9 @@ class BotMessageBottom extends ConsumerWidget {
         if (showResumeButton && paused && receiveId == msg.id)
           GD(
             onTap: _onResumePressed,
-            child: C(
+            child: Container(
               padding: const EI.o(v: 9, l: 12),
-              child: C(
+              child: Container(
                 padding: const EI.s(v: 1, h: 8),
                 decoration: BD(
                   color: kC,

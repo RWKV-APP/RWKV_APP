@@ -310,7 +310,7 @@ class Message extends ConsumerWidget {
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
         borderRadius: clipBorderRadius,
-        child: C(
+        child: Container(
           padding: padding,
           decoration: BD(
             color: isMine ? primaryContainer : (isChat ? Theme.of(context).colorScheme.surface : null),
@@ -321,7 +321,7 @@ class Message extends ConsumerWidget {
             crossAxisAlignment: isMine ? CAA.end : CAA.start,
             children: [
               if (kDebugMode && Args.debugMsgId)
-                C(
+                Container(
                   decoration: BD(color: kCR.q(1)),
                   child: T("Debug: ${msg.id}", s: const TS(c: kW)),
                 ),
@@ -373,7 +373,7 @@ class Message extends ConsumerWidget {
                         P.msg.cotDisplayState(msg.id).q = CoTDisplayState.showCotHeaderAndCotContent;
                       }
                     },
-                    child: C(
+                    child: Container(
                       decoration: const BD(color: kC),
                       child: Row(
                         children: [

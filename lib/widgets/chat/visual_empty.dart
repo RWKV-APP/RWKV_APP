@@ -28,7 +28,7 @@ class VisualEmpty extends ConsumerWidget {
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final primary = Theme.of(context).colorScheme.primary;
     final imagePath = ref.watch(P.world.imagePath);
-    if (imagePath != null) return Positioned(child: IgnorePointer(child: C()));
+    if (imagePath != null) return Positioned(child: IgnorePointer(child: Container()));
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final s = S.of(context);
 
@@ -43,7 +43,7 @@ class VisualEmpty extends ConsumerWidget {
       case WorldType.engAudioQA:
       case WorldType.chineseASR:
       case WorldType.engASR:
-        return Positioned(child: IgnorePointer(child: C()));
+        return Positioned(child: IgnorePointer(child: Container()));
     }
 
     final messages = ref.watch(P.msg.list);
@@ -69,7 +69,7 @@ class VisualEmpty extends ConsumerWidget {
               borderRadius: 12.r,
               child: GD(
                 onTap: _onTapImageSelector,
-                child: C(
+                child: Container(
                   decoration: BD(
                     color: primaryContainer.q(.5),
                     border: Border.all(color: primary.q(.5)),

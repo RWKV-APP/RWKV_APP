@@ -112,7 +112,7 @@ class AudioInput extends ConsumerWidget {
                 right: 0,
                 height: 50,
                 bottom: 0,
-                child: C(
+                child: Container(
                   decoration: BD(
                     gradient: showGradient
                         ? LinearGradient(
@@ -141,7 +141,7 @@ class AudioInput extends ConsumerWidget {
                         borderRadius: 1000.r,
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                          child: C(
+                          child: Container(
                             height: _kButtonSize,
                             width: _kButtonSize,
                             decoration: BD(

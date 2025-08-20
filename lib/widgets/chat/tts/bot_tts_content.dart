@@ -110,7 +110,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final allDone = overallProgress >= 1;
     final qb = ref.watch(P.app.qb);
 
-    return C(
+    return Container(
       decoration: const BD(color: kC),
       padding: const EI.o(),
       width: changing ? 130 : width,
@@ -194,7 +194,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   if (allDone)
                     GD(
                       onTap: _onSharePressed,
-                      child: C(
+                      child: Container(
                         decoration: const BD(color: kC),
                         padding: const EI.o(l: 8, r: 4),
                         child: const Icon(Icons.share),
@@ -210,7 +210,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
               children: [
                 GD(
                   onTap: _onSharePressed,
-                  child: C(
+                  child: Container(
                     decoration: const BD(color: kC),
                     padding: const EI.s(
                       v: 12,

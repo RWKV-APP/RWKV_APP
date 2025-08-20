@@ -78,7 +78,7 @@ class _WebSearchModeButton extends ConsumerWidget {
     return IntrinsicWidth(
       child: GD(
         onTap: _onTap,
-        child: C(
+        child: Container(
           height: height,
           padding: padding,
           decoration: BD(
@@ -171,7 +171,7 @@ class _ThinkingModeButton extends ConsumerWidget {
           onTap: _onTap,
           child: SB(
             height: height,
-            child: C(
+            child: Container(
               padding: padding,
               decoration: BD(
                 color: color,
@@ -349,7 +349,7 @@ class _MessageButton extends ConsumerWidget {
         duration: 250.ms,
         child: GD(
           onTap: _onPressed,
-          child: C(
+          child: Container(
             padding: const EI.s(h: 10, v: 5),
             child: Icon(
               (Platform.isIOS || Platform.isMacOS)
@@ -368,7 +368,7 @@ class _MessageButton extends ConsumerWidget {
 
     return GD(
       onTap: P.chat.onStopButtonPressed,
-      child: C(
+      child: Container(
         decoration: const BD(color: kC),
         child: Stack(
           children: [
@@ -376,7 +376,7 @@ class _MessageButton extends ConsumerWidget {
               width: 46,
               height: 34,
               child: Center(
-                child: C(
+                child: Container(
                   decoration: BD(color: color, borderRadius: 2.r),
                   width: 12,
                   height: 12,

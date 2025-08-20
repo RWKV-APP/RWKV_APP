@@ -114,7 +114,7 @@ class Debugger extends ConsumerWidget {
           ),
           color: kC,
           child: SB(
-            child: C(
+            child: Container(
               decoration: const BD(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
@@ -170,7 +170,7 @@ class Debugger extends ConsumerWidget {
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
                         decoration: BD(color: qb.q(.55)),
                         child: e,
@@ -215,7 +215,7 @@ class _SudokuDebugger extends ConsumerWidget {
           ),
           color: kC,
           child: SB(
-            child: C(
+            child: Container(
               decoration: const BD(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
@@ -236,7 +236,7 @@ class _SudokuDebugger extends ConsumerWidget {
                       T("modelSelectorShown".codeToName),
                       T(modelSelectorShown.toString()),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
                         decoration: BD(color: qb.q(.66)),
                         child: e,
@@ -295,7 +295,7 @@ class _TTSDebugger extends ConsumerWidget {
           ),
           color: kC,
           child: SB(
-            child: C(
+            child: Container(
               decoration: const BD(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
@@ -344,7 +344,7 @@ class _TTSDebugger extends ConsumerWidget {
                       T("asExhaust".codeToName),
                       T(asExhaust.toString()),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
                         decoration: BD(color: qb.q(.66)),
                         child: e,
@@ -384,7 +384,7 @@ class _TranslatorDebugger extends ConsumerWidget {
           ),
           color: kC,
           child: SB(
-            child: C(
+            child: Container(
               decoration: const BD(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
@@ -397,7 +397,7 @@ class _TranslatorDebugger extends ConsumerWidget {
                       T("currentModel".codeToName),
                       T(currentModel?.fileName ?? "null"),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
                         decoration: BD(color: qb.q(.66)),
                         child: e,

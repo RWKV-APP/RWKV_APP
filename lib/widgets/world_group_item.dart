@@ -131,7 +131,7 @@ class WorldGroupItem extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 8.r,
-      child: C(
+      child: Container(
         decoration: BD(
           color: customTheme.settingItem,
           borderRadius: 8.r,
@@ -151,7 +151,7 @@ class WorldGroupItem extends ConsumerWidget {
               ],
             ),
             ..._fileInfos.m(
-              (e) => C(
+              (e) => Container(
                 decoration: BD(
                   color: kC,
                   border: Border.all(color: primaryColor),

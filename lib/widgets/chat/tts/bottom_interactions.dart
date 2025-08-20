@@ -47,13 +47,13 @@ class TTSBottomInteractions extends ConsumerWidget {
 
     return GD(
       onTap: P.tts.dismissAllShown,
-      child: C(
+      child: Container(
         decoration: const BD(color: kC),
         child: Column(
           crossAxisAlignment: CAA.stretch,
           children: [
             if (selectedSpkName != null)
-              C(
+              Container(
                 padding: const EI.s(v: 4),
                 child: T(
                   target,
@@ -61,7 +61,7 @@ class TTSBottomInteractions extends ConsumerWidget {
                 ),
               ),
             if (selectSourceAudioPath != null)
-              C(
+              Container(
                 padding: const EI.s(v: 4),
                 child: T(
                   s.imitate_target + ": " + (sourceWavName ?? ""),
@@ -144,7 +144,7 @@ class _AudioInteractor extends ConsumerWidget {
                       WidgetSpan(
                         child: GD(
                           onTap: _onUploadFilePressed,
-                          child: C(
+                          child: Container(
                             decoration: const BD(color: kC),
                             child: const Icon(
                               Icons.upload_file,
@@ -205,7 +205,7 @@ class _IntonationPanel extends ConsumerWidget {
               onTap: () {
                 _onTap(e);
               },
-              child: C(
+              child: Container(
                 decoration: BD(
                   color: kC,
                   border: Border.all(color: qb.q(.5), width: .5),
@@ -237,7 +237,7 @@ class _AudioButton extends ConsumerWidget {
       onTap: P.tts.onAudioInteractorButtonPressed,
       child: Padding(
         padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
-        child: C(
+        child: Container(
           padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
           decoration: BD(
             color: primary.q(audioInteractorShown ? 1 : .1),
@@ -270,7 +270,7 @@ class _SpkButton extends ConsumerWidget {
       onTap: P.tts.onSpkButtonPressed,
       child: Padding(
         padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
-        child: C(
+        child: Container(
           padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
           decoration: BD(
             color: primary.q(spkShown ? 1 : .1),
@@ -301,7 +301,7 @@ class _IntonationButton extends ConsumerWidget {
       onTap: P.tts.onIntonationButtonPressed,
       child: Padding(
         padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
-        child: C(
+        child: Container(
           padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
           decoration: BD(
             color: primary.q(intonationShown ? 1 : .1),
@@ -348,7 +348,7 @@ class _Actions extends ConsumerWidget {
           ),
         ),
         if (generating)
-          C(
+          Container(
             decoration: const BD(color: kC),
             child: Stack(
               children: [
@@ -356,7 +356,7 @@ class _Actions extends ConsumerWidget {
                   width: 46,
                   height: 34,
                   child: Center(
-                    child: C(
+                    child: Container(
                       decoration: BD(color: kC, borderRadius: 2.r),
                       width: 12,
                       height: 12,
@@ -387,7 +387,7 @@ class _Actions extends ConsumerWidget {
             duration: 250.ms,
             child: GD(
               onTap: _onRightButtonPressed,
-              child: C(
+              child: Container(
                 padding: const EI.s(h: 10, v: 5),
                 child: Icon(
                   (Platform.isIOS || Platform.isMacOS)
@@ -462,7 +462,7 @@ class _SpkPanel extends ConsumerWidget {
                     P.tts.selectedSpkPanelFilter.q = e;
                     P.app.hapticLight();
                   },
-                  child: C(
+                  child: Container(
                     padding: const EI.s(h: 4, v: 2),
                     margin: const EI.o(r: 4),
                     decoration: BD(
@@ -510,7 +510,7 @@ class _SpkPanel extends ConsumerWidget {
                     child: Row(
                       children: [
                         Expanded(
-                          child: C(
+                          child: Container(
                             padding: const EI.o(t: 4, b: 4, l: 8, r: 8),
                             decoration: BD(
                               color: selected ? primary.q(.1) : kC,
@@ -540,7 +540,7 @@ class _SpkPanel extends ConsumerWidget {
                             P.msg.latestClicked.q = null;
                             await P.world.play(path: path);
                           },
-                          child: C(
+                          child: Container(
                             padding: const EI.a(6.5),
                             decoration: const BD(color: kC),
                             child: Icon(
@@ -651,7 +651,7 @@ class _InstructTabs extends ConsumerWidget {
                 child: AnimatedOpacity(
                   opacity: enabled ? 1 : .333,
                   duration: 250.ms,
-                  child: C(
+                  child: Container(
                     margin: const EI.o(t: 4),
                     padding: const EI.o(l: 8, r: 8, t: 4, b: 4),
                     decoration: BD(
@@ -729,7 +729,7 @@ class _InstructOptions extends ConsumerWidget {
               onTap: () {
                 _onTap(index);
               },
-              child: C(
+              child: Container(
                 padding: const EI.o(l: 8, r: 8, t: 4, b: 4),
                 margin: const EI.o(t: 4),
                 decoration: BD(
@@ -805,7 +805,7 @@ class _TextField extends ConsumerWidget {
                   child: AnimatedOpacity(
                     opacity: textInInput.trim().isNotEmpty ? 1 : .5,
                     duration: 250.ms,
-                    child: C(
+                    child: Container(
                       padding: const EI.s(v: 6, h: 4),
                       child: const Icon(Icons.clear),
                     ),
@@ -813,7 +813,7 @@ class _TextField extends ConsumerWidget {
                 ),
                 GD(
                   onTap: P.tts.onRefreshButtonPressed,
-                  child: C(
+                  child: Container(
                     padding: const EI.s(v: 6, h: 4),
                     child: const Icon(Icons.refresh),
                   ),

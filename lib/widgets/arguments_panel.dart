@@ -43,7 +43,7 @@ class ArgumentsPanel extends ConsumerWidget {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     return ClipRRect(
       borderRadius: 16.r,
-      child: C(
+      child: Container(
         margin: const EI.o(t: 8),
         child: Column(
           crossAxisAlignment: CAA.stretch,
@@ -121,7 +121,7 @@ class _SamplerOptions extends ConsumerWidget {
     final s = S.of(context);
     final reasoning = ref.watch(P.rwkv.reasoning);
     final qb = ref.watch(P.app.qb);
-    return C(
+    return Container(
       margin: const EI.s(h: 12),
       decoration: BD(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
@@ -152,7 +152,7 @@ class _CompletionOptions extends ConsumerWidget {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final reasoning = ref.watch(P.rwkv.reasoning);
-    return C(
+    return Container(
       margin: const EI.s(h: 12),
       decoration: BD(color: qb.q(.1), borderRadius: 8.r),
       child: Row(

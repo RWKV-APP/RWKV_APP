@@ -246,7 +246,7 @@ class _ModelSettings extends ConsumerWidget {
     return Material(
       color: qb.q(.0),
       textStyle: const TS(ff: "monospace", s: 10),
-      child: C(
+      child: Container(
         padding: const EI.a(4),
         margin: const EI.a(4),
         decoration: BD(
@@ -314,7 +314,7 @@ class _Players extends ConsumerWidget {
     final usePortrait = ref.watch(P.othello.usePortrait);
     final qb = ref.watch(P.app.qb);
 
-    final blackOptions = C(
+    final blackOptions = Container(
       decoration: BD(
         color: kC,
         borderRadius: 4.r,
@@ -363,7 +363,7 @@ class _Players extends ConsumerWidget {
       ),
     );
 
-    final whiteOptions = C(
+    final whiteOptions = Container(
       decoration: BD(
         color: kC,
         borderRadius: 4.r,
@@ -415,7 +415,7 @@ class _Players extends ConsumerWidget {
     return Material(
       color: qb.q(.0),
       textStyle: const TS(ff: "monospace", s: 10),
-      child: C(
+      child: Container(
         margin: const EI.a(4),
         padding: const EI.a(4),
         decoration: BD(
@@ -532,7 +532,7 @@ class _Score extends ConsumerWidget {
           textAlign: TextAlign.center,
         ),
         16.w,
-        C(
+        Container(
           padding: const EI.o(t: 0, b: 8, l: 8, r: 8),
           decoration: BD(
             color: kC,
@@ -626,7 +626,7 @@ class _Grid extends ConsumerWidget {
                     onTap: () {
                       _onCellTap(row: row, col: col);
                     },
-                    child: C(
+                    child: Container(
                       decoration: BD(color: const Color(0xFF808080).q(.5)),
                       child: _Cell(
                         row: row,
@@ -674,7 +674,7 @@ class _Grid extends ConsumerWidget {
           );
         }).toList();
 
-        return C(
+        return Container(
           width: size,
           height: size,
           decoration: const BD(color: kC),
@@ -718,7 +718,7 @@ class _Cell extends StatelessWidget {
           return Center(
             child: Stack(
               children: [
-                C(
+                Container(
                   constraints: BoxConstraints(
                     minWidth: minAvailableSize,
                     minHeight: minAvailableSize,
@@ -762,7 +762,7 @@ class _White extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return C(
+    return Container(
       constraints: BoxConstraints(
         minWidth: minSize,
         minHeight: minSize,
@@ -801,7 +801,7 @@ class _Black extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return C(
+    return Container(
       constraints: BoxConstraints(
         minWidth: minSize,
         minHeight: minSize,
@@ -922,7 +922,7 @@ class _ConsoleCell extends ConsumerWidget {
         color = kC;
         break;
     }
-    return C(
+    return Container(
       height: 12,
       width: 12,
       margin: const EI.s(h: 1),

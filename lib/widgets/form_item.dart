@@ -42,7 +42,7 @@ class FormItem extends ConsumerWidget {
 
     return GD(
       onTap: onTap,
-      child: C(
+      child: Container(
         decoration: BD(
           color: customTheme.settingItem,
           borderRadius: BorderRadius.only(

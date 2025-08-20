@@ -66,7 +66,7 @@ class _Info extends ConsumerWidget {
         onTap: () {
           Settings.show();
         },
-        child: C(
+        child: Container(
           decoration: const BoxDecoration(
             color: kC,
           ),

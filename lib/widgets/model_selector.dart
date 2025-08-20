@@ -143,7 +143,7 @@ class ModelSelector extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 16.r,
-      child: C(
+      child: Container(
         margin: const EI.o(t: 12),
         child: ListView(
           padding: const EI.o(l: 12, r: 12),
@@ -206,7 +206,7 @@ class _DownloadSource extends ConsumerWidget {
               onTap: () {
                 P.fileManager.downloadSource.q = e;
               },
-              child: C(
+              child: Container(
                 decoration: BD(
                   color: e == currentSource ? primary : kC,
                   borderRadius: 4.r,

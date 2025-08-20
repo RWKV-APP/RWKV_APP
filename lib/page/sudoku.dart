@@ -103,7 +103,7 @@ class _ButtonGenerate extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final running = ref.watch(P.sudoku.running);
-    return C(
+    return Container(
       padding: const EI.o(b: _kButtonPadding),
       child: SB(
         height: _kButtonHeight,
@@ -158,7 +158,7 @@ class _ButtonGenerateHardest extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final running = ref.watch(P.sudoku.running);
-    return C(
+    return Container(
       padding: const EI.o(b: _kButtonPadding),
       child: SB(
         height: 48,
@@ -200,7 +200,7 @@ class _ButtonInference extends ConsumerWidget {
     final s = S.of(context);
     final running = ref.watch(P.sudoku.running);
     final hasPuzzle = ref.watch(P.sudoku.hasPuzzle);
-    return C(
+    return Container(
       padding: const EI.o(b: _kButtonPadding),
       child: SB(
         height: _kButtonHeight,
@@ -249,7 +249,7 @@ class _ButtonClear extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final running = ref.watch(P.sudoku.running);
-    return C(
+    return Container(
       padding: const EI.o(b: _kButtonPadding),
       child: SB(
         height: _kButtonHeight,
@@ -282,7 +282,7 @@ class _ButtonShowStack extends ConsumerWidget {
     final showStack = ref.watch(P.sudoku.showStack);
     final currentStack = ref.watch(P.sudoku.currentStack);
     final enable = currentStack.isNotEmpty;
-    return C(
+    return Container(
       padding: const EI.o(b: _kButtonPadding),
       child: SB(
         height: _kButtonHeight,
@@ -334,7 +334,7 @@ class _UI extends ConsumerWidget {
         textAlign: TextAlign.center,
         s: TS(s: 14 * magnification, w: FontWeight.w500),
       ),
-      C(
+      Container(
         height: 1,
         width: 1,
         decoration: BD(color: const Color(0xFF888888).q(0.33)),
@@ -378,7 +378,7 @@ class _UI extends ConsumerWidget {
     ];
 
     final qw = ref.watch(P.app.qw);
-    return C(
+    return Container(
       width: shouldUseVerticalLayout ? min / 1.428 : min * (isPortrait ? 1 : 1.428),
       height: shouldUseVerticalLayout ? min : min * (isPortrait ? 0.7 : 1),
       decoration: BD(color: qw),
@@ -414,7 +414,7 @@ class _Sudoku extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDesktop = ref.watch(P.app.isDesktop);
     final double magnification = isDesktop ? 4 : 1;
-    return C(
+    return Container(
       decoration: const BD(color: _kGridBGColor),
       padding: EI.a(4 * magnification.toDouble()),
       child: const Stack(
@@ -495,11 +495,11 @@ class _Stack extends ConsumerWidget {
                 final col = e.$2;
                 final row = e.$1;
                 final position = widgetPosition["$col-$row"];
-                if (position == null) return C();
+                if (position == null) return Container();
                 return Positioned(
                   left: _kStackPointOffsetX + position.dx - uiOffset.dx,
                   top: _kStackPointOffsetY + position.dy - uiOffset.dy - padding.top,
-                  child: C(
+                  child: Container(
                     height: _kStackPointSize,
                     width: _kStackPointSize,
                     decoration: BD(
@@ -518,7 +518,7 @@ class _Stack extends ConsumerWidget {
                 final colEnd = end.$2;
                 final rowEnd = end.$1;
                 final endOffset = widgetPosition["$colEnd-$rowEnd"];
-                if (startOffset == null || endOffset == null) return C();
+                if (startOffset == null || endOffset == null) return Container();
 
                 return AnimatedOpacity(
                   opacity: 1,
@@ -684,7 +684,7 @@ class _Terminal extends ConsumerWidget {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final isDesktop = ref.watch(P.app.isDesktop);
     return SelectionArea(
-      child: C(
+      child: Container(
         decoration: const BD(color: _kGridBGColor),
         child: ListView.builder(
           controller: P.sudoku.scrollController,

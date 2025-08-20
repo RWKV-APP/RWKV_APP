@@ -75,7 +75,7 @@ class UserTTSContent extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
-                child: C(
+                child: Container(
                   decoration: BD(
                     color: qw.q(.5),
                     borderRadius: 8.r,

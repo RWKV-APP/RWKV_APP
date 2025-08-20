@@ -147,7 +147,7 @@ class ModelItem extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 8.r,
-      child: C(
+      child: Container(
         decoration: BD(
           color: customTheme.settingItem,
           borderRadius: 8.r,
@@ -166,7 +166,7 @@ class ModelItem extends ConsumerWidget {
               if (!isCurrentModel)
                 GD(
                   onTap: _onStartTap,
-                  child: C(
+                  child: Container(
                     decoration: BD(
                       color: loading ? kCG.q(.5) : kCG,
                       borderRadius: 8.r,
@@ -181,7 +181,7 @@ class ModelItem extends ConsumerWidget {
               if (isCurrentModel)
                 GD(
                   onTap: null,
-                  child: C(
+                  child: Container(
                     decoration: BD(
                       color: kG.q(.5),
                       borderRadius: 8.r,
@@ -294,7 +294,7 @@ class _Delete extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     return GD(
       onTap: _onTap,
-      child: C(
+      child: Container(
         decoration: BD(
           color: kC,
           borderRadius: 8.r,
@@ -406,7 +406,7 @@ class _Tags extends ConsumerWidget {
       children: [
         ...tags.map((tag) {
           final showHighlight = _highlightTags.contains(tag);
-          return C(
+          return Container(
             decoration: BD(
               borderRadius: 4.r,
               color: showHighlight ? kCG : kG.q(.2),
@@ -428,7 +428,7 @@ class _Tags extends ConsumerWidget {
             child: T("DEBUG", s: TS(c: qw)),
           ),
         if (quantization != null && quantization.isNotEmpty)
-          C(
+          Container(
             decoration: BD(color: kG.q(.2), borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T(quantization),

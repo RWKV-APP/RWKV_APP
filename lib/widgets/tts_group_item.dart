@@ -219,7 +219,7 @@ class TTSGroupItem extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 8.r,
-      child: C(
+      child: Container(
         decoration: BD(color: qw, borderRadius: 8.r),
         margin: const EI.o(t: 8),
         padding: const EI.o(t: 8, l: 8, r: 8, b: 8),
@@ -301,7 +301,7 @@ class TTSGroupItem extends ConsumerWidget {
               ],
             ),
             ...fileInfos.m(
-              (e) => C(
+              (e) => Container(
                 decoration: BD(
                   color: kC,
                   border: Border.all(color: primaryColor),

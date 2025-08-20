@@ -121,7 +121,7 @@ class Empty extends ConsumerWidget {
                       if (loaded) T(s.you_are_now_using("")),
                       4.h,
                       if (loaded)
-                        C(
+                        Container(
                           padding: const EI.s(h: 4, v: 2),
                           decoration: BD(
                             border: Border.all(color: primary),

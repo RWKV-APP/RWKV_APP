@@ -133,7 +133,7 @@ class _NavigationBarBottomLine extends ConsumerWidget {
       left: 0,
       right: 0,
       height: .5,
-      child: C(
+      child: Container(
         height: kToolbarHeight,
         color: qb.q(.1),
       ),
@@ -194,7 +194,7 @@ class _List extends ConsumerWidget {
     }
     final qb = ref.watch(P.app.qb);
 
-    // return Positioned.fill(child: C());
+    // return Positioned.fill(child: Container());
 
     return Positioned.fill(
       child: GD(

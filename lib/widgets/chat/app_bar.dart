@@ -103,7 +103,7 @@ class ChatAppBar extends ConsumerWidget {
       systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GD(
         onTap: _onTitlePressed,
-        child: C(
+        child: Container(
           decoration: const BD(color: kC),
           child: Column(
             crossAxisAlignment: CAA.center,
@@ -142,7 +142,7 @@ class ChatAppBar extends ConsumerWidget {
                 ),
               if (isChat) const ModelSelectButton(),
               if (!isChat)
-                C(
+                Container(
                   padding: const EI.o(l: 4, r: 4, t: 1, b: 1),
                   decoration: BD(
                     color: kB.q(.1),
@@ -183,8 +183,7 @@ class ChatAppBar extends ConsumerWidget {
       actions: [
         if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
         // if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
-        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user))
-          _buildMorePopupMenuButton(context, completionMode),
+        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user)) _buildMorePopupMenuButton(context, completionMode),
         if (demoType != DemoType.chat && demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
             onPressed: onSettingsPressed,

@@ -146,7 +146,7 @@ class _App extends ConsumerWidget {
       child: _TextScaleWrapper(
         child: Stack(
           children: [
-            Positioned(left: 0, right: 0, top: 0, bottom: 0, child: C(color: customTheme.scaffold)),
+            Positioned(left: 0, right: 0, top: 0, bottom: 0, child: Container(color: customTheme.scaffold)),
             if (child != null) child,
             const Alert(),
             if (kDebugMode) const Debugger(),

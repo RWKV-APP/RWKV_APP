@@ -34,7 +34,7 @@ class BranchSwitcher extends ConsumerWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: C(
+          child: Container(
             constraints: const BoxConstraints(minWidth: 16),
             child: Center(
               child: T(

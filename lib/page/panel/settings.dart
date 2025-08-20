@@ -340,7 +340,7 @@ class Settings extends ConsumerWidget {
       context: context,
       applicationName: Config.appTitle,
       applicationVersion: "$version ($buildNumber)",
-      applicationIcon: C(
+      applicationIcon: Container(
         margin: const EI.o(t: 12, b: 12),
         child: iconWidget,
       ),

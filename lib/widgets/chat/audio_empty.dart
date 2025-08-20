@@ -20,7 +20,7 @@ class AudioEmpty extends ConsumerWidget {
 
     final imagePath = ref.watch(P.world.imagePath);
     if (imagePath != null) {
-      return Positioned(child: IgnorePointer(child: C()));
+      return Positioned(child: IgnorePointer(child: Container()));
     }
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
@@ -36,7 +36,7 @@ class AudioEmpty extends ConsumerWidget {
       case WorldType.ocr:
       case WorldType.modrwkvV2:
       case null:
-        return Positioned(child: IgnorePointer(child: C()));
+        return Positioned(child: IgnorePointer(child: Container()));
     }
 
     final messages = ref.watch(P.msg.list);
@@ -76,13 +76,13 @@ class AudioEmpty extends ConsumerWidget {
           opacity: show ? 1 : 0,
           duration: 200.ms,
           curve: Curves.easeInOutBack,
-          child: C(
+          child: Container(
             decoration: const BD(color: kC),
             child: Column(
               crossAxisAlignment: CAA.center,
               mainAxisAlignment: MAA.center,
               children: [
-                C(
+                Container(
                   padding: const EI.s(h: 24),
                   child: T(
                     message,
