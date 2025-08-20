@@ -16,8 +16,6 @@ class _FileManager {
 
   late final availableModels = qs<Set<FileInfo>>({});
 
-  late final unavailableModels = qs<Set<FileInfo>>({});
-
   late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
 
   late final hasDownloadedModels = qs(false);
@@ -33,22 +31,17 @@ class _FileManager {
 /// Public methods
 extension $FileManager on _FileManager {
   Future<void> syncAvailableModels() async {
-    switch (P.app.demoType.q) {
-      case DemoType.othello:
-        qqw("othello game does not need to sync available models");
-        return;
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.sudoku:
-      case DemoType.tts:
-      case DemoType.world:
+    final demoType = P.app.demoType.q;
+    if (demoType == DemoType.othello) {
+      qqw("othello game does not need to sync available models");
+      return;
     }
 
     qq;
     late final List<Map<String, dynamic>> json;
 
     try {
-      if (P.app.modelConfig.q.isEmpty) {
+      if (P.app._modelConfig.q.isEmpty) {
         final demoType = P.app.demoType.q;
         final jsonPath = "remote/latest.json";
         qqq("jsonPath: $jsonPath");
@@ -57,7 +50,7 @@ extension $FileManager on _FileManager {
         final data = rawJSON[demoType.name]["model_config"];
         json = HF.listJSON(data);
       } else {
-        json = P.app.modelConfig.q;
+        json = P.app._modelConfig.q;
       }
     } catch (e) {
       qqe(e);
@@ -68,7 +61,6 @@ extension $FileManager on _FileManager {
       final weights = json.map((e) => FileInfo.fromJSON(e)).toSet();
       _all.q = weights;
       availableModels.q = weights.where((e) => e.available).toSet();
-      unavailableModels.q = weights.where((e) => !e.available).toSet();
       if (P.app.demoType.q == DemoType.tts) {
         ttsCores.q = availableModels.q.where((e) => e.tags.contains("core")).toSet();
       }

@@ -65,7 +65,6 @@ class Debugger extends ConsumerWidget {
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
     final availableModels = ref.watch(P.fileManager.availableModels);
-    final unavailableModels = ref.watch(P.fileManager.unavailableModels);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
@@ -152,7 +151,6 @@ class Debugger extends ConsumerWidget {
                       if (showSocName) ...[T("socName".codeToName), T(socName)],
                       if (showSocBrand) ...[T("socBrand".codeToName), T(socBrand.toString())],
                       if (showAvailableModels) ...[T("availableModels".codeToName), T(availableModels.map((e) => e.name).join("\n"))],
-                      if (showUnavailableModels) ...[T("unavailableModels".codeToName), T(unavailableModels.map((e) => e.name).join("\n"))],
                       if (showDisableRemoteConfig) ...[T("disableRemoteConfig".codeToName), T(disableRemoteConfig.toString())],
                       if (showPreferredThemeMode) ...[T("preferredThemeMode".codeToName), T(preferredThemeMode.toString())],
                       if (showCustomTheme) ...[T("customTheme".codeToName), T(customTheme.runtimeType.toString())],
