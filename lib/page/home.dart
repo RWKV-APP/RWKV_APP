@@ -52,6 +52,8 @@ class PageHome extends ConsumerWidget {
     final isLandscape = width > 600;
     final maxWidth = width / (isLandscape ? 3 : 2) - (isLandscape ? 60 : 24);
 
+    final s = S.of(context);
+
     return AppScaffold(
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -94,35 +96,35 @@ class PageHome extends ConsumerWidget {
                 children:
                     [
                           buildButton(
-                            title: S.of(context).chat,
-                            subtitle: S.of(context).chat_with_rwkv_model,
+                            title: s.chat,
+                            subtitle: s.chat_with_rwkv_model,
                             onTap: onChatTap,
-                            color: Colors.blueAccent,
+                            iconColor: Colors.blueAccent,
                             icon: FontAwesomeIcons.comments,
                           ),
                           buildButton(
-                            title: S.of(context).neko,
-                            subtitle: S.of(context).nyan_nyan,
+                            title: s.neko,
+                            subtitle: s.nyan_nyan,
                             onTap: () => onNekoTap(context),
-                            color: Colors.pinkAccent,
+                            iconColor: Colors.pinkAccent,
                             icon: FontAwesomeIcons.cat,
                           ),
                           buildButton(
-                            title: S.of(context).completion_mode,
-                            subtitle: S.of(context).text_completion_mode,
+                            title: s.completion_mode,
+                            subtitle: s.text_completion_mode,
                             onTap: () {
                               push(PageKey.completion);
                             },
-                            color: Colors.lightGreen,
+                            iconColor: Colors.lightGreen,
                             icon: FontAwesomeIcons.feather,
                           ),
                           buildButton(
-                            title: "离线翻译",
-                            subtitle: "离线翻译文本",
+                            title: isDesktop ? s.offline_translator_server : s.offline_translator,
+                            subtitle: s.offline_translator_detail,
                             onTap: () {
                               push(PageKey.translator);
                             },
-                            color: Colors.blue,
+                            iconColor: Colors.blue,
                             icon: Icons.translate,
                           ),
                         ]
@@ -143,11 +145,11 @@ class PageHome extends ConsumerWidget {
   }
 
   Widget buildButton({
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    required Color color,
-    required IconData icon,
+    String? title,
+    String? subtitle,
+    VoidCallback? onTap,
+    Color? iconColor,
+    IconData? icon,
   }) {
     return Material(
       clipBehavior: Clip.antiAlias,
@@ -159,23 +161,24 @@ class PageHome extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
+              if (icon != null)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                      color: iconColor,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: FaIcon(icon, color: Colors.white),
                   ),
-                  alignment: Alignment.center,
-                  child: FaIcon(icon, color: Colors.white),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              if (title != null) const SizedBox(height: 12),
+              if (title != null) Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              if (subtitle != null) const SizedBox(height: 8),
+              if (subtitle != null) Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),

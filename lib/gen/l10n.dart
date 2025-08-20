@@ -54,21 +54,36 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `RWKV 离线翻译服务器`
-  String get rwkv_offline_translator_server {
+  /// `文本转语音`
+  String get tts {
+    return Intl.message('文本转语音', name: 'tts', desc: '', args: []);
+  }
+
+  /// `让 RWKV 输出语音`
+  String get tts_detail {
+    return Intl.message('让 RWKV 输出语音', name: 'tts_detail', desc: '', args: []);
+  }
+
+  /// `线翻译服务器`
+  String get offline_translator_server {
     return Intl.message(
-      'RWKV 离线翻译服务器',
-      name: 'rwkv_offline_translator_server',
+      '线翻译服务器',
+      name: 'offline_translator_server',
       desc: '',
       args: [],
     );
   }
 
-  /// `RWKV 离线翻译`
-  String get rwkv_offline_translator {
+  /// `离线翻译`
+  String get offline_translator {
+    return Intl.message('离线翻译', name: 'offline_translator', desc: '', args: []);
+  }
+
+  /// `离线翻译文本`
+  String get offline_translator_detail {
     return Intl.message(
-      'RWKV 离线翻译',
-      name: 'rwkv_offline_translator',
+      '离线翻译文本',
+      name: 'offline_translator_detail',
       desc: '',
       args: [],
     );

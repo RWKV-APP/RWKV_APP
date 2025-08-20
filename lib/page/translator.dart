@@ -17,7 +17,7 @@ class PageTranslator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
-    final title = isDesktop ? s.rwkv_offline_translator_server : s.rwkv_offline_translator;
+    final title = isDesktop ? s.offline_translator_server : s.offline_translator;
 
     return GestureDetector(
       onTap: isDesktop ? null : () => FocusScope.of(context).unfocus(),
