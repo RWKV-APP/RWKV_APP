@@ -2,10 +2,10 @@ part of 'p.dart';
 
 class _FileManager {
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
-    return LocalFile(targetPath: ref.watch(paths(key)));
+    return LocalFile(targetPath: ref.watch(_paths(key)));
   });
 
-  late final paths = qsff<FileInfo, String>((ref, key) {
+  late final _paths = qsff<FileInfo, String>((ref, key) {
     final dir = ref.watch(P.app.documentsDir);
     final fileName = key.fileName;
     final dirPath = dir!.path;
@@ -18,14 +18,12 @@ class _FileManager {
 
   late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
 
-  late final hasDownloadedModels = qs(false);
-
   late final modelSelectorShown = qs(false);
 
   late final ttsCores = qs<Set<FileInfo>>({});
 
   /// model-name to download-task map
-  late final downloadTasks = <String, DownloadTask>{};
+  late final _downloadTasks = <String, DownloadTask>{};
 }
 
 /// Public methods
@@ -77,7 +75,7 @@ extension $FileManager on _FileManager {
     final _fileInfos = all.where((e) => e.available).toList();
 
     for (final fileInfo in _fileInfos) {
-      final path = paths(fileInfo).q;
+      final path = _paths(fileInfo).q;
       final pathExists = await File(path).exists();
       bool fileSizeVerified = false;
       if (pathExists) {
@@ -108,14 +106,14 @@ extension $FileManager on _FileManager {
 
   Future<void> getFile({required FileInfo fileInfo}) async {
     final url = downloadSource.q.prefix + fileInfo.raw + downloadSource.q.suffix;
-    final path = paths(fileInfo).q;
+    final path = _paths(fileInfo).q;
 
     qqq('start download file: \n>>url:$url\n>>path:$path');
 
-    DownloadTask? task = downloadTasks[fileInfo.fileName];
+    DownloadTask? task = _downloadTasks[fileInfo.fileName];
     if (task == null) {
       task = await DownloadTask.create(url: url, path: path);
-      downloadTasks[fileInfo.fileName] = task;
+      _downloadTasks[fileInfo.fileName] = task;
     }
 
     if (task.state == TaskState.running) return;
@@ -156,14 +154,14 @@ extension $FileManager on _FileManager {
   }
 
   Future<void> pauseDownload({required FileInfo fileInfo}) async {
-    final task = downloadTasks[fileInfo.fileName];
+    final task = _downloadTasks[fileInfo.fileName];
     task?.stop();
     final state = locals(fileInfo);
     state.q = state.q.copyWith(state: TaskState.stopped);
   }
 
   Future<void> cancelDownload({required FileInfo fileInfo}) async {
-    final task = downloadTasks[fileInfo.fileName];
+    final task = _downloadTasks[fileInfo.fileName];
     await task?.cancel();
     final state = locals(fileInfo);
     state.q = state.q.copyWith(state: TaskState.idle);
@@ -180,7 +178,7 @@ extension $FileManager on _FileManager {
       qqe(e);
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
-    final path = paths(fileInfo).q;
+    final path = _paths(fileInfo).q;
     await File(path).delete();
     state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
   }
@@ -203,10 +201,10 @@ extension _$FileManager on _FileManager {
     for (final fileInfo in availableFiles) {
       final taskId = fileInfo.fileName;
 
-      if (downloadTasks.containsKey(taskId)) {
+      if (_downloadTasks.containsKey(taskId)) {
         continue;
       }
-      final path = paths(fileInfo).q;
+      final path = _paths(fileInfo).q;
       final url = fileInfo.raw.startsWith("http://") || fileInfo.raw.startsWith("https://")
           ? fileInfo.raw
           : sprintf(urlFmt, [fileInfo.raw]);
@@ -222,7 +220,7 @@ extension _$FileManager on _FileManager {
           hasFile: task.state == TaskState.completed,
           state: task.state,
         );
-        downloadTasks[taskId] = task;
+        _downloadTasks[taskId] = task;
       } catch (e) {
         qqe(e);
         fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
