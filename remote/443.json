@@ -7,7 +7,7 @@
     "android_url": "https://www.pgyer.com/rwkvchat",
     "android_apk_url": "",
     "share_chat_qrcode_zh": "https://rwkvos.com/",
-    "share_chat_qrcode_en": "https://github.com/MollySophia/rwkv_mobile_flutter",
+    "share_chat_qrcode_en": "https://github.com/RWKV-APP/RWKV_APP",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "controlled_rollout": {
       "web_search": false
