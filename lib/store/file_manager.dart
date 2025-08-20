@@ -39,7 +39,7 @@ extension $FileManager on _FileManager {
     late final List<Map<String, dynamic>> modelConfigInCurrentDemoType;
 
     try {
-      if (P.app._modelConfig.q.isEmpty) {
+      if (P.app._modelConfigInCurrentDemoType.q.isEmpty) {
         final demoType = P.app.demoType.q;
         final jsonPath = "remote/latest.json";
         qqq("jsonPath: $jsonPath");
@@ -48,7 +48,7 @@ extension $FileManager on _FileManager {
         final data = rawJSON[demoType.name]["model_config"];
         modelConfigInCurrentDemoType = HF.listJSON(data);
       } else {
-        modelConfigInCurrentDemoType = P.app._modelConfig.q;
+        modelConfigInCurrentDemoType = P.app._modelConfigInCurrentDemoType.q;
       }
     } catch (e) {
       qqe(e);

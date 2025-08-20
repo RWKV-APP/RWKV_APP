@@ -19,7 +19,7 @@ class _App extends RawApp {
   late final shareChatQrCodeZh = qs<String?>(null);
   late final shareChatQrCodeEn = qs<String?>(null);
 
-  late final _modelConfig = qs<List<Map<String, dynamic>>>([]);
+  late final _modelConfigInCurrentDemoType = qs<List<Map<String, dynamic>>>([]);
 
   late final _newVersionDialogShown = qs(false);
 
@@ -354,7 +354,7 @@ extension _$App on _App {
     _latestBuildIos.q = buildIos.toInt();
     _noteZh.q = (config["note_zh"] as List<dynamic>).m((e) => e.toString());
     _noteEn.q = (config["note_en"] as List<dynamic>).m((e) => e.toString());
-    _modelConfig.q = HF.listJSON(config["model_config"]);
+    _modelConfigInCurrentDemoType.q = HF.listJSON(config["model_config"]);
     _androidUrl.q = config["android_url"];
     _androidApkUrl.q = config["android_apk_url"];
     shareChatQrCodeEn.q = config["share_chat_qrcode_en"];
