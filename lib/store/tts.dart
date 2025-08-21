@@ -65,7 +65,6 @@ class _TTS {
 /// Private methods
 extension _$TTS on _TTS {
   Future<void> _init() async {
-    if (P.app.demoType.q != DemoType.tts) return;
     qq;
     P.chat.focusNode.addListener(_onChatFocusNodeChanged);
 
@@ -89,6 +88,8 @@ extension _$TTS on _TTS {
     selectSourceAudioPath.q = null;
 
     focusNode.addListener(() {
+      final pageKey = P.app.pageKey.q;
+      if (pageKey != PageKey.talk) return;
       hasFocus.q = focusNode.hasFocus;
     });
 
@@ -99,10 +100,14 @@ extension _$TTS on _TTS {
   }
 
   void _onSpkShownChanged(bool next) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     selectedSpkPanelFilter.q = selectedLanguage.q;
   }
 
   void _onSelectSpkNameChanged(String? next) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qq;
     if (next == null) {
       selectedLanguage.q = Language.none;
@@ -119,6 +124,8 @@ extension _$TTS on _TTS {
   }
 
   void _onChatFocusNodeChanged() {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qqq("P.chat.focusNode.hasFocus: ${P.chat.focusNode.hasFocus}");
     if (P.chat.focusNode.hasFocus) {
       dismissAllShown(intonationShown: intonationShown.q);
@@ -126,13 +133,15 @@ extension _$TTS on _TTS {
   }
 
   void _onTextChanged(String next) {
-    // qqq("_onTextChanged");
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     final textInController = textEditingController.text;
     if (next != textInController) textEditingController.text = next;
   }
 
   void _onTextEditingControllerValueChanged() {
-    // qqq("_onTextEditingControllerValueChanged");
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     final textInController = textEditingController.text;
     if (textInInput.q != textInController) textInInput.q = textInController;
   }
@@ -213,6 +222,8 @@ extension _$TTS on _TTS {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     switch (event) {
       case from_rwkv.TTSStreamingBuffer res:
         _onTTSStreamingBuffer(res);
@@ -255,10 +266,14 @@ extension _$TTS on _TTS {
   }
 
   void _onStreamDone() {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qq;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
   }

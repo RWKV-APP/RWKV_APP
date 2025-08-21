@@ -17,14 +17,15 @@ const _kButtonBottom = 36.0;
 const _kWidgetSize = _kButtonSize + _kButtonBottom;
 
 class AudioInput extends ConsumerWidget {
-  const AudioInput({super.key});
+  final DemoType demoType;
+
+  const AudioInput({super.key, required this.demoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final primary = Theme.of(context).colorScheme.primary;
-    final demoType = ref.watch(P.app.demoType);
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final screenWidth = ref.watch(P.app.screenWidth);
     final receiving = ref.watch(P.chat.receivingTokens);

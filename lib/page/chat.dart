@@ -11,12 +11,10 @@ import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
-import 'package:zone/widgets/chat/audio_input.dart';
 import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/empty.dart';
 import 'package:zone/widgets/chat/message.dart';
 import 'package:zone/widgets/chat/share_chat.dart';
-import 'package:zone/widgets/chat/suggestions.dart';
 import 'package:zone/widgets/chat/visual_empty.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -87,12 +85,10 @@ class _Page extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Suggestions(),
-                  BottomBar(),
+                  BottomBar(demoType: DemoType.chat),
                 ],
               ),
             ),
-          const AudioInput(),
         ],
       ),
     );
@@ -129,7 +125,6 @@ class _List extends ConsumerWidget {
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final paddingRight = ref.watch(P.app.paddingRight);
     final inputHeight = ref.watch(P.chat.inputHeight);
-    final demoType = ref.watch(P.app.demoType);
 
     double top = paddingTop + kToolbarHeight + 4;
     double bottom = inputHeight + 12;
@@ -159,17 +154,6 @@ class _List extends ConsumerWidget {
         break;
     }
 
-    switch (demoType) {
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
-      case DemoType.world:
-        break;
-      case DemoType.tts:
-        bottom += Suggestions.defaultHeight;
-        scrollBarBottom += Suggestions.defaultHeight;
-    }
     final qb = ref.watch(P.app.qb);
 
     // return Positioned.fill(child: Container());

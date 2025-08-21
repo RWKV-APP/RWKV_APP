@@ -8,6 +8,7 @@ import 'package:zone/page/home.dart';
 import 'package:zone/page/othello.dart';
 import 'package:zone/page/settings.dart';
 import 'package:zone/page/sudoku.dart';
+import 'package:zone/page/talk.dart';
 import 'package:zone/page/translator.dart';
 
 enum PageKey {
@@ -19,12 +20,14 @@ enum PageKey {
   advancedSettings,
   othello,
   sudoku,
-  home;
+  home,
+  talk;
 
   String get path => "/$name";
 
   Widget get scaffold => switch (this) {
     PageKey.chat => const PageChat(),
+    PageKey.talk => const PageTalk(),
     PageKey.othello => const PageOthello(),
     PageKey.completion => const CompletionPage(),
     PageKey.sudoku => const PageSudoku(),

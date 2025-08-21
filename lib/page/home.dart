@@ -42,7 +42,7 @@ class PageHome extends ConsumerWidget {
   }
 
   void _onTtsTap() async {
-    push(PageKey.chat);
+    push(PageKey.talk);
   }
 
   @override
@@ -109,7 +109,7 @@ class PageHome extends ConsumerWidget {
                             title: s.tts,
                             subtitle: s.tts_detail,
                             onTap: _onTtsTap,
-                            icon: FaIcon(
+                            icon: const FaIcon(
                               FontAwesomeIcons.volumeHigh,
                               color: Colors.white,
                             ),

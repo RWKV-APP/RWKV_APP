@@ -267,9 +267,9 @@ extension _$App on _App {
     if (Platform.isAndroid && _latestBuild.q <= int.parse(buildNumber.q)) return;
     if (Platform.isIOS && _latestBuildIos.q <= int.parse(buildNumber.q)) return;
 
-    final androidUrl = this._androidUrl.q ?? '';
-    final androidApkUrl = this._androidApkUrl.q ?? '';
-    final iosUrl = this._iosUrl.q;
+    final androidUrl = _androidUrl.q ?? '';
+    final androidApkUrl = _androidApkUrl.q ?? '';
+    final iosUrl = _iosUrl.q;
 
     if (Platform.isAndroid && (androidUrl.isEmpty)) return;
 
@@ -277,8 +277,8 @@ extension _$App on _App {
 
     await Future.delayed(const Duration(milliseconds: 1));
 
-    final noteZh = this._noteZh.q;
-    final noteEn = this._noteEn.q;
+    final noteZh = _noteZh.q;
+    final noteEn = _noteEn.q;
 
     final currentLocale = Intl.getCurrentLocale();
     final useEn = currentLocale.startsWith("en");

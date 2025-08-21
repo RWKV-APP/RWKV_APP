@@ -129,6 +129,27 @@ class _Suggestion {
     return [];
   });
 
+  final talkSuggestion = qp<List<String>>((ref) {
+    final imagePath = ref.watch(P.world.imagePath);
+    const demoType = DemoType.tts;
+    final messages = ref.watch(P.msg.list);
+    final _ = ref.watch(P.suggestion.ttsTicker);
+    final _ = ref.watch(P.rwkv.currentModel);
+    final _ = ref.watch(P.msg.length);
+
+    final hideCases = [
+      demoType == DemoType.chat && messages.isNotEmpty,
+      demoType == DemoType.world && (imagePath == null || imagePath.isEmpty || messages.length != 1),
+    ];
+    if (hideCases.any((e) => e)) {
+      return [];
+    }
+    final config = ref.watch(P.suggestion.config);
+
+    final r = config.tts.toList().shuffled.take(5).toList();
+    return r;
+  });
+
   Future<void> loadSuggestions() async {
     final shouldUseEn = P.preference.preferredLanguage.q.resolved.locale.languageCode != "zh";
     final lang = shouldUseEn ? "en" : "zh";

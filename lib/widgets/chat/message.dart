@@ -36,7 +36,12 @@ class Message extends ConsumerWidget {
   /// 页面中第一个消息的 index 为 0
   final int index;
 
-  const Message(this.msg, this.index, {super.key, required this.selectMode});
+  const Message(
+    this.msg,
+    this.index, {
+    super.key,
+    this.selectMode = false,
+  });
 
   void _onTapLink(String text, String? href, String title) async {
     if (href == null) return;
