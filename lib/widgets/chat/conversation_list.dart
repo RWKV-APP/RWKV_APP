@@ -145,7 +145,7 @@ class ConversationItem extends ConsumerWidget {
           child: Row(
             children: [
               const Icon(Icons.edit_outlined),
-              const SB(
+              const SizedBox(
                 width: 8,
               ),
               Text(s.rename),
@@ -158,7 +158,7 @@ class ConversationItem extends ConsumerWidget {
           child: Row(
             children: [
               const Icon(Icons.download_outlined),
-              const SB(
+              const SizedBox(
                 width: 8,
               ),
               Text(s.export_data),
@@ -171,7 +171,7 @@ class ConversationItem extends ConsumerWidget {
           child: Row(
             children: [
               const Icon(Icons.delete_outline),
-              const SB(
+              const SizedBox(
                 width: 8,
               ),
               Text(s.delete_conversation),
@@ -226,7 +226,7 @@ class ConversationItem extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final color = P.conversation.getConversationColor(conversation);
     return Material(
-      child: GD(
+      child: GestureDetector(
         onLongPressStart: (details) => _onLongPressStart(details, context),
         child: InkWell(
           onTap: _onTap,
@@ -253,7 +253,7 @@ class ConversationItem extends ConsumerWidget {
                     children: [
                       T(
                         conversation.title,
-                        s: TS(s: 16, w: FW.w500, c: qb),
+                        s: TS(s: 16, w: FontWeight.w500, c: qb),
                         overflow: TextOverflow.ellipsis,
                       ),
                       4.h,

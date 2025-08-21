@@ -4,8 +4,6 @@ import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 
-/// Flutter code sample for [NavigationRail].
-
 class PageTab extends StatefulWidget {
   final Widget content;
 
@@ -21,17 +19,7 @@ class _PageTabState extends State<PageTab> {
   void _onTabSelected(int index) async {
     _selectedIndex = index;
     setState(() {});
-    switch (index) {
-      case 0:
-        replace(PageKey.home);
-        break;
-      case 1:
-        replace(PageKey.conversation);
-        break;
-      case 2:
-        replace(PageKey.settings);
-        break;
-    }
+    replace(PageKey.tabs[index]);
   }
 
   @override
@@ -85,9 +73,8 @@ class _PageTabState extends State<PageTab> {
             ),
           ],
         ),
-        const VerticalDivider(thickness: 1, width: 1),
+        const VerticalDivider(thickness: 0.5, width: 0.5),
         Expanded(child: widget.content),
-        // This is the main content.
       ],
     );
 

@@ -25,7 +25,7 @@ import 'package:zone/widgets/model_item.dart';
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
 
-  static FV show({bool nekoOnly = false}) async {
+  static Future<void> show({bool nekoOnly = false}) async {
     qq;
 
     if (P.fileManager.modelSelectorShown.q) return;
@@ -75,7 +75,7 @@ class ModelSelector extends ConsumerWidget {
 
   List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
-    var availableModels = ref.watch(P.fileManager.availableModels);
+    var availableModels = ref.watch(P.fileManager.availableModelsInCurrentDemoType);
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
@@ -143,7 +143,7 @@ class ModelSelector extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 16.r,
-      child: C(
+      child: Container(
         margin: const EI.o(t: 12),
         child: ListView(
           padding: const EI.o(l: 12, r: 12),
@@ -152,7 +152,7 @@ class ModelSelector extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
+                  child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
                 ),
                 IconButton(
                   onPressed: () {
@@ -162,13 +162,13 @@ class ModelSelector extends ConsumerWidget {
                 ),
               ],
             ),
-            if (demoType == DemoType.world) T(s.please_select_a_world_type, s: const TS(s: 16, w: FW.w500)),
+            if (demoType == DemoType.world) T(s.please_select_a_world_type, s: const TS(s: 16, w: FontWeight.w500)),
             // T(s.memory_used(memUsedString, memFreeString), s: TS(c: qb.q(.7), s: 12)),
             const _DownloadSource(),
             if (demoType == DemoType.chat)
               T(
                 "👉${s.str_model_selection_dialog_hint}👈",
-                s: TS(c: qb.q(.7), s: 12, w: FW.w500),
+                s: TS(c: qb.q(.7), s: 12, w: FontWeight.w500),
               ),
             ..._buildItems(context, ref),
             16.h,
@@ -195,19 +195,19 @@ class _DownloadSource extends ConsumerWidget {
         4.h,
         T(
           S.current.download_server_,
-          s: TS(c: qb.q(.7), s: 12, w: FW.w600),
+          s: TS(c: qb.q(.7), s: 12, w: FontWeight.w600),
         ),
         4.h,
         Wrap(
           runSpacing: 4,
           spacing: 4,
           children: FileDownloadSource.values.where((e) => kDebugMode || !e.isDebug).map((e) {
-            return GD(
+            return GestureDetector(
               onTap: () {
                 P.fileManager.downloadSource.q = e;
               },
-              child: C(
-                decoration: BD(
+              child: Container(
+                decoration: BoxDecoration(
                   color: e == currentSource ? primary : kC,
                   borderRadius: 4.r,
                   border: Border.all(

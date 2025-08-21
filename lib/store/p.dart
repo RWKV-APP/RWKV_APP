@@ -117,7 +117,7 @@ abstract class P {
   static final backend = _Backend();
   static final translator = _Translator();
 
-  static FV init() async {
+  static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     try {
@@ -135,7 +135,7 @@ abstract class P {
     await _unorderedInit();
   }
 
-  static FV _unorderedInit() async {
+  static Future<void> _unorderedInit() async {
     await Future.wait([
       _safeInit(() => rwkv._init(), 'rwkv'),
       _safeInit(() => chat._init(), 'chat'),

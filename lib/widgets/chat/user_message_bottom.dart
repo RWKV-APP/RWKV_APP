@@ -76,7 +76,7 @@ class UserMessageBottom extends ConsumerWidget {
       children: [
         BranchSwitcher(msg, index),
         if (showUserEditButton)
-          GD(
+          GestureDetector(
             onTap: _onUserEditPressed,
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),
@@ -88,7 +88,7 @@ class UserMessageBottom extends ConsumerWidget {
             ),
           ),
         if (showUserTTSPlayButton && (!playing || !isCurrentMessage))
-          GD(
+          GestureDetector(
             onTap: _onTTSPlayPressed,
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),
@@ -96,7 +96,7 @@ class UserMessageBottom extends ConsumerWidget {
             ),
           ),
         if (showUserTTSPlayButton && (playing && isCurrentMessage))
-          GD(
+          GestureDetector(
             onTap: _onTTSPausePressed,
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),
@@ -104,7 +104,7 @@ class UserMessageBottom extends ConsumerWidget {
             ),
           ),
         if (showUserCopyButton)
-          GD(
+          GestureDetector(
             onTap: _onCopyPressed,
             child: Padding(
               padding: const EI.o(v: 12, l: 4, r: 4),

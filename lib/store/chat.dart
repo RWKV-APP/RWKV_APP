@@ -75,7 +75,7 @@ extension $Chat on _Chat {
     webSearch.q = enabled ? WebSearchMode.off : WebSearchMode.search;
   }
 
-  FV onSendButtonPressed() async {
+  Future<void> onSendButtonPressed() async {
     qq;
     if (!checkModelSelection()) return;
 
@@ -125,11 +125,11 @@ extension $Chat on _Chat {
     await send(textToSend);
   }
 
-  FV onEditingComplete() async {
+  Future<void> onEditingComplete() async {
     qq;
   }
 
-  FV onKeyboardSubmitted(String aString) async {
+  Future<void> onKeyboardSubmitted(String aString) async {
     qqq(aString);
 
     final receivingTokens = P.chat.receivingTokens.q;
@@ -151,7 +151,7 @@ extension $Chat on _Chat {
     await send(textToSend);
   }
 
-  FV onTapMessageList() async {
+  Future<void> onTapMessageList() async {
     qq;
     P.chat.focusNode.unfocus();
     P.tts.dismissAllShown();
@@ -161,14 +161,14 @@ extension $Chat on _Chat {
     textEditingController.value = const TextEditingValue(text: "");
   }
 
-  FV onTapClearInput() async {
+  Future<void> onTapClearInput() async {
     qq;
     textEditingController.clear();
     textInInput.q = "";
     P.msg.editingOrRegeneratingIndex.q = null;
   }
 
-  FV onTapEditInUserMessageBubble({required int index}) async {
+  Future<void> onTapEditInUserMessageBubble({required int index}) async {
     if (!checkModelSelection()) return;
     final content = P.msg.list.q[index].content;
     textEditingController.value = TextEditingValue(text: content);
@@ -176,7 +176,7 @@ extension $Chat on _Chat {
     P.msg.editingOrRegeneratingIndex.q = index;
   }
 
-  FV onTapEditInBotMessageBubble({required int index}) async {
+  Future<void> onTapEditInBotMessageBubble({required int index}) async {
     if (!checkModelSelection()) return;
     final content = P.msg.list.q[index].content;
     textEditingController.value = TextEditingValue(text: content);
@@ -184,7 +184,7 @@ extension $Chat on _Chat {
     P.msg.editingOrRegeneratingIndex.q = index;
   }
 
-  FV onRegeneratePressed({required int index}) async {
+  Future<void> onRegeneratePressed({required int index}) async {
     qqq("index: $index");
     if (!checkModelSelection()) return;
 
@@ -205,11 +205,11 @@ extension $Chat on _Chat {
     await send(userMessage.content, isRegenerate: true);
   }
 
-  FV scrollToBottom({Duration? duration, bool? animate = true}) async {
+  Future<void> scrollToBottom({Duration? duration, bool? animate = true}) async {
     await scrollTo(offset: 0, duration: duration, animate: animate);
   }
 
-  FV scrollTo({required double offset, Duration? duration, bool? animate = true}) async {
+  Future<void> scrollTo({required double offset, Duration? duration, bool? animate = true}) async {
     if (scrollController.hasClients == false) return;
     if (scrollController.offset == offset) return;
     if (animate == true) {
@@ -223,7 +223,7 @@ extension $Chat on _Chat {
     }
   }
 
-  FV startNewChat() async {
+  Future<void> startNewChat() async {
     if (receivingTokens.q) await onStopButtonPressed();
     await Future.delayed(100.ms);
     // Alert.success(S.current.new_chat_started);
@@ -232,7 +232,7 @@ extension $Chat on _Chat {
     P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
   }
 
-  FV completion(String prompt) async {
+  Future<void> completion(String prompt) async {
     P.rwkv.clearStates();
     P.rwkv.completion(prompt);
   }
@@ -248,15 +248,15 @@ extension $Chat on _Chat {
     P.rwkv.setGenerateMode(r);
   }
 
-  FV resumeCompletion() async {
+  Future<void> resumeCompletion() async {
     P.rwkv.completion('');
   }
 
-  FV stopCompletion() async {
+  Future<void> stopCompletion() async {
     P.rwkv.stop();
   }
 
-  FV send(
+  Future<void> send(
     String message, {
     MessageType type = MessageType.text,
     String? imageUrl,
@@ -359,7 +359,7 @@ extension $Chat on _Chat {
     _checkSensitive(message);
   }
 
-  FV onStopButtonPressed() async {
+  Future<void> onStopButtonPressed() async {
     qqq("receiveId: ${receiveId.q}");
     P.app.hapticLight();
     await Future.delayed(1.ms);
@@ -374,7 +374,7 @@ extension $Chat on _Chat {
     _pauseMessageById(id: id);
   }
 
-  FV resumeMessageById({required int id, bool withHaptic = true}) async {
+  Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
     P.rwkv.sendMessages(_history());
@@ -389,7 +389,7 @@ extension $Chat on _Chat {
 
 /// Private methods
 extension _$Chat on _Chat {
-  FV _init() async {
+  Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
@@ -432,7 +432,7 @@ extension _$Chat on _Chat {
     P.preference.preferredLanguage.lv(P.suggestion.loadSuggestions);
   }
 
-  FV _checkSensitive(String content) async {
+  Future<void> _checkSensitive(String content) async {
     final isSensitive = await P.guard.isSensitive(content);
     if (!isSensitive) return;
 
@@ -497,7 +497,7 @@ extension _$Chat on _Chat {
 
   void _onReceivingTokensChanged(bool next) async {}
 
-  FV _pauseMessageById({required int id, bool isSensitive = false}) async {
+  Future<void> _pauseMessageById({required int id, bool isSensitive = false}) async {
     qq;
 
     P.rwkv.stop();
@@ -517,11 +517,11 @@ extension _$Chat on _Chat {
     P.msg._syncMsg(id, newMsg);
   }
 
-  FV _onFocusNodeChanged() async {
+  Future<void> _onFocusNodeChanged() async {
     hasFocus.q = focusNode.hasFocus;
   }
 
-  FV _onNewFileReceived((File, int) event) async {
+  Future<void> _onNewFileReceived((File, int) event) async {
     final demoType = P.app.demoType.q;
     if (demoType == DemoType.world) {
       final (file, length) = event;

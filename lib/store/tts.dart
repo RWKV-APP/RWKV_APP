@@ -46,7 +46,7 @@ class _TTS {
   late final selectedSpkName = qs<String?>(null);
 
   late final selectedSpkPanelFilter = qs(Language.none);
-  late final spkPairs = qs<JSON>({});
+  late final spkPairs = qs<Map<String, dynamic>>({});
   late final spkShown = qs(false);
   late final textEditingController = TextEditingController(text: _TTSStatic._defaultTextInInput);
   late final textInInput = qs(_TTSStatic._defaultTextInInput);
@@ -64,7 +64,7 @@ class _TTS {
 
 /// Private methods
 extension _$TTS on _TTS {
-  FV _init() async {
+  Future<void> _init() async {
     if (P.app.demoType.q != DemoType.tts) return;
     qq;
     P.chat.focusNode.addListener(_onChatFocusNodeChanged);
@@ -153,7 +153,7 @@ extension _$TTS on _TTS {
     _queryTimer = null;
   }
 
-  FV _runTTS({
+  Future<void> _runTTS({
     required String ttsText,
     required String instructionText,
     required String promptWavPath,
@@ -266,17 +266,17 @@ extension _$TTS on _TTS {
 
 /// Public methods
 extension $TTS on _TTS {
-  FV startStateSync() async {
+  Future<void> startStateSync() async {
     Timer.periodic(500.ms, (timer) {
       //
     });
   }
 
-  FV stopStateSync() async {
+  Future<void> stopStateSync() async {
     // timer.cancel();
   }
 
-  FV getTTSSpkNames() async {
+  Future<void> getTTSSpkNames() async {
     qq;
     try {
       final data = await rootBundle.loadString("assets/lib/chat/pairs.json");
@@ -288,7 +288,7 @@ extension $TTS on _TTS {
     }
   }
 
-  FV onAudioInteractorButtonPressed() async {
+  Future<void> onAudioInteractorButtonPressed() async {
     qq;
     P.app.hapticLight();
     if (focusNode.hasFocus) focusNode.unfocus();
@@ -300,7 +300,7 @@ extension $TTS on _TTS {
     }
   }
 
-  FV onSpkButtonPressed() async {
+  Future<void> onSpkButtonPressed() async {
     qq;
     P.app.hapticLight();
     if (focusNode.hasFocus) focusNode.unfocus();
@@ -312,7 +312,7 @@ extension $TTS on _TTS {
     }
   }
 
-  FV onIntonationButtonPressed() async {
+  Future<void> onIntonationButtonPressed() async {
     qq;
     P.app.hapticLight();
     if (focusNode.hasFocus) focusNode.unfocus();
@@ -374,7 +374,7 @@ extension $TTS on _TTS {
     return json["transcription"];
   }
 
-  FV gen() async {
+  Future<void> gen() async {
     qq;
     if (!checkModelSelection()) return;
 
@@ -532,7 +532,7 @@ outputWavPath: $outputWavPath""");
   }
 
   @Deprecated("Use sparktts instead")
-  FV setTTSCFMSteps(int steps) async {
+  Future<void> setTTSCFMSteps(int steps) async {
     qq;
     cfmSteps.q = steps;
     P.rwkv.send(to_rwkv.SetTTSCFMSteps(steps));
@@ -540,7 +540,7 @@ outputWavPath: $outputWavPath""");
     prefs.setInt(_TTSStatic._cfmStepsKey, steps);
   }
 
-  FV showTTSCFMStepsSelector() async {
+  Future<void> showTTSCFMStepsSelector() async {
     qq;
     final context = getContext();
     if (context == null) return;
@@ -606,7 +606,7 @@ outputWavPath: $outputWavPath""");
   }
 }
 
-JSON _parseSpkNames(String message) {
+Map<String, dynamic> _parseSpkNames(String message) {
   return HF.json(jsonDecode(message));
 }
 

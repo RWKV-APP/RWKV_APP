@@ -1,4 +1,3 @@
-
 import 'package:background_downloader/background_downloader.dart' as bd;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,7 +70,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
     qqq(r);
   }
 
-  FV downloadAppUpdate(String url) async {
+  Future<void> downloadAppUpdate(String url) async {
     final ts = DateTime.now().millisecondsSinceEpoch;
     final fileName = "$ts.apk";
     task = bd.DownloadTask(

@@ -80,7 +80,7 @@ class _RWKV {
 }
 
 extension $RWKVLoad on _RWKV {
-  FV loadWorldVision({
+  Future<void> loadWorldVision({
     required String modelPath,
     required String encoderPath,
     required Backend backend,
@@ -152,7 +152,7 @@ extension $RWKVLoad on _RWKV {
     _loading.q = false;
   }
 
-  FV loadWorldEngAudioQA({
+  Future<void> loadWorldEngAudioQA({
     required String modelPath,
     required String encoderPath,
     required Backend backend,
@@ -207,7 +207,7 @@ extension $RWKVLoad on _RWKV {
     _loading.q = false;
   }
 
-  FV loadSparkTTS({
+  Future<void> loadSparkTTS({
     required String modelPath,
     required String wav2vec2Path,
     required String detokenizePath,
@@ -282,7 +282,7 @@ extension $RWKVLoad on _RWKV {
   }
 
   @Deprecated("Use loadSparkTTS instead")
-  FV loadTTSModels({
+  Future<void> loadTTSModels({
     required String modelPath,
     required Backend backend,
     required bool enableReasoning,
@@ -390,7 +390,7 @@ extension $RWKVLoad on _RWKV {
     }
   }
 
-  FV loadChat({
+  Future<void> loadChat({
     required String modelPath,
     required Backend backend,
     required bool enableReasoning,
@@ -444,7 +444,7 @@ extension $RWKVLoad on _RWKV {
     _loading.q = false;
   }
 
-  FV loadOthello() async {
+  Future<void> loadOthello() async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
@@ -509,7 +509,7 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.ClearStates());
   }
 
-  FV loadSudoku({
+  Future<void> loadSudoku({
     required String modelPath,
     required Backend backend,
   }) async {
@@ -573,11 +573,11 @@ extension $RWKVLoad on _RWKV {
 
 /// Public methods
 extension $RWKV on _RWKV {
-  FV setAudioPrompt({required String path}) async {
+  Future<void> setAudioPrompt({required String path}) async {
     send(to_rwkv.SetAudioPrompt(path));
   }
 
-  FV sendMessages(
+  Future<void> sendMessages(
     List<String> messages, {
     double getIsGeneratingRate = .5,
     double getResponseBufferContentRate = .5,
@@ -604,7 +604,7 @@ extension $RWKV on _RWKV {
     });
   }
 
-  FV completion(String prompt) async {
+  Future<void> completion(String prompt) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final sendPort = _sendPort;
@@ -628,7 +628,7 @@ extension $RWKV on _RWKV {
   }
 
   /// 直接在 ffi+cpp 线程中进行推理工作, 也就是说, 会让 ffi 线程不接受任何新的 event
-  FV generate(String prompt) async {
+  Future<void> generate(String prompt) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final sendPort = _sendPort;
@@ -651,11 +651,11 @@ extension $RWKV on _RWKV {
     });
   }
 
-  FV setImagePath({required String path}) async {
+  Future<void> setImagePath({required String path}) async {
     send(to_rwkv.SetVisionPrompt(path));
   }
 
-  FV clearStates() async {
+  Future<void> clearStates() async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final sendPort = _sendPort;
@@ -676,9 +676,9 @@ extension $RWKV on _RWKV {
     return;
   }
 
-  FV stop() async => send(to_rwkv.Stop());
+  Future<void> stop() async => send(to_rwkv.Stop());
 
-  FV reInitRuntime({
+  Future<void> reInitRuntime({
     required String modelPath,
     required Backend backend,
     required String tokenizerPath,
@@ -705,7 +705,7 @@ extension $RWKV on _RWKV {
     }
   }
 
-  FV setModelConfig({
+  Future<void> setModelConfig({
     ThinkingMode? thinkingMode,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? enableReasoning,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferChinese,
@@ -744,7 +744,7 @@ extension $RWKV on _RWKV {
     }
   }
 
-  FV resetSamplerParams({required bool enableReasoning}) async {
+  Future<void> resetSamplerParams({required bool enableReasoning}) async {
     await syncSamplerParams(
       temperature: enableReasoning ? Argument.temperature.reasonDefaults : Argument.temperature.defaults,
       topK: enableReasoning ? Argument.topK.reasonDefaults : Argument.topK.defaults,
@@ -755,7 +755,7 @@ extension $RWKV on _RWKV {
     );
   }
 
-  FV syncSamplerParams({
+  Future<void> syncSamplerParams({
     double? temperature,
     double? topK,
     double? topP,
@@ -784,13 +784,13 @@ extension $RWKV on _RWKV {
     if (kDebugMode) send(to_rwkv.GetSamplerParams());
   }
 
-  FV resetMaxLength({required bool enableReasoning}) async {
+  Future<void> resetMaxLength({required bool enableReasoning}) async {
     await syncMaxLength(
       maxLength: enableReasoning ? Argument.maxLength.reasonDefaults : Argument.maxLength.defaults,
     );
   }
 
-  FV syncMaxLength({num? maxLength}) async {
+  Future<void> syncMaxLength({num? maxLength}) async {
     if (maxLength != null) arguments(Argument.maxLength).q = maxLength.toDouble();
     send(to_rwkv.SetMaxLength(_intIfFixedDecimalsIsZero(Argument.maxLength).toInt()));
   }
@@ -855,7 +855,7 @@ extension $RWKV on _RWKV {
 
 /// Private methods
 extension _$RWKV on _RWKV {
-  FV _init() async {
+  Future<void> _init() async {
     P.app.pageKey.lv(_onPageKeyChanged);
     _receivePort.listen(_onMessage);
     final r = await compute((_) {
@@ -876,7 +876,7 @@ extension _$RWKV on _RWKV {
     }
   }
 
-  FV _onPageKeyChanged() async {
+  Future<void> _onPageKeyChanged() async {
     final pageKey = P.app.pageKey.q;
     switch (pageKey) {
       case PageKey.othello:
@@ -888,12 +888,12 @@ extension _$RWKV on _RWKV {
   }
 
   // ignore: unused_element
-  FV _loadFifthteenPuzzle() async {
+  Future<void> _loadFifthteenPuzzle() async {
     throw "Not support, please contact the developer";
   }
 
   // ignore: unused_element
-  FV _loadSudoku() async {
+  Future<void> _loadSudoku() async {
     throw "Not support, please contact the developer";
   }
 
@@ -1015,7 +1015,7 @@ extension _$RWKV on _RWKV {
     }
   }
 
-  FV _ensureQNNCopied() async {
+  Future<void> _ensureQNNCopied() async {
     if (Platform.isAndroid && !_qnnLibsCopied.q) {
       // TODO: @Molly better solution here
       // TODO: @wangce Ask Molly why there are "better" solution here

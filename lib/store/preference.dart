@@ -59,7 +59,7 @@ class _Preference {
 
 /// Private methods
 extension _$Preference on _Preference {
-  FV _init() async {
+  Future<void> _init() async {
     final sp = await SharedPreferences.getInstance();
 
     _showBatteryOptimization = sp.getBool("halo_state.showBatteryOptimizationDialog") ?? true;
@@ -128,14 +128,14 @@ extension _$Preference on _Preference {
     }
   }
 
-  FV _saveDumpping(bool dumpping) async {
+  Future<void> _saveDumpping(bool dumpping) async {
     qqr("saveDumpping: $dumpping");
     this.dumpping.q = dumpping;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool("halo_state.dumpping", dumpping);
   }
 
-  FV _saveLatestRuntimeAddress(int latestRuntimeAddress) async {
+  Future<void> _saveLatestRuntimeAddress(int latestRuntimeAddress) async {
     qqr("saveLatestRuntimeAddress: $latestRuntimeAddress");
     this.latestRuntimeAddress.q = latestRuntimeAddress;
     final sp = await SharedPreferences.getInstance();
@@ -166,7 +166,7 @@ extension $Preference on _Preference {
     await sp.setInt("halo_state.user_type", res.index);
   }
 
-  FV showTextScaleFactorDialog() async {
+  Future<void> showTextScaleFactorDialog() async {
     final context = getContext();
     if (context == null) return;
     if (!context.mounted) return;
@@ -192,7 +192,7 @@ extension $Preference on _Preference {
     await sp.setDouble("halo_state.textScaleFactor", res);
   }
 
-  FV showLocaleDialog() async {
+  Future<void> showLocaleDialog() async {
     final context = getContext();
     if (context == null) return;
     if (!context.mounted) return;
@@ -217,14 +217,14 @@ extension $Preference on _Preference {
     await sp.setString("halo_state.language", res.locale.toString());
   }
 
-  FV showThemeSettings() async {
+  Future<void> showThemeSettings() async {
     final context = getContext();
     if (context == null) return;
     if (!context.mounted) return;
     await ThemeSelector.show();
   }
 
-  FV tryShowBatteryOptimizationDialog(BuildContext context) async {
+  Future<void> tryShowBatteryOptimizationDialog(BuildContext context) async {
     if (!_showBatteryOptimization || !Platform.isAndroid) {
       return;
     }

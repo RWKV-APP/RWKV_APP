@@ -41,7 +41,7 @@ class ModelItem extends ConsumerWidget {
     }
   }
 
-  FV _onStartTapInSudoku() async {
+  Future<void> _onStartTapInSudoku() async {
     qq;
     final localFile = P.fileManager.locals(fileInfo).q;
     final modelPath = localFile.targetPath;
@@ -59,7 +59,7 @@ class ModelItem extends ConsumerWidget {
     pop();
   }
 
-  FV _onStartTapInChat() async {
+  Future<void> _onStartTapInChat() async {
     qq;
     if (P.chat.receivingTokens.q) {
       Alert.warning(S.current.please_wait_for_the_model_to_generate);
@@ -147,8 +147,8 @@ class ModelItem extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 8.r,
-      child: C(
-        decoration: BD(
+      child: Container(
+        decoration: BoxDecoration(
           color: customTheme.settingItem,
           borderRadius: 8.r,
           border: Border.all(color: qw.q(.1), width: .5),
@@ -164,10 +164,10 @@ class ModelItem extends ConsumerWidget {
             _DownloadActions(file: fileInfo, state: localFile.state),
             if (hasFile) ...[
               if (!isCurrentModel)
-                GD(
+                GestureDetector(
                   onTap: _onStartTap,
-                  child: C(
-                    decoration: BD(
+                  child: Container(
+                    decoration: BoxDecoration(
                       color: loading ? kCG.q(.5) : kCG,
                       borderRadius: 8.r,
                     ),
@@ -179,10 +179,10 @@ class ModelItem extends ConsumerWidget {
                   ),
                 ),
               if (isCurrentModel)
-                GD(
+                GestureDetector(
                   onTap: null,
-                  child: C(
-                    decoration: BD(
+                  child: Container(
+                    decoration: BoxDecoration(
                       color: kG.q(.5),
                       borderRadius: 8.r,
                     ),
@@ -292,10 +292,10 @@ class _Delete extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final primary = Theme.of(context).colorScheme.primary;
-    return GD(
+    return GestureDetector(
       onTap: _onTap,
-      child: C(
-        decoration: BD(
+      child: Container(
+        decoration: BoxDecoration(
           color: kC,
           borderRadius: 8.r,
           border: Border.all(
@@ -343,11 +343,11 @@ class FileKeyItem extends ConsumerWidget {
           children: [
             T(
               fileInfo.name,
-              s: const TS(w: FW.w600),
+              s: const TS(w: FontWeight.w600),
             ),
             T(
               gbDisplay(fileSize),
-              s: TS(c: qb.q(.7), w: FW.w500),
+              s: TS(c: qb.q(.7), w: FontWeight.w500),
             ),
             if (showDownloaded && localFile.hasFile)
               Icon(
@@ -406,8 +406,8 @@ class _Tags extends ConsumerWidget {
       children: [
         ...tags.map((tag) {
           final showHighlight = _highlightTags.contains(tag);
-          return C(
-            decoration: BD(
+          return Container(
+            decoration: BoxDecoration(
               borderRadius: 4.r,
               color: showHighlight ? kCG : kG.q(.2),
             ),
@@ -416,20 +416,20 @@ class _Tags extends ConsumerWidget {
               tag.toUpperCase(),
               s: TS(
                 c: showHighlight ? qw : qb,
-                w: showHighlight ? FW.w500 : FW.w400,
+                w: showHighlight ? FontWeight.w500 : FontWeight.w400,
               ),
             ),
           );
         }),
         if (kDebugMode && fileInfo.isDebug)
           Container(
-            decoration: BD(color: kCR, borderRadius: 4.r),
+            decoration: BoxDecoration(color: kCR, borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T("DEBUG", s: TS(c: qw)),
           ),
         if (quantization != null && quantization.isNotEmpty)
-          C(
-            decoration: BD(color: kG.q(.2), borderRadius: 4.r),
+          Container(
+            decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T(quantization),
           ),

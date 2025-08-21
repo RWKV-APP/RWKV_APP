@@ -102,7 +102,7 @@ class AudioInput extends ConsumerWidget {
           }
           P.chat.inputHeight.q = size.height + 30;
         },
-        child: SB(
+        child: SizedBox(
           height: _kWidgetSize + bottomAdjust,
           width: screenWidth,
           child: Stack(
@@ -112,8 +112,8 @@ class AudioInput extends ConsumerWidget {
                 right: 0,
                 height: 50,
                 bottom: 0,
-                child: C(
-                  decoration: BD(
+                child: Container(
+                  decoration: BoxDecoration(
                     gradient: showGradient
                         ? LinearGradient(
                             colors: [
@@ -133,7 +133,7 @@ class AudioInput extends ConsumerWidget {
                 right: 0,
                 child: Column(
                   children: [
-                    GD(
+                    GestureDetector(
                       onTapDown: _onTapDown,
                       onTapUp: _onTapUp,
                       onTapCancel: _onTapCancel,
@@ -141,10 +141,10 @@ class AudioInput extends ConsumerWidget {
                         borderRadius: 1000.r,
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                          child: C(
+                          child: Container(
                             height: _kButtonSize,
                             width: _kButtonSize,
-                            decoration: BD(
+                            decoration: BoxDecoration(
                               color: primary.q(.2),
                               border: Border.all(color: primary.q(.5)),
                               borderRadius: 1000.r,
@@ -186,7 +186,7 @@ class AudioInput extends ConsumerWidget {
     );
   }
 
-  FV _onTapDown(TapDownDetails details) async {
+  Future<void> _onTapDown(TapDownDetails details) async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) return;
     P.app.hapticLight();
@@ -194,14 +194,14 @@ class AudioInput extends ConsumerWidget {
     await P.world.startRecord();
   }
 
-  FV _onTapCancel() async {
+  Future<void> _onTapCancel() async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) return;
     P.app.hapticLight();
     await P.world.stopRecord(isCancel: true);
   }
 
-  FV _onTapUp(TapUpDetails details) async {
+  Future<void> _onTapUp(TapUpDetails details) async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) return;
     P.app.hapticMedium();

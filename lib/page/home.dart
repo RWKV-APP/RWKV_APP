@@ -37,8 +37,12 @@ class PageHome extends ConsumerWidget {
     push(PageKey.chat, extra: PageChatParam(isNeko: true));
   }
 
-  void onChatTap() async {
+  void _onChatTap() async {
     P.chat.startNewChat();
+    push(PageKey.chat);
+  }
+
+  void _onTtsTap() async {
     push(PageKey.chat);
   }
 
@@ -98,16 +102,25 @@ class PageHome extends ConsumerWidget {
                           buildButton(
                             title: s.chat,
                             subtitle: s.chat_with_rwkv_model,
-                            onTap: onChatTap,
+                            onTap: _onChatTap,
                             iconColor: Colors.blueAccent,
-                            icon: FontAwesomeIcons.comments,
+                            iconData: FontAwesomeIcons.comments,
                           ),
+                          // buildButton(
+                          //   title: s.tts,
+                          //   subtitle: s.tts_detail,
+                          //   onTap: _onTtsTap,
+                          //   icon: FaIcon(
+                          //     FontAwesomeIcons.volumeHigh,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
                           buildButton(
                             title: s.neko,
                             subtitle: s.nyan_nyan,
                             onTap: () => onNekoTap(context),
                             iconColor: Colors.pinkAccent,
-                            icon: FontAwesomeIcons.cat,
+                            iconData: FontAwesomeIcons.cat,
                           ),
                           buildButton(
                             title: s.completion_mode,
@@ -116,7 +129,7 @@ class PageHome extends ConsumerWidget {
                               push(PageKey.completion);
                             },
                             iconColor: Colors.lightGreen,
-                            icon: FontAwesomeIcons.feather,
+                            iconData: FontAwesomeIcons.feather,
                           ),
                           buildButton(
                             title: isDesktop ? s.offline_translator_server : s.offline_translator,
@@ -125,7 +138,7 @@ class PageHome extends ConsumerWidget {
                               push(PageKey.translator);
                             },
                             iconColor: Colors.blue,
-                            icon: Icons.translate,
+                            iconData: Icons.translate,
                           ),
                         ]
                         .map(
@@ -149,7 +162,8 @@ class PageHome extends ConsumerWidget {
     String? subtitle,
     VoidCallback? onTap,
     Color? iconColor,
-    IconData? icon,
+    IconData? iconData,
+    Widget? icon,
   }) {
     return Material(
       clipBehavior: Clip.antiAlias,
@@ -161,7 +175,7 @@ class PageHome extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (icon != null)
+              if (iconData != null)
                 Align(
                   alignment: Alignment.topLeft,
                   child: Container(
@@ -172,7 +186,15 @@ class PageHome extends ConsumerWidget {
                       shape: BoxShape.circle,
                     ),
                     alignment: Alignment.center,
-                    child: FaIcon(icon, color: Colors.white),
+                    child: FaIcon(iconData, color: Colors.white),
+                  ),
+                ),
+              if (icon != null)
+                SizedBox(
+                  height: 48,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: icon,
                   ),
                 ),
               if (title != null) const SizedBox(height: 12),

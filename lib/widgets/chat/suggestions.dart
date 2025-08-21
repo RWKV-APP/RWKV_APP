@@ -186,15 +186,15 @@ class _AllSuggestionDialogState extends State<AllSuggestionDialog> implements Ti
 
   @override
   Widget build(BuildContext context) {
-    return SB(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           16.h,
-          T(S.of(context).all_prompt, s: const TS(s: 16, w: FW.w600)),
+          T(S.of(context).all_prompt, s: const TS(s: 16, w: FontWeight.w600)),
           16.h,
-          SB(
+          SizedBox(
             height: 50,
             child: TabBar(
               isScrollable: true,
@@ -263,7 +263,7 @@ class _SuggestionList extends StatelessWidget {
         return InkWell(
           child: Container(
             padding: const EI.s(v: 8, h: 12),
-            child: T(s.display, s: const TS(s: 14, w: FW.w500)),
+            child: T(s.display, s: const TS(s: 14, w: FontWeight.w500)),
           ),
           onTap: () {
             Navigator.pop(context, s);

@@ -14,12 +14,12 @@ class _Conversation {
 
 /// Private methods
 extension _$Conversation on _Conversation {
-  FV _init() async {
+  Future<void> _init() async {
     await load();
     P.msg.msgNode.lv(_onMsgNodeChanged, fireImmediately: true);
   }
 
-  FV _onMsgNodeChanged() async {
+  Future<void> _onMsgNodeChanged() async {
     qq;
     final createAtUS = P.msg.msgNode.q.createAtInUS;
     if (currentCreatedAtUS.q == createAtUS) {
@@ -28,7 +28,7 @@ extension _$Conversation on _Conversation {
     currentCreatedAtUS.q = createAtUS;
   }
 
-  FV _syncNode() async {
+  Future<void> _syncNode() async {
     qq;
 
     final msgNode = P.msg.msgNode.q;
@@ -55,7 +55,7 @@ extension _$Conversation on _Conversation {
 
 /// Public methods
 extension $Conversation on _Conversation {
-  FV load() async {
+  Future<void> load() async {
     try {
       qqq(HF.microseconds);
       final db = P.app._db;
@@ -74,7 +74,7 @@ extension $Conversation on _Conversation {
     return _Conversation._conversationColors[index];
   }
 
-  FV onTapInList(ConversationData conversation) async {
+  Future<void> onTapInList(ConversationData conversation) async {
     qq;
     currentCreatedAtUS.q = conversation.createdAtUS;
     // Pager.toggle();
@@ -90,7 +90,7 @@ extension $Conversation on _Conversation {
     push(PageKey.chat);
   }
 
-  FV onDeleteClicked(BuildContext context, ConversationData conversation) async {
+  Future<void> onDeleteClicked(BuildContext context, ConversationData conversation) async {
     // final s = S.of(context);
     // final res = await showOkCancelAlertDialog(
     //   context: context,
@@ -123,7 +123,7 @@ extension $Conversation on _Conversation {
     }
   }
 
-  FV onRenameClicked(BuildContext context, ConversationData conversation) async {
+  Future<void> onRenameClicked(BuildContext context, ConversationData conversation) async {
     final s = S.of(context);
     final currentTitle = conversation.title;
     final initialText = currentTitle.length > Config.maxTitleLength ? currentTitle.substring(0, Config.maxTitleLength) : currentTitle;
@@ -199,7 +199,7 @@ extension $Conversation on _Conversation {
   /// Assistant:
   ///
   /// context
-  FV onExportClicked(BuildContext context, ConversationData conversation) async {
+  Future<void> onExportClicked(BuildContext context, ConversationData conversation) async {
     final s = S.of(context);
     try {
       // 1. 从ConversationData转成MsgNode获取所有消息ID

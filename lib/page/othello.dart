@@ -130,7 +130,7 @@ class _Title extends ConsumerWidget {
         if (usePortrait) const Spacer(),
         T(
           s.rwkv_othello,
-          s: const TS(s: 20, w: FW.w700),
+          s: const TS(s: 20, w: FontWeight.w700),
         ),
         if (usePortrait) const Spacer(),
         if (!usePortrait) 32.w,
@@ -161,7 +161,7 @@ class _ModelSettings extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MAA.center,
       children: [
-        SB(
+        SizedBox(
           width: 32,
           height: 32,
           child: IconButton(
@@ -246,10 +246,10 @@ class _ModelSettings extends ConsumerWidget {
     return Material(
       color: qb.q(.0),
       textStyle: const TS(ff: "monospace", s: 10),
-      child: C(
+      child: Container(
         padding: const EI.a(4),
         margin: const EI.a(4),
-        decoration: BD(
+        decoration: BoxDecoration(
           color: qb.q(.0),
           borderRadius: 4.r,
           border: Border.all(color: qb.q(.5), width: .5),
@@ -260,7 +260,7 @@ class _ModelSettings extends ConsumerWidget {
           children: [
             T(
               s.model_settings,
-              s: const TS(w: FW.w700),
+              s: const TS(w: FontWeight.w700),
             ),
             8.h,
             T(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, s: TS(c: qb.q(.5), s: 10)),
@@ -314,8 +314,8 @@ class _Players extends ConsumerWidget {
     final usePortrait = ref.watch(P.othello.usePortrait);
     final qb = ref.watch(P.app.qb);
 
-    final blackOptions = C(
-      decoration: BD(
+    final blackOptions = Container(
+      decoration: BoxDecoration(
         color: kC,
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
@@ -327,7 +327,7 @@ class _Players extends ConsumerWidget {
           T(
             s.black + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: FW.w700),
+            s: const TS(w: FontWeight.w700),
           ),
           Wrap(
             children: [
@@ -363,8 +363,8 @@ class _Players extends ConsumerWidget {
       ),
     );
 
-    final whiteOptions = C(
-      decoration: BD(
+    final whiteOptions = Container(
+      decoration: BoxDecoration(
         color: kC,
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
@@ -376,7 +376,7 @@ class _Players extends ConsumerWidget {
           T(
             s.white + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: FW.w700),
+            s: const TS(w: FontWeight.w700),
           ),
           Wrap(
             children: [
@@ -415,10 +415,10 @@ class _Players extends ConsumerWidget {
     return Material(
       color: qb.q(.0),
       textStyle: const TS(ff: "monospace", s: 10),
-      child: C(
+      child: Container(
         margin: const EI.a(4),
         padding: const EI.a(4),
-        decoration: BD(
+        decoration: BoxDecoration(
           color: qb.q(.0),
           borderRadius: 4.r,
           border: Border.all(color: qb.q(.5), width: .5),
@@ -428,7 +428,7 @@ class _Players extends ConsumerWidget {
           children: [
             T(
               s.players,
-              s: const TS(w: FW.w700),
+              s: const TS(w: FontWeight.w700),
             ),
             12.h,
             if (usePortrait && !playerShouldAtSameColumnWithSettings && !settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
@@ -495,16 +495,16 @@ class _Score extends ConsumerWidget {
           duration: const Duration(milliseconds: 150),
           child: T(
             s.thinking,
-            s: TS(s: 10, w: thinking ? FW.w400 : FW.w400),
+            s: TS(s: 10, w: thinking ? FontWeight.w400 : FontWeight.w400),
           ),
         ),
         T(
           "${s.prefill}: ${prefillSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: FW.w400),
+          s: const TS(s: 10, w: FontWeight.w400),
         ),
         T(
           "${s.decode}: ${decodeSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: FW.w400),
+          s: const TS(s: 10, w: FontWeight.w400),
         ),
       ],
     );
@@ -517,7 +517,7 @@ class _Score extends ConsumerWidget {
             },
       child: T(
         s.new_game,
-        s: const TS(s: 10, w: FW.w500),
+        s: const TS(s: 10, w: FontWeight.w500),
       ),
     );
 
@@ -532,9 +532,9 @@ class _Score extends ConsumerWidget {
           textAlign: TextAlign.center,
         ),
         16.w,
-        C(
+        Container(
           padding: const EI.o(t: 0, b: 8, l: 8, r: 8),
-          decoration: BD(
+          decoration: BoxDecoration(
             color: kC,
             borderRadius: 8.r,
             border: Border.all(color: qb.q(.5), width: .5),
@@ -622,12 +622,12 @@ class _Grid extends ConsumerWidget {
                   top: top + labelSize,
                   width: sizeForCell,
                   height: sizeForCell,
-                  child: GD(
+                  child: GestureDetector(
                     onTap: () {
                       _onCellTap(row: row, col: col);
                     },
-                    child: C(
-                      decoration: BD(color: const Color(0xFF808080).q(.5)),
+                    child: Container(
+                      decoration: BoxDecoration(color: const Color(0xFF808080).q(.5)),
                       child: _Cell(
                         row: row,
                         col: col,
@@ -652,7 +652,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: T(
                 e,
-                s: const TS(s: 10, w: FW.w700),
+                s: const TS(s: 10, w: FontWeight.w700),
               ),
             ),
           );
@@ -668,16 +668,16 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: T(
                 e,
-                s: const TS(s: 10, w: FW.w700),
+                s: const TS(s: 10, w: FontWeight.w700),
               ),
             ),
           );
         }).toList();
 
-        return C(
+        return Container(
           width: size,
           height: size,
-          decoration: const BD(color: kC),
+          decoration: const BoxDecoration(color: kC),
           child: Stack(
             children: [
               ...cells,
@@ -718,14 +718,14 @@ class _Cell extends StatelessWidget {
           return Center(
             child: Stack(
               children: [
-                C(
+                Container(
                   constraints: BoxConstraints(
                     minWidth: minAvailableSize,
                     minHeight: minAvailableSize,
                     maxWidth: maxAvailableSize,
                     maxHeight: maxAvailableSize,
                   ),
-                  decoration: BD(color: Colors.green, borderRadius: 100.r),
+                  decoration: BoxDecoration(color: Colors.green, borderRadius: 100.r),
                 ),
               ],
             ),
@@ -762,14 +762,14 @@ class _White extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return C(
+    return Container(
       constraints: BoxConstraints(
         minWidth: minSize,
         minHeight: minSize,
         maxWidth: maxSize,
         maxHeight: maxSize,
       ),
-      decoration: BD(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.black.q(.3),
@@ -801,14 +801,14 @@ class _Black extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return C(
+    return Container(
       constraints: BoxConstraints(
         minWidth: minSize,
         minHeight: minSize,
         maxWidth: maxSize,
         maxHeight: maxSize,
       ),
-      decoration: BD(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: Colors.black.q(.3),
@@ -894,7 +894,7 @@ class _Console extends ConsumerWidget {
                   }),
               ],
             ),
-            style: TS(c: qw, s: 12, w: FW.w500),
+            style: TS(c: qw, s: 12, w: FontWeight.w500),
           );
         },
       ),
@@ -922,11 +922,11 @@ class _ConsoleCell extends ConsumerWidget {
         color = kC;
         break;
     }
-    return C(
+    return Container(
       height: 12,
       width: 12,
       margin: const EI.s(h: 1),
-      decoration: BD(color: qw.q(.33)),
+      decoration: BoxDecoration(color: qw.q(.33)),
       child: Center(
         child: Icon(
           Icons.circle,

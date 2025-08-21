@@ -48,7 +48,7 @@ class InputTextField extends ConsumerWidget {
 
     final isDesktop = ref.watch(P.app.isDesktop);
 
-    final textFieldWidget = GD(
+    final textFieldWidget = GestureDetector(
       onTap: textFieldEnabled ? null : _onTapTextFieldWhenItsDisabled,
       child: TextField(
         focusNode: P.chat.focusNode,
@@ -104,7 +104,7 @@ class InputTextField extends ConsumerWidget {
           hintStyle: !isChat ? null : const TextStyle(color: Colors.grey),
           suffixIcon: textInInput.isEmpty || isChat
               ? null
-              : GD(
+              : GestureDetector(
                   onTap: P.chat.onTapClearInput,
                   child: const Icon(Icons.clear),
                 ),

@@ -80,7 +80,7 @@ class Settings extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == DemoType.chat;
 
-    final iconWidget = SB(
+    final iconWidget = SizedBox(
       width: 64,
       height: 64,
       child: ClipRRect(
@@ -159,7 +159,7 @@ class Settings extends ConsumerWidget {
                 Expanded(
                   child: T(
                     s.application_settings,
-                    s: TS(w: FW.w500, c: qb.q(.8), s: 12),
+                    s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -204,7 +204,7 @@ class Settings extends ConsumerWidget {
                 Expanded(
                   child: T(
                     s.join_the_community,
-                    s: TS(w: FW.w500, c: qb.q(.8), s: 12),
+                    s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -242,7 +242,7 @@ class Settings extends ConsumerWidget {
               children: [
                 T(
                   s.about,
-                  s: TS(w: FW.w500, c: qb.q(.8), s: 12),
+                  s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
                 ),
               ],
             ),
@@ -340,7 +340,7 @@ class Settings extends ConsumerWidget {
       context: context,
       applicationName: Config.appTitle,
       applicationVersion: "$version ($buildNumber)",
-      applicationIcon: C(
+      applicationIcon: Container(
         margin: const EI.o(t: 12, b: 12),
         child: iconWidget,
       ),

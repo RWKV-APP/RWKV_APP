@@ -23,8 +23,6 @@ enum PageKey {
 
   String get path => "/$name";
 
-  bool get hasTransition => {chat, completion, advancedSettings}.contains(this);
-
   Widget get scaffold => switch (this) {
     PageKey.chat => const PageChat(),
     PageKey.othello => const PageOthello(),
@@ -37,43 +35,19 @@ enum PageKey {
     PageKey.advancedSettings => const PageAdvancedSettings(),
   };
 
-  //
-
-  GoRoute get route => switch (this) {
-    PageKey.translator => GoRoute(
-      path: path,
-      builder: (context, state) => scaffold,
-    ),
-    _ => GoRoute(
-      path: path,
-      pageBuilder: (context, state) => _page(state),
-    ),
-  };
-
-  Page _page(GoRouterState state) {
-    if (!hasTransition) {
-      return NoTransitionPage<void>(
-        key: state.pageKey,
-        child: scaffold,
+  GoRoute get route {
+    if (PageKey.tabs.contains(this)) {
+      return GoRoute(
+        path: path,
+        pageBuilder: (context, state) => NoTransitionPage(child: scaffold),
       );
     }
-    final page = this == chat ? PageChat(param: state.extra) : scaffold;
-    return CustomTransitionPage(
-      key: state.pageKey,
-      child: page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(1.0, 0.0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: child,
-        );
-      },
-    );
+    return GoRoute(path: path, builder: (context, state) => scaffold);
   }
 
   static String get initialLocation => first.path;
 
   static PageKey get first => PageKey.home;
+
+  static List<PageKey> get tabs => [home, conversation, settings];
 }

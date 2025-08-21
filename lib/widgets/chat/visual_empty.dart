@@ -28,7 +28,7 @@ class VisualEmpty extends ConsumerWidget {
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final primary = Theme.of(context).colorScheme.primary;
     final imagePath = ref.watch(P.world.imagePath);
-    if (imagePath != null) return Positioned(child: IgnorePointer(child: C()));
+    if (imagePath != null) return Positioned(child: IgnorePointer(child: Container()));
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final s = S.of(context);
 
@@ -43,7 +43,7 @@ class VisualEmpty extends ConsumerWidget {
       case WorldType.engAudioQA:
       case WorldType.chineseASR:
       case WorldType.engASR:
-        return Positioned(child: IgnorePointer(child: C()));
+        return Positioned(child: IgnorePointer(child: Container()));
     }
 
     final messages = ref.watch(P.msg.list);
@@ -67,10 +67,10 @@ class VisualEmpty extends ConsumerWidget {
           Center(
             child: ClipRRect(
               borderRadius: 12.r,
-              child: GD(
+              child: GestureDetector(
                 onTap: _onTapImageSelector,
-                child: C(
-                  decoration: BD(
+                child: Container(
+                  decoration: BoxDecoration(
                     color: primaryContainer.q(.5),
                     border: Border.all(color: primary.q(.5)),
                     borderRadius: 12.r,
@@ -83,7 +83,7 @@ class VisualEmpty extends ConsumerWidget {
                     children: [
                       if (imagePath == null) const Icon(Icons.image),
                       if (imagePath == null) 8.h,
-                      if (imagePath == null) T(s.click_to_load_image, s: const TS(w: FW.w500, s: 20)),
+                      if (imagePath == null) T(s.click_to_load_image, s: const TS(w: FontWeight.w500, s: 20)),
                       if (imagePath == null) 8.h,
                       if (imagePath == null) T(s.then_you_can_start_to_chat_with_rwkv),
                     ],

@@ -92,7 +92,7 @@ class ThemeSelector extends ConsumerWidget {
           Expanded(
             child: T(
               s.dark_mode_theme,
-              s: TS(w: FW.w500, c: qb.q(.8), s: 12),
+              s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
             ),
           ),
         ],
