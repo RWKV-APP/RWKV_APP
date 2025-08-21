@@ -6,7 +6,6 @@ import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/model/file_info.dart';
-import 'package:zone/page/chat.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $FileManager, $RWKVLoad;
@@ -34,7 +33,7 @@ class PageHome extends ConsumerWidget {
       }
     }
     P.chat.startNewChat();
-    push(PageKey.chat, extra: PageChatParam(isNeko: true));
+    push(PageKey.chat);
   }
 
   void _onChatTap() async {
@@ -106,15 +105,15 @@ class PageHome extends ConsumerWidget {
                             iconColor: Colors.blueAccent,
                             iconData: FontAwesomeIcons.comments,
                           ),
-                          // buildButton(
-                          //   title: s.tts,
-                          //   subtitle: s.tts_detail,
-                          //   onTap: _onTtsTap,
-                          //   icon: FaIcon(
-                          //     FontAwesomeIcons.volumeHigh,
-                          //     color: Colors.white,
-                          //   ),
-                          // ),
+                          buildButton(
+                            title: s.tts,
+                            subtitle: s.tts_detail,
+                            onTap: _onTtsTap,
+                            icon: FaIcon(
+                              FontAwesomeIcons.volumeHigh,
+                              color: Colors.white,
+                            ),
+                          ),
                           buildButton(
                             title: s.neko,
                             subtitle: s.nyan_nyan,

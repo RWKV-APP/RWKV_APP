@@ -153,14 +153,6 @@ extension _$App on _App {
     }
     demoType.q = DemoType.values.byName(name);
 
-    if (isDesktop.q) {
-      final desktopOrientations = demoType.q.desktopOrientations;
-      if (desktopOrientations != null) SystemChrome.setPreferredOrientations(desktopOrientations);
-    } else {
-      final mobileOrientations = demoType.q.mobileOrientations;
-      if (mobileOrientations != null) SystemChrome.setPreferredOrientations(mobileOrientations);
-    }
-
     kRouter.routerDelegate.addListener(_routerListener);
 
     if (kDebugMode) {

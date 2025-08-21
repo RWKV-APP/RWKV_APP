@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 enum DemoType {
   /// RWKV Chat
@@ -20,7 +19,7 @@ enum DemoType {
   /// RWKV_See
   world;
 
-  Color get seedColor => switch (this) {
+  Color get _seedColor => switch (this) {
     DemoType.chat => const Color(0xFF365FD9),
     DemoType.tts => Colors.green,
     DemoType.world => Colors.blue,
@@ -30,18 +29,11 @@ enum DemoType {
   };
 
   ColorScheme get colorScheme => switch (this) {
-    _ => ColorScheme.fromSeed(seedColor: seedColor),
+    _ => ColorScheme.fromSeed(seedColor: _seedColor),
   };
 
   ColorScheme get colorSchemeDark => switch (this) {
-    _ => ColorScheme.fromSeed(seedColor: seedColor, brightness: Brightness.dark),
+    _ => ColorScheme.fromSeed(seedColor: _seedColor, brightness: Brightness.dark),
   };
 
-  List<DeviceOrientation>? get mobileOrientations => switch (this) {
-    _ => null,
-  };
-
-  List<DeviceOrientation>? get desktopOrientations => switch (this) {
-    _ => null,
-  };
 }

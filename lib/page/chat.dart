@@ -11,7 +11,6 @@ import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
-import 'package:zone/widgets/chat/audio_empty.dart';
 import 'package:zone/widgets/chat/audio_input.dart';
 import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/empty.dart';
@@ -20,18 +19,9 @@ import 'package:zone/widgets/chat/share_chat.dart';
 import 'package:zone/widgets/chat/suggestions.dart';
 import 'package:zone/widgets/chat/visual_empty.dart';
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/widgets/pager.dart';
-
-class PageChatParam {
-  final bool isNeko;
-
-  PageChatParam({required this.isNeko});
-}
 
 class PageChat extends StatefulWidget {
-  final dynamic param;
-
-  const PageChat({super.key, this.param});
+  const PageChat({super.key});
 
   @override
   State<PageChat> createState() => _PageChatState();
@@ -73,32 +63,20 @@ class _Page extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectMessageMode = ref.watch(P.chat.isSharing);
-    final atMainPage = ref.watch(Pager.atMainPage);
-    final demoType = ref.watch(P.app.demoType);
 
     return Scaffold(
-      resizeToAvoidBottomInset: atMainPage,
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     P.tts.test();
-      //   },
-      //   child: const Icon(Icons.play_arrow),
-      // ),
       body: Stack(
         children: [
-          if (DemoType.chat == demoType) const AppGradientBackground(child: SizedBox()),
+          const AppGradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
           const VisualEmpty(),
-          const AudioEmpty(),
           const Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: ChatAppBar(),
           ),
-          if (DemoType.chat != demoType) const _NavigationBarBottomLine(),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
           if (!selectMessageMode)
             const Positioned(
