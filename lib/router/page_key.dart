@@ -1,4 +1,4 @@
-import 'package:flutter_roleplay/hometabs/jingxuan_page.dart';
+import 'package:flutter_roleplay/hometabs/roleplay_chat_page.dart';
 import 'package:zone/page/advanced_sesttings.dart' show PageAdvancedSettings;
 import 'package:zone/page/chat.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'package:zone/page/othello.dart';
 import 'package:zone/page/settings.dart';
 import 'package:zone/page/sudoku.dart';
 import 'package:zone/page/translator.dart';
+import 'package:zone/router/router.dart';
 
 enum PageKey {
   translator,
@@ -37,46 +38,22 @@ enum PageKey {
     PageKey.settings => const PageSettings(),
     PageKey.translator => const PageTranslator(),
     PageKey.advancedSettings => const PageAdvancedSettings(),
-    PageKey.rolePlaying => const JingxuanPage(),
+    PageKey.rolePlaying => RoleplayManage.createRolePlayChatPage(getContext()!),
   };
 
-  //
-
-  GoRoute get route => switch (this) {
-    PageKey.translator => GoRoute(
-      path: path,
-      builder: (context, state) => scaffold,
-    ),
-    _ => GoRoute(
-      path: path,
-      pageBuilder: (context, state) => _page(state),
-    ),
-  };
-
-  Page _page(GoRouterState state) {
-    if (!hasTransition) {
-      return NoTransitionPage<void>(
-        key: state.pageKey,
-        child: scaffold,
+  GoRoute get route {
+    if (PageKey.tabs.contains(this)) {
+      return GoRoute(
+        path: path,
+        pageBuilder: (context, state) => NoTransitionPage(child: scaffold),
       );
     }
-    final page = this == chat ? PageChat(param: state.extra) : scaffold;
-    return CustomTransitionPage(
-      key: state.pageKey,
-      child: page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(1.0, 0.0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: child,
-        );
-      },
-    );
+    return GoRoute(path: path, builder: (context, state) => scaffold);
   }
 
   static String get initialLocation => first.path;
 
   static PageKey get first => PageKey.home;
+
+  static List<PageKey> get tabs => [home, conversation, settings];
 }

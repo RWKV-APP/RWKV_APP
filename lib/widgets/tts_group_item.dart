@@ -24,20 +24,20 @@ class TTSGroupItem extends ConsumerWidget {
   }) : assert(fileInfo.tags.contains("core"), "fileInfo must be a core model");
 
   void _onDownloadAllTap() async {
-    final helperModels = P.fileManager.availableModels.q.where((e) => !e.tags.contains("core")).toList();
+    final helperModels = P.fileManager.availableModelsInCurrentDemoType.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
     final missingFileInfos = [...helperModels, core].where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
     missingFileInfos.forEach((e) => P.fileManager.getFile(fileInfo: e));
   }
 
   void _onDeleteAllTap() async {
-    final helperModels = P.fileManager.availableModels.q.where((e) => !e.tags.contains("core")).toList();
+    final helperModels = P.fileManager.availableModelsInCurrentDemoType.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
     [...helperModels, core].forEach((e) => P.fileManager.deleteFile(fileInfo: e));
   }
 
-  FV _onSparkTap() async {
-    final availableModels = P.fileManager.availableModels.q;
+  Future<void> _onSparkTap() async {
+    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
     final fileInfos = availableModels.toList();
     final sparkFileKeys = fileInfos.where((e) => e.tags.contains("spark")).toList();
     if (sparkFileKeys.isEmpty) {
@@ -104,7 +104,7 @@ class TTSGroupItem extends ConsumerWidget {
       Alert.warning("Please wait for the model to load...");
       return;
     }
-    final availableModels = P.fileManager.availableModels.q;
+    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
     final isSpark = fileInfo.tags.contains("spark");
     if (isSpark) {
       await _onSparkTap();
@@ -195,7 +195,7 @@ class TTSGroupItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final availableModels = P.fileManager.availableModels.q;
+    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
     final isSpark = fileInfo.tags.contains("spark");
     final fileInfos = availableModels.toList().where((e) {
       return !e.tags.contains("core") && (isSpark ? e.tags.contains("spark") : !e.tags.contains("spark"));
@@ -219,8 +219,8 @@ class TTSGroupItem extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 8.r,
-      child: C(
-        decoration: BD(color: qw, borderRadius: 8.r),
+      child: Container(
+        decoration: BoxDecoration(color: qw, borderRadius: 8.r),
         margin: const EI.o(t: 8),
         padding: const EI.o(t: 8, l: 8, r: 8, b: 8),
         child: Column(
@@ -230,8 +230,8 @@ class TTSGroupItem extends ConsumerWidget {
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                T(fileInfo.name, s: const TS(s: 18, w: FW.w600)),
-                const T("TTS", s: TS(s: 12, w: FW.w400)),
+                T(fileInfo.name, s: const TS(s: 18, w: FontWeight.w600)),
+                const T("TTS", s: TS(s: 12, w: FontWeight.w400)),
               ],
             ),
             Row(
@@ -243,7 +243,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: const T(
                       "Download All",
                       s: TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -253,7 +253,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       s.download_missing,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -263,7 +263,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       s.delete_all,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -273,7 +273,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       s.exploring,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -284,7 +284,7 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.start_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -294,15 +294,15 @@ class TTSGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.back_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
               ],
             ),
             ...fileInfos.m(
-              (e) => C(
-                decoration: BD(
+              (e) => Container(
+                decoration: BoxDecoration(
                   color: kC,
                   border: Border.all(color: primaryColor),
                   borderRadius: 6.r,

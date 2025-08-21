@@ -37,8 +37,12 @@ class PageHome extends ConsumerWidget {
     push(PageKey.chat, extra: PageChatParam(isNeko: true));
   }
 
-  void onChatTap() async {
+  void _onChatTap() async {
     P.chat.startNewChat();
+    push(PageKey.chat);
+  }
+
+  void _onTtsTap() async {
     push(PageKey.chat);
   }
 
@@ -51,6 +55,8 @@ class PageHome extends ConsumerWidget {
 
     final isLandscape = width > 600;
     final maxWidth = width / (isLandscape ? 3 : 2) - (isLandscape ? 60 : 24);
+
+    final s = S.of(context);
 
     return AppScaffold(
       body: SingleChildScrollView(
@@ -94,36 +100,45 @@ class PageHome extends ConsumerWidget {
                 children:
                     [
                           buildButton(
-                            title: S.of(context).chat,
-                            subtitle: S.of(context).chat_with_rwkv_model,
-                            onTap: onChatTap,
-                            color: Colors.blueAccent,
-                            icon: FontAwesomeIcons.comments,
+                            title: s.chat,
+                            subtitle: s.chat_with_rwkv_model,
+                            onTap: _onChatTap,
+                            iconColor: Colors.blueAccent,
+                            iconData: FontAwesomeIcons.comments,
                           ),
+                          // buildButton(
+                          //   title: s.tts,
+                          //   subtitle: s.tts_detail,
+                          //   onTap: _onTtsTap,
+                          //   icon: FaIcon(
+                          //     FontAwesomeIcons.volumeHigh,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
                           buildButton(
-                            title: S.of(context).neko,
-                            subtitle: S.of(context).nyan_nyan,
+                            title: s.neko,
+                            subtitle: s.nyan_nyan,
                             onTap: () => onNekoTap(context),
-                            color: Colors.pinkAccent,
-                            icon: FontAwesomeIcons.cat,
+                            iconColor: Colors.pinkAccent,
+                            iconData: FontAwesomeIcons.cat,
                           ),
                           buildButton(
-                            title: S.of(context).completion_mode,
-                            subtitle: S.of(context).text_completion_mode,
+                            title: s.completion_mode,
+                            subtitle: s.text_completion_mode,
                             onTap: () {
                               push(PageKey.completion);
                             },
-                            color: Colors.lightGreen,
-                            icon: FontAwesomeIcons.feather,
+                            iconColor: Colors.lightGreen,
+                            iconData: FontAwesomeIcons.feather,
                           ),
                           buildButton(
-                            title: "离线翻译",
-                            subtitle: "离线翻译文本",
+                            title: isDesktop ? s.offline_translator_server : s.offline_translator,
+                            subtitle: s.offline_translator_detail,
                             onTap: () {
                               push(PageKey.translator);
                             },
-                            color: Colors.blue,
-                            icon: Icons.translate,
+                            iconColor: Colors.blue,
+                            iconData: Icons.translate,
                           ),
                           buildButton(
                             title: "角色扮演",
@@ -131,8 +146,8 @@ class PageHome extends ConsumerWidget {
                             onTap: () {
                               push(PageKey.rolePlaying);
                             },
-                            color: Colors.amberAccent,
-                            icon: Icons.emoji_emotions_outlined,
+                            iconColor: Colors.amberAccent,
+                            iconData: Icons.emoji_emotions_outlined,
                           ),
                         ]
                         .map(
@@ -152,11 +167,12 @@ class PageHome extends ConsumerWidget {
   }
 
   Widget buildButton({
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    required Color color,
-    required IconData icon,
+    String? title,
+    String? subtitle,
+    VoidCallback? onTap,
+    Color? iconColor,
+    IconData? iconData,
+    Widget? icon,
   }) {
     return Material(
       clipBehavior: Clip.antiAlias,
@@ -168,23 +184,32 @@ class PageHome extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
+              if (iconData != null)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                      color: iconColor,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: FaIcon(iconData, color: Colors.white),
                   ),
-                  alignment: Alignment.center,
-                  child: FaIcon(icon, color: Colors.white),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              if (icon != null)
+                SizedBox(
+                  height: 48,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: icon,
+                  ),
+                ),
+              if (title != null) const SizedBox(height: 12),
+              if (title != null) Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              if (subtitle != null) const SizedBox(height: 8),
+              if (subtitle != null) Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),

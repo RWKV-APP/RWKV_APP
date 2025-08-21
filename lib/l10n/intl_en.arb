@@ -1,7 +1,10 @@
 {
   "@@locale": "en",
-  "rwkv_offline_translator_server": "RWKV Offline Translator Server",
-  "rwkv_offline_translator": "RWKV Offline Translator",
+  "tts": "Text-to-Speech",
+  "tts_detail": "Let RWKV output voice",
+  "offline_translator_server": "Offline Translator Server",
+  "offline_translator": "Offline Translator",
+  "offline_translator_detail": "Translate text on your device",
   "no_audio_file": "No audio file",
   "github_repository": "Github Repository",
   "report_an_issue_on_github": "Report an issue on Github",

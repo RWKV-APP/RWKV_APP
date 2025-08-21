@@ -43,7 +43,7 @@ class ArgumentsPanel extends ConsumerWidget {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     return ClipRRect(
       borderRadius: 16.r,
-      child: C(
+      child: Container(
         margin: const EI.o(t: 8),
         child: Column(
           crossAxisAlignment: CAA.stretch,
@@ -70,7 +70,7 @@ class ArgumentsPanel extends ConsumerWidget {
                       12.w,
                       T(
                         s.model_settings,
-                        s: const TS(s: 16, w: FW.w500),
+                        s: const TS(s: 16, w: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -121,9 +121,9 @@ class _SamplerOptions extends ConsumerWidget {
     final s = S.of(context);
     final reasoning = ref.watch(P.rwkv.reasoning);
     final qb = ref.watch(P.app.qb);
-    return C(
+    return Container(
       margin: const EI.s(h: 12),
-      decoration: BD(color: qb.q(.1), borderRadius: 8.r),
+      decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
           12.w,
@@ -152,9 +152,9 @@ class _CompletionOptions extends ConsumerWidget {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final reasoning = ref.watch(P.rwkv.reasoning);
-    return C(
+    return Container(
       margin: const EI.s(h: 12),
-      decoration: BD(color: qb.q(.1), borderRadius: 8.r),
+      decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
           12.w,
@@ -229,11 +229,11 @@ class _Value extends ConsumerWidget {
                 argument.name.codeToName,
                 s: const TS(
                   s: 14,
-                  w: FW.w500,
+                  w: FontWeight.w500,
                 ),
               ),
             ),
-            T(value.toStringAsFixed(argument.fixedDecimals), s: const TS(s: 14, w: FW.w600)),
+            T(value.toStringAsFixed(argument.fixedDecimals), s: const TS(s: 14, w: FontWeight.w600)),
             12.w,
           ],
         ),

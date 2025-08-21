@@ -316,6 +316,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "number": MessageLookupByLibrary.simpleMessage("数字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
     "off": MessageLookupByLibrary.simpleMessage("关闭"),
+    "offline_translator": MessageLookupByLibrary.simpleMessage("离线翻译"),
+    "offline_translator_detail": MessageLookupByLibrary.simpleMessage("离线翻译文本"),
+    "offline_translator_server": MessageLookupByLibrary.simpleMessage("线翻译服务器"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage("或者选择一个 wav 文件，让 RWKV 模仿它。"),
@@ -392,12 +395,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "resume": MessageLookupByLibrary.simpleMessage("恢复"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
-    "rwkv_offline_translator": MessageLookupByLibrary.simpleMessage(
-      "RWKV 离线翻译",
-    ),
-    "rwkv_offline_translator_server": MessageLookupByLibrary.simpleMessage(
-      "RWKV 离线翻译服务器",
-    ),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("扫描二维码"),
@@ -475,6 +472,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "translating": MessageLookupByLibrary.simpleMessage("翻译中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻译结果"),
     "translator_debug_info": MessageLookupByLibrary.simpleMessage("翻译器调试信息"),
+    "tts": MessageLookupByLibrary.simpleMessage("文本转语音"),
+    "tts_detail": MessageLookupByLibrary.simpleMessage("让 RWKV 输出语音"),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("落子权转移"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("超大 (140%)"),

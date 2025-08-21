@@ -1,93 +1,73 @@
-// ignore_for_file: constant_identifier_names
-
 part of 'p.dart';
 
 class _FileManager {
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
-    return LocalFile(targetPath: ref.watch(paths(key)));
+    return LocalFile(targetPath: ref.watch(_paths(key)));
   });
 
-  late final paths = qsff<FileInfo, String>((ref, key) {
+  late final _paths = qsff<FileInfo, String>((ref, key) {
     final dir = ref.watch(P.app.documentsDir);
     final fileName = key.fileName;
     final dirPath = dir!.path;
     return "$dirPath/$fileName";
   });
 
-  late final _all = qs<Set<FileInfo>>({});
+  late final _allInCurrentDemoType = qs<Set<FileInfo>>({});
 
-  late final availableModels = qs<Set<FileInfo>>({});
-
-  late final unavailableModels = qs<Set<FileInfo>>({});
+  late final availableModelsInCurrentDemoType = qs<Set<FileInfo>>({});
 
   late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
-
-  late final hasDownloadedModels = qs(false);
 
   late final modelSelectorShown = qs(false);
 
   late final ttsCores = qs<Set<FileInfo>>({});
 
-  // model-name to download-task map
-  late final downloadTasks = <String, DownloadTask>{};
+  /// model-name to download-task map
+  late final _downloadTasks = <String, DownloadTask>{};
 }
 
 /// Public methods
 extension $FileManager on _FileManager {
-  FV syncAvailableModels() async {
-    switch (P.app.demoType.q) {
-      case DemoType.othello:
-        qqw("othello game does not need to sync available models");
-        return;
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.sudoku:
-      case DemoType.tts:
-      case DemoType.world:
+  Future<void> syncAvailableModels() async {
+    final demoType = P.app.demoType.q;
+    if (demoType == DemoType.othello) {
+      qqw("othello game does not need to sync available models");
+      return;
     }
 
     qq;
-    late final List<JSON> json;
+    late final List<Map<String, dynamic>> modelConfigInCurrentDemoType;
 
     try {
-      if (P.app.modelConfig.q.isEmpty) {
+      if (P.app._modelConfigInCurrentDemoType.q.isEmpty) {
         final demoType = P.app.demoType.q;
         final jsonPath = "remote/latest.json";
         qqq("jsonPath: $jsonPath");
         final jsonString = await rootBundle.loadString(jsonPath);
         final rawJSON = jsonDecode(jsonString);
         final data = rawJSON[demoType.name]["model_config"];
-        json = HF.listJSON(data);
+        modelConfigInCurrentDemoType = HF.listJSON(data);
       } else {
-        json = P.app.modelConfig.q;
+        modelConfigInCurrentDemoType = P.app._modelConfigInCurrentDemoType.q;
       }
-    } catch (e) {
-      qqe(e);
-      Sentry.captureException(e, stackTrace: StackTrace.current);
-    }
-
-    try {
-      final weights = json.map((e) => FileInfo.fromJSON(e)).toSet();
-      _all.q = weights;
-      availableModels.q = weights.where((e) => e.available).toSet();
-      unavailableModels.q = weights.where((e) => !e.available).toSet();
-      if (P.app.demoType.q == DemoType.tts) {
-        ttsCores.q = availableModels.q.where((e) => e.tags.contains("core")).toSet();
-      }
+      final weights = modelConfigInCurrentDemoType.map((e) => FileInfo.fromJSON(e)).toSet();
+      _allInCurrentDemoType.q = weights;
+      availableModelsInCurrentDemoType.q = weights.where((e) => e.available).toSet();
+      ttsCores.q = availableModelsInCurrentDemoType.q.where((e) => e.tags.contains("core")).toSet();
     } catch (e) {
       qqe(e);
       Sentry.captureException(e, stackTrace: StackTrace.current);
     }
   }
 
-  FV checkLocal() async {
+  Future<void> checkLocal() async {
     qq;
-    await HF.wait(17);
-    final all = _all.q;
+    await Future.delayed(const Duration(milliseconds: 17));
+    final all = _allInCurrentDemoType.q;
     final _fileInfos = all.where((e) => e.available).toList();
 
     for (final fileInfo in _fileInfos) {
-      final path = paths(fileInfo).q;
+      final path = _paths(fileInfo).q;
       final pathExists = await File(path).exists();
       bool fileSizeVerified = false;
       if (pathExists) {
@@ -112,54 +92,20 @@ extension $FileManager on _FileManager {
   }
 
   List<FileInfo> getNekoModel() {
-    final nekos = _all.q.where((e) => e.available && e.isNeko).toList();
+    final nekos = _allInCurrentDemoType.q.where((e) => e.available && e.isNeko).toList();
     return nekos;
   }
 
-  FV _initModelDownloadTaskState() async {
-    await HF.wait(17);
-    final availableFiles = availableModels.q;
-    final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
-    for (final fileInfo in availableFiles) {
-      final taskId = fileInfo.fileName;
-
-      if (downloadTasks.containsKey(taskId)) {
-        continue;
-      }
-      final path = paths(fileInfo).q;
-      final url = fileInfo.raw.startsWith("http://") || fileInfo.raw.startsWith("https://")
-          ? fileInfo.raw
-          : sprintf(urlFmt, [fileInfo.raw]);
-      final fileState = locals(fileInfo);
-      try {
-        final task = await DownloadTask.create(
-          url: url,
-          path: path,
-          acceptedSize: fileInfo.fileSize,
-        );
-        // qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
-        fileState.q = fileState.q.copyWith(
-          hasFile: task.state == TaskState.completed,
-          state: task.state,
-        );
-        downloadTasks[taskId] = task;
-      } catch (e) {
-        qqe(e);
-        fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
-      }
-    }
-  }
-
-  FV getFile({required FileInfo fileInfo}) async {
+  Future<void> getFile({required FileInfo fileInfo}) async {
     final url = downloadSource.q.prefix + fileInfo.raw + downloadSource.q.suffix;
-    final path = paths(fileInfo).q;
+    final path = _paths(fileInfo).q;
 
     qqq('start download file: \n>>url:$url\n>>path:$path');
 
-    DownloadTask? task = downloadTasks[fileInfo.fileName];
+    DownloadTask? task = _downloadTasks[fileInfo.fileName];
     if (task == null) {
       task = await DownloadTask.create(url: url, path: path);
-      downloadTasks[fileInfo.fileName] = task;
+      _downloadTasks[fileInfo.fileName] = task;
     }
 
     if (task.state == TaskState.running) return;
@@ -199,21 +145,21 @@ extension $FileManager on _FileManager {
     }
   }
 
-  FV pauseDownload({required FileInfo fileInfo}) async {
-    final task = downloadTasks[fileInfo.fileName];
+  Future<void> pauseDownload({required FileInfo fileInfo}) async {
+    final task = _downloadTasks[fileInfo.fileName];
     task?.stop();
     final state = locals(fileInfo);
     state.q = state.q.copyWith(state: TaskState.stopped);
   }
 
-  FV cancelDownload({required FileInfo fileInfo}) async {
-    final task = downloadTasks[fileInfo.fileName];
+  Future<void> cancelDownload({required FileInfo fileInfo}) async {
+    final task = _downloadTasks[fileInfo.fileName];
     await task?.cancel();
     final state = locals(fileInfo);
     state.q = state.q.copyWith(state: TaskState.idle);
   }
 
-  FV deleteFile({required FileInfo fileInfo}) async {
+  Future<void> deleteFile({required FileInfo fileInfo}) async {
     final state = locals(fileInfo);
     final value = state.q;
 
@@ -224,7 +170,7 @@ extension $FileManager on _FileManager {
       qqe(e);
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
-    final path = paths(fileInfo).q;
+    final path = _paths(fileInfo).q;
     await File(path).delete();
     state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
   }
@@ -232,11 +178,45 @@ extension $FileManager on _FileManager {
 
 /// Private methods
 extension _$FileManager on _FileManager {
-  FV _init() async {
+  Future<void> _init() async {
     try {
       await syncAvailableModels();
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+  }
+
+  Future<void> _initModelDownloadTaskState() async {
+    await Future.delayed(const Duration(milliseconds: 17));
+    final availableFiles = availableModelsInCurrentDemoType.q;
+    final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
+    for (final fileInfo in availableFiles) {
+      final taskId = fileInfo.fileName;
+
+      if (_downloadTasks.containsKey(taskId)) {
+        continue;
+      }
+      final path = _paths(fileInfo).q;
+      final url = fileInfo.raw.startsWith("http://") || fileInfo.raw.startsWith("https://")
+          ? fileInfo.raw
+          : sprintf(urlFmt, [fileInfo.raw]);
+      final fileState = locals(fileInfo);
+      try {
+        final task = await DownloadTask.create(
+          url: url,
+          path: path,
+          acceptedSize: fileInfo.fileSize,
+        );
+        // qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
+        fileState.q = fileState.q.copyWith(
+          hasFile: task.state == TaskState.completed,
+          state: task.state,
+        );
+        _downloadTasks[taskId] = task;
+      } catch (e) {
+        qqe(e);
+        fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
+      }
     }
   }
 }

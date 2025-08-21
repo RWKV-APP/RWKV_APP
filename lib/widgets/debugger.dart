@@ -64,8 +64,7 @@ class Debugger extends ConsumerWidget {
     final ids = ref.watch(P.msg.ids);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
-    final availableModels = ref.watch(P.fileManager.availableModels);
-    final unavailableModels = ref.watch(P.fileManager.unavailableModels);
+    final availableModels = ref.watch(P.fileManager.availableModelsInCurrentDemoType);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
@@ -113,9 +112,9 @@ class Debugger extends ConsumerWidget {
             s: 8,
           ),
           color: kC,
-          child: SB(
-            child: C(
-              decoration: const BD(color: kC),
+          child: SizedBox(
+            child: Container(
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -152,7 +151,6 @@ class Debugger extends ConsumerWidget {
                       if (showSocName) ...[T("socName".codeToName), T(socName)],
                       if (showSocBrand) ...[T("socBrand".codeToName), T(socBrand.toString())],
                       if (showAvailableModels) ...[T("availableModels".codeToName), T(availableModels.map((e) => e.name).join("\n"))],
-                      if (showUnavailableModels) ...[T("unavailableModels".codeToName), T(unavailableModels.map((e) => e.name).join("\n"))],
                       if (showDisableRemoteConfig) ...[T("disableRemoteConfig".codeToName), T(disableRemoteConfig.toString())],
                       if (showPreferredThemeMode) ...[T("preferredThemeMode".codeToName), T(preferredThemeMode.toString())],
                       if (showCustomTheme) ...[T("customTheme".codeToName), T(customTheme.runtimeType.toString())],
@@ -170,9 +168,9 @@ class Debugger extends ConsumerWidget {
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.55)),
+                        decoration: BoxDecoration(color: qb.q(.55)),
                         child: e,
                       );
                     }),
@@ -214,9 +212,9 @@ class _SudokuDebugger extends ConsumerWidget {
             s: 8,
           ),
           color: kC,
-          child: SB(
-            child: C(
-              decoration: const BD(color: kC),
+          child: SizedBox(
+            child: Container(
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -236,9 +234,9 @@ class _SudokuDebugger extends ConsumerWidget {
                       T("modelSelectorShown".codeToName),
                       T(modelSelectorShown.toString()),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.66)),
+                        decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
                     }),
@@ -294,9 +292,9 @@ class _TTSDebugger extends ConsumerWidget {
             s: isDesktop ? 20 : 8,
           ),
           color: kC,
-          child: SB(
-            child: C(
-              decoration: const BD(color: kC),
+          child: SizedBox(
+            child: Container(
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -344,9 +342,9 @@ class _TTSDebugger extends ConsumerWidget {
                       T("asExhaust".codeToName),
                       T(asExhaust.toString()),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.66)),
+                        decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
                     }),
@@ -383,9 +381,9 @@ class _TranslatorDebugger extends ConsumerWidget {
             s: 8,
           ),
           color: kC,
-          child: SB(
-            child: C(
-              decoration: const BD(color: kC),
+          child: SizedBox(
+            child: Container(
+              decoration: const BoxDecoration(color: kC),
               child: Column(
                 mainAxisAlignment: MAA.start,
                 crossAxisAlignment: CAA.end,
@@ -397,9 +395,9 @@ class _TranslatorDebugger extends ConsumerWidget {
                       T("currentModel".codeToName),
                       T(currentModel?.fileName ?? "null"),
                     ].indexMap((index, e) {
-                      return C(
+                      return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),
-                        decoration: BD(color: qb.q(.66)),
+                        decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
                     }),

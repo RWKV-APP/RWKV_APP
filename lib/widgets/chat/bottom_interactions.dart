@@ -76,12 +76,12 @@ class _WebSearchModeButton extends ConsumerWidget {
     final height = textScaleFactor.scale(14) + 20;
     final padding = const EI.o(l: 8);
     return IntrinsicWidth(
-      child: GD(
+      child: GestureDetector(
         onTap: _onTap,
-        child: C(
+        child: Container(
           height: height,
           padding: padding,
-          decoration: BD(
+          decoration: BoxDecoration(
             color: color,
             borderRadius: 60.r,
           ),
@@ -167,13 +167,13 @@ class _ThinkingModeButton extends ConsumerWidget {
       child: AnimatedOpacity(
         opacity: loading ? .33 : 1,
         duration: 250.ms,
-        child: GD(
+        child: GestureDetector(
           onTap: _onTap,
-          child: SB(
+          child: SizedBox(
             height: height,
-            child: C(
+            child: Container(
               padding: padding,
-              decoration: BD(
+              decoration: BoxDecoration(
                 color: color,
                 borderRadius: 60.r,
               ),
@@ -258,14 +258,14 @@ class _SecondaryOptionsButton extends ConsumerWidget {
         child: AnimatedOpacity(
           opacity: loading ? .33 : 1,
           duration: 250.ms,
-          child: GD(
+          child: GestureDetector(
             onTap: _onTap,
             child: AnimatedContainer(
               height: height,
               duration: 150.ms,
               curve: Curves.easeOutCubic,
               padding: padding,
-              decoration: BD(
+              decoration: BoxDecoration(
                 color: color,
                 borderRadius: 60.r,
               ),
@@ -294,14 +294,14 @@ class _SelectImageButton extends ConsumerWidget {
     final color = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final s = S.of(context);
-    return GD(
+    return GestureDetector(
       onTap: () async {
         await showImageSelector();
       },
       child: AnimatedContainer(
         duration: 150.ms,
         curve: Curves.easeOutCubic,
-        decoration: BD(
+        decoration: BoxDecoration(
           color: primaryContainer,
           border: Border.all(
             color: color.q(.5),
@@ -347,9 +347,9 @@ class _MessageButton extends ConsumerWidget {
       return AnimatedOpacity(
         opacity: canSend ? 1 : .333,
         duration: 250.ms,
-        child: GD(
+        child: GestureDetector(
           onTap: _onPressed,
-          child: C(
+          child: Container(
             padding: const EI.s(h: 10, v: 5),
             child: Icon(
               (Platform.isIOS || Platform.isMacOS)
@@ -366,28 +366,28 @@ class _MessageButton extends ConsumerWidget {
       );
     }
 
-    return GD(
+    return GestureDetector(
       onTap: P.chat.onStopButtonPressed,
-      child: C(
-        decoration: const BD(color: kC),
+      child: Container(
+        decoration: const BoxDecoration(color: kC),
         child: Stack(
           children: [
             SizedBox(
               width: 46,
               height: 34,
               child: Center(
-                child: C(
-                  decoration: BD(color: color, borderRadius: 2.r),
+                child: Container(
+                  decoration: BoxDecoration(color: color, borderRadius: 2.r),
                   width: 12,
                   height: 12,
                 ),
               ),
             ),
-            SB(
+            SizedBox(
               width: 46,
               height: 34,
               child: Center(
-                child: SB(
+                child: SizedBox(
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(

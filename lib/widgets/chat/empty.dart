@@ -47,7 +47,7 @@ class Empty extends ConsumerWidget {
         opacity: hasSpecificEmpty ? 0 : 1,
         duration: 200.ms,
         curve: Curves.easeInOutBack,
-        child: GD(
+        child: GestureDetector(
           onTap: () {
             P.chat.focusNode.unfocus();
             P.tts.dismissAllShown();
@@ -92,7 +92,7 @@ class Empty extends ConsumerWidget {
                             opacity: 0.0,
                             child: T(version, s: const TS(s: 10)),
                           ),
-                          T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FW.w600)),
+                          T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
                           Opacity(
                             opacity: 0.5,
                             child: Padding(
@@ -115,21 +115,21 @@ class Empty extends ConsumerWidget {
                           onPressed: () async {
                             ModelSelector.show();
                           },
-                          child: T(demoType == DemoType.world ? s.select_a_world_type : s.select_a_model, s: const TS(s: 16, w: FW.w600)),
+                          child: T(demoType == DemoType.world ? s.select_a_world_type : s.select_a_model, s: const TS(s: 16, w: FontWeight.w600)),
                         ),
                       if (!loaded) 12.h,
                       if (loaded) T(s.you_are_now_using("")),
                       4.h,
                       if (loaded)
-                        C(
+                        Container(
                           padding: const EI.s(h: 4, v: 2),
-                          decoration: BD(
+                          decoration: BoxDecoration(
                             border: Border.all(color: primary),
                             borderRadius: 4.r,
                           ),
                           child: T(
                             currentModel?.name ?? "",
-                            s: TS(s: 16, w: FW.w600, c: primary),
+                            s: TS(s: 16, w: FontWeight.w600, c: primary),
                           ),
                         ),
                       const Spacer(),

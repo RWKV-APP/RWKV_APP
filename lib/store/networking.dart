@@ -60,7 +60,7 @@ Future<Object?> _post(
   String token = "",
 }) async {
   if (requireSigned) {
-    await HF.wait(1);
+    await Future.delayed(const Duration(milliseconds: 1));
     final signed = false;
     if (!signed) return null;
   }

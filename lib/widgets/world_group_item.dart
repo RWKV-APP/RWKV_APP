@@ -21,7 +21,7 @@ class WorldGroupItem extends ConsumerWidget {
 
   const WorldGroupItem(this.worldType, {super.key, required this.socPair});
 
-  List<FileInfo> get _fileInfos => P.fileManager.availableModels.q.where((e) => e.worldType == worldType).where((file) {
+  List<FileInfo> get _fileInfos => P.fileManager.availableModelsInCurrentDemoType.q.where((e) => e.worldType == worldType).where((file) {
     return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == socPair.$2);
   }).toList();
 
@@ -39,7 +39,7 @@ class WorldGroupItem extends ConsumerWidget {
       Alert.warning("Please wait for the model to load...");
       return;
     }
-    final availableModels = P.fileManager.availableModels.q;
+    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
     final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
     final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
     final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == socPair.$2);
@@ -131,8 +131,8 @@ class WorldGroupItem extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: 8.r,
-      child: C(
-        decoration: BD(
+      child: Container(
+        decoration: BoxDecoration(
           color: customTheme.settingItem,
           borderRadius: 8.r,
           border: Border.all(color: qw.q(.1), width: .5),
@@ -146,13 +146,13 @@ class WorldGroupItem extends ConsumerWidget {
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                T(worldType.displayName, s: const TS(s: 18, w: FW.w600)),
-                T(worldType.taskDescription, s: const TS(s: 12, w: FW.w400)),
+                T(worldType.displayName, s: const TS(s: 18, w: FontWeight.w600)),
+                T(worldType.taskDescription, s: const TS(s: 12, w: FontWeight.w400)),
               ],
             ),
             ..._fileInfos.m(
-              (e) => C(
-                decoration: BD(
+              (e) => Container(
+                decoration: BoxDecoration(
                   color: kC,
                   border: Border.all(color: primaryColor),
                   borderRadius: 6.r,
@@ -171,7 +171,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.download_all,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -181,7 +181,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.download_missing,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -191,7 +191,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.delete_all,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -201,7 +201,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       s.exploring,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -212,7 +212,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.start_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -222,7 +222,7 @@ class WorldGroupItem extends ConsumerWidget {
                     child: T(
                       loading ? s.loading : s.back_to_chat,
                       s: const TS(
-                        w: FW.w600,
+                        w: FontWeight.w600,
                       ),
                     ),
                   ),

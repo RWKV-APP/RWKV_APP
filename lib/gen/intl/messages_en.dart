@@ -409,6 +409,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "number": MessageLookupByLibrary.simpleMessage("Number"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
     "off": MessageLookupByLibrary.simpleMessage("Off"),
+    "offline_translator": MessageLookupByLibrary.simpleMessage(
+      "Offline Translator",
+    ),
+    "offline_translator_detail": MessageLookupByLibrary.simpleMessage(
+      "Translate text on your device",
+    ),
+    "offline_translator_server": MessageLookupByLibrary.simpleMessage(
+      "Offline Translator Server",
+    ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
@@ -509,12 +518,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
-    "rwkv_offline_translator": MessageLookupByLibrary.simpleMessage(
-      "RWKV Offline Translator",
-    ),
-    "rwkv_offline_translator_server": MessageLookupByLibrary.simpleMessage(
-      "RWKV Offline Translator Server",
-    ),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
@@ -624,6 +627,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "translator_debug_info": MessageLookupByLibrary.simpleMessage(
       "Translator Debug Info",
     ),
+    "tts": MessageLookupByLibrary.simpleMessage("Text-to-Speech"),
+    "tts_detail": MessageLookupByLibrary.simpleMessage("Let RWKV output voice"),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Turn transfer"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Ultra Large (140%)"),

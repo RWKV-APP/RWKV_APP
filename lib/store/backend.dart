@@ -50,7 +50,7 @@ class _Backend {
 
 /// Private methods
 extension _$Backend on _Backend {
-  FV _init() async {
+  Future<void> _init() async {
     final isDesktop = P.app.isDesktop.q;
     if (!isDesktop) return;
     qq;
@@ -232,7 +232,7 @@ extension _$Backend on _Backend {
 
 /// Public methods
 extension $Backend on _Backend {
-  FV start() async {
+  Future<void> start() async {
     final isDesktop = P.app.isDesktop.q;
     if (!isDesktop) return;
 
@@ -290,7 +290,7 @@ extension $Backend on _Backend {
     }
   }
 
-  FV stop() async {
+  Future<void> stop() async {
     final isDesktop = P.app.isDesktop.q;
     if (!isDesktop) return;
     qq;

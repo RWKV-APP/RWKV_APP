@@ -1,7 +1,10 @@
 {
   "@@locale": "zh-Hans",
-  "rwkv_offline_translator_server": "RWKV 离线翻译服务器",
-  "rwkv_offline_translator": "RWKV 离线翻译",
+  "tts": "文本转语音",
+  "tts_detail": "让 RWKV 输出语音",
+  "offline_translator_server": "线翻译服务器",
+  "offline_translator": "离线翻译",
+  "offline_translator_detail": "离线翻译文本",
   "no_audio_file": "没有音频文件",
   "github_repository": "Github 仓库",
   "report_an_issue_on_github": "在 Github 上报告问题",

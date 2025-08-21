@@ -61,7 +61,7 @@ extension $Othello on _Othello {
     _clear();
   }
 
-  FV onCellTap({required int row, required int col}) async {
+  Future<void> onCellTap({required int row, required int col}) async {
     final thinking = receivingTokens.q;
     if (thinking) return;
     final eatCountMatrixForBlack = this.eatCountMatrixForBlack.q;
@@ -125,7 +125,7 @@ extension $Othello on _Othello {
 
 /// Private methods
 extension _$Othello on _Othello {
-  FV _init() async {
+  Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.fifthteenPuzzle:
       case DemoType.sudoku:
@@ -159,7 +159,7 @@ extension _$Othello on _Othello {
     P.app.paddingRight.lv(_syncLayout, fireImmediately: true);
 
     if (Config.firstPage == PageKey.othello.name) {
-      HF.wait(1000).then((_) {
+      Future.delayed(const Duration(milliseconds: 1000)).then((_) {
         P.rwkv.loadOthello();
       });
     }
@@ -181,7 +181,7 @@ extension _$Othello on _Othello {
     }
 
     for (var i = 0; i < 1000; i++) {
-      await HF.wait(10);
+      await Future.delayed(const Duration(milliseconds: 10));
       final thinking = receivingTokens.q;
       if (!thinking) break;
     }
@@ -268,12 +268,12 @@ extension _$Othello on _Othello {
         break;
     }
 
-    HF.wait(200).then((_) {
+    Future.delayed(const Duration(milliseconds: 200)).then((_) {
       receivedScrollController.jumpTo(receivedScrollController.position.maxScrollExtent);
     });
   }
 
-  FV _onStreamingToken(int? token) async {
+  Future<void> _onStreamingToken(int? token) async {
     if (token == null) return;
 
     if (token == _kOutputStartToken) {
@@ -304,7 +304,7 @@ extension _$Othello on _Othello {
     }
   }
 
-  FV _showGameOverDialog() async {
+  Future<void> _showGameOverDialog() async {
     final blackScore = this.blackScore.q;
     final whiteScore = this.whiteScore.q;
 

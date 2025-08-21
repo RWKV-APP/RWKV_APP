@@ -101,10 +101,10 @@ class ChatAppBar extends ConsumerWidget {
       centerTitle: true,
       backgroundColor: isChat ? Colors.transparent : scaffold.q(.7),
       systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
-      title: GD(
+      title: GestureDetector(
         onTap: _onTitlePressed,
-        child: C(
-          decoration: const BD(color: kC),
+        child: Container(
+          decoration: const BoxDecoration(color: kC),
           child: Column(
             crossAxisAlignment: CAA.center,
             children: [
@@ -142,9 +142,9 @@ class ChatAppBar extends ConsumerWidget {
                 ),
               if (isChat) const ModelSelectButton(),
               if (!isChat)
-                C(
+                Container(
                   padding: const EI.o(l: 4, r: 4, t: 1, b: 1),
-                  decoration: BD(
+                  decoration: BoxDecoration(
                     color: kB.q(.1),
                     borderRadius: 10.r,
                   ),
@@ -160,7 +160,7 @@ class ChatAppBar extends ConsumerWidget {
                       4.w,
                       Transform.rotate(
                         angle: 0, // 90度
-                        child: SB(
+                        child: SizedBox(
                           width: 10,
                           height: 5,
                           child: CustomPaint(
@@ -183,8 +183,7 @@ class ChatAppBar extends ConsumerWidget {
       actions: [
         if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
         // if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
-        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user))
-          _buildMorePopupMenuButton(context, completionMode),
+        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user)) _buildMorePopupMenuButton(context, completionMode),
         if (demoType != DemoType.chat && demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
             onPressed: onSettingsPressed,
@@ -318,7 +317,7 @@ class _SelectMessageAppBar extends ConsumerWidget {
           value: all,
           onChanged: (v) => onAllTap(),
         ),
-        GD(
+        GestureDetector(
           onTap: onAllTap,
           child: T(S.of(context).all),
         ),

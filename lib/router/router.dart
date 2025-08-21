@@ -9,7 +9,6 @@ import 'package:zone/router/page_key.dart';
 BuildContext? getContext() => _getRooNavigatorKey().currentState?.context;
 
 GlobalKey<NavigatorState> _getRooNavigatorKey() => _rootNavigatorKey;
-GlobalKey<NavigatorState> _getShellNavigatorKey() => _shellNavigatorKey;
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
@@ -21,12 +20,8 @@ final kRouter = GoRouter(
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      builder: (context, state, child) => PageTab(content: child),
-      routes: [
-        PageKey.home.route,
-        PageKey.conversation.route,
-        PageKey.settings.route,
-      ],
+      pageBuilder: (context, state, child) => NoTransitionPage(child: PageTab(content: child)),
+      routes: PageKey.tabs.map((e) => e.route).toList(),
     ),
     ...PageKey.values.map((e) => e.route),
   ],

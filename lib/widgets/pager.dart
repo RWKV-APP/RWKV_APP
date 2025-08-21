@@ -18,12 +18,12 @@ class Pager extends ConsumerStatefulWidget {
   static final _newController = qs<PageController>(PageController());
   static final drawerWidth = qs(100.0);
 
-  static FV toggle() async {
+  static Future<void> toggle() async {
     final currentPage = Pager.page.q;
     final targetPage = currentPage == 0 ? 1 : 0;
     qqq("currentPage: $currentPage, targetPage: $targetPage");
     _CustomPageScrollPhysics.disableGaimon = true;
-    HF.wait(20).then((_) {
+    Future.delayed(const Duration(milliseconds: 20)).then((_) {
       if (Platform.isAndroid) P.app.hapticLight();
       if (Platform.isIOS) P.app.hapticSoft();
     });
@@ -110,7 +110,7 @@ class _PagerState extends ConsumerState<Pager> {
     final screenWidth = ref.watch(P.app.screenWidth);
     final screenHeight = ref.watch(P.app.screenHeight);
 
-    if (screenWidth == 0) return const SB();
+    if (screenWidth == 0) return const SizedBox();
 
     final ignorePointer = ref.watch(Pager.atMainPage);
 
@@ -127,19 +127,19 @@ class _PagerState extends ConsumerState<Pager> {
           controller: Pager._newController.q,
           physics: recording ? const NeverScrollableScrollPhysics() : const _CustomPageScrollPhysics(parent: ClampingScrollPhysics()),
           scrollDirection: Axis.horizontal,
-          child: SB(
+          child: SizedBox(
             width: screenWidth + drawerWidth,
             height: screenHeight,
             child: Row(
               children: [
-                SB(
+                SizedBox(
                   width: drawerWidth,
                   height: screenHeight,
                   child: widget.drawer,
                 ),
                 Stack(
                   children: [
-                    SB(
+                    SizedBox(
                       width: screenWidth,
                       height: screenHeight,
                       child: widget.child,
@@ -184,16 +184,16 @@ class _Dim extends ConsumerWidget {
 
     return IgnorePointer(
       ignoring: ignorePointer,
-      child: GD(
+      child: GestureDetector(
         onTap: _onTap,
         child: Opacity(
           opacity: drawerOpacity.clamp(0, 1),
           child: Material(
             color: kC,
-            child: C(
+            child: Container(
               width: screenWidth,
               height: screenHeight,
-              decoration: BD(color: qb.q(dark ? .1 : .3)),
+              decoration: BoxDecoration(color: qb.q(dark ? .1 : .3)),
             ),
           ),
         ),

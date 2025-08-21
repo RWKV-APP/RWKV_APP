@@ -1,13 +1,13 @@
 {
   "chat": {
     "latest_build": 513,
-    "latest_build_ios": 449,
+    "latest_build_ios": 513,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
     "android_url": "https://www.pgyer.com/rwkvchat",
     "android_apk_url": "",
     "share_chat_qrcode_zh": "https://rwkvos.com/",
-    "share_chat_qrcode_en": "https://github.com/MollySophia/rwkv_mobile_flutter",
+    "share_chat_qrcode_en": "https://github.com/RWKV-APP/RWKV_APP",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "controlled_rollout": {
       "web_search": false

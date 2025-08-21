@@ -9,18 +9,20 @@ class _App extends RawApp {
   /// 当前正在运行的任务
   late final demoType = qs(DemoType.chat);
 
-  late final latestBuild = qs(-1);
-  late final latestBuildIos = qs(-1);
-  late final noteZh = qs<List<String>>([]);
-  late final noteEn = qs<List<String>>([]);
-  late final modelConfig = qs<List<JSON>>([]);
-  late final androidUrl = qs<String?>(null);
-  late final androidApkUrl = qs<String?>(null);
-  late final iosUrl = qs<String?>(null);
+  late final _latestBuild = qs(-1);
+  late final _latestBuildIos = qs(-1);
+  late final _noteZh = qs<List<String>>([]);
+  late final _noteEn = qs<List<String>>([]);
+  late final _androidUrl = qs<String?>(null);
+  late final _androidApkUrl = qs<String?>(null);
+  late final _iosUrl = qs<String?>(null);
   late final shareChatQrCodeZh = qs<String?>(null);
   late final shareChatQrCodeEn = qs<String?>(null);
 
-  late final newVersionDialogShown = qs(false);
+  @Deprecated("use P.fileManager.availableModelsInCurrentDemoType instead")
+  late final _modelConfigInCurrentDemoType = qs<List<Map<String, dynamic>>>([]);
+
+  late final _newVersionDialogShown = qs(false);
 
   static const String _remoteDemoConfigKey = "latest.json";
 
@@ -60,7 +62,7 @@ class _App extends RawApp {
 
 /// Public methods
 extension $App on _App {
-  FV getConfig() async {
+  Future<void> getConfig() async {
     if (Args.disableRemoteConfig) {
       qqw("Remote config is disabled");
       return;
@@ -75,38 +77,18 @@ extension $App on _App {
       await _parseConfig(jsonDecode(sp.getString(_App._remoteDemoConfigKey)!));
     }
 
-    await HF.wait(17);
+    await Future.delayed(const Duration(milliseconds: 17));
 
-    final config = await _pullRemoteConfig();
+    final allConfig = await _getAllRemoteConfig();
+    final config = allConfig?[demoType.q.name];
     if (config == null) {
+      qqe("config is null, demoType: ${demoType.q.name}");
       return;
     }
 
     await _parseConfig(config);
     // 将 res 写入本地沙盒文件
     sp.setString(_App._remoteDemoConfigKey, jsonEncode(config));
-  }
-
-  Future<dynamic> _pullRemoteConfig() async {
-    try {
-      final res = await _get("get-demo-config", timeout: 10000.ms);
-      if (res is! Map) {
-        qqe("res is not a Map, res: ${res.runtimeType}");
-        return;
-      }
-      final success = res["success"];
-      final message = res["message"];
-      final data = res["data"];
-      if (success != true) throw "success is false, success: $success, message: $message";
-      if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
-      qqq("pull remote config success");
-      return data[demoType.q.name];
-    } catch (e) {
-      qe;
-      qqe("e: $e");
-      if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
-    }
-    return null;
   }
 
   void hapticLight() {
@@ -121,8 +103,8 @@ extension $App on _App {
     if (_isMobile.q) Gaimon.medium();
   }
 
-  FV customThemeChanged() async {
-    await HF.wait(100);
+  Future<void> customThemeChanged() async {
+    await Future.delayed(const Duration(milliseconds: 100));
     if (customTheme.q.light) {
       _statusBarToLightMode();
     } else {
@@ -131,17 +113,19 @@ extension $App on _App {
   }
 
   void checkUpdates() async {
-    final config = await _pullRemoteConfig();
+    final allConfig = await _getAllRemoteConfig();
+    final config = allConfig?[demoType.q.name];
     if (config == null) {
+      qqe("config is null, demoType: ${demoType.q.name}");
       return;
     }
-    latestBuild.q = config["latest_build"] as int;
-    latestBuildIos.q = config["latest_build_ios"] as int;
-    if (Platform.isIOS && latestBuildIos.q <= int.parse(buildNumber.q)) {
+    _latestBuild.q = config["latest_build"] as int;
+    _latestBuildIos.q = config["latest_build_ios"] as int;
+    if (Platform.isIOS && _latestBuildIos.q <= int.parse(buildNumber.q)) {
       Alert.info(S.current.app_is_already_up_to_date);
       return;
     }
-    if (latestBuild.q <= int.parse(buildNumber.q)) {
+    if (_latestBuild.q <= int.parse(buildNumber.q)) {
       Alert.info(S.current.app_is_already_up_to_date);
       return;
     }
@@ -151,7 +135,7 @@ extension $App on _App {
 
 /// Private methods
 extension _$App on _App {
-  FV _init() async {
+  Future<void> _init() async {
     qq;
 
     _initDB();
@@ -192,7 +176,7 @@ extension _$App on _App {
 
     if (!Args.disableRemoteConfig) {
       getConfig().then((_) async {
-        await HF.wait(1000);
+        await Future.delayed(const Duration(milliseconds: 1000));
         _showNewVersionDialogIfNeeded();
       });
     }
@@ -240,7 +224,7 @@ extension _$App on _App {
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
 
     if (Args.autoShowTranslator) {
-      HF.wait(1500).then((_) {
+      Future.delayed(const Duration(milliseconds: 1500)).then((_) {
         push(PageKey.translator);
       });
     }
@@ -255,7 +239,7 @@ extension _$App on _App {
     }
   }
 
-  FV _syncTheme() async {
+  Future<void> _syncTheme() async {
     final light = this.light.q;
     final preferredThemeMode = this.preferredThemeMode.q;
     final preferredDarkCustomTheme = P.preference.preferredDarkCustomTheme.q;
@@ -274,35 +258,35 @@ extension _$App on _App {
     }
   }
 
-  FV _statusBarToLightMode() async {
+  Future<void> _statusBarToLightMode() async {
     SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleLight);
   }
 
-  FV _statusBarToDarkMode() async {
+  Future<void> _statusBarToDarkMode() async {
     qq;
     SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleDark);
   }
 
-  FV _onLifecycleStateChanged() async {}
+  Future<void> _onLifecycleStateChanged() async {}
 
   Future _showNewVersionDialogIfNeeded() async {
     if (!Platform.isIOS && !Platform.isAndroid) return;
     qq;
-    if (Platform.isAndroid && latestBuild.q <= int.parse(buildNumber.q)) return;
-    if (Platform.isIOS && latestBuildIos.q <= int.parse(buildNumber.q)) return;
+    if (Platform.isAndroid && _latestBuild.q <= int.parse(buildNumber.q)) return;
+    if (Platform.isIOS && _latestBuildIos.q <= int.parse(buildNumber.q)) return;
 
-    final androidUrl = this.androidUrl.q ?? '';
-    final androidApkUrl = this.androidApkUrl.q ?? '';
-    final iosUrl = this.iosUrl.q;
+    final androidUrl = this._androidUrl.q ?? '';
+    final androidApkUrl = this._androidApkUrl.q ?? '';
+    final iosUrl = this._iosUrl.q;
 
     if (Platform.isAndroid && (androidUrl.isEmpty)) return;
 
     if (Platform.isIOS && (iosUrl == null || iosUrl.isEmpty)) return;
 
-    await HF.wait(1);
+    await Future.delayed(const Duration(milliseconds: 1));
 
-    final noteZh = this.noteZh.q;
-    final noteEn = this.noteEn.q;
+    final noteZh = this._noteZh.q;
+    final noteEn = this._noteEn.q;
 
     final currentLocale = Intl.getCurrentLocale();
     final useEn = currentLocale.startsWith("en");
@@ -313,7 +297,7 @@ extension _$App on _App {
 
     qqq('app update: \n$androidUrl\n$androidApkUrl\n$iosUrl\n$message');
 
-    newVersionDialogShown.q = true;
+    _newVersionDialogShown.q = true;
     final res = await showAlertDialog(
       context: getContext()!,
       title: S.current.new_version_found,
@@ -330,7 +314,7 @@ extension _$App on _App {
       ],
       // cancelLabel: S.current.cancel_update,
     );
-    newVersionDialogShown.q = false;
+    _newVersionDialogShown.q = false;
 
     if (res == 1 || res == null) return;
 
@@ -351,13 +335,7 @@ extension _$App on _App {
     }
   }
 
-  FV _parseConfig(dynamic config) async {
-    if (config is! Map) {
-      qqe("config is not a Map, config: ${config.runtimeType}");
-      Sentry.captureException(Exception("config is not a Map, config: ${config.runtimeType}"), stackTrace: StackTrace.current);
-      return;
-    }
-
+  Future<void> _parseConfig(Map<String, dynamic> config) async {
     final build = config["latest_build"];
     final buildIos = config["latest_build_ios"];
 
@@ -373,16 +351,16 @@ extension _$App on _App {
       return;
     }
 
-    latestBuild.q = build.toInt();
-    latestBuildIos.q = buildIos.toInt();
-    noteZh.q = (config["note_zh"] as List<dynamic>).m((e) => e.toString());
-    noteEn.q = (config["note_en"] as List<dynamic>).m((e) => e.toString());
-    modelConfig.q = HF.listJSON(config["model_config"]);
-    androidUrl.q = config["android_url"];
-    androidApkUrl.q = config["android_apk_url"];
+    _latestBuild.q = build.toInt();
+    _latestBuildIos.q = buildIos.toInt();
+    _noteZh.q = (config["note_zh"] as List<dynamic>).m((e) => e.toString());
+    _noteEn.q = (config["note_en"] as List<dynamic>).m((e) => e.toString());
+    _modelConfigInCurrentDemoType.q = HF.listJSON(config["model_config"]);
+    _androidUrl.q = config["android_url"];
+    _androidApkUrl.q = config["android_apk_url"];
     shareChatQrCodeEn.q = config["share_chat_qrcode_en"];
     shareChatQrCodeZh.q = config["share_chat_qrcode_zh"];
-    iosUrl.q = config["ios_url"].toString();
+    _iosUrl.q = config["ios_url"].toString();
     featureRollout.q =
         FeatureRollout.fromMap(config["controlled_rollout"]) // merge with dev options
             .merge(P.preference.featureRollout);
@@ -396,8 +374,27 @@ extension _$App on _App {
     final matchedLocation = currentConfiguration.last.matchedLocation;
     final pageKey = PageKey.values.byName(matchedLocation.replaceAll("/", ""));
     qqr("navigate to page: ${pageKey.toString().split(".").last}");
-    HF.wait(0).then((_) {
+    Future.delayed(const Duration(milliseconds: 0)).then((_) {
       _pageKey.q = pageKey;
     });
+  }
+
+  Future<Map<String, dynamic>?> _getAllRemoteConfig() async {
+    try {
+      final res = await _get("get-demo-config", timeout: 10000.ms);
+      if (res is! Map) throw "res is not a Map, res: ${res.runtimeType}";
+      final success = res["success"];
+      final message = res["message"];
+      final data = res["data"];
+      if (success != true) throw "success is false, success: $success, message: $message";
+      if (data is! Map) throw "data is not a Map, data: ${data.runtimeType}";
+      qqr("pull remote config success");
+      return HF.json(data);
+    } catch (e) {
+      qe;
+      qqe(e);
+      if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+    return null;
   }
 }

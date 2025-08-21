@@ -310,9 +310,9 @@ class Message extends ConsumerWidget {
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
         borderRadius: clipBorderRadius,
-        child: C(
+        child: Container(
           padding: padding,
-          decoration: BD(
+          decoration: BoxDecoration(
             color: isMine ? primaryContainer : (isChat ? Theme.of(context).colorScheme.surface : null),
             border: border,
             borderRadius: borderRadius,
@@ -321,8 +321,8 @@ class Message extends ConsumerWidget {
             crossAxisAlignment: isMine ? CAA.end : CAA.start,
             children: [
               if (kDebugMode && Args.debugMsgId)
-                C(
-                  decoration: BD(color: kCR.q(1)),
+                Container(
+                  decoration: BoxDecoration(color: kCR.q(1)),
                   child: T("Debug: ${msg.id}", s: const TS(c: kW)),
                 ),
               if (isMine) ...[
@@ -351,7 +351,7 @@ class Message extends ConsumerWidget {
                 if (worldDemoMessageHeader.isNotEmpty)
                   T(
                     worldDemoMessageHeader,
-                    s: TS(c: qb.q(.5), w: FW.w700, s: 10),
+                    s: TS(c: qb.q(.5), w: FontWeight.w700, s: 10),
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
@@ -365,7 +365,7 @@ class Message extends ConsumerWidget {
                   ),
                 // 🔥 Bot message cot header
                 if (reasoning && !isQuickThinking)
-                  GD(
+                  GestureDetector(
                     onTap: () {
                       if (showingCotContent) {
                         P.msg.cotDisplayState(msg.id).q = CoTDisplayState.hideCotHeader;
@@ -373,13 +373,13 @@ class Message extends ConsumerWidget {
                         P.msg.cotDisplayState(msg.id).q = CoTDisplayState.showCotHeaderAndCotContent;
                       }
                     },
-                    child: C(
-                      decoration: const BD(color: kC),
+                    child: Container(
+                      decoration: const BoxDecoration(color: kC),
                       child: Row(
                         children: [
                           T(
                             thisMessageIsReceiving ? s.thinking : s.thought_result,
-                            s: TS(c: qb.q(.5), w: FW.w600),
+                            s: TS(c: qb.q(.5), w: FontWeight.w600),
                           ),
                           showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
                         ],
@@ -431,7 +431,7 @@ class Message extends ConsumerWidget {
             child: Column(
               children: [
                 if (reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                GD(onTap: _onTap, child: bubbleContent),
+                GestureDetector(onTap: _onTap, child: bubbleContent),
               ],
             ),
           ),

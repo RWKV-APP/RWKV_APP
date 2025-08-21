@@ -48,8 +48,8 @@ class LayoutDebugger extends ConsumerWidget {
           top: 0,
           bottom: 0,
           child: IgnorePointer(
-            child: C(
-              decoration: BD(
+            child: Container(
+              decoration: BoxDecoration(
                 border: Border.all(color: frameColor, width: frameWidth),
               ),
             ),
@@ -61,7 +61,7 @@ class LayoutDebugger extends ConsumerWidget {
             child: Material(
               color: qb.q(.5),
               textStyle: TS(c: qw, s: 8),
-              child: C(
+              child: Container(
                 child: debugWidget!,
               ),
             ),

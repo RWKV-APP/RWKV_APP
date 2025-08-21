@@ -39,7 +39,7 @@ Future<T?> push<T extends Object?>(PageKey pageKey, {Object? extra}) async {
 }
 
 /// # 返回, 传递返回值
-FV pop<T extends Object?>([T? result]) async {
+Future<void> pop<T extends Object?>([T? result]) async {
   final context = getContext();
   if (context == null) {
     qqw("Context is null when calling pop");

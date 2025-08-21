@@ -70,7 +70,7 @@ class _Translator {
 
 /// Private methods
 extension _$Translator on _Translator {
-  FV _init() async {
+  Future<void> _init() async {
     final isDesktop = P.app.isDesktop.q;
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     source.l(_onTextChanged);
@@ -104,7 +104,7 @@ extension _$Translator on _Translator {
 
     final isGenerating = this.isGenerating.q;
     if (isGenerating) return;
-    await HF.wait(100);
+    await Future.delayed(const Duration(milliseconds: 100));
     final isGenerating2 = this.isGenerating.q;
     if (isGenerating2) return;
     final key = _selectNextTaskKey();
@@ -201,14 +201,14 @@ extension _$Translator on _Translator {
       case PageKey.translator:
         final currentModel = P.rwkv.currentModel.q;
         if (currentModel == null) {
-          HF.wait(500).then((_) {
+          Future.delayed(const Duration(milliseconds: 500)).then((_) {
             ModelSelector.show();
           });
         } else {
           if (!currentModel.tags.contains("translate")) {
             P.rwkv.currentModel.q = null;
             Alert.info(S.current.please_load_model_first);
-            HF.wait(500).then((_) {
+            Future.delayed(const Duration(milliseconds: 500)).then((_) {
               ModelSelector.show();
             });
             return;
@@ -289,7 +289,7 @@ extension _$Translator on _Translator {
 
     final nextKey = _selectNextTaskKey();
     if (nextKey == null) return;
-    HF.wait(0).then((_) => _startNewTask(nextKey));
+    Future.delayed(const Duration(milliseconds: 0)).then((_) => _startNewTask(nextKey));
   }
 
   String? _selectNextTaskKey() {
@@ -398,7 +398,7 @@ extension _$Translator on _Translator {
     return existingTranslation?.replaceAll(_endString, "") ?? "";
   }
 
-  Future<String> _getFullTranslation(JSON json) async {
+  Future<String> _getFullTranslation(Map<String, dynamic> json) async {
     final source = json['source'] as String;
     final url = json['url'] as String;
     final tabId = json['tabId'] as int;
@@ -447,7 +447,7 @@ extension _$Translator on _Translator {
 
 /// Public methods
 extension $Translator on _Translator {
-  FV onPressTest() async {
+  Future<void> onPressTest() async {
     final s = S.current;
     if (!P.rwkv.loaded.q) {
       Alert.info(s.please_load_model_first);

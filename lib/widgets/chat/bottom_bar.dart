@@ -33,8 +33,8 @@ class BottomBar extends ConsumerWidget {
         borderRadius: !isChat ? BorderRadius.zero : const BorderRadius.vertical(top: Radius.circular(16)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-          child: C(
-            decoration: BD(
+          child: Container(
+            decoration: BoxDecoration(
               color: isChat ? theme.cardColor : scaffoldBackgroundColor.q(.8),
               border: isChat
                   ? null

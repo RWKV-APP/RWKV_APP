@@ -3,9 +3,14 @@ import 'package:zone/widgets/settings/chat_template_dialog.dart';
 
 import '../gen/l10n.dart' show S;
 
-class PageAdvancedSettings extends StatelessWidget {
+class PageAdvancedSettings extends StatefulWidget {
   const PageAdvancedSettings({super.key});
 
+  @override
+  State<PageAdvancedSettings> createState() => _PageAdvancedSettingsState();
+}
+
+class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,10 +136,11 @@ class PageAdvancedSettings extends StatelessWidget {
   }
 
   Widget buildGroupTitle(String title) {
+    final surface = Theme.of(context).colorScheme.surface;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      color: Colors.grey.shade100,
+      color: surface,
       child: Text(title),
     );
   }

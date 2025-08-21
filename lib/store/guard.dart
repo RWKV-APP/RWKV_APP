@@ -44,7 +44,7 @@ extension $Guard on _Guard {
 
 /// Private methods
 extension _$Guard on _Guard {
-  FV _init() async {
+  Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
@@ -62,7 +62,7 @@ extension _$Guard on _Guard {
     }
   }
 
-  FV _loadFilter() async {
+  Future<void> _loadFilter() async {
     qq;
 
     final start = HF.milliseconds;

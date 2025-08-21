@@ -17,7 +17,7 @@ class PageTranslator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
-    final title = isDesktop ? s.rwkv_offline_translator_server : s.rwkv_offline_translator;
+    final title = isDesktop ? s.offline_translator_server : s.offline_translator;
 
     return GestureDetector(
       onTap: isDesktop ? null : () => FocusScope.of(context).unfocus(),
@@ -94,7 +94,7 @@ class _DesktopLayout extends ConsumerWidget {
 class _TranslatorInterface extends ConsumerWidget {
   const _TranslatorInterface();
 
-  FV _onPressTest() async {
+  Future<void> _onPressTest() async {
     qq;
     P.translator.onPressTest();
   }
@@ -312,7 +312,7 @@ class _InferenceInfo extends ConsumerWidget {
 class _ServiceInfo extends ConsumerWidget {
   const _ServiceInfo();
 
-  FV _onPressed() async {
+  Future<void> _onPressed() async {
     qq;
     final state = P.backend.httpState.q;
     switch (state) {
@@ -489,7 +489,7 @@ class _BrowserTab extends ConsumerWidget {
 class _TranslatorDebugInfo extends ConsumerWidget {
   const _TranslatorDebugInfo();
 
-  FV _onPressClearCompleterPool() async {
+  Future<void> _onPressClearCompleterPool() async {
     qq;
     P.backend.runningTasks.q = {};
     P.translator.browserTabInnerSize.q = {};
