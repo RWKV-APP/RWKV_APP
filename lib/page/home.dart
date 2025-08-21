@@ -106,15 +106,15 @@ class PageHome extends ConsumerWidget {
                             iconColor: Colors.blueAccent,
                             iconData: FontAwesomeIcons.comments,
                           ),
-                          buildButton(
-                            title: s.tts,
-                            subtitle: s.tts_detail,
-                            onTap: _onTtsTap,
-                            icon: FaIcon(
-                              FontAwesomeIcons.volumeHigh,
-                              color: Colors.white,
-                            ),
-                          ),
+                          // buildButton(
+                          //   title: s.tts,
+                          //   subtitle: s.tts_detail,
+                          //   onTap: _onTtsTap,
+                          //   icon: FaIcon(
+                          //     FontAwesomeIcons.volumeHigh,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
                           buildButton(
                             title: s.neko,
                             subtitle: s.nyan_nyan,
