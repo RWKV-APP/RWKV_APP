@@ -13,7 +13,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
-import 'package:zone/widgets/model_item.dart';
+import 'package:zone/func/gb_display.dart';
 
 class TTSGroupItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -117,7 +117,19 @@ class TTSGroupItem extends ConsumerWidget {
     }).toList();
     fileInfos.insert(0, fileInfo);
     if (fileInfos.isEmpty) return const SizedBox.shrink();
-    final primaryColor = Theme.of(context).colorScheme.primaryContainer;
+
+    final customTheme = ref.watch(P.app.customTheme);
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = !customTheme.light;
+
+    // 适配深色和浅色模式的颜色
+    final cardColor = isDark ? const Color(0xFF1E1E1E) : const Color(0xFFFFFFFF);
+    final borderColor = isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE0E0E0);
+    final fileItemBgColor = isDark ? const Color(0xFF252525) : const Color(0xFFF8F9FA);
+    final fileItemBorderColor = isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE8E8E8);
+    final primaryColor = colorScheme.primary;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final secondaryTextColor = isDark ? Colors.white70 : Colors.black54;
 
     final files = fileInfos.m((e) {
       return ref.watch(P.fileManager.locals(e));
@@ -130,108 +142,384 @@ class TTSGroupItem extends ConsumerWidget {
     final currentModel = ref.watch(P.rwkv.currentModel);
     final alreadyStarted = currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
-    final qw = ref.watch(P.app.qw);
 
-    // debugger();
-
-    return ClipRRect(
-      borderRadius: 8.r,
-      child: Container(
-        decoration: BoxDecoration(color: qw, borderRadius: 8.r),
-        margin: const EI.o(t: 8),
-        padding: const EI.o(t: 8, l: 8, r: 8, b: 8),
+    return Container(
+      margin: const EI.o(t: 12, l: 16, r: 16, b: 8),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor, width: 1),
+        boxShadow: isDark
+            ? [
+                BoxShadow(
+                  color: Colors.black.q(.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : [
+                BoxShadow(
+                  color: Colors.black.q(.05),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+      ),
+      child: Padding(
+        padding: const EI.a(16),
         child: Column(
           crossAxisAlignment: CAA.stretch,
           children: [
-            Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              crossAxisAlignment: WrapCrossAlignment.center,
+            // 标题栏
+            Row(
               children: [
-                T(fileInfo.name, s: const TS(s: 18, w: FontWeight.w600)),
-                const T("TTS", s: TS(s: 12, w: FontWeight.w400)),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CAA.start,
+                    children: [
+                      T(
+                        fileInfo.name,
+                        s: TS(
+                          s: 18,
+                          w: FontWeight.w600,
+                          c: textColor,
+                        ),
+                      ),
+                      4.h,
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EI.s(h: 8, v: 4),
+                            decoration: BoxDecoration(
+                              color: primaryColor.q(.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: T(
+                              "TTS",
+                              s: TS(
+                                s: 12,
+                                w: FontWeight.w500,
+                                c: primaryColor,
+                              ),
+                            ),
+                          ),
+                          8.w,
+                          // 国旗图标
+                          Row(
+                            children: [
+                              T("🇨🇳", s: const TS(s: 14)),
+                              4.w,
+                              T("🇺🇸", s: const TS(s: 14)),
+                              4.w,
+                              T("🇯🇵", s: const TS(s: 14)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
+
+            16.h,
+
+            // 操作按钮
             Row(
               children: [
                 if (downloading) 8.h,
                 if (allMissing && !downloading)
-                  TextButton(
+                  _ActionButton(
+                    text: s.download_all,
                     onPressed: _onDownloadAllTap,
-                    child: T(
-                      s.download_all,
-                      s: TS(
-                        w: FontWeight.w600,
-                      ),
-                    ),
+                    color: primaryColor,
+                    isDark: isDark,
                   ),
                 if (!allMissing && !allDownloaded && !downloading)
-                  TextButton(
+                  _ActionButton(
+                    text: s.download_missing,
                     onPressed: _onDownloadAllTap,
-                    child: T(
-                      s.download_missing,
-                      s: const TS(
-                        w: FontWeight.w600,
-                      ),
-                    ),
+                    color: primaryColor,
+                    isDark: isDark,
                   ),
                 if (allDownloaded && !alreadyStarted)
-                  TextButton(
+                  _ActionButton(
+                    text: s.delete_all,
                     onPressed: _onDeleteAllTap,
-                    child: T(
-                      s.delete_all,
-                      s: const TS(
-                        w: FontWeight.w600,
-                      ),
-                    ),
+                    color: Colors.red,
+                    isDark: isDark,
                   ),
                 if (alreadyStarted)
-                  TextButton(
+                  _ActionButton(
+                    text: s.exploring,
                     onPressed: null,
-                    child: T(
-                      s.exploring,
-                      s: const TS(
-                        w: FontWeight.w600,
-                      ),
-                    ),
+                    color: Colors.grey,
+                    isDark: isDark,
                   ),
                 const Spacer(),
                 if (allDownloaded && !alreadyStarted)
-                  TextButton(
+                  _ActionButton(
+                    text: loading ? s.loading : s.start_to_chat,
                     onPressed: loading ? null : _onSparkTap,
-                    child: T(
-                      loading ? s.loading : s.start_to_chat,
-                      s: const TS(
-                        w: FontWeight.w600,
-                      ),
-                    ),
+                    color: primaryColor,
+                    isDark: isDark,
+                    isPrimary: true,
                   ),
                 if (alreadyStarted)
-                  TextButton(
+                  _ActionButton(
+                    text: loading ? s.loading : s.back_to_chat,
                     onPressed: loading ? null : _onContinueTap,
-                    child: T(
-                      loading ? s.loading : s.back_to_chat,
-                      s: const TS(
-                        w: FontWeight.w600,
-                      ),
-                    ),
+                    color: primaryColor,
+                    isDark: isDark,
+                    isPrimary: true,
                   ),
               ],
             ),
+
+            16.h,
+
+            // 文件列表
             ...fileInfos.m(
               (e) => Container(
                 decoration: BoxDecoration(
-                  color: kC,
-                  border: Border.all(color: primaryColor),
-                  borderRadius: 6.r,
+                  color: fileItemBgColor,
+                  border: Border.all(color: fileItemBorderColor, width: 1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EI.s(v: 4, h: 4),
+                padding: const EI.a(12),
                 margin: const EI.o(t: 8),
-                child: FileKeyItem(e, showDownloaded: true),
+                child: _FileItem(
+                  fileInfo: e,
+                  isDark: isDark,
+                  primaryColor: primaryColor,
+                  textColor: textColor,
+                  secondaryTextColor: secondaryTextColor,
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final String text;
+  final VoidCallback? onPressed;
+  final Color color;
+  final bool isDark;
+  final bool isPrimary;
+
+  const _ActionButton({
+    required this.text,
+    required this.onPressed,
+    required this.color,
+    required this.isDark,
+    this.isPrimary = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isPrimary) {
+      return Container(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: TextButton(
+          onPressed: onPressed,
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            padding: const EI.s(h: 16, v: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: T(
+            text,
+            s: const TS(
+              w: FontWeight.w600,
+              s: 14,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        foregroundColor: color,
+        padding: const EI.s(h: 16, v: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: T(
+        text,
+        s: TS(
+          w: FontWeight.w600,
+          s: 14,
+          c: color,
+        ),
+      ),
+    );
+  }
+}
+
+class _FileItem extends ConsumerWidget {
+  final FileInfo fileInfo;
+  final bool isDark;
+  final Color primaryColor;
+  final Color textColor;
+  final Color secondaryTextColor;
+
+  const _FileItem({
+    required this.fileInfo,
+    required this.isDark,
+    required this.primaryColor,
+    required this.textColor,
+    required this.secondaryTextColor,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final localFile = ref.watch(P.fileManager.locals(fileInfo));
+    final hasFile = localFile.hasFile;
+    final downloading = localFile.downloading;
+    final progress = localFile.progress / 100;
+    final fileSize = fileInfo.fileSize;
+    double networkSpeed = localFile.networkSpeed;
+    if (networkSpeed < 0) networkSpeed = 0;
+    Duration timeRemaining = localFile.timeRemaining;
+    if (timeRemaining.isNegative) timeRemaining = Duration.zero;
+
+    return Column(
+      crossAxisAlignment: CAA.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CAA.start,
+                children: [
+                  T(
+                    fileInfo.name,
+                    s: TS(
+                      w: FontWeight.w600,
+                      c: textColor,
+                      s: 14,
+                    ),
+                  ),
+                  4.h,
+                  T(
+                    gbDisplay(fileSize),
+                    s: TS(
+                      c: secondaryTextColor,
+                      w: FontWeight.w500,
+                      s: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (hasFile)
+              Container(
+                padding: const EI.s(h: 8, v: 4),
+                decoration: BoxDecoration(
+                  color: primaryColor.q(.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.check_circle,
+                  color: primaryColor,
+                  size: 16,
+                ),
+              ),
+          ],
+        ),
+
+        8.h,
+
+        // 标签
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            ...fileInfo.tags.map((tag) {
+              final isHighlight = ["GPU", "CPU", "NPU", "gpu", "cpu", "npu"].contains(tag);
+              return Container(
+                padding: const EI.s(h: 8, v: 4),
+                decoration: BoxDecoration(
+                  color: isHighlight
+                      ? (tag.toLowerCase() == "gpu" ? Colors.green.q(.2) : Colors.blue.q(.2))
+                      : (isDark ? Colors.grey.q(.2) : Colors.grey.q(.1)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: T(
+                  tag.toUpperCase(),
+                  s: TS(
+                    c: isHighlight ? (tag.toLowerCase() == "gpu" ? Colors.green : Colors.blue) : secondaryTextColor,
+                    w: FontWeight.w500,
+                    s: 10,
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+
+        if (downloading) ...[
+          12.h,
+          LinearProgressIndicator(
+            value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
+            backgroundColor: isDark ? Colors.grey.q(.3) : Colors.grey.q(.2),
+            valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          8.h,
+          Wrap(
+            spacing: 8,
+            children: [
+              T(
+                s.speed,
+                s: TS(
+                  c: secondaryTextColor,
+                  w: FontWeight.w500,
+                  s: 11,
+                ),
+              ),
+              T(
+                "${networkSpeed.toStringAsFixed(1)}MB/s",
+                s: TS(
+                  c: textColor,
+                  w: FontWeight.w600,
+                  s: 11,
+                ),
+              ),
+              16.w,
+              T(
+                s.remaining,
+                s: TS(
+                  c: secondaryTextColor,
+                  w: FontWeight.w500,
+                  s: 11,
+                ),
+              ),
+              T(
+                timeRemaining.inMinutes > 0 ? "${timeRemaining.inMinutes}m" : "${timeRemaining.inSeconds}s",
+                s: TS(
+                  c: textColor,
+                  w: FontWeight.w600,
+                  s: 11,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }
