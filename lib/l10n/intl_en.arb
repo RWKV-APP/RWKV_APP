@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "download_all_missing": "Download All Missing Files",
   "tts": "Text-to-Speech",
   "tts_detail": "Let RWKV output voice",
   "offline_translator_server": "Offline Translator Server",
