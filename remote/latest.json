@@ -763,7 +763,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.4B-g1-respark-voice-tunable_ipa-f16.st",
         "fileSize": 952345792,
         "quantization": "fp16",
-        "platforms": ["android", "ios", "macos", "windows", "linux"],
+        "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webrwkv"],
         "tags": ["gpu", "core", "spark"]
       },
@@ -773,7 +773,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.4B-g1-respark-voice-tunable_ipa-q8_0.gguf",
         "fileSize": 528865856,
         "quantization": "fp16",
-        "platforms": ["ios", "macos", "windows", "linux"],
+        "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["llamacpp"],
         "tags": ["cpu", "core", "spark"]
       },

@@ -80,8 +80,6 @@ class TTSGroupItem extends ConsumerWidget {
     P.rwkv.clearStates();
     P.chat.clearMessages();
 
-    debugger();
-
     try {
       await P.rwkv.loadSparkTTS(
         modelPath: modelLocalFile.targetPath,
