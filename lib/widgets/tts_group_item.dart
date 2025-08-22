@@ -144,7 +144,7 @@ class TTSGroupItem extends ConsumerWidget {
     final loading = ref.watch(P.rwkv.loading);
 
     return Container(
-      margin: const EI.o(t: 12, l: 16, r: 16, b: 8),
+      margin: const EI.o(t: 0, l: 0, r: 0, b: 8),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(16),
