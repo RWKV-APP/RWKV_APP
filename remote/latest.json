@@ -778,6 +778,70 @@
         "tags": ["cpu", "core", "spark"]
       },
       {
+        "name": "RWKV7 SparkTTS 0.1B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8gen3_combined.bin",
+        "fileSize": 223059016,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core", "spark"],
+        "socLimitations": ["8 Gen 3"]
+      },
+      {
+        "name": "RWKV7 SparkTTS 0.1B (8s Gen 3) 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8sgen3_combined.bin",
+        "fileSize": 223104064,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core", "spark"],
+        "socLimitations": ["8s Gen 3"]
+      },
+      {
+        "name": "RWKV7 SparkTTS 0.1B (8 Gen 2) 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8gen2_combined.bin",
+        "fileSize": 223026248,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core", "spark"],
+        "socLimitations": ["8 Gen 2"]
+      },
+      {
+        "name": "RWKV7 SparkTTS 0.1B (8 Elite) 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8elite_combined.bin",
+        "fileSize": 222215240,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core", "spark"],
+        "socLimitations": ["8 Elite"]
+      },
+      {
+        "name": "RWKV7 SparkTTS 0.1B 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.1B-g1-respark-voice-tunable-ipa-epoch0-f16.st",
+        "fileSize": 420157752,
+        "quantization": "fp16",
+        "platforms": ["ios", "macos", "windows", "linux"],
+        "backends": ["webrwkv"],
+        "tags": ["gpu", "core", "spark"]
+      },
+      {
+        "name": "RWKV7 SparkTTS 0.1B 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.1B-g1-respark-voice-tunable-ipa-epoch0-q8_0.gguf",
+        "fileSize": 233002304,
+        "quantization": "fp16",
+        "platforms": ["android", "ios", "macos", "windows", "linux"],
+        "backends": ["llamacpp"],
+        "tags": ["cpu", "core", "spark"]
+      },
+      {
         "name": "wav2vec2-large-xlsr-53.mnn",
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/wav2vec2-large-xlsr-53.mnn",
         "fileSize": 858931436,
