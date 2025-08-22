@@ -10,7 +10,8 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 
 class InputTextField extends ConsumerWidget {
-  const InputTextField({super.key});
+  final DemoType? preferredDemoType;
+  const InputTextField({super.key, this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,7 +19,7 @@ class InputTextField extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final loaded = ref.watch(P.rwkv.loaded);
     final loading = ref.watch(P.rwkv.loading);
-    final demoType = ref.watch(P.app.demoType);
+    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final isChat = demoType == DemoType.chat;
 
     String hintText;

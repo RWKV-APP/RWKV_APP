@@ -175,6 +175,8 @@ class FileInfo extends Equatable {
 
   bool get isNeko => name.contains('Neko');
 
+  bool get isTTS => name.toLowerCase().contains('tts');
+
   @override
   List<Object?> get props => [raw];
 

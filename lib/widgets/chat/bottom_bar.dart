@@ -56,7 +56,7 @@ class BottomBar extends ConsumerWidget {
               duration: 250.ms,
               child: Column(
                 children: [
-                  const InputTextField(),
+                  InputTextField(preferredDemoType: demoType),
                   if (demoType != DemoType.tts) const BottomInteractions(),
                   if (demoType == DemoType.tts) const TTSBottomInteractions(),
                 ],

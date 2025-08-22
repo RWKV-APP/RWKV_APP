@@ -36,7 +36,7 @@ class Suggestions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<dynamic> suggestions = ref.watch(P.suggestion.talkSuggestion);
+    final suggestions = ref.watch(P.suggestion.talkSuggestion);
 
     if (suggestions.isEmpty) {
       return const SizedBox.shrink();
@@ -64,7 +64,7 @@ class Suggestions extends ConsumerWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                 ),
                 child: Text(
-                  item is Suggestion ? item.display : item.toString(),
+                  item,
                   style: TextStyle(fontSize: 14, color: qb, fontWeight: FontWeight.w400),
                 ),
               ),

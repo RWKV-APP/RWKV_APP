@@ -37,13 +37,19 @@ class PageHome extends ConsumerWidget {
   }
 
   void _onChatTap() async {
+    final isTTS = P.rwkv.currentModel.q?.isTTS ?? false;
+    if (isTTS) P.rwkv.currentModel.q = null;
     P.chat.startNewChat();
     push(PageKey.chat);
   }
 
   void _onTtsTap() async {
     P.chat.startNewChat();
-    P.rwkv.currentModel.q = null;
+    final isTTS = P.rwkv.currentModel.q?.isTTS ?? false;
+    if (!isTTS) {
+      P.rwkv.currentGroupInfo.q = null;
+      P.rwkv.currentModel.q = null;
+    }
     push(PageKey.talk);
   }
 
@@ -111,9 +117,18 @@ class PageHome extends ConsumerWidget {
                             title: s.tts,
                             subtitle: s.tts_detail,
                             onTap: _onTtsTap,
-                            icon: const FaIcon(
-                              FontAwesomeIcons.volumeHigh,
-                              color: Colors.white,
+                            icon: Container(
+                              height: 48,
+                              width: 48,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.record_voice_over,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           buildButton(

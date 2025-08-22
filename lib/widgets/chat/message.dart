@@ -428,20 +428,22 @@ class Message extends ConsumerWidget {
       ),
     );
 
-    return Align(
-      alignment: alignment,
-      child: IgnorePointer(
-        ignoring: editingIndex != null && editingIndex != index,
-        child: AnimatedOpacity(
-          opacity: opacity,
-          duration: 250.ms,
-          child: Padding(
-            padding: const EI.s(h: marginHorizontal, v: marginVertical),
-            child: Column(
-              children: [
-                if (reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                GestureDetector(onTap: _onTap, child: bubbleContent),
-              ],
+    return GestureDetector(
+      child: Align(
+        alignment: alignment,
+        child: IgnorePointer(
+          ignoring: editingIndex != null && editingIndex != index,
+          child: AnimatedOpacity(
+            opacity: opacity,
+            duration: 250.ms,
+            child: Padding(
+              padding: const EI.s(h: marginHorizontal, v: marginVertical),
+              child: Column(
+                children: [
+                  if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
+                  GestureDetector(onTap: _onTap, child: bubbleContent),
+                ],
+              ),
             ),
           ),
         ),

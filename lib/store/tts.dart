@@ -127,9 +127,7 @@ extension _$TTS on _TTS {
     final pageKey = P.app.pageKey.q;
     if (pageKey != PageKey.talk) return;
     qqq("P.chat.focusNode.hasFocus: ${P.chat.focusNode.hasFocus}");
-    if (P.chat.focusNode.hasFocus) {
-      dismissAllShown(intonationShown: intonationShown.q);
-    }
+    if (P.chat.focusNode.hasFocus) dismissAllShown(intonationShown: intonationShown.q);
   }
 
   void _onTextChanged(String next) {
@@ -502,7 +500,7 @@ outputWavPath: $outputWavPath""");
   }
 
   void dismissAllShown({bool intonationShown = false}) {
-    if (P.app.demoType.q != DemoType.tts) return;
+    if (P.app.pageKey.q != PageKey.talk) return;
     qqq("intonationShown: $intonationShown");
 
     audioInteractorShown.q = false;
