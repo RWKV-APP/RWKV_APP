@@ -13,8 +13,6 @@ extension _Instruction on Language {
 
 extension _TTSStatic on _TTS {
   static const _defaultTextInInput = "";
-  static const _cfmStepsKey = "cfmSteps";
-  static const _defaultCfmSteps = 5;
   static const _replaceMap = {
     "English": "🇺🇸",
     "Japanese": "🇯🇵",
@@ -32,8 +30,6 @@ extension _TTSStatic on _TTS {
 
 class _TTS {
   late final audioInteractorShown = qs(false);
-  @Deprecated("Use sparktts instead")
-  late final cfmSteps = qs(_TTSStatic._defaultCfmSteps);
   late final focusNode = FocusNode();
   late final hasFocus = qs(false);
   late final instructions = qsf<TTSInstruction, int?>(null);
@@ -71,14 +67,6 @@ extension _$TTS on _TTS {
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     textInInput.l(_onTextChanged);
     await getTTSSpkNames();
-
-    final prefs = await SharedPreferences.getInstance();
-    final cfmSteps = prefs.getInt(_TTSStatic._cfmStepsKey);
-    if (cfmSteps == null) {
-      this.cfmSteps.q = _TTSStatic._defaultCfmSteps;
-    } else {
-      this.cfmSteps.q = cfmSteps;
-    }
 
     final spkPairs = this.spkPairs.q;
 
@@ -449,7 +437,6 @@ extension $TTS on _TTS {
       ttsSourceAudioPath: selectSourceAudioPath,
       ttsInstruction: instructionText,
       audioUrl: selectSourceAudioPath,
-      ttsCFMSteps: cfmSteps.q,
     );
 
     P.msg._syncMsg(id, msg);
@@ -542,38 +529,6 @@ outputWavPath: $outputWavPath""");
     instruction = instruction.replaceAll("用模仿", "模仿");
     textInInput.q = instruction;
     textEditingController.text = instruction;
-  }
-
-  @Deprecated("Use sparktts instead")
-  Future<void> setTTSCFMSteps(int steps) async {
-    qq;
-    cfmSteps.q = steps;
-    P.rwkv.send(to_rwkv.SetTTSCFMSteps(steps));
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(_TTSStatic._cfmStepsKey, steps);
-  }
-
-  Future<void> showTTSCFMStepsSelector() async {
-    qq;
-    final context = getContext();
-    if (context == null) return;
-    if (!context.mounted) return;
-    final currentQ = cfmSteps.q;
-    final res = await showConfirmationDialog<int?>(
-      context: context,
-      title: "TTS CFM Steps",
-      message: "范围3～10吧，越高越慢越精细",
-      initialSelectedActionKey: currentQ,
-      actions: [3, 4, 5, 6, 7, 8, 9, 10].m((value) => AlertDialogAction<int>(label: value.toString(), key: value)),
-    );
-    qqq("$res");
-
-    if (res == null) return;
-
-    cfmSteps.q = res;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setInt(_TTSStatic._cfmStepsKey, res);
-    setTTSCFMSteps(res);
   }
 
   (String flag, String nameCN, String nameEN) getSpkInfo(String spkName) {

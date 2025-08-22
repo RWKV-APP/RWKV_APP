@@ -83,6 +83,7 @@ final class Message extends Equatable {
   final int? audioLength;
   final bool isSensitive;
 
+  @Deprecated("")
   final int? ttsCFMSteps;
   final String? ttsTarget;
   final String? ttsSpeakerName;
@@ -120,7 +121,7 @@ final class Message extends Equatable {
     this.ttsSpeakerName,
     this.ttsSourceAudioPath,
     this.ttsInstruction,
-    this.ttsCFMSteps,
+    this.ttsCFMSteps = 5,
     this.isSensitive = false,
     this.ttsOverallProgress,
     this.ttsPerWavProgress,
@@ -146,7 +147,6 @@ final class Message extends Equatable {
     ttsSpeakerName,
     ttsSourceAudioPath,
     ttsInstruction,
-    ttsCFMSteps,
     isSensitive,
     ttsOverallProgress,
     ...ttsPerWavProgress ?? [],
@@ -172,7 +172,6 @@ final class Message extends Equatable {
       ttsSpeakerName: json["ttsSpeakerName"] as String?,
       ttsSourceAudioPath: json["ttsSourceAudioPath"] as String?,
       ttsInstruction: json["ttsInstruction"] as String?,
-      ttsCFMSteps: json["ttsCFMSteps"] as int?,
       isSensitive: json["isSensitive"] as bool,
       ttsOverallProgress: json["ttsOverallProgress"] as double?,
       ttsPerWavProgress: json["ttsPerWavProgress"] as List<double>?,
@@ -199,7 +198,6 @@ final class Message extends Equatable {
       "ttsSpeakerName": ttsSpeakerName,
       "ttsSourceAudioPath": ttsSourceAudioPath,
       "ttsInstruction": ttsInstruction,
-      "ttsCFMSteps": ttsCFMSteps,
       "isSensitive": isSensitive,
       "ttsOverallProgress": ttsOverallProgress,
       "ttsPerWavProgress": ttsPerWavProgress,
@@ -225,7 +223,6 @@ final class Message extends Equatable {
     String? ttsSpeakerName,
     String? ttsSourceAudioPath,
     String? ttsInstruction,
-    int? ttsCFMSteps,
     bool? isSensitive,
     double? ttsOverallProgress,
     List<double>? ttsPerWavProgress,
@@ -249,7 +246,6 @@ final class Message extends Equatable {
       ttsSpeakerName: ttsSpeakerName ?? this.ttsSpeakerName,
       ttsSourceAudioPath: ttsSourceAudioPath ?? this.ttsSourceAudioPath,
       ttsInstruction: ttsInstruction ?? this.ttsInstruction,
-      ttsCFMSteps: ttsCFMSteps ?? this.ttsCFMSteps,
       isSensitive: isSensitive ?? this.isSensitive,
       ttsOverallProgress: ttsOverallProgress ?? this.ttsOverallProgress,
       ttsPerWavProgress: ttsPerWavProgress ?? this.ttsPerWavProgress,
@@ -278,7 +274,6 @@ Message(
   ttsSpeakerName: $ttsSpeakerName,
   ttsSourceAudioPath: $ttsSourceAudioPath,
   ttsInstruction: $ttsInstruction,
-  ttsCFMSteps: $ttsCFMSteps,
   isSensitive: $isSensitive,
   ttsOverallProgress: $ttsOverallProgress,
   ttsPerWavProgress: $ttsPerWavProgress,

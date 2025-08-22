@@ -102,9 +102,6 @@ class UserTTSContent extends ConsumerWidget {
                             ),
                           ),
                         ],
-                        if (msg.ttsCFMSteps != null) ...[
-                          TextSpan(text: " (CFM Steps: ${msg.ttsCFMSteps!})"),
-                        ],
                       ],
                     ),
                   ),

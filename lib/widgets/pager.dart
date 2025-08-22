@@ -9,7 +9,6 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/store/p.dart';
 
-@Deprecated("Use PageTab instead")
 class Pager extends ConsumerStatefulWidget {
   static final page = qs<double>(1.0);
   static final atMainPage = qs(true);
@@ -49,6 +48,7 @@ class Pager extends ConsumerStatefulWidget {
   ConsumerState<Pager> createState() => _PagerState();
 }
 
+@Deprecated("Use PageTab instead")
 class _PagerState extends ConsumerState<Pager> {
   @override
   void initState() {
