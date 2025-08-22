@@ -42,6 +42,8 @@ class PageHome extends ConsumerWidget {
   }
 
   void _onTtsTap() async {
+    P.chat.startNewChat();
+    P.rwkv.currentModel.q = null;
     push(PageKey.talk);
   }
 

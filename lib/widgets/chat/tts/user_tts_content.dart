@@ -5,7 +5,6 @@ import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
 
@@ -37,8 +36,6 @@ class UserTTSContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final demoType = ref.watch(P.app.demoType);
-    if (demoType != DemoType.tts) return const SizedBox.shrink();
     final primary = Theme.of(context).colorScheme.primary;
 
     // final displayFlag = ref.watch(P.tts.displayFlag);

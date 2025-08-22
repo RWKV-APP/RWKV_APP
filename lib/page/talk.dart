@@ -4,15 +4,17 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/gen/assets.gen.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
 import 'package:zone/widgets/chat/audio_input.dart';
 import 'package:zone/widgets/chat/bottom_bar.dart';
-import 'package:zone/widgets/chat/empty.dart';
 import 'package:zone/widgets/chat/message.dart';
 import 'package:zone/widgets/chat/tts/suggestions.dart';
+import 'package:zone/widgets/model_selector.dart';
 
 class PageTalk extends ConsumerWidget {
   const PageTalk({super.key});
@@ -24,12 +26,12 @@ class PageTalk extends ConsumerWidget {
         children: [
           AppGradientBackground(child: SizedBox()),
           _List(),
-          Empty(),
+          _Empty(),
           Positioned(
             top: 0,
             left: 0,
             right: 0,
-            child: ChatAppBar(),
+            child: ChatAppBar(preferredDemoType: DemoType.tts),
           ),
           Positioned(
             bottom: 0,
@@ -93,12 +95,71 @@ class _List extends ConsumerWidget {
             itemBuilder: (context, index) {
               final finalIndex = messages.length - 1 - index;
               final msg = messages[finalIndex];
-              return Message(msg, finalIndex);
+              return Message(msg, finalIndex, preferredDemoType: DemoType.tts);
             },
             separatorBuilder: (context, index) {
               return const SizedBox(height: 15);
             },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Empty extends ConsumerWidget {
+  const _Empty();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final logoSquare = Assets.img.chat.logoSquare;
+    final inputHeight = ref.watch(P.chat.inputHeight);
+    final version = ref.watch(P.app.version);
+    final s = S.of(context);
+    final loaded = ref.watch(P.rwkv.loaded);
+    final messages = ref.watch(P.msg.list);
+    final qb = ref.watch(P.app.qb);
+
+    return AnimatedPositioned(
+      duration: 200.ms,
+      curve: Curves.ease,
+      bottom: inputHeight,
+      left: 28,
+      right: 28,
+      top: 0,
+      child: AnimatedOpacity(
+        opacity: messages.isEmpty ? 1 : 0,
+        duration: 200.ms,
+        curve: Curves.ease,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            logoSquare.image(width: 140),
+            T(s.chat_welcome_to_use("RWKV Talk"), s: const TS(s: 18, w: FontWeight.w600)),
+            4.h,
+            T("v$version"),
+            12.h,
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: T(
+                s.intro,
+                s: TS(c: qb, w: FontWeight.w500),
+              ),
+            ),
+            12.h,
+            if (!loaded)
+              T(
+                s.start_a_new_chat_by_clicking_the_button_below,
+                s: TS(c: qb, s: 12),
+              ),
+            12.h,
+            if (!loaded)
+              TextButton(
+                onPressed: () => ModelSelector.show(preferredDemoType: DemoType.tts),
+                child: T(s.select_a_model, s: const TS(s: 16, w: FontWeight.w600)),
+              ),
+          ],
         ),
       ),
     );

@@ -22,9 +22,10 @@ class _App extends RawApp {
   @Deprecated("use P.fileManager.availableModelsInCurrentDemoType instead")
   late final _modelConfigInCurrentDemoType = qs<List<Map<String, dynamic>>>([]);
 
-  late final _newVersionDialogShown = qs(false);
+  /// 全部的配置信息, 包含所有功能种类的权重
+  late final _config = qs<Map<String, dynamic>?>(null);
 
-  static const String _remoteDemoConfigKey = "latest.json";
+  late final _newVersionDialogShown = qs(false);
 
   late final isDesktop = qp((ref) => ref.watch(_isDesktop));
   final _isDesktop = qs(false);
@@ -56,39 +57,45 @@ class _App extends RawApp {
     );
   }
 
+  String get _configForAllDemosKey => "configForAllDemosKey_${buildNumber.q}";
+
   @override
   BuildContext? get context => getContext();
 }
 
 /// Public methods
 extension $App on _App {
-  Future<void> getConfig() async {
+  /// # 同步配置
+  ///
+  /// 1. 先从 sandbox 中同步配置, 如果 sandbox 中没有, 则从应用包中加载, 并存储到本地沙盒中
+  /// 2. 再从服务器同步配置
+  Future<void> syncConfig() async {
+    qq;
+
+    final (config, sp) = await _loadConfigFromLocal();
+    _config.q = config;
+    await _parseConfigForDemoSpecificData(config[demoType.q.name]);
+    await P.fileManager.syncAvailableModels();
+    await P.fileManager.checkLocal();
+
     if (Args.disableRemoteConfig) {
       qqw("Remote config is disabled");
       return;
     }
 
-    qq;
-
-    final sp = await SharedPreferences.getInstance();
-
-    if (sp.containsKey(_App._remoteDemoConfigKey)) {
-      qqr("Load cached remote config from local");
-      await _parseConfig(jsonDecode(sp.getString(_App._remoteDemoConfigKey)!));
-    }
-
     await Future.delayed(const Duration(milliseconds: 17));
 
-    final allConfig = await _getAllRemoteConfig();
-    final config = allConfig?[demoType.q.name];
-    if (config == null) {
-      qqe("config is null, demoType: ${demoType.q.name}");
+    final allConfig = await _getRemoteConfig();
+    if (allConfig == null) {
+      qqe("Can not get remote config, skip sync");
       return;
     }
 
-    await _parseConfig(config);
-    // 将 res 写入本地沙盒文件
-    sp.setString(_App._remoteDemoConfigKey, jsonEncode(config));
+    _config.q = allConfig;
+    await sp.setString(_configForAllDemosKey, jsonEncode(allConfig));
+    await _parseConfigForDemoSpecificData(allConfig[demoType.q.name]);
+    await P.fileManager.syncAvailableModels();
+    await P.fileManager.checkLocal();
   }
 
   void hapticLight() {
@@ -113,7 +120,7 @@ extension $App on _App {
   }
 
   void checkUpdates() async {
-    final allConfig = await _getAllRemoteConfig();
+    final allConfig = await _getRemoteConfig();
     final config = allConfig?[demoType.q.name];
     if (config == null) {
       qqe("config is null, demoType: ${demoType.q.name}");
@@ -166,12 +173,10 @@ extension _$App on _App {
 
     WidgetsBinding.instance.addObserver(this);
 
-    if (!Args.disableRemoteConfig) {
-      getConfig().then((_) async {
-        await Future.delayed(const Duration(milliseconds: 1000));
-        _showNewVersionDialogIfNeeded();
-      });
-    }
+    syncConfig().then((_) async {
+      await Future.delayed(const Duration(milliseconds: 1000));
+      _showNewVersionDialogIfNeeded();
+    });
 
     lifecycleState.lv(_onLifecycleStateChanged);
 
@@ -261,7 +266,7 @@ extension _$App on _App {
 
   Future<void> _onLifecycleStateChanged() async {}
 
-  Future _showNewVersionDialogIfNeeded() async {
+  Future<void> _showNewVersionDialogIfNeeded() async {
     if (!Platform.isIOS && !Platform.isAndroid) return;
     qq;
     if (Platform.isAndroid && _latestBuild.q <= int.parse(buildNumber.q)) return;
@@ -327,9 +332,15 @@ extension _$App on _App {
     }
   }
 
-  Future<void> _parseConfig(Map<String, dynamic> config) async {
-    final build = config["latest_build"];
-    final buildIos = config["latest_build_ios"];
+  /// 解析配置, 只解析 demo 相关的数据, 不解析所有数据
+  Future<void> _parseConfigForDemoSpecificData(Map<String, dynamic>? json) async {
+    if (json == null) {
+      qqe("json is null");
+      return;
+    }
+
+    final build = json["latest_build"];
+    final buildIos = json["latest_build_ios"];
 
     if (build is! num) {
       qqe("build is not an num, build: $build");
@@ -345,20 +356,16 @@ extension _$App on _App {
 
     _latestBuild.q = build.toInt();
     _latestBuildIos.q = buildIos.toInt();
-    _noteZh.q = (config["note_zh"] as List<dynamic>).m((e) => e.toString());
-    _noteEn.q = (config["note_en"] as List<dynamic>).m((e) => e.toString());
-    _modelConfigInCurrentDemoType.q = HF.listJSON(config["model_config"]);
-    _androidUrl.q = config["android_url"];
-    _androidApkUrl.q = config["android_apk_url"];
-    shareChatQrCodeEn.q = config["share_chat_qrcode_en"];
-    shareChatQrCodeZh.q = config["share_chat_qrcode_zh"];
-    _iosUrl.q = config["ios_url"].toString();
+    _noteZh.q = (json["note_zh"] as List<dynamic>).m((e) => e.toString());
+    _noteEn.q = (json["note_en"] as List<dynamic>).m((e) => e.toString());
+    _androidUrl.q = json["android_url"];
+    _androidApkUrl.q = json["android_apk_url"];
+    shareChatQrCodeEn.q = json["share_chat_qrcode_en"];
+    shareChatQrCodeZh.q = json["share_chat_qrcode_zh"];
+    _iosUrl.q = json["ios_url"].toString();
     featureRollout.q =
-        FeatureRollout.fromMap(config["controlled_rollout"]) // merge with dev options
+        FeatureRollout.fromMap(json["controlled_rollout"]) // merge with dev options
             .merge(P.preference.featureRollout);
-
-    await P.fileManager.syncAvailableModels();
-    await P.fileManager.checkLocal();
   }
 
   void _routerListener() {
@@ -371,7 +378,8 @@ extension _$App on _App {
     });
   }
 
-  Future<Map<String, dynamic>?> _getAllRemoteConfig() async {
+  /// 从服务器获取远程配置
+  Future<Map<String, dynamic>?> _getRemoteConfig() async {
     try {
       final res = await _get("get-demo-config", timeout: 10000.ms);
       if (res is! Map) throw "res is not a Map, res: ${res.runtimeType}";
@@ -388,5 +396,43 @@ extension _$App on _App {
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
     return null;
+  }
+
+  /// 从本地沙盒中加载配置, 如果本地沙盒中没有, 则从应用包中加载, 并存储到本地沙盒中
+  Future<(Map<String, dynamic> json, SharedPreferences sp)> _loadConfigFromLocal() async {
+    qr;
+
+    final startTime = HF.milliseconds;
+
+    final sp = await SharedPreferences.getInstance();
+    final contains = sp.containsKey(_configForAllDemosKey);
+
+    // 如果禁用了远程配置, 则强制从应用包中加载
+    final forceRefreshFromBundle = Args.disableRemoteConfig;
+    if (forceRefreshFromBundle) {
+      qqw("force refresh from bundle");
+      final jsonPath = "remote/latest.json";
+      final jsonStringInBundle = await rootBundle.loadString(jsonPath);
+      await sp.setString(_configForAllDemosKey, jsonStringInBundle);
+    }
+
+    if (contains) {
+      qqq("latest config data already stored in sandbox");
+    } else {
+      qqq("latest config data not stored in sandbox");
+      qqq("load latest config from application bundle");
+      final jsonPath = "remote/latest.json";
+      final jsonStringInBundle = await rootBundle.loadString(jsonPath);
+      await sp.setString(_configForAllDemosKey, jsonStringInBundle);
+    }
+
+    final jsonString = sp.getString(_configForAllDemosKey);
+    final rawJSON = jsonDecode(jsonString!);
+    final json = HF.json(rawJSON);
+
+    final endTime = HF.milliseconds;
+    qqw("load config from local sandbox and bundle time: ${endTime - startTime}ms");
+
+    return (json, sp);
   }
 }

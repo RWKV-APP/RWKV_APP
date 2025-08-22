@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
@@ -34,7 +33,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     super.initState();
 
     if (widget.msg.isMine) return;
-    final demoType = P.app.demoType.q;
+    const demoType = DemoType.tts;
     if (demoType != DemoType.tts) return;
 
     ref.listenManual(P.msg.latestClicked, (previous, next) {
@@ -82,8 +81,6 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
   @override
   Widget build(BuildContext context) {
     if (widget.msg.isMine) return const SizedBox.shrink();
-    final demoType = ref.watch(P.app.demoType);
-    if (demoType != DemoType.tts) return const SizedBox.shrink();
     final s = S.of(context);
 
     _syncWavDuration().then((value) {

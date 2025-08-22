@@ -219,7 +219,7 @@ extension $RWKVLoad on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424_sparktts.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/vocab_talk.txt");
     await _ensureQNNCopied();
     final rootIsolateToken = RootIsolateToken.instance;
 

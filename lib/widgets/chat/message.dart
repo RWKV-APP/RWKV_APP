@@ -32,6 +32,7 @@ const double _kTextScaleFactorForCotContent = 1;
 class Message extends ConsumerWidget {
   final model.Message msg;
   final bool selectMode;
+  final DemoType? preferredDemoType;
 
   /// 页面中第一个消息的 index 为 0
   final int index;
@@ -41,6 +42,7 @@ class Message extends ConsumerWidget {
     this.index, {
     super.key,
     this.selectMode = false,
+    this.preferredDemoType,
   });
 
   void _onTapLink(String text, String? href, String title) async {
@@ -93,7 +95,7 @@ class Message extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
 
-    final demoType = ref.watch(P.app.demoType);
+    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final worldType = ref.watch(P.rwkv.currentWorldType);
 
     // 由 message 对象是否正在 changing 来决定是否根据 receivedTokens 渲染消息内容
@@ -311,6 +313,8 @@ class Message extends ConsumerWidget {
       borderRadius = BorderRadius.circular(16);
     }
 
+    final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
+
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
@@ -318,7 +322,7 @@ class Message extends ConsumerWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: isMine ? primaryContainer : (isChat ? Theme.of(context).colorScheme.surface : null),
+            color: isMine ? primaryContainer : botMessageBackgroundColor,
             border: border,
             borderRadius: borderRadius,
           ),
@@ -348,7 +352,7 @@ class Message extends ConsumerWidget {
                   ),
                 // 🔥 User message audio
                 if (isUserAudio) AudioBubble(msg),
-                UserTTSContent(msg, index),
+                if (preferredDemoType == DemoType.tts) UserTTSContent(msg, index),
                 UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
@@ -415,8 +419,8 @@ class Message extends ConsumerWidget {
                     styleSheet: markdownStyleSheet,
                     onTapLink: _onTapLink,
                   ),
-                if (!selectMode) BotMessageBottom(msg, index),
-                BotTtsContent(msg, index),
+                if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType),
+                if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
               ],
             ],
           ),

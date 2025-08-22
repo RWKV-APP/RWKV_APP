@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `下载全部缺失文件`
+  String get download_all_missing {
+    return Intl.message(
+      '下载全部缺失文件',
+      name: 'download_all_missing',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `文本转语音`
   String get tts {
     return Intl.message('文本转语音', name: 'tts', desc: '', args: []);

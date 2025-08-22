@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/file_info.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
@@ -25,8 +25,12 @@ import 'package:zone/widgets/model_item.dart';
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
   final ScrollController scrollController;
+  static DemoType? _preferredDemoType;
 
-  static Future<void> show({bool nekoOnly = false}) async {
+  static Future<void> show({
+    bool nekoOnly = false,
+    DemoType? preferredDemoType,
+  }) async {
     if (P.fileManager.modelSelectorShown.q) return;
     P.fileManager.modelSelectorShown.q = true;
 
@@ -39,12 +43,18 @@ class ModelSelector extends ConsumerWidget {
     // Fire and forget model updates
     (() async {
       P.fileManager.checkLocal();
-      if (!Args.disableRemoteConfig) {
-        await P.app.getConfig();
-      }
+      await P.app.syncConfig();
       await P.fileManager.syncAvailableModels();
       P.fileManager.checkLocal();
     })();
+
+    if (P.app.pageKey.q == PageKey.talk) {
+      _preferredDemoType = DemoType.tts;
+    }
+
+    if (preferredDemoType != null) {
+      _preferredDemoType = preferredDemoType;
+    }
 
     await showModalBottomSheet(
       isScrollControlled: true,
@@ -60,6 +70,9 @@ class ModelSelector extends ConsumerWidget {
         ),
       ),
     );
+
+    _preferredDemoType = null;
+
     P.fileManager.modelSelectorShown.q = false;
   }
 
@@ -115,7 +128,7 @@ class _Hints extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final demoType = ref.watch(P.app.demoType);
+    final demoType = ModelSelector._preferredDemoType ?? ref.watch(P.app.demoType);
     final qb = ref.watch(P.app.qb);
 
     return Column(
@@ -144,7 +157,17 @@ class _ModelList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
-    var availableModels = ref.watch(P.fileManager.availableModelsInCurrentDemoType);
+    final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
+
+    Set<FileInfo> availableModels = switch (preferredDemoType) {
+      DemoType.world => ref.watch(P.fileManager.worldWeights),
+      DemoType.tts => ref.watch(P.fileManager.ttsWeights),
+      DemoType.chat => ref.watch(P.fileManager.chatWeights),
+      DemoType.sudoku => ref.watch(P.fileManager.sudokuWeights),
+      DemoType.othello => ref.watch(P.fileManager.othelloWeights),
+      DemoType.fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
+    };
+
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
@@ -155,7 +178,7 @@ class _ModelList extends ConsumerWidget {
       availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
     }
 
-    final List<Widget> items = switch (demoType) {
+    final List<Widget> items = switch (preferredDemoType) {
       DemoType.world =>
         WorldType.values
             .where((e) => e.available)

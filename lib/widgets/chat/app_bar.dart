@@ -24,7 +24,9 @@ import 'package:sprintf/sprintf.dart';
 
 // TODO: rename the file name to chat_app_bar.dart
 class ChatAppBar extends ConsumerWidget {
-  const ChatAppBar({super.key});
+  final DemoType? preferredDemoType;
+
+  const ChatAppBar({super.key, this.preferredDemoType});
 
   void onSettingsPressed() async {
     if (!checkModelSelection()) return;
@@ -47,7 +49,7 @@ class ChatAppBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    final demoType = ref.watch(P.app.demoType);
+    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final primary = Theme.of(context).colorScheme.primary;
     final currentModel = ref.watch(P.rwkv.currentModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);

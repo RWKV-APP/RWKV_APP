@@ -23,21 +23,25 @@ class TTSGroupItem extends ConsumerWidget {
     super.key,
   }) : assert(fileInfo.tags.contains("core"), "fileInfo must be a core model");
 
-  void _onDownloadAllTap() async {
-    final helperModels = P.fileManager.availableModelsInCurrentDemoType.q.where((e) => !e.tags.contains("core")).toList();
+  Future<void> _onDownloadAllTap() async {
+    final helperModels = P.fileManager.ttsWeights.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
     final missingFileInfos = [...helperModels, core].where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
     missingFileInfos.forEach((e) => P.fileManager.getFile(fileInfo: e));
   }
 
-  void _onDeleteAllTap() async {
-    final helperModels = P.fileManager.availableModelsInCurrentDemoType.q.where((e) => !e.tags.contains("core")).toList();
+  Future<void> _onDeleteAllTap() async {
+    final helperModels = P.fileManager.ttsWeights.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
     [...helperModels, core].forEach((e) => P.fileManager.deleteFile(fileInfo: e));
   }
 
   Future<void> _onSparkTap() async {
-    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
+    if (P.rwkv.loading.q) {
+      Alert.warning(S.current.please_wait_for_the_model_to_load);
+      return;
+    }
+    final availableModels = P.fileManager.ttsWeights.q;
     final fileInfos = availableModels.toList();
     final sparkFileKeys = fileInfos.where((e) => e.tags.contains("spark")).toList();
     if (sparkFileKeys.isEmpty) {
@@ -96,98 +100,9 @@ class TTSGroupItem extends ConsumerWidget {
     P.rwkv.currentGroupInfo.q = GroupInfo(displayName: fileInfo.name);
     P.rwkv.currentModel.q = fileInfo;
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
-    pop();
   }
 
-  void _onStartToChatTap() async {
-    if (P.rwkv.loading.q) {
-      Alert.warning("Please wait for the model to load...");
-      return;
-    }
-    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
-    final isSpark = fileInfo.tags.contains("spark");
-    if (isSpark) {
-      await _onSparkTap();
-      return;
-    }
-
-    final fileInfos = availableModels.toList();
-
-    final campPlusFileKey = fileInfos.firstWhereOrNull((e) => e.tags.contains("campplus"));
-    final flowEncoderFileKey = fileInfos.firstWhereOrNull((e) => e.tags.contains("flow.encoder"));
-    final flowDecoderEstimatorFileKey = fileInfos.firstWhereOrNull((e) => e.tags.contains("flow.decoder.estimator"));
-    final hiftGeneratorFileKey = fileInfos.firstWhereOrNull((e) => e.tags.contains("hift"));
-    final speechTokenizerFileKey = fileInfos.firstWhereOrNull((e) => e.tags.contains("speech.tokenizer"));
-
-    if (campPlusFileKey == null) {
-      Alert.error("Campplus file not found");
-      qqe;
-      return;
-    }
-
-    if (flowEncoderFileKey == null) {
-      Alert.error("Flow encoder file not found");
-      qqe;
-      return;
-    }
-
-    if (flowDecoderEstimatorFileKey == null) {
-      Alert.error("Flow decoder estimator file not found");
-      qqe;
-      return;
-    }
-
-    if (hiftGeneratorFileKey == null) {
-      Alert.error("Hift generator file not found");
-      qqe;
-      return;
-    }
-
-    if (speechTokenizerFileKey == null) {
-      Alert.error("TTS tokenizer file not found");
-      qqe;
-      return;
-    }
-
-    final modelLocalFile = P.fileManager.locals(fileInfo).q;
-    final localCampPlusFile = P.fileManager.locals(campPlusFileKey).q;
-    final localFlowEncoderFile = P.fileManager.locals(flowEncoderFileKey).q;
-    final localFlowDecoderEstimatorFile = P.fileManager.locals(flowDecoderEstimatorFileKey).q;
-    final localHiftGeneratorFile = P.fileManager.locals(hiftGeneratorFileKey).q;
-    final localSpeechTokenizerFile = P.fileManager.locals(speechTokenizerFileKey).q;
-    P.rwkv.currentGroupInfo.q = GroupInfo(displayName: fileInfo.name);
-
-    P.rwkv.clearStates();
-    P.chat.clearMessages();
-
-    try {
-      await P.rwkv.loadTTSModels(
-        modelPath: modelLocalFile.targetPath,
-        backend: fileInfo.backend!,
-        enableReasoning: false,
-        campPlusPath: localCampPlusFile.targetPath,
-        flowEncoderPath: localFlowEncoderFile.targetPath,
-        flowDecoderEstimatorPath: localFlowDecoderEstimatorFile.targetPath,
-        hiftGeneratorPath: localHiftGeneratorFile.targetPath,
-        speechTokenizerPath: localSpeechTokenizerFile.targetPath,
-      );
-      P.tts.setTTSCFMSteps(P.tts.cfmSteps.q);
-      P.tts.getTTSSpkNames();
-      Navigator.pop(getContext()!);
-    } catch (e) {
-      qqe("$e");
-      Alert.error(e.toString());
-      P.rwkv.currentGroupInfo.q = null;
-      return;
-    }
-
-    P.rwkv.currentGroupInfo.q = GroupInfo(displayName: fileInfo.name);
-    P.rwkv.currentModel.q = fileInfo;
-    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
-    pop();
-  }
-
-  void _onContinueTap() async {
+  Future<void> _onContinueTap() async {
     qq;
     pop();
   }
@@ -195,7 +110,7 @@ class TTSGroupItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
+    final availableModels = ref.watch(P.fileManager.ttsWeights);
     final isSpark = fileInfo.tags.contains("spark");
     final fileInfos = availableModels.toList().where((e) {
       return !e.tags.contains("core") && (isSpark ? e.tags.contains("spark") : !e.tags.contains("spark"));
@@ -216,6 +131,8 @@ class TTSGroupItem extends ConsumerWidget {
     final alreadyStarted = currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
     final qw = ref.watch(P.app.qw);
+
+    // debugger();
 
     return ClipRRect(
       borderRadius: 8.r,
@@ -240,8 +157,8 @@ class TTSGroupItem extends ConsumerWidget {
                 if (allMissing && !downloading)
                   TextButton(
                     onPressed: _onDownloadAllTap,
-                    child: const T(
-                      "Download All",
+                    child: T(
+                      s.download_all,
                       s: TS(
                         w: FontWeight.w600,
                       ),
@@ -280,7 +197,7 @@ class TTSGroupItem extends ConsumerWidget {
                 const Spacer(),
                 if (allDownloaded && !alreadyStarted)
                   TextButton(
-                    onPressed: loading ? null : _onStartToChatTap,
+                    onPressed: loading ? null : _onSparkTap,
                     child: T(
                       loading ? s.loading : s.start_to_chat,
                       s: const TS(
