@@ -229,6 +229,32 @@ extension _$TTS on _TTS {
 
     if (addedLength != 0) {
       final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
+
+      // Debug: print distribution
+      int zeros = 0;
+      int r1to500 = 0;
+      int r500to1000 = 0;
+      int r1000plus = 0;
+
+      for (final v in float32Data) {
+        final a = v.abs();
+        if (a == 0.0) {
+          zeros++;
+        } else if (a > 0 && a <= 100) {
+          r1to500++;
+        } else if (a > 100 && a <= 1000) {
+          r500to1000++;
+        } else if (a > 1000) {
+          r1000plus++;
+        }
+      }
+
+      String _pad(int v, [int w = 7]) => v.toString().padLeft(w);
+      final msg =
+          "float32Data dist len=${_pad(float32Data.length)} | 0:${_pad(zeros)}, 1-100:${_pad(r1to500)}, 100-1000:${_pad(r500to1000)}, >1000:${_pad(r1000plus)}";
+
+      qqq(msg);
+
       audioStream?.push(float32Data);
     }
 
@@ -555,7 +581,24 @@ outputWavPath: $outputWavPath""");
   }
 
   void test() async {
-    audioStream?.resume();
+    late final mp_audio_stream.AudioStream audioStream;
+    if (this.audioStream == null) {
+      audioStream = mp_audio_stream.getAudioStream();
+      final res = audioStream.init(
+        sampleRate: 16000,
+        channels: 1,
+        bufferMilliSec: 60000,
+        waitingBufferMilliSec: 200,
+      );
+      audioStream.resetStat();
+      if (res != 0) {
+        qqe("audioStream init failed: $res");
+      } else {
+        audioStream.resume();
+      }
+    }
+
+    audioStream.resume();
 
     const noteDuration = Duration(seconds: 1);
     const pushFreq = 60; // Hz
@@ -567,7 +610,7 @@ outputWavPath: $outputWavPath""");
       const step = 16000 ~/ pushFreq;
       // await Future.delayed(Duration(milliseconds: 500));
       for (int pos = 0; pos < wave.length; pos += step) {
-        audioStream?.push(wave.sublist(pos, math.min(wave.length, pos + step)));
+        audioStream.push(wave.sublist(pos, math.min(wave.length, pos + step)));
         await Future.delayed(noteDuration ~/ pushFreq);
       }
     }
