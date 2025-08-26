@@ -92,6 +92,7 @@ class ChatAppBar extends ConsumerWidget {
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
     final isChat = demoType == DemoType.chat;
+    final isTTS = demoType == DemoType.tts;
 
     final userType = ref.watch(P.preference.userType);
 
@@ -99,7 +100,7 @@ class ChatAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: isChat ? Colors.transparent : scaffold.q(.7),
+      backgroundColor: (isChat || isTTS) ? Colors.transparent : scaffold.q(.7),
       systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GestureDetector(
         onTap: _onTitlePressed,

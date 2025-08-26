@@ -142,13 +142,14 @@ class TTSGroupItem extends ConsumerWidget {
     final currentModel = ref.watch(P.rwkv.currentModel);
     final alreadyStarted = currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
+    final isDesktop = ref.watch(P.app.isDesktop);
 
     return Container(
       margin: const EI.o(t: 0, l: 0, r: 0, b: 8),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: 1),
+        border: Border.all(color: borderColor, width: 0.5),
         boxShadow: isDark
             ? [
                 BoxShadow(
@@ -166,7 +167,7 @@ class TTSGroupItem extends ConsumerWidget {
               ],
       ),
       child: Padding(
-        padding: const EI.a(16),
+        padding: EI.a(isDesktop ? 12 : 8),
         child: Column(
           crossAxisAlignment: CAA.stretch,
           children: [
@@ -222,8 +223,6 @@ class TTSGroupItem extends ConsumerWidget {
               ],
             ),
 
-            16.h,
-
             // 操作按钮
             Row(
               children: [
@@ -276,8 +275,6 @@ class TTSGroupItem extends ConsumerWidget {
               ],
             ),
 
-            16.h,
-
             // 文件列表
             ...fileInfos.m(
               (e) => Container(
@@ -286,7 +283,7 @@ class TTSGroupItem extends ConsumerWidget {
                   border: Border.all(color: fileItemBorderColor, width: 1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EI.a(12),
+                padding: EI.a(isDesktop ? 12 : 8),
                 margin: const EI.o(t: 8),
                 child: _FileItem(
                   fileInfo: e,

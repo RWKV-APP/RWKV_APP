@@ -95,26 +95,6 @@ class _Page extends ConsumerWidget {
   }
 }
 
-class _NavigationBarBottomLine extends ConsumerWidget {
-  const _NavigationBarBottomLine();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final paddingTop = ref.watch(P.app.paddingTop);
-    final qb = ref.watch(P.app.qb);
-    return Positioned(
-      top: paddingTop + kToolbarHeight,
-      left: 0,
-      right: 0,
-      height: .5,
-      child: Container(
-        height: kToolbarHeight,
-        color: qb.q(.1),
-      ),
-    );
-  }
-}
-
 class _List extends ConsumerWidget {
   const _List();
 

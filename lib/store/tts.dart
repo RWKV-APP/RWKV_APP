@@ -229,32 +229,6 @@ extension _$TTS on _TTS {
 
     if (addedLength != 0) {
       final float32Data = Float32List.fromList(rawFloatList).sublist(latestBufferLength.q, length);
-
-      // Debug: print distribution
-      int zeros = 0;
-      int r1to500 = 0;
-      int r500to1000 = 0;
-      int r1000plus = 0;
-
-      for (final v in float32Data) {
-        final a = v.abs();
-        if (a == 0.0) {
-          zeros++;
-        } else if (a > 0 && a <= 100) {
-          r1to500++;
-        } else if (a > 100 && a <= 1000) {
-          r500to1000++;
-        } else if (a > 1000) {
-          r1000plus++;
-        }
-      }
-
-      String _pad(int v, [int w = 7]) => v.toString().padLeft(w);
-      final msg =
-          "float32Data dist len=${_pad(float32Data.length)} | 0:${_pad(zeros)}, 1-100:${_pad(r1to500)}, 100-1000:${_pad(r500to1000)}, >1000:${_pad(r1000plus)}";
-
-      qqq(msg);
-
       audioStream?.push(float32Data);
     }
 

@@ -37,8 +37,6 @@ class PageHome extends ConsumerWidget {
   }
 
   void _onChatTap() async {
-    final isTTS = P.rwkv.currentModel.q?.isTTS ?? false;
-    if (isTTS) P.rwkv.currentModel.q = null;
     P.chat.startNewChat();
     push(PageKey.chat);
   }

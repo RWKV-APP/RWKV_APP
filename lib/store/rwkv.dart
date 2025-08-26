@@ -77,6 +77,14 @@ class _RWKV {
 
   // TODO: Use it @WangCe
   late final receiving = qs(false);
+
+  late final inTTSOrTranslateMode = qp((ref) {
+    final model = ref.watch(P.rwkv.currentModel);
+    if (model == null) return false;
+    final isTTS = model.isTTS;
+    final isTranslate = model.tags.contains("translate");
+    return isTTS || isTranslate;
+  });
 }
 
 extension $RWKVLoad on _RWKV {

@@ -81,13 +81,14 @@ class ModelSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
+    final isDesktop = ref.watch(P.app.isDesktop);
 
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
         margin: const EI.o(t: 12),
         child: ListView(
-          padding: const EI.o(l: 12, r: 12),
+          padding: EI.o(l: isDesktop ? 12 : 8, r: isDesktop ? 12 : 8),
           controller: scrollController,
           children: [
             const _Header(),

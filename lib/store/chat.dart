@@ -550,9 +550,10 @@ extension _$Chat on _Chat {
   void _onPageKeyChanged(PageKey pageKey) {
     switch (pageKey) {
       case PageKey.chat:
-        if (P.rwkv.currentModel.q?.tags.contains("translate") == true) {
-          P.rwkv.currentModel.q = null;
-        }
+        final model = P.rwkv.currentModel.q;
+        final isTTS = model?.isTTS ?? false;
+        final isTranslate = model?.tags.contains("translate") ?? false;
+        if (isTTS || isTranslate) P.rwkv.currentModel.q = null;
         break;
       default:
         break;

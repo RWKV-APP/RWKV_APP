@@ -92,6 +92,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final generating = ref.watch(P.tts.generating);
 
     final changing = widget.msg.changing;
+    // final changing = true;
 
     final primaryColor = Theme.of(context).colorScheme.primary;
     final length = _length;
@@ -110,7 +111,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     return Container(
       decoration: const BoxDecoration(color: kC),
       padding: const EI.o(),
-      width: changing ? 130 : width,
+      width: changing ? 160 : width,
       // height: 50,
       child: Column(
         mainAxisSize: MainAxisSize.min,
