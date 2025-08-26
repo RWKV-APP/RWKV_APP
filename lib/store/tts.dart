@@ -85,6 +85,14 @@ extension _$TTS on _TTS {
     spkShown.l(_onSpkShownChanged, fireImmediately: true);
 
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+
+    P.app.pageKey.lb(_onPageKeyChanged);
+  }
+
+  void _onPageKeyChanged(PageKey? previous, PageKey next) {
+    if (previous == PageKey.talk) {
+      P.msg._clear(syncNode: false);
+    }
   }
 
   void _onSpkShownChanged(bool next) {

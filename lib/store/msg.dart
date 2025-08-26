@@ -65,8 +65,8 @@ extension _$Msg on _Msg {
     return currentMessages[index];
   }
 
-  void _clear() {
-    P.conversation._syncNode();
+  void _clear({bool syncNode = true}) {
+    if (syncNode) P.conversation._syncNode();
     ids.q = [];
     msgNode.q = MsgNode(0);
   }

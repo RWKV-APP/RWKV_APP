@@ -548,16 +548,26 @@ extension _$Chat on _Chat {
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
+    final model = P.rwkv.currentModel.q;
+    final isTTS = model?.isTTS ?? false;
     switch (pageKey) {
       case PageKey.chat:
-        final model = P.rwkv.currentModel.q;
-        final isTTS = model?.isTTS ?? false;
         final isTranslate = model?.tags.contains("translate") ?? false;
         if (isTTS || isTranslate) P.rwkv.currentModel.q = null;
+        break;
+      case PageKey.talk:
+        if (!isTTS) {
+          P.rwkv.currentGroupInfo.q = null;
+          P.rwkv.currentModel.q = null;
+        }
         break;
       default:
         break;
     }
+    textInInput.q = "";
+    textEditingController.text = "";
+    focusNode.unfocus();
+    hasFocus.q = false;
   }
 
   void _onTextEditingControllerValueChanged() {
