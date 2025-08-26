@@ -90,7 +90,23 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "state": [
+          {
+            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv-9-mix_user6500_system1700.rmpack",
+            "fileSize": 10489856,
+            "sha256": "dbcd1c54d1d4edfb6a4d57e260b83880637bc6e3341d77c8b47c330fadf7f407",
+            "name": "General role play fine-tuned",
+            "fileName": "rwkv-9-mix_user6500_system1700.rmpack"
+          },
+          {
+            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv-9-mix_user6500_system17001.rmpack",
+            "fileSize": 10489856,
+            "sha256": "dbcd1c54d1d4edfb6a4d57e260b83880637bc6e3341d77c8b47c330fadf7f4071",
+            "name": "Dummy state for testing",
+            "fileName": "rwkv-9-mix_user6500_system17001.rmpack"
+          }
+        ]
       },
       {
         "name": "RWKV7-G1a 0.1B",

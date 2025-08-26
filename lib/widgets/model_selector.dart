@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_roleplay/models/model_info.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
@@ -17,6 +18,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
 import 'package:zone/widgets/model_item.dart';
@@ -24,8 +26,9 @@ import 'package:zone/widgets/model_item.dart';
 // TODO: move it to pages/panel
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
+  final bool rolePlayOnly;
 
-  static Future<void> show({bool nekoOnly = false}) async {
+  static Future<void> show({bool nekoOnly = false, bool rolePlayOnly = false}) async {
     qq;
 
     if (P.fileManager.modelSelectorShown.q) return;
@@ -61,7 +64,7 @@ class ModelSelector extends ConsumerWidget {
           snap: false,
 
           builder: (BuildContext context, ScrollController scrollController) {
-            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly);
+            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly, rolePlayOnly: rolePlayOnly);
           },
         );
       },
@@ -71,7 +74,7 @@ class ModelSelector extends ConsumerWidget {
 
   final ScrollController scrollController;
 
-  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly});
+  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly, required this.rolePlayOnly});
 
   List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
@@ -79,6 +82,11 @@ class ModelSelector extends ConsumerWidget {
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
+
+    if (rolePlayOnly) {
+      availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
+      return availableModels.map((e) => RolePlayItem(file: e)).toList();
+    }
 
     if (pageKey == PageKey.translator) {
       availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
