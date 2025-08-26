@@ -13,13 +13,14 @@ import 'package:zone/widgets/chat/input_text_field.dart';
 import 'package:zone/widgets/chat/tts/bottom_interactions.dart';
 
 class BottomBar extends ConsumerWidget {
-  const BottomBar({super.key});
+  final DemoType demoType;
+
+  const BottomBar({super.key, required this.demoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final primary = Theme.of(context).colorScheme.primary;
-    final demoType = ref.watch(P.app.demoType);
     final isChat = demoType == DemoType.chat;
 
     final theme = Theme.of(context);
@@ -55,7 +56,7 @@ class BottomBar extends ConsumerWidget {
               duration: 250.ms,
               child: Column(
                 children: [
-                  const InputTextField(),
+                  InputTextField(preferredDemoType: demoType),
                   if (demoType != DemoType.tts) const BottomInteractions(),
                   if (demoType == DemoType.tts) const TTSBottomInteractions(),
                 ],

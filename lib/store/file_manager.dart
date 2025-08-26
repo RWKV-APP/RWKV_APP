@@ -1,6 +1,12 @@
 part of 'p.dart';
 
 class _FileManager {
+  late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
+  late final modelSelectorShown = qs(false);
+
+  /// model-name to download-task map
+  late final _downloadTasks = <String, DownloadTask>{};
+
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
     return LocalFile(targetPath: ref.watch(_paths(key)));
   });
@@ -12,61 +18,57 @@ class _FileManager {
     return "$dirPath/$fileName";
   });
 
-  late final _allInCurrentDemoType = qs<Set<FileInfo>>({});
+  /// 全部 chat 权重
+  late final _allChatWeights = qs<Set<FileInfo>>({});
 
-  late final availableModelsInCurrentDemoType = qs<Set<FileInfo>>({});
+  /// 当前平台可用的 chat 权重
+  late final chatWeights = qs<Set<FileInfo>>({});
 
-  late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
+  late final worldWeights = qs<Set<FileInfo>>({});
+  late final sudokuWeights = qs<Set<FileInfo>>({});
+  late final othelloWeights = qs<Set<FileInfo>>({});
 
-  late final modelSelectorShown = qs(false);
-
+  /// 当前平台可用的 tts 权重, 包含 core 和 non-core 两种
+  late final ttsWeights = qs<Set<FileInfo>>({});
   late final ttsCores = qs<Set<FileInfo>>({});
-
-  /// model-name to download-task map
-  late final _downloadTasks = <String, DownloadTask>{};
 }
 
 /// Public methods
 extension $FileManager on _FileManager {
   Future<void> syncAvailableModels() async {
-    final demoType = P.app.demoType.q;
-    if (demoType == DemoType.othello) {
-      qqw("othello game does not need to sync available models");
+    qq;
+    final config = P.app._config.q;
+    if (config == null) {
+      qqe("config is null");
       return;
     }
 
-    qq;
-    late final List<Map<String, dynamic>> modelConfigInCurrentDemoType;
+    final chatWeights = HF.listJSON(config["chat"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final ttsWeights = HF.listJSON(config["tts"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
 
-    try {
-      if (P.app._modelConfigInCurrentDemoType.q.isEmpty) {
-        final demoType = P.app.demoType.q;
-        final jsonPath = "remote/latest.json";
-        qqq("jsonPath: $jsonPath");
-        final jsonString = await rootBundle.loadString(jsonPath);
-        final rawJSON = jsonDecode(jsonString);
-        final data = rawJSON[demoType.name]["model_config"];
-        modelConfigInCurrentDemoType = HF.listJSON(data);
-      } else {
-        modelConfigInCurrentDemoType = P.app._modelConfigInCurrentDemoType.q;
-      }
-      final weights = modelConfigInCurrentDemoType.map((e) => FileInfo.fromJSON(e)).toSet();
-      _allInCurrentDemoType.q = weights;
-      availableModelsInCurrentDemoType.q = weights.where((e) => e.available).toSet();
-      ttsCores.q = availableModelsInCurrentDemoType.q.where((e) => e.tags.contains("core")).toSet();
-    } catch (e) {
-      qqe(e);
-      Sentry.captureException(e, stackTrace: StackTrace.current);
-    }
+    // FIXME: 需要根据 demoType 来获取对应的权重
+    final worldWeights = HF.listJSON(config["world"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final sudokuWeights = HF.listJSON(config["sudoku"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final othelloWeights = HF.listJSON(config["othello"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+
+    _allChatWeights.q = chatWeights;
+    this.chatWeights.q = chatWeights.where((e) => e.available).toSet();
+    this.ttsWeights.q = ttsWeights.where((e) => e.available).toSet();
+    ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
   }
 
   Future<void> checkLocal() async {
     qq;
     await Future.delayed(const Duration(milliseconds: 17));
-    final all = _allInCurrentDemoType.q;
-    final _fileInfos = all.where((e) => e.available).toList();
+    final fileInfos = [
+      chatWeights.q,
+      ttsWeights.q,
+      worldWeights.q,
+      sudokuWeights.q,
+      othelloWeights.q,
+    ].expand((e) => e).where((e) => e.available).toList();
 
-    for (final fileInfo in _fileInfos) {
+    for (final fileInfo in fileInfos) {
       final path = _paths(fileInfo).q;
       final pathExists = await File(path).exists();
       bool fileSizeVerified = false;
@@ -92,7 +94,7 @@ extension $FileManager on _FileManager {
   }
 
   List<FileInfo> getNekoModel() {
-    final nekos = _allInCurrentDemoType.q.where((e) => e.available && e.isNeko).toList();
+    final nekos = _allChatWeights.q.where((e) => e.available && e.isNeko).toList();
     return nekos;
   }
 
@@ -140,6 +142,7 @@ extension $FileManager on _FileManager {
     try {
       await task.start();
     } catch (e) {
+      qqe(e);
       state.q = state.q.copyWith(state: TaskState.stopped);
       rethrow;
     }
@@ -188,7 +191,7 @@ extension _$FileManager on _FileManager {
 
   Future<void> _initModelDownloadTaskState() async {
     await Future.delayed(const Duration(milliseconds: 17));
-    final availableFiles = availableModelsInCurrentDemoType.q;
+    final availableFiles = chatWeights.q;
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
     for (final fileInfo in availableFiles) {
       final taskId = fileInfo.fileName;

@@ -77,6 +77,14 @@ class _RWKV {
 
   // TODO: Use it @WangCe
   late final receiving = qs(false);
+
+  late final inTTSOrTranslateMode = qp((ref) {
+    final model = ref.watch(P.rwkv.currentModel);
+    if (model == null) return false;
+    final isTTS = model.isTTS;
+    final isTranslate = model.tags.contains("translate");
+    return isTTS || isTranslate;
+  });
 }
 
 extension $RWKVLoad on _RWKV {
@@ -219,7 +227,7 @@ extension $RWKVLoad on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424_sparktts.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/vocab_talk.txt");
     await _ensureQNNCopied();
     final rootIsolateToken = RootIsolateToken.instance;
 

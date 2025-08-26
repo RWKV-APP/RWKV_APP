@@ -18,14 +18,15 @@ import 'package:zone/widgets/chat/branch_switcher.dart';
 class BotMessageBottom extends ConsumerWidget {
   final model.Message msg;
   final int index;
+  final DemoType? preferredDemoType;
 
-  const BotMessageBottom(this.msg, this.index, {super.key});
+  const BotMessageBottom(this.msg, this.index, {super.key, this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     if (msg.isMine) return const SizedBox.shrink();
-    final demoType = ref.watch(P.app.demoType);
+    final demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     if (demoType == DemoType.tts) return const SizedBox.shrink();
 
     final receiveId = ref.watch(P.chat.receiveId);

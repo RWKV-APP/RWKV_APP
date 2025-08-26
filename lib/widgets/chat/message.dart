@@ -32,11 +32,18 @@ const double _kTextScaleFactorForCotContent = 1;
 class Message extends ConsumerWidget {
   final model.Message msg;
   final bool selectMode;
+  final DemoType? preferredDemoType;
 
   /// 页面中第一个消息的 index 为 0
   final int index;
 
-  const Message(this.msg, this.index, {super.key, required this.selectMode});
+  const Message(
+    this.msg,
+    this.index, {
+    super.key,
+    this.selectMode = false,
+    this.preferredDemoType,
+  });
 
   void _onTapLink(String text, String? href, String title) async {
     if (href == null) return;
@@ -88,7 +95,7 @@ class Message extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
 
-    final demoType = ref.watch(P.app.demoType);
+    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final worldType = ref.watch(P.rwkv.currentWorldType);
 
     // 由 message 对象是否正在 changing 来决定是否根据 receivedTokens 渲染消息内容
@@ -306,6 +313,8 @@ class Message extends ConsumerWidget {
       borderRadius = BorderRadius.circular(16);
     }
 
+    final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
+
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
@@ -313,7 +322,7 @@ class Message extends ConsumerWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: isMine ? primaryContainer : (isChat ? Theme.of(context).colorScheme.surface : null),
+            color: isMine ? primaryContainer : botMessageBackgroundColor,
             border: border,
             borderRadius: borderRadius,
           ),
@@ -343,7 +352,7 @@ class Message extends ConsumerWidget {
                   ),
                 // 🔥 User message audio
                 if (isUserAudio) AudioBubble(msg),
-                UserTTSContent(msg, index),
+                if (preferredDemoType == DemoType.tts) UserTTSContent(msg, index),
                 UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
@@ -410,8 +419,8 @@ class Message extends ConsumerWidget {
                     styleSheet: markdownStyleSheet,
                     onTapLink: _onTapLink,
                   ),
-                if (!selectMode) BotMessageBottom(msg, index),
-                BotTtsContent(msg, index),
+                if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType),
+                if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
               ],
             ],
           ),
@@ -419,20 +428,22 @@ class Message extends ConsumerWidget {
       ),
     );
 
-    return Align(
-      alignment: alignment,
-      child: IgnorePointer(
-        ignoring: editingIndex != null && editingIndex != index,
-        child: AnimatedOpacity(
-          opacity: opacity,
-          duration: 250.ms,
-          child: Padding(
-            padding: const EI.s(h: marginHorizontal, v: marginVertical),
-            child: Column(
-              children: [
-                if (reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                GestureDetector(onTap: _onTap, child: bubbleContent),
-              ],
+    return GestureDetector(
+      child: Align(
+        alignment: alignment,
+        child: IgnorePointer(
+          ignoring: editingIndex != null && editingIndex != index,
+          child: AnimatedOpacity(
+            opacity: opacity,
+            duration: 250.ms,
+            child: Padding(
+              padding: const EI.s(h: marginHorizontal, v: marginVertical),
+              child: Column(
+                children: [
+                  if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
+                  GestureDetector(onTap: _onTap, child: bubbleContent),
+                ],
+              ),
             ),
           ),
         ),

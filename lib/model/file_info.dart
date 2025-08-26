@@ -61,11 +61,6 @@ class FileInfo extends Equatable {
 
   /// e.g.
   ///
-  /// gguf, safetensors, ...
-  final String? ext;
-
-  /// e.g.
-  ///
   /// q4_0, q4_1, q4_2, q4_3, q4_4, q5_0, q5_1, q5_2, q5_3, q5_4, q8_0, q8_1, q8_2, q8_3, q8_4, ...
   final String? quantization;
 
@@ -93,7 +88,6 @@ class FileInfo extends Equatable {
     required this.backend,
     required this.sha256,
     required this.modelSize,
-    required this.ext,
     required this.quantization,
     required this.tags,
     required this.socLimitations,
@@ -107,19 +101,20 @@ class FileInfo extends Equatable {
     final fileType = rawFileType == null ? FileType.weights : FileType.values.byName(rawFileType);
     final socLimitations = HF.list(json['socLimitations'] ?? []).map((e) => e.toString()).toList();
     final unsupportedSocBrand = HF.list(json['unsupportedSocBrand'] ?? []).map((e) => SocBrand.values.byName(e.toString())).toSet();
+    final url = json['url'] as String;
+    final fileName = url.split('/').last;
     return FileInfo(
       name: json['name'],
-      fileName: json['fileName'],
+      fileName: fileName,
       fileType: fileType,
       fileSize: json['fileSize'],
-      raw: json['url'],
+      raw: url,
       isDebug: json['isDebug'] as bool? ?? false,
       availableIn: HF.list(json['availableIn'] ?? []).map((e) => FileDownloadSource.values.byName(e.toString())).toList(),
       supportedPlatforms: HF.list(json['platforms']).map((e) => e.toString()).toList(),
       backend: backend,
       sha256: json['sha256'] as String?,
       modelSize: json['modelSize'] as double?,
-      ext: json['type'] as String?,
       quantization: json['quantization'] as String?,
       tags: HF.list(json['tags'] ?? []).map((e) => e.toString()).toList(),
       socLimitations: socLimitations,
@@ -180,6 +175,8 @@ class FileInfo extends Equatable {
 
   bool get isNeko => name.contains('Neko');
 
+  bool get isTTS => name.toLowerCase().contains('tts');
+
   @override
   List<Object?> get props => [raw];
 
@@ -198,7 +195,6 @@ FileInfo(
   backend: $backend,
   sha256: $sha256,
   modelSize: $modelSize,
-  ext: $ext,
   quantization: $quantization,
   tags: $tags,
   socLimitations: $socLimitations,

@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/file_info.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
@@ -24,58 +24,151 @@ import 'package:zone/widgets/model_item.dart';
 // TODO: move it to pages/panel
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
+  final ScrollController scrollController;
+  static DemoType? _preferredDemoType;
 
-  static Future<void> show({bool nekoOnly = false}) async {
-    qq;
-
+  static Future<void> show({
+    bool nekoOnly = false,
+    DemoType? preferredDemoType,
+  }) async {
     if (P.fileManager.modelSelectorShown.q) return;
-
     P.fileManager.modelSelectorShown.q = true;
-
-    P.fileManager.checkLocal();
-
-    if (!Args.disableRemoteConfig) {
-      P.app.getConfig().then((_) async {
-        await P.fileManager.syncAvailableModels();
-        await P.fileManager.checkLocal();
-      });
-    } else {
-      P.fileManager.syncAvailableModels().then((_) {
-        P.fileManager.checkLocal();
-      });
-    }
 
     final context = getContext();
     if (context == null) {
       P.fileManager.modelSelectorShown.q = false;
       return;
     }
+
+    // Fire and forget model updates
+    (() async {
+      P.fileManager.checkLocal();
+      await P.app.syncConfig();
+      await P.fileManager.syncAvailableModels();
+      P.fileManager.checkLocal();
+    })();
+
+    if (P.app.pageKey.q == PageKey.talk) {
+      _preferredDemoType = DemoType.tts;
+    }
+
+    if (preferredDemoType != null) {
+      _preferredDemoType = preferredDemoType;
+    }
+
     await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: .8,
-          maxChildSize: .9,
-          expand: false,
-          snap: false,
-
-          builder: (BuildContext context, ScrollController scrollController) {
-            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly);
-          },
-        );
-      },
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: .8,
+        maxChildSize: .9,
+        expand: false,
+        snap: false,
+        builder: (context, scrollController) => ModelSelector(
+          scrollController: scrollController,
+          nekoOnly: nekoOnly,
+        ),
+      ),
     );
+
+    _preferredDemoType = null;
+
     P.fileManager.modelSelectorShown.q = false;
   }
 
-  final ScrollController scrollController;
-
   const ModelSelector({super.key, required this.scrollController, required this.nekoOnly});
 
-  List<Widget> _buildItems(BuildContext context, WidgetRef ref) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
+    final isDesktop = ref.watch(P.app.isDesktop);
+
+    return ClipRRect(
+      borderRadius: 16.r,
+      child: Container(
+        margin: const EI.o(t: 12),
+        child: ListView(
+          padding: EI.o(l: isDesktop ? 12 : 8, r: isDesktop ? 12 : 8),
+          controller: scrollController,
+          children: [
+            const _Header(),
+            const _Hints(),
+            _ModelList(nekoOnly: nekoOnly),
+            16.h,
+            paddingBottom.h,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    return Row(
+      children: [
+        Expanded(
+          child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
+        ),
+        IconButton(
+          onPressed: pop,
+          icon: const Icon(Icons.close),
+        ),
+      ],
+    );
+  }
+}
+
+class _Hints extends ConsumerWidget {
+  const _Hints();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final demoType = ModelSelector._preferredDemoType ?? ref.watch(P.app.demoType);
+    final qb = ref.watch(P.app.qb);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (demoType == DemoType.world) ...[
+          T(s.please_select_a_world_type, s: const TS(s: 16, w: FontWeight.w500)),
+          4.h,
+        ],
+        const _DownloadSource(),
+        if (demoType == DemoType.chat)
+          T(
+            "👉${s.str_model_selection_dialog_hint}👈",
+            s: TS(c: qb.q(.7), s: 12, w: FontWeight.w500),
+          ),
+      ],
+    );
+  }
+}
+
+class _ModelList extends ConsumerWidget {
+  final bool nekoOnly;
+
+  const _ModelList({required this.nekoOnly});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final demoType = ref.watch(P.app.demoType);
-    var availableModels = ref.watch(P.fileManager.availableModelsInCurrentDemoType);
+    final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
+
+    Set<FileInfo> availableModels = switch (preferredDemoType) {
+      DemoType.world => ref.watch(P.fileManager.worldWeights),
+      DemoType.tts => ref.watch(P.fileManager.ttsWeights),
+      DemoType.chat => ref.watch(P.fileManager.chatWeights),
+      DemoType.sudoku => ref.watch(P.fileManager.sudokuWeights),
+      DemoType.othello => ref.watch(P.fileManager.othelloWeights),
+      DemoType.fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
+    };
+
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
@@ -86,96 +179,40 @@ class ModelSelector extends ConsumerWidget {
       availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
     }
 
-    return switch (demoType) {
-      DemoType.world => [
-        ...WorldType.values
-            .where((e) {
-              return e.available;
+    final List<Widget> items = switch (preferredDemoType) {
+      DemoType.world =>
+        WorldType.values
+            .where((e) => e.available)
+            .expand(
+              (e) => e.socPairs
+                  .where((pair) => pair.$1.isEmpty || pair.$1 == P.rwkv.socName.q)
+                  .sortedBy<num>((pair) => -pair.$1.length)
+                  .map((pair) => WorldGroupItem(e, socPair: pair)),
+            )
+            .toList(),
+      DemoType.tts => ttsCores.map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
+      DemoType.chat || DemoType.sudoku =>
+        availableModels
+            .where((e) => !nekoOnly || e.isNeko)
+            .sorted((a, b) {
+              final aHasNpu = a.tags.contains("npu");
+              final bHasNpu = b.tags.contains("npu");
+              if (aHasNpu != bHasNpu) return aHasNpu ? -1 : 1;
+
+              final aHasGpu = a.tags.contains("gpu");
+              final bHasGpu = b.tags.contains("gpu");
+              if (aHasGpu != bHasGpu) return aHasGpu ? -1 : 1;
+
+              return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
             })
-            .map((e) {
-              return e.socPairs
-                  .where((pair) {
-                    return pair.$1 == "" || pair.$1 == P.rwkv.socName.q;
-                  })
-                  .sorted((a, b) {
-                    return b.$1.length.compareTo(a.$1.length);
-                  })
-                  .map((pair) {
-                    return WorldGroupItem(e, socPair: pair);
-                  });
-            })
-            .reduce((v, e) {
-              return [...v, ...e];
-            }),
-      ],
-      DemoType.tts => [
-        for (final fileInfo in ttsCores) TTSGroupItem(fileInfo),
-      ],
-      DemoType.chat || DemoType.sudoku => [
-        for (final fileInfo
-            in availableModels
-                .where((e) {
-                  return !nekoOnly || e.isNeko;
-                })
-                .sorted((a, b) {
-                  /// 模型尺寸大的在上面
-                  return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
-                })
-                .sorted((a, b) {
-                  return (a.tags.contains("gpu") ? 0 : 1).compareTo(b.tags.contains("gpu") ? 0 : 1);
-                })
-                .sorted((a, b) {
-                  return (a.tags.contains("npu") ? 0 : 1).compareTo(b.tags.contains("npu") ? 0 : 1);
-                }))
-          ModelItem(fileInfo, userType.isGreaterThan(UserType.user)),
-      ],
+            .map((fileInfo) => ModelItem(fileInfo, userType.isGreaterThan(UserType.user)))
+            .toList(),
       DemoType.fifthteenPuzzle || DemoType.othello => [],
     };
-  }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-
-    final demoType = ref.watch(P.app.demoType);
-    final qb = ref.watch(P.app.qb);
-
-    return ClipRRect(
-      borderRadius: 16.r,
-      child: Container(
-        margin: const EI.o(t: 12),
-        child: ListView(
-          padding: const EI.o(l: 12, r: 12),
-          controller: scrollController,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
-                ),
-                IconButton(
-                  onPressed: () {
-                    pop();
-                  },
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            if (demoType == DemoType.world) T(s.please_select_a_world_type, s: const TS(s: 16, w: FontWeight.w500)),
-            // T(s.memory_used(memUsedString, memFreeString), s: TS(c: qb.q(.7), s: 12)),
-            const _DownloadSource(),
-            if (demoType == DemoType.chat)
-              T(
-                "👉${s.str_model_selection_dialog_hint}👈",
-                s: TS(c: qb.q(.7), s: 12, w: FontWeight.w500),
-              ),
-            ..._buildItems(context, ref),
-            16.h,
-            paddingBottom.h,
-          ],
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: items,
     );
   }
 }

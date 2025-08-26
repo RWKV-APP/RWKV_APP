@@ -116,11 +116,13 @@ extension $World on _World {
   }
 
   Future<void> play({required String path}) async {
+    qq;
     if (path.isEmpty) return;
     await stopPlaying();
     ap.Source source = ap.DeviceFileSource(path);
     playing.q = true;
     P.app.hapticLight();
+
     await _audioPlayer.play(source);
     P.tts.audioStream?.resetStat();
     P.tts.audioStream?.uninit();
@@ -141,8 +143,8 @@ extension _$World on _World {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
       case DemoType.sudoku:
-      case DemoType.chat:
         return;
+      case DemoType.chat:
       case DemoType.tts:
       case DemoType.world:
     }
@@ -151,6 +153,7 @@ extension _$World on _World {
     P.tts.audioInteractorShown.lv(_onAudioInteractorShown);
     P.app.demoType.lv(_onWorldTypeChanged);
     _audioPlayer.eventStream.listen(_onPlayerChanged);
+    _audioPlayer.onPlayerStateChanged.listen(_onPlayerStateChanged);
   }
 
   void _onPlayerChanged(ap.AudioEvent event) {
@@ -165,6 +168,22 @@ extension _$World on _World {
       case ap.AudioEventType.duration:
       case ap.AudioEventType.seekComplete:
         break;
+    }
+  }
+
+  void _onPlayerStateChanged(ap.PlayerState state) {
+    qqq("🔊 AudioPlayerState: $state");
+    switch (state) {
+      case ap.PlayerState.playing:
+        playing.q = true;
+      case ap.PlayerState.paused:
+        playing.q = false;
+      case ap.PlayerState.stopped:
+        playing.q = false;
+      case ap.PlayerState.completed:
+        playing.q = false;
+      case ap.PlayerState.disposed:
+        playing.q = false;
     }
   }
 

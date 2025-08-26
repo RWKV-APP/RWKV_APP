@@ -5,6 +5,13 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// Load signing configuration
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('app/signing.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.rwkvzone.chat"
     compileSdk = flutter.compileSdkVersion
@@ -23,7 +30,7 @@ android {
         applicationId = "com.rwkvzone.chat"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23
+        minSdkVersion flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -33,11 +40,27 @@ android {
         }
     }
 
-
+    signingConfigs {
+        debug {
+            keyAlias keystoreProperties['debug.keyAlias'] ?: 'androiddebugkey'
+            keyPassword keystoreProperties['debug.keyPassword'] ?: 'android'
+            storeFile keystoreProperties['debug.storeFile'] ? file(keystoreProperties['debug.storeFile']) : file('debug.keystore')
+            storePassword keystoreProperties['debug.storePassword'] ?: 'android'
+        }
+        release {
+            keyAlias keystoreProperties['release.keyAlias'] ?: 'rwkvapp'
+            keyPassword keystoreProperties['release.keyPassword'] ?: 'rwkvapp123'
+            storeFile keystoreProperties['release.storeFile'] ? file(keystoreProperties['release.storeFile']) : file('release.keystore')
+            storePassword keystoreProperties['release.storePassword'] ?: 'rwkvapp123'
+        }
+    }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

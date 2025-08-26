@@ -129,6 +129,17 @@ class _Suggestion {
     return [];
   });
 
+  final talkSuggestion = qp<List<String>>((ref) {
+    final _ = ref.watch(P.suggestion.ttsTicker);
+    final _ = ref.watch(P.rwkv.currentModel);
+    final _ = ref.watch(P.msg.length);
+
+    final config = ref.watch(P.suggestion.config);
+
+    final r = config.tts.toList().shuffled.take(5).toList();
+    return r;
+  });
+
   Future<void> loadSuggestions() async {
     final shouldUseEn = P.preference.preferredLanguage.q.resolved.locale.languageCode != "zh";
     final lang = shouldUseEn ? "en" : "zh";
