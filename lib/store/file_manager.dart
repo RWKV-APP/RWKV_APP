@@ -191,7 +191,7 @@ extension _$FileManager on _FileManager {
     final availableFiles = availableModelsInCurrentDemoType.q;
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
 
-    final stateFiles = availableFiles.map((e) => e.state).flattened;
+    final stateFiles = availableFiles.map((e) => e.state).flattened.toSet();
     availableFiles.addAll(stateFiles);
 
     for (final fileInfo in availableFiles) {

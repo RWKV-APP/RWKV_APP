@@ -2422,6 +2422,21 @@ class S {
       args: [],
     );
   }
+
+  /// `加载`
+  String get load_ {
+    return Intl.message('加载', name: 'load_', desc: '', args: []);
+  }
+
+  /// `已加载`
+  String get loaded {
+    return Intl.message('已加载', name: 'loaded', desc: '', args: []);
+  }
+
+  /// `State 列表`
+  String get state_list {
+    return Intl.message('State 列表', name: 'state_list', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

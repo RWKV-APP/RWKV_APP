@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,18 +9,20 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart' show P, $FileManager;
 import 'package:zone/widgets/model_item.dart';
 
+import '../gen/l10n.dart' show S;
+
 ModelInfo? rolePlayCurrentModel;
 
-class RolePlayItem extends StatefulWidget {
+class RolePlayItem extends ConsumerStatefulWidget {
   final FileInfo file;
 
   const RolePlayItem({super.key, required this.file});
 
   @override
-  State<RolePlayItem> createState() => _RolePlayItemState();
+  ConsumerState<RolePlayItem> createState() => _RolePlayItemState();
 }
 
-class _RolePlayItemState extends State<RolePlayItem> {
+class _RolePlayItemState extends ConsumerState<RolePlayItem> {
   String currentModelName = '';
   ModelStateFile? currentStateFile;
 
@@ -53,6 +53,8 @@ class _RolePlayItemState extends State<RolePlayItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final local = ref.watch(P.fileManager.locals(widget.file));
+    final customTheme = ref.watch(P.app.customTheme);
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
@@ -60,7 +62,7 @@ class _RolePlayItemState extends State<RolePlayItem> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: theme.primaryColor),
-        color: theme.scaffoldBackgroundColor,
+        color: theme.colorScheme.surfaceContainerLow,
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -71,33 +73,34 @@ class _RolePlayItemState extends State<RolePlayItem> {
             true,
             showLoadModel: false,
           ),
-          const SizedBox(height: 8),
-          Text('State List', style: TextStyle(fontWeight: FontWeight.w500)),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: theme.colorScheme.surfaceContainer,
-            ),
-            child: Column(
-              children: [
-                for (final state in widget.file.state) ...[
-                  _ModelStateItem(
-                    state: state,
-                    onSelectTap: currentStateFile?.fileName == state.fileName ? null : () => onStateTap(state),
-                  ),
-                  if (state != widget.file.state.last)
-                    Divider(
-                      height: 8,
-                      thickness: 0.4,
-                      indent: 2,
-                      endIndent: 2,
+          if (local.hasFile) const SizedBox(height: 8),
+          if (local.hasFile) Text(S.current.state_list, style: TextStyle(fontWeight: FontWeight.w500)),
+          if (local.hasFile)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              margin: const EdgeInsets.only(top: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: customTheme.settingItem,
+              ),
+              child: Column(
+                children: [
+                  for (final state in widget.file.state) ...[
+                    _ModelStateItem(
+                      state: state,
+                      onSelectTap: currentStateFile?.fileName == state.fileName ? null : () => onStateTap(state),
                     ),
+                    if (state != widget.file.state.last)
+                      Divider(
+                        height: 8,
+                        thickness: 0.4,
+                        indent: 2,
+                        endIndent: 2,
+                      ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
           const SizedBox(height: 8),
         ],
       ),
@@ -169,7 +172,7 @@ class _ModelStateItem extends ConsumerWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
-            child: Text('Load'),
+            child: Text(onSelectTap == null ? S.current.loaded : S.current.load_),
           ),
       ],
     );
