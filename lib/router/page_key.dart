@@ -46,6 +46,7 @@ enum PageKey {
       onModelDownloadRequired: () => ModelSelector.show(rolePlayOnly: true),
       changeModelCallback: (modelInfo) {
         rolePlayCurrentModel = modelInfo;
+        ModelSelector.show(rolePlayOnly: true);
       },
     ),
   };
