@@ -1,5 +1,8 @@
 {
   "@@locale": "en",
+  "thinking_mode_off": "Think: Off",
+  "thinking_mode_auto": "Think: Auto",
+  "thinking_mode_high": "Think: High",
   "download_all_missing": "Download All Missing Files",
   "tts": "Text-to-Speech",
   "tts_detail": "Let RWKV output voice",

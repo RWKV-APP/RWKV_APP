@@ -54,6 +54,31 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `推理: 关`
+  String get thinking_mode_off {
+    return Intl.message('推理: 关', name: 'thinking_mode_off', desc: '', args: []);
+  }
+
+  /// `推理: 中`
+  String get thinking_mode_auto {
+    return Intl.message(
+      '推理: 中',
+      name: 'thinking_mode_auto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理: 高`
+  String get thinking_mode_high {
+    return Intl.message(
+      '推理: 高',
+      name: 'thinking_mode_high',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `下载全部缺失文件`
   String get download_all_missing {
     return Intl.message(
@@ -214,12 +239,12 @@ class S {
     );
   }
 
-  /// `会话名称不能超过{maxLength}个字符`
+  /// `会话名称不能超过 {maxLength} 个字符`
   String conversation_name_cannot_be_longer_than_30_characters(
     Object maxLength,
   ) {
     return Intl.message(
-      '会话名称不能超过$maxLength个字符',
+      '会话名称不能超过 $maxLength 个字符',
       name: 'conversation_name_cannot_be_longer_than_30_characters',
       desc: '',
       args: [maxLength],

@@ -1,5 +1,8 @@
 {
   "@@locale": "zh-Hans",
+  "thinking_mode_off": "推理: 关",
+  "thinking_mode_auto": "推理: 中",
+  "thinking_mode_high": "推理: 高",
   "download_all_missing": "下载全部缺失文件",
   "tts": "文本转语音",
   "tts_detail": "让 RWKV 输出语音",
@@ -22,7 +25,7 @@
   "rename": "重命名",
   "please_enter_conversation_name": "请输入会话名称",
   "conversation_name_cannot_be_empty": "会话名称不能为空",
-  "conversation_name_cannot_be_longer_than_30_characters": "会话名称不能超过{maxLength}个字符",
+  "conversation_name_cannot_be_longer_than_30_characters": "会话名称不能超过 {maxLength} 个字符",
   "delete_conversation": "删除会话",
   "delete_conversation_message": "确定要删除会话吗？",
   "export_data": "导出数据",
