@@ -40,6 +40,12 @@ android {
         }
     }
 
+    packaging {
+        jniLibs {
+            excludes += ["**/x86/**", "**/x86_64/**", "**/armeabi-v7a/**"]
+        }
+    }
+
     signingConfigs {
         debug {
             keyAlias keystoreProperties['debug.keyAlias'] ?: 'androiddebugkey'

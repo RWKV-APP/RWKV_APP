@@ -27,7 +27,7 @@ module Fastlane
         # 执行构建命令
         sh "cd #{project_root}; flutter clean"
         sh "cd #{project_root}; flutter pub get"
-        sh "cd #{project_root}; flutter build apk --release"
+        sh "cd #{project_root}; flutter build apk --release --target-platform android-arm64"
 
         # 重命名 APK 文件
         if File.exist?(default_apk_path)
