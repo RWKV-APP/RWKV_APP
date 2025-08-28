@@ -316,6 +316,50 @@
         "socLimitations": ["8 Gen 2"]
       },
       {
+        "name": "RWKV7a-G1b 0.1B (8 Elite)",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7a-g1b-0.1b-20250819-ctx4096-a16w8-8elite.rmpack",
+        "fileSize": 1861519920,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["DeepEmbedding", "reason", "npu"],
+        "socLimitations": ["8 Elite"]
+      },
+      {
+        "name": "RWKV7a-G1b 0.1B (8 Gen 3)",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7a-g1b-0.1b-20250819-ctx4096-a16w8-8gen3.rmpack",
+        "fileSize": 1862302256,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["DeepEmbedding", "reason", "npu"],
+        "socLimitations": ["8 Gen 3"]
+      },
+      {
+        "name": "RWKV7a-G1b 0.1B (8s Gen 3)",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7a-g1b-0.1b-20250819-ctx4096-a16w8-8sgen3.rmpack",
+        "fileSize": 1862351400,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["DeepEmbedding", "reason", "npu"],
+        "socLimitations": ["8s Gen 3"]
+      },
+      {
+        "name": "RWKV7a-G1b 0.1B (8 Gen 2)",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7a-g1b-0.1b-20250819-ctx4096-a16w8-8gen2.rmpack",
+        "fileSize": 1862289968,
+        "quantization": "a16w8",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["DeepEmbedding", "reason", "npu"],
+        "socLimitations": ["8 Gen 2"]
+      },
+      {
         "name": "RWKV7-G1 0.4B (8 Elite)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250705/rwkv7-g1-0.4b-20250324-ctx4096-a16w8-8elite_combined.bin",
