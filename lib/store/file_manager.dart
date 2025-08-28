@@ -1,7 +1,7 @@
 part of 'p.dart';
 
 class _FileManager {
-  late final downloadSource = qs(P.preference.currentLangIsZh ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
+  late final downloadSource = qs(P.preference.currentLangIsZh.q ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
   late final modelSelectorShown = qs(false);
 
   /// model-name to download-task map

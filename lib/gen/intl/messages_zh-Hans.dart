@@ -466,6 +466,13 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("推理: 中"),
+    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
+      "推理模式: 中",
+    ),
+    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
+      "推理模式: 高",
+    ),
+    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage("推理模式: 关"),
     "thinking_mode_high": MessageLookupByLibrary.simpleMessage("推理: 高"),
     "thinking_mode_off": MessageLookupByLibrary.simpleMessage("推理: 关"),
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),

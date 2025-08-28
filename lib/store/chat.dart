@@ -721,7 +721,7 @@ extension _$Chat on _Chat {
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
     RefInfo ref = RefInfo.empty();
-    final isZh = P.preference.currentLangIsZh;
+    final isZh = P.preference.currentLangIsZh.q;
 
     if (webSearch.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);

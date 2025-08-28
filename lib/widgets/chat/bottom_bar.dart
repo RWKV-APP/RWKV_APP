@@ -13,17 +13,17 @@ import 'package:zone/widgets/chat/input_text_field.dart';
 import 'package:zone/widgets/chat/tts/bottom_interactions.dart';
 
 class BottomBar extends ConsumerWidget {
-  final DemoType demoType;
+  final DemoType preferredDemoType;
 
-  const BottomBar({super.key, required this.demoType});
+  const BottomBar({super.key, this.preferredDemoType = DemoType.chat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final primary = Theme.of(context).colorScheme.primary;
-    final isChat = demoType == DemoType.chat;
+    final isChat = preferredDemoType == DemoType.chat;
 
     final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
 
     return MeasureSize(
@@ -32,35 +32,32 @@ class BottomBar extends ConsumerWidget {
       },
       child: ClipRRect(
         borderRadius: !isChat ? BorderRadius.zero : const BorderRadius.vertical(top: Radius.circular(16)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-          child: Container(
-            decoration: BoxDecoration(
-              color: isChat ? theme.cardColor : scaffoldBackgroundColor.q(.8),
-              border: isChat
-                  ? null
-                  : Border(
-                      top: BorderSide(
-                        color: primary.q(.33),
-                        width: .5,
-                      ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: isChat ? theme.cardColor : scaffoldBackgroundColor.q(.8),
+            border: isChat
+                ? null
+                : Border(
+                    top: BorderSide(
+                      color: primary.q(.33),
+                      width: .5,
                     ),
-            ),
-            padding: EI.o(
-              l: 10,
-              r: 10,
-              b: paddingBottom + 12,
-              t: 12,
-            ),
-            child: AnimatedSize(
-              duration: 250.ms,
-              child: Column(
-                children: [
-                  InputTextField(preferredDemoType: demoType),
-                  if (demoType != DemoType.tts) const BottomInteractions(),
-                  if (demoType == DemoType.tts) const TTSBottomInteractions(),
-                ],
-              ),
+                  ),
+          ),
+          padding: EI.o(
+            l: 10,
+            r: 10,
+            b: paddingBottom + 12,
+            t: 12,
+          ),
+          child: AnimatedSize(
+            duration: 250.ms,
+            child: Column(
+              children: [
+                InputTextField(preferredDemoType: preferredDemoType),
+                if (preferredDemoType != DemoType.tts) const BottomInteractions(),
+                if (preferredDemoType == DemoType.tts) const TTSBottomInteractions(),
+              ],
             ),
           ),
         ),

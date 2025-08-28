@@ -617,6 +617,15 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
     "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("Think: Auto"),
+    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
+      "Reasoning Mode: Auto",
+    ),
+    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
+      "Reasoning Mode: High",
+    ),
+    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
+      "Reasoning Mode: Off",
+    ),
     "thinking_mode_high": MessageLookupByLibrary.simpleMessage("Think: High"),
     "thinking_mode_off": MessageLookupByLibrary.simpleMessage("Think: Off"),
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(

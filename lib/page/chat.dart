@@ -81,13 +81,7 @@ class _Page extends ConsumerWidget {
               bottom: 0,
               right: 0,
               left: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  BottomBar(demoType: DemoType.chat),
-                ],
-              ),
+              child: BottomBar(),
             ),
         ],
       ),

@@ -79,6 +79,36 @@ class S {
     );
   }
 
+  /// `推理模式: 关`
+  String get thinking_mode_detail_off {
+    return Intl.message(
+      '推理模式: 关',
+      name: 'thinking_mode_detail_off',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理模式: 中`
+  String get thinking_mode_detail_auto {
+    return Intl.message(
+      '推理模式: 中',
+      name: 'thinking_mode_detail_auto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理模式: 高`
+  String get thinking_mode_detail_high {
+    return Intl.message(
+      '推理模式: 高',
+      name: 'thinking_mode_detail_high',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `下载全部缺失文件`
   String get download_all_missing {
     return Intl.message(

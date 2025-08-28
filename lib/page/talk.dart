@@ -47,7 +47,7 @@ class PageTalk extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Suggestions(),
-                BottomBar(demoType: DemoType.tts),
+                BottomBar(preferredDemoType: DemoType.tts),
               ],
             ),
           ),
