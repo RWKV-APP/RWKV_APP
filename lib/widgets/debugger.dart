@@ -25,6 +25,8 @@ class Debugger extends ConsumerWidget {
     switch (pageKey) {
       case PageKey.translator:
         return const _TranslatorDebugger();
+      case PageKey.talk:
+        return const _TTSDebugger();
       default:
         break;
     }
@@ -33,7 +35,6 @@ class Debugger extends ConsumerWidget {
       case DemoType.sudoku:
         return const _SudokuDebugger();
       case DemoType.tts:
-        return const _TTSDebugger();
       case DemoType.chat:
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
@@ -64,7 +65,7 @@ class Debugger extends ConsumerWidget {
     final ids = ref.watch(P.msg.ids);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
-    final availableModels = ref.watch(P.fileManager.availableModelsInCurrentDemoType);
+    final availableModels = ref.watch(P.fileManager.chatWeights);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
@@ -73,6 +74,7 @@ class Debugger extends ConsumerWidget {
     final checkingLatency = ref.watch(P.guard.checkingLatency);
     final msgNode = ref.watch(P.msg.msgNode);
     final pool = ref.watch(P.msg.pool);
+    final conversations = ref.watch(P.conversation.conversations);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -95,7 +97,7 @@ class Debugger extends ConsumerWidget {
     const showPreferredDarkCustomTheme = false;
     const showCheckingLatency = false;
     const showConversation = true;
-    const showCurrentModel = false;
+    const showCurrentModel = true;
     const showLoading = false;
     const showMsgNode = true;
 
@@ -163,6 +165,7 @@ class Debugger extends ConsumerWidget {
                       if (showConversation) ...[T("currentCreatedAtUS".codeToName), T(currentCreatedAtUS.toString())],
                       if (showMsgNode) ...[T("msgNode.createAtInUS".codeToName), T(msgNode.createAtInUS.toString())],
                       if (showPool) ...[T("pool".codeToName), T((pool.values.m((e) => e.id)).toString())],
+                      if (showConversation) ...[T("conversations".codeToName), T(conversations.length.toString())],
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
                       T("pageKey".codeToName),
@@ -278,6 +281,7 @@ class _TTSDebugger extends ConsumerWidget {
     final generating = ref.watch(P.tts.generating);
     final asFull = ref.watch(P.tts.asFull);
     final asExhaust = ref.watch(P.tts.asExhaust);
+    final currentModel = ref.watch(P.rwkv.currentModel);
 
     return Positioned(
       left: 0,
@@ -301,6 +305,8 @@ class _TTSDebugger extends ConsumerWidget {
                 children:
                     [
                       paddingTop.h,
+                      T("currentModel".codeToName),
+                      T(currentModel?.fileName ?? "null"),
                       T("receiveId".codeToName),
                       T(receiveId.toString()),
                       T("selectedSpkPanelFilter".codeToName),

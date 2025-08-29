@@ -172,6 +172,23 @@ def update_filesizes(config_file: str, max_workers: int = 5):
     safe_print(f"\n配置文件已更新: {config_file}")
     safe_print(f"成功更新了 {updated_count}/{len(models)} 个模型")
 
+def format_json_with_prettier(file_path: str, print_width: int = 200) -> bool:
+    try:
+        import subprocess
+        cmd = ["npx", "prettier", "--parser", "json", f"--print-width={print_width}", "--write", file_path]
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode != 0:
+            safe_print(f"\033[91mPrettier 格式化失败: {result.stderr.strip()}\033[0m")
+            return False
+        safe_print("使用 Prettier 完成 JSON 格式化")
+        return True
+    except FileNotFoundError:
+        safe_print("\033[93m未找到 npx 或 prettier，跳过 Prettier 格式化\033[0m")
+        return False
+    except Exception as e:
+        safe_print(f"\033[91mPrettier 格式化出错: {e}\033[0m")
+        return False
+
 def main():
     """主函数"""
     config_file = "remote/latest.json"
@@ -182,6 +199,10 @@ def main():
     
     try:
         update_filesizes(config_file, max_workers)
+        # 最后格式化 JSON，printWidth = 200
+        formatted = format_json_with_prettier(config_file, 200)
+        if not formatted:
+            safe_print("已跳过或无法使用 Prettier 格式化，继续使用默认缩进格式")
         safe_print("\n更新完成！")
     except Exception as e:
         safe_print(f"\033[91m更新过程中出错: {e}\033[0m")

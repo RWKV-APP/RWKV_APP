@@ -54,7 +54,10 @@ class _Preference {
 
   var promptTemplate = PromptTemplate.empty();
 
-  bool get currentLangIsZh => preferredLanguage.q.resolved.locale.languageCode == "zh";
+  late final currentLangIsZh = qp((ref) {
+    final preferredLanguage = ref.watch(P.preference.preferredLanguage);
+    return preferredLanguage.resolved.locale.languageCode == "zh";
+  });
 }
 
 /// Private methods

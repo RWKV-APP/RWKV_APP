@@ -22,7 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(demoName) => "欢迎探索 ${demoName}";
 
-  static String m1(maxLength) => "会话名称不能超过${maxLength}个字符";
+  static String m1(maxLength) => "会话名称不能超过 ${maxLength} 个字符";
 
   static String m2(path) => "消息记录会存储在该文件夹下\n ${path}";
 
@@ -180,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("不再询问"),
     "download_all": MessageLookupByLibrary.simpleMessage("下载全部"),
+    "download_all_missing": MessageLookupByLibrary.simpleMessage("下载全部缺失文件"),
     "download_app": MessageLookupByLibrary.simpleMessage("下载App"),
     "download_failed": MessageLookupByLibrary.simpleMessage("下载失败"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage("从浏览器下载"),
@@ -467,6 +468,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
+    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("推理: 中"),
+    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
+      "推理模式: 中",
+    ),
+    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
+      "推理模式: 高",
+    ),
+    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage("推理模式: 关"),
+    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("推理: 高"),
+    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("推理: 关"),
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),

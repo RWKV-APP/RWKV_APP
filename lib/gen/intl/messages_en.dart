@@ -225,6 +225,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("Don\'t ask again"),
     "download_all": MessageLookupByLibrary.simpleMessage("Download All"),
+    "download_all_missing": MessageLookupByLibrary.simpleMessage(
+      "Download All Missing Files",
+    ),
     "download_app": MessageLookupByLibrary.simpleMessage("Download App"),
     "download_failed": MessageLookupByLibrary.simpleMessage("Download Failed"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage(
@@ -616,6 +619,18 @@ class MessageLookup extends MessageLookupByLibrary {
           "Then you can start to chat with RWKV",
         ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
+    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("Think: Auto"),
+    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
+      "Reasoning Mode: Auto",
+    ),
+    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
+      "Reasoning Mode: High",
+    ),
+    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
+      "Reasoning Mode: Off",
+    ),
+    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("Think: High"),
+    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("Think: Off"),
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Thinking Mode Template",
     ),

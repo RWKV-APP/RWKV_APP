@@ -33,6 +33,7 @@ void main() async {
   FlutterNativeSplash.remove();
 }
 
+/// 主要是测试 App 在当前的编译配置下, 能不能正常启动
 // ignore: unused_element
 class _TestApp extends StatelessWidget {
   const _TestApp();

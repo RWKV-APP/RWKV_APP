@@ -211,7 +211,7 @@ class AppDatabase extends _$AppDatabase {
       final firstMsgContent = firstMsg?.content ?? "";
       title = firstMsgContent.length > Config.maxTitleLength ? firstMsgContent.substring(0, Config.maxTitleLength) : firstMsgContent;
     } else {
-      title = P.preference.currentLangIsZh ? "新会话" : "New Conversation";
+      title = P.preference.currentLangIsZh.q ? "新会话" : "New Conversation";
     }
 
     final convData = _conversationToConversationCompanion(msgNode, title: title);

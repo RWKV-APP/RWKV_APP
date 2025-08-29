@@ -21,6 +21,8 @@ extension _$Conversation on _Conversation {
 
   Future<void> _onMsgNodeChanged() async {
     qq;
+    if (P.rwkv.inTTSOrTranslateMode.q) return;
+
     final createAtUS = P.msg.msgNode.q.createAtInUS;
     if (currentCreatedAtUS.q == createAtUS) {
       return;
@@ -30,6 +32,7 @@ extension _$Conversation on _Conversation {
 
   Future<void> _syncNode() async {
     qq;
+    if (P.rwkv.inTTSOrTranslateMode.q) return;
 
     final msgNode = P.msg.msgNode.q;
     final db = P.app._db;
@@ -91,17 +94,8 @@ extension $Conversation on _Conversation {
   }
 
   Future<void> onDeleteClicked(BuildContext context, ConversationData conversation) async {
-    // final s = S.of(context);
-    // final res = await showOkCancelAlertDialog(
-    //   context: context,
-    //   title: s.delete_conversation,
-    //   message: s.delete_conversation_message,
-    //   okLabel: s.delete,
-    //   cancelLabel: s.cancel,
-    //   isDestructiveAction: true,
-    // );
-    //
-    // if (res != OkCancelResult.ok) return;
+    qq;
+    if (P.rwkv.inTTSOrTranslateMode.q) return;
 
     final db = P.app._db;
     final createAtInUS = conversation.createdAtUS;
@@ -124,6 +118,9 @@ extension $Conversation on _Conversation {
   }
 
   Future<void> onRenameClicked(BuildContext context, ConversationData conversation) async {
+    qq;
+    if (P.rwkv.inTTSOrTranslateMode.q) return;
+
     final s = S.of(context);
     final currentTitle = conversation.title;
     final initialText = currentTitle.length > Config.maxTitleLength ? currentTitle.substring(0, Config.maxTitleLength) : currentTitle;
@@ -160,6 +157,8 @@ extension $Conversation on _Conversation {
   }
 
   void updateCurrentConvSubtitle(String subtitle) async {
+    qq;
+    if (P.rwkv.inTTSOrTranslateMode.q) return;
     final id = P.conversation.currentCreatedAtUS.q;
     if (id == null) {
       return;
@@ -200,6 +199,8 @@ extension $Conversation on _Conversation {
   ///
   /// context
   Future<void> onExportClicked(BuildContext context, ConversationData conversation) async {
+    qq;
+    if (P.rwkv.inTTSOrTranslateMode.q) return;
     final s = S.of(context);
     try {
       // 1. 从ConversationData转成MsgNode获取所有消息ID

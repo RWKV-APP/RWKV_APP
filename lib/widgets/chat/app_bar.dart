@@ -19,19 +19,19 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/widgets/pager.dart';
 import 'package:sprintf/sprintf.dart';
 
 // TODO: rename the file name to chat_app_bar.dart
 class ChatAppBar extends ConsumerWidget {
-  const ChatAppBar({super.key});
+  final DemoType? preferredDemoType;
 
-  void onSettingsPressed() async {
+  const ChatAppBar({super.key, this.preferredDemoType});
+
+  void _onSettingsPressed() async {
     if (!checkModelSelection()) return;
 
     final demoType = P.app.demoType.q;
     if (demoType == DemoType.tts) {
-      await P.tts.showTTSCFMStepsSelector();
       return;
     }
 
@@ -47,7 +47,7 @@ class ChatAppBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    final demoType = ref.watch(P.app.demoType);
+    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final primary = Theme.of(context).colorScheme.primary;
     final currentModel = ref.watch(P.rwkv.currentModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
@@ -92,6 +92,7 @@ class ChatAppBar extends ConsumerWidget {
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
     final isChat = demoType == DemoType.chat;
+    final isTTS = demoType == DemoType.tts;
 
     final userType = ref.watch(P.preference.userType);
 
@@ -99,7 +100,7 @@ class ChatAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: isChat ? Colors.transparent : scaffold.q(.7),
+      backgroundColor: (isChat || isTTS) ? Colors.transparent : scaffold.q(.7),
       systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GestureDetector(
         onTap: _onTitlePressed,
@@ -186,7 +187,7 @@ class ChatAppBar extends ConsumerWidget {
         if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user)) _buildMorePopupMenuButton(context, completionMode),
         if (demoType != DemoType.chat && demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
-            onPressed: onSettingsPressed,
+            onPressed: _onSettingsPressed,
             icon: const Icon(Icons.tune),
           ),
       ],
@@ -202,7 +203,7 @@ class ChatAppBar extends ConsumerWidget {
             push(PageKey.advancedSettings);
             break;
           case 2:
-            onSettingsPressed();
+            _onSettingsPressed();
             break;
         }
       },
@@ -258,22 +259,6 @@ class _NewConversationButton extends ConsumerWidget {
             }
           : null,
       icon: icon,
-    );
-  }
-}
-
-class _MenuButton extends ConsumerWidget {
-  const _MenuButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final childOpacity = ref.watch(Pager.childOpacity);
-    return Opacity(
-      opacity: childOpacity,
-      child: const IconButton(
-        onPressed: Pager.toggle,
-        icon: Icon(Icons.menu),
-      ),
     );
   }
 }

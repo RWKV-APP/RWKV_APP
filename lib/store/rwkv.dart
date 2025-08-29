@@ -41,10 +41,10 @@ class _RWKV {
 
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
-  late final _thinkingMode = qs<ThinkingMode>(const thinking_mode.Lighting());
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Lighting());
 
-  ThinkingMode reasoningOnOrder = const thinking_mode.Free();
-  ThinkingMode reasoningOffOrder = const thinking_mode.Lighting();
+  thinking_mode.ThinkingMode reasoningOnOrder = const thinking_mode.Free();
+  thinking_mode.ThinkingMode reasoningOffOrder = const thinking_mode.Lighting();
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
@@ -77,6 +77,14 @@ class _RWKV {
 
   // TODO: Use it @WangCe
   late final receiving = qs(false);
+
+  late final inTTSOrTranslateMode = qp((ref) {
+    final model = ref.watch(P.rwkv.currentModel);
+    if (model == null) return false;
+    final isTTS = model.isTTS;
+    final isTranslate = model.tags.contains("translate");
+    return isTTS || isTranslate;
+  });
 }
 
 extension $RWKVLoad on _RWKV {
@@ -219,7 +227,7 @@ extension $RWKVLoad on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424_sparktts.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/vocab_talk.txt");
     await _ensureQNNCopied();
     final rootIsolateToken = RootIsolateToken.instance;
 
@@ -706,7 +714,7 @@ extension $RWKV on _RWKV {
   }
 
   Future<void> setModelConfig({
-    ThinkingMode? thinkingMode,
+    thinking_mode.ThinkingMode? thinkingMode,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? enableReasoning,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferChinese,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferPseudo,
@@ -808,19 +816,17 @@ extension $RWKV on _RWKV {
     final current = thinkingMode.q;
     switch (current) {
       case thinking_mode.Lighting():
-        setModelConfig(thinkingMode: reasoningOnOrder);
-        if (reasoningOnOrder is thinking_mode.Free) Alert.success(S.current.reasoning_enabled);
-        if (reasoningOnOrder is thinking_mode.PreferChinese) Alert.success(S.current.prefer_chinese);
-        reasoningOffOrder = const thinking_mode.Lighting();
+        setModelConfig(thinkingMode: thinking_mode.Free());
+        Alert.success(S.current.thinking_mode_detail_high);
       case thinking_mode.Free():
-        setModelConfig(thinkingMode: reasoningOffOrder);
-        reasoningOnOrder = const thinking_mode.Free();
+        setModelConfig(thinkingMode: thinking_mode.None());
+        Alert.success(S.current.thinking_mode_detail_off);
       case thinking_mode.PreferChinese():
-        setModelConfig(thinkingMode: reasoningOffOrder);
-        reasoningOnOrder = const thinking_mode.PreferChinese();
+        setModelConfig(thinkingMode: thinking_mode.None());
+        Alert.success(S.current.thinking_mode_detail_off);
       case thinking_mode.None():
-        setModelConfig(thinkingMode: reasoningOnOrder);
-        reasoningOffOrder = const thinking_mode.None();
+        setModelConfig(thinkingMode: thinking_mode.Lighting());
+        Alert.success(S.current.thinking_mode_detail_auto);
     }
   }
 
@@ -837,18 +843,14 @@ extension $RWKV on _RWKV {
     P.app.hapticLight();
     switch (current) {
       case thinking_mode.Lighting():
-        setModelConfig(thinkingMode: const thinking_mode.None());
-        reasoningOffOrder = const thinking_mode.None();
+      case thinking_mode.None():
+        break;
       case thinking_mode.Free():
         setModelConfig(thinkingMode: const thinking_mode.PreferChinese());
         Alert.success(S.current.prefer_chinese);
-        reasoningOnOrder = const thinking_mode.PreferChinese();
       case thinking_mode.PreferChinese():
         setModelConfig(thinkingMode: const thinking_mode.Free());
-        reasoningOnOrder = const thinking_mode.Free();
-      case thinking_mode.None():
-        setModelConfig(thinkingMode: const thinking_mode.Lighting());
-        reasoningOffOrder = const thinking_mode.Lighting();
+        Alert.success(S.current.thinking_mode_detail_high);
     }
   }
 }

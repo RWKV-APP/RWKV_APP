@@ -548,15 +548,26 @@ extension _$Chat on _Chat {
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
+    final model = P.rwkv.currentModel.q;
+    final isTTS = model?.isTTS ?? false;
     switch (pageKey) {
       case PageKey.chat:
-        if (P.rwkv.currentModel.q?.tags.contains("translate") == true) {
+        final isTranslate = model?.tags.contains("translate") ?? false;
+        if (isTTS || isTranslate) P.rwkv.currentModel.q = null;
+        break;
+      case PageKey.talk:
+        if (!isTTS) {
+          P.rwkv.currentGroupInfo.q = null;
           P.rwkv.currentModel.q = null;
         }
         break;
       default:
         break;
     }
+    textInInput.q = "";
+    textEditingController.text = "";
+    focusNode.unfocus();
+    hasFocus.q = false;
   }
 
   void _onTextEditingControllerValueChanged() {
@@ -710,7 +721,7 @@ extension _$Chat on _Chat {
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {
     RefInfo ref = RefInfo.empty();
-    final isZh = P.preference.currentLangIsZh;
+    final isZh = P.preference.currentLangIsZh.q;
 
     if (webSearch.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);

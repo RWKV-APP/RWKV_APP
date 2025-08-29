@@ -13,8 +13,6 @@ extension _Instruction on Language {
 
 extension _TTSStatic on _TTS {
   static const _defaultTextInInput = "";
-  static const _cfmStepsKey = "cfmSteps";
-  static const _defaultCfmSteps = 5;
   static const _replaceMap = {
     "English": "🇺🇸",
     "Japanese": "🇯🇵",
@@ -32,8 +30,6 @@ extension _TTSStatic on _TTS {
 
 class _TTS {
   late final audioInteractorShown = qs(false);
-  @Deprecated("Use sparktts instead")
-  late final cfmSteps = qs(_TTSStatic._defaultCfmSteps);
   late final focusNode = FocusNode();
   late final hasFocus = qs(false);
   late final instructions = qsf<TTSInstruction, int?>(null);
@@ -65,21 +61,12 @@ class _TTS {
 /// Private methods
 extension _$TTS on _TTS {
   Future<void> _init() async {
-    if (P.app.demoType.q != DemoType.tts) return;
     qq;
     P.chat.focusNode.addListener(_onChatFocusNodeChanged);
 
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     textInInput.l(_onTextChanged);
     await getTTSSpkNames();
-
-    final prefs = await SharedPreferences.getInstance();
-    final cfmSteps = prefs.getInt(_TTSStatic._cfmStepsKey);
-    if (cfmSteps == null) {
-      this.cfmSteps.q = _TTSStatic._defaultCfmSteps;
-    } else {
-      this.cfmSteps.q = cfmSteps;
-    }
 
     final spkPairs = this.spkPairs.q;
 
@@ -89,6 +76,8 @@ extension _$TTS on _TTS {
     selectSourceAudioPath.q = null;
 
     focusNode.addListener(() {
+      final pageKey = P.app.pageKey.q;
+      if (pageKey != PageKey.talk) return;
       hasFocus.q = focusNode.hasFocus;
     });
 
@@ -96,13 +85,25 @@ extension _$TTS on _TTS {
     spkShown.l(_onSpkShownChanged, fireImmediately: true);
 
     P.rwkv.broadcastStream.listen(_onStreamEvent, onDone: _onStreamDone, onError: _onStreamError);
+
+    P.app.pageKey.lb(_onPageKeyChanged);
+  }
+
+  void _onPageKeyChanged(PageKey? previous, PageKey next) {
+    if (previous == PageKey.talk) {
+      P.msg._clear(syncNode: false);
+    }
   }
 
   void _onSpkShownChanged(bool next) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     selectedSpkPanelFilter.q = selectedLanguage.q;
   }
 
   void _onSelectSpkNameChanged(String? next) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qq;
     if (next == null) {
       selectedLanguage.q = Language.none;
@@ -119,20 +120,22 @@ extension _$TTS on _TTS {
   }
 
   void _onChatFocusNodeChanged() {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qqq("P.chat.focusNode.hasFocus: ${P.chat.focusNode.hasFocus}");
-    if (P.chat.focusNode.hasFocus) {
-      dismissAllShown(intonationShown: intonationShown.q);
-    }
+    if (P.chat.focusNode.hasFocus) dismissAllShown(intonationShown: intonationShown.q);
   }
 
   void _onTextChanged(String next) {
-    // qqq("_onTextChanged");
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     final textInController = textEditingController.text;
     if (next != textInController) textEditingController.text = next;
   }
 
   void _onTextEditingControllerValueChanged() {
-    // qqq("_onTextEditingControllerValueChanged");
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     final textInController = textEditingController.text;
     if (textInInput.q != textInController) textInInput.q = textInController;
   }
@@ -213,6 +216,8 @@ extension _$TTS on _TTS {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     switch (event) {
       case from_rwkv.TTSStreamingBuffer res:
         _onTTSStreamingBuffer(res);
@@ -255,10 +260,14 @@ extension _$TTS on _TTS {
   }
 
   void _onStreamDone() {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qq;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != PageKey.talk) return;
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
   }
@@ -436,7 +445,6 @@ extension $TTS on _TTS {
       ttsSourceAudioPath: selectSourceAudioPath,
       ttsInstruction: instructionText,
       audioUrl: selectSourceAudioPath,
-      ttsCFMSteps: cfmSteps.q,
     );
 
     P.msg._syncMsg(id, msg);
@@ -487,7 +495,7 @@ outputWavPath: $outputWavPath""");
   }
 
   void dismissAllShown({bool intonationShown = false}) {
-    if (P.app.demoType.q != DemoType.tts) return;
+    if (P.app.pageKey.q != PageKey.talk) return;
     qqq("intonationShown: $intonationShown");
 
     audioInteractorShown.q = false;
@@ -531,38 +539,6 @@ outputWavPath: $outputWavPath""");
     textEditingController.text = instruction;
   }
 
-  @Deprecated("Use sparktts instead")
-  Future<void> setTTSCFMSteps(int steps) async {
-    qq;
-    cfmSteps.q = steps;
-    P.rwkv.send(to_rwkv.SetTTSCFMSteps(steps));
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(_TTSStatic._cfmStepsKey, steps);
-  }
-
-  Future<void> showTTSCFMStepsSelector() async {
-    qq;
-    final context = getContext();
-    if (context == null) return;
-    if (!context.mounted) return;
-    final currentQ = cfmSteps.q;
-    final res = await showConfirmationDialog<int?>(
-      context: context,
-      title: "TTS CFM Steps",
-      message: "范围3～10吧，越高越慢越精细",
-      initialSelectedActionKey: currentQ,
-      actions: [3, 4, 5, 6, 7, 8, 9, 10].m((value) => AlertDialogAction<int>(label: value.toString(), key: value)),
-    );
-    qqq("$res");
-
-    if (res == null) return;
-
-    cfmSteps.q = res;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setInt(_TTSStatic._cfmStepsKey, res);
-    setTTSCFMSteps(res);
-  }
-
   (String flag, String nameCN, String nameEN) getSpkInfo(String spkName) {
     String flag = "";
     String nameCN = "";
@@ -587,7 +563,24 @@ outputWavPath: $outputWavPath""");
   }
 
   void test() async {
-    audioStream?.resume();
+    late final mp_audio_stream.AudioStream audioStream;
+    if (this.audioStream == null) {
+      audioStream = mp_audio_stream.getAudioStream();
+      final res = audioStream.init(
+        sampleRate: 16000,
+        channels: 1,
+        bufferMilliSec: 60000,
+        waitingBufferMilliSec: 200,
+      );
+      audioStream.resetStat();
+      if (res != 0) {
+        qqe("audioStream init failed: $res");
+      } else {
+        audioStream.resume();
+      }
+    }
+
+    audioStream.resume();
 
     const noteDuration = Duration(seconds: 1);
     const pushFreq = 60; // Hz
@@ -599,7 +592,7 @@ outputWavPath: $outputWavPath""");
       const step = 16000 ~/ pushFreq;
       // await Future.delayed(Duration(milliseconds: 500));
       for (int pos = 0; pos < wave.length; pos += step) {
-        audioStream?.push(wave.sublist(pos, math.min(wave.length, pos + step)));
+        audioStream.push(wave.sublist(pos, math.min(wave.length, pos + step)));
         await Future.delayed(noteDuration ~/ pushFreq);
       }
     }

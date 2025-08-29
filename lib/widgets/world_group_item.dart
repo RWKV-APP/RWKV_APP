@@ -21,7 +21,7 @@ class WorldGroupItem extends ConsumerWidget {
 
   const WorldGroupItem(this.worldType, {super.key, required this.socPair});
 
-  List<FileInfo> get _fileInfos => P.fileManager.availableModelsInCurrentDemoType.q.where((e) => e.worldType == worldType).where((file) {
+  List<FileInfo> get _fileInfos => P.fileManager.worldWeights.q.where((e) => e.worldType == worldType).where((file) {
     return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == socPair.$2);
   }).toList();
 
@@ -39,7 +39,7 @@ class WorldGroupItem extends ConsumerWidget {
       Alert.warning("Please wait for the model to load...");
       return;
     }
-    final availableModels = P.fileManager.availableModelsInCurrentDemoType.q;
+    final availableModels = P.fileManager.worldWeights.q;
     final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
     final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
     final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == socPair.$2);
