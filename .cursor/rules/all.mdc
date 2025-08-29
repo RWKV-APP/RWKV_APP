@@ -1,0 +1,154 @@
+---
+alwaysApply: true
+---
+
+## Project Overview
+
+- 这是一个 flutter / dart 项目
+- 我们会将这个项目部署到 iOS / Android / Windows / macOS / Linux 上
+- 这是一个在本地运行大语言模型的 App, 使用 NPU / GPU / CPU 来运行模型, 权重加载到显存或统一内存中
+
+## 架构解释
+
+### 状态管理
+
+- 整个项目在使用 riverpods 管理状态
+- 下面是对 riverpods 的封装, 用于原子化状态管理
+
+```dart
+/// Generates a [StateProvider] initialized to the specified value.
+StateProvider<V> qs<V>(V v) => StateProvider<V>((_) => v);
+
+/// Generates a [Provider] using the provided createFn.
+Provider<V> qp<V>(V Function(Ref<V> ref) createFn) => Provider<V>(createFn);
+
+extension HaloProviderListenable<V> on ProviderListenable<V> {
+  /// Reads the current value using shorthand `q`.
+  V get q => rc.read(this);
+}
+
+extension HaloStateProvider<V> on StateProvider<V> {
+  /// Reads the current state using shorthand `q`.
+  V get q => rc.read(this);
+
+  /// Sets the state to [value].
+  set q(V value) {
+    rc.read(notifier).state = value;
+  }
+}
+```
+
+### 文件
+
+- 绝大部分的全局状态都在 `lib/store` 文件夹中
+- 我们只在 `lib/store/p.dart` 中使用 import 来导入其他文件, 因为所有 `lib/store` 中的其他文件, 均通过 `part of 'p.dart';` 共享了这些引用, 所以你只用考虑在 `lib/store/p.dart` 中导入其他文件即可
+
+### 路由管理
+
+- `lib/router` 管理路由
+- 我们使用的是 go_router 这个 package
+
+### UI
+
+- 我们大量使用 `ConsumerWidget` 来构建 UI
+
+### LLM 服务提供方式
+
+- `rwkv_mobile_flutter` 是这个项目的 LLM inference 引擎
+
+## 最佳实践
+
+### 使用 for 循环, 禁止使用 forEach 函数
+
+```dart
+List<T> list;
+// Bad 😡
+list.forEach((e) {
+  // ...
+});
+
+// Good ✅
+for (var e in list) {
+  // ...
+}
+```
+
+### 不要在 UI 层的 class 中声明任何 `Widget build` 方法
+
+Bad 😡
+
+```dart
+class WidgetName extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _buildFooBar(context, ref);
+  }
+
+  Widget _buildFooBar(BuildContext context, WidgetRef ref) {
+    return const SizedBox();
+  }
+}
+```
+
+Good ✅
+
+```dart
+class WidgetName extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _SubWidgetName();
+  }
+}
+
+class _SubWidgetName extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const SizedBox();
+  }
+}
+```
+
+### 使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度
+
+```dart
+Widget build(BuildContext context, WidgetRef ref) {
+  final width0 = MediaQuery.sizeOf(context).width; // ✅ Goog
+  final width1 = MediaQuery.of(context).size.width; // 😡 Bad
+  return SizedBox(width: width0, height: 100);
+}
+```
+
+### 不要使用 `then`
+
+```dart
+Future<void> foo() async {
+  await Future.delayed(const Duration(seconds: 1));
+}
+
+// Bad 😡
+foo().then((value) {
+  // ...
+});
+
+// Good ✅
+final value =await foo();
+```
+
+### 使用 `.q(.x)` 来修改 `Color` 的透明度
+
+```dart
+Color color = Colors.red;
+color = color.withOpacity(0.5); // Bad 😡
+color = color.q(.5); // Good ✅
+```
+
+## 输出信息的方式
+
+- qq; // 输出当然函数名
+- qw; // 输出当前函数名, 并且在前面加上 "🚧"
+- qr; // 输出当前函数名, 并且在前面加上 "✅"
+- qe; // 输出当前函数名, 并且在前面加上 "😡"
+- qqq(dynamic anything); // 输出当前函数名和 message
+- qqw(dynamic anything); // 输出当前函数名和 message, 并且在前面加上 "🚧"
+- qqr(dynamic anything); // 输出当前函数名和 message, 并且在前面加上 "✅"
+- qqe(dynamic anything); // 输出当前函数名和 message, 并且在前面加上 "😡"
