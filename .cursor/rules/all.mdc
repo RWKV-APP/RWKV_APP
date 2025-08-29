@@ -73,7 +73,9 @@ for (var e in list) {
 }
 ```
 
-### 不要在 UI 层的 class 中声明任何 `Widget build` 方法
+### 不要在 UI 层的 class 中声明任何 `Widget _build` helper 方法
+
+Flutter 官方视频说: [使用 `Widget _build` 形式的 helper 方法会降低程序的渲染性能](https://youtu.be/IOyq-eTRhvo?si=aBXuUVXIkirPqQVR&t=99)
 
 Bad 😡
 
@@ -110,6 +112,8 @@ class _SubWidgetName extends ConsumerWidget {
 
 ### 使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度
 
+使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度, 不要使用 `MediaQuery.of(context).size.width`, 因为 `MediaQuery.of(context).size.width` 会触发 `MediaQuery.of(context)` 会坚挺各种 MediaQuery 的变化, 导致非必要的重回, 比如键盘展示 / 收起事件
+
 ```dart
 Widget build(BuildContext context, WidgetRef ref) {
   final width0 = MediaQuery.sizeOf(context).width; // ✅ Goog
@@ -119,6 +123,8 @@ Widget build(BuildContext context, WidgetRef ref) {
 ```
 
 ### 不要使用 `then`
+
+使用 `then` 会降低代码的可读性
 
 ```dart
 Future<void> foo() async {
