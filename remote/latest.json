@@ -81,18 +81,11 @@
         "tags": ["reason", "cpu"],
         "state": [
           {
-            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv-9-mix_user6500_system1700.rmpack",
+            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv_roleplay_0828_cn_en_ctx8192.rmpack",
             "fileSize": 10489856,
-            "sha256": "dbcd1c54d1d4edfb6a4d57e260b83880637bc6e3341d77c8b47c330fadf7f407",
-            "name": "General role play fine-tuned",
-            "fileName": "rwkv-9-mix_user6500_system1700.rmpack"
-          },
-          {
-            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv_state_0825_novel_ctx8192.rmpack",
-            "fileSize": 10489856,
-            "sha256": "f6ed4dc160eb9bb4bb5269fba44e4276cfd60f172bceae81a2c9058c06b8f116",
-            "name": "General role play fine-tuned better",
-            "fileName": "rwkv_state_0825_novel_ctx8192.rmpack"
+            "sha256": "19444860076940e5408e146246cd943c26bac3f059fb0bbfd73c99264f556244",
+            "name": "中英双语角色扮演-ctx8192-0828",
+            "fileName": "rwkv_roleplay_0828_cn_en_ctx8192.rmpack"
           }
         ]
       },
