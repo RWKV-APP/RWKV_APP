@@ -52,6 +52,9 @@ class _Chat {
 
   late final webSearch = qs(WebSearchMode.off);
 
+  // 使用文言文
+  late final wenYanWen = qs(false);
+
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 }
 
@@ -61,18 +64,28 @@ extension $Chat on _Chat {
     P.msg._clear();
   }
 
-  void onSwitchWebSearchMode(WebSearchMode? mode) async {
+  void onSwitchWebSearchMode(WebSearchMode mode) async {
     final receiving = receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    if (mode != null) {
-      webSearch.q = mode;
+    if (mode != WebSearchMode.off) {
+      wenYanWen.q = false;
+    }
+    webSearch.q = mode;
+  }
+
+  void onSwitchWenYanWen(bool enabled) async {
+    final receiving = receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    final enabled = webSearch.q != WebSearchMode.off;
-    webSearch.q = enabled ? WebSearchMode.off : WebSearchMode.search;
+    if (enabled) {
+      webSearch.q = WebSearchMode.off;
+    }
+    wenYanWen.q = enabled;
   }
 
   Future<void> onSendButtonPressed() async {
@@ -487,7 +500,10 @@ extension _$Chat on _Chat {
     while (iterator.moveNext()) {
       mine = iterator.current;
       bot = iterator.moveNext() ? iterator.current : null;
-      final content = mine.getContentForHistoryWithRef(bot?.reference);
+      String content = mine.getContentForHistoryWithRef(bot?.reference);
+      if (wenYanWen.q) {
+        content = '请用文言文回答: $content';
+      }
       result.add(content);
       if (bot == null) break;
       result.add(bot.getContentForHistory());
