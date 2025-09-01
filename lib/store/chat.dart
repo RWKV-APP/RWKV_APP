@@ -491,7 +491,8 @@ extension _$Chat on _Chat {
       final content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
       result.add(content);
       if (botMsg == null) break;
-      result.add(botMsg.getContentForHistory());
+      final botContent = botMsg.getContentForHistory(appendThinkTagInThinkingTagIsEmpty: true);
+      result.add(botContent);
     }
     return result;
   }

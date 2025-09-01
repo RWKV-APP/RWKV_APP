@@ -73,7 +73,7 @@ class ModelItem extends ConsumerWidget {
 
     final modelSize = fileInfo.modelSize ?? 0.1;
     final pageKey = P.app.pageKey.q;
-    if (modelSize < 1.5 && pageKey == PageKey.chat) {
+    if (modelSize < 1.5 && pageKey == PageKey.chat && !fileInfo.tags.contains("DeepEmbedding")) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
