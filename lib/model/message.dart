@@ -307,20 +307,18 @@ Message(
     if (!isCotFormat) return content;
     if (!containsCotEndMark) return content;
     if (paused) return content;
-    final (cotContent, cotResult) = cotContentAndResult;
+    final (cotContent, cotResult) = _cotContentAndResult;
     return cotResult;
   }
 
-  (String cotContent, String cotResult) get cotContentAndResult {
-    if (!isCotFormat) {
-      return ("", "");
-    }
-    if (!containsCotEndMark) {
-      return (content.substring(7), "");
-    }
+  (String cotContent, String cotResult) get _cotContentAndResult {
+    if (!isCotFormat) return ("", "");
+
+    if (!containsCotEndMark) return (content.substring(7), "");
 
     final endIndex = content.indexOf("</think>");
     final _content = content.substring(7, endIndex);
+
     String _result = "";
     if (endIndex + 9 < content.length) {
       _result = content.substring(endIndex + 9);

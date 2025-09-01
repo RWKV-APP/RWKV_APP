@@ -464,6 +464,7 @@ extension _$Chat on _Chat {
     qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
   }
 
+  /// 将完整的历史记录发送至推理引擎
   List<String> _history() {
     final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
 
@@ -482,15 +483,15 @@ extension _$Chat on _Chat {
     }
 
     final iterator = messages.iterator;
-    Message mine;
-    Message? bot;
+    Message userMsg;
+    Message? botMsg;
     while (iterator.moveNext()) {
-      mine = iterator.current;
-      bot = iterator.moveNext() ? iterator.current : null;
-      final content = mine.getContentForHistoryWithRef(bot?.reference);
+      userMsg = iterator.current;
+      botMsg = iterator.moveNext() ? iterator.current : null;
+      final content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
       result.add(content);
-      if (bot == null) break;
-      result.add(bot.getContentForHistory());
+      if (botMsg == null) break;
+      result.add(botMsg.getContentForHistory());
     }
     return result;
   }
