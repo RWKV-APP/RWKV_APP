@@ -247,18 +247,16 @@ enum FileDownloadSource {
     googleapis => '',
   };
 
-  bool get isDebug {
-    switch (this) {
-      case huggingface:
-        return false;
-      case hfmirror:
-        return false;
-      case aifasthub:
-        return false;
-      case github:
-        return true;
-      case googleapis:
-        return true;
-    }
-  }
+  bool get isDebug => switch (this) {
+    huggingface => false,
+    hfmirror => false,
+    aifasthub => false,
+    github => true,
+    googleapis => true,
+  };
+
+  bool get hidden => switch (this) {
+    aifasthub => true,
+    _ => false,
+  };
 }

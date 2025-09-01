@@ -238,7 +238,7 @@ class _DownloadSource extends ConsumerWidget {
         Wrap(
           runSpacing: 4,
           spacing: 4,
-          children: FileDownloadSource.values.where((e) => kDebugMode || !e.isDebug).map((e) {
+          children: FileDownloadSource.values.where((e) => (kDebugMode || !e.isDebug) && !e.hidden).map((e) {
             return GestureDetector(
               onTap: () {
                 P.fileManager.downloadSource.q = e;
