@@ -37,11 +37,7 @@ final class Message extends Equatable {
   final String? modelName;
   final String? runningMode;
 
-  bool get ttsHasContent => ttsFilePaths?.isNotEmpty ?? false;
-
-  bool get ttsIsDone => (ttsOverallProgress ?? 0.0) >= 1.0;
-
-  int get createAtInMS => id;
+  // Computed properties and behaviors are moved to extension `MessageX`
 
   const Message({
     required this.id,
@@ -220,6 +216,14 @@ Message(
   runningMode: $runningMode,
 )""";
   }
+}
+
+extension MessageX on Message {
+  bool get ttsHasContent => ttsFilePaths?.isNotEmpty ?? false;
+
+  bool get ttsIsDone => (ttsOverallProgress ?? 0.0) >= 1.0;
+
+  int get createAtInMS => id;
 
   bool get isCotFormat => content.startsWith("<think>");
 
@@ -227,16 +231,16 @@ Message(
 
   /// Append web search reference text behind of the user input content
   String getContentForHistoryWithRef(RefInfo? reference) {
-    final content = getContentForHistory();
+    final contentForHistory = getContentForHistory();
     if (!isMine || reference == null) {
-      return content;
+      return contentForHistory;
     }
     final ref = reference.enable ? reference.toLlmReferenceText() : null;
-    qqq("$content, ${ref?.substring(0, 30)}");
+    qqq("$contentForHistory, ${ref?.substring(0, 30)}");
     if (ref == null) {
-      return content;
+      return contentForHistory;
     } else {
-      return "$ref\n$content";
+      return "$ref\n$contentForHistory";
     }
   }
 
@@ -257,17 +261,17 @@ Message(
     if (!containsCotEndMark) return (content.substring(7), "");
 
     final endIndex = content.indexOf("</think>");
-    final _content = content.substring(7, endIndex);
+    final thinkingContent = content.substring(7, endIndex);
 
-    String _result = "";
+    String result = "";
     if (endIndex + 9 < content.length) {
-      _result = content.substring(endIndex + 9);
+      result = content.substring(endIndex + 9);
     }
 
     if (appendThinkTagInThinkingTagIsEmpty && content.contains("<think>\n</think>")) {
-      return (_content, content);
+      return (thinkingContent, content);
     }
 
-    return (_content, _result);
+    return (thinkingContent, result);
   }
 }
