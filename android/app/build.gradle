@@ -14,7 +14,7 @@ if (keystorePropertiesFile.exists()) {
 
 // for debug only ignore it if you are building release
 // roleplay debug version with roleplay package name and icon
-def rolepaly = project.property('roleplay')
+def rolepaly = project.properties['roleplay'] ?: false
 println ">>> roleplay: " + rolepaly
 
 android {
