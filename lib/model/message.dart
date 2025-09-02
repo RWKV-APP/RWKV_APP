@@ -37,8 +37,6 @@ final class Message extends Equatable {
   final String? modelName;
   final String? runningMode;
 
-  // Computed properties and behaviors are moved to extension `MessageX`
-
   const Message({
     required this.id,
     required this.content,
@@ -273,5 +271,21 @@ extension MessageX on Message {
     }
 
     return (thinkingContent, result);
+  }
+}
+
+const _batchMarker = "V9m!T7#q2fH@x1Lz*8YwK0^g4";
+
+extension BatchMessage on Message {
+  (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) get batchInfo {
+    final decodedInfo = content.split(_batchMarker);
+    if (decodedInfo.length == 1) {
+      return ([content], false, 0, 0);
+    }
+    final dataCount = decodedInfo.length;
+    final batch = decodedInfo.sublist(0, dataCount - 1);
+    int? selectedBatch = int.tryParse(decodedInfo.last);
+    if (selectedBatch != null && selectedBatch < 0) selectedBatch = null;
+    return (batch, true, dataCount - 1, selectedBatch);
   }
 }

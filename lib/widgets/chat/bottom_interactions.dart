@@ -12,6 +12,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/store/p.dart';
+import 'package:zone/store/web_search_mode.dart';
 import 'package:zone/widgets/performance_info.dart';
 
 class BottomInteractions extends ConsumerWidget {

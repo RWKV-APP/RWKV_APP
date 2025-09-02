@@ -1,11 +1,5 @@
 part of 'p.dart';
 
-enum WebSearchMode {
-  off,
-  search,
-  deepSearch,
-}
-
 class _Chat {
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
