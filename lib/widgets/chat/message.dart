@@ -15,6 +15,8 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/cot_display_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
+import 'package:zone/model/message_type.dart' as model;
+import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
