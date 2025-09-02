@@ -21,7 +21,7 @@ class PageTalk extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return const Scaffold(
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {
       //     P.tts.test();

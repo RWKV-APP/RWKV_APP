@@ -74,7 +74,6 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/widgets/app_update_dialog.dart' show AppUpdateDialog;
-import 'package:zone/widgets/chat/tts/bot_tts_content.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 part "adapter.dart";

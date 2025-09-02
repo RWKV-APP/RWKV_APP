@@ -114,9 +114,9 @@ class _Header extends StatelessWidget {
         Expanded(
           child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
         ),
-        IconButton(
+        const IconButton(
           onPressed: pop,
-          icon: const Icon(Icons.close),
+          icon: Icon(Icons.close),
         ),
       ],
     );
