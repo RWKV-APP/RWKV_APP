@@ -30,6 +30,7 @@ class _PageChatState extends State<PageChat> {
   void initState() {
     super.initState();
 
+    // 自动展示模型选择器
     if (P.app.demoType.q == DemoType.chat) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         final loaded = P.rwkv.currentModel.q != null;
@@ -43,10 +44,10 @@ class _PageChatState extends State<PageChat> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
+    return PopScope<void>(
       child: const _Page(),
-      onPopInvokedWithResult: (pop, c) async {
-        if (pop) {
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) {
           P.chat.isSharing.q = false;
           P.chat.onStopButtonPressed();
         }
