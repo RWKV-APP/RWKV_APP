@@ -375,5 +375,7 @@
   "hint_system_prompt": "Example: System: You are a powerful RWKV large language model, and you always patiently answer users' questions.",
   "load_": "Load",
   "loaded": "Loaded",
-  "state_list": "State List"
+  "state_list": "State List",
+  "role_play": "Role Play",
+  "role_play_intro": "Play as your favorite character"
 }

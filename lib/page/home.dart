@@ -150,8 +150,8 @@ class PageHome extends ConsumerWidget {
                             iconData: Icons.translate,
                           ),
                           buildButton(
-                            title: "角色扮演",
-                            subtitle: "扮演你喜欢的角色",
+                            title: S.current.role_play,
+                            subtitle: S.current.role_play_intro,
                             onTap: () {
                               push(PageKey.rolePlaying);
                             },

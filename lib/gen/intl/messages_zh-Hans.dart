@@ -396,6 +396,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "reselect_model": MessageLookupByLibrary.simpleMessage("重新选择模型"),
     "reset": MessageLookupByLibrary.simpleMessage("重置"),
     "resume": MessageLookupByLibrary.simpleMessage("恢复"),
+    "role_play": MessageLookupByLibrary.simpleMessage("角色扮演"),
+    "role_play_intro": MessageLookupByLibrary.simpleMessage("扮演你喜欢的角色"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),

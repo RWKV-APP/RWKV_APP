@@ -374,5 +374,7 @@
   "hint_system_prompt": "例子: System: 你是秦始皇，使用文言文，以居高临下的态度与人沟通.",
   "load_": "加载",
   "loaded": "已加载",
-  "state_list": "State 列表"
+  "state_list": "State 列表",
+  "role_play": "角色扮演",
+  "role_play_intro": "扮演你喜欢的角色"
 }

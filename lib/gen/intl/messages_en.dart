@@ -521,6 +521,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "reselect_model": MessageLookupByLibrary.simpleMessage("Reselect model"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
+    "role_play": MessageLookupByLibrary.simpleMessage("Role Play"),
+    "role_play_intro": MessageLookupByLibrary.simpleMessage(
+      "Play as your favorite character",
+    ),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
