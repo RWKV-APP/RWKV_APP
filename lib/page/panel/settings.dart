@@ -276,6 +276,12 @@ class Settings extends ConsumerWidget {
                 },
                 showArrow: false,
               ),
+            if (isChat)
+              FormItem(
+                icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
+                title: "性能测试",
+                onTap: () => push(PageKey.benchmark),
+              ),
             FormItem(
               title: s.github_repository,
               icon: Icon(Icons.code, color: qb.q(.667), size: 16),
