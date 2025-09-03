@@ -50,9 +50,7 @@ class _Chat {
 
   late final batchInference = qs(false);
   late final batchCount = qs<int>(2);
-
-  // 70% 屏幕宽度
-  late final batchWV = qs(70);
+  late final batchVW = qs(70);
 }
 
 /// Public methods
@@ -354,7 +352,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    P.rwkv.sendMessages(history);
+    P.rwkv.sendMessages(history, batchSize: batchCount.q);
 
     _checkSensitive(message);
   }
@@ -377,7 +375,8 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
-    P.rwkv.sendMessages(_history());
+    // TODO: support batch inference
+    P.rwkv.sendMessages(_history(), batchSize: batchCount.q);
     _updateMessageById(
       id: id,
       changing: true,
@@ -679,11 +678,18 @@ extension _$Chat on _Chat {
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
-        if (completionMode.q) {
-          return;
-        }
+        if (completionMode.q) return;
         _sensitiveThrottler.call(() {
           _checkSensitive(res.responseBufferContent);
+        });
+        break;
+
+      case from_rwkv.ResponseBatchBufferContent res:
+        final responseBufferContent = res.responseBufferContent.join(Config.batchMarker);
+        receivedTokens.q = responseBufferContent;
+        if (completionMode.q) return;
+        _sensitiveThrottler.call(() {
+          _checkSensitive(responseBufferContent);
         });
         break;
 

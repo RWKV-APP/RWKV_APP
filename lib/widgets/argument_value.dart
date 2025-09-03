@@ -26,7 +26,7 @@ class ArgumentValue extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final value = switch (argument) {
       Argument.batchCount => ref.watch(P.chat.batchCount),
-      Argument.batchWV => ref.watch(P.chat.batchWV),
+      Argument.batchVW => ref.watch(P.chat.batchVW),
       _ => ref.watch(P.rwkv.arguments(argument)),
     };
     if (!argument.show) return const SizedBox.shrink();

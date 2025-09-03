@@ -9,7 +9,7 @@ enum Argument {
   penaltyDecay,
   maxLength,
   batchCount,
-  batchWV;
+  batchVW;
 
   bool get configureable => switch (this) {
     temperature => true,
@@ -20,7 +20,7 @@ enum Argument {
     penaltyDecay => true,
     maxLength => true,
     batchCount => true,
-    batchWV => true,
+    batchVW => true,
   };
 
   bool get show => switch (this) {
@@ -32,7 +32,7 @@ enum Argument {
     penaltyDecay => true,
     maxLength => true,
     batchCount => true,
-    batchWV => true,
+    batchVW => true,
   };
 
   int get fixedDecimals => switch (this) {
@@ -44,7 +44,7 @@ enum Argument {
     penaltyDecay => 3,
     maxLength => 0,
     batchCount => 0,
-    batchWV => 0,
+    batchVW => 0,
   };
 
   double? get step => switch (this) {
@@ -56,7 +56,7 @@ enum Argument {
     penaltyDecay => .001,
     maxLength => 100,
     batchCount => 1,
-    batchWV => 5,
+    batchVW => 5,
   };
 
   double get min => switch (this) {
@@ -68,7 +68,7 @@ enum Argument {
     penaltyDecay => .99,
     maxLength => 100,
     batchCount => 2,
-    batchWV => 40,
+    batchVW => 40,
   };
 
   double get max => switch (this) {
@@ -80,7 +80,7 @@ enum Argument {
     penaltyDecay => .999,
     maxLength => 10000,
     batchCount => 20,
-    batchWV => 80,
+    batchVW => 80,
   };
 
   double get reasonDefaults => switch (this) {
@@ -92,7 +92,7 @@ enum Argument {
     penaltyDecay => .996,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 4000,
     batchCount => 4,
-    batchWV => 70,
+    batchVW => 70,
   };
 
   double get defaults => switch (this) {
@@ -104,7 +104,7 @@ enum Argument {
     penaltyDecay => .996,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 2000,
     batchCount => 4,
-    batchWV => 70,
+    batchVW => 70,
   };
 
   bool get enableGaimon => switch (this) {
@@ -116,6 +116,6 @@ enum Argument {
     Argument.penaltyDecay => true,
     Argument.maxLength => false,
     Argument.batchCount => true,
-    Argument.batchWV => true,
+    Argument.batchVW => true,
   };
 }

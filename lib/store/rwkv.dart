@@ -589,6 +589,7 @@ extension $RWKV on _RWKV {
     List<String> messages, {
     double getIsGeneratingRate = .5,
     double getResponseBufferContentRate = .5,
+    int batchSize = 1,
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -599,14 +600,21 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-    send(to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag));
 
-    if (_getTokensTimer != null) {
-      _getTokensTimer!.cancel();
-    }
+    final isBatch = batchSize > 1;
+
+    final startInferenceCalling = isBatch
+        ? to_rwkv.ChatBatchAsync(messages, reasoning: _thinkingMode.q.hasThinkTag, batchSize: batchSize) //
+        : to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag);
+    send(startInferenceCalling);
+
+    if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferContent(messages));
+      final getResponseCalling = isBatch
+          ? to_rwkv.GetBatchResponseBufferContent(messages) //
+          : to_rwkv.GetResponseBufferContent(messages);
+      send(getResponseCalling);
       if (HF.randomBool(truePercentage: getIsGeneratingRate)) send(to_rwkv.GetIsGenerating());
       if (HF.randomBool(truePercentage: getResponseBufferContentRate)) send(to_rwkv.GetPrefillAndDecodeSpeed());
     });

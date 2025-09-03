@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/config.dart';
 import 'package:zone/model/message_type.dart';
 import 'package:zone/model/ref_info.dart';
 
@@ -274,11 +275,9 @@ extension MessageX on Message {
   }
 }
 
-const _batchMarker = "V9m!T7#q2fH@x1Lz*8YwK0^g4";
-
 extension BatchMessage on Message {
   (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) get batchInfo {
-    final decodedInfo = content.split(_batchMarker);
+    final decodedInfo = content.split(Config.batchMarker);
     if (decodedInfo.length == 1) {
       return ([content], false, 0, 0);
     }

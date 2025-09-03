@@ -55,7 +55,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     if (argument.step != null) rawNewValue = (rawNewValue / argument.step!).round() * argument.step!.toInt();
     final currentValue = switch (argument) {
       Argument.batchCount => P.chat.batchCount.q,
-      Argument.batchWV => P.chat.batchWV.q,
+      Argument.batchVW => P.chat.batchVW.q,
       _ => 0,
     };
     if (currentValue == rawNewValue) return;
@@ -63,8 +63,8 @@ class BatchSettingsPanel extends ConsumerWidget {
     switch (argument) {
       case Argument.batchCount:
         P.chat.batchCount.q = rawNewValue;
-      case Argument.batchWV:
-        P.chat.batchWV.q = rawNewValue;
+      case Argument.batchVW:
+        P.chat.batchVW.q = rawNewValue;
       default:
         throw UnimplementedError();
     }
@@ -77,7 +77,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     final batchCount = ref.watch(P.chat.batchCount);
     final customTheme = ref.watch(P.app.customTheme);
     final batchInference = ref.watch(P.chat.batchInference);
-    final batchWV = ref.watch(P.chat.batchWV);
+    final batchVW = ref.watch(P.chat.batchVW);
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(16),
@@ -157,10 +157,10 @@ class BatchSettingsPanel extends ConsumerWidget {
                   isSectionEnd: true,
                   title: s.batch_inference_width,
                   subtitle: s.batch_inference_width_detail,
-                  info: batchWV.toString() + "% " + s.screen_width,
+                  info: batchVW.toString() + "% " + s.screen_width,
                   onTap: () {},
                   bottom: ArgumentValue(
-                    Argument.batchWV,
+                    Argument.batchVW,
                     _onChanged,
                     showTitle: false,
                     showValue: false,
