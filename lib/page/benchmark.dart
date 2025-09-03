@@ -134,6 +134,11 @@ class _TestState extends ConsumerState<_Test> {
         });
       }
     });
+    ref.listen(P.chat.receivedTokens, (p, r) {
+      if(r.length > 1000) {
+        P.rwkv.stop();
+      }
+    });
   }
 
   @override
