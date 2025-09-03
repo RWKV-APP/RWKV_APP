@@ -93,6 +93,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto_detect": MessageLookupByLibrary.simpleMessage("Auto Detect"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
     "beginner": MessageLookupByLibrary.simpleMessage("Beginner"),
+    "benchmark": MessageLookupByLibrary.simpleMessage("Benchmark"),
+    "benchmark_result": MessageLookupByLibrary.simpleMessage(
+      "Benchmark Result",
+    ),
     "black": MessageLookupByLibrary.simpleMessage("Black"),
     "black_score": MessageLookupByLibrary.simpleMessage("Black Score"),
     "black_wins": MessageLookupByLibrary.simpleMessage("Black Wins!"),
@@ -359,6 +363,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "license": MessageLookupByLibrary.simpleMessage("Open Source License"),
     "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
+    "load_": MessageLookupByLibrary.simpleMessage("Load"),
+    "loaded": MessageLookupByLibrary.simpleMessage("Loaded"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
     "memory_used": m6,
@@ -433,6 +439,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "output": MessageLookupByLibrary.simpleMessage("Output"),
     "overseas": MessageLookupByLibrary.simpleMessage(""),
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
+    "performance_test": MessageLookupByLibrary.simpleMessage(
+      "Performance Test",
+    ),
     "players": MessageLookupByLibrary.simpleMessage("Players"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "Playing partially generated audio",
@@ -518,6 +527,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "reselect_model": MessageLookupByLibrary.simpleMessage("Reselect model"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+    "result": MessageLookupByLibrary.simpleMessage("Result"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
@@ -537,6 +547,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select from Library",
     ),
     "select_image": MessageLookupByLibrary.simpleMessage("Select Image"),
+    "select_model": MessageLookupByLibrary.simpleMessage("Select Model"),
     "select_new_image": MessageLookupByLibrary.simpleMessage(
       "Select New Image",
     ),
@@ -559,6 +570,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("Small (90%)"),
     "speed": MessageLookupByLibrary.simpleMessage("Download Speed:"),
+    "start": MessageLookupByLibrary.simpleMessage("Start"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage(
       "Start a New Chat",
     ),
@@ -571,6 +583,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_service_and_open_browser": MessageLookupByLibrary.simpleMessage(
       "Start the service and open a supported browser page.",
     ),
+    "start_testing": MessageLookupByLibrary.simpleMessage("Start Testing"),
     "start_to_chat": MessageLookupByLibrary.simpleMessage("Start to chat"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage(
       "Start Inference",
@@ -602,6 +615,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "Technical Research Group",
     ),
+    "test_result": MessageLookupByLibrary.simpleMessage("Test Result"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage(
       "Text completion mode",
     ),

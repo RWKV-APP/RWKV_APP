@@ -279,7 +279,7 @@ class Settings extends ConsumerWidget {
             if (isChat)
               FormItem(
                 icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
-                title: "性能测试",
+                title: S.current.performance_test,
                 onTap: () => push(PageKey.benchmark),
               ),
             FormItem(

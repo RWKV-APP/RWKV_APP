@@ -2487,6 +2487,56 @@ class S {
       args: [],
     );
   }
+
+  /// `加载`
+  String get load_ {
+    return Intl.message('加载', name: 'load_', desc: '', args: []);
+  }
+
+  /// `已加载`
+  String get loaded {
+    return Intl.message('已加载', name: 'loaded', desc: '', args: []);
+  }
+
+  /// `基准测试`
+  String get benchmark {
+    return Intl.message('基准测试', name: 'benchmark', desc: '', args: []);
+  }
+
+  /// `选择模型`
+  String get select_model {
+    return Intl.message('选择模型', name: 'select_model', desc: '', args: []);
+  }
+
+  /// `开始`
+  String get start {
+    return Intl.message('开始', name: 'start', desc: '', args: []);
+  }
+
+  /// `开始测试`
+  String get start_testing {
+    return Intl.message('开始测试', name: 'start_testing', desc: '', args: []);
+  }
+
+  /// `结果`
+  String get result {
+    return Intl.message('结果', name: 'result', desc: '', args: []);
+  }
+
+  /// `测试结果`
+  String get test_result {
+    return Intl.message('测试结果', name: 'test_result', desc: '', args: []);
+  }
+
+  /// `基准测试结果`
+  String get benchmark_result {
+    return Intl.message('基准测试结果', name: 'benchmark_result', desc: '', args: []);
+  }
+
+  /// `性能测试`
+  String get performance_test {
+    return Intl.message('性能测试', name: 'performance_test', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

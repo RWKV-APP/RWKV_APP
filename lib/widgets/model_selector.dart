@@ -179,6 +179,10 @@ class _ModelList extends ConsumerWidget {
       availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
     }
 
+    if (pageKey == PageKey.benchmark) {
+      availableModels = availableModels.whereNot((e) => e.tags.contains('DeepEmbedding')).toSet();
+    }
+
     final List<Widget> items = switch (preferredDemoType) {
       DemoType.world =>
         WorldType.values
@@ -205,7 +209,10 @@ class _ModelList extends ConsumerWidget {
 
               return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
             })
-            .map((fileInfo) => ModelItem(fileInfo, userType.isGreaterThan(UserType.user)))
+            .map(
+              (fileInfo) =>
+                  ModelItem(fileInfo, userType.isGreaterThan(UserType.user), loadButtonTextShowLoad: pageKey == PageKey.benchmark),
+            )
             .toList(),
       DemoType.fifthteenPuzzle || DemoType.othello => [],
     };
