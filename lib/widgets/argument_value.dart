@@ -24,7 +24,6 @@ class ArgumentValue extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    qq;
     final value = switch (argument) {
       Argument.batchCount => ref.watch(P.chat.batchCount),
       Argument.batchWV => ref.watch(P.chat.batchWV),

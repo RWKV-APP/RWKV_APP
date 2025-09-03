@@ -443,16 +443,40 @@ class _BatchButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final textScaleFactor = MediaQuery.textScalerOf(context);
+    final height = textScaleFactor.scale(14) + 20;
+    final surfaceContainer = theme.colorScheme.surfaceContainer;
+    final batchInference = ref.watch(P.chat.batchInference);
+
+    final primary = theme.colorScheme.primary;
+    final s = S.of(context);
+
+    final bgColor = batchInference ? primary : surfaceContainer;
+    final textColor = batchInference ? kW : primary;
+    final batchCount = ref.watch(P.chat.batchCount);
+    final borderColor = batchInference ? primary : primary.q(.1);
+
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
         child: Container(
+          height: height,
           decoration: BoxDecoration(
-            color: color,
-            borderRadius: 4.r,
+            color: bgColor,
+            borderRadius: 60.r,
+            border: Border.all(color: borderColor),
           ),
-          child: T("Batch", s: TS(c: color)),
+          padding: EI.o(h: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              T(s.batch_inference, s: TS(c: textColor)),
+              if (batchInference) 2.w,
+              if (batchInference) T("×" + batchCount.toString(), s: TS(c: textColor)),
+            ],
+          ),
         ),
       ),
     );

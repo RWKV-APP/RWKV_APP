@@ -27,9 +27,9 @@ class BatchSettingsPanel extends ConsumerWidget {
       isScrollControlled: true,
       builder: (context) {
         return DraggableScrollableSheet(
-          initialChildSize: .75,
-          maxChildSize: .85,
-          minChildSize: .5,
+          initialChildSize: .6,
+          maxChildSize: .65,
+          minChildSize: .45,
           expand: false,
           snap: false,
           builder: (context, scrollController) {
