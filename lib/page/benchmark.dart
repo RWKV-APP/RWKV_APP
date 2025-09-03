@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $RWKV;
 import 'package:zone/widgets/model_selector.dart';
 
@@ -52,6 +53,8 @@ class _TestState extends ConsumerState<_Test> {
   int numberOfCore = -1;
   Map<String, String> deviceInfo = {};
 
+  double oldMaxLength = 4000;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +64,9 @@ class _TestState extends ConsumerState<_Test> {
       setState(() {
         deviceInfo = di;
       });
+
+      oldMaxLength = P.rwkv.arguments(Argument.maxLength).q;
+      P.rwkv.syncMaxLength(maxLength: 200);
     });
   }
 
@@ -71,7 +77,6 @@ class _TestState extends ConsumerState<_Test> {
         generating = false;
       });
     } else {
-      P.rwkv.syncMaxLength(maxLength: 400);
       setState(() {
         bw = 0;
         flops = 0;
@@ -87,8 +92,10 @@ class _TestState extends ConsumerState<_Test> {
   @override
   void dispose() {
     super.dispose();
-    P.chat.stopCompletion();
-    P.rwkv.syncMaxLength(maxLength: 2000);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      P.chat.stopCompletion();
+      P.rwkv.syncMaxLength(maxLength: oldMaxLength);
+    });
   }
 
   Future<Map<String, String>> getDeviceInfo() async {
