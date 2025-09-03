@@ -13,6 +13,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/store/p.dart';
 import 'package:zone/store/web_search_mode.dart';
+import 'package:zone/widgets/chat/batch_settings_panel.dart';
 import 'package:zone/widgets/performance_info.dart';
 
 class BottomInteractions extends ConsumerWidget {
@@ -50,6 +51,7 @@ class _Interactions extends ConsumerWidget {
         if (features.webSearch && demoType == DemoType.chat) const _WebSearchModeButton(),
         if (demoType == DemoType.chat) const _ThinkingModeButton(),
         if (demoType == DemoType.chat && currentLangIsZh) const _SecondaryOptionsButton(),
+        if (demoType == DemoType.chat) const _BatchButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
     );
@@ -68,9 +70,9 @@ class _WebSearchModeButton extends ConsumerWidget {
     final s = S.of(context);
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    final webSearch = ref.watch(P.chat.webSearch);
+    final webSearchMode = ref.watch(P.chat.webSearchMode);
 
-    final enabled = webSearch != WebSearchMode.off;
+    final enabled = webSearchMode != WebSearchMode.off;
     final color = enabled ? primary : theme.colorScheme.surfaceContainer;
     final textColor = enabled ? theme.colorScheme.onPrimary : Colors.grey;
 
@@ -92,7 +94,7 @@ class _WebSearchModeButton extends ConsumerWidget {
               Icon(Icons.travel_explore, color: textColor, size: 16),
               2.w,
               T(
-                webSearch == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
+                webSearchMode == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
                 s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
               ),
               4.w,
@@ -109,7 +111,7 @@ class _WebSearchModeButton extends ConsumerWidget {
                 onSelected: (mode) {
                   P.chat.onSwitchWebSearchMode(mode);
                 },
-                initialValue: webSearch,
+                initialValue: webSearchMode,
                 popUpAnimationStyle: AnimationStyle(
                   curve: Curves.linear,
                   duration: 250.ms,
@@ -425,6 +427,32 @@ class _MessageButton extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BatchButton extends ConsumerWidget {
+  const _BatchButton();
+
+  Future<void> _onTap() async {
+    qq;
+    await BatchSettingsPanel.show();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final color = Theme.of(context).colorScheme.primary;
+    return IntrinsicWidth(
+      child: GestureDetector(
+        onTap: _onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: 4.r,
+          ),
+          child: T("Batch", s: TS(c: color)),
         ),
       ),
     );

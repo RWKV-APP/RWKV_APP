@@ -44,9 +44,15 @@ class _Chat {
 
   late final completionMode = qs(false);
 
-  late final webSearch = qs(WebSearchMode.off);
+  late final webSearchMode = qs(WebSearchMode.off);
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
+
+  late final batchInference = qs(false);
+  late final batchCount = qs<int>(2);
+
+  // 70% 屏幕宽度
+  late final batchWV = qs(70);
 }
 
 /// Public methods
@@ -62,11 +68,11 @@ extension $Chat on _Chat {
       return;
     }
     if (mode != null) {
-      webSearch.q = mode;
+      webSearchMode.q = mode;
       return;
     }
-    final enabled = webSearch.q != WebSearchMode.off;
-    webSearch.q = enabled ? WebSearchMode.off : WebSearchMode.search;
+    final enabled = webSearchMode.q != WebSearchMode.off;
+    webSearchMode.q = enabled ? WebSearchMode.off : WebSearchMode.search;
   }
 
   Future<void> onSendButtonPressed() async {
@@ -719,11 +725,11 @@ extension _$Chat on _Chat {
     RefInfo ref = RefInfo.empty();
     final isZh = P.preference.currentLangIsZh.q;
 
-    if (webSearch.q != WebSearchMode.off) {
+    if (webSearchMode.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
         final prompt = allMessage.last;
-        final deepSearch = webSearch.q == WebSearchMode.deepSearch;
+        final deepSearch = webSearchMode.q == WebSearchMode.deepSearch;
         _updateMessageById(id: receiveId, reference: ref);
         final resp =
             await _post(
@@ -736,7 +742,7 @@ extension _$Chat on _Chat {
                   },
                 ).timeout(const Duration(seconds: 10))
                 as dynamic;
-        qqq('web search mode: ${webSearch.q}');
+        qqq('web search mode: ${webSearchMode.q}');
         final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
         ref = ref.copyWith(list: refs);
         final searchResult = refs.map((e) => e.summary).join("\n");

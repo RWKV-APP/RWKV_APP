@@ -9,6 +9,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/argument_value.dart';
 
 // TODO: @wangce move it to pages/panel
 class ArgumentsPanel extends ConsumerWidget {
@@ -36,6 +37,26 @@ class ArgumentsPanel extends ConsumerWidget {
   const ArgumentsPanel({super.key, required this.scrollController});
 
   final ScrollController scrollController;
+
+  void _onChanged(Argument argument, double value) {
+    double rawNewValue = double.parse(value.toStringAsFixed(argument.fixedDecimals));
+    if (argument.step != null) {
+      rawNewValue = (rawNewValue / argument.step!).round() * argument.step!;
+    }
+    final currentValue = P.rwkv.arguments(argument).q;
+    if (currentValue == rawNewValue) return;
+    if (argument.enableGaimon) P.app.hapticLight();
+    P.rwkv.arguments(argument).q = rawNewValue;
+    if (argument == Argument.maxLength) {
+      P.rwkv.argumentUpdatingDebouncer.call(() {
+        P.rwkv.syncMaxLength();
+      });
+    } else {
+      P.rwkv.argumentUpdatingDebouncer.call(() {
+        P.rwkv.syncSamplerParams();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,16 +114,16 @@ class ArgumentsPanel extends ConsumerWidget {
               child: ListView(
                 controller: scrollController,
                 padding: EI.o(b: paddingBottom),
-                children: const [
+                children: [
                   _SamplerOptions(),
-                  _Value(Argument.temperature),
-                  _Value(Argument.topK),
-                  _Value(Argument.topP),
-                  _Value(Argument.presencePenalty),
-                  _Value(Argument.frequencyPenalty),
-                  _Value(Argument.penaltyDecay),
+                  ArgumentValue(Argument.temperature, _onChanged),
+                  ArgumentValue(Argument.topK, _onChanged),
+                  ArgumentValue(Argument.topP, _onChanged),
+                  ArgumentValue(Argument.presencePenalty, _onChanged),
+                  ArgumentValue(Argument.frequencyPenalty, _onChanged),
+                  ArgumentValue(Argument.penaltyDecay, _onChanged),
                   _CompletionOptions(),
-                  _Value(Argument.maxLength),
+                  ArgumentValue(Argument.maxLength, _onChanged),
                 ],
               ),
             ),
@@ -171,100 +192,6 @@ class _CompletionOptions extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-extension _ArgumentGaimon on Argument {
-  bool get enableGaimon => switch (this) {
-    Argument.temperature => true,
-    Argument.topK => true,
-    Argument.topP => true,
-    Argument.presencePenalty => true,
-    Argument.frequencyPenalty => true,
-    Argument.penaltyDecay => true,
-    Argument.maxLength => false,
-  };
-}
-
-class _Value extends ConsumerWidget {
-  final Argument argument;
-
-  const _Value(this.argument);
-
-  void _onChanged(double value) {
-    double rawNewValue = double.parse(value.toStringAsFixed(argument.fixedDecimals));
-    if (argument.step != null) {
-      rawNewValue = (rawNewValue / argument.step!).round() * argument.step!;
-    }
-    final currentValue = P.rwkv.arguments(argument).q;
-    if (currentValue == rawNewValue) return;
-    if (argument.enableGaimon) P.app.hapticLight();
-    P.rwkv.arguments(argument).q = rawNewValue;
-    if (argument == Argument.maxLength) {
-      P.rwkv.argumentUpdatingDebouncer.call(() {
-        P.rwkv.syncMaxLength();
-      });
-    } else {
-      P.rwkv.argumentUpdatingDebouncer.call(() {
-        P.rwkv.syncSamplerParams();
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final value = ref.watch(P.rwkv.arguments(argument));
-    if (!argument.show) return const SizedBox.shrink();
-    final qb = ref.watch(P.app.qb);
-    return Column(
-      crossAxisAlignment: CAA.stretch,
-      children: [
-        12.h,
-        Row(
-          children: [
-            12.w,
-            Expanded(
-              child: T(
-                argument.name.codeToName,
-                s: const TS(
-                  s: 14,
-                  w: FontWeight.w500,
-                ),
-              ),
-            ),
-            T(value.toStringAsFixed(argument.fixedDecimals), s: const TS(s: 14, w: FontWeight.w600)),
-            12.w,
-          ],
-        ),
-        4.h,
-        Row(
-          children: [
-            12.w,
-            T(
-              argument.min.toStringAsFixed(argument.fixedDecimals),
-              s: TS(s: 12, c: qb.q(.5)),
-            ),
-            14.w,
-            Expanded(
-              child: Slider(
-                padding: EI.zero,
-                value: value,
-                min: argument.min,
-                max: argument.max,
-                onChanged: argument.configureable ? _onChanged : null,
-              ),
-            ),
-            14.w,
-            T(
-              argument.max.toStringAsFixed(argument.fixedDecimals),
-              s: TS(s: 12, c: qb.q(.5)),
-            ),
-            12.w,
-          ],
-        ),
-        12.h,
-      ],
     );
   }
 }

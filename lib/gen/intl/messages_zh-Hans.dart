@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_Hans';
 
+  static String m12(count) => "每次推理将生成 ${count} 条消息";
+
   static String m0(demoName) => "欢迎探索 ${demoName}";
 
   static String m1(maxLength) => "会话名称不能超过 ${maxLength} 个字符";
@@ -77,6 +79,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "auto_detect": MessageLookupByLibrary.simpleMessage("自动检测"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("返回聊天"),
+    "batch_inference": MessageLookupByLibrary.simpleMessage("批量推理"),
+    "batch_inference_count": MessageLookupByLibrary.simpleMessage("批量推理数量"),
+    "batch_inference_count_detail": m12,
+    "batch_inference_settings": MessageLookupByLibrary.simpleMessage("批量推理设置"),
+    "batch_inference_width": MessageLookupByLibrary.simpleMessage("批量推理宽度"),
+    "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
+      "批量推理每条消息宽度",
+    ),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "black": MessageLookupByLibrary.simpleMessage("黑方"),
     "black_score": MessageLookupByLibrary.simpleMessage("黑方得分"),
@@ -399,6 +409,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("扫描二维码"),
+    "screen_width": MessageLookupByLibrary.simpleMessage("屏幕宽度"),
     "search": MessageLookupByLibrary.simpleMessage("搜索"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("搜索宽度"),
     "search_depth": MessageLookupByLibrary.simpleMessage("搜索深度"),

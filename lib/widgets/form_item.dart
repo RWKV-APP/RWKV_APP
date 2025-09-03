@@ -18,6 +18,8 @@ class FormItem extends ConsumerWidget {
 
   final Widget? trailing;
 
+  final Widget? bottom;
+
   const FormItem({
     super.key,
     required this.title,
@@ -32,13 +34,13 @@ class FormItem extends ConsumerWidget {
     this.titleColor,
     this.subtitle,
     this.trailing,
+    this.bottom,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final customTheme = ref.watch(P.app.customTheme);
     final qb = ref.watch(P.app.qb);
-    final screenWidth = ref.watch(P.app.screenWidth);
 
     return GestureDetector(
       onTap: onTap,
@@ -61,45 +63,50 @@ class FormItem extends ConsumerWidget {
           ),
         ),
         padding: const EI.o(t: 12, b: 12, r: 8, l: 8),
-        child: Row(
+        child: Column(
           children: [
-            if (icon != null) icon!,
-            if (icon != null) 8.w,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CAA.start,
-                children: [
-                  T(
-                    title,
-                    textAlign: titleTextAlign,
-                    s: TS(w: FontWeight.w500, s: 16, c: titleColor),
-                  ),
-                  if (subtitle != null)
-                    Opacity(
-                      opacity: 0.5,
-                      child: T(
-                        subtitle!,
-                        s: const TS(w: FontWeight.w500, s: 12),
+            Row(
+              children: [
+                if (icon != null) icon!,
+                if (icon != null) 8.w,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CAA.start,
+                    children: [
+                      T(
+                        title,
+                        textAlign: titleTextAlign,
+                        s: TS(w: FontWeight.w500, s: 16, c: titleColor),
                       ),
-                    ),
-                ],
-              ),
-            ),
-            if (info != null)
-              Expanded(
-                child: T(
-                  info,
-                  s: const TS(w: FontWeight.w500, s: 12),
-                  textAlign: TextAlign.right,
+                      if (subtitle != null)
+                        Opacity(
+                          opacity: 0.5,
+                          child: T(
+                            subtitle!,
+                            s: const TS(w: FontWeight.w500, s: 12),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            if (!showArrow && info != null) 4.w,
-            ?trailing,
-            if (showArrow) 8.w,
-            if (showArrow)
-              const Icon(
-                Icons.chevron_right,
-              ),
+                if (info != null)
+                  Expanded(
+                    child: T(
+                      info,
+                      s: const TS(w: FontWeight.w500, s: 12),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                if (!showArrow && info != null) 4.w,
+                ?trailing,
+                if (showArrow) 8.w,
+                if (showArrow)
+                  const Icon(
+                    Icons.chevron_right,
+                  ),
+              ],
+            ),
+            if (bottom != null) bottom!,
           ],
         ),
       ),

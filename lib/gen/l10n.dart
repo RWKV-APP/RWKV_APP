@@ -54,6 +54,66 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `屏幕宽度`
+  String get screen_width {
+    return Intl.message('屏幕宽度', name: 'screen_width', desc: '', args: []);
+  }
+
+  /// `批量推理`
+  String get batch_inference {
+    return Intl.message('批量推理', name: 'batch_inference', desc: '', args: []);
+  }
+
+  /// `批量推理设置`
+  String get batch_inference_settings {
+    return Intl.message(
+      '批量推理设置',
+      name: 'batch_inference_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `批量推理数量`
+  String get batch_inference_count {
+    return Intl.message(
+      '批量推理数量',
+      name: 'batch_inference_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每次推理将生成 {count} 条消息`
+  String batch_inference_count_detail(Object count) {
+    return Intl.message(
+      '每次推理将生成 $count 条消息',
+      name: 'batch_inference_count_detail',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `批量推理宽度`
+  String get batch_inference_width {
+    return Intl.message(
+      '批量推理宽度',
+      name: 'batch_inference_width',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `批量推理每条消息宽度`
+  String get batch_inference_width_detail {
+    return Intl.message(
+      '批量推理每条消息宽度',
+      name: 'batch_inference_width_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `推理: 关`
   String get thinking_mode_off {
     return Intl.message('推理: 关', name: 'thinking_mode_off', desc: '', args: []);
