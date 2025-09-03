@@ -352,7 +352,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    P.rwkv.sendMessages(history, batchSize: batchCount.q);
+    P.rwkv.sendMessages(history, batchSize: batchInference.q ? batchCount.q : 1);
 
     _checkSensitive(message);
   }
@@ -376,7 +376,7 @@ extension $Chat on _Chat {
     qq;
     if (withHaptic) P.app.hapticLight();
     // TODO: support batch inference
-    P.rwkv.sendMessages(_history(), batchSize: batchCount.q);
+    P.rwkv.sendMessages(_history(), batchSize: batchInference.q ? batchCount.q : 1);
     _updateMessageById(
       id: id,
       changing: true,
