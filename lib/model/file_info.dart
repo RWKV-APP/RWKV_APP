@@ -64,6 +64,8 @@ class FileInfo extends Equatable {
   /// q4_0, q4_1, q4_2, q4_3, q4_4, q5_0, q5_1, q5_2, q5_3, q5_4, q8_0, q8_1, q8_2, q8_3, q8_4, ...
   final String? quantization;
 
+  final String? updatedAt;
+
   /// e.g.
   ///
   /// ["encoder", ...]
@@ -89,6 +91,7 @@ class FileInfo extends Equatable {
     required this.sha256,
     required this.modelSize,
     required this.quantization,
+    required this.updatedAt,
     required this.tags,
     required this.socLimitations,
     required this.unsupportedSocBrand,
@@ -116,6 +119,7 @@ class FileInfo extends Equatable {
       sha256: json['sha256'] as String?,
       modelSize: json['modelSize'] as double?,
       quantization: json['quantization'] as String?,
+      updatedAt: json['updatedAt'] as String?,
       tags: HF.list(json['tags'] ?? []).map((e) => e.toString()).toList(),
       socLimitations: socLimitations,
       unsupportedSocBrand: unsupportedSocBrand,
@@ -188,9 +192,12 @@ class FileInfo extends Equatable {
         final y = m.group(1)!;
         final mo = m.group(2)!;
         final d = m.group(3)!;
-        return '$y-$mo-$d';
+        return '$y$mo$d';
       }
     }
+
+    if (updatedAt != null) return updatedAt;
+
     return null;
   }
 
@@ -213,6 +220,7 @@ FileInfo(
   sha256: $sha256,
   modelSize: $modelSize,
   quantization: $quantization,
+  updatedAt: $updatedAt,
   tags: $tags,
   socLimitations: $socLimitations,
   unsupportedSocBrand: $unsupportedSocBrand,

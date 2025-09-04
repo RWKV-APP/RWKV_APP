@@ -406,6 +406,7 @@ class _Tags extends ConsumerWidget {
       children: [
         ...tags.map((tag) {
           final showHighlight = _highlightTags.contains(tag);
+          if (tag == "DeepEmbedding") tag = "DE";
           return Container(
             decoration: BoxDecoration(
               borderRadius: 4.r,
