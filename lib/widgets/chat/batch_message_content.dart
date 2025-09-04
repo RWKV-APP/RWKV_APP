@@ -28,20 +28,27 @@ class BatchMessageContent extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var i = 0; i < batchCount; i++)
-            Container(
-              constraints: BoxConstraints(
-                maxWidth: screenWidth * (batchVW / 100),
-                minWidth: screenWidth * (batchVW / 100),
-              ),
-              padding: const EI.o(l: 8, r: 8),
-              decoration: BoxDecoration(
-                color: kC,
-              ),
-              child: _MarkdownBody(data: batch[i]),
-            ).debug,
-        ],
+        children:
+            [
+              4.w,
+              for (var i = 0; i < batchCount; i++)
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth * (batchVW / 100),
+                    minWidth: screenWidth * (batchVW / 100),
+                  ),
+                  padding: const EI.a(8),
+                  decoration: BoxDecoration(
+                    color: kC,
+                    border: Border.all(color: qb.q(.1)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: _MarkdownBody(data: batch[i]),
+                ),
+              4.w,
+            ].widgetJoin((index) {
+              return 8.w;
+            }),
       ),
     );
   }

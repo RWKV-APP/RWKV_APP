@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/config.dart';
+import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
@@ -21,6 +23,42 @@ class BotMessageBottom extends ConsumerWidget {
   final DemoType? preferredDemoType;
 
   const BotMessageBottom(this.msg, this.index, {super.key, this.preferredDemoType});
+
+  void _onSharePressed() {
+    if (P.chat.receivingTokens.q) {
+      P.chat.onStopButtonPressed();
+    }
+
+    final list = P.msg.list.q;
+    final index = list.indexOf(msg);
+    if (index > 0) {
+      P.chat.sharingSelectedMsgIds.q = {list[index - 1].id, msg.id};
+    }
+    P.chat.isSharing.q = true;
+  }
+
+  void _onResumePressed() {
+    P.chat.resumeMessageById(id: msg.id);
+  }
+
+  void _onBotEditPressed() async {
+    await P.chat.onTapEditInBotMessageBubble(index: index);
+  }
+
+  void _onRegeneratePressed() async {
+    await P.chat.onRegeneratePressed(index: index);
+  }
+
+  void _onCopyPressed() {
+    Alert.success(S.current.chat_copied_to_clipboard);
+    final isBatch = getIsBatch(msg.content);
+    String message = msg.content;
+    if (isBatch) {
+      message = message.replaceAll(Config.batchMarker, "\n\n");
+      message = message.substring(0, message.length - 3);
+    }
+    Clipboard.setData(ClipboardData(text: message));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,8 +78,8 @@ class BotMessageBottom extends ConsumerWidget {
 
     final worldType = ref.watch(P.rwkv.currentWorldType);
 
-    bool showBotEditButton = true;
-    bool showBotCopyButton = true;
+    bool showEditButton = true;
+    bool showCopyButton = true;
     bool showBotRegenerateButton = true;
     bool showResumeButton = true;
     bool showShareButton = false;
@@ -50,14 +88,14 @@ class BotMessageBottom extends ConsumerWidget {
       case null:
         break;
       default:
-        showBotEditButton = false;
-        showBotCopyButton = false;
+        showEditButton = false;
+        showCopyButton = false;
     }
 
     switch (demoType) {
       case DemoType.tts:
-        showBotEditButton = false;
-        showBotCopyButton = false;
+        showEditButton = false;
+        showCopyButton = false;
         showBotRegenerateButton = false;
         showResumeButton = false;
         break;
@@ -70,8 +108,8 @@ class BotMessageBottom extends ConsumerWidget {
 
     if (msg.isSensitive || selectMessageMode) {
       showResumeButton = false;
-      showBotCopyButton = false;
-      showBotEditButton = false;
+      showCopyButton = false;
+      showEditButton = false;
       showShareButton = false;
     }
     if (selectMessageMode) {
@@ -88,9 +126,16 @@ class BotMessageBottom extends ConsumerWidget {
       _ => const SizedBox.shrink(),
     };
 
+    final isBatch = getIsBatch(msg.content);
+
+    if (isBatch) {
+      showEditButton = false;
+    }
+
     return Row(
       mainAxisAlignment: MAA.start,
       children: [
+        if (isBatch) 12.w,
         if (changing)
           Padding(
             padding: const EI.o(v: 12, r: 4),
@@ -108,7 +153,7 @@ class BotMessageBottom extends ConsumerWidget {
               ),
             ),
           ),
-        if (showBotCopyButton)
+        if (showCopyButton)
           GestureDetector(
             onTap: _onCopyPressed,
             child: Padding(
@@ -132,7 +177,7 @@ class BotMessageBottom extends ConsumerWidget {
               ),
             ),
           ),
-        if (showBotEditButton)
+        if (showEditButton)
           GestureDetector(
             onTap: _onBotEditPressed,
             child: Padding(
@@ -192,35 +237,5 @@ class BotMessageBottom extends ConsumerWidget {
           ),
       ],
     );
-  }
-
-  void _onSharePressed() {
-    if (P.chat.receivingTokens.q) {
-      P.chat.onStopButtonPressed();
-    }
-
-    final list = P.msg.list.q;
-    final index = list.indexOf(msg);
-    if (index > 0) {
-      P.chat.sharingSelectedMsgIds.q = {list[index - 1].id, msg.id};
-    }
-    P.chat.isSharing.q = true;
-  }
-
-  void _onResumePressed() {
-    P.chat.resumeMessageById(id: msg.id);
-  }
-
-  void _onBotEditPressed() async {
-    await P.chat.onTapEditInBotMessageBubble(index: index);
-  }
-
-  void _onRegeneratePressed() async {
-    await P.chat.onRegeneratePressed(index: index);
-  }
-
-  void _onCopyPressed() {
-    Alert.success(S.current.chat_copied_to_clipboard);
-    Clipboard.setData(ClipboardData(text: msg.content));
   }
 }

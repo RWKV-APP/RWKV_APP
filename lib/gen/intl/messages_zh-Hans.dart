@@ -20,32 +20,34 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_Hans';
 
-  static String m12(count) => "每次推理将生成 ${count} 条消息";
+  static String m0(count) => "并行 × ${count}";
 
-  static String m0(demoName) => "欢迎探索 ${demoName}";
+  static String m1(count) => "每次推理将生成 ${count} 条消息";
 
-  static String m1(maxLength) => "会话名称不能超过 ${maxLength} 个字符";
+  static String m2(demoName) => "欢迎探索 ${demoName}";
 
-  static String m2(path) => "消息记录会存储在该文件夹下\n ${path}";
+  static String m3(maxLength) => "会话名称不能超过 ${maxLength} 个字符";
 
-  static String m3(port) => "HTTP 服务 (端口: ${port})";
+  static String m4(path) => "消息记录会存储在该文件夹下\n ${path}";
 
-  static String m4(flag, nameCN, nameEN) =>
+  static String m5(port) => "HTTP 服务 (端口: ${port})";
+
+  static String m6(flag, nameCN, nameEN) =>
       "模仿 ${flag} ${nameCN}(${nameEN}) 的声音";
 
-  static String m5(fileName) => "模仿 ${fileName}";
+  static String m7(fileName) => "模仿 ${fileName}";
 
-  static String m6(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
+  static String m8(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
 
-  static String m7(count) => "排队中: ${count}";
+  static String m9(count) => "排队中: ${count}";
 
-  static String m8(port) => "WebSocket 服务 (端口: ${port})";
+  static String m10(port) => "WebSocket 服务 (端口: ${port})";
 
-  static String m9(id) => "窗口 ${id}";
+  static String m11(id) => "窗口 ${id}";
 
-  static String m10(count) => "${count} 个标签页";
+  static String m12(count) => "${count} 个标签页";
 
-  static String m11(modelName) => "您当前正在使用 ${modelName}";
+  static String m13(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -79,13 +81,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "auto_detect": MessageLookupByLibrary.simpleMessage("自动检测"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("返回聊天"),
-    "batch_inference": MessageLookupByLibrary.simpleMessage("批量推理"),
-    "batch_inference_count": MessageLookupByLibrary.simpleMessage("批量推理数量"),
-    "batch_inference_count_detail": m12,
-    "batch_inference_settings": MessageLookupByLibrary.simpleMessage("批量推理设置"),
-    "batch_inference_width": MessageLookupByLibrary.simpleMessage("批量推理宽度"),
+    "batch_inference": MessageLookupByLibrary.simpleMessage("并行推理"),
+    "batch_inference_button": m0,
+    "batch_inference_count": MessageLookupByLibrary.simpleMessage("并行推理数量"),
+    "batch_inference_count_detail": m1,
+    "batch_inference_detail": MessageLookupByLibrary.simpleMessage(
+      "开启并行推理后，RWKV 可以同时生成多个答案",
+    ),
+    "batch_inference_enable_or_not": MessageLookupByLibrary.simpleMessage(
+      "开启或关闭并行推理",
+    ),
+    "batch_inference_settings": MessageLookupByLibrary.simpleMessage("并行推理设置"),
+    "batch_inference_width": MessageLookupByLibrary.simpleMessage("消息显示宽度"),
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
-      "批量推理每条消息宽度",
+      "并行推理每条消息宽度",
     ),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "black": MessageLookupByLibrary.simpleMessage("黑方"),
@@ -117,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("继续"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
-    "chat_welcome_to_use": m0,
+    "chat_welcome_to_use": m2,
     "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage("与 RWKV 模型对话"),
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage("您需要先下载模型才能使用"),
@@ -157,7 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "会话名称不能为空",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m1,
+    "conversation_name_cannot_be_longer_than_30_characters": m3,
     "conversations": MessageLookupByLibrary.simpleMessage("会话"),
     "copy_text": MessageLookupByLibrary.simpleMessage("复制文本"),
     "create_a_new_one_by_clicking_the_button_above":
@@ -187,6 +196,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "difficulty_must_be_less_than_81": MessageLookupByLibrary.simpleMessage(
       "难度必须小于 81",
     ),
+    "disabled": MessageLookupByLibrary.simpleMessage("关闭"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("不再询问"),
     "download_all": MessageLookupByLibrary.simpleMessage("下载全部"),
@@ -201,10 +211,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "downloading": MessageLookupByLibrary.simpleMessage("下载中"),
     "draw": MessageLookupByLibrary.simpleMessage("平局！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自动 Dump 消息记录"),
-    "dump_see_files_alert_message": m2,
+    "dump_see_files_alert_message": m4,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage("协助我们改进算法"),
     "dump_started": MessageLookupByLibrary.simpleMessage("自动 dump 已开启"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自动 dump 已关闭"),
+    "enabled": MessageLookupByLibrary.simpleMessage("开启"),
     "end": MessageLookupByLibrary.simpleMessage("完"),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
@@ -259,12 +270,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "按住录音，松开发送",
     ),
     "home": MessageLookupByLibrary.simpleMessage("主页"),
-    "http_service_port": m3,
+    "http_service_port": m5,
     "human": MessageLookupByLibrary.simpleMessage("人类"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想让 RWKV 说..."),
     "idle": MessageLookupByLibrary.simpleMessage("空闲"),
-    "imitate": m4,
-    "imitate_fle": m5,
+    "imitate": m6,
+    "imitate_fle": m7,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage("当搜索深度和宽度都大于 2 时，将激活上下文搜索"),
@@ -294,7 +305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("浅色模式"),
     "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m6,
+    "memory_used": m8,
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
     "model": MessageLookupByLibrary.simpleMessage("模型"),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
@@ -388,7 +399,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 模板"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
-    "queued_x": m7,
+    "queued_x": m9,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已经开启"),
     "reason": MessageLookupByLibrary.simpleMessage("推理"),
@@ -511,7 +522,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
-    "websocket_service_port": m8,
+    "websocket_service_port": m10,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV Chat",
     ),
@@ -519,11 +530,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
-    "window_id": m9,
+    "window_id": m11,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m10,
-    "you_are_now_using": m11,
+    "x_tabs": m12,
+    "you_are_now_using": m13,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

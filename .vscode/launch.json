@@ -52,6 +52,9 @@
       "flutterMode": "debug",
       "args": [
         //
+        "--dart-define=enableBatchInference=true",
+        "--dart-define=batchCount=8",
+        "--dart-define=batchVW=50",
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true"
       ],
@@ -65,6 +68,9 @@
       "flutterMode": "debug",
       "args": [
         //
+        "--dart-define=enableBatchInference=true",
+        "--dart-define=batchCount=8",
+        "--dart-define=batchVW=50",
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true"
       ],
@@ -101,8 +107,9 @@
       "name": "All (Halo)",
       "configurations": [
         //,
-        "debug (Halo) - Android",
-        "debug (Halo) - macOS"
+        // "debug (Halo) - Android",
+        "debug (Halo) - macOS",
+        "debug (Halo) - iOS"
       ]
     }
   ]

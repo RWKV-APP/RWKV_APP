@@ -112,8 +112,8 @@ class BatchSettingsPanel extends ConsumerWidget {
               isSectionStart: true,
               isSectionEnd: !batchInference,
               title: s.batch_inference,
-              subtitle: s.batch_inference,
-              info: batchInference ? "开启" : "关闭",
+              subtitle: s.batch_inference_detail,
+              info: batchInference ? s.enabled : s.disabled,
               showArrow: false,
               trailing: Switch.adaptive(
                 value: P.chat.batchInference.q,

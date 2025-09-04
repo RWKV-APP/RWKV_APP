@@ -11,3 +11,8 @@ import 'package:zone/config.dart';
   if (selectedBatch != null && selectedBatch < 0) selectedBatch = null;
   return (batch, true, dataCount - 1, selectedBatch);
 }
+
+bool getIsBatch(String content) {
+  final decodedInfo = content.split(Config.batchMarker);
+  return decodedInfo.length > 1;
+}

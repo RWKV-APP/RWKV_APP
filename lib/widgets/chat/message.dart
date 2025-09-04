@@ -267,7 +267,7 @@ class Message extends ConsumerWidget {
         break;
     }
 
-    EI padding = const EI.o(t: 12, l: 12, r: 12);
+    EdgeInsets padding = const EI.o(t: 12, l: 12, r: 12);
     Border? border = Border.all(color: primary.q(.2));
     double radius = 20;
 
@@ -326,7 +326,11 @@ class Message extends ConsumerWidget {
     if (isMine) {
       isBatch = false;
     } else {
-      (_, isBatch, _, _) = getBatchInfo(finalContent);
+      isBatch = getIsBatch(finalContent);
+    }
+
+    if (isBatch) {
+      padding = padding.copyWith(left: 0, right: 0);
     }
 
     final bubbleContent = ConstrainedBox(
@@ -434,7 +438,7 @@ class Message extends ConsumerWidget {
                     onTapLink: _onTapLink,
                   ),
 
-                if (isBatch) BatchMessageContent(msg, index, finalContent).debug,
+                if (isBatch) BatchMessageContent(msg, index, finalContent),
                 if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType),
                 if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
               ],
