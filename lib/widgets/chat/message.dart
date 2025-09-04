@@ -321,26 +321,12 @@ class Message extends ConsumerWidget {
 
     final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
 
-    late final List<String> batch;
     late final bool isBatch;
-    late final int batchCount;
-    late final int? selectedBatch;
 
     if (isMine) {
-      batch = [];
       isBatch = false;
-      batchCount = 1;
-      selectedBatch = null;
     } else {
-      (batch, isBatch, batchCount, selectedBatch) = getBatchInfo(finalContent);
-    }
-
-    if (!isMine) {
-      qqq(isBatch);
-      qqq(batchCount);
-      qqq(selectedBatch);
-      qqq(batch);
-      qqq(finalContent);
+      (_, isBatch, _, _) = getBatchInfo(finalContent);
     }
 
     final bubbleContent = ConstrainedBox(
