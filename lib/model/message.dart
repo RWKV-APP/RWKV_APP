@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/config.dart';
+import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/message_type.dart';
 import 'package:zone/model/ref_info.dart';
 
@@ -276,15 +276,5 @@ extension MessageX on Message {
 }
 
 extension BatchMessage on Message {
-  (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) get batchInfo {
-    final decodedInfo = content.split(Config.batchMarker);
-    if (decodedInfo.length == 1) {
-      return ([content], false, 0, 0);
-    }
-    final dataCount = decodedInfo.length;
-    final batch = decodedInfo.sublist(0, dataCount - 1);
-    int? selectedBatch = int.tryParse(decodedInfo.last);
-    if (selectedBatch != null && selectedBatch < 0) selectedBatch = null;
-    return (batch, true, dataCount - 1, selectedBatch);
-  }
+  (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) get batchInfo => getBatchInfo(content);
 }

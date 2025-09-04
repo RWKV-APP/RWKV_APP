@@ -85,6 +85,8 @@ class _RWKV {
     final isTranslate = model.tags.contains("translate");
     return isTTS || isTranslate;
   });
+
+  late final supportedBatchSizes = qs<List<int>>([]);
 }
 
 extension $RWKVLoad on _RWKV {
@@ -450,6 +452,7 @@ extension $RWKVLoad on _RWKV {
     await resetMaxLength(enableReasoning: enableReasoning);
     send(to_rwkv.GetSamplerParams());
     _loading.q = false;
+    send(to_rwkv.GetSupportedBatchSizes());
   }
 
   Future<void> loadOthello() async {
@@ -1021,7 +1024,11 @@ extension _$RWKV on _RWKV {
         if (decodeSpeed != -1.0) this.decodeSpeed.q = decodeSpeed;
         if (prefillSpeed != -1.0) this.prefillSpeed.q = prefillSpeed;
 
+      case from_rwkv.SupportedBatchSizes response:
+        supportedBatchSizes.q = response.supportedBatchSizes;
+
       default:
+        break;
     }
   }
 

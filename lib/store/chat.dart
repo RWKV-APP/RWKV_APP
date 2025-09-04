@@ -48,9 +48,9 @@ class _Chat {
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 
-  late final batchInference = qs(false);
-  late final batchCount = qs<int>(2);
-  late final batchVW = qs(70);
+  late final batchInference = qs(Args.enableBatchInference);
+  late final batchCount = qs(Args.batchCount);
+  late final batchVW = qs(Args.batchVW);
 }
 
 /// Public methods
@@ -685,7 +685,7 @@ extension _$Chat on _Chat {
         break;
 
       case from_rwkv.ResponseBatchBufferContent res:
-        final responseBufferContent = res.responseBufferContent.join(Config.batchMarker);
+        final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
         receivedTokens.q = responseBufferContent;
         if (completionMode.q) return;
         _sensitiveThrottler.call(() {
