@@ -216,7 +216,7 @@ class BotMessageBottom extends ConsumerWidget {
             ),
           ),
         modeWidget,
-        if (showResumeButton && paused && receiveId == msg.id)
+        if (showResumeButton && paused && receiveId == msg.id && !isBatch)
           GestureDetector(
             onTap: _onResumePressed,
             child: Container(
