@@ -52,6 +52,9 @@ class _Chat {
 
   late final webSearch = qs(WebSearchMode.off);
 
+  // 使用文言文
+  late final wenYanWen = qs(false);
+
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 }
 
@@ -61,18 +64,28 @@ extension $Chat on _Chat {
     P.msg._clear();
   }
 
-  void onSwitchWebSearchMode(WebSearchMode? mode) async {
+  void onSwitchWebSearchMode(WebSearchMode mode) async {
     final receiving = receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    if (mode != null) {
-      webSearch.q = mode;
+    if (mode != WebSearchMode.off) {
+      wenYanWen.q = false;
+    }
+    webSearch.q = mode;
+  }
+
+  void onSwitchWenYanWen(bool enabled) async {
+    final receiving = receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    final enabled = webSearch.q != WebSearchMode.off;
-    webSearch.q = enabled ? WebSearchMode.off : WebSearchMode.search;
+    if (enabled) {
+      webSearch.q = WebSearchMode.off;
+    }
+    wenYanWen.q = enabled;
   }
 
   Future<void> onSendButtonPressed() async {
@@ -488,7 +501,10 @@ extension _$Chat on _Chat {
     while (iterator.moveNext()) {
       userMsg = iterator.current;
       botMsg = iterator.moveNext() ? iterator.current : null;
-      final content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
+      String content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
+      if (wenYanWen.q) {
+        content = '请用文言文回答: $content';
+      }
       result.add(content);
       if (botMsg == null) break;
       final botContent = botMsg.getContentForHistory(appendThinkTagInThinkingTagIsEmpty: true);
@@ -586,7 +602,7 @@ extension _$Chat on _Chat {
 
   void _fullyReceived({String? callingFunction}) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.translator) return;
+    if (pageKey == PageKey.translator || pageKey == PageKey.benchmark || pageKey == PageKey.completion) return;
     qqq("callingFunction: $callingFunction");
 
     final id = receiveId.q;

@@ -1,4 +1,5 @@
 import 'package:zone/page/advanced_sesttings.dart' show PageAdvancedSettings;
+import 'package:zone/page/benchmark.dart' show PageBenchmark;
 import 'package:zone/page/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,7 @@ enum PageKey {
   conversation,
   settings,
   advancedSettings,
+  benchmark,
   othello,
   sudoku,
   home,
@@ -35,6 +37,7 @@ enum PageKey {
     PageKey.conversation => const PageConversation(),
     PageKey.settings => const PageSettings(),
     PageKey.translator => const PageTranslator(),
+    PageKey.benchmark => const PageBenchmark(),
     PageKey.advancedSettings => const PageAdvancedSettings(),
   };
 
