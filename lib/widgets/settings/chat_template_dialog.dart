@@ -210,9 +210,9 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         data: OutlinedButtonThemeData(
           style: ButtonStyle(
             visualDensity: VisualDensity.compact,
-            textStyle: WidgetStateProperty.all(TextStyle(fontSize: 12)),
-            padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-            minimumSize: WidgetStateProperty.all(Size(0, 36)),
+            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 12)),
+            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+            minimumSize: WidgetStateProperty.all(const Size(0, 36)),
             shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
           ),
         ),
@@ -222,21 +222,21 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
               onPressed: () {
                 _controllerPreferChinese.text = '<think>嗯';
               },
-              child: Text('<think>嗯'),
+              child: const Text('<think>嗯'),
             ),
             const SizedBox(width: 6),
             OutlinedButton(
               onPressed: () {
                 _controllerPreferChinese.text = '<think>首先';
               },
-              child: Text('<think>首先'),
+              child: const Text('<think>首先'),
             ),
             const SizedBox(width: 6),
             OutlinedButton(
               onPressed: () {
                 _controllerPreferChinese.text = '<think>好的';
               },
-              child: Text('<think>好的'),
+              child: const Text('<think>好的'),
             ),
           ],
         ),

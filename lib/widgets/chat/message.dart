@@ -384,13 +384,13 @@ class Message extends ConsumerWidget {
                       children: [
                         Text(
                           "并行推理中，同时生成 $batchCount 条消息",
-                          style: TS(c: kCG),
+                          style: const TS(c: kCG),
                         ),
                         if (batchSelection != null) 16.w,
                         if (batchSelection != null)
                           Text(
                             "已选择第 ${batchSelection + 1} 条消息",
-                            style: TS(c: kCG),
+                            style: const TS(c: kCG),
                           ),
                       ],
                     ),

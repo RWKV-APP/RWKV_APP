@@ -25,7 +25,7 @@ class PageBenchmark extends ConsumerWidget {
         title: Text(S.current.performance_test),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -175,7 +175,7 @@ class _TestState extends ConsumerState<_Test> {
               child: OutlinedButton.icon(
                 icon: null,
                 onPressed: () => ModelSelector.show(),
-                style: ButtonStyle(visualDensity: VisualDensity.standard),
+                style: const ButtonStyle(visualDensity: VisualDensity.standard),
                 label: Text(S.current.select_model),
               ),
             ),
@@ -183,13 +183,13 @@ class _TestState extends ConsumerState<_Test> {
             Expanded(
               child: FilledButton.icon(
                 icon: generating
-                    ? SizedBox.square(
+                    ? const SizedBox.square(
                         dimension: 18,
                         child: CircularProgressIndicator(color: Colors.white),
                       )
                     : null,
                 onPressed: model == null ? null : () => onStartStopTap(),
-                style: ButtonStyle(visualDensity: VisualDensity.standard),
+                style: const ButtonStyle(visualDensity: VisualDensity.standard),
                 label: Text(generating ? S.current.stop : S.current.start),
               ),
             ),
@@ -220,16 +220,16 @@ class _KeyValuePairs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.all(Radius.circular(8)),
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (title.isNotEmpty)
               Text(
                 title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
             if (title.isNotEmpty) const SizedBox(height: 6),
             for (final pair in pairs.entries) ...[
@@ -242,7 +242,7 @@ class _KeyValuePairs extends StatelessWidget {
                   ],
                 )
               else
-                Divider(height: 12, thickness: 1),
+                const Divider(height: 12, thickness: 1),
             ],
           ],
         ),

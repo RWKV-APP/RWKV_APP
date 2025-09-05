@@ -508,7 +508,7 @@ class _BatchButton extends ConsumerWidget {
             borderRadius: 60.r,
             border: Border.all(color: borderColor),
           ),
-          padding: EI.o(h: 8),
+          padding: const EI.o(h: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
