@@ -131,6 +131,8 @@ class ModelItem extends ConsumerWidget {
 
     late final String startTitle;
 
+    final isTranslate = fileInfo.tags.contains("translate");
+
     switch (demoType) {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
@@ -139,7 +141,7 @@ class ModelItem extends ConsumerWidget {
       case DemoType.chat:
       case DemoType.tts:
       case DemoType.world:
-        startTitle = s.start_to_chat;
+        startTitle = isTranslate ? s.use_it_now : s.start_to_chat;
     }
 
     final qw = ref.watch(P.app.qw);
