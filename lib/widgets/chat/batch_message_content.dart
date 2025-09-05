@@ -5,7 +5,6 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/extrack_thought_and_output.dart';
 import 'package:zone/func/get_batch_info.dart';
-import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
 
@@ -23,7 +22,6 @@ class BatchMessageContent extends ConsumerWidget {
     final batchVW = ref.watch(P.chat.batchVW);
     final qb = ref.watch(P.app.qb);
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
-    final primary = Theme.of(context).colorScheme.primary;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -108,6 +106,7 @@ class _MarkdownBody extends ConsumerWidget {
     );
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (thought.isNotEmpty) MarkdownBody(data: thought, styleSheet: markdownStyleSheetForCotContent),
         if (output.isNotEmpty) MarkdownBody(data: output, styleSheet: markdownStyleSheet),
