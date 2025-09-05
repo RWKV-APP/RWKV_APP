@@ -149,7 +149,7 @@ class ModelItem extends ConsumerWidget {
     }
 
     if (loadButtonTextShowLoad) {
-      startTitle = "Load";
+      startTitle = S.current.load_;
     }
 
     final qw = ref.watch(P.app.qw);
@@ -196,7 +196,7 @@ class ModelItem extends ConsumerWidget {
                       borderRadius: 8.r,
                     ),
                     padding: const EI.a(8),
-                    child: T(loadButtonTextShowLoad ? 'Loaded' : s.chatting, s: TS(c: qw)),
+                    child: T(loadButtonTextShowLoad ? S.current.loaded : s.chatting, s: TS(c: qw)),
                   ),
                 ),
               if (!isCurrentModel) 8.w,
