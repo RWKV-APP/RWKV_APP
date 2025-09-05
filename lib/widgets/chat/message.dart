@@ -322,16 +322,19 @@ class Message extends ConsumerWidget {
     final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
 
     late final bool isBatch;
+    late final int batchCount;
 
     if (isMine) {
       isBatch = false;
     } else {
-      isBatch = getIsBatch(finalContent);
+      (_, isBatch, batchCount, _) = getBatchInfo(finalContent);
     }
 
     if (isBatch) {
       padding = padding.copyWith(left: 0, right: 0);
     }
+
+    final batchSelection = ref.watch(P.msg.batchSelection(msg));
 
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
@@ -374,6 +377,24 @@ class Message extends ConsumerWidget {
                 UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
+                if (isBatch)
+                  Padding(
+                    padding: const EI.o(l: 14, b: 4, r: 14),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          "并行推理中，同时生成 $batchCount 条消息",
+                          style: TS(c: kCG),
+                        ),
+                        if (batchSelection != null) 16.w,
+                        if (batchSelection != null)
+                          Text(
+                            "已选择第 ${batchSelection + 1} 条消息",
+                            style: TS(c: kCG),
+                          ),
+                      ],
+                    ),
+                  ),
                 // 🔥 Bot message audio recognition result
                 if (worldDemoMessageHeader.isNotEmpty)
                   T(
@@ -439,7 +460,7 @@ class Message extends ConsumerWidget {
                   ),
 
                 if (isBatch) BatchMessageContent(msg, index, finalContent),
-                if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType),
+                if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
                 if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
               ],
             ],

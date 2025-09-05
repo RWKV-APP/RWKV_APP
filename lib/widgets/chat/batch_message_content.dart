@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/extrack_thought_and_output.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
@@ -20,8 +21,9 @@ class BatchMessageContent extends ConsumerWidget {
     final (batch, isBatch, batchCount, selectedBatch) = getBatchInfo(finalContent);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final batchVW = ref.watch(P.chat.batchVW);
-    final s = S.of(context);
     final qb = ref.watch(P.app.qb);
+    final batchSelection = ref.watch(P.msg.batchSelection(msg));
+    final primary = Theme.of(context).colorScheme.primary;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -33,18 +35,23 @@ class BatchMessageContent extends ConsumerWidget {
               [
                 4.w,
                 for (var i = 0; i < batchCount; i++)
-                  Container(
-                    constraints: BoxConstraints(
-                      maxWidth: screenWidth * (batchVW / 100),
-                      minWidth: screenWidth * (batchVW / 100),
+                  GD(
+                    onTap: () {
+                      P.msg.batchSelection(msg).q = i;
+                    },
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: screenWidth * (batchVW / 100),
+                        minWidth: screenWidth * (batchVW / 100),
+                      ),
+                      padding: const EI.a(8),
+                      decoration: BoxDecoration(
+                        color: kC,
+                        border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: _MarkdownBody(data: batch[i]),
                     ),
-                    padding: const EI.a(8),
-                    decoration: BoxDecoration(
-                      color: kC,
-                      border: Border.all(color: qb.q(.1)),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: _MarkdownBody(data: batch[i]),
                   ),
                 4.w,
               ].widgetJoin((index) {

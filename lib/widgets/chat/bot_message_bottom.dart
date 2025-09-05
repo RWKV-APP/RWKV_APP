@@ -21,8 +21,9 @@ class BotMessageBottom extends ConsumerWidget {
   final model.Message msg;
   final int index;
   final DemoType? preferredDemoType;
+  final String? finalContent;
 
-  const BotMessageBottom(this.msg, this.index, {super.key, this.preferredDemoType});
+  const BotMessageBottom(this.msg, this.index, {super.key, this.preferredDemoType, this.finalContent});
 
   void _onSharePressed() {
     if (P.chat.receivingTokens.q) {
@@ -126,7 +127,7 @@ class BotMessageBottom extends ConsumerWidget {
       _ => const SizedBox.shrink(),
     };
 
-    final isBatch = getIsBatch(msg.content);
+    final isBatch = getIsBatch(finalContent ?? msg.content);
 
     if (isBatch) {
       showEditButton = false;
