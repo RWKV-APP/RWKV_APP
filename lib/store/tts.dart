@@ -148,6 +148,7 @@ extension _$TTS on _TTS {
     // P.rwkv.send(to_rwkv.GetTTSGenerationProgress());
     P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
     P.rwkv.send(to_rwkv.GetTTSStreamingBuffer());
+    P.rwkv.send(to_rwkv.GetIsGenerating());
     // P.rwkv.send(to_rwkv.GetTTSOutputFileList());
   }
 
@@ -222,13 +223,33 @@ extension _$TTS on _TTS {
       case from_rwkv.TTSStreamingBuffer res:
         _onTTSStreamingBuffer(res);
         break;
+      case from_rwkv.IsGenerating res:
+        _onIsGenerating(res);
+        break;
       default:
         break;
     }
   }
 
+  void _onIsGenerating(from_rwkv.IsGenerating res) {
+    final generating = res.isGenerating;
+
+    final allReceived = !generating && this.generating.q;
+
+    this.generating.q = generating;
+
+    final receiveId = P.chat.receiveId.q;
+    if (receiveId == null) {
+      qqw("receiveId is null");
+      return;
+    }
+
+    P.chat._updateMessageById(id: receiveId, changing: !allReceived);
+
+    if (allReceived) _stopQueryTimer();
+  }
+
   void _onTTSStreamingBuffer(from_rwkv.TTSStreamingBuffer res) async {
-    final buffer = res.ttsStreamingBuffer;
     final length = res.ttsStreamingBufferLength;
     final generating = res.generating;
     final allReceived = !generating && this.generating.q;

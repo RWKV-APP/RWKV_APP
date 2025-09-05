@@ -136,9 +136,9 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                 }),
               ],
             ),
-          if (changing)
+          if (changing && generating)
             Padding(
-              padding: const EI.o(v: 4),
+              padding: const EI.o(t: 4, b: 12),
               child: Row(
                 mainAxisAlignment: MAA.start,
                 children: [
@@ -157,7 +157,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   ),
                   8.w,
                   T(
-                    s.generating + " " + (overallProgress * 100).toStringAsFixed(0) + "%",
+                    s.generating + "",
                     s: TS(c: qb.q(.8), w: FontWeight.w500),
                   ),
                 ],
