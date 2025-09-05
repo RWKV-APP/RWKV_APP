@@ -1,70 +1,9 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/model/reference.dart';
-
-enum MessageType {
-  text,
-  userImage,
-  userTTS,
-  ttsGeneration,
-  @Deprecated("Xuan 说 RWKV-See 不添加 Audio QA 功能")
-  userAudio,
-}
-
-final class RefInfo {
-  final List<Reference> list;
-  final bool enable;
-  final String error;
-
-  const RefInfo({required this.list, required this.enable, required this.error});
-
-  factory RefInfo.empty() => const RefInfo(list: [], enable: false, error: "");
-
-  factory RefInfo.deserialize(String? json) => json == null || json.isEmpty ? RefInfo.empty() : RefInfo.fromJson(jsonDecode(json));
-
-  factory RefInfo.fromJson(dynamic json) {
-    if (json == null) return RefInfo.empty();
-    try {
-      return RefInfo(
-        list: (json["list"] as Iterable).map((e) => Reference.fromJson(e)).toList(),
-        enable: json["enable"] as bool,
-        error: json["error"] as String,
-      );
-    } catch (e) {
-      qqe(e);
-      return RefInfo.empty();
-    }
-  }
-
-  String toLlmReferenceText() {
-    return list.map((e) => e.summary).join("\n");
-  }
-
-  String serialize() => jsonEncode(toJson());
-
-  Map<String, dynamic> toJson() {
-    return {
-      "list": list.map((e) => e.toJson()).toList(),
-      "enable": enable,
-      "error": error,
-    };
-  }
-
-  RefInfo copyWith({
-    List<Reference>? list,
-    bool? enable,
-    String? error,
-  }) {
-    return RefInfo(
-      list: list ?? this.list,
-      enable: enable ?? this.enable,
-      error: error ?? this.error,
-    );
-  }
-}
+import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/model/message_type.dart';
+import 'package:zone/model/ref_info.dart';
 
 @immutable
 final class Message extends Equatable {
@@ -98,12 +37,6 @@ final class Message extends Equatable {
 
   final String? modelName;
   final String? runningMode;
-
-  bool get ttsHasContent => ttsFilePaths?.isNotEmpty ?? false;
-
-  bool get ttsIsDone => (ttsOverallProgress ?? 0.0) >= 1.0;
-
-  int get createAtInMS => id;
 
   const Message({
     required this.id,
@@ -282,6 +215,14 @@ Message(
   runningMode: $runningMode,
 )""";
   }
+}
+
+extension MessageX on Message {
+  bool get ttsHasContent => ttsFilePaths?.isNotEmpty ?? false;
+
+  bool get ttsIsDone => (ttsOverallProgress ?? 0.0) >= 1.0;
+
+  int get createAtInMS => id;
 
   bool get isCotFormat => content.startsWith("<think>");
 
@@ -289,16 +230,16 @@ Message(
 
   /// Append web search reference text behind of the user input content
   String getContentForHistoryWithRef(RefInfo? reference) {
-    final content = getContentForHistory();
+    final contentForHistory = getContentForHistory();
     if (!isMine || reference == null) {
-      return content;
+      return contentForHistory;
     }
     final ref = reference.enable ? reference.toLlmReferenceText() : null;
-    qqq("$content, ${ref?.substring(0, 30)}");
+    qqq("$contentForHistory, ${ref?.substring(0, 30)}");
     if (ref == null) {
-      return content;
+      return contentForHistory;
     } else {
-      return "$ref\n$content";
+      return "$ref\n$contentForHistory";
     }
   }
 
@@ -319,17 +260,21 @@ Message(
     if (!containsCotEndMark) return (content.substring(7), "");
 
     final endIndex = content.indexOf("</think>");
-    final _content = content.substring(7, endIndex);
+    final thinkingContent = content.substring(7, endIndex);
 
-    String _result = "";
+    String result = "";
     if (endIndex + 9 < content.length) {
-      _result = content.substring(endIndex + 9);
+      result = content.substring(endIndex + 9);
     }
 
     if (appendThinkTagInThinkingTagIsEmpty && content.contains("<think>\n</think>")) {
-      return (_content, content);
+      return (thinkingContent, content);
     }
 
-    return (_content, _result);
+    return (thinkingContent, result);
   }
+}
+
+extension BatchMessage on Message {
+  (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) get batchInfo => getBatchInfo(content);
 }

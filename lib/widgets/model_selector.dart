@@ -21,7 +21,6 @@ import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
 import 'package:zone/widgets/model_item.dart';
 
-// TODO: move it to pages/panel
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
   final ScrollController scrollController;

@@ -75,6 +75,7 @@ class Debugger extends ConsumerWidget {
     final msgNode = ref.watch(P.msg.msgNode);
     final pool = ref.watch(P.msg.pool);
     final conversations = ref.watch(P.conversation.conversations);
+    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -100,7 +101,7 @@ class Debugger extends ConsumerWidget {
     const showCurrentModel = true;
     const showLoading = false;
     const showMsgNode = true;
-
+    const showSupportedBatchSizes = true;
     return Positioned(
       left: 0,
       top: 0,
@@ -166,6 +167,7 @@ class Debugger extends ConsumerWidget {
                       if (showMsgNode) ...[T("msgNode.createAtInUS".codeToName), T(msgNode.createAtInUS.toString())],
                       if (showPool) ...[T("pool".codeToName), T((pool.values.m((e) => e.id)).toString())],
                       if (showConversation) ...[T("conversations".codeToName), T(conversations.length.toString())],
+                      if (showSupportedBatchSizes) ...[T("supportedBatchSizes".codeToName), T(supportedBatchSizes.toString())],
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
                       T("pageKey".codeToName),

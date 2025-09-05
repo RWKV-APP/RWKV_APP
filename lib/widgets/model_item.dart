@@ -136,6 +136,8 @@ class ModelItem extends ConsumerWidget {
 
     String startTitle;
 
+    final isTranslate = fileInfo.tags.contains("translate");
+
     switch (demoType) {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
@@ -144,7 +146,7 @@ class ModelItem extends ConsumerWidget {
       case DemoType.chat:
       case DemoType.tts:
       case DemoType.world:
-        startTitle = s.start_to_chat;
+        startTitle = isTranslate ? s.use_it_now : s.start_to_chat;
     }
 
     if (loadButtonTextShowLoad) {
@@ -415,6 +417,7 @@ class _Tags extends ConsumerWidget {
       children: [
         ...tags.map((tag) {
           final showHighlight = _highlightTags.contains(tag);
+          if (tag == "DeepEmbedding") tag = "DE";
           return Container(
             decoration: BoxDecoration(
               borderRadius: 4.r,

@@ -27,4 +27,6 @@ abstract class Config {
   ];
 
   static const maxTitleLength = 60;
+
+  static const batchMarker = "V9m!T7#q2fH@x1Lz*8YwK0^g4";
 }

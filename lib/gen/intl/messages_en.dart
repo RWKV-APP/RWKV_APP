@@ -20,33 +20,37 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(demoName) => "Welcome to ${demoName}";
+  static String m0(count) => "Parallel × ${count}";
 
-  static String m1(maxLength) =>
+  static String m1(count) => "Each inference will generate ${count} messages";
+
+  static String m2(demoName) => "Welcome to ${demoName}";
+
+  static String m3(maxLength) =>
       "Conversation name cannot be longer than ${maxLength} characters";
 
-  static String m2(path) =>
+  static String m4(path) =>
       "Message records will be stored in the following folder\n ${path}";
 
-  static String m3(port) => "HTTP Service (Port: ${port})";
+  static String m5(port) => "HTTP Service (Port: ${port})";
 
-  static String m4(flag, nameCN, nameEN) =>
+  static String m6(flag, nameCN, nameEN) =>
       "Imitate ${flag} ${nameCN}(${nameEN})\'s voice";
 
-  static String m5(fileName) => "Imitate ${fileName}";
+  static String m7(fileName) => "Imitate ${fileName}";
 
-  static String m6(memUsed, memFree) =>
+  static String m8(memUsed, memFree) =>
       "Memory Used: ${memUsed}, Memory Free: ${memFree}";
 
-  static String m7(count) => "Queued: ${count}";
+  static String m9(count) => "Queued: ${count}";
 
-  static String m8(port) => "WebSocket Service (Port: ${port})";
+  static String m10(port) => "WebSocket Service (Port: ${port})";
 
-  static String m9(id) => "Window ${id}";
+  static String m11(id) => "Window ${id}";
 
-  static String m10(count) => "${count} tabs";
+  static String m12(count) => "${count} tabs";
 
-  static String m11(modelName) => "You are now using ${modelName}";
+  static String m13(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -92,6 +96,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "auto_detect": MessageLookupByLibrary.simpleMessage("Auto Detect"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
+    "batch_inference": MessageLookupByLibrary.simpleMessage("Parallel"),
+    "batch_inference_button": m0,
+    "batch_inference_count": MessageLookupByLibrary.simpleMessage(
+      "Parallel Inference Count",
+    ),
+    "batch_inference_count_detail": m1,
+    "batch_inference_detail": MessageLookupByLibrary.simpleMessage(
+      "After enabling parallel inference, RWKV can generate multiple answers at the same time",
+    ),
+    "batch_inference_enable_or_not": MessageLookupByLibrary.simpleMessage(
+      "Enable or disable parallel inference",
+    ),
+    "batch_inference_settings": MessageLookupByLibrary.simpleMessage(
+      "Parallel Inference Settings",
+    ),
+    "batch_inference_width": MessageLookupByLibrary.simpleMessage(
+      "Parallel Inference Width",
+    ),
+    "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
+      "Parallel Inference Each Message Width",
+    ),
     "beginner": MessageLookupByLibrary.simpleMessage("Beginner"),
     "benchmark": MessageLookupByLibrary.simpleMessage("Benchmark"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage(
@@ -130,7 +155,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
-    "chat_welcome_to_use": m0,
+    "chat_welcome_to_use": m2,
     "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage(
       "Chat with RWKV models",
     ),
@@ -186,7 +211,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "Conversation name cannot be empty",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m1,
+    "conversation_name_cannot_be_longer_than_30_characters": m3,
     "conversations": MessageLookupByLibrary.simpleMessage("Conversations"),
     "copy_text": MessageLookupByLibrary.simpleMessage("Copy text"),
     "create_a_new_one_by_clicking_the_button_above":
@@ -226,6 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "difficulty_must_be_less_than_81": MessageLookupByLibrary.simpleMessage(
       "Difficulty must be less than 81",
     ),
+    "disabled": MessageLookupByLibrary.simpleMessage("Disabled"),
     "discord": MessageLookupByLibrary.simpleMessage("Discord"),
     "dont_ask_again": MessageLookupByLibrary.simpleMessage("Don\'t ask again"),
     "download_all": MessageLookupByLibrary.simpleMessage("Download All"),
@@ -248,12 +274,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_see_files": MessageLookupByLibrary.simpleMessage(
       "Dump Message Records",
     ),
-    "dump_see_files_alert_message": m2,
+    "dump_see_files_alert_message": m4,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "Help us improve the algorithm",
     ),
     "dump_started": MessageLookupByLibrary.simpleMessage("Auto dump enabled"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("Auto dump disabled"),
+    "enabled": MessageLookupByLibrary.simpleMessage("Enabled"),
     "end": MessageLookupByLibrary.simpleMessage("End"),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage(
@@ -316,14 +343,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hold to record, release to send",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "http_service_port": m3,
+    "http_service_port": m5,
     "human": MessageLookupByLibrary.simpleMessage("Human"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to say...",
     ),
     "idle": MessageLookupByLibrary.simpleMessage("Idle"),
-    "imitate": m4,
-    "imitate_fle": m5,
+    "imitate": m6,
+    "imitate_fle": m7,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Use"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -367,7 +394,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loaded": MessageLookupByLibrary.simpleMessage("Loaded"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
-    "memory_used": m6,
+    "memory_used": m8,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
     "model": MessageLookupByLibrary.simpleMessage("Model"),
     "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
@@ -465,6 +492,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_load_model_first": MessageLookupByLibrary.simpleMessage(
       "Please load the model first",
     ),
+    "please_select_a_branch_to_continue_the_conversation":
+        MessageLookupByLibrary.simpleMessage(
+          "Please select a branch to continue the conversation",
+        ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Please select a World Type",
     ),
@@ -506,7 +537,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ Group 2"),
-    "queued_x": m7,
+    "queued_x": m9,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Quick Reasoning Enabled",
@@ -534,6 +565,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "scan_qrcode": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
+    "screen_width": MessageLookupByLibrary.simpleMessage("Screen width"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("Search Breadth"),
     "search_depth": MessageLookupByLibrary.simpleMessage("Search Depth"),
@@ -675,7 +707,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m8,
+    "websocket_service_port": m10,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV Chat",
     ),
@@ -685,11 +717,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m9,
+    "window_id": m11,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m10,
-    "you_are_now_using": m11,
+    "x_tabs": m12,
+    "you_are_now_using": m13,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

@@ -1,11 +1,5 @@
 part of 'p.dart';
 
-enum WebSearchMode {
-  off,
-  search,
-  deepSearch,
-}
-
 class _Chat {
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
@@ -50,12 +44,16 @@ class _Chat {
 
   late final completionMode = qs(false);
 
-  late final webSearch = qs(WebSearchMode.off);
+  late final webSearchMode = qs(WebSearchMode.off);
 
   // 使用文言文
   late final wenYanWen = qs(false);
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
+
+  late final batchEnabled = qs(Args.enableBatchInference);
+  late final batchCount = qs(Args.batchCount);
+  late final batchVW = qs(Args.batchVW);
 }
 
 /// Public methods
@@ -73,7 +71,7 @@ extension $Chat on _Chat {
     if (mode != WebSearchMode.off) {
       wenYanWen.q = false;
     }
-    webSearch.q = mode;
+    webSearchMode.q = mode;
   }
 
   void onSwitchWenYanWen(bool enabled) async {
@@ -83,7 +81,7 @@ extension $Chat on _Chat {
       return;
     }
     if (enabled) {
-      webSearch.q = WebSearchMode.off;
+      webSearchMode.q = WebSearchMode.off;
     }
     wenYanWen.q = enabled;
   }
@@ -95,6 +93,16 @@ extension $Chat on _Chat {
     if (!inputHasContent.q) {
       Alert.info("Please enter a message");
       return;
+    }
+
+    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
+    final parentMsg = P.msg.pool.q[parentNode.id];
+    if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
+      final selection = P.msg.batchSelection(parentMsg).q;
+      if (selection == null) {
+        Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+        return;
+      }
     }
 
     focusNode.unfocus();
@@ -312,6 +320,20 @@ extension $Chat on _Chat {
       parentNode.latest = null;
     } else {
       // 新增或编辑了用户消息
+
+      final parentMsg = P.msg.pool.q[parentNode.id];
+      if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
+        final selection = P.msg.batchSelection(parentMsg).q;
+        if (selection != null) {
+          final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
+          final finalizedMsg = parentMsg.copyWith(content: finalizedContent);
+          P.msg._syncMsg(parentMsg.id, finalizedMsg);
+        } else {
+          Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+          return;
+        }
+      }
+
       msg = Message(
         id: id,
         content: message,
@@ -343,7 +365,7 @@ extension $Chat on _Chat {
     final receiveId = HF.milliseconds + 1;
     this.receiveId.q = receiveId;
 
-    var history = withHistory ? _history() : <String>[];
+    List<String> history = withHistory ? _history() : <String>[];
 
     P.msg.editingOrRegeneratingIndex.q = null;
 
@@ -367,7 +389,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    P.rwkv.sendMessages(history);
+    P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
 
     _checkSensitive(message);
   }
@@ -390,7 +412,8 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
-    P.rwkv.sendMessages(_history());
+    // TODO: support batch inference
+    P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
     _updateMessageById(
       id: id,
       changing: true,
@@ -695,11 +718,18 @@ extension _$Chat on _Chat {
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
-        if (completionMode.q) {
-          return;
-        }
+        if (completionMode.q) return;
         _sensitiveThrottler.call(() {
           _checkSensitive(res.responseBufferContent);
+        });
+        break;
+
+      case from_rwkv.ResponseBatchBufferContent res:
+        final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
+        receivedTokens.q = responseBufferContent;
+        if (completionMode.q) return;
+        _sensitiveThrottler.call(() {
+          _checkSensitive(responseBufferContent);
         });
         break;
 
@@ -741,11 +771,11 @@ extension _$Chat on _Chat {
     RefInfo ref = RefInfo.empty();
     final isZh = P.preference.currentLangIsZh.q;
 
-    if (webSearch.q != WebSearchMode.off) {
+    if (webSearchMode.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
         final prompt = allMessage.last;
-        final deepSearch = webSearch.q == WebSearchMode.deepSearch;
+        final deepSearch = webSearchMode.q == WebSearchMode.deepSearch;
         _updateMessageById(id: receiveId, reference: ref);
         final resp =
             await _post(
@@ -758,7 +788,7 @@ extension _$Chat on _Chat {
                   },
                 ).timeout(const Duration(seconds: 10))
                 as dynamic;
-        qqq('web search mode: ${webSearch.q}');
+        qqq('web search mode: ${webSearchMode.q}');
         final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
         ref = ref.copyWith(list: refs);
         final searchResult = refs.map((e) => e.summary).join("\n");

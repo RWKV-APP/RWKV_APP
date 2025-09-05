@@ -54,6 +54,116 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `开启`
+  String get enabled {
+    return Intl.message('开启', name: 'enabled', desc: '', args: []);
+  }
+
+  /// `关闭`
+  String get disabled {
+    return Intl.message('关闭', name: 'disabled', desc: '', args: []);
+  }
+
+  /// `请选择你喜欢的分支以进行接下来的对话`
+  String get please_select_a_branch_to_continue_the_conversation {
+    return Intl.message(
+      '请选择你喜欢的分支以进行接下来的对话',
+      name: 'please_select_a_branch_to_continue_the_conversation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `屏幕宽度`
+  String get screen_width {
+    return Intl.message('屏幕宽度', name: 'screen_width', desc: '', args: []);
+  }
+
+  /// `并行 × {count}`
+  String batch_inference_button(Object count) {
+    return Intl.message(
+      '并行 × $count',
+      name: 'batch_inference_button',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `并行推理`
+  String get batch_inference {
+    return Intl.message('并行推理', name: 'batch_inference', desc: '', args: []);
+  }
+
+  /// `开启并行推理后，RWKV 可以同时生成多个答案`
+  String get batch_inference_detail {
+    return Intl.message(
+      '开启并行推理后，RWKV 可以同时生成多个答案',
+      name: 'batch_inference_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开启或关闭并行推理`
+  String get batch_inference_enable_or_not {
+    return Intl.message(
+      '开启或关闭并行推理',
+      name: 'batch_inference_enable_or_not',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行推理设置`
+  String get batch_inference_settings {
+    return Intl.message(
+      '并行推理设置',
+      name: 'batch_inference_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行推理数量`
+  String get batch_inference_count {
+    return Intl.message(
+      '并行推理数量',
+      name: 'batch_inference_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每次推理将生成 {count} 条消息`
+  String batch_inference_count_detail(Object count) {
+    return Intl.message(
+      '每次推理将生成 $count 条消息',
+      name: 'batch_inference_count_detail',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `消息显示宽度`
+  String get batch_inference_width {
+    return Intl.message(
+      '消息显示宽度',
+      name: 'batch_inference_width',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行推理每条消息宽度`
+  String get batch_inference_width_detail {
+    return Intl.message(
+      '并行推理每条消息宽度',
+      name: 'batch_inference_width_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `推理: 关`
   String get thinking_mode_off {
     return Intl.message('推理: 关', name: 'thinking_mode_off', desc: '', args: []);

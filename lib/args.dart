@@ -10,4 +10,7 @@ abstract class Args {
   static const debugMsgId = bool.fromEnvironment("debugMsgId", defaultValue: false);
   static const showHaloDebugger = bool.fromEnvironment("showHaloDebugger", defaultValue: false);
   static const nativeSplashPreserveDurationInMS = int.fromEnvironment("nativeSplashPreserveDurationInMS", defaultValue: 50);
+  static const enableBatchInference = bool.fromEnvironment("enableBatchInference", defaultValue: false);
+  static const batchCount = int.fromEnvironment("batchCount", defaultValue: 2);
+  static const batchVW = int.fromEnvironment("batchVW", defaultValue: 70);
 }
