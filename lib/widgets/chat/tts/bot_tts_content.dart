@@ -232,12 +232,15 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     }
     final file = File(audioUrl);
     if (!await file.exists()) return;
+    // final userMessage = ref.watch(P.msg.userMessage);
+    String text = file.path.split("/").last;
+    if (text.isEmpty) text = "RWKV TTS";
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(audioUrl)],
-        text: widget.msg.content,
-        subject: widget.msg.content,
-        title: widget.msg.content,
+        text: text,
+        subject: text,
+        title: text,
       ),
     );
   }
