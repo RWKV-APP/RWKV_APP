@@ -47,7 +47,7 @@ class BatchSettingsPanel extends ConsumerWidget {
 
   void _onBatchInferenceSwitchChanged(bool value) {
     P.app.hapticLight();
-    P.chat.batchInference.q = value;
+    P.chat.batchEnabled.q = value;
   }
 
   void _onChanged(Argument argument, double value) {
@@ -76,7 +76,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final batchCount = ref.watch(P.chat.batchCount);
     final customTheme = ref.watch(P.app.customTheme);
-    final batchInference = ref.watch(P.chat.batchInference);
+    final batchInference = ref.watch(P.chat.batchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     return ClipRRect(
       borderRadius: const BorderRadius.only(
@@ -116,7 +116,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               info: batchInference ? s.enabled : s.disabled,
               showArrow: false,
               trailing: Switch.adaptive(
-                value: P.chat.batchInference.q,
+                value: P.chat.batchEnabled.q,
                 onChanged: _onBatchInferenceSwitchChanged,
               ),
             ),

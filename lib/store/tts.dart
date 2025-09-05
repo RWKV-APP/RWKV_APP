@@ -587,7 +587,6 @@ outputWavPath: $outputWavPath""");
 
     for (double noteFreq in [261.626, 293.665, 329.628, 123, 456, 789, 10]) {
       final wave = _synthSineWave(noteFreq, 16000, noteDuration);
-      // debugger();
       // push wave data to audio stream in specified interval (pushFreq)
       const step = 16000 ~/ pushFreq;
       // await Future.delayed(Duration(milliseconds: 500));

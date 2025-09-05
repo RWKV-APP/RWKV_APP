@@ -2,6 +2,7 @@
   "@@locale": "zh-Hans",
   "enabled": "开启",
   "disabled": "关闭",
+  "please_select_a_branch_to_continue_the_conversation": "请选择你喜欢的分支以进行接下来的对话",
   "screen_width": "屏幕宽度",
   "batch_inference_button": "并行 × {count}",
   "batch_inference": "并行推理",

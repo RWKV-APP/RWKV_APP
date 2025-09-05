@@ -483,6 +483,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_load_model_first": MessageLookupByLibrary.simpleMessage(
       "Please load the model first",
     ),
+    "please_select_a_branch_to_continue_the_conversation":
+        MessageLookupByLibrary.simpleMessage(
+          "Please select a branch to continue the conversation",
+        ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Please select a World Type",
     ),

@@ -48,7 +48,7 @@ class _Chat {
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 
-  late final batchInference = qs(Args.enableBatchInference);
+  late final batchEnabled = qs(Args.enableBatchInference);
   late final batchCount = qs(Args.batchCount);
   late final batchVW = qs(Args.batchVW);
 }
@@ -80,6 +80,16 @@ extension $Chat on _Chat {
     if (!inputHasContent.q) {
       Alert.info("Please enter a message");
       return;
+    }
+
+    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
+    final parentMsg = P.msg.pool.q[parentNode.id];
+    if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
+      final selection = P.msg.batchSelection(parentMsg).q;
+      if (selection == null) {
+        Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+        return;
+      }
     }
 
     focusNode.unfocus();
@@ -297,6 +307,20 @@ extension $Chat on _Chat {
       parentNode.latest = null;
     } else {
       // 新增或编辑了用户消息
+
+      final parentMsg = P.msg.pool.q[parentNode.id];
+      if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
+        final selection = P.msg.batchSelection(parentMsg).q;
+        if (selection != null) {
+          final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
+          final finalizedMsg = parentMsg.copyWith(content: finalizedContent);
+          P.msg._syncMsg(parentMsg.id, finalizedMsg);
+        } else {
+          Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+          return;
+        }
+      }
+
       msg = Message(
         id: id,
         content: message,
@@ -328,7 +352,7 @@ extension $Chat on _Chat {
     final receiveId = HF.milliseconds + 1;
     this.receiveId.q = receiveId;
 
-    var history = withHistory ? _history() : <String>[];
+    List<String> history = withHistory ? _history() : <String>[];
 
     P.msg.editingOrRegeneratingIndex.q = null;
 
@@ -352,7 +376,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    P.rwkv.sendMessages(history, batchSize: batchInference.q ? batchCount.q : 1);
+    P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
 
     _checkSensitive(message);
   }
@@ -376,7 +400,7 @@ extension $Chat on _Chat {
     qq;
     if (withHaptic) P.app.hapticLight();
     // TODO: support batch inference
-    P.rwkv.sendMessages(_history(), batchSize: batchInference.q ? batchCount.q : 1);
+    P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
     _updateMessageById(
       id: id,
       changing: true,

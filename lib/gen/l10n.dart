@@ -64,6 +64,16 @@ class S {
     return Intl.message('关闭', name: 'disabled', desc: '', args: []);
   }
 
+  /// `请选择你喜欢的分支以进行接下来的对话`
+  String get please_select_a_branch_to_continue_the_conversation {
+    return Intl.message(
+      '请选择你喜欢的分支以进行接下来的对话',
+      name: 'please_select_a_branch_to_continue_the_conversation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `屏幕宽度`
   String get screen_width {
     return Intl.message('屏幕宽度', name: 'screen_width', desc: '', args: []);
