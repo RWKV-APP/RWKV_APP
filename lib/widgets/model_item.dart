@@ -23,8 +23,9 @@ import 'package:zone/store/p.dart';
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final bool showTags;
+  final bool loadButtonTextShowLoad;
 
-  const ModelItem(this.fileInfo, this.showTags, {super.key});
+  const ModelItem(this.fileInfo, this.showTags, {super.key, this.loadButtonTextShowLoad = false});
 
   void _onStartTap() async {
     qq;
@@ -55,7 +56,9 @@ class ModelItem extends ConsumerWidget {
     }
 
     P.rwkv.currentModel.q = fileInfo;
-    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    if (!loadButtonTextShowLoad) {
+      Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    }
     pop();
   }
 
@@ -114,7 +117,9 @@ class ModelItem extends ConsumerWidget {
     }
 
     P.rwkv.currentModel.q = fileInfo;
-    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    if (!loadButtonTextShowLoad) {
+      Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    }
     pop();
   }
 
@@ -129,7 +134,7 @@ class ModelItem extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
 
-    late final String startTitle;
+    String startTitle;
 
     final isTranslate = fileInfo.tags.contains("translate");
 
@@ -142,6 +147,10 @@ class ModelItem extends ConsumerWidget {
       case DemoType.tts:
       case DemoType.world:
         startTitle = isTranslate ? s.use_it_now : s.start_to_chat;
+    }
+
+    if (loadButtonTextShowLoad) {
+      startTitle = S.current.load_;
     }
 
     final qw = ref.watch(P.app.qw);
@@ -188,7 +197,7 @@ class ModelItem extends ConsumerWidget {
                       borderRadius: 8.r,
                     ),
                     padding: const EI.a(8),
-                    child: T(s.chatting, s: TS(c: qw)),
+                    child: T(loadButtonTextShowLoad ? S.current.loaded : s.chatting, s: TS(c: qw)),
                   ),
                 ),
               if (!isCurrentModel) 8.w,

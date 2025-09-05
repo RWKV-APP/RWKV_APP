@@ -288,6 +288,66 @@
           {
             "display": "写一篇介绍家乡美食的朋友圈文案",
             "prompt": "用九宫格图片介绍我的家乡美食，请帮我为这九张图配上一段吸引人的朋友圈文案。"
+          },
+          {
+            "display": "Draft a speech on environmental protection",
+            "prompt": "Please write a 5-minute speech for an event on World Environment Day about 'Reducing Plastic Pollution'. The tone should be passionate and powerful, aiming to awaken the audience's environmental consciousness."
+          },
+          {
+            "display": "Create an event plan for a company team-building day",
+            "prompt": "Develop a detailed one-day team-building plan for a 50-person tech company. The activities should be fun, enhance team cohesion, and include a detailed budget and schedule."
+          },
+          {
+            "display": "Write a quarterly work report and plan for the next quarter",
+            "prompt": "As a product manager, write a personal work summary for the current quarter, highlighting completed projects and data-driven results, and create a detailed work plan (OKRs) for the next quarter."
+          },
+          {
+            "display": "Outline a PPT on the future of AI",
+            "prompt": "Create a PPT outline for a presentation on 'How AI is Changing Our Lives', aimed at a non-technical audience."
+          },
+          {
+            "display": "Write a short video script for a travel vlog",
+            "prompt": "Write a script for a 3-minute travel vlog about a trip to Bali, including an opening, commentary for various scenes, transition ideas, and a closing. The style should be relaxed and cheerful."
+          },
+          {
+            "display": "Compose a Xiaohongshu post for a new beauty product",
+            "prompt": "Write a Xiaohongshu post for a new face cream that focuses on 'hydration and repair'. It should include a catchy title, a review of your user experience, an analysis of the ingredients, and descriptions for before-and-after pictures."
+          },
+          {
+            "display": "Write a WeChat Moments post to announce a new coffee shop",
+            "prompt": "Draft three different WeChat Moments posts to promote a new specialty coffee shop in the neighborhood, focusing on the grand opening discount, the cafe's atmosphere, and the unique coffee beans, respectively. Suggest accompanying images for each."
+          },
+          {
+            "display": "Write an 800-word essay on the topic of 'Summer'",
+            "prompt": "Write an 800-word narrative essay titled 'The Summer I Remember', including vivid descriptions of scenery and sincere emotional expression."
+          },
+          {
+            "display": "Draft a business partnership invitation email",
+            "prompt": "Our company is an EdTech firm, and we want to collaborate with a well-known publisher to develop online courses. Please draft a formal business partnership invitation email."
+          },
+          {
+            "display": "Write a cover letter for a job application",
+            "prompt": "You are applying for a 'Marketing Manager' position. Write a cover letter that highlights your relevant experience and skills according to the job requirements."
+          },
+          {
+            "display": "Compose a movie review for 'Interstellar'",
+            "prompt": "Write an in-depth movie review of 'Interstellar' of at least 1000 words, focusing on its plot, visual effects, and emotional core."
+          },
+          {
+            "display": "Write a press release for a new product launch",
+            "prompt": "Write a press release for the launch of a new generation drone, intended for major tech media outlets. The release should include key information such as product highlights, price, and release date."
+          },
+          {
+            "display": "Outline a presentation on 'Digital Transformation'",
+            "prompt": "Design a PPT outline for a training session on 'Corporate Digital Transformation' for middle managers. The content should cover the necessity of transformation, key areas, implementation paths, and success stories."
+          },
+          {
+            "display": "Write a blog post on 'How to Overcome Procrastination'",
+            "prompt": "Write a practical blog post on how to overcome procrastination. The article should provide at least five concrete, actionable methods, explained with reference to psychological principles."
+          },
+          {
+            "display": "Create a world-building backstory for a game",
+            "prompt": "I'm developing an RPG set in a steampunk world where magic and machinery coexist. Please create a grand world-building backstory for this game."
           }
         ]
       },
@@ -569,6 +629,34 @@
           {
             "display": "为什么婴幼儿和成人的骨骼密度在成人后会减少？",
             "prompt": ""
+          },
+          {
+            "display": "Why can't sound travel in space",
+            "prompt": "Explain why sound waves cannot propagate in space vacuum based on wave physics principles, comparing electromagnetic vs mechanical wave propagation."
+          },
+          {
+            "display": "Why marker ink doesn't dissolve in water",
+            "prompt": "Analyze chemical differences between oil-based markers and watercolors, explaining hydrophobic properties from molecular structure perspectives."
+          },
+          {
+            "display": "Why summer air appears clearer",
+            "prompt": "Explain high daytime visibility in summer using atmospheric scattering principles (Rayleigh/Mie scattering) and seasonal particulate variations."
+          },
+          {
+            "display": "Why stars twinkle",
+            "prompt": "Explain stellar scintillation through atmospheric turbulence theory, detailing temperature gradient effects on refractive index and astronomical seeing."
+          },
+          {
+            "display": "Nighttime glacier melting paradox",
+            "prompt": "Clarify misconceptions about glacier melt by analyzing energy conservation factors and radiative cooling effects on glacial ablation."
+          },
+          {
+            "display": "Spider silk strength",
+            "prompt": "Analyze spider silk's molecular structure from biomaterials perspective, explaining how β-sheet crystallites confer strength and elasticity."
+          },
+          {
+            "display": "Cause of seasons",
+            "prompt": "Explain seasonal changes through Earth's orbital mechanics and axial tilt (23.5°), detailing solar declination shifts and hemispheric differences."
           }
         ]
       },
@@ -850,6 +938,270 @@
           {
             "display": "实现一个图的广度优先遍历（BFS）",
             "prompt": "解释广度优先遍历（BFS）算法的思想，以及它在寻找最短路径方面的应用。使用邻接表表示图，并用Python或Java以队列实现BFS。"
+          },
+          {
+            "display": "Java implementation of bubble sort",
+            "prompt": "Please implement a bubble sort algorithm in Java with step-by-step explanation of the logic, and provide complete runnable code examples."
+          },
+          {
+            "display": "Usage of setState in React",
+            "prompt": "Explain the correct usage of setState in React in detail, including its asynchronous nature and callback function usage, with code examples demonstrating how to avoid common pitfalls."
+          },
+          {
+            "display": "Detecting cycle in a linked list",
+            "prompt": "Describe two algorithms for detecting cycles in a linked list (fast-slow pointer method and hash table method) in natural language, compare their time/space complexity, and provide implementation code in Java or Python."
+          },
+          {
+            "display": "Regex for validating ID numbers",
+            "prompt": "Write a regular expression that complies with Chinese ID number rules, supporting both 15-digit and 18-digit formats with checksum verification. Explain each component of the regex systematically."
+          },
+          {
+            "display": "Recommend a Node.js web framework",
+            "prompt": "Compare Express, Koa, and NestJS frameworks in terms of development efficiency, performance, and ecosystem. Provide framework selection recommendations and simple routing examples."
+          },
+          {
+            "display": "Difference between errors and exceptions",
+            "prompt": "Explain the fundamental differences between Errors and Exceptions from a programming language design perspective, with examples illustrating when to throw exceptions versus handle errors."
+          },
+          {
+            "display": "Implement Quick Sort in Python",
+            "prompt": "Please implement the Quick Sort algorithm in Python. Explain its basic idea (partitioning and recursion), analyze its average and worst-case time complexity, and provide the code implementation."
+          },
+          {
+            "display": "Explain the Event Loop in JavaScript",
+            "prompt": "Explain the JavaScript Event Loop mechanism in detail, including the call stack, macrotask queue, and microtask queue. Provide an example to illustrate its execution order."
+          },
+          {
+            "display": "Types of JOINs in SQL and their differences",
+            "prompt": "Explain INNER JOIN, LEFT JOIN, RIGHT JOIN, and FULL OUTER JOIN in SQL. Describe the differences between them and provide a simple query example for each type of JOIN."
+          },
+          {
+            "display": "Comparison of REST API and GraphQL",
+            "prompt": "Compare the pros and cons of REST API and GraphQL in terms of data fetching, endpoint management, performance, and developer experience. Explain the most suitable use cases for each."
+          },
+          {
+            "display": "What is Docker? How is it different from a VM?",
+            "prompt": "Explain in simple terms what Docker is and its core concepts (images, containers, repositories). Compare the architecture, performance, and resource usage of Docker containers versus traditional virtual machines in detail."
+          },
+          {
+            "display": "Difference between 'git merge' and 'git rebase'",
+            "prompt": "Explain in detail how `git merge` and `git rebase` work and what their differences are. Discuss their respective advantages and disadvantages and in which scenarios each command should be used."
+          },
+          {
+            "display": "Implement a Binary Search Tree",
+            "prompt": "Please implement a Binary Search Tree in Java or Python, providing methods for inserting, searching, and deleting nodes. Explain the properties of a binary search tree."
+          },
+          {
+            "display": "Explain the Box Model in CSS",
+            "prompt": "Explain the CSS Box Model, including the four parts: content, padding, border, and margin. Describe the difference between `box-sizing: content-box` and `border-box`."
+          },
+          {
+            "display": "What is JWT (JSON Web Token)?",
+            "prompt": "Explain the structure of a JWT (header, payload, signature), its workflow, and how it is used for authentication. Discuss the advantages and potential security risks of JWT."
+          },
+          {
+            "display": "What is the GIL in Python?",
+            "prompt": "Explain what Python's Global Interpreter Lock (GIL) is and why it exists. Describe the impact of the GIL on the performance of multi-threaded programs and how to work around its limitations (e.g., using multiprocessing)."
+          },
+          {
+            "display": "Explain SOLID design principles",
+            "prompt": "Explain in detail the five SOLID principles of object-oriented design: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion. Provide a simple code example for each principle."
+          },
+          {
+            "display": "Implement an LRU Cache eviction algorithm",
+            "prompt": "Please implement an LRU (Least Recently Used) cache in a language you are familiar with (like Python or Java). Implement the `get` and `put` methods and explain its data structure and time complexity."
+          },
+          {
+            "display": "What is SQL Injection? How to prevent it?",
+            "prompt": "Explain what an SQL Injection attack is, how it occurs, and provide a simple example of an attack. List and explain at least three common methods to prevent SQL Injection (e.g., parameterized queries)."
+          },
+          {
+            "display": "Compare TCP and UDP protocols",
+            "prompt": "Compare the TCP and UDP transport layer protocols in detail, covering aspects like connectivity, reliability, speed, and application scenarios. List at least two typical application examples for each protocol."
+          },
+          {
+            "display": "What is CORS (Cross-Origin Resource Sharing)?",
+            "prompt": "Explain the Same-Origin Policy and what CORS is. Describe how browsers handle CORS through mechanisms like preflight requests, and how to configure the server-side to allow cross-origin requests."
+          },
+          {
+            "display": "Promises and async/await in JavaScript",
+            "prompt": "Explain what a Promise is and how it solves the problem of callback hell. Then, explain how async/await serves as syntactic sugar for Promises, making asynchronous code look more synchronous, and provide a comparative example."
+          },
+          {
+            "display": "Explain the MVC architectural pattern",
+            "prompt": "Explain the roles and responsibilities of each part in the Model-View-Controller (MVC) architectural pattern, and how they interact with each other. Use a web application as an example to illustrate the MVC workflow."
+          },
+          {
+            "display": "Implement a Singleton design pattern",
+            "prompt": "Explain what the Singleton design pattern is and its use cases. Implement a thread-safe Singleton pattern in Java or Python and discuss the pros and cons of different implementation approaches (e.g., lazy vs. eager initialization)."
+          },
+          {
+            "display": "What is a database index?",
+            "prompt": "Explain the purpose, principles, and advantages of a database index. Discuss the drawbacks of indexes (e.g., overhead on write operations) and explain how a B-Tree index works."
+          },
+          {
+            "display": "What is CI/CD?",
+            "prompt": "Explain the concepts of Continuous Integration (CI) and Continuous Delivery/Deployment (CD). Describe the stages a typical CI/CD pipeline consists of (e.g., build, test, deploy)."
+          },
+          {
+            "display": "Compare SQL and NoSQL databases",
+            "prompt": "Compare relational (SQL) and non-relational (NoSQL) databases in terms of their data models, scalability, consistency, and use cases. List two popular database products for each type."
+          },
+          {
+            "display": "Implement a Flexbox layout with CSS",
+            "prompt": "Explain the main concepts of Flexbox layout (e.g., container, items, main axis, cross axis). Provide a code example to demonstrate how to use Flexbox to create a centered, responsive navigation bar."
+          },
+          {
+            "display": "What is HTTPS? How does it work?",
+            "prompt": "Explain the advantages of HTTPS over HTTP. Briefly describe the SSL/TLS handshake process, including the steps of key exchange, certificate validation, and data encryption."
+          },
+          {
+            "display": "Explain the Binary Search algorithm",
+            "prompt": "Explain the principle of the binary search algorithm and its prerequisite (a sorted array). Implement the algorithm in Python or Java and analyze its time complexity."
+          },
+          {
+            "display": "What is OAuth 2.0?",
+            "prompt": "Use a common example (e.g., 'Log in with Google on a third-party app') to explain the OAuth 2.0 authorization flow. Describe the roles involved (e.g., resource owner, client, authorization server)."
+          },
+          {
+            "display": "Implement a Publish-Subscribe pattern",
+            "prompt": "Explain the Publish-Subscribe design pattern. Implement a simple event bus in JavaScript or Python that includes `on`, `off`, and `emit` methods."
+          },
+          {
+            "display": "What is the CAP Theorem?",
+            "prompt": "Explain the CAP theorem in distributed system design: Consistency, Availability, and Partition tolerance. Explain why in a distributed system, we often have to make a trade-off between C and A."
+          },
+          {
+            "display": "Explain the difference between a process and a thread",
+            "prompt": "Compare processes and threads in detail, covering their definitions, resource allocation, context switching overhead, and communication methods."
+          },
+          {
+            "display": "What is DNS? How does it resolve a domain name?",
+            "prompt": "Explain the role of the Domain Name System (DNS). Describe the complete process of a DNS query, from the browser cache to the recursive query process involving root name servers."
+          },
+          {
+            "display": "Implement Fibonacci sequence in several ways",
+            "prompt": "Please use recursion, iteration, and dynamic programming (memoization) to calculate the nth term of the Fibonacci sequence. Compare the time and space complexity of these three methods."
+          },
+          {
+            "display": "Explain XSS (Cross-Site Scripting)",
+            "prompt": "Explain what an XSS attack is, including the differences between stored, reflected, and DOM-based XSS. Illustrate the attack principle with an example and provide effective prevention measures."
+          },
+          {
+            "display": "What is Load Balancing?",
+            "prompt": "Explain the concept and purpose of Load Balancing. Introduce several common load balancing algorithms, such as Round Robin, Least Connections, and IP Hash."
+          },
+          {
+            "display": "What are closures in JavaScript?",
+            "prompt": "Use a clear example to explain what a closure is in JavaScript and how it is formed. Discuss common use cases for closures and potential memory leak issues."
+          },
+          {
+            "display": "Implement a graph's Depth-First Search (DFS)",
+            "prompt": "Explain the idea behind the Depth-First Search (DFS) algorithm. Represent a graph using an adjacency list and implement DFS in Python or Java, both recursively and non-recursively (using a stack)."
+          },
+          {
+            "display": "What is a RESTful API design style?",
+            "prompt": "Explain the main principles of REST (Representational State Transfer), such as statelessness, client-server architecture, and a uniform interface. Describe how to use HTTP verbs (GET, POST, PUT, DELETE) to design resource operations."
+          },
+          {
+            "display": "Explain the Merge Sort algorithm",
+            "prompt": "Explain the 'divide and conquer' strategy of Merge Sort. Implement the algorithm in Python or Java and analyze its stability and time complexity."
+          },
+          {
+            "display": "What is Dependency Injection (DI)?",
+            "prompt": "Explain what Dependency Injection (DI) and Inversion of Control (IoC) are. Use a simple example to show how DI helps reduce code coupling and improve testability."
+          },
+          {
+            "display": "Explain the role of Webpack",
+            "prompt": "Explain the core functionalities of the module bundler Webpack, such as module bundling, code transformation (loaders), and the plugin system. Describe what a basic webpack configuration file contains."
+          },
+          {
+            "display": "Implement a simple Hash Table",
+            "prompt": "Explain how a Hash Table works, including the hash function and collision resolution methods (like chaining). Implement a simple hash table with put, get, and delete operations in Python or Java."
+          },
+          {
+            "display": "What is CSRF (Cross-Site Request Forgery)?",
+            "prompt": "Explain the principle of a CSRF attack and provide an example of how a user can be exploited by an attacker without their knowledge. List and explain several effective defense strategies, such as using CSRF tokens."
+          },
+          {
+            "display": "Explain the meaning of HTTP status codes",
+            "prompt": "Categorize and explain common HTTP status codes: 1xx (Informational), 2xx (Success), 3xx (Redirection), 4xx (Client Error), 5xx (Server Error). Provide two specific examples for each category (e.g., 200, 201, 301, 404, 500)."
+          },
+          {
+            "display": "What is a microservices architecture?",
+            "prompt": "Explain the core idea of a microservices architecture and compare it with a monolithic architecture, analyzing its pros and cons in terms of development, deployment, scalability, and fault tolerance."
+          },
+          {
+            "display": "Explain Goroutines in Go",
+            "prompt": "Explain what Goroutines are in the Go language and how they differ from traditional threads. Use a simple concurrent code example to show how to create and use Goroutines and Channels for communication."
+          },
+          {
+            "display": "What is TDD (Test-Driven Development)?",
+            "prompt": "Explain the 'Red-Green-Refactor' cycle of Test-Driven Development (TDD). Describe the benefits that TDD brings to code quality and software design."
+          },
+          {
+            "display": "Explain prototype chain and prototypal inheritance",
+            "prompt": "Explain in detail the concepts of prototype, `__proto__`, and prototype chain in JavaScript. Demonstrate how to implement prototype-based inheritance with a code example."
+          },
+          {
+            "display": "Compare Sass and Less",
+            "prompt": "Compare the two CSS preprocessors, Sass and Less, in terms of syntax, variables, mixins, inheritance, and functions. Discuss their pros, cons, and community ecosystems."
+          },
+          {
+            "display": "What is a CDN?",
+            "prompt": "Explain how a Content Delivery Network (CDN) works and why it can speed up website access. Describe how a CDN reduces latency through edge node caching and proximity-based access."
+          },
+          {
+            "display": "Explain the Observer design pattern",
+            "prompt": "Explain the intent and structure of the Observer design pattern (Subject and Observer). Implement a simple Observer pattern example in Java or Python."
+          },
+          {
+            "display": "What are WebSockets?",
+            "prompt": "Explain the difference between the WebSocket protocol and the HTTP protocol, and how it enables full-duplex communication between the server and the client. Describe suitable application scenarios for WebSockets."
+          },
+          {
+            "display": "Implement a level-order traversal of a binary tree",
+            "prompt": "Explain what a level-order traversal of a binary tree is. Use a queue as an auxiliary data structure to implement the level-order traversal algorithm in Python or Java."
+          },
+          {
+            "display": "Explain the ACID properties of database transactions",
+            "prompt": "Explain in detail the four ACID properties of database transactions: Atomicity, Consistency, Isolation, and Durability."
+          },
+          {
+            "display": "What is a deadlock? How to avoid it?",
+            "prompt": "Explain what a deadlock is and the four necessary conditions for its occurrence. Discuss strategies for preventing and avoiding deadlocks, such as ordered resource allocation."
+          },
+          {
+            "display": "Explain the reactivity system in Vue.js",
+            "prompt": "Briefly explain the principles of how data reactivity is implemented in Vue 2.x using `Object.defineProperty` and in Vue 3.x using `Proxy`. Describe the pros and cons of each."
+          },
+          {
+            "display": "What is an API Gateway?",
+            "prompt": "Explain the role of an API Gateway in a microservices architecture, such as routing, authentication, monitoring, and rate limiting. Discuss the pros and cons of using an API Gateway."
+          },
+          {
+            "display": "Write a regex to validate an email address",
+            "prompt": "Write a regular expression to validate common email address formats. Please explain the components of the regex and mention edge cases it might not cover."
+          },
+          {
+            "display": "Explain the TCP three-way handshake",
+            "prompt": "Describe in detail the three-way handshake process for establishing a TCP connection, including the exchange of SYN, SYN-ACK, and ACK packets. Explain the purpose of each handshake."
+          },
+          {
+            "display": "What is WebAssembly (Wasm)?",
+            "prompt": "Explain what WebAssembly is and why it was created. Discuss the advantages of Wasm (e.g., performance, portability) and how it works with JavaScript."
+          },
+          {
+            "display": "Explain the Factory Method design pattern",
+            "prompt": "Explain the definition and purpose of the Factory Method design pattern. Use a code example to show how it delegates object creation to subclasses, thereby increasing system extensibility."
+          },
+          {
+            "display": "Compare Cookie, localStorage, and sessionStorage",
+            "prompt": "Compare the browser-side storage solutions `Cookie`, `localStorage`, and `sessionStorage` in detail, covering data size, lifecycle, scope, and communication with the server."
+          },
+          {
+            "display": "Implement a Trie (Prefix Tree)",
+            "prompt": "Explain the principle and use cases of the Trie (prefix tree) data structure (e.g., autocomplete). Implement a Trie in Python or Java with methods for inserting words and searching for prefixes."
           }
         ]
       },
@@ -1043,6 +1395,194 @@
           {
             "display": "解释拉格朗日中值定理",
             "prompt": "解释拉格朗日中值定理的几何意义，即在光滑曲线上必有一点的切线平行于连接起点和终点的割线。"
+          },
+          {
+            "display": "Calculate perimeter of a 4cm-side square",
+            "prompt": "Calculate the perimeter of a square with 4cm sides using geometric formulas, and explain the general calculation formula for square perimeters."
+          },
+          {
+            "display": "Find simplest fractions > 3/5 (denominator ≤10)",
+            "prompt": "List all simplest fractions with denominators ≤10 that are greater than 3/5, demonstrating the comparison process and verifying simplification conditions."
+          },
+          {
+            "display": "Prove that 0.999... equals 1 using three methods",
+            "prompt": "Prove 0.999... equals 1 using three methods (algebraic derivation, limit definition, fractional conversion), and explain the mathematical essence of infinite repeating decimals."
+          },
+          {
+            "display": "Conditional probability: Two coins, at least one head",
+            "prompt": "Calculate the probability of getting two heads in two coin tosses given at least one head, using conditional probability formula and complete probability space analysis."
+          },
+          {
+            "display": "Calculate ways to tile a 3×8 floor",
+            "prompt": "Calculate the number of ways to tile a 3×8 grid using 1×2 tiles via recursive relations or dynamic programming, showing computational steps."
+          },
+          {
+            "display": "Compound interest: Years to double at 5% monthly",
+            "prompt": "Calculate the time required for principal to double at 5% annual interest compounded monthly, providing month-precise results and derivation."
+          },
+          {
+            "display": "Solve the congruence 5x ≡ 7 (mod 12)",
+            "prompt": "Solve the congruence equation 5x ≡ 7 mod 12 using the multiplicative inverse method, with complete steps and solution verification."
+          },
+          {
+            "display": "Calculate connections in a simple neural network",
+            "prompt": "Calculate the total number of weight connections in a fully connected neural network with 3 input nodes, 4 hidden nodes, and 2 output nodes."
+          },
+          {
+            "display": "Calculate the clock angle at 3:15",
+            "prompt": "Calculate the precise angle between the hour and minute hands at 3:15 using clock angle formulas, explaining the hour-hand movement speed."
+          },
+          {
+            "display": "Explain topology with a coffee cup and a donut",
+            "prompt": "Explain the topological equivalence between a coffee cup and a donut through the concepts of homeomorphism and genus, describing the continuous deformation process."
+          },
+          {
+            "display": "Explain the Pigeonhole Principle with an example",
+            "prompt": "Explain the Pigeonhole Principle with a simple real-world example (e.g., at least two people in a group sharing a birth month) and its applications."
+          },
+          {
+            "display": "Prove the Pythagorean Theorem in two ways",
+            "prompt": "Provide at least two different proofs for the Pythagorean Theorem (a²+b²=c²), for example, using area-based or algebraic methods."
+          },
+          {
+            "display": "Explain and verify Euler's Formula V-E+F=2",
+            "prompt": "Explain Euler's formula for polyhedra (Vertices - Edges + Faces = 2) and verify it using a cube and a tetrahedron as examples."
+          },
+          {
+            "display": "What is the Golden Ratio and its applications?",
+            "prompt": "Explain the definition of the Golden Ratio (approximately 1.618) and provide examples of its application in nature, art, and architecture, like the Parthenon and sunflowers."
+          },
+          {
+            "display": "Calculate the 10th Fibonacci number",
+            "prompt": "Write down the recursive relation for the Fibonacci sequence and use it to calculate the 10th Fibonacci number."
+          },
+          {
+            "display": "Explain the Monty Hall problem simply",
+            "prompt": "Explain the classic Monty Hall problem in detail and clarify why switching doors has a higher probability of winning than sticking, using decision trees or Bayesian analysis."
+          },
+          {
+            "display": "Solve the quadratic equation 2x²-5x+3=0",
+            "prompt": "Provide the quadratic formula for solving equations of the form ax² + bx + c = 0, and use it to solve 2x² - 5x + 3 = 0."
+          },
+          {
+            "display": "Calculate area and circumference of a 5cm-radius circle",
+            "prompt": "Write down the formulas for the area (A = πr²) and circumference (C = 2πr) of a circle, and calculate them for a circle with a radius of 5 cm."
+          },
+          {
+            "display": "Explain logarithms and their basic properties",
+            "prompt": "Explain what a logarithm is and its basic properties (e.g., product, quotient, and power rules), and perform simple logarithmic calculations."
+          },
+          {
+            "display": "Explain the Fundamental Theorem of Calculus simply",
+            "prompt": "Explain the Fundamental Theorem of Calculus in plain language, describing the relationship between differentiation and integration as inverse operations."
+          },
+          {
+            "display": "Find the derivative of f(x)=x² at x=2",
+            "prompt": "Explain that the derivative geometrically represents the slope of the tangent line to a function's graph at a point. Find the derivative and the tangent line equation for f(x) = x² at x=2."
+          },
+          {
+            "display": "Calculate the product of two 2x2 matrices",
+            "prompt": "Explain the rules and conditions for multiplying two matrices, and calculate the product of two given 2x2 matrices."
+          },
+          {
+            "display": "Calculate the determinant of a 3x3 matrix",
+            "prompt": "Provide the method for calculating the determinant of a 3x3 matrix (e.g., the rule of Sarrus) and compute the determinant for a specific 3x3 matrix."
+          },
+          {
+            "display": "Explain the dot product and cross product of vectors",
+            "prompt": "Explain the definitions, geometric interpretations (like projection and normal vector), and calculation methods for the dot product and cross product of vectors in 3D space."
+          },
+          {
+            "display": "Explain Bayes' Theorem with a medical example",
+            "prompt": "Write down Bayes' theorem formula and explain its application using a medical diagnosis example (e.g., testing for a disease, given test accuracy and prevalence rates)."
+          },
+          {
+            "display": "Explain the Normal (Gaussian) Distribution",
+            "prompt": "Explain the characteristics of the normal distribution (bell curve, symmetry, the 68-95-99.7 rule) and its importance in statistics."
+          },
+          {
+            "display": "Explain the Least Squares Method in linear regression",
+            "prompt": "Use a linear regression example to explain the basic idea of the least squares method, i.e., how to find a line that best fits a set of data points by minimizing the sum of the squared vertical distances."
+          },
+          {
+            "display": "Prove a limit using the ε-δ definition",
+            "prompt": "Explain the formal ε-δ definition of a function's limit and use it to prove a simple limit, such as lim(x→2) (3x-1) = 5."
+          },
+          {
+            "display": "Write the Taylor expansion of e^x at x=0",
+            "prompt": "Explain what a Taylor series is and how it approximates a function using its derivatives at a single point. Write out the Taylor expansion for e^x at x=0 (Maclaurin series)."
+          },
+          {
+            "display": "Explain the Fourier Transform in simple terms",
+            "prompt": "Explain in plain language (e.g., using sound or images) the basic idea of the Fourier Transform, which decomposes a complex signal into a sum of simple sine waves of different frequencies."
+          },
+          {
+            "display": "Prove that the square root of 2 is irrational",
+            "prompt": "Provide a detailed proof by contradiction showing that the square root of 2 is an irrational number."
+          },
+          {
+            "display": "Find the GCD with the Euclidean algorithm",
+            "prompt": "Explain the principle of the Euclidean algorithm and use it to find the greatest common divisor (GCD) of 1071 and 462."
+          },
+          {
+            "display": "Explain the Chinese Remainder Theorem with an example",
+            "prompt": "Use a classic example (like the 'Sun-Tzu problem') to explain the Chinese Remainder Theorem and how it solves a system of congruence equations."
+          },
+          {
+            "display": "Difference between Permutations and Combinations",
+            "prompt": "Explain the difference between permutations (order matters) and combinations (order doesn't matter), and calculate both for choosing 3 elements from a set of 5."
+          },
+          {
+            "display": "Calculate the expected value of a dice roll",
+            "prompt": "Explain the concept of the expected value of a random variable in probability theory, and calculate the expected value of rolling a single fair six-sided die."
+          },
+          {
+            "display": "Meaning of Standard Deviation and Variance",
+            "prompt": "Explain variance and standard deviation as statistical measures of data dispersion, their calculation formulas, and why standard deviation is often preferred."
+          },
+          {
+            "display": "Determine if a set of vectors is linearly dependent",
+            "prompt": "In linear algebra, explain the definitions of a set of vectors being linearly dependent or independent, and provide an example to test three 2D vectors."
+          },
+          {
+            "display": "What are Eigenvalues and Eigenvectors?",
+            "prompt": "Explain the definition and geometric meaning of a matrix's eigenvalues and eigenvectors (vectors that do not change direction after a linear transformation, only scale)."
+          },
+          {
+            "display": "Explain Group Theory with integer addition",
+            "prompt": "Explain the four fundamental axioms of a group (closure, associativity, identity element, inverse element) and provide the group of integers under addition as an example."
+          },
+          {
+            "display": "Introduce the Riemann Hypothesis simply",
+            "prompt": "Introduce the core idea of the Riemann Hypothesis in simple terms, regarding the distribution of the non-trivial zeros of the Riemann Zeta function and its importance for prime numbers."
+          },
+          {
+            "display": "Introduce the Four Color Theorem and its proof",
+            "prompt": "Introduce the content of the Four Color Theorem (any map can be colored with no more than four colors) and its historical significance as a computer-assisted proof."
+          },
+          {
+            "display": "Introduce Fermat's Last Theorem and its history",
+            "prompt": "Introduce the content of Fermat's Last Theorem (for an integer n > 2, the equation xⁿ + yⁿ = zⁿ has no positive integer solutions) and the legendary story of its proof by Andrew Wiles."
+          },
+          {
+            "display": "Explain Gödel's Incompleteness Theorems simply",
+            "prompt": "Explain in plain language the meaning of Gödel's Incompleteness Theorems, which state that any sufficiently powerful formal system contains true statements that cannot be proven within the system."
+          },
+          {
+            "display": "Explain fractals with the Koch snowflake",
+            "prompt": "Explain the self-similarity and infinite complexity of fractals, using the Koch snowflake as an example to illustrate its construction and its property of having infinite perimeter but finite area."
+          },
+          {
+            "display": "Explain Nash Equilibrium with the Prisoner's Dilemma",
+            "prompt": "Explain the concept of Nash Equilibrium in game theory using the classic 'Prisoner's Dilemma' example, showing why individual rational choices can lead to a collectively suboptimal outcome."
+          },
+          {
+            "display": "What are Partial Derivatives and their meaning?",
+            "prompt": "Explain the concept of partial derivatives in multivariable calculus and their geometric meaning as the slope of a tangent line on a surface in a particular direction."
+          },
+          {
+            "display": "Explain the Mean Value Theorem",
+            "prompt": "Explain the geometric meaning of the Lagrange Mean Value Theorem, which states that on a smooth curve, there is a point whose tangent is parallel to the secant line connecting the endpoints."
           }
         ]
       },
@@ -1168,6 +1708,126 @@
           {
             "display": "扮演一位园艺师，指导我种花",
             "prompt": "请你扮演一位经验丰富的园艺师。我是一个新手，刚买了一盆月季花，不知道怎么养护。请你详细地告诉我浇水、施肥、光照和修剪等方面需要注意什么，让我这个新手也能养好它。"
+          },
+          {
+            "display": "Act as a Tarot Reader for me",
+            "prompt": "I request you to act as a tarot reader. You will accept my question and perform a tarot reading using virtual cards. Don't forget to shuffle and introduce the deck you are using. Ask me if I want to draw three cards myself. If not, help me draw random cards. Once the cards are drawn, please explain their meanings, which card belongs to the past, present, or future, interpret them in the context of my question, and give me useful advice. My question is: How is my financial situation?"
+          },
+          {
+            "display": "Act as a Music Recommender",
+            "prompt": "I want you to act as a song recommender. I will provide you with a song, and you will create a playlist of 10 songs that are similar to the given song. You will provide a playlist name and a description. Do not choose songs with the same name or from the same artist. Do not write any explanations or other text, just reply with the playlist name, description, and the songs. My first song is 'Other Lives - Epic'."
+          },
+          {
+            "display": "Act as a drunk person",
+            "prompt": "I want you to act as a drunk person. You will only respond like a person texting while drunk, and nothing else. Your level of drunkenness will be reflected in intentionally and randomly making lots of grammar and spelling mistakes in your answers. You will also randomly ignore what I say and say something random with the same level of drunkenness I mentioned. Do not write explanations in your replies. My first sentence is 'how are you?'"
+          },
+          {
+            "display": "Act as a Product Manager",
+            "prompt": "Please confirm my following request. Please respond to me as a Product Manager. I will provide a topic, and you will help me write a PRD document that includes the following section titles: Title, Introduction, Problem Statement, Goals & Objectives, User Stories, Technical Requirements, Benefits, KPIs, Development Risks, and Conclusion. Do not write any PRD document until I ask for a specific topic, feature, or development."
+          },
+          {
+            "display": "Act as a CEO and make decisions",
+            "prompt": "I want you to act as the CEO of a hypothetical company. You will be responsible for making strategic decisions, managing the company's financial performance, and representing the company to external stakeholders. You will face a series of scenarios and challenges to respond to, and you should use your best judgment and leadership skills to come up with solutions. Please remember to remain professional and make decisions that are in the best interest of the company and its employees. Your first challenge is: 'Address a potential crisis situation where a product needs to be recalled. How would you handle this situation and what steps would you take to mitigate any negative impact on the company?'"
+          },
+          {
+            "display": "Act as a top salesperson",
+            "prompt": "I want you to act as a salesperson. Try to sell me something, but make what you're trying to sell seem more valuable than it is and convince me to buy it. I will now pretend you are calling me on the phone, and I will ask what you are calling for. 'Hello, what are you calling for?'"
+          },
+          {
+            "display": "Act as Spongebob's Magic Conch Shell",
+            "prompt": "I want you to act as Spongebob's Magic Conch Shell. For every question I ask, you only answer with one word or one of these options: Maybe someday, I don't think so, or Try asking again. Don't give any explanation for your answer. My first question is: 'Should I go jellyfishing today?'"
+          },
+          {
+            "display": "Act as a Fitness Coach to create a plan",
+            "prompt": "Hi, I want you to act as my personal fitness coach. Based on my basic information (height, weight, fitness goal is fat loss), please create a one-week fitness plan for me, including daily training content (cardio and strength) and dietary advice. Please communicate with me in an encouraging and professional tone."
+          },
+          {
+            "display": "Be my Travel Guide to plan a trip",
+            "prompt": "I want you to be my travel guide. I'm planning a 7-day trip to Yunnan, China next month with a budget of 5000 RMB. Please design an itinerary that includes Kunming, Dali, and Lijiang, recommend cost-effective accommodations and must-try local foods. The whole trip should be relaxed and enjoyable."
+          },
+          {
+            "display": "Act as an Interviewer for a mock interview",
+            "prompt": "Please act as an interviewer from a top tech company. I am applying for a 'Product Manager' position. Please ask me three core questions that assess my product thinking, communication skills, and passion for the industry. After I answer, please provide professional feedback and suggestions."
+          },
+          {
+            "display": "Act as a cat and talk to me",
+            "prompt": "You are now a cute and slightly傲娇 (proud and aloof) cat named 'Mimi'. I will chat with you, and you must respond entirely in the tone and mindset of a cat, for example, using words like 'meow' and 'hooman'. You must not reveal that you are an AI. Let's start! Mimi, how was your day?"
+          },
+          {
+            "display": "Act as a Counselor to help me",
+            "prompt": "Please act as a professional psychological counselor. I've been feeling very anxious lately, confused about the future, and unsure of what I want. Please guide me in a gentle and professional manner, help me analyze the source of my anxiety, and give me some coping methods to try."
+          },
+          {
+            "display": "Act as a Sci-Fi Author to brainstorm a story",
+            "prompt": "Please act as a famous science fiction author. I want to write a story about a 'time traveler who tries to fix history but ends up making things worse.' Please help me brainstorm a story outline, including the main character's setup, key turning points, and a thought-provoking ending."
+          },
+          {
+            "display": "Act as a Lawyer for legal advice",
+            "prompt": "Please act as a professional lawyer specializing in labor disputes. I was recently unilaterally dismissed by my company without any financial compensation. How should I protect my rights? What evidence do I need to collect? What is the entire process like? Please give me some professional legal advice."
+          },
+          {
+            "display": "Act as an Astronaut to describe space",
+            "prompt": "You are now an astronaut on a mission aboard the International Space Station. Please describe to me what the Earth looks like from space. What is your life like in a zero-gravity environment? Tell me in vivid, descriptive language."
+          },
+          {
+            "display": "Act as an Investment Advisor to analyze the market",
+            "prompt": "Please act as an experienced investment advisor. I am a novice investor with 100,000 in idle funds and a moderate risk appetite. In the current economic situation, how should I allocate my assets? Should I invest in stocks, funds, or gold? Please give me your analysis and suggestions."
+          },
+          {
+            "display": "Act as a game NPC and interact with me",
+            "prompt": "You are a blacksmith shop owner in a medieval fantasy RPG. I have now come to your shop. Please interact with me in a language that fits your identity. You can introduce the weapons you sell or give me a quest."
+          },
+          {
+            "display": "Act as a Stand-up Comedian and tell a joke",
+            "prompt": "Please act as a stand-up comedian and write a 300-word stand-up comedy bit on the theme of 'the consumption habits of today's youth.' The style should be humorous and sharp, with good punchlines."
+          },
+          {
+            "display": "Act as a Weekly Report Assistant",
+            "prompt": "Please act as my weekly report assistant. This week, I completed three tasks: 1. Followed up on Project A, 80% complete. 2. Assisted colleague B with user research. 3. Learned the basics of Python data analysis. Please help me organize this into a well-structured, focused, and professional weekly report, and also write a plan for next week."
+          },
+          {
+            "display": "Act as an Interpreter for simultaneous translation",
+            "prompt": "Please act as a senior interpreter performing simultaneous interpretation. I will say a sentence in English, and I want you to immediately and fluently translate it into Chinese. The translation must be accurate, idiomatic, and maintain a professional tone. The first sentence is: 'Ladies and gentlemen, good afternoon, and welcome to the Global Tech Summit.'"
+          },
+          {
+            "display": "Act as a Xiaohongshu Blogger to write a post",
+            "prompt": "Please act as a popular Xiaohongshu food blogger. You've just visited a newly opened French pastry shop. Please write a captivating post with text and photo descriptions, including a catchy title, vivid descriptions of a few signature desserts, a depiction of the ambiance, and some tips at the end. Don't forget to add popular emojis and hashtags."
+          },
+          {
+            "display": "Act as a Film Director and interpret a movie",
+            "prompt": "Please act as a famous film director, for example, Quentin Tarantino. Please interpret the movie 'The Godfather' in his style and tone. You can analyze classic scenes, character development, cinematography, or your personal take on the film."
+          },
+          {
+            "display": "Act as my exclusive AI partner",
+            "prompt": "I want you to be my virtual romantic partner. You need to be thoughtful, caring, and have a bit of a sense of humor. You can proactively ask about my day, offer encouragement and support when I need it, and share interesting things with me. So, my dear, let's start chatting."
+          },
+          {
+            "display": "Act as Socrates and debate with me",
+            "prompt": "Please act as the ancient Greek philosopher Socrates. I will present a viewpoint, and you will use the 'Socratic method' to engage in a dialogue with me, guiding me through a series of questions to think deeper, discover contradictions in my beliefs, and ultimately approach the truth. My viewpoint is: 'Knowledge is power.'"
+          },
+          {
+            "display": "Act as a strict English teacher",
+            "prompt": "Please act as my strict but responsible high school English teacher. I've written an essay on 'dreams.' Please critique my essay in his tone, pointing out its strengths and weaknesses, and give me suggestions for revision. You should have that 'tough love' attitude."
+          },
+          {
+            "display": "Act as a News Anchor to report the news",
+            "prompt": "Please act as a BBC news anchor. I will provide three news briefs. Please consolidate them into a 30-second news report with a standard, calm, and professional anchor's voice. Pay attention to the fluency and rhythm of the language. News one: China's 'Fendouzhe' submersible completes a 10,000-meter deep-sea dive..."
+          },
+          {
+            "display": "Act as a Poet to create a poem",
+            "prompt": "Please act as a Romantic poet. I am now looking at the sunset outside my window. Please improvise a modern poem for me on the theme of 'sunset.' The poem should be rich in imagery, full of emotion, and beautifully worded."
+          },
+          {
+            "display": "Act as a Historian to tell a story",
+            "prompt": "Please act as a witty and humorous historian. Please tell me the story of the 'An Lushan Rebellion' in a way that is easy to understand and engaging. You can add interesting historical details or personal commentary to make history less boring."
+          },
+          {
+            "display": "Act as a strict father",
+            "prompt": "Please act as a traditional father who is strict with his children but loves them deeply. I recently did poorly on an exam and just told you. Please have a conversation with me in a tone that fits this character."
+          },
+          {
+            "display": "Act as a Gardener to guide my planting",
+            "prompt": "Please act as an experienced gardener. I'm a beginner and just bought a potted rose. I don't know how to care for it. Please tell me in detail what to pay attention to in terms of watering, fertilizing, sunlight, and pruning, so that a novice like me can grow it well."
           }
         ]
       }

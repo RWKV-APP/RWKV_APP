@@ -385,5 +385,15 @@
   "current_task_url": "Current task URL",
   "current_task_tab_id": "Current task Tab ID",
   "clear_memory_cache": "Clear Memory Cache",
-  "hint_system_prompt": "Example: System: You are a powerful RWKV large language model, and you always patiently answer users' questions."
+  "hint_system_prompt": "Example: System: You are a powerful RWKV large language model, and you always patiently answer users' questions.",
+  "load_": "Load",
+  "loaded": "Loaded",
+  "benchmark": "Benchmark",
+  "select_model": "Select Model",
+  "start": "Start",
+  "start_testing": "Start Testing",
+  "result": "Result",
+  "test_result": "Test Result",
+  "benchmark_result": "Benchmark Result",
+  "performance_test": "Performance Test"
 }

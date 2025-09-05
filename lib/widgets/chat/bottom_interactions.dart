@@ -52,6 +52,7 @@ class _Interactions extends ConsumerWidget {
         if (demoType == DemoType.chat) const _ThinkingModeButton(),
         if (demoType == DemoType.chat && currentLangIsZh) const _SecondaryOptionsButton(),
         if (demoType == DemoType.chat) const _BatchButton(),
+        if (demoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
     );
@@ -62,7 +63,7 @@ class _WebSearchModeButton extends ConsumerWidget {
   const _WebSearchModeButton();
 
   void _onTap() {
-    P.chat.onSwitchWebSearchMode(null);
+    P.chat.onSwitchWebSearchMode(P.chat.webSearchMode.q == WebSearchMode.off ? WebSearchMode.search : WebSearchMode.off);
   }
 
   @override
@@ -211,6 +212,46 @@ class _ThinkingModeButton extends ConsumerWidget {
                     4.w,
                   ],
                 ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WenYanWenButton extends ConsumerWidget {
+  const _WenYanWenButton();
+
+  void _onTap() {
+    P.chat.onSwitchWenYanWen(!P.chat.wenYanWen.q);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final wenYanWen = ref.watch(P.chat.wenYanWen);
+
+    final textScaleFactor = MediaQuery.textScalerOf(context);
+    final height = textScaleFactor.scale(14) + 20;
+
+    return IntrinsicWidth(
+      child: GestureDetector(
+        onTap: _onTap,
+        child: AnimatedContainer(
+          height: height,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          duration: 150.ms,
+          curve: Curves.easeOutCubic,
+          decoration: BoxDecoration(color: wenYanWen ? theme.colorScheme.primary : theme.colorScheme.surfaceContainer, borderRadius: 60.r),
+          child: Center(
+            child: Text(
+              "文言文",
+              style: TextStyle(
+                fontSize: 14,
+                height: 1,
+                color: wenYanWen ? theme.colorScheme.onPrimary : Colors.grey,
               ),
             ),
           ),

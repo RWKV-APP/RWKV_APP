@@ -135,7 +135,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                         labelText: S.current.system_prompt,
                         labelStyle: const TextStyle(fontSize: 16),
                         border: const OutlineInputBorder(),
-                        hintText: S.current.hint_system_prompt
+                        hintText: S.current.hint_system_prompt,
                       ),
                     ),
                   if (widget.newChat)
@@ -173,37 +173,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
                     ),
                     const SizedBox(height: 16),
                   ],
-                  if (widget.thinking) ...[
-                    TextField(
-                      controller: _controllerFree,
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        labelText: S.current.thinking_mode_template,
-                        labelStyle: const TextStyle(fontSize: 16),
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _controllerPreferChinese,
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        labelText: S.current.chinese_thinking_mode_template,
-                        labelStyle: const TextStyle(fontSize: 16),
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _controllerLighting,
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        labelText: S.current.lazy_thinking_mode_template,
-                        labelStyle: const TextStyle(fontSize: 16),
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
+                  if (widget.thinking) ...buildThinkingWidget(),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -212,5 +182,75 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         ],
       ),
     );
+  }
+
+  List<Widget> buildThinkingWidget() {
+    return [
+      TextField(
+        controller: _controllerFree,
+        maxLines: 2,
+        decoration: InputDecoration(
+          labelText: S.current.thinking_mode_template,
+          labelStyle: const TextStyle(fontSize: 16),
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      const SizedBox(height: 16),
+      TextField(
+        controller: _controllerPreferChinese,
+        maxLines: 2,
+        decoration: InputDecoration(
+          labelText: S.current.chinese_thinking_mode_template,
+          labelStyle: const TextStyle(fontSize: 16),
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      const SizedBox(height: 8),
+      OutlinedButtonTheme(
+        data: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            visualDensity: VisualDensity.compact,
+            textStyle: WidgetStateProperty.all(TextStyle(fontSize: 12)),
+            padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+            minimumSize: WidgetStateProperty.all(Size(0, 36)),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+          ),
+        ),
+        child: Row(
+          children: [
+            OutlinedButton(
+              onPressed: () {
+                _controllerPreferChinese.text = '<think>嗯';
+              },
+              child: Text('<think>嗯'),
+            ),
+            const SizedBox(width: 6),
+            OutlinedButton(
+              onPressed: () {
+                _controllerPreferChinese.text = '<think>首先';
+              },
+              child: Text('<think>首先'),
+            ),
+            const SizedBox(width: 6),
+            OutlinedButton(
+              onPressed: () {
+                _controllerPreferChinese.text = '<think>好的';
+              },
+              child: Text('<think>好的'),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 16),
+      TextField(
+        controller: _controllerLighting,
+        maxLines: 2,
+        decoration: InputDecoration(
+          labelText: S.current.lazy_thinking_mode_template,
+          labelStyle: const TextStyle(fontSize: 16),
+          border: const OutlineInputBorder(),
+        ),
+      ),
+    ];
   }
 }
