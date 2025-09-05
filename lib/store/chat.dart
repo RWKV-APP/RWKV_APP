@@ -499,9 +499,9 @@ extension _$Chat on _Chat {
     Message userMsg;
     Message? botMsg;
     while (iterator.moveNext()) {
-      mine = iterator.current;
-      bot = iterator.moveNext() ? iterator.current : null;
-      String content = mine.getContentForHistoryWithRef(bot?.reference);
+      userMsg = iterator.current;
+      botMsg = iterator.moveNext() ? iterator.current : null;
+      String content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
       if (wenYanWen.q) {
         content = '请用文言文回答: $content';
       }
