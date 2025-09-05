@@ -213,10 +213,10 @@ packages:
     dependency: transitive
     description:
       name: built_value
-      sha256: "1b3b173f3379c8f941446267868548b6fc67e9134d81f4842eb98bb729451359"
+      sha256: a30f0a0e38671e89a492c44d005b5545b830a961575bbd8336d42869ff71066d
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "8.11.2"
+    version: "8.12.0"
   cached_network_image:
     dependency: transitive
     description:
@@ -674,10 +674,10 @@ packages:
     dependency: "direct main"
     description:
       name: font_awesome_flutter
-      sha256: b738e35f8bb4957896c34957baf922f99c5d415b38ddc8b070d14b7fa95715d4
+      sha256: "27af5982e6c510dec1ba038eff634fa284676ee84e3fd807225c80c4ad869177"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "10.9.1"
+    version: "10.10.0"
   freezed:
     dependency: "direct dev"
     description:
@@ -1640,10 +1640,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite_android
-      sha256: "2b3070c5fa881839f8b402ee4a39c1b4d561704d4ebbbcfb808a119bc2a1701b"
+      sha256: ecd684501ebc2ae9a83536e8b15731642b9570dc8623e0073d227d0ee2bfea88
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2+2"
   sqflite_common:
     dependency: transitive
     description:
@@ -1997,5 +1997,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.8.0 <4.0.0"
+  dart: ">=3.9.0 <4.0.0"
   flutter: ">=3.29.0"
