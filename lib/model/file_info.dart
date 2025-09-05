@@ -177,6 +177,23 @@ class FileInfo extends Equatable {
 
   bool get isTTS => name.toLowerCase().contains('tts');
 
+  String? get date {
+    // 用正则表达式匹配 "20250317", "20381101" 这样的日期
+    final re = RegExp(r'(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])');
+
+    for (final s in [fileName]) {
+      if (s.isEmpty) continue;
+      final m = re.firstMatch(s);
+      if (m != null) {
+        final y = m.group(1)!;
+        final mo = m.group(2)!;
+        final d = m.group(3)!;
+        return '$y-$mo-$d';
+      }
+    }
+    return null;
+  }
+
   @override
   List<Object?> get props => [raw];
 

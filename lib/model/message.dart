@@ -302,28 +302,32 @@ Message(
     }
   }
 
-  String getContentForHistory() {
+  String getContentForHistory({bool appendThinkTagInThinkingTagIsEmpty = false}) {
     if (!isReasoning) return content;
     if (!isCotFormat) return content;
     if (!containsCotEndMark) return content;
     if (paused) return content;
-    final (cotContent, cotResult) = cotContentAndResult;
+    final (cotContent, cotResult) = getCotContentAndResult(
+      appendThinkTagInThinkingTagIsEmpty: appendThinkTagInThinkingTagIsEmpty,
+    );
     return cotResult;
   }
 
-  (String cotContent, String cotResult) get cotContentAndResult {
-    if (!isCotFormat) {
-      return ("", "");
-    }
-    if (!containsCotEndMark) {
-      return (content.substring(7), "");
-    }
+  (String cotContent, String cotResult) getCotContentAndResult({bool appendThinkTagInThinkingTagIsEmpty = false}) {
+    if (!isCotFormat) return ("", "");
+
+    if (!containsCotEndMark) return (content.substring(7), "");
 
     final endIndex = content.indexOf("</think>");
     final _content = content.substring(7, endIndex);
+
     String _result = "";
     if (endIndex + 9 < content.length) {
       _result = content.substring(endIndex + 9);
+    }
+
+    if (appendThinkTagInThinkingTagIsEmpty && content.contains("<think>\n</think>")) {
+      return (_content, content);
     }
 
     return (_content, _result);

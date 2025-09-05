@@ -208,11 +208,11 @@ class TTSGroupItem extends ConsumerWidget {
                           // 国旗图标
                           Row(
                             children: [
-                              T("🇨🇳", s: const TS(s: 14)),
+                              const T("🇨🇳", s: TS(s: 14)),
                               4.w,
-                              T("🇺🇸", s: const TS(s: 14)),
+                              const T("🇺🇸", s: TS(s: 14)),
                               4.w,
-                              T("🇯🇵", s: const TS(s: 14)),
+                              const T("🇯🇵", s: TS(s: 14)),
                             ],
                           ),
                         ],

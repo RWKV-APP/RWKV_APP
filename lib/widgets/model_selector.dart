@@ -114,9 +114,9 @@ class _Header extends StatelessWidget {
         Expanded(
           child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
         ),
-        IconButton(
+        const IconButton(
           onPressed: pop,
-          icon: const Icon(Icons.close),
+          icon: Icon(Icons.close),
         ),
       ],
     );
@@ -245,7 +245,7 @@ class _DownloadSource extends ConsumerWidget {
         Wrap(
           runSpacing: 4,
           spacing: 4,
-          children: FileDownloadSource.values.where((e) => kDebugMode || !e.isDebug).map((e) {
+          children: FileDownloadSource.values.where((e) => (kDebugMode || !e.isDebug) && !e.hidden).map((e) {
             return GestureDetector(
               onTap: () {
                 P.fileManager.downloadSource.q = e;

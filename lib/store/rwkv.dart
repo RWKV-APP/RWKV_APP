@@ -816,16 +816,16 @@ extension $RWKV on _RWKV {
     final current = thinkingMode.q;
     switch (current) {
       case thinking_mode.Lighting():
-        setModelConfig(thinkingMode: thinking_mode.Free());
+        setModelConfig(thinkingMode: const thinking_mode.Free());
         Alert.success(S.current.thinking_mode_detail_high);
       case thinking_mode.Free():
-        setModelConfig(thinkingMode: thinking_mode.None());
+        setModelConfig(thinkingMode: const thinking_mode.None());
         Alert.success(S.current.thinking_mode_detail_off);
       case thinking_mode.PreferChinese():
-        setModelConfig(thinkingMode: thinking_mode.None());
+        setModelConfig(thinkingMode: const thinking_mode.None());
         Alert.success(S.current.thinking_mode_detail_off);
       case thinking_mode.None():
-        setModelConfig(thinkingMode: thinking_mode.Lighting());
+        setModelConfig(thinkingMode: const thinking_mode.Lighting());
         Alert.success(S.current.thinking_mode_detail_auto);
     }
   }

@@ -477,6 +477,7 @@ extension _$Chat on _Chat {
     qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
   }
 
+  /// 将完整的历史记录发送至推理引擎
   List<String> _history() {
     final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
 
@@ -495,8 +496,8 @@ extension _$Chat on _Chat {
     }
 
     final iterator = messages.iterator;
-    Message mine;
-    Message? bot;
+    Message userMsg;
+    Message? botMsg;
     while (iterator.moveNext()) {
       mine = iterator.current;
       bot = iterator.moveNext() ? iterator.current : null;
@@ -505,8 +506,9 @@ extension _$Chat on _Chat {
         content = '请用文言文回答: $content';
       }
       result.add(content);
-      if (bot == null) break;
-      result.add(bot.getContentForHistory());
+      if (botMsg == null) break;
+      final botContent = botMsg.getContentForHistory(appendThinkTagInThinkingTagIsEmpty: true);
+      result.add(botContent);
     }
     return result;
   }

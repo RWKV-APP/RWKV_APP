@@ -76,7 +76,7 @@ class ModelItem extends ConsumerWidget {
 
     final modelSize = fileInfo.modelSize ?? 0.1;
     final pageKey = P.app.pageKey.q;
-    if (modelSize < 1.5 && pageKey == PageKey.chat) {
+    if (modelSize < 1.5 && pageKey == PageKey.chat && !fileInfo.tags.contains("DeepEmbedding")) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
@@ -128,7 +128,6 @@ class ModelItem extends ConsumerWidget {
     final s = S.of(context);
     final localFile = ref.watch(P.fileManager.locals(fileInfo));
     final hasFile = localFile.hasFile;
-    final downloading = localFile.downloading;
     final currentModel = ref.watch(P.rwkv.currentModel);
     final isCurrentModel = currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
@@ -400,7 +399,7 @@ class _Tags extends ConsumerWidget {
   final FileInfo fileInfo;
 
   static const _blockedTags = ["encoder", "reason", "ENCODER", "REASON"];
-  static const _highlightTags = ["NPU", "GPU", "npu", "gpu"];
+  static const _highlightTags = ["NPU", "GPU", "npu", "gpu", "DeepEmbedding"];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -408,6 +407,7 @@ class _Tags extends ConsumerWidget {
     final tags = fileInfo.tags.where((e) => !_blockedTags.contains(e));
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
+    final date = fileInfo.date;
 
     return Wrap(
       spacing: 4,
@@ -441,6 +441,12 @@ class _Tags extends ConsumerWidget {
             decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T(quantization),
+          ),
+        if (date != null)
+          Container(
+            decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
+            padding: const EI.s(h: 4),
+            child: T(date),
           ),
       ],
     );
