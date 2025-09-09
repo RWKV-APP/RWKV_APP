@@ -105,6 +105,7 @@ extension $FileManager on _FileManager {
     qqq('start download file: \n>>url:$url\n>>path:$path');
 
     DownloadTask? task = _downloadTasks[fileInfo.fileName];
+    task?.url = url;
     if (task == null) {
       task = await DownloadTask.create(url: url, path: path);
       _downloadTasks[fileInfo.fileName] = task;
