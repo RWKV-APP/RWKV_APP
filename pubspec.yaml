@@ -23,7 +23,7 @@ dependencies:
     # path: ../rwkv_downloader
     git:
       url: https://github.com/RWKV-APP/rwkv_downloader.git
-      ref: master
+      ref: 4b6f6210273cec414c43a3baca5493e83b0ad2c1
 
   photo_viewer:
     git:
