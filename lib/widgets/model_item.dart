@@ -405,7 +405,7 @@ class _Tags extends ConsumerWidget {
   final FileInfo fileInfo;
 
   static const _blockedTags = ["encoder", "reason", "ENCODER", "REASON"];
-  static const _highlightTags = ["NPU", "GPU", "npu", "gpu", "DeepEmbedding"];
+  static const _highlightTags = ["NPU", "GPU", "npu", "gpu", "DeepEmbedding", "batch"];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -54,6 +54,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `并行推理中，同时生成 {count} 条消息`
+  String batch_inference_running(Object count) {
+    return Intl.message(
+      '并行推理中，同时生成 $count 条消息',
+      name: 'batch_inference_running',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `已选择第 {count} 条消息`
+  String batch_inference_selected(Object count) {
+    return Intl.message(
+      '已选择第 $count 条消息',
+      name: 'batch_inference_selected',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `这个模型不支持并行推理, 请选择带有 batch 标签的模型`
   String get this_model_does_not_support_batch_inference {
     return Intl.message(

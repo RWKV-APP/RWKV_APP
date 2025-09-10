@@ -20,20 +20,20 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ja';
 
-  static String m2(demoName) => "${demoName}へようこそ";
+  static String m4(demoName) => "${demoName}へようこそ";
 
-  static String m3(maxLength) => "会話名は${maxLength}文字を超えることはできません";
+  static String m5(maxLength) => "会話名は${maxLength}文字を超えることはできません";
 
-  static String m4(path) => "メッセージ履歴は以下のフォルダに保存されます:\n ${path}";
+  static String m6(path) => "メッセージ履歴は以下のフォルダに保存されます:\n ${path}";
 
-  static String m6(flag, nameCN, nameEN) =>
+  static String m8(flag, nameCN, nameEN) =>
       "${flag} ${nameCN}(${nameEN})の音声を模倣";
 
-  static String m7(fileName) => "${fileName}を模倣";
+  static String m9(fileName) => "${fileName}を模倣";
 
-  static String m8(memUsed, memFree) => "使用メモリ：${memUsed}、残りメモリ：${memFree}";
+  static String m10(memUsed, memFree) => "使用メモリ：${memUsed}、残りメモリ：${memFree}";
 
-  static String m13(modelName) => "現在、${modelName}を使用しています";
+  static String m15(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -78,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("再開"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKVチャット"),
-    "chat_welcome_to_use": m2,
+    "chat_welcome_to_use": m4,
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage("使用するには、まずモデルをダウンロードする必要があります"),
     "chatting": MessageLookupByLibrary.simpleMessage("チャット中"),
@@ -109,7 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "会話名は空にできません",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m3,
+    "conversation_name_cannot_be_longer_than_30_characters": m5,
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("上のボタンをクリックして新しいセッションを作成"),
     "current_turn": MessageLookupByLibrary.simpleMessage("現在のターン"),
@@ -147,7 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "downloading": MessageLookupByLibrary.simpleMessage("ダウンロード中"),
     "draw": MessageLookupByLibrary.simpleMessage("引き分け！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自動ダンプメッセージ履歴"),
-    "dump_see_files_alert_message": m4,
+    "dump_see_files_alert_message": m6,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "アルゴリズム改善にご協力ください",
     ),
@@ -193,8 +193,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKVに言わせたいのは...",
     ),
-    "imitate": m6,
-    "imitate_fle": m7,
+    "imitate": m8,
+    "imitate_fle": m9,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -222,7 +222,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("ライトモード"),
     "loading": MessageLookupByLibrary.simpleMessage("ロード中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m8,
+    "memory_used": m10,
     "model_settings": MessageLookupByLibrary.simpleMessage("モデル設定"),
     "more": MessageLookupByLibrary.simpleMessage("その他"),
     "my_voice": MessageLookupByLibrary.simpleMessage("私の声"),
@@ -388,7 +388,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
-    "you_are_now_using": m13,
+    "you_are_now_using": m15,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

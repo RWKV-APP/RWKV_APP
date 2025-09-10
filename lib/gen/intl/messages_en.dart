@@ -24,33 +24,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(count) => "Each inference will generate ${count} messages";
 
-  static String m2(demoName) => "Welcome to ${demoName}";
+  static String m2(count) =>
+      "Parallel inference running, generating ${count} messages at the same time";
 
-  static String m3(maxLength) =>
+  static String m3(count) => "Selected ${count} message";
+
+  static String m4(demoName) => "Welcome to ${demoName}";
+
+  static String m5(maxLength) =>
       "Conversation name cannot be longer than ${maxLength} characters";
 
-  static String m4(path) =>
+  static String m6(path) =>
       "Message records will be stored in the following folder\n ${path}";
 
-  static String m5(port) => "HTTP Service (Port: ${port})";
+  static String m7(port) => "HTTP Service (Port: ${port})";
 
-  static String m6(flag, nameCN, nameEN) =>
+  static String m8(flag, nameCN, nameEN) =>
       "Imitate ${flag} ${nameCN}(${nameEN})\'s voice";
 
-  static String m7(fileName) => "Imitate ${fileName}";
+  static String m9(fileName) => "Imitate ${fileName}";
 
-  static String m8(memUsed, memFree) =>
+  static String m10(memUsed, memFree) =>
       "Memory Used: ${memUsed}, Memory Free: ${memFree}";
 
-  static String m9(count) => "Queued: ${count}";
+  static String m11(count) => "Queued: ${count}";
 
-  static String m10(port) => "WebSocket Service (Port: ${port})";
+  static String m12(port) => "WebSocket Service (Port: ${port})";
 
-  static String m11(id) => "Window ${id}";
+  static String m13(id) => "Window ${id}";
 
-  static String m12(count) => "${count} tabs";
+  static String m14(count) => "${count} tabs";
 
-  static String m13(modelName) => "You are now using ${modelName}";
+  static String m15(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -108,6 +113,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_enable_or_not": MessageLookupByLibrary.simpleMessage(
       "Enable or disable parallel inference",
     ),
+    "batch_inference_running": m2,
+    "batch_inference_selected": m3,
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage(
       "Parallel Inference Settings",
     ),
@@ -155,7 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
-    "chat_welcome_to_use": m2,
+    "chat_welcome_to_use": m4,
     "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage(
       "Chat with RWKV models",
     ),
@@ -211,7 +218,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "Conversation name cannot be empty",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m3,
+    "conversation_name_cannot_be_longer_than_30_characters": m5,
     "conversations": MessageLookupByLibrary.simpleMessage("Conversations"),
     "copy_text": MessageLookupByLibrary.simpleMessage("Copy text"),
     "create_a_new_one_by_clicking_the_button_above":
@@ -274,7 +281,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_see_files": MessageLookupByLibrary.simpleMessage(
       "Dump Message Records",
     ),
-    "dump_see_files_alert_message": m4,
+    "dump_see_files_alert_message": m6,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "Help us improve the algorithm",
     ),
@@ -343,14 +350,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hold to record, release to send",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "http_service_port": m5,
+    "http_service_port": m7,
     "human": MessageLookupByLibrary.simpleMessage("Human"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to say...",
     ),
     "idle": MessageLookupByLibrary.simpleMessage("Idle"),
-    "imitate": m6,
-    "imitate_fle": m7,
+    "imitate": m8,
+    "imitate_fle": m9,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Use"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -394,7 +401,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loaded": MessageLookupByLibrary.simpleMessage("Loaded"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
-    "memory_used": m8,
+    "memory_used": m10,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
     "model": MessageLookupByLibrary.simpleMessage("Model"),
     "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
@@ -537,7 +544,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ Group 2"),
-    "queued_x": m9,
+    "queued_x": m11,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Quick Reasoning Enabled",
@@ -711,7 +718,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m10,
+    "websocket_service_port": m12,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV Chat",
     ),
@@ -721,11 +728,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m11,
+    "window_id": m13,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m12,
-    "you_are_now_using": m13,
+    "x_tabs": m14,
+    "you_are_now_using": m15,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

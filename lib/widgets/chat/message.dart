@@ -383,13 +383,13 @@ class Message extends ConsumerWidget {
                     child: Wrap(
                       children: [
                         Text(
-                          "并行推理中，同时生成 $batchCount 条消息",
+                          s.batch_inference_running(batchCount),
                           style: const TS(c: kCG),
                         ),
                         if (batchSelection != null) 16.w,
                         if (batchSelection != null)
                           Text(
-                            "已选择第 ${batchSelection + 1} 条消息",
+                            s.batch_inference_selected(batchSelection + 1),
                             style: const TS(c: kCG),
                           ),
                       ],

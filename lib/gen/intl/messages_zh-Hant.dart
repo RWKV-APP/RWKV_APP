@@ -20,20 +20,20 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_Hant';
 
-  static String m2(demoName) => "歡迎探索 ${demoName}";
+  static String m4(demoName) => "歡迎探索 ${demoName}";
 
-  static String m3(maxLength) => "對話名稱不能超過${maxLength}個字元";
+  static String m5(maxLength) => "對話名稱不能超過${maxLength}個字元";
 
-  static String m4(path) => "訊息記錄會儲存在該資料夾下\n ${path}";
+  static String m6(path) => "訊息記錄會儲存在該資料夾下\n ${path}";
 
-  static String m6(flag, nameCN, nameEN) =>
+  static String m8(flag, nameCN, nameEN) =>
       "模仿 ${flag} ${nameCN}(${nameEN}) 的聲音";
 
-  static String m7(fileName) => "模仿 ${fileName}";
+  static String m9(fileName) => "模仿 ${fileName}";
 
-  static String m8(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
+  static String m10(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
 
-  static String m13(modelName) => "您目前正在使用 ${modelName}";
+  static String m15(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("繼續"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
-    "chat_welcome_to_use": m2,
+    "chat_welcome_to_use": m4,
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage("您需要先下載模型才能使用"),
     "chatting": MessageLookupByLibrary.simpleMessage("聊天中"),
@@ -101,7 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "對話名稱不能為空",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m3,
+    "conversation_name_cannot_be_longer_than_30_characters": m5,
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("點擊上方按鈕建立新會話"),
     "current_turn": MessageLookupByLibrary.simpleMessage("目前回合"),
@@ -133,7 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "downloading": MessageLookupByLibrary.simpleMessage("下載中"),
     "draw": MessageLookupByLibrary.simpleMessage("平局！"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("自動 Dump 訊息記錄"),
-    "dump_see_files_alert_message": m4,
+    "dump_see_files_alert_message": m6,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "協助我們改進演算法",
     ),
@@ -175,8 +175,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "human": MessageLookupByLibrary.simpleMessage("人類"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想讓 RWKV 說..."),
-    "imitate": m6,
-    "imitate_fle": m7,
+    "imitate": m8,
+    "imitate_fle": m9,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage("當搜尋深度和寬度都大於 2 時，將啟用上下文搜尋"),
@@ -200,7 +200,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("淺色模式"),
     "loading": MessageLookupByLibrary.simpleMessage("載入中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m8,
+    "memory_used": m10,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型設定"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的聲音"),
@@ -350,7 +350,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
-    "you_are_now_using": m13,
+    "you_are_now_using": m15,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),
