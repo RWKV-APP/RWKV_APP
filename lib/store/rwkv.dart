@@ -808,6 +808,9 @@ extension _$RWKV on _RWKV {
       case PageKey.othello:
         await loadOthello();
         break;
+      case PageKey.chat:
+        send(to_rwkv.GetSupportedBatchSizes());
+        break;
       default:
         break;
     }

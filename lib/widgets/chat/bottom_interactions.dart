@@ -13,7 +13,10 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/store/p.dart';
 import 'package:zone/store/web_search_mode.dart';
-import 'package:zone/widgets/chat/batch_settings_panel.dart';
+import 'package:zone/widgets/chat/batch_button.dart';
+import 'package:zone/widgets/chat/secondary_options_button.dart';
+import 'package:zone/widgets/chat/select_image_button.dart';
+import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/performance_info.dart';
 
 class BottomInteractions extends ConsumerWidget {
@@ -47,11 +50,11 @@ class _Interactions extends ConsumerWidget {
       runSpacing: 4,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: _SelectImageButton()),
+        if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: SelectImageButton()),
         if (features.webSearch && demoType == DemoType.chat) const _WebSearchModeButton(),
-        if (demoType == DemoType.chat) const _ThinkingModeButton(),
-        if (demoType == DemoType.chat && currentLangIsZh) const _SecondaryOptionsButton(),
-        if (demoType == DemoType.chat) const _BatchButton(),
+        if (demoType == DemoType.chat) const ThinkingModeButton(),
+        if (demoType == DemoType.chat && currentLangIsZh) const SecondaryOptionsButton(),
+        if (demoType == DemoType.chat) const BatchButton(),
         if (demoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
@@ -134,93 +137,6 @@ class _WebSearchModeButton extends ConsumerWidget {
   }
 }
 
-class _ThinkingModeButton extends ConsumerWidget {
-  const _ThinkingModeButton();
-
-  void _onTap() {
-    P.rwkv.onThinkModeTyped();
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
-    final loading = ref.watch(P.rwkv.loading);
-    final qw = ref.watch(P.app.qw);
-    final thinkingMode = ref.watch(P.rwkv.thinkingMode);
-
-    final color = switch (thinkingMode) {
-      thinking_mode.Lighting() => theme.colorScheme.surfaceContainer,
-      thinking_mode.None() => theme.colorScheme.surfaceContainer,
-      thinking_mode.Free() => primary,
-      thinking_mode.PreferChinese() => primary,
-    };
-
-    final textColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => primary,
-      thinking_mode.None() => Colors.grey,
-      thinking_mode.Free() => theme.colorScheme.onPrimary,
-      thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
-    };
-
-    final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
-    final padding = const EI.s(h: 8);
-
-    final text = switch (thinkingMode) {
-      thinking_mode.Lighting() => s.thinking_mode_auto,
-      thinking_mode.None() => s.thinking_mode_off,
-      thinking_mode.Free() => s.thinking_mode_high,
-      thinking_mode.PreferChinese() => s.thinking_mode_high,
-    };
-
-    final border = switch (thinkingMode) {
-      thinking_mode.Lighting() => Border.all(
-        color: textColor,
-      ),
-      _ => null,
-    };
-
-    return AnimatedSize(
-      key: const Key("_ThinkingModeButton"),
-      duration: 150.ms,
-      curve: Curves.easeOutCubic,
-      child: IntrinsicWidth(
-        child: AnimatedOpacity(
-          opacity: loading ? .33 : 1,
-          duration: 250.ms,
-          child: GestureDetector(
-            onTap: _onTap,
-            child: SizedBox(
-              height: height,
-              child: Container(
-                padding: padding,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: 60.r,
-                  border: border,
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.lightbulb_outline, color: textColor, size: 18),
-                    2.w,
-                    T(
-                      text,
-                      s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
-                    ),
-                    4.w,
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _WenYanWenButton extends ConsumerWidget {
   const _WenYanWenButton();
 
@@ -255,132 +171,6 @@ class _WenYanWenButton extends ConsumerWidget {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SecondaryOptionsButton extends ConsumerWidget {
-  const _SecondaryOptionsButton();
-
-  void _onTap() {
-    P.rwkv.onSecondaryOptionsTyped();
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
-    final loading = ref.watch(P.rwkv.loading);
-
-    final thinkingMode = ref.watch(P.rwkv.thinkingMode);
-
-    final color = switch (thinkingMode) {
-      thinking_mode.Lighting() => kC,
-      thinking_mode.Free() => theme.colorScheme.surfaceContainer,
-      thinking_mode.None() => kC,
-      thinking_mode.PreferChinese() => primary,
-    };
-
-    final textColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => Colors.grey,
-      thinking_mode.None() => theme.colorScheme.onPrimary,
-      thinking_mode.Free() => Colors.grey,
-      thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
-    };
-
-    final iconWidget = switch (thinkingMode) {
-      thinking_mode.Free() => Icon(Icons.translate, color: textColor, size: 18),
-      thinking_mode.PreferChinese() => Icon(Icons.translate, color: textColor, size: 18),
-      _ => null,
-    };
-
-    final textWidget = switch (thinkingMode) {
-      thinking_mode.Lighting() => null,
-      thinking_mode.None() => null,
-      _ => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MAA.center,
-        children: [
-          T(s.prefer, s: TS(c: textColor, s: 10, height: 1)),
-          2.h,
-          T(s.chinese, s: TS(c: textColor, s: 10, height: 1)),
-        ],
-      ),
-    };
-
-    final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
-
-    final padding = switch (thinkingMode) {
-      thinking_mode.Lighting() => const EI.s(h: 0),
-      thinking_mode.None() => const EI.s(h: 0),
-      thinking_mode.Free() => const EI.s(h: 12),
-      thinking_mode.PreferChinese() => const EI.s(h: 12),
-    };
-
-    return AnimatedSize(
-      key: const Key("_SecondaryOptionsButton"),
-      duration: 150.ms,
-      curve: Curves.easeOutCubic,
-      child: IntrinsicWidth(
-        child: AnimatedOpacity(
-          opacity: loading ? .33 : 1,
-          duration: 250.ms,
-          child: GestureDetector(
-            onTap: _onTap,
-            child: AnimatedContainer(
-              height: height,
-              duration: 150.ms,
-              curve: Curves.easeOutCubic,
-              padding: padding,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: 60.r,
-              ),
-              child: Row(
-                children: [
-                  ?iconWidget,
-                  if (textWidget != null) 4.w,
-                  ?textWidget,
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SelectImageButton extends ConsumerWidget {
-  const _SelectImageButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final color = Theme.of(context).colorScheme.primary;
-    final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
-    final s = S.of(context);
-    return GestureDetector(
-      onTap: () async {
-        await showImageSelector();
-      },
-      child: AnimatedContainer(
-        duration: 150.ms,
-        curve: Curves.easeOutCubic,
-        decoration: BoxDecoration(
-          color: primaryContainer,
-          border: Border.all(
-            color: color.q(.5),
-          ),
-          borderRadius: 12.r,
-        ),
-        padding: const EI.o(l: 8, r: 8, t: 8, b: 8),
-        child: T(
-          s.select_new_image,
-          s: TS(c: color),
         ),
       ),
     );
@@ -468,55 +258,6 @@ class _MessageButton extends ConsumerWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BatchButton extends ConsumerWidget {
-  const _BatchButton();
-
-  Future<void> _onTap() async {
-    qq;
-    await BatchSettingsPanel.show();
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
-    final surfaceContainer = theme.colorScheme.surfaceContainer;
-    final batchEnabled = ref.watch(P.chat.batchEnabled);
-
-    final primary = theme.colorScheme.primary;
-    final s = S.of(context);
-
-    final bgColor = batchEnabled ? primary : surfaceContainer;
-    final textColor = batchEnabled ? kW : primary;
-    final batchCount = ref.watch(P.chat.batchCount);
-    final borderColor = batchEnabled ? primary : primary.q(.1);
-
-    return IntrinsicWidth(
-      child: GestureDetector(
-        onTap: _onTap,
-        child: Container(
-          height: height,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: 60.r,
-            border: Border.all(color: borderColor),
-          ),
-          padding: const EI.o(h: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (batchEnabled) T(s.batch_inference_button(batchCount), s: TS(c: textColor)),
-              if (!batchEnabled) T(s.batch_inference, s: TS(c: textColor)),
-            ],
-          ),
         ),
       ),
     );
