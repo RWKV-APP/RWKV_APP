@@ -309,10 +309,12 @@ extension $RWKVLoad on _RWKV {
       );
       P.rwkv.currentModel.q = fileInfo;
     } catch (e) {
+      qqe;
       Alert.error(e.toString());
       return;
     }
-    final batchAllowed = currentModel.q!.tags.contains("batch");
+
+    final batchAllowed = fileInfo.tags.contains("batch");
     if (!batchAllowed) P.chat.batchEnabled.q = false;
   }
 
@@ -369,8 +371,6 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.GetSamplerParams());
     _loading.q = false;
     send(to_rwkv.GetSupportedBatchSizes());
-    final batchAllowed = currentModel.q!.tags.contains("batch");
-    if (!batchAllowed) P.chat.batchEnabled.q = false;
   }
 
   Future<void> loadOthello() async {
@@ -774,6 +774,8 @@ extension $RWKV on _RWKV {
 
     if (!batchAllowed) {
       Alert.info(S.current.this_model_does_not_support_batch_inference);
+      await Future.delayed(const Duration(milliseconds: 500));
+      ModelSelector.show();
       return;
     }
 
@@ -954,6 +956,7 @@ extension _$RWKV on _RWKV {
           if (message.to?.requestId != null) errorLog += " requestId: ${message.to?.requestId}";
           qqe(errorLog);
         }
+        qqe;
         Alert.error(response.message);
 
       case from_rwkv.Speed response:

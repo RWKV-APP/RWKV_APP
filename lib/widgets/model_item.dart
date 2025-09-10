@@ -100,9 +100,13 @@ class ModelItem extends ConsumerWidget {
         enableReasoning: fileInfo.isReasoning,
       );
     } catch (e) {
+      qqe;
       Alert.error(e.toString());
       return;
     }
+
+    final batchAllowed = fileInfo.tags.contains("batch");
+    if (!batchAllowed) P.chat.batchEnabled.q = false;
 
     final tags = fileInfo.tags;
 

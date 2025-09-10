@@ -100,7 +100,7 @@ extension $Chat on _Chat {
     if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
       final selection = P.msg.batchSelection(parentMsg).q;
       if (selection == null) {
-        Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+        Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.top);
         return;
       }
     }
