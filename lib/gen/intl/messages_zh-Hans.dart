@@ -225,6 +225,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自动 dump 已关闭"),
     "enabled": MessageLookupByLibrary.simpleMessage("开启"),
     "end": MessageLookupByLibrary.simpleMessage("完"),
+    "english_translation_result": MessageLookupByLibrary.simpleMessage(
+      "英文翻译结果",
+    ),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
@@ -290,6 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "inference_engine": MessageLookupByLibrary.simpleMessage("推理引擎"),
     "inference_is_done": MessageLookupByLibrary.simpleMessage("🎉 推理完成"),
     "inference_is_running": MessageLookupByLibrary.simpleMessage("推理中"),
+    "input_chinese_text_here": MessageLookupByLibrary.simpleMessage("输入中文文本"),
     "input_english_text_here": MessageLookupByLibrary.simpleMessage("输入英文文本"),
     "intonations": MessageLookupByLibrary.simpleMessage("语气词"),
     "intro": MessageLookupByLibrary.simpleMessage(

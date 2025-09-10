@@ -114,6 +114,8 @@ class _TranslatorInterface extends ConsumerWidget {
         children: [
           const _Source(),
           Divider(height: 1, color: theme.colorScheme.outline.q(0.2)),
+          const _TranslationDirectionButton(),
+          Divider(height: 1, color: theme.colorScheme.outline.q(0.2)),
           const _Result(),
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -140,6 +142,8 @@ class _Source extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
+    final enToZh = ref.watch(P.translator.enToZh);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Column(
@@ -147,7 +151,10 @@ class _Source extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Text(s.input_english_text_here, style: theme.textTheme.labelLarge),
+              Text(
+                enToZh ? s.input_english_text_here : s.input_chinese_text_here,
+                style: theme.textTheme.labelLarge,
+              ),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.clear),
@@ -216,6 +223,8 @@ class _ResultState extends ConsumerState<_Result> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = S.of(context);
+    final enToZh = ref.watch(P.translator.enToZh);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -225,7 +234,10 @@ class _ResultState extends ConsumerState<_Result> {
         children: [
           Row(
             children: [
-              Text(s.chinese_translation_result, style: theme.textTheme.labelLarge),
+              Text(
+                enToZh ? s.chinese_translation_result : s.english_translation_result,
+                style: theme.textTheme.labelLarge,
+              ),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.copy_all_outlined, size: 20),
@@ -564,6 +576,62 @@ class _TranslatorDebugInfo extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TranslationDirectionButton extends ConsumerWidget {
+  const _TranslationDirectionButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final enToZh = ref.watch(P.translator.enToZh);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Center(
+        child: GestureDetector(
+          onTap: P.translator.onDirectionButtonPressed,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.q(0.3),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: theme.colorScheme.primary.q(0.5),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  enToZh ? 'EN' : 'ZH',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.arrow_forward,
+                  size: 16,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  enToZh ? 'ZH' : 'EN',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

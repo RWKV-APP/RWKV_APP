@@ -1,6 +1,6 @@
 part of 'p.dart';
 
-const _initialSource =
+const _initialSourceEn =
     "RWKV (pronounced RwaKuv) is an RNN with great LLM performance, which can also be directly trained like a GPT transformer (parallelizable). We are at RWKV-7 \"Goose\". So it's combining the best of RNN and transformer - great performance, linear time, constant space (no kv-cache), fast training, infinite ctx_len, and free sentence embedding.";
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
@@ -35,8 +35,8 @@ class _Translator {
   late final translationCountInSandbox = qs(0);
   late final _saveTranslationsThrottler = Throttler(milliseconds: 10000, trailing: true);
 
-  late final source = qs(_initialSource);
-  late final textEditingController = TextEditingController(text: _initialSource);
+  late final source = qs(_initialSourceEn);
+  late final textEditingController = TextEditingController(text: _initialSourceEn);
   late final result = qs(_initialResult);
   late final resultTextEditingController = TextEditingController(text: _initialResult);
 
@@ -65,7 +65,7 @@ class _Translator {
   late final browserWindows = qs<List<BrowserWindow>>([]);
   late final latestTaskTag = qs<int>(0);
 
-  late final Timer _taskCheckingTimer;
+  late final enToZh = qs(true);
 }
 
 /// Private methods
@@ -88,7 +88,7 @@ extension _$Translator on _Translator {
     await _loadTranslationsFromFile();
 
     if (isDesktop) {
-      _taskCheckingTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+      Timer.periodic(const Duration(milliseconds: 200), (timer) {
         _checkTask();
       });
     }
@@ -465,5 +465,16 @@ extension $Translator on _Translator {
     final browserTabs = this.browserTabs.q;
     final activeBrowserTab = activedTab.q;
     final pools = browserTabs.map((tab) => pool(tab).q).where((pool) => pool.isNotEmpty).toList();
+  }
+
+  void onDirectionButtonPressed() async {
+    enToZh.q = !enToZh.q;
+    if (enToZh.q) {
+      P.rwkv.send(to_rwkv.SetUserRole("English"));
+      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+    } else {
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+    }
   }
 }

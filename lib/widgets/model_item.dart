@@ -111,8 +111,13 @@ class ModelItem extends ConsumerWidget {
     final tags = fileInfo.tags;
 
     if (tags.contains("translate")) {
-      P.rwkv.send(SetUserRole("English"));
-      P.rwkv.send(SetResponseRole("Chinese"));
+      if (P.translator.enToZh.q) {
+        P.rwkv.send(SetUserRole("English"));
+        P.rwkv.send(SetResponseRole("Chinese"));
+      } else {
+        P.rwkv.send(SetUserRole("Chinese"));
+        P.rwkv.send(SetResponseRole("English"));
+      }
       await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "");
       P.backend.start();
     } else {

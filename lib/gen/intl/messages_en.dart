@@ -289,6 +289,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_stopped": MessageLookupByLibrary.simpleMessage("Auto dump disabled"),
     "enabled": MessageLookupByLibrary.simpleMessage("Enabled"),
     "end": MessageLookupByLibrary.simpleMessage("End"),
+    "english_translation_result": MessageLookupByLibrary.simpleMessage(
+      "English Translation Result",
+    ),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage(
           "Please ensure your device has enough memory, otherwise the application might crash",
@@ -371,6 +374,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "inference_is_running": MessageLookupByLibrary.simpleMessage(
       "Inference Running",
+    ),
+    "input_chinese_text_here": MessageLookupByLibrary.simpleMessage(
+      "Input Chinese text here",
     ),
     "input_english_text_here": MessageLookupByLibrary.simpleMessage(
       "Input English text here",

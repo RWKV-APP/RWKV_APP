@@ -2388,6 +2388,16 @@ class S {
     );
   }
 
+  /// `输入中文文本`
+  String get input_chinese_text_here {
+    return Intl.message(
+      '输入中文文本',
+      name: 'input_chinese_text_here',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `清除文本`
   String get clear_text {
     return Intl.message('清除文本', name: 'clear_text', desc: '', args: []);
@@ -2413,6 +2423,16 @@ class S {
     return Intl.message(
       '中文翻译结果',
       name: 'chinese_translation_result',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `英文翻译结果`
+  String get english_translation_result {
+    return Intl.message(
+      '英文翻译结果',
+      name: 'english_translation_result',
       desc: '',
       args: [],
     );
