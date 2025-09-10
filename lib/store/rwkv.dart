@@ -52,6 +52,7 @@ class _RWKV {
     return currentModel != null;
   });
 
+  /// 当前加载的权重
   late final currentModel = qs<FileInfo?>(null);
 
   late final currentWorldType = qs<WorldType?>(null);
@@ -311,6 +312,8 @@ extension $RWKVLoad on _RWKV {
       Alert.error(e.toString());
       return;
     }
+    final batchAllowed = currentModel.q!.tags.contains("batch");
+    if (!batchAllowed) P.chat.batchEnabled.q = false;
   }
 
   Future<void> loadChat({
@@ -366,6 +369,8 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.GetSamplerParams());
     _loading.q = false;
     send(to_rwkv.GetSupportedBatchSizes());
+    final batchAllowed = currentModel.q!.tags.contains("batch");
+    if (!batchAllowed) P.chat.batchEnabled.q = false;
   }
 
   Future<void> loadOthello() async {
@@ -754,6 +759,27 @@ extension $RWKV on _RWKV {
     }
   }
 
+  void onBatchInferenceTyped() async {
+    final receiving = P.chat.receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    if (!checkModelSelection()) return;
+
+    final currentModel = P.rwkv.currentModel.q;
+
+    final batchAllowed = currentModel!.tags.contains("batch");
+
+    if (!batchAllowed) {
+      Alert.info(S.current.this_model_does_not_support_batch_inference);
+      return;
+    }
+
+    await BatchSettingsPanel.show();
+  }
+
   void onSecondaryOptionsTyped() async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) {
@@ -809,6 +835,7 @@ extension _$RWKV on _RWKV {
         await loadOthello();
         break;
       case PageKey.chat:
+        qq;
         send(to_rwkv.GetSupportedBatchSizes());
         break;
       default:

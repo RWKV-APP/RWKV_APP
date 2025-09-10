@@ -1,20 +1,13 @@
 // ignore: unused_import
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/chat/batch_settings_panel.dart';
 
 class BatchButton extends ConsumerWidget {
   const BatchButton({super.key});
-
-  Future<void> _onTap() async {
-    qq;
-    await BatchSettingsPanel.show();
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +27,7 @@ class BatchButton extends ConsumerWidget {
 
     return IntrinsicWidth(
       child: GestureDetector(
-        onTap: _onTap,
+        onTap: P.rwkv.onBatchInferenceTyped,
         child: Container(
           height: height,
           decoration: BoxDecoration(

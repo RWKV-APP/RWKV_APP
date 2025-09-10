@@ -681,6 +681,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "This is the hardest Sudoku in the world",
         ),
+    "this_model_does_not_support_batch_inference":
+        MessageLookupByLibrary.simpleMessage(
+          "This model does not support batch inference, please select a model with the \"batch\" tag",
+        ),
     "thought_result": MessageLookupByLibrary.simpleMessage("Thought Result"),
     "translate": MessageLookupByLibrary.simpleMessage("Translate"),
     "translating": MessageLookupByLibrary.simpleMessage("Translating..."),

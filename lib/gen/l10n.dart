@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `这个模型不支持并行推理, 请选择带有 batch 标签的模型`
+  String get this_model_does_not_support_batch_inference {
+    return Intl.message(
+      '这个模型不支持并行推理, 请选择带有 batch 标签的模型',
+      name: 'this_model_does_not_support_batch_inference',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `开启`
   String get enabled {
     return Intl.message('开启', name: 'enabled', desc: '', args: []);
