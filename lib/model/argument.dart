@@ -79,7 +79,7 @@ enum Argument {
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,
-    batchCount => 8,
+    batchCount => 6,
     batchVW => 80,
   };
 
@@ -91,8 +91,8 @@ enum Argument {
     frequencyPenalty => .5,
     penaltyDecay => .996,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 4000,
-    batchCount => 4,
-    batchVW => 70,
+    batchCount => Args.batchCount.toDouble(),
+    batchVW => Args.batchVW.toDouble(),
   };
 
   double get defaults => switch (this) {
@@ -103,8 +103,8 @@ enum Argument {
     frequencyPenalty => .5,
     penaltyDecay => .996,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 2000,
-    batchCount => 4,
-    batchVW => 70,
+    batchCount => Args.batchCount.toDouble(),
+    batchVW => Args.batchVW.toDouble(),
   };
 
   bool get enableGaimon => switch (this) {

@@ -52,8 +52,8 @@ class _Chat {
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 
   late final batchEnabled = qs(Args.enableBatchInference);
-  late final batchCount = qs(Args.batchCount);
-  late final batchVW = qs(Args.batchVW);
+  late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
+  late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
 }
 
 /// Public methods
