@@ -195,7 +195,14 @@ class _MarkdownBody extends ConsumerWidget {
       ),
     );
 
-    if (thought.isEmpty) return MarkdownBody(data: output, styleSheet: markdownStyleSheet);
+    if (thought.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          MarkdownBody(data: output, styleSheet: markdownStyleSheet),
+        ],
+      );
+    }
 
     final factorOfThought = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactorForCotContent));
 
