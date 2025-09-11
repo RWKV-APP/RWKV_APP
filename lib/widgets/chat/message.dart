@@ -403,7 +403,7 @@ class Message extends ConsumerWidget {
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
-                if (!reasoning)
+                if (!reasoning && !isBatch)
                   MarkdownBody(
                     data: finalContent,
                     selectable: false,
