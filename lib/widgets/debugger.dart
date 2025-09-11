@@ -76,6 +76,7 @@ class Debugger extends ConsumerWidget {
     final pool = ref.watch(P.msg.pool);
     final conversations = ref.watch(P.conversation.conversations);
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final receivingTokens = ref.watch(P.chat.receivingTokens);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -102,6 +103,7 @@ class Debugger extends ConsumerWidget {
     const showLoading = false;
     const showMsgNode = true;
     const showSupportedBatchSizes = true;
+
     return Positioned(
       left: 0,
       top: 0,
@@ -172,6 +174,8 @@ class Debugger extends ConsumerWidget {
                       T(pageKey.toString()),
                       T("pageKey".codeToName),
                       T(pageKey.toString()),
+                      T("receivingTokens".codeToName),
+                      T(receivingTokens.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: EI.o(t: index % 2 == 0 ? 0 : 1),

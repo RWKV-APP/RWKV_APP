@@ -579,7 +579,7 @@ extension _$Chat on _Chat {
       qqq("send done in ${t2 - t1}ms");
     }
 
-    if (demoType == DemoType.tts) {
+    if (demoType == DemoType.tts || demoType == DemoType.chat) {
       final (file, length) = event;
       final path = file.path;
       qqq("new file received: $path, length: $length");
