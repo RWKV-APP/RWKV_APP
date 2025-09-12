@@ -215,7 +215,8 @@ enum FileType {
 }
 
 class ModelStateFile extends FileInfo {
-  //
+  final dynamic decodeParam;
+
   ModelStateFile({
     required super.name,
     required super.fileName,
@@ -233,6 +234,7 @@ class ModelStateFile extends FileInfo {
     super.socLimitations = const [],
     super.unsupportedSocBrand = const {},
     super.state = const [],
+    this.decodeParam,
   });
 
   factory ModelStateFile.fromJson(dynamic json) {
@@ -241,6 +243,7 @@ class ModelStateFile extends FileInfo {
       raw: json["url"],
       fileSize: json["fileSize"],
       name: json['name'],
+      decodeParam: json['decodeParam'] ?? {},
     );
   }
 }
