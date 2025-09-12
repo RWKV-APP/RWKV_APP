@@ -77,6 +77,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
             widget.file,
             true,
             showLoadModel: false,
+            showDelete: currentModelName != widget.file.fileName,
           ),
           if (local.hasFile) const SizedBox(height: 8),
           if (local.hasFile) Text(S.current.state_list, style: TextStyle(fontWeight: FontWeight.w500)),
@@ -158,7 +159,7 @@ class _ModelStateItem extends ConsumerWidget {
           file: state,
           state: localFile.state,
         ),
-        if (localFile.hasFile)
+        if (onSelectTap != null && localFile.hasFile)
           IconButton(
             onPressed: () {
               P.fileManager.deleteFile(fileInfo: state);

@@ -25,8 +25,9 @@ class ModelItem extends ConsumerWidget {
   final bool showTags;
   final VoidCallback? onLoadModelTap;
   final bool showLoadModel;
+  final bool showDelete;
 
-  const ModelItem(this.fileInfo, this.showTags, {super.key, this.onLoadModelTap, this.showLoadModel = true});
+  const ModelItem(this.fileInfo, this.showTags, {super.key, this.onLoadModelTap, this.showLoadModel = true, this.showDelete = true});
 
   void _onStartTap() async {
     if (onLoadModelTap != null) {
@@ -196,8 +197,8 @@ class ModelItem extends ConsumerWidget {
                     child: T(s.chatting, s: TS(c: qw)),
                   ),
                 ),
-              if (!isCurrentModel) 8.w,
-              if (!isCurrentModel) _Delete(fileInfo),
+              if (!isCurrentModel && showDelete) 8.w,
+              if (!isCurrentModel && showDelete) _Delete(fileInfo),
             ],
           ],
         ),
