@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "your_voice_is_empty": "Your voice data is empty, please check your microphone",
   "batch_inference_running": "Parallel inference running, generating {count} messages at the same time",
   "batch_inference_selected": "Selected {count} message",
   "this_model_does_not_support_batch_inference": "This model does not support batch inference, please select a model with the \"batch\" tag",

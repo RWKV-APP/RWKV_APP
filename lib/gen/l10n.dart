@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `您的声音数据为空，请检查您的麦克风`
+  String get your_voice_is_empty {
+    return Intl.message(
+      '您的声音数据为空，请检查您的麦克风',
+      name: 'your_voice_is_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `并行推理中，同时生成 {count} 条消息`
   String batch_inference_running(Object count) {
     return Intl.message(

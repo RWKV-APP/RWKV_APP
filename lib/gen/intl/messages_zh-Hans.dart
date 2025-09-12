@@ -567,6 +567,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "you_can_select_a_role_to_chat": MessageLookupByLibrary.simpleMessage(
       "您可以选择角色进行聊天",
     ),
+    "your_voice_is_empty": MessageLookupByLibrary.simpleMessage(
+      "您的声音数据为空，请检查您的麦克风",
+    ),
     "your_voice_is_too_short": MessageLookupByLibrary.simpleMessage(
       "您的声音太短，请长按按钮更久以获取您的声音。",
     ),

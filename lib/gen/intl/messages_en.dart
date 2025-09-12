@@ -749,6 +749,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "you_can_select_a_role_to_chat": MessageLookupByLibrary.simpleMessage(
       "You can select a role to chat with",
     ),
+    "your_voice_is_empty": MessageLookupByLibrary.simpleMessage(
+      "Your voice data is empty, please check your microphone",
+    ),
     "your_voice_is_too_short": MessageLookupByLibrary.simpleMessage(
       "Your voice is too short. Please hold the button longer to capture your voice.",
     ),

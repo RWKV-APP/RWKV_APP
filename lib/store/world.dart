@@ -87,7 +87,10 @@ extension $World on _World {
       return false;
     }
 
-    if (_audioData.isEmpty) throw Exception("😡 audioData is empty");
+    if (_audioData.isEmpty) {
+      Alert.warning(S.current.your_voice_is_empty);
+      throw Exception("😡 audioData is empty");
+    }
 
     final cacheDir = P.app.cacheDir.q;
     if (cacheDir == null) throw Exception("😡 cacheDir is null");
