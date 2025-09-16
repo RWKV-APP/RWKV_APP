@@ -145,11 +145,9 @@ extension _$TTS on _TTS {
   }
 
   void _pulse() {
-    // P.rwkv.send(to_rwkv.GetTTSGenerationProgress());
     P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
     P.rwkv.send(to_rwkv.GetTTSStreamingBuffer());
     P.rwkv.send(to_rwkv.GetIsGenerating());
-    // P.rwkv.send(to_rwkv.GetTTSOutputFileList());
   }
 
   void _stopQueryTimer() {
