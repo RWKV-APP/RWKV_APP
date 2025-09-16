@@ -189,9 +189,14 @@ class FileInfo extends Equatable {
       if (s.isEmpty) continue;
       final m = re.firstMatch(s);
       if (m != null) {
-        final y = m.group(1)!;
+        // 2025
+        // 但是只取后两位
+        final y = m.group(1)!.substring(2);
+        // 03
         final mo = m.group(2)!;
+        // 17
         final d = m.group(3)!;
+        // 20250317
         return '$y$mo$d';
       }
     }
