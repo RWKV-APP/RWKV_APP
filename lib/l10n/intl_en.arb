@@ -409,5 +409,6 @@
   "default_": "Default",
   "balanced": "Balanced",
   "custom": "Custom",
-  "mode": "Mode"
+  "mode": "Mode",
+  "suggest": "Suggest"
 }

@@ -2747,6 +2747,11 @@ class S {
   String get mode {
     return Intl.message('模式', name: 'mode', desc: '', args: []);
   }
+
+  /// `推荐`
+  String get suggest {
+    return Intl.message('推荐', name: 'suggest', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

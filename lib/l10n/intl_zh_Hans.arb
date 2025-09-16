@@ -408,5 +408,6 @@
   "default_": "默认",
   "balanced": "均衡",
   "custom": "自定义",
-  "mode": "模式"
+  "mode": "模式",
+  "suggest": "推荐"
 }

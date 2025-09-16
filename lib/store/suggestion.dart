@@ -32,6 +32,7 @@ class SuggestionCategory {
 
 class SuggestionConfig {
   final List<SuggestionCategory> chat;
+  final List<String> completion;
   final List<String> tts;
   final List<String> seeReasoningQa;
   final List<String> seeOcr;
@@ -39,6 +40,7 @@ class SuggestionConfig {
   const SuggestionConfig({
     required this.chat,
     required this.tts,
+    required this.completion,
     required this.seeReasoningQa,
     required this.seeOcr,
   });
@@ -47,11 +49,13 @@ class SuggestionConfig {
     List<SuggestionCategory>? chat,
     List<String>? tts,
     List<String>? seeReasoningQa,
+    List<String>? completion,
     List<String>? seeOcr,
   }) {
     return SuggestionConfig(
       chat: chat ?? this.chat,
       tts: tts ?? this.tts,
+      completion: completion ?? this.completion,
       seeReasoningQa: seeReasoningQa ?? this.seeReasoningQa,
       seeOcr: seeOcr ?? this.seeOcr,
     );
@@ -61,6 +65,7 @@ class SuggestionConfig {
     return SuggestionConfig(
       chat: (json['chat'] as Iterable).map((e) => SuggestionCategory.fromJson(e)).toList(),
       tts: (json['tts'] as Iterable).map((e) => e as String).toList(),
+      completion: (json['completion'] as Iterable?)?.map((e) => e as String).toList() ?? [],
       seeReasoningQa: (json['see_reasoning_qa'] as Iterable).map((e) => e as String).toList(),
       seeOcr: (json['see_ocr'] as Iterable).map((e) => e as String).toList(),
     );
@@ -235,6 +240,7 @@ extension $Suggestion on _Suggestion {}
 class _DefaultSuggestion {
   static const SuggestionConfig zh = SuggestionConfig(
     chat: [],
+    completion: [],
     tts: [
       "一二三四五，上山打老虎！",
       "一日不见，如三秋兮",
@@ -284,6 +290,7 @@ class _DefaultSuggestion {
 
   static const SuggestionConfig en = SuggestionConfig(
     chat: [],
+    completion: [],
     tts: [
       "Believe in yourself and all that you are",
       "Dream big and dare to fail",
