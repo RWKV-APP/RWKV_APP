@@ -165,12 +165,12 @@ class _TestState extends ConsumerState<_Test> {
           title: '',
           pairs: {
             ...deviceInfo.map((key, value) => MapEntry(key.codeToName, value)),
+            if (socBrand != SocBrand.unknown) 'SocBrand'.codeToName: socBrand.name,
             if (model != null) '---': '',
             if (model != null) 'Model'.codeToName: "${model.name} ${model.quantization}",
             if (model != null) 'FileSize'.codeToName: '${(model.fileSize / 1024 / 1024).toStringAsFixed(2)}MB',
             if (model != null) 'Backend'.codeToName: model.backend?.asArgument ?? '-',
             if (socName.isNotEmpty) 'SocName'.codeToName: socName,
-            if (socBrand != SocBrand.unknown) 'SocBrand'.codeToName: socBrand.name,
           },
         ),
         const SizedBox(height: 16),
