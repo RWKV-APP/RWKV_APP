@@ -257,7 +257,6 @@ enum FileDownloadSource {
   };
 
   bool get hidden => switch (this) {
-    aifasthub => true,
     _ => false,
   };
 }
