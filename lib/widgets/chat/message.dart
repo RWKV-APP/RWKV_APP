@@ -315,7 +315,7 @@ class Message extends ConsumerWidget {
 
     if (isChat) {
       border = null;
-      padding = const EI.o(t: 12, l: 12, r: 12, b: 12);
+      padding = const EI.o(t: 12, l: 12, r: 12, b: 4);
       borderRadius = BorderRadius.circular(16);
     }
 
@@ -330,9 +330,7 @@ class Message extends ConsumerWidget {
       (_, isBatch, batchCount, _) = getBatchInfo(finalContent);
     }
 
-    if (isBatch) {
-      padding = padding.copyWith(left: 0, right: 0);
-    }
+    if (isBatch) padding = padding.copyWith(left: 0, right: 0);
 
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
 
