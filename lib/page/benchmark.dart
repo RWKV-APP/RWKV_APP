@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $RWKV;
 import 'package:zone/widgets/model_selector.dart';
@@ -135,7 +136,7 @@ class _TestState extends ConsumerState<_Test> {
       }
     });
     ref.listen(P.chat.receivedTokens, (p, r) {
-      if(r.length > 1000) {
+      if (r.length > 1000) {
         P.rwkv.stop();
       }
     });
@@ -145,6 +146,8 @@ class _TestState extends ConsumerState<_Test> {
   Widget build(BuildContext context) {
     listen();
     final model = ref.watch(P.rwkv.currentModel);
+    final socName = ref.watch(P.rwkv.socName);
+    final socBrand = ref.watch(P.rwkv.socBrand);
 
     if (model != null) {
       final modelSizeGb = model.fileSize / 1024 / 1024 / 1024;
@@ -161,11 +164,13 @@ class _TestState extends ConsumerState<_Test> {
         _KeyValuePairs(
           title: '',
           pairs: {
-            ...deviceInfo,
+            ...deviceInfo.map((key, value) => MapEntry(key.codeToName, value)),
             if (model != null) '---': '',
-            if (model != null) 'Model': "${model.name} ${model.quantization}",
-            if (model != null) 'FileSize': '${(model.fileSize / 1024 / 1024).toStringAsFixed(2)}MB',
-            if (model != null) 'Backend': model.backend?.asArgument ?? '-',
+            if (model != null) 'Model'.codeToName: "${model.name} ${model.quantization}",
+            if (model != null) 'FileSize'.codeToName: '${(model.fileSize / 1024 / 1024).toStringAsFixed(2)}MB',
+            if (model != null) 'Backend'.codeToName: model.backend?.asArgument ?? '-',
+            if (socName.isNotEmpty) 'SocName'.codeToName: socName,
+            if (socBrand != SocBrand.unknown) 'SocBrand'.codeToName: socBrand.name,
           },
         ),
         const SizedBox(height: 16),
