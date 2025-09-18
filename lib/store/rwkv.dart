@@ -35,6 +35,21 @@ class _RWKV {
   late final prefillProgress = qs<double>(.0);
   late final argumentsPanelShown = qs(false);
 
+  late final decodeParamType = qp<DecodeParamType>((ref) {
+    final temp = ref.watch(arguments(Argument.temperature));
+    final topP = ref.watch(arguments(Argument.topP));
+    final presencePenalty = ref.watch(arguments(Argument.presencePenalty));
+    final frequencyPenalty = ref.watch(arguments(Argument.frequencyPenalty));
+    final penaltyDecay = ref.watch(arguments(Argument.penaltyDecay));
+    return DecodeParamType.fromValue(
+      temperature: temp,
+      topP: topP,
+      presencePenalty: presencePenalty,
+      frequencyPenalty: frequencyPenalty,
+      penaltyDecay: penaltyDecay,
+    );
+  });
+
   late final arguments = qsff<Argument, double>((ref, argument) {
     return argument.defaults;
   });
@@ -670,6 +685,16 @@ extension $RWKV on _RWKV {
       presencePenalty: enableReasoning ? Argument.presencePenalty.reasonDefaults : Argument.presencePenalty.defaults,
       frequencyPenalty: enableReasoning ? Argument.frequencyPenalty.reasonDefaults : Argument.frequencyPenalty.defaults,
       penaltyDecay: enableReasoning ? Argument.penaltyDecay.reasonDefaults : Argument.penaltyDecay.defaults,
+    );
+  }
+
+  Future syncSamplerParamsFromDefault(DecodeParamType param) async {
+    await syncSamplerParams(
+      temperature: param.temperature,
+      topP: param.topP,
+      penaltyDecay: param.penaltyDecay,
+      presencePenalty: param.presencePenalty,
+      frequencyPenalty: param.frequencyPenalty,
     );
   }
 

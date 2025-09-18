@@ -162,7 +162,7 @@ class _WenYanWenButton extends ConsumerWidget {
           decoration: BoxDecoration(color: wenYanWen ? theme.colorScheme.primary : theme.colorScheme.surfaceContainer, borderRadius: 60.r),
           child: Center(
             child: Text(
-              "文言文",
+              "文言",
               style: TextStyle(
                 fontSize: 14,
                 height: 1,

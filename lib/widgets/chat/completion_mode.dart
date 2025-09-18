@@ -200,6 +200,17 @@ class _CompletionState extends ConsumerState<Completion> {
     });
   }
 
+  void onSuggestTap() async {
+    final res = await _SuggestDialog.show(context);
+    if (res == null || !mounted) {
+      return;
+    }
+    controllerPrompt.text = res;
+    setState(() {
+      canResume = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     listenGenEvent();
@@ -214,6 +225,13 @@ class _CompletionState extends ConsumerState<Completion> {
             children: [
               Text(S.current.prompt),
               const Spacer(),
+              TextButton(
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                ),
+                onPressed: generating ? null : onSuggestTap,
+                child: Text(S.current.suggest),
+              ),
               TextButton(
                 style: TextButton.styleFrom(
                   visualDensity: VisualDensity.compact,
@@ -315,6 +333,87 @@ class _CompletionState extends ConsumerState<Completion> {
         const SizedBox(width: 8),
         const PerformanceInfo(),
       ],
+    );
+  }
+}
+
+class _SuggestDialog extends StatefulWidget {
+  final ScrollController scrollController;
+
+  _SuggestDialog(this.scrollController);
+
+  static Future<String?> show(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (c) => DraggableScrollableSheet(
+        maxChildSize: .9,
+        minChildSize: .25,
+        expand: false,
+        snap: false,
+        builder: (BuildContext context, ScrollController scrollController) {
+          return _SuggestDialog(scrollController);
+        },
+      ),
+    );
+  }
+
+  @override
+  State<_SuggestDialog> createState() => _SuggestDialogState();
+}
+
+class _SuggestDialogState extends State<_SuggestDialog> {
+  List<String> items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    items = P.suggestion.config.q.completion;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Row(
+              children: [
+                const SizedBox(width: 6),
+                Expanded(child: Text(S.of(context).suggest, style: theme.textTheme.titleMedium)),
+                const CloseButton(),
+              ],
+            ),
+          ),
+          Flexible(
+            child: SingleChildScrollView(
+              controller: widget.scrollController,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final item in items) ...[
+                    ListTile(
+                      title: Text(item, maxLines: 3, overflow: TextOverflow.ellipsis),
+                      onTap: () {
+                        Navigator.pop(context, item);
+                      },
+                    ),
+                    Divider(indent: 16, endIndent: 16, height: 6, thickness: 0.5),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
