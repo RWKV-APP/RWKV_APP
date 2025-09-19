@@ -3,6 +3,9 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
@@ -11,16 +14,13 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
-import 'package:zone/widgets/model_item.dart';
 
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
@@ -196,7 +196,6 @@ class _ModelList extends ConsumerWidget {
       availableModels = availableModels.whereNot((e) => e.tags.contains('DeepEmbedding')).toSet();
     }
 
-    final List<Widget> items = switch (preferredDemoType) {
     List<Widget> items = switch (preferredDemoType) {
       DemoType.world =>
         WorldType.values

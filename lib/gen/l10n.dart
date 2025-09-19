@@ -2707,6 +2707,26 @@ class S {
   String get performance_test {
     return Intl.message('性能测试', name: 'performance_test', desc: '', args: []);
   }
+
+  /// `State 列表`
+  String get state_list {
+    return Intl.message('State 列表', name: 'state_list', desc: '', args: []);
+  }
+
+  /// `角色扮演`
+  String get role_play {
+    return Intl.message('角色扮演', name: 'role_play', desc: '', args: []);
+  }
+
+  /// `扮演你喜欢的角色`
+  String get role_play_intro {
+    return Intl.message(
+      '扮演你喜欢的角色',
+      name: 'role_play_intro',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

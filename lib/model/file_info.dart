@@ -252,6 +252,7 @@ class ModelStateFile extends FileInfo {
     required super.fileName,
     required super.fileSize,
     required super.raw,
+    super.updatedAt = '',
     super.fileType = FileType.weights,
     super.isDebug = false,
     super.availableIn = const [],

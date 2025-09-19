@@ -28,8 +28,15 @@ class ModelItem extends ConsumerWidget {
   final bool showLoadModel;
   final bool showDelete;
 
-  const ModelItem(this.fileInfo, this.showTags, {super.key, this.onLoadModelTap, this.showLoadModel = true, this.showDelete = true});
-  const ModelItem(this.fileInfo, this.showTags, {super.key, this.loadButtonTextShowLoad = false});
+  ModelItem(
+    this.fileInfo,
+    this.showTags, {
+    super.key,
+    this.onLoadModelTap,
+    this.showLoadModel = true,
+    this.showDelete = true,
+    this.loadButtonTextShowLoad = false,
+  });
 
   void _onStartTap() async {
     if (onLoadModelTap != null) {
