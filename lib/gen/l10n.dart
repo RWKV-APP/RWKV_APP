@@ -2708,6 +2708,51 @@ class S {
     return Intl.message('性能测试', name: 'performance_test', desc: '', args: []);
   }
 
+  /// `解码参数`
+  String get decode_param {
+    return Intl.message('解码参数', name: 'decode_param', desc: '', args: []);
+  }
+
+  /// `固定`
+  String get fixed {
+    return Intl.message('固定', name: 'fixed', desc: '', args: []);
+  }
+
+  /// `创意`
+  String get creative {
+    return Intl.message('创意', name: 'creative', desc: '', args: []);
+  }
+
+  /// `保守`
+  String get conservative {
+    return Intl.message('保守', name: 'conservative', desc: '', args: []);
+  }
+
+  /// `默认`
+  String get default_ {
+    return Intl.message('默认', name: 'default_', desc: '', args: []);
+  }
+
+  /// `均衡`
+  String get balanced {
+    return Intl.message('均衡', name: 'balanced', desc: '', args: []);
+  }
+
+  /// `自定义`
+  String get custom {
+    return Intl.message('自定义', name: 'custom', desc: '', args: []);
+  }
+
+  /// `模式`
+  String get mode {
+    return Intl.message('模式', name: 'mode', desc: '', args: []);
+  }
+
+  /// `推荐`
+  String get suggest {
+    return Intl.message('推荐', name: 'suggest', desc: '', args: []);
+  }
+
   /// `State 列表`
   String get state_list {
     return Intl.message('State 列表', name: 'state_list', desc: '', args: []);

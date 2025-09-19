@@ -1,5 +1,70 @@
 import 'package:zone/args.dart';
 
+enum DecodeParamType {
+  unknown(temperature: -1, topP: -1, presencePenalty: -1, frequencyPenalty: -1, penaltyDecay: -1),
+  creative(
+    temperature: 0.6,
+    topP: 0.8,
+    presencePenalty: 2,
+    frequencyPenalty: 0.2,
+    penaltyDecay: 0.990,
+  ),
+  conservative(
+    temperature: 0.3,
+    topP: 0.3,
+    presencePenalty: 0,
+    frequencyPenalty: 0,
+    penaltyDecay: 0.996,
+  ),
+  fixed(
+    temperature: 0.2,
+    topP: 0,
+    presencePenalty: 0,
+    frequencyPenalty: 0,
+    penaltyDecay: 0.996,
+  ),
+  defaults(
+    temperature: 1,
+    topP: 0.3,
+    presencePenalty: 0.5,
+    frequencyPenalty: 0.5,
+    penaltyDecay: 0.996,
+  );
+
+  final double temperature;
+  final double topP;
+  final double presencePenalty;
+  final double frequencyPenalty;
+  final double penaltyDecay;
+
+  const DecodeParamType({
+    required this.temperature,
+    required this.topP,
+    required this.presencePenalty,
+    required this.frequencyPenalty,
+    required this.penaltyDecay,
+  });
+
+  static DecodeParamType fromValue({
+    required double temperature,
+    required double topP,
+    required double presencePenalty,
+    required double frequencyPenalty,
+    required double penaltyDecay,
+  }) {
+    for (final type in values) {
+      if (type.temperature == temperature &&
+          type.topP == topP &&
+          type.presencePenalty == presencePenalty &&
+          type.frequencyPenalty == frequencyPenalty &&
+          type.penaltyDecay == penaltyDecay) {
+        return type;
+      }
+    }
+    return unknown;
+  }
+}
+
 enum Argument {
   temperature,
   topK,
@@ -75,7 +140,7 @@ enum Argument {
     temperature => 2.0,
     topK => 0,
     topP => 1.0,
-    presencePenalty => 1.0,
+    presencePenalty => 2.0,
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,

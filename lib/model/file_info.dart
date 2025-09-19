@@ -211,7 +211,7 @@ class FileInfo extends Equatable {
   }
 
   @override
-  List<Object?> get props => [raw];
+  List<Object?> get props => [raw, name];
 
   @override
   String toString() {

@@ -27,16 +27,6 @@ class CompletionPage extends ConsumerWidget {
           ],
         ),
         centerTitle: true,
-        actions: [
-          if (mode.isGreaterThan(UserType.user))
-            IconButton(
-              onPressed: () async {
-                if (!checkModelSelection()) return;
-                await ArgumentsPanel.show(context);
-              },
-              icon: const Icon(Icons.tune_rounded),
-            ),
-        ],
       ),
       body: PopScope(
         child: const Completion(),

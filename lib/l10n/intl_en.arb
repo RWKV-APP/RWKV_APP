@@ -404,5 +404,14 @@
   "result": "Result",
   "test_result": "Test Result",
   "benchmark_result": "Benchmark Result",
-  "performance_test": "Performance Test"
+  "performance_test": "Performance Test",
+  "decode_param": "Decode Param",
+  "fixed": "Fixed",
+  "creative": "Creative",
+  "conservative": "Conservative",
+  "default_": "Default",
+  "balanced": "Balanced",
+  "custom": "Custom",
+  "mode": "Mode",
+  "suggest": "Suggest"
 }

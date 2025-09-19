@@ -101,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "auto_detect": MessageLookupByLibrary.simpleMessage("Auto Detect"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
+    "balanced": MessageLookupByLibrary.simpleMessage("Balanced"),
     "batch_inference": MessageLookupByLibrary.simpleMessage("Parallel"),
     "batch_inference_button": m0,
     "batch_inference_count": MessageLookupByLibrary.simpleMessage(
@@ -209,6 +210,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion_mode": MessageLookupByLibrary.simpleMessage("Completion Mode"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "conservative": MessageLookupByLibrary.simpleMessage("Conservative"),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Continue Download",
     ),
@@ -226,6 +228,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Create a new one by clicking the button above",
         ),
     "created_at": MessageLookupByLibrary.simpleMessage("Created at"),
+    "creative": MessageLookupByLibrary.simpleMessage("Creative"),
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
       "Current task Tab ID",
     ),
@@ -236,13 +239,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "Current task URL",
     ),
     "current_turn": MessageLookupByLibrary.simpleMessage("Current Turn"),
+    "custom": MessageLookupByLibrary.simpleMessage("Custom"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
       "Custom Difficulty",
     ),
     "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("Dark Mode Theme"),
     "decode": MessageLookupByLibrary.simpleMessage("Decode"),
+    "decode_param": MessageLookupByLibrary.simpleMessage("Decode Param"),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("DeepSearch"),
+    "default_": MessageLookupByLibrary.simpleMessage("Default"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
@@ -318,6 +324,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "finish_recording": MessageLookupByLibrary.simpleMessage(
       "Recording finished",
     ),
+    "fixed": MessageLookupByLibrary.simpleMessage("Fixed"),
     "follow_system": MessageLookupByLibrary.simpleMessage("System"),
     "follow_us_on_twitter": MessageLookupByLibrary.simpleMessage(
       "Follow us on Twitter",
@@ -409,6 +416,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
     "memory_used": m10,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
+    "mode": MessageLookupByLibrary.simpleMessage("Mode"),
     "model": MessageLookupByLibrary.simpleMessage("Model"),
     "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
@@ -659,6 +667,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Easy"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Hard"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("Medium"),
+    "suggest": MessageLookupByLibrary.simpleMessage("Suggest"),
     "system_mode": MessageLookupByLibrary.simpleMessage("System Mode"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("System Prompt"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Take Photo"),
