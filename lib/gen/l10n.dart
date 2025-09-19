@@ -54,6 +54,156 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `您的声音数据为空，请检查您的麦克风`
+  String get your_voice_is_empty {
+    return Intl.message(
+      '您的声音数据为空，请检查您的麦克风',
+      name: 'your_voice_is_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行推理中，同时生成 {count} 条消息`
+  String batch_inference_running(Object count) {
+    return Intl.message(
+      '并行推理中，同时生成 $count 条消息',
+      name: 'batch_inference_running',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `已选择第 {count} 条消息`
+  String batch_inference_selected(Object count) {
+    return Intl.message(
+      '已选择第 $count 条消息',
+      name: 'batch_inference_selected',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `这个模型不支持并行推理, 请选择带有 batch 标签的模型`
+  String get this_model_does_not_support_batch_inference {
+    return Intl.message(
+      '这个模型不支持并行推理, 请选择带有 batch 标签的模型',
+      name: 'this_model_does_not_support_batch_inference',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开启`
+  String get enabled {
+    return Intl.message('开启', name: 'enabled', desc: '', args: []);
+  }
+
+  /// `关闭`
+  String get disabled {
+    return Intl.message('关闭', name: 'disabled', desc: '', args: []);
+  }
+
+  /// `请选择你喜欢的分支以进行接下来的对话`
+  String get please_select_a_branch_to_continue_the_conversation {
+    return Intl.message(
+      '请选择你喜欢的分支以进行接下来的对话',
+      name: 'please_select_a_branch_to_continue_the_conversation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `屏幕宽度`
+  String get screen_width {
+    return Intl.message('屏幕宽度', name: 'screen_width', desc: '', args: []);
+  }
+
+  /// `并行 × {count}`
+  String batch_inference_button(Object count) {
+    return Intl.message(
+      '并行 × $count',
+      name: 'batch_inference_button',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `并行推理`
+  String get batch_inference {
+    return Intl.message('并行推理', name: 'batch_inference', desc: '', args: []);
+  }
+
+  /// `开启并行推理后，RWKV 可以同时生成多个答案`
+  String get batch_inference_detail {
+    return Intl.message(
+      '开启并行推理后，RWKV 可以同时生成多个答案',
+      name: 'batch_inference_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开启或关闭并行推理`
+  String get batch_inference_enable_or_not {
+    return Intl.message(
+      '开启或关闭并行推理',
+      name: 'batch_inference_enable_or_not',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行推理设置`
+  String get batch_inference_settings {
+    return Intl.message(
+      '并行推理设置',
+      name: 'batch_inference_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行推理数量`
+  String get batch_inference_count {
+    return Intl.message(
+      '并行推理数量',
+      name: 'batch_inference_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每次推理将生成 {count} 条消息`
+  String batch_inference_count_detail(Object count) {
+    return Intl.message(
+      '每次推理将生成 $count 条消息',
+      name: 'batch_inference_count_detail',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `消息显示宽度`
+  String get batch_inference_width {
+    return Intl.message(
+      '消息显示宽度',
+      name: 'batch_inference_width',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行推理每条消息宽度`
+  String get batch_inference_width_detail {
+    return Intl.message(
+      '并行推理每条消息宽度',
+      name: 'batch_inference_width_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `推理: 关`
   String get thinking_mode_off {
     return Intl.message('推理: 关', name: 'thinking_mode_off', desc: '', args: []);
@@ -2248,6 +2398,16 @@ class S {
     );
   }
 
+  /// `输入中文文本`
+  String get input_chinese_text_here {
+    return Intl.message(
+      '输入中文文本',
+      name: 'input_chinese_text_here',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `清除文本`
   String get clear_text {
     return Intl.message('清除文本', name: 'clear_text', desc: '', args: []);
@@ -2273,6 +2433,16 @@ class S {
     return Intl.message(
       '中文翻译结果',
       name: 'chinese_translation_result',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `英文翻译结果`
+  String get english_translation_result {
+    return Intl.message(
+      '英文翻译结果',
+      name: 'english_translation_result',
       desc: '',
       args: [],
     );
@@ -2498,24 +2668,44 @@ class S {
     return Intl.message('已加载', name: 'loaded', desc: '', args: []);
   }
 
-  /// `State 列表`
-  String get state_list {
-    return Intl.message('State 列表', name: 'state_list', desc: '', args: []);
+  /// `基准测试`
+  String get benchmark {
+    return Intl.message('基准测试', name: 'benchmark', desc: '', args: []);
   }
 
-  /// `角色扮演`
-  String get role_play {
-    return Intl.message('角色扮演', name: 'role_play', desc: '', args: []);
+  /// `选择模型`
+  String get select_model {
+    return Intl.message('选择模型', name: 'select_model', desc: '', args: []);
   }
 
-  /// `扮演你喜欢的角色`
-  String get role_play_intro {
-    return Intl.message(
-      '扮演你喜欢的角色',
-      name: 'role_play_intro',
-      desc: '',
-      args: [],
-    );
+  /// `开始`
+  String get start {
+    return Intl.message('开始', name: 'start', desc: '', args: []);
+  }
+
+  /// `开始测试`
+  String get start_testing {
+    return Intl.message('开始测试', name: 'start_testing', desc: '', args: []);
+  }
+
+  /// `结果`
+  String get result {
+    return Intl.message('结果', name: 'result', desc: '', args: []);
+  }
+
+  /// `测试结果`
+  String get test_result {
+    return Intl.message('测试结果', name: 'test_result', desc: '', args: []);
+  }
+
+  /// `基准测试结果`
+  String get benchmark_result {
+    return Intl.message('基准测试结果', name: 'benchmark_result', desc: '', args: []);
+  }
+
+  /// `性能测试`
+  String get performance_test {
+    return Intl.message('性能测试', name: 'performance_test', desc: '', args: []);
   }
 }
 

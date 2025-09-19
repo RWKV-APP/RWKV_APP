@@ -20,21 +20,21 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ko';
 
-  static String m0(demoName) => "${demoName}을(를) 탐험해 보세요";
+  static String m4(demoName) => "${demoName}을(를) 탐험해 보세요";
 
-  static String m1(maxLength) => "대화 이름은 ${maxLength}자를 초과할 수 없습니다";
+  static String m5(maxLength) => "대화 이름은 ${maxLength}자를 초과할 수 없습니다";
 
-  static String m2(path) => "메시지 기록은 다음 폴더에 저장됩니다:\n ${path}";
+  static String m6(path) => "메시지 기록은 다음 폴더에 저장됩니다:\n ${path}";
 
-  static String m4(flag, nameCN, nameEN) =>
+  static String m8(flag, nameCN, nameEN) =>
       "${flag} ${nameCN}(${nameEN})의 목소리를 모방";
 
-  static String m5(fileName) => "${fileName} 모방";
+  static String m9(fileName) => "${fileName} 모방";
 
-  static String m6(memUsed, memFree) =>
+  static String m10(memUsed, memFree) =>
       "사용된 메모리: ${memUsed}, 남은 메모리: ${memFree}";
 
-  static String m11(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
+  static String m15(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -79,7 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_resume": MessageLookupByLibrary.simpleMessage("계속"),
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV 채팅"),
-    "chat_welcome_to_use": m0,
+    "chat_welcome_to_use": m4,
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage("사용하려면 먼저 모델을 다운로드해야 합니다"),
     "chatting": MessageLookupByLibrary.simpleMessage("채팅 중"),
@@ -112,7 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "대화 이름은 비워둘 수 없습니다",
     ),
-    "conversation_name_cannot_be_longer_than_30_characters": m1,
+    "conversation_name_cannot_be_longer_than_30_characters": m5,
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("위 버튼을 클릭하여 새로 생성"),
     "current_turn": MessageLookupByLibrary.simpleMessage("현재 차례"),
@@ -148,7 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "downloading": MessageLookupByLibrary.simpleMessage("다운로드 중"),
     "draw": MessageLookupByLibrary.simpleMessage("무승부!"),
     "dump_see_files": MessageLookupByLibrary.simpleMessage("자동 덤프 메시지 기록"),
-    "dump_see_files_alert_message": m2,
+    "dump_see_files_alert_message": m6,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "알고리즘 개선에 도움을 주세요",
     ),
@@ -194,8 +194,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKV가 말하게 하고 싶어요...",
     ),
-    "imitate": m4,
-    "imitate_fle": m5,
+    "imitate": m8,
+    "imitate_fle": m9,
     "imitate_target": MessageLookupByLibrary.simpleMessage("사용"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -221,7 +221,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "light_mode": MessageLookupByLibrary.simpleMessage("라이트 모드"),
     "loading": MessageLookupByLibrary.simpleMessage("로드 중..."),
     "medium": MessageLookupByLibrary.simpleMessage("중간 (110%)"),
-    "memory_used": m6,
+    "memory_used": m10,
     "model_settings": MessageLookupByLibrary.simpleMessage("모델 설정"),
     "more": MessageLookupByLibrary.simpleMessage("더 보기"),
     "my_voice": MessageLookupByLibrary.simpleMessage("내 목소리"),
@@ -389,7 +389,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
-    "you_are_now_using": m11,
+    "you_are_now_using": m15,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV와 채팅을 시작할 수 있습니다",
     ),

@@ -23,11 +23,13 @@ import 'package:zone/store/p.dart';
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final bool showTags;
+  final bool loadButtonTextShowLoad;
   final VoidCallback? onLoadModelTap;
   final bool showLoadModel;
   final bool showDelete;
 
   const ModelItem(this.fileInfo, this.showTags, {super.key, this.onLoadModelTap, this.showLoadModel = true, this.showDelete = true});
+  const ModelItem(this.fileInfo, this.showTags, {super.key, this.loadButtonTextShowLoad = false});
 
   void _onStartTap() async {
     if (onLoadModelTap != null) {
@@ -62,7 +64,9 @@ class ModelItem extends ConsumerWidget {
     }
 
     P.rwkv.currentModel.q = fileInfo;
-    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    if (!loadButtonTextShowLoad) {
+      Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    }
     pop();
   }
 
@@ -80,7 +84,7 @@ class ModelItem extends ConsumerWidget {
 
     final modelSize = fileInfo.modelSize ?? 0.1;
     final pageKey = P.app.pageKey.q;
-    if (modelSize < 1.5 && pageKey == PageKey.chat) {
+    if (modelSize < 1.5 && pageKey == PageKey.chat && !fileInfo.tags.contains("DeepEmbedding")) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
@@ -104,15 +108,24 @@ class ModelItem extends ConsumerWidget {
         enableReasoning: fileInfo.isReasoning,
       );
     } catch (e) {
+      qqe;
       Alert.error(e.toString());
       return;
     }
 
+    final batchAllowed = fileInfo.tags.contains("batch");
+    if (!batchAllowed) P.chat.batchEnabled.q = false;
+
     final tags = fileInfo.tags;
 
     if (tags.contains("translate")) {
-      P.rwkv.send(SetUserRole("English"));
-      P.rwkv.send(SetResponseRole("Chinese"));
+      if (P.translator.enToZh.q) {
+        P.rwkv.send(SetUserRole("English"));
+        P.rwkv.send(SetResponseRole("Chinese"));
+      } else {
+        P.rwkv.send(SetUserRole("Chinese"));
+        P.rwkv.send(SetResponseRole("English"));
+      }
       await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "");
       P.backend.start();
     } else {
@@ -121,7 +134,9 @@ class ModelItem extends ConsumerWidget {
     }
 
     P.rwkv.currentModel.q = fileInfo;
-    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    if (!loadButtonTextShowLoad) {
+      Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    }
     pop();
   }
 
@@ -130,14 +145,15 @@ class ModelItem extends ConsumerWidget {
     final s = S.of(context);
     final localFile = ref.watch(P.fileManager.locals(fileInfo));
     final hasFile = localFile.hasFile;
-    final downloading = localFile.downloading;
     final currentModel = ref.watch(P.rwkv.currentModel);
     final isCurrentModel = currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
 
-    late final String startTitle;
+    String startTitle;
+
+    final isTranslate = fileInfo.tags.contains("translate");
 
     switch (demoType) {
       case DemoType.fifthteenPuzzle:
@@ -147,7 +163,11 @@ class ModelItem extends ConsumerWidget {
       case DemoType.chat:
       case DemoType.tts:
       case DemoType.world:
-        startTitle = s.start_to_chat;
+        startTitle = isTranslate ? s.use_it_now : s.start_to_chat;
+    }
+
+    if (loadButtonTextShowLoad) {
+      startTitle = S.current.load_;
     }
 
     final qw = ref.watch(P.app.qw);
@@ -194,7 +214,7 @@ class ModelItem extends ConsumerWidget {
                       borderRadius: 8.r,
                     ),
                     padding: const EI.a(8),
-                    child: T(s.chatting, s: TS(c: qw)),
+                    child: T(loadButtonTextShowLoad ? S.current.loaded : s.chatting, s: TS(c: qw)),
                   ),
                 ),
               if (!isCurrentModel && showDelete) 8.w,
@@ -398,7 +418,7 @@ class _Tags extends ConsumerWidget {
   final FileInfo fileInfo;
 
   static const _blockedTags = ["encoder", "reason", "ENCODER", "REASON"];
-  static const _highlightTags = ["NPU", "GPU", "npu", "gpu"];
+  static const _highlightTags = ["NPU", "GPU", "npu", "gpu", "DeepEmbedding", "batch"];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -406,6 +426,7 @@ class _Tags extends ConsumerWidget {
     final tags = fileInfo.tags.where((e) => !_blockedTags.contains(e));
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
+    final date = fileInfo.date;
 
     return Wrap(
       spacing: 4,
@@ -413,6 +434,7 @@ class _Tags extends ConsumerWidget {
       children: [
         ...tags.map((tag) {
           final showHighlight = _highlightTags.contains(tag);
+          if (tag == "DeepEmbedding") tag = "DE";
           return Container(
             decoration: BoxDecoration(
               borderRadius: 4.r,
@@ -439,6 +461,12 @@ class _Tags extends ConsumerWidget {
             decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
             padding: const EI.s(h: 4),
             child: T(quantization),
+          ),
+        if (date != null)
+          Container(
+            decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
+            padding: const EI.s(h: 4),
+            child: T(date),
           ),
       ],
     );

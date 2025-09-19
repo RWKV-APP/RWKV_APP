@@ -7,7 +7,9 @@ enum Argument {
   presencePenalty,
   frequencyPenalty,
   penaltyDecay,
-  maxLength;
+  maxLength,
+  batchCount,
+  batchVW;
 
   bool get configureable => switch (this) {
     temperature => true,
@@ -17,6 +19,8 @@ enum Argument {
     frequencyPenalty => true,
     penaltyDecay => true,
     maxLength => true,
+    batchCount => true,
+    batchVW => true,
   };
 
   bool get show => switch (this) {
@@ -27,6 +31,8 @@ enum Argument {
     frequencyPenalty => true,
     penaltyDecay => true,
     maxLength => true,
+    batchCount => true,
+    batchVW => true,
   };
 
   int get fixedDecimals => switch (this) {
@@ -37,6 +43,8 @@ enum Argument {
     frequencyPenalty => 1,
     penaltyDecay => 3,
     maxLength => 0,
+    batchCount => 0,
+    batchVW => 0,
   };
 
   double? get step => switch (this) {
@@ -47,6 +55,8 @@ enum Argument {
     frequencyPenalty => null,
     penaltyDecay => .001,
     maxLength => 100,
+    batchCount => 1,
+    batchVW => 5,
   };
 
   double get min => switch (this) {
@@ -57,6 +67,8 @@ enum Argument {
     frequencyPenalty => .0,
     penaltyDecay => .99,
     maxLength => 100,
+    batchCount => 2,
+    batchVW => 40,
   };
 
   double get max => switch (this) {
@@ -67,6 +79,8 @@ enum Argument {
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,
+    batchCount => 6,
+    batchVW => 80,
   };
 
   double get reasonDefaults => switch (this) {
@@ -77,6 +91,8 @@ enum Argument {
     frequencyPenalty => .5,
     penaltyDecay => .996,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 4000,
+    batchCount => Args.batchCount.toDouble(),
+    batchVW => Args.batchVW.toDouble(),
   };
 
   double get defaults => switch (this) {
@@ -87,5 +103,19 @@ enum Argument {
     frequencyPenalty => .5,
     penaltyDecay => .996,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 2000,
+    batchCount => Args.batchCount.toDouble(),
+    batchVW => Args.batchVW.toDouble(),
+  };
+
+  bool get enableGaimon => switch (this) {
+    Argument.temperature => true,
+    Argument.topK => true,
+    Argument.topP => true,
+    Argument.presencePenalty => true,
+    Argument.frequencyPenalty => true,
+    Argument.penaltyDecay => true,
+    Argument.maxLength => false,
+    Argument.batchCount => true,
+    Argument.batchVW => true,
   };
 }

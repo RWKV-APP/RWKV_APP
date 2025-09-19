@@ -64,6 +64,8 @@ class FileInfo extends Equatable {
   /// q4_0, q4_1, q4_2, q4_3, q4_4, q5_0, q5_1, q5_2, q5_3, q5_4, q8_0, q8_1, q8_2, q8_3, q8_4, ...
   final String? quantization;
 
+  final String? updatedAt;
+
   /// e.g.
   ///
   /// ["encoder", ...]
@@ -91,6 +93,7 @@ class FileInfo extends Equatable {
     required this.sha256,
     required this.modelSize,
     required this.quantization,
+    required this.updatedAt,
     required this.tags,
     required this.socLimitations,
     required this.unsupportedSocBrand,
@@ -119,6 +122,7 @@ class FileInfo extends Equatable {
       sha256: json['sha256'] as String?,
       modelSize: json['modelSize'] as double?,
       quantization: json['quantization'] as String?,
+      updatedAt: json['updatedAt'] as String?,
       tags: HF.list(json['tags'] ?? []).map((e) => e.toString()).toList(),
       socLimitations: socLimitations,
       unsupportedSocBrand: unsupportedSocBrand,
@@ -181,6 +185,31 @@ class FileInfo extends Equatable {
 
   bool get isTTS => name.toLowerCase().contains('tts');
 
+  String? get date {
+    // 用正则表达式匹配 "20250317", "20381101" 这样的日期
+    final re = RegExp(r'(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])');
+
+    for (final s in [fileName]) {
+      if (s.isEmpty) continue;
+      final m = re.firstMatch(s);
+      if (m != null) {
+        // 2025
+        // 但是只取后两位
+        final y = m.group(1)!.substring(2);
+        // 03
+        final mo = m.group(2)!;
+        // 17
+        final d = m.group(3)!;
+        // 20250317
+        return '$y$mo$d';
+      }
+    }
+
+    if (updatedAt != null) return updatedAt;
+
+    return null;
+  }
+
   @override
   List<Object?> get props => [raw];
 
@@ -200,6 +229,7 @@ FileInfo(
   sha256: $sha256,
   modelSize: $modelSize,
   quantization: $quantization,
+  updatedAt: $updatedAt,
   tags: $tags,
   socLimitations: $socLimitations,
   unsupportedSocBrand: $unsupportedSocBrand,

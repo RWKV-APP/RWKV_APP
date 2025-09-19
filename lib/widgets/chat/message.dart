@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,7 @@ import 'package:photo_viewer/photo_viewer.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/args.dart';
+import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,10 +18,13 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/cot_display_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
+import 'package:zone/model/message_type.dart' as model;
+import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/audio_bubble.dart';
+import 'package:zone/widgets/chat/batch_message_content.dart';
 import 'package:zone/widgets/chat/bot_message_bottom.dart';
 import 'package:zone/widgets/chat/search_reference_dialog.dart';
 import 'package:zone/widgets/chat/tts/bot_tts_content.dart';
@@ -261,7 +267,7 @@ class Message extends ConsumerWidget {
         break;
     }
 
-    EI padding = const EI.o(t: 12, l: 12, r: 12);
+    EdgeInsets padding = const EI.o(t: 12, l: 12, r: 12);
     Border? border = Border.all(color: primary.q(.2));
     double radius = 20;
 
@@ -315,6 +321,21 @@ class Message extends ConsumerWidget {
 
     final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
 
+    late final bool isBatch;
+    late final int batchCount;
+
+    if (isMine) {
+      isBatch = false;
+    } else {
+      (_, isBatch, batchCount, _) = getBatchInfo(finalContent);
+    }
+
+    if (isBatch) {
+      padding = padding.copyWith(left: 0, right: 0);
+    }
+
+    final batchSelection = ref.watch(P.msg.batchSelection(msg));
+
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
@@ -356,6 +377,24 @@ class Message extends ConsumerWidget {
                 UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
+                if (isBatch)
+                  Padding(
+                    padding: const EI.o(l: 14, b: 4, r: 14),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          s.batch_inference_running(batchCount),
+                          style: const TS(c: kCG),
+                        ),
+                        if (batchSelection != null) 16.w,
+                        if (batchSelection != null)
+                          Text(
+                            s.batch_inference_selected(batchSelection + 1),
+                            style: const TS(c: kCG),
+                          ),
+                      ],
+                    ),
+                  ),
                 // 🔥 Bot message audio recognition result
                 if (worldDemoMessageHeader.isNotEmpty)
                   T(
@@ -364,7 +403,7 @@ class Message extends ConsumerWidget {
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
-                if (!reasoning)
+                if (!reasoning && !isBatch)
                   MarkdownBody(
                     data: finalContent,
                     selectable: false,
@@ -373,7 +412,7 @@ class Message extends ConsumerWidget {
                     onTapLink: _onTapLink,
                   ),
                 // 🔥 Bot message cot header
-                if (reasoning && !isQuickThinking)
+                if (reasoning && !isQuickThinking && !isBatch)
                   GestureDetector(
                     onTap: () {
                       if (showingCotContent) {
@@ -396,8 +435,8 @@ class Message extends ConsumerWidget {
                     ),
                   ),
                 // 🔥 Bot message cot content
-                if (reasoning && !isQuickThinking) 4.h,
-                if (reasoning && !isQuickThinking)
+                if (reasoning && !isQuickThinking && !isBatch) 4.h,
+                if (reasoning && !isQuickThinking && !isBatch)
                   AnimatedContainer(
                     duration: 250.ms,
                     height: cotContentHeight,
@@ -410,8 +449,8 @@ class Message extends ConsumerWidget {
                     ),
                   ),
                 // 🔥 Bot message cot result
-                if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking) 12.h,
-                if (cotResult.isNotEmpty && reasoning)
+                if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) 12.h,
+                if (cotResult.isNotEmpty && reasoning && !isBatch)
                   MarkdownBody(
                     data: cotResult,
                     selectable: false,
@@ -419,7 +458,9 @@ class Message extends ConsumerWidget {
                     styleSheet: markdownStyleSheet,
                     onTapLink: _onTapLink,
                   ),
-                if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType),
+
+                if (isBatch) BatchMessageContent(msg, index, finalContent),
+                if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
                 if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
               ],
             ],

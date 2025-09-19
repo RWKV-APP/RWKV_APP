@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:halo_state/halo_state.dart';
 import 'package:flutter/material.dart';

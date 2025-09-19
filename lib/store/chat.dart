@@ -1,11 +1,5 @@
 part of 'p.dart';
 
-enum WebSearchMode {
-  off,
-  search,
-  deepSearch,
-}
-
 class _Chat {
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
@@ -50,9 +44,16 @@ class _Chat {
 
   late final completionMode = qs(false);
 
-  late final webSearch = qs(WebSearchMode.off);
+  late final webSearchMode = qs(WebSearchMode.off);
+
+  // 使用文言文
+  late final wenYanWen = qs(false);
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
+
+  late final batchEnabled = qs(Args.enableBatchInference);
+  late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
+  late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
 }
 
 /// Public methods
@@ -61,18 +62,28 @@ extension $Chat on _Chat {
     P.msg._clear();
   }
 
-  void onSwitchWebSearchMode(WebSearchMode? mode) async {
+  void onSwitchWebSearchMode(WebSearchMode mode) async {
     final receiving = receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    if (mode != null) {
-      webSearch.q = mode;
+    if (mode != WebSearchMode.off) {
+      wenYanWen.q = false;
+    }
+    webSearchMode.q = mode;
+  }
+
+  void onSwitchWenYanWen(bool enabled) async {
+    final receiving = receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    final enabled = webSearch.q != WebSearchMode.off;
-    webSearch.q = enabled ? WebSearchMode.off : WebSearchMode.search;
+    if (enabled) {
+      webSearchMode.q = WebSearchMode.off;
+    }
+    wenYanWen.q = enabled;
   }
 
   Future<void> onSendButtonPressed() async {
@@ -82,6 +93,16 @@ extension $Chat on _Chat {
     if (!inputHasContent.q) {
       Alert.info("Please enter a message");
       return;
+    }
+
+    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
+    final parentMsg = P.msg.pool.q[parentNode.id];
+    if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
+      final selection = P.msg.batchSelection(parentMsg).q;
+      if (selection == null) {
+        Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.top);
+        return;
+      }
     }
 
     focusNode.unfocus();
@@ -299,6 +320,20 @@ extension $Chat on _Chat {
       parentNode.latest = null;
     } else {
       // 新增或编辑了用户消息
+
+      final parentMsg = P.msg.pool.q[parentNode.id];
+      if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
+        final selection = P.msg.batchSelection(parentMsg).q;
+        if (selection != null) {
+          final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
+          final finalizedMsg = parentMsg.copyWith(content: finalizedContent);
+          P.msg._syncMsg(parentMsg.id, finalizedMsg);
+        } else {
+          Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+          return;
+        }
+      }
+
       msg = Message(
         id: id,
         content: message,
@@ -330,7 +365,7 @@ extension $Chat on _Chat {
     final receiveId = HF.milliseconds + 1;
     this.receiveId.q = receiveId;
 
-    var history = withHistory ? _history() : <String>[];
+    List<String> history = withHistory ? _history() : <String>[];
 
     P.msg.editingOrRegeneratingIndex.q = null;
 
@@ -354,7 +389,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    P.rwkv.sendMessages(history);
+    P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
 
     _checkSensitive(message);
   }
@@ -377,7 +412,8 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
-    P.rwkv.sendMessages(_history());
+    // TODO: support batch inference
+    P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
     _updateMessageById(
       id: id,
       changing: true,
@@ -464,6 +500,7 @@ extension _$Chat on _Chat {
     qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
   }
 
+  /// 将完整的历史记录发送至推理引擎
   List<String> _history() {
     final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
 
@@ -482,15 +519,19 @@ extension _$Chat on _Chat {
     }
 
     final iterator = messages.iterator;
-    Message mine;
-    Message? bot;
+    Message userMsg;
+    Message? botMsg;
     while (iterator.moveNext()) {
-      mine = iterator.current;
-      bot = iterator.moveNext() ? iterator.current : null;
-      final content = mine.getContentForHistoryWithRef(bot?.reference);
+      userMsg = iterator.current;
+      botMsg = iterator.moveNext() ? iterator.current : null;
+      String content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
+      if (wenYanWen.q) {
+        content = '请用文言文回答: $content';
+      }
       result.add(content);
-      if (bot == null) break;
-      result.add(bot.getContentForHistory());
+      if (botMsg == null) break;
+      final botContent = botMsg.getContentForHistory(appendThinkTagInThinkingTagIsEmpty: true);
+      result.add(botContent);
     }
     return result;
   }
@@ -538,7 +579,7 @@ extension _$Chat on _Chat {
       qqq("send done in ${t2 - t1}ms");
     }
 
-    if (demoType == DemoType.tts) {
+    if (demoType == DemoType.tts || demoType == DemoType.chat) {
       final (file, length) = event;
       final path = file.path;
       qqq("new file received: $path, length: $length");
@@ -584,7 +625,7 @@ extension _$Chat on _Chat {
 
   void _fullyReceived({String? callingFunction}) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.translator) return;
+    if (pageKey == PageKey.translator || pageKey == PageKey.benchmark || pageKey == PageKey.completion) return;
     qqq("callingFunction: $callingFunction");
 
     final id = receiveId.q;
@@ -677,11 +718,18 @@ extension _$Chat on _Chat {
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
-        if (completionMode.q) {
-          return;
-        }
+        if (completionMode.q) return;
         _sensitiveThrottler.call(() {
           _checkSensitive(res.responseBufferContent);
+        });
+        break;
+
+      case from_rwkv.ResponseBatchBufferContent res:
+        final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
+        receivedTokens.q = responseBufferContent;
+        if (completionMode.q) return;
+        _sensitiveThrottler.call(() {
+          _checkSensitive(responseBufferContent);
         });
         break;
 
@@ -723,11 +771,11 @@ extension _$Chat on _Chat {
     RefInfo ref = RefInfo.empty();
     final isZh = P.preference.currentLangIsZh.q;
 
-    if (webSearch.q != WebSearchMode.off) {
+    if (webSearchMode.q != WebSearchMode.off) {
       ref = ref.copyWith(enable: true);
       try {
         final prompt = allMessage.last;
-        final deepSearch = webSearch.q == WebSearchMode.deepSearch;
+        final deepSearch = webSearchMode.q == WebSearchMode.deepSearch;
         _updateMessageById(id: receiveId, reference: ref);
         final resp =
             await _post(
@@ -740,7 +788,7 @@ extension _$Chat on _Chat {
                   },
                 ).timeout(const Duration(seconds: 10))
                 as dynamic;
-        qqq('web search mode: ${webSearch.q}');
+        qqq('web search mode: ${webSearchMode.q}');
         final refs = (resp['data'] as Iterable).map((e) => Reference.fromJson(e)).toList();
         ref = ref.copyWith(list: refs);
         final searchResult = refs.map((e) => e.summary).join("\n");

@@ -42,6 +42,8 @@ class _Msg {
   late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
 
   late final loading = qs(false);
+
+  late final batchSelection = qsf<Message, int?>(null);
 }
 
 /// Private methods

@@ -22,7 +22,6 @@ import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
 import 'package:zone/widgets/model_item.dart';
 
-// TODO: move it to pages/panel
 class ModelSelector extends ConsumerWidget {
   final bool nekoOnly;
   final bool rolePlayOnly;
@@ -119,9 +118,9 @@ class _Header extends StatelessWidget {
         Expanded(
           child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
         ),
-        IconButton(
+        const IconButton(
           onPressed: pop,
-          icon: const Icon(Icons.close),
+          icon: Icon(Icons.close),
         ),
       ],
     );
@@ -193,6 +192,11 @@ class _ModelList extends ConsumerWidget {
       availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
     }
 
+    if (pageKey == PageKey.benchmark) {
+      availableModels = availableModels.whereNot((e) => e.tags.contains('DeepEmbedding')).toSet();
+    }
+
+    final List<Widget> items = switch (preferredDemoType) {
     List<Widget> items = switch (preferredDemoType) {
       DemoType.world =>
         WorldType.values
@@ -219,7 +223,10 @@ class _ModelList extends ConsumerWidget {
 
               return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
             })
-            .map((fileInfo) => ModelItem(fileInfo, userType.isGreaterThan(UserType.user)))
+            .map(
+              (fileInfo) =>
+                  ModelItem(fileInfo, userType.isGreaterThan(UserType.user), loadButtonTextShowLoad: pageKey == PageKey.benchmark),
+            )
             .toList(),
       DemoType.fifthteenPuzzle || DemoType.othello => [],
     };
@@ -252,7 +259,7 @@ class _DownloadSource extends ConsumerWidget {
         Wrap(
           runSpacing: 4,
           spacing: 4,
-          children: FileDownloadSource.values.where((e) => kDebugMode || !e.isDebug).map((e) {
+          children: FileDownloadSource.values.where((e) => (kDebugMode || !e.isDebug) && !e.hidden).map((e) {
             return GestureDetector(
               onTap: () {
                 P.fileManager.downloadSource.q = e;

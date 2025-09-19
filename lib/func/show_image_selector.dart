@@ -6,7 +6,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/message.dart';
+import 'package:zone/model/message_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 

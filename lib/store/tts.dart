@@ -145,10 +145,9 @@ extension _$TTS on _TTS {
   }
 
   void _pulse() {
-    // P.rwkv.send(to_rwkv.GetTTSGenerationProgress());
     P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
     P.rwkv.send(to_rwkv.GetTTSStreamingBuffer());
-    // P.rwkv.send(to_rwkv.GetTTSOutputFileList());
+    P.rwkv.send(to_rwkv.GetIsGenerating());
   }
 
   void _stopQueryTimer() {
@@ -222,13 +221,33 @@ extension _$TTS on _TTS {
       case from_rwkv.TTSStreamingBuffer res:
         _onTTSStreamingBuffer(res);
         break;
+      case from_rwkv.IsGenerating res:
+        _onIsGenerating(res);
+        break;
       default:
         break;
     }
   }
 
+  void _onIsGenerating(from_rwkv.IsGenerating res) {
+    final generating = res.isGenerating;
+
+    final allReceived = !generating && this.generating.q;
+
+    this.generating.q = generating;
+
+    final receiveId = P.chat.receiveId.q;
+    if (receiveId == null) {
+      qqw("receiveId is null");
+      return;
+    }
+
+    P.chat._updateMessageById(id: receiveId, changing: !allReceived);
+
+    if (allReceived) _stopQueryTimer();
+  }
+
   void _onTTSStreamingBuffer(from_rwkv.TTSStreamingBuffer res) async {
-    final buffer = res.ttsStreamingBuffer;
     final length = res.ttsStreamingBufferLength;
     final generating = res.generating;
     final allReceived = !generating && this.generating.q;
@@ -587,7 +606,6 @@ outputWavPath: $outputWavPath""");
 
     for (double noteFreq in [261.626, 293.665, 329.628, 123, 456, 789, 10]) {
       final wave = _synthSineWave(noteFreq, 16000, noteDuration);
-      // debugger();
       // push wave data to audio stream in specified interval (pushFreq)
       const step = 16000 ~/ pushFreq;
       // await Future.delayed(Duration(milliseconds: 500));

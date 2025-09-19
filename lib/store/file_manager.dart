@@ -105,6 +105,7 @@ extension $FileManager on _FileManager {
     qqq('start download file: \n>>url:$url\n>>path:$path');
 
     DownloadTask? task = _downloadTasks[fileInfo.fileName];
+    task?.url = url;
     if (task == null) {
       task = await DownloadTask.create(url: url, path: path);
       _downloadTasks[fileInfo.fileName] = task;
@@ -251,18 +252,15 @@ enum FileDownloadSource {
     googleapis => '',
   };
 
-  bool get isDebug {
-    switch (this) {
-      case huggingface:
-        return false;
-      case hfmirror:
-        return false;
-      case aifasthub:
-        return false;
-      case github:
-        return true;
-      case googleapis:
-        return true;
-    }
-  }
+  bool get isDebug => switch (this) {
+    huggingface => false,
+    hfmirror => false,
+    aifasthub => false,
+    github => true,
+    googleapis => true,
+  };
+
+  bool get hidden => switch (this) {
+    _ => false,
+  };
 }

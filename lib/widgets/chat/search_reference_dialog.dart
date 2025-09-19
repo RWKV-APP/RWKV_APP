@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:zone/gen/l10n.dart' show S;
-import 'package:zone/model/message.dart' show RefInfo;
+import 'package:zone/model/ref_info.dart';
 
 class SearchReferenceDialog extends StatelessWidget {
   final RefInfo refInfo;
@@ -64,7 +64,12 @@ class SearchReferenceDialog extends StatelessWidget {
                         children: [
                           Text(ref.title),
                           const SizedBox(height: 4),
-                          Text(ref.summary.replaceAll("\n", ' '), maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall),
+                          Text(
+                            ref.summary.replaceAll("\n", ' '),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall,
+                          ),
                           const SizedBox(height: 4),
                         ],
                       ),

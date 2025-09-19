@@ -21,6 +21,33 @@ class AudioInput extends ConsumerWidget {
 
   const AudioInput({super.key, required this.demoType});
 
+  Future<void> _onPanStart(DragStartDetails details) async {
+    qr;
+    final receiving = P.chat.receivingTokens.q;
+    if (receiving) return;
+    P.app.hapticLight();
+    Alert.info(S.current.recording_your_voice);
+    await P.world.startRecord();
+  }
+
+  Future<void> _onPanEnd(DragEndDetails details) async {
+    qr;
+    final receiving = P.chat.receivingTokens.q;
+    if (receiving) return;
+    P.app.hapticMedium();
+    final success = await P.world.stopRecord();
+    if (!success) return;
+    Alert.success(S.current.finish_recording);
+  }
+
+  Future<void> _onPanCancel() async {
+    qr;
+    final receiving = P.chat.receivingTokens.q;
+    if (receiving) return;
+    P.app.hapticLight();
+    await P.world.stopRecord(isCancel: true);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
@@ -135,9 +162,9 @@ class AudioInput extends ConsumerWidget {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTapDown: _onTapDown,
-                      onTapUp: _onTapUp,
-                      onTapCancel: _onTapCancel,
+                      onPanStart: _onPanStart,
+                      onPanEnd: _onPanEnd,
+                      onPanCancel: _onPanCancel,
                       child: ClipRRect(
                         borderRadius: 1000.r,
                         child: BackdropFilter(
@@ -185,29 +212,5 @@ class AudioInput extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _onTapDown(TapDownDetails details) async {
-    final receiving = P.chat.receivingTokens.q;
-    if (receiving) return;
-    P.app.hapticLight();
-    Alert.info(S.current.recording_your_voice);
-    await P.world.startRecord();
-  }
-
-  Future<void> _onTapCancel() async {
-    final receiving = P.chat.receivingTokens.q;
-    if (receiving) return;
-    P.app.hapticLight();
-    await P.world.stopRecord(isCancel: true);
-  }
-
-  Future<void> _onTapUp(TapUpDetails details) async {
-    final receiving = P.chat.receivingTokens.q;
-    if (receiving) return;
-    P.app.hapticMedium();
-    final success = await P.world.stopRecord();
-    if (!success) return;
-    Alert.success(S.current.finish_recording);
   }
 }

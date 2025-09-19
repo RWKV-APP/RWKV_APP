@@ -114,7 +114,7 @@ class PageHome extends ConsumerWidget {
                               height: 48,
                               width: 48,
                               alignment: Alignment.center,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.orange,
                                 shape: BoxShape.circle,
                               ),

@@ -7,6 +7,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
+import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
@@ -30,6 +31,7 @@ class _PageChatState extends State<PageChat> {
   void initState() {
     super.initState();
 
+    // 自动展示模型选择器
     if (P.app.demoType.q == DemoType.chat) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         final loaded = P.rwkv.currentModel.q != null;
@@ -43,10 +45,10 @@ class _PageChatState extends State<PageChat> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
+    return PopScope<void>(
       child: const _Page(),
-      onPopInvokedWithResult: (pop, c) async {
-        if (pop) {
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) {
           P.chat.isSharing.q = false;
           P.chat.onStopButtonPressed();
         }

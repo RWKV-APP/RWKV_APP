@@ -18,14 +18,17 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        "--dart-define=disableRemoteConfig=true",
-        "--dart-define=logLevel=3",
+        // "--dart-define=disableRemoteConfig=true",
         // "--dart-define=autoShowTranslator=true",
-        "--dart-define=showHaloDebugger=true"
+        // "--dart-define=logLevel=3",
+        "--dart-define=enableBatchInference=true",
+        "--dart-define=batchCount=4",
+        "--dart-define=batchVW=50",
         // "--dart-define=debugMsgId=true",
         // "--dart-define=debuggingThemes=true",
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
         // "--dart-define=maxTokens=200",
+        "--dart-define=showHaloDebugger=true"
       ]
     },
     {
@@ -49,6 +52,9 @@
       "flutterMode": "debug",
       "args": [
         //
+        "--dart-define=enableBatchInference=true",
+        "--dart-define=batchCount=8",
+        "--dart-define=batchVW=50",
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true"
       ],
@@ -62,6 +68,9 @@
       "flutterMode": "debug",
       "args": [
         //
+        "--dart-define=enableBatchInference=true",
+        "--dart-define=batchCount=8",
+        "--dart-define=batchVW=50",
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true"
       ],
@@ -98,8 +107,9 @@
       "name": "All (Halo)",
       "configurations": [
         //,
-        "debug (Halo) - Android",
-        "debug (Halo) - macOS"
+        // "debug (Halo) - Android",
+        "debug (Halo) - macOS",
+        "debug (Halo) - iOS"
       ]
     }
   ]

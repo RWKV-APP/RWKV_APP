@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
@@ -26,6 +29,11 @@ class UserTTSContent extends ConsumerWidget {
   void _onTTSPlayPressed() {
     qq;
     P.msg.latestClicked.q = msg;
+    final audioUrl = msg.audioUrl;
+    if (audioUrl == null) {
+      Alert.warning(S.current.no_audio_file);
+      return;
+    }
     P.world.play(path: msg.audioUrl!);
   }
 
@@ -33,26 +41,41 @@ class UserTTSContent extends ConsumerWidget {
     P.world.stopPlaying();
   }
 
+  void _onSharePressed() async {
+    qq;
+    P.msg.latestClicked.q = msg;
+    final audioUrl = msg.audioUrl;
+    if (audioUrl == null) {
+      Alert.warning(S.current.no_audio_file);
+      return;
+    }
+    final file = File(audioUrl);
+    if (!await file.exists()) return;
+    // final userMessage = ref.watch(P.msg.userMessage);
+    String text = file.path.split("/").last;
+    if (text.isEmpty) text = "RWKV TTS";
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(audioUrl)],
+        text: text,
+        subject: text,
+        title: text,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final primary = Theme.of(context).colorScheme.primary;
 
-    // final displayFlag = ref.watch(P.tts.displayFlag);
-    // final displayNameCn = ref.watch(P.tts.displayNameCn);
-    // final displayNameEn = ref.watch(P.tts.displayNameEn);
     final (String displayFlag, String displayNameCn, String displayNameEn) = P.tts.getSpkInfo(msg.ttsSpeakerName ?? "");
 
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final playing = ref.watch(P.world.playing);
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
-    const buttonPadding = EI.o(
-      t: 8,
-      b: 4,
-      l: 4,
-      r: 4,
-    );
+    const buttonPadding = EI.o(t: 8, b: 4, l: 4, r: 4);
 
     const buttonSize = 24.0;
 
@@ -79,10 +102,7 @@ class UserTTSContent extends ConsumerWidget {
                     border: Border.all(color: primary, width: .5),
                   ),
                   margin: const EI.o(t: 4),
-                  padding: const EI.o(
-                    h: 4,
-                    v: 4,
-                  ),
+                  padding: const EI.o(h: 4, v: 4),
                   child: Text.rich(
                     TextSpan(
                       children: [
@@ -130,6 +150,17 @@ class UserTTSContent extends ConsumerWidget {
                   padding: buttonPadding,
                   child: Icon(
                     Icons.copy,
+                    color: primary.q(.8),
+                    size: buttonSize,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: _onSharePressed,
+                child: Padding(
+                  padding: buttonPadding,
+                  child: Icon(
+                    Icons.share,
                     color: primary.q(.8),
                     size: buttonSize,
                   ),

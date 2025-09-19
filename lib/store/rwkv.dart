@@ -52,6 +52,7 @@ class _RWKV {
     return currentModel != null;
   });
 
+  /// 当前加载的权重
   late final currentModel = qs<FileInfo?>(null);
 
   late final currentWorldType = qs<WorldType?>(null);
@@ -85,6 +86,8 @@ class _RWKV {
     final isTranslate = model.tags.contains("translate");
     return isTTS || isTranslate;
   });
+
+  late final supportedBatchSizes = qs<List<int>>([]);
 }
 
 extension $RWKVLoad on _RWKV {
@@ -128,7 +131,6 @@ extension $RWKVLoad on _RWKV {
         backend: backend,
         sendPort: _receivePort.sendPort,
         rootIsolateToken: rootIsolateToken!,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
       );
       await RWKVMobile().runIsolate(options);
     }
@@ -137,8 +139,6 @@ extension $RWKVLoad on _RWKV {
       qqq("waiting for sendPort...");
       await Future.delayed(const Duration(milliseconds: 50));
     }
-
-    send(to_rwkv.GetLatestRuntimeAddress());
 
     if (adapterPath != null) {
       send(to_rwkv.LoadVisionEncoderAndAdapter(encoderPath, adapterPath));
@@ -188,7 +188,6 @@ extension $RWKVLoad on _RWKV {
         backend: backend,
         sendPort: _receivePort.sendPort,
         rootIsolateToken: rootIsolateToken!,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
       );
       await RWKVMobile().runIsolate(options);
     }
@@ -197,8 +196,6 @@ extension $RWKVLoad on _RWKV {
       qqq("waiting for sendPort...");
       await Future.delayed(const Duration(milliseconds: 50));
     }
-
-    send(to_rwkv.GetLatestRuntimeAddress());
 
     send(to_rwkv.LoadWhisperEncoder(encoderPath));
     await setModelConfig(
@@ -251,7 +248,6 @@ extension $RWKVLoad on _RWKV {
         backend: backend,
         sendPort: _receivePort.sendPort,
         rootIsolateToken: rootIsolateToken!,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
       );
       await RWKVMobile().runIsolate(options);
     }
@@ -289,93 +285,6 @@ extension $RWKVLoad on _RWKV {
     _loading.q = false;
   }
 
-  @Deprecated("Use loadSparkTTS instead")
-  Future<void> loadTTSModels({
-    required String modelPath,
-    required Backend backend,
-    required bool enableReasoning,
-    required String campPlusPath,
-    required String flowEncoderPath,
-    required String flowDecoderEstimatorPath,
-    required String hiftGeneratorPath,
-    required String speechTokenizerPath,
-  }) async {
-    qq;
-    _loading.q = true;
-    prefillSpeed.q = 0;
-    decodeSpeed.q = 0;
-
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
-
-    await _ensureQNNCopied();
-
-    final rootIsolateToken = RootIsolateToken.instance;
-
-    if (_sendPort != null) {
-      try {
-        send(to_rwkv.ReleaseTTSModels());
-        final startMS = HF.milliseconds;
-        await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-        final endMS = HF.milliseconds;
-        qqr("initRuntime done in ${endMS - startMS}ms");
-      } catch (e) {
-        qqe("initRuntime failed: $e");
-        if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
-        Alert.error("Failed to load model: $e");
-        return;
-      }
-    } else {
-      final options = StartOptions(
-        modelPath: modelPath,
-        tokenizerPath: tokenizerPath,
-        backend: backend,
-        sendPort: _receivePort.sendPort,
-        rootIsolateToken: rootIsolateToken!,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
-      );
-      await RWKVMobile().runIsolate(options);
-    }
-
-    while (_sendPort == null) {
-      qqq("waiting for sendPort...");
-      await Future.delayed(const Duration(milliseconds: 50));
-    }
-
-    send(to_rwkv.GetLatestRuntimeAddress());
-
-    if (_ttsPerformanceTimer != null) {
-      _ttsPerformanceTimer!.cancel();
-      _ttsPerformanceTimer = null;
-    }
-
-    _ttsPerformanceTimer = Timer.periodic(225.ms, (timer) async {
-      send(to_rwkv.GetPrefillAndDecodeSpeed());
-    });
-
-    final ttsTokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424_tts.txt");
-
-    send(
-      to_rwkv.LoadTTSModels(
-        campPlusPath: campPlusPath,
-        flowDecoderEstimatorPath: flowDecoderEstimatorPath,
-        flowEncoderPath: flowEncoderPath,
-        hiftGeneratorPath: hiftGeneratorPath,
-        speechTokenizerPath: speechTokenizerPath,
-        ttsTokenizerPath: ttsTokenizerPath,
-      ),
-    );
-
-    final ttsTextNormalizerDatePath = await fromAssetsToTemp("assets/config/chat/date-zh.fst");
-    final ttsTextNormalizerNumberPath = await fromAssetsToTemp("assets/config/chat/number-zh.fst");
-    final ttsTextNormalizerPhonePath = await fromAssetsToTemp("assets/config/chat/phone-zh.fst");
-    // note: order matters here
-    send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerDatePath));
-    send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
-    send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerNumberPath));
-
-    _loading.q = false;
-  }
-
   Future switchChatModel(FileInfo fileInfo) async {
     final current = P.rwkv.currentModel.q;
     if (current == fileInfo) {
@@ -393,9 +302,13 @@ extension $RWKVLoad on _RWKV {
       );
       P.rwkv.currentModel.q = fileInfo;
     } catch (e) {
+      qqe;
       Alert.error(e.toString());
       return;
     }
+
+    final batchAllowed = fileInfo.tags.contains("batch");
+    if (!batchAllowed) P.chat.batchEnabled.q = false;
   }
 
   Future<void> loadChat({
@@ -432,7 +345,6 @@ extension $RWKVLoad on _RWKV {
         backend: backend,
         sendPort: _receivePort.sendPort,
         rootIsolateToken: rootIsolateToken!,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
       );
       await RWKVMobile().runIsolate(options);
     }
@@ -442,14 +354,13 @@ extension $RWKVLoad on _RWKV {
       await Future.delayed(const Duration(milliseconds: 50));
     }
 
-    send(to_rwkv.GetLatestRuntimeAddress());
-
     P.app.demoType.q = DemoType.chat;
     await setModelConfig(enableReasoning: enableReasoning);
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
     send(to_rwkv.GetSamplerParams());
     _loading.q = false;
+    send(to_rwkv.GetSupportedBatchSizes());
   }
 
   Future<void> loadOthello() async {
@@ -478,7 +389,6 @@ extension $RWKVLoad on _RWKV {
           modelPath: modelPath,
           backend: backend,
           tokenizerPath: tokenizerPath,
-          latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
         ),
       );
     } else {
@@ -488,7 +398,6 @@ extension $RWKVLoad on _RWKV {
         backend: backend,
         sendPort: _receivePort.sendPort,
         rootIsolateToken: rootIsolateToken!,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
       );
       await RWKVMobile().runIsolate(options);
     }
@@ -497,8 +406,6 @@ extension $RWKVLoad on _RWKV {
       qqq("waiting for sendPort...");
       await Future.delayed(const Duration(milliseconds: 50));
     }
-
-    send(to_rwkv.GetLatestRuntimeAddress());
 
     P.app.demoType.q = DemoType.othello;
 
@@ -538,7 +445,6 @@ extension $RWKVLoad on _RWKV {
           modelPath: modelPath,
           backend: backend,
           tokenizerPath: tokenizerPath,
-          latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
         ),
       );
     } else {
@@ -548,7 +454,6 @@ extension $RWKVLoad on _RWKV {
         backend: backend,
         sendPort: _receivePort.sendPort,
         rootIsolateToken: rootIsolateToken!,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
       );
       await RWKVMobile().runIsolate(options);
     }
@@ -557,8 +462,6 @@ extension $RWKVLoad on _RWKV {
       qqq("waiting for sendPort...");
       await Future.delayed(const Duration(milliseconds: 50));
     }
-
-    send(to_rwkv.GetLatestRuntimeAddress());
 
     P.app.demoType.q = DemoType.sudoku;
 
@@ -589,6 +492,7 @@ extension $RWKV on _RWKV {
     List<String> messages, {
     double getIsGeneratingRate = .5,
     double getResponseBufferContentRate = .5,
+    int batchSize = 1,
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -599,14 +503,21 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-    send(to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag));
 
-    if (_getTokensTimer != null) {
-      _getTokensTimer!.cancel();
-    }
+    final isBatch = batchSize > 1;
+
+    final startInferenceCalling = isBatch
+        ? to_rwkv.ChatBatchAsync(messages, reasoning: _thinkingMode.q.hasThinkTag, batchSize: batchSize) //
+        : to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag);
+    send(startInferenceCalling);
+
+    if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferContent(messages));
+      final getResponseCalling = isBatch
+          ? to_rwkv.GetBatchResponseBufferContent(messages) //
+          : to_rwkv.GetResponseBufferContent(messages);
+      send(getResponseCalling);
       if (HF.randomBool(truePercentage: getIsGeneratingRate)) send(to_rwkv.GetIsGenerating());
       if (HF.randomBool(truePercentage: getResponseBufferContentRate)) send(to_rwkv.GetPrefillAndDecodeSpeed());
     });
@@ -699,7 +610,6 @@ extension $RWKV on _RWKV {
         modelPath: modelPath,
         backend: backend,
         tokenizerPath: tokenizerPath,
-        latestRuntimeAddress: P.preference.latestRuntimeAddress.q,
       ),
     );
     return _initRuntimeCompleter.future;
@@ -816,18 +726,41 @@ extension $RWKV on _RWKV {
     final current = thinkingMode.q;
     switch (current) {
       case thinking_mode.Lighting():
-        setModelConfig(thinkingMode: thinking_mode.Free());
+        setModelConfig(thinkingMode: const thinking_mode.Free());
         Alert.success(S.current.thinking_mode_detail_high);
       case thinking_mode.Free():
-        setModelConfig(thinkingMode: thinking_mode.None());
+        setModelConfig(thinkingMode: const thinking_mode.None());
         Alert.success(S.current.thinking_mode_detail_off);
       case thinking_mode.PreferChinese():
-        setModelConfig(thinkingMode: thinking_mode.None());
+        setModelConfig(thinkingMode: const thinking_mode.None());
         Alert.success(S.current.thinking_mode_detail_off);
       case thinking_mode.None():
-        setModelConfig(thinkingMode: thinking_mode.Lighting());
+        setModelConfig(thinkingMode: const thinking_mode.Lighting());
         Alert.success(S.current.thinking_mode_detail_auto);
     }
+  }
+
+  void onBatchInferenceTyped() async {
+    final receiving = P.chat.receivingTokens.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    if (!checkModelSelection()) return;
+
+    final currentModel = P.rwkv.currentModel.q;
+
+    final batchAllowed = currentModel!.tags.contains("batch");
+
+    if (!batchAllowed) {
+      Alert.info(S.current.this_model_does_not_support_batch_inference);
+      await Future.delayed(const Duration(milliseconds: 500));
+      ModelSelector.show();
+      return;
+    }
+
+    await BatchSettingsPanel.show();
   }
 
   void onSecondaryOptionsTyped() async {
@@ -883,6 +816,10 @@ extension _$RWKV on _RWKV {
     switch (pageKey) {
       case PageKey.othello:
         await loadOthello();
+        break;
+      case PageKey.chat:
+        qq;
+        send(to_rwkv.GetSupportedBatchSizes());
         break;
       default:
         break;
@@ -990,9 +927,6 @@ extension _$RWKV on _RWKV {
           } else {}
         }
 
-      case from_rwkv.LatestRuntimeAddress response:
-        P.preference._saveLatestRuntimeAddress(response.latestRuntimeAddress);
-
       case from_rwkv.Error response:
         if (kDebugMode) {
           String errorLog = "error: ${response.message}";
@@ -1000,6 +934,7 @@ extension _$RWKV on _RWKV {
           if (message.to?.requestId != null) errorLog += " requestId: ${message.to?.requestId}";
           qqe(errorLog);
         }
+        qqe;
         Alert.error(response.message);
 
       case from_rwkv.Speed response:
@@ -1013,7 +948,11 @@ extension _$RWKV on _RWKV {
         if (decodeSpeed != -1.0) this.decodeSpeed.q = decodeSpeed;
         if (prefillSpeed != -1.0) this.prefillSpeed.q = prefillSpeed;
 
+      case from_rwkv.SupportedBatchSizes response:
+        supportedBatchSizes.q = response.supportedBatchSizes;
+
       default:
+        break;
     }
   }
 
