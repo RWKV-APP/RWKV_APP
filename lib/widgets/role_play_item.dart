@@ -46,10 +46,10 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       statePath: P.fileManager.locals(state).q.targetPath,
       backend: widget.file.backend!,
       topP: state.decodeParam['topP'],
-      temperature: state.decodeParam['temperature'],
-      penaltyDecay: state.decodeParam['penaltyDecay'],
-      presencePenalty: state.decodeParam['presencePenalty'],
-      frequencyPenalty: state.decodeParam['frequencyPenalty'],
+      temperature: state.decodeParam['temperature']?.toDouble(),
+      penaltyDecay: state.decodeParam['penaltyDecay']?.toDouble(),
+      presencePenalty: state.decodeParam['presencePenalty']?.toDouble(),
+      frequencyPenalty: state.decodeParam['frequencyPenalty']?.toDouble(),
     );
     RoleplayManage.onModelDownloadComplete(info);
     Navigator.pop(context);
