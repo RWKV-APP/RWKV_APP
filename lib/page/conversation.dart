@@ -75,9 +75,17 @@ class _PageConversationState extends ConsumerState<PageConversation> {
           if (isEmpty) const Expanded(child: _Empty()),
           if (!isEmpty)
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
                 padding: const EdgeInsets.only(bottom: 60),
                 itemCount: conversations.length,
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    height: 0,
+                    indent: 68,
+                    endIndent: 12,
+                    color: Theme.of(context).dividerColor.q(.2),
+                  );
+                },
                 itemBuilder: (context, index) {
                   final conversation = conversations[index % conversations.length];
                   return buildConversationItem(conversation, index);
@@ -90,38 +98,31 @@ class _PageConversationState extends ConsumerState<PageConversation> {
   }
 
   Widget buildConversationItem(ConversationData conversation, int index) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+    return Dismissible(
+      key: Key(conversation.createdAtUS.toString()),
+      background: Container(
+        color: Colors.redAccent,
+        padding: const EdgeInsets.only(right: 24),
+        alignment: Alignment.centerRight,
+        child: const FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
       ),
-      clipBehavior: Clip.antiAlias,
-      margin: const EdgeInsets.only(top: 8, left: 12, right: 12),
-      child: Dismissible(
-        key: Key(conversation.createdAtUS.toString()),
-        background: Container(
-          color: Colors.redAccent,
-          padding: const EdgeInsets.only(right: 24),
-          alignment: Alignment.centerRight,
-          child: const FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
-        ),
-        direction: DismissDirection.endToStart,
-        confirmDismiss: (d) async {
-          final s = S.of(context);
-          final res = await showOkCancelAlertDialog(
-            context: context,
-            title: s.delete_conversation,
-            message: s.delete_conversation_message,
-            okLabel: s.delete,
-            cancelLabel: s.cancel,
-            isDestructiveAction: true,
-          );
-          return res == OkCancelResult.ok;
-        },
-        onDismissed: (d) async {
-          await P.conversation.onDeleteClicked(context, conversation);
-        },
-        child: ConversationItem(conversation: conversation),
-      ),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (d) async {
+        final s = S.of(context);
+        final res = await showOkCancelAlertDialog(
+          context: context,
+          title: s.delete_conversation,
+          message: s.delete_conversation_message,
+          okLabel: s.delete,
+          cancelLabel: s.cancel,
+          isDestructiveAction: true,
+        );
+        return res == OkCancelResult.ok;
+      },
+      onDismissed: (d) async {
+        await P.conversation.onDeleteClicked(context, conversation);
+      },
+      child: ConversationItem(conversation: conversation),
     );
   }
 }
