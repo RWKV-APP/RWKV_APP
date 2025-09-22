@@ -99,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_running": m2,
     "batch_inference_selected": m3,
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage("并行推理设置"),
+    "batch_inference_short": MessageLookupByLibrary.simpleMessage("并行"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage("消息显示宽度"),
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
       "并行推理每条消息宽度",

@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `并行`
+  String get batch_inference_short {
+    return Intl.message(
+      '并行',
+      name: 'batch_inference_short',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `您的声音数据为空，请检查您的麦克风`
   String get your_voice_is_empty {
     return Intl.message(

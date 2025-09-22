@@ -20,12 +20,12 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(count) => "Parallel × ${count}";
+  static String m0(count) => "Batch × ${count}";
 
   static String m1(count) => "Each inference will generate ${count} messages";
 
   static String m2(count) =>
-      "Parallel inference running, generating ${count} messages at the same time";
+      "Batch inference running, generating ${count} messages at the same time";
 
   static String m3(count) => "Selected ${count} message";
 
@@ -102,28 +102,29 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto_detect": MessageLookupByLibrary.simpleMessage("Auto Detect"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
     "balanced": MessageLookupByLibrary.simpleMessage("Balanced"),
-    "batch_inference": MessageLookupByLibrary.simpleMessage("Parallel"),
+    "batch_inference": MessageLookupByLibrary.simpleMessage("Batch"),
     "batch_inference_button": m0,
     "batch_inference_count": MessageLookupByLibrary.simpleMessage(
-      "Parallel Inference Count",
+      "Batch Inference Count",
     ),
     "batch_inference_count_detail": m1,
     "batch_inference_detail": MessageLookupByLibrary.simpleMessage(
-      "After enabling parallel inference, RWKV can generate multiple answers at the same time",
+      "After enabling batcj inference, RWKV can generate multiple answers at the same time",
     ),
     "batch_inference_enable_or_not": MessageLookupByLibrary.simpleMessage(
-      "Enable or disable parallel inference",
+      "Enable or disable batcj inference",
     ),
     "batch_inference_running": m2,
     "batch_inference_selected": m3,
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage(
-      "Parallel Inference Settings",
+      "Batch Inference Settings",
     ),
+    "batch_inference_short": MessageLookupByLibrary.simpleMessage("Batch"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage(
-      "Parallel Inference Width",
+      "Batch Inference Width",
     ),
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
-      "Parallel Inference Each Message Width",
+      "Batch Inference Each Message Width",
     ),
     "beginner": MessageLookupByLibrary.simpleMessage("Beginner"),
     "benchmark": MessageLookupByLibrary.simpleMessage("Benchmark"),

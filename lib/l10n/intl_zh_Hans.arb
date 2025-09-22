@@ -1,5 +1,6 @@
 {
   "@@locale": "zh-Hans",
+  "batch_inference_short": "并行",
   "your_voice_is_empty": "您的声音数据为空，请检查您的麦克风",
   "batch_inference_running": "并行推理中，同时生成 {count} 条消息",
   "batch_inference_selected": "已选择第 {count} 条消息",
