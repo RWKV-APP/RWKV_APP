@@ -155,7 +155,7 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
-        "name": "RWKV7-G1 0.4B Translate",
+        "name": "RWKV7-G1a 0.4B Translate",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/RWKV_v7_G1a_0.4B_Translate_ctx4096_20250915_latest_int8.prefab",
         "fileSize": 621465077,
