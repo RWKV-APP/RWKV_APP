@@ -340,7 +340,7 @@ class _CompletionState extends ConsumerState<Completion> {
 class _SuggestDialog extends StatefulWidget {
   final ScrollController scrollController;
 
-  _SuggestDialog(this.scrollController);
+  const _SuggestDialog(this.scrollController);
 
   static Future<String?> show(BuildContext context) {
     return showModalBottomSheet(
@@ -383,7 +383,7 @@ class _SuggestDialogState extends State<_SuggestDialog> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               children: [
                 const SizedBox(width: 6),
@@ -406,7 +406,7 @@ class _SuggestDialogState extends State<_SuggestDialog> {
                         Navigator.pop(context, item);
                       },
                     ),
-                    Divider(indent: 16, endIndent: 16, height: 6, thickness: 0.5),
+                    const Divider(indent: 16, endIndent: 16, height: 6, thickness: 0.5),
                   ],
                 ],
               ),

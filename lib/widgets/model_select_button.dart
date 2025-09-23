@@ -57,7 +57,7 @@ class ModelSelectButton extends ConsumerWidget {
                 ),
               ),
             if (currentModel == null) const SizedBox(width: 8),
-            if (currentModel != null) VerticalDivider(thickness: 1, width: 1),
+            if (currentModel != null) const VerticalDivider(thickness: 1, width: 1),
             if (currentModel != null)
               PopupMenuTheme(
                 data: PopupMenuThemeData(
@@ -75,7 +75,7 @@ class ModelSelectButton extends ConsumerWidget {
                         height: 32,
                         value: DecodeParamType.unknown,
                         enabled: false,
-                        child: Text(S.current.decode_param, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        child: Text(S.current.decode_param, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                       ),
                       buildMenuItem(S.current.default_, DecodeParamType.defaults, decodeParamType),
                       buildMenuItem(S.current.creative, DecodeParamType.creative, decodeParamType),
@@ -114,7 +114,7 @@ class ModelSelectButton extends ConsumerWidget {
           if (checked) const Icon(Icons.check, size: 16),
           if (!checked) const SizedBox(width: 16),
           const SizedBox(width: 8),
-          Text(text, style: TextStyle(height: 1)),
+          Text(text, style: const TextStyle(height: 1)),
         ],
       ),
     );
