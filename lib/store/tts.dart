@@ -1,16 +1,5 @@
 part of 'p.dart';
 
-extension _Instruction on Language {
-  String get _ttsSpkInstruct => switch (this) {
-    Language.none => "",
-    Language.en => "",
-    Language.ja => "日本語で話してください。",
-    Language.ko => "한국어로 말씀해주세요.",
-    Language.zh_Hans => "",
-    Language.zh_Hant => "",
-  };
-}
-
 extension _TTSStatic on _TTS {
   static const _defaultTextInInput = "";
   static const _replaceMap = {
@@ -626,4 +615,16 @@ Float32List _synthSineWave(double freq, int sampleRate, Duration duration) {
   final sineWave = List.generate(length, (i) => math.sin(2 * math.pi * ((i * freq) % sampleRate) / sampleRate));
 
   return Float32List.fromList(sineWave);
+}
+
+extension _Instruction on Language {
+  String get _ttsSpkInstruct => switch (this) {
+    Language.none => "",
+    Language.en => "",
+    Language.ru => "",
+    Language.ja => "日本語で話してください。",
+    Language.ko => "한국어로 말씀해주세요.",
+    Language.zh_Hans => "",
+    Language.zh_Hant => "",
+  };
 }

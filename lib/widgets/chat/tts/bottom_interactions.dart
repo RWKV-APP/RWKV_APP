@@ -428,6 +428,7 @@ class _SpkPanel extends ConsumerWidget {
 
     switch (selectedSpkPanelFilter) {
       case Language.none:
+      case Language.ru:
       case Language.en:
         spkNames = spkPairs.keys.where((e) => e.contains(Language.en.enName!));
       case Language.ja:
