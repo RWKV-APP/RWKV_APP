@@ -157,9 +157,9 @@
       {
         "name": "RWKV7-G1 0.4B Translate",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/RWKV_v7_G1_0.4B_Translate_ctx4096_20250721_latest-int8.prefab",
-        "fileSize": 621465080,
-        "sha256": "06bb2b946bafa3515134af8f96972037a892075578858eaba023910932c2527c",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/RWKV_v7_G1a_0.4B_Translate_ctx4096_20250915_latest_int8.prefab",
+        "fileSize": 621465077,
+        "sha256": "607bb1fec6ccda6d68d78ad07b85d3d916c77f0a29af4762beed8e074fe9fa0f",
         "quantization": "int8",
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
