@@ -114,9 +114,7 @@ enum Language {
   };
 
   Locale get locale {
-    if (this == none) {
-      return PlatformDispatcher.instance.locale;
-    }
+    if (this == none) return PlatformDispatcher.instance.locale;
 
     final locale = name.split('_');
     final scriptCode = locale.length > 1 ? locale[1] : null;

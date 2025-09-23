@@ -121,7 +121,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage(
       "Настройки пакетного вывода",
     ),
-    "batch_inference_short": MessageLookupByLibrary.simpleMessage("Пакетный"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage(
       "Ширина отображения сообщения",
     ),
