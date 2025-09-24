@@ -409,5 +409,6 @@
   "balanced": "均衡",
   "custom": "自定义",
   "mode": "模式",
-  "suggest": "推荐"
+  "suggest": "推荐",
+  "comprehensive": "综合"
 }

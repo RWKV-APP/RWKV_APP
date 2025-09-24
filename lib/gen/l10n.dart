@@ -2752,6 +2752,11 @@ class S {
   String get suggest {
     return Intl.message('推荐', name: 'suggest', desc: '', args: []);
   }
+
+  /// `综合`
+  String get comprehensive {
+    return Intl.message('综合', name: 'comprehensive', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

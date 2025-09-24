@@ -23,6 +23,13 @@ enum DecodeParamType {
     frequencyPenalty: 0,
     penaltyDecay: 0.996,
   ),
+  comprehensive(
+    temperature: 1,
+    topP: 0.3,
+    presencePenalty: 2,
+    frequencyPenalty: 0.2,
+    penaltyDecay: 0.99,
+  ),
   defaults(
     temperature: 1,
     topP: 0.3,

@@ -167,6 +167,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "色彩模式跟随系统",
     ),
     "completion_mode": MessageLookupByLibrary.simpleMessage("续写模式"),
+    "comprehensive": MessageLookupByLibrary.simpleMessage("综合"),
     "confirm": MessageLookupByLibrary.simpleMessage("确认"),
     "conservative": MessageLookupByLibrary.simpleMessage("保守"),
     "continue_download": MessageLookupByLibrary.simpleMessage("继续下载"),
