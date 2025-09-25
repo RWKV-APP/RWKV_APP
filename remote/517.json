@@ -1,7 +1,7 @@
 {
   "chat": {
-    "latest_build": 530,
-    "latest_build_ios": 528,
+    "latest_build": 536,
+    "latest_build_ios": 532,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
     "android_url": "https://www.pgyer.com/rwkvchat",
@@ -720,12 +720,12 @@
     ]
   },
   "tts": {
-    "latest_build": 451,
-    "latest_build_ios": 421,
+    "latest_build": 536,
+    "latest_build_ios": 532,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
-    "android_url": "https://www.pgyer.com/rwkv-talk",
-    "ios_url": "https://testflight.apple.com/join/mfsdWS4b",
+    "android_url": "https://www.pgyer.com/rwkvchat",
+    "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "model_config": [
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
