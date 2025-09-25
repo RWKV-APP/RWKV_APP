@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/func/check_model_selection.dart';
-import 'package:zone/model/user_type.dart';
 import 'package:zone/store/p.dart' show P, $RWKV;
-import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/completion_mode.dart';
 import 'package:zone/widgets/model_select_button.dart';
 

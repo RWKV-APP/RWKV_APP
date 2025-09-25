@@ -209,6 +209,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Follow system appearance",
     ),
     "completion_mode": MessageLookupByLibrary.simpleMessage("Completion Mode"),
+    "comprehensive": MessageLookupByLibrary.simpleMessage("Comprehensive"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "conservative": MessageLookupByLibrary.simpleMessage("Conservative"),
     "continue_download": MessageLookupByLibrary.simpleMessage(

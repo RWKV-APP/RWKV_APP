@@ -241,7 +241,7 @@ class ConversationItem extends ConsumerWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: const FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white),
                   ),

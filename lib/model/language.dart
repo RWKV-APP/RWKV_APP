@@ -9,6 +9,9 @@ enum Language {
   /// English
   en,
 
+  /// Russian
+  ru,
+
   /// Japanese
   ja,
 
@@ -24,6 +27,7 @@ enum Language {
   String? get display => switch (this) {
     none => null,
     en => "English",
+    ru => "Русский",
     ja => "日本語",
     ko => "한국어",
     zh_Hans => "简体中文",
@@ -33,6 +37,7 @@ enum Language {
   String? get soundDisplay => switch (this) {
     none => null,
     en => "English",
+    ru => "Русский",
     ja => "日本語",
     ko => "한국어",
     zh_Hans => "普通话",
@@ -42,6 +47,7 @@ enum Language {
   String? get flag => switch (this) {
     none => null,
     en => "🇺🇸",
+    ru => "🇷🇺",
     ja => "🇯🇵",
     ko => "🇰🇷",
     zh_Hans => "🇨🇳",
@@ -51,6 +57,7 @@ enum Language {
   String? get enName => switch (this) {
     none => null,
     en => "English",
+    ru => "Russian",
     ja => "Japanese",
     ko => "Korean",
     zh_Hans => "Chinese",
@@ -60,6 +67,7 @@ enum Language {
   String? get jaName => switch (this) {
     none => null,
     en => "英語",
+    ru => "ロシア語",
     ja => "日本語",
     ko => "韓国語",
     zh_Hans => "簡体中国語",
@@ -70,29 +78,31 @@ enum Language {
   String? get koName => switch (this) {
     none => null,
     en => "영어",
+    ru => "러시아어",
     ja => "일본어",
     ko => "한국어",
     zh_Hans => "간체 중국어",
     zh_Hant => "번체 중국어",
   };
 
-  String? localizedName(Locale locale) {
-    switch (locale.languageCode) {
-      case 'en':
-        return enName;
-      case 'ja':
-        return jaName;
-      case 'ko':
-        return koName;
-      case 'zh':
-        if (locale.scriptCode == 'Hans') {
-          return zh_Hans.name;
-        }
-        return zh_Hant.name;
-      default:
-        return null;
-    }
-  }
+  String? get ruName => switch (this) {
+    none => null,
+    en => "Английский",
+    ru => "Русский",
+    ja => "Японский",
+    ko => "Корейский",
+    zh_Hans => "Китайский (упрощенный)",
+    zh_Hant => "Китайский (традиционный)",
+  };
+
+  String? localizedName(Locale locale) => switch (locale.languageCode) {
+    "en" => enName,
+    "ru" => ruName,
+    "ja" => jaName,
+    "ko" => koName,
+    "zh" => locale.scriptCode == 'Hans' ? zh_Hans.name : zh_Hant.name,
+    _ => null,
+  };
 
   bool get isCJK {
     return name.startsWith('zh') || this == ja || this == ko;
@@ -104,9 +114,7 @@ enum Language {
   };
 
   Locale get locale {
-    if (this == none) {
-      return PlatformDispatcher.instance.locale;
-    }
+    if (this == none) return PlatformDispatcher.instance.locale;
 
     final locale = name.split('_');
     final scriptCode = locale.length > 1 ? locale[1] : null;

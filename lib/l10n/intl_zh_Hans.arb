@@ -412,5 +412,6 @@
   "suggest": "推荐",
   "state_list": "State 列表",
   "role_play": "角色扮演",
-  "role_play_intro": "扮演你喜欢的角色"
+  "role_play_intro": "扮演你喜欢的角色",
+  "comprehensive": "综合"
 }

@@ -413,5 +413,6 @@
   "balanced": "Balanced",
   "custom": "Custom",
   "mode": "Mode",
-  "suggest": "Suggest"
+  "suggest": "Suggest",
+  "comprehensive": "Comprehensive"
 }

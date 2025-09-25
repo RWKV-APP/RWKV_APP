@@ -1,7 +1,7 @@
 {
   "chat": {
-    "latest_build": 530,
-    "latest_build_ios": 528,
+    "latest_build": 532,
+    "latest_build_ios": 532,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
     "android_url": "https://www.pgyer.com/rwkvchat",
@@ -172,11 +172,11 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
-        "name": "RWKV7-G1 0.4B Translate",
+        "name": "RWKV7-G1a 0.4B Translate",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/RWKV_v7_G1_0.4B_Translate_ctx4096_20250721_latest-int8.prefab",
-        "fileSize": 621465080,
-        "sha256": "06bb2b946bafa3515134af8f96972037a892075578858eaba023910932c2527c",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/RWKV_v7_G1a_0.4B_Translate_ctx4096_20250915_latest_int8.prefab",
+        "fileSize": 621465077,
+        "sha256": "607bb1fec6ccda6d68d78ad07b85d3d916c77f0a29af4762beed8e074fe9fa0f",
         "quantization": "int8",
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
@@ -804,12 +804,12 @@
     ]
   },
   "tts": {
-    "latest_build": 451,
-    "latest_build_ios": 421,
+    "latest_build": 532,
+    "latest_build_ios": 532,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
-    "android_url": "https://www.pgyer.com/rwkv-talk",
-    "ios_url": "https://testflight.apple.com/join/mfsdWS4b",
+    "android_url": "https://www.pgyer.com/rwkvchat",
+    "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "model_config": [
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
