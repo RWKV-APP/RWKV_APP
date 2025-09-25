@@ -4,7 +4,7 @@ enum DecodeParamType {
   unknown(temperature: -1, topP: -1, presencePenalty: -1, frequencyPenalty: -1, penaltyDecay: -1),
   creative(
     temperature: 0.6,
-    topP: 0.8,
+    topP: 0.6,
     presencePenalty: 2,
     frequencyPenalty: 0.2,
     penaltyDecay: 0.990,
