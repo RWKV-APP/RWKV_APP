@@ -35,7 +35,7 @@ enum PageKey {
 
   bool get hasTransition => {chat, completion, advancedSettings, rolePlaying}.contains(this);
 
-  Widget get scaffold => switch (this) {
+  Widget scaffold(Map<String, String> param) => switch (this) {
     PageKey.chat => const PageChat(),
     PageKey.talk => const PageTalk(),
     PageKey.othello => const PageOthello(),
@@ -47,8 +47,10 @@ enum PageKey {
     PageKey.translator => const PageTranslator(),
     PageKey.benchmark => const PageBenchmark(),
     PageKey.advancedSettings => const PageAdvancedSettings(),
-    PageKey.rolePlaying => RoleplayManage.createRolePlayChatPage(
+    PageKey.rolePlaying => RoleplayManage.goRolePlay(
+      param['roleName'] ?? '',
       getContext()!,
+      onUpdateRolePlaySessionRequired: () => updateRolePlayConversations(),
       onModelDownloadRequired: () => ModelSelector.show(rolePlayOnly: true),
       changeModelCallback: (modelInfo) {
         rolePlayCurrentModel = modelInfo;
@@ -61,10 +63,15 @@ enum PageKey {
     if (PageKey.tabs.contains(this)) {
       return GoRoute(
         path: path,
-        pageBuilder: (context, state) => NoTransitionPage(child: scaffold),
+        pageBuilder: (context, state) => NoTransitionPage(child: scaffold({})),
       );
     }
-    return GoRoute(path: path, builder: (context, state) => scaffold);
+    return GoRoute(
+      path: path,
+      builder: (context, state) {
+        return scaffold(state.extra as Map<String, String>? ?? {});
+      },
+    );
   }
 
   static String get initialLocation => first.path;

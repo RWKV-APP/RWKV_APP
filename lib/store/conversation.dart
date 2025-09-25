@@ -71,9 +71,8 @@ extension $Conversation on _Conversation {
     }
   }
 
-  Color getConversationColor(ConversationData conversation) {
-    final createAtInUS = conversation.createdAtUS;
-    final index = createAtInUS % _Conversation._conversationColors.length;
+  Color getConversationColor(int timestamp) {
+    final index = timestamp % _Conversation._conversationColors.length;
     return _Conversation._conversationColors[index];
   }
 

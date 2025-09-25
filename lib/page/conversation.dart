@@ -1,15 +1,37 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/db/db.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/conversation_list.dart';
+
+final _roleplayConvList = qs<List<ConversationListItemData>>([]);
+
+final _compositedConversations = qp<List<ConversationListItemData>>((ref) {
+  qqq('updating');
+  final chat = ref.watch(P.conversation.conversations).map((e) => ConversationListItemData.fromConv(e));
+  final roleplay = ref.watch(_roleplayConvList);
+  final composed = [...chat, ...roleplay];
+  composed.sort((a, b) => b.sortKey.compareTo(a.sortKey));
+  return composed;
+});
+
+void updateRolePlayConversations() async {
+  qqq('load role play conversation list');
+  final roleplaySessions = await RoleplayManage.getRolePlayListSession();
+  List<ConversationListItemData> data = [];
+  for (var rs in roleplaySessions) {
+    data.add(ConversationListItemData.fromRoleplay(rs.values.first, rs.keys.first));
+  }
+  _roleplayConvList.q = data;
+}
 
 class PageConversation extends ConsumerStatefulWidget {
   const PageConversation({super.key});
@@ -21,6 +43,7 @@ class PageConversation extends ConsumerStatefulWidget {
 class _PageConversationState extends ConsumerState<PageConversation> {
   final ScrollController controller = ScrollController();
   int appBarAlpha = 0;
+  List<ConversationListItemData> roleplayConversations = [];
 
   @override
   void initState() {
@@ -36,6 +59,10 @@ class _PageConversationState extends ConsumerState<PageConversation> {
         setState(() {});
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      updateRolePlayConversations();
+    });
   }
 
   @override
@@ -47,7 +74,7 @@ class _PageConversationState extends ConsumerState<PageConversation> {
   @override
   Widget build(BuildContext context) {
     final theme = ref.watch(P.app.customTheme);
-    final conversations = ref.watch(P.conversation.conversations);
+    final conversations = ref.watch(_compositedConversations);
     final isEmpty = conversations.isEmpty;
 
     return AppScaffold(
@@ -97,9 +124,9 @@ class _PageConversationState extends ConsumerState<PageConversation> {
     );
   }
 
-  Widget buildConversationItem(ConversationData conversation, int index) {
+  Widget buildConversationItem(ConversationListItemData item, int index) {
     return Dismissible(
-      key: Key(conversation.createdAtUS.toString()),
+      key: Key(item.id),
       background: Container(
         color: Colors.redAccent,
         padding: const EdgeInsets.only(right: 24),
@@ -120,9 +147,13 @@ class _PageConversationState extends ConsumerState<PageConversation> {
         return res == OkCancelResult.ok;
       },
       onDismissed: (d) async {
-        await P.conversation.onDeleteClicked(context, conversation);
+        if (item.isRoleplay) {
+          await RoleplayManage.deleteRolePlaySession(item.roleName!);
+          return;
+        }
+        await P.conversation.onDeleteClicked(context, item.conv!);
       },
-      child: ConversationItem(conversation: conversation),
+      child: ConversationItem(conversation: item),
     );
   }
 }

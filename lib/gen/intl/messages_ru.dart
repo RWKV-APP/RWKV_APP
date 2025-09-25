@@ -20,12 +20,12 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
-  static String m0(count) => "Пакетный × ${count}";
+  static String m0(count) => "Ветка × ${count}";
 
   static String m1(count) => "Каждый вывод сгенерирует ${count} сообщений";
 
   static String m2(count) =>
-      "Пакетный вывод, генерируется ${count} сообщений одновременно";
+      "Ветвление, генерируется ${count} сообщений одновременно";
 
   static String m3(count) => "Выбрано ${count} сообщение";
 
@@ -40,7 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m7(port) => "HTTP-сервис (Порт: ${port})";
 
   static String m8(flag, nameCN, nameEN) =>
-      "Имитировать голос ${flag} ${nameCN}(${nameEN})";
+      "Имитировать голос ${flag} ${nameEN} (${nameCN})";
 
   static String m9(fileName) => "Имитировать ${fileName}";
 
@@ -86,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Язык приложения",
     ),
     "application_mode": MessageLookupByLibrary.simpleMessage(
-      "Режим приложения",
+      "Уровень возможностей",
     ),
     "application_settings": MessageLookupByLibrary.simpleMessage(
       "Настройки приложения",
@@ -104,28 +104,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto_detect": MessageLookupByLibrary.simpleMessage("Автоопределение"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Вернуться в чат"),
     "balanced": MessageLookupByLibrary.simpleMessage("Сбалансированный"),
-    "batch_inference": MessageLookupByLibrary.simpleMessage("Пакетный вывод"),
+    "batch_inference": MessageLookupByLibrary.simpleMessage("Ветвление"),
     "batch_inference_button": m0,
     "batch_inference_count": MessageLookupByLibrary.simpleMessage(
-      "Количество для пакетного вывода",
+      "Количество параллельных ответов",
     ),
     "batch_inference_count_detail": m1,
     "batch_inference_detail": MessageLookupByLibrary.simpleMessage(
-      "После включения пакетного вывода RWKV может генерировать несколько ответов одновременно",
+      "После включения ветвления RWKV может генерировать несколько ответов одновременно",
     ),
     "batch_inference_enable_or_not": MessageLookupByLibrary.simpleMessage(
-      "Включить или выключить пакетный вывод",
+      "Включить или выключить ветвление",
     ),
     "batch_inference_running": m2,
     "batch_inference_selected": m3,
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage(
-      "Настройки пакетного вывода",
+      "Настройки Ветвления",
     ),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage(
       "Ширина отображения сообщения",
     ),
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
-      "Ширина каждого сообщения при пакетном выводе",
+      "Ширина каждого сообщения при ветвлении",
     ),
     "beginner": MessageLookupByLibrary.simpleMessage("Новичок"),
     "benchmark": MessageLookupByLibrary.simpleMessage(
@@ -177,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "chat_you_need_download_model_if_you_want_to_use_it":
         MessageLookupByLibrary.simpleMessage(
-          "Вам нужно сначала скачать модель, чтобы использовать её",
+          "Сначала скачайте модель, чтобы использовать функцию",
         ),
     "chatting": MessageLookupByLibrary.simpleMessage("В чате"),
     "check_for_updates": MessageLookupByLibrary.simpleMessage(
@@ -255,10 +255,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage(
       "Тема тёмного режима",
     ),
-    "decode": MessageLookupByLibrary.simpleMessage("Декодирование"),
-    "decode_param": MessageLookupByLibrary.simpleMessage(
-      "Параметры декодирования",
-    ),
+    "decode": MessageLookupByLibrary.simpleMessage("вывод"),
+    "decode_param": MessageLookupByLibrary.simpleMessage("Параметры модели"),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("Глубокий поиск"),
     "default_": MessageLookupByLibrary.simpleMessage("По умолчанию"),
     "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
@@ -295,7 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "download_model": MessageLookupByLibrary.simpleMessage("Скачать модель"),
     "download_server_": MessageLookupByLibrary.simpleMessage(
-      "Сервер загрузки (попробуйте, какой быстрее)",
+      "Сервер загрузки (выберите тот, что быстрее)",
     ),
     "download_source": MessageLookupByLibrary.simpleMessage(
       "Источник загрузки",
@@ -341,7 +339,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "extra_large": MessageLookupByLibrary.simpleMessage("Очень большой (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("Обратная связь"),
     "filter": MessageLookupByLibrary.simpleMessage(
-      "Здравствуйте, я пока не могу ответить на этот вопрос. Давайте поговорим на другую тему.",
+      "Я пока не могу ответить на этот вопрос. Давайте поговорим на другую тему.",
     ),
     "finish_recording": MessageLookupByLibrary.simpleMessage(
       "Запись завершена",
@@ -403,7 +401,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Контекстный поиск будет активирован, когда глубина и ширина поиска будут больше 2",
         ),
-    "inference_engine": MessageLookupByLibrary.simpleMessage("Движок вывода"),
+    "inference_engine": MessageLookupByLibrary.simpleMessage("ИИ-Движок"),
     "inference_is_done": MessageLookupByLibrary.simpleMessage(
       "🎉 Вывод завершен",
     ),
@@ -433,7 +431,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "join_the_community": MessageLookupByLibrary.simpleMessage(
       "Присоединиться к сообществу",
     ),
-    "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 Смотри на меня!"),
+    "just_watch_me": MessageLookupByLibrary.simpleMessage(
+      "😎 Смотри и наслаждайся!",
+    ),
     "lan_server": MessageLookupByLibrary.simpleMessage("LAN-сервер"),
     "large": MessageLookupByLibrary.simpleMessage("Большой (120%)"),
     "lazy": MessageLookupByLibrary.simpleMessage("Ленивый"),
@@ -496,7 +496,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("Нет судоку"),
     "number": MessageLookupByLibrary.simpleMessage("Число"),
-    "nyan_nyan": MessageLookupByLibrary.simpleMessage("Нян~~,Нян~~"),
+    "nyan_nyan": MessageLookupByLibrary.simpleMessage("Мрр~ Мрявк~"),
     "off": MessageLookupByLibrary.simpleMessage("Выключено"),
     "offline_translator": MessageLookupByLibrary.simpleMessage(
       "Офлайн-переводчик",
@@ -517,7 +517,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
-    "overseas": MessageLookupByLibrary.simpleMessage("(За рубежом)"),
+    "overseas": MessageLookupByLibrary.simpleMessage("(США)"),
     "pause": MessageLookupByLibrary.simpleMessage("Пауза"),
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Тест производительности",
@@ -586,10 +586,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Предустановленные голоса",
     ),
     "prefer": MessageLookupByLibrary.simpleMessage("Использовать"),
-    "prefer_chinese": MessageLookupByLibrary.simpleMessage(
-      "Использовать китайский для вывода",
-    ),
-    "prefill": MessageLookupByLibrary.simpleMessage("Предзаполнение"),
+    "prefer_chinese": MessageLookupByLibrary.simpleMessage("Китайский режим"),
+    "prefill": MessageLookupByLibrary.simpleMessage("ввод"),
     "prompt": MessageLookupByLibrary.simpleMessage("Промпт"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Шаблон промпта"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("Группа QQ 1"),
@@ -688,7 +686,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Разрешение на доступ к хранилищу не предоставлено",
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
-      "Рекомендуется выбрать модель не менее 1.5B, а лучше 2.9B.",
+      "Для наилучшего опыта выберите 1.5B, 2.9B или больше.",
     ),
     "str_please_disable_battery_opt_": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, отключите оптимизацию батареи, чтобы разрешить фоновые загрузки, иначе загрузки могут приостанавливаться при переключении на другие приложения",
@@ -722,22 +720,18 @@ class MessageLookup extends MessageLookupByLibrary {
           "Затем вы можете начать общаться с RWKV",
         ),
     "thinking": MessageLookupByLibrary.simpleMessage("Думаю..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Авто",
-    ),
+    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("Мысли: Авто"),
     "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "Режим мышления: Автоматический",
+      "Мышление: Автоматическое",
     ),
     "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "Режим мышления: Высокий",
+      "Мышление: Всегда",
     ),
     "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
-      "Режим мышления: Выключен",
+      "Мышление: Выключено",
     ),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Высокое",
-    ),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("Мышление: Выкл"),
+    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("Мысли: Вкл"),
+    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("Мысли: Выкл"),
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон режима мышления",
     ),
@@ -745,7 +739,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("Это самый сложный судоку в мире"),
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage(
-          "Эта модель не поддерживает пакетный вывод, выберите модель с тегом \"batch\"",
+          "Эта модель не поддерживает парралельный вывод, выберите модель с тегом \"batch\"",
         ),
     "thought_result": MessageLookupByLibrary.simpleMessage(
       "Результат размышлений",
@@ -781,7 +775,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "websocket_service_port": m12,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
-      "Добро пожаловать в RWKV Чат",
+      "Это RWKV Чат\n Добро пожаловать",
     ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage(
       "Добро пожаловать в RWKV",
