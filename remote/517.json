@@ -80,6 +80,18 @@
         "tags": ["reason", "cpu"]
       },
       {
+        "name": "RWKV7-G0a 7.2B",
+        "type": "gguf",
+        "modelSize": 7.2,
+        "fileName": "rwkv7-g0a-7.2b-20250829-ctx4096-q4_k_m.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g0a-7.2b-20250829-ctx4096-q4_k_m.gguf",
+        "fileSize": 4510365632,
+        "quantization": "Q4_K_M",
+        "platforms": ["macos", "linux", "android"],
+        "backends": ["llamacpp"],
+        "tags": ["reason", "cpu"]
+      },
+      {
         "name": "RWKV7-G1a 0.1B",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a-0.1b-20250728-ctx4096.st",
@@ -514,7 +526,7 @@
         "isDebug": true
       },
       {
-        "name": "RWKV7-G1a 1.5B",
+        "name": "RWKV7-G1 1.5B",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1-1.5b-20250429-ctx4096_lut4.mlmodelc.zip",
         "fileSize": 702614342,
