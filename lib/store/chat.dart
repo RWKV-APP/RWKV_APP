@@ -635,9 +635,11 @@ extension _$Chat on _Chat {
       return;
     }
 
+    final receivedTokens = this.receivedTokens.q;
+
     _updateMessageById(
       id: id,
-      content: receivedTokens.q,
+      content: receivedTokens,
       changing: false,
       callingFunction: callingFunction,
     );
