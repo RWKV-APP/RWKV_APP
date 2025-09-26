@@ -76,7 +76,7 @@ class ModelSelectButton extends ConsumerWidget {
                         height: 32,
                         value: DecodeParamType.unknown,
                         enabled: false,
-                        child: Text(S.current.decode_param, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                        child: Text(S.current.decode_param, style: const TextStyle(fontSize: 12)),
                       ),
                       buildMenuItem(S.current.creative, DecodeParamType.creative, decodeParamType),
                       buildMenuItem(S.current.comprehensive, DecodeParamType.comprehensive, decodeParamType),
@@ -96,7 +96,7 @@ class ModelSelectButton extends ConsumerWidget {
                   borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    child: Text(currentName, style: const TextStyle(color: Colors.grey, fontSize: 10, height: 1)),
+                    child: Text(currentName, style: const TextStyle(fontSize: 10, height: 1)),
                   ),
                 ),
               ),
