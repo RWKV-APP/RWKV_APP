@@ -11,6 +11,7 @@ from typing import Dict, Any, List, Tuple
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
+import argparse
 
 # 全局锁用于线程安全的打印
 print_lock = Lock()
@@ -192,9 +193,14 @@ def format_json_with_prettier(file_path: str, print_width: int = 200) -> bool:
 
 
 def main():
+    parser = argparse.ArgumentParser(description="更新模型文件大小")
+    parser.add_argument("--config", type=str, default="remote/latest.json", help="配置文件路径")
+    parser.add_argument("--max-workers", type=int, default=5, help="最大线程数")
+    args = parser.parse_args()
+
     """主函数"""
-    config_file = "remote/latest.json"
-    max_workers = 5  # 可以根据需要调整线程数
+    config_file = args.config
+    max_workers = args.max_workers
 
     safe_print("开始更新模型文件大小（多线程版本）...")
     safe_print("=" * 60)

@@ -45,10 +45,10 @@
         "tags": ["reason", "cpu"]
       },
       {
-        "name": "RWKV7-G1 1.5B",
+        "name": "RWKV7-G1a 1.5B",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1-1.5b-20250429-ctx4096-Q6_K.gguf",
-        "fileSize": 1336081344,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a-1.5b-20250922-ctx4096-Q6_K.gguf",
+        "fileSize": 1336082592,
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
@@ -66,10 +66,10 @@
         "tags": ["reason", "cpu"]
       },
       {
-        "name": "RWKV7-G1 2.9B",
+        "name": "RWKV7-G1a 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1-2.9b-20250519-ctx4096-Q6_K.gguf",
-        "fileSize": 2567852800,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a-2.9b-20250924-ctx4096-Q6_K.gguf",
+        "fileSize": 2567854016,
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
@@ -98,10 +98,10 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
-        "name": "RWKV7-G1 1.5B",
+        "name": "RWKV7-G1a 1.5B",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1-1.5b-20250429-ctx4096-nf4.prefab",
-        "fileSize": 1355373866,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a-1.5b-20250922-ctx4096-nf4.prefab",
+        "fileSize": 1355373863,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
@@ -109,10 +109,10 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
-        "name": "RWKV7-G1 2.9B",
+        "name": "RWKV7-G1a 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1-2.9b-20250519-ctx4096-nf4.prefab",
-        "fileSize": 2315788802,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a-2.9b-20250924-ctx4096-nf4.prefab",
+        "fileSize": 2315788799,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
