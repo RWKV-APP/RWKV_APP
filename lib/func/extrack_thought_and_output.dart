@@ -21,7 +21,7 @@ import 'package:halo/halo.dart';
     int outputStartIndex = thinkTagEndIndex + 9;
     if (outputStartIndex >= text.length) return (thought, "");
     final output = text.substring(outputStartIndex).replaceAll("<EOD>", "");
-    return (thought, output);
+    return (thought.trim().replaceAll("\n\n", "\n"), output.trim().replaceAll("\n\n", "\n"));
   } catch (e) {
     final startIndex = text.indexOf("<think>");
     final isThinkingMessage = startIndex == 0;

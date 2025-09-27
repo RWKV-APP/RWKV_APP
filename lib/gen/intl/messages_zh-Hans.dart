@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(count) => "并行推理中，同时生成 ${count} 条消息";
 
-  static String m3(count) => "已选择第 ${count} 条消息";
+  static String m3(index) => "已选择第 ${index} 条消息";
 
   static String m4(demoName) => "欢迎探索 ${demoName}";
 

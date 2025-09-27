@@ -84,13 +84,13 @@ class S {
     );
   }
 
-  /// `已选择第 {count} 条消息`
-  String batch_inference_selected(Object count) {
+  /// `已选择第 {index} 条消息`
+  String batch_inference_selected(Object index) {
     return Intl.message(
-      '已选择第 $count 条消息',
+      '已选择第 $index 条消息',
       name: 'batch_inference_selected',
       desc: '',
-      args: [count],
+      args: [index],
     );
   }
 

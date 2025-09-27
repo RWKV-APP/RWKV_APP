@@ -3,7 +3,7 @@
   "batch_inference_short": "并行",
   "your_voice_is_empty": "您的声音数据为空，请检查您的麦克风",
   "batch_inference_running": "并行推理中，同时生成 {count} 条消息",
-  "batch_inference_selected": "已选择第 {count} 条消息",
+  "batch_inference_selected": "已选择第 {index} 条消息",
   "this_model_does_not_support_batch_inference": "这个模型不支持并行推理, 请选择带有 batch 标签的模型",
   "enabled": "开启",
   "disabled": "关闭",

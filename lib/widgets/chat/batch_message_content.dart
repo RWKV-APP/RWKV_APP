@@ -82,34 +82,32 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
         SingleChildScrollView(
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                4.w,
-                for (var i = 0; i < batchCount; i++)
-                  GD(
-                    onTap: () {
-                      P.msg.batchSelection(widget.msg).q = i;
-                    },
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: screenWidth * (batchVW / 100),
-                        minWidth: screenWidth * (batchVW / 100),
-                      ),
-                      padding: const EI.a(8),
-                      decoration: BoxDecoration(
-                        color: qw,
-                        border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: _MarkdownBody(data: batch[i]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              4.w,
+              for (var i = 0; i < batchCount; i++)
+                GD(
+                  onTap: () {
+                    P.msg.batchSelection(widget.msg).q = i;
+                  },
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth * (batchVW / 100),
+                      minWidth: screenWidth * (batchVW / 100),
                     ),
+                    padding: const EI.a(8),
+                    decoration: BoxDecoration(
+                      color: qw,
+                      border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: _MarkdownBody(data: batch[i]),
                   ),
-                4.w,
-              ].widgetJoin((index) => 8.w),
-            ),
+                ),
+              4.w,
+            ].widgetJoin((index) => 8.w),
           ),
         ),
         AnimatedPositioned(

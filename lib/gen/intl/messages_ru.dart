@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m2(count) =>
       "Ветвление, генерируется ${count} сообщений одновременно";
 
-  static String m3(count) => "Выбрано ${count} сообщение";
+  static String m3(index) => "Выбрано ${index} сообщение";
 
   static String m4(demoName) => "Добро пожаловать в ${demoName}";
 

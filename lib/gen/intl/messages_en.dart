@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m2(count) =>
       "Batch inference running, generating ${count} messages at the same time";
 
-  static String m3(count) => "Selected ${count} message";
+  static String m3(index) => "Selected message ${index}";
 
   static String m4(demoName) => "Welcome to ${demoName}";
 
