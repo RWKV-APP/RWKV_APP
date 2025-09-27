@@ -32,6 +32,6 @@ import 'package:halo/halo.dart';
     qqe("startIndex: $startIndex");
     qqe("endIndex: $endIndex");
     qqe("text.length: ${text.length}");
-    return ("", text);
+    return ("", text.trim());
   }
 }
