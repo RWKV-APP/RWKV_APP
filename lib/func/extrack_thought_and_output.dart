@@ -9,9 +9,9 @@ import 'package:halo/halo.dart';
     final thinkTagEndIndex = text.indexOf("</think>");
     if (thinkTagEndIndex == -1) {
       if (text.contains("<think>\n")) {
-        return (text.replaceFirst("<think>\n", ""), "");
+        return (text.replaceFirst("<think>\n", "").trim(), "");
       }
-      return (text.replaceFirst("<think>", ""), "");
+      return (text.replaceFirst("<think>", "").trim(), "");
     }
     final thought = text
         .substring(thinkTagStartIndex, thinkTagEndIndex)
