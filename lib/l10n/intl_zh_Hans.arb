@@ -1,5 +1,6 @@
 {
   "@@locale": "zh-Hans",
+  "model_size_increased_please_open_a_new_conversation": "模型大小增加，请打开一个新的对话, 以提升对话质量",
   "batch_inference_short": "并行",
   "your_voice_is_empty": "您的声音数据为空，请检查您的麦克风",
   "batch_inference_running": "并行推理中，同时生成 {count} 条消息",

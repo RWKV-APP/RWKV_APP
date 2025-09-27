@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `模型大小增加，请打开一个新的对话, 以提升对话质量`
+  String get model_size_increased_please_open_a_new_conversation {
+    return Intl.message(
+      '模型大小增加，请打开一个新的对话, 以提升对话质量',
+      name: 'model_size_increased_please_open_a_new_conversation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `并行`
   String get batch_inference_short {
     return Intl.message(

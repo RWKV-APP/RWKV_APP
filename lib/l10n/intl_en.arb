@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "model_size_increased_please_open_a_new_conversation": "Model size increased, please open a new conversation, to improve the conversation quality",
   "batch_inference_short": "Batch",
   "your_voice_is_empty": "Your voice data is empty, please check your microphone",
   "batch_inference_running": "Batch inference running, generating {count} messages at the same time",

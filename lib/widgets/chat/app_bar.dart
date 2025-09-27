@@ -112,17 +112,16 @@ class ChatAppBar extends ConsumerWidget {
               if (isChat)
                 Row(
                   mainAxisAlignment: MAA.center,
-                  crossAxisAlignment: CAA.baseline,
                   mainAxisSize: MainAxisSize.min,
-                  textBaseline: TextBaseline.alphabetic,
+                  crossAxisAlignment: CAA.end,
                   children: [
                     const T(
                       Config.appTitle,
                       s: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
-                    T(
-                      ' $version',
-                      s: const TS(s: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4, left: 1),
+                      child: T(' $version', s: const TS(s: 8)),
                     ),
                   ],
                 ),

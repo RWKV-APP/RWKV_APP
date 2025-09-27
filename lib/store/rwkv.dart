@@ -826,6 +826,19 @@ extension _$RWKV on _RWKV {
     }, []);
     socName.q = r.$1;
     socBrand.q = r.$2;
+    currentModel.lb(_onCurrentModelChanged);
+  }
+
+  void _onCurrentModelChanged(FileInfo? oldModel, FileInfo? newModel) async {
+    if (oldModel == null || newModel == null) return;
+    final oldModelSize = oldModel.modelSize;
+    final newModelSize = newModel.modelSize;
+    if (oldModelSize == null || newModelSize == null) return;
+    if (oldModelSize >= newModelSize) return;
+    if (P.app.pageKey.q != PageKey.chat) return;
+    if (P.msg.list.q.isEmpty) return;
+    await Future.delayed(2000.ms);
+    Alert.info(S.current.model_size_increased_please_open_a_new_conversation);
   }
 
   num _intIfFixedDecimalsIsZero(Argument argument) {

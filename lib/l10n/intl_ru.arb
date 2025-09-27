@@ -1,5 +1,6 @@
 {
   "@@locale": "ru",
+  "model_size_increased_please_open_a_new_conversation": "Размер модели увеличен, откройте новый диалог, чтобы улучшить качество диалога",
   "batch_inference_short": "Ветвление",
   "your_voice_is_empty": "Данные вашего голоса пусты, проверьте микрофон",
   "batch_inference_running": "Ветвление, генерируется {count} сообщений одновременно",

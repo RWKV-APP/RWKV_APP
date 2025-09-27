@@ -334,6 +334,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "model": MessageLookupByLibrary.simpleMessage("模型"),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
+    "model_size_increased_please_open_a_new_conversation":
+        MessageLookupByLibrary.simpleMessage("模型大小增加，请打开一个新的对话, 以提升对话质量"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_questions": MessageLookupByLibrary.simpleMessage("更多问题"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),

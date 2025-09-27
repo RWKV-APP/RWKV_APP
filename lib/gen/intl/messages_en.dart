@@ -422,6 +422,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "model": MessageLookupByLibrary.simpleMessage("Model"),
     "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
+    "model_size_increased_please_open_a_new_conversation":
+        MessageLookupByLibrary.simpleMessage(
+          "Model size increased, please open a new conversation, to improve the conversation quality",
+        ),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "more_questions": MessageLookupByLibrary.simpleMessage("More Questions"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
