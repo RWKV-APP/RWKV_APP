@@ -181,7 +181,7 @@ class FileInfo extends Equatable {
 
   bool get isTTS => name.toLowerCase().contains('tts');
 
-  String? get date {
+  String? get dateDisplayString {
     // 用正则表达式匹配 "20250317", "20381101" 这样的日期
     final re = RegExp(r'(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])');
 
@@ -204,6 +204,12 @@ class FileInfo extends Equatable {
     if (updatedAt != null) return updatedAt;
 
     return null;
+  }
+
+  DateTime? get date {
+    final dateDisplayString = this.dateDisplayString;
+    if (dateDisplayString == null) return null;
+    return DateTime.parse("20" + dateDisplayString);
   }
 
   @override
