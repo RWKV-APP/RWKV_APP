@@ -526,7 +526,7 @@ extension _$Chat on _Chat {
       botMsg = iterator.moveNext() ? iterator.current : null;
       String content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
       if (wenYanWen.q) {
-        content = '请用文言文回答: $content';
+        content = '$content 请用文言文回答。';
       }
       result.add(content);
       if (botMsg == null) break;
