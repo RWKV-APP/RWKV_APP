@@ -283,6 +283,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hello, 请随意 \n向我提问...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隐藏思维链堆栈"),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "默认使用 \'<think>好的\', 在 2025-09-21 前发布的模型中, 会自动使用 \'<think>嗯\'",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "例子: System: 你是秦始皇，使用文言文，以居高临下的态度与人沟通.",
     ),

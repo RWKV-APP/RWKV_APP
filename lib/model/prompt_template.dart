@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/thinking_mode.dart';
+import 'package:zone/store/p.dart';
 
 class PromptTemplate {
   final String thinkingWithChinese;
@@ -23,7 +26,7 @@ class PromptTemplate {
 
   factory PromptTemplate.empty() {
     return PromptTemplate(
-      thinkingWithChinese: '<think>嗯',
+      thinkingWithChinese: '',
       thinkingLighting: '<think>\n</think>',
       thinkingFree: '<think',
       newChatTemplate: '',
@@ -49,13 +52,19 @@ class PromptTemplate {
   String apply(ThinkingMode mode) {
     switch (mode) {
       case Lighting():
-        return thinkingLighting.isNotEmpty ? thinkingLighting : mode.header;
+        return thinkingLighting.isNotEmpty ? thinkingLighting : Lighting().header;
       case Free():
-        return thinkingFree.isNotEmpty ? thinkingFree : mode.header;
+        return thinkingFree.isNotEmpty ? thinkingFree : Free().header;
       case PreferChinese():
-        return thinkingWithChinese.isNotEmpty ? thinkingWithChinese : mode.header;
+        final fileInfo = P.rwkv.currentModel.q;
+        final date = fileInfo?.date;
+        if (date != null && date.isAfter(DateTime(2025, 9, 21))) {
+          final result = thinkingWithChinese.isNotEmpty ? thinkingWithChinese : "<think>好的";
+          return result;
+        }
+        return thinkingWithChinese.isNotEmpty ? thinkingWithChinese : PreferChinese().header;
       case None():
-        return mode.header;
+        return None().header;
     }
   }
 

@@ -418,7 +418,7 @@ class _Tags extends ConsumerWidget {
     final tags = fileInfo.tags.where((e) => !_blockedTags.contains(e));
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
-    final date = fileInfo.date;
+    final date = fileInfo.dateDisplayString;
 
     return Wrap(
       spacing: 4,

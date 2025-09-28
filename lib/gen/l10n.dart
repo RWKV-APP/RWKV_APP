@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `默认使用 '<think>好的', 在 2025-09-21 前发布的模型中, 会自动使用 '<think>嗯'`
+  String get hint_chinese_thinking_mode_template {
+    return Intl.message(
+      '默认使用 \'<think>好的\', 在 2025-09-21 前发布的模型中, 会自动使用 \'<think>嗯\'',
+      name: 'hint_chinese_thinking_mode_template',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `模型大小增加，请打开一个新的对话, 以提升对话质量`
   String get model_size_increased_please_open_a_new_conversation {
     return Intl.message(

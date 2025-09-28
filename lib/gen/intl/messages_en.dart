@@ -355,6 +355,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hello, Ask Me \nAnything...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("Hide Thought Stack"),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "Default use \'<think>好的\', in models released before 2025-09-21, will automatically use \'<think>嗯\'",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "Example: System: You are a powerful RWKV large language model, and you always patiently answer users\' questions.",
     ),
