@@ -25,16 +25,24 @@ class ThinkingModeButton extends ConsumerWidget {
 
     final color = switch (thinkingMode) {
       thinking_mode.Lighting() => theme.colorScheme.surfaceContainer,
+      thinking_mode.Fast() => theme.colorScheme.surfaceContainer,
       thinking_mode.None() => theme.colorScheme.surfaceContainer,
       thinking_mode.Free() => primary,
       thinking_mode.PreferChinese() => primary,
+      thinking_mode.En() => primary,
+      thinking_mode.EnShort() => primary,
+      thinking_mode.EnLong() => primary,
     };
 
     final textColor = switch (thinkingMode) {
       thinking_mode.Lighting() => primary,
+      thinking_mode.Fast() => primary,
       thinking_mode.None() => Colors.grey,
-      thinking_mode.Free() => theme.colorScheme.onPrimary,
       thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
+      thinking_mode.Free() => theme.colorScheme.onPrimary,
+      thinking_mode.En() => theme.colorScheme.onPrimary,
+      thinking_mode.EnShort() => theme.colorScheme.onPrimary,
+      thinking_mode.EnLong() => theme.colorScheme.onPrimary,
     };
 
     final textScaleFactor = MediaQuery.textScalerOf(context);

@@ -667,6 +667,9 @@ extension $RWKV on _RWKV {
     switch (_thinkingMode.q) {
       case thinking_mode.Lighting():
       case thinking_mode.Free():
+      case thinking_mode.En():
+      case thinking_mode.EnShort():
+      case thinking_mode.EnLong():
       case thinking_mode.PreferChinese():
         final custom = P.preference.promptTemplate;
         final thinkingToken = custom.apply(_thinkingMode.q);

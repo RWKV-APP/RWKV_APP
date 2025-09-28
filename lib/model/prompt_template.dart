@@ -65,6 +65,12 @@ class PromptTemplate {
         return thinkingWithChinese.isNotEmpty ? thinkingWithChinese : PreferChinese().header;
       case None():
         return None().header;
+      case En():
+        return En().header;
+      case EnShort():
+        return EnShort().header;
+      case EnLong():
+        return EnLong().header;
     }
   }
 
