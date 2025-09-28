@@ -96,7 +96,6 @@ extension $FileManager on _FileManager {
   }
 
   Future<void> removeFilesNotInConfig() async {
-    debugger();
     qq;
     final fileInfos = [
       chatWeights.q,
@@ -110,24 +109,21 @@ extension $FileManager on _FileManager {
     final files = documentsDir.listSync();
     const maxSizeBytes = 20 * 1024 * 1024; // 20MB
     for (final file in files) {
-      qqr("file: ${file.path}");
       if (fileInfos.any((e) => file.path.contains(e.fileName))) continue;
 
       // 不移除以 .tmp 结尾的文件
       if (file.path.endsWith('.tmp')) {
-        qqr("skip .tmp file: ${file.path}");
         continue;
       }
 
       // 检查文件大小，只删除大于 20MB 的文件
       final fileSize = await File(file.path).length();
       if (fileSize <= maxSizeBytes) {
-        qqr("skip file (size: $fileSize bytes): ${file.path}");
         continue;
       }
 
       await file.delete();
-      qqr("delete file (size: ${fileSize} bytes): ${file.path}");
+      qqw("delete file (size: ${fileSize} bytes): ${file.path}");
     }
   }
 
