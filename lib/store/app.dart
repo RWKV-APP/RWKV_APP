@@ -96,6 +96,7 @@ extension $App on _App {
     await _parseConfigForDemoSpecificData(allConfig[demoType.q.name]);
     await P.fileManager.syncAvailableModels();
     await P.fileManager.checkLocal();
+    await P.fileManager.removeFilesNotInConfig();
   }
 
   void hapticLight() {
