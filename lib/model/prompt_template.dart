@@ -52,9 +52,9 @@ class PromptTemplate {
     switch (mode) {
       case Lighting():
       case Fast():
-        return thinkingLighting.isNotEmpty ? thinkingLighting : Lighting().header;
+        return thinkingLighting.isNotEmpty ? thinkingLighting : const Lighting().header;
       case Free():
-        return thinkingFree.isNotEmpty ? thinkingFree : Free().header;
+        return thinkingFree.isNotEmpty ? thinkingFree : const Free().header;
       case PreferChinese():
         final fileInfo = P.rwkv.currentModel.q;
         final date = fileInfo?.date;
@@ -62,15 +62,15 @@ class PromptTemplate {
           final result = thinkingWithChinese.isNotEmpty ? thinkingWithChinese : "<think>好的";
           return result;
         }
-        return thinkingWithChinese.isNotEmpty ? thinkingWithChinese : PreferChinese().header;
+        return thinkingWithChinese.isNotEmpty ? thinkingWithChinese : const PreferChinese().header;
       case None():
-        return None().header;
+        return const None().header;
       case En():
-        return En().header;
+        return const En().header;
       case EnShort():
-        return EnShort().header;
+        return const EnShort().header;
       case EnLong():
-        return EnLong().header;
+        return const EnLong().header;
     }
   }
 

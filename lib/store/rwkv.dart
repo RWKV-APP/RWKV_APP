@@ -792,12 +792,12 @@ extension $RWKV on _RWKV {
       title: s.think_mode_selector_title,
       message: s.think_mode_selector_message,
       actions: [
-        AlertDialogAction(label: s.thinking_mode_off(""), key: thinking_mode.None()),
-        AlertDialogAction(label: s.think_button_mode_fast(""), key: thinking_mode.Fast()),
-        AlertDialogAction(label: s.thinking_mode_high(""), key: thinking_mode.Free()),
-        AlertDialogAction(label: s.think_button_mode_en(""), key: thinking_mode.En()),
-        AlertDialogAction(label: s.think_button_mode_en_short(""), key: thinking_mode.EnShort()),
-        AlertDialogAction(label: s.think_button_mode_en_long(""), key: thinking_mode.EnLong()),
+        AlertDialogAction(label: s.thinking_mode_off(""), key: const thinking_mode.None()),
+        AlertDialogAction(label: s.think_button_mode_fast(""), key: const thinking_mode.Fast()),
+        AlertDialogAction(label: s.thinking_mode_high(""), key: const thinking_mode.Free()),
+        AlertDialogAction(label: s.think_button_mode_en(""), key: const thinking_mode.En()),
+        AlertDialogAction(label: s.think_button_mode_en_short(""), key: const thinking_mode.EnShort()),
+        AlertDialogAction(label: s.think_button_mode_en_long(""), key: const thinking_mode.EnLong()),
       ],
     );
 
