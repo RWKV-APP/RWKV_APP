@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/thinking_mode.dart';
@@ -52,6 +51,7 @@ class PromptTemplate {
   String apply(ThinkingMode mode) {
     switch (mode) {
       case Lighting():
+      case Fast():
         return thinkingLighting.isNotEmpty ? thinkingLighting : Lighting().header;
       case Free():
         return thinkingFree.isNotEmpty ? thinkingFree : Free().header;

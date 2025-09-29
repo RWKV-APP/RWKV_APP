@@ -25,6 +25,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
 
     final color = switch (thinkingMode) {
       thinking_mode.Lighting() => kC,
+      thinking_mode.Fast() => kC,
       thinking_mode.Free() => theme.colorScheme.surfaceContainer,
       thinking_mode.None() => kC,
       thinking_mode.PreferChinese() => primary,
@@ -35,6 +36,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
 
     final textColor = switch (thinkingMode) {
       thinking_mode.Lighting() => Colors.grey,
+      thinking_mode.Fast() => Colors.grey,
       thinking_mode.None() => theme.colorScheme.onPrimary,
       thinking_mode.Free() => Colors.grey,
       thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
@@ -68,6 +70,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
 
     final padding = switch (thinkingMode) {
       thinking_mode.Lighting() => const EI.s(h: 0),
+      thinking_mode.Fast() => const EI.s(h: 0),
       thinking_mode.None() => const EI.s(h: 0),
       thinking_mode.Free() => const EI.s(h: 12),
       thinking_mode.PreferChinese() => const EI.s(h: 12),

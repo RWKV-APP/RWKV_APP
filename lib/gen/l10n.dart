@@ -54,6 +54,46 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `推理: 快`
+  String get think_button_mode_fast {
+    return Intl.message(
+      '推理: 快',
+      name: 'think_button_mode_fast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理: 英`
+  String get think_button_mode_en {
+    return Intl.message(
+      '推理: 英',
+      name: 'think_button_mode_en',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理: 英短`
+  String get think_button_mode_en_short {
+    return Intl.message(
+      '推理: 英短',
+      name: 'think_button_mode_en_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理: 英长`
+  String get think_button_mode_en_long {
+    return Intl.message(
+      '推理: 英长',
+      name: 'think_button_mode_en_long',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `默认使用 '<think>好的', 在 2025-09-21 前发布的模型中, 会自动使用 '<think>嗯'`
   String get hint_chinese_thinking_mode_template {
     return Intl.message(

@@ -1,5 +1,9 @@
 {
   "@@locale": "en",
+  "think_button_mode_fast": "Think: Fast",
+  "think_button_mode_en": "Think: GPT",
+  "think_button_mode_en_short": "Think: GPT-low",
+  "think_button_mode_en_long": "Think: GPT-high",
   "hint_chinese_thinking_mode_template": "Default use '<think>好的', in models released before 2025-09-21, will automatically use '<think>嗯'",
   "model_size_increased_please_open_a_new_conversation": "Model size increased, please open a new conversation, to improve the conversation quality",
   "batch_inference_short": "Batch",

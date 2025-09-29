@@ -666,6 +666,7 @@ extension $RWKV on _RWKV {
 
     switch (_thinkingMode.q) {
       case thinking_mode.Lighting():
+      case thinking_mode.Fast():
       case thinking_mode.Free():
       case thinking_mode.En():
       case thinking_mode.EnShort():
@@ -812,6 +813,8 @@ extension $RWKV on _RWKV {
       case thinking_mode.PreferChinese():
         setModelConfig(thinkingMode: const thinking_mode.Free());
         Alert.success(S.current.thinking_mode_detail_high);
+      default:
+        break;
     }
   }
 }

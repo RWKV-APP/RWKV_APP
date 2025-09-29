@@ -692,6 +692,16 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Then you can start to chat with RWKV",
         ),
+    "think_button_mode_en": MessageLookupByLibrary.simpleMessage("Think: GPT"),
+    "think_button_mode_en_long": MessageLookupByLibrary.simpleMessage(
+      "Think: GPT-high",
+    ),
+    "think_button_mode_en_short": MessageLookupByLibrary.simpleMessage(
+      "Think: GPT-low",
+    ),
+    "think_button_mode_fast": MessageLookupByLibrary.simpleMessage(
+      "Think: Fast",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
     "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("Think: Auto"),
     "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(

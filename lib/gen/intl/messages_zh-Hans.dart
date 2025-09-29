@@ -524,6 +524,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
+    "think_button_mode_en": MessageLookupByLibrary.simpleMessage("推理: 英"),
+    "think_button_mode_en_long": MessageLookupByLibrary.simpleMessage("推理: 英长"),
+    "think_button_mode_en_short": MessageLookupByLibrary.simpleMessage(
+      "推理: 英短",
+    ),
+    "think_button_mode_fast": MessageLookupByLibrary.simpleMessage("推理: 快"),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("推理: 中"),
     "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(

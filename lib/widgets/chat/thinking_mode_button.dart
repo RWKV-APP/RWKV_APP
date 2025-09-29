@@ -54,6 +54,10 @@ class ThinkingModeButton extends ConsumerWidget {
       thinking_mode.None() => s.thinking_mode_off,
       thinking_mode.Free() => s.thinking_mode_high,
       thinking_mode.PreferChinese() => s.thinking_mode_high,
+      thinking_mode.Fast() => s.think_button_mode_fast,
+      thinking_mode.En() => s.think_button_mode_en,
+      thinking_mode.EnShort() => s.think_button_mode_en_short,
+      thinking_mode.EnLong() => s.think_button_mode_en_long,
     };
 
     final border = switch (thinkingMode) {

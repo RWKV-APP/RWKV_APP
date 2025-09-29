@@ -1,5 +1,9 @@
 {
   "@@locale": "zh-Hans",
+  "think_button_mode_fast": "推理: 快",
+  "think_button_mode_en": "推理: 英",
+  "think_button_mode_en_short": "推理: 英短",
+  "think_button_mode_en_long": "推理: 英长",
   "hint_chinese_thinking_mode_template": "默认使用 '<think>好的', 在 2025-09-21 前发布的模型中, 会自动使用 '<think>嗯'",
   "model_size_increased_please_open_a_new_conversation": "模型大小增加，请打开一个新的对话, 以提升对话质量",
   "batch_inference_short": "并行",
