@@ -23,7 +23,7 @@ class BatchButton extends ConsumerWidget {
     final s = S.of(context);
 
     final bgColor = batchEnabled ? primary : surfaceContainer;
-    final textColor = batchEnabled ? qw.q(.667) : qb.q(.667);
+    final textColor = batchEnabled ? qw.q(1) : qb.q(.667);
     final batchCount = ref.watch(P.chat.batchCount);
     final borderColor = batchEnabled ? primary : primary.q(.1);
 
