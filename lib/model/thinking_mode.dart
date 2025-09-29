@@ -18,6 +18,11 @@ sealed class ThinkingMode {
     if (runningMode == "ThinkingMode.Lighting") return const Lighting();
     if (runningMode == "ThinkingMode.Free") return const Free();
     if (runningMode == "ThinkingMode.PreferChinese") return const PreferChinese();
+    if (runningMode == "ThinkingMode.Fast") return const Fast();
+    if (runningMode == "ThinkingMode.None") return const None();
+    if (runningMode == "ThinkingMode.En") return const En();
+    if (runningMode == "ThinkingMode.EnShort") return const EnShort();
+    if (runningMode == "ThinkingMode.EnLong") return const EnLong();
     return const None();
   }
 }
