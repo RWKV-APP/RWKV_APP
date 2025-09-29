@@ -286,6 +286,12 @@ extension $Chat on _Chat {
     bool withHistory = true,
     bool isRegenerate = false,
   }) async {
+    message = message.trim();
+    final thinkingMode = P.rwkv.thinkingMode.q;
+    if (!message.endsWith(thinkingMode.userMsgFooter)) {
+      message = message + thinkingMode.userMsgFooter;
+    }
+
     MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
 
     final editingOrRegeneratingIndex = P.msg.editingOrRegeneratingIndex.q;

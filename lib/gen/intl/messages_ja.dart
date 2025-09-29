@@ -45,13 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "キュー内：${count}";
 
-  static String m12(port) => "WebSocketサービス（ポート：${port}）";
+  static String m16(footer) => "思考：自動";
 
-  static String m13(id) => "ウィンドウ ${id}";
+  static String m17(footer) => "思考：高";
 
-  static String m14(count) => "${count}個のタブ";
+  static String m18(footer) => "思考：オフ";
 
-  static String m15(modelName) => "現在、${modelName}を使用しています";
+  static String m19(port) => "WebSocketサービス（ポート：${port}）";
+
+  static String m20(id) => "ウィンドウ ${id}";
+
+  static String m21(count) => "${count}個のタブ";
+
+  static String m22(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -573,18 +579,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("これでRWKVとのチャットを開始できます"),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("思考：自動"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "推論モード：自動",
-    ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "推論モード：高",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
-      "推論モード：オフ",
-    ),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("思考：高"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("思考：オフ"),
+    "thinking_mode_auto": m16,
+    "thinking_mode_high": m17,
+    "thinking_mode_off": m18,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "思考モードテンプレート",
     ),
@@ -616,7 +613,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("音声クローン"),
     "web_search": MessageLookupByLibrary.simpleMessage("ウェブ検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
-    "websocket_service_port": m12,
+    "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "RWKVチャットへようこそ",
     ),
@@ -624,13 +621,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白"),
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
-    "window_id": m13,
+    "window_id": m20,
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%dページ見つかりました"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m21,
+    "you_are_now_using": m22,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

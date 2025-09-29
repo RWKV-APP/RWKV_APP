@@ -70,6 +70,16 @@ class _RWKV {
   /// 当前加载的权重
   late final currentModel = qs<FileInfo?>(null);
 
+  /// 当前模型是否是2025年9月22日之前发布的
+  ///
+  /// 新的权重要使用新的 thinking mode 组
+  late final currentModelIsBefore20250922 = qp((ref) {
+    final currentModel = ref.watch(this.currentModel);
+    if (currentModel == null) return false;
+    final date = currentModel.date;
+    return date != null && date.isBefore(DateTime(2025, 9, 22));
+  });
+
   late final currentWorldType = qs<WorldType?>(null);
 
   late final currentGroupInfo = qs<GroupInfo?>(null);
@@ -666,7 +676,11 @@ extension $RWKV on _RWKV {
 
     switch (_thinkingMode.q) {
       case thinking_mode.Lighting():
+      case thinking_mode.Fast():
       case thinking_mode.Free():
+      case thinking_mode.En():
+      case thinking_mode.EnShort():
+      case thinking_mode.EnLong():
       case thinking_mode.PreferChinese():
         final custom = P.preference.promptTemplate;
         final thinkingToken = custom.apply(_thinkingMode.q);
@@ -738,7 +752,7 @@ extension $RWKV on _RWKV {
     send(to_rwkv.SetMaxLength(_intIfFixedDecimalsIsZero(Argument.maxLength).toInt()));
   }
 
-  void onThinkModeTyped() async {
+  Future<void> onThinkModeTapped() async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
@@ -748,24 +762,67 @@ extension $RWKV on _RWKV {
     if (!checkModelSelection()) return;
 
     P.app.hapticLight();
-    final current = thinkingMode.q;
-    switch (current) {
-      case thinking_mode.Lighting():
-        setModelConfig(thinkingMode: const thinking_mode.Free());
-        Alert.success(S.current.thinking_mode_detail_high);
-      case thinking_mode.Free():
-        setModelConfig(thinkingMode: const thinking_mode.None());
-        Alert.success(S.current.thinking_mode_detail_off);
-      case thinking_mode.PreferChinese():
-        setModelConfig(thinkingMode: const thinking_mode.None());
-        Alert.success(S.current.thinking_mode_detail_off);
+
+    final s = S.current;
+
+    final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
+    if (currentModelIsBefore20250922) {
+      final current = thinkingMode.q;
+      switch (current) {
+        case thinking_mode.Lighting():
+          setModelConfig(thinkingMode: const thinking_mode.Free());
+          Alert.success(s.thinking_mode_high(s.thinking_mode_alert_footer));
+        case thinking_mode.Free():
+          setModelConfig(thinkingMode: const thinking_mode.None());
+          Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
+        case thinking_mode.PreferChinese():
+          setModelConfig(thinkingMode: const thinking_mode.None());
+          Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
+        case thinking_mode.None():
+          setModelConfig(thinkingMode: const thinking_mode.Lighting());
+          Alert.success(s.thinking_mode_auto(s.thinking_mode_alert_footer));
+        default:
+          break;
+      }
+      return;
+    }
+
+    final res = await showConfirmationDialog(
+      context: getContext()!,
+      title: s.think_mode_selector_title,
+      message: s.think_mode_selector_message,
+      actions: [
+        AlertDialogAction(label: s.thinking_mode_off(""), key: thinking_mode.None()),
+        AlertDialogAction(label: s.think_button_mode_fast(""), key: thinking_mode.Fast()),
+        AlertDialogAction(label: s.thinking_mode_high(""), key: thinking_mode.Free()),
+        AlertDialogAction(label: s.think_button_mode_en(""), key: thinking_mode.En()),
+        AlertDialogAction(label: s.think_button_mode_en_short(""), key: thinking_mode.EnShort()),
+        AlertDialogAction(label: s.think_button_mode_en_long(""), key: thinking_mode.EnLong()),
+      ],
+    );
+
+    if (res == null) return;
+
+    setModelConfig(thinkingMode: res);
+    switch (res) {
       case thinking_mode.None():
-        setModelConfig(thinkingMode: const thinking_mode.Lighting());
-        Alert.success(S.current.thinking_mode_detail_auto);
+        Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
+      case thinking_mode.Fast():
+        Alert.success(s.think_button_mode_fast(s.thinking_mode_alert_footer));
+      case thinking_mode.Free():
+        Alert.success(s.thinking_mode_high(s.thinking_mode_alert_footer));
+      case thinking_mode.En():
+        Alert.success(s.think_button_mode_en(s.thinking_mode_alert_footer));
+      case thinking_mode.EnShort():
+        Alert.success(s.think_button_mode_en_short(s.thinking_mode_alert_footer));
+      case thinking_mode.EnLong():
+        Alert.success(s.think_button_mode_en_long(s.thinking_mode_alert_footer));
+      default:
+        break;
     }
   }
 
-  void onBatchInferenceTyped() async {
+  void onBatchInferenceTapped() async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
@@ -788,7 +845,7 @@ extension $RWKV on _RWKV {
     await BatchSettingsPanel.show();
   }
 
-  void onSecondaryOptionsTyped() async {
+  void onSecondaryOptionsTapped() async {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
@@ -808,7 +865,9 @@ extension $RWKV on _RWKV {
         Alert.success(S.current.prefer_chinese);
       case thinking_mode.PreferChinese():
         setModelConfig(thinkingMode: const thinking_mode.Free());
-        Alert.success(S.current.thinking_mode_detail_high);
+        Alert.success(S.current.thinking_mode_high(S.current.thinking_mode_alert_footer));
+      default:
+        break;
     }
   }
 }

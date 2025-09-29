@@ -45,13 +45,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "排队中: ${count}";
 
-  static String m12(port) => "WebSocket 服务 (端口: ${port})";
+  static String m12(footer) => "推理${footer}: 英";
 
-  static String m13(id) => "窗口 ${id}";
+  static String m13(footer) => "推理${footer}: 英长";
 
-  static String m14(count) => "${count} 个标签页";
+  static String m14(footer) => "推理${footer}: 英短";
 
-  static String m15(modelName) => "您当前正在使用 ${modelName}";
+  static String m15(footer) => "推理${footer}: 快";
+
+  static String m16(footer) => "推理${footer}: 中";
+
+  static String m17(footer) => "推理${footer}: 高";
+
+  static String m18(footer) => "推理${footer}: 关";
+
+  static String m19(port) => "WebSocket 服务 (端口: ${port})";
+
+  static String m20(id) => "窗口 ${id}";
+
+  static String m21(count) => "${count} 个标签页";
+
+  static String m22(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -524,17 +538,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
+    "think_button_mode_en": m12,
+    "think_button_mode_en_long": m13,
+    "think_button_mode_en_short": m14,
+    "think_button_mode_fast": m15,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "推理模式会影响模型在推理时的表现",
+    ),
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "请选择推理模式",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("推理: 中"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "推理模式: 中",
-    ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "推理模式: 高",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage("推理模式: 关"),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("推理: 高"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("推理: 关"),
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
+    "thinking_mode_auto": m16,
+    "thinking_mode_high": m17,
+    "thinking_mode_off": m18,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
@@ -562,7 +580,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
-    "websocket_service_port": m12,
+    "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV Chat",
     ),
@@ -570,11 +588,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
-    "window_id": m13,
+    "window_id": m20,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m21,
+    "you_are_now_using": m22,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

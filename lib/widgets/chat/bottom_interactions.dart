@@ -44,6 +44,7 @@ class _Interactions extends ConsumerWidget {
     final demoType = ref.watch(P.app.demoType);
     final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
+    final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);
     return Wrap(
       spacing: 4,
       runSpacing: 4,
@@ -52,7 +53,7 @@ class _Interactions extends ConsumerWidget {
         if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: SelectImageButton()),
         if (features.webSearch && demoType == DemoType.chat) const _WebSearchModeButton(),
         if (demoType == DemoType.chat) const ThinkingModeButton(),
-        if (demoType == DemoType.chat && currentLangIsZh) const SecondaryOptionsButton(),
+        if (demoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
         if (demoType == DemoType.chat) const BatchButton(),
         if (demoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
