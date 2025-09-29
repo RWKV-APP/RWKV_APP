@@ -46,13 +46,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "대기열: ${count}";
 
-  static String m12(port) => "WebSocket 서비스 (포트: ${port})";
+  static String m16(footer) => "추론: 자동";
 
-  static String m13(id) => "창 ${id}";
+  static String m17(footer) => "추론: 높음";
 
-  static String m14(count) => "${count}개의 탭";
+  static String m18(footer) => "추론: 끔";
 
-  static String m15(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
+  static String m19(port) => "WebSocket 서비스 (포트: ${port})";
+
+  static String m20(id) => "창 ${id}";
+
+  static String m21(count) => "${count}개의 탭";
+
+  static String m22(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -574,18 +580,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("그럼 이제 RWKV와 채팅을 시작할 수 있습니다"),
     "thinking": MessageLookupByLibrary.simpleMessage("생각 중..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("추론: 자동"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "추론 모드: 자동",
-    ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "추론 모드: 높음",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
-      "추론 모드: 끔",
-    ),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("추론: 높음"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("추론: 끔"),
+    "thinking_mode_auto": m16,
+    "thinking_mode_high": m17,
+    "thinking_mode_off": m18,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("사고 모드 템플릿"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("이것은 세상에서 가장 어려운 스도쿠입니다"),
@@ -615,7 +612,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("음성 복제"),
     "web_search": MessageLookupByLibrary.simpleMessage("웹 검색"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
-    "websocket_service_port": m12,
+    "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "RWKV 채팅에 오신 것을 환영합니다",
     ),
@@ -625,11 +622,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("백"),
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
-    "window_id": m13,
+    "window_id": m20,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d페이지 찾음"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m21,
+    "you_are_now_using": m22,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV와 채팅을 시작할 수 있습니다",
     ),

@@ -11,7 +11,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
   const SecondaryOptionsButton({super.key});
 
   void _onTap() {
-    P.rwkv.onSecondaryOptionsTyped();
+    P.rwkv.onSecondaryOptionsTapped();
   }
 
   @override

@@ -49,13 +49,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "В очереди: ${count}";
 
-  static String m12(port) => "WebSocket-сервис (Порт: ${port})";
+  static String m16(footer) => "Мысли: Авто";
 
-  static String m13(id) => "Окно ${id}";
+  static String m17(footer) => "Мысли: Вкл";
 
-  static String m14(count) => "${count} вкладок";
+  static String m18(footer) => "Мысли: Выкл";
 
-  static String m15(modelName) => "Вы сейчас используете ${modelName}";
+  static String m19(port) => "WebSocket-сервис (Порт: ${port})";
+
+  static String m20(id) => "Окно ${id}";
+
+  static String m21(count) => "${count} вкладок";
+
+  static String m22(modelName) => "Вы сейчас используете ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -725,18 +731,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "Затем вы можете начать общаться с RWKV",
         ),
     "thinking": MessageLookupByLibrary.simpleMessage("Думаю..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("Мысли: Авто"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Автоматическое",
-    ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Всегда",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Выключено",
-    ),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("Мысли: Вкл"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("Мысли: Выкл"),
+    "thinking_mode_auto": m16,
+    "thinking_mode_high": m17,
+    "thinking_mode_off": m18,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон режима мышления",
     ),
@@ -778,7 +775,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон веб-поиска",
     ),
-    "websocket_service_port": m12,
+    "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Это RWKV Чат\n Добро пожаловать",
     ),
@@ -788,13 +785,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("Белые"),
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
-    "window_id": m13,
+    "window_id": m20,
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("Найдено %d страниц"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m21,
+    "you_are_now_using": m22,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "Теперь вы можете начать общаться с RWKV",
     ),

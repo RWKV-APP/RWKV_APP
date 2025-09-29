@@ -49,13 +49,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "Queued: ${count}";
 
-  static String m12(port) => "WebSocket Service (Port: ${port})";
+  static String m12(footer) => "Think${footer}: GPT";
 
-  static String m13(id) => "Window ${id}";
+  static String m13(footer) => "Think${footer}: GPT-high";
 
-  static String m14(count) => "${count} tabs";
+  static String m14(footer) => "Think${footer}: GPT-low";
 
-  static String m15(modelName) => "You are now using ${modelName}";
+  static String m15(footer) => "Think${footer}: Fast";
+
+  static String m16(footer) => "Think${footer}: Auto";
+
+  static String m17(footer) => "Think${footer}: High";
+
+  static String m18(footer) => "Think${footer}: Off";
+
+  static String m19(port) => "WebSocket Service (Port: ${port})";
+
+  static String m20(id) => "Window ${id}";
+
+  static String m21(count) => "${count} tabs";
+
+  static String m22(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -692,29 +706,23 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Then you can start to chat with RWKV",
         ),
-    "think_button_mode_en": MessageLookupByLibrary.simpleMessage("Think: GPT"),
-    "think_button_mode_en_long": MessageLookupByLibrary.simpleMessage(
-      "Think: GPT-high",
+    "think_button_mode_en": m12,
+    "think_button_mode_en_long": m13,
+    "think_button_mode_en_short": m14,
+    "think_button_mode_fast": m15,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "Thinking mode affects the performance of the model in thinking",
     ),
-    "think_button_mode_en_short": MessageLookupByLibrary.simpleMessage(
-      "Think: GPT-low",
-    ),
-    "think_button_mode_fast": MessageLookupByLibrary.simpleMessage(
-      "Think: Fast",
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "Please select a thinking mode",
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("Think: Auto"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "Reasoning Mode: Auto",
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage(
+      "ing Mode",
     ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "Reasoning Mode: High",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
-      "Reasoning Mode: Off",
-    ),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("Think: High"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("Think: Off"),
+    "thinking_mode_auto": m16,
+    "thinking_mode_high": m17,
+    "thinking_mode_off": m18,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Thinking Mode Template",
     ),
@@ -752,7 +760,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m12,
+    "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV Chat",
     ),
@@ -762,11 +770,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m13,
+    "window_id": m20,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m21,
+    "you_are_now_using": m22,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

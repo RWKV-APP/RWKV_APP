@@ -54,43 +54,73 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `推理: 快`
-  String get think_button_mode_fast {
+  /// `模式`
+  String get thinking_mode_alert_footer {
     return Intl.message(
-      '推理: 快',
+      '模式',
+      name: 'thinking_mode_alert_footer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请选择推理模式`
+  String get think_mode_selector_title {
+    return Intl.message(
+      '请选择推理模式',
+      name: 'think_mode_selector_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理模式会影响模型在推理时的表现`
+  String get think_mode_selector_message {
+    return Intl.message(
+      '推理模式会影响模型在推理时的表现',
+      name: 'think_mode_selector_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理{footer}: 快`
+  String think_button_mode_fast(Object footer) {
+    return Intl.message(
+      '推理$footer: 快',
       name: 'think_button_mode_fast',
       desc: '',
-      args: [],
+      args: [footer],
     );
   }
 
-  /// `推理: 英`
-  String get think_button_mode_en {
+  /// `推理{footer}: 英`
+  String think_button_mode_en(Object footer) {
     return Intl.message(
-      '推理: 英',
+      '推理$footer: 英',
       name: 'think_button_mode_en',
       desc: '',
-      args: [],
+      args: [footer],
     );
   }
 
-  /// `推理: 英短`
-  String get think_button_mode_en_short {
+  /// `推理{footer}: 英短`
+  String think_button_mode_en_short(Object footer) {
     return Intl.message(
-      '推理: 英短',
+      '推理$footer: 英短',
       name: 'think_button_mode_en_short',
       desc: '',
-      args: [],
+      args: [footer],
     );
   }
 
-  /// `推理: 英长`
-  String get think_button_mode_en_long {
+  /// `推理{footer}: 英长`
+  String think_button_mode_en_long(Object footer) {
     return Intl.message(
-      '推理: 英长',
+      '推理$footer: 英长',
       name: 'think_button_mode_en_long',
       desc: '',
-      args: [],
+      args: [footer],
     );
   }
 
@@ -274,58 +304,33 @@ class S {
     );
   }
 
-  /// `推理: 关`
-  String get thinking_mode_off {
-    return Intl.message('推理: 关', name: 'thinking_mode_off', desc: '', args: []);
+  /// `推理{footer}: 关`
+  String thinking_mode_off(Object footer) {
+    return Intl.message(
+      '推理$footer: 关',
+      name: 'thinking_mode_off',
+      desc: '',
+      args: [footer],
+    );
   }
 
-  /// `推理: 中`
-  String get thinking_mode_auto {
+  /// `推理{footer}: 中`
+  String thinking_mode_auto(Object footer) {
     return Intl.message(
-      '推理: 中',
+      '推理$footer: 中',
       name: 'thinking_mode_auto',
       desc: '',
-      args: [],
+      args: [footer],
     );
   }
 
-  /// `推理: 高`
-  String get thinking_mode_high {
+  /// `推理{footer}: 高`
+  String thinking_mode_high(Object footer) {
     return Intl.message(
-      '推理: 高',
+      '推理$footer: 高',
       name: 'thinking_mode_high',
       desc: '',
-      args: [],
-    );
-  }
-
-  /// `推理模式: 关`
-  String get thinking_mode_detail_off {
-    return Intl.message(
-      '推理模式: 关',
-      name: 'thinking_mode_detail_off',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `推理模式: 中`
-  String get thinking_mode_detail_auto {
-    return Intl.message(
-      '推理模式: 中',
-      name: 'thinking_mode_detail_auto',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `推理模式: 高`
-  String get thinking_mode_detail_high {
-    return Intl.message(
-      '推理模式: 高',
-      name: 'thinking_mode_detail_high',
-      desc: '',
-      args: [],
+      args: [footer],
     );
   }
 

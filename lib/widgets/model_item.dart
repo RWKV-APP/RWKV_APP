@@ -129,6 +129,15 @@ class ModelItem extends ConsumerWidget {
     if (!loadButtonTextShowLoad) {
       Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     }
+
+    final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
+
+    if (currentModelIsBefore20250922) {
+      P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Lighting());
+    } else {
+      P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Fast());
+    }
+
     pop();
   }
 

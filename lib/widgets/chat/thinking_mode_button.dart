@@ -11,7 +11,7 @@ class ThinkingModeButton extends ConsumerWidget {
   const ThinkingModeButton({super.key});
 
   void _onTap() {
-    P.rwkv.onThinkModeTyped();
+    P.rwkv.onThinkModeTapped();
   }
 
   @override
@@ -50,14 +50,14 @@ class ThinkingModeButton extends ConsumerWidget {
     final padding = const EI.s(h: 8);
 
     final text = switch (thinkingMode) {
-      thinking_mode.Lighting() => s.thinking_mode_auto,
-      thinking_mode.None() => s.thinking_mode_off,
-      thinking_mode.Free() => s.thinking_mode_high,
-      thinking_mode.PreferChinese() => s.thinking_mode_high,
-      thinking_mode.Fast() => s.think_button_mode_fast,
-      thinking_mode.En() => s.think_button_mode_en,
-      thinking_mode.EnShort() => s.think_button_mode_en_short,
-      thinking_mode.EnLong() => s.think_button_mode_en_long,
+      thinking_mode.Lighting() => s.thinking_mode_auto(""),
+      thinking_mode.None() => s.thinking_mode_off(""),
+      thinking_mode.Free() => s.thinking_mode_high(""),
+      thinking_mode.PreferChinese() => s.thinking_mode_high(""),
+      thinking_mode.Fast() => s.think_button_mode_fast(""),
+      thinking_mode.En() => s.think_button_mode_en(""),
+      thinking_mode.EnShort() => s.think_button_mode_en_short(""),
+      thinking_mode.EnLong() => s.think_button_mode_en_long(""),
     };
 
     final border = switch (thinkingMode) {

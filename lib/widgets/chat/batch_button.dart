@@ -29,7 +29,7 @@ class BatchButton extends ConsumerWidget {
 
     return IntrinsicWidth(
       child: GestureDetector(
-        onTap: P.rwkv.onBatchInferenceTyped,
+        onTap: P.rwkv.onBatchInferenceTapped,
         child: Container(
           height: height,
           decoration: BoxDecoration(

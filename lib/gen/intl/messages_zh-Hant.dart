@@ -45,13 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "排隊中: ${count}";
 
-  static String m12(port) => "WebSocket 服務 (連接埠: ${port})";
+  static String m16(footer) => "推理: 中";
 
-  static String m13(id) => "視窗 ${id}";
+  static String m17(footer) => "推理: 高";
 
-  static String m14(count) => "${count} 個分頁";
+  static String m18(footer) => "推理: 關";
 
-  static String m15(modelName) => "您目前正在使用 ${modelName}";
+  static String m19(port) => "WebSocket 服務 (連接埠: ${port})";
+
+  static String m20(id) => "視窗 ${id}";
+
+  static String m21(count) => "${count} 個分頁";
+
+  static String m22(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -523,16 +529,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然後您就可以開始與 RWKV 對話了"),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("推理: 中"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "推理模式: 中",
-    ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "推理模式: 高",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage("推理模式: 關"),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("推理: 高"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("推理: 關"),
+    "thinking_mode_auto": m16,
+    "thinking_mode_high": m17,
+    "thinking_mode_off": m18,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式範本"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("這是世界上最難的數獨"),
@@ -560,7 +559,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("聲音複製"),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
-    "websocket_service_port": m12,
+    "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "歡迎探索 RWKV Chat",
     ),
@@ -568,11 +567,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
-    "window_id": m13,
+    "window_id": m20,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m21,
+    "you_are_now_using": m22,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),
