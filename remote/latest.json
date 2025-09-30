@@ -473,7 +473,7 @@
         "socLimitations": ["8 Gen 3"]
       },
       {
-        "name": "RWKV7-G1a 1.5B (8s Gen 3)",
+        "name": "RWKV7-G1a 2.9B (8s Gen 3)",
         "modelSize": 2.9,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250923/rwkv7-g1a-2.9b-20250924-ctx4096-a16w4-8sgen3-batch.rmpack",
         "fileSize": 2318337904,
