@@ -437,21 +437,31 @@ class Message extends ConsumerWidget {
       ),
     );
 
-    return GestureDetector(
-      child: Align(
-        alignment: alignment,
-        child: IgnorePointer(
-          ignoring: editingIndex != null && editingIndex != index,
-          child: AnimatedOpacity(
-            opacity: opacity,
-            duration: 250.ms,
-            child: Padding(
-              padding: const EI.s(h: marginHorizontal, v: marginVertical),
-              child: Column(
-                children: [
-                  if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                  GestureDetector(onTap: _onTap, child: bubbleContent),
-                ],
+    return GptMarkdownTheme(
+      gptThemeData: GptMarkdownTheme.of(context).copyWith(
+        h1: TextStyle(fontSize: rawFontSize + 5),
+        h2: TextStyle(fontSize: rawFontSize + 4),
+        h3: TextStyle(fontSize: rawFontSize + 3),
+        h4: TextStyle(fontSize: rawFontSize + 2),
+        h5: TextStyle(fontSize: rawFontSize + 1),
+        h6: TextStyle(fontSize: rawFontSize),
+      ),
+      child: GestureDetector(
+        child: Align(
+          alignment: alignment,
+          child: IgnorePointer(
+            ignoring: editingIndex != null && editingIndex != index,
+            child: AnimatedOpacity(
+              opacity: opacity,
+              duration: 250.ms,
+              child: Padding(
+                padding: const EI.s(h: marginHorizontal, v: marginVertical),
+                child: Column(
+                  children: [
+                    if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
+                    GestureDetector(onTap: _onTap, child: bubbleContent),
+                  ],
+                ),
               ),
             ),
           ),
