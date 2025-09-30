@@ -451,61 +451,6 @@
         "socLimitations": ["8 Gen 2"]
       },
       {
-        "name": "RWKV7-G1a 2.9B (8 Elite)",
-        "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250923/rwkv7-g1a-2.9b-20250924-ctx4096-a16w4-8elite-batch.rmpack",
-        "fileSize": 2319230856,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite"]
-      },
-      {
-        "name": "RWKV7-G1a 2.9B (8 Gen 3)",
-        "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250923/rwkv7-g1a-2.9b-20250924-ctx4096-a16w4-8gen3-batch.rmpack",
-        "fileSize": 2316908424,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 3"]
-      },
-      {
-        "name": "RWKV7-G1a 1.5B (8s Gen 3)",
-        "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250923/rwkv7-g1a-2.9b-20250924-ctx4096-a16w4-8sgen3-batch.rmpack",
-        "fileSize": 2318337904,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8s Gen 3"]
-      },
-      {
-        "name": "RWKV7-G1a 2.9B (7+ Gen 3)",
-        "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250923/rwkv7-g1a-2.9b-20250924-ctx4096-a16w4-8sgen3-batch.rmpack",
-        "fileSize": 2318337904,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["7+ Gen 3"]
-      },
-      {
-        "name": "RWKV7-G1a 2.9B (8 Gen 2)",
-        "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250923/rwkv7-g1a-2.9b-20250924-ctx4096-a16w4-8gen2-batch.rmpack",
-        "fileSize": 2316810120,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 2"]
-      },
-      {
         "name": "RWKV7-G1 1.5B Neko (8 Elite)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.35-250923/rwkv7-g1-1.5b-Lonely-Neko-a16w8-8elite.bin",
