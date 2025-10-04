@@ -674,21 +674,10 @@ extension $RWKV on _RWKV {
       qqw("setPrompt: $prompt");
     }
 
-    switch (_thinkingMode.q) {
-      case thinking_mode.Lighting():
-      case thinking_mode.Fast():
-      case thinking_mode.Free():
-      case thinking_mode.En():
-      case thinking_mode.EnShort():
-      case thinking_mode.EnLong():
-      case thinking_mode.PreferChinese():
-        final custom = P.preference.promptTemplate;
-        final thinkingToken = custom.apply(_thinkingMode.q);
-        qqq("setThinkingToken: $thinkingToken");
-        send(to_rwkv.SetThinkingToken(thinkingToken));
-      case thinking_mode.None():
-        break;
-    }
+    final custom = P.preference.promptTemplate;
+    final thinkingToken = custom.apply(_thinkingMode.q);
+    qqq("setThinkingToken: $thinkingToken");
+    send(to_rwkv.SetThinkingToken(thinkingToken));
   }
 
   Future<void> resetSamplerParams({required bool enableReasoning}) async {
@@ -787,9 +776,12 @@ extension $RWKV on _RWKV {
       return;
     }
 
+    final current = thinkingMode.q;
+
     final res = await showConfirmationDialog(
       context: getContext()!,
       title: s.think_mode_selector_title,
+      initialSelectedActionKey: current,
       message: s.think_mode_selector_message,
       actions: [
         AlertDialogAction(label: s.thinking_mode_off(""), key: const thinking_mode.None()),
