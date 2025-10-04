@@ -20,7 +20,7 @@
       "args": [
         // "--dart-define=disableRemoteConfig=true",
         // "--dart-define=autoShowTranslator=true",
-        "--dart-define=logLevel=3",
+        // "--dart-define=logLevel=3",
         // "--dart-define=enableBatchInference=true",
         // "--dart-define=batchCount=4",
         // "--dart-define=batchVW=50",
@@ -28,7 +28,7 @@
         // "--dart-define=debuggingThemes=true",
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
         // "--dart-define=maxTokens=200",
-        "--dart-define=showHaloDebugger=true"
+        // "--dart-define=showHaloDebugger=true"
       ]
     },
     {
