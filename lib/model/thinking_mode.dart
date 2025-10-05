@@ -27,6 +27,7 @@ sealed class ThinkingMode {
   }
 }
 
+@Deprecated("Use Fast instead")
 class Lighting extends ThinkingMode {
   @override
   final String header = '<think>\n</think>';

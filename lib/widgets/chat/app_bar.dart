@@ -120,7 +120,7 @@ class ChatAppBar extends ConsumerWidget {
                       s: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 4, left: 1),
+                      padding: const EdgeInsets.only(bottom: 2, left: 1),
                       child: T(' $version', s: const TS(s: 8)),
                     ),
                   ],

@@ -23,12 +23,14 @@ enum PageKey {
   othello,
   sudoku,
   home,
-  talk;
+  talk,
+  neko;
 
   String get path => "/$name";
 
   Widget get scaffold => switch (this) {
     PageKey.chat => const PageChat(),
+    PageKey.neko => const PageChat(),
     PageKey.talk => const PageTalk(),
     PageKey.othello => const PageOthello(),
     PageKey.completion => const CompletionPage(),

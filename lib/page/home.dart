@@ -25,7 +25,7 @@ class PageHome extends ConsumerWidget {
         if (!loaded) return;
       } else if (nekoList.isNotEmpty) {
         Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
-        ModelSelector.show(nekoOnly: true);
+        ModelSelector.show(showNeko: true);
         return;
       } else {
         Alert.error('Neko is not available');
@@ -33,7 +33,7 @@ class PageHome extends ConsumerWidget {
       }
     }
     P.chat.startNewChat();
-    push(PageKey.chat);
+    push(PageKey.neko);
   }
 
   void _onChatTap() async {

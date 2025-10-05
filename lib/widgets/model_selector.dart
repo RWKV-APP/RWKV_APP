@@ -22,12 +22,12 @@ import 'package:zone/widgets/world_group_item.dart';
 import 'package:zone/widgets/model_item.dart';
 
 class ModelSelector extends ConsumerWidget {
-  final bool nekoOnly;
+  final bool showNeko;
   final ScrollController scrollController;
   static DemoType? _preferredDemoType;
 
   static Future<void> show({
-    bool nekoOnly = false,
+    bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
     if (P.fileManager.modelSelectorShown.q) return;
@@ -65,7 +65,7 @@ class ModelSelector extends ConsumerWidget {
         snap: false,
         builder: (context, scrollController) => ModelSelector(
           scrollController: scrollController,
-          nekoOnly: nekoOnly,
+          showNeko: showNeko,
         ),
       ),
     );
@@ -75,7 +75,11 @@ class ModelSelector extends ConsumerWidget {
     P.fileManager.modelSelectorShown.q = false;
   }
 
-  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly});
+  const ModelSelector({
+    super.key,
+    required this.scrollController,
+    required this.showNeko,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -92,7 +96,7 @@ class ModelSelector extends ConsumerWidget {
           children: [
             const _Header(),
             const _Hints(),
-            _ModelList(nekoOnly: nekoOnly),
+            _ModelList(showNeko: showNeko),
             16.h,
             paddingBottom.h,
           ],
@@ -150,9 +154,9 @@ class _Hints extends ConsumerWidget {
 }
 
 class _ModelList extends ConsumerWidget {
-  final bool nekoOnly;
+  final bool showNeko;
 
-  const _ModelList({required this.nekoOnly});
+  const _ModelList({required this.showNeko});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -196,7 +200,7 @@ class _ModelList extends ConsumerWidget {
       DemoType.tts => ttsCores.map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
       DemoType.chat || DemoType.sudoku =>
         availableModels
-            .where((e) => !nekoOnly || e.isNeko)
+            .where((e) => showNeko == e.isNeko)
             .sorted((a, b) {
               final aHasNpu = a.tags.contains("npu");
               final bHasNpu = b.tags.contains("npu");

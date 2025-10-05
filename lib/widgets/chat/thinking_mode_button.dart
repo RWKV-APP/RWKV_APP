@@ -30,7 +30,7 @@ class ThinkingModeButton extends ConsumerWidget {
       thinking_mode.Free() => primary,
       thinking_mode.PreferChinese() => primary,
       thinking_mode.En() => primary,
-      thinking_mode.EnShort() => primary,
+      thinking_mode.EnShort() => theme.colorScheme.surfaceContainer,
       thinking_mode.EnLong() => primary,
     };
 
@@ -41,7 +41,7 @@ class ThinkingModeButton extends ConsumerWidget {
       thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
       thinking_mode.Free() => theme.colorScheme.onPrimary,
       thinking_mode.En() => theme.colorScheme.onPrimary,
-      thinking_mode.EnShort() => theme.colorScheme.onPrimary,
+      thinking_mode.EnShort() => primary,
       thinking_mode.EnLong() => theme.colorScheme.onPrimary,
     };
 
@@ -61,10 +61,14 @@ class ThinkingModeButton extends ConsumerWidget {
     };
 
     final border = switch (thinkingMode) {
-      thinking_mode.Lighting() => Border.all(
-        color: textColor,
-      ),
-      _ => null,
+      thinking_mode.Lighting() => Border.all(color: textColor),
+      thinking_mode.None() => null,
+      thinking_mode.Free() => Border.all(color: textColor),
+      thinking_mode.PreferChinese() => Border.all(color: textColor),
+      thinking_mode.Fast() => Border.all(color: textColor),
+      thinking_mode.En() => Border.all(color: textColor),
+      thinking_mode.EnShort() => Border.all(color: textColor),
+      thinking_mode.EnLong() => Border.all(color: textColor),
     };
 
     return AnimatedSize(

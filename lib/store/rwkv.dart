@@ -778,19 +778,27 @@ extension $RWKV on _RWKV {
 
     final current = thinkingMode.q;
 
-    final res = await showConfirmationDialog(
+    final actionPairs = [
+      (label: s.thinking_mode_off(""), key: const thinking_mode.None()),
+      (label: s.think_button_mode_fast(""), key: const thinking_mode.Fast()),
+      (label: s.thinking_mode_high(""), key: const thinking_mode.Free()),
+      (label: s.think_button_mode_en(""), key: const thinking_mode.En()),
+      (label: s.think_button_mode_en_short(""), key: const thinking_mode.EnShort()),
+      (label: s.think_button_mode_en_long(""), key: const thinking_mode.EnLong()),
+    ];
+
+    final actions = actionPairs.map((e) {
+      final isCurrent = e.key == current;
+      final label = isCurrent ? "☑ ${e.label}" : e.label;
+      final key = e.key;
+      return SheetAction(label: label, key: key);
+    }).toList();
+
+    final res = await showModalActionSheet<thinking_mode.ThinkingMode>(
       context: getContext()!,
       title: s.think_mode_selector_title,
-      initialSelectedActionKey: current,
       message: s.think_mode_selector_message,
-      actions: [
-        AlertDialogAction(label: s.thinking_mode_off(""), key: const thinking_mode.None()),
-        AlertDialogAction(label: s.think_button_mode_fast(""), key: const thinking_mode.Fast()),
-        AlertDialogAction(label: s.thinking_mode_high(""), key: const thinking_mode.Free()),
-        AlertDialogAction(label: s.think_button_mode_en(""), key: const thinking_mode.En()),
-        AlertDialogAction(label: s.think_button_mode_en_short(""), key: const thinking_mode.EnShort()),
-        AlertDialogAction(label: s.think_button_mode_en_long(""), key: const thinking_mode.EnLong()),
-      ],
+      actions: actions,
     );
 
     if (res == null) return;
