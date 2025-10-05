@@ -49,11 +49,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "В очереди: ${count}";
 
-  static String m16(footer) => "Мысли: Авто";
+  static String m12(footer) => "Мышление${footer}: Англ";
 
-  static String m17(footer) => "Мысли: Вкл";
+  static String m13(footer) => "Мышление${footer}: Англ Длинно";
 
-  static String m18(footer) => "Мысли: Выкл";
+  static String m14(footer) => "Мышление${footer}: Англ Коротко";
+
+  static String m15(footer) => "Мышление${footer}: Быстро";
+
+  static String m16(footer) => "Мышление${footer}: Авто";
+
+  static String m17(footer) => "Мышление${footer}: Вкл";
+
+  static String m18(footer) => "Мышление${footer}: Выкл";
 
   static String m19(port) => "WebSocket-сервис (Порт: ${port})";
 
@@ -224,8 +232,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Цветовая схема как в системе",
     ),
     "completion_mode": MessageLookupByLibrary.simpleMessage("Режим дополнения"),
+    "comprehensive": MessageLookupByLibrary.simpleMessage("Всесторонний"),
     "confirm": MessageLookupByLibrary.simpleMessage("Подтвердить"),
-    "conservative": MessageLookupByLibrary.simpleMessage("Консервативный"),
+    "conservative": MessageLookupByLibrary.simpleMessage(
+      "Консервативный (подходит для математики и кода)",
+    ),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Продолжить загрузку",
     ),
@@ -388,6 +399,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "hide_stack": MessageLookupByLibrary.simpleMessage(
       "Скрыть стек цепочки мыслей",
     ),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "По умолчанию используется \'<think>好的\', в моделях, выпущенных до 21.09.2025, автоматически будет использоваться \'<think>嗯\'",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "Пример: System: Ты — могущественная большая языковая модель RWKV, и ты всегда терпеливо отвечаешь на вопросы пользователей.",
     ),
@@ -528,7 +542,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
-    "overseas": MessageLookupByLibrary.simpleMessage("(США)"),
+    "overseas": MessageLookupByLibrary.simpleMessage("(за рубежом)"),
     "pause": MessageLookupByLibrary.simpleMessage("Пауза"),
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Тест производительности",
@@ -730,7 +744,18 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Затем вы можете начать общаться с RWKV",
         ),
+    "think_button_mode_en": m12,
+    "think_button_mode_en_long": m13,
+    "think_button_mode_en_short": m14,
+    "think_button_mode_fast": m15,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "Режим мышления влияет на производительность модели при рассуждениях",
+    ),
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "Выберите режим мышления",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("Думаю..."),
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("Режим"),
     "thinking_mode_auto": m16,
     "thinking_mode_high": m17,
     "thinking_mode_off": m18,
@@ -777,7 +802,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
-      "Это RWKV Чат\n Добро пожаловать",
+      "Добро пожаловать в RWKV Чат",
     ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage(
       "Добро пожаловать в RWKV",

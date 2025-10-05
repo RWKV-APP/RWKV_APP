@@ -45,11 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "排隊中: ${count}";
 
-  static String m16(footer) => "推理: 中";
+  static String m12(footer) => "推理${footer}: 英";
 
-  static String m17(footer) => "推理: 高";
+  static String m13(footer) => "推理${footer}: 英長";
 
-  static String m18(footer) => "推理: 關";
+  static String m14(footer) => "推理${footer}: 英短";
+
+  static String m15(footer) => "推理${footer}: 快";
+
+  static String m16(footer) => "推理${footer}: 中";
+
+  static String m17(footer) => "推理${footer}: 高";
+
+  static String m18(footer) => "推理${footer}: 關";
 
   static String m19(port) => "WebSocket 服務 (連接埠: ${port})";
 
@@ -78,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "application_internal_test_group": MessageLookupByLibrary.simpleMessage(
       "應用程式內測群",
     ),
-    "application_language": MessageLookupByLibrary.simpleMessage("應用程式語言"),
+    "application_language": MessageLookupByLibrary.simpleMessage("應用語言"),
     "application_mode": MessageLookupByLibrary.simpleMessage("應用程式模式"),
     "application_settings": MessageLookupByLibrary.simpleMessage("應用程式設定"),
     "apply": MessageLookupByLibrary.simpleMessage("套用"),
@@ -174,7 +182,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "completion_mode": MessageLookupByLibrary.simpleMessage("續寫模式"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("綜合"),
     "confirm": MessageLookupByLibrary.simpleMessage("確認"),
-    "conservative": MessageLookupByLibrary.simpleMessage("保守"),
+    "conservative": MessageLookupByLibrary.simpleMessage("保守（適合數學和程式碼）"),
     "continue_download": MessageLookupByLibrary.simpleMessage("繼續下載"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "繼續使用較小模型",
@@ -224,6 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_app": MessageLookupByLibrary.simpleMessage("下載App"),
     "download_failed": MessageLookupByLibrary.simpleMessage("下載失敗"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage("從瀏覽器下載"),
+    "download_missing": MessageLookupByLibrary.simpleMessage("下載缺失檔案"),
     "download_model": MessageLookupByLibrary.simpleMessage("下載模型"),
     "download_server_": MessageLookupByLibrary.simpleMessage("下載伺服器(請試試哪個快)"),
     "download_source": MessageLookupByLibrary.simpleMessage("下載來源"),
@@ -288,6 +297,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hello, 請隨意 \n向我提問...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隱藏思維鏈堆疊"),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "預設使用 \'<think>好的\', 在 2025-09-21 前發佈的模型中, 會自動使用 \'<think>嗯\'",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "例子: System: 你是秦始皇，使用文言文，以居高臨下的態度與人溝通。",
     ),
@@ -456,7 +468,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
     "save": MessageLookupByLibrary.simpleMessage("儲存"),
-    "scan_qrcode": MessageLookupByLibrary.simpleMessage("掃描QR碼"),
+    "scan_qrcode": MessageLookupByLibrary.simpleMessage("掃描二維碼"),
     "screen_width": MessageLookupByLibrary.simpleMessage("螢幕寬度"),
     "search": MessageLookupByLibrary.simpleMessage("搜尋"),
     "search_breadth": MessageLookupByLibrary.simpleMessage("搜尋寬度"),
@@ -528,7 +540,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然後您就可以開始與 RWKV 對話了"),
+    "think_button_mode_en": m12,
+    "think_button_mode_en_long": m13,
+    "think_button_mode_en_short": m14,
+    "think_button_mode_fast": m15,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "推理模式會影響模型在推理時的表現",
+    ),
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "請選擇推理模式",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
     "thinking_mode_auto": m16,
     "thinking_mode_high": m17,
     "thinking_mode_off": m18,

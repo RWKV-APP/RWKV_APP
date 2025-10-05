@@ -45,11 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "キュー内：${count}";
 
-  static String m16(footer) => "思考：自動";
+  static String m12(footer) => "推論${footer}: 英語";
 
-  static String m17(footer) => "思考：高";
+  static String m13(footer) => "推論${footer}: 英語 長";
 
-  static String m18(footer) => "思考：オフ";
+  static String m14(footer) => "推論${footer}: 英語 短";
+
+  static String m15(footer) => "推論${footer}: 速い";
+
+  static String m16(footer) => "推論${footer}: 自動";
+
+  static String m17(footer) => "推論${footer}: 高";
+
+  static String m18(footer) => "推論${footer}: オフ";
 
   static String m19(port) => "WebSocketサービス（ポート：${port}）";
 
@@ -186,7 +194,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "completion_mode": MessageLookupByLibrary.simpleMessage("補完モード"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("包括的"),
     "confirm": MessageLookupByLibrary.simpleMessage("確認"),
-    "conservative": MessageLookupByLibrary.simpleMessage("保守的"),
+    "conservative": MessageLookupByLibrary.simpleMessage("保守的（数学やコードに適しています）"),
     "continue_download": MessageLookupByLibrary.simpleMessage("ダウンロードを続行"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "より小さいモデルの使用を続行",
@@ -213,7 +221,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("ダークモードテーマ"),
     "decode": MessageLookupByLibrary.simpleMessage("デコード"),
     "decode_param": MessageLookupByLibrary.simpleMessage("デコードパラメータ"),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage("ディープウェブ検索"),
+    "deep_web_search": MessageLookupByLibrary.simpleMessage("ディープネットワーク検索"),
     "default_": MessageLookupByLibrary.simpleMessage("デフォルト"),
     "delete": MessageLookupByLibrary.simpleMessage("削除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("すべて削除"),
@@ -239,6 +247,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_failed": MessageLookupByLibrary.simpleMessage("ダウンロードに失敗しました"),
     "download_from_browser": MessageLookupByLibrary.simpleMessage(
       "ブラウザからダウンロード",
+    ),
+    "download_missing": MessageLookupByLibrary.simpleMessage(
+      "不足しているファイルをダウンロード",
     ),
     "download_model": MessageLookupByLibrary.simpleMessage("モデルをダウンロード"),
     "download_server_": MessageLookupByLibrary.simpleMessage(
@@ -308,6 +319,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "こんにちは、\n何でも聞いてください...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("思考チェーンスタックを隠す"),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "デフォルトでは\'<think>好的\'を使用します。2025-09-21より前にリリースされたモデルでは、自動的に\'<think>嗯\'が使用されます",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "例：System: あなたは強力なRWKV大規模言語モデルで、常にユーザーの質問に辛抱強く答えます。",
     ),
@@ -578,7 +592,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黒"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("これでRWKVとのチャットを開始できます"),
+    "think_button_mode_en": m12,
+    "think_button_mode_en_long": m13,
+    "think_button_mode_en_short": m14,
+    "think_button_mode_fast": m15,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "推論モードは、モデルの推論時のパフォーマンスに影響します",
+    ),
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "推論モードを選択してください",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("モード"),
     "thinking_mode_auto": m16,
     "thinking_mode_high": m17,
     "thinking_mode_off": m18,
@@ -611,7 +636,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("非常に小さい (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("音声クローン"),
-    "web_search": MessageLookupByLibrary.simpleMessage("ウェブ検索"),
+    "web_search": MessageLookupByLibrary.simpleMessage("ネットワーク検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
     "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(

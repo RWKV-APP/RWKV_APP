@@ -46,11 +46,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "대기열: ${count}";
 
-  static String m16(footer) => "추론: 자동";
+  static String m12(footer) => "추론${footer}: 영어";
 
-  static String m17(footer) => "추론: 높음";
+  static String m13(footer) => "추론${footer}: 영어 길게";
 
-  static String m18(footer) => "추론: 끔";
+  static String m14(footer) => "추론${footer}: 영어 짧게";
+
+  static String m15(footer) => "추론${footer}: 빠름";
+
+  static String m16(footer) => "추론${footer}: 자동";
+
+  static String m17(footer) => "추론${footer}: 높음";
+
+  static String m18(footer) => "추론${footer}: 끔";
 
   static String m19(port) => "WebSocket 서비스 (포트: ${port})";
 
@@ -189,7 +197,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "completion_mode": MessageLookupByLibrary.simpleMessage("완성 모드"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("종합"),
     "confirm": MessageLookupByLibrary.simpleMessage("확인"),
-    "conservative": MessageLookupByLibrary.simpleMessage("보수적"),
+    "conservative": MessageLookupByLibrary.simpleMessage("보수적 (수학 및 코드에 적합)"),
     "continue_download": MessageLookupByLibrary.simpleMessage("다운로드 계속"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "더 작은 모델 계속 사용",
@@ -216,7 +224,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("다크 모드 테마"),
     "decode": MessageLookupByLibrary.simpleMessage("디코딩"),
     "decode_param": MessageLookupByLibrary.simpleMessage("디코딩 매개변수"),
-    "deep_web_search": MessageLookupByLibrary.simpleMessage("딥 웹 검색"),
+    "deep_web_search": MessageLookupByLibrary.simpleMessage("심층 네트워크 검색"),
     "default_": MessageLookupByLibrary.simpleMessage("기본값"),
     "delete": MessageLookupByLibrary.simpleMessage("삭제"),
     "delete_all": MessageLookupByLibrary.simpleMessage("모두 삭제"),
@@ -243,6 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_from_browser": MessageLookupByLibrary.simpleMessage(
       "브라우저에서 다운로드",
     ),
+    "download_missing": MessageLookupByLibrary.simpleMessage("누락된 파일 다운로드"),
     "download_model": MessageLookupByLibrary.simpleMessage("모델 다운로드"),
     "download_server_": MessageLookupByLibrary.simpleMessage(
       "다운로드 서버 (어떤 것이 빠른지 시도해보세요)",
@@ -311,6 +320,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "안녕하세요, 무엇이든 \n물어보세요...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("사고 체인 스택 숨기기"),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "기본적으로 \'<think>好的\'를 사용하며, 2025-09-21 이전에 출시된 모델에서는 자동으로 \'<think>嗯\'을 사용합니다",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "예: System: 당신은 강력한 RWKV 대규모 언어 모델이며, 항상 사용자의 질문에 참을성 있게 답변합니다.",
     ),
@@ -579,7 +591,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("검정"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("그럼 이제 RWKV와 채팅을 시작할 수 있습니다"),
+    "think_button_mode_en": m12,
+    "think_button_mode_en_long": m13,
+    "think_button_mode_en_short": m14,
+    "think_button_mode_fast": m15,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "추론 모드는 모델의 추론 성능에 영향을 미칩니다",
+    ),
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "추론 모드를 선택해주세요",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("생각 중..."),
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("모드"),
     "thinking_mode_auto": m16,
     "thinking_mode_high": m17,
     "thinking_mode_off": m18,
@@ -610,7 +633,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("매우 작게 (80%)"),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("음성 복제"),
-    "web_search": MessageLookupByLibrary.simpleMessage("웹 검색"),
+    "web_search": MessageLookupByLibrary.simpleMessage("네트워크 검색"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
     "websocket_service_port": m19,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
