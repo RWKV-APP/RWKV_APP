@@ -151,7 +151,7 @@ enum Argument {
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,
-    batchCount => 6,
+    batchCount => 8,
     batchVW => 80,
   };
 
