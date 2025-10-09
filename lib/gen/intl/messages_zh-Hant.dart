@@ -45,27 +45,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "排隊中: ${count}";
 
-  static String m12(footer) => "推理${footer}: 英";
+  static String m12(count) => "已選擇 ${count}";
 
-  static String m13(footer) => "推理${footer}: 英長";
+  static String m13(footer) => "推理${footer}: 英";
 
-  static String m14(footer) => "推理${footer}: 英短";
+  static String m14(footer) => "推理${footer}: 英長";
 
-  static String m15(footer) => "推理${footer}: 快";
+  static String m15(footer) => "推理${footer}: 英短";
 
-  static String m16(footer) => "推理${footer}: 中";
+  static String m16(footer) => "推理${footer}: 快";
 
-  static String m17(footer) => "推理${footer}: 高";
+  static String m17(footer) => "推理${footer}: 中";
 
-  static String m18(footer) => "推理${footer}: 關";
+  static String m18(footer) => "推理${footer}: 高";
 
-  static String m19(port) => "WebSocket 服務 (連接埠: ${port})";
+  static String m19(footer) => "推理${footer}: 關";
 
-  static String m20(id) => "視窗 ${id}";
+  static String m20(port) => "WebSocket 服務 (連接埠: ${port})";
 
-  static String m21(count) => "${count} 個分頁";
+  static String m21(id) => "視窗 ${id}";
 
-  static String m22(modelName) => "您目前正在使用 ${modelName}";
+  static String m22(count) => "${count} 個分頁";
+
+  static String m23(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -116,6 +118,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
       "並行推理每則訊息寬度",
     ),
+    "batch_management": MessageLookupByLibrary.simpleMessage("批量管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "benchmark": MessageLookupByLibrary.simpleMessage("基準測試"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("基準測試結果"),
@@ -134,6 +137,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "can_not_generate": MessageLookupByLibrary.simpleMessage("無法產生"),
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+    "cancel_all_selection": MessageLookupByLibrary.simpleMessage("取消全選"),
     "cancel_download": MessageLookupByLibrary.simpleMessage("取消下載"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("暫不更新"),
     "change": MessageLookupByLibrary.simpleMessage("變更"),
@@ -477,10 +481,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "searching": MessageLookupByLibrary.simpleMessage("搜尋中..."),
     "select_a_model": MessageLookupByLibrary.simpleMessage("選擇模型"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("選擇任務類型"),
+    "select_all": MessageLookupByLibrary.simpleMessage("全選"),
     "select_from_library": MessageLookupByLibrary.simpleMessage("從相簿選擇"),
     "select_image": MessageLookupByLibrary.simpleMessage("選擇圖片"),
     "select_model": MessageLookupByLibrary.simpleMessage("選擇模型"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("選擇新圖片"),
+    "selected_count": m12,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("傳送訊息給 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("伺服器錯誤"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("會話組態"),
@@ -540,10 +546,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然後您就可以開始與 RWKV 對話了"),
-    "think_button_mode_en": m12,
-    "think_button_mode_en_long": m13,
-    "think_button_mode_en_short": m14,
-    "think_button_mode_fast": m15,
+    "think_button_mode_en": m13,
+    "think_button_mode_en_long": m14,
+    "think_button_mode_en_short": m15,
+    "think_button_mode_fast": m16,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式會影響模型在推理時的表現",
     ),
@@ -552,9 +558,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
-    "thinking_mode_auto": m16,
-    "thinking_mode_high": m17,
-    "thinking_mode_off": m18,
+    "thinking_mode_auto": m17,
+    "thinking_mode_high": m18,
+    "thinking_mode_off": m19,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式範本"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("這是世界上最難的數獨"),
@@ -582,7 +588,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("聲音複製"),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
-    "websocket_service_port": m19,
+    "websocket_service_port": m20,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "歡迎探索 RWKV Chat",
     ),
@@ -590,11 +596,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
-    "window_id": m20,
+    "window_id": m21,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
-    "x_tabs": m21,
-    "you_are_now_using": m22,
+    "x_tabs": m22,
+    "you_are_now_using": m23,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),

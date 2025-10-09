@@ -1,5 +1,9 @@
 {
   "@@locale": "ja",
+  "selected_count": "選択された {count}",
+  "select_all": "すべて選択",
+  "cancel_all_selection": "すべて選択を解除",
+  "batch_management": "バッチ管理",
   "thinking_mode_alert_footer": "モード",
   "think_mode_selector_title": "推論モードを選択してください",
   "think_mode_selector_message": "推論モードは、モデルの推論時のパフォーマンスに影響します",

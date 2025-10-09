@@ -50,12 +50,14 @@ class _PageConversationState extends ConsumerState<PageConversation> {
   Widget build(BuildContext context) {
     final conversations = ref.watch(P.conversation.conversations);
     final isEmpty = conversations.isEmpty;
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
 
     return AppScaffold(
       body: Column(
         children: [
           _ConversationAppBar(alpha: _appBarAlpha),
           isEmpty ? const Expanded(child: _EmptyState()) : Expanded(child: _ConversationList()),
+          if (isBatchMode) const _BatchActionBar(),
         ],
       ),
     );
@@ -70,17 +72,43 @@ class _ConversationAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(P.app.customTheme);
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
+    final selectedConversations = ref.watch(P.conversation.selectedConversations);
+    final selectedCount = selectedConversations.length;
+    final conversations = ref.watch(P.conversation.conversations);
+    final isEmpty = conversations.isEmpty;
+    final s = S.of(context);
 
     return AppBar(
-      title: Text(S.of(context).conversations),
+      title: isBatchMode ? Text(s.selected_count(selectedCount)) : Text(s.conversations),
       backgroundColor: Colors.transparent,
       systemOverlayStyle: theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       primary: true,
       actions: [
-        IconButton(
-          onPressed: _handleNewChat,
-          icon: const FaIcon(FontAwesomeIcons.squarePlus),
-        ),
+        if (!isBatchMode)
+          IconButton(
+            onPressed: _handleNewChat,
+            icon: const FaIcon(FontAwesomeIcons.squarePlus),
+          ),
+        if (!isEmpty && !isBatchMode)
+          TextButton(
+            onPressed: () => P.conversation.toggleBatchMode(),
+            child: Text(s.batch_management),
+          ),
+        if (isBatchMode)
+          TextButton(
+            onPressed: selectedCount == conversations.length
+                ? () => P.conversation.clearSelection()
+                : () => P.conversation.selectAllConversations(),
+            child: Text(
+              selectedCount == conversations.length ? s.cancel_all_selection : s.select_all,
+            ),
+          ),
+        if (isBatchMode)
+          TextButton(
+            onPressed: () => P.conversation.toggleBatchMode(),
+            child: Text(s.cancel),
+          ),
       ],
     );
   }
@@ -122,13 +150,15 @@ class _ConversationSeparator extends StatelessWidget {
   }
 }
 
-class _ConversationDismissible extends StatelessWidget {
+class _ConversationDismissible extends ConsumerWidget {
   const _ConversationDismissible({required this.conversation});
 
   final ConversationData conversation;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
+    if (isBatchMode) return ConversationItem(conversation: conversation);
     return Dismissible(
       key: ValueKey(conversation.createdAtUS),
       background: const _DismissBackground(),
@@ -210,5 +240,60 @@ class _NewChatButton extends StatelessWidget {
   Future<void> _handleNewChat() async {
     await P.chat.startNewChat();
     push(PageKey.chat);
+  }
+}
+
+class _BatchActionBar extends ConsumerWidget {
+  const _BatchActionBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedConversations = ref.watch(P.conversation.selectedConversations);
+    final selectedCount = selectedConversations.length;
+    final hasSelection = selectedConversations.isNotEmpty;
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: theme.dividerColor.q(.2),
+            width: 1,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                '已选择: $selectedCount',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            FilledButton.icon(
+              onPressed: hasSelection ? () => _handleDelete(context) : null,
+              icon: const FaIcon(FontAwesomeIcons.trashCan, size: 16),
+              label: Text(S.of(context).delete),
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleDelete(BuildContext context) async {
+    await P.conversation.deleteSelectedConversations(context);
   }
 }

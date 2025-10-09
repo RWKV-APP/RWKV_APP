@@ -49,27 +49,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "Queued: ${count}";
 
-  static String m12(footer) => "Reasoning${footer}: EN";
+  static String m12(count) => "Selected ${count}";
 
-  static String m13(footer) => "Reasoning${footer}: EN Long";
+  static String m13(footer) => "Reasoning${footer}: EN";
 
-  static String m14(footer) => "Reasoning${footer}: EN Short";
+  static String m14(footer) => "Reasoning${footer}: EN Long";
 
-  static String m15(footer) => "Reasoning${footer}: Fast";
+  static String m15(footer) => "Reasoning${footer}: EN Short";
 
-  static String m16(footer) => "Reasoning${footer}: Auto";
+  static String m16(footer) => "Reasoning${footer}: Fast";
 
-  static String m17(footer) => "Reasoning${footer}: High";
+  static String m17(footer) => "Reasoning${footer}: Auto";
 
-  static String m18(footer) => "Reasoning${footer}: Off";
+  static String m18(footer) => "Reasoning${footer}: High";
 
-  static String m19(port) => "WebSocket Service (Port: ${port})";
+  static String m19(footer) => "Reasoning${footer}: Off";
 
-  static String m20(id) => "Window ${id}";
+  static String m20(port) => "WebSocket Service (Port: ${port})";
 
-  static String m21(count) => "${count} tabs";
+  static String m21(id) => "Window ${id}";
 
-  static String m22(modelName) => "You are now using ${modelName}";
+  static String m22(count) => "${count} tabs";
+
+  static String m23(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -142,6 +144,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
       "Batch Inference Each Message Width",
     ),
+    "batch_management": MessageLookupByLibrary.simpleMessage(
+      "Batch Management",
+    ),
     "beginner": MessageLookupByLibrary.simpleMessage("Beginner"),
     "benchmark": MessageLookupByLibrary.simpleMessage("Benchmark"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage(
@@ -162,6 +167,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "can_not_generate": MessageLookupByLibrary.simpleMessage("Cannot Generate"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancel_all_selection": MessageLookupByLibrary.simpleMessage(
+      "Cancel All Selection",
+    ),
     "cancel_download": MessageLookupByLibrary.simpleMessage("Cancel Download"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("Not now"),
     "change": MessageLookupByLibrary.simpleMessage("Change"),
@@ -627,6 +635,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Select a World Type",
     ),
+    "select_all": MessageLookupByLibrary.simpleMessage("Select All"),
     "select_from_library": MessageLookupByLibrary.simpleMessage(
       "Select from Library",
     ),
@@ -635,6 +644,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_new_image": MessageLookupByLibrary.simpleMessage(
       "Select New Image",
     ),
+    "selected_count": m12,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "Message RWKV",
     ),
@@ -714,10 +724,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Then you can start to chat with RWKV",
         ),
-    "think_button_mode_en": m12,
-    "think_button_mode_en_long": m13,
-    "think_button_mode_en_short": m14,
-    "think_button_mode_fast": m15,
+    "think_button_mode_en": m13,
+    "think_button_mode_en_long": m14,
+    "think_button_mode_en_short": m15,
+    "think_button_mode_fast": m16,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "The reasoning mode affects the model\'s performance during reasoning",
     ),
@@ -726,9 +736,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage(" Mode"),
-    "thinking_mode_auto": m16,
-    "thinking_mode_high": m17,
-    "thinking_mode_off": m18,
+    "thinking_mode_auto": m17,
+    "thinking_mode_high": m18,
+    "thinking_mode_off": m19,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Thinking Mode Template",
     ),
@@ -766,7 +776,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m19,
+    "websocket_service_port": m20,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV Chat",
     ),
@@ -776,11 +786,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m20,
+    "window_id": m21,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m21,
-    "you_are_now_using": m22,
+    "x_tabs": m22,
+    "you_are_now_using": m23,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

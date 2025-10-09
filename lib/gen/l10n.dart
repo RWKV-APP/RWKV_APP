@@ -54,6 +54,36 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `已选择 {count}`
+  String selected_count(Object count) {
+    return Intl.message(
+      '已选择 $count',
+      name: 'selected_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `全选`
+  String get select_all {
+    return Intl.message('全选', name: 'select_all', desc: '', args: []);
+  }
+
+  /// `取消全选`
+  String get cancel_all_selection {
+    return Intl.message(
+      '取消全选',
+      name: 'cancel_all_selection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `批量管理`
+  String get batch_management {
+    return Intl.message('批量管理', name: 'batch_management', desc: '', args: []);
+  }
+
   /// `模式`
   String get thinking_mode_alert_footer {
     return Intl.message(

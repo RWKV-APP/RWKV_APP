@@ -45,27 +45,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "キュー内：${count}";
 
-  static String m12(footer) => "推論${footer}: 英語";
+  static String m12(count) => "選択された ${count}";
 
-  static String m13(footer) => "推論${footer}: 英語 長";
+  static String m13(footer) => "推論${footer}: 英語";
 
-  static String m14(footer) => "推論${footer}: 英語 短";
+  static String m14(footer) => "推論${footer}: 英語 長";
 
-  static String m15(footer) => "推論${footer}: 速い";
+  static String m15(footer) => "推論${footer}: 英語 短";
 
-  static String m16(footer) => "推論${footer}: 自動";
+  static String m16(footer) => "推論${footer}: 速い";
 
-  static String m17(footer) => "推論${footer}: 高";
+  static String m17(footer) => "推論${footer}: 自動";
 
-  static String m18(footer) => "推論${footer}: オフ";
+  static String m18(footer) => "推論${footer}: 高";
 
-  static String m19(port) => "WebSocketサービス（ポート：${port}）";
+  static String m19(footer) => "推論${footer}: オフ";
 
-  static String m20(id) => "ウィンドウ ${id}";
+  static String m20(port) => "WebSocketサービス（ポート：${port}）";
 
-  static String m21(count) => "${count}個のタブ";
+  static String m21(id) => "ウィンドウ ${id}";
 
-  static String m22(modelName) => "現在、${modelName}を使用しています";
+  static String m22(count) => "${count}個のタブ";
+
+  static String m23(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -118,6 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
       "並列推論の各メッセージの幅",
     ),
+    "batch_management": MessageLookupByLibrary.simpleMessage("バッチ管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("初心者"),
     "benchmark": MessageLookupByLibrary.simpleMessage("ベンチマーク"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("ベンチマーク結果"),
@@ -136,6 +139,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "can_not_generate": MessageLookupByLibrary.simpleMessage("生成できません"),
     "cancel": MessageLookupByLibrary.simpleMessage("キャンセル"),
+    "cancel_all_selection": MessageLookupByLibrary.simpleMessage("すべて選択を解除"),
     "cancel_download": MessageLookupByLibrary.simpleMessage("ダウンロードをキャンセル"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("今すぐ更新しない"),
     "change": MessageLookupByLibrary.simpleMessage("変更"),
@@ -525,10 +529,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "searching": MessageLookupByLibrary.simpleMessage("検索中..."),
     "select_a_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("タスクの種類を選択"),
+    "select_all": MessageLookupByLibrary.simpleMessage("すべて選択"),
     "select_from_library": MessageLookupByLibrary.simpleMessage("ライブラリから選択"),
     "select_image": MessageLookupByLibrary.simpleMessage("画像を選択"),
     "select_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("新しい画像を選択"),
+    "selected_count": m12,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "RWKVにメッセージを送信",
     ),
@@ -592,10 +598,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黒"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("これでRWKVとのチャットを開始できます"),
-    "think_button_mode_en": m12,
-    "think_button_mode_en_long": m13,
-    "think_button_mode_en_short": m14,
-    "think_button_mode_fast": m15,
+    "think_button_mode_en": m13,
+    "think_button_mode_en_long": m14,
+    "think_button_mode_en_short": m15,
+    "think_button_mode_fast": m16,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推論モードは、モデルの推論時のパフォーマンスに影響します",
     ),
@@ -604,9 +610,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("モード"),
-    "thinking_mode_auto": m16,
-    "thinking_mode_high": m17,
-    "thinking_mode_off": m18,
+    "thinking_mode_auto": m17,
+    "thinking_mode_high": m18,
+    "thinking_mode_off": m19,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "思考モードテンプレート",
     ),
@@ -638,7 +644,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("音声クローン"),
     "web_search": MessageLookupByLibrary.simpleMessage("ネットワーク検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
-    "websocket_service_port": m19,
+    "websocket_service_port": m20,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "RWKVチャットへようこそ",
     ),
@@ -646,13 +652,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白"),
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
-    "window_id": m20,
+    "window_id": m21,
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%dページ見つかりました"),
-    "x_tabs": m21,
-    "you_are_now_using": m22,
+    "x_tabs": m22,
+    "you_are_now_using": m23,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

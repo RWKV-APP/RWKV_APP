@@ -128,16 +128,28 @@ class ConversationItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
     final color = P.conversation.getConversationColor(conversation);
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
+    final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.createdAtUS);
+
     return Material(
       child: GestureDetector(
-        onLongPressStart: (details) => _onLongPressStart(details, context),
+        onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
         child: InkWell(
-          onTap: _onTap,
+          onTap: isBatchMode ? () => _handleBatchSelection() : _onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (isBatchMode) ...[
+                  Center(
+                    child: Checkbox(
+                      value: isSelected,
+                      onChanged: (_) => _handleBatchSelection(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
                 Center(
                   child: Container(
                     margin: const EdgeInsets.only(top: 4),
@@ -177,5 +189,9 @@ class ConversationItem extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _handleBatchSelection() {
+    P.conversation.toggleConversationSelection(conversation.createdAtUS);
   }
 }
