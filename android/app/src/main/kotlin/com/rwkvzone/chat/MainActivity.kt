@@ -26,6 +26,7 @@ class MainActivity : FlutterActivity() {
                         result.error("INVALID_PATH", "Path cannot be null", null)
                     }
                 }
+
                 else -> {
                     result.notImplemented()
                 }

@@ -1,5 +1,4 @@
 // ignore: unused_import
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,104 +7,8 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/db/db.dart';
-import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
-
-class ConversationList extends ConsumerWidget {
-  const ConversationList({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final conversations = ref.watch(P.conversation.conversations);
-    final isEmpty = conversations.isEmpty;
-
-    if (isEmpty) {
-      return _HeaderWrapper(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: SizedBox(
-                height: constraints.maxHeight,
-                child: const _Empty(),
-              ),
-            );
-          },
-        ),
-      );
-    }
-
-    return _HeaderWrapper(
-      child: RefreshIndicator.adaptive(
-        onRefresh: () async {
-          P.app.hapticLight();
-          await P.conversation.load();
-        },
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          shrinkWrap: isEmpty,
-          padding: const EI.o(
-            t: 8,
-            b: 8,
-            l: 8,
-            r: 8,
-          ),
-          itemCount: isEmpty ? 0 : conversations.length,
-          itemBuilder: (context, index) {
-            final conversation = conversations[index];
-            return ConversationItem(conversation: conversation);
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class _Empty extends ConsumerWidget {
-  const _Empty();
-
-  void _onPressed() {
-    if (!checkModelSelection()) return;
-    push(PageKey.chat);
-    P.chat.startNewChat();
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        children: [
-          const Spacer(),
-          IconButton(
-            onPressed: _onPressed,
-            icon: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CAA.stretch,
-              children: [
-                12.h,
-                const Icon(Icons.add),
-                T(s.new_chat, s: const TS(s: 20), textAlign: TextAlign.center),
-                T(
-                  s.create_a_new_one_by_clicking_the_button_above,
-                  s: TS(s: 10, c: qb.q(.5)),
-                  textAlign: TextAlign.center,
-                ),
-                12.h,
-              ],
-            ),
-          ),
-          const Spacer(),
-        ],
-      ),
-    );
-  }
-}
 
 class ConversationItem extends ConsumerWidget {
   const ConversationItem({super.key, required this.conversation});
@@ -272,35 +175,6 @@ class ConversationItem extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _HeaderWrapper extends ConsumerWidget {
-  const _HeaderWrapper({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final paddingTop = ref.watch(P.app.paddingTop);
-    return Material(
-      color: kC,
-      child: Column(
-        children: [
-          (paddingTop + 12).h,
-          Row(
-            mainAxisAlignment: MAA.start,
-            children: [
-              12.w,
-              T(s.chat_history),
-            ],
-          ),
-          8.h,
-          Expanded(child: child),
-        ],
       ),
     );
   }
