@@ -208,7 +208,7 @@ class _MarkdownBody extends ConsumerWidget {
           GptMarkdown(
             output,
             textScaler: factorOfOutput,
-            style: TextStyle(color: qb.q(.5)),
+            style: TextStyle(color: qb.q(.9)),
           ),
       ],
     );
