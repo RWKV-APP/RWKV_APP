@@ -508,36 +508,39 @@ extension _$Chat on _Chat {
 
   /// 获取历史记录
   List<String> _history() {
-    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
+    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text).toList();
 
     if (messages.isEmpty) return [];
 
-    final result = <String>[];
-
+    // 如果只有一条消息，使用模板
     if (messages.length == 1) {
       final template = P.preference.promptTemplate.newChatTemplate.trim();
       if (template.isNotEmpty) {
-        final msgs = template.split("\n\n").where((e) => e.isNotEmpty);
-        result.addAll(msgs);
-        return result;
+        return template.split("\n\n").where((e) => e.isNotEmpty).toList();
       }
     }
 
-    final iterator = messages.iterator;
-    Message userMsg;
-    Message? botMsg;
-    while (iterator.moveNext()) {
-      userMsg = iterator.current;
-      botMsg = iterator.moveNext() ? iterator.current : null;
-      String content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
+    final result = <String>[];
+
+    // 按用户消息和机器人消息配对处理
+    for (int i = 0; i < messages.length; i += 2) {
+      final userMsg = messages[i];
+      final botMsg = i + 1 < messages.length ? messages[i + 1] : null;
+
+      // 处理用户消息
+      String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
       if (wenYanWen.q) {
-        content = '$content 请用文言文回答。';
+        userContent = '$userContent 请用文言文回答。';
       }
-      result.add(content);
-      if (botMsg == null) break;
-      final botContent = botMsg.getContentForHistory(appendThinkTagInThinkingTagIsEmpty: true);
-      result.add(botContent);
+      result.add(userContent);
+
+      // 处理机器人消息（如果存在）
+      if (botMsg != null) {
+        final botContent = botMsg.getHistoryContent();
+        result.add(botContent);
+      }
     }
+
     return result;
   }
 

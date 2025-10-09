@@ -248,13 +248,25 @@ extension MessageX on Message {
     if (!isCotFormat) return content;
     if (!containsCotEndMark) return content;
     if (paused) return content;
-    final (cotContent, cotResult) = getCotContentAndResult(
+    final (cotContent, cotResult) = _getCotContentAndResult(
       appendThinkTagInThinkingTagIsEmpty: appendThinkTagInThinkingTagIsEmpty,
     );
     return cotResult;
   }
 
-  (String cotContent, String cotResult) getCotContentAndResult({bool appendThinkTagInThinkingTagIsEmpty = false}) {
+  String getHistoryContent() {
+    if (!isReasoning) return content;
+    if (!isCotFormat) return content;
+    if (!containsCotEndMark) return content;
+    if (paused) return content;
+    final (cotContent, cotResult) = _getCotContentAndResult(
+      appendThinkTagInThinkingTagIsEmpty: true,
+    );
+    if (cotResult.length <= 200) return content;
+    return cotResult;
+  }
+
+  (String cotContent, String cotResult) _getCotContentAndResult({bool appendThinkTagInThinkingTagIsEmpty = false}) {
     if (!isCotFormat) return ("", "");
 
     if (!containsCotEndMark) return (content.substring(7), "");
