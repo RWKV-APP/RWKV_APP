@@ -400,9 +400,9 @@ extension $Chat on _Chat {
     _checkSensitive(message);
   }
 
-  Future<void> onStopButtonPressed() async {
+  Future<void> onStopButtonPressed({bool wantHaptic = true}) async {
     qqq("receiveId: ${receiveId.q}");
-    P.app.hapticLight();
+    if (wantHaptic) P.app.hapticLight();
     await Future.delayed(1.ms);
     final id = receiveId.q;
     if (id == null) {

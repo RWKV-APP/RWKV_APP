@@ -47,14 +47,15 @@ class _PageChatState extends State<PageChat> {
   @override
   Widget build(BuildContext context) {
     return PopScope<void>(
+      onPopInvokedWithResult: _onPopInvokedWithResult,
       child: const _Page(),
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) {
-          P.chat.isSharing.q = false;
-          P.chat.onStopButtonPressed();
-        }
-      },
     );
+  }
+
+  void _onPopInvokedWithResult(bool didPop, _) {
+    if (!didPop) return;
+    P.chat.isSharing.q = false;
+    P.chat.onStopButtonPressed(wantHaptic: false);
   }
 }
 

@@ -1,47 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zone/gen/l10n.dart' show S;
-import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
+import 'package:zone/store/p.dart';
 
-class PageTab extends StatefulWidget {
-  final Widget content;
+class PageTab extends ConsumerWidget {
+  final Widget child;
 
-  const PageTab({super.key, required this.content});
-
-  @override
-  State<PageTab> createState() => _PageTabState();
-}
-
-class _PageTabState extends State<PageTab> {
-  int _selectedIndex = 0;
-
-  void _onTabSelected(int index) async {
-    _selectedIndex = index;
-    setState(() {});
-    replace(PageKey.tabs[index]);
-  }
+  const PageTab({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final useBottomNavigationBar = screenWidth <= 600;
+    final tabIndex = ref.watch(P.app.tabIndex);
+    final s = S.of(context);
 
     final verticalLayout = Column(
       children: <Widget>[
-        Expanded(child: widget.content),
+        Expanded(child: child),
         SafeArea(
           top: false,
           child: Row(
             children: [
               Expanded(
-                child: buildItem(S.of(context).home, FontAwesomeIcons.house, 0),
+                child: _buildItem(ref, context, s.home, FontAwesomeIcons.house, 0),
               ),
               Expanded(
-                child: buildItem(S.of(context).conversations, FontAwesomeIcons.solidMessage, 1),
+                child: _buildItem(ref, context, s.conversations, FontAwesomeIcons.solidMessage, 1),
               ),
               Expanded(
-                child: buildItem(S.of(context).settings, FontAwesomeIcons.gear, 2),
+                child: _buildItem(ref, context, s.settings, FontAwesomeIcons.gear, 2),
               ),
             ],
           ),
@@ -52,43 +41,50 @@ class _PageTabState extends State<PageTab> {
     final horizontalLayout = Row(
       children: <Widget>[
         NavigationRail(
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _onTabSelected,
+          selectedIndex: tabIndex,
+          onDestinationSelected: P.app.onTabSelected,
           labelType: NavigationRailLabelType.all,
           destinations: <NavigationRailDestination>[
             NavigationRailDestination(
               icon: const Icon(Icons.home_outlined),
               selectedIcon: const Icon(Icons.home),
-              label: Text(S.of(context).home),
+              label: Text(s.home),
             ),
             NavigationRailDestination(
               icon: const Icon(Icons.chat_bubble_outline),
               selectedIcon: const Icon(Icons.chat_bubble),
-              label: Text(S.of(context).conversations),
+              label: Text(s.conversations),
             ),
             NavigationRailDestination(
               icon: const Icon(Icons.settings_outlined),
               selectedIcon: const Icon(Icons.settings),
-              label: Text(S.of(context).settings),
+              label: Text(s.settings),
             ),
           ],
         ),
         const VerticalDivider(thickness: 0.5, width: 0.5),
-        Expanded(child: widget.content),
+        Expanded(child: child),
       ],
     );
 
     return Scaffold(body: useBottomNavigationBar ? verticalLayout : horizontalLayout);
   }
 
-  Widget buildItem(String label, IconData icon, int index) {
+  Widget _buildItem(
+    WidgetRef ref,
+    BuildContext context,
+    String label,
+    IconData icon,
+    int index,
+  ) {
+    final selectedIndex = ref.watch(P.app.tabIndex);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final color = _selectedIndex == index
+    final color = selectedIndex == index
         ? (isDark ? Colors.grey.shade400 : theme.primaryColor) //
         : (isDark ? Colors.grey.shade800 : Colors.grey);
     return InkWell(
-      onTap: () => _onTabSelected(index),
+      onTap: () => P.app.onTabSelected(index),
       borderRadius: BorderRadius.circular(100),
       child: Column(
         children: [

@@ -56,7 +56,7 @@ class _PageConversationState extends ConsumerState<PageConversation> {
       body: Column(
         children: [
           _ConversationAppBar(alpha: _appBarAlpha),
-          isEmpty ? const Expanded(child: _EmptyState()) : Expanded(child: _ConversationList()),
+          isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
           if (isBatchMode) const _BatchActionBar(),
         ],
       ),
@@ -130,7 +130,7 @@ class _ConversationList extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 60),
       itemCount: conversations.length,
       cacheExtent: 200,
-      separatorBuilder: (context, index) => _ConversationSeparator(),
+      separatorBuilder: (context, index) => const _ConversationSeparator(),
       itemBuilder: (context, index) => _ConversationDismissible(conversation: conversations[index]),
     );
   }
