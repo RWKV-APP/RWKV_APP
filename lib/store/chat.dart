@@ -506,13 +506,11 @@ extension _$Chat on _Chat {
     qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
   }
 
-  /// 将完整的历史记录发送至推理引擎
+  /// 获取历史记录
   List<String> _history() {
     final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
 
-    if (messages.isEmpty) {
-      return [];
-    }
+    if (messages.isEmpty) return [];
 
     final result = <String>[];
 
@@ -521,6 +519,7 @@ extension _$Chat on _Chat {
       if (template.isNotEmpty) {
         final msgs = template.split("\n\n").where((e) => e.isNotEmpty);
         result.addAll(msgs);
+        return result;
       }
     }
 
