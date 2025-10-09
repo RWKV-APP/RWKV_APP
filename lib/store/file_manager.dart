@@ -106,24 +106,25 @@ extension $FileManager on _FileManager {
     ].expand((e) => e).where((e) => e.available).toList();
     final documentsDir = P.app.documentsDir.q;
     if (documentsDir == null) return;
-    final files = documentsDir.listSync();
+    final fileSystemEntities = documentsDir.listSync();
     const maxSizeBytes = 20 * 1024 * 1024; // 20MB
-    for (final file in files) {
-      if (fileInfos.any((e) => file.path.contains(e.fileName))) continue;
+    for (final entity in fileSystemEntities) {
+      if (entity is! File) continue;
+      if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
 
       // 不移除以 .tmp 结尾的文件
-      if (file.path.endsWith('.tmp')) {
+      if (entity.path.endsWith('.tmp')) {
         continue;
       }
 
       // 检查文件大小，只删除大于 20MB 的文件
-      final fileSize = await File(file.path).length();
+      final fileSize = await File(entity.path).length();
       if (fileSize <= maxSizeBytes) {
         continue;
       }
 
-      await file.delete();
-      qqw("delete file (size: ${fileSize} bytes): ${file.path}");
+      await entity.delete();
+      qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
     }
   }
 
