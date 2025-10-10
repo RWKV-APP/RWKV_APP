@@ -178,9 +178,17 @@ extension $FileManager on _FileManager {
     try {
       await task.start();
     } catch (e) {
-      qqe(e);
+      if (e.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+        Alert.error('SSL Certificate Verify Failed');
+      } else if (e.toString().toLowerCase().contains("timeout")) {
+        Alert.error('Network timeout');
+      } else if (e.toString().contains('HandshakeException')) {
+        Alert.error(S.current.network_error);
+      } else {
+        qqe(e);
+        Alert.error(S.current.download_failed);
+      }
       state.q = state.q.copyWith(state: TaskState.stopped);
-      rethrow;
     }
   }
 

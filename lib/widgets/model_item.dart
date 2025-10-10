@@ -249,13 +249,7 @@ class _DownloadActions extends StatelessWidget {
 
   void onDownloadTap(BuildContext context) async {
     await P.preference.tryShowBatteryOptimizationDialog(context);
-
-    try {
-      await P.fileManager.getFile(fileInfo: file);
-    } catch (e) {
-      qqe(e);
-      Alert.error(S.current.download_failed);
-    }
+    await P.fileManager.getFile(fileInfo: file);
   }
 
   @override
