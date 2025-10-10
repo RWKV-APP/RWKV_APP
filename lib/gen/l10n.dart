@@ -2867,6 +2867,16 @@ class S {
   String get comprehensive {
     return Intl.message('综合', name: 'comprehensive', desc: '', args: []);
   }
+
+  /// `下载%.1f% 速度%.1fMB/s 剩余%s`
+  String get str_downloading_info {
+    return Intl.message(
+      '下载%.1f% 速度%.1fMB/s 剩余%s',
+      name: 'str_downloading_info',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

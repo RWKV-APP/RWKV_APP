@@ -10,6 +10,7 @@ import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:rwkv_mobile_flutter/to_rwkv.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
@@ -348,12 +349,15 @@ class FileKeyItem extends ConsumerWidget {
     final fileSize = fileInfo.fileSize;
     final progress = localFile.progress / 100;
     final downloading = localFile.downloading;
-    double networkSpeed = localFile.networkSpeed;
-    if (networkSpeed < 0) networkSpeed = 0;
+    double networkSpeed = localFile.networkSpeed.clamp(0, 99999999).toDouble();
     Duration timeRemaining = localFile.timeRemaining;
     if (timeRemaining.isNegative) timeRemaining = Duration.zero;
     final primary = Theme.of(getContext()!).colorScheme.primary;
     final qb = ref.watch(P.app.qb);
+
+    final remainText = timeRemaining.inMinutes == 0
+        ? '${timeRemaining.inSeconds}s'
+        : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
 
     return Column(
       crossAxisAlignment: CAA.start,
@@ -394,12 +398,13 @@ class FileKeyItem extends ConsumerWidget {
         if (downloading)
           Wrap(
             children: [
-              T(s.speed),
-              T("${networkSpeed.toStringAsFixed(1)}MB/s"),
-              12.w,
-              T(s.remaining),
-              if (timeRemaining.inMinutes > 0) T("${timeRemaining.inMinutes}m"),
-              if (timeRemaining.inMinutes == 0) T("${timeRemaining.inSeconds}s"),
+              T(
+                sprintf(s.str_downloading_info, [progress * 100, networkSpeed, remainText]),
+                s: TextStyle(
+                  fontFamily: 'monospace',
+                  fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
+                ),
+              ),
             ],
           ),
       ],

@@ -421,5 +421,6 @@
   "custom": "自定义",
   "mode": "模式",
   "suggest": "推荐",
-  "comprehensive": "综合"
+  "comprehensive": "综合",
+  "str_downloading_info": "下载%.1f% 速度%.1fMB/s 剩余%s"
 }
