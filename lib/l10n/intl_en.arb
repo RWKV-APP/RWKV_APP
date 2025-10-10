@@ -398,5 +398,5 @@
   "mode": "Mode",
   "suggest": "Suggest",
   "comprehensive": "Comprehensive",
-  "str_downloading_info": "Downloaded %.1f% Speed %.1fMB/s Remain %s",
+  "str_downloading_info": "Downloaded %.1f% Speed %.1fMB/s Remain %s"
 }
