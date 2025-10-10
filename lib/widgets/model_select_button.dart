@@ -21,7 +21,7 @@ class ModelSelectButton extends ConsumerWidget {
         {
           DecodeParamType.defaults: S.current.default_,
           DecodeParamType.creative: S.current.creative,
-          DecodeParamType.conservative: S.current.conservative.split('（')[0],
+          DecodeParamType.conservative: S.current.conservative.split('(')[0].trim(),
           DecodeParamType.fixed: S.current.fixed,
           DecodeParamType.comprehensive: S.current.comprehensive,
           DecodeParamType.unknown: S.current.custom,
@@ -116,7 +116,7 @@ class ModelSelectButton extends ConsumerWidget {
           if (checked) const Icon(Icons.check, size: 16),
           if (!checked) const SizedBox(width: 16),
           const SizedBox(width: 8),
-          Text(text, style: const TextStyle(height: 1)),
+          Text(text, style: const TextStyle(height: 1), overflow: TextOverflow.ellipsis),
         ],
       ),
     );

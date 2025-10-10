@@ -2828,10 +2828,10 @@ class S {
     return Intl.message('创意', name: 'creative', desc: '', args: []);
   }
 
-  /// `保守（适合数学和代码）`
+  /// `保守 (适合数学和代码)`
   String get conservative {
     return Intl.message(
-      '保守（适合数学和代码）',
+      '保守 (适合数学和代码)',
       name: 'conservative',
       desc: '',
       args: [],
