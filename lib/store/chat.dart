@@ -287,13 +287,21 @@ extension $Chat on _Chat {
     bool isRegenerate = false,
   }) async {
     message = message.trim();
+
+    final currentModel = P.rwkv.currentModel.q;
+
+    if (currentModel == null) {
+      ModelSelector.show();
+      return;
+    }
+
     final thinkingMode = P.rwkv.thinkingMode.q;
-    if (!message.endsWith(thinkingMode.userMsgFooter)) {
+
+    if (thinkingMode.userMsgFooter.isNotEmpty) {
       message = message + thinkingMode.userMsgFooter;
     }
 
     MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
-
     final editingOrRegeneratingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (editingOrRegeneratingIndex != null) {
       final currentMessage = P.msg.findByIndex(editingOrRegeneratingIndex);
@@ -315,13 +323,13 @@ extension $Chat on _Chat {
       }
     }
 
-    late final Message? msg;
+    late final Message? userMsg;
 
     final id = HF.milliseconds;
 
     if (isRegenerate) {
       // 重新生成 Bot 消息, 所以, 不添加新的用户消息
-      msg = null;
+      userMsg = null;
       // 但是, 需要移除旧的 bot 消息
       parentNode.latest = null;
     } else {
@@ -340,7 +348,7 @@ extension $Chat on _Chat {
         }
       }
 
-      msg = Message(
+      userMsg = Message(
         id: id,
         content: message,
         isMine: true,
@@ -351,7 +359,7 @@ extension $Chat on _Chat {
         isReasoning: false,
         paused: false,
       );
-      P.msg._syncMsg(id, msg);
+      P.msg._syncMsg(id, userMsg);
       parentNode = parentNode.add(MsgNode(id));
     }
 
@@ -383,10 +391,10 @@ extension $Chat on _Chat {
       content: "",
       isMine: false,
       changing: true,
-      isReasoning: P.rwkv.reasoning.q,
+      isReasoning: thinkingMode.hasThinkTag,
       paused: false,
-      modelName: P.rwkv.currentModel.q?.name,
-      runningMode: P.rwkv.thinkingMode.q.toString(),
+      modelName: currentModel.name,
+      runningMode: thinkingMode.toString(),
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;
