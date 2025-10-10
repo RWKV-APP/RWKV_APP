@@ -223,7 +223,8 @@ extension $Chat on _Chat {
       );
       return;
     }
-    await send(userMessage.content, isRegenerate: true);
+    final content = userMessage.contentAndTails.first;
+    await send(content, isRegenerate: true);
   }
 
   Future<void> scrollToBottom({Duration? duration, bool? animate = true}) async {
@@ -278,7 +279,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> send(
-    String message, {
+    String raw, {
     MessageType type = MessageType.text,
     String? imageUrl,
     String? audioUrl,
@@ -286,7 +287,10 @@ extension $Chat on _Chat {
     bool withHistory = true,
     bool isRegenerate = false,
   }) async {
-    message = message.trim();
+    assert(!raw.contains(Config.userMsgModifierSep));
+
+    raw = raw.trim();
+    String message = raw;
 
     final currentModel = P.rwkv.currentModel.q;
 
@@ -296,10 +300,6 @@ extension $Chat on _Chat {
     }
 
     final thinkingMode = P.rwkv.thinkingMode.q;
-
-    if (thinkingMode.userMsgFooter.isNotEmpty) {
-      message = message + thinkingMode.userMsgFooter;
-    }
 
     MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
     final editingOrRegeneratingIndex = P.msg.editingOrRegeneratingIndex.q;
@@ -327,15 +327,24 @@ extension $Chat on _Chat {
 
     final id = HF.milliseconds;
 
+    if (thinkingMode.userMsgFooter.isNotEmpty) {
+      message = message + thinkingMode.userMsgFooter;
+    }
+
+    final parentMsg = P.msg.pool.q[parentNode.id];
     if (isRegenerate) {
       // 重新生成 Bot 消息, 所以, 不添加新的用户消息
-      userMsg = null;
+      userMsg = parentMsg;
       // 但是, 需要移除旧的 bot 消息
       parentNode.latest = null;
+      if (parentMsg != null) {
+        final newContent = parentMsg.content + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
+        final newUserMsg = parentMsg.copyWith(content: newContent);
+        P.msg._syncMsg(parentMsg.id, newUserMsg);
+      }
     } else {
       // 新增或编辑了用户消息
 
-      final parentMsg = P.msg.pool.q[parentNode.id];
       if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
         final selection = P.msg.batchSelection(parentMsg).q;
         if (selection != null) {
@@ -348,9 +357,10 @@ extension $Chat on _Chat {
         }
       }
 
+      final storedContent = raw + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
       userMsg = Message(
         id: id,
-        content: message,
+        content: storedContent,
         isMine: true,
         type: type,
         imageUrl: imageUrl,
@@ -403,9 +413,10 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
+    debugger();
     P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
 
-    _checkSensitive(message);
+    _checkSensitive(raw);
   }
 
   Future<void> onStopButtonPressed({bool wantHaptic = true}) async {

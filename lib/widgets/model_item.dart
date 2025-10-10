@@ -400,7 +400,7 @@ class FileKeyItem extends ConsumerWidget {
             children: [
               T(
                 sprintf(s.str_downloading_info, [progress * 100, networkSpeed, remainText]),
-                s: TextStyle(
+                s: const TextStyle(
                   fontFamily: 'monospace',
                   fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),

@@ -2,9 +2,7 @@ sealed class ThinkingMode {
   abstract final String header;
   final String userMsgFooter = "";
 
-  bool get hasThinkTag {
-    return header.startsWith("<think");
-  }
+  bool get hasThinkTag => header.startsWith("<think");
 
   const ThinkingMode();
 

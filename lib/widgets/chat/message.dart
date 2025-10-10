@@ -10,6 +10,7 @@ import 'package:photo_viewer/photo_viewer.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/args.dart';
+import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +135,7 @@ class Message extends ConsumerWidget {
     }
 
     if (isMine) finalContent = finalContent.replaceAll("\n\n", "\n");
+    if (isMine) finalContent = finalContent.split(Config.userMsgModifierSep)[0];
 
     switch (demoType) {
       case DemoType.tts:
