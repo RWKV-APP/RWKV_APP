@@ -21,7 +21,7 @@ class ModelSelectButton extends ConsumerWidget {
         {
           DecodeParamType.defaults: S.current.default_,
           DecodeParamType.creative: S.current.creative,
-          DecodeParamType.conservative: S.current.conservative,
+          DecodeParamType.conservative: S.current.conservative.split('（')[0],
           DecodeParamType.fixed: S.current.fixed,
           DecodeParamType.comprehensive: S.current.comprehensive,
           DecodeParamType.unknown: S.current.custom,
