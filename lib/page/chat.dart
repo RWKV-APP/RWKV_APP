@@ -9,6 +9,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
@@ -37,7 +38,7 @@ class _PageChatState extends State<PageChat> {
         final loaded = P.rwkv.currentModel.q != null;
         if (!loaded) {
           await Future.delayed(const Duration(milliseconds: 200));
-          ModelSelector.show();
+          ModelSelector.show(showNeko: P.app.pageKey.q == PageKey.neko);
         }
       });
     }
@@ -46,14 +47,15 @@ class _PageChatState extends State<PageChat> {
   @override
   Widget build(BuildContext context) {
     return PopScope<void>(
+      onPopInvokedWithResult: _onPopInvokedWithResult,
       child: const _Page(),
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) {
-          P.chat.isSharing.q = false;
-          P.chat.onStopButtonPressed();
-        }
-      },
     );
+  }
+
+  void _onPopInvokedWithResult(bool didPop, _) {
+    if (!didPop) return;
+    P.chat.isSharing.q = false;
+    P.chat.onStopButtonPressed(wantHaptic: false);
   }
 }
 

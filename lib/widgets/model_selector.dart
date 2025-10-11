@@ -23,14 +23,14 @@ import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
 
 class ModelSelector extends ConsumerWidget {
-  final bool nekoOnly;
   final bool rolePlayOnly;
+  final bool showNeko;
   final ScrollController scrollController;
   static DemoType? _preferredDemoType;
 
   static Future<void> show({
-    bool nekoOnly = false,
     bool rolePlayOnly = false,
+    bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
     if (P.fileManager.modelSelectorShown.q) return;
@@ -61,18 +61,16 @@ class ModelSelector extends ConsumerWidget {
     await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: .8,
-          maxChildSize: .9,
-          expand: false,
-          snap: false,
-
-          builder: (BuildContext context, ScrollController scrollController) {
-            return ModelSelector(scrollController: scrollController, nekoOnly: nekoOnly, rolePlayOnly: rolePlayOnly);
-          },
-        );
-      },
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: .8,
+        maxChildSize: .9,
+        expand: false,
+        snap: false,
+        builder: (context, scrollController) => ModelSelector(
+          scrollController: scrollController,
+          showNeko: showNeko,rolePlayOnly: rolePlayOnly
+        ),
+      ),
     );
 
     _preferredDemoType = null;
@@ -80,7 +78,7 @@ class ModelSelector extends ConsumerWidget {
     P.fileManager.modelSelectorShown.q = false;
   }
 
-  const ModelSelector({super.key, required this.scrollController, required this.nekoOnly, required this.rolePlayOnly});
+  const ModelSelector({super.key, required this.scrollController, required this.showNeko, required this.rolePlayOnly});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -97,7 +95,7 @@ class ModelSelector extends ConsumerWidget {
           children: [
             const _Header(),
             const _Hints(),
-            _ModelList(nekoOnly: nekoOnly, rolePlayOnly: rolePlayOnly),
+            _ModelList(showNeko: showNeko, rolePlayOnly: rolePlayOnly),
             16.h,
             paddingBottom.h,
           ],
@@ -155,10 +153,10 @@ class _Hints extends ConsumerWidget {
 }
 
 class _ModelList extends ConsumerWidget {
-  final bool nekoOnly;
+  final bool showNeko;
   final bool rolePlayOnly;
 
-  const _ModelList({required this.nekoOnly, required this.rolePlayOnly});
+  const _ModelList({required this.showNeko, required this.rolePlayOnly});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -210,7 +208,7 @@ class _ModelList extends ConsumerWidget {
       DemoType.tts => ttsCores.map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
       DemoType.chat || DemoType.sudoku =>
         availableModels
-            .where((e) => !nekoOnly || e.isNeko)
+            .where((e) => showNeko == e.isNeko)
             .sorted((a, b) {
               final aHasNpu = a.tags.contains("npu");
               final bHasNpu = b.tags.contains("npu");

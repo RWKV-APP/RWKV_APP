@@ -11,7 +11,7 @@ class ThinkingModeButton extends ConsumerWidget {
   const ThinkingModeButton({super.key});
 
   void _onTap() {
-    P.rwkv.onThinkModeTyped();
+    P.rwkv.onThinkModeTapped();
   }
 
   @override
@@ -25,16 +25,24 @@ class ThinkingModeButton extends ConsumerWidget {
 
     final color = switch (thinkingMode) {
       thinking_mode.Lighting() => theme.colorScheme.surfaceContainer,
+      thinking_mode.Fast() => theme.colorScheme.surfaceContainer,
       thinking_mode.None() => theme.colorScheme.surfaceContainer,
       thinking_mode.Free() => primary,
       thinking_mode.PreferChinese() => primary,
+      thinking_mode.En() => primary,
+      thinking_mode.EnShort() => theme.colorScheme.surfaceContainer,
+      thinking_mode.EnLong() => primary,
     };
 
     final textColor = switch (thinkingMode) {
       thinking_mode.Lighting() => primary,
+      thinking_mode.Fast() => primary,
       thinking_mode.None() => Colors.grey,
-      thinking_mode.Free() => theme.colorScheme.onPrimary,
       thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
+      thinking_mode.Free() => theme.colorScheme.onPrimary,
+      thinking_mode.En() => theme.colorScheme.onPrimary,
+      thinking_mode.EnShort() => primary,
+      thinking_mode.EnLong() => theme.colorScheme.onPrimary,
     };
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
@@ -42,17 +50,25 @@ class ThinkingModeButton extends ConsumerWidget {
     final padding = const EI.s(h: 8);
 
     final text = switch (thinkingMode) {
-      thinking_mode.Lighting() => s.thinking_mode_auto,
-      thinking_mode.None() => s.thinking_mode_off,
-      thinking_mode.Free() => s.thinking_mode_high,
-      thinking_mode.PreferChinese() => s.thinking_mode_high,
+      thinking_mode.Lighting() => s.thinking_mode_auto(""),
+      thinking_mode.None() => s.thinking_mode_off(""),
+      thinking_mode.Free() => s.thinking_mode_high(""),
+      thinking_mode.PreferChinese() => s.thinking_mode_high(""),
+      thinking_mode.Fast() => s.think_button_mode_fast(""),
+      thinking_mode.En() => s.think_button_mode_en(""),
+      thinking_mode.EnShort() => s.think_button_mode_en_short(""),
+      thinking_mode.EnLong() => s.think_button_mode_en_long(""),
     };
 
     final border = switch (thinkingMode) {
-      thinking_mode.Lighting() => Border.all(
-        color: textColor,
-      ),
-      _ => null,
+      thinking_mode.Lighting() => Border.all(color: textColor),
+      thinking_mode.None() => null,
+      thinking_mode.Free() => Border.all(color: textColor),
+      thinking_mode.PreferChinese() => Border.all(color: textColor),
+      thinking_mode.Fast() => Border.all(color: textColor),
+      thinking_mode.En() => Border.all(color: textColor),
+      thinking_mode.EnShort() => Border.all(color: textColor),
+      thinking_mode.EnLong() => Border.all(color: textColor),
     };
 
     return AnimatedSize(

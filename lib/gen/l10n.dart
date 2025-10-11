@@ -54,6 +54,136 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `已选择 {count}`
+  String selected_count(Object count) {
+    return Intl.message(
+      '已选择 $count',
+      name: 'selected_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `全选`
+  String get select_all {
+    return Intl.message('全选', name: 'select_all', desc: '', args: []);
+  }
+
+  /// `取消全选`
+  String get cancel_all_selection {
+    return Intl.message(
+      '取消全选',
+      name: 'cancel_all_selection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `批量管理`
+  String get batch_management {
+    return Intl.message('批量管理', name: 'batch_management', desc: '', args: []);
+  }
+
+  /// `模式`
+  String get thinking_mode_alert_footer {
+    return Intl.message(
+      '模式',
+      name: 'thinking_mode_alert_footer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请选择推理模式`
+  String get think_mode_selector_title {
+    return Intl.message(
+      '请选择推理模式',
+      name: 'think_mode_selector_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理模式会影响模型在推理时的表现`
+  String get think_mode_selector_message {
+    return Intl.message(
+      '推理模式会影响模型在推理时的表现',
+      name: 'think_mode_selector_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推理{footer}: 快`
+  String think_button_mode_fast(Object footer) {
+    return Intl.message(
+      '推理$footer: 快',
+      name: 'think_button_mode_fast',
+      desc: '',
+      args: [footer],
+    );
+  }
+
+  /// `推理{footer}: 英`
+  String think_button_mode_en(Object footer) {
+    return Intl.message(
+      '推理$footer: 英',
+      name: 'think_button_mode_en',
+      desc: '',
+      args: [footer],
+    );
+  }
+
+  /// `推理{footer}: 英短`
+  String think_button_mode_en_short(Object footer) {
+    return Intl.message(
+      '推理$footer: 英短',
+      name: 'think_button_mode_en_short',
+      desc: '',
+      args: [footer],
+    );
+  }
+
+  /// `推理{footer}: 英长`
+  String think_button_mode_en_long(Object footer) {
+    return Intl.message(
+      '推理$footer: 英长',
+      name: 'think_button_mode_en_long',
+      desc: '',
+      args: [footer],
+    );
+  }
+
+  /// `默认使用 '<think>好的', 在 2025-09-21 前发布的模型中, 会自动使用 '<think>嗯'`
+  String get hint_chinese_thinking_mode_template {
+    return Intl.message(
+      '默认使用 \'<think>好的\', 在 2025-09-21 前发布的模型中, 会自动使用 \'<think>嗯\'',
+      name: 'hint_chinese_thinking_mode_template',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `模型大小增加，请打开一个新的对话, 以提升对话质量`
+  String get model_size_increased_please_open_a_new_conversation {
+    return Intl.message(
+      '模型大小增加，请打开一个新的对话, 以提升对话质量',
+      name: 'model_size_increased_please_open_a_new_conversation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并行`
+  String get batch_inference_short {
+    return Intl.message(
+      '并行',
+      name: 'batch_inference_short',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `您的声音数据为空，请检查您的麦克风`
   String get your_voice_is_empty {
     return Intl.message(
@@ -74,13 +204,13 @@ class S {
     );
   }
 
-  /// `已选择第 {count} 条消息`
-  String batch_inference_selected(Object count) {
+  /// `已选择第 {index} 条消息`
+  String batch_inference_selected(Object index) {
     return Intl.message(
-      '已选择第 $count 条消息',
+      '已选择第 $index 条消息',
       name: 'batch_inference_selected',
       desc: '',
-      args: [count],
+      args: [index],
     );
   }
 
@@ -204,58 +334,33 @@ class S {
     );
   }
 
-  /// `推理: 关`
-  String get thinking_mode_off {
-    return Intl.message('推理: 关', name: 'thinking_mode_off', desc: '', args: []);
+  /// `推理{footer}: 关`
+  String thinking_mode_off(Object footer) {
+    return Intl.message(
+      '推理$footer: 关',
+      name: 'thinking_mode_off',
+      desc: '',
+      args: [footer],
+    );
   }
 
-  /// `推理: 中`
-  String get thinking_mode_auto {
+  /// `推理{footer}: 中`
+  String thinking_mode_auto(Object footer) {
     return Intl.message(
-      '推理: 中',
+      '推理$footer: 中',
       name: 'thinking_mode_auto',
       desc: '',
-      args: [],
+      args: [footer],
     );
   }
 
-  /// `推理: 高`
-  String get thinking_mode_high {
+  /// `推理{footer}: 高`
+  String thinking_mode_high(Object footer) {
     return Intl.message(
-      '推理: 高',
+      '推理$footer: 高',
       name: 'thinking_mode_high',
       desc: '',
-      args: [],
-    );
-  }
-
-  /// `推理模式: 关`
-  String get thinking_mode_detail_off {
-    return Intl.message(
-      '推理模式: 关',
-      name: 'thinking_mode_detail_off',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `推理模式: 中`
-  String get thinking_mode_detail_auto {
-    return Intl.message(
-      '推理模式: 中',
-      name: 'thinking_mode_detail_auto',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `推理模式: 高`
-  String get thinking_mode_detail_high {
-    return Intl.message(
-      '推理模式: 高',
-      name: 'thinking_mode_detail_high',
-      desc: '',
-      args: [],
+      args: [footer],
     );
   }
 
@@ -2723,9 +2828,14 @@ class S {
     return Intl.message('创意', name: 'creative', desc: '', args: []);
   }
 
-  /// `保守`
+  /// `保守 (适合数学和代码)`
   String get conservative {
-    return Intl.message('保守', name: 'conservative', desc: '', args: []);
+    return Intl.message(
+      '保守 (适合数学和代码)',
+      name: 'conservative',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `默认`
@@ -2753,6 +2863,21 @@ class S {
     return Intl.message('推荐', name: 'suggest', desc: '', args: []);
   }
 
+  /// `综合`
+  String get comprehensive {
+    return Intl.message('综合', name: 'comprehensive', desc: '', args: []);
+  }
+
+  /// `下载%.1f% 速度%.1fMB/s 剩余%s`
+  String get str_downloading_info {
+    return Intl.message(
+      '下载%.1f% 速度%.1fMB/s 剩余%s',
+      name: 'str_downloading_info',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `State 列表`
   String get state_list {
     return Intl.message('State 列表', name: 'state_list', desc: '', args: []);
@@ -2771,11 +2896,6 @@ class S {
       desc: '',
       args: [],
     );
-  }
-
-  /// `综合`
-  String get comprehensive {
-    return Intl.message('综合', name: 'comprehensive', desc: '', args: []);
   }
 }
 

@@ -73,6 +73,7 @@ extension _$Msg on _Msg {
     msgNode.q = MsgNode(0);
   }
 
+  /// 在内存和数据库中同时更新消息
   Future<bool> _syncMsg(int id, Message msg) async {
     // 在内存中更新消息
     pool.q = {...pool.q, id: msg};

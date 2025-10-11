@@ -7,6 +7,10 @@ class _Conversation {
 
   final interactingCreatedAtUS = qs<int?>(null);
 
+  // 批量选择相关状态
+  final isBatchMode = qs(false);
+  final selectedConversations = qs<Set<int>>({});
+
   static final _conversationColors = [
     for (int i = 0; i < 12; i++) HSLColor.fromAHSL(1.0, 30.0 * i, 0.4, 0.7).toColor(),
   ];
@@ -38,7 +42,7 @@ extension _$Conversation on _Conversation {
     final db = P.app._db;
 
     if (msgNode.isEmpty) {
-      qqq("msgNode is empty, skip upsert");
+      qqw("msgNode is empty, skip upsert");
       return;
     }
 
@@ -60,13 +64,11 @@ extension _$Conversation on _Conversation {
 extension $Conversation on _Conversation {
   Future<void> load() async {
     try {
-      qqq(HF.microseconds);
       final db = P.app._db;
       final list = await db.convPage();
-      qqq("${list.length}");
       conversations.q = list;
     } catch (e) {
-      qqq(e);
+      qqe(e);
       Sentry.captureException(e, stackTrace: StackTrace.current);
     }
   }
@@ -156,7 +158,6 @@ extension $Conversation on _Conversation {
   }
 
   void updateCurrentConvSubtitle(String subtitle) async {
-    qq;
     if (P.rwkv.inTTSOrTranslateMode.q) return;
     final id = P.conversation.currentCreatedAtUS.q;
     if (id == null) {
@@ -167,7 +168,6 @@ extension $Conversation on _Conversation {
     if (c.subtitle != null && c.subtitle!.length > 100) {
       return;
     }
-    qqq('update conversation subtitle');
     P.app._db.updateConv(id, subtitle: subtitle);
     await P.conversation.load();
   }
@@ -283,6 +283,89 @@ extension $Conversation on _Conversation {
     } catch (e) {
       qqe("Export conversation failed: $e");
       Alert.error(s.export_conversation_failed);
+    }
+  }
+
+  // 批量选择相关方法
+  void toggleBatchMode() {
+    qq;
+    isBatchMode.q = !isBatchMode.q;
+    if (!isBatchMode.q) {
+      selectedConversations.q = {};
+    }
+  }
+
+  void toggleConversationSelection(int createdAtUS) {
+    qq;
+    final selected = Set<int>.from(selectedConversations.q);
+    if (selected.contains(createdAtUS)) {
+      selected.remove(createdAtUS);
+    } else {
+      selected.add(createdAtUS);
+    }
+    selectedConversations.q = selected;
+  }
+
+  void selectAllConversations() {
+    qq;
+    final allIds = conversations.q.map((c) => c.createdAtUS).toSet();
+    selectedConversations.q = allIds;
+  }
+
+  void clearSelection() {
+    qq;
+    selectedConversations.q = {};
+  }
+
+  bool isConversationSelected(int createdAtUS) {
+    return selectedConversations.q.contains(createdAtUS);
+  }
+
+  Future<void> deleteSelectedConversations(BuildContext context) async {
+    qq;
+    if (P.rwkv.inTTSOrTranslateMode.q) return;
+
+    final s = S.of(context);
+    final selectedIds = selectedConversations.q;
+
+    if (selectedIds.isEmpty) return;
+
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: s.delete_conversation,
+      message: '确定要删除 ${selectedIds.length} 个对话吗？',
+      okLabel: s.delete,
+      cancelLabel: s.cancel,
+      isDestructiveAction: true,
+    );
+
+    if (result != OkCancelResult.ok) return;
+
+    try {
+      final db = P.app._db;
+
+      for (final createdAtUS in selectedIds) {
+        final allRelatedMsgIds = await _getAllMsgIdsFromConv(createdAtUS);
+        await db.deleteConv(createdAtUS);
+        await db.deleteMsgsByCreateAtInUS(allRelatedMsgIds);
+      }
+
+      await load();
+
+      // 清除当前对话状态如果被删除的对话是当前对话
+      if (selectedIds.contains(currentCreatedAtUS.q)) {
+        P.msg.ids.q = [];
+        P.msg.msgNode.q = MsgNode(0);
+        P.msg._clear();
+        currentCreatedAtUS.q = null;
+      }
+
+      // 退出批量模式
+      isBatchMode.q = false;
+      selectedConversations.q = {};
+    } catch (e) {
+      qqe("Batch delete conversations failed: $e");
+      Alert.error('删除对话失败');
     }
   }
 }

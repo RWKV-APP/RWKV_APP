@@ -53,21 +53,6 @@ android {
         }
     }
 
-    // signingConfigs {
-    //     debug {
-    //         keyAlias keystoreProperties['debug.keyAlias'] ?: 'androiddebugkey'
-    //         keyPassword keystoreProperties['debug.keyPassword'] ?: 'android'
-    //         storeFile keystoreProperties['debug.storeFile'] ? file(keystoreProperties['debug.storeFile']) : file('debug.keystore')
-    //         storePassword keystoreProperties['debug.storePassword'] ?: 'android'
-    //     }
-    //     release {
-    //         keyAlias keystoreProperties['release.keyAlias'] ?: 'rwkvapp'
-    //         keyPassword keystoreProperties['release.keyPassword'] ?: 'rwkvapp123'
-    //         storeFile keystoreProperties['release.storeFile'] ? file(keystoreProperties['release.storeFile']) : file('release.keystore')
-    //         storePassword keystoreProperties['release.storePassword'] ?: 'rwkvapp123'
-    //     }
-    // }
-
     buildTypes {
         debug {
             signingConfig signingConfigs.debug

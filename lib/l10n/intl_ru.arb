@@ -1,9 +1,22 @@
 {
   "@@locale": "ru",
+  "selected_count": "Выбрано {count}",
+  "select_all": "Выбрать все",
+  "cancel_all_selection": "Отменить выбор всех",
+  "batch_management": "Параллельное управление",
+  "thinking_mode_alert_footer": "Режим",
+  "think_mode_selector_title": "Выберите режим мышления",
+  "think_mode_selector_message": "Режим мышления влияет на производительность модели при рассуждениях",
+  "think_button_mode_fast": "Мышление{footer}: Быстро",
+  "think_button_mode_en": "Мышление{footer}: Англ",
+  "think_button_mode_en_short": "Мышление{footer}: Англ Коротко",
+  "think_button_mode_en_long": "Мышление{footer}: Англ Длинно",
+  "hint_chinese_thinking_mode_template": "По умолчанию используется '<think>好的', в моделях, выпущенных до 21.09.2025, автоматически будет использоваться '<think>嗯'",
+  "model_size_increased_please_open_a_new_conversation": "Размер модели увеличен, откройте новый диалог, чтобы улучшить качество диалога",
   "batch_inference_short": "Ветвление",
   "your_voice_is_empty": "Данные вашего голоса пусты, проверьте микрофон",
   "batch_inference_running": "Ветвление, генерируется {count} сообщений одновременно",
-  "batch_inference_selected": "Выбрано {count} сообщение",
+  "batch_inference_selected": "Выбрано {index} сообщение",
   "this_model_does_not_support_batch_inference": "Эта модель не поддерживает парралельный вывод, выберите модель с тегом \"batch\"",
   "enabled": "Включено",
   "disabled": "Выключено",
@@ -18,12 +31,9 @@
   "batch_inference_count_detail": "Каждый вывод сгенерирует {count} сообщений",
   "batch_inference_width": "Ширина отображения сообщения",
   "batch_inference_width_detail": "Ширина каждого сообщения при ветвлении",
-  "thinking_mode_off": "Мысли: Выкл",
-  "thinking_mode_auto": "Мысли: Авто",
-  "thinking_mode_high": "Мысли: Вкл",
-  "thinking_mode_detail_off": "Мышление: Выключено",
-  "thinking_mode_detail_auto": "Мышление: Автоматическое",
-  "thinking_mode_detail_high": "Мышление: Всегда",
+  "thinking_mode_off": "Мышление{footer}: Выкл",
+  "thinking_mode_auto": "Мышление{footer}: Авто",
+  "thinking_mode_high": "Мышление{footer}: Вкл",
   "download_all_missing": "Скачать все недостающие файлы",
   "tts": "Текст в речь",
   "tts_detail": "Позволить RWKV выводить голос",
@@ -157,7 +167,7 @@
   "new_game": "Новая игра",
   "rwkv": "RWKV",
   "prefill": "ввод",
-  "decode":  "вывод",
+  "decode": "вывод",
   "current_turn": "Текущий ход",
   "start_a_new_game": "Начать игру",
   "please_wait_for_the_model_to_generate": "Пожалуйста, подождите, пока модель сгенерирует ответ",
@@ -243,7 +253,7 @@
   "download_from_browser": "Скачать из браузера",
   "downloading": "Загрузка",
   "download_server_": "Сервер загрузки (выберите тот, что быстрее)",
-  "overseas": "(США)",
+  "overseas": "(за рубежом)",
   "x_message_selected": "Выбрано %d сообщений",
   "appearance": "Внешний вид",
   "dark_mode": "Тёмный режим",
@@ -282,6 +292,7 @@
   "str_model_selection_dialog_hint": "Для наилучшего опыта выберите 1.5B, 2.9B или больше.",
   "settings": "Настройки",
   "chat_history": "История чатов",
+  "source_code": "Исходный код",
   "search": "Поиск",
   "reference_source": "Источник",
   "analysing_result": "Анализ результатов поиска",
@@ -296,7 +307,7 @@
   "dont_ask_again": "Больше не спрашивать",
   "searching": "Поиск...",
   "search_failed": "Ошибка поиска",
-  "welcome_to_rwkv_chat": "Это RWKV Чат\n Добро пожаловать",
+  "welcome_to_rwkv_chat": "Добро пожаловать в RWKV Чат",
   "chat": "Чат",
   "neko": "Неко",
   "Completion": "Режим дополнения",
@@ -352,38 +363,13 @@
   "start_service": "Запустить службу",
   "lan_server": "LAN-сервер",
   "http_service_port": "HTTP-сервис (Порт: {port})",
-  "@http_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "websocket_service_port": "WebSocket-сервис (Порт: {port})",
-  "@websocket_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "browser_status": "Статус браузера",
   "no_browser_windows_connected": "Нет подключенных окон браузера",
   "start_service_and_open_browser": "Запустите службу и откройте поддерживаемую страницу браузера.",
   "window_id": "Окно {id}",
-  "@window_id": {
-    "placeholders": {
-      "id": {}
-    }
-  },
   "x_tabs": "{count} вкладок",
-  "@x_tabs": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "queued_x": "В очереди: {count}",
-  "@queued_x": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "translator_debug_info": "Отладочная информация переводчика",
   "cached_translations_memory": "Кэшированные переводы (память)",
   "cached_translations_disk": "Кэшированные переводы (диск)",
@@ -405,10 +391,11 @@
   "decode_param": "Параметры модели",
   "fixed": "Фиксированный",
   "creative": "Творческий",
-  "conservative": "Консервативный",
+  "conservative": "Консервативный (подходит для математики и кода)",
   "default_": "По умолчанию",
   "balanced": "Сбалансированный",
   "custom": "Пользовательский",
   "mode": "Режим",
-  "suggest": "Рекомендовать"
+  "suggest": "Рекомендовать",
+  "comprehensive": "Всесторонний"
 }

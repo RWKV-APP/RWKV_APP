@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 part of 'p.dart';
 
 class _FileManager {
@@ -93,6 +95,39 @@ extension $FileManager on _FileManager {
     await _initModelDownloadTaskState();
   }
 
+  Future<void> removeFilesNotInConfig() async {
+    qq;
+    final fileInfos = [
+      chatWeights.q,
+      ttsWeights.q,
+      worldWeights.q,
+      sudokuWeights.q,
+      othelloWeights.q,
+    ].expand((e) => e).where((e) => e.available).toList();
+    final documentsDir = P.app.documentsDir.q;
+    if (documentsDir == null) return;
+    final fileSystemEntities = documentsDir.listSync();
+    const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+    for (final entity in fileSystemEntities) {
+      if (entity is! File) continue;
+      if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
+
+      // 不移除以 .tmp 结尾的文件
+      if (entity.path.endsWith('.tmp')) {
+        continue;
+      }
+
+      // 检查文件大小，只删除大于 20MB 的文件
+      final fileSize = await File(entity.path).length();
+      if (fileSize <= maxSizeBytes) {
+        continue;
+      }
+
+      await entity.delete();
+      qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
+    }
+  }
+
   List<FileInfo> getNekoModel() {
     final nekos = _allChatWeights.q.where((e) => e.available && e.isNeko).toList();
     return nekos;
@@ -143,9 +178,17 @@ extension $FileManager on _FileManager {
     try {
       await task.start();
     } catch (e) {
-      qqe(e);
+      if (e.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+        Alert.error('SSL Certificate Verify Failed');
+      } else if (e.toString().toLowerCase().contains("timeout")) {
+        Alert.error('Network timeout');
+      } else if (e.toString().contains('HandshakeException')) {
+        Alert.error(S.current.network_error);
+      } else {
+        qqe(e);
+        Alert.error(S.current.download_failed);
+      }
       state.q = state.q.copyWith(state: TaskState.stopped);
-      rethrow;
     }
   }
 

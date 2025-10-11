@@ -16,18 +16,20 @@ class BatchButton extends ConsumerWidget {
     final height = textScaleFactor.scale(14) + 20;
     final surfaceContainer = theme.colorScheme.surfaceContainer;
     final batchEnabled = ref.watch(P.chat.batchEnabled);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
 
     final primary = theme.colorScheme.primary;
     final s = S.of(context);
 
     final bgColor = batchEnabled ? primary : surfaceContainer;
-    final textColor = batchEnabled ? kW : primary;
+    final textColor = batchEnabled ? qw.q(1) : qb.q(.667);
     final batchCount = ref.watch(P.chat.batchCount);
     final borderColor = batchEnabled ? primary : primary.q(.1);
 
     return IntrinsicWidth(
       child: GestureDetector(
-        onTap: P.rwkv.onBatchInferenceTyped,
+        onTap: P.rwkv.onBatchInferenceTapped,
         child: Container(
           height: height,
           decoration: BoxDecoration(
@@ -41,7 +43,7 @@ class BatchButton extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (batchEnabled) T(s.batch_inference_button(batchCount), s: TS(c: textColor)),
-              if (!batchEnabled) T(s.batch_inference, s: TS(c: textColor)),
+              if (!batchEnabled) T(s.batch_inference_short, s: TS(c: textColor)),
             ],
           ),
         ),

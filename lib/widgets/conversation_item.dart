@@ -1,22 +1,20 @@
 // ignore: unused_import
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_roleplay/flutter_roleplay.dart';
+import 'package:flutter_roleplay/models/chat_message_model.dart' show ChatMessage;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/db/db.dart';
-import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 
 class ConversationListItemData {
-  final String id;
+  final int id;
   final String? avatar;
   final ConversationData? conv;
   final String? roleName;
@@ -45,7 +43,7 @@ class ConversationListItemData {
     return ConversationListItemData(
       conv: cov,
       sortKey: cov.updatedAtUS ?? cov.createdAtUS,
-      id: cov.createdAtUS.toString(),
+      id: cov.createdAtUS,
       title: cov.title,
       subtitle: cov.subtitle ?? '-',
       displayTime: getDisplayTime(cov.updatedAtUS ?? cov.createdAtUS),
@@ -55,7 +53,7 @@ class ConversationListItemData {
   static ConversationListItemData fromRoleplay(ChatMessage cm, String avatar) {
     return ConversationListItemData(
       sortKey: cm.timestamp.microsecondsSinceEpoch,
-      id: cm.timestamp.microsecondsSinceEpoch.toString(),
+      id: cm.timestamp.microsecondsSinceEpoch,
       avatar: avatar,
       title: cm.roleName,
       subtitle: cm.content,
@@ -75,99 +73,6 @@ class ConversationListItemData {
       showTime = sprintf('%02d-%02d', [datetime.month, datetime.day]);
     }
     return showTime;
-  }
-}
-
-class ConversationList extends ConsumerWidget {
-  const ConversationList({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final conversations = ref.watch(P.conversation.conversations);
-    final isEmpty = conversations.isEmpty;
-
-    if (isEmpty) {
-      return _HeaderWrapper(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: SizedBox(
-                height: constraints.maxHeight,
-                child: const _Empty(),
-              ),
-            );
-          },
-        ),
-      );
-    }
-
-    return _HeaderWrapper(
-      child: RefreshIndicator.adaptive(
-        onRefresh: () async {
-          P.app.hapticLight();
-          await P.conversation.load();
-        },
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          shrinkWrap: isEmpty,
-          padding: const EI.o(
-            t: 8,
-            b: 8,
-            l: 8,
-            r: 8,
-          ),
-          itemCount: isEmpty ? 0 : conversations.length,
-          itemBuilder: (context, index) {
-            final conversation = conversations[index];
-            return ConversationItem(conversation: ConversationListItemData.fromConv(conversation));
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class _Empty extends ConsumerWidget {
-  const _Empty();
-
-  void _onPressed() {
-    if (!checkModelSelection()) return;
-    push(PageKey.chat);
-    P.chat.startNewChat();
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        children: [
-          const Spacer(),
-          IconButton(
-            onPressed: _onPressed,
-            icon: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CAA.stretch,
-              children: [
-                12.h,
-                const Icon(Icons.add),
-                T(s.new_chat, s: const TS(s: 20), textAlign: TextAlign.center),
-                T(
-                  s.create_a_new_one_by_clicking_the_button_above,
-                  s: TS(s: 10, c: qb.q(.5)),
-                  textAlign: TextAlign.center,
-                ),
-                12.h,
-              ],
-            ),
-          ),
-          const Spacer(),
-        ],
-      ),
-    );
   }
 }
 
@@ -280,17 +185,29 @@ class ConversationItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
-    final color = P.conversation.getConversationColor(conversation.sortKey);
+    final color = P.conversation.getConversationColor(conversation.id);
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
+    final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
+
     return Material(
       child: GestureDetector(
-        onLongPressStart: (details) => _onLongPressStart(details, context),
+        onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
         child: InkWell(
-          onTap: () => _onTap(context),
+          onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (isBatchMode) ...[
+                  Center(
+                    child: Checkbox(
+                      value: isSelected,
+                      onChanged: (_) => _handleBatchSelection(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
                 Center(
                   child: Container(
                     height: 40,
@@ -316,7 +233,7 @@ class ConversationItem extends ConsumerWidget {
                       ),
                       4.h,
                       T(
-                        conversation.subtitle ?? '-',
+                        conversation.subtitle,
                         s: const TS(s: 12, c: Colors.grey),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -343,33 +260,8 @@ class ConversationItem extends ConsumerWidget {
     }
     return Image.network(conversation.avatar!, fit: BoxFit.cover, height: 40, width: 40);
   }
-}
 
-class _HeaderWrapper extends ConsumerWidget {
-  const _HeaderWrapper({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final paddingTop = ref.watch(P.app.paddingTop);
-    return Material(
-      color: kC,
-      child: Column(
-        children: [
-          (paddingTop + 12).h,
-          Row(
-            mainAxisAlignment: MAA.start,
-            children: [
-              12.w,
-              T(s.chat_history),
-            ],
-          ),
-          8.h,
-          Expanded(child: child),
-        ],
-      ),
-    );
+  void _handleBatchSelection() {
+    P.conversation.toggleConversationSelection(conversation.id);
   }
 }

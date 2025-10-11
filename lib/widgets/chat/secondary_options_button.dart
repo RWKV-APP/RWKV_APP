@@ -11,7 +11,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
   const SecondaryOptionsButton({super.key});
 
   void _onTap() {
-    P.rwkv.onSecondaryOptionsTyped();
+    P.rwkv.onSecondaryOptionsTapped();
   }
 
   @override
@@ -25,16 +25,24 @@ class SecondaryOptionsButton extends ConsumerWidget {
 
     final color = switch (thinkingMode) {
       thinking_mode.Lighting() => kC,
+      thinking_mode.Fast() => kC,
       thinking_mode.Free() => theme.colorScheme.surfaceContainer,
       thinking_mode.None() => kC,
       thinking_mode.PreferChinese() => primary,
+      thinking_mode.En() => primary,
+      thinking_mode.EnShort() => primary,
+      thinking_mode.EnLong() => primary,
     };
 
     final textColor = switch (thinkingMode) {
       thinking_mode.Lighting() => Colors.grey,
+      thinking_mode.Fast() => Colors.grey,
       thinking_mode.None() => theme.colorScheme.onPrimary,
       thinking_mode.Free() => Colors.grey,
       thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
+      thinking_mode.En() => theme.colorScheme.onPrimary,
+      thinking_mode.EnShort() => theme.colorScheme.onPrimary,
+      thinking_mode.EnLong() => theme.colorScheme.onPrimary,
     };
 
     final iconWidget = switch (thinkingMode) {
@@ -62,9 +70,13 @@ class SecondaryOptionsButton extends ConsumerWidget {
 
     final padding = switch (thinkingMode) {
       thinking_mode.Lighting() => const EI.s(h: 0),
+      thinking_mode.Fast() => const EI.s(h: 0),
       thinking_mode.None() => const EI.s(h: 0),
       thinking_mode.Free() => const EI.s(h: 12),
       thinking_mode.PreferChinese() => const EI.s(h: 12),
+      thinking_mode.En() => const EI.s(h: 12),
+      thinking_mode.EnShort() => const EI.s(h: 12),
+      thinking_mode.EnLong() => const EI.s(h: 12),
     };
 
     return AnimatedSize(

@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_roleplay/flutter_roleplay.dart';
-import 'package:flutter_roleplay/models/model_info.dart';
+import 'package:flutter_roleplay/models/model_info.dart' show ModelInfo;
+import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:zone/model/file_info.dart';

@@ -36,6 +36,7 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <th style="text-align: center;">RWKV Talk</th>
 <th style="text-align: center;">RWKV Sudoku</th>
 <th style="text-align: center;">RWKV Othello</th>
+<th style="text-align: center;">RWKV Music (Another repo)</th>
 </tr>
 </thead>
 <tbody>
@@ -46,6 +47,7 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Talk/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-see">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Sudoku/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-sudoku">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Othello/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-othello">pgyer</a></td>
+<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-music">pgyer</a></td>
 </tr>
 <tr>
 <td style="text-align: center;">iOS</td>
@@ -54,15 +56,18 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/mfsdWS4b">testflight</a></td>
 <td style="text-align: center;">-</td>
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/f5SVf76c">testflight</a></td>
+<td style="text-align: center;">-</td>
 </tr>
 <tr>
 <td style="text-align: center;" rowspan="2">Windows</td>
 <td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;" colspan="1" ><a href="https://apps.microsoft.com/detail/xpdc65wjh8ws17?hl=en-US&gl=US">Microsoft Store</a></td>
 </tr>
 <tr></tr>
 <tr>
 <td style="text-align: center;" rowspan="2">macOS</td>
 <td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;">-</td>
 </tr>
 <tr></tr>
 </tbody>

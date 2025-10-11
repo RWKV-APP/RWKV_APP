@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/message_type.dart';
 import 'package:zone/model/ref_info.dart';
@@ -230,7 +231,7 @@ extension MessageX on Message {
 
   /// Append web search reference text behind of the user input content
   String getContentForHistoryWithRef(RefInfo? reference) {
-    final contentForHistory = getContentForHistory();
+    final contentForHistory = _getContentForHistory();
     if (!isMine || reference == null) {
       return contentForHistory;
     }
@@ -243,18 +244,31 @@ extension MessageX on Message {
     }
   }
 
-  String getContentForHistory({bool appendThinkTagInThinkingTagIsEmpty = false}) {
+  String _getContentForHistory({bool appendThinkTagInThinkingTagIsEmpty = false}) {
+    if (isMine) return contentAndTails.first + contentAndTails.last;
     if (!isReasoning) return content;
     if (!isCotFormat) return content;
     if (!containsCotEndMark) return content;
     if (paused) return content;
-    final (cotContent, cotResult) = getCotContentAndResult(
+    final (cotContent, cotResult) = _getCotContentAndResult(
       appendThinkTagInThinkingTagIsEmpty: appendThinkTagInThinkingTagIsEmpty,
     );
     return cotResult;
   }
 
-  (String cotContent, String cotResult) getCotContentAndResult({bool appendThinkTagInThinkingTagIsEmpty = false}) {
+  String getHistoryContent() {
+    if (!isReasoning) return content;
+    if (!isCotFormat) return content;
+    if (!containsCotEndMark) return content;
+    if (paused) return content;
+    final (cotContent, cotResult) = _getCotContentAndResult(
+      appendThinkTagInThinkingTagIsEmpty: true,
+    );
+    if (cotResult.length <= 200) return content;
+    return cotResult;
+  }
+
+  (String cotContent, String cotResult) _getCotContentAndResult({bool appendThinkTagInThinkingTagIsEmpty = false}) {
     if (!isCotFormat) return ("", "");
 
     if (!containsCotEndMark) return (content.substring(7), "");
@@ -277,4 +291,6 @@ extension MessageX on Message {
 
 extension BatchMessage on Message {
   (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) get batchInfo => getBatchInfo(content);
+
+  List<String> get contentAndTails => content.split(Config.userMsgModifierSep);
 }

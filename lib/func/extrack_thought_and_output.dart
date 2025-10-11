@@ -9,9 +9,9 @@ import 'package:halo/halo.dart';
     final thinkTagEndIndex = text.indexOf("</think>");
     if (thinkTagEndIndex == -1) {
       if (text.contains("<think>\n")) {
-        return (text.replaceFirst("<think>\n", ""), "");
+        return (text.replaceFirst("<think>\n", "").trim(), "");
       }
-      return (text.replaceFirst("<think>", ""), "");
+      return (text.replaceFirst("<think>", "").trim(), "");
     }
     final thought = text
         .substring(thinkTagStartIndex, thinkTagEndIndex)
@@ -21,7 +21,7 @@ import 'package:halo/halo.dart';
     int outputStartIndex = thinkTagEndIndex + 9;
     if (outputStartIndex >= text.length) return (thought, "");
     final output = text.substring(outputStartIndex).replaceAll("<EOD>", "");
-    return (thought, output);
+    return (thought.trim().replaceAll("\n\n", "\n"), output.trim().replaceAll("\n\n", "\n"));
   } catch (e) {
     final startIndex = text.indexOf("<think>");
     final isThinkingMessage = startIndex == 0;
@@ -32,6 +32,6 @@ import 'package:halo/halo.dart';
     qqe("startIndex: $startIndex");
     qqe("endIndex: $endIndex");
     qqe("text.length: ${text.length}");
-    return ("", text);
+    return ("", text.trim());
   }
 }

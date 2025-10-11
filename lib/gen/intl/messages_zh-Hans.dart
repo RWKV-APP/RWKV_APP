@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(count) => "并行推理中，同时生成 ${count} 条消息";
 
-  static String m3(count) => "已选择第 ${count} 条消息";
+  static String m3(index) => "已选择第 ${index} 条消息";
 
   static String m4(demoName) => "欢迎探索 ${demoName}";
 
@@ -45,13 +45,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "排队中: ${count}";
 
-  static String m12(port) => "WebSocket 服务 (端口: ${port})";
+  static String m12(count) => "已选择 ${count}";
 
-  static String m13(id) => "窗口 ${id}";
+  static String m13(footer) => "推理${footer}: 英";
 
-  static String m14(count) => "${count} 个标签页";
+  static String m14(footer) => "推理${footer}: 英长";
 
-  static String m15(modelName) => "您当前正在使用 ${modelName}";
+  static String m15(footer) => "推理${footer}: 英短";
+
+  static String m16(footer) => "推理${footer}: 快";
+
+  static String m17(footer) => "推理${footer}: 中";
+
+  static String m18(footer) => "推理${footer}: 高";
+
+  static String m19(footer) => "推理${footer}: 关";
+
+  static String m20(port) => "WebSocket 服务 (端口: ${port})";
+
+  static String m21(id) => "窗口 ${id}";
+
+  static String m22(count) => "${count} 个标签页";
+
+  static String m23(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -99,10 +115,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_running": m2,
     "batch_inference_selected": m3,
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage("并行推理设置"),
+    "batch_inference_short": MessageLookupByLibrary.simpleMessage("并行"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage("消息显示宽度"),
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
       "并行推理每条消息宽度",
     ),
+    "batch_management": MessageLookupByLibrary.simpleMessage("批量管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "benchmark": MessageLookupByLibrary.simpleMessage("基准测试"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("基准测试结果"),
@@ -121,6 +139,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "can_not_generate": MessageLookupByLibrary.simpleMessage("无法生成"),
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+    "cancel_all_selection": MessageLookupByLibrary.simpleMessage("取消全选"),
     "cancel_download": MessageLookupByLibrary.simpleMessage("取消下载"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
     "change": MessageLookupByLibrary.simpleMessage("更改"),
@@ -169,7 +188,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "completion_mode": MessageLookupByLibrary.simpleMessage("续写模式"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("综合"),
     "confirm": MessageLookupByLibrary.simpleMessage("确认"),
-    "conservative": MessageLookupByLibrary.simpleMessage("保守"),
+    "conservative": MessageLookupByLibrary.simpleMessage("保守 (适合数学和代码)"),
     "continue_download": MessageLookupByLibrary.simpleMessage("继续下载"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "继续使用较小模型",
@@ -282,6 +301,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hello, 请随意 \n向我提问...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隐藏思维链堆栈"),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "默认使用 \'<think>好的\', 在 2025-09-21 前发布的模型中, 会自动使用 \'<think>嗯\'",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "例子: System: 你是秦始皇，使用文言文，以居高临下的态度与人沟通.",
     ),
@@ -333,6 +355,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "model": MessageLookupByLibrary.simpleMessage("模型"),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
+    "model_size_increased_please_open_a_new_conversation":
+        MessageLookupByLibrary.simpleMessage("模型大小增加，请打开一个新的对话, 以提升对话质量"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_questions": MessageLookupByLibrary.simpleMessage("更多问题"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),
@@ -457,10 +481,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "searching": MessageLookupByLibrary.simpleMessage("搜索中..."),
     "select_a_model": MessageLookupByLibrary.simpleMessage("选择模型"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("选择任务类型"),
+    "select_all": MessageLookupByLibrary.simpleMessage("全选"),
     "select_from_library": MessageLookupByLibrary.simpleMessage("从相册选择"),
     "select_image": MessageLookupByLibrary.simpleMessage("选择图片"),
     "select_model": MessageLookupByLibrary.simpleMessage("选择模型"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("选择新图片"),
+    "selected_count": m12,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("发送消息给 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("服务器错误"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("会话配置"),
@@ -495,6 +521,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "存储权限未授予",
     ),
+    "str_downloading_info": MessageLookupByLibrary.simpleMessage(
+      "下载%.1f% 速度%.1fMB/s 剩余%s",
+    ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "推荐至少选择1.5B模型，更大的2.9B模型更好",
     ),
@@ -521,17 +550,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
+    "think_button_mode_en": m13,
+    "think_button_mode_en_long": m14,
+    "think_button_mode_en_short": m15,
+    "think_button_mode_fast": m16,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "推理模式会影响模型在推理时的表现",
+    ),
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "请选择推理模式",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("推理: 中"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "推理模式: 中",
-    ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "推理模式: 高",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage("推理模式: 关"),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("推理: 高"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("推理: 关"),
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
+    "thinking_mode_auto": m17,
+    "thinking_mode_high": m18,
+    "thinking_mode_off": m19,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
@@ -559,7 +592,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
-    "websocket_service_port": m12,
+    "websocket_service_port": m20,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV Chat",
     ),
@@ -567,11 +600,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
-    "window_id": m13,
+    "window_id": m21,
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m22,
+    "you_are_now_using": m23,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

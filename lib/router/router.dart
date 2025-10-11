@@ -20,7 +20,7 @@ final kRouter = GoRouter(
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      pageBuilder: (context, state, child) => NoTransitionPage(child: PageTab(content: child)),
+      pageBuilder: (context, state, child) => NoTransitionPage(child: PageTab(child: child)),
       routes: PageKey.tabs.map((e) => e.route).toList(),
     ),
     ...PageKey.values.map((e) => e.route),

@@ -10,7 +10,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
-import 'package:zone/widgets/chat/conversation_list.dart';
+import 'package:zone/widgets/conversation_item.dart';
 
 final _roleplayConvList = qs<List<ConversationListItemData>>([]);
 
@@ -41,22 +41,23 @@ class PageConversation extends ConsumerStatefulWidget {
 }
 
 class _PageConversationState extends ConsumerState<PageConversation> {
-  final ScrollController controller = ScrollController();
-  int appBarAlpha = 0;
   List<ConversationListItemData> roleplayConversations = [];
+  late final ScrollController _scrollController;
+  int _appBarAlpha = 0;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _setupScrollListener();
+  }
 
-    P.conversation.load();
-
-    controller.addListener(() {
-      final offset = controller.offset;
-      final alpha = offset.clamp(0, 255).toInt();
-      if (alpha != appBarAlpha) {
-        appBarAlpha = alpha;
-        setState(() {});
+  void _setupScrollListener() {
+    _scrollController.addListener(() {
+      final offset = _scrollController.offset;
+      final alpha = (offset * 0.5).clamp(0, 255).toInt();
+      if (alpha != _appBarAlpha) {
+        setState(() => _appBarAlpha = alpha);
       }
     });
 
@@ -67,58 +68,22 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 
   @override
   void dispose() {
-    controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(P.app.customTheme);
     final conversations = ref.watch(_compositedConversations);
     final isEmpty = conversations.isEmpty;
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
 
     return AppScaffold(
       body: Column(
         children: [
-          AppBar(
-            title: Text(S.of(context).conversations),
-            backgroundColor: Colors.transparent,
-            // backgroundColor: P.app.qw.q.withAlpha(appBarAlpha),
-            systemOverlayStyle: theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
-            // floating: true,
-            // pinned: true,
-            primary: true,
-            actions: [
-              IconButton(
-                onPressed: () async {
-                  await P.chat.startNewChat();
-                  push(PageKey.chat);
-                },
-                icon: const FaIcon(FontAwesomeIcons.squarePlus),
-              ),
-            ],
-          ),
-
-          if (isEmpty) const Expanded(child: _Empty()),
-          if (!isEmpty)
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.only(bottom: 60),
-                itemCount: conversations.length,
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    height: 0,
-                    indent: 68,
-                    endIndent: 12,
-                    color: Theme.of(context).dividerColor.q(.2),
-                  );
-                },
-                itemBuilder: (context, index) {
-                  final conversation = conversations[index % conversations.length];
-                  return buildConversationItem(conversation, index);
-                },
-              ),
-            ),
+          _ConversationAppBar(alpha: _appBarAlpha),
+          isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
+          if (isBatchMode) const _BatchActionBar(),
         ],
       ),
     );
@@ -126,7 +91,7 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 
   Widget buildConversationItem(ConversationListItemData item, int index) {
     return Dismissible(
-      key: Key(item.id),
+      key: Key(item.id.toString()),
       background: Container(
         color: Colors.redAccent,
         padding: const EdgeInsets.only(right: 24),
@@ -158,29 +123,240 @@ class _PageConversationState extends ConsumerState<PageConversation> {
   }
 }
 
-class _Empty extends ConsumerWidget {
-  const _Empty();
+class _ConversationAppBar extends ConsumerWidget {
+  const _ConversationAppBar({required this.alpha});
 
-  void _onPressed() async {
-    P.chat.startNewChat();
+  final int alpha;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(P.app.customTheme);
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
+    final selectedConversations = ref.watch(P.conversation.selectedConversations);
+    final selectedCount = selectedConversations.length;
+    final conversations = ref.watch(P.conversation.conversations);
+    final isEmpty = conversations.isEmpty;
+    final s = S.of(context);
+
+    return AppBar(
+      title: isBatchMode ? Text(s.selected_count(selectedCount)) : Text(s.conversations),
+      backgroundColor: Colors.transparent,
+      systemOverlayStyle: theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
+      primary: true,
+      actions: [
+        if (!isBatchMode)
+          IconButton(
+            onPressed: _handleNewChat,
+            icon: const FaIcon(FontAwesomeIcons.squarePlus),
+          ),
+        if (!isEmpty && !isBatchMode)
+          TextButton(
+            onPressed: () => P.conversation.toggleBatchMode(),
+            child: Text(s.batch_management),
+          ),
+        if (isBatchMode)
+          TextButton(
+            onPressed: selectedCount == conversations.length
+                ? () => P.conversation.clearSelection()
+                : () => P.conversation.selectAllConversations(),
+            child: Text(
+              selectedCount == conversations.length ? s.cancel_all_selection : s.select_all,
+            ),
+          ),
+        if (isBatchMode)
+          TextButton(
+            onPressed: () => P.conversation.toggleBatchMode(),
+            child: Text(s.cancel),
+          ),
+      ],
+    );
+  }
+
+  Future<void> _handleNewChat() async {
+    await P.chat.startNewChat();
     push(PageKey.chat);
   }
+}
+
+class _ConversationList extends ConsumerWidget {
+  const _ConversationList();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final conversations = ref.watch(_compositedConversations);
+    return ListView.separated(
+      controller: context.findAncestorStateOfType<_PageConversationState>()?._scrollController,
+      padding: const EdgeInsets.only(bottom: 60),
+      itemCount: conversations.length,
+      cacheExtent: 200,
+      separatorBuilder: (context, index) => const _ConversationSeparator(),
+      itemBuilder: (context, index) => _ConversationDismissible(conversation: conversations[index]),
+    );
+  }
+}
+
+class _ConversationSeparator extends StatelessWidget {
+  const _ConversationSeparator();
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      height: 0,
+      indent: 68,
+      endIndent: 12,
+      color: Theme.of(context).dividerColor.q(.2),
+    );
+  }
+}
+
+class _ConversationDismissible extends ConsumerWidget {
+  const _ConversationDismissible({required this.conversation});
+
+  final ConversationListItemData conversation;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBatchMode = ref.watch(P.conversation.isBatchMode);
+    if (isBatchMode) return ConversationItem(conversation: conversation);
+    return Dismissible(
+      key: ValueKey(conversation.id),
+      background: const _DismissBackground(),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) => _confirmDismiss(context, direction),
+      onDismissed: (direction) => _handleDismiss(context, direction),
+      child: ConversationItem(conversation: conversation),
+    );
+  }
+
+  Future<bool?> _confirmDismiss(BuildContext context, DismissDirection direction) async {
+    final s = S.of(context);
+
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: s.delete_conversation,
+      message: s.delete_conversation_message,
+      okLabel: s.delete,
+      cancelLabel: s.cancel,
+      isDestructiveAction: true,
+    );
+
+    return result == OkCancelResult.ok;
+  }
+
+  Future<void> _handleDismiss(BuildContext context, DismissDirection direction) async {
+    if (conversation.isRoleplay) {
+      await RoleplayManage.deleteRolePlaySession(conversation.roleName!);
+    } else {
+      await P.conversation.onDeleteClicked(context, conversation.conv!);
+    }
+  }
+}
+
+class _DismissBackground extends StatelessWidget {
+  const _DismissBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.redAccent,
+      padding: const EdgeInsets.only(right: 24),
+      alignment: Alignment.centerRight,
+      child: const FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
+    );
+  }
+}
+
+class _EmptyState extends ConsumerWidget {
+  const _EmptyState();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
       children: [
-        Text(S.of(context).no_conversations_yet, style: const TextStyle(fontSize: 16)),
-        16.h,
-        FilledButton.icon(
-          onPressed: _onPressed,
-          label: Text(S.of(context).new_conversation),
-          icon: const FaIcon(FontAwesomeIcons.plus),
-          style: const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16, vertical: 12))),
+        Text(
+          S.of(context).no_conversations_yet,
+          style: const TextStyle(fontSize: 16),
         ),
+        16.h,
+        _NewChatButton(),
       ],
     );
+  }
+}
+
+class _NewChatButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(
+      onPressed: _handleNewChat,
+      label: Text(S.of(context).new_conversation),
+      icon: const FaIcon(FontAwesomeIcons.plus),
+      style: const ButtonStyle(
+        padding: WidgetStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleNewChat() async {
+    await P.chat.startNewChat();
+    push(PageKey.chat);
+  }
+}
+
+class _BatchActionBar extends ConsumerWidget {
+  const _BatchActionBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedConversations = ref.watch(P.conversation.selectedConversations);
+    final selectedCount = selectedConversations.length;
+    final hasSelection = selectedConversations.isNotEmpty;
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: theme.dividerColor.q(.2),
+            width: 1,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                '已选择: $selectedCount',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            FilledButton.icon(
+              onPressed: hasSelection ? () => _handleDelete(context) : null,
+              icon: const FaIcon(FontAwesomeIcons.trashCan, size: 16),
+              label: Text(S.of(context).delete),
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleDelete(BuildContext context) async {
+    await P.conversation.deleteSelectedConversations(context);
   }
 }

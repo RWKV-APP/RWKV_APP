@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 2.5.0+534
+version: 2.6.6+546
 
 environment:
   sdk: ^3.9.0
@@ -23,10 +23,10 @@ dependencies:
   #      ref: dev
 
   rwkv_downloader:
-    # path: ../rwkv_downloader
-    git:
-      url: https://github.com/RWKV-APP/rwkv_downloader.git
-      ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
+     path: ../rwkv_downloader
+#    git:
+#      url: https://github.com/RWKV-APP/rwkv_downloader.git
+#      ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
 
   photo_viewer:
     git:
@@ -44,7 +44,7 @@ dependencies:
   equatable: ^2.0.7
   file_picker: ^10.1.9
   flutter_dotenv: ^5.2.1
-  flutter_markdown: ^0.7.7+1
+  gpt_markdown:
   flutter_native_splash: ^2.4.6
   flutter_riverpod: ^2.6.1
   freezed_annotation: ^3.0.0

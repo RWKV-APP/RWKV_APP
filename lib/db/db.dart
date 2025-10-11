@@ -218,16 +218,13 @@ class AppDatabase extends _$AppDatabase {
 
     final convData = _conversationToConversationCompanion(msgNode, title: title);
 
-    qqr("msgNode.createAtInUS: ${msgNode.createAtInUS}");
-
     try {
       // 使用 Drift 的 insert 方法，并结合 onConflict 参数实现 UPSERT。
       // 如果主键唯一，则会触发 DoUpdate 策略
-      final res = await into(conversation).insert(convData, onConflict: DoUpdate((old) => convData));
-      qqr("upsert successful: insert result: $res");
+      await into(conversation).insert(convData, onConflict: DoUpdate((old) => convData));
       return true;
     } catch (e) {
-      qqr("upsert failed: $e");
+      qqe("upsert failed: $e");
       return false;
     }
   }

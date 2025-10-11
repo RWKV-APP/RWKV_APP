@@ -343,6 +343,8 @@ extension _$Translator on _Translator {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.chat || pageKey == PageKey.talk) return;
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         _handleResponseBufferContent(res);

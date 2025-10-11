@@ -200,6 +200,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         controller: _controllerPreferChinese,
         maxLines: 2,
         decoration: InputDecoration(
+          hintText: S.current.hint_chinese_thinking_mode_template,
           labelText: S.current.chinese_thinking_mode_template,
           labelStyle: const TextStyle(fontSize: 16),
           border: const OutlineInputBorder(),

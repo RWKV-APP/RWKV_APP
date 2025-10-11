@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/extrack_thought_and_output.dart';
@@ -82,34 +82,32 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
         SingleChildScrollView(
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                4.w,
-                for (var i = 0; i < batchCount; i++)
-                  GD(
-                    onTap: () {
-                      P.msg.batchSelection(widget.msg).q = i;
-                    },
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: screenWidth * (batchVW / 100),
-                        minWidth: screenWidth * (batchVW / 100),
-                      ),
-                      padding: const EI.a(8),
-                      decoration: BoxDecoration(
-                        color: qw,
-                        border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: _MarkdownBody(data: batch[i]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              4.w,
+              for (var i = 0; i < batchCount; i++)
+                GD(
+                  onTap: () {
+                    P.msg.batchSelection(widget.msg).q = i;
+                  },
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth * (batchVW / 100),
+                      minWidth: screenWidth * (batchVW / 100),
                     ),
+                    padding: const EI.a(8),
+                    decoration: BoxDecoration(
+                      color: qw,
+                      border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: _MarkdownBody(data: batch[i]),
                   ),
-                4.w,
-              ].widgetJoin((index) => 8.w),
-            ),
+                ),
+              4.w,
+            ].widgetJoin((index) => 8.w),
           ),
         ),
         AnimatedPositioned(
@@ -185,47 +183,33 @@ class _MarkdownBody extends ConsumerWidget {
 
     final factorOfOutput = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactor));
 
-    final markdownStyleSheet = MarkdownStyleSheet(
-      listBulletPadding: const EI.o(l: 0),
-      listIndent: 20,
-      textScaler: factorOfOutput,
-      horizontalRuleDecoration: BoxDecoration(
-        color: qb.q(.1),
-        border: Border(top: BorderSide(color: qb.q(.1), width: 1)),
-      ),
-    );
-
     if (thought.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          MarkdownBody(data: output, styleSheet: markdownStyleSheet),
+          GptMarkdown(output),
         ],
       );
     }
 
     final factorOfThought = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactorForCotContent));
 
-    final markdownStyleSheetForCotContent = MarkdownStyleSheet(
-      p: TS(c: qb.q(.5)),
-      h1: TS(c: qb.q(.5)),
-      h2: TS(c: qb.q(.5)),
-      h3: TS(c: qb.q(.5)),
-      h4: TS(c: qb.q(.5)),
-      h5: TS(c: qb.q(.5)),
-      h6: TS(c: qb.q(.5)),
-      listBullet: TS(c: qb.q(.5)),
-      listBulletPadding: const EI.o(l: 0),
-      listIndent: 20,
-      textScaler: factorOfThought,
-    );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (thought.isNotEmpty) MarkdownBody(data: thought, styleSheet: markdownStyleSheetForCotContent),
+        if (thought.isNotEmpty)
+          GptMarkdown(
+            thought,
+            textScaler: factorOfThought,
+            style: TextStyle(color: qb.q(.5)),
+          ),
         if (output.isNotEmpty) 4.h,
-        if (output.isNotEmpty) MarkdownBody(data: output, styleSheet: markdownStyleSheet),
+        if (output.isNotEmpty)
+          GptMarkdown(
+            output,
+            textScaler: factorOfOutput,
+            style: TextStyle(color: qb.q(.9)),
+          ),
       ],
     );
   }

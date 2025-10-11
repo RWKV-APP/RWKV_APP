@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m2(count) =>
       "Ветвление, генерируется ${count} сообщений одновременно";
 
-  static String m3(count) => "Выбрано ${count} сообщение";
+  static String m3(index) => "Выбрано ${index} сообщение";
 
   static String m4(demoName) => "Добро пожаловать в ${demoName}";
 
@@ -49,13 +49,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(count) => "В очереди: ${count}";
 
-  static String m12(port) => "WebSocket-сервис (Порт: ${port})";
+  static String m12(count) => "Выбрано ${count}";
 
-  static String m13(id) => "Окно ${id}";
+  static String m13(footer) => "Мышление${footer}: Англ";
 
-  static String m14(count) => "${count} вкладок";
+  static String m14(footer) => "Мышление${footer}: Англ Длинно";
 
-  static String m15(modelName) => "Вы сейчас используете ${modelName}";
+  static String m15(footer) => "Мышление${footer}: Англ Коротко";
+
+  static String m16(footer) => "Мышление${footer}: Быстро";
+
+  static String m17(footer) => "Мышление${footer}: Авто";
+
+  static String m18(footer) => "Мышление${footer}: Вкл";
+
+  static String m19(footer) => "Мышление${footer}: Выкл";
+
+  static String m20(port) => "WebSocket-сервис (Порт: ${port})";
+
+  static String m21(id) => "Окно ${id}";
+
+  static String m22(count) => "${count} вкладок";
+
+  static String m23(modelName) => "Вы сейчас используете ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -121,11 +137,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage(
       "Настройки Ветвления",
     ),
+    "batch_inference_short": MessageLookupByLibrary.simpleMessage("Ветвление"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage(
       "Ширина отображения сообщения",
     ),
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
       "Ширина каждого сообщения при ветвлении",
+    ),
+    "batch_management": MessageLookupByLibrary.simpleMessage(
+      "Параллельное управление",
     ),
     "beginner": MessageLookupByLibrary.simpleMessage("Новичок"),
     "benchmark": MessageLookupByLibrary.simpleMessage(
@@ -151,6 +171,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Не удалось сгенерировать",
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
+    "cancel_all_selection": MessageLookupByLibrary.simpleMessage(
+      "Отменить выбор всех",
+    ),
     "cancel_download": MessageLookupByLibrary.simpleMessage(
       "Отменить загрузку",
     ),
@@ -217,8 +240,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Цветовая схема как в системе",
     ),
     "completion_mode": MessageLookupByLibrary.simpleMessage("Режим дополнения"),
+    "comprehensive": MessageLookupByLibrary.simpleMessage("Всесторонний"),
     "confirm": MessageLookupByLibrary.simpleMessage("Подтвердить"),
-    "conservative": MessageLookupByLibrary.simpleMessage("Консервативный"),
+    "conservative": MessageLookupByLibrary.simpleMessage(
+      "Консервативный (подходит для математики и кода)",
+    ),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Продолжить загрузку",
     ),
@@ -381,6 +407,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "hide_stack": MessageLookupByLibrary.simpleMessage(
       "Скрыть стек цепочки мыслей",
     ),
+    "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
+      "По умолчанию используется \'<think>好的\', в моделях, выпущенных до 21.09.2025, автоматически будет использоваться \'<think>嗯\'",
+    ),
     "hint_system_prompt": MessageLookupByLibrary.simpleMessage(
       "Пример: System: Ты — могущественная большая языковая модель RWKV, и ты всегда терпеливо отвечаешь на вопросы пользователей.",
     ),
@@ -456,6 +485,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "model": MessageLookupByLibrary.simpleMessage("Модель"),
     "model_loading": MessageLookupByLibrary.simpleMessage("Загрузка модели..."),
     "model_settings": MessageLookupByLibrary.simpleMessage("Настройки модели"),
+    "model_size_increased_please_open_a_new_conversation":
+        MessageLookupByLibrary.simpleMessage(
+          "Размер модели увеличен, откройте новый диалог, чтобы улучшить качество диалога",
+        ),
     "more": MessageLookupByLibrary.simpleMessage("Ещё"),
     "more_questions": MessageLookupByLibrary.simpleMessage("Больше вопросов"),
     "my_voice": MessageLookupByLibrary.simpleMessage("Мой голос"),
@@ -517,7 +550,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
-    "overseas": MessageLookupByLibrary.simpleMessage("(США)"),
+    "overseas": MessageLookupByLibrary.simpleMessage("(за рубежом)"),
     "pause": MessageLookupByLibrary.simpleMessage("Пауза"),
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Тест производительности",
@@ -630,6 +663,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Выберите тип задачи",
     ),
+    "select_all": MessageLookupByLibrary.simpleMessage("Выбрать все"),
     "select_from_library": MessageLookupByLibrary.simpleMessage(
       "Выбрать из галереи",
     ),
@@ -638,6 +672,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_new_image": MessageLookupByLibrary.simpleMessage(
       "Выбрать новое изображение",
     ),
+    "selected_count": m12,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "Отправить сообщение в RWKV",
     ),
@@ -719,19 +754,21 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Затем вы можете начать общаться с RWKV",
         ),
+    "think_button_mode_en": m13,
+    "think_button_mode_en_long": m14,
+    "think_button_mode_en_short": m15,
+    "think_button_mode_fast": m16,
+    "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
+      "Режим мышления влияет на производительность модели при рассуждениях",
+    ),
+    "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
+      "Выберите режим мышления",
+    ),
     "thinking": MessageLookupByLibrary.simpleMessage("Думаю..."),
-    "thinking_mode_auto": MessageLookupByLibrary.simpleMessage("Мысли: Авто"),
-    "thinking_mode_detail_auto": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Автоматическое",
-    ),
-    "thinking_mode_detail_high": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Всегда",
-    ),
-    "thinking_mode_detail_off": MessageLookupByLibrary.simpleMessage(
-      "Мышление: Выключено",
-    ),
-    "thinking_mode_high": MessageLookupByLibrary.simpleMessage("Мысли: Вкл"),
-    "thinking_mode_off": MessageLookupByLibrary.simpleMessage("Мысли: Выкл"),
+    "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("Режим"),
+    "thinking_mode_auto": m17,
+    "thinking_mode_high": m18,
+    "thinking_mode_off": m19,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон режима мышления",
     ),
@@ -773,9 +810,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон веб-поиска",
     ),
-    "websocket_service_port": m12,
+    "websocket_service_port": m20,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
-      "Это RWKV Чат\n Добро пожаловать",
+      "Добро пожаловать в RWKV Чат",
     ),
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage(
       "Добро пожаловать в RWKV",
@@ -783,13 +820,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("Белые"),
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
-    "window_id": m13,
+    "window_id": m21,
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("Найдено %d страниц"),
-    "x_tabs": m14,
-    "you_are_now_using": m15,
+    "x_tabs": m22,
+    "you_are_now_using": m23,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "Теперь вы можете начать общаться с RWKV",
     ),

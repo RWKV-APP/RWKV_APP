@@ -223,7 +223,8 @@ extension $Chat on _Chat {
       );
       return;
     }
-    await send(userMessage.content, isRegenerate: true);
+    final content = userMessage.contentAndTails.first;
+    await send(content, isRegenerate: true);
   }
 
   Future<void> scrollToBottom({Duration? duration, bool? animate = true}) async {
@@ -278,7 +279,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> send(
-    String message, {
+    String raw, {
     MessageType type = MessageType.text,
     String? imageUrl,
     String? audioUrl,
@@ -286,8 +287,21 @@ extension $Chat on _Chat {
     bool withHistory = true,
     bool isRegenerate = false,
   }) async {
-    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
+    assert(!raw.contains(Config.userMsgModifierSep));
 
+    raw = raw.trim();
+    String message = raw;
+
+    final currentModel = P.rwkv.currentModel.q;
+
+    if (currentModel == null) {
+      ModelSelector.show();
+      return;
+    }
+
+    final thinkingMode = P.rwkv.thinkingMode.q;
+
+    MsgNode? parentNode = P.msg.msgNode.q.wholeLatestNode;
     final editingOrRegeneratingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (editingOrRegeneratingIndex != null) {
       final currentMessage = P.msg.findByIndex(editingOrRegeneratingIndex);
@@ -309,19 +323,28 @@ extension $Chat on _Chat {
       }
     }
 
-    late final Message? msg;
+    late final Message? userMsg;
 
     final id = HF.milliseconds;
 
+    if (thinkingMode.userMsgFooter.isNotEmpty) {
+      message = message + thinkingMode.userMsgFooter;
+    }
+
+    final parentMsg = P.msg.pool.q[parentNode.id];
     if (isRegenerate) {
       // 重新生成 Bot 消息, 所以, 不添加新的用户消息
-      msg = null;
+      userMsg = parentMsg;
       // 但是, 需要移除旧的 bot 消息
       parentNode.latest = null;
+      if (parentMsg != null) {
+        final newContent = parentMsg.content + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
+        final newUserMsg = parentMsg.copyWith(content: newContent);
+        P.msg._syncMsg(parentMsg.id, newUserMsg);
+      }
     } else {
       // 新增或编辑了用户消息
 
-      final parentMsg = P.msg.pool.q[parentNode.id];
       if (parentMsg != null && parentMsg.type == MessageType.text && !parentMsg.isMine && getIsBatch(parentMsg.content)) {
         final selection = P.msg.batchSelection(parentMsg).q;
         if (selection != null) {
@@ -334,9 +357,10 @@ extension $Chat on _Chat {
         }
       }
 
-      msg = Message(
+      final storedContent = raw + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
+      userMsg = Message(
         id: id,
-        content: message,
+        content: storedContent,
         isMine: true,
         type: type,
         imageUrl: imageUrl,
@@ -345,7 +369,7 @@ extension $Chat on _Chat {
         isReasoning: false,
         paused: false,
       );
-      P.msg._syncMsg(id, msg);
+      P.msg._syncMsg(id, userMsg);
       parentNode = parentNode.add(MsgNode(id));
     }
 
@@ -377,10 +401,10 @@ extension $Chat on _Chat {
       content: "",
       isMine: false,
       changing: true,
-      isReasoning: P.rwkv.reasoning.q,
+      isReasoning: thinkingMode.hasThinkTag,
       paused: false,
-      modelName: P.rwkv.currentModel.q?.name,
-      runningMode: P.rwkv.thinkingMode.q.toString(),
+      modelName: currentModel.name,
+      runningMode: thinkingMode.toString(),
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;
@@ -391,12 +415,12 @@ extension $Chat on _Chat {
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
     P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
 
-    _checkSensitive(message);
+    _checkSensitive(raw);
   }
 
-  Future<void> onStopButtonPressed() async {
+  Future<void> onStopButtonPressed({bool wantHaptic = true}) async {
     qqq("receiveId: ${receiveId.q}");
-    P.app.hapticLight();
+    if (wantHaptic) P.app.hapticLight();
     await Future.delayed(1.ms);
     final id = receiveId.q;
     if (id == null) {
@@ -500,39 +524,41 @@ extension _$Chat on _Chat {
     qqq("autoPauseId: ${_autoPauseId.q}, receiveId: ${receiveId.q}, state: $next");
   }
 
-  /// 将完整的历史记录发送至推理引擎
+  /// 获取历史记录
   List<String> _history() {
-    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text);
+    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text).toList();
 
-    if (messages.isEmpty) {
-      return [];
+    if (messages.isEmpty) return [];
+
+    // 如果只有一条消息，使用模板
+    if (messages.length == 1) {
+      final template = P.preference.promptTemplate.newChatTemplate.trim();
+      if (template.isNotEmpty) {
+        return template.split("\n\n").where((e) => e.isNotEmpty).toList();
+      }
     }
 
     final result = <String>[];
 
-    if (messages.length == 1) {
-      final template = P.preference.promptTemplate.newChatTemplate.trim();
-      if (template.isNotEmpty) {
-        final msgs = template.split("\n\n").where((e) => e.isNotEmpty);
-        result.addAll(msgs);
+    // 按用户消息和机器人消息配对处理
+    for (int i = 0; i < messages.length; i += 2) {
+      final userMsg = messages[i];
+      final botMsg = i + 1 < messages.length ? messages[i + 1] : null;
+
+      // 处理用户消息
+      String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
+      if (wenYanWen.q) {
+        userContent = '$userContent 请用文言文回答。';
+      }
+      result.add(userContent);
+
+      // 处理机器人消息（如果存在）
+      if (botMsg != null) {
+        final botContent = botMsg.getHistoryContent();
+        result.add(botContent);
       }
     }
 
-    final iterator = messages.iterator;
-    Message userMsg;
-    Message? botMsg;
-    while (iterator.moveNext()) {
-      userMsg = iterator.current;
-      botMsg = iterator.moveNext() ? iterator.current : null;
-      String content = userMsg.getContentForHistoryWithRef(botMsg?.reference);
-      if (wenYanWen.q) {
-        content = '请用文言文回答: $content';
-      }
-      result.add(content);
-      if (botMsg == null) break;
-      final botContent = botMsg.getContentForHistory(appendThinkTagInThinkingTagIsEmpty: true);
-      result.add(botContent);
-    }
     return result;
   }
 
@@ -635,9 +661,11 @@ extension _$Chat on _Chat {
       return;
     }
 
+    final receivedTokens = this.receivedTokens.q;
+
     _updateMessageById(
       id: id,
-      content: receivedTokens.q,
+      content: receivedTokens,
       changing: false,
       callingFunction: callingFunction,
     );

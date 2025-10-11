@@ -37,6 +37,8 @@ class _App extends RawApp {
   /// 当前应用的主题
   late final customTheme = qs<custom_theme.CustomTheme>(custom_theme.Light());
 
+  late final tabIndex = qs(0);
+
   SystemUiOverlayStyle get systemOverlayStyleLight {
     final scaffold = customTheme.q.scaffold;
     return SystemUiOverlayStyle(
@@ -96,6 +98,7 @@ extension $App on _App {
     await _parseConfigForDemoSpecificData(allConfig[demoType.q.name]);
     await P.fileManager.syncAvailableModels();
     await P.fileManager.checkLocal();
+    await P.fileManager.removeFilesNotInConfig();
   }
 
   void hapticLight() {
@@ -137,6 +140,11 @@ extension $App on _App {
       return;
     }
     await _showNewVersionDialogIfNeeded();
+  }
+
+  void onTabSelected(int index) {
+    tabIndex.q = index;
+    replace(PageKey.tabs[index]);
   }
 }
 
