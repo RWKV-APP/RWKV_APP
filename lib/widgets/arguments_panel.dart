@@ -70,12 +70,9 @@ class ArgumentsPanel extends ConsumerWidget {
           children: [
             Row(
               children: [
-                4.w,
+                8.w,
                 TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EI.zero,
-                    iconSize: 16,
-                  ),
+                  style: TextButton.styleFrom(iconSize: 16),
                   onPressed: () {
                     pop();
                   },
@@ -96,16 +93,13 @@ class ArgumentsPanel extends ConsumerWidget {
                   ),
                 ),
                 TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EI.zero,
-                    iconSize: 16,
-                  ),
+                  style: TextButton.styleFrom(iconSize: 16),
                   onPressed: () {
                     pop();
                   },
                   child: T(s.apply),
                 ),
-                4.w,
+                8.w,
               ],
             ),
             12.h,

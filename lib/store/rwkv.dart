@@ -34,6 +34,7 @@ class _RWKV {
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
   late final argumentsPanelShown = qs(false);
+  late final logPanelShown = qs(false);
 
   late final decodeParamType = qp<DecodeParamType>((ref) {
     final temp = ref.watch(arguments(Argument.temperature));
@@ -113,6 +114,8 @@ class _RWKV {
   });
 
   late final supportedBatchSizes = qs<List<int>>([]);
+
+  late final runtimeLog = qs<String>("");
 }
 
 extension $RWKVLoad on _RWKV {
@@ -870,6 +873,10 @@ extension $RWKV on _RWKV {
         break;
     }
   }
+
+  Future<void> refreshRuntimeLog() async {
+    send(to_rwkv.DumpLog());
+  }
 }
 
 /// Private methods
@@ -1047,6 +1054,9 @@ extension _$RWKV on _RWKV {
 
       case from_rwkv.SupportedBatchSizes response:
         supportedBatchSizes.q = response.supportedBatchSizes;
+
+      case from_rwkv.RuntimeLog response:
+        runtimeLog.q = response.runtimeLog;
 
       default:
         break;

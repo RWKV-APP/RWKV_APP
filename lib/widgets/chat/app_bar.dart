@@ -17,6 +17,7 @@ import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
+import 'package:zone/widgets/log_panel.dart';
 import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:sprintf/sprintf.dart';
@@ -211,7 +212,9 @@ class _MorePopupMenuButton extends ConsumerWidget {
     return;
   }
 
-  void _logPanelTapped() async {}
+  void _logPanelTapped() async {
+    await LogPanel.show(getContext()!);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -228,6 +231,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             _onSettingsPressed();
             break;
           case 3:
+            _logPanelTapped();
             break;
           default:
             break;
@@ -261,16 +265,16 @@ class _MorePopupMenuButton extends ConsumerWidget {
               ],
             ),
           ),
-          // PopupMenuItem(
-          //   value: 2,
-          //   child: Row(
-          //     children: [
-          //       const FaIcon(FontAwesomeIcons.sliders, size: 14),
-          //       8.w,
-          //       Text("打开调试日志面板"),
-          //     ],
-          //   ),
-          // ),
+          PopupMenuItem(
+            value: 3,
+            child: Row(
+              children: [
+                const FaIcon(FontAwesomeIcons.sliders, size: 14),
+                8.w,
+                Text(s.open_debug_log_panel),
+              ],
+            ),
+          ),
         ];
       },
     );

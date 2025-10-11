@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `打开调试日志面板`
+  String get open_debug_log_panel {
+    return Intl.message(
+      '打开调试日志面板',
+      name: 'open_debug_log_panel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `已选择 {count}`
   String selected_count(Object count) {
     return Intl.message(

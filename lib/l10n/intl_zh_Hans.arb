@@ -1,5 +1,6 @@
 {
   "@@locale": "zh-Hans",
+  "open_debug_log_panel": "打开调试日志面板",
   "selected_count": "已选择 {count}",
   "select_all": "全选",
   "cancel_all_selection": "取消全选",
