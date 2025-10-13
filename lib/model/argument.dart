@@ -14,14 +14,14 @@ enum DecodeParamType {
     topP: 0.3,
     presencePenalty: 0,
     frequencyPenalty: 0,
-    penaltyDecay: 0.996,
+    penaltyDecay: 0.99,
   ),
   fixed(
     temperature: 0.2,
     topP: 0,
     presencePenalty: 0,
     frequencyPenalty: 0,
-    penaltyDecay: 0.996,
+    penaltyDecay: 0.99,
   ),
   comprehensive(
     temperature: 1,
@@ -35,7 +35,7 @@ enum DecodeParamType {
     topP: 0.3,
     presencePenalty: 0.5,
     frequencyPenalty: 0.5,
-    penaltyDecay: 0.996,
+    penaltyDecay: 0.99,
   );
 
   final double temperature;
