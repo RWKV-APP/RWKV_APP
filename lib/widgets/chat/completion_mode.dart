@@ -23,6 +23,13 @@ class _CompletionState extends ConsumerState<Completion> {
   final ScrollController scrollController = ScrollController();
 
   late final controllerCheckSensitive = StreamController<String>();
+  StreamSubscription? subscription;
+
+  int row = 2;
+  int col = 2;
+
+  int get batchSize => row * col;
+  List<String> outputs = [];
 
   bool generating = false;
   bool resuming = false;
@@ -34,16 +41,29 @@ class _CompletionState extends ConsumerState<Completion> {
 
   bool get showPause => generating && hasPrompt && !resuming;
 
-  bool get showResume => (!generating && hasPrompt && canResume) || resuming;
+  bool get showResume => (!generating && hasPrompt && canResume && batchSize == 1) || resuming;
 
-  bool get showSubmit => !generating && !canResume;
+  bool get showSubmit => !generating && !canResume && !resuming;
+
+  void onInputOutputEmpty() {
+    if (canResume) {
+      setState(() {
+        canResume = false;
+      });
+    }
+    if (isSensitive) {
+      setState(() {
+        isSensitive = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
 
     controllerCheckSensitive.stream
-        .throttleTime(const Duration(milliseconds: 100), trailing: true) //
+        .throttleTime(const Duration(milliseconds: 400), trailing: true) //
         .listen((v) {
           checkSensitive(v);
         });
@@ -52,10 +72,13 @@ class _CompletionState extends ConsumerState<Completion> {
       if (generating) {
         return;
       }
-      final r = controllerPrompt.text.isNotEmpty;
-      if (r != hasPrompt) {
+      final notEmpty = controllerPrompt.text.isNotEmpty;
+      if (!notEmpty) {
+        onInputOutputEmpty();
+      }
+      if (notEmpty != hasPrompt) {
         setState(() {
-          hasPrompt = r;
+          hasPrompt = notEmpty;
         });
       }
     });
@@ -64,48 +87,13 @@ class _CompletionState extends ConsumerState<Completion> {
       if (generating) {
         return;
       }
-      final r = controllerOutput.text.isNotEmpty;
-      if (r != canResume && !isSensitive) {
+      final notEmpty = controllerOutput.text.isNotEmpty;
+      if (!notEmpty) {
+        onInputOutputEmpty();
+      }
+      if (notEmpty != canResume && !isSensitive) {
         setState(() {
-          canResume = r;
-        });
-      }
-    });
-  }
-
-  void listenGenEvent() {
-    ref.listen(P.chat.receivedTokens, (p, v) {
-      if (isSensitive || v.isEmpty) {
-        return;
-      }
-      if (resuming) {
-        setState(() {
-          resuming = false;
-        });
-      }
-      final max = scrollController.position.maxScrollExtent;
-      final remain = max - scrollController.position.pixels;
-      final prompt = controllerPrompt.text.trim();
-      var output = v.replaceFirst(prompt, "");
-      if (output.endsWith("<EOD>")) {
-        setState(() {
-          canResume = false;
-        });
-        output = output.substring(0, output.length - 5);
-      }
-      controllerOutput.text = output;
-      if (0 < remain && remain < 80 && !isTouchingOutput) {
-        scrollController.jumpTo(max);
-      }
-      controllerCheckSensitive.add(v);
-    });
-    ref.listen(P.chat.receivingTokens, (p, v) {
-      if (v != generating) {
-        qqq('generating => $v');
-        Future.delayed(const Duration(milliseconds: 100), () {
-          setState(() {
-            generating = v;
-          });
+          canResume = notEmpty;
         });
       }
     });
@@ -113,6 +101,9 @@ class _CompletionState extends ConsumerState<Completion> {
 
   Future checkSensitive(String content) async {
     isSensitive = await P.guard.isSensitive(content);
+    if (!mounted) {
+      return;
+    }
     if (isSensitive) {
       P.chat.stopCompletion();
       P.chat.receivedTokens.q = "";
@@ -126,6 +117,7 @@ class _CompletionState extends ConsumerState<Completion> {
 
   @override
   void dispose() {
+    subscription?.cancel();
     controllerCheckSensitive.close();
     controllerPrompt.dispose();
     controllerOutput.dispose();
@@ -137,25 +129,36 @@ class _CompletionState extends ConsumerState<Completion> {
     if (!checkModelSelection()) return;
 
     final prompt = controllerPrompt.text.trim();
-    if (prompt.isEmpty) {
-      return;
-    }
     qqq('submit->$prompt');
-    final contains = P.guard.isSensitiveSync(prompt);
-    if (contains) {
-      setState(() {
-        canResume = false;
-        isSensitive = true;
-      });
+    completion(prompt);
+  }
+
+  void onResponse(String content) {
+    if (isSensitive || content.isEmpty) {
       return;
     }
-    setState(() {
-      isSensitive = false;
-    });
-    P.chat.completion(prompt);
+    if (resuming) {
+      setState(() {
+        resuming = false;
+      });
+    }
+    final max = scrollController.position.maxScrollExtent;
+    final remain = max - scrollController.position.pixels;
+    final prompt = controllerPrompt.text.trim();
+    var output = content.replaceFirst(prompt, "");
+    if (output.endsWith("<EOD>")) {
+      output = output.substring(0, output.length - 5);
+    }
+    controllerOutput.text = output;
+    if (0 < remain && remain < 80 && !isTouchingOutput) {
+      scrollController.jumpTo(max);
+    }
+    controllerCheckSensitive.add(content);
   }
 
   void onStopTap() async {
+    subscription?.cancel();
+    subscription = null;
     P.chat.stopCompletion();
     setState(() {
       canResume = true;
@@ -172,32 +175,59 @@ class _CompletionState extends ConsumerState<Completion> {
     final prompt = controllerPrompt.text.trim();
     final output = controllerOutput.text.trim();
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    qqq('resume->$prompt');
+    completion(prompt + output);
+  }
+
+  void completion(String prompt) {
     final contains = P.guard.isSensitiveSync(prompt);
+    setState(() {
+      isSensitive = false;
+      canResume = false;
+    });
     if (contains) {
       setState(() {
-        canResume = false;
         isSensitive = true;
       });
       return;
     }
-    qqq('resume->$prompt');
-    P.chat.completion(prompt + output);
+    P.rwkv.clearStates();
+    subscription?.cancel();
+    subscription = P.rwkv
+        .completion(prompt, batchSize: batchSize)
+        .listen(
+          (e) {
+            if (batchSize > 1) {
+              setState(() {
+                outputs = e.responseBufferContent;
+              });
+            } else {
+              onResponse(e.responseBufferContent[0]);
+              if (e.eosFound[0]) {
+                setState(() {
+                  qqq('message');
+                  canResume = false;
+                });
+              }
+            }
+          },
+          onError: (e) {
+            setState(() {
+              canResume = false;
+            });
+          },
+          onDone: () {
+            qqq('done');
+          },
+        );
   }
 
   void onClearOutputTap() {
     controllerOutput.clear();
-    setState(() {
-      isSensitive = false;
-      canResume = false;
-    });
   }
 
   void onClearInputTap() {
     controllerPrompt.clear();
-    setState(() {
-      isSensitive = false;
-      canResume = false;
-    });
   }
 
   void onSuggestTap() async {
@@ -206,14 +236,19 @@ class _CompletionState extends ConsumerState<Completion> {
       return;
     }
     controllerPrompt.text = res;
-    setState(() {
-      canResume = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    listenGenEvent();
+    ref.listen(P.rwkv.generating, (_, v) {
+      if (generating != v) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          setState(() {
+            generating = v;
+          });
+        });
+      }
+    });
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       height: double.infinity,
@@ -253,45 +288,82 @@ class _CompletionState extends ConsumerState<Completion> {
           ),
           const SizedBox(height: 12),
           _buildActions(),
-          Row(
-            children: [
-              Expanded(child: Text(S.current.output)),
-              TextButton(
-                style: TextButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
-                ),
-                onPressed: generating ? null : onClearOutputTap,
-                child: Text(S.current.clear),
-              ),
-            ],
-          ),
-          Expanded(
-            flex: 2,
-            child: Listener(
-              onPointerDown: (event) {
-                isTouchingOutput = true;
-              },
-              onPointerUp: (event) {
-                isTouchingOutput = false;
-              },
-              onPointerCancel: (event) {
-                isTouchingOutput = false;
-              },
-              child: TextField(
-                scrollController: scrollController,
-                controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
-                maxLines: 999999999,
-                readOnly: generating || isSensitive,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 50),
+          if (batchSize == 1) ..._buildSingleOutput(),
+          if (batchSize > 1) ..._buildMultiOutput(),
+          const SizedBox(height: 20),
         ],
       ),
     );
+  }
+
+  List<Widget> _buildMultiOutput() {
+    return [
+      const SizedBox(height: 12),
+      Expanded(
+        flex: 3,
+        child: Column(
+          children: [
+            for (var i = 0; i < row; i++)
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var j = 0; j < col; j++)
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(right: j == col - 1 ? 0 : 8, bottom: i == row - 1 ? 0 : 8),
+                          child: _BatchOutputText(
+                            text: outputs.length <= i * col + j ? '' : outputs[i * col + j],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildSingleOutput() {
+    return [
+      Row(
+        children: [
+          Expanded(child: Text(S.current.output)),
+          TextButton(
+            style: TextButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+            ),
+            onPressed: generating ? null : onClearOutputTap,
+            child: Text(S.current.clear),
+          ),
+        ],
+      ),
+      Expanded(
+        flex: 2,
+        child: Listener(
+          onPointerDown: (event) {
+            isTouchingOutput = true;
+          },
+          onPointerUp: (event) {
+            isTouchingOutput = false;
+          },
+          onPointerCancel: (event) {
+            isTouchingOutput = false;
+          },
+          child: TextField(
+            scrollController: scrollController,
+            controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
+            maxLines: 999999999,
+            readOnly: generating || isSensitive,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 
   Widget _buildActions() {
@@ -333,6 +405,53 @@ class _CompletionState extends ConsumerState<Completion> {
         const SizedBox(width: 8),
         const PerformanceInfo(),
       ],
+    );
+  }
+}
+
+class _BatchOutputText extends StatefulWidget {
+  final String text;
+
+  const _BatchOutputText({required this.text});
+
+  @override
+  State<_BatchOutputText> createState() => _BatchOutputTextState();
+}
+
+class _BatchOutputTextState extends State<_BatchOutputText> {
+  final ScrollController scrollController = ScrollController();
+  late final TextEditingController controller = TextEditingController(text: widget.text);
+
+  @override
+  void didUpdateWidget(covariant _BatchOutputText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.text != oldWidget.text) {
+      controller.text = widget.text;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+    controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      scrollController: scrollController,
+      maxLines: 99999999,
+      readOnly: true,
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        isDense: true,
+        border: OutlineInputBorder(),
+      ),
+      controller: controller,
     );
   }
 }

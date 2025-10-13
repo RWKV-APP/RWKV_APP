@@ -30,6 +30,7 @@ class _RWKV {
 
   late Completer<void> _initRuntimeCompleter = Completer<void>();
 
+  final generating = qs(false);
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
@@ -548,7 +549,7 @@ extension $RWKV on _RWKV {
     });
   }
 
-  Future<void> completion(String prompt) async {
+  Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) async* {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final sendPort = _sendPort;
@@ -556,19 +557,24 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-    send(to_rwkv.GenerateAsync(prompt));
+    final request = to_rwkv.GenerateAsync(prompt, batch: batchSize);
+    send(request);
+    await Future.delayed(const Duration(seconds: 2));
 
-    if (_getTokensTimer != null) {
-      _getTokensTimer!.cancel();
-    }
-
-    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferIds());
-      send(to_rwkv.GetPrefillAndDecodeSpeed());
-      send(to_rwkv.GetResponseBufferContent());
-      await Future.delayed(const Duration(milliseconds: 1000));
-      send(to_rwkv.GetIsGenerating());
-    });
+    final response = broadcastStream.whereType<from_rwkv.ResponseBatchBufferContent>();
+    yield* Stream.periodic(const Duration(milliseconds: 20))
+        .map((e) {
+          if (batchSize > 1) {
+            send(to_rwkv.GetBatchResponseBufferContent());
+          } else {
+            send(to_rwkv.GetResponseBufferContent());
+          }
+          send(to_rwkv.GetIsGenerating());
+          send(to_rwkv.GetPrefillAndDecodeSpeed());
+        })
+        .zipWith(response, (a, b) => b)
+        .where((_) => generating.q)
+        .timeout(Duration(seconds: 10)); // avoid leak
   }
 
   /// 直接在 ffi+cpp 线程中进行推理工作, 也就是说, 会让 ffi 线程不接受任何新的 event
@@ -1006,6 +1012,11 @@ extension _$RWKV on _RWKV {
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
     _messagesController.add(message);
     switch (message) {
+      case from_rwkv.IsGenerating res:
+        if (res.isGenerating != generating.q) {
+          generating.q = res.isGenerating;
+          qqq('generating=${res.isGenerating}');
+        }
       case from_rwkv.ReInitSteps res:
         final done = res.done;
         final success = res.success;

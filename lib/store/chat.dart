@@ -253,11 +253,6 @@ extension $Chat on _Chat {
     P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
   }
 
-  Future<void> completion(String prompt) async {
-    P.rwkv.clearStates();
-    P.rwkv.completion(prompt);
-  }
-
   void toggleCompletionMode() {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) {
@@ -267,10 +262,6 @@ extension $Chat on _Chat {
     final r = !completionMode.q;
     completionMode.q = r;
     P.rwkv.setGenerateMode(r);
-  }
-
-  Future<void> resumeCompletion() async {
-    P.rwkv.completion('');
   }
 
   Future<void> stopCompletion() async {
