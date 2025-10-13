@@ -4,7 +4,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 
@@ -12,6 +14,7 @@ class LogPanel extends ConsumerWidget {
   static Future<void> show(BuildContext context) async {
     if (P.rwkv.logPanelShown.q) return;
     P.rwkv.logPanelShown.q = true;
+    P.rwkv.refreshRuntimeLog();
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -35,7 +38,13 @@ class LogPanel extends ConsumerWidget {
   final ScrollController scrollController;
 
   void _onRefreshPressed() {
+    Alert.info(S.current.refreshed);
     P.rwkv.refreshRuntimeLog();
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: 200.ms,
+      curve: Curves.easeInOut,
+    );
   }
 
   void _onClosePressed() {
@@ -58,7 +67,7 @@ class LogPanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onRefreshPressed,
-                  child: T("Refresh"),
+                  child: T(S.current.refresh),
                 ),
                 Expanded(
                   child: Row(
@@ -68,7 +77,7 @@ class LogPanel extends ConsumerWidget {
                       const Icon(Icons.tune),
                       12.w,
                       T(
-                        "Runtime Log Panel",
+                        S.current.runtime_log_panel,
                         s: const TS(s: 16, w: FontWeight.w500),
                       ),
                     ],
@@ -77,7 +86,7 @@ class LogPanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onClosePressed,
-                  child: T("Close"),
+                  child: T(S.current.close),
                 ),
                 8.w,
               ],

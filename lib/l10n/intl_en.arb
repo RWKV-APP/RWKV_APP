@@ -1,5 +1,10 @@
 {
   "@@locale": "en",
+  "refreshed": "Refreshed",
+  "refresh": "Refresh",
+  "close": "Close",
+  "runtime_log_panel": "Runtime Log Panel",
+  "open_debug_log_panel": "Open Debug Log Panel",
   "selected_count": "Selected {count}",
   "select_all": "Select All",
   "cancel_all_selection": "Cancel All Selection",

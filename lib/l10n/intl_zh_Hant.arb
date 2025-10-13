@@ -1,5 +1,10 @@
 {
   "@@locale": "zh-Hant",
+  "refreshed": "已刷新",
+  "refresh": "刷新",
+  "close": "關閉",
+  "runtime_log_panel": "運行日誌面板",
+  "open_debug_log_panel": "打開調試日誌面板",
   "selected_count": "已選擇 {count}",
   "select_all": "全選",
   "cancel_all_selection": "取消全選",

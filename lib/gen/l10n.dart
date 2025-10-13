@@ -54,6 +54,31 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `已刷新`
+  String get refreshed {
+    return Intl.message('已刷新', name: 'refreshed', desc: '', args: []);
+  }
+
+  /// `刷新`
+  String get refresh {
+    return Intl.message('刷新', name: 'refresh', desc: '', args: []);
+  }
+
+  /// `关闭`
+  String get close {
+    return Intl.message('关闭', name: 'close', desc: '', args: []);
+  }
+
+  /// `运行日志面板`
+  String get runtime_log_panel {
+    return Intl.message(
+      '运行日志面板',
+      name: 'runtime_log_panel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `打开调试日志面板`
   String get open_debug_log_panel {
     return Intl.message(

@@ -236,6 +236,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "click_to_select_model": MessageLookupByLibrary.simpleMessage(
       "Нажмите, чтобы выбрать модель",
     ),
+    "close": MessageLookupByLibrary.simpleMessage("Закрыть"),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Цветовая схема как в системе",
     ),
@@ -541,6 +542,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Офлайн-сервер перевода",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("ОК"),
+    "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
+      "Открыть панель отладки",
+    ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "Или выберите wav-файл, чтобы RWKV его имитировал.",
@@ -636,6 +640,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Идет запись голоса...",
     ),
     "reference_source": MessageLookupByLibrary.simpleMessage("Источник"),
+    "refresh": MessageLookupByLibrary.simpleMessage("Обновлено"),
+    "refreshed": MessageLookupByLibrary.simpleMessage("Обновлено"),
     "regenerate": MessageLookupByLibrary.simpleMessage("Сгенерировать заново"),
     "remaining": MessageLookupByLibrary.simpleMessage("Оставшееся время:"),
     "rename": MessageLookupByLibrary.simpleMessage("Переименовать"),
@@ -648,6 +654,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset": MessageLookupByLibrary.simpleMessage("Сброс"),
     "result": MessageLookupByLibrary.simpleMessage("Результат"),
     "resume": MessageLookupByLibrary.simpleMessage("Возобновить"),
+    "runtime_log_panel": MessageLookupByLibrary.simpleMessage(
+      "Панель журнала выполнения",
+    ),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Чат"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),

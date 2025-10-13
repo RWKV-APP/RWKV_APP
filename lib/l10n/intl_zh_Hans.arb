@@ -1,5 +1,9 @@
 {
   "@@locale": "zh-Hans",
+  "refreshed": "已刷新",
+  "refresh": "刷新",
+  "close": "关闭",
+  "runtime_log_panel": "运行日志面板",
   "open_debug_log_panel": "打开调试日志面板",
   "selected_count": "已选择 {count}",
   "select_all": "全选",

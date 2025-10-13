@@ -180,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "click_to_load_image": MessageLookupByLibrary.simpleMessage("點擊載入圖片"),
     "click_to_select_model": MessageLookupByLibrary.simpleMessage("點擊選擇模型"),
+    "close": MessageLookupByLibrary.simpleMessage("關閉"),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "色彩模式跟隨系統",
     ),
@@ -391,6 +392,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "離線翻譯伺服器",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("確定"),
+    "open_debug_log_panel": MessageLookupByLibrary.simpleMessage("打開調試日誌面板"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage("或者選擇一個 wav 檔案，讓 RWKV 模仿它。"),
     "or_you_can_start_a_new_empty_chat": MessageLookupByLibrary.simpleMessage(
@@ -458,6 +460,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推理模式"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("正在錄音..."),
     "reference_source": MessageLookupByLibrary.simpleMessage("參考來源"),
+    "refresh": MessageLookupByLibrary.simpleMessage("刷新"),
+    "refreshed": MessageLookupByLibrary.simpleMessage("已刷新"),
     "regenerate": MessageLookupByLibrary.simpleMessage("重新產生"),
     "remaining": MessageLookupByLibrary.simpleMessage("剩餘時間："),
     "rename": MessageLookupByLibrary.simpleMessage("重新命名"),
@@ -468,6 +472,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset": MessageLookupByLibrary.simpleMessage("重設"),
     "result": MessageLookupByLibrary.simpleMessage("結果"),
     "resume": MessageLookupByLibrary.simpleMessage("恢復"),
+    "runtime_log_panel": MessageLookupByLibrary.simpleMessage("運行日誌面板"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),

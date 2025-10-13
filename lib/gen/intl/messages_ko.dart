@@ -195,6 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "click_to_select_model": MessageLookupByLibrary.simpleMessage(
       "모델 선택을 클릭하세요",
     ),
+    "close": MessageLookupByLibrary.simpleMessage("닫기"),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "색상 테마 시스템 설정 따르기",
     ),
@@ -426,6 +427,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "오프라인 번역 서버",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("확인"),
+    "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
+      "디버그 로그 패널 열기",
+    ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "또는 RWKV가 복사하도록 wav 파일을 선택할 수 있습니다.",
@@ -503,6 +507,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("추론 모드"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("음성 녹음 중..."),
     "reference_source": MessageLookupByLibrary.simpleMessage("참조 소스"),
+    "refresh": MessageLookupByLibrary.simpleMessage("새로고침"),
+    "refreshed": MessageLookupByLibrary.simpleMessage("새로고침"),
     "regenerate": MessageLookupByLibrary.simpleMessage("재생성"),
     "remaining": MessageLookupByLibrary.simpleMessage("남은 시간:"),
     "rename": MessageLookupByLibrary.simpleMessage("이름 변경"),
@@ -513,6 +519,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset": MessageLookupByLibrary.simpleMessage("초기화"),
     "result": MessageLookupByLibrary.simpleMessage("결과"),
     "resume": MessageLookupByLibrary.simpleMessage("재개"),
+    "runtime_log_panel": MessageLookupByLibrary.simpleMessage("런타임 로그 패널"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 채팅"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 오셀로"),

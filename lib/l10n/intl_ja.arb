@@ -1,5 +1,10 @@
 {
   "@@locale": "ja",
+  "refreshed": "更新",
+  "refresh": "更新",
+  "close": "閉じる",
+  "runtime_log_panel": "実行ログパネル",
+  "open_debug_log_panel": "デバッグログパネルを開く",
   "selected_count": "選択された {count}",
   "select_all": "すべて選択",
   "cancel_all_selection": "すべて選択を解除",

@@ -1,5 +1,10 @@
 {
   "@@locale": "ru",
+  "refreshed": "Обновлено",
+  "refresh": "Обновлено",
+  "close": "Закрыть",
+  "runtime_log_panel": "Панель журнала выполнения",
+  "open_debug_log_panel": "Открыть панель отладки",
   "selected_count": "Выбрано {count}",
   "select_all": "Выбрать все",
   "cancel_all_selection": "Отменить выбор всех",

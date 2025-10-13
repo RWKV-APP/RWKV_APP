@@ -192,6 +192,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "click_to_select_model": MessageLookupByLibrary.simpleMessage(
       "モデルを選択するにはクリック",
     ),
+    "close": MessageLookupByLibrary.simpleMessage("閉じる"),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "カラーテーマはシステムに従う",
     ),
@@ -429,6 +430,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "オフライン翻訳サーバー",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
+      "デバッグログパネルを開く",
+    ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "または、RWKVにコピーさせるためにwavファイルを選択できます。",
@@ -506,6 +510,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推論モード"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("音声を録音中..."),
     "reference_source": MessageLookupByLibrary.simpleMessage("参照元"),
+    "refresh": MessageLookupByLibrary.simpleMessage("更新"),
+    "refreshed": MessageLookupByLibrary.simpleMessage("更新"),
     "regenerate": MessageLookupByLibrary.simpleMessage("再生成"),
     "remaining": MessageLookupByLibrary.simpleMessage("残り時間："),
     "rename": MessageLookupByLibrary.simpleMessage("名前を変更"),
@@ -516,6 +522,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset": MessageLookupByLibrary.simpleMessage("リセット"),
     "result": MessageLookupByLibrary.simpleMessage("結果"),
     "resume": MessageLookupByLibrary.simpleMessage("再開"),
+    "runtime_log_panel": MessageLookupByLibrary.simpleMessage("実行ログパネル"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV チャット"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV オセロ"),

@@ -230,6 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "click_to_select_model": MessageLookupByLibrary.simpleMessage(
       "Click to select model",
     ),
+    "close": MessageLookupByLibrary.simpleMessage("Close"),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Follow system appearance",
     ),
@@ -515,6 +516,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Offline Translator Server",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
+      "Open Debug Log Panel",
+    ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "Or select a WAV file for RWKV to imitate.",
@@ -610,6 +614,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "reference_source": MessageLookupByLibrary.simpleMessage(
       "Reference Source",
     ),
+    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
+    "refreshed": MessageLookupByLibrary.simpleMessage("Refreshed"),
     "regenerate": MessageLookupByLibrary.simpleMessage("Regenerate"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining Time:"),
     "rename": MessageLookupByLibrary.simpleMessage("Rename"),
@@ -620,6 +626,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "result": MessageLookupByLibrary.simpleMessage("Result"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
+    "runtime_log_panel": MessageLookupByLibrary.simpleMessage(
+      "Runtime Log Panel",
+    ),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),

@@ -1,5 +1,10 @@
 {
   "@@locale": "ko",
+  "refreshed": "새로고침",
+  "refresh": "새로고침",
+  "close": "닫기",
+  "runtime_log_panel": "런타임 로그 패널",
+  "open_debug_log_panel": "디버그 로그 패널 열기",
   "selected_count": "선택됨 {count}",
   "select_all": "모두 선택",
   "cancel_all_selection": "모두 선택 취소",
