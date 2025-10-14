@@ -97,7 +97,7 @@ class _RWKV {
   Timer? _getTokensTimer;
 
   late final socName = qs("");
-  late final socBrand = qs<SocBrand>(SocBrand.unknown);
+  late final socBrand = qs(SocBrand.unknown);
 
   late final _qnnLibsCopied = qs(false);
 
@@ -117,7 +117,7 @@ class _RWKV {
   late final supportedBatchSizes = qs<List<int>>([]);
 
   late final runtimeLog = qs("");
-  late final stateInfo = qs("");
+  late final stateLogList = qs<List<StateLog>>([]);
 }
 
 extension $RWKVLoad on _RWKV {
@@ -1038,7 +1038,15 @@ extension _$RWKV on _RWKV {
         }
 
       case from_rwkv.StateInfo response:
-        stateInfo.q = response.stateInfo;
+        final stateInfo = response.stateInfo.trim();
+        if (stateInfo.isEmpty) return;
+        final stateLogList = stateInfo.split("text =").where((e) => e.isNotEmpty).map((e) {
+          final raw = e.split(", remaining lifespan = ");
+          final text = raw[0];
+          final lifeSpan = int.tryParse(raw[1]) ?? 0;
+          return StateLog(text: text, lifeSpan: lifeSpan);
+        }).toList();
+        this.stateLogList.q = stateLogList;
 
       case from_rwkv.Error response:
         if (kDebugMode) {

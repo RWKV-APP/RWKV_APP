@@ -11,6 +11,8 @@ import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 
 class StatePanel extends ConsumerWidget {
+  static final _nReplaced = qs(false);
+
   static Future<void> show(BuildContext context) async {
     if (P.rwkv.statePanelShown.q) return;
     P.rwkv.statePanelShown.q = true;
@@ -51,9 +53,16 @@ class StatePanel extends ConsumerWidget {
     pop();
   }
 
+  void _onNReplacedPressed() {
+    StatePanel._nReplaced.q = !StatePanel._nReplaced.q;
+    P.rwkv.refreshStatePanel();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stateInfo = ref.watch(P.rwkv.stateInfo);
+    final stateLogList = ref.watch(P.rwkv.stateLogList);
+    final qb = ref.watch(P.app.qb);
+    final nReplaced = ref.watch(StatePanel._nReplaced);
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
@@ -85,6 +94,11 @@ class StatePanel extends ConsumerWidget {
                 ),
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
+                  onPressed: _onNReplacedPressed,
+                  child: T("替换换行符显示"),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onClosePressed,
                   child: T(S.current.close),
                 ),
@@ -93,12 +107,35 @@ class StatePanel extends ConsumerWidget {
             ),
             12.h,
             Expanded(
-              child: SingleChildScrollView(
+              child: ListView.builder(
                 controller: scrollController,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: T(stateInfo),
-                ),
+                itemCount: stateLogList.length,
+                padding: EI.o(b: 8),
+                itemBuilder: (context, index) {
+                  final log = stateLogList[index];
+                  final text = nReplaced ? log.text.replaceAll("\\n", "\n") : log.text;
+                  return Container(
+                    decoration: BD(
+                      border: Border.all(color: qb.q(.5)),
+                      borderRadius: 8.r,
+                    ),
+                    padding: EI.a(4),
+                    margin: EI.o(l: 8, r: 8, t: 4, b: 4),
+                    child: Column(
+                      crossAxisAlignment: CAA.start,
+                      children: [
+                        Text(text),
+                        4.h,
+                        Row(
+                          children: [
+                            Text("Life Span: "),
+                            Text(log.lifeSpan.toString()),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
