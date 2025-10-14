@@ -1,6 +1,7 @@
 {
   "@@locale": "zh-Hans",
   "state_panel": "状态面板",
+  "open_state_panel": "打开状态面板",
   "refreshed": "已刷新",
   "refresh": "刷新",
   "close": "关闭",

@@ -433,6 +433,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "デバッグログパネルを開く",
     ),
+    "open_state_panel": MessageLookupByLibrary.simpleMessage(
+      "Open State Panel",
+    ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "または、RWKVにコピーさせるためにwavファイルを選択できます。",
@@ -570,6 +573,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_to_chat": MessageLookupByLibrary.simpleMessage("チャットを開始"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("推論を開始"),
     "starting": MessageLookupByLibrary.simpleMessage("開始中..."),
+    "state_panel": MessageLookupByLibrary.simpleMessage("State Panel"),
     "status": MessageLookupByLibrary.simpleMessage("ステータス"),
     "stop": MessageLookupByLibrary.simpleMessage("停止"),
     "stop_service": MessageLookupByLibrary.simpleMessage("サービスを停止"),

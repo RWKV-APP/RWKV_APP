@@ -1,6 +1,7 @@
 {
   "@@locale": "ru",
   "state_panel": "Панель состояния",
+  "open_state_panel": "Open State Panel",
   "refreshed": "Обновлено",
   "refresh": "Обновлено",
   "close": "Закрыть",

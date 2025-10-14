@@ -391,6 +391,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "offline_translator_server": MessageLookupByLibrary.simpleMessage("线翻译服务器"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage("打开调试日志面板"),
+    "open_state_panel": MessageLookupByLibrary.simpleMessage("打开状态面板"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage("或者选择一个 wav 文件，让 RWKV 模仿它。"),
     "or_you_can_start_a_new_empty_chat": MessageLookupByLibrary.simpleMessage(

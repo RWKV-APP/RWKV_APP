@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "state_panel": "State Panel",
+  "open_state_panel": "Open State Panel",
   "refreshed": "Refreshed",
   "refresh": "Refresh",
   "close": "Close",

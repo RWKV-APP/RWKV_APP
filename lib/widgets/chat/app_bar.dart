@@ -277,7 +277,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             value: 3,
             child: Row(
               children: [
-                const FaIcon(FontAwesomeIcons.sliders, size: 14),
+                const FaIcon(FontAwesomeIcons.book, size: 14),
                 8.w,
                 Text(s.open_debug_log_panel),
               ],
@@ -287,9 +287,9 @@ class _MorePopupMenuButton extends ConsumerWidget {
             value: 4,
             child: Row(
               children: [
-                const FaIcon(FontAwesomeIcons.sliders, size: 14),
+                const FaIcon(FontAwesomeIcons.satellite, size: 14),
                 8.w,
-                Text(s.open_debug_log_panel),
+                Text(s.open_state_panel),
               ],
             ),
           ),

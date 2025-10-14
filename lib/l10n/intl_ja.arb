@@ -1,6 +1,8 @@
 {
   "@@locale": "ja",
   "refreshed": "更新",
+  "state_panel": "State Panel",
+  "open_state_panel": "Open State Panel",
   "refresh": "更新",
   "close": "閉じる",
   "runtime_log_panel": "実行ログパネル",

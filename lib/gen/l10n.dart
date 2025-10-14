@@ -59,6 +59,11 @@ class S {
     return Intl.message('状态面板', name: 'state_panel', desc: '', args: []);
   }
 
+  /// `打开状态面板`
+  String get open_state_panel {
+    return Intl.message('打开状态面板', name: 'open_state_panel', desc: '', args: []);
+  }
+
   /// `已刷新`
   String get refreshed {
     return Intl.message('已刷新', name: 'refreshed', desc: '', args: []);

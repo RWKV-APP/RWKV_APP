@@ -430,6 +430,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "디버그 로그 패널 열기",
     ),
+    "open_state_panel": MessageLookupByLibrary.simpleMessage(
+      "Open State Panel",
+    ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "또는 RWKV가 복사하도록 wav 파일을 선택할 수 있습니다.",

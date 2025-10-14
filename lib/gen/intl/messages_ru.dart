@@ -545,6 +545,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "Открыть панель отладки",
     ),
+    "open_state_panel": MessageLookupByLibrary.simpleMessage(
+      "Open State Panel",
+    ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "Или выберите wav-файл, чтобы RWKV его имитировал.",

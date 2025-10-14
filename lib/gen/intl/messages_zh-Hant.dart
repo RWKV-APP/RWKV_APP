@@ -393,6 +393,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ok": MessageLookupByLibrary.simpleMessage("確定"),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage("打開調試日誌面板"),
+    "open_state_panel": MessageLookupByLibrary.simpleMessage("打開狀態面板"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage("或者選擇一個 wav 檔案，讓 RWKV 模仿它。"),
     "or_you_can_start_a_new_empty_chat": MessageLookupByLibrary.simpleMessage(
