@@ -95,7 +95,7 @@ class StatePanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onNReplacedPressed,
-                  child: T("替换换行符显示"),
+                  child: T("换行符显示"),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),

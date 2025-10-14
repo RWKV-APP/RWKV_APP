@@ -11,6 +11,8 @@ import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 
 class LogPanel extends ConsumerWidget {
+  static final _nReplaced = qs(false);
+
   static Future<void> show(BuildContext context) async {
     if (P.rwkv.logPanelShown.q) return;
     P.rwkv.logPanelShown.q = true;
