@@ -722,6 +722,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_to_chat": MessageLookupByLibrary.simpleMessage("Начать чат"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("Начать вывод"),
     "starting": MessageLookupByLibrary.simpleMessage("Запуск..."),
+    "state_panel": MessageLookupByLibrary.simpleMessage("Панель состояния"),
     "status": MessageLookupByLibrary.simpleMessage("Статус"),
     "stop": MessageLookupByLibrary.simpleMessage("Стоп"),
     "stop_service": MessageLookupByLibrary.simpleMessage("Остановить службу"),

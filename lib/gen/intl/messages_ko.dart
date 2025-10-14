@@ -567,6 +567,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_to_chat": MessageLookupByLibrary.simpleMessage("채팅 시작"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("추론 시작"),
     "starting": MessageLookupByLibrary.simpleMessage("시작 중..."),
+    "state_panel": MessageLookupByLibrary.simpleMessage("State Panel"),
     "status": MessageLookupByLibrary.simpleMessage("상태"),
     "stop": MessageLookupByLibrary.simpleMessage("중지"),
     "stop_service": MessageLookupByLibrary.simpleMessage("서비스 중지"),

@@ -692,6 +692,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Start Inference",
     ),
     "starting": MessageLookupByLibrary.simpleMessage("Starting..."),
+    "state_panel": MessageLookupByLibrary.simpleMessage("State Panel"),
     "status": MessageLookupByLibrary.simpleMessage("Status"),
     "stop": MessageLookupByLibrary.simpleMessage("Stop"),
     "stop_service": MessageLookupByLibrary.simpleMessage("Stop Service"),

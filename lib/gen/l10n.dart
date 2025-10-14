@@ -54,6 +54,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `状态面板`
+  String get state_panel {
+    return Intl.message('状态面板', name: 'state_panel', desc: '', args: []);
+  }
+
   /// `已刷新`
   String get refreshed {
     return Intl.message('已刷新', name: 'refreshed', desc: '', args: []);

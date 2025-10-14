@@ -21,6 +21,7 @@ import 'package:zone/widgets/log_panel.dart';
 import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/widgets/state_panel.dart';
 
 // TODO: rename the file name to chat_app_bar.dart
 class ChatAppBar extends ConsumerWidget {
@@ -216,6 +217,10 @@ class _MorePopupMenuButton extends ConsumerWidget {
     await LogPanel.show(getContext()!);
   }
 
+  void _statePanelTapped() async {
+    await StatePanel.show(getContext()!);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final version = ref.watch(P.app.version);
@@ -232,6 +237,9 @@ class _MorePopupMenuButton extends ConsumerWidget {
             break;
           case 3:
             _logPanelTapped();
+            break;
+          case 4:
+            _statePanelTapped();
             break;
           default:
             break;
@@ -267,6 +275,16 @@ class _MorePopupMenuButton extends ConsumerWidget {
           ),
           PopupMenuItem(
             value: 3,
+            child: Row(
+              children: [
+                const FaIcon(FontAwesomeIcons.sliders, size: 14),
+                8.w,
+                Text(s.open_debug_log_panel),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 4,
             child: Row(
               children: [
                 const FaIcon(FontAwesomeIcons.sliders, size: 14),

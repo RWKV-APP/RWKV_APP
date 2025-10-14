@@ -35,6 +35,7 @@ class _RWKV {
   late final prefillProgress = qs<double>(.0);
   late final argumentsPanelShown = qs(false);
   late final logPanelShown = qs(false);
+  late final statePanelShown = qs(false);
 
   late final decodeParamType = qp<DecodeParamType>((ref) {
     final temp = ref.watch(arguments(Argument.temperature));
@@ -115,7 +116,8 @@ class _RWKV {
 
   late final supportedBatchSizes = qs<List<int>>([]);
 
-  late final runtimeLog = qs<String>("");
+  late final runtimeLog = qs("");
+  late final stateInfo = qs("");
 }
 
 extension $RWKVLoad on _RWKV {
@@ -877,6 +879,10 @@ extension $RWKV on _RWKV {
   Future<void> refreshRuntimeLog() async {
     send(to_rwkv.DumpLog());
   }
+
+  Future<void> refreshStatePanel() async {
+    send(to_rwkv.DumpStateInfo());
+  }
 }
 
 /// Private methods
@@ -1030,6 +1036,9 @@ extension _$RWKV on _RWKV {
             _initRuntimeCompleter.completeError(exception);
           } else {}
         }
+
+      case from_rwkv.StateInfo response:
+        stateInfo.q = response.stateInfo;
 
       case from_rwkv.Error response:
         if (kDebugMode) {

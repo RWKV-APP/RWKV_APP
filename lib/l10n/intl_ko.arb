@@ -1,5 +1,6 @@
 {
   "@@locale": "ko",
+  "state_panel": "State Panel",
   "refreshed": "새로고침",
   "refresh": "새로고침",
   "close": "닫기",

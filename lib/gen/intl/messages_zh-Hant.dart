@@ -518,6 +518,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_to_chat": MessageLookupByLibrary.simpleMessage("開始聊天"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("開始推理"),
     "starting": MessageLookupByLibrary.simpleMessage("啟動中..."),
+    "state_panel": MessageLookupByLibrary.simpleMessage("狀態面板"),
     "status": MessageLookupByLibrary.simpleMessage("狀態"),
     "stop": MessageLookupByLibrary.simpleMessage("停止"),
     "stop_service": MessageLookupByLibrary.simpleMessage("停止服務"),
