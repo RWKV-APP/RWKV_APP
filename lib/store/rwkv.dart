@@ -60,10 +60,7 @@ class _RWKV {
 
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
-  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Lighting());
-
-  thinking_mode.ThinkingMode reasoningOnOrder = const thinking_mode.Free();
-  thinking_mode.ThinkingMode reasoningOffOrder = const thinking_mode.Lighting();
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
@@ -572,9 +569,11 @@ extension $RWKV on _RWKV {
 
     final isBatch = batchSize > 1;
 
+    final thinkingMode = _thinkingMode.q;
+
     final startInferenceCalling = isBatch
-        ? to_rwkv.ChatBatchAsync(messages, reasoning: _thinkingMode.q.hasThinkTag, batchSize: batchSize) //
-        : to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag);
+        ? to_rwkv.ChatBatchAsync(messages, reasoning: thinkingMode.hasThinkTag, batchSize: batchSize) //
+        : to_rwkv.ChatAsync(messages, reasoning: thinkingMode.hasThinkTag);
     send(startInferenceCalling);
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
@@ -698,7 +697,7 @@ extension $RWKV on _RWKV {
     String? prompt,
   }) async {
     qqr(thinkingMode);
-    _thinkingMode.q = thinkingMode ?? const thinking_mode.Lighting();
+    _thinkingMode.q = thinkingMode ?? const thinking_mode.Fast();
 
     final systemPrompt = P.preference.promptTemplate.systemPrompt.trim();
 
