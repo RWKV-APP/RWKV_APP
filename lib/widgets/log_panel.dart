@@ -53,9 +53,18 @@ class LogPanel extends ConsumerWidget {
     pop();
   }
 
+  void _onNReplacedPressed() {
+    P.rwkv.showEscapeCharacters.q = !P.rwkv.showEscapeCharacters.q;
+    P.rwkv.refreshStatePanel();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final runtimeLog = ref.watch(P.rwkv.runtimeLog);
+    final showEscapeCharacters = ref.watch(P.rwkv.showEscapeCharacters);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final showPrefillLogOnly = ref.watch(P.rwkv.showPrefillLogOnly);
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
@@ -93,14 +102,61 @@ class LogPanel extends ConsumerWidget {
                 8.w,
               ],
             ),
-            12.h,
-            Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: T(runtimeLog),
+            Row(
+              children: [
+                8.w,
+                TextButton(
+                  style: TextButton.styleFrom(iconSize: 16),
+                  onPressed: _onNReplacedPressed,
+                  child: T(
+                    S.current.show_escape_characters +
+                        ": " +
+                        (showEscapeCharacters ? S.current.line_break_rendered : S.current.escape_characters_rendered),
+                  ),
                 ),
+                8.w,
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: runtimeLog.length,
+                padding: const EI.o(b: 4, l: 4, r: 4, t: 4),
+                itemBuilder: (context, index) {
+                  final log = runtimeLog[index];
+                  final content = showEscapeCharacters ? log.content.replaceAll("\\n", "\n") : log.content;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: kC,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: qb),
+                    ),
+                    padding: const EI.s(h: 4, v: 4),
+                    margin: const EI.o(b: 4),
+                    child: Column(
+                      crossAxisAlignment: CAA.start,
+                      children: [
+                        Row(
+                          children: [
+                            T(log.tag, s: TS(w: FontWeight.w700)),
+                            if (log.isPrefill) ...[
+                              4.w,
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: kCG.q(.5),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                padding: const EI.s(h: 2),
+                                child: T("Prefill", s: TS(w: FontWeight.w700)),
+                              ),
+                            ],
+                          ],
+                        ),
+                        T(content),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],

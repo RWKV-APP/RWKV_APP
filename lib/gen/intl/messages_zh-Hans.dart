@@ -260,6 +260,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "输入要翻译的文本...",
     ),
+    "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
+      "已渲染换行符",
+    ),
     "expert": MessageLookupByLibrary.simpleMessage("专家模式"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("探索RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("探索中..."),
@@ -345,7 +348,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "懒思考模板",
     ),
     "license": MessageLookupByLibrary.simpleMessage("开源许可证"),
+    "life_span": MessageLookupByLibrary.simpleMessage("Life Span"),
     "light_mode": MessageLookupByLibrary.simpleMessage("浅色模式"),
+    "line_break_rendered": MessageLookupByLibrary.simpleMessage("已渲染换行"),
     "load_": MessageLookupByLibrary.simpleMessage("加载"),
     "loaded": MessageLookupByLibrary.simpleMessage("已加载"),
     "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
@@ -498,6 +503,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("设置"),
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "share_chat": MessageLookupByLibrary.simpleMessage("分享聊天"),
+    "show_escape_characters": MessageLookupByLibrary.simpleMessage("换行符显示"),
     "show_stack": MessageLookupByLibrary.simpleMessage("显示思维链堆栈"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "推荐至少选择 1.5B 模型，效果更好",
@@ -547,6 +553,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技术研发群"),
     "test_result": MessageLookupByLibrary.simpleMessage("测试结果"),
+    "text": MessageLookupByLibrary.simpleMessage("文本"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("文本补全模式"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage("数独无效"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("深色"),

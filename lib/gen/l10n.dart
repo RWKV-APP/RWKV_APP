@@ -54,6 +54,46 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `换行符显示`
+  String get show_escape_characters {
+    return Intl.message(
+      '换行符显示',
+      name: 'show_escape_characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已渲染换行`
+  String get line_break_rendered {
+    return Intl.message(
+      '已渲染换行',
+      name: 'line_break_rendered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已渲染换行符`
+  String get escape_characters_rendered {
+    return Intl.message(
+      '已渲染换行符',
+      name: 'escape_characters_rendered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文本`
+  String get text {
+    return Intl.message('文本', name: 'text', desc: '', args: []);
+  }
+
+  /// `Life Span`
+  String get life_span {
+    return Intl.message('Life Span', name: 'life_span', desc: '', args: []);
+  }
+
   /// `状态面板`
   String get state_panel {
     return Intl.message('状态面板', name: 'state_panel', desc: '', args: []);
