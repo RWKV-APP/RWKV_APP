@@ -1,7 +1,11 @@
 {
   "@@locale": "ru",
+  "show_escape_characters": "Показать символы новой строки",
+  "line_break_rendered": "Новая строка отображена",
+  "escape_characters_rendered": "Символы новой строки отображены",
+  "show_prefill_log_only": "Показать только Prefill журнал",
   "state_panel": "Панель состояния",
-  "open_state_panel": "Open State Panel",
+  "open_state_panel": "Открыть панель состояния",
   "refreshed": "Обновлено",
   "refresh": "Обновлено",
   "close": "Закрыть",
@@ -404,5 +408,6 @@
   "custom": "Пользовательский",
   "mode": "Режим",
   "suggest": "Рекомендовать",
-  "comprehensive": "Всесторонний"
+  "comprehensive": "Всесторонний",
+  "str_downloading_info": "Скачано %.1f% Скорость %.1fMB/s Осталось %s"
 }

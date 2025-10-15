@@ -36,6 +36,8 @@ class _RWKV {
   late final argumentsPanelShown = qs(false);
   late final logPanelShown = qs(false);
   late final statePanelShown = qs(false);
+  late final showEscapeCharacters = qs(false);
+  late final showPrefillLogOnly = qs(true);
 
   late final decodeParamType = qp<DecodeParamType>((ref) {
     final temp = ref.watch(arguments(Argument.temperature));
@@ -58,10 +60,7 @@ class _RWKV {
 
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
-  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Lighting());
-
-  thinking_mode.ThinkingMode reasoningOnOrder = const thinking_mode.Free();
-  thinking_mode.ThinkingMode reasoningOffOrder = const thinking_mode.Lighting();
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
@@ -116,8 +115,42 @@ class _RWKV {
 
   late final supportedBatchSizes = qs<List<int>>([]);
 
-  late final runtimeLog = qs("");
+  late final runtimeLog = qs<List<LogItem>>([]);
   late final stateLogList = qs<List<StateLog>>([]);
+
+  /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
+  List<LogItem> _parseRuntimeLog(String runtimeLog) {
+    if (runtimeLog.isEmpty) return [];
+
+    final logItems = <LogItem>[];
+    final regex = RegExp(r'\[(INFO|DEBUG|WARN|ERROR|TRACE|FATAL)\]');
+    final matches = regex.allMatches(runtimeLog);
+
+    for (int i = 0; i < matches.length; i++) {
+      final match = matches.elementAt(i);
+      final tag = match.group(1) ?? 'UNKNOWN';
+
+      // 获取当前标签到下一个标签之间的内容
+      final start = match.end;
+      final end = i + 1 < matches.length ? matches.elementAt(i + 1).start : runtimeLog.length;
+
+      final content = runtimeLog.substring(start, end).trim();
+
+      final isPrefill = content.startsWith("new text to prefill");
+
+      if (content.isNotEmpty) {
+        logItems.add(
+          LogItem(
+            tag: tag,
+            content: content,
+            isPrefill: isPrefill,
+          ),
+        );
+      }
+    }
+
+    return logItems;
+  }
 }
 
 extension $RWKVLoad on _RWKV {
@@ -536,9 +569,11 @@ extension $RWKV on _RWKV {
 
     final isBatch = batchSize > 1;
 
+    final thinkingMode = _thinkingMode.q;
+
     final startInferenceCalling = isBatch
-        ? to_rwkv.ChatBatchAsync(messages, reasoning: _thinkingMode.q.hasThinkTag, batchSize: batchSize) //
-        : to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag);
+        ? to_rwkv.ChatBatchAsync(messages, reasoning: thinkingMode.hasThinkTag, batchSize: batchSize) //
+        : to_rwkv.ChatAsync(messages, reasoning: thinkingMode.hasThinkTag);
     send(startInferenceCalling);
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
@@ -662,7 +697,7 @@ extension $RWKV on _RWKV {
     String? prompt,
   }) async {
     qqr(thinkingMode);
-    _thinkingMode.q = thinkingMode ?? const thinking_mode.Lighting();
+    _thinkingMode.q = thinkingMode ?? const thinking_mode.Fast();
 
     final systemPrompt = P.preference.promptTemplate.systemPrompt.trim();
 
@@ -1073,7 +1108,7 @@ extension _$RWKV on _RWKV {
         supportedBatchSizes.q = response.supportedBatchSizes;
 
       case from_rwkv.RuntimeLog response:
-        runtimeLog.q = response.runtimeLog;
+        runtimeLog.q = _parseRuntimeLog(response.runtimeLog);
 
       default:
         break;

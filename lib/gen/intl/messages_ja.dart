@@ -282,6 +282,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "翻訳するテキストを入力...",
     ),
+    "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
+      "改行文字が表示されました",
+    ),
     "expert": MessageLookupByLibrary.simpleMessage("専門家"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("RWKVを探索"),
     "exploring": MessageLookupByLibrary.simpleMessage("探索中..."),
@@ -378,6 +381,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "license": MessageLookupByLibrary.simpleMessage("オープンソースライセンス"),
     "light_mode": MessageLookupByLibrary.simpleMessage("ライトモード"),
+    "line_break_rendered": MessageLookupByLibrary.simpleMessage("改行文字が表示されました"),
     "load_": MessageLookupByLibrary.simpleMessage("ロード"),
     "loaded": MessageLookupByLibrary.simpleMessage("ロード済み"),
     "loading": MessageLookupByLibrary.simpleMessage("ロード中..."),
@@ -433,9 +437,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "デバッグログパネルを開く",
     ),
-    "open_state_panel": MessageLookupByLibrary.simpleMessage(
-      "Open State Panel",
-    ),
+    "open_state_panel": MessageLookupByLibrary.simpleMessage("状態パネルを開く"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "または、RWKVにコピーさせるためにwavファイルを選択できます。",
@@ -554,6 +556,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("設定"),
     "share": MessageLookupByLibrary.simpleMessage("共有"),
     "share_chat": MessageLookupByLibrary.simpleMessage("チャットを共有"),
+    "show_escape_characters": MessageLookupByLibrary.simpleMessage("改行文字を表示"),
+    "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
+      "Prefill ログのみ表示",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage("思考チェーンスタックを表示"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "少なくとも1.5Bモデルを選択することをお勧めします。より大きい2.9Bモデルの方が優れています。",
@@ -573,13 +579,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_to_chat": MessageLookupByLibrary.simpleMessage("チャットを開始"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("推論を開始"),
     "starting": MessageLookupByLibrary.simpleMessage("開始中..."),
-    "state_panel": MessageLookupByLibrary.simpleMessage("State Panel"),
+    "state_panel": MessageLookupByLibrary.simpleMessage("状態パネル"),
     "status": MessageLookupByLibrary.simpleMessage("ステータス"),
     "stop": MessageLookupByLibrary.simpleMessage("停止"),
     "stop_service": MessageLookupByLibrary.simpleMessage("サービスを停止"),
     "stopping": MessageLookupByLibrary.simpleMessage("停止中..."),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "ストレージ権限が許可されていません",
+    ),
+    "str_downloading_info": MessageLookupByLibrary.simpleMessage(
+      "ダウンロード %.1f% 速度 %.1fMB/s 残り %s",
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "少なくとも1.5Bモデルを選択することをお勧めします。より大きい2.9Bモデルの方が優れています。",

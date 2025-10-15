@@ -1,5 +1,9 @@
 {
   "@@locale": "zh-Hant",
+  "show_escape_characters": "換行符顯示",
+  "line_break_rendered": "已渲染換行",
+  "escape_characters_rendered": "已渲染換行符",
+  "show_prefill_log_only": "僅顯示 Prefill 日誌",
   "state_panel": "狀態面板",
   "open_state_panel": "打開狀態面板",
   "refreshed": "已刷新",
@@ -404,5 +408,6 @@
   "custom": "自訂",
   "mode": "模式",
   "suggest": "推薦",
-  "comprehensive": "綜合"
+  "comprehensive": "綜合",
+  "str_downloading_info": "下載 %.1f% 速度 %.1fMB/s 剩餘 %s"
 }

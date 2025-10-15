@@ -352,6 +352,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "Введите текст для перевода...",
     ),
+    "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
+      "Символы новой строки отображены",
+    ),
     "expert": MessageLookupByLibrary.simpleMessage("Эксперт"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Исследовать RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("Исследую..."),
@@ -474,6 +477,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Лицензия с открытым исходным кодом",
     ),
     "light_mode": MessageLookupByLibrary.simpleMessage("Светлый режим"),
+    "line_break_rendered": MessageLookupByLibrary.simpleMessage(
+      "Новая строка отображена",
+    ),
     "load_": MessageLookupByLibrary.simpleMessage("Загрузить"),
     "loaded": MessageLookupByLibrary.simpleMessage("Загружено"),
     "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
@@ -546,7 +552,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Открыть панель отладки",
     ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage(
-      "Open State Panel",
+      "Открыть панель состояния",
     ),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
@@ -698,6 +704,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
     "share": MessageLookupByLibrary.simpleMessage("Поделиться"),
     "share_chat": MessageLookupByLibrary.simpleMessage("Поделиться чатом"),
+    "show_escape_characters": MessageLookupByLibrary.simpleMessage(
+      "Показать символы новой строки",
+    ),
+    "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
+      "Показать только Prefill журнал",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage(
       "Показать стек цепочки мыслей",
     ),
@@ -732,6 +744,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopping": MessageLookupByLibrary.simpleMessage("Остановка..."),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "Разрешение на доступ к хранилищу не предоставлено",
+    ),
+    "str_downloading_info": MessageLookupByLibrary.simpleMessage(
+      "Скачано %.1f% Скорость %.1fMB/s Осталось %s",
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "Для наилучшего опыта выберите 1.5B, 2.9B или больше.",
