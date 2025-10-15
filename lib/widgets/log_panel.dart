@@ -149,7 +149,7 @@ class LogPanel extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            T(log.tag, s: TS(w: FontWeight.w700)),
+                            T(log.tag, s: const TS(w: FontWeight.w700)),
                             if (log.isPrefill) ...[
                               4.w,
                               Container(
@@ -158,7 +158,7 @@ class LogPanel extends ConsumerWidget {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 padding: const EI.s(h: 2),
-                                child: T("Prefill", s: TS(w: FontWeight.w700)),
+                                child: const T("Prefill", s: TS(w: FontWeight.w700)),
                               ),
                             ],
                           ],
