@@ -338,6 +338,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "Enter text to translate...",
     ),
+    "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
+      "Escape characters rendered",
+    ),
     "expert": MessageLookupByLibrary.simpleMessage("Expert"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("Explore RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("Exploring..."),
@@ -446,6 +449,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "license": MessageLookupByLibrary.simpleMessage("Open Source License"),
     "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
+    "line_break_rendered": MessageLookupByLibrary.simpleMessage(
+      "Line break rendered",
+    ),
     "load_": MessageLookupByLibrary.simpleMessage("Load"),
     "loaded": MessageLookupByLibrary.simpleMessage("Loaded"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
@@ -670,6 +676,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "share_chat": MessageLookupByLibrary.simpleMessage("Share Chat"),
+    "show_escape_characters": MessageLookupByLibrary.simpleMessage(
+      "Show escape characters",
+    ),
+    "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
+      "Show only Prefill log",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage("Show Thought Stack"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "It is recommended to choose at least a 1.5B model for better results",

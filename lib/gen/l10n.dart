@@ -84,6 +84,16 @@ class S {
     );
   }
 
+  /// `仅显示 Prefill 日志`
+  String get show_prefill_log_only {
+    return Intl.message(
+      '仅显示 Prefill 日志',
+      name: 'show_prefill_log_only',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `文本`
   String get text {
     return Intl.message('文本', name: 'text', desc: '', args: []);

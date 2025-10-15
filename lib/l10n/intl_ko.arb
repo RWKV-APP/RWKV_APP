@@ -1,7 +1,11 @@
 {
   "@@locale": "ko",
-  "state_panel": "State Panel",
-  "open_state_panel": "Open State Panel",
+  "show_escape_characters": "새로운 줄 문자 표시",
+  "line_break_rendered": "새로운 줄 문자가 표시되었습니다",
+  "escape_characters_rendered": "새로운 줄 문자가 표시되었습니다",
+  "show_prefill_log_only": "Prefill 로그만 표시",
+  "state_panel": "상태 패널",
+  "open_state_panel": "State Panel 열기",
   "refreshed": "새로고침",
   "refresh": "새로고침",
   "close": "닫기",
@@ -404,5 +408,6 @@
   "custom": "사용자 지정",
   "mode": "모드",
   "suggest": "제안",
-  "comprehensive": "종합"
+  "comprehensive": "종합",
+  "str_downloading_info": "다운로드 %.1f% 속도 %.1fMB/s 남은 %s"
 }

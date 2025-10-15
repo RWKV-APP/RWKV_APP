@@ -260,6 +260,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "輸入要翻譯的文字...",
     ),
+    "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
+      "已渲染換行符",
+    ),
     "expert": MessageLookupByLibrary.simpleMessage("專家模式"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("探索RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("探索中..."),
@@ -346,6 +349,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "license": MessageLookupByLibrary.simpleMessage("開源許可證"),
     "light_mode": MessageLookupByLibrary.simpleMessage("淺色模式"),
+    "line_break_rendered": MessageLookupByLibrary.simpleMessage("已渲染換行"),
     "load_": MessageLookupByLibrary.simpleMessage("載入"),
     "loaded": MessageLookupByLibrary.simpleMessage("已載入"),
     "loading": MessageLookupByLibrary.simpleMessage("載入中..."),
@@ -500,6 +504,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("設定"),
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "share_chat": MessageLookupByLibrary.simpleMessage("分享聊天"),
+    "show_escape_characters": MessageLookupByLibrary.simpleMessage("換行符顯示"),
+    "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
+      "僅顯示 Prefill 日誌",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage("顯示思維鏈堆疊"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "推薦至少選擇 1.5B 模型，效果更好",
@@ -526,6 +534,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopping": MessageLookupByLibrary.simpleMessage("停止中..."),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "儲存權限未授予",
+    ),
+    "str_downloading_info": MessageLookupByLibrary.simpleMessage(
+      "下載 %.1f% 速度 %.1fMB/s 剩餘 %s",
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "推薦至少選擇1.5B模型，更大的2.9B模型更好",

@@ -504,6 +504,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "share_chat": MessageLookupByLibrary.simpleMessage("分享聊天"),
     "show_escape_characters": MessageLookupByLibrary.simpleMessage("换行符显示"),
+    "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
+      "仅显示 Prefill 日志",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage("显示思维链堆栈"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "推荐至少选择 1.5B 模型，效果更好",

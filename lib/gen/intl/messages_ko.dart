@@ -283,6 +283,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "번역할 텍스트 입력...",
     ),
+    "escape_characters_rendered": MessageLookupByLibrary.simpleMessage(
+      "새로운 줄 문자가 표시되었습니다",
+    ),
     "expert": MessageLookupByLibrary.simpleMessage("전문가"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("RWKV 탐험"),
     "exploring": MessageLookupByLibrary.simpleMessage("탐험 중..."),
@@ -377,6 +380,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "license": MessageLookupByLibrary.simpleMessage("오픈 소스 라이선스"),
     "light_mode": MessageLookupByLibrary.simpleMessage("라이트 모드"),
+    "line_break_rendered": MessageLookupByLibrary.simpleMessage(
+      "새로운 줄 문자가 표시되었습니다",
+    ),
     "load_": MessageLookupByLibrary.simpleMessage("로드"),
     "loaded": MessageLookupByLibrary.simpleMessage("로드됨"),
     "loading": MessageLookupByLibrary.simpleMessage("로드 중..."),
@@ -430,9 +436,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "디버그 로그 패널 열기",
     ),
-    "open_state_panel": MessageLookupByLibrary.simpleMessage(
-      "Open State Panel",
-    ),
+    "open_state_panel": MessageLookupByLibrary.simpleMessage("State Panel 열기"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
           "또는 RWKV가 복사하도록 wav 파일을 선택할 수 있습니다.",
@@ -551,6 +555,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("설정"),
     "share": MessageLookupByLibrary.simpleMessage("공유"),
     "share_chat": MessageLookupByLibrary.simpleMessage("채팅 공유"),
+    "show_escape_characters": MessageLookupByLibrary.simpleMessage(
+      "새로운 줄 문자 표시",
+    ),
+    "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
+      "Prefill 로그만 표시",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage("사고 체인 스택 표시"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "최소 1.5B 모델을 선택하는 것이 좋으며, 더 큰 2.9B 모델이 더 좋습니다.",
@@ -570,13 +580,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_to_chat": MessageLookupByLibrary.simpleMessage("채팅 시작"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("추론 시작"),
     "starting": MessageLookupByLibrary.simpleMessage("시작 중..."),
-    "state_panel": MessageLookupByLibrary.simpleMessage("State Panel"),
+    "state_panel": MessageLookupByLibrary.simpleMessage("상태 패널"),
     "status": MessageLookupByLibrary.simpleMessage("상태"),
     "stop": MessageLookupByLibrary.simpleMessage("중지"),
     "stop_service": MessageLookupByLibrary.simpleMessage("서비스 중지"),
     "stopping": MessageLookupByLibrary.simpleMessage("중지 중..."),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "저장소 권한이 부여되지 않았습니다",
+    ),
+    "str_downloading_info": MessageLookupByLibrary.simpleMessage(
+      "다운로드 %.1f% 속도 %.1fMB/s 남은 %s",
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "최소 1.5B 모델을 선택하는 것이 좋으며, 더 큰 2.9B 모델이 더 좋습니다.",
