@@ -1,4 +1,7 @@
+import 'package:collection/collection.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/args.dart';
+import 'package:zone/store/p.dart';
 
 enum DecodeParamType {
   unknown(temperature: -1, topP: -1, presencePenalty: -1, frequencyPenalty: -1, penaltyDecay: -1),
@@ -151,7 +154,7 @@ enum Argument {
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,
-    batchCount => 8,
+    batchCount => P.rwkv.supportedBatchSizes.q.max.toDouble(),
     batchVW => 80,
   };
 
