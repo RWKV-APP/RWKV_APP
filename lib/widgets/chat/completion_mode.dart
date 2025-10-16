@@ -383,7 +383,7 @@ class _CompletionState extends ConsumerState<Completion> {
                                   child: Container(
                                     margin: EdgeInsets.only(right: j == col - 1 ? 0 : 8, bottom: i == row - 1 ? 0 : 8),
                                     child: i * col + j > batchSize
-                                        ? SizedBox()
+                                        ? const SizedBox()
                                         : _BatchOutputText(
                                             text: outputs.length <= i * col + j ? '' : outputs[i * col + j],
                                           ),
@@ -489,7 +489,7 @@ class _CompletionState extends ConsumerState<Completion> {
         const SizedBox(width: 8),
         OutlinedButton(
           style: ButtonStyle(
-            padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
+            padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
             backgroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.primary),
             foregroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
           ),

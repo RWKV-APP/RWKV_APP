@@ -595,7 +595,7 @@ extension $RWKV on _RWKV {
     final sendPort = _sendPort;
     if (sendPort == null) {
       qqw("sendPort is null");
-      return Stream.empty();
+      return const Stream.empty();
     }
     final request = to_rwkv.GenerateAsync(prompt, batch: batchSize);
     send(request);
