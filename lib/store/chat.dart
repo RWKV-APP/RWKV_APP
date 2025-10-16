@@ -123,7 +123,6 @@ extension $Chat on _Chat {
         content: textToSend,
         isMine: false,
         changing: false,
-        isReasoning: currentMessage.isReasoning,
         paused: currentMessage.paused,
         modelName: currentMessage.modelName,
         runningMode: currentMessage.runningMode,
@@ -357,7 +356,6 @@ extension $Chat on _Chat {
         imageUrl: imageUrl,
         audioUrl: audioUrl,
         audioLength: audioLength,
-        isReasoning: false,
         paused: false,
       );
       P.msg._syncMsg(id, userMsg);
@@ -392,7 +390,6 @@ extension $Chat on _Chat {
       content: "",
       isMine: false,
       changing: true,
-      isReasoning: thinkingMode.hasThinkTag,
       paused: false,
       modelName: currentModel.name,
       runningMode: thinkingMode.toString(),

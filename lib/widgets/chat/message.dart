@@ -148,7 +148,7 @@ class Message extends ConsumerWidget {
         break;
     }
 
-    final reasoning = msg.isReasoning && !msg.isSensitive;
+    final reasoning = finalContent.startsWith("<think>") && !msg.isSensitive;
 
     String cotContent = "";
     String cotResult = "";

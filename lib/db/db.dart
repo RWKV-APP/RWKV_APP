@@ -314,7 +314,6 @@ model.Message _msgDataToMessage(_MsgData msgData) {
     imageUrl: msgData.imageUrl,
     audioUrl: msgData.audioUrl,
     audioLength: msgData.audioLength,
-    isReasoning: msgData.isReasoning,
     paused: msgData.paused,
     ttsTarget: msgData.ttsTarget,
     ttsSpeakerName: msgData.ttsSpeakerName,

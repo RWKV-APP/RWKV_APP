@@ -14,7 +14,7 @@ final class Message extends Equatable {
   final bool isMine;
   final bool changing;
   final MessageType type;
-  final bool isReasoning;
+
   final bool paused;
   final RefInfo reference;
 
@@ -43,7 +43,6 @@ final class Message extends Equatable {
     required this.id,
     required this.content,
     required this.isMine,
-    required this.isReasoning,
     required this.paused,
     this.reference = const RefInfo(list: [], enable: false, error: ''),
     this.changing = false,
@@ -100,7 +99,6 @@ final class Message extends Equatable {
       imageUrl: json["imageUrl"] as String?,
       audioUrl: json["audioUrl"] as String?,
       audioLength: json["audioLength"] as int?,
-      isReasoning: json["isReasoning"] as bool,
       paused: json["paused"] as bool,
       ttsTarget: json["ttsTarget"] as String?,
       ttsSpeakerName: json["ttsSpeakerName"] as String?,
@@ -174,7 +172,6 @@ final class Message extends Equatable {
       imageUrl: imageUrl ?? this.imageUrl,
       audioUrl: audioUrl ?? this.audioUrl,
       audioLength: audioLength ?? this.audioLength,
-      isReasoning: isReasoning ?? this.isReasoning,
       paused: paused ?? this.paused,
       ttsTarget: ttsTarget ?? this.ttsTarget,
       ttsSpeakerName: ttsSpeakerName ?? this.ttsSpeakerName,
@@ -219,6 +216,8 @@ Message(
 }
 
 extension MessageX on Message {
+  bool get isReasoning => content.startsWith("<think>");
+
   bool get ttsHasContent => ttsFilePaths?.isNotEmpty ?? false;
 
   bool get ttsIsDone => (ttsOverallProgress ?? 0.0) >= 1.0;
