@@ -422,5 +422,10 @@
   "mode": "模式",
   "suggest": "推荐",
   "comprehensive": "综合",
-  "str_downloading_info": "下载%.1f% 速度%.1fMB/s 剩余%s"
+  "str_downloading_info": "下载%.1f% 速度%.1fMB/s 剩余%s",
+  "batch_completion": "并行续写",
+  "batch_completion_settings": "并行续写设置",
+  "batch_inference_width_2": "结果显示宽度",
+  "batch_inference_count_detail_2": "每次生成 {count} 条结果",
+  "batch_inference_width_detail_2": "每条结果的宽度"
 }

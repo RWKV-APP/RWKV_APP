@@ -549,32 +549,38 @@ extension $RWKV on _RWKV {
     });
   }
 
-  Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) async* {
+  Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final sendPort = _sendPort;
     if (sendPort == null) {
       qqw("sendPort is null");
-      return;
+      return Stream.empty();
     }
     final request = to_rwkv.GenerateAsync(prompt, batch: batchSize);
     send(request);
-    await Future.delayed(const Duration(seconds: 2));
+    if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
-    final response = broadcastStream.whereType<from_rwkv.ResponseBatchBufferContent>();
-    yield* Stream.periodic(const Duration(milliseconds: 20))
-        .map((e) {
-          if (batchSize > 1) {
-            send(to_rwkv.GetBatchResponseBufferContent());
-          } else {
-            send(to_rwkv.GetResponseBufferContent());
-          }
-          send(to_rwkv.GetIsGenerating());
-          send(to_rwkv.GetPrefillAndDecodeSpeed());
-        })
-        .zipWith(response, (a, b) => b)
-        .where((_) => generating.q)
-        .timeout(Duration(seconds: 10)); // avoid leak
+    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
+      final getResponseCalling = batchSize > 1
+          ? to_rwkv.GetBatchResponseBufferContent() //
+          : to_rwkv.GetResponseBufferContent();
+      send(getResponseCalling);
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
+    });
+    return broadcastStream.mapNotNull((e) {
+      if (e is from_rwkv.ResponseBatchBufferContent) {
+        return e;
+      } else if (e is from_rwkv.ResponseBufferContent) {
+        return from_rwkv.ResponseBatchBufferContent(
+          responseBufferContent: [e.responseBufferContent],
+          eosFound: [e.eosFound],
+          batchSize: batchSize,
+        );
+      }
+      return null;
+    });
   }
 
   /// 直接在 ffi+cpp 线程中进行推理工作, 也就是说, 会让 ffi 线程不接受任何新的 event
