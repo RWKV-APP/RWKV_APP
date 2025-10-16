@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart' show qqq;
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:zone/func/check_model_selection.dart' show checkModelSelection;
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
 import 'package:zone/widgets/performance_info.dart' show PerformanceInfo;
 
 class Completion extends ConsumerStatefulWidget {
@@ -23,6 +27,17 @@ class _CompletionState extends ConsumerState<Completion> {
   final ScrollController scrollController = ScrollController();
 
   late final controllerCheckSensitive = StreamController<String>();
+  StreamSubscription? subscription;
+
+  BatchCompletionSettings settings = BatchCompletionSettings.initial();
+  int row = 1;
+
+  int get col => settings.enabled ? settings.batchCount : 1;
+
+  double get colWidthPercent => settings.width / 100.0;
+
+  int get batchSize => row * col;
+  List<String> outputs = [];
 
   bool generating = false;
   bool resuming = false;
@@ -32,18 +47,38 @@ class _CompletionState extends ConsumerState<Completion> {
   bool isSensitive = false;
   bool isTouchingOutput = false;
 
+  bool get batchCompletion => batchSize > 1;
+
   bool get showPause => generating && hasPrompt && !resuming;
 
-  bool get showResume => (!generating && hasPrompt && canResume) || resuming;
+  bool get showResume => (!generating && hasPrompt && canResume && batchSize == 1) || resuming;
 
-  bool get showSubmit => !generating && !canResume;
+  bool get showSubmit => !generating && !canResume && !resuming;
+
+  void onInputOutputEmpty() {
+    if (canResume) {
+      setState(() {
+        canResume = false;
+      });
+    }
+    if (isSensitive) {
+      setState(() {
+        isSensitive = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
 
+    settings = BatchCompletionSettingsPanel.settings.q;
+    if (P.rwkv.currentModel.q?.tags.contains('batch') == false && settings.enabled) {
+      settings = settings.copyWith(enabled: false);
+    }
+
     controllerCheckSensitive.stream
-        .throttleTime(const Duration(milliseconds: 100), trailing: true) //
+        .throttleTime(const Duration(milliseconds: 400), trailing: true) //
         .listen((v) {
           checkSensitive(v);
         });
@@ -52,10 +87,13 @@ class _CompletionState extends ConsumerState<Completion> {
       if (generating) {
         return;
       }
-      final r = controllerPrompt.text.isNotEmpty;
-      if (r != hasPrompt) {
+      final notEmpty = controllerPrompt.text.isNotEmpty;
+      if (!notEmpty) {
+        onInputOutputEmpty();
+      }
+      if (notEmpty != hasPrompt) {
         setState(() {
-          hasPrompt = r;
+          hasPrompt = notEmpty;
         });
       }
     });
@@ -64,48 +102,13 @@ class _CompletionState extends ConsumerState<Completion> {
       if (generating) {
         return;
       }
-      final r = controllerOutput.text.isNotEmpty;
-      if (r != canResume && !isSensitive) {
+      final notEmpty = controllerOutput.text.isNotEmpty;
+      if (!notEmpty) {
+        onInputOutputEmpty();
+      }
+      if (notEmpty != canResume && !isSensitive) {
         setState(() {
-          canResume = r;
-        });
-      }
-    });
-  }
-
-  void listenGenEvent() {
-    ref.listen(P.chat.receivedTokens, (p, v) {
-      if (isSensitive || v.isEmpty) {
-        return;
-      }
-      if (resuming) {
-        setState(() {
-          resuming = false;
-        });
-      }
-      final max = scrollController.position.maxScrollExtent;
-      final remain = max - scrollController.position.pixels;
-      final prompt = controllerPrompt.text.trim();
-      var output = v.replaceFirst(prompt, "");
-      if (output.endsWith("<EOD>")) {
-        setState(() {
-          canResume = false;
-        });
-        output = output.substring(0, output.length - 5);
-      }
-      controllerOutput.text = output;
-      if (0 < remain && remain < 80 && !isTouchingOutput) {
-        scrollController.jumpTo(max);
-      }
-      controllerCheckSensitive.add(v);
-    });
-    ref.listen(P.chat.receivingTokens, (p, v) {
-      if (v != generating) {
-        qqq('generating => $v');
-        Future.delayed(const Duration(milliseconds: 100), () {
-          setState(() {
-            generating = v;
-          });
+          canResume = notEmpty;
         });
       }
     });
@@ -113,6 +116,9 @@ class _CompletionState extends ConsumerState<Completion> {
 
   Future checkSensitive(String content) async {
     isSensitive = await P.guard.isSensitive(content);
+    if (!mounted) {
+      return;
+    }
     if (isSensitive) {
       P.chat.stopCompletion();
       P.chat.receivedTokens.q = "";
@@ -126,6 +132,7 @@ class _CompletionState extends ConsumerState<Completion> {
 
   @override
   void dispose() {
+    subscription?.cancel();
     controllerCheckSensitive.close();
     controllerPrompt.dispose();
     controllerOutput.dispose();
@@ -133,32 +140,66 @@ class _CompletionState extends ConsumerState<Completion> {
     super.dispose();
   }
 
+  void onBatchTap() async {
+    if (!checkModelSelection()) return;
+    final unavailable = P.rwkv.currentModel.q?.tags.contains('batch') == false;
+    if (unavailable) {
+      Alert.warning(S.current.this_model_does_not_support_batch_inference);
+      return;
+    }
+    BatchCompletionSettingsPanel.settings.q = this.settings;
+    final settings = await BatchCompletionSettingsPanel.show();
+    if (settings.enabled != this.settings.enabled) {
+      outputs.clear();
+      canResume = false;
+      resuming = false;
+      controllerOutput.clear();
+    }
+    setState(() {
+      this.settings = settings;
+    });
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+
   void onSubmitTap({bool regenerate = false}) async {
     if (!checkModelSelection()) return;
 
     final prompt = controllerPrompt.text.trim();
-    if (prompt.isEmpty) {
-      return;
-    }
     qqq('submit->$prompt');
-    final contains = P.guard.isSensitiveSync(prompt);
-    if (contains) {
-      setState(() {
-        canResume = false;
-        isSensitive = true;
-      });
+    completion(prompt, prompt);
+  }
+
+  void onResponse(String content) {
+    if (isSensitive || content.isEmpty) {
       return;
     }
-    setState(() {
-      isSensitive = false;
-    });
-    P.chat.completion(prompt);
+    if (resuming) {
+      setState(() {
+        resuming = false;
+      });
+    }
+    final max = scrollController.position.maxScrollExtent;
+    final remain = max - scrollController.position.pixels;
+    final prompt = controllerPrompt.text.trim();
+    var output = content.replaceFirst(prompt, "");
+    if (output.endsWith("<EOD>")) {
+      output = output.substring(0, output.length - 5);
+    }
+    controllerOutput.text = output;
+    if (0 < remain && remain < 80 && !isTouchingOutput) {
+      scrollController.jumpTo(max);
+    }
+    controllerCheckSensitive.add(content);
   }
 
   void onStopTap() async {
+    qqq('stop');
+    subscription?.cancel();
+    subscription = null;
     P.chat.stopCompletion();
     setState(() {
-      canResume = true;
+      generating = false;
+      canResume = batchSize == 1;
     });
   }
 
@@ -172,32 +213,61 @@ class _CompletionState extends ConsumerState<Completion> {
     final prompt = controllerPrompt.text.trim();
     final output = controllerOutput.text.trim();
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    qqq('resume->$prompt');
+    completion(prompt + output, prompt);
+  }
+
+  void completion(String prompt, String trim) {
+    FocusScope.of(context).requestFocus(FocusNode());
     final contains = P.guard.isSensitiveSync(prompt);
+    setState(() {
+      generating = true;
+      isSensitive = false;
+      canResume = false;
+    });
     if (contains) {
       setState(() {
-        canResume = false;
         isSensitive = true;
       });
       return;
     }
-    qqq('resume->$prompt');
-    P.chat.completion(prompt + output);
+    P.rwkv.clearStates();
+    subscription?.cancel();
+    subscription = P.rwkv
+        .completion(prompt, batchSize: batchSize)
+        .listen(
+          (e) {
+            final resp = e.responseBufferContent.map((e) => e.replaceFirst(trim, '')).toList();
+            if (batchSize > 1) {
+              setState(() {
+                outputs = resp;
+              });
+            } else {
+              onResponse(resp[0]);
+              if (e.eosFound[0]) {
+                setState(() {
+                  canResume = false;
+                });
+              }
+            }
+          },
+          onError: (e) {
+            setState(() {
+              canResume = false;
+            });
+          },
+          onDone: () {
+            qqq('done');
+          },
+        );
   }
 
   void onClearOutputTap() {
     controllerOutput.clear();
-    setState(() {
-      isSensitive = false;
-      canResume = false;
-    });
   }
 
   void onClearInputTap() {
     controllerPrompt.clear();
-    setState(() {
-      isSensitive = false;
-      canResume = false;
-    });
   }
 
   void onSuggestTap() async {
@@ -206,14 +276,26 @@ class _CompletionState extends ConsumerState<Completion> {
       return;
     }
     controllerPrompt.text = res;
-    setState(() {
-      canResume = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    listenGenEvent();
+    ref.listen(P.rwkv.generating, (_, v) {
+      if (generating != v) {
+        qqq('generating=>$v');
+        setState(() {
+          generating = v;
+        });
+      }
+    });
+    ref.listen(P.rwkv.currentModel, (_, v) {
+      final batchUnavailable = v?.tags.contains('batch') == false;
+      if (batchUnavailable && settings.enabled) {
+        settings = settings.copyWith(enabled: false);
+        BatchCompletionSettingsPanel.settings.q = settings;
+        setState(() {});
+      }
+    });
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       height: double.infinity,
@@ -244,7 +326,7 @@ class _CompletionState extends ConsumerState<Completion> {
           Expanded(
             child: TextField(
               maxLines: 999999999,
-              enabled: !generating,
+              readOnly: generating,
               controller: controllerPrompt,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -253,45 +335,111 @@ class _CompletionState extends ConsumerState<Completion> {
           ),
           const SizedBox(height: 12),
           _buildActions(),
-          Row(
-            children: [
-              Expanded(child: Text(S.current.output)),
-              TextButton(
-                style: TextButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
-                ),
-                onPressed: generating ? null : onClearOutputTap,
-                child: Text(S.current.clear),
-              ),
-            ],
-          ),
           Expanded(
-            flex: 2,
-            child: Listener(
-              onPointerDown: (event) {
-                isTouchingOutput = true;
-              },
-              onPointerUp: (event) {
-                isTouchingOutput = false;
-              },
-              onPointerCancel: (event) {
-                isTouchingOutput = false;
-              },
-              child: TextField(
-                scrollController: scrollController,
-                controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
-                maxLines: 999999999,
-                readOnly: generating || isSensitive,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
+            flex: 3,
+            child: Column(
+              children: [
+                if (batchSize == 1) ..._buildSingleOutput(),
+                if (batchSize > 1) ..._buildMultiOutput(),
+              ],
             ),
           ),
-          const SizedBox(height: 50),
+          SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
         ],
       ),
     );
+  }
+
+  List<Widget> _buildMultiOutput() {
+    return [
+      const SizedBox(height: 12),
+      Expanded(
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.trackpad,
+            },
+            scrollbars: true,
+          ),
+          child: LayoutBuilder(
+            builder: (ctx, cs) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  height: cs.maxHeight,
+                  child: Column(
+                    children: [
+                      for (var i = 0; i < row; i++)
+                        SizedBox(
+                          height: cs.maxHeight / row,
+                          width: cs.maxWidth * colWidthPercent * col,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              for (var j = 0; j < col; j++)
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: j == col - 1 ? 0 : 8, bottom: i == row - 1 ? 0 : 8),
+                                    child: i * col + j > batchSize
+                                        ? SizedBox()
+                                        : _BatchOutputText(
+                                            text: outputs.length <= i * col + j ? '' : outputs[i * col + j],
+                                          ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildSingleOutput() {
+    return [
+      Row(
+        children: [
+          Expanded(child: Text(S.current.output)),
+          TextButton(
+            style: TextButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+            ),
+            onPressed: generating ? null : onClearOutputTap,
+            child: Text(S.current.clear),
+          ),
+        ],
+      ),
+      Expanded(
+        child: Listener(
+          onPointerDown: (event) {
+            isTouchingOutput = true;
+          },
+          onPointerUp: (event) {
+            isTouchingOutput = false;
+          },
+          onPointerCancel: (event) {
+            isTouchingOutput = false;
+          },
+          child: TextField(
+            scrollController: scrollController,
+            controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
+            maxLines: 999999999,
+            readOnly: generating || isSensitive,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 
   Widget _buildActions() {
@@ -306,8 +454,18 @@ class _CompletionState extends ConsumerState<Completion> {
         if (showPause)
           FilledButton.icon(
             onPressed: onStopTap,
-            label: Text(S.current.pause),
-            icon: const Icon(Icons.pause_rounded),
+            label: Text(batchCompletion ? S.current.stop : S.current.pause),
+            icon: SizedBox(
+              width: 22,
+              height: 22,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  batchCompletion ? const Icon(Icons.stop) : const Icon(Icons.pause_rounded),
+                  CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary, strokeWidth: 2),
+                ],
+              ),
+            ),
           ),
 
         if (showResume)
@@ -322,17 +480,74 @@ class _CompletionState extends ConsumerState<Completion> {
                 : const Icon(Icons.play_arrow_rounded),
           ),
 
-        if (showResume || showPause) const SizedBox(width: 8),
-        if (showResume || showPause)
-          OutlinedButton.icon(
+        if ((showResume || showPause) && !batchCompletion) const SizedBox(width: 8),
+        if ((showResume || showPause) && !batchCompletion)
+          IconButton.outlined(
             onPressed: generating ? null : onSubmitTap,
-            label: Text(S.current.regenerate),
             icon: const Icon(Icons.refresh_rounded),
           ),
+        const SizedBox(width: 8),
+        OutlinedButton(
+          style: ButtonStyle(
+            padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
+            backgroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.primary),
+            foregroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
+          ),
+          onPressed: generating ? null : onBatchTap,
+          child: Text(!batchCompletion ? S.current.batch_inference_short : S.current.batch_inference_button(batchSize)),
+        ),
         const Spacer(),
         const SizedBox(width: 8),
         const PerformanceInfo(),
       ],
+    );
+  }
+}
+
+class _BatchOutputText extends StatefulWidget {
+  final String text;
+
+  const _BatchOutputText({required this.text});
+
+  @override
+  State<_BatchOutputText> createState() => _BatchOutputTextState();
+}
+
+class _BatchOutputTextState extends State<_BatchOutputText> {
+  final ScrollController scrollController = ScrollController();
+  late final TextEditingController controller = TextEditingController(text: widget.text);
+
+  @override
+  void didUpdateWidget(covariant _BatchOutputText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.text != oldWidget.text) {
+      controller.text = widget.text;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+    controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      scrollController: scrollController,
+      maxLines: 99999999,
+      focusNode: Platform.isWindows ? FocusNode() : null,
+      readOnly: true,
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        isDense: true,
+        border: OutlineInputBorder(),
+      ),
+      controller: controller,
     );
   }
 }

@@ -2972,6 +2972,51 @@ class S {
       args: [],
     );
   }
+
+  /// `并行续写`
+  String get batch_completion {
+    return Intl.message('并行续写', name: 'batch_completion', desc: '', args: []);
+  }
+
+  /// `并行续写设置`
+  String get batch_completion_settings {
+    return Intl.message(
+      '并行续写设置',
+      name: 'batch_completion_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `结果显示宽度`
+  String get batch_inference_width_2 {
+    return Intl.message(
+      '结果显示宽度',
+      name: 'batch_inference_width_2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每次生成 {count} 条结果`
+  String batch_inference_count_detail_2(Object count) {
+    return Intl.message(
+      '每次生成 $count 条结果',
+      name: 'batch_inference_count_detail_2',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `每条结果的宽度`
+  String get batch_inference_width_detail_2 {
+    return Intl.message(
+      '每条结果的宽度',
+      name: 'batch_inference_width_detail_2',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

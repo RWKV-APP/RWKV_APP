@@ -30,6 +30,7 @@ class _RWKV {
 
   late Completer<void> _initRuntimeCompleter = Completer<void>();
 
+  final generating = qs(false);
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
@@ -588,26 +589,37 @@ extension $RWKV on _RWKV {
     });
   }
 
-  Future<void> completion(String prompt) async {
+  Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final sendPort = _sendPort;
     if (sendPort == null) {
       qqw("sendPort is null");
-      return;
+      return Stream.empty();
     }
-    send(to_rwkv.GenerateAsync(prompt));
-
-    if (_getTokensTimer != null) {
-      _getTokensTimer!.cancel();
-    }
+    final request = to_rwkv.GenerateAsync(prompt, batch: batchSize);
+    send(request);
+    if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferIds());
-      send(to_rwkv.GetPrefillAndDecodeSpeed());
-      send(to_rwkv.GetResponseBufferContent());
-      await Future.delayed(const Duration(milliseconds: 1000));
-      send(to_rwkv.GetIsGenerating());
+      final getResponseCalling = batchSize > 1
+          ? to_rwkv.GetBatchResponseBufferContent() //
+          : to_rwkv.GetResponseBufferContent();
+      send(getResponseCalling);
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
+    });
+    return broadcastStream.mapNotNull((e) {
+      if (e is from_rwkv.ResponseBatchBufferContent) {
+        return e;
+      } else if (e is from_rwkv.ResponseBufferContent) {
+        return from_rwkv.ResponseBatchBufferContent(
+          responseBufferContent: [e.responseBufferContent],
+          eosFound: [e.eosFound],
+          batchSize: batchSize,
+        );
+      }
+      return null;
     });
   }
 
@@ -1054,6 +1066,11 @@ extension _$RWKV on _RWKV {
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
     _messagesController.add(message);
     switch (message) {
+      case from_rwkv.IsGenerating res:
+        if (res.isGenerating != generating.q) {
+          generating.q = res.isGenerating;
+          qqq('generating=${res.isGenerating}');
+        }
       case from_rwkv.ReInitSteps res:
         final done = res.done;
         final success = res.success;

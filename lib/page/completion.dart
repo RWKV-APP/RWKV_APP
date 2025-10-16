@@ -28,7 +28,7 @@ class CompletionPage extends ConsumerWidget {
       body: PopScope(
         child: const Completion(),
         onPopInvokedWithResult: (pop, _) {
-          if (pop & P.chat.receivingTokens.q) {
+          if (pop & P.rwkv.generating.q) {
             P.rwkv.stop();
           }
         },
