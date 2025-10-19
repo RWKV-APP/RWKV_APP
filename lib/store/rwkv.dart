@@ -1144,11 +1144,13 @@ extension _$RWKV on _RWKV {
         "libQnnHtpV73Stub.so",
         "libQnnHtpV75Stub.so",
         "libQnnHtpV79Stub.so",
+        "libQnnHtpV81Stub.so",
         "libQnnHtpV68Skel.so",
         "libQnnHtpV69Skel.so",
         "libQnnHtpV73Skel.so",
         "libQnnHtpV75Skel.so",
         "libQnnHtpV79Skel.so",
+        "libQnnHtpV81Skel.so",
         "libQnnHtpPrepare.so",
         "libQnnSystem.so",
         "libQnnRwkvWkvOpPackageV68.so",
@@ -1156,6 +1158,7 @@ extension _$RWKV on _RWKV {
         "libQnnRwkvWkvOpPackageV73.so",
         "libQnnRwkvWkvOpPackageV75.so",
         "libQnnRwkvWkvOpPackageV79.so",
+        "libQnnRwkvWkvOpPackageV81.so",
       };
       for (final lib in qnnLibList) {
         await fromAssetsToTemp("assets/lib/qnn/$lib", targetPath: "assets/lib/$lib");

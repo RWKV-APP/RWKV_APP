@@ -637,6 +637,12 @@ class $AssetsLibQnnGen {
   /// File path: assets/lib/qnn/libQnnHtpV79Stub.so
   String get libQnnHtpV79Stub => 'assets/lib/qnn/libQnnHtpV79Stub.so';
 
+  /// File path: assets/lib/qnn/libQnnHtpV81Stub.so
+  String get libQnnHtpV81Stub => 'assets/lib/qnn/libQnnHtpV81Stub.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV81Skel.so
+  String get libQnnHtpV81Skel => 'assets/lib/qnn/libQnnHtpV81Skel.so';
+
   /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV68.so
   String get libQnnRwkvWkvOpPackageV68 => 'assets/lib/qnn/libQnnRwkvWkvOpPackageV68.so';
 
@@ -651,6 +657,9 @@ class $AssetsLibQnnGen {
 
   /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV79.so
   String get libQnnRwkvWkvOpPackageV79 => 'assets/lib/qnn/libQnnRwkvWkvOpPackageV79.so';
+
+  /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV81.so
+  String get libQnnRwkvWkvOpPackageV81 => 'assets/lib/qnn/libQnnRwkvWkvOpPackageV81.so';
 
   /// File path: assets/lib/qnn/libQnnSystem.so
   String get libQnnSystem => 'assets/lib/qnn/libQnnSystem.so';
@@ -670,11 +679,14 @@ class $AssetsLibQnnGen {
     libQnnHtpV75Stub,
     libQnnHtpV79Skel,
     libQnnHtpV79Stub,
+    libQnnHtpV81Skel,
+    libQnnHtpV81Stub,
     libQnnRwkvWkvOpPackageV68,
     libQnnRwkvWkvOpPackageV69,
     libQnnRwkvWkvOpPackageV73,
     libQnnRwkvWkvOpPackageV75,
     libQnnRwkvWkvOpPackageV79,
+    libQnnRwkvWkvOpPackageV81,
     libQnnSystem,
   ];
 }
