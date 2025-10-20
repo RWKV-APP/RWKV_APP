@@ -205,7 +205,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["npu", "translate"],
+        "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8 Elite Gen5"]
       },
       {
@@ -216,7 +216,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["npu", "translate"],
+        "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8 Gen 2"]
       },
       {
@@ -227,7 +227,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["npu", "translate"],
+        "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8 Gen 3"]
       },
       {
@@ -238,7 +238,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["npu", "translate"],
+        "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8s Gen 3", "7+ Gen 3"]
       },
       {
