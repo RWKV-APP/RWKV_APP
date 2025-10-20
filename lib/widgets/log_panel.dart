@@ -154,13 +154,23 @@ class LogPanel extends ConsumerWidget {
                               4.w,
                               Container(
                                 decoration: BoxDecoration(
-                                  color: kCG.q(.5),
+                                  color: kCG.q(.3),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 padding: const EI.s(h: 2),
                                 child: const T("Prefill", s: TS(w: FontWeight.w700)),
                               ),
                             ],
+                            Spacer(),
+                            if (log.dateTimeString.isNotEmpty)
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: kCG.q(.3),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                padding: const EI.s(h: 2),
+                                child: T(log.dateTimeString, s: TS(w: FontWeight.w600)),
+                              ),
                           ],
                         ),
                         T(content),

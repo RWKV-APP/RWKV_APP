@@ -126,6 +126,8 @@ class _RWKV {
     final logItems = <LogItem>[];
     final regex = RegExp(r'\[(INFO|DEBUG|WARN|ERROR|TRACE|FATAL)\]');
     final matches = regex.allMatches(runtimeLog);
+    final timeRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2}\.\d+)\]');
+    final dateRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\]');
 
     for (int i = 0; i < matches.length; i++) {
       final match = matches.elementAt(i);
@@ -135,16 +137,19 @@ class _RWKV {
       final start = match.end;
       final end = i + 1 < matches.length ? matches.elementAt(i + 1).start : runtimeLog.length;
 
-      final content = runtimeLog.substring(start, end).trim();
-
+      String content = runtimeLog.substring(start, end).trim();
+      final timeDisplayString = timeRegex.firstMatch(content)?.group(1) ?? "";
+      final dateDisplayString = dateRegex.firstMatch(content)?.group(0) ?? "";
+      content = content.replaceAll(dateDisplayString, "");
       final isPrefill = content.startsWith("new text to prefill");
 
       if (content.isNotEmpty) {
         logItems.add(
           LogItem(
             tag: tag,
-            content: content,
+            content: content.trim(),
             isPrefill: isPrefill,
+            dateTimeString: timeDisplayString.trim(),
           ),
         );
       }
