@@ -368,6 +368,17 @@
         "isDebug": true
       },
       {
+        "name": "RWKV7-G1a 0.4B (8 Elite Gen5)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-251016/rwkv7-g1a-0.4b-20250905-ctx4096-a16w8-8elitegen5.bin",
+        "fileSize": 537608192,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Elite Gen5"]
+      },
+      {
         "name": "RWKV7-G1a 0.4B (8 Elite)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-251016/rwkv7-g1a-0.4b-20250905-ctx4096-a16w8-8elite.bin",
