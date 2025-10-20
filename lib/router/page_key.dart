@@ -14,8 +14,8 @@ import 'package:zone/page/talk.dart';
 import 'package:zone/page/translator.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/widgets/model_selector.dart';
-
-import '../widgets/role_play_item.dart' show rolePlayCurrentModel;
+import 'package:zone/page/lambada.dart';
+import 'package:zone/widgets/role_play_item.dart';
 
 enum PageKey {
   translator,
@@ -30,7 +30,8 @@ enum PageKey {
   rolePlaying,
   home,
   talk,
-  neko;
+  neko,
+  lambada;
 
   String get path => "/$name";
 
@@ -59,6 +60,7 @@ enum PageKey {
         ModelSelector.show(rolePlayOnly: true);
       },
     ),
+    PageKey.lambada => const PageLambada(),
   };
 
   GoRoute get route {
