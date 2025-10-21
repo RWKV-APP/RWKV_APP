@@ -146,7 +146,24 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "state": [
+          {
+            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
+            "fileSize": 10489856,
+            "sha256": "9adc53f17ce1b8860d15d4210b6993f2a7bf74b698e452c5d4289e082c6f51d4",
+            "name": "中英双语角色扮演-20251014_ctx8192",
+            "fileName": "rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
+            "decodeParam": {
+              "temperature": 0.6,
+              "topK": 500,
+              "topP": 0.8,
+              "presencePenalty": 2.0,
+              "frequencyPenalty": 0.2,
+              "penaltyDecay": 0.99
+            }
+          }
+        ]
       },
       {
         "name": "RWKV7-G0a2 7.2B",
