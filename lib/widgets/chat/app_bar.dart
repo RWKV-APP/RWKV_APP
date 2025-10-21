@@ -17,9 +17,11 @@ import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
+import 'package:zone/widgets/log_panel.dart';
 import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/widgets/state_panel.dart';
 
 // TODO: rename the file name to chat_app_bar.dart
 class ChatAppBar extends ConsumerWidget {
@@ -27,32 +29,14 @@ class ChatAppBar extends ConsumerWidget {
 
   const ChatAppBar({super.key, this.preferredDemoType});
 
-  void _onSettingsPressed() async {
-    if (!checkModelSelection()) return;
-
-    final demoType = P.app.demoType.q;
-    if (demoType == DemoType.tts) {
-      return;
-    }
-
-    await ArgumentsPanel.show(getContext()!);
-    return;
-  }
-
-  void _onTitlePressed() async {
-    ModelSelector.show();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final primary = Theme.of(context).colorScheme.primary;
     final currentModel = ref.watch(P.rwkv.currentModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
     final selectMessageMode = ref.watch(P.chat.isSharing);
-    final completionMode = ref.watch(P.chat.completionMode);
 
     String displayName = s.click_to_select_model;
     if (currentGroupInfo != null) {
@@ -75,28 +59,53 @@ class ChatAppBar extends ConsumerWidget {
           ),
           child: selectMessageMode
               ? _SelectMessageAppBar() //
-              : _buildAppBar(context, displayName, primary, demoType, completionMode, ref),
+              : _MainAppBar(
+                  displayName: displayName,
+                  demoType: demoType,
+                ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildAppBar(
-    BuildContext context,
-    String displayName,
-    Color primary,
-    DemoType demoType,
-    bool completionMode,
-    WidgetRef ref,
-  ) {
+class _MainAppBar extends ConsumerWidget {
+  final String displayName;
+  final DemoType demoType;
+
+  const _MainAppBar({
+    required this.displayName,
+    required this.demoType,
+  });
+
+  void _onSettingsPressed() async {
+    if (!checkModelSelection()) return;
+
+    final demoType = P.app.demoType.q;
+    if (demoType == DemoType.tts) {
+      return;
+    }
+
+    await ArgumentsPanel.show(getContext()!);
+    return;
+  }
+
+  void _onTitlePressed() async {
+    ModelSelector.show();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final primary = Theme.of(context).colorScheme.primary;
+    final completionMode = ref.watch(P.chat.completionMode);
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
     final isChat = demoType == DemoType.chat;
     final isTTS = demoType == DemoType.tts;
 
     final userType = ref.watch(P.preference.userType);
-
     final version = ref.watch(P.app.version);
+
     return AppBar(
       elevation: 0,
       centerTitle: true,
@@ -176,15 +185,9 @@ class ChatAppBar extends ConsumerWidget {
           ),
         ),
       ),
-      // leading: const Row(
-      //   children: [
-      //     _MenuButton(),
-      //   ],
-      // ),
       actions: [
         if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
-        // if (demoType == DemoType.chat) _buildMorePopupMenuButton(context, completionMode),
-        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user)) _buildMorePopupMenuButton(context, completionMode),
+        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user)) const _MorePopupMenuButton(),
         if (demoType != DemoType.chat && demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
             onPressed: _onSettingsPressed,
@@ -193,9 +196,36 @@ class ChatAppBar extends ConsumerWidget {
       ],
     );
   }
+}
 
-  Widget _buildMorePopupMenuButton(BuildContext context, bool completionMode) {
-    final version = P.app.version.q;
+class _MorePopupMenuButton extends ConsumerWidget {
+  const _MorePopupMenuButton();
+
+  void _onSettingsPressed() async {
+    if (!checkModelSelection()) return;
+
+    final demoType = P.app.demoType.q;
+    if (demoType == DemoType.tts) {
+      return;
+    }
+
+    await ArgumentsPanel.show(getContext()!);
+    return;
+  }
+
+  void _logPanelTapped() async {
+    await LogPanel.show(getContext()!);
+  }
+
+  void _statePanelTapped() async {
+    await StatePanel.show(getContext()!);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final version = ref.watch(P.app.version);
+    final s = S.of(context);
+
     return PopupMenuButton(
       onSelected: (v) {
         switch (v) {
@@ -204,6 +234,14 @@ class ChatAppBar extends ConsumerWidget {
             break;
           case 2:
             _onSettingsPressed();
+            break;
+          case 3:
+            _logPanelTapped();
+            break;
+          case 4:
+            _statePanelTapped();
+            break;
+          default:
             break;
         }
       },
@@ -221,7 +259,7 @@ class ChatAppBar extends ConsumerWidget {
               children: [
                 const FaIcon(FontAwesomeIcons.screwdriverWrench, size: 14),
                 8.w,
-                Text(S.current.advance_settings),
+                Text(s.advance_settings),
               ],
             ),
           ),
@@ -231,7 +269,27 @@ class ChatAppBar extends ConsumerWidget {
               children: [
                 const FaIcon(FontAwesomeIcons.sliders, size: 14),
                 8.w,
-                Text(S.of(context).session_configuration),
+                Text(s.session_configuration),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 3,
+            child: Row(
+              children: [
+                const FaIcon(FontAwesomeIcons.book, size: 14),
+                8.w,
+                Text(s.open_debug_log_panel),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 4,
+            child: Row(
+              children: [
+                const FaIcon(FontAwesomeIcons.satellite, size: 14),
+                8.w,
+                Text(s.open_state_panel),
               ],
             ),
           ),
@@ -292,11 +350,33 @@ class _SelectMessageAppBar extends ConsumerWidget {
 
     final all = allMessage.length == selected.length;
 
-    void onAllTap() {
-      P.chat.sharingSelectedMsgIds.q = all ? {} : allMessage.map((e) => e.id).toSet();
-    }
+    return AppBar(
+      elevation: 0,
+      centerTitle: true,
+      title: T(sprintf(S.of(context).x_message_selected, [selected.length]), s: const TS(s: 18)),
+      leading: _SelectAllRow(
+        all: all,
+        onAllTap: () {
+          P.chat.sharingSelectedMsgIds.q = all ? {} : allMessage.map((e) => e.id).toSet();
+        },
+      ),
+      leadingWidth: 100,
+    );
+  }
+}
 
-    final leading = Row(
+class _SelectAllRow extends ConsumerWidget {
+  final bool all;
+  final VoidCallback onAllTap;
+
+  const _SelectAllRow({
+    required this.all,
+    required this.onAllTap,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
       children: [
         Checkbox(
           value: all,
@@ -307,15 +387,6 @@ class _SelectMessageAppBar extends ConsumerWidget {
           child: T(S.of(context).all),
         ),
       ],
-    );
-    sprintf("", []);
-
-    return AppBar(
-      elevation: 0,
-      centerTitle: true,
-      title: T(sprintf(S.of(context).x_message_selected, [selected.length]), s: const TS(s: 18)),
-      leading: leading,
-      leadingWidth: 100,
     );
   }
 }

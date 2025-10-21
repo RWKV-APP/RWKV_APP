@@ -1,5 +1,16 @@
 {
   "@@locale": "ru",
+  "show_escape_characters": "Показать символы новой строки",
+  "line_break_rendered": "Новая строка отображена",
+  "escape_characters_rendered": "Символы новой строки отображены",
+  "show_prefill_log_only": "Показать только Prefill журнал",
+  "state_panel": "Панель состояния",
+  "open_state_panel": "Открыть панель состояния",
+  "refreshed": "Обновлено",
+  "refresh": "Обновлено",
+  "close": "Закрыть",
+  "runtime_log_panel": "Панель журнала выполнения",
+  "open_debug_log_panel": "Открыть панель отладки",
   "selected_count": "Выбрано {count}",
   "select_all": "Выбрать все",
   "cancel_all_selection": "Отменить выбор всех",
@@ -397,5 +408,6 @@
   "custom": "Пользовательский",
   "mode": "Режим",
   "suggest": "Рекомендовать",
-  "comprehensive": "Всесторонний"
+  "comprehensive": "Всесторонний",
+  "str_downloading_info": "Скачано %.1f% Скорость %.1fMB/s Осталось %s"
 }

@@ -446,7 +446,6 @@ extension $TTS on _TTS {
       content: "",
       isMine: true,
       type: MessageType.userTTS,
-      isReasoning: false,
       paused: false,
       ttsTarget: ttsText,
       ttsSpeakerName: spkName,
@@ -467,7 +466,6 @@ extension $TTS on _TTS {
       content: ttsText,
       isMine: false,
       changing: true,
-      isReasoning: false,
       paused: false,
       type: MessageType.ttsGeneration,
       audioUrl: outputWavPath,
@@ -479,11 +477,6 @@ extension $TTS on _TTS {
     P.chat.receiveId.q = receiveId;
     P.msg.pool.q[receiveId] = receiveMsg;
     P.msg.msgNode.q.rootAdd(MsgNode(receiveId));
-
-    final checkPool = P.msg.pool.q;
-    final checkIds = P.msg.ids.q;
-    final checkList = P.msg.list.q;
-    final checkNode = P.msg.msgNode.q;
 
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
 

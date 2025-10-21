@@ -52,6 +52,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
   late final TextEditingController _controllerWebSearch;
   late final TextEditingController _controllerWebSearchChinese;
   late final TextEditingController _controllerSystemPrompt;
+  late final TextEditingController _controllerFast;
 
   @override
   void initState() {
@@ -64,12 +65,14 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
     _controllerWebSearch = TextEditingController(text: template.webSearchTemplate);
     _controllerWebSearchChinese = TextEditingController(text: template.webSearchChineseTemplate);
     _controllerSystemPrompt = TextEditingController(text: template.systemPrompt);
+    _controllerFast = TextEditingController(text: template.thinkingFast);
   }
 
   void onApplyTap() async {
     final template = PromptTemplate(
       thinkingWithChinese: _controllerPreferChinese.text.trim(),
       thinkingLighting: _controllerLighting.text.trim(),
+      thinkingFast: _controllerFast.text.trim(),
       thinkingFree: _controllerFree.text.trim(),
       newChatTemplate: _controllerNewChat.text.trim(),
       webSearchTemplate: _controllerWebSearch.text.trim(),
@@ -94,6 +97,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
     _controllerFree.dispose();
     _controllerPreferChinese.dispose();
     _controllerLighting.dispose();
+    _controllerFast.dispose();
   }
 
   @override

@@ -12,6 +12,7 @@ class ArgumentValue extends ConsumerWidget {
   final bool showTitle;
   final bool showValue;
   final EdgeInsets padding;
+  final dynamic defaultValue;
 
   const ArgumentValue(
     this.argument,
@@ -20,11 +21,12 @@ class ArgumentValue extends ConsumerWidget {
     this.showTitle = true,
     this.showValue = true,
     this.padding = const EI.o(l: 12, r: 12),
+    this.defaultValue,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final value = switch (argument) {
+    final value = defaultValue ?? switch (argument) {
       Argument.batchCount => ref.watch(P.chat.batchCount),
       Argument.batchVW => ref.watch(P.chat.batchVW),
       _ => ref.watch(P.rwkv.arguments(argument)),

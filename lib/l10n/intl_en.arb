@@ -1,5 +1,16 @@
 {
   "@@locale": "en",
+  "show_escape_characters": "Show escape characters",
+  "line_break_rendered": "Line break rendered",
+  "escape_characters_rendered": "Escape characters rendered",
+  "show_prefill_log_only": "Show only Prefill log",
+  "state_panel": "State Panel",
+  "open_state_panel": "Open State Panel",
+  "refreshed": "Refreshed",
+  "refresh": "Refresh",
+  "close": "Close",
+  "runtime_log_panel": "Runtime Log Panel",
+  "open_debug_log_panel": "Open Debug Log Panel",
   "selected_count": "Selected {count}",
   "select_all": "Select All",
   "cancel_all_selection": "Cancel All Selection",
@@ -401,5 +412,10 @@
   "mode": "Mode",
   "suggest": "Suggest",
   "comprehensive": "Comprehensive",
-  "str_downloading_info": "Downloaded %.1f% Speed %.1fMB/s Remain %s"
+  "str_downloading_info": "Downloaded %.1f% Speed %.1fMB/s Remain %s",
+  "batch_completion": "Batch Completion",
+  "batch_completion_settings": "Batch Completion Settings",
+  "batch_inference_width_2": "Result Display Width",
+  "batch_inference_count_detail_2": "Each inference will generate %d result",
+  "batch_inference_width_detail_2": "Width of Each Result"
 }

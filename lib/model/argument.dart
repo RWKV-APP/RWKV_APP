@@ -1,4 +1,7 @@
+import 'package:collection/collection.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/args.dart';
+import 'package:zone/store/p.dart';
 
 enum DecodeParamType {
   unknown(temperature: -1, topP: -1, presencePenalty: -1, frequencyPenalty: -1, penaltyDecay: -1),
@@ -14,14 +17,14 @@ enum DecodeParamType {
     topP: 0.3,
     presencePenalty: 0,
     frequencyPenalty: 0,
-    penaltyDecay: 0.996,
+    penaltyDecay: 0.99,
   ),
   fixed(
     temperature: 0.2,
     topP: 0,
     presencePenalty: 0,
     frequencyPenalty: 0,
-    penaltyDecay: 0.996,
+    penaltyDecay: 0.99,
   ),
   comprehensive(
     temperature: 1,
@@ -35,7 +38,7 @@ enum DecodeParamType {
     topP: 0.3,
     presencePenalty: 0.5,
     frequencyPenalty: 0.5,
-    penaltyDecay: 0.996,
+    penaltyDecay: 0.99,
   );
 
   final double temperature;
@@ -151,7 +154,7 @@ enum Argument {
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,
-    batchCount => 8,
+    batchCount => P.rwkv.supportedBatchSizes.q.max.toDouble(),
     batchVW => 80,
   };
 

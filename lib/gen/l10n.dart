@@ -54,6 +54,101 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `换行符显示`
+  String get show_escape_characters {
+    return Intl.message(
+      '换行符显示',
+      name: 'show_escape_characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已渲染换行`
+  String get line_break_rendered {
+    return Intl.message(
+      '已渲染换行',
+      name: 'line_break_rendered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已渲染换行符`
+  String get escape_characters_rendered {
+    return Intl.message(
+      '已渲染换行符',
+      name: 'escape_characters_rendered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `仅显示 Prefill 日志`
+  String get show_prefill_log_only {
+    return Intl.message(
+      '仅显示 Prefill 日志',
+      name: 'show_prefill_log_only',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文本`
+  String get text {
+    return Intl.message('文本', name: 'text', desc: '', args: []);
+  }
+
+  /// `Life Span`
+  String get life_span {
+    return Intl.message('Life Span', name: 'life_span', desc: '', args: []);
+  }
+
+  /// `状态面板`
+  String get state_panel {
+    return Intl.message('状态面板', name: 'state_panel', desc: '', args: []);
+  }
+
+  /// `打开状态面板`
+  String get open_state_panel {
+    return Intl.message('打开状态面板', name: 'open_state_panel', desc: '', args: []);
+  }
+
+  /// `已刷新`
+  String get refreshed {
+    return Intl.message('已刷新', name: 'refreshed', desc: '', args: []);
+  }
+
+  /// `刷新`
+  String get refresh {
+    return Intl.message('刷新', name: 'refresh', desc: '', args: []);
+  }
+
+  /// `关闭`
+  String get close {
+    return Intl.message('关闭', name: 'close', desc: '', args: []);
+  }
+
+  /// `运行日志面板`
+  String get runtime_log_panel {
+    return Intl.message(
+      '运行日志面板',
+      name: 'runtime_log_panel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开调试日志面板`
+  String get open_debug_log_panel {
+    return Intl.message(
+      '打开调试日志面板',
+      name: 'open_debug_log_panel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `已选择 {count}`
   String selected_count(Object count) {
     return Intl.message(
@@ -2878,21 +2973,46 @@ class S {
     );
   }
 
-  /// `State 列表`
-  String get state_list {
-    return Intl.message('State 列表', name: 'state_list', desc: '', args: []);
+  /// `并行续写`
+  String get batch_completion {
+    return Intl.message('并行续写', name: 'batch_completion', desc: '', args: []);
   }
 
-  /// `角色扮演`
-  String get role_play {
-    return Intl.message('角色扮演', name: 'role_play', desc: '', args: []);
-  }
-
-  /// `扮演你喜欢的角色`
-  String get role_play_intro {
+  /// `并行续写设置`
+  String get batch_completion_settings {
     return Intl.message(
-      '扮演你喜欢的角色',
-      name: 'role_play_intro',
+      '并行续写设置',
+      name: 'batch_completion_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `结果显示宽度`
+  String get batch_inference_width_2 {
+    return Intl.message(
+      '结果显示宽度',
+      name: 'batch_inference_width_2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每次生成 {count} 条结果`
+  String batch_inference_count_detail_2(Object count) {
+    return Intl.message(
+      '每次生成 $count 条结果',
+      name: 'batch_inference_count_detail_2',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `每条结果的宽度`
+  String get batch_inference_width_detail_2 {
+    return Intl.message(
+      '每条结果的宽度',
+      name: 'batch_inference_width_detail_2',
       desc: '',
       args: [],
     );

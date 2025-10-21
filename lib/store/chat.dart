@@ -123,7 +123,6 @@ extension $Chat on _Chat {
         content: textToSend,
         isMine: false,
         changing: false,
-        isReasoning: currentMessage.isReasoning,
         paused: currentMessage.paused,
         modelName: currentMessage.modelName,
         runningMode: currentMessage.runningMode,
@@ -254,11 +253,6 @@ extension $Chat on _Chat {
     P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
   }
 
-  Future<void> completion(String prompt) async {
-    P.rwkv.clearStates();
-    P.rwkv.completion(prompt);
-  }
-
   void toggleCompletionMode() {
     final receiving = P.chat.receivingTokens.q;
     if (receiving) {
@@ -268,10 +262,6 @@ extension $Chat on _Chat {
     final r = !completionMode.q;
     completionMode.q = r;
     P.rwkv.setGenerateMode(r);
-  }
-
-  Future<void> resumeCompletion() async {
-    P.rwkv.completion('');
   }
 
   Future<void> stopCompletion() async {
@@ -366,7 +356,6 @@ extension $Chat on _Chat {
         imageUrl: imageUrl,
         audioUrl: audioUrl,
         audioLength: audioLength,
-        isReasoning: false,
         paused: false,
       );
       P.msg._syncMsg(id, userMsg);
@@ -401,7 +390,6 @@ extension $Chat on _Chat {
       content: "",
       isMine: false,
       changing: true,
-      isReasoning: thinkingMode.hasThinkTag,
       paused: false,
       modelName: currentModel.name,
       runningMode: thinkingMode.toString(),

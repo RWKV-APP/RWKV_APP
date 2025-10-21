@@ -30,10 +30,15 @@ class _RWKV {
 
   late Completer<void> _initRuntimeCompleter = Completer<void>();
 
+  final generating = qs(false);
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
   late final argumentsPanelShown = qs(false);
+  late final logPanelShown = qs(false);
+  late final statePanelShown = qs(false);
+  late final showEscapeCharacters = qs(false);
+  late final showPrefillLogOnly = qs(true);
 
   late final decodeParamType = qp<DecodeParamType>((ref) {
     final temp = ref.watch(arguments(Argument.temperature));
@@ -56,10 +61,7 @@ class _RWKV {
 
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
-  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Lighting());
-
-  thinking_mode.ThinkingMode reasoningOnOrder = const thinking_mode.Free();
-  thinking_mode.ThinkingMode reasoningOffOrder = const thinking_mode.Lighting();
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
@@ -95,7 +97,7 @@ class _RWKV {
   Timer? _getTokensTimer;
 
   late final socName = qs("");
-  late final socBrand = qs<SocBrand>(SocBrand.unknown);
+  late final socBrand = qs(SocBrand.unknown);
 
   late final _qnnLibsCopied = qs(false);
 
@@ -113,6 +115,43 @@ class _RWKV {
   });
 
   late final supportedBatchSizes = qs<List<int>>([]);
+
+  late final runtimeLog = qs<List<LogItem>>([]);
+  late final stateLogList = qs<List<StateLog>>([]);
+
+  /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
+  List<LogItem> _parseRuntimeLog(String runtimeLog) {
+    if (runtimeLog.isEmpty) return [];
+
+    final logItems = <LogItem>[];
+    final regex = RegExp(r'\[(INFO|DEBUG|WARN|ERROR|TRACE|FATAL)\]');
+    final matches = regex.allMatches(runtimeLog);
+
+    for (int i = 0; i < matches.length; i++) {
+      final match = matches.elementAt(i);
+      final tag = match.group(1) ?? 'UNKNOWN';
+
+      // 获取当前标签到下一个标签之间的内容
+      final start = match.end;
+      final end = i + 1 < matches.length ? matches.elementAt(i + 1).start : runtimeLog.length;
+
+      final content = runtimeLog.substring(start, end).trim();
+
+      final isPrefill = content.startsWith("new text to prefill");
+
+      if (content.isNotEmpty) {
+        logItems.add(
+          LogItem(
+            tag: tag,
+            content: content,
+            isPrefill: isPrefill,
+          ),
+        );
+      }
+    }
+
+    return logItems;
+  }
 }
 
 extension $RWKVLoad on _RWKV {
@@ -531,9 +570,11 @@ extension $RWKV on _RWKV {
 
     final isBatch = batchSize > 1;
 
+    final thinkingMode = _thinkingMode.q;
+
     final startInferenceCalling = isBatch
-        ? to_rwkv.ChatBatchAsync(messages, reasoning: _thinkingMode.q.hasThinkTag, batchSize: batchSize) //
-        : to_rwkv.ChatAsync(messages, reasoning: _thinkingMode.q.hasThinkTag);
+        ? to_rwkv.ChatBatchAsync(messages, reasoning: thinkingMode.hasThinkTag, batchSize: batchSize) //
+        : to_rwkv.ChatAsync(messages, reasoning: thinkingMode.hasThinkTag);
     send(startInferenceCalling);
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
@@ -548,26 +589,37 @@ extension $RWKV on _RWKV {
     });
   }
 
-  Future<void> completion(String prompt) async {
+  Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final sendPort = _sendPort;
     if (sendPort == null) {
       qqw("sendPort is null");
-      return;
+      return const Stream.empty();
     }
-    send(to_rwkv.GenerateAsync(prompt));
-
-    if (_getTokensTimer != null) {
-      _getTokensTimer!.cancel();
-    }
+    final request = to_rwkv.GenerateAsync(prompt, batch: batchSize);
+    send(request);
+    if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferIds());
-      send(to_rwkv.GetPrefillAndDecodeSpeed());
-      send(to_rwkv.GetResponseBufferContent());
-      await Future.delayed(const Duration(milliseconds: 1000));
-      send(to_rwkv.GetIsGenerating());
+      final getResponseCalling = batchSize > 1
+          ? to_rwkv.GetBatchResponseBufferContent() //
+          : to_rwkv.GetResponseBufferContent();
+      send(getResponseCalling);
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
+    });
+    return broadcastStream.mapNotNull((e) {
+      if (e is from_rwkv.ResponseBatchBufferContent) {
+        return e;
+      } else if (e is from_rwkv.ResponseBufferContent) {
+        return from_rwkv.ResponseBatchBufferContent(
+          responseBufferContent: [e.responseBufferContent],
+          eosFound: [e.eosFound],
+          batchSize: batchSize,
+        );
+      }
+      return null;
     });
   }
 
@@ -657,7 +709,7 @@ extension $RWKV on _RWKV {
     String? prompt,
   }) async {
     qqr(thinkingMode);
-    _thinkingMode.q = thinkingMode ?? const thinking_mode.Lighting();
+    _thinkingMode.q = thinkingMode ?? const thinking_mode.Fast();
 
     final systemPrompt = P.preference.promptTemplate.systemPrompt.trim();
 
@@ -870,6 +922,14 @@ extension $RWKV on _RWKV {
         break;
     }
   }
+
+  Future<void> refreshRuntimeLog() async {
+    send(to_rwkv.DumpLog());
+  }
+
+  Future<void> refreshStatePanel() async {
+    send(to_rwkv.DumpStateInfo());
+  }
 }
 
 /// Private methods
@@ -1006,6 +1066,11 @@ extension _$RWKV on _RWKV {
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
     _messagesController.add(message);
     switch (message) {
+      case from_rwkv.IsGenerating res:
+        if (res.isGenerating != generating.q) {
+          generating.q = res.isGenerating;
+          qqq('generating=${res.isGenerating}');
+        }
       case from_rwkv.ReInitSteps res:
         final done = res.done;
         final success = res.success;
@@ -1023,6 +1088,17 @@ extension _$RWKV on _RWKV {
             _initRuntimeCompleter.completeError(exception);
           } else {}
         }
+
+      case from_rwkv.StateInfo response:
+        final stateInfo = response.stateInfo.trim();
+        if (stateInfo.isEmpty) return;
+        final stateLogList = stateInfo.split("text =").where((e) => e.isNotEmpty).map((e) {
+          final raw = e.split(", remaining lifespan = ");
+          final text = raw[0];
+          final lifeSpan = int.tryParse(raw[1]) ?? 0;
+          return StateLog(text: text, lifeSpan: lifeSpan);
+        }).toList();
+        this.stateLogList.q = stateLogList;
 
       case from_rwkv.Error response:
         if (kDebugMode) {
@@ -1048,6 +1124,9 @@ extension _$RWKV on _RWKV {
       case from_rwkv.SupportedBatchSizes response:
         supportedBatchSizes.q = response.supportedBatchSizes;
 
+      case from_rwkv.RuntimeLog response:
+        runtimeLog.q = _parseRuntimeLog(response.runtimeLog);
+
       default:
         break;
     }
@@ -1065,11 +1144,13 @@ extension _$RWKV on _RWKV {
         "libQnnHtpV73Stub.so",
         "libQnnHtpV75Stub.so",
         "libQnnHtpV79Stub.so",
+        "libQnnHtpV81Stub.so",
         "libQnnHtpV68Skel.so",
         "libQnnHtpV69Skel.so",
         "libQnnHtpV73Skel.so",
         "libQnnHtpV75Skel.so",
         "libQnnHtpV79Skel.so",
+        "libQnnHtpV81Skel.so",
         "libQnnHtpPrepare.so",
         "libQnnSystem.so",
         "libQnnRwkvWkvOpPackageV68.so",
@@ -1077,6 +1158,7 @@ extension _$RWKV on _RWKV {
         "libQnnRwkvWkvOpPackageV73.so",
         "libQnnRwkvWkvOpPackageV75.so",
         "libQnnRwkvWkvOpPackageV79.so",
+        "libQnnRwkvWkvOpPackageV81.so",
       };
       for (final lib in qnnLibList) {
         await fromAssetsToTemp("assets/lib/qnn/$lib", targetPath: "assets/lib/$lib");

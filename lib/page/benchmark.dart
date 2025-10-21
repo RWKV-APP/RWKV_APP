@@ -56,6 +56,8 @@ class _TestState extends ConsumerState<_Test> {
 
   double oldMaxLength = 4000;
 
+  StreamSubscription? subscription;
+
   @override
   void initState() {
     super.initState();
@@ -86,13 +88,16 @@ class _TestState extends ConsumerState<_Test> {
       });
       final prompt =
           "My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard, ";
-      P.chat.completion(prompt);
+      P.rwkv.clearStates();
+      subscription?.cancel();
+      subscription = P.rwkv.completion(prompt).listen((e) {}, onError: (e) {}, onDone: () {});
     }
   }
 
   @override
   void dispose() {
     super.dispose();
+    subscription?.cancel();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       P.chat.stopCompletion();
       P.rwkv.syncMaxLength(maxLength: oldMaxLength);

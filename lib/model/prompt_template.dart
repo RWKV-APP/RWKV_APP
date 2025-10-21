@@ -7,6 +7,7 @@ import 'package:zone/store/p.dart';
 class PromptTemplate {
   final String thinkingWithChinese;
   final String thinkingLighting;
+  final String thinkingFast;
   final String thinkingFree;
   final String newChatTemplate;
   final String webSearchTemplate;
@@ -16,6 +17,7 @@ class PromptTemplate {
   PromptTemplate({
     required this.thinkingWithChinese,
     required this.thinkingLighting,
+    required this.thinkingFast,
     required this.thinkingFree,
     required this.newChatTemplate,
     required this.webSearchTemplate,
@@ -27,6 +29,7 @@ class PromptTemplate {
     return PromptTemplate(
       thinkingWithChinese: '',
       thinkingLighting: '<think>\n</think>',
+      thinkingFast: '<think>\n</think',
       thinkingFree: '<think',
       newChatTemplate: '',
       webSearchTemplate: '%s\nPlease answer according to the above information:\n%s',
@@ -40,6 +43,7 @@ class PromptTemplate {
     return PromptTemplate(
       thinkingWithChinese: map['thinkingWithChinese'] ?? '',
       thinkingLighting: map['thinkingLighting'] ?? '',
+      thinkingFast: map['thinkingFast'] ?? '',
       thinkingFree: map['thinkingFree'] ?? '',
       newChatTemplate: map['newChatTemplate'] ?? '',
       webSearchTemplate: map['webSearchTemplate'] ?? '',
@@ -51,8 +55,9 @@ class PromptTemplate {
   String apply(ThinkingMode mode) {
     switch (mode) {
       case Lighting():
-      case Fast():
         return thinkingLighting.isNotEmpty ? thinkingLighting : const Lighting().header;
+      case Fast():
+        return thinkingFast.isNotEmpty ? thinkingFast : const Fast().header;
       case Free():
         return thinkingFree.isNotEmpty ? thinkingFree : const Free().header;
       case PreferChinese():
@@ -78,6 +83,7 @@ class PromptTemplate {
     return jsonEncode({
       "thinkingWithChinese": thinkingWithChinese,
       "thinkingLighting": thinkingLighting,
+      "thinkingFast": thinkingFast,
       "thinkingFree": thinkingFree,
       "newChatTemplate": newChatTemplate,
       "webSearchTemplate": webSearchTemplate,
