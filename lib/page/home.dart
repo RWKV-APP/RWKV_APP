@@ -66,23 +66,23 @@ class PageHome extends ConsumerWidget {
                 children: [
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _ChatButton(),
+                    child: const _ChatButton(),
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _TTSButton(),
+                    child: const _TTSButton(),
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _NekoButton(),
+                    child: const _NekoButton(),
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _CompletionButton(),
+                    child: const _CompletionButton(),
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _TranslatorButton(),
+                    child: const _TranslatorButton(),
                   ),
                 ],
               ),
