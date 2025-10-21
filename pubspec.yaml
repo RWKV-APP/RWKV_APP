@@ -13,23 +13,21 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  flutter_roleplay:
-#    path: ../flutter_roleplay
-    git:
-      url: https://github.com/chenqi2013/flutter_roleplay
-      ref: main
-
   rwkv_mobile_flutter:
     path: ../rwkv_mobile_flutter
   #    git:
   #      url: https://github.com/MollySophia/rwkv_mobile_flutter
   #      ref: dev
 
+  flutter_roleplay:
+    git:
+      url: https://github.com/chenqi2013/flutter_roleplay
+      ref: main
+
   rwkv_downloader:
-#     path: ../rwkv_downloader
     git:
       url: https://github.com/RWKV-APP/rwkv_downloader.git
-      ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
+      ref: master
 
   photo_viewer:
     git:
@@ -84,6 +82,10 @@ dependencies:
   shelf_web_socket: ^3.0.0
   web_socket_channel: ^3.0.3
   device_info_plus: ^11.5.0
+
+dependency_overrides:
+  rwkv_mobile_flutter:
+    path: ../rwkv_mobile_flutter
 
 dev_dependencies:
   build_runner: ^2.5.4

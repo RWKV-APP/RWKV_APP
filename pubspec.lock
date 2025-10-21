@@ -655,9 +655,11 @@ packages:
   flutter_roleplay:
     dependency: "direct main"
     description:
-      path: "../flutter_roleplay"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "1b7eb325da3074a35f8bcfe9985f35dcee6a3beb"
+      url: "https://github.com/chenqi2013/flutter_roleplay"
+    source: git
     version: "0.0.1"
   flutter_svg:
     dependency: transitive
@@ -1428,9 +1430,11 @@ packages:
   rwkv_downloader:
     dependency: "direct main"
     description:
-      path: "../rwkv_downloader"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
+      url: "https://github.com/RWKV-APP/rwkv_downloader.git"
+    source: git
     version: "0.0.1"
   rwkv_mobile_flutter:
     dependency: "direct main"
