@@ -650,6 +650,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "result": MessageLookupByLibrary.simpleMessage("Result"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
+    "role_play": MessageLookupByLibrary.simpleMessage("Role Play"),
+    "role_play_intro": MessageLookupByLibrary.simpleMessage(
+      "Play as your favorite character",
+    ),
     "runtime_log_panel": MessageLookupByLibrary.simpleMessage(
       "Runtime Log Panel",
     ),
@@ -722,6 +726,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Start Inference",
     ),
     "starting": MessageLookupByLibrary.simpleMessage("Starting..."),
+    "state_list": MessageLookupByLibrary.simpleMessage("State List"),
     "state_panel": MessageLookupByLibrary.simpleMessage("State Panel"),
     "status": MessageLookupByLibrary.simpleMessage("Status"),
     "stop": MessageLookupByLibrary.simpleMessage("Stop"),

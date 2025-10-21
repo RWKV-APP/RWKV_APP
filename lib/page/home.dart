@@ -84,6 +84,10 @@ class PageHome extends ConsumerWidget {
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: _TranslatorButton(),
                   ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: _RolePlayButton(),
+                  ),
                 ],
               ),
             ),
@@ -396,6 +400,51 @@ class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
               const CircularProgressIndicator(),
               const SizedBox(height: 16),
               Text(S.current.model_loading),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RolePlayButton extends ConsumerWidget {
+  const _RolePlayButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+
+    return Material(
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: InkWell(
+        onTap: () {
+          push(PageKey.rolePlaying);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  height: 48,
+                  width: 48,
+                  decoration: const BoxDecoration(
+                    color: Colors.yellow,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(s.role_play, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(s.role_play_intro, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              const SizedBox(height: 6),
             ],
           ),
         ),
