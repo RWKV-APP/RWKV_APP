@@ -14,7 +14,10 @@ dependencies:
     sdk: flutter
 
   flutter_roleplay:
-    path: ../flutter_roleplay
+#    path: ../flutter_roleplay
+    git:
+      url: https://github.com/chenqi2013/flutter_roleplay
+      ref: main
 
   rwkv_mobile_flutter:
     path: ../rwkv_mobile_flutter
@@ -23,10 +26,10 @@ dependencies:
   #      ref: dev
 
   rwkv_downloader:
-     path: ../rwkv_downloader
-#    git:
-#      url: https://github.com/RWKV-APP/rwkv_downloader.git
-#      ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
+#     path: ../rwkv_downloader
+    git:
+      url: https://github.com/RWKV-APP/rwkv_downloader.git
+      ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
 
   photo_viewer:
     git:
