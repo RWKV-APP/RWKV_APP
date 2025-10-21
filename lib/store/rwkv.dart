@@ -429,7 +429,15 @@ extension $RWKVLoad on _RWKV {
     await resetMaxLength(enableReasoning: enableReasoning);
     send(to_rwkv.GetSamplerParams());
     _loading.q = false;
-    send(to_rwkv.GetSupportedBatchSizes());
+    Future.delayed(500.ms).then((_) {
+      send(to_rwkv.GetSupportedBatchSizes());
+    });
+    Future.delayed(1000.ms).then((_) {
+      send(to_rwkv.GetSupportedBatchSizes());
+    });
+    Future.delayed(1500.ms).then((_) {
+      send(to_rwkv.GetSupportedBatchSizes());
+    });
   }
 
   Future<void> loadOthello() async {
