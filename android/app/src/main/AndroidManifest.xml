@@ -10,8 +10,8 @@
     <application
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
-        android:icon="${launcherIcon}"
-        android:label="${appName}"
+         android:icon="@mipmap/ic_launcher"
+        android:label="RWKV Chat"
         android:requestLegacyExternalStorage="true">
 
         <provider
