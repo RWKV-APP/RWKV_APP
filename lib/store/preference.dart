@@ -72,6 +72,11 @@ extension _$Preference on _Preference {
       final r = Language.values.firstWhereOrNull((e) => e.name == language) ?? Language.none;
       qqq("language: $language, r: $r");
       preferredLanguage.q = r;
+      Locale local = Language.en.locale;
+      if (r == Language.zh_Hans || r == Language.zh_Hant) {
+        local = Language.zh_Hans.locale;
+      }
+      RoleplayManage.changeLocale(local);
     } else {
       preferredLanguage.q = Language.none;
     }
@@ -218,6 +223,7 @@ extension $Preference on _Preference {
     preferredLanguage.q = res;
     final sp = await SharedPreferences.getInstance();
     await sp.setString("halo_state.language", res.locale.toString());
+    RoleplayManage.changeLocale(res.locale);
   }
 
   Future<void> showThemeSettings() async {

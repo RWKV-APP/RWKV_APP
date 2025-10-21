@@ -652,6 +652,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.6.1"
+  flutter_roleplay:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: main
+      resolved-ref: "1b7eb325da3074a35f8bcfe9985f35dcee6a3beb"
+      url: "https://github.com/chenqi2013/flutter_roleplay"
+    source: git
+    version: "0.0.1"
   flutter_svg:
     dependency: transitive
     description:
@@ -713,6 +722,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.2"
+  get:
+    dependency: transitive
+    description:
+      name: get
+      sha256: c79eeb4339f1f3deffd9ec912f8a923834bec55f7b49c9e882b8fef2c139d425
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.7.2"
   glob:
     dependency: transitive
     description:
@@ -1414,7 +1431,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
+      ref: master
       resolved-ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
       url: "https://github.com/RWKV-APP/rwkv_downloader.git"
     source: git

@@ -2,27 +2,100 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_roleplay/models/chat_message_model.dart' show ChatMessage;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
+
+class ConversationListItemData {
+  final int id;
+  final String? avatar;
+  final ConversationData? conv;
+  final String? roleName;
+
+  final String title;
+  final String subtitle;
+  final String displayTime;
+  final int sortKey;
+
+  bool get isRoleplay => roleName != null;
+
+  static final _today = DateTime.now().copyWith(hour: 23, minute: 59);
+
+  ConversationListItemData({
+    required this.id,
+    required this.sortKey,
+    required this.title,
+    required this.subtitle,
+    required this.displayTime,
+    this.avatar,
+    this.conv,
+    this.roleName,
+  });
+
+  static ConversationListItemData fromConv(ConversationData cov) {
+    return ConversationListItemData(
+      conv: cov,
+      sortKey: cov.updatedAtUS ?? cov.createdAtUS,
+      id: cov.createdAtUS,
+      title: cov.title,
+      subtitle: cov.subtitle ?? '-',
+      displayTime: getDisplayTime(cov.updatedAtUS ?? cov.createdAtUS),
+    );
+  }
+
+  static ConversationListItemData fromRoleplay(ChatMessage cm, String avatar) {
+    return ConversationListItemData(
+      sortKey: cm.timestamp.microsecondsSinceEpoch,
+      id: cm.timestamp.microsecondsSinceEpoch,
+      avatar: avatar,
+      title: cm.roleName,
+      subtitle: cm.content,
+      roleName: cm.roleName,
+      displayTime: getDisplayTime(cm.timestamp.microsecondsSinceEpoch),
+    );
+  }
+
+  static String getDisplayTime(int microsecondsSinceEpoch) {
+    final datetime = DateTime.fromMicrosecondsSinceEpoch(microsecondsSinceEpoch);
+    String showTime = sprintf('%02d:%02d', [datetime.hour, datetime.minute]);
+    final diff = datetime.difference(_today);
+    final span = diff.inDays;
+    if (span == 0) {
+      showTime = showTime;
+    } else {
+      showTime = sprintf('%02d-%02d', [datetime.month, datetime.day]);
+    }
+    return showTime;
+  }
+}
 
 class ConversationItem extends ConsumerWidget {
   const ConversationItem({super.key, required this.conversation});
 
-  final ConversationData conversation;
+  final ConversationListItemData conversation;
 
-  void _onTap() async {
-    await P.conversation.onTapInList(conversation);
+  void _onTap(BuildContext context) async {
+    if (conversation.isRoleplay) {
+      push(PageKey.rolePlaying, extra: {'roleName': conversation.roleName!});
+      return;
+    }
+    await P.conversation.onTapInList(conversation.conv!);
   }
 
   void _onLongPressStart(LongPressStartDetails details, BuildContext context) async {
     // 在长按开始时显示菜单
+    if (conversation.isRoleplay) {
+      return;
+    }
 
-    P.conversation.interactingCreatedAtUS.q = conversation.createdAtUS;
+    P.conversation.interactingCreatedAtUS.q = conversation.conv!.createdAtUS;
 
     P.app.hapticLight();
 
@@ -97,11 +170,11 @@ class ConversationItem extends ConsumerWidget {
 
     switch (res) {
       case 'rename':
-        await P.conversation.onRenameClicked(context, conversation);
+        await P.conversation.onRenameClicked(context, conversation.conv!);
       case 'delete':
-        await P.conversation.onDeleteClicked(context, conversation);
+        await P.conversation.onDeleteClicked(context, conversation.conv!);
       case 'export':
-        await P.conversation.onExportClicked(context, conversation);
+        await P.conversation.onExportClicked(context, conversation.conv!);
       default:
         break;
     }
@@ -109,33 +182,18 @@ class ConversationItem extends ConsumerWidget {
     P.conversation.interactingCreatedAtUS.q = null;
   }
 
-  static String getDisplayTime(int microsecondsSinceEpoch) {
-    final datetime = DateTime.fromMicrosecondsSinceEpoch(microsecondsSinceEpoch);
-    String showTime = sprintf('%02d:%02d', [datetime.hour, datetime.minute]);
-    final diff = datetime.difference(DateTime.now());
-    final span = diff.inDays;
-    if (span == -1) {
-      showTime = 'Yesterday';
-    } else if (span == 0) {
-      showTime = showTime;
-    } else {
-      showTime = sprintf('%02d-%02d', [datetime.month, datetime.day]);
-    }
-    return showTime;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
-    final color = P.conversation.getConversationColor(conversation);
+    final color = P.conversation.getConversationColor(conversation.id);
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
-    final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.createdAtUS);
+    final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
 
     return Material(
       child: GestureDetector(
         onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
         child: InkWell(
-          onTap: isBatchMode ? () => _handleBatchSelection() : _onTap,
+          onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Row(
@@ -152,13 +210,15 @@ class ConversationItem extends ConsumerWidget {
                 ],
                 Center(
                   child: Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.all(12),
+                    height: 40,
+                    width: 40,
+                    clipBehavior: Clip.antiAlias,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: color,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white),
+                    child: buildAvatar(),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -173,7 +233,7 @@ class ConversationItem extends ConsumerWidget {
                       ),
                       4.h,
                       T(
-                        conversation.subtitle ?? '-',
+                        conversation.subtitle,
                         s: const TS(s: 12, c: Colors.grey),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -182,7 +242,7 @@ class ConversationItem extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Text(getDisplayTime(conversation.createdAtUS), style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(conversation.displayTime, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
           ),
@@ -191,7 +251,17 @@ class ConversationItem extends ConsumerWidget {
     );
   }
 
+  Widget buildAvatar() {
+    if (conversation.avatar == null) {
+      return const FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white);
+    }
+    if (!conversation.avatar!.startsWith('http')) {
+      return Image.asset(conversation.avatar!, height: 40, width: 40);
+    }
+    return Image.network(conversation.avatar!, fit: BoxFit.cover, height: 40, width: 40);
+  }
+
   void _handleBatchSelection() {
-    P.conversation.toggleConversationSelection(conversation.createdAtUS);
+    P.conversation.toggleConversationSelection(conversation.id);
   }
 }

@@ -14,6 +14,7 @@ import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:gaimon/gaimon.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';

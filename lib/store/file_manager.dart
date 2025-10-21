@@ -237,6 +237,10 @@ extension _$FileManager on _FileManager {
     await Future.delayed(const Duration(milliseconds: 17));
     final availableFiles = chatWeights.q;
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
+
+    final stateFiles = availableFiles.map((e) => e.state).flattened.toSet();
+    availableFiles.addAll(stateFiles);
+
     for (final fileInfo in availableFiles) {
       final taskId = fileInfo.fileName;
 

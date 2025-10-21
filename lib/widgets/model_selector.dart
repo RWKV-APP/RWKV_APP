@@ -3,6 +3,9 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
@@ -11,22 +14,22 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/model_item.dart';
+import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
-import 'package:zone/widgets/model_item.dart';
 
 class ModelSelector extends ConsumerWidget {
+  final bool rolePlayOnly;
   final bool showNeko;
   final ScrollController scrollController;
   static DemoType? _preferredDemoType;
 
   static Future<void> show({
+    bool rolePlayOnly = false,
     bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
@@ -65,7 +68,7 @@ class ModelSelector extends ConsumerWidget {
         snap: false,
         builder: (context, scrollController) => ModelSelector(
           scrollController: scrollController,
-          showNeko: showNeko,
+          showNeko: showNeko,rolePlayOnly: rolePlayOnly
         ),
       ),
     );
@@ -75,11 +78,7 @@ class ModelSelector extends ConsumerWidget {
     P.fileManager.modelSelectorShown.q = false;
   }
 
-  const ModelSelector({
-    super.key,
-    required this.scrollController,
-    required this.showNeko,
-  });
+  const ModelSelector({super.key, required this.scrollController, required this.showNeko, required this.rolePlayOnly});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,7 +95,7 @@ class ModelSelector extends ConsumerWidget {
           children: [
             const _Header(),
             const _Hints(),
-            _ModelList(showNeko: showNeko),
+            _ModelList(showNeko: showNeko, rolePlayOnly: rolePlayOnly),
             16.h,
             paddingBottom.h,
           ],
@@ -155,8 +154,9 @@ class _Hints extends ConsumerWidget {
 
 class _ModelList extends ConsumerWidget {
   final bool showNeko;
+  final bool rolePlayOnly;
 
-  const _ModelList({required this.showNeko});
+  const _ModelList({required this.showNeko, required this.rolePlayOnly});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -176,6 +176,14 @@ class _ModelList extends ConsumerWidget {
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
 
+    if (rolePlayOnly) {
+      availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: availableModels.map((e) => RolePlayItem(file: e)).toList(),
+      );
+    }
+
     if (pageKey == PageKey.translator) {
       availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
     } else {
@@ -186,7 +194,7 @@ class _ModelList extends ConsumerWidget {
       availableModels = availableModels.whereNot((e) => e.tags.contains('DeepEmbedding')).toSet();
     }
 
-    final List<Widget> items = switch (preferredDemoType) {
+    List<Widget> items = switch (preferredDemoType) {
       DemoType.world =>
         WorldType.values
             .where((e) => e.available)

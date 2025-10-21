@@ -25,10 +25,25 @@ class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final bool showTags;
   final bool loadButtonTextShowLoad;
+  final VoidCallback? onLoadModelTap;
+  final bool showLoadModel;
+  final bool showDelete;
 
-  const ModelItem(this.fileInfo, this.showTags, {super.key, this.loadButtonTextShowLoad = false});
+  ModelItem(
+    this.fileInfo,
+    this.showTags, {
+    super.key,
+    this.onLoadModelTap,
+    this.showLoadModel = true,
+    this.showDelete = true,
+    this.loadButtonTextShowLoad = false,
+  });
 
   void _onStartTap() async {
+    if (onLoadModelTap != null) {
+      onLoadModelTap!();
+      return;
+    }
     qq;
 
     switch (P.app.demoType.q) {
@@ -190,9 +205,9 @@ class ModelItem extends ConsumerWidget {
               child: FileKeyItem(fileInfo, showTags: showTags),
             ),
             8.w,
-            _DownloadActions(file: fileInfo, state: localFile.state),
+            DownloadActions(file: fileInfo, state: localFile.state),
             if (hasFile) ...[
-              if (!isCurrentModel)
+              if (!isCurrentModel && showLoadModel)
                 GestureDetector(
                   onTap: _onStartTap,
                   child: Container(
@@ -219,8 +234,8 @@ class ModelItem extends ConsumerWidget {
                     child: T(loadButtonTextShowLoad ? S.current.loaded : s.chatting, s: TS(c: qw)),
                   ),
                 ),
-              if (!isCurrentModel) 8.w,
-              if (!isCurrentModel) _Delete(fileInfo),
+              if (!isCurrentModel && showDelete) 8.w,
+              if (!isCurrentModel && showDelete) _Delete(fileInfo),
             ],
           ],
         ),
@@ -229,11 +244,11 @@ class ModelItem extends ConsumerWidget {
   }
 }
 
-class _DownloadActions extends StatelessWidget {
+class DownloadActions extends StatelessWidget {
   final TaskState state;
   final FileInfo file;
 
-  const _DownloadActions({required this.file, required this.state});
+  const DownloadActions({super.key, required this.file, required this.state});
 
   void onCancelTap() async {
     final result = await showOkCancelAlertDialog(

@@ -78,6 +78,8 @@ class FileInfo extends Equatable {
 
   final Set<SocBrand> unsupportedSocBrand;
 
+  final List<ModelStateFile> state;
+
   const FileInfo({
     required this.name,
     required this.fileName,
@@ -95,6 +97,7 @@ class FileInfo extends Equatable {
     required this.tags,
     required this.socLimitations,
     required this.unsupportedSocBrand,
+    required this.state,
   });
 
   factory FileInfo.fromJSON(Map<String, dynamic> json) {
@@ -123,6 +126,7 @@ class FileInfo extends Equatable {
       tags: HF.list(json['tags'] ?? []).map((e) => e.toString()).toList(),
       socLimitations: socLimitations,
       unsupportedSocBrand: unsupportedSocBrand,
+      state: HF.list(json['state'] ?? []).map((e) => ModelStateFile.fromJson(e)).toList(),
     );
   }
 
@@ -244,4 +248,39 @@ enum FileType {
   encoder,
   runtime,
   downloadTest,
+}
+
+class ModelStateFile extends FileInfo {
+  final dynamic decodeParam;
+
+  ModelStateFile({
+    required super.name,
+    required super.fileName,
+    required super.fileSize,
+    required super.raw,
+    super.updatedAt = '',
+    super.fileType = FileType.weights,
+    super.isDebug = false,
+    super.availableIn = const [],
+    super.supportedPlatforms = const [],
+    super.backend,
+    super.sha256,
+    super.modelSize,
+    super.quantization,
+    super.tags = const [],
+    super.socLimitations = const [],
+    super.unsupportedSocBrand = const {},
+    super.state = const [],
+    this.decodeParam,
+  });
+
+  factory ModelStateFile.fromJson(dynamic json) {
+    return ModelStateFile(
+      fileName: json["fileName"],
+      raw: json["url"],
+      fileSize: json["fileSize"],
+      name: json['name'],
+      decodeParam: json['decodeParam'] ?? {},
+    );
+  }
 }
