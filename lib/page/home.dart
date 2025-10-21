@@ -87,10 +87,10 @@ class PageHome extends ConsumerWidget {
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: _RolePlayButton(),
                   ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _LambadaButton(),
-                  ),
+                  // ConstrainedBox(
+                  //   constraints: BoxConstraints(maxWidth: maxWidth),
+                  //   child: _LambadaButton(),
+                  // ),
                 ],
               ),
             ),
