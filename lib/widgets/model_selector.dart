@@ -68,7 +68,8 @@ class ModelSelector extends ConsumerWidget {
         snap: false,
         builder: (context, scrollController) => ModelSelector(
           scrollController: scrollController,
-          showNeko: showNeko,rolePlayOnly: rolePlayOnly
+          showNeko: showNeko,
+          rolePlayOnly: rolePlayOnly,
         ),
       ),
     );
@@ -114,7 +115,7 @@ class _Header extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
+          child: T(s.chat_please_select_a_model, s: const TS(s: 18, w: FontWeight.w600)),
         ),
         const IconButton(
           onPressed: pop,
