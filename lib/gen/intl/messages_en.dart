@@ -736,7 +736,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Storage permission not granted",
     ),
     "str_downloading_info": MessageLookupByLibrary.simpleMessage(
-      "Downloaded %.1f% Speed %.1fMB/s Remain %s",
+      "Downloaded %.1f%% Speed %.1fMB/s Remain %s",
     ),
     "str_model_selection_dialog_hint": MessageLookupByLibrary.simpleMessage(
       "We recommend choosing at least the 1.5B model, 2.9B is preferable.",

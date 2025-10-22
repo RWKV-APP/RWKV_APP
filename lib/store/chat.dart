@@ -478,6 +478,18 @@ extension _$Chat on _Chat {
     P.app.lifecycleState.lb(_onLifecycleStateChanged);
 
     P.preference.preferredLanguage.lv(P.suggestion.loadSuggestions);
+
+    P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
+  }
+
+  void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {
+    if (supportedBatchSizes.isEmpty) {
+      batchEnabled.q = false;
+      batchCount.q = Argument.batchCount.defaults.toInt();
+      return;
+    }
+    final max = supportedBatchSizes.max;
+    if (max < batchCount.q) batchCount.q = max;
   }
 
   Future<void> _checkSensitive(String content) async {

@@ -56,7 +56,6 @@ class PageHome extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 100),
-
             Center(
               child: Wrap(
                 spacing: 12,
@@ -88,6 +87,10 @@ class PageHome extends ConsumerWidget {
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: _RolePlayButton(),
                   ),
+                  // ConstrainedBox(
+                  //   constraints: BoxConstraints(maxWidth: maxWidth),
+                  //   child: _LambadaButton(),
+                  // ),
                 ],
               ),
             ),
@@ -344,6 +347,51 @@ class _TranslatorButton extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(s.offline_translator_detail, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              const SizedBox(height: 6),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LambadaButton extends ConsumerWidget {
+  const _LambadaButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+
+    return Material(
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: InkWell(
+        onTap: () {
+          push(PageKey.lambada);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  height: 48,
+                  width: 48,
+                  decoration: const BoxDecoration(
+                    color: Colors.purple,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: const FaIcon(FontAwesomeIcons.bolt, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text("跑分测试", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text("使用 lambada 测试 perplexity", style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),

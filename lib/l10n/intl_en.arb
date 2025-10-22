@@ -412,7 +412,7 @@
   "mode": "Mode",
   "suggest": "Suggest",
   "comprehensive": "Comprehensive",
-  "str_downloading_info": "Downloaded %.1f% Speed %.1fMB/s Remain %s",
+  "str_downloading_info": "Downloaded %.1f%% Speed %.1fMB/s Remain %s",
   "batch_completion": "Batch Completion",
   "batch_completion_settings": "Batch Completion Settings",
   "batch_inference_width_2": "Result Display Width",
