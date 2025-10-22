@@ -33,6 +33,10 @@ class ModelSelector extends ConsumerWidget {
     bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
+    if (rolePlayOnly && P.app.pageKey.q != PageKey.rolePlaying) {
+      return;
+    }
+
     if (P.fileManager.modelSelectorShown.q) return;
     P.fileManager.modelSelectorShown.q = true;
 
