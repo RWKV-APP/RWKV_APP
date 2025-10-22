@@ -181,7 +181,7 @@ class _ModelList extends ConsumerWidget {
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
 
-    if (rolePlayOnly) {
+    if (rolePlayOnly && pageKey == PageKey.rolePlaying) {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
