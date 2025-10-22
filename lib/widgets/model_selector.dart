@@ -33,10 +33,6 @@ class ModelSelector extends ConsumerWidget {
     bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
-    if (rolePlayOnly && P.app.pageKey.q != PageKey.rolePlaying) {
-      return;
-    }
-
     if (P.fileManager.modelSelectorShown.q) return;
     P.fileManager.modelSelectorShown.q = true;
 
@@ -60,6 +56,10 @@ class ModelSelector extends ConsumerWidget {
 
     if (preferredDemoType != null) {
       _preferredDemoType = preferredDemoType;
+    }
+
+    if (rolePlayOnly && P.app.pageKey.q != PageKey.rolePlaying) {
+      return;
     }
 
     await showModalBottomSheet(
