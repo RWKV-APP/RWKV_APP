@@ -4,7 +4,6 @@ class _Lambada {
   late final testItems = qs<List<LambadaTestItem>>([]);
   late final waitingItems = qs<List<LambadaTestItem>>([]);
 
-  late final currentIndex = qs<int>(0);
   late final progress = qs<double>(0.0);
   late final totalFinishCount = qs<int>(0);
   late final correctCount = qs<int>(0);
@@ -89,7 +88,8 @@ extension $Lambada on _Lambada {
       return;
     }
 
-    currentIndex.q = 0;
+    testItems.q = testItems.q.shuffled.toList();
+
     progress.q = 0.0;
     totalFinishCount.q = 0;
     correctCount.q = 0;
@@ -108,13 +108,11 @@ extension $Lambada on _Lambada {
   }
 
   void reset() {
-    currentIndex.q = 0;
     progress.q = 0.0;
   }
 
   void clearTestData() {
     testItems.q = [];
-    currentIndex.q = 0;
     progress.q = 0.0;
   }
 
