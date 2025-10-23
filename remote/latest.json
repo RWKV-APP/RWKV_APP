@@ -553,7 +553,24 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "state": [
+          {
+            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
+            "fileSize": 10489856,
+            "sha256": "9adc53f17ce1b8860d15d4210b6993f2a7bf74b698e452c5d4289e082c6f51d4",
+            "name": "中英双语角色扮演-20251014_ctx8192",
+            "fileName": "rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
+            "decodeParam": {
+              "temperature": 0.6,
+              "topK": 500,
+              "topP": 0.8,
+              "presencePenalty": 2.0,
+              "frequencyPenalty": 0.2,
+              "penaltyDecay": 0.99
+            }
+          }
+        ]
       },
       {
         "name": "RWKV7-G1a 2.9B (8 Gen 3)",
@@ -870,10 +887,21 @@
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "model_config": [
       {
+        "name": "RWKV7 SparkTTS 0.4B (8 Elite Gen5) 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.4B-g1-respark-voice-tunable_ipa-a16w8-8elitegen5.bin",
+        "fileSize": 502841344,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core", "spark"],
+        "socLimitations": ["8 Elite Gen5"]
+      },
+      {
         "name": "RWKV7 SparkTTS 0.4B (8 Elite) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.4B-g1-respark-voice-tunable-ipa-a16w8-8elite.bin",
-        "fileSize": 498627848,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.4B-g1-respark-voice-tunable_ipa-a16w8-8elite.bin",
+        "fileSize": 502513664,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -883,8 +911,8 @@
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.4B-g1-respark-voice-tunable-ipa-a16w8-8gen3.bin",
-        "fileSize": 500614408,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.4B-g1-respark-voice-tunable_ipa-a16w8-8gen3.bin",
+        "fileSize": 504672256,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -894,8 +922,8 @@
       {
         "name": "RWKV7 SparkTTS 0.4B (8s Gen 3) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.4B-g1-respark-voice-tunable-ipa-a16w8-8sgen3.bin",
-        "fileSize": 500659456,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.4B-g1-respark-voice-tunable_ipa-a16w8-8sgen3.bin",
+        "fileSize": 504717312,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -905,8 +933,8 @@
       {
         "name": "RWKV7 SparkTTS 0.4B (7+ Gen 3) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.4B-g1-respark-voice-tunable-ipa-a16w8-8sgen3.bin",
-        "fileSize": 500659456,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.4B-g1-respark-voice-tunable_ipa-a16w8-8sgen3.bin",
+        "fileSize": 504717312,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -916,8 +944,8 @@
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Gen 2) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.4B-g1-respark-voice-tunable-ipa-a16w8-8gen2.bin",
-        "fileSize": 500602120,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.4B-g1-respark-voice-tunable_ipa-a16w8-8gen2.bin",
+        "fileSize": 504664064,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -945,21 +973,21 @@
         "tags": ["cpu", "core", "spark"]
       },
       {
-        "name": "RWKV7 SparkTTS 0.1B (8 Elite) 🇨🇳🇺🇸🇯🇵",
+        "name": "RWKV7 SparkTTS 0.1B (8 Elite Gen5) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.1B-g1-respark-voice-tunable-ipa-a16w8-8elite.bin",
-        "fileSize": 222197480,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8elitegen5.bin",
+        "fileSize": 224100352,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite Gen5"]
       },
       {
         "name": "RWKV7 SparkTTS 0.1B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.1B-g1-respark-voice-tunable-ipa-a16w8-8gen3.bin",
-        "fileSize": 222877416,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8gen3.bin",
+        "fileSize": 224706560,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -969,8 +997,8 @@
       {
         "name": "RWKV7 SparkTTS 0.1B (8s Gen 3) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.1B-g1-respark-voice-tunable-ipa-a16w8-8sgen3.bin",
-        "fileSize": 222922464,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8sgen3.bin",
+        "fileSize": 224780288,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -980,8 +1008,8 @@
       {
         "name": "RWKV7 SparkTTS 0.1B (7+ Gen 3) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.1B-g1-respark-voice-tunable-ipa-a16w8-8sgen3.bin",
-        "fileSize": 222922464,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8sgen3.bin",
+        "fileSize": 224780288,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
@@ -991,8 +1019,8 @@
       {
         "name": "RWKV7 SparkTTS 0.1B (8 Gen 2) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.35-250923/rwkv7-0.1B-g1-respark-voice-tunable-ipa-a16w8-8gen2.bin",
-        "fileSize": 222877416,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.39-251016/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8gen2.bin",
+        "fileSize": 224710656,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
