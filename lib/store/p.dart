@@ -48,6 +48,7 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
+import 'package:zone/model/lambada_test_item.dart';
 import 'package:zone/db/db.dart' as db;
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
@@ -93,6 +94,7 @@ part "device.dart";
 part "dump.dart";
 part "file_manager.dart";
 part "guard.dart";
+part "lambada.dart";
 part "msg.dart";
 part "networking.dart";
 part "othello.dart";
@@ -123,6 +125,7 @@ abstract class P {
   static final msg = _Msg();
   static final backend = _Backend();
   static final translator = _Translator();
+  static final lambada = _Lambada();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -160,6 +163,7 @@ abstract class P {
       _safeInit(() => msg._init(), 'msg'),
       _safeInit(() => backend._init(), 'backend'),
       _safeInit(() => translator._init(), 'translator'),
+      _safeInit(() => lambada._init(), 'lambada'),
     ]);
   }
 

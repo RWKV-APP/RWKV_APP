@@ -87,10 +87,10 @@ class PageHome extends ConsumerWidget {
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: const _RolePlayButton(),
                   ),
-                  // ConstrainedBox(
-                  //   constraints: BoxConstraints(maxWidth: maxWidth),
-                  //   child: _LambadaButton(),
-                  // ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: _LambadaButton(),
+                  ),
                 ],
               ),
             ),
@@ -361,8 +361,6 @@ class _LambadaButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-
     return Material(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
