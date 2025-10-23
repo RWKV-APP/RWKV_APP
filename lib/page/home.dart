@@ -85,7 +85,7 @@ class PageHome extends ConsumerWidget {
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _RolePlayButton(),
+                    child: const _RolePlayButton(),
                   ),
                   // ConstrainedBox(
                   //   constraints: BoxConstraints(maxWidth: maxWidth),
@@ -389,9 +389,9 @@ class _LambadaButton extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Text("跑分测试", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text("跑分测试", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text("使用 lambada 测试 perplexity", style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              const Text("使用 lambada 测试 perplexity", style: TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),

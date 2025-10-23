@@ -253,7 +253,7 @@ enum FileType {
 class ModelStateFile extends FileInfo {
   final dynamic decodeParam;
 
-  ModelStateFile({
+  const ModelStateFile({
     required super.name,
     required super.fileName,
     required super.fileSize,

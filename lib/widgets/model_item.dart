@@ -29,7 +29,7 @@ class ModelItem extends ConsumerWidget {
   final bool showLoadModel;
   final bool showDelete;
 
-  ModelItem(
+  const ModelItem(
     this.fileInfo,
     this.showTags, {
     super.key,

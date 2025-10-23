@@ -8,9 +8,9 @@ class PageLambada extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lambada'),
+        title: const Text('Lambada'),
       ),
-      body: Center(child: Text('Lambada')),
+      body: const Center(child: Text('Lambada')),
     );
   }
 }

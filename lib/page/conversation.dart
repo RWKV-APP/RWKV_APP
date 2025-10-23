@@ -189,7 +189,7 @@ class _ConversationList extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 60),
       itemCount: conversations.length,
       cacheExtent: 200,
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (context, index) => const _ConversationSeparator(),
       itemBuilder: (context, index) => _ConversationDismissible(conversation: conversations[index]),
     );
