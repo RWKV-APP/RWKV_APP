@@ -71,13 +71,14 @@ class _AllSuggestionDialogState extends State<AllSuggestionDialog> implements Ti
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           16.h,
-          T(S.of(context).all_prompt, s: const TS(s: 16, w: FontWeight.w600)),
+          T(s.all_prompt, s: const TS(s: 16, w: FontWeight.w600)),
           16.h,
           SizedBox(
             height: 50,
@@ -133,10 +134,11 @@ class _SuggestionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     if (suggestions.isEmpty) {
       return Container(
         alignment: Alignment.center,
-        child: T(S.of(context).no_data, s: const TS(s: 16)),
+        child: T(s.no_data, s: const TS(s: 16)),
       );
     }
     return ListView.builder(

@@ -17,6 +17,7 @@ class PageHome extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final version = ref.watch(P.app.version);
 
     final width = MediaQuery.of(context).size.width;
@@ -45,7 +46,7 @@ class PageHome extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              S.of(context).welcome_to_rwkv_chat,
+              s.welcome_to_rwkv_chat,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),

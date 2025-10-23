@@ -110,6 +110,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     return Center(
       widthFactor: 1,
@@ -128,7 +129,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
             children: [
               4.h,
               Text(
-                S.of(context).downloading,
+                s.downloading,
                 style: theme.textTheme.titleMedium,
               ),
               12.h,
@@ -154,7 +155,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text(S.of(context).cancel_download),
+                    child: Text(s.cancel_download),
                   ),
                 ],
               ),

@@ -9,9 +9,10 @@ class PageLambada extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).lambada_test),
+        title: Text(s.lambada_test),
         actions: [
           _AppBarActions(),
         ],
@@ -59,6 +60,7 @@ class _AppBarActions extends ConsumerWidget {
 class _TestControlButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
 
     return Row(
@@ -73,7 +75,7 @@ class _TestControlButtons extends ConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.play_arrow),
-            label: Text(isRunning ? S.of(context).testing : S.of(context).start_test),
+            label: Text(isRunning ? s.testing : s.start_test),
           ),
         ),
         const SizedBox(width: 8),
@@ -82,7 +84,7 @@ class _TestControlButtons extends ConsumerWidget {
             child: ElevatedButton.icon(
               onPressed: () => P.lambada.stopTest(),
               icon: const Icon(Icons.stop),
-              label: Text(S.of(context).stop_test),
+              label: Text(s.stop_test),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -93,7 +95,7 @@ class _TestControlButtons extends ConsumerWidget {
           ElevatedButton.icon(
             onPressed: () => P.lambada.loadTestData(),
             icon: const Icon(Icons.refresh),
-            label: Text(S.of(context).load_data),
+            label: Text(s.load_data),
           ),
       ],
     );
@@ -103,17 +105,18 @@ class _TestControlButtons extends ConsumerWidget {
 class _ModelSelectionButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final currentModel = ref.watch(P.rwkv.currentModel);
 
     return Row(
       children: [
-        if (currentModel != null) Expanded(child: Text(S.of(context).current_model(currentModel.name))),
-        if (currentModel == null) Expanded(child: Text(S.of(context).please_select_model)),
+        if (currentModel != null) Expanded(child: Text(s.current_model(currentModel.name))),
+        if (currentModel == null) Expanded(child: Text(s.please_select_model)),
         ElevatedButton.icon(
           onPressed: isRunning ? null : () => P.lambada.reselectModel(),
           icon: const Icon(Icons.model_training),
-          label: currentModel == null ? Text(S.of(context).please_select_model) : Text(S.of(context).reselect_model),
+          label: currentModel == null ? Text(s.please_select_model) : Text(s.reselect_model),
         ),
       ],
     );
@@ -123,6 +126,7 @@ class _ModelSelectionButton extends ConsumerWidget {
 class _TestDataCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final testItems = ref.watch(P.lambada.testItems);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
@@ -135,14 +139,14 @@ class _TestDataCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              S.of(context).test_data,
+              s.test_data,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            Text(S.of(context).total_test_items(testItems.length)),
+            Text(s.total_test_items(testItems.length)),
             if (isRunning) ...[
               const SizedBox(height: 8),
-              Text(S.of(context).current_progress(totalFinishCount, testItems.length)),
+              Text(s.current_progress(totalFinishCount, testItems.length)),
               const SizedBox(height: 8),
               LinearProgressIndicator(value: progress),
             ],
@@ -156,6 +160,7 @@ class _TestDataCard extends ConsumerWidget {
 class _TestResultsCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final ppl = ref.watch(P.lambada.ppl);
     final acc = ref.watch(P.lambada.acc);
@@ -171,7 +176,7 @@ class _TestResultsCard extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  S.of(context).test_results,
+                  s.test_results,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 if (isRunning) ...[
@@ -193,7 +198,7 @@ class _TestResultsCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          S.of(context).real_time_update,
+                          s.real_time_update,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.orange.shade700,
@@ -211,7 +216,7 @@ class _TestResultsCard extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _ResultCard(
-                    title: S.of(context).accuracy,
+                    title: s.accuracy,
                     value: '${(acc * 100).toStringAsFixed(2)}%',
                     color: Colors.green,
                   ),
@@ -219,7 +224,7 @@ class _TestResultsCard extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _ResultCard(
-                    title: S.of(context).perplexity,
+                    title: s.perplexity,
                     value: ppl.toStringAsFixed(2),
                     color: Colors.blue,
                   ),
@@ -231,7 +236,7 @@ class _TestResultsCard extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _ResultCard(
-                    title: S.of(context).correct_count,
+                    title: s.correct_count,
                     value: '$correctCount',
                     color: Colors.orange,
                   ),
@@ -239,7 +244,7 @@ class _TestResultsCard extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _ResultCard(
-                    title: S.of(context).total_count,
+                    title: s.total_count,
                     value: '$totalFinishCount',
                     color: Colors.grey,
                   ),
@@ -256,6 +261,7 @@ class _TestResultsCard extends ConsumerWidget {
 class _CurrentTestPreview extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final testItems = ref.watch(P.lambada.testItems);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
@@ -272,17 +278,17 @@ class _CurrentTestPreview extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              S.of(context).current_test_item(currentIndex + 1, testItems.length),
+              s.current_test_item(currentIndex + 1, testItems.length),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              S.of(context).source_text(testItems[currentIndex].sourceText),
+              s.source_text(testItems[currentIndex].sourceText),
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 4),
             Text(
-              S.of(context).target_text(testItems[currentIndex].targetText),
+              s.target_text(testItems[currentIndex].targetText),
               style: const TextStyle(fontSize: 12, color: Colors.blue),
             ),
           ],

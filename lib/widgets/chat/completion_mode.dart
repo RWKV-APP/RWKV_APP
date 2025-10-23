@@ -590,6 +590,7 @@ class _SuggestDialogState extends State<_SuggestDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     return SizedBox(
       width: double.infinity,
@@ -602,7 +603,7 @@ class _SuggestDialogState extends State<_SuggestDialog> {
             child: Row(
               children: [
                 const SizedBox(width: 6),
-                Expanded(child: Text(S.of(context).suggest, style: theme.textTheme.titleMedium)),
+                Expanded(child: Text(s.suggest, style: theme.textTheme.titleMedium)),
                 const CloseButton(),
               ],
             ),
