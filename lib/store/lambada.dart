@@ -6,14 +6,12 @@ class _Lambada {
 
   late final currentIndex = qs<int>(0);
   late final progress = qs<double>(0.0);
-  late final totalCount = qs<int>(0);
+  late final totalFinishCount = qs<int>(0);
   late final correctCount = qs<int>(0);
   late final totalLogits = qs<double>(0.0);
 
   late final ppl = qs<double>(0.0);
   late final acc = qs<double>(0.0);
-
-  late final stop = qs(false);
 
   late final currentItem = qs<LambadaTestItem?>(null);
   late final currentRequest = qs<to_rwkv.RunEvaluation?>(null);
@@ -34,7 +32,7 @@ extension _$Lambada on _Lambada {
       return;
     }
 
-    totalCount.q++;
+    totalFinishCount.q++;
 
     final logits = res.logits.first;
     totalLogits.q += logits;
@@ -42,9 +40,11 @@ extension _$Lambada on _Lambada {
     if (correct) correctCount.q++;
 
     // 困惑度就是拿logits values做平均之后exp(-average)
-    ppl.q = exp(-totalLogits.q / totalCount.q);
+    ppl.q = exp(-totalLogits.q / totalFinishCount.q);
 
-    acc.q = correctCount.q / totalCount.q;
+    acc.q = correctCount.q / totalFinishCount.q;
+
+    if (!autoStartNextTest.q) return;
 
     final item = waitingItems.q.first;
     waitingItems.q = waitingItems.q.skip(1).toList();
@@ -91,12 +91,12 @@ extension $Lambada on _Lambada {
 
     currentIndex.q = 0;
     progress.q = 0.0;
-    totalCount.q = 0;
+    totalFinishCount.q = 0;
     correctCount.q = 0;
-    stop.q = false;
     ppl.q = 0.0;
     acc.q = 0.0;
     totalLogits.q = 0.0;
+    autoStartNextTest.q = true;
 
     waitingItems.q = testItems.q;
     final item = waitingItems.q.first;
@@ -127,7 +127,6 @@ extension $Lambada on _Lambada {
   }
 
   void stopTest() {
-    // 停止测试
-    qqr('LAMBADA test stopped by user');
+    autoStartNextTest.q = false;
   }
 }
