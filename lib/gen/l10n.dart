@@ -2354,8 +2354,8 @@ class S {
   }
 
   /// `续写模式`
-  String get Completion {
-    return Intl.message('续写模式', name: 'Completion', desc: '', args: []);
+  String get completion {
+    return Intl.message('续写模式', name: 'completion', desc: '', args: []);
   }
 
   /// `与 RWKV 模型对话`
@@ -3033,6 +3033,156 @@ class S {
     return Intl.message(
       '每条结果的宽度',
       name: 'batch_inference_width_detail_2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LAMBADA 测试`
+  String get lambada_test {
+    return Intl.message('LAMBADA 测试', name: 'lambada_test', desc: '', args: []);
+  }
+
+  /// `测试中...`
+  String get testing {
+    return Intl.message('测试中...', name: 'testing', desc: '', args: []);
+  }
+
+  /// `开始测试`
+  String get start_test {
+    return Intl.message('开始测试', name: 'start_test', desc: '', args: []);
+  }
+
+  /// `停止测试`
+  String get stop_test {
+    return Intl.message('停止测试', name: 'stop_test', desc: '', args: []);
+  }
+
+  /// `加载数据`
+  String get load_data {
+    return Intl.message('加载数据', name: 'load_data', desc: '', args: []);
+  }
+
+  /// `当前模型: {modelName}`
+  String current_model(Object modelName) {
+    return Intl.message(
+      '当前模型: $modelName',
+      name: 'current_model',
+      desc: '',
+      args: [modelName],
+    );
+  }
+
+  /// `请选择模型`
+  String get please_select_model {
+    return Intl.message(
+      '请选择模型',
+      name: 'please_select_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `测试数据`
+  String get test_data {
+    return Intl.message('测试数据', name: 'test_data', desc: '', args: []);
+  }
+
+  /// `总测试项: {count}`
+  String total_test_items(Object count) {
+    return Intl.message(
+      '总测试项: $count',
+      name: 'total_test_items',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `当前进度: {current}/{total}`
+  String current_progress(Object current, Object total) {
+    return Intl.message(
+      '当前进度: $current/$total',
+      name: 'current_progress',
+      desc: '',
+      args: [current, total],
+    );
+  }
+
+  /// `测试结果`
+  String get test_results {
+    return Intl.message('测试结果', name: 'test_results', desc: '', args: []);
+  }
+
+  /// `实时更新`
+  String get real_time_update {
+    return Intl.message('实时更新', name: 'real_time_update', desc: '', args: []);
+  }
+
+  /// `准确率`
+  String get accuracy {
+    return Intl.message('准确率', name: 'accuracy', desc: '', args: []);
+  }
+
+  /// `困惑度`
+  String get perplexity {
+    return Intl.message('困惑度', name: 'perplexity', desc: '', args: []);
+  }
+
+  /// `正确数`
+  String get correct_count {
+    return Intl.message('正确数', name: 'correct_count', desc: '', args: []);
+  }
+
+  /// `总数`
+  String get total_count {
+    return Intl.message('总数', name: 'total_count', desc: '', args: []);
+  }
+
+  /// `当前测试项 ({current}/{total})`
+  String current_test_item(Object current, Object total) {
+    return Intl.message(
+      '当前测试项 ($current/$total)',
+      name: 'current_test_item',
+      desc: '',
+      args: [current, total],
+    );
+  }
+
+  /// `源文本: {text}`
+  String source_text(Object text) {
+    return Intl.message(
+      '源文本: $text',
+      name: 'source_text',
+      desc: '',
+      args: [text],
+    );
+  }
+
+  /// `目标文本: {text}`
+  String target_text(Object text) {
+    return Intl.message(
+      '目标文本: $text',
+      name: 'target_text',
+      desc: '',
+      args: [text],
+    );
+  }
+
+  /// `跑分测试`
+  String get performance_test_title {
+    return Intl.message(
+      '跑分测试',
+      name: 'performance_test_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用 lambada 测试 perplexity`
+  String get performance_test_description {
+    return Intl.message(
+      '使用 lambada 测试 perplexity',
+      name: 'performance_test_description',
       desc: '',
       args: [],
     );

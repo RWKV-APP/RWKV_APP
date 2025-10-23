@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/store/p.dart';
 
 class PageLambada extends ConsumerWidget {
@@ -10,7 +11,7 @@ class PageLambada extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LAMBADA 测试'),
+        title: Text(S.of(context).lambada_test),
         actions: [
           _AppBarActions(),
         ],
@@ -72,7 +73,7 @@ class _TestControlButtons extends ConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.play_arrow),
-            label: Text(isRunning ? '测试中...' : '开始测试'),
+            label: Text(isRunning ? S.of(context).testing : S.of(context).start_test),
           ),
         ),
         const SizedBox(width: 8),
@@ -81,7 +82,7 @@ class _TestControlButtons extends ConsumerWidget {
             child: ElevatedButton.icon(
               onPressed: () => P.lambada.stopTest(),
               icon: const Icon(Icons.stop),
-              label: const Text('停止测试'),
+              label: Text(S.of(context).stop_test),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -92,7 +93,7 @@ class _TestControlButtons extends ConsumerWidget {
           ElevatedButton.icon(
             onPressed: () => P.lambada.loadTestData(),
             icon: const Icon(Icons.refresh),
-            label: const Text('加载数据'),
+            label: Text(S.of(context).load_data),
           ),
       ],
     );
@@ -107,12 +108,12 @@ class _ModelSelectionButton extends ConsumerWidget {
 
     return Row(
       children: [
-        if (currentModel != null) Expanded(child: T("当前模型: ${currentModel.name}")),
-        if (currentModel == null) Expanded(child: T("请选择模型")),
+        if (currentModel != null) Expanded(child: Text(S.of(context).current_model(currentModel.name))),
+        if (currentModel == null) Expanded(child: Text(S.of(context).please_select_model)),
         ElevatedButton.icon(
           onPressed: isRunning ? null : () => P.lambada.reselectModel(),
           icon: const Icon(Icons.model_training),
-          label: currentModel == null ? Text("请选择模型") : Text('重新选择模型'),
+          label: currentModel == null ? Text(S.of(context).please_select_model) : Text(S.of(context).reselect_model),
         ),
       ],
     );
@@ -134,14 +135,14 @@ class _TestDataCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '测试数据',
+              S.of(context).test_data,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            Text('总测试项: ${testItems.length}'),
+            Text(S.of(context).total_test_items(testItems.length)),
             if (isRunning) ...[
               const SizedBox(height: 8),
-              Text('当前进度: $totalFinishCount / ${testItems.length}'),
+              Text(S.of(context).current_progress(totalFinishCount, testItems.length)),
               const SizedBox(height: 8),
               LinearProgressIndicator(value: progress),
             ],
@@ -170,7 +171,7 @@ class _TestResultsCard extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  '测试结果',
+                  S.of(context).test_results,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 if (isRunning) ...[
@@ -192,7 +193,7 @@ class _TestResultsCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '实时更新',
+                          S.of(context).real_time_update,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.orange.shade700,
@@ -210,7 +211,7 @@ class _TestResultsCard extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _ResultCard(
-                    title: '准确率',
+                    title: S.of(context).accuracy,
                     value: '${(acc * 100).toStringAsFixed(2)}%',
                     color: Colors.green,
                   ),
@@ -218,7 +219,7 @@ class _TestResultsCard extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _ResultCard(
-                    title: '困惑度',
+                    title: S.of(context).perplexity,
                     value: ppl.toStringAsFixed(2),
                     color: Colors.blue,
                   ),
@@ -230,7 +231,7 @@ class _TestResultsCard extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _ResultCard(
-                    title: '正确数',
+                    title: S.of(context).correct_count,
                     value: '$correctCount',
                     color: Colors.orange,
                   ),
@@ -238,7 +239,7 @@ class _TestResultsCard extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _ResultCard(
-                    title: '总数',
+                    title: S.of(context).total_count,
                     value: '$totalFinishCount',
                     color: Colors.grey,
                   ),
@@ -271,17 +272,17 @@ class _CurrentTestPreview extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '当前测试项 (${currentIndex + 1}/${testItems.length})',
+              S.of(context).current_test_item(currentIndex + 1, testItems.length),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              '源文本: ${testItems[currentIndex].sourceText}',
+              S.of(context).source_text(testItems[currentIndex].sourceText),
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 4),
             Text(
-              '目标文本: ${testItems[currentIndex].targetText}',
+              S.of(context).target_text(testItems[currentIndex].targetText),
               style: const TextStyle(fontSize: 12, color: Colors.blue),
             ),
           ],

@@ -361,6 +361,7 @@ class _LambadaButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     return Material(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -387,9 +388,9 @@ class _LambadaButton extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text("跑分测试", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.lambada_test, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              const Text("使用 lambada 测试 perplexity", style: TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(s.performance_test_description, style: TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),
