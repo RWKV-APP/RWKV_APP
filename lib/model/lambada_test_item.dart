@@ -5,7 +5,7 @@ class LambadaTestItem extends Equatable {
   final String sourceText;
   final String targetText;
 
-  LambadaTestItem({
+  const LambadaTestItem({
     required this.text,
     required this.sourceText,
     required this.targetText,
