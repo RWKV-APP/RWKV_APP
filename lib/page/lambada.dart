@@ -103,15 +103,16 @@ class _ModelSelectionButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
+    final currentModel = ref.watch(P.rwkv.currentModel);
 
     return Row(
       children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: isRunning ? null : () => P.lambada.reselectModel(),
-            icon: const Icon(Icons.model_training),
-            label: const Text('重新选择模型'),
-          ),
+        if (currentModel != null) Expanded(child: T("当前模型: ${currentModel.name}")),
+        if (currentModel == null) Expanded(child: T("请选择模型")),
+        ElevatedButton.icon(
+          onPressed: isRunning ? null : () => P.lambada.reselectModel(),
+          icon: const Icon(Icons.model_training),
+          label: currentModel == null ? Text("请选择模型") : Text('重新选择模型'),
         ),
       ],
     );
