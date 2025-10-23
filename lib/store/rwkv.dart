@@ -1079,6 +1079,8 @@ extension _$RWKV on _RWKV {
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
     _messagesController.add(message);
     switch (message) {
+      case from_rwkv.EvaluationResults res:
+        P.lambada._onResultsReceived(res);
       case from_rwkv.IsGenerating res:
         if (res.isGenerating != generating.q) {
           generating.q = res.isGenerating;
