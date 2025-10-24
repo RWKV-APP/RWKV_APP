@@ -1090,7 +1090,7 @@
       {
         "name": "RWKV7 Sudoku (8 Elite Gen5)",
         "modelSize": 0.013,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-L10-D320-fp16-8elitegen5.bin",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-20241120-fp16-8elitegen5.bin",
         "fileSize": 32358400,
         "quantization": "fp16",
         "platforms": ["android"],
@@ -1101,7 +1101,7 @@
       {
         "name": "RWKV7 Sudoku (8 Elite)",
         "modelSize": 0.013,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-L10-D320-fp16-8elite.bin",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-20241120-fp16-8elite.bin",
         "fileSize": 32014336,
         "quantization": "fp16",
         "platforms": ["android"],
@@ -1112,7 +1112,7 @@
       {
         "name": "RWKV7 Sudoku (8 Gen 3)",
         "modelSize": 0.013,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-L10-D320-fp16-8gen3.bin",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-20241120-fp16-8gen3.bin",
         "fileSize": 32067584,
         "quantization": "fp16",
         "platforms": ["android"],
@@ -1123,7 +1123,7 @@
       {
         "name": "RWKV7 Sudoku (8 Gen 2)",
         "modelSize": 0.013,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-L10-D320-fp16-8gen2.bin",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-20241120-fp16-8gen2.bin",
         "fileSize": 32055296,
         "quantization": "fp16",
         "platforms": ["android"],
@@ -1144,7 +1144,7 @@
       {
         "name": "RWKV7 Sudoku (GPU)",
         "modelSize": 0.013,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/sudoku_rwkv-v7-L10-D320-webrwkv.st",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/sudoku_rwkv-v7-20241120-webrwkv.st",
         "fileSize": 26948008,
         "quantization": "fp16",
         "platforms": ["ios", "macos", "windows", "linux"],
