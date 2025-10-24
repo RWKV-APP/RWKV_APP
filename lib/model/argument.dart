@@ -159,24 +159,24 @@ enum Argument {
   };
 
   double get reasonDefaults => switch (this) {
-    temperature => 1.0,
+    temperature => DecodeParamType.defaults.temperature,
     topK => 500,
-    topP => .3,
-    presencePenalty => .5,
-    frequencyPenalty => .5,
-    penaltyDecay => .996,
+    topP => DecodeParamType.defaults.topP,
+    presencePenalty => DecodeParamType.defaults.presencePenalty,
+    frequencyPenalty => DecodeParamType.defaults.frequencyPenalty,
+    penaltyDecay => DecodeParamType.defaults.penaltyDecay,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 4000,
     batchCount => Args.batchCount.toDouble(),
     batchVW => Args.batchVW.toDouble(),
   };
 
   double get defaults => switch (this) {
-    temperature => 1.0,
+    temperature => DecodeParamType.defaults.temperature,
     topK => 500,
-    topP => .3,
-    presencePenalty => .5,
-    frequencyPenalty => .5,
-    penaltyDecay => .996,
+    topP => DecodeParamType.defaults.topP,
+    presencePenalty => DecodeParamType.defaults.presencePenalty,
+    frequencyPenalty => DecodeParamType.defaults.frequencyPenalty,
+    penaltyDecay => DecodeParamType.defaults.penaltyDecay,
     maxLength => Args.maxTokens > 0 ? Args.maxTokens.toDouble() : 2000,
     batchCount => Args.batchCount.toDouble(),
     batchVW => Args.batchVW.toDouble(),
