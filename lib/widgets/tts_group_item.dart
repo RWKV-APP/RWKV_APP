@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
+import 'package:flutter_roleplay/flutter_roleplay.dart';
 import 'package:flutter_roleplay/models/model_info.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
@@ -80,6 +81,18 @@ class TTSGroupItem extends ConsumerWidget {
     final localWav2vec2File = P.fileManager.locals(wav2vec2FileKey).q;
     final localDetokenizeFile = P.fileManager.locals(detokenizeFileKey).q;
     final localTokenizeFile = P.fileManager.locals(bicodecTokenizeFileKey).q;
+
+    if (P.app.pageKey.q == PageKey.rolePlaying) {
+      final info = ModelInfo(
+        id: fileInfo.fileName,
+        modelPath: modelLocalFile.targetPath,
+        statePath: '',
+        backend: fileInfo.backend!,
+      );
+      RoleplayManage.onModelDownloadComplete(info);
+      Navigator.pop(getContext()!);
+      return;
+    }
 
     P.rwkv.clearStates();
     P.chat.clearMessages();
