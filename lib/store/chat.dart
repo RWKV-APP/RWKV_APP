@@ -638,8 +638,7 @@ extension _$Chat on _Chat {
   }
 
   void _onTextEditingControllerValueChanged() {
-    // qqq("_onTextEditingControllerValueChanged");
-    final textInController = textEditingController.text;
+    final textInController = textEditingController.text.replaceAll(Config.userMsgModifierSep, "");
     if (textInInput.q != textInController) textInInput.q = textInController;
   }
 
