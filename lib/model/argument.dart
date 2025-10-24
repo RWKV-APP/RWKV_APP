@@ -36,8 +36,8 @@ enum DecodeParamType {
   defaults(
     temperature: 1,
     topP: 0.3,
-    presencePenalty: 0.5,
-    frequencyPenalty: 0.5,
+    presencePenalty: 1,
+    frequencyPenalty: 0.1,
     penaltyDecay: 0.99,
   );
 
