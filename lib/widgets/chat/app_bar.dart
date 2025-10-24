@@ -91,7 +91,7 @@ class _MainAppBar extends ConsumerWidget {
   }
 
   void _onTitlePressed() async {
-    ModelSelector.show();
+    ModelSelector.show(showNeko: P.app.pageKey.q == PageKey.neko);
   }
 
   @override
