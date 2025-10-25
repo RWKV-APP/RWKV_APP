@@ -50,6 +50,7 @@ class _TTS {
 /// Private methods
 extension _$TTS on _TTS {
   Future<void> _init() async {
+    if (P.app.demoType.q == DemoType.sudoku) return;
     qq;
     P.chat.focusNode.addListener(_onChatFocusNodeChanged);
 

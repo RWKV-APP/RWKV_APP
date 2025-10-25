@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zone/page/panel/settings.dart';
 
 @Deprecated('Use PopupMenuButton instead')
 class Menu extends ConsumerWidget {
@@ -11,6 +12,6 @@ class Menu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const SizedBox();
+    return const Settings(isInDrawerMenu: true);
   }
 }

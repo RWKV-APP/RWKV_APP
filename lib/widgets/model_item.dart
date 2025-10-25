@@ -244,7 +244,7 @@ class ModelItem extends ConsumerWidget {
   }
 }
 
-class DownloadActions extends StatelessWidget {
+class DownloadActions extends ConsumerWidget {
   final TaskState state;
   final FileInfo file;
 
@@ -269,15 +269,17 @@ class DownloadActions extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final showDownload = state == TaskState.idle;
     final showResume = state == TaskState.stopped;
     final showPause = state == TaskState.running;
     final showCancel = showPause || showResume;
+    final localFile = ref.watch(P.fileManager.locals(file));
+    final hasFile = localFile.hasFile;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showDownload)
+        if (showDownload && !hasFile)
           IconButton(
             onPressed: () => onDownloadTap(context),
             icon: const Icon(Icons.download_rounded),
