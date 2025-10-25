@@ -4,7 +4,7 @@ abstract class Args {
   static const batchVW = int.fromEnvironment("batchVW", defaultValue: 70);
   static const debugMsgId = bool.fromEnvironment("debugMsgId", defaultValue: false);
   static const debuggingThemes = bool.fromEnvironment("debuggingThemes", defaultValue: false);
-  static const demoType = String.fromEnvironment("demoType", defaultValue: "__sudoku__");
+  static const demoType = String.fromEnvironment("demoType", defaultValue: "__chat__");
   static const disableAutoShowOfWeightsPanel = bool.fromEnvironment("disableAutoShowOfWeightsPanel", defaultValue: false);
   static const disableRemoteConfig = bool.fromEnvironment("disableRemoteConfig", defaultValue: false);
   static const enableBatchInference = bool.fromEnvironment("enableBatchInference", defaultValue: false);

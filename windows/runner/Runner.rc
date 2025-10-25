@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.rwkv.sudoku" "\0"
-            VALUE "FileDescription", "RWKV Sudoku" "\0"
+            VALUE "CompanyName", "com.rwkvzone.chat" "\0"
+            VALUE "FileDescription", "RWKV Chat" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "RWKV Sudoku" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.rwkv.sudoku. All rights reserved." "\0"
-            VALUE "OriginalFilename", "RWKV Sudoku.exe" "\0"
-            VALUE "ProductName", "RWKV Sudoku" "\0"
+            VALUE "InternalName", "RWKV Chat" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.rwkvzone.chat. All rights reserved." "\0"
+            VALUE "OriginalFilename", "RWKV Chat.exe" "\0"
+            VALUE "ProductName", "RWKV Chat" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

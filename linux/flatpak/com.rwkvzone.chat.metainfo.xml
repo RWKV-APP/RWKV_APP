@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.rwkv.sudoku</id>
+  <id>com.rwkvzone.chat</id>
   
-  <name>RWKV Sudoku</name>
+  <name>RWKV Chat</name>
   <summary>Chat with RWKV models</summary>
   
   <metadata_license>CC0-1.0</metadata_license>
@@ -17,7 +17,7 @@
     </p>
   </description>
   
-  <launchable type="desktop-id">com.rwkv.sudoku.desktop</launchable>
+  <launchable type="desktop-id">com.rwkvzone.chat.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/RWKV_APP/RWKV_APP/3b13aaf2c0f2da3642ade5f77db8a3e6c853c71c/linux/flatpak/screenshots/screenshot1.png</image>
@@ -39,7 +39,7 @@
   <url type="bugtracker">https://github.com/RWKV-APP/RWKV_APP/issues</url>
   <url type="vcs-browser">https://github.com/RWKV-APP/RWKV_APP</url>
   
-  <icon type="stock">com.rwkv.sudoku</icon>
+  <icon type="stock">com.rwkvzone.chat</icon>
   <categories>
     <category>Utility</category>
     <category>Development</category>

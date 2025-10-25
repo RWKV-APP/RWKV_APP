@@ -1,4 +1,4 @@
-package com.rwkv.sudoku
+package com.rwkvzone.chat
 
 import android.content.Intent
 import android.util.Log

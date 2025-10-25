@@ -13,7 +13,7 @@ plugins {
 // }
 
 android {
-    namespace = "com.rwkv.sudoku"
+    namespace = "com.rwkvzone.chat"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.rwkv.sudoku"
+        applicationId = "com.rwkvzone.chat"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdkVersion flutter.minSdkVersion

@@ -50,6 +50,7 @@ class _TTS {
 /// Private methods
 extension _$TTS on _TTS {
   Future<void> _init() async {
+    if (P.app.demoType.q == DemoType.sudoku) return;
     qq;
     P.chat.focusNode.addListener(_onChatFocusNodeChanged);
 
@@ -296,7 +297,7 @@ extension $TTS on _TTS {
   Future<void> getTTSSpkNames() async {
     qq;
     try {
-      final data = await rootBundle.loadString("assets/lib/sudoku/pairs.json");
+      final data = await rootBundle.loadString("assets/lib/chat/pairs.json");
       final spkPairs = await compute(_parseSpkNames, data);
       this.spkPairs.q = spkPairs;
     } catch (e) {
@@ -378,7 +379,7 @@ extension $TTS on _TTS {
   Future<String> getPrebuiltSpkAudioPathFromTemp(String spkName) async {
     qq;
     final fileName = "$spkName.wav";
-    final path = "assets/lib/sudoku/$fileName";
+    final path = "assets/lib/chat/$fileName";
     final localPath = await fromAssetsToTemp(path);
     return localPath;
   }
@@ -386,7 +387,7 @@ extension $TTS on _TTS {
   Future<String> getPromptSpeechText(String spkName) async {
     qq;
     final fileName = "$spkName.json";
-    final data = await rootBundle.loadString("assets/lib/sudoku/$fileName");
+    final data = await rootBundle.loadString("assets/lib/chat/$fileName");
     final json = HF.json(jsonDecode(data));
     return json["transcription"];
   }

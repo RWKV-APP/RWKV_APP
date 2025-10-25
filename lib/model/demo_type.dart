@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum DemoType {
-  /// RWKV Sudoku
+  /// RWKV Chat
   chat,
 
   /// RWKV_Fiffthteen_Puzzle

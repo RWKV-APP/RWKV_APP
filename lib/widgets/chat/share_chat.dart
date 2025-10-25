@@ -427,7 +427,7 @@ class _PreviewState extends ConsumerState<_Preview> {
         ClipRRect(
           borderRadius: BorderRadius.circular(6),
           child: Image.asset(
-            "assets/img/sudoku/icon.png",
+            "assets/img/chat/icon.png",
             width: 42,
             height: 42,
             fit: BoxFit.cover,
