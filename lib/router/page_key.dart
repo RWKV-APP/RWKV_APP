@@ -82,10 +82,10 @@ enum PageKey {
   static String get initialLocation => first.path;
 
   static PageKey get first {
-    if (Args.demoType == '__chat__') {
+    if (Args.demoType == '__sudoku__') {
       return PageKey.sudoku;
     }
-    if (Args.demoType == '__chat__') {
+    if (Args.demoType == '__othello__') {
       return PageKey.othello;
     }
     return PageKey.home;

@@ -190,7 +190,7 @@ extension $Chat on _Chat {
 
   Future<void> onTapEditInUserMessageBubble({required int index}) async {
     if (!checkModelSelection()) return;
-    final content = P.msg.list.q[index].content;
+    final content = P.msg.list.q[index].contentAndTails[0];
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
     P.msg.editingOrRegeneratingIndex.q = index;
