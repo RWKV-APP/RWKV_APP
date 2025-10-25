@@ -181,8 +181,6 @@ class _MarkdownBody extends ConsumerWidget {
 
     final (thought, output) = extrackThoughtAndOutput(data);
 
-    final factorOfOutput = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactor));
-
     if (thought.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -192,25 +190,52 @@ class _MarkdownBody extends ConsumerWidget {
       );
     }
 
-    final factorOfThought = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactorForCotContent));
+    final rawFontSize = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14.0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (thought.isNotEmpty)
-          GptMarkdown(
-            thought,
-            textScaler: factorOfThought,
-            style: TextStyle(color: qb.q(.5)),
-          ),
-        if (output.isNotEmpty) 4.h,
-        if (output.isNotEmpty)
-          GptMarkdown(
-            output,
-            textScaler: factorOfOutput,
-            style: TextStyle(color: qb.q(.9)),
-          ),
-      ],
+    final textScaleFactor = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactor));
+
+    final v = textScaleFactor.scale(14.0) / 14.0;
+    final alphaS = 1.5 / v;
+
+    final gptMarkdownStyle = TextStyle(
+      // color: kCR,
+      fontSize: rawFontSize * _kTextScaleFactor,
+    );
+
+    return GptMarkdownTheme(
+      gptThemeData: GptMarkdownTheme.of(context).copyWith(
+        h1: TextStyle(fontSize: rawFontSize * 1.0 * alphaS),
+        h2: TextStyle(fontSize: rawFontSize * 0.98 * alphaS),
+        h3: TextStyle(fontSize: rawFontSize * 0.96 * alphaS),
+        h4: TextStyle(fontSize: rawFontSize * 0.94 * alphaS),
+        h5: TextStyle(fontSize: rawFontSize * 0.92 * alphaS),
+        h6: TextStyle(fontSize: rawFontSize * 0.9 * alphaS),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (thought.isNotEmpty)
+            GptMarkdown(
+              thought,
+              style: TextStyle(
+                color: qb.q(.6),
+                fontSize: rawFontSize * _kTextScaleFactorForCotContent,
+              ),
+            ),
+          if (output.isNotEmpty) 4.h,
+          if (output.isNotEmpty)
+            GptMarkdown(
+              output,
+              style: gptMarkdownStyle,
+              orderedListBuilder: (context, no, child, config) {
+                return MediaQuery.withNoTextScaling(child: child);
+              },
+              unOrderedListBuilder: (context, child, config) {
+                return MediaQuery.withNoTextScaling(child: child);
+              },
+            ),
+        ],
+      ),
     );
   }
 }

@@ -312,6 +312,11 @@ class Message extends ConsumerWidget {
 
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
 
+    final gptMarkdownStyle = TextStyle(
+      // color: kCR,
+      fontSize: rawFontSize * _kTextScaleFactor,
+    );
+
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
@@ -383,7 +388,7 @@ class Message extends ConsumerWidget {
                   GptMarkdown(
                     finalContent.replaceAll("\n\n", "\n"),
                     onLinkTap: _onTapLink,
-                    textScaler: textScaleFactor,
+                    style: gptMarkdownStyle,
                   ),
                 // 🔥 Bot message cot header
                 if (reasoning && !isQuickThinking && !isBatch)
@@ -417,8 +422,10 @@ class Message extends ConsumerWidget {
                     child: GptMarkdown(
                       cotContent.replaceAll("\n\n", "\n"),
                       onLinkTap: _onTapLink,
-                      textScaler: textScaleFactorForCotContent,
-                      style: TextStyle(color: qb.q(.5)),
+                      style: TextStyle(
+                        color: qb.q(.6),
+                        fontSize: rawFontSize * _kTextScaleFactorForCotContent,
+                      ),
                     ),
                   ),
                 // 🔥 Bot message cot result
@@ -427,7 +434,13 @@ class Message extends ConsumerWidget {
                   GptMarkdown(
                     cotResult.replaceAll("\n\n", "\n"),
                     onLinkTap: _onTapLink,
-                    textScaler: textScaleFactor,
+                    style: gptMarkdownStyle,
+                    orderedListBuilder: (context, no, child, config) {
+                      return MediaQuery.withNoTextScaling(child: child);
+                    },
+                    unOrderedListBuilder: (context, child, config) {
+                      return MediaQuery.withNoTextScaling(child: child);
+                    },
                   ),
                 if (isBatch) BatchMessageContent(msg, index, finalContent),
                 if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
@@ -439,14 +452,17 @@ class Message extends ConsumerWidget {
       ),
     );
 
+    final v = textScaleFactor.scale(14.0) / 14.0;
+    final alphaS = 1.5 / v;
+
     return GptMarkdownTheme(
       gptThemeData: GptMarkdownTheme.of(context).copyWith(
-        h1: TextStyle(fontSize: rawFontSize + 5),
-        h2: TextStyle(fontSize: rawFontSize + 4),
-        h3: TextStyle(fontSize: rawFontSize + 3),
-        h4: TextStyle(fontSize: rawFontSize + 2),
-        h5: TextStyle(fontSize: rawFontSize + 1),
-        h6: TextStyle(fontSize: rawFontSize),
+        h1: TextStyle(fontSize: rawFontSize * 1.0 * alphaS),
+        h2: TextStyle(fontSize: rawFontSize * 0.98 * alphaS),
+        h3: TextStyle(fontSize: rawFontSize * 0.96 * alphaS),
+        h4: TextStyle(fontSize: rawFontSize * 0.94 * alphaS),
+        h5: TextStyle(fontSize: rawFontSize * 0.92 * alphaS),
+        h6: TextStyle(fontSize: rawFontSize * 0.9 * alphaS),
       ),
       child: GestureDetector(
         child: Align(
