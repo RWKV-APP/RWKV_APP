@@ -1,4 +1,4 @@
-app_identifier('com.rwkv.chat.v7.100m') # The bundle identifier of your app
+app_identifier('com.rwkvsudoku.ios') # The bundle identifier of your app
 apple_id('halowang1991@gmail.com') # Your Apple Developer Portal username
 
 itc_team_id('127523260') # App Store Connect Team ID

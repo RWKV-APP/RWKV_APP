@@ -2,6 +2,7 @@ part of 'p.dart';
 
 class _App extends RawApp {
   final _pageKey = qs(PageKey.first);
+
   late final pageKey = qp((ref) => ref.watch(_pageKey));
 
   late final db.AppDatabase _db;
@@ -164,7 +165,7 @@ extension _$App on _App {
     if (kDebugMode) {
       name = (Args.demoType).replaceAll("__", "");
     } else {
-      name = "__chat__".replaceAll("__", "");
+      name = "__sudoku__".replaceAll("__", "");
     }
     demoType.q = DemoType.values.byName(name);
 
@@ -276,9 +277,10 @@ extension _$App on _App {
 
   Future<void> _showNewVersionDialogIfNeeded() async {
     if (!Platform.isIOS && !Platform.isAndroid) return;
-    qq;
     if (Platform.isAndroid && _latestBuild.q <= int.parse(buildNumber.q)) return;
     if (Platform.isIOS && _latestBuildIos.q <= int.parse(buildNumber.q)) return;
+
+    qq;
 
     final androidUrl = _androidUrl.q ?? '';
     final androidApkUrl = _androidApkUrl.q ?? '';

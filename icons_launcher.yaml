@@ -1,5 +1,5 @@
 icons_launcher:
-  image_path: "assets/design/light/icon/chat.png"
+  image_path: "assets/design/light/icon/sudoku.png"
   platforms:
     android:
       enable: true
@@ -7,12 +7,12 @@ icons_launcher:
       enable: true
     macos:
       enable: true
-      image_path: "assets/design/light/icon/macos/chat.png"
+      image_path: "assets/design/light/icon/macos/sudoku.png"
     windows:
       enable: true
-      image_path: "assets/design/light/icon/windows/chat.png"
+      image_path: "assets/design/light/icon/windows/sudoku.png"
     linux:
       enable: true
-      image_path: "assets/design/light/icon/linux/chat.png"
+      image_path: "assets/design/light/icon/linux/sudoku.png"
     web:
       enable: false

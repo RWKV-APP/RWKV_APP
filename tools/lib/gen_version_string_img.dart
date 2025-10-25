@@ -4,7 +4,7 @@ import 'package:path/path.dart' as path;
 
 /// 生成版本号图片
 ///
-/// 创建一个图片，图片的内容是 "RWKV Chat 1.8.0 (440)"
+/// 创建一个图片，图片的内容是 "RWKV Sudoku 1.8.0 (440)"
 ///
 /// 白底黑字，或者黑底白字，图片的尺寸为，1000 * 400
 ///
@@ -28,7 +28,7 @@ Future<File?> gen() async {
     final version = versionParts[0]; // 例如 "1.8.1"
     final buildNumber = versionParts[1]; // 例如 "439"
 
-    final text = "RWKV Chat $version ($buildNumber)";
+    final text = "RWKV Sudoku $version ($buildNumber)";
 
     // 创建输出目录
     final outputDir = Directory('tools/output');

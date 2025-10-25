@@ -141,7 +141,7 @@ class _Empty extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             logoSquare.image(width: 140),
-            T(s.chat_welcome_to_use("RWKV Chat"), s: const TS(s: 18, w: FontWeight.w600)),
+            T(s.chat_welcome_to_use("RWKV Sudoku"), s: const TS(s: 18, w: FontWeight.w600)),
             4.h,
             T("v$version"),
             12.h,
