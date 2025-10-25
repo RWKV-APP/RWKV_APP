@@ -22,7 +22,7 @@ dependencies:
   flutter_roleplay:
     git:
       url: https://github.com/chenqi2013/flutter_roleplay
-      ref: main
+      ref: b1b6d96e585b6f4e5999870063c1a4d1be71b5f2
 
   rwkv_downloader:
     git:

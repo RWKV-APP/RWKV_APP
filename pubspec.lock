@@ -656,8 +656,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: main
-      resolved-ref: "1b7eb325da3074a35f8bcfe9985f35dcee6a3beb"
+      ref: b1b6d96e585b6f4e5999870063c1a4d1be71b5f2
+      resolved-ref: b1b6d96e585b6f4e5999870063c1a4d1be71b5f2
       url: "https://github.com/chenqi2013/flutter_roleplay"
     source: git
     version: "0.0.1"
@@ -1672,6 +1672,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.5.6"
+  sqflite_common_ffi:
+    dependency: transitive
+    description:
+      name: sqflite_common_ffi
+      sha256: "9faa2fedc5385ef238ce772589f7718c24cdddd27419b609bb9c6f703ea27988"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.3.6"
   sqflite_darwin:
     dependency: transitive
     description:
