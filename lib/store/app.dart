@@ -20,9 +20,6 @@ class _App extends RawApp {
   late final shareChatQrCodeZh = qs<String?>(null);
   late final shareChatQrCodeEn = qs<String?>(null);
 
-  @Deprecated("use P.fileManager.availableModelsInCurrentDemoType instead")
-  late final _modelConfigInCurrentDemoType = qs<List<Map<String, dynamic>>>([]);
-
   /// 全部的配置信息, 包含所有功能种类的权重
   late final _config = qs<Map<String, dynamic>?>(null);
 
