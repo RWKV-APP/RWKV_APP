@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/models/model_info.dart' show ModelInfo;
-import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
+import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage, RoleplayManageModelType;
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:zone/model/file_info.dart';
@@ -50,6 +50,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       penaltyDecay: state.decodeParam['penaltyDecay']?.toDouble(),
       presencePenalty: state.decodeParam['presencePenalty']?.toDouble(),
       frequencyPenalty: state.decodeParam['frequencyPenalty']?.toDouble(),
+      modelType: RoleplayManageModelType.chat,
     );
     RoleplayManage.onModelDownloadComplete(info);
     Navigator.pop(context);
