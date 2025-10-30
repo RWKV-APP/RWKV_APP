@@ -389,7 +389,7 @@ extension _$App on _App {
   Future<Map<String, dynamic>?> _getRemoteConfig() async {
     try {
       final res = await _get("get-demo-config", timeout: 10000.ms);
-      if (res is! Map) throw "res is not a Map, res: ${res.runtimeType}";
+      if (res is! Map) return null;
       final success = res["success"];
       final message = res["message"];
       final data = res["data"];
