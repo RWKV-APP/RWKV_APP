@@ -591,7 +591,6 @@ extension $RWKV on _RWKV {
     for (var i = 0; i < batchSize; i++) {
       batchMessages.add(messages);
     }
-    debugger();
     final startInferenceCalling = isBatch
         ? to_rwkv.ChatBatchAsync(batchMessages, reasoning: reasoning, batchSize: batchSize) //
         : to_rwkv.ChatAsync(messages, reasoning: reasoning);
