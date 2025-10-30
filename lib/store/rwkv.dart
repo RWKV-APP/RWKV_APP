@@ -587,8 +587,13 @@ extension $RWKV on _RWKV {
     final thinkingMode = _thinkingMode.q;
 
     final reasoning = thinkingMode.hasThinkTag;
+    List<List<String>> batchMessages = [];
+    for (var i = 0; i < batchSize; i++) {
+      batchMessages.add(messages);
+    }
+    debugger();
     final startInferenceCalling = isBatch
-        ? to_rwkv.ChatBatchAsync([messages], reasoning: reasoning, batchSize: batchSize) //
+        ? to_rwkv.ChatBatchAsync(batchMessages, reasoning: reasoning, batchSize: batchSize) //
         : to_rwkv.ChatAsync(messages, reasoning: reasoning);
     send(startInferenceCalling);
 
