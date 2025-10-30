@@ -93,11 +93,11 @@
         ]
       },
       {
-        "name": "RWKV7-G0a2 7.2B",
+        "name": "RWKV7-G0a3 7.2B",
         "type": "gguf",
         "modelSize": 7.2,
-        "fileName": "rwkv7-g0a2-7.2b-20251005-ctx4096-q4_k_m.gguf",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g0a2-7.2b-20251005-ctx4096-q4_k_m.gguf",
+        "fileName": "rwkv7-g0a3-7.2b-20251029-ctx8192-q4_k_m.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g0a3-7.2b-20251029-ctx8192-q4_k_m.gguf",
         "fileSize": 4510365632,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android"],
@@ -166,9 +166,9 @@
         ]
       },
       {
-        "name": "RWKV7-G0a2 7.2B",
+        "name": "RWKV7-G0a3 7.2B",
         "modelSize": 7.2,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g0a2-7.2b-20251005-ctx4096-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g0a3-7.2b-20251029-ctx8192-nf4.prefab",
         "fileSize": 5233791487,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows"],
