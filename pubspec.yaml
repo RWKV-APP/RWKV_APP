@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 2.8.7+558
+version: 2.9.0+560
 
 environment:
   sdk: ^3.9.0
@@ -34,7 +34,7 @@ dependencies:
       url: https://github.com/HaloWang/photo_viewer
       ref: main
 
-  adaptive_dialog:
+  adaptive_dialog: 2.5.0
   audioplayers:
   background_downloader:
   collection:
@@ -47,14 +47,14 @@ dependencies:
   flutter_dotenv:
   gpt_markdown:
   flutter_native_splash:
-  flutter_riverpod:
+  flutter_riverpod: 2.6.1
   freezed_annotation:
   gaimon:
   gal:
   go_router:
-  halo:
-  halo_alert:
-  halo_state:
+  halo: ^1.0.0
+  halo_alert: ^1.0.0
+  halo_state: ^1.0.0
   http:
   image_picker:
   intl:
