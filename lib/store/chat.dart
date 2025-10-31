@@ -424,7 +424,6 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
-    // TODO: support batch inference
     P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
     _updateMessageById(
       id: id,
