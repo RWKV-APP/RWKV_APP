@@ -13,7 +13,7 @@ import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $RWKV;
 import 'package:zone/widgets/model_selector.dart';
 
-import '../gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart' show S;
 
 class PageBenchmark extends ConsumerWidget {
   const PageBenchmark({super.key});

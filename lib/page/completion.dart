@@ -5,7 +5,7 @@ import 'package:zone/store/p.dart' show P, $RWKV;
 import 'package:zone/widgets/chat/completion_mode.dart';
 import 'package:zone/widgets/model_select_button.dart';
 
-import '../gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart' show S;
 
 class CompletionPage extends ConsumerWidget {
   const CompletionPage({super.key});

@@ -9,7 +9,7 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart' show P, $FileManager;
 import 'package:zone/widgets/model_item.dart';
 
-import '../gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart' show S;
 
 ModelInfo? rolePlayCurrentModel;
 
