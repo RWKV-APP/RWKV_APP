@@ -587,24 +587,14 @@ extension $RWKV on _RWKV {
     final thinkingMode = _thinkingMode.q;
 
     final reasoning = thinkingMode.hasThinkTag;
-    // List<List<String>> batchMessages = [];
-    // for (var i = 0; i < batchSize; i++) {
-    //   batchMessages.add(messages);
-    // }
-    List<List<String>> batchMessages = [
-      ["给我讲讲苏菲玛索"],
-      ["给我讲讲贝多芬"],
-      ["给我讲讲达芬奇"],
-      ["给我讲讲毛泽东"],
-      ["给我讲讲李开复"],
-      ["给我讲讲特朗普"],
-      ["给我讲讲马特达蒙"],
-      ["给我讲讲爱因斯坦"],
-    ];
-    final startInferenceCalling = isBatch
+    List<List<String>> batchMessages = [];
+    for (var i = 0; i < batchSize; i++) {
+      batchMessages.add(messages);
+    }
+    final request = isBatch
         ? to_rwkv.ChatBatchAsync(batchMessages, reasoning: reasoning, batchSize: batchSize) //
         : to_rwkv.ChatAsync(messages, reasoning: reasoning);
-    send(startInferenceCalling);
+    send(request);
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 

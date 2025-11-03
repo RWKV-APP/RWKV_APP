@@ -126,7 +126,8 @@ class ModelItem extends ConsumerWidget {
 
     final tags = fileInfo.tags;
 
-    if (tags.contains("translate")) {
+    final isTranslate = tags.contains("translate");
+    if (isTranslate) {
       if (P.translator.enToZh.q) {
         P.rwkv.send(SetUserRole("English"));
         P.rwkv.send(SetResponseRole("Chinese"));
@@ -148,10 +149,12 @@ class ModelItem extends ConsumerWidget {
 
     final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
 
-    if (currentModelIsBefore20250922) {
-      P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Lighting());
-    } else {
-      P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Fast());
+    if (!isTranslate) {
+      if (currentModelIsBefore20250922) {
+        P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Lighting());
+      } else {
+        P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Fast());
+      }
     }
 
     pop();

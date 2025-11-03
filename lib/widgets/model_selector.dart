@@ -188,13 +188,16 @@ class _ModelList extends ConsumerWidget {
       );
     }
 
-    if (pageKey == PageKey.translator) {
+    final inTranslator = pageKey == PageKey.translator;
+    final inBenchmark = pageKey == PageKey.benchmark;
+
+    if (inTranslator) {
       availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
     } else {
-      availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
+      availableModels = availableModels.where((e) => !e.tags.contains("translate") && !e.tags.contains("batch")).toSet();
     }
 
-    if (pageKey == PageKey.benchmark) {
+    if (inBenchmark) {
       availableModels = availableModels.whereNot((e) => e.tags.contains('DeepEmbedding')).toSet();
     }
 
