@@ -1,7 +1,9 @@
 part of 'p.dart';
 
 const _initialSourceEn =
-    "RWKV (pronounced RwaKuv) is an RNN with great LLM performance, which can also be directly trained like a GPT transformer (parallelizable). We are at RWKV-7 \"Goose\". So it's combining the best of RNN and transformer - great performance, linear time, constant space (no kv-cache), fast training, infinite ctx_len, and free sentence embedding.";
+    """RWKV (pronounced RwaKuv) is an RNN with great LLM performance, which can also be directly trained like a GPT transformer (parallelizable). We are at RWKV-7 "Goose".
+    
+So it's combining the best of RNN and transformer - great performance, linear time, constant space (no kv-cache), fast training, infinite ctx_len, and free sentence embedding.""";
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
 
@@ -66,6 +68,15 @@ class _Translator {
   late final latestTaskTag = qs<int>(0);
 
   late final enToZh = qs(true);
+
+  /// 当前批量任务的原始行列表（用于多行翻译）
+  late final batchTaskLines = qs<List<String>>([]);
+
+  /// 批量任务中每一行的翻译结果
+  late final batchTranslations = qs<Map<int, String>>({});
+
+  /// 批量任务的定时器
+  Timer? _batchTaskTimer;
 }
 
 /// Private methods
@@ -251,7 +262,40 @@ extension _$Translator on _Translator {
     // 状态由生成中变为非生成中, 则认为是结束信号
     final isStopEvent = generatingStateInFrontend && !generatingStateFromEvent;
     if (!isStopEvent) return;
-    _appendEndStringAndStartNewTask();
+
+    // 如果是批量任务，处理批量任务的结束
+    if (batchTaskLines.q.isNotEmpty) {
+      _appendBatchEndString();
+    } else {
+      _appendEndStringAndStartNewTask();
+    }
+  }
+
+  void _appendBatchEndString() {
+    final batchLines = batchTaskLines.q;
+    if (batchLines.isEmpty) return;
+
+    // 清理定时器
+    if (_batchTaskTimer != null) {
+      _batchTaskTimer!.cancel();
+      _batchTaskTimer = null;
+    }
+
+    // 将所有行的翻译结果用换行符连接起来
+    final combinedResult = <String>[];
+    for (var i = 0; i < batchLines.length; i++) {
+      final translation = batchTranslations.q[i] ?? "";
+      combinedResult.add(translation);
+    }
+    final finalResult = combinedResult.join("\n");
+
+    // 更新 result
+    result.q = finalResult;
+
+    // 清空批量任务状态
+    batchTaskLines.q = [];
+    batchTranslations.q = {};
+    runningTaskKey.q = null;
   }
 
   void _appendEndStringAndStartNewTask() {
@@ -347,9 +391,17 @@ extension _$Translator on _Translator {
     if (pageKey == PageKey.chat || pageKey == PageKey.talk) return;
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
-        _handleResponseBufferContent(res);
+        // 只有在非批量模式下才处理单行响应
+        if (batchTaskLines.q.isEmpty) {
+          _handleResponseBufferContent(res);
+        }
+        break;
+      case from_rwkv.ResponseBatchBufferContent res:
+        _handleBatchResponseBufferContent(res);
+        break;
       case from_rwkv.IsGenerating res:
         _handleIsGenerating(res);
+        break;
       default:
         break;
     }
@@ -375,6 +427,77 @@ extension _$Translator on _Translator {
       getIsGeneratingRate: 1,
       getResponseBufferContentRate: .1,
     );
+  }
+
+  void _startBatchTask(List<String> lines) {
+    qq;
+    P.rwkv.stop();
+
+    // 清理之前的定时器
+    if (_batchTaskTimer != null) {
+      _batchTaskTimer!.cancel();
+      _batchTaskTimer = null;
+    }
+
+    batchTranslations.q = {};
+    final batchSize = lines.length;
+
+    // 设置 runningTaskKey 为整个输入文本，用于标识当前任务
+    runningTaskKey.q = lines.join("\n");
+
+    // 为每一行创建消息列表
+    final batchMessages = <List<String>>[];
+    for (var line in lines) {
+      batchMessages.add([line.trim()]);
+    }
+
+    // 使用批量模式发送：每个批次是一条独立的消息列表
+    final thinkingMode = P.rwkv.thinkingMode.q;
+    final reasoning = thinkingMode.hasThinkTag;
+    P.rwkv.send(
+      to_rwkv.ChatBatchAsync(
+        batchMessages,
+        reasoning: reasoning,
+        batchSize: batchSize,
+      ),
+    );
+
+    // 启动定时器获取响应
+    _batchTaskTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+      // 获取批量响应（无参数版本会返回所有批次的响应）
+      P.rwkv.send(to_rwkv.GetBatchResponseBufferContent());
+      P.rwkv.send(to_rwkv.GetIsGenerating());
+      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
+    });
+  }
+
+  void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
+    qq;
+
+    final responseBufferContents = res.responseBufferContent;
+    final batchLines = batchTaskLines.q;
+
+    if (batchLines.isEmpty) {
+      return;
+    }
+
+    // 更新每一行的翻译结果
+    final updatedTranslations = <int, String>{};
+    for (var i = 0; i < responseBufferContents.length && i < batchLines.length; i++) {
+      updatedTranslations[i] = responseBufferContents[i];
+    }
+
+    batchTranslations.q = {...batchTranslations.q, ...updatedTranslations};
+
+    // 将所有行的翻译结果用换行符连接起来
+    final combinedResult = <String>[];
+    for (var i = 0; i < batchLines.length; i++) {
+      final translation = batchTranslations.q[i] ?? "";
+      combinedResult.add(translation);
+    }
+    final finalResult = combinedResult.join("\n");
+
+    result.q = finalResult;
   }
 
   /// 1. 如果 runningTaskKey 不是 sourceKey, 停止 LLM, 开启新的任务
@@ -456,9 +579,32 @@ extension $Translator on _Translator {
       ModelSelector.show();
       return;
     }
+    // 确保角色与方向一致
+    if (enToZh.q) {
+      P.rwkv.send(to_rwkv.SetUserRole("English"));
+      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+    } else {
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+    }
     result.q = "";
     resultTextEditingController.text = "";
-    _startNewTask(source.q);
+    batchTranslations.q = {};
+    batchTaskLines.q = [];
+
+    final sourceText = source.q.trim();
+    if (sourceText.isEmpty) return;
+
+    // 检测是否是多行文本
+    final lines = sourceText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+    if (lines.length > 1) {
+      // 多行文本，使用批量翻译
+      batchTaskLines.q = lines;
+      _startBatchTask(lines);
+    } else {
+      // 单行文本，使用原有逻辑
+      _startNewTask(sourceText);
+    }
   }
 
   void debugCheck() {
