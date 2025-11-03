@@ -624,5 +624,22 @@ extension $Translator on _Translator {
       P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
       P.rwkv.send(to_rwkv.SetResponseRole("English"));
     }
+
+    // 将下方结果文本移动到上方输入；若结果为空，则会清空上方，实现“清除全部”
+    final resultText = resultTextEditingController.text.trim();
+    source.q = resultText;
+    result.q = "";
+    resultTextEditingController.text = "";
+    // 清理批量状态
+    batchTaskLines.q = [];
+    batchTranslations.q = {};
+    runningTaskKey.q = null;
+
+    // 若上下文本均为空，且为 EN -> ZH 模式，则填充示例英文文本
+    final srcNow = source.q.trim();
+    final resNow = result.q.trim();
+    if (srcNow.isEmpty && resNow.isEmpty && enToZh.q) {
+      source.q = _initialSourceEn;
+    }
   }
 }
