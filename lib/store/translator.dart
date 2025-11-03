@@ -69,6 +69,12 @@ class _Translator {
 
   late final enToZh = qs(true);
 
+  /// 是否启用并行（批量）翻译，由用户控制，但会根据输入自动联动
+  late final batchEnabled = qs(false);
+
+  /// 是否允许自动联动批量开关（用户手动切换后将关闭自动联动）
+  late final batchAuto = qs(true);
+
   /// 当前批量任务的原始行列表（用于多行翻译）
   late final batchTaskLines = qs<List<String>>([]);
 
@@ -195,11 +201,25 @@ extension _$Translator on _Translator {
   void _onTextEditingControllerValueChanged() {
     final textInController = textEditingController.text;
     if (source.q != textInController) source.q = textInController;
+    // 根据输入是否为多行，自动联动批量开关（仅在 batchAuto 开启时）
+    if (batchAuto.q) {
+      final lines = textInController.trim().split('\n').where((e) => e.trim().isNotEmpty).toList();
+      final isMulti = lines.length > 1;
+      if (isMulti && !batchEnabled.q) batchEnabled.q = true;
+      if (!isMulti && batchEnabled.q) batchEnabled.q = false;
+    }
   }
 
   void _onTextChanged(String next) {
     final textInController = textEditingController.text;
     if (next != textInController) textEditingController.text = next;
+    // 根据输入是否为多行，自动联动批量开关（仅在 batchAuto 开启时）
+    if (batchAuto.q) {
+      final lines = next.trim().split('\n').where((e) => e.trim().isNotEmpty).toList();
+      final isMulti = lines.length > 1;
+      if (isMulti && !batchEnabled.q) batchEnabled.q = true;
+      if (!isMulti && batchEnabled.q) batchEnabled.q = false;
+    }
   }
 
   void _onResultChanged(String next) {
@@ -595,14 +615,29 @@ extension $Translator on _Translator {
     final sourceText = source.q.trim();
     if (sourceText.isEmpty) return;
 
-    // 检测是否是多行文本
+    // 如果用户关闭了批量，则不进行任何换行分割，直接单次翻译
+    if (!batchEnabled.q) {
+      _startNewTask(sourceText);
+      return;
+    }
+
+    // 批量开启的情况下才进行换行分割
     final lines = sourceText.split('\n').where((line) => line.trim().isNotEmpty).toList();
-    if (lines.length > 1) {
-      // 多行文本，使用批量翻译
+    final isMulti = lines.length > 1;
+
+    // 单行时强制关闭批量
+    if (!isMulti && batchEnabled.q) {
+      batchEnabled.q = false;
+      _startNewTask(sourceText);
+      return;
+    }
+
+    if (isMulti) {
+      // 多行 + 已启用批量
       batchTaskLines.q = lines;
       _startBatchTask(lines);
     } else {
-      // 单行文本，使用原有逻辑
+      // 单行 或 用户关闭了批量
       _startNewTask(sourceText);
     }
   }
@@ -641,5 +676,17 @@ extension $Translator on _Translator {
     if (srcNow.isEmpty && resNow.isEmpty && enToZh.q) {
       source.q = _initialSourceEn;
     }
+  }
+
+  void onBatchToggle(bool next) {
+    final src = source.q;
+    final lines = src.trim().split('\n').where((e) => e.trim().isNotEmpty).toList();
+    final isMulti = lines.length > 1;
+    if (!isMulti && next) {
+      Alert.info(S.current.this_model_does_not_support_batch_inference); // 重用已有提示文案
+      batchEnabled.q = false;
+      return;
+    }
+    batchEnabled.q = next;
   }
 }
