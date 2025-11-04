@@ -22,7 +22,7 @@ dependencies:
   flutter_roleplay:
     git:
       url: https://github.com/chenqi2013/flutter_roleplay
-      ref: tts
+      ref: 6260521fbc24bb5e32658c506bd642c7bd629f3a
 
   rwkv_downloader:
     git:
