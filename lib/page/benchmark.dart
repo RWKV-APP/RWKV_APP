@@ -128,12 +128,10 @@ class _TestState extends ConsumerState<_Test> {
 
   void listen() {
     ref.listen(P.rwkv.decodeSpeed, (p, r) {
-      qqr("decodeSpeed: $r");
       decodeSpeed = r;
       setState(() {});
     });
     ref.listen(P.rwkv.prefillSpeed, (p, r) {
-      qqr("prefillSpeed: $r");
       prefillSpeed = max(r, prefillSpeed);
       setState(() {});
     });
