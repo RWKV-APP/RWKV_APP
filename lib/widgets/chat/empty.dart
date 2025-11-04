@@ -115,7 +115,10 @@ class Empty extends ConsumerWidget {
                           onPressed: () async {
                             ModelSelector.show();
                           },
-                          child: T(demoType == DemoType.world ? s.select_a_world_type : s.select_a_model, s: const TS(s: 16, w: FontWeight.w600)),
+                          child: T(
+                            demoType == DemoType.world ? s.select_a_world_type : s.select_a_model,
+                            s: const TS(s: 16, w: FontWeight.w600),
+                          ),
                         ),
                       if (!loaded) 12.h,
                       if (loaded) T(s.you_are_now_using("")),
@@ -160,6 +163,7 @@ class _EmptyV2 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final suggestions = ref.watch(P.suggestion.suggestion);
 
     return Column(
@@ -168,7 +172,7 @@ class _EmptyV2 extends ConsumerWidget {
       children: [
         16.h,
         Text(
-          S.of(context).hello_ask_me_anything,
+          s.hello_ask_me_anything,
           style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),

@@ -9,7 +9,7 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart' show P, $FileManager;
 import 'package:zone/widgets/model_item.dart';
 
-import '../gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart' show S;
 
 ModelInfo? rolePlayCurrentModel;
 
@@ -63,8 +63,8 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     final customTheme = ref.watch(P.app.customTheme);
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: theme.primaryColor),
@@ -81,7 +81,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
             showDelete: currentModelName != widget.file.fileName,
           ),
           if (local.hasFile) const SizedBox(height: 8),
-          if (local.hasFile) Text(S.current.state_list, style: TextStyle(fontWeight: FontWeight.w500)),
+          if (local.hasFile) Text(S.current.state_list, style: const TextStyle(fontWeight: FontWeight.w500)),
           if (local.hasFile)
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -98,7 +98,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
                       onSelectTap: currentStateFile?.fileName == state.fileName ? null : () => onStateTap(state),
                     ),
                     if (state != widget.file.state.last)
-                      Divider(
+                      const Divider(
                         height: 8,
                         thickness: 0.4,
                         indent: 2,
@@ -135,7 +135,7 @@ class _ModelStateItem extends ConsumerWidget {
             children: [
               Text(
                 state.name,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -166,7 +166,7 @@ class _ModelStateItem extends ConsumerWidget {
               P.fileManager.deleteFile(fileInfo: state);
             },
             visualDensity: VisualDensity.compact,
-            icon: Icon(Icons.delete_outline),
+            icon: const Icon(Icons.delete_outline),
           ),
         if (localFile.hasFile)
           FilledButton(

@@ -3,7 +3,7 @@ import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/model/prompt_template.dart' show PromptTemplate;
 import 'package:zone/store/p.dart' show P, $Preference;
 
-import '../../gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart' show S;
 
 class ChatTemplateDialog extends StatefulWidget {
   final bool newChat;

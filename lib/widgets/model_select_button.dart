@@ -4,7 +4,7 @@ import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart' show P, $RWKV;
 import 'package:zone/widgets/arguments_panel.dart';
 
-import '../gen/l10n.dart';
+import 'package:zone/gen/l10n.dart';
 import 'model_selector.dart';
 
 class ModelSelectButton extends ConsumerWidget {

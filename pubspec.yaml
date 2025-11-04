@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 2.8.0+550
+version: 2.8.9+560
 
 environment:
   sdk: ^3.9.0
@@ -22,7 +22,7 @@ dependencies:
   flutter_roleplay:
     git:
       url: https://github.com/chenqi2013/flutter_roleplay
-      ref: 6260521fbc24bb5e32658c506bd642c7bd629f3a
+      ref: b1b6d96e585b6f4e5999870063c1a4d1be71b5f2
 
   rwkv_downloader:
     git:
@@ -34,7 +34,7 @@ dependencies:
       url: https://github.com/HaloWang/photo_viewer
       ref: main
 
-  adaptive_dialog:
+  adaptive_dialog: 2.5.0
   audioplayers:
   background_downloader:
   collection:
@@ -47,14 +47,14 @@ dependencies:
   flutter_dotenv:
   gpt_markdown:
   flutter_native_splash:
-  flutter_riverpod:
+  flutter_riverpod: 2.6.1
   freezed_annotation:
   gaimon:
   gal:
   go_router:
-  halo:
-  halo_alert:
-  halo_state:
+  halo: ^1.0.0
+  halo_alert: ^1.0.0
+  halo_state: ^1.0.0
   http:
   image_picker:
   intl:
@@ -112,6 +112,7 @@ flutter:
     - remote/latest.json
     - .env
     - assets/filter.txt
+    - assets/lambada_test.jsonl
 
 flutter_intl:
   enabled: true # Required. Must be set to true to activate the plugin. Default: false

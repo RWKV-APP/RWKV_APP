@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zone/widgets/settings/chat_template_dialog.dart';
 
-import '../gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart' show S;
 
 class PageAdvancedSettings extends StatefulWidget {
   const PageAdvancedSettings({super.key});

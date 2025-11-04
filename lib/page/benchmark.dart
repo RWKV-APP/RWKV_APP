@@ -13,7 +13,7 @@ import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $RWKV;
 import 'package:zone/widgets/model_selector.dart';
 
-import '../gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart' show S;
 
 class PageBenchmark extends ConsumerWidget {
   const PageBenchmark({super.key});
@@ -56,6 +56,8 @@ class _TestState extends ConsumerState<_Test> {
 
   double oldMaxLength = 4000;
 
+  int selectedBatchSize = 1;
+
   StreamSubscription? subscription;
 
   @override
@@ -90,7 +92,7 @@ class _TestState extends ConsumerState<_Test> {
           "My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard, ";
       P.rwkv.clearStates();
       subscription?.cancel();
-      subscription = P.rwkv.completion(prompt).listen((e) {}, onError: (e) {}, onDone: () {});
+      subscription = P.rwkv.completion(prompt, batchSize: selectedBatchSize).listen((e) {}, onError: (e) {}, onDone: () {});
     }
   }
 
@@ -126,7 +128,7 @@ class _TestState extends ConsumerState<_Test> {
 
   void listen() {
     ref.listen(P.rwkv.decodeSpeed, (p, r) {
-      decodeSpeed = max(r, decodeSpeed);
+      decodeSpeed = r;
       setState(() {});
     });
     ref.listen(P.rwkv.prefillSpeed, (p, r) {
@@ -153,6 +155,7 @@ class _TestState extends ConsumerState<_Test> {
     final model = ref.watch(P.rwkv.currentModel);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
+    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
 
     if (model != null) {
       final modelSizeGb = model.fileSize / 1024 / 1024 / 1024;
@@ -205,6 +208,16 @@ class _TestState extends ConsumerState<_Test> {
             ),
           ],
         ),
+        const SizedBox(height: 12),
+        _BatchSizeSelector(
+          selectedBatchSize: selectedBatchSize,
+          supportedBatchSizes: supportedBatchSizes,
+          onChanged: (value) {
+            setState(() {
+              selectedBatchSize = value;
+            });
+          },
+        ),
         const SizedBox(height: 16),
         if (!generating && flops != 0)
           _KeyValuePairs(
@@ -217,6 +230,59 @@ class _TestState extends ConsumerState<_Test> {
             },
           ),
       ],
+    );
+  }
+}
+
+class _BatchSizeSelector extends ConsumerWidget {
+  final int selectedBatchSize;
+  final List<int> supportedBatchSizes;
+  final ValueChanged<int> onChanged;
+
+  const _BatchSizeSelector({
+    required this.selectedBatchSize,
+    required this.supportedBatchSizes,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final options = <int>{1, ...supportedBatchSizes}.toList()..sort();
+
+    return Material(
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              S.current.batch_inference_count,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<int>(
+              value: selectedBatchSize,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              ),
+              items: options.map((size) {
+                final label = size == 1 ? '1 (单线程)' : '$size (多线程)';
+                return DropdownMenuItem<int>(
+                  value: size,
+                  child: Text(label),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  onChanged(value);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

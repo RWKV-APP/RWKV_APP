@@ -29,7 +29,7 @@ class ModelItem extends ConsumerWidget {
   final bool showLoadModel;
   final bool showDelete;
 
-  ModelItem(
+  const ModelItem(
     this.fileInfo,
     this.showTags, {
     super.key,
@@ -126,7 +126,8 @@ class ModelItem extends ConsumerWidget {
 
     final tags = fileInfo.tags;
 
-    if (tags.contains("translate")) {
+    final isTranslate = tags.contains("translate");
+    if (isTranslate) {
       if (P.translator.enToZh.q) {
         P.rwkv.send(SetUserRole("English"));
         P.rwkv.send(SetResponseRole("Chinese"));
@@ -148,13 +149,25 @@ class ModelItem extends ConsumerWidget {
 
     final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
 
-    if (currentModelIsBefore20250922) {
-      P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Lighting());
-    } else {
-      P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Fast());
+    if (!isTranslate) {
+      if (currentModelIsBefore20250922) {
+        P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Lighting());
+      } else {
+        P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Fast());
+      }
     }
 
     pop();
+
+    Future.delayed(const Duration(milliseconds: 500)).then((_) {
+      P.rwkv.send(GetSupportedBatchSizes());
+    });
+    Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+      P.rwkv.send(GetSupportedBatchSizes());
+    });
+    Future.delayed(const Duration(milliseconds: 1500)).then((_) {
+      P.rwkv.send(GetSupportedBatchSizes());
+    });
   }
 
   @override
@@ -244,7 +257,7 @@ class ModelItem extends ConsumerWidget {
   }
 }
 
-class DownloadActions extends StatelessWidget {
+class DownloadActions extends ConsumerWidget {
   final TaskState state;
   final FileInfo file;
 
@@ -269,15 +282,17 @@ class DownloadActions extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final showDownload = state == TaskState.idle;
     final showResume = state == TaskState.stopped;
     final showPause = state == TaskState.running;
     final showCancel = showPause || showResume;
+    final localFile = ref.watch(P.fileManager.locals(file));
+    final hasFile = localFile.hasFile;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showDownload)
+        if (showDownload && !hasFile)
           IconButton(
             onPressed: () => onDownloadTap(context),
             icon: const Icon(Icons.download_rounded),

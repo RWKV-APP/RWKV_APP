@@ -47,8 +47,6 @@ extension $FileManager on _FileManager {
 
     final chatWeights = HF.listJSON(config["chat"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final ttsWeights = HF.listJSON(config["tts"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
-
-    // FIXME: 需要根据 demoType 来获取对应的权重
     final worldWeights = HF.listJSON(config["world"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final sudokuWeights = HF.listJSON(config["sudoku"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final othelloWeights = HF.listJSON(config["othello"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
@@ -56,6 +54,9 @@ extension $FileManager on _FileManager {
     _allChatWeights.q = chatWeights;
     this.chatWeights.q = chatWeights.where((e) => e.available).toSet();
     this.ttsWeights.q = ttsWeights.where((e) => e.available).toSet();
+    this.sudokuWeights.q = sudokuWeights.where((e) => e.available).toSet();
+    this.othelloWeights.q = othelloWeights.where((e) => e.available).toSet();
+    this.worldWeights.q = worldWeights.where((e) => e.available).toSet();
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
   }
 

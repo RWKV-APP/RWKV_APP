@@ -91,7 +91,7 @@ class _MainAppBar extends ConsumerWidget {
   }
 
   void _onTitlePressed() async {
-    ModelSelector.show();
+    ModelSelector.show(showNeko: P.app.pageKey.q == PageKey.neko);
   }
 
   @override
@@ -345,6 +345,7 @@ class _TrianglePainter extends CustomPainter {
 class _SelectMessageAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final selected = ref.watch(P.chat.sharingSelectedMsgIds);
     final allMessage = ref.watch(P.msg.list);
 
@@ -353,7 +354,7 @@ class _SelectMessageAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      title: T(sprintf(S.of(context).x_message_selected, [selected.length]), s: const TS(s: 18)),
+      title: T(sprintf(s.x_message_selected, [selected.length]), s: const TS(s: 18)),
       leading: _SelectAllRow(
         all: all,
         onAllTap: () {
@@ -376,6 +377,7 @@ class _SelectAllRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     return Row(
       children: [
         Checkbox(
@@ -384,7 +386,7 @@ class _SelectAllRow extends ConsumerWidget {
         ),
         GestureDetector(
           onTap: onAllTap,
-          child: T(S.of(context).all),
+          child: T(s.all),
         ),
       ],
     );

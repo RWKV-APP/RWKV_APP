@@ -190,7 +190,7 @@ extension $Chat on _Chat {
 
   Future<void> onTapEditInUserMessageBubble({required int index}) async {
     if (!checkModelSelection()) return;
-    final content = P.msg.list.q[index].content;
+    final content = P.msg.list.q[index].contentAndTails[0];
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
     P.msg.editingOrRegeneratingIndex.q = index;
@@ -424,7 +424,6 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
-    // TODO: support batch inference
     P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
     _updateMessageById(
       id: id,
@@ -638,8 +637,7 @@ extension _$Chat on _Chat {
   }
 
   void _onTextEditingControllerValueChanged() {
-    // qqq("_onTextEditingControllerValueChanged");
-    final textInController = textEditingController.text;
+    final textInController = textEditingController.text.replaceAll(Config.userMsgModifierSep, "");
     if (textInInput.q != textInController) textInInput.q = textInController;
   }
 

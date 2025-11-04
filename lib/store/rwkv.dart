@@ -31,9 +31,11 @@ class _RWKV {
   late Completer<void> _initRuntimeCompleter = Completer<void>();
 
   final generating = qs(false);
+
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
+
   late final argumentsPanelShown = qs(false);
   late final logPanelShown = qs(false);
   late final statePanelShown = qs(false);
@@ -72,6 +74,10 @@ class _RWKV {
   /// 当前加载的权重
   late final currentModel = qs<FileInfo?>(null);
 
+  late final currentWorldType = qs<WorldType?>(null);
+
+  late final currentGroupInfo = qs<GroupInfo?>(null);
+
   /// 当前模型是否是2025年9月22日之前发布的
   ///
   /// 新的权重要使用新的 thinking mode 组
@@ -81,10 +87,6 @@ class _RWKV {
     final date = currentModel.date;
     return date != null && date.isBefore(DateTime(2025, 9, 22));
   });
-
-  late final currentWorldType = qs<WorldType?>(null);
-
-  late final currentGroupInfo = qs<GroupInfo?>(null);
 
   late final loading = qp((ref) {
     return ref.watch(_loading);
@@ -106,6 +108,10 @@ class _RWKV {
   // TODO: Use it @WangCe
   late final receiving = qs(false);
 
+  late final supportedBatchSizes = qs<List<int>>([]);
+  late final runtimeLog = qs<List<LogItem>>([]);
+  late final stateLogList = qs<List<StateLog>>([]);
+
   late final inTTSOrTranslateMode = qp((ref) {
     final model = ref.watch(P.rwkv.currentModel);
     if (model == null) return false;
@@ -113,11 +119,6 @@ class _RWKV {
     final isTranslate = model.tags.contains("translate");
     return isTTS || isTranslate;
   });
-
-  late final supportedBatchSizes = qs<List<int>>([]);
-
-  late final runtimeLog = qs<List<LogItem>>([]);
-  late final stateLogList = qs<List<StateLog>>([]);
 
   /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
   List<LogItem> _parseRuntimeLog(String runtimeLog) {
@@ -585,10 +586,15 @@ extension $RWKV on _RWKV {
 
     final thinkingMode = _thinkingMode.q;
 
-    final startInferenceCalling = isBatch
-        ? to_rwkv.ChatBatchAsync(messages, reasoning: thinkingMode.hasThinkTag, batchSize: batchSize) //
-        : to_rwkv.ChatAsync(messages, reasoning: thinkingMode.hasThinkTag);
-    send(startInferenceCalling);
+    final reasoning = thinkingMode.hasThinkTag;
+    List<List<String>> batchMessages = [];
+    for (var i = 0; i < batchSize; i++) {
+      batchMessages.add(messages);
+    }
+    final request = isBatch
+        ? to_rwkv.ChatBatchAsync(batchMessages, reasoning: reasoning, batchSize: batchSize) //
+        : to_rwkv.ChatAsync(messages, reasoning: reasoning);
+    send(request);
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
@@ -1079,6 +1085,8 @@ extension _$RWKV on _RWKV {
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
     _messagesController.add(message);
     switch (message) {
+      case from_rwkv.EvaluationResults res:
+        P.lambada._onResultsReceived(res);
       case from_rwkv.IsGenerating res:
         if (res.isGenerating != generating.q) {
           generating.q = res.isGenerating;

@@ -17,6 +17,7 @@ class PageHome extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final version = ref.watch(P.app.version);
 
     final width = MediaQuery.of(context).size.width;
@@ -45,7 +46,7 @@ class PageHome extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              S.of(context).welcome_to_rwkv_chat,
+              s.welcome_to_rwkv_chat,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -85,12 +86,12 @@ class PageHome extends ConsumerWidget {
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: _RolePlayButton(),
+                    child: const _RolePlayButton(),
                   ),
-                  // ConstrainedBox(
-                  //   constraints: BoxConstraints(maxWidth: maxWidth),
-                  //   child: _LambadaButton(),
-                  // ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: const _LambadaButton(),
+                  ),
                 ],
               ),
             ),
@@ -362,7 +363,6 @@ class _LambadaButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-
     return Material(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -389,9 +389,9 @@ class _LambadaButton extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Text("跑分测试", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.lambada_test, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text("使用 lambada 测试 perplexity", style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(s.performance_test_description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),

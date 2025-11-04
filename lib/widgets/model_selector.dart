@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
@@ -189,13 +188,16 @@ class _ModelList extends ConsumerWidget {
       );
     }
 
-    if (pageKey == PageKey.translator) {
+    final inTranslator = pageKey == PageKey.translator;
+    final inBenchmark = pageKey == PageKey.benchmark;
+
+    if (inTranslator) {
       availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
     } else {
       availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
     }
 
-    if (pageKey == PageKey.benchmark) {
+    if (inBenchmark) {
       availableModels = availableModels.whereNot((e) => e.tags.contains('DeepEmbedding')).toSet();
     }
 

@@ -2,6 +2,7 @@ part of 'p.dart';
 
 class _App extends RawApp {
   final _pageKey = qs(PageKey.first);
+
   late final pageKey = qp((ref) => ref.watch(_pageKey));
 
   late final db.AppDatabase _db;
@@ -18,9 +19,6 @@ class _App extends RawApp {
   late final _iosUrl = qs<String?>(null);
   late final shareChatQrCodeZh = qs<String?>(null);
   late final shareChatQrCodeEn = qs<String?>(null);
-
-  @Deprecated("use P.fileManager.availableModelsInCurrentDemoType instead")
-  late final _modelConfigInCurrentDemoType = qs<List<Map<String, dynamic>>>([]);
 
   /// 全部的配置信息, 包含所有功能种类的权重
   late final _config = qs<Map<String, dynamic>?>(null);
@@ -276,9 +274,10 @@ extension _$App on _App {
 
   Future<void> _showNewVersionDialogIfNeeded() async {
     if (!Platform.isIOS && !Platform.isAndroid) return;
-    qq;
     if (Platform.isAndroid && _latestBuild.q <= int.parse(buildNumber.q)) return;
     if (Platform.isIOS && _latestBuildIos.q <= int.parse(buildNumber.q)) return;
+
+    qq;
 
     final androidUrl = _androidUrl.q ?? '';
     final androidApkUrl = _androidApkUrl.q ?? '';
@@ -390,7 +389,7 @@ extension _$App on _App {
   Future<Map<String, dynamic>?> _getRemoteConfig() async {
     try {
       final res = await _get("get-demo-config", timeout: 10000.ms);
-      if (res is! Map) throw "res is not a Map, res: ${res.runtimeType}";
+      if (res is! Map) return null;
       final success = res["success"];
       final message = res["message"];
       final data = res["data"];

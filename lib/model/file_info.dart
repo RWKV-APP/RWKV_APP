@@ -222,8 +222,7 @@ class FileInfo extends Equatable {
   @override
   String toString() {
     return '''
-FileInfo(
-  name: $name,
+FileInfo($name,
   fileName: $fileName,
   fileType: $fileType,
   fileSize: $fileSize,
@@ -253,7 +252,7 @@ enum FileType {
 class ModelStateFile extends FileInfo {
   final dynamic decodeParam;
 
-  ModelStateFile({
+  const ModelStateFile({
     required super.name,
     required super.fileName,
     required super.fileSize,

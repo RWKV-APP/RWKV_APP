@@ -18,7 +18,6 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        "--dart-define=disableRemoteConfig=true",
         // "--dart-define=autoShowTranslator=true",
         // "--dart-define=logLevel=3",
         // "--dart-define=enableBatchInference=true",
@@ -28,6 +27,7 @@
         // "--dart-define=debuggingThemes=true",
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
         // "--dart-define=maxTokens=200",
+        // "--dart-define=disableRemoteConfig=true",
         "--dart-define=showHaloDebugger=true"
       ]
     },

@@ -161,7 +161,7 @@ class LogPanel extends ConsumerWidget {
                                 child: const T("Prefill", s: TS(w: FontWeight.w700)),
                               ),
                             ],
-                            Spacer(),
+                            const Spacer(),
                             if (log.dateTimeString.isNotEmpty)
                               Container(
                                 decoration: BoxDecoration(
@@ -169,7 +169,7 @@ class LogPanel extends ConsumerWidget {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 padding: const EI.s(h: 2),
-                                child: T(log.dateTimeString, s: TS(w: FontWeight.w600)),
+                                child: T(log.dateTimeString, s: const TS(w: FontWeight.w600)),
                               ),
                           ],
                         ),

@@ -189,7 +189,7 @@ class _ConversationList extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 60),
       itemCount: conversations.length,
       cacheExtent: 200,
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       separatorBuilder: (context, index) => const _ConversationSeparator(),
       itemBuilder: (context, index) => _ConversationDismissible(conversation: conversations[index]),
     );
@@ -272,11 +272,12 @@ class _EmptyState extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          S.of(context).no_conversations_yet,
+          s.no_conversations_yet,
           style: const TextStyle(fontSize: 16),
         ),
         16.h,
@@ -289,9 +290,10 @@ class _EmptyState extends ConsumerWidget {
 class _NewChatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return FilledButton.icon(
       onPressed: _handleNewChat,
-      label: Text(S.of(context).new_conversation),
+      label: Text(s.new_conversation),
       icon: const FaIcon(FontAwesomeIcons.plus),
       style: const ButtonStyle(
         padding: WidgetStatePropertyAll(
@@ -312,6 +314,7 @@ class _BatchActionBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final selectedConversations = ref.watch(P.conversation.selectedConversations);
     final selectedCount = selectedConversations.length;
     final hasSelection = selectedConversations.isNotEmpty;
@@ -345,7 +348,7 @@ class _BatchActionBar extends ConsumerWidget {
             FilledButton.icon(
               onPressed: hasSelection ? () => _handleDelete(context) : null,
               icon: const FaIcon(FontAwesomeIcons.trashCan, size: 16),
-              label: Text(S.of(context).delete),
+              label: Text(s.delete),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,

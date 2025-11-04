@@ -94,7 +94,9 @@ enum PageKey {
 
   static String get initialLocation => first.path;
 
-  static PageKey get first => PageKey.home;
+  static PageKey get first {
+    return PageKey.home;
+  }
 
   static List<PageKey> get tabs => [home, conversation, settings];
 }

@@ -64,6 +64,7 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final selectedCount = ref.watch(P.chat.sharingSelectedMsgIds).length;
     final paddingBottom = ref.watch(P.app.paddingBottom);
 
@@ -84,21 +85,21 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
                   Expanded(
                     child: TextButton.icon(
                       onPressed: onCancelTap,
-                      label: Text(S.of(context).cancel),
+                      label: Text(s.cancel),
                       icon: const Icon(Icons.cancel_outlined),
                     ),
                   ),
                   Expanded(
                     child: TextButton.icon(
                       onPressed: selectedCount == 0 ? null : onSaveTap,
-                      label: Text(S.of(context).save),
+                      label: Text(s.save),
                       icon: const Icon(Icons.save_alt_outlined),
                     ),
                   ),
                   Expanded(
                     child: TextButton.icon(
                       onPressed: selectedCount == 0 ? null : onShareTap,
-                      label: Text(S.of(context).share),
+                      label: Text(s.share),
                       icon: const Icon(Icons.share_rounded),
                     ),
                   ),
@@ -253,6 +254,7 @@ class _PreviewState extends ConsumerState<_Preview> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     final dark = ref.watch(P.app.dark);
 
@@ -289,12 +291,12 @@ class _PreviewState extends ConsumerState<_Preview> {
                   TextButton.icon(
                     onPressed: widget.onCancelTap,
                     icon: const Icon(Icons.close),
-                    label: Text(S.of(context).cancel),
+                    label: Text(s.cancel),
                   ),
                   TextButton.icon(
                     onPressed: () => onConfirmTap(context),
                     icon: const Icon(Icons.check),
-                    label: Text(S.of(context).confirm),
+                    label: Text(s.confirm),
                   ),
                 ],
               ),

@@ -1,5 +1,5 @@
 {
-  "@@locale": "zh-Hant",
+  "@@locale": "zh_Hant",
   "show_escape_characters": "換行符顯示",
   "line_break_rendered": "已渲染換行",
   "escape_characters_rendered": "已渲染換行符",
@@ -409,5 +409,7 @@
   "mode": "模式",
   "suggest": "推薦",
   "comprehensive": "綜合",
-  "str_downloading_info": "下載 %.1f% 速度 %.1fMB/s 剩餘 %s"
+  "str_downloading_info": "下載 %.1f% 速度 %.1fMB/s 剩餘 %s",
+  "performance_test_title": "跑分測試",
+  "performance_test_description": "使用 lambada 測試 perplexity"
 }

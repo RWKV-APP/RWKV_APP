@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/config.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
@@ -227,7 +228,7 @@ class ConversationItem extends ConsumerWidget {
                     crossAxisAlignment: CAA.stretch,
                     children: [
                       T(
-                        conversation.title,
+                        conversation.title.replaceAll(Config.userMsgModifierSep, ''),
                         s: TS(s: 16, w: FontWeight.w500, c: qb),
                         overflow: TextOverflow.ellipsis,
                       ),
