@@ -222,8 +222,7 @@ class FileInfo extends Equatable {
   @override
   String toString() {
     return '''
-FileInfo(
-  name: $name,
+FileInfo($name,
   fileName: $fileName,
   fileType: $fileType,
   fileSize: $fileSize,

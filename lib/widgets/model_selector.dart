@@ -194,7 +194,7 @@ class _ModelList extends ConsumerWidget {
     if (inTranslator) {
       availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
     } else {
-      availableModels = availableModels.where((e) => !e.tags.contains("translate") && !e.tags.contains("batch")).toSet();
+      availableModels = availableModels.where((e) => !e.tags.contains("translate")).toSet();
     }
 
     if (inBenchmark) {

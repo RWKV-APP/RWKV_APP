@@ -158,6 +158,16 @@ class ModelItem extends ConsumerWidget {
     }
 
     pop();
+
+    Future.delayed(const Duration(milliseconds: 500)).then((_) {
+      P.rwkv.send(GetSupportedBatchSizes());
+    });
+    Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+      P.rwkv.send(GetSupportedBatchSizes());
+    });
+    Future.delayed(const Duration(milliseconds: 1500)).then((_) {
+      P.rwkv.send(GetSupportedBatchSizes());
+    });
   }
 
   @override
