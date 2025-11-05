@@ -35,6 +35,7 @@ dependencies:
       ref: main
 
   adaptive_dialog: 2.5.0
+  sqflite_common_ffi:
   audioplayers:
   background_downloader:
   collection:
