@@ -432,7 +432,7 @@ class FileKeyItem extends ConsumerWidget {
             children: [
               T(
                 sprintf(s.str_downloading_info, [
-                  (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0 : progress * 100,
+                  (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0.0 : progress * 100.0,
                   networkSpeed,
                   remainText,
                 ]),
