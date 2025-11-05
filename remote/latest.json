@@ -73,24 +73,7 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"],
-        "state": [
-          {
-            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
-            "fileSize": 10489856,
-            "sha256": "9adc53f17ce1b8860d15d4210b6993f2a7bf74b698e452c5d4289e082c6f51d4",
-            "name": "中英双语角色扮演-20251014_ctx8192",
-            "fileName": "rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
-            "decodeParam": {
-              "temperature": 0.6,
-              "topK": 500,
-              "topP": 0.8,
-              "presencePenalty": 2.0,
-              "frequencyPenalty": 0.2,
-              "penaltyDecay": 0.99
-            }
-          }
-        ]
+        "tags": ["reason", "cpu"]
       },
       {
         "name": "RWKV7-G0a3 7.2B",
@@ -146,24 +129,7 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
-        "state": [
-          {
-            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
-            "fileSize": 10489856,
-            "sha256": "9adc53f17ce1b8860d15d4210b6993f2a7bf74b698e452c5d4289e082c6f51d4",
-            "name": "中英双语角色扮演-20251014_ctx8192",
-            "fileName": "rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
-            "decodeParam": {
-              "temperature": 0.6,
-              "topK": 500,
-              "topP": 0.8,
-              "presencePenalty": 2.0,
-              "frequencyPenalty": 0.2,
-              "penaltyDecay": 0.99
-            }
-          }
-        ]
+        "tags": ["reason", "gpu", "batch"]
       },
       {
         "name": "RWKV7-G0a3 7.2B",
@@ -553,24 +519,7 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite Gen5"],
-        "state": [
-          {
-            "url": "mollysama/rwkv-mobile-models/resolve/main/states/rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
-            "fileSize": 10489856,
-            "sha256": "9adc53f17ce1b8860d15d4210b6993f2a7bf74b698e452c5d4289e082c6f51d4",
-            "name": "中英双语角色扮演-20251014_ctx8192",
-            "fileName": "rwkv_7_g1a_2b9_roleplaystate_20251014_ctx8192.rmpack",
-            "decodeParam": {
-              "temperature": 0.6,
-              "topK": 500,
-              "topP": 0.8,
-              "presencePenalty": 2.0,
-              "frequencyPenalty": 0.2,
-              "penaltyDecay": 0.99
-            }
-          }
-        ]
+        "socLimitations": ["8 Elite Gen5"]
       },
       {
         "name": "RWKV7-G1a 2.9B (8 Gen 3)",
@@ -701,6 +650,86 @@
         "url": "https://storage.googleapis.com/approachcharts/test/5MB-test.ZIP",
         "platforms": ["macos", "windows", "linux", "android", "ios", "web"],
         "isDebug": true
+      }
+    ]
+  },
+  "roleplay": {
+    "model_config": [
+      {
+        "name": "RWKV7-G1a3 1.5B (8 Elite)",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-251016/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-a16w8-8elite-batch.rmpack",
+        "fileSize": 1750089728,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu", "batch"],
+        "socLimitations": ["8 Elite"]
+      },
+      {
+        "name": "RWKV7-G1a3 1.5B (8 Elite Gen5)",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-251016/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-a16w8-8elitegen5-batch.rmpack",
+        "fileSize": 1766301696,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu", "batch"],
+        "socLimitations": ["8 Elite Gen5"]
+      },
+      {
+        "name": "RWKV7-G1a3 1.5B (8 Gen 2)",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-251016/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-a16w8-8gen2-batch.rmpack",
+        "fileSize": 1722187776,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu", "batch"],
+        "socLimitations": ["8 Gen 2"]
+      },
+      {
+        "name": "RWKV7-G1a3 1.5B (8 Gen 3)",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-251016/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-a16w8-8gen3-batch.rmpack",
+        "fileSize": 1754181632,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu", "batch"],
+        "socLimitations": ["8 Gen 3"]
+      },
+      {
+        "name": "RWKV7-G1a3 1.5B (8s Gen 3)",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-251016/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-a16w8-8sgen3-batch.rmpack",
+        "fileSize": 1754451968,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu", "batch"],
+        "socLimitations": ["8s Gen 3"]
+      },
+      {
+        "name": "RWKV7-G1a3 1.5B",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-q4_k_m.gguf",
+        "fileSize": 990052512,
+        "quantization": "Q6_K",
+        "platforms": ["macos", "linux", "android"],
+        "backends": ["llamacpp"],
+        "tags": ["reason", "cpu"]
+      },
+      {
+        "name": "RWKV7-G1a3 1.5B",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-nf4.prefab",
+        "fileSize": 1355373863,
+        "quantization": "NF4",
+        "platforms": ["macos", "web", "windows", "ios"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["reason", "gpu", "batch"]
       }
     ]
   },

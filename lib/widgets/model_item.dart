@@ -28,6 +28,7 @@ class ModelItem extends ConsumerWidget {
   final VoidCallback? onLoadModelTap;
   final bool showLoadModel;
   final bool showDelete;
+  final bool isCurrentModel;
 
   const ModelItem(
     this.fileInfo,
@@ -36,6 +37,7 @@ class ModelItem extends ConsumerWidget {
     this.onLoadModelTap,
     this.showLoadModel = true,
     this.showDelete = true,
+    this.isCurrentModel = false,
     this.loadButtonTextShowLoad = false,
   });
 
@@ -176,7 +178,7 @@ class ModelItem extends ConsumerWidget {
     final localFile = ref.watch(P.fileManager.locals(fileInfo));
     final hasFile = localFile.hasFile;
     final currentModel = ref.watch(P.rwkv.currentModel);
-    final isCurrentModel = currentModel == fileInfo;
+    final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
@@ -429,7 +431,11 @@ class FileKeyItem extends ConsumerWidget {
           Wrap(
             children: [
               T(
-                sprintf(s.str_downloading_info, [progress * 100, networkSpeed, remainText]),
+                sprintf(s.str_downloading_info, [
+                  (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0 : progress * 100,
+                  networkSpeed,
+                  remainText,
+                ]),
                 s: const TextStyle(
                   fontFamily: 'monospace',
                   fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],

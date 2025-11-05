@@ -182,6 +182,7 @@ class _ModelList extends ConsumerWidget {
 
     if (rolePlayOnly && pageKey == PageKey.rolePlaying) {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
+      availableModels.addAll(P.fileManager.roleplayWeights.q);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: availableModels.map((e) => RolePlayItem(file: e)).toList(),

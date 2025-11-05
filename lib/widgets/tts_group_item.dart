@@ -2,6 +2,8 @@
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
+import 'package:flutter_roleplay/flutter_roleplay.dart';
+import 'package:flutter_roleplay/models/model_info.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +12,13 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/group_info.dart';
 import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
+
+ModelInfo? rolePlayTTSModel;
 
 class TTSGroupItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -76,6 +81,19 @@ class TTSGroupItem extends ConsumerWidget {
     final localWav2vec2File = P.fileManager.locals(wav2vec2FileKey).q;
     final localDetokenizeFile = P.fileManager.locals(detokenizeFileKey).q;
     final localTokenizeFile = P.fileManager.locals(bicodecTokenizeFileKey).q;
+
+    if (P.app.pageKey.q == PageKey.rolePlaying) {
+      final info = ModelInfo(
+        id: fileInfo.fileName,
+        modelPath: modelLocalFile.targetPath,
+        statePath: '',
+        backend: fileInfo.backend!,
+        modelType: RoleplayManageModelType.tts,
+      );
+      RoleplayManage.onModelDownloadComplete(info);
+      Navigator.pop(getContext()!);
+      return;
+    }
 
     P.rwkv.clearStates();
     P.chat.clearMessages();
@@ -140,9 +158,13 @@ class TTSGroupItem extends ConsumerWidget {
     final downloading = files.any((e) => e.downloading);
 
     final currentModel = ref.watch(P.rwkv.currentModel);
-    final alreadyStarted = currentModel == fileInfo;
+    bool alreadyStarted = currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
     final isDesktop = ref.watch(P.app.isDesktop);
+
+    if (P.app.pageKey.q == PageKey.rolePlaying) {
+      alreadyStarted = fileInfo.fileName == rolePlayTTSModel?.id;
+    }
 
     return Container(
       margin: const EI.o(t: 0, l: 0, r: 0, b: 8),

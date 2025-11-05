@@ -30,6 +30,9 @@ class _FileManager {
   late final sudokuWeights = qs<Set<FileInfo>>({});
   late final othelloWeights = qs<Set<FileInfo>>({});
 
+  ///
+  late final roleplayWeights = qs<Set<FileInfo>>({});
+
   /// 当前平台可用的 tts 权重, 包含 core 和 non-core 两种
   late final ttsWeights = qs<Set<FileInfo>>({});
   late final ttsCores = qs<Set<FileInfo>>({});
@@ -51,8 +54,12 @@ extension $FileManager on _FileManager {
     final sudokuWeights = HF.listJSON(config["sudoku"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final othelloWeights = HF.listJSON(config["othello"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
 
+    final roleplayConfig = (config["roleplay"] ?? <String, dynamic>{})["model_config"];
+    final roleplayWeights = HF.listJSON(roleplayConfig ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
+
     _allChatWeights.q = chatWeights;
     this.chatWeights.q = chatWeights.where((e) => e.available).toSet();
+    this.roleplayWeights.q = roleplayWeights.where((e) => e.available).toSet();
     this.ttsWeights.q = ttsWeights.where((e) => e.available).toSet();
     this.sudokuWeights.q = sudokuWeights.where((e) => e.available).toSet();
     this.othelloWeights.q = othelloWeights.where((e) => e.available).toSet();
@@ -65,6 +72,7 @@ extension $FileManager on _FileManager {
     await Future.delayed(const Duration(milliseconds: 17));
     final fileInfos = [
       chatWeights.q,
+      roleplayWeights.q,
       ttsWeights.q,
       worldWeights.q,
       sudokuWeights.q,
@@ -100,6 +108,7 @@ extension $FileManager on _FileManager {
     qq;
     final fileInfos = [
       chatWeights.q,
+      roleplayWeights.q,
       ttsWeights.q,
       worldWeights.q,
       sudokuWeights.q,
@@ -156,7 +165,7 @@ extension $FileManager on _FileManager {
         .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
         .listen(
           (e) {
-            qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s');
+            qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
             state.q = state.q.copyWith(
               timeRemaining: Duration(seconds: e.remainSeconds.round().clamp(0, 60 * 60 * 24)),
               progress: e.progress,
@@ -236,7 +245,7 @@ extension _$FileManager on _FileManager {
 
   Future<void> _initModelDownloadTaskState() async {
     await Future.delayed(const Duration(milliseconds: 17));
-    final availableFiles = chatWeights.q;
+    final availableFiles = [...chatWeights.q, ...roleplayWeights.q];
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
 
     final stateFiles = availableFiles.map((e) => e.state).flattened.toSet();
