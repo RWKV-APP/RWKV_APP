@@ -66,10 +66,10 @@
         "tags": ["reason", "cpu"]
       },
       {
-        "name": "RWKV7-G1a 2.9B",
+        "name": "RWKV7-G1a3 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a-2.9b-20250924-ctx4096-Q6_K.gguf",
-        "fileSize": 2567854016,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a3-2.9b-20251103-ctx8192-q6_k.gguf",
+        "fileSize": 2567854272,
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
@@ -121,9 +121,9 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
-        "name": "RWKV7-G1a 2.9B",
+        "name": "RWKV7-G1a3 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a-2.9b-20250924-ctx4096-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a3-2.9b-20251103-ctx8192-nf4.prefab",
         "fileSize": 2315788799,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
