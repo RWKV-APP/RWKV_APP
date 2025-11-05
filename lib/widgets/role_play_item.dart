@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/models/model_info.dart' show ModelInfo;
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage, RoleplayManageModelType;
+import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:zone/model/file_info.dart';
@@ -34,22 +35,23 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       final stateName = rolePlayCurrentModel!.statePath.split('/').last;
       currentStateFile = widget.file.state.firstWhereOrNull((e) => e.fileName == stateName) ?? widget.file.state.first;
     }
+    qqq('current model name: $currentModelName, current state name: ${currentStateFile?.fileName}');
   }
 
-  void onStateTap(ModelStateFile state) {
+  void onLoadTap(ModelStateFile? state) {
     setState(() {
       currentStateFile = state;
     });
     final info = ModelInfo(
       id: widget.file.fileName,
       modelPath: P.fileManager.locals(widget.file).q.targetPath,
-      statePath: P.fileManager.locals(state).q.targetPath,
+      statePath: state == null ? '' : P.fileManager.locals(state).q.targetPath,
       backend: widget.file.backend!,
-      topP: state.decodeParam['topP'],
-      temperature: state.decodeParam['temperature']?.toDouble(),
-      penaltyDecay: state.decodeParam['penaltyDecay']?.toDouble(),
-      presencePenalty: state.decodeParam['presencePenalty']?.toDouble(),
-      frequencyPenalty: state.decodeParam['frequencyPenalty']?.toDouble(),
+      topP: state?.decodeParam['topP'],
+      temperature: state?.decodeParam['temperature']?.toDouble(),
+      penaltyDecay: state?.decodeParam['penaltyDecay']?.toDouble(),
+      presencePenalty: state?.decodeParam['presencePenalty']?.toDouble(),
+      frequencyPenalty: state?.decodeParam['frequencyPenalty']?.toDouble(),
       modelType: RoleplayManageModelType.chat,
     );
     RoleplayManage.onModelDownloadComplete(info);
@@ -61,6 +63,19 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     final theme = Theme.of(context);
     final local = ref.watch(P.fileManager.locals(widget.file));
     final customTheme = ref.watch(P.app.customTheme);
+
+    final noState = widget.file.state.isEmpty;
+
+    if (noState) {
+      return ModelItem(
+        widget.file,
+        true,
+        isCurrentModel: currentModelName == widget.file.fileName,
+        onLoadModelTap: () => onLoadTap(null),
+        showLoadModel: noState,
+        showDelete: currentModelName != widget.file.fileName,
+      );
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -95,7 +110,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
                   for (final state in widget.file.state) ...[
                     _ModelStateItem(
                       state: state,
-                      onSelectTap: currentStateFile?.fileName == state.fileName ? null : () => onStateTap(state),
+                      onSelectTap: currentStateFile?.fileName == state.fileName ? null : () => onLoadTap(state),
                     ),
                     if (state != widget.file.state.last)
                       const Divider(
