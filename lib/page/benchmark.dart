@@ -262,7 +262,7 @@ class _BatchSizeSelector extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<int>(
-              value: selectedBatchSize,
+              initialValue: selectedBatchSize,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
