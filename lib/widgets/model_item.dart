@@ -431,7 +431,11 @@ class FileKeyItem extends ConsumerWidget {
           Wrap(
             children: [
               T(
-                sprintf(s.str_downloading_info, [progress * 100, networkSpeed, remainText]),
+                sprintf(s.str_downloading_info, [
+                  (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0 : progress * 100,
+                  networkSpeed,
+                  remainText,
+                ]),
                 s: const TextStyle(
                   fontFamily: 'monospace',
                   fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
