@@ -10,8 +10,10 @@ import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:rwkv_mobile_flutter/to_rwkv.dart';
+import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/gb_display.dart';
+import 'package:zone/func/unzip.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
@@ -107,14 +109,27 @@ class ModelItem extends ConsumerWidget {
     }
 
     final localFile = P.fileManager.locals(fileInfo).q;
-    final modelPath = localFile.targetPath;
+    String modelPath = localFile.targetPath;
     final backend = fileInfo.backend;
+
+    if (backend == null) {
+      Alert.error("Backend is null");
+      return;
+    }
+
+    switch (backend) {
+      case Backend.mlx:
+      case Backend.coreml:
+        modelPath = await unzipInPlace(modelPath);
+      default:
+        break;
+    }
 
     try {
       P.rwkv.clearStates();
       await P.rwkv.loadChat(
         modelPath: modelPath,
-        backend: backend!,
+        backend: backend,
         enableReasoning: fileInfo.isReasoning,
       );
     } catch (e) {
@@ -161,15 +176,11 @@ class ModelItem extends ConsumerWidget {
 
     pop();
 
-    Future.delayed(const Duration(milliseconds: 500)).then((_) {
-      P.rwkv.send(GetSupportedBatchSizes());
-    });
-    Future.delayed(const Duration(milliseconds: 1000)).then((_) {
-      P.rwkv.send(GetSupportedBatchSizes());
-    });
-    Future.delayed(const Duration(milliseconds: 1500)).then((_) {
-      P.rwkv.send(GetSupportedBatchSizes());
-    });
+    for (var i = 0; i < 3; i++) {
+      Future.delayed(Duration(milliseconds: 500 * i)).then((_) {
+        P.rwkv.send(GetSupportedBatchSizes());
+      });
+    }
   }
 
   @override
@@ -454,7 +465,7 @@ class _Tags extends ConsumerWidget {
   final FileInfo fileInfo;
 
   static const _blockedTags = ["encoder", "reason", "ENCODER", "REASON"];
-  static const _highlightTags = ["NPU", "GPU", "npu", "gpu", "DeepEmbedding", "batch"];
+  static final _highlightTags = ["mlx", "npu", "gpu", "DeepEmbedding", "batch"].map((e) => e.toLowerCase()).toList();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -469,38 +480,82 @@ class _Tags extends ConsumerWidget {
       runSpacing: 8,
       children: [
         ...tags.map((tag) {
-          final showHighlight = _highlightTags.contains(tag);
+          final lowercaseTag = tag.toLowerCase();
+          final showHighlight = _highlightTags.contains(lowercaseTag);
           if (tag == "DeepEmbedding") tag = "DE";
+          final isMLX = tag == "mlx";
+          late final Color color;
+          late final Color textColor;
+          late final Color borderColor;
+
+          if (isMLX) {
+            color = kC;
+            textColor = qb;
+            borderColor = qb;
+          } else {
+            color = showHighlight ? kCG : kG.q(.2);
+            textColor = showHighlight ? qw : qb;
+            borderColor = showHighlight ? kCG : kG.q(.2);
+          }
+
           return Container(
             decoration: BoxDecoration(
               borderRadius: 4.r,
-              color: showHighlight ? kCG : kG.q(.2),
+              color: color,
+              border: Border.all(color: borderColor, width: .5),
             ),
             padding: const EI.s(h: 4),
-            child: T(
-              tag.toUpperCase(),
-              s: TS(
-                c: showHighlight ? qw : qb,
-                w: showHighlight ? FontWeight.w500 : FontWeight.w400,
+            child: IntrinsicWidth(
+              child: Row(
+                children: [
+                  if (isMLX)
+                    Padding(
+                      padding: EI.o(b: 2),
+                      child: Icon(
+                        Icons.apple,
+                        size: 13,
+                        color: qb,
+                      ),
+                    ),
+                  Text(
+                    tag.toUpperCase(),
+                    style: TS(
+                      c: textColor,
+                      w: showHighlight ? FontWeight.w500 : FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ),
           );
         }),
         if (kDebugMode && fileInfo.isDebug)
           Container(
-            decoration: BoxDecoration(color: kCR, borderRadius: 4.r),
+            decoration: BoxDecoration(
+              color: kCR,
+              borderRadius: 4.r,
+              border: Border.all(width: .5, color: kCR),
+            ),
             padding: const EI.s(h: 4),
             child: T("DEBUG", s: TS(c: qw)),
           ),
         if (quantization != null && quantization.isNotEmpty)
           Container(
-            decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
+            decoration: BoxDecoration(
+              color: kG.q(.2),
+              borderRadius: 4.r,
+              border: Border.all(width: .5, color: kG.q(.2)),
+            ),
             padding: const EI.s(h: 4),
             child: T(quantization),
           ),
         if (date != null)
           Container(
-            decoration: BoxDecoration(color: kG.q(.2), borderRadius: 4.r),
+            decoration: BoxDecoration(
+              color: kG.q(.2),
+              borderRadius: 4.r,
+              border: Border.all(width: .5, color: kG.q(.2)),
+            ),
             padding: const EI.s(h: 4),
             child: T(date),
           ),

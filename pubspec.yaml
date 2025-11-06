@@ -34,25 +34,32 @@ dependencies:
       url: https://github.com/HaloWang/photo_viewer
       ref: main
 
+  disable_battery_optimization:
+    git:
+      url: https://github.com/pvsvamsi/Disable-Battery-Optimizations
+      ref: 3bd744d
+
   adaptive_dialog: 2.5.0
-  sqflite_common_ffi:
+  archive:
   audioplayers:
   background_downloader:
   collection:
   crypto:
   cupertino_icons:
+  device_info_plus:
   drift:
   drift_flutter:
   equatable:
   file_picker:
   flutter_dotenv:
-  gpt_markdown:
   flutter_native_splash:
   flutter_riverpod: 2.6.1
+  font_awesome_flutter:
   freezed_annotation:
   gaimon:
   gal:
   go_router:
+  gpt_markdown:
   halo: ^1.0.0
   halo_alert: ^1.0.0
   halo_state: ^1.0.0
@@ -60,29 +67,24 @@ dependencies:
   image_picker:
   intl:
   json_annotation:
+  mp_audio_stream:
   package_info_plus:
   path:
   path_provider:
   permission_handler:
+  pretty_qr_code:
   record:
+  rxdart:
   sentry_flutter:
   share_plus:
   shared_preferences:
-  system_info2:
-  url_launcher:
-  sprintf:
-  pretty_qr_code:
-  rxdart:
-  disable_battery_optimization:
-    git:
-      url: https://github.com/pvsvamsi/Disable-Battery-Optimizations
-      ref: 3bd744d
-  mp_audio_stream:
-  font_awesome_flutter:
   shelf:
   shelf_web_socket:
+  sprintf:
+  sqflite_common_ffi:
+  system_info2:
+  url_launcher:
   web_socket_channel:
-  device_info_plus:
 
 dependency_overrides:
   rwkv_mobile_flutter:
