@@ -132,6 +132,17 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
+        "name": "RWKV7-G1a3 2.9B (MLX 6-Bit)",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a3-mlx-6bit.zip",
+        "fileSize": 1775525906,
+        "quantization": "6-Bit",
+        "platforms": ["macos", "ios"],
+        "backends": ["mlx"],
+        "tags": ["reason", "gpu"],
+        "isDebug": true
+      },
+      {
         "name": "RWKV7-G0a3 7.2B",
         "modelSize": 7.2,
         "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g0a3-7.2b-20251029-ctx8192-nf4.prefab",

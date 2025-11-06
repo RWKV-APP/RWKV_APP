@@ -207,7 +207,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   record_ios: f75fa1d57f840012775c0e93a38a7f3ceea1a374
-  rwkv_mobile_flutter: c154ba85d4b8927e96118b7cee5a7976eaf62e1e
+  rwkv_mobile_flutter: d26d6688381bfa42489a48d3730722abc4b3abcc
   SDWebImage: 16309af6d214ba3f77a7c6f6fdda888cb313a50a
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 7f88e12d1882ec6e648644a7c0ff5b1466f07f99

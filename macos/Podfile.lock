@@ -165,7 +165,7 @@ SPEC CHECKSUMS:
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   record_macos: 43194b6c06ca6f8fa132e2acea72b202b92a0f5b
-  rwkv_mobile_flutter: e5bb3bf88238edc6a3b13ebfce7dd110c3685cae
+  rwkv_mobile_flutter: 8ca6e2136af1082006740e7a3072448fd0f210e7
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 7f88e12d1882ec6e648644a7c0ff5b1466f07f99
   share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
