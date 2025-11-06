@@ -134,8 +134,8 @@
       {
         "name": "RWKV7-G1a3 2.9B (MLX 6-Bit)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a3-mlx-6bit.zip",
-        "fileSize": 1775525906,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a3-20251103-ctx8192-mlx-6bit.zip",
+        "fileSize": 2176332528,
         "quantization": "6-Bit",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
