@@ -229,8 +229,11 @@ class _ModelList extends ConsumerWidget {
               return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
             })
             .map(
-              (fileInfo) =>
-                  ModelItem(fileInfo, userType.isGreaterThan(UserType.user), loadButtonTextShowLoad: pageKey == PageKey.benchmark),
+              (fileInfo) => ModelItem(
+                fileInfo,
+                userType.isGreaterThan(UserType.user),
+                loadButtonTextShowLoad: pageKey == PageKey.benchmark,
+              ),
             )
             .toList(),
       DemoType.fifthteenPuzzle || DemoType.othello => [],
