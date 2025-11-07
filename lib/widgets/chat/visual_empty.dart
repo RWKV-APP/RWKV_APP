@@ -33,16 +33,12 @@ class VisualEmpty extends ConsumerWidget {
     final s = S.of(context);
 
     switch (currentWorldType) {
-      case WorldType.engVisualQA:
-      case WorldType.qa:
       case WorldType.reasoningQA:
       case WorldType.ocr:
       case WorldType.modrwkvV2:
+      case WorldType.modrwkvV3:
         break;
       case null:
-      case WorldType.engAudioQA:
-      case WorldType.chineseASR:
-      case WorldType.engASR:
         return Positioned(child: IgnorePointer(child: Container()));
     }
 

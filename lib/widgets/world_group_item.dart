@@ -21,9 +21,12 @@ class WorldGroupItem extends ConsumerWidget {
 
   const WorldGroupItem(this.worldType, {super.key, required this.socPair});
 
-  List<FileInfo> get _fileInfos => P.fileManager.worldWeights.q.where((e) => e.worldType == worldType).where((file) {
-    return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == socPair.$2);
-  }).toList();
+  List<FileInfo> get _fileInfos {
+    final worldWeights = P.fileManager.worldWeights.q.where((e) => e.worldType == worldType).where((file) {
+      return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == socPair.$2);
+    }).toList();
+    return worldWeights;
+  }
 
   void _onDownloadAllTap() async {
     final missingFileInfos = _fileInfos.where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
@@ -57,16 +60,6 @@ class WorldGroupItem extends ConsumerWidget {
 
     try {
       switch (worldType) {
-        case WorldType.engAudioQA:
-        case WorldType.chineseASR:
-        case WorldType.engASR:
-          await P.rwkv.loadWorldEngAudioQA(
-            modelPath: modelLocalFile.targetPath,
-            encoderPath: encoderLocalFile.targetPath,
-            backend: modelFileKey.backend!,
-          );
-        case WorldType.engVisualQA:
-        case WorldType.qa:
         case WorldType.reasoningQA:
         case WorldType.ocr:
           await P.rwkv.loadWorldVision(
@@ -77,6 +70,7 @@ class WorldGroupItem extends ConsumerWidget {
             adapterPath: null,
           );
         case WorldType.modrwkvV2:
+        case WorldType.modrwkvV3:
           await P.rwkv.loadWorldVision(
             modelPath: modelLocalFile.targetPath,
             encoderPath: encoderLocalFile.targetPath,

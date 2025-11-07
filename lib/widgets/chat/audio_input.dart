@@ -63,16 +63,11 @@ class AudioInput extends ConsumerWidget {
     if (demoType == DemoType.world) {
       switch (currentWorldType) {
         case null:
-        case WorldType.engVisualQA:
-        case WorldType.qa:
         case WorldType.reasoningQA:
         case WorldType.ocr:
         case WorldType.modrwkvV2:
+        case WorldType.modrwkvV3:
           shouldShow = false;
-        case WorldType.engAudioQA:
-        case WorldType.chineseASR:
-        case WorldType.engASR:
-          shouldShow = true;
       }
     }
 
@@ -82,18 +77,11 @@ class AudioInput extends ConsumerWidget {
     if (demoType == DemoType.world) {
       switch (currentWorldType) {
         case null:
-        case WorldType.engVisualQA:
-        case WorldType.qa:
         case WorldType.reasoningQA:
         case WorldType.ocr:
         case WorldType.modrwkvV2:
+        case WorldType.modrwkvV3:
           bottomMessage = "";
-        case WorldType.engAudioQA:
-          bottomMessage = "Press and hold the microphone button above\nrelease to send";
-        case WorldType.chineseASR:
-          bottomMessage = "长按下方麦克风按钮开始录音\n松开即可发送";
-        case WorldType.engASR:
-          bottomMessage = "Press and hold the microphone button above\nrelease to send";
       }
     }
 
@@ -125,9 +113,6 @@ class AudioInput extends ConsumerWidget {
       left: 0,
       child: MeasureSize(
         onChange: (size) {
-          if (currentWorldType != WorldType.chineseASR && currentWorldType != WorldType.engASR) {
-            return;
-          }
           P.chat.inputHeight.q = size.height + 30;
         },
         child: SizedBox(

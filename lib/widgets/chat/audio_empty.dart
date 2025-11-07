@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 
 class AudioEmpty extends ConsumerWidget {
@@ -23,22 +22,6 @@ class AudioEmpty extends ConsumerWidget {
       return Positioned(child: IgnorePointer(child: Container()));
     }
 
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
-
-    switch (currentWorldType) {
-      case WorldType.chineseASR:
-      case WorldType.engASR:
-      case WorldType.engAudioQA:
-        break;
-      case WorldType.engVisualQA:
-      case WorldType.qa:
-      case WorldType.reasoningQA:
-      case WorldType.ocr:
-      case WorldType.modrwkvV2:
-      case null:
-        return Positioned(child: IgnorePointer(child: Container()));
-    }
-
     final messages = ref.watch(P.msg.list);
 
     bool show = true;
@@ -47,21 +30,6 @@ class AudioEmpty extends ConsumerWidget {
     }
 
     String message = "";
-    switch (currentWorldType) {
-      case null:
-      case WorldType.engVisualQA:
-      case WorldType.qa:
-      case WorldType.reasoningQA:
-      case WorldType.ocr:
-      case WorldType.modrwkvV2:
-        message = "";
-      case WorldType.engAudioQA:
-        message = "Press and hold the microphone button below to start recording.\nRelease to send it to RWKV.";
-      case WorldType.chineseASR:
-        message = "请长按下方按钮开始录音\n松开即可让 RWKV 识别你的声音";
-      case WorldType.engASR:
-        message = "Please press and hold the microphone button below to start recording.\nRelease to let RWKV recognize your voice";
-    }
 
     return AnimatedPositioned(
       duration: 200.ms,

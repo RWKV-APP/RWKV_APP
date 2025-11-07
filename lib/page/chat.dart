@@ -113,22 +113,13 @@ class _List extends ConsumerWidget {
     switch (currentWorldType) {
       case null:
         break;
-      case WorldType.engVisualQA:
-      case WorldType.qa:
       case WorldType.reasoningQA:
       case WorldType.ocr:
       case WorldType.modrwkvV2:
+      case WorldType.modrwkvV3:
         if (messages.length == 1 && messages.first.type == model.MessageType.userImage) {
           bottom += 46;
         }
-      case WorldType.engAudioQA:
-        bottom += 16;
-        break;
-      case WorldType.chineseASR:
-        bottom += 16;
-        break;
-      case WorldType.engASR:
-        bottom += 16;
         break;
     }
 

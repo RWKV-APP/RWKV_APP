@@ -228,23 +228,6 @@ class Message extends ConsumerWidget {
 
     String worldDemoMessageHeader = "";
 
-    switch (worldType) {
-      case WorldType.chineseASR:
-        if (changing) {
-          worldDemoMessageHeader = "正在识别您的声音...";
-        } else {
-          worldDemoMessageHeader = "语音识别结果";
-        }
-      case WorldType.engASR:
-        if (changing) {
-          worldDemoMessageHeader = "Recognizing your voice...";
-        } else {
-          worldDemoMessageHeader = "Voice recognition result";
-        }
-      default:
-        break;
-    }
-
     EdgeInsets padding = const EI.o(t: 12, l: 12, r: 12);
     Border? border = Border.all(color: primary.q(.2));
     double radius = 20;

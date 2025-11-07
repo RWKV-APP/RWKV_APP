@@ -176,6 +176,8 @@ class _ModelList extends ConsumerWidget {
       DemoType.fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
     };
 
+    // debugger();
+
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);

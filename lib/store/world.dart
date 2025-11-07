@@ -258,9 +258,6 @@ extension _$World on _World {
 
     final demoType = P.app.demoType.q;
     final isWorldDemo = demoType == DemoType.world;
-    final currentWorldType = P.rwkv.currentWorldType.q;
-    final isAudioDemo =
-        currentWorldType == WorldType.engAudioQA || currentWorldType == WorldType.chineseASR || currentWorldType == WorldType.engASR;
 
     P.chat.clearMessages();
     imagePath.q = null;
@@ -273,7 +270,7 @@ extension _$World on _World {
     playing.q = false;
     audioPath.q = "";
 
-    if (!isAudioDemo || !isWorldDemo) {
+    if (!isWorldDemo) {
       await _recorder.pause();
       await _recorder.stop();
       await _audioPlayer.stop();
@@ -281,8 +278,6 @@ extension _$World on _World {
       streaming.q = false;
       return;
     }
-
-    await _startStream();
   }
 
   List<int> _createWavHeader({
