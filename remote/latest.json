@@ -162,16 +162,6 @@
         "tags": ["reason", "mlx", "gpu"]
       },
       {
-        "name": "RWKV7-G1a3 2.9B (MLX 4-Bit)",
-        "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a3-20251103-ctx8192-mlx-4bit.zip",
-        "fileSize": 1825860452,
-        "quantization": "4-Bit",
-        "platforms": ["macos", "ios"],
-        "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"]
-      },
-      {
         "name": "RWKV7-G1a3 2.9B (MLX 6-Bit)",
         "modelSize": 2.9,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a3-20251103-ctx8192-mlx-6bit.zip",
