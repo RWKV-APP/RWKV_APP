@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 2.9.2+563
+version: 2.9.3+564
 
 environment:
   sdk: ^3.9.0
@@ -22,7 +22,7 @@ dependencies:
   flutter_roleplay:
     git:
       url: https://github.com/chenqi2013/flutter_roleplay
-      ref: a9fb5568c60bee29ecbdb52f04079869963ab642
+      ref: 6ba659b74764d4395a4a193ccfa1342b0bde5a7b
 
   rwkv_downloader:
     git:
