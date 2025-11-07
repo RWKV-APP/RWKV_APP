@@ -74,9 +74,9 @@ class SuggestionConfig {
 
 class _Suggestion {
   /// All suggestion config
-  final config = qs<SuggestionConfig>(_DefaultSuggestion.zh);
+  final config = qs(_DefaultSuggestion.zh);
 
-  final ttsTicker = qs<int>(0);
+  final ttsTicker = qs(0);
 
   /// suggestion prompt list at top of the text input
   /// item type: [String] or [Suggestion]
@@ -128,6 +128,30 @@ class _Suggestion {
         return [];
     }
     return [];
+  });
+
+  final worldSuggestion = qp<List<String>>((ref) {
+    final _ = ref.watch(P.suggestion.ttsTicker);
+    final _ = ref.watch(P.rwkv.currentModel);
+    final _ = ref.watch(P.msg.length);
+
+    final config = ref.watch(P.suggestion.config);
+
+    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+
+    // debugger();
+
+    switch (currentWorldType) {
+      case WorldType.reasoningQA:
+        return config.seeReasoningQa;
+      case WorldType.ocr:
+        return config.seeOcr;
+      case WorldType.modrwkvV2:
+      case WorldType.modrwkvV3:
+        return config.seeReasoningQa;
+      case null:
+        return [];
+    }
   });
 
   final talkSuggestion = qp<List<String>>((ref) {
@@ -191,34 +215,6 @@ class _Suggestion {
       return jsonDecode(json);
     } catch (e) {
       return null;
-    }
-  }
-
-  @Deprecated('Deprecated')
-  Future<void> _loadSuggestions() async {
-    final demoType = P.app.demoType.q;
-    final shouldUseEn = P.preference.preferredLanguage.q.resolved.locale.languageCode != "zh";
-    config.q = shouldUseEn ? _DefaultSuggestion.en : _DefaultSuggestion.zh;
-
-    // TODO load suggestions from server
-
-    if (demoType == DemoType.chat) {
-      const head = "assets/config/chat/suggestions";
-      final lang = shouldUseEn ? ".en-US" : ".zh-hans";
-      final suffix = kDebugMode ? ".debug" : "";
-      final assetPath = "$head$lang$suffix.json";
-      final jsonString = await rootBundle.loadString(assetPath);
-      final list = HF.list(jsonDecode(jsonString));
-
-      final suggestions = list.map((e) => Suggestion(display: e['display'], prompt: e['prompt'])).toList();
-      config.q = config.q.copyWith(
-        chat: [
-          SuggestionCategory(
-            name: 'Default',
-            items: suggestions,
-          ),
-        ],
-      );
     }
   }
 }

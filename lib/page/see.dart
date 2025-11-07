@@ -13,7 +13,7 @@ import 'package:zone/widgets/chat/app_bar.dart';
 import 'package:zone/widgets/chat/audio_input.dart';
 import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/message.dart';
-import 'package:zone/widgets/chat/tts/suggestions.dart';
+import 'package:zone/widgets/chat/world/suggestions.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageSee extends ConsumerWidget {

@@ -1901,10 +1901,7 @@
       "What is written in this image?",
       "What do you see in this picture?"
     ],
-    "see_reasoning_qa": [
-      "请向我描述这张图片",
-      "Please describe this image for me~"
-    ]
+    "see_reasoning_qa": ["请向我描述这张图片", "Please describe this image for me~"]
   },
   "en": {
     "chat": [
@@ -2646,9 +2643,6 @@
       "What is written in this image?",
       "What do you see in this picture?"
     ],
-    "see_reasoning_qa": [
-      "请向我描述这张图片",
-      "Please describe this image for me~"
-    ]
+    "see_reasoning_qa": ["请向我描述这张图片", "Please describe this image for me~"]
   }
 }

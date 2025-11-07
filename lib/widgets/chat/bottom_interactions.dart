@@ -1,5 +1,6 @@
 // ignore: unused_import
 
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,15 +20,20 @@ import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/performance_info.dart';
 
 class BottomInteractions extends ConsumerWidget {
-  const BottomInteractions({super.key});
+  final DemoType preferredDemoType;
+
+  const BottomInteractions({
+    super.key,
+    this.preferredDemoType = DemoType.chat,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Padding(
-      padding: EI.o(t: 8),
+    return Padding(
+      padding: const EI.o(t: 8),
       child: Row(
         children: [
-          Expanded(child: _Interactions()),
+          Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
           _MessageButton(),
         ],
       ),
@@ -36,12 +42,12 @@ class BottomInteractions extends ConsumerWidget {
 }
 
 class _Interactions extends ConsumerWidget {
-  const _Interactions();
+  final DemoType preferredDemoType;
+  const _Interactions({this.preferredDemoType = DemoType.chat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
-    final demoType = ref.watch(P.app.demoType);
     final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);
@@ -50,12 +56,12 @@ class _Interactions extends ConsumerWidget {
       runSpacing: 4,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (currentWorldType?.isVisualDemo == true) const IntrinsicWidth(child: SelectImageButton()),
-        if (features.webSearch && demoType == DemoType.chat) const _WebSearchModeButton(),
-        if (demoType == DemoType.chat) const ThinkingModeButton(),
-        if (demoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
-        if (demoType == DemoType.chat) const BatchButton(),
-        if (demoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
+        if (preferredDemoType == DemoType.world) const IntrinsicWidth(child: SelectImageButton()),
+        if (features.webSearch && preferredDemoType == DemoType.chat) const _WebSearchModeButton(),
+        if (preferredDemoType == DemoType.chat) const ThinkingModeButton(),
+        if (preferredDemoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
+        if (preferredDemoType == DemoType.chat) const BatchButton(),
+        if (preferredDemoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
     );
