@@ -514,7 +514,7 @@ class _Tags extends ConsumerWidget {
                 children: [
                   if (isMLX)
                     Padding(
-                      padding: EI.o(b: 2),
+                      padding: const EI.o(b: 2),
                       child: Icon(
                         Icons.apple,
                         size: 13,

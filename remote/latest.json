@@ -171,7 +171,6 @@
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"]
       },
-
       {
         "name": "RWKV7-G0a3 7.2B",
         "modelSize": 7.2,
