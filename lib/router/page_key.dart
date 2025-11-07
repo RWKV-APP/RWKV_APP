@@ -11,6 +11,7 @@ import 'package:zone/page/conversation.dart';
 import 'package:zone/page/home.dart';
 import 'package:zone/page/lambada.dart';
 import 'package:zone/page/othello.dart';
+import 'package:zone/page/see.dart';
 import 'package:zone/page/settings.dart';
 import 'package:zone/page/sudoku.dart';
 import 'package:zone/page/talk.dart';
@@ -34,7 +35,8 @@ enum PageKey {
   home,
   talk,
   neko,
-  lambada;
+  lambada,
+  see;
 
   String get path => "/$name";
 
@@ -53,6 +55,7 @@ enum PageKey {
     PageKey.translator => const PageTranslator(),
     PageKey.benchmark => const PageBenchmark(),
     PageKey.advancedSettings => const PageAdvancedSettings(),
+    PageKey.see => const PageSee(),
     PageKey.rolePlaying => RoleplayManage.goRolePlay(
       param['roleName'] ?? '',
       getContext()!,

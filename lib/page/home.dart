@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/args.dart';
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
@@ -72,6 +73,11 @@ class PageHome extends ConsumerWidget {
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: const _TTSButton(),
                   ),
+                  if (Args.showWorldDemoEntry)
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: maxWidth),
+                      child: const _VisualButton(),
+                    ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: const _NekoButton(),
@@ -192,6 +198,51 @@ class _TTSButton extends ConsumerWidget {
               Text(s.tts, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Text(s.tts_detail, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              const SizedBox(height: 6),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _VisualButton extends ConsumerWidget {
+  const _VisualButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+
+    return Material(
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: InkWell(
+        onTap: () {
+          push(PageKey.see);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  height: 48,
+                  width: 48,
+                  decoration: const BoxDecoration(
+                    color: Colors.deepPurpleAccent,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.public, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text("世界", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text("世界", style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
             ],
           ),

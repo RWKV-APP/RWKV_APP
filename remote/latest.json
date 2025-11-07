@@ -925,25 +925,59 @@
         "socLimitations": ["8 Elite"]
       },
       {
-        "name": "RWKV7 WhisperB ENASR 0.1B",
-        "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/RWKV7-0.1B-WhisperB-ENASR-DEMO-F16.gguf",
-        "fileSize": 386369760,
-        "quantization": "fp16",
-        "platforms": ["macos", "linux", "android", "ios"],
-        "backends": ["llamacpp"]
+        "name": "ModRWKV V3 0.4B (8 Elite)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/qnn2.39-251107/modrwkv-v3-0.4b-251107-a16w8-8elite.bin",
+        "fileSize": 546095104,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Elite"]
       },
       {
-        "name": "test: github-releases",
-        "fileSize": 19532901,
-        "url": "https://github.com/HaloWang/RWKV-Demos/releases/download/1.0.0_weights/test",
-        "platforms": ["macos", "windows", "linux", "android", "ios", "web"]
+        "name": "ModRWKV V3 0.4B (8 Elite Gen5)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/qnn2.39-251107/modrwkv-v3-0.4b-251107-a16w8-8elitegen5.bin",
+        "fileSize": 546095104,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Elite Gen5"]
       },
       {
-        "name": "test: 5MB",
-        "fileSize": 6207471,
-        "url": "https://storage.googleapis.com/approachcharts/test/5MB-test.ZIP",
-        "platforms": ["macos", "windows", "linux", "android", "ios", "web"]
+        "name": "ModRWKV V3 0.4B (8 Gen 2)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/qnn2.39-251107/modrwkv-v3-0.4b-251107-a16w8-8gen2.bin",
+        "fileSize": 1701303560,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Gen 2"]
+      },
+      {
+        "name": "ModRWKV V3 0.4B (8 Gen 3)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/qnn2.39-251107/modrwkv-v3-0.4b-251107-a16w8-8gen3.bin",
+        "fileSize": 1701303560,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8 Gen 3"]
+      },
+      {
+        "name": "ModRWKV V3 0.4B (8s Gen 3)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/qnn2.39-251107/modrwkv-v3-0.4b-251107-a16w8-8sgen3.bin",
+        "fileSize": 1701303560,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["8s Gen 3"]
       }
     ]
   },

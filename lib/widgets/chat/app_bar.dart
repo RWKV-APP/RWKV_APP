@@ -79,7 +79,7 @@ class _MainAppBar extends ConsumerWidget {
   });
 
   void _onSettingsPressed() async {
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: this.demoType)) return;
 
     final demoType = P.app.demoType.q;
     if (demoType == DemoType.tts) {
@@ -91,7 +91,10 @@ class _MainAppBar extends ConsumerWidget {
   }
 
   void _onTitlePressed() async {
-    ModelSelector.show(showNeko: P.app.pageKey.q == PageKey.neko);
+    await ModelSelector.show(
+      showNeko: P.app.pageKey.q == PageKey.neko,
+      preferredDemoType: demoType,
+    );
   }
 
   @override

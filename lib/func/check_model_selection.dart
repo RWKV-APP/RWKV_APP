@@ -3,6 +3,7 @@
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -10,12 +11,13 @@ import 'package:zone/widgets/model_selector.dart';
 bool checkModelSelection({
   bool showAlert = true,
   bool showModelSelector = true,
+  DemoType preferredDemoType = DemoType.chat,
 }) {
   final currentModel = P.rwkv.currentModel.q;
 
   if (currentModel == null) {
     if (showAlert) Alert.info(S.current.please_load_model_first);
-    if (showModelSelector) ModelSelector.show();
+    if (showModelSelector) ModelSelector.show(preferredDemoType: preferredDemoType);
     return false;
   }
 
