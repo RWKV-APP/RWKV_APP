@@ -120,7 +120,11 @@ class ModelItem extends ConsumerWidget {
     switch (backend) {
       case Backend.mlx:
       case Backend.coreml:
+        P.rwkv.loading.q = true;
+        await Future.delayed(const Duration(milliseconds: 20));
         modelPath = await unzipInPlace(modelPath);
+        await Future.delayed(const Duration(milliseconds: 20));
+        P.rwkv.loading.q = false;
       default:
         break;
     }

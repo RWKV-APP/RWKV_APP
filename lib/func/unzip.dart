@@ -1,12 +1,18 @@
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
+import 'package:flutter/foundation.dart';
 import 'package:halo/halo.dart';
 
 /// 在 zip 文件所在的位置解压缩
 Future<String> unzipInPlace(String modelPath) async {
+  return await compute(_unzipInPlaceIsolate, modelPath);
+}
+
+/// 在 isolate 中执行解压缩的顶级函数
+Future<String> _unzipInPlaceIsolate(String modelPath) async {
   final start = HF.milliseconds;
-  qqq("unzipInPlace start");
+  qqq("start");
   final modelDir = modelPath.substring(0, modelPath.lastIndexOf('/'));
   final modelPathWithoutZip = modelPath.substring(0, modelPath.lastIndexOf('.zip'));
   final exists = await File(modelPathWithoutZip).exists();
@@ -40,7 +46,7 @@ Future<String> unzipInPlace(String modelPath) async {
   }
 
   final end = HF.milliseconds;
-  qqq("unzipInPlace time cost: ${end - start}ms");
-  qqq("unzipInPlace end");
+  qqq("time cost: ${end - start}ms");
+  qqq("end");
   return modelPathWithoutZip;
 }

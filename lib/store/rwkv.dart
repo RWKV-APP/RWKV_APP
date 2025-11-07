@@ -88,11 +88,7 @@ class _RWKV {
     return date != null && date.isBefore(DateTime(2025, 9, 22));
   });
 
-  late final loading = qp((ref) {
-    return ref.watch(_loading);
-  });
-
-  late final _loading = qs(false);
+  late final loading = qs(false);
 
   late final argumentUpdatingDebouncer = Debouncer(milliseconds: 300);
 
@@ -169,7 +165,7 @@ extension $RWKVLoad on _RWKV {
     required String? adapterPath,
   }) async {
     qq;
-    _loading.q = true;
+    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     _thinkingMode.q = enableReasoning ? const thinking_mode.Free() : const thinking_mode.None();
@@ -227,7 +223,7 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.SetEosToken("\x17"));
     send(to_rwkv.SetBosToken("\x16"));
     send(to_rwkv.SetTokenBanned([0]));
-    _loading.q = false;
+    loading.q = false;
   }
 
   Future<void> loadWorldEngAudioQA({
@@ -236,7 +232,7 @@ extension $RWKVLoad on _RWKV {
     required Backend backend,
   }) async {
     qq;
-    _loading.q = true;
+    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
@@ -279,7 +275,7 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.SetBosToken("\x16"));
     send(to_rwkv.SetTokenBanned([0]));
     send(to_rwkv.SetUserRole(""));
-    _loading.q = false;
+    loading.q = false;
   }
 
   Future<void> loadSparkTTS({
@@ -290,7 +286,7 @@ extension $RWKVLoad on _RWKV {
     required Backend backend,
   }) async {
     qq;
-    _loading.q = true;
+    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
@@ -352,7 +348,7 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerNumberPath));
 
-    _loading.q = false;
+    loading.q = false;
   }
 
   Future switchChatModel(FileInfo fileInfo) async {
@@ -387,7 +383,7 @@ extension $RWKVLoad on _RWKV {
     required bool enableReasoning,
   }) async {
     qq;
-    _loading.q = true;
+    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
@@ -429,7 +425,7 @@ extension $RWKVLoad on _RWKV {
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
     send(to_rwkv.GetSamplerParams());
-    _loading.q = false;
+    loading.q = false;
     Future.delayed(500.ms).then((_) {
       send(to_rwkv.GetSupportedBatchSizes());
     });
@@ -556,7 +552,7 @@ extension $RWKVLoad on _RWKV {
     );
     send(to_rwkv.SetGenerationStopToken(_Sudoku.tokenStop));
     send(to_rwkv.ClearStates());
-    _loading.q = false;
+    loading.q = false;
   }
 }
 
