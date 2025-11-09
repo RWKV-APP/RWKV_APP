@@ -47,7 +47,6 @@ class _Interactions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);

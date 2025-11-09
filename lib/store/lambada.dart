@@ -88,8 +88,6 @@ extension $Lambada on _Lambada {
       return;
     }
 
-    testItems.q = testItems.q.shuffled.toList();
-
     progress.q = 0.0;
     totalFinishCount.q = 0;
     correctCount.q = 0;
