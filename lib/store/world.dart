@@ -167,12 +167,15 @@ extension _$World on _World {
       visualFloatHeight.q = null;
       P.rwkv.clearStates();
       P.chat.clearMessages();
+      P.rwkv.currentWorldType.q = null;
+      P.rwkv.currentModel.q = null;
     } else if (previous != PageKey.see && next == PageKey.see) {
       P.rwkv.clearStates();
       P.chat.clearMessages();
       imagePath.q = null;
       imageHeight.q = null;
       visualFloatHeight.q = null;
+      P.rwkv.currentModel.q = null;
     } else {}
   }
 

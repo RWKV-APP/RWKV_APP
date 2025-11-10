@@ -24,7 +24,6 @@ class BottomBar extends ConsumerWidget {
 
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
 
     return MeasureSize(
       onChange: (size) {
@@ -34,7 +33,7 @@ class BottomBar extends ConsumerWidget {
         borderRadius: !isChat ? BorderRadius.zero : const BorderRadius.vertical(top: Radius.circular(16)),
         child: Container(
           decoration: BoxDecoration(
-            color: isChat ? theme.cardColor : scaffoldBackgroundColor.q(.8),
+            color: theme.cardColor,
             border: isChat
                 ? null
                 : Border(
@@ -45,10 +44,10 @@ class BottomBar extends ConsumerWidget {
                   ),
           ),
           padding: EI.o(
-            l: 10,
-            r: 10,
-            b: paddingBottom + 12,
-            t: 12,
+            l: 8,
+            r: 8,
+            b: paddingBottom + 8,
+            t: 8,
           ),
           child: AnimatedSize(
             duration: 250.ms,
