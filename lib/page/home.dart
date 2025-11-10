@@ -4,12 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/args.dart';
-import 'package:zone/gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
-import 'package:zone/store/p.dart' show P, $Chat, $FileManager, $RWKVLoad;
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -71,13 +70,12 @@ class PageHome extends ConsumerWidget {
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: const _VisualButton(),
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
                     child: const _TTSButton(),
                   ),
-                  if (Args.showWorldDemoEntry)
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: maxWidth),
-                      child: const _VisualButton(),
-                    ),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: const _NekoButton(),

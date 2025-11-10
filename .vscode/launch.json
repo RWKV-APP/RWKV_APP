@@ -18,7 +18,6 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
-        "--dart-define=showWorldDemoEntry=true",
         // "--dart-define=autoShowTranslator=true",
         // "--dart-define=logLevel=3",
         // "--dart-define=enableBatchInference=true",
