@@ -164,6 +164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("取消下载"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
     "change": MessageLookupByLibrary.simpleMessage("更改"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage("更换选定图片"),
     "chat": MessageLookupByLibrary.simpleMessage("开始对话"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已复制到剪贴板"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("请输入消息内容"),
@@ -461,6 +462,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("请选择你喜欢的分支以进行接下来的对话"),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "请选择任务类型",
+    ),
+    "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
+      "请先选择一个图片",
     ),
     "please_select_an_image_from_the_following_options":
         MessageLookupByLibrary.simpleMessage("请从以下选项中选择一个图片"),

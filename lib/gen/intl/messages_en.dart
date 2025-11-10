@@ -200,6 +200,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("Cancel Download"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("Not now"),
     "change": MessageLookupByLibrary.simpleMessage("Change"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage(
+      "Change Selected Image",
+    ),
     "chat": MessageLookupByLibrary.simpleMessage("Chat"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "Copied to clipboard",
@@ -612,6 +615,9 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Please select a World Type",
+    ),
+    "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
+      "Please select an image first",
     ),
     "please_select_an_image_from_the_following_options":
         MessageLookupByLibrary.simpleMessage(

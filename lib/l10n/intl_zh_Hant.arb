@@ -1,5 +1,6 @@
 {
   "@@locale": "zh_Hant",
+  "change_selected_image": "更換選定圖片",
   "show_escape_characters": "換行符顯示",
   "line_break_rendered": "已渲染換行",
   "escape_characters_rendered": "已渲染換行符",

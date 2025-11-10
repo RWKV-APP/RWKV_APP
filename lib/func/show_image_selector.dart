@@ -53,8 +53,8 @@ Future<void> showImageSelector() async {
     throw Exception("Invalid result: $result");
   }
   P.world.imagePath.q = image.path;
-  P.chat.clearMessages();
-  P.rwkv.clearStates();
-  P.rwkv.setImagePath(path: image.path);
-  P.chat.send("", type: MessageType.userImage, imageUrl: image.path);
+  // P.chat.clearMessages();
+  // P.rwkv.clearStates();
+  // P.rwkv.setImagePath(path: image.path);
+  // P.chat.send("", type: MessageType.userImage, imageUrl: image.path);
 }

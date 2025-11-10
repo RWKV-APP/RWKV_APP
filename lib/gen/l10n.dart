@@ -54,6 +54,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `请先选择一个图片`
+  String get please_select_an_image_first {
+    return Intl.message(
+      '请先选择一个图片',
+      name: 'please_select_an_image_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `更换选定图片`
+  String get change_selected_image {
+    return Intl.message(
+      '更换选定图片',
+      name: 'change_selected_image',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `换行符显示`
   String get show_escape_characters {
     return Intl.message(

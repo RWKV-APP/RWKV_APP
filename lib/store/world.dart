@@ -157,6 +157,23 @@ extension _$World on _World {
     P.app.demoType.lv(_onWorldTypeChanged);
     _audioPlayer.eventStream.listen(_onPlayerChanged);
     _audioPlayer.onPlayerStateChanged.listen(_onPlayerStateChanged);
+    P.app.pageKey.lb(_onPageKeyChanged);
+  }
+
+  void _onPageKeyChanged(PageKey? previous, PageKey next) {
+    if (previous == PageKey.see && next != PageKey.see) {
+      imagePath.q = null;
+      imageHeight.q = null;
+      visualFloatHeight.q = null;
+      P.rwkv.clearStates();
+      P.chat.clearMessages();
+    } else if (previous != PageKey.see && next == PageKey.see) {
+      P.rwkv.clearStates();
+      P.chat.clearMessages();
+      imagePath.q = null;
+      imageHeight.q = null;
+      visualFloatHeight.q = null;
+    } else {}
   }
 
   void _onPlayerChanged(ap.AudioEvent event) {

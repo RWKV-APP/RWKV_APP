@@ -46,7 +46,6 @@ class PageSee extends ConsumerWidget {
               ],
             ),
           ),
-          AudioInput(demoType: DemoType.world),
         ],
       ),
     );

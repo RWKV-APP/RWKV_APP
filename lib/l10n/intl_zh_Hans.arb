@@ -1,5 +1,7 @@
 {
   "@@locale": "zh_Hans",
+  "please_select_an_image_first": "请先选择一个图片",
+  "change_selected_image": "更换选定图片",
   "show_escape_characters": "换行符显示",
   "line_break_rendered": "已渲染换行",
   "escape_characters_rendered": "已渲染换行符",

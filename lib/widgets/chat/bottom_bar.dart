@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:halo_state/halo_state.dart';
 import 'package:flutter/material.dart';
@@ -53,17 +54,67 @@ class BottomBar extends ConsumerWidget {
             duration: 250.ms,
             child: Column(
               children: [
+                _ImagePreview(preferredDemoType: preferredDemoType),
                 InputTextField(preferredDemoType: preferredDemoType),
-                if (preferredDemoType != DemoType.tts)
-                  BottomInteractions(
-                    preferredDemoType: preferredDemoType,
-                  ),
+                if (preferredDemoType != DemoType.tts) BottomInteractions(preferredDemoType: preferredDemoType),
                 if (preferredDemoType == DemoType.tts) const TTSBottomInteractions(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ImagePreview extends ConsumerWidget {
+  final DemoType preferredDemoType;
+  const _ImagePreview({required this.preferredDemoType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedImagePath = ref.watch(P.world.imagePath);
+    final screenWidth = ref.watch(P.app.screenWidth);
+    if (selectedImagePath == null) return const SizedBox.shrink();
+    if (preferredDemoType != DemoType.world) return const SizedBox.shrink();
+    return Row(
+      children: [
+        Padding(
+          padding: EI.o(b: 8),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: screenWidth * 0.2,
+              maxHeight: screenWidth * 0.2,
+            ),
+            child: ClipRRect(
+              borderRadius: 12.r,
+              child: Stack(
+                children: [
+                  Image.file(
+                    File(selectedImagePath),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        P.world.imagePath.q = null;
+                      },
+                      icon: Container(
+                        decoration: BD(color: kB.q(.5), borderRadius: 1000.r),
+                        child: Icon(
+                          Icons.close,
+                          color: kW.q(1),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

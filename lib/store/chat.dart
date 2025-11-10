@@ -142,7 +142,16 @@ extension $Chat on _Chat {
       return;
     }
 
-    await send(textToSend);
+    final inSee = P.app.pageKey.q == PageKey.see;
+    if (inSee) {
+      final imagePath = P.world.imagePath.q;
+      P.world.imagePath.q = null;
+      await send("", type: MessageType.userImage, imageUrl: imagePath);
+      final finalTextToSend = "<image>$imagePath</image>" + textToSend.trim();
+      await send(finalTextToSend);
+    } else {
+      await send(textToSend);
+    }
   }
 
   Future<void> onEditingComplete() async {

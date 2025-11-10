@@ -11,6 +11,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/store/web_search_mode.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
@@ -192,8 +193,8 @@ class _MessageButton extends ConsumerWidget {
     final imagePath = P.world.imagePath.q;
 
     if (currentWorldType != null && imagePath == null) {
+      Alert.info(S.current.please_select_an_image_first);
       await showImageSelector();
-      Alert.info(S.current.please_load_model_first);
       return;
     }
 
@@ -203,13 +204,17 @@ class _MessageButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final receiving = ref.watch(P.chat.receivingTokens);
-    final canSend = ref.watch(P.chat.inputHasContent);
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
+    final inSee = ref.watch(P.app.pageKey) == PageKey.see;
+    final imagePath = ref.watch(P.world.imagePath);
+    final inputHasContent = ref.watch(P.chat.inputHasContent);
+    double opacity = 1;
+    if (inSee) opacity = (imagePath != null && inputHasContent) ? 1 : .333;
 
     if (!receiving) {
       return AnimatedOpacity(
-        opacity: canSend ? 1 : .333,
+        opacity: opacity,
         duration: 250.ms,
         child: GestureDetector(
           onTap: _onPressed,

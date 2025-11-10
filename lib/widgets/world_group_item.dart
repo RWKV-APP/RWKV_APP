@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -82,6 +83,8 @@ class WorldGroupItem extends ConsumerWidget {
             enableReasoning: worldType.isReasoning,
             adapterPath: adapterLocalFile?.targetPath,
           );
+          P.rwkv.send(SetImageUniqueIdentifier("image"));
+          P.rwkv.send(SetSpaceAfterRoles(false));
       }
       Navigator.pop(getContext()!);
     } catch (e) {

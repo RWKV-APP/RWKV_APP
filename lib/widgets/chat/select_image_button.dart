@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/store/p.dart';
 
 class SelectImageButton extends ConsumerWidget {
   const SelectImageButton({super.key});
@@ -14,6 +15,7 @@ class SelectImageButton extends ConsumerWidget {
     final color = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final s = S.of(context);
+    final selectedImagePath = ref.watch(P.world.imagePath);
     return GestureDetector(
       onTap: () async {
         await showImageSelector();
@@ -30,7 +32,7 @@ class SelectImageButton extends ConsumerWidget {
         ),
         padding: const EI.o(l: 8, r: 8, t: 8, b: 8),
         child: T(
-          s.select_new_image,
+          selectedImagePath == null ? s.select_new_image : s.change_selected_image,
           s: TS(c: color),
         ),
       ),
