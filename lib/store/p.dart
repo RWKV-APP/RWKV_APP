@@ -82,7 +82,6 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/web_search_mode.dart';
-import 'package:zone/widgets/app_update_dialog.dart' show AppUpdateDialog;
 import 'package:zone/widgets/chat/batch_settings_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
 
