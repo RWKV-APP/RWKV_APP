@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
@@ -20,10 +21,11 @@ class PageHome extends ConsumerWidget {
     final s = S.of(context);
     final version = ref.watch(P.app.version);
 
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
 
     final isLandscape = width > 600;
-    final maxWidth = width / (isLandscape ? 3 : 2) - (isLandscape ? 60 : 24);
+    final crossAxisCount = isLandscape ? 3 : 2;
+    final maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
 
     return AppScaffold(
       body: SingleChildScrollView(
@@ -57,46 +59,31 @@ class PageHome extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 100),
-            Center(
-              child: Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                alignment: WrapAlignment.start,
-                runAlignment: WrapAlignment.center,
-                children: [
-                  ConstrainedBox(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: MasonryGridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                itemBuilder: (context, index) {
+                  final widgets = [
+                    const _ChatButton(),
+                    const _VisualButton(),
+                    const _TTSButton(),
+                    const _NekoButton(),
+                    const _CompletionButton(),
+                    const _TranslatorButton(),
+                    const _RolePlayButton(),
+                    const _LambadaButton(),
+                  ];
+                  return ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _ChatButton(),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _VisualButton(),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _TTSButton(),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _NekoButton(),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _CompletionButton(),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _TranslatorButton(),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _RolePlayButton(),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: const _LambadaButton(),
-                  ),
-                ],
+                    child: widgets[index],
+                  );
+                },
+                itemCount: 8,
               ),
             ),
             const SizedBox(height: 20),
