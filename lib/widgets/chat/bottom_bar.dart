@@ -80,7 +80,7 @@ class _ImagePreview extends ConsumerWidget {
     return Row(
       children: [
         Padding(
-          padding: EI.o(b: 8),
+          padding: const EI.o(b: 8),
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: screenWidth * 0.2,

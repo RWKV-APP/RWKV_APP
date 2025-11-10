@@ -10,7 +10,6 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
-import 'package:zone/widgets/chat/audio_input.dart';
 import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/message.dart';
 import 'package:zone/widgets/chat/world/suggestions.dart';

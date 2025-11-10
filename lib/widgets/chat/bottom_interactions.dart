@@ -32,7 +32,7 @@ class BottomInteractions extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
-          _MessageButton(),
+          const _MessageButton(),
         ],
       ),
     );
