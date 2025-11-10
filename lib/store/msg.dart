@@ -44,6 +44,11 @@ class _Msg {
   late final loading = qs(false);
 
   late final batchSelection = qsf<Message, int?>(null);
+
+  late final hasAtLeastOneImage = qp<bool>((ref) {
+    final list = ref.watch(this.list);
+    return list.any((msg) => msg.type == MessageType.userImage);
+  });
 }
 
 /// Private methods

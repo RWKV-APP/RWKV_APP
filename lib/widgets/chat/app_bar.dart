@@ -191,7 +191,7 @@ class _MainAppBar extends ConsumerWidget {
         ),
       ),
       actions: [
-        if (demoType == DemoType.chat && !completionMode) const _NewConversationButton(),
+        if ((demoType == DemoType.chat || demoType == DemoType.world) && !completionMode) const _NewConversationButton(),
         if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user)) const _MorePopupMenuButton(),
         if (demoType != DemoType.chat && demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(

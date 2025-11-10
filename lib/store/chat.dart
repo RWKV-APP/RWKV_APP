@@ -80,15 +80,25 @@ extension $Chat on _Chat {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    if (enabled) {
-      webSearchMode.q = WebSearchMode.off;
-    }
+    if (enabled) webSearchMode.q = WebSearchMode.off;
+
     wenYanWen.q = enabled;
   }
 
   Future<void> onSendButtonPressed() async {
     qq;
     if (!checkModelSelection()) return;
+
+    final inSee = P.app.pageKey.q == PageKey.see;
+    if (inSee) {
+      final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
+      final imagePath = P.world.imagePath.q;
+      if (!hasAtLeastOneImage && imagePath == null) {
+        Alert.info(S.current.please_select_an_image_first);
+        await showImageSelector();
+        return;
+      }
+    }
 
     if (!inputHasContent.q) {
       Alert.info("Please enter a message");
@@ -142,13 +152,16 @@ extension $Chat on _Chat {
       return;
     }
 
-    final inSee = P.app.pageKey.q == PageKey.see;
     if (inSee) {
       final imagePath = P.world.imagePath.q;
-      P.world.imagePath.q = null;
-      await send("", type: MessageType.userImage, imageUrl: imagePath);
-      final finalTextToSend = "<image>$imagePath</image>" + textToSend.trim();
-      await send(finalTextToSend);
+      if (imagePath == null) {
+        await send(textToSend);
+      } else {
+        P.world.imagePath.q = null;
+        await send("", type: MessageType.userImage, imageUrl: imagePath);
+        final finalTextToSend = "<image>$imagePath</image>" + textToSend.trim();
+        await send(finalTextToSend);
+      }
     } else {
       await send(textToSend);
     }
@@ -410,6 +423,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
+    // debugger();
     P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
 
     _checkSensitive(raw);

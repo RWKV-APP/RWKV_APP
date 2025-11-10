@@ -1,14 +1,11 @@
 // ignore: unused_import
 
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/router/page_key.dart';
@@ -186,21 +183,6 @@ class _WenYanWenButton extends ConsumerWidget {
 class _MessageButton extends ConsumerWidget {
   const _MessageButton();
 
-  void _onPressed() async {
-    qq;
-
-    final currentWorldType = P.rwkv.currentWorldType.q;
-    final imagePath = P.world.imagePath.q;
-
-    if (currentWorldType != null && imagePath == null) {
-      Alert.info(S.current.please_select_an_image_first);
-      await showImageSelector();
-      return;
-    }
-
-    await P.chat.onSendButtonPressed();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final receiving = ref.watch(P.chat.receivingTokens);
@@ -208,16 +190,17 @@ class _MessageButton extends ConsumerWidget {
     final color = Theme.of(context).colorScheme.primary;
     final inSee = ref.watch(P.app.pageKey) == PageKey.see;
     final imagePath = ref.watch(P.world.imagePath);
+    final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
     final inputHasContent = ref.watch(P.chat.inputHasContent);
     double opacity = 1;
-    if (inSee) opacity = (imagePath != null && inputHasContent) ? 1 : .333;
+    if (inSee) opacity = ((imagePath != null || hasAtLeastOneImage) && inputHasContent) ? 1 : .333;
 
     if (!receiving) {
       return AnimatedOpacity(
         opacity: opacity,
         duration: 250.ms,
         child: GestureDetector(
-          onTap: _onPressed,
+          onTap: P.chat.onSendButtonPressed,
           child: Container(
             padding: const EI.s(h: 10, v: 5),
             child: Icon(

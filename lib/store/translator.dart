@@ -274,6 +274,8 @@ extension _$Translator on _Translator {
   }
 
   void _handleIsGenerating(from_rwkv.IsGenerating res) {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey == PageKey.see || pageKey == PageKey.talk || pageKey == PageKey.chat) return;
     final generatingStateFromEvent = res.isGenerating;
     final generatingStateInFrontend = isGenerating.q;
 

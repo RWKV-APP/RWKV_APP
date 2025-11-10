@@ -108,12 +108,13 @@ class _RWKV {
   late final runtimeLog = qs<List<LogItem>>([]);
   late final stateLogList = qs<List<StateLog>>([]);
 
-  late final inTTSOrTranslateMode = qp((ref) {
+  late final inTTSTranslateOrSee = qp((ref) {
     final model = ref.watch(P.rwkv.currentModel);
     if (model == null) return false;
     final isTTS = model.isTTS;
     final isTranslate = model.tags.contains("translate");
-    return isTTS || isTranslate;
+    final isWorld = model.fileName.contains("modrwkv");
+    return isTTS || isTranslate || isWorld;
   });
 
   /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割

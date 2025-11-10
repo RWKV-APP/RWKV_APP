@@ -25,7 +25,7 @@ extension _$Conversation on _Conversation {
 
   Future<void> _onMsgNodeChanged() async {
     qq;
-    if (P.rwkv.inTTSOrTranslateMode.q) return;
+    if (P.rwkv.inTTSTranslateOrSee.q) return;
 
     final createAtUS = P.msg.msgNode.q.createAtInUS;
     if (currentCreatedAtUS.q == createAtUS) {
@@ -36,7 +36,7 @@ extension _$Conversation on _Conversation {
 
   Future<void> _syncNode() async {
     qq;
-    if (P.rwkv.inTTSOrTranslateMode.q) return;
+    if (P.rwkv.inTTSTranslateOrSee.q) return;
 
     final msgNode = P.msg.msgNode.q;
     final db = P.app._db;
@@ -96,7 +96,7 @@ extension $Conversation on _Conversation {
 
   Future<void> onDeleteClicked(BuildContext context, ConversationData conversation) async {
     qq;
-    if (P.rwkv.inTTSOrTranslateMode.q) return;
+    if (P.rwkv.inTTSTranslateOrSee.q) return;
 
     final db = P.app._db;
     final createAtInUS = conversation.createdAtUS;
@@ -120,7 +120,7 @@ extension $Conversation on _Conversation {
 
   Future<void> onRenameClicked(BuildContext context, ConversationData conversation) async {
     qq;
-    if (P.rwkv.inTTSOrTranslateMode.q) return;
+    if (P.rwkv.inTTSTranslateOrSee.q) return;
 
     final s = S.of(context);
     final currentTitle = conversation.title;
@@ -158,7 +158,7 @@ extension $Conversation on _Conversation {
   }
 
   void updateCurrentConvSubtitle(String subtitle) async {
-    if (P.rwkv.inTTSOrTranslateMode.q) return;
+    if (P.rwkv.inTTSTranslateOrSee.q) return;
     final id = P.conversation.currentCreatedAtUS.q;
     if (id == null) {
       return;
@@ -199,7 +199,7 @@ extension $Conversation on _Conversation {
   /// context
   Future<void> onExportClicked(BuildContext context, ConversationData conversation) async {
     qq;
-    if (P.rwkv.inTTSOrTranslateMode.q) return;
+    if (P.rwkv.inTTSTranslateOrSee.q) return;
     final s = S.of(context);
     try {
       // 1. 从ConversationData转成MsgNode获取所有消息ID
@@ -323,7 +323,7 @@ extension $Conversation on _Conversation {
 
   Future<void> deleteSelectedConversations(BuildContext context) async {
     qq;
-    if (P.rwkv.inTTSOrTranslateMode.q) return;
+    if (P.rwkv.inTTSTranslateOrSee.q) return;
 
     final s = S.of(context);
     final selectedIds = selectedConversations.q;
