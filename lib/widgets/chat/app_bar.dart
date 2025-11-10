@@ -109,11 +109,12 @@ class _MainAppBar extends ConsumerWidget {
 
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);
-
+    final light = ref.watch(P.app.light);
+    final transparentColor = light ? Color.fromRGBO(239, 243, 251, 0.5) : kB.q(.5);
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: (isChat || isTTS || isWorld) ? kC : scaffold.q(.7),
+      backgroundColor: (isChat || isTTS || isWorld) ? transparentColor : scaffold.q(.7),
       systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GestureDetector(
         onTap: _onTitlePressed,

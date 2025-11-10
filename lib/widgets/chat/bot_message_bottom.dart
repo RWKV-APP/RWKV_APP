@@ -14,6 +14,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/thinking_mode.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
 
@@ -118,12 +119,16 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     final thinkingMode = ThinkingMode.fromString(msg.runningMode);
+    final inSee = ref.watch(P.app.pageKey) == PageKey.see;
 
     final modeWidget = switch (thinkingMode) {
-      None() => Padding(
-        padding: const EI.o(v: 4, r: 4, l: 4),
-        child: Icon(CupertinoIcons.zzz, color: primaryColor.q(.8), size: 14),
-      ),
+      None() =>
+        inSee
+            ? const SizedBox.shrink()
+            : Padding(
+                padding: const EI.o(v: 4, r: 4, l: 4),
+                child: Icon(CupertinoIcons.zzz, color: primaryColor.q(.8), size: 14),
+              ),
       _ => const SizedBox.shrink(),
     };
 

@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 
 class SelectImageButton extends ConsumerWidget {
@@ -18,6 +20,7 @@ class SelectImageButton extends ConsumerWidget {
     final selectedImagePath = ref.watch(P.world.imagePath);
     return GestureDetector(
       onTap: () async {
+        if (!checkModelSelection(preferredDemoType: DemoType.world)) return;
         await showImageSelector();
       },
       child: AnimatedContainer(
