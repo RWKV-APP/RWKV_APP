@@ -207,6 +207,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "cancel_update": MessageLookupByLibrary.simpleMessage("Не сейчас"),
     "change": MessageLookupByLibrary.simpleMessage("Изменить"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage(
+      "Изменить выбранное изображение",
+    ),
     "chat": MessageLookupByLibrary.simpleMessage("Чат"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "Скопировано в буфер обмена",
@@ -268,6 +271,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Цветовая схема как в системе",
     ),
+    "completion": MessageLookupByLibrary.simpleMessage("Режим дополнения"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("Режим дополнения"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("Всесторонний"),
     "confirm": MessageLookupByLibrary.simpleMessage("Подтвердить"),
@@ -511,6 +515,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "license": MessageLookupByLibrary.simpleMessage(
       "Лицензия с открытым исходным кодом",
     ),
+    "life_span": MessageLookupByLibrary.simpleMessage("Life Span"),
     "light_mode": MessageLookupByLibrary.simpleMessage("Светлый режим"),
     "line_break_rendered": MessageLookupByLibrary.simpleMessage(
       "Новая строка отображена",
@@ -641,6 +646,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, выберите тип задачи",
     ),
+    "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
+      "Пожалуйста, сначала выберите изображение",
+    ),
     "please_select_an_image_from_the_following_options":
         MessageLookupByLibrary.simpleMessage(
           "Пожалуйста, выберите изображение из следующих опций",
@@ -730,6 +738,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("Глубина поиска"),
     "search_failed": MessageLookupByLibrary.simpleMessage("Ошибка поиска"),
     "searching": MessageLookupByLibrary.simpleMessage("Поиск..."),
+    "see": MessageLookupByLibrary.simpleMessage("See"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Выберите модель"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Выберите тип задачи",
@@ -770,6 +779,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Рекомендуется выбрать модель не менее 1.5B для лучших результатов",
     ),
     "small": MessageLookupByLibrary.simpleMessage("Маленький (90%)"),
+    "source_code": MessageLookupByLibrary.simpleMessage("Исходный код"),
     "source_text": m17,
     "speed": MessageLookupByLibrary.simpleMessage("Скорость загрузки:"),
     "start": MessageLookupByLibrary.simpleMessage("Начать"),
@@ -830,6 +840,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_result": MessageLookupByLibrary.simpleMessage("Результат теста"),
     "test_results": MessageLookupByLibrary.simpleMessage("Результаты тестов"),
     "testing": MessageLookupByLibrary.simpleMessage("Тестирование..."),
+    "text": MessageLookupByLibrary.simpleMessage("Текст"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage(
       "Режим дополнения текста",
     ),
@@ -894,6 +905,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Значение должно быть от 0 до 9",
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("Очень маленький (80%)"),
+    "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
+      "Визуальное понимание и OCR",
+    ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage(
       "Клонирование голоса",
     ),
@@ -912,6 +926,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
     "window_id": m28,
+    "world": MessageLookupByLibrary.simpleMessage("World"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),

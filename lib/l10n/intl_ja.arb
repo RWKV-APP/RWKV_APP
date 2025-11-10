@@ -1,9 +1,16 @@
 {
   "@@locale": "ja",
+  "world": "World",
+  "see": "See",
+  "visual_understanding_and_ocr": "視覚理解とOCR",
+  "please_select_an_image_first": "まず画像を選択してください",
+  "change_selected_image": "選択した画像を変更",
   "show_escape_characters": "改行文字を表示",
   "line_break_rendered": "改行文字が表示されました",
   "escape_characters_rendered": "改行文字が表示されました",
   "show_prefill_log_only": "Prefill ログのみ表示",
+  "text": "テキスト",
+  "life_span": "Life Span",
   "refreshed": "更新",
   "state_panel": "状態パネル",
   "open_state_panel": "状態パネルを開く",
@@ -321,7 +328,7 @@
   "welcome_to_rwkv_chat": "RWKVチャットへようこそ",
   "chat": "チャット",
   "neko": "ネコ",
-  "Completion": "補完",
+  "completion": "補完",
   "chat_with_rwkv_model": "RWKVモデルとチャット",
   "text_completion_mode": "テキスト補完モード",
   "home": "ホーム",
@@ -374,13 +381,38 @@
   "start_service": "サービスを開始",
   "lan_server": "LANサーバー",
   "http_service_port": "HTTPサービス（ポート：{port}）",
+  "@http_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "websocket_service_port": "WebSocketサービス（ポート：{port}）",
+  "@websocket_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "browser_status": "ブラウザのステータス",
   "no_browser_windows_connected": "接続されているブラウザウィンドウはありません",
   "start_service_and_open_browser": "サービスを開始し、サポートされているブラウザページを開いてください。",
   "window_id": "ウィンドウ {id}",
+  "@window_id": {
+    "placeholders": {
+      "id": {}
+    }
+  },
   "x_tabs": "{count}個のタブ",
+  "@x_tabs": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "queued_x": "キュー内：{count}",
+  "@queued_x": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "translator_debug_info": "翻訳者デバッグ情報",
   "cached_translations_memory": "キャッシュされた翻訳（メモリ）",
   "cached_translations_disk": "キャッシュされた翻訳（ディスク）",

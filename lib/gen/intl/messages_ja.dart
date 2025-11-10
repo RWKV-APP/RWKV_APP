@@ -166,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("ダウンロードをキャンセル"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("今すぐ更新しない"),
     "change": MessageLookupByLibrary.simpleMessage("変更"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage("選択した画像を変更"),
     "chat": MessageLookupByLibrary.simpleMessage("チャット"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "クリップボードにコピーされました",
@@ -219,6 +220,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "カラーテーマはシステムに従う",
     ),
+    "completion": MessageLookupByLibrary.simpleMessage("補完"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("補完モード"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("包括的"),
     "confirm": MessageLookupByLibrary.simpleMessage("確認"),
@@ -408,6 +410,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "怠惰な思考モードテンプレート",
     ),
     "license": MessageLookupByLibrary.simpleMessage("オープンソースライセンス"),
+    "life_span": MessageLookupByLibrary.simpleMessage("Life Span"),
     "light_mode": MessageLookupByLibrary.simpleMessage("ライトモード"),
     "line_break_rendered": MessageLookupByLibrary.simpleMessage("改行文字が表示されました"),
     "load_": MessageLookupByLibrary.simpleMessage("ロード"),
@@ -512,6 +515,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "タスクの種類を選択してください",
     ),
+    "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
+      "まず画像を選択してください",
+    ),
     "please_select_an_image_from_the_following_options":
         MessageLookupByLibrary.simpleMessage("以下のオプションから画像を選択してください"),
     "please_select_application_language": MessageLookupByLibrary.simpleMessage(
@@ -579,6 +585,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("検索深度"),
     "search_failed": MessageLookupByLibrary.simpleMessage("検索に失敗しました"),
     "searching": MessageLookupByLibrary.simpleMessage("検索中..."),
+    "see": MessageLookupByLibrary.simpleMessage("See"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("タスクの種類を選択"),
     "select_all": MessageLookupByLibrary.simpleMessage("すべて選択"),
@@ -605,6 +612,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "少なくとも1.5Bモデルを選択することをお勧めします。より大きい2.9Bモデルの方が優れています。",
     ),
     "small": MessageLookupByLibrary.simpleMessage("小さい (90%)"),
+    "source_code": MessageLookupByLibrary.simpleMessage("ソースコード"),
     "source_text": m17,
     "speed": MessageLookupByLibrary.simpleMessage("ダウンロード速度："),
     "start": MessageLookupByLibrary.simpleMessage("開始"),
@@ -659,6 +667,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_result": MessageLookupByLibrary.simpleMessage("テスト結果"),
     "test_results": MessageLookupByLibrary.simpleMessage("テスト結果"),
     "testing": MessageLookupByLibrary.simpleMessage("テスト中..."),
+    "text": MessageLookupByLibrary.simpleMessage("テキスト"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("テキスト補完モード"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage("数独が無効です"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("暗い"),
@@ -711,6 +720,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "値は0から9の間である必要があります",
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("非常に小さい (80%)"),
+    "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
+      "視覚理解とOCR",
+    ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("音声クローン"),
     "web_search": MessageLookupByLibrary.simpleMessage("ネットワーク検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
@@ -723,6 +735,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
     "window_id": m28,
+    "world": MessageLookupByLibrary.simpleMessage("World"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),

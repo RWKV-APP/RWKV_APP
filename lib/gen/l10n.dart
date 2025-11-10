@@ -54,6 +54,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `World`
+  String get world {
+    return Intl.message('World', name: 'world', desc: '', args: []);
+  }
+
+  /// `See`
+  String get see {
+    return Intl.message('See', name: 'see', desc: '', args: []);
+  }
+
+  /// `视觉理解与 OCR`
+  String get visual_understanding_and_ocr {
+    return Intl.message(
+      '视觉理解与 OCR',
+      name: 'visual_understanding_and_ocr',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `请先选择一个图片`
   String get please_select_an_image_first {
     return Intl.message(
@@ -2261,6 +2281,11 @@ class S {
   /// `聊天记录`
   String get chat_history {
     return Intl.message('聊天记录', name: 'chat_history', desc: '', args: []);
+  }
+
+  /// `源代码`
+  String get source_code {
+    return Intl.message('源代码', name: 'source_code', desc: '', args: []);
   }
 
   /// `搜索`

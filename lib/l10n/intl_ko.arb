@@ -1,9 +1,16 @@
 {
   "@@locale": "ko",
+  "world": "World",
+  "see": "See",
+  "visual_understanding_and_ocr": "시각 이해 및 OCR",
+  "please_select_an_image_first": "먼저 이미지를 선택해주세요",
+  "change_selected_image": "선택한 이미지 변경",
   "show_escape_characters": "새로운 줄 문자 표시",
   "line_break_rendered": "새로운 줄 문자가 표시되었습니다",
   "escape_characters_rendered": "새로운 줄 문자가 표시되었습니다",
   "show_prefill_log_only": "Prefill 로그만 표시",
+  "text": "텍스트",
+  "life_span": "Life Span",
   "state_panel": "상태 패널",
   "open_state_panel": "State Panel 열기",
   "refreshed": "새로고침",
@@ -321,7 +328,7 @@
   "welcome_to_rwkv_chat": "RWKV 채팅에 오신 것을 환영합니다",
   "chat": "채팅",
   "neko": "네코",
-  "Completion": "완성",
+  "completion": "완성",
   "chat_with_rwkv_model": "RWKV 모델과 채팅",
   "text_completion_mode": "텍스트 완성 모드",
   "home": "홈",
@@ -374,13 +381,38 @@
   "start_service": "서비스 시작",
   "lan_server": "LAN 서버",
   "http_service_port": "HTTP 서비스 (포트: {port})",
+  "@http_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "websocket_service_port": "WebSocket 서비스 (포트: {port})",
+  "@websocket_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "browser_status": "브라우저 상태",
   "no_browser_windows_connected": "연결된 브라우저 창 없음",
   "start_service_and_open_browser": "서비스를 시작하고 지원되는 브라우저 페이지를 여세요.",
   "window_id": "창 {id}",
+  "@window_id": {
+    "placeholders": {
+      "id": {}
+    }
+  },
   "x_tabs": "{count}개의 탭",
+  "@x_tabs": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "queued_x": "대기열: {count}",
+  "@queued_x": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "translator_debug_info": "번역기 디버그 정보",
   "cached_translations_memory": "캐시된 번역 (메모리)",
   "cached_translations_disk": "캐시된 번역 (디스크)",

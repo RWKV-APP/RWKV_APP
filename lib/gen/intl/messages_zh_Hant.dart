@@ -24,6 +24,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(count) => "每次推理將生成 ${count} 則訊息";
 
+  static String m2(count) => "每次生成 ${count} 條結果";
+
   static String m3(count) => "並行推理中，同時生成 ${count} 則訊息";
 
   static String m4(index) => "已選擇第 ${index} 則訊息";
@@ -31,6 +33,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(demoName) => "歡迎探索 ${demoName}";
 
   static String m6(maxLength) => "對話名稱不能超過${maxLength}個字元";
+
+  static String m7(modelName) => "目前模型: ${modelName}";
+
+  static String m8(current, total) => "目前進度: ${current}/${total}";
+
+  static String m9(current, total) => "目前測試項 (${current}/${total})";
 
   static String m10(path) => "訊息記錄會儲存在該資料夾下\n ${path}";
 
@@ -47,6 +55,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(count) => "已選擇 ${count}";
 
+  static String m17(text) => "來源文字: ${text}";
+
+  static String m18(text) => "目標文字: ${text}";
+
   static String m19(footer) => "推理${footer}: 英";
 
   static String m20(footer) => "推理${footer}: 英長";
@@ -61,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m25(footer) => "推理${footer}: 關";
 
+  static String m26(count) => "總測試項: ${count}";
+
   static String m27(port) => "WebSocket 服務 (連接埠: ${port})";
 
   static String m28(id) => "視窗 ${id}";
@@ -74,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "about": MessageLookupByLibrary.simpleMessage("關於"),
     "according_to_the_following_audio_file":
         MessageLookupByLibrary.simpleMessage("根據: "),
+    "accuracy": MessageLookupByLibrary.simpleMessage("準確率"),
     "advance_settings": MessageLookupByLibrary.simpleMessage("進階設定"),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
@@ -99,10 +114,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto_detect": MessageLookupByLibrary.simpleMessage("自動偵測"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("返回聊天"),
     "balanced": MessageLookupByLibrary.simpleMessage("均衡"),
+    "batch_completion": MessageLookupByLibrary.simpleMessage("並行續寫"),
+    "batch_completion_settings": MessageLookupByLibrary.simpleMessage("並行續寫設定"),
     "batch_inference": MessageLookupByLibrary.simpleMessage("並行推理"),
     "batch_inference_button": m0,
     "batch_inference_count": MessageLookupByLibrary.simpleMessage("並行推理數量"),
     "batch_inference_count_detail": m1,
+    "batch_inference_count_detail_2": m2,
     "batch_inference_detail": MessageLookupByLibrary.simpleMessage(
       "開啟並行推理後，RWKV 可以同時生成多個答案",
     ),
@@ -114,8 +132,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_settings": MessageLookupByLibrary.simpleMessage("並行推理設定"),
     "batch_inference_short": MessageLookupByLibrary.simpleMessage("並行"),
     "batch_inference_width": MessageLookupByLibrary.simpleMessage("訊息顯示寬度"),
+    "batch_inference_width_2": MessageLookupByLibrary.simpleMessage("結果顯示寬度"),
     "batch_inference_width_detail": MessageLookupByLibrary.simpleMessage(
       "並行推理每則訊息寬度",
+    ),
+    "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
+      "每條結果的寬度",
     ),
     "batch_management": MessageLookupByLibrary.simpleMessage("批量管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
@@ -184,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "色彩模式跟隨系統",
     ),
+    "completion": MessageLookupByLibrary.simpleMessage("續寫模式"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("續寫模式"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("綜合"),
     "confirm": MessageLookupByLibrary.simpleMessage("確認"),
@@ -198,15 +221,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_name_cannot_be_longer_than_30_characters": m6,
     "conversations": MessageLookupByLibrary.simpleMessage("對話"),
     "copy_text": MessageLookupByLibrary.simpleMessage("複製文字"),
+    "correct_count": MessageLookupByLibrary.simpleMessage("正確數"),
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("點擊上方按鈕建立新會話"),
     "created_at": MessageLookupByLibrary.simpleMessage("建立時間"),
     "creative": MessageLookupByLibrary.simpleMessage("創意"),
+    "current_model": m7,
+    "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("目前任務分頁 ID"),
     "current_task_text_length": MessageLookupByLibrary.simpleMessage(
       "目前任務文字長度",
     ),
     "current_task_url": MessageLookupByLibrary.simpleMessage("目前任務 URL"),
+    "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("目前回合"),
     "custom": MessageLookupByLibrary.simpleMessage("自訂"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("自定義難度"),
@@ -341,6 +368,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "join_the_community": MessageLookupByLibrary.simpleMessage("加入社群"),
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 看我表演！"),
+    "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA 測試"),
     "lan_server": MessageLookupByLibrary.simpleMessage("區域網路伺服器"),
     "large": MessageLookupByLibrary.simpleMessage("大 (120%)"),
     "lazy": MessageLookupByLibrary.simpleMessage("懶"),
@@ -348,9 +376,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "懶人思考範本",
     ),
     "license": MessageLookupByLibrary.simpleMessage("開源許可證"),
+    "life_span": MessageLookupByLibrary.simpleMessage("Life Span"),
     "light_mode": MessageLookupByLibrary.simpleMessage("淺色模式"),
     "line_break_rendered": MessageLookupByLibrary.simpleMessage("已渲染換行"),
     "load_": MessageLookupByLibrary.simpleMessage("載入"),
+    "load_data": MessageLookupByLibrary.simpleMessage("載入資料"),
     "loaded": MessageLookupByLibrary.simpleMessage("已載入"),
     "loading": MessageLookupByLibrary.simpleMessage("載入中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
@@ -412,6 +442,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "使用 lambada 測試 perplexity",
     ),
     "performance_test_title": MessageLookupByLibrary.simpleMessage("跑分測試"),
+    "perplexity": MessageLookupByLibrary.simpleMessage("困惑度"),
     "players": MessageLookupByLibrary.simpleMessage("玩家"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "正在播放部分已產生的語音",
@@ -434,12 +465,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "請選擇任務類型",
     ),
+    "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
+      "請先選擇一個圖片",
+    ),
     "please_select_an_image_from_the_following_options":
         MessageLookupByLibrary.simpleMessage("請從以下選項中選擇一個圖片"),
     "please_select_application_language": MessageLookupByLibrary.simpleMessage(
       "請選擇應用程式語言",
     ),
     "please_select_font_size": MessageLookupByLibrary.simpleMessage("請選擇字體大小"),
+    "please_select_model": MessageLookupByLibrary.simpleMessage("請選擇模型"),
     "please_select_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "請選擇難度",
     ),
@@ -465,6 +500,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "queued_x": m15,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已經開啟"),
+    "real_time_update": MessageLookupByLibrary.simpleMessage("即時更新"),
     "reason": MessageLookupByLibrary.simpleMessage("推理"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推理模式"),
     "recording_your_voice": MessageLookupByLibrary.simpleMessage("正在錄音..."),
@@ -481,6 +517,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset": MessageLookupByLibrary.simpleMessage("重設"),
     "result": MessageLookupByLibrary.simpleMessage("結果"),
     "resume": MessageLookupByLibrary.simpleMessage("恢復"),
+    "role_play": MessageLookupByLibrary.simpleMessage("角色扮演"),
+    "role_play_intro": MessageLookupByLibrary.simpleMessage("扮演你喜歡的角色"),
     "runtime_log_panel": MessageLookupByLibrary.simpleMessage("運行日誌面板"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
@@ -493,6 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("搜尋深度"),
     "search_failed": MessageLookupByLibrary.simpleMessage("搜尋失敗"),
     "searching": MessageLookupByLibrary.simpleMessage("搜尋中..."),
+    "see": MessageLookupByLibrary.simpleMessage("See"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("選擇模型"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("選擇任務類型"),
     "select_all": MessageLookupByLibrary.simpleMessage("全選"),
@@ -517,6 +556,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "推薦至少選擇 1.5B 模型，效果更好",
     ),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
+    "source_code": MessageLookupByLibrary.simpleMessage("原始碼"),
+    "source_text": m17,
     "speed": MessageLookupByLibrary.simpleMessage("下載速度："),
     "start": MessageLookupByLibrary.simpleMessage("開始"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("開始新聊天"),
@@ -527,14 +568,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_service_and_open_browser": MessageLookupByLibrary.simpleMessage(
       "啟動服務並開啟支援的瀏覽器頁面。",
     ),
+    "start_test": MessageLookupByLibrary.simpleMessage("開始測試"),
     "start_testing": MessageLookupByLibrary.simpleMessage("開始測試"),
     "start_to_chat": MessageLookupByLibrary.simpleMessage("開始聊天"),
     "start_to_inference": MessageLookupByLibrary.simpleMessage("開始推理"),
     "starting": MessageLookupByLibrary.simpleMessage("啟動中..."),
+    "state_list": MessageLookupByLibrary.simpleMessage("State 列表"),
     "state_panel": MessageLookupByLibrary.simpleMessage("狀態面板"),
     "status": MessageLookupByLibrary.simpleMessage("狀態"),
     "stop": MessageLookupByLibrary.simpleMessage("停止"),
     "stop_service": MessageLookupByLibrary.simpleMessage("停止服務"),
+    "stop_test": MessageLookupByLibrary.simpleMessage("停止測試"),
     "stopping": MessageLookupByLibrary.simpleMessage("停止中..."),
     "storage_permission_not_granted": MessageLookupByLibrary.simpleMessage(
       "儲存權限未授予",
@@ -559,8 +603,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "system_mode": MessageLookupByLibrary.simpleMessage("跟隨系統"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("系統提示詞"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
+    "target_text": m18,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技術研發群"),
+    "test_data": MessageLookupByLibrary.simpleMessage("測試資料"),
     "test_result": MessageLookupByLibrary.simpleMessage("測試結果"),
+    "test_results": MessageLookupByLibrary.simpleMessage("測試結果"),
+    "testing": MessageLookupByLibrary.simpleMessage("測試中..."),
+    "text": MessageLookupByLibrary.simpleMessage("文字"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("文字補全模式"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage("數獨無效"),
     "theme_dim": MessageLookupByLibrary.simpleMessage("深色"),
@@ -589,6 +638,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage("此模型不支援並行推理，請選擇帶有 batch 標籤的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考結果"),
+    "total_count": MessageLookupByLibrary.simpleMessage("總數"),
+    "total_test_items": m26,
     "translate": MessageLookupByLibrary.simpleMessage("翻譯"),
     "translating": MessageLookupByLibrary.simpleMessage("翻譯中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻譯結果"),
@@ -607,6 +658,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "值必須在 0 和 9 之間",
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("非常小 (80%)"),
+    "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
+      "視覺理解與 OCR",
+    ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("聲音複製"),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
@@ -619,6 +673,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
     "window_id": m28,
+    "world": MessageLookupByLibrary.simpleMessage("World"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
     "x_tabs": m29,

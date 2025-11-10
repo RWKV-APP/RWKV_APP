@@ -1,5 +1,10 @@
 {
   "@@locale": "en",
+  "world": "World",
+  "see": "See",
+  "text": "Text",
+  "life_span": "Life Span",
+  "visual_understanding_and_ocr": "Visual Understanding and OCR",
   "please_select_an_image_first": "Please select an image first",
   "change_selected_image": "Change Selected Image",
   "show_escape_characters": "Show escape characters",
@@ -376,13 +381,38 @@
   "start_service": "Start Service",
   "lan_server": "LAN Server",
   "http_service_port": "HTTP Service (Port: {port})",
+  "@http_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "websocket_service_port": "WebSocket Service (Port: {port})",
+  "@websocket_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "browser_status": "Browser Status",
   "no_browser_windows_connected": "No browser windows connected",
   "start_service_and_open_browser": "Start the service and open a supported browser page.",
   "window_id": "Window {id}",
+  "@window_id": {
+    "placeholders": {
+      "id": {}
+    }
+  },
   "x_tabs": "{count} tabs",
+  "@x_tabs": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "queued_x": "Queued: {count}",
+  "@queued_x": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "translator_debug_info": "Translator Debug Info",
   "cached_translations_memory": "Cached translations (memory)",
   "cached_translations_disk": "Cached translations (disk)",

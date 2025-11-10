@@ -484,6 +484,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Lazy Thinking Mode Template",
     ),
     "license": MessageLookupByLibrary.simpleMessage("Open Source License"),
+    "life_span": MessageLookupByLibrary.simpleMessage("Life Span"),
     "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
     "line_break_rendered": MessageLookupByLibrary.simpleMessage(
       "Line break rendered",
@@ -706,6 +707,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("Search Depth"),
     "search_failed": MessageLookupByLibrary.simpleMessage("Search Failed"),
     "searching": MessageLookupByLibrary.simpleMessage("Searching..."),
+    "see": MessageLookupByLibrary.simpleMessage("See"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Select a Model"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Select a World Type",
@@ -744,6 +746,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "It is recommended to choose at least a 1.5B model for better results",
     ),
     "small": MessageLookupByLibrary.simpleMessage("Small (90%)"),
+    "source_code": MessageLookupByLibrary.simpleMessage("Source Code"),
     "source_text": m17,
     "speed": MessageLookupByLibrary.simpleMessage("Download Speed:"),
     "start": MessageLookupByLibrary.simpleMessage("Start"),
@@ -804,6 +807,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_result": MessageLookupByLibrary.simpleMessage("Test Result"),
     "test_results": MessageLookupByLibrary.simpleMessage("Test Results"),
     "testing": MessageLookupByLibrary.simpleMessage("Testing..."),
+    "text": MessageLookupByLibrary.simpleMessage("Text"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage(
       "Text completion mode",
     ),
@@ -866,6 +870,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Value must be between 0 and 9",
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("Very Small (80%)"),
+    "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
+      "Visual Understanding and OCR",
+    ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("Voice Cloning"),
     "web_search": MessageLookupByLibrary.simpleMessage("Network Search"),
     "web_search_template": MessageLookupByLibrary.simpleMessage(
@@ -882,6 +889,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "window_id": m28,
+    "world": MessageLookupByLibrary.simpleMessage("World"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
     "x_tabs": m29,

@@ -1,9 +1,16 @@
 {
   "@@locale": "ru",
+  "world": "World",
+  "see": "See",
+  "visual_understanding_and_ocr": "Визуальное понимание и OCR",
+  "please_select_an_image_first": "Пожалуйста, сначала выберите изображение",
+  "change_selected_image": "Изменить выбранное изображение",
   "show_escape_characters": "Показать символы новой строки",
   "line_break_rendered": "Новая строка отображена",
   "escape_characters_rendered": "Символы новой строки отображены",
   "show_prefill_log_only": "Показать только Prefill журнал",
+  "text": "Текст",
+  "life_span": "Life Span",
   "state_panel": "Панель состояния",
   "open_state_panel": "Открыть панель состояния",
   "refreshed": "Обновлено",
@@ -321,7 +328,7 @@
   "welcome_to_rwkv_chat": "Добро пожаловать в RWKV Чат",
   "chat": "Чат",
   "neko": "Неко",
-  "Completion": "Режим дополнения",
+  "completion": "Режим дополнения",
   "chat_with_rwkv_model": "Общайтесь с моделями RWKV",
   "text_completion_mode": "Режим дополнения текста",
   "home": "Главная",
@@ -374,13 +381,38 @@
   "start_service": "Запустить службу",
   "lan_server": "LAN-сервер",
   "http_service_port": "HTTP-сервис (Порт: {port})",
+  "@http_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "websocket_service_port": "WebSocket-сервис (Порт: {port})",
+  "@websocket_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "browser_status": "Статус браузера",
   "no_browser_windows_connected": "Нет подключенных окон браузера",
   "start_service_and_open_browser": "Запустите службу и откройте поддерживаемую страницу браузера.",
   "window_id": "Окно {id}",
+  "@window_id": {
+    "placeholders": {
+      "id": {}
+    }
+  },
   "x_tabs": "{count} вкладок",
+  "@x_tabs": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "queued_x": "В очереди: {count}",
+  "@queued_x": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "translator_debug_info": "Отладочная информация переводчика",
   "cached_translations_memory": "Кэшированные переводы (память)",
   "cached_translations_disk": "Кэшированные переводы (диск)",

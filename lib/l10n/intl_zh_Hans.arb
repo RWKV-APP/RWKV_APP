@@ -1,5 +1,8 @@
 {
   "@@locale": "zh_Hans",
+  "world": "World",
+  "see": "See",
+  "visual_understanding_and_ocr": "视觉理解与 OCR",
   "please_select_an_image_first": "请先选择一个图片",
   "change_selected_image": "更换选定图片",
   "show_escape_characters": "换行符显示",
@@ -307,6 +310,7 @@
   "str_model_selection_dialog_hint": "推荐至少选择1.5B模型，更大的2.9B模型更好",
   "settings": "设置",
   "chat_history": "聊天记录",
+  "source_code": "源代码",
   "search": "搜索",
   "reference_source": "参考源",
   "analysing_result": "正在分析搜索结果",

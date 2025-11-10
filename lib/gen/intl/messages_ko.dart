@@ -169,6 +169,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("다운로드 취소"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("지금은 업데이트 안 함"),
     "change": MessageLookupByLibrary.simpleMessage("변경"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage("선택한 이미지 변경"),
     "chat": MessageLookupByLibrary.simpleMessage("채팅"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "클립보드에 복사되었습니다",
@@ -222,6 +223,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "색상 테마 시스템 설정 따르기",
     ),
+    "completion": MessageLookupByLibrary.simpleMessage("완성"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("완성 모드"),
     "comprehensive": MessageLookupByLibrary.simpleMessage("종합"),
     "confirm": MessageLookupByLibrary.simpleMessage("확인"),
@@ -407,6 +409,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "게으른 사고 모드 템플릿",
     ),
     "license": MessageLookupByLibrary.simpleMessage("오픈 소스 라이선스"),
+    "life_span": MessageLookupByLibrary.simpleMessage("Life Span"),
     "light_mode": MessageLookupByLibrary.simpleMessage("라이트 모드"),
     "line_break_rendered": MessageLookupByLibrary.simpleMessage(
       "새로운 줄 문자가 표시되었습니다",
@@ -509,6 +512,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "작업 유형을 선택해주세요",
     ),
+    "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
+      "먼저 이미지를 선택해주세요",
+    ),
     "please_select_an_image_from_the_following_options":
         MessageLookupByLibrary.simpleMessage("다음 옵션에서 이미지를 선택해주세요"),
     "please_select_application_language": MessageLookupByLibrary.simpleMessage(
@@ -576,6 +582,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("검색 깊이"),
     "search_failed": MessageLookupByLibrary.simpleMessage("검색 실패"),
     "searching": MessageLookupByLibrary.simpleMessage("검색 중..."),
+    "see": MessageLookupByLibrary.simpleMessage("See"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("모델 선택"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("작업 유형 선택"),
     "select_all": MessageLookupByLibrary.simpleMessage("모두 선택"),
@@ -604,6 +611,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "최소 1.5B 모델을 선택하는 것이 좋으며, 더 큰 2.9B 모델이 더 좋습니다.",
     ),
     "small": MessageLookupByLibrary.simpleMessage("작게 (90%)"),
+    "source_code": MessageLookupByLibrary.simpleMessage("소스 코드"),
     "source_text": m17,
     "speed": MessageLookupByLibrary.simpleMessage("다운로드 속도:"),
     "start": MessageLookupByLibrary.simpleMessage("시작"),
@@ -658,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_result": MessageLookupByLibrary.simpleMessage("테스트 결과"),
     "test_results": MessageLookupByLibrary.simpleMessage("테스트 결과"),
     "testing": MessageLookupByLibrary.simpleMessage("테스트 중..."),
+    "text": MessageLookupByLibrary.simpleMessage("텍스트"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("텍스트 완성 모드"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage(
       "스도쿠가 유효하지 않습니다",
@@ -710,6 +719,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "값은 0에서 9 사이여야 합니다",
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("매우 작게 (80%)"),
+    "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
+      "시각 이해 및 OCR",
+    ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("음성 복제"),
     "web_search": MessageLookupByLibrary.simpleMessage("네트워크 검색"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
@@ -724,6 +736,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
     "window_id": m28,
+    "world": MessageLookupByLibrary.simpleMessage("World"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d페이지 찾음"),
     "x_tabs": m29,

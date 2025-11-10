@@ -1,10 +1,16 @@
 {
   "@@locale": "zh_Hant",
+  "world": "World",
+  "see": "See",
+  "visual_understanding_and_ocr": "視覺理解與 OCR",
+  "please_select_an_image_first": "請先選擇一個圖片",
   "change_selected_image": "更換選定圖片",
   "show_escape_characters": "換行符顯示",
   "line_break_rendered": "已渲染換行",
   "escape_characters_rendered": "已渲染換行符",
   "show_prefill_log_only": "僅顯示 Prefill 日誌",
+  "text": "文字",
+  "life_span": "Life Span",
   "state_panel": "狀態面板",
   "open_state_panel": "打開狀態面板",
   "refreshed": "已刷新",
@@ -322,7 +328,7 @@
   "welcome_to_rwkv_chat": "歡迎探索 RWKV Chat",
   "chat": "開始對話",
   "neko": "Neko",
-  "Completion": "續寫模式",
+  "completion": "續寫模式",
   "chat_with_rwkv_model": "與 RWKV 模型對話",
   "text_completion_mode": "文字補全模式",
   "home": "主頁",
@@ -375,13 +381,38 @@
   "start_service": "啟動服務",
   "lan_server": "區域網路伺服器",
   "http_service_port": "HTTP 服務 (連接埠: {port})",
+  "@http_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "websocket_service_port": "WebSocket 服務 (連接埠: {port})",
+  "@websocket_service_port": {
+    "placeholders": {
+      "port": {}
+    }
+  },
   "browser_status": "瀏覽器狀態",
   "no_browser_windows_connected": "沒有連接的瀏覽器視窗",
   "start_service_and_open_browser": "啟動服務並開啟支援的瀏覽器頁面。",
   "window_id": "視窗 {id}",
+  "@window_id": {
+    "placeholders": {
+      "id": {}
+    }
+  },
   "x_tabs": "{count} 個分頁",
+  "@x_tabs": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "queued_x": "排隊中: {count}",
+  "@queued_x": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "translator_debug_info": "翻譯器偵錯資訊",
   "cached_translations_memory": "快取的翻譯 (記憶體)",
   "cached_translations_disk": "快取的翻譯 (磁碟)",
@@ -411,6 +442,33 @@
   "suggest": "推薦",
   "comprehensive": "綜合",
   "str_downloading_info": "下載 %.1f% 速度 %.1fMB/s 剩餘 %s",
+  "state_list": "State 列表",
+  "role_play": "角色扮演",
+  "role_play_intro": "扮演你喜歡的角色",
+  "batch_completion": "並行續寫",
+  "batch_completion_settings": "並行續寫設定",
+  "batch_inference_width_2": "結果顯示寬度",
+  "batch_inference_count_detail_2": "每次生成 {count} 條結果",
+  "batch_inference_width_detail_2": "每條結果的寬度",
+  "lambada_test": "LAMBADA 測試",
+  "testing": "測試中...",
+  "start_test": "開始測試",
+  "stop_test": "停止測試",
+  "load_data": "載入資料",
+  "current_model": "目前模型: {modelName}",
+  "please_select_model": "請選擇模型",
+  "test_data": "測試資料",
+  "total_test_items": "總測試項: {count}",
+  "current_progress": "目前進度: {current}/{total}",
+  "test_results": "測試結果",
+  "real_time_update": "即時更新",
+  "accuracy": "準確率",
+  "perplexity": "困惑度",
+  "correct_count": "正確數",
+  "total_count": "總數",
+  "current_test_item": "目前測試項 ({current}/{total})",
+  "source_text": "來源文字: {text}",
+  "target_text": "目標文字: {text}",
   "performance_test_title": "跑分測試",
   "performance_test_description": "使用 lambada 測試 perplexity"
 }
