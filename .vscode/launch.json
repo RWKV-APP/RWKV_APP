@@ -27,8 +27,8 @@
         // "--dart-define=debuggingThemes=true",
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
         // "--dart-define=maxTokens=200",
-        "--dart-define=disableRemoteConfig=true",
-        "--dart-define=showHaloDebugger=true"
+        // "--dart-define=disableRemoteConfig=true",
+        // "--dart-define=showHaloDebugger=true"
       ]
     },
     {

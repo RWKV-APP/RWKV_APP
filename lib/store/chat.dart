@@ -159,6 +159,7 @@ extension $Chat on _Chat {
       } else {
         P.world.imagePath.q = null;
         await send("", type: MessageType.userImage, imageUrl: imagePath);
+        await Future.delayed(50.ms);
         final finalTextToSend = "<image>$imagePath</image>" + textToSend.trim();
         await send(finalTextToSend);
       }
