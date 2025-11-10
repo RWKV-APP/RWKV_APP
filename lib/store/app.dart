@@ -37,6 +37,8 @@ class _App extends RawApp {
 
   late final tabIndex = qs(0);
 
+  late final apkDownloadState = qs<TaskUpdate?>(null);
+
   SystemUiOverlayStyle get systemOverlayStyleLight {
     final scaffold = customTheme.q.scaffold;
     return SystemUiOverlayStyle(
@@ -58,6 +60,8 @@ class _App extends RawApp {
   }
 
   String get _configForAllDemosKey => "configForAllDemosKey_${buildNumber.q}";
+
+  DownloadTask? _appUpdateTask;
 
   @override
   BuildContext? get context => getContext();
@@ -324,7 +328,7 @@ extension _$App on _App {
 
     if (Platform.isAndroid) {
       if (res == 3 && showInAppUpdate) {
-        AppUpdateDialog.show(getContext()!, url: androidApkUrl);
+        _startInAppUpdate(androidApkUrl);
       } else {
         launchUrl(Uri.parse(androidUrl), mode: LaunchMode.externalApplication);
       }
@@ -441,5 +445,65 @@ extension _$App on _App {
     qqw("load config from local sandbox and bundle time: ${endTime - startTime}ms");
 
     return (json, sp);
+  }
+
+  void _startInAppUpdate(String url) async {
+    final cacheDir = await getApplicationCacheDirectory();
+    final apkPath = '${cacheDir.path}/rwkv_chat_${_latestBuild.q}.apk';
+    if (await File(apkPath).exists()) {
+      _installApk(apkPath);
+      return;
+    }
+    _appUpdateTask = await DownloadTask.create(url: url, path: apkPath);
+    _appUpdateTask!
+        .events() //
+        .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
+        .listen(
+          (event) async {
+            qqq(
+              'download update: ${event.progress.toStringAsFixed(1)}% '
+              'speed:${event.speedInMB.toStringAsFixed(2)}MB/s',
+            );
+            if (event.state == TaskState.stopped) {
+              _appUpdateTask = null;
+            }
+            if (event.state == TaskState.completed) {
+              _appUpdateTask = null;
+              _installApk(apkPath);
+            }
+            switch (event.state) {
+              case TaskState.running:
+                apkDownloadState.q = event;
+                break;
+              default:
+                apkDownloadState.q = null;
+            }
+          },
+          onDone: () async {
+            _appUpdateTask = null;
+            apkDownloadState.q = null;
+          },
+          onError: (e) {
+            qqe(e);
+            _appUpdateTask = null;
+            apkDownloadState.q = null;
+          },
+        );
+    try {
+      await _appUpdateTask!.start();
+      Alert.success(S.current.start_download_updates_);
+    } catch (e) {
+      qqe(e);
+      Alert.error(S.current.download_failed);
+    }
+  }
+
+  void _installApk(String apkPath) async {
+    try {
+      final utils = const MethodChannel("utils");
+      await utils.invokeMethod('installApk', {"path": apkPath});
+    } catch (e) {
+      qqe(e);
+    }
   }
 }

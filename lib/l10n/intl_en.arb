@@ -470,5 +470,6 @@
   "source_text": "Source Text: {text}",
   "target_text": "Target Text: {text}",
   "performance_test_title": "Performance Test",
-  "performance_test_description": "Use lambada to test perplexity"
+  "performance_test_description": "Use lambada to test perplexity",
+  "start_download_updates_": "Start downloading updates..."
 }

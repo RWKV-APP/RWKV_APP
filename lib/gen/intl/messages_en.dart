@@ -758,6 +758,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "Start a new chat by clicking the button below",
         ),
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("Start Game"),
+    "start_download_updates_": MessageLookupByLibrary.simpleMessage(
+      "Start downloading updates...",
+    ),
     "start_service": MessageLookupByLibrary.simpleMessage("Start Service"),
     "start_service_and_open_browser": MessageLookupByLibrary.simpleMessage(
       "Start the service and open a supported browser page.",

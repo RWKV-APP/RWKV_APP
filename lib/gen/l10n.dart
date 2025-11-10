@@ -3232,6 +3232,16 @@ class S {
       args: [],
     );
   }
+
+  /// `开始后台下载更新...`
+  String get start_download_updates_ {
+    return Intl.message(
+      '开始后台下载更新...',
+      name: 'start_download_updates_',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

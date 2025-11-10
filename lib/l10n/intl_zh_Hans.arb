@@ -470,5 +470,6 @@
   "source_text": "源文本: {text}",
   "target_text": "目标文本: {text}",
   "performance_test_title": "跑分测试",
-  "performance_test_description": "使用 lambada 测试 perplexity"
+  "performance_test_description": "使用 lambada 测试 perplexity",
+  "start_download_updates_": "开始后台下载更新..."
 }
