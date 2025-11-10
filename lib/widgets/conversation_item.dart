@@ -219,7 +219,7 @@ class ConversationItem extends ConsumerWidget {
                       color: color,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: buildAvatar(),
+                    child: _buildAvatar(),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -252,7 +252,7 @@ class ConversationItem extends ConsumerWidget {
     );
   }
 
-  Widget buildAvatar() {
+  Widget _buildAvatar() {
     if (conversation.avatar == null) {
       return const FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white);
     }
