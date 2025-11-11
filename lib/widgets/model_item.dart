@@ -156,7 +156,7 @@ class ModelItem extends ConsumerWidget {
         P.rwkv.send(SetUserRole("Chinese"));
         P.rwkv.send(SetResponseRole("English"));
       }
-      await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "");
+      await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "<EOD>", setPrompt: true);
       P.backend.start();
     } else {
       P.rwkv.send(SetUserRole("User"));
