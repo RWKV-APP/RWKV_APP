@@ -72,10 +72,10 @@ class PageHome extends ConsumerWidget {
                     const _ChatButton(),
                     const _VisualButton(),
                     const _TTSButton(),
-                    const _NekoButton(),
+                    const _RolePlayButton(),
                     const _CompletionButton(),
                     const _TranslatorButton(),
-                    const _RolePlayButton(),
+                    const _NekoButton(),
                     const _LambadaButton(),
                   ];
                   return ConstrainedBox(
