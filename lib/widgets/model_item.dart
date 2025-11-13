@@ -517,6 +517,13 @@ class _Tags extends ConsumerWidget {
             child: IntrinsicWidth(
               child: Row(
                 children: [
+                  Text(
+                    tag.toUpperCase(),
+                    style: TS(
+                      c: textColor,
+                      w: showHighlight ? FontWeight.w500 : FontWeight.w400,
+                    ),
+                  ),
                   if (isMLX)
                     Padding(
                       padding: const EI.o(b: 2),
@@ -526,13 +533,6 @@ class _Tags extends ConsumerWidget {
                         color: qb,
                       ),
                     ),
-                  Text(
-                    tag.toUpperCase(),
-                    style: TS(
-                      c: textColor,
-                      w: showHighlight ? FontWeight.w500 : FontWeight.w400,
-                    ),
-                  ),
                 ],
               ),
             ),
