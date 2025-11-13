@@ -51,12 +51,12 @@ enum WorldType {
       ("8 Gen 3", "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin"),
     ],
     WorldType.modrwkvV3 => [
-      ("", "modrwkv-v3-0.4b-251107-q8_0.gguf"),
-      ("8 Elite", "modrwkv-v3-0.4b-251107-a16w8-8elite.bin"),
-      ("8 Gen 3", "modrwkv-v3-0.4b-251107-a16w8-8gen3.bin"),
-      ("8s Gen 3", "modrwkv-v3-0.4b-251107-a16w8-8sgen3.bin"),
-      ("8 Gen 2", "modrwkv-v3-0.4b-251107-a16w8-8gen2.bin"),
-      ("8 Elite Gen5", "modrwkv-v3-0.4b-251107-a16w8-8elitegen5.bin"),
+      ("", "modrwkv-v3-0.4b-251113-q8_0.gguf"),
+      ("8 Elite", "modrwkv-v3-0.4b-251113-a16w8-8elite.bin"),
+      ("8 Gen 3", "modrwkv-v3-0.4b-251113-a16w8-8gen3.bin"),
+      ("8s Gen 3", "modrwkv-v3-0.4b-251113-a16w8-8sgen3.bin"),
+      ("8 Gen 2", "modrwkv-v3-0.4b-251113-a16w8-8gen2.bin"),
+      ("8 Elite Gen5", "modrwkv-v3-0.4b-251113-a16w8-8elitegen5.bin"),
     ],
   };
 }
