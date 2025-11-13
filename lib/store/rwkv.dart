@@ -816,7 +816,7 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
     P.app.hapticLight();
 
@@ -897,7 +897,7 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
     final currentModel = P.rwkv.currentModel.q;
 
@@ -920,7 +920,7 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
     final current = thinkingMode.q;
     P.app.hapticLight();

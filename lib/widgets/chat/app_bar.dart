@@ -61,7 +61,7 @@ class ChatAppBar extends ConsumerWidget {
               ? _SelectMessageAppBar() //
               : _MainAppBar(
                   displayName: displayName,
-                  demoType: demoType,
+                  preferredDemoType: demoType,
                 ),
         ),
       ),
@@ -71,15 +71,15 @@ class ChatAppBar extends ConsumerWidget {
 
 class _MainAppBar extends ConsumerWidget {
   final String displayName;
-  final DemoType demoType;
+  final DemoType preferredDemoType;
 
   const _MainAppBar({
     required this.displayName,
-    required this.demoType,
+    required this.preferredDemoType,
   });
 
   void _onSettingsPressed() async {
-    if (!checkModelSelection(preferredDemoType: this.demoType)) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     final demoType = P.app.demoType.q;
     if (demoType == DemoType.tts) {
@@ -93,7 +93,7 @@ class _MainAppBar extends ConsumerWidget {
   void _onTitlePressed() async {
     await ModelSelector.show(
       showNeko: P.app.pageKey.q == PageKey.neko,
-      preferredDemoType: demoType,
+      preferredDemoType: preferredDemoType,
     );
   }
 
@@ -103,9 +103,9 @@ class _MainAppBar extends ConsumerWidget {
     final completionMode = ref.watch(P.chat.completionMode);
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
-    final isChat = demoType == DemoType.chat;
-    final isTTS = demoType == DemoType.tts;
-    final isWorld = demoType == DemoType.world;
+    final isChat = preferredDemoType == DemoType.chat;
+    final isTTS = preferredDemoType == DemoType.tts;
+    final isWorld = preferredDemoType == DemoType.world;
 
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);
@@ -191,9 +191,11 @@ class _MainAppBar extends ConsumerWidget {
         ),
       ),
       actions: [
-        if ((demoType == DemoType.chat || demoType == DemoType.world) && !completionMode) const _NewConversationButton(),
-        if (demoType == DemoType.chat && userType.isGreaterThan(UserType.user)) const _MorePopupMenuButton(),
-        if (demoType != DemoType.chat && demoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
+        if ((preferredDemoType == DemoType.chat || preferredDemoType == DemoType.world) && !completionMode)
+          _NewConversationButton(preferredDemoType: preferredDemoType),
+        if (preferredDemoType == DemoType.chat && userType.isGreaterThan(UserType.user))
+          _MorePopupMenuButton(preferredDemoType: preferredDemoType),
+        if (preferredDemoType != DemoType.chat && preferredDemoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
             onPressed: _onSettingsPressed,
             icon: const Icon(Icons.tune),
@@ -204,10 +206,11 @@ class _MainAppBar extends ConsumerWidget {
 }
 
 class _MorePopupMenuButton extends ConsumerWidget {
-  const _MorePopupMenuButton();
+  final DemoType preferredDemoType;
+  const _MorePopupMenuButton({required this.preferredDemoType});
 
   void _onSettingsPressed() async {
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     final demoType = P.app.demoType.q;
     if (demoType == DemoType.tts) {
@@ -305,7 +308,9 @@ class _MorePopupMenuButton extends ConsumerWidget {
 }
 
 class _NewConversationButton extends ConsumerWidget {
-  const _NewConversationButton();
+  final DemoType preferredDemoType;
+
+  const _NewConversationButton({required this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -317,7 +322,7 @@ class _NewConversationButton extends ConsumerWidget {
     return IconButton(
       onPressed: !isEmpty
           ? () {
-              if (!checkModelSelection()) return;
+              if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
               P.chat.startNewChat();
             }
           : null,

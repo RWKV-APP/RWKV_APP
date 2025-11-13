@@ -394,7 +394,7 @@ extension $TTS on _TTS {
 
   Future<void> gen() async {
     qq;
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: DemoType.tts)) return;
 
     if (!P.chat.inputHasContent.q) return;
 

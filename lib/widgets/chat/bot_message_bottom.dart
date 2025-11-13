@@ -48,7 +48,7 @@ class BotMessageBottom extends ConsumerWidget {
   }
 
   void _onRegeneratePressed() async {
-    await P.chat.onRegeneratePressed(index: index);
+    await P.chat.onRegeneratePressed(index: index, preferredDemoType: preferredDemoType ?? DemoType.chat);
   }
 
   void _onCopyPressed() {

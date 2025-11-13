@@ -123,7 +123,7 @@ class InputTextField extends ConsumerWidget {
           if (HardwareKeyboard.instance.isShiftPressed) {
             return KeyEventResult.ignored;
           } else {
-            P.chat.onSendButtonPressed();
+            P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType ?? DemoType.chat);
             return KeyEventResult.handled;
           }
         }
@@ -147,6 +147,6 @@ class InputTextField extends ConsumerWidget {
 
   void _onTapTextFieldWhenItsDisabled() {
     qq;
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType ?? DemoType.chat)) return;
   }
 }

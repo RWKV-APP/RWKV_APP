@@ -72,7 +72,8 @@ class TTSBottomInteractions extends ConsumerWidget {
             if (audioInteractorShown) const _AudioInteractor(),
             if (spkShown) const _SpkPanel(),
             if (intonationShown) const _IntonationPanel(),
-            if (!audioInteractorShown && !intonationShown && !spkShown && selectedSpkName == null) const _Instruction(),
+            if (!audioInteractorShown && !intonationShown && !spkShown && selectedSpkName == null)
+              const _Instruction(preferredDemoType: DemoType.tts),
           ],
         ),
       ),
@@ -565,7 +566,8 @@ class _SpkPanel extends ConsumerWidget {
 }
 
 class _Instruction extends ConsumerWidget {
-  const _Instruction();
+  final DemoType preferredDemoType;
+  const _Instruction({required this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -578,7 +580,7 @@ class _Instruction extends ConsumerWidget {
           Column(
             crossAxisAlignment: CAA.stretch,
             children: [
-              const _TextField(),
+              _TextField(preferredDemoType: preferredDemoType),
               if (!hasFocus) const _InstructTabs(),
               if (!hasFocus && interactingInstruction != TTSInstruction.none) const _InstructOptions(),
             ],
@@ -749,7 +751,9 @@ class _InstructOptions extends ConsumerWidget {
 }
 
 class _TextField extends ConsumerWidget {
-  const _TextField();
+  final DemoType preferredDemoType;
+
+  const _TextField({required this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -891,6 +895,6 @@ class _TextField extends ConsumerWidget {
 
   void _onTapTextFieldWhenItsDisabled() {
     qq;
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
   }
 }

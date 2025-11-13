@@ -11,7 +11,7 @@ import 'package:zone/widgets/model_selector.dart';
 bool checkModelSelection({
   bool showAlert = true,
   bool showModelSelector = true,
-  DemoType preferredDemoType = DemoType.chat,
+  required DemoType preferredDemoType,
 }) {
   final currentModel = P.rwkv.currentModel.q;
 

@@ -85,9 +85,11 @@ extension $Chat on _Chat {
     wenYanWen.q = enabled;
   }
 
-  Future<void> onSendButtonPressed() async {
+  Future<void> onSendButtonPressed({
+    required DemoType preferredDemoType,
+  }) async {
     qq;
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     final inSee = P.app.pageKey.q == PageKey.see;
     if (inSee) {
@@ -212,7 +214,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> onTapEditInUserMessageBubble({required int index}) async {
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
     final content = P.msg.list.q[index].contentAndTails[0];
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
@@ -220,16 +222,16 @@ extension $Chat on _Chat {
   }
 
   Future<void> onTapEditInBotMessageBubble({required int index}) async {
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
     final content = P.msg.list.q[index].content;
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
     P.msg.editingOrRegeneratingIndex.q = index;
   }
 
-  Future<void> onRegeneratePressed({required int index}) async {
+  Future<void> onRegeneratePressed({required int index, required DemoType preferredDemoType}) async {
     qqq("index: $index");
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     final userMessage = P.msg.list.q[index - 1];
     P.msg.editingOrRegeneratingIndex.q = index;

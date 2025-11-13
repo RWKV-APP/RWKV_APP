@@ -156,7 +156,7 @@ class _EmptyV2 extends ConsumerWidget {
   }
 
   void onTap(dynamic suggestion) {
-    if (!checkModelSelection()) return;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
     final s = (suggestion as Suggestion);
     P.chat.send(s.prompt.isEmpty ? s.display : s.prompt);
   }

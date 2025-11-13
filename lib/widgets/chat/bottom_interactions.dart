@@ -22,7 +22,7 @@ class BottomInteractions extends ConsumerWidget {
 
   const BottomInteractions({
     super.key,
-    this.preferredDemoType = DemoType.chat,
+    required this.preferredDemoType,
   });
 
   @override
@@ -32,7 +32,7 @@ class BottomInteractions extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
-          const _MessageButton(),
+          _MessageButton(preferredDemoType: preferredDemoType),
         ],
       ),
     );
@@ -181,7 +181,9 @@ class _WenYanWenButton extends ConsumerWidget {
 }
 
 class _MessageButton extends ConsumerWidget {
-  const _MessageButton();
+  final DemoType preferredDemoType;
+
+  const _MessageButton({required this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -200,7 +202,7 @@ class _MessageButton extends ConsumerWidget {
         opacity: opacity,
         duration: 250.ms,
         child: GestureDetector(
-          onTap: P.chat.onSendButtonPressed,
+          onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
           child: Container(
             padding: const EI.s(h: 10, v: 5),
             child: Icon(

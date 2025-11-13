@@ -75,7 +75,7 @@ extension $Lambada on _Lambada {
 
   Future<void> startTest() async {
     // 检查是否有模型被加载
-    if (!checkModelSelection(showAlert: true, showModelSelector: true)) {
+    if (!checkModelSelection(showAlert: true, showModelSelector: true, preferredDemoType: DemoType.chat)) {
       return;
     }
 
