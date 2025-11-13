@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
@@ -478,12 +479,16 @@ class _Tags extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
     final date = fileInfo.dateDisplayString;
+    List<String> hiddenTags = [];
+    if (Platform.isIOS || Platform.isMacOS) {
+      hiddenTags = ["gpu"];
+    }
 
     return Wrap(
       spacing: 4,
       runSpacing: 8,
       children: [
-        ...tags.map((tag) {
+        ...tags.where((tag) => !hiddenTags.contains(tag)).map((tag) {
           final lowercaseTag = tag.toLowerCase();
           final showHighlight = _highlightTags.contains(lowercaseTag);
           if (tag == "DeepEmbedding") tag = "DE";

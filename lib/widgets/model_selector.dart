@@ -220,6 +220,10 @@ class _ModelList extends ConsumerWidget {
         availableModels
             .where((e) => showNeko == e.isNeko)
             .sorted((a, b) {
+              final aHasMLX = a.tags.contains("mlx");
+              final bHasMLX = b.tags.contains("mlx");
+              if (aHasMLX != bHasMLX) return aHasMLX ? -1 : 1;
+
               final aHasNpu = a.tags.contains("npu");
               final bHasNpu = b.tags.contains("npu");
               if (aHasNpu != bHasNpu) return aHasNpu ? -1 : 1;
