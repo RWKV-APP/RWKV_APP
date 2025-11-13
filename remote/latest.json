@@ -868,7 +868,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/vision_encoder/siglip2-encoder-patch16-384-q8_0.gguf",
         "fileSize": 99950656,
         "quantization": "q8_0",
-        "platforms": ["macos", "linux", "android", "ios"],
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
         "tags": ["encoder"]
       },
