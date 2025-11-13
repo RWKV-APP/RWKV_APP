@@ -160,10 +160,12 @@ extension $Chat on _Chat {
         await send(textToSend);
       } else {
         P.world.imagePath.q = null;
-        if (P.msg.hasAtLeastOneImage.q) P.msg._clear();
-        await Future.delayed(10.ms);
-        P.rwkv.send(to_rwkv.ClearStates());
-        await Future.delayed(10.ms);
+        if (P.msg.hasAtLeastOneImage.q) {
+          P.msg._clear();
+          await Future.delayed(10.ms);
+          P.rwkv.send(to_rwkv.ClearStates());
+          await Future.delayed(10.ms);
+        }
         await send("", type: MessageType.userImage, imageUrl: imagePath);
         await Future.delayed(50.ms);
         final finalTextToSend = "<image>$imagePath</image>" + textToSend.trim();
