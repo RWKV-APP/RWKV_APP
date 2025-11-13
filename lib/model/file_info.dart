@@ -175,7 +175,6 @@ class FileInfo extends Equatable {
     "modrwkv-v3-0.4b-251113-a16w8-8gen3.bin" => WorldType.modrwkvV3,
     "modrwkv-v3-0.4b-251113-a16w8-8sgen3.bin" => WorldType.modrwkvV3,
     "modrwkv-v3-0.4b-251113-q8_0.gguf" => WorldType.modrwkvV3,
-    // "modrwkv-v3-0.4b-251107-siglip-encoder-patch16-384-q8.gguf" => WorldType.modrwkvV3,
     "modrwkv-v3-0.4b-251113-vision-adapter.gguf" => WorldType.modrwkvV3,
     "siglip2-encoder-patch16-384-q8_0.gguf" => WorldType.modrwkvV3,
     _ => null,
