@@ -430,6 +430,7 @@ class _PreviewState extends ConsumerState<_Preview> {
             "assets/img/chat/icon.png",
             width: 42,
             height: 42,
+            filterQuality: FilterQuality.low,
             fit: BoxFit.cover,
           ),
         ),

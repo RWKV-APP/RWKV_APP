@@ -236,7 +236,6 @@ class ConversationItem extends ConsumerWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CAA.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   T(
                     conversation.title.replaceAll(Config.userMsgModifierSep, ''),
