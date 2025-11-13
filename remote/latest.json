@@ -132,41 +132,41 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
-        "name": "RWKV7-G1a 0.1B (MLX 6-Bit)",
+        "name": "RWKV7-G1a 0.1B (MLX INT6)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.1B-g1a-20250728-ctx4096-mlx-6bit.zip",
         "fileSize": 160618980,
-        "quantization": "6-Bit",
+        "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"]
       },
       {
-        "name": "RWKV7-G1a 0.4B (MLX 6-Bit)",
+        "name": "RWKV7-G1a 0.4B (MLX INT6)",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.4B-g1a-20250905-ctx4096-mlx-6bit.zip",
         "fileSize": 377365143,
-        "quantization": "6-Bit",
+        "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"]
       },
       {
-        "name": "RWKV7-G1a3 1.5B (MLX 6-Bit)",
+        "name": "RWKV7-G1a3 1.5B (MLX INT6)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-1.5B-g1a3-20251015-ctx8192-mlx-6bit.zip",
         "fileSize": 1332754348,
-        "quantization": "6-Bit",
+        "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"]
       },
       {
-        "name": "RWKV7-G1a3 2.9B (MLX 6-Bit)",
+        "name": "RWKV7-G1a3 2.9B (MLX INT6)",
         "modelSize": 2.9,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a3-20251103-ctx8192-mlx-6bit.zip",
         "fileSize": 2207928070,
-        "quantization": "6-Bit",
+        "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"]
@@ -886,7 +886,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/modrwkv-v3-0.4b-251107-siglip-encoder-patch16-384-q8.gguf",
         "fileSize": 99950656,
         "quantization": "q8_0",
-        "platforms": ["macos", "linux", "android", "ios"],
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
         "tags": ["encoder"]
       },
@@ -895,7 +895,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/modrwkv-v3-0.4b-251107-vision-adapter.gguf",
         "fileSize": 14717568,
         "quantization": "fp16",
-        "platforms": ["macos", "linux", "android", "ios"],
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
         "tags": ["adapter"]
       },
@@ -948,7 +948,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/modrwkv-v3-0.4b-251107-q8_0.gguf",
         "fileSize": 501497984,
         "quantization": "q8_0",
-        "platforms": ["macos", "linux", "android"],
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"]
       },
