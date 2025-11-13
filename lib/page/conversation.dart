@@ -42,34 +42,13 @@ class PageConversation extends ConsumerStatefulWidget {
 
 class _PageConversationState extends ConsumerState<PageConversation> {
   List<ConversationListItemData> roleplayConversations = [];
-  late final ScrollController _scrollController;
-  int _appBarAlpha = 0;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    _setupScrollListener();
-  }
-
-  void _setupScrollListener() {
-    _scrollController.addListener(() {
-      final offset = _scrollController.offset;
-      final alpha = (offset * 0.5).clamp(0, 255).toInt();
-      if (alpha != _appBarAlpha) {
-        setState(() => _appBarAlpha = alpha);
-      }
-    });
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       updateRolePlayConversations();
     });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 
   @override
@@ -81,7 +60,7 @@ class _PageConversationState extends ConsumerState<PageConversation> {
     return AppScaffold(
       body: Column(
         children: [
-          _ConversationAppBar(alpha: _appBarAlpha),
+          _ConversationAppBar(),
           isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
           if (isBatchMode) const _BatchActionBar(),
         ],
@@ -124,9 +103,7 @@ class _PageConversationState extends ConsumerState<PageConversation> {
 }
 
 class _ConversationAppBar extends ConsumerWidget {
-  const _ConversationAppBar({required this.alpha});
-
-  final int alpha;
+  const _ConversationAppBar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -185,7 +162,6 @@ class _ConversationList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final conversations = ref.watch(_compositedConversations);
     return ListView.separated(
-      controller: context.findAncestorStateOfType<_PageConversationState>()?._scrollController,
       padding: const EdgeInsets.only(bottom: 60),
       itemCount: conversations.length,
       cacheExtent: 200,
@@ -211,9 +187,9 @@ class _ConversationSeparator extends StatelessWidget {
 }
 
 class _ConversationDismissible extends ConsumerWidget {
-  const _ConversationDismissible({required this.conversation});
-
   final ConversationListItemData conversation;
+
+  const _ConversationDismissible({required this.conversation});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

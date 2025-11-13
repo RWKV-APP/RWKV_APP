@@ -13,6 +13,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ConversationListItemData {
   final int id;
@@ -48,6 +49,16 @@ class ConversationListItemData {
       title: cov.title,
       subtitle: cov.subtitle ?? '-',
       displayTime: getDisplayTime(cov.updatedAtUS ?? cov.createdAtUS),
+    );
+  }
+
+  factory ConversationListItemData.empty() {
+    return ConversationListItemData(
+      id: 0,
+      sortKey: 0,
+      title: 'A',
+      subtitle: 'BB' * 100,
+      displayTime: '',
     );
   }
 
@@ -190,63 +201,61 @@ class ConversationItem extends ConsumerWidget {
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
 
-    return Material(
-      child: GestureDetector(
-        onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
-        child: InkWell(
-          onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isBatchMode) ...[
-                  Center(
-                    child: Checkbox(
-                      value: isSelected,
-                      onChanged: (_) => _handleBatchSelection(),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                ],
-                Center(
-                  child: Container(
-                    height: 40,
-                    width: 40,
-                    clipBehavior: Clip.antiAlias,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: _buildAvatar(),
-                  ),
+    return GestureDetector(
+      onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
+      onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
+      child: Container(
+        color: Theme.of(context).colorScheme.surface,
+        padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (isBatchMode) ...[
+              Center(
+                child: Checkbox(
+                  value: isSelected,
+                  onChanged: (_) => _handleBatchSelection(),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CAA.stretch,
-                    children: [
-                      T(
-                        conversation.title.replaceAll(Config.userMsgModifierSep, ''),
-                        s: TS(s: 16, w: FontWeight.w500, c: qb),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      4.h,
-                      T(
-                        conversation.subtitle,
-                        s: const TS(s: 12, c: Colors.grey),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
-                  ),
+              ),
+              const SizedBox(width: 12),
+            ],
+            Center(
+              child: Container(
+                height: 40,
+                width: 40,
+                clipBehavior: Clip.antiAlias,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(width: 12),
-                Text(conversation.displayTime, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              ],
+                child: _buildAvatar(),
+              ),
             ),
-          ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CAA.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  T(
+                    conversation.title.replaceAll(Config.userMsgModifierSep, ''),
+                    s: TS(s: 16, w: FontWeight.w500, c: qb),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  4.h,
+                  T(
+                    conversation.subtitle,
+                    s: const TS(s: 12, c: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(conversation.displayTime, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          ],
         ),
       ),
     );
@@ -259,7 +268,7 @@ class ConversationItem extends ConsumerWidget {
     if (!conversation.avatar!.startsWith('http')) {
       return Image.asset(conversation.avatar!, height: 40, width: 40);
     }
-    return Image.network(conversation.avatar!, fit: BoxFit.cover, height: 40, width: 40);
+    return CachedNetworkImage(imageUrl: conversation.avatar!, fit: BoxFit.cover, height: 40, width: 40);
   }
 
   void _handleBatchSelection() {
