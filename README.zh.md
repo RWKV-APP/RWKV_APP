@@ -32,8 +32,6 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 <tr>
 <th style="text-align: center;"></th>
 <th style="text-align: center;">RWKV Chat</th>
-<th style="text-align: center;">RWKV See</th>
-<th style="text-align: center;">RWKV Talk</th>
 <th style="text-align: center;">RWKV Sudoku</th>
 <th style="text-align: center;">RWKV Othello</th>
 </tr>
@@ -42,27 +40,23 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 <tr>
 <td style="text-align: center;">Android APK 下载链接</td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkvchat">蒲公英</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">蒲公英</a></td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-see">蒲公英</a></td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-sudoku">蒲公英</a></td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-othello">蒲公英</a></td>
 </tr>
 <tr>
 <td style="text-align: center;">iOS</td>
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
-<td style="text-align: center;"><a href="https://testflight.apple.com/join/vAjawMJc">testflight</a></td>
-<td style="text-align: center;"><a href="https://testflight.apple.com/join/mfsdWS4b">testflight</a></td>
 <td style="text-align: center;">-</td>
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/f5SVf76c">testflight</a></td>
 </tr>
 <tr>
 <td style="text-align: center;" rowspan="2">Windows</td>
-<td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ 群</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ 群</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
 </tr>
 <tr></tr>
 <tr>
 <td style="text-align: center;" rowspan="2">macOS</td>
-<td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ 群</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ 群</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
 </tr>
 <tr></tr>
 </tbody>

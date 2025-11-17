@@ -32,8 +32,6 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <tr>
 <th style="text-align: center;"></th>
 <th style="text-align: center;">RWKV Chat</th>
-<th style="text-align: center;">RWKV See</th>
-<th style="text-align: center;">RWKV Talk</th>
 <th style="text-align: center;">RWKV Sudoku</th>
 <th style="text-align: center;">RWKV Othello</th>
 <th style="text-align: center;">RWKV Music (Another repo)</th>
@@ -43,8 +41,6 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <tr>
 <td style="text-align: center;">Android APK Download Link</td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
-<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-See/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-see">pgyer</a></td>
-<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Talk/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Sudoku/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-sudoku">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Othello/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-othello">pgyer</a></td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-music">pgyer</a></td>
@@ -52,21 +48,19 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <tr>
 <td style="text-align: center;">iOS</td>
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
-<td style="text-align: center;"><a href="https://testflight.apple.com/join/vAjawMJc">testflight</a></td>
-<td style="text-align: center;"><a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
 <td style="text-align: center;">-</td>
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/f5SVf76c">testflight</a></td>
 <td style="text-align: center;">-</td>
 </tr>
 <tr>
 <td style="text-align: center;" rowspan="2">Windows</td>
-<td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
 <td style="text-align: center;" colspan="1" ><a href="https://apps.microsoft.com/detail/xpdc65wjh8ws17?hl=en-US&gl=US">Microsoft Store</a></td>
 </tr>
 <tr></tr>
 <tr>
 <td style="text-align: center;" rowspan="2">macOS</td>
-<td style="text-align: center;" colspan="5" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
 <td style="text-align: center;">-</td>
 </tr>
 <tr></tr>
