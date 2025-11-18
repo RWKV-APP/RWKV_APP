@@ -31,7 +31,7 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <thead>
 <tr>
 <th style="text-align: center;"></th>
-<th style="text-align: center;">RWKV Chat</th>
+<th style="text-align: center;">RWKV Chat (with See and Talk)</th>
 <th style="text-align: center;">RWKV Sudoku</th>
 <th style="text-align: center;">RWKV Othello</th>
 <th style="text-align: center;">RWKV Music (Another repo)</th>
