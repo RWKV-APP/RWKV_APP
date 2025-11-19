@@ -449,6 +449,26 @@ class S {
     );
   }
 
+  /// `单线程`
+  String get single_thread {
+    return Intl.message(
+      '单线程',
+      name: 'single_thread',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `多线程`
+  String get multi_thread {
+    return Intl.message(
+      '多线程',
+      name: 'multi_thread',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `消息显示宽度`
   String get batch_inference_width {
     return Intl.message(

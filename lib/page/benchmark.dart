@@ -248,6 +248,7 @@ class _BatchSizeSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final options = <int>{1, ...supportedBatchSizes}.toList()..sort();
+    final s = S.of(context);
 
     return Material(
       borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -268,7 +269,7 @@ class _BatchSizeSelector extends ConsumerWidget {
                 contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: options.map((size) {
-                final label = size == 1 ? '1 (单线程)' : '$size (多线程)';
+                final label = size == 1 ? '1 (${s.single_thread})' : '$size (${s.multi_thread})';
                 return DropdownMenuItem<int>(
                   value: size,
                   child: Text(label),

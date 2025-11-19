@@ -47,6 +47,8 @@
   "batch_inference_settings": "並列推論設定",
   "batch_inference_count": "並列推論数",
   "batch_inference_count_detail": "各推論で{count}件のメッセージが生成されます",
+  "single_thread": "シングルスレッド",
+  "multi_thread": "マルチスレッド",
   "batch_inference_width": "メッセージ表示幅",
   "batch_inference_width_detail": "並列推論の各メッセージの幅",
   "thinking_mode_off": "推論{footer}: オフ",

@@ -47,6 +47,8 @@
   "batch_inference_settings": "Настройки Ветвления",
   "batch_inference_count": "Количество параллельных ответов",
   "batch_inference_count_detail": "Каждый вывод сгенерирует {count} сообщений",
+  "single_thread": "Однопоточный",
+  "multi_thread": "Многопоточный",
   "batch_inference_width": "Ширина отображения сообщения",
   "batch_inference_width_detail": "Ширина каждого сообщения при ветвлении",
   "thinking_mode_off": "Мышление{footer}: Выкл",

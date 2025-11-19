@@ -47,6 +47,8 @@
   "batch_inference_settings": "Batch Inference Settings",
   "batch_inference_count": "Batch Inference Count",
   "batch_inference_count_detail": "Each inference will generate {count} messages",
+  "single_thread": "Single-threaded",
+  "multi_thread": "Multi-threaded",
   "batch_inference_width": "Message Display Width",
   "batch_inference_width_detail": "Batch Inference Each Message Width",
   "thinking_mode_off": "Reasoning{footer}: Off",

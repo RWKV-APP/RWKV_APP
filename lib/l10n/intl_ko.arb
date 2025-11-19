@@ -47,6 +47,8 @@
   "batch_inference_settings": "병렬 추론 설정",
   "batch_inference_count": "병렬 추론 수",
   "batch_inference_count_detail": "각 추론마다 {count}개의 메시지가 생성됩니다",
+  "single_thread": "단일 스레드",
+  "multi_thread": "다중 스레드",
   "batch_inference_width": "메시지 표시 너비",
   "batch_inference_width_detail": "병렬 추론 각 메시지 너비",
   "thinking_mode_off": "추론{footer}: 끔",

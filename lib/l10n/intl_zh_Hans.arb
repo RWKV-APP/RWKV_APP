@@ -47,6 +47,8 @@
   "batch_inference_settings": "并行推理设置",
   "batch_inference_count": "并行推理数量",
   "batch_inference_count_detail": "每次推理将生成 {count} 条消息",
+  "single_thread": "单线程",
+  "multi_thread": "多线程",
   "batch_inference_width": "消息显示宽度",
   "batch_inference_width_detail": "并行推理每条消息宽度",
   "thinking_mode_off": "推理{footer}: 关",
