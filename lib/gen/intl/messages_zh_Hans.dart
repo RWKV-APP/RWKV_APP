@@ -601,6 +601,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("专家"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("普通"),
     "suggest": MessageLookupByLibrary.simpleMessage("推荐"),
+    "switch_to_creative_mode_for_better_exp":
+        MessageLookupByLibrary.simpleMessage("建议选择 “创意模式”, 以便获得更好的体验"),
     "system_mode": MessageLookupByLibrary.simpleMessage("跟随系统"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("系统提示词"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),

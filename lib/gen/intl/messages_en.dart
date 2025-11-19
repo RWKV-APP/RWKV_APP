@@ -799,6 +799,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Hard"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("Medium"),
     "suggest": MessageLookupByLibrary.simpleMessage("Suggest"),
+    "switch_to_creative_mode_for_better_exp":
+        MessageLookupByLibrary.simpleMessage(
+          "Switch to \'Creative\' mode for better experience",
+        ),
     "system_mode": MessageLookupByLibrary.simpleMessage("System Mode"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("System Prompt"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Take Photo"),

@@ -3242,6 +3242,16 @@ class S {
       args: [],
     );
   }
+
+  /// `建议选择 “创意模式”, 以便获得更好的体验`
+  String get switch_to_creative_mode_for_better_exp {
+    return Intl.message(
+      '建议选择 “创意模式”, 以便获得更好的体验',
+      name: 'switch_to_creative_mode_for_better_exp',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
