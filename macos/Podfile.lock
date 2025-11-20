@@ -34,7 +34,7 @@ PODS:
   - rwkv_mobile_flutter (0.0.1):
     - FlutterMacOS
   - Sentry/HybridSDK (8.56.2)
-  - sentry_flutter (9.7.0):
+  - sentry_flutter (9.8.0):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.56.2)
@@ -167,7 +167,7 @@ SPEC CHECKSUMS:
   record_macos: 43194b6c06ca6f8fa132e2acea72b202b92a0f5b
   rwkv_mobile_flutter: 8ca6e2136af1082006740e7a3072448fd0f210e7
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
-  sentry_flutter: 7f88e12d1882ec6e648644a7c0ff5b1466f07f99
+  sentry_flutter: 4c33648b7e83310aa1fdb1b10c5491027d9643f0
   share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
@@ -175,6 +175,6 @@ SPEC CHECKSUMS:
   sqlite3_flutter_libs: 83f8e9f5b6554077f1d93119fe20ebaa5f3a9ef1
   url_launcher_macos: f87a979182d112f911de6820aefddaf56ee9fbfd
 
-PODFILE CHECKSUM: d8e8c9c295d548ba4115888def2d784d1032be1b
+PODFILE CHECKSUM: f7afe0ae99d55ea5523929d2ee0be325bc2300ec
 
 COCOAPODS: 1.16.2
