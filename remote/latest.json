@@ -66,10 +66,10 @@
         "tags": ["reason", "cpu"]
       },
       {
-        "name": "RWKV7-G1a3 2.9B",
+        "name": "RWKV7-G1a4 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a3-2.9b-20251103-ctx8192-q6_k.gguf",
-        "fileSize": 2567854272,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a4-2.9b-20251118-ctx8192-imatrix-q6_k.gguf",
+        "fileSize": 2567854240,
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
@@ -121,9 +121,9 @@
         "tags": ["reason", "gpu", "batch"]
       },
       {
-        "name": "RWKV7-G1a3 2.9B",
+        "name": "RWKV7-G1a4 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a3-2.9b-20251103-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a4-2.9b-20251118-ctx8192-nf4.prefab",
         "fileSize": 2315788799,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
@@ -162,10 +162,10 @@
         "tags": ["reason", "mlx", "gpu"]
       },
       {
-        "name": "RWKV7-G1a3 2.9B (MLX INT6)",
+        "name": "RWKV7-G1a4 2.9B (MLX INT6)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a3-20251103-ctx8192-mlx-6bit.zip",
-        "fileSize": 2207928070,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1a4-20251118-ctx8192-mlx-6bit.zip",
+        "fileSize": 2134527686,
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
