@@ -539,6 +539,7 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "more": MessageLookupByLibrary.simpleMessage("Ещё"),
     "more_questions": MessageLookupByLibrary.simpleMessage("Больше вопросов"),
+    "multi_thread": MessageLookupByLibrary.simpleMessage("Многопоточный"),
     "my_voice": MessageLookupByLibrary.simpleMessage("Мой голос"),
     "neko": MessageLookupByLibrary.simpleMessage("Неко"),
     "network_error": MessageLookupByLibrary.simpleMessage("Ошибка сети"),
@@ -775,6 +776,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_stack": MessageLookupByLibrary.simpleMessage(
       "Показать стек цепочки мыслей",
     ),
+    "single_thread": MessageLookupByLibrary.simpleMessage("Однопоточный"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "Рекомендуется выбрать модель не менее 1.5B для лучших результатов",
     ),

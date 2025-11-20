@@ -57,7 +57,7 @@
   "download_all_missing": "下载全部缺失文件",
   "tts": "文本转语音",
   "tts_detail": "让 RWKV 输出语音",
-  "offline_translator_server": "线翻译服务器",
+  "offline_translator_server": "离线翻译服务器",
   "offline_translator": "离线翻译",
   "offline_translator_detail": "离线翻译文本",
   "no_audio_file": "没有音频文件",

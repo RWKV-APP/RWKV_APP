@@ -451,22 +451,12 @@ class S {
 
   /// `单线程`
   String get single_thread {
-    return Intl.message(
-      '单线程',
-      name: 'single_thread',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('单线程', name: 'single_thread', desc: '', args: []);
   }
 
   /// `多线程`
   String get multi_thread {
-    return Intl.message(
-      '多线程',
-      name: 'multi_thread',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('多线程', name: 'multi_thread', desc: '', args: []);
   }
 
   /// `消息显示宽度`
@@ -539,10 +529,10 @@ class S {
     return Intl.message('让 RWKV 输出语音', name: 'tts_detail', desc: '', args: []);
   }
 
-  /// `线翻译服务器`
+  /// `离线翻译服务器`
   String get offline_translator_server {
     return Intl.message(
-      '线翻译服务器',
+      '离线翻译服务器',
       name: 'offline_translator_server',
       desc: '',
       args: [],

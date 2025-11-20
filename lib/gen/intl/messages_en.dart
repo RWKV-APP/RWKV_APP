@@ -506,6 +506,7 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "more_questions": MessageLookupByLibrary.simpleMessage("More Questions"),
+    "multi_thread": MessageLookupByLibrary.simpleMessage("Multi-threaded"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
     "neko": MessageLookupByLibrary.simpleMessage("Neko"),
     "network_error": MessageLookupByLibrary.simpleMessage("Network Error"),
@@ -742,6 +743,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Show only Prefill log",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("Show Thought Stack"),
+    "single_thread": MessageLookupByLibrary.simpleMessage("Single-threaded"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "It is recommended to choose at least a 1.5B model for better results",
     ),

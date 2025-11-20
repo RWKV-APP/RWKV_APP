@@ -394,6 +394,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("模型大小增加，請開啟一個新的對話，以提升對話品質"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_questions": MessageLookupByLibrary.simpleMessage("更多問題"),
+    "multi_thread": MessageLookupByLibrary.simpleMessage("多執行緒"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的聲音"),
     "neko": MessageLookupByLibrary.simpleMessage("Neko"),
     "network_error": MessageLookupByLibrary.simpleMessage("網路錯誤"),
@@ -552,6 +553,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "僅顯示 Prefill 日誌",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("顯示思維鏈堆疊"),
+    "single_thread": MessageLookupByLibrary.simpleMessage("單執行緒"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "推薦至少選擇 1.5B 模型，效果更好",
     ),

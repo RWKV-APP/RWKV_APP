@@ -431,6 +431,7 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "more": MessageLookupByLibrary.simpleMessage("더 보기"),
     "more_questions": MessageLookupByLibrary.simpleMessage("더 많은 질문"),
+    "multi_thread": MessageLookupByLibrary.simpleMessage("다중 스레드"),
     "my_voice": MessageLookupByLibrary.simpleMessage("내 목소리"),
     "neko": MessageLookupByLibrary.simpleMessage("네코"),
     "network_error": MessageLookupByLibrary.simpleMessage("네트워크 오류"),
@@ -607,6 +608,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Prefill 로그만 표시",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("사고 체인 스택 표시"),
+    "single_thread": MessageLookupByLibrary.simpleMessage("단일 스레드"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "최소 1.5B 모델을 선택하는 것이 좋으며, 더 큰 2.9B 모델이 더 좋습니다.",
     ),
