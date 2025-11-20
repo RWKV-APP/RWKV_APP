@@ -68,13 +68,13 @@ class SearchReferenceDialog extends StatelessWidget {
                           Text(
                             ref.summary.replaceAll("\n", ' '),
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                             style: theme.textTheme.bodySmall,
                           ),
                           const SizedBox(height: 4),
                         ],
                       ),
-                      subtitle: Text(ref.url, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      subtitle: Text(ref.url, maxLines: 1, overflow: .ellipsis),
                       onTap: () {
                         launchUrlString(ref.url);
                       },

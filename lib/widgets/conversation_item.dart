@@ -240,13 +240,13 @@ class ConversationItem extends ConsumerWidget {
                   T(
                     conversation.title.replaceAll(Config.userMsgModifierSep, ''),
                     s: TS(s: 16, w: .w500, c: qb),
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                   ),
                   4.h,
                   T(
                     conversation.subtitle,
                     s: const TS(s: 12, c: Colors.grey),
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                     maxLines: 2,
                   ),
                 ],

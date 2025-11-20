@@ -218,7 +218,7 @@ class BotMessageBottom extends ConsumerWidget {
               msg.modelName!,
               s: TS(c: primaryColor.q(.8), s: 10),
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           ),
         modeWidget,

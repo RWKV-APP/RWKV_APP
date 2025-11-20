@@ -618,7 +618,7 @@ class _SuggestDialogState extends State<_SuggestDialog> {
                 children: [
                   for (final item in items) ...[
                     ListTile(
-                      title: Text(item, maxLines: 3, overflow: TextOverflow.ellipsis),
+                      title: Text(item, maxLines: 3, overflow: .ellipsis),
                       onTap: () {
                         Navigator.pop(context, item);
                       },

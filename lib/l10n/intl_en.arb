@@ -439,7 +439,7 @@
   "decode_param": "Decode Param",
   "fixed": "Fixed",
   "creative": "Creative",
-  "conservative": "Conservative (suitable for math and code)",
+  "conservative": "Conservative (math & code)",
   "default_": "Default",
   "balanced": "Balanced",
   "custom": "Custom",

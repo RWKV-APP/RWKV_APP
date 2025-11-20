@@ -269,7 +269,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "comprehensive": MessageLookupByLibrary.simpleMessage("Comprehensive"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "conservative": MessageLookupByLibrary.simpleMessage(
-      "Conservative (suitable for math and code)",
+      "Conservative (math & code)",
     ),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Continue Download",

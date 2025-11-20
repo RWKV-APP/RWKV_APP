@@ -488,8 +488,8 @@ class _BrowserTab extends ConsumerWidget {
 
     return ListTile(
       leading: isActive ? Icon(Icons.gps_fixed, color: theme.colorScheme.primary) : const Icon(Icons.tab_unselected),
-      title: Text(tab.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Text(tab.url, maxLines: 1, overflow: TextOverflow.ellipsis),
+      title: Text(tab.title, maxLines: 1, overflow: .ellipsis),
+      subtitle: Text(tab.url, maxLines: 1, overflow: .ellipsis),
       trailing: isThisTabRunningTask
           ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
           : (pool.isNotEmpty ? Text(s.queued_x(pool.length)) : null),

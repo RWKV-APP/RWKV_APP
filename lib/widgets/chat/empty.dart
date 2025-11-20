@@ -199,7 +199,7 @@ class _EmptyV2 extends ConsumerWidget {
                 child: Text(
                   S.current.more_questions,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ),
             ),
@@ -233,7 +233,7 @@ class _EmptyV2 extends ConsumerWidget {
                 child: Text(
                   item is Suggestion ? item.display : item.toString(),
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ),
             ],
