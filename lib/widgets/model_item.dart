@@ -6,6 +6,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -496,6 +497,7 @@ class _Tags extends ConsumerWidget {
           late final Color color;
           late final Color textColor;
           late final Color borderColor;
+          final isNPU = tag == "npu";
 
           if (isMLX) {
             color = kC;
@@ -527,11 +529,12 @@ class _Tags extends ConsumerWidget {
                   if (isMLX)
                     Padding(
                       padding: const EI.o(b: 2),
-                      child: Icon(
-                        Icons.apple,
-                        size: 13,
-                        color: qb,
-                      ),
+                      child: Icon(Icons.apple, size: 13, color: qb),
+                    ),
+                  if (isNPU)
+                    Padding(
+                      padding: const .only(left: 4),
+                      child: FaIcon(FontAwesomeIcons.boltLightning, size: 10, color: qw),
                     ),
                 ],
               ),
