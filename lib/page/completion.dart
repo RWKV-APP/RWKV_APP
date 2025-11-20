@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/model/argument.dart';
+import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/store/p.dart' show P, $RWKV;
 import 'package:zone/widgets/chat/completion_mode.dart';
 import 'package:zone/widgets/model_select_button.dart';
@@ -26,7 +26,7 @@ class CompletionPage extends ConsumerWidget {
         bottom: !showBanner
             ? null
             : PreferredSize(
-                preferredSize: Size.fromHeight(38),
+                preferredSize: const Size.fromHeight(38),
                 child: _TipsBanner(() {
                   _showTips.q = false;
                 }),
@@ -60,9 +60,9 @@ class _TipsBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? Color(0xFFF9D3B1) : Color(0xFFDE851B);
+    final textColor = isDark ? const Color(0xFFF9D3B1) : const Color(0xFFDE851B);
     return Container(
-      color: isDark ? Color(0xFFAB825C) : Color(0xFFF8DFC2),
+      color: isDark ? const Color(0xFFAB825C) : const Color(0xFFF8DFC2),
       height: 38,
       padding: const .only(left: 16),
       width: double.infinity,

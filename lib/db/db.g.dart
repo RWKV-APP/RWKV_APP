@@ -673,6 +673,17 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _rawDecodeParamsMeta = const VerificationMeta(
+    'rawDecodeParams',
+  );
+  @override
+  late final GeneratedColumn<String> rawDecodeParams = GeneratedColumn<String>(
+    'raw_decode_params',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -697,6 +708,7 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     modelName,
     runningMode,
     build,
+    rawDecodeParams,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -884,6 +896,15 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     } else if (isInserting) {
       context.missing(_buildMeta);
     }
+    if (data.containsKey('raw_decode_params')) {
+      context.handle(
+        _rawDecodeParamsMeta,
+        rawDecodeParams.isAcceptableOrUnknown(
+          data['raw_decode_params']!,
+          _rawDecodeParamsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -981,6 +1002,10 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         DriftSqlType.string,
         data['${effectivePrefix}build'],
       )!,
+      rawDecodeParams: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_decode_params'],
+      ),
     );
   }
 
@@ -1013,6 +1038,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   final String? modelName;
   final String? runningMode;
   final String build;
+  final String? rawDecodeParams;
   const _MsgData({
     required this.id,
     required this.content,
@@ -1036,6 +1062,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     this.modelName,
     this.runningMode,
     required this.build,
+    this.rawDecodeParams,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1090,6 +1117,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       map['running_mode'] = Variable<String>(runningMode);
     }
     map['build'] = Variable<String>(build);
+    if (!nullToAbsent || rawDecodeParams != null) {
+      map['raw_decode_params'] = Variable<String>(rawDecodeParams);
+    }
     return map;
   }
 
@@ -1145,6 +1175,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           ? const Value.absent()
           : Value(runningMode),
       build: Value(build),
+      rawDecodeParams: rawDecodeParams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawDecodeParams),
     );
   }
 
@@ -1182,6 +1215,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       modelName: serializer.fromJson<String?>(json['modelName']),
       runningMode: serializer.fromJson<String?>(json['runningMode']),
       build: serializer.fromJson<String>(json['build']),
+      rawDecodeParams: serializer.fromJson<String?>(json['rawDecodeParams']),
     );
   }
   @override
@@ -1210,6 +1244,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       'modelName': serializer.toJson<String?>(modelName),
       'runningMode': serializer.toJson<String?>(runningMode),
       'build': serializer.toJson<String>(build),
+      'rawDecodeParams': serializer.toJson<String?>(rawDecodeParams),
     };
   }
 
@@ -1236,6 +1271,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     Value<String?> modelName = const Value.absent(),
     Value<String?> runningMode = const Value.absent(),
     String? build,
+    Value<String?> rawDecodeParams = const Value.absent(),
   }) => _MsgData(
     id: id ?? this.id,
     content: content ?? this.content,
@@ -1269,6 +1305,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     modelName: modelName.present ? modelName.value : this.modelName,
     runningMode: runningMode.present ? runningMode.value : this.runningMode,
     build: build ?? this.build,
+    rawDecodeParams: rawDecodeParams.present
+        ? rawDecodeParams.value
+        : this.rawDecodeParams,
   );
   _MsgData copyWithCompanion(_MsgCompanion data) {
     return _MsgData(
@@ -1316,6 +1355,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           ? data.runningMode.value
           : this.runningMode,
       build: data.build.present ? data.build.value : this.build,
+      rawDecodeParams: data.rawDecodeParams.present
+          ? data.rawDecodeParams.value
+          : this.rawDecodeParams,
     );
   }
 
@@ -1343,7 +1385,8 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           ..write('ttsFilePaths: $ttsFilePaths, ')
           ..write('modelName: $modelName, ')
           ..write('runningMode: $runningMode, ')
-          ..write('build: $build')
+          ..write('build: $build, ')
+          ..write('rawDecodeParams: $rawDecodeParams')
           ..write(')'))
         .toString();
   }
@@ -1372,6 +1415,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     modelName,
     runningMode,
     build,
+    rawDecodeParams,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -1398,7 +1442,8 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           other.ttsFilePaths == this.ttsFilePaths &&
           other.modelName == this.modelName &&
           other.runningMode == this.runningMode &&
-          other.build == this.build);
+          other.build == this.build &&
+          other.rawDecodeParams == this.rawDecodeParams);
 }
 
 class _MsgCompanion extends UpdateCompanion<_MsgData> {
@@ -1424,6 +1469,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   final Value<String?> modelName;
   final Value<String?> runningMode;
   final Value<String> build;
+  final Value<String?> rawDecodeParams;
   const _MsgCompanion({
     this.id = const Value.absent(),
     this.content = const Value.absent(),
@@ -1447,6 +1493,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     this.modelName = const Value.absent(),
     this.runningMode = const Value.absent(),
     this.build = const Value.absent(),
+    this.rawDecodeParams = const Value.absent(),
   });
   _MsgCompanion.insert({
     this.id = const Value.absent(),
@@ -1471,6 +1518,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     this.modelName = const Value.absent(),
     this.runningMode = const Value.absent(),
     required String build,
+    this.rawDecodeParams = const Value.absent(),
   }) : content = Value(content),
        isMine = Value(isMine),
        type = Value(type),
@@ -1500,6 +1548,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Expression<String>? modelName,
     Expression<String>? runningMode,
     Expression<String>? build,
+    Expression<String>? rawDecodeParams,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1526,6 +1575,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       if (modelName != null) 'model_name': modelName,
       if (runningMode != null) 'running_mode': runningMode,
       if (build != null) 'build': build,
+      if (rawDecodeParams != null) 'raw_decode_params': rawDecodeParams,
     });
   }
 
@@ -1552,6 +1602,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Value<String?>? modelName,
     Value<String?>? runningMode,
     Value<String>? build,
+    Value<String?>? rawDecodeParams,
   }) {
     return _MsgCompanion(
       id: id ?? this.id,
@@ -1576,6 +1627,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       modelName: modelName ?? this.modelName,
       runningMode: runningMode ?? this.runningMode,
       build: build ?? this.build,
+      rawDecodeParams: rawDecodeParams ?? this.rawDecodeParams,
     );
   }
 
@@ -1648,6 +1700,9 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     if (build.present) {
       map['build'] = Variable<String>(build.value);
     }
+    if (rawDecodeParams.present) {
+      map['raw_decode_params'] = Variable<String>(rawDecodeParams.value);
+    }
     return map;
   }
 
@@ -1675,7 +1730,8 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
           ..write('ttsFilePaths: $ttsFilePaths, ')
           ..write('modelName: $modelName, ')
           ..write('runningMode: $runningMode, ')
-          ..write('build: $build')
+          ..write('build: $build, ')
+          ..write('rawDecodeParams: $rawDecodeParams')
           ..write(')'))
         .toString();
   }
@@ -1940,6 +1996,7 @@ typedef $$_MsgTableCreateCompanionBuilder =
       Value<String?> modelName,
       Value<String?> runningMode,
       required String build,
+      Value<String?> rawDecodeParams,
     });
 typedef $$_MsgTableUpdateCompanionBuilder =
     _MsgCompanion Function({
@@ -1965,6 +2022,7 @@ typedef $$_MsgTableUpdateCompanionBuilder =
       Value<String?> modelName,
       Value<String?> runningMode,
       Value<String> build,
+      Value<String?> rawDecodeParams,
     });
 
 class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
@@ -2082,6 +2140,11 @@ class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
 
   ColumnFilters<String> get build => $composableBuilder(
     column: $table.build,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawDecodeParams => $composableBuilder(
+    column: $table.rawDecodeParams,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2203,6 +2266,11 @@ class $$_MsgTableOrderingComposer extends Composer<_$AppDatabase, $_MsgTable> {
     column: $table.build,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get rawDecodeParams => $composableBuilder(
+    column: $table.rawDecodeParams,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$_MsgTableAnnotationComposer
@@ -2301,6 +2369,11 @@ class $$_MsgTableAnnotationComposer
 
   GeneratedColumn<String> get build =>
       $composableBuilder(column: $table.build, builder: (column) => column);
+
+  GeneratedColumn<String> get rawDecodeParams => $composableBuilder(
+    column: $table.rawDecodeParams,
+    builder: (column) => column,
+  );
 }
 
 class $$_MsgTableTableManager
@@ -2353,6 +2426,7 @@ class $$_MsgTableTableManager
                 Value<String?> modelName = const Value.absent(),
                 Value<String?> runningMode = const Value.absent(),
                 Value<String> build = const Value.absent(),
+                Value<String?> rawDecodeParams = const Value.absent(),
               }) => _MsgCompanion(
                 id: id,
                 content: content,
@@ -2376,6 +2450,7 @@ class $$_MsgTableTableManager
                 modelName: modelName,
                 runningMode: runningMode,
                 build: build,
+                rawDecodeParams: rawDecodeParams,
               ),
           createCompanionCallback:
               ({
@@ -2401,6 +2476,7 @@ class $$_MsgTableTableManager
                 Value<String?> modelName = const Value.absent(),
                 Value<String?> runningMode = const Value.absent(),
                 required String build,
+                Value<String?> rawDecodeParams = const Value.absent(),
               }) => _MsgCompanion.insert(
                 id: id,
                 content: content,
@@ -2424,6 +2500,7 @@ class $$_MsgTableTableManager
                 modelName: modelName,
                 runningMode: runningMode,
                 build: build,
+                rawDecodeParams: rawDecodeParams,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

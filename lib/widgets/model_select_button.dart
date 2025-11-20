@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/model/argument.dart';
+import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/store/p.dart' show P, $RWKV;
 import 'package:zone/widgets/arguments_panel.dart';
 

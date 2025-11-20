@@ -101,7 +101,6 @@ dev_dependencies:
   freezed:
   icons_launcher:
   json_serializable:
-  riverpod_lint:
   sentry_dart_plugin:
   test:
 
