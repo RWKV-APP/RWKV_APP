@@ -22,6 +22,7 @@ import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
+import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
 
 class ModelItem extends ConsumerWidget {
@@ -114,6 +115,16 @@ class ModelItem extends ConsumerWidget {
     final backend = fileInfo.backend;
 
     if (backend == null) {
+      if (fileInfo.isAlbatross) {
+        try {
+          await Albatross.instance.load(fileInfo);
+          Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+          pop();
+        } catch (e) {
+          Alert.error(e.toString());
+        }
+        return;
+      }
       Alert.error("Backend is null");
       return;
     }

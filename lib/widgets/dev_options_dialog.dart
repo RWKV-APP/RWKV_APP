@@ -106,6 +106,17 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
               },
             ),
           ),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+            leading: const Text('Albatross', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            trailing: Switch(
+              value: P.rwkv.enableAlbatross.q,
+              onChanged: (v) async {
+                P.rwkv.enableAlbatross.q = v;
+                setState(() {});
+              },
+            ),
+          ),
         ],
       ),
     );

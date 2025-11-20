@@ -87,6 +87,7 @@ dependencies:
   url_launcher:
   web_socket_channel:
   cached_network_image: ^3.4.1
+  dio: ^5.9.0
 
 dependency_overrides:
   rwkv_mobile_flutter:

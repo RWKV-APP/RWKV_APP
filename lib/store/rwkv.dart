@@ -71,6 +71,13 @@ class _RWKV {
     return currentModel != null;
   });
 
+  late final isAlbatrossLoaded = qp((ref) {
+    final currentModel = ref.watch(this.currentModel);
+    return currentModel?.tags.contains('albatross') ?? false;
+  });
+
+  late final enableAlbatross = qs(false);
+
   /// 当前加载的权重
   late final currentModel = qs<FileInfo?>(null);
 
@@ -572,6 +579,20 @@ extension $RWKV on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
+    if (isAlbatrossLoaded.q) {
+      final stream = Albatross.instance.chat(messages, batchSize: 1);
+      try {
+        await for (final event in stream) {
+          _messagesController.add(event);
+        }
+        _oldMessagesController.add(LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
+        _messagesController.add(from_rwkv.GenerateStop());
+      } catch (e) {
+        _messagesController.add(from_rwkv.GenerateStop(error: e.toString()));
+      }
+      return;
+    }
+
     final sendPort = _sendPort;
 
     if (sendPort == null) {
@@ -608,6 +629,11 @@ extension $RWKV on _RWKV {
   Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+
+    if (isAlbatrossLoaded.q) {
+      return Albatross.instance.completion(prompt, batchSize: batchSize);
+    }
+
     final sendPort = _sendPort;
     if (sendPort == null) {
       qqw("sendPort is null");
@@ -688,7 +714,10 @@ extension $RWKV on _RWKV {
     return;
   }
 
-  Future<void> stop() async => send(to_rwkv.Stop());
+  Future<void> stop() async {
+    if (isAlbatrossLoaded.q) return Albatross.instance.stop();
+    return send(to_rwkv.Stop());
+  }
 
   Future<void> reInitRuntime({
     required String modelPath,
@@ -821,6 +850,16 @@ extension $RWKV on _RWKV {
     P.app.hapticLight();
 
     final s = S.current;
+
+    if (isAlbatrossLoaded.q) {
+      final current = thinkingMode.q;
+      if (current is! thinking_mode.None) {
+        setModelConfig(thinkingMode: const thinking_mode.None());
+      } else {
+        setModelConfig(thinkingMode: const thinking_mode.Free());
+      }
+      return;
+    }
 
     final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
     if (currentModelIsBefore20250922) {
@@ -962,6 +1001,7 @@ extension _$RWKV on _RWKV {
     socName.q = r.$1;
     socBrand.q = r.$2;
     currentModel.lb(_onCurrentModelChanged);
+    Albatross.instance.init();
   }
 
   void _onCurrentModelChanged(FileInfo? oldModel, FileInfo? newModel) async {
