@@ -59,3 +59,5 @@ android/app/.cxx/
 fastlane/README.md
 fastlane/report.xml
 sentry-wizard
+android/build/
+android/.kotlin/sessions/
