@@ -64,9 +64,9 @@ class _TipsBanner extends StatelessWidget {
     return Container(
       color: isDark ? Color(0xFFAB825C) : Color(0xFFF8DFC2),
       height: 38,
-      padding: const EdgeInsets.only(left: 16),
+      padding: const .only(left: 16),
       width: double.infinity,
-      alignment: Alignment.centerLeft,
+      alignment: .centerLeft,
       child: Row(
         children: [
           Icon(Icons.info_outline, size: 16, color: textColor),

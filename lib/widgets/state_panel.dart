@@ -66,7 +66,7 @@ class StatePanel extends ConsumerWidget {
       child: Container(
         margin: const EI.o(t: 8),
         child: Column(
-          crossAxisAlignment: CAA.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Row(
               children: [
@@ -78,14 +78,14 @@ class StatePanel extends ConsumerWidget {
                 ),
                 Expanded(
                   child: Row(
-                    crossAxisAlignment: CAA.center,
-                    mainAxisAlignment: MAA.center,
+                    crossAxisAlignment: .center,
+                    mainAxisAlignment: .center,
                     children: [
                       const Icon(Icons.tune),
                       4.w,
                       T(
                         S.current.state_panel,
-                        s: const TS(s: 16, w: FontWeight.w500),
+                        s: const TS(s: 16, w: .w500),
                       ),
                     ],
                   ),
@@ -126,15 +126,15 @@ class StatePanel extends ConsumerWidget {
                       border: Border.all(color: qb.q(.5)),
                       borderRadius: 8.r,
                     ),
-                    padding: const EI.a(4),
+                    padding: const .all(4),
                     margin: const EI.o(l: 8, r: 8, t: 4, b: 4),
                     child: Column(
-                      crossAxisAlignment: CAA.start,
+                      crossAxisAlignment: .start,
                       children: [
-                        const Text("Text: ", style: TS(w: FontWeight.w700)),
+                        const Text("Text: ", style: TS(w: .w700)),
                         Text(text),
                         4.h,
-                        const Text("Life Span: ", style: TS(w: FontWeight.w700)),
+                        const Text("Life Span: ", style: TS(w: .w700)),
                         Text(log.lifeSpan.toString()),
                       ],
                     ),

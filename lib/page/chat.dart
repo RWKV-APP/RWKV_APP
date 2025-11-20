@@ -196,7 +196,7 @@ class _MessageWrap extends ConsumerWidget {
       onTap: () => toggle(),
       behavior: HitTestBehavior.opaque,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Checkbox(
             value: selected,

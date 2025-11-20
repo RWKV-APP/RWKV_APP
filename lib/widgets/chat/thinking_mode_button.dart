@@ -96,7 +96,7 @@ class ThinkingModeButton extends ConsumerWidget {
                     2.w,
                     T(
                       text,
-                      s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                      s: TS(c: textColor, s: 14, height: 1, w: .w500),
                     ),
                     4.w,
                   ],

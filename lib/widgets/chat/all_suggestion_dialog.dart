@@ -75,10 +75,10 @@ class _AllSuggestionDialogState extends State<AllSuggestionDialog> implements Ti
     return SizedBox(
       width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           16.h,
-          T(s.all_prompt, s: const TS(s: 16, w: FontWeight.w600)),
+          T(s.all_prompt, s: const TS(s: 16, w: .w600)),
           16.h,
           SizedBox(
             height: 50,
@@ -137,7 +137,7 @@ class _SuggestionList extends StatelessWidget {
     final s = S.of(context);
     if (suggestions.isEmpty) {
       return Container(
-        alignment: Alignment.center,
+        alignment: .center,
         child: T(s.no_data, s: const TS(s: 16)),
       );
     }
@@ -150,7 +150,7 @@ class _SuggestionList extends StatelessWidget {
         return InkWell(
           child: Container(
             padding: const EI.s(v: 8, h: 12),
-            child: T(s.display, s: const TS(s: 14, w: FontWeight.w500)),
+            child: T(s.display, s: const TS(s: 14, w: .w500)),
           ),
           onTap: () {
             Navigator.pop(context, s);

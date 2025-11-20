@@ -111,9 +111,9 @@ class _ButtonGenerate extends ConsumerWidget {
           style: ButtonStyle(
             maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
             minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
-            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 0.0)),
+            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
           child: T(s.generate),
@@ -166,9 +166,9 @@ class _ButtonGenerateHardest extends ConsumerWidget {
           style: ButtonStyle(
             maximumSize: WidgetStateProperty.all(const Size(double.infinity, 48)),
             minimumSize: WidgetStateProperty.all(const Size(double.infinity, 48)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
-            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 0.0)),
+            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
           child: T(
@@ -208,14 +208,14 @@ class _ButtonInference extends ConsumerWidget {
           style: ButtonStyle(
             maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
             minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
-            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
+            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: !hasPuzzle || running ? null : () => _onPressed(context, ref),
           child: running
               ? Row(
-                  mainAxisAlignment: MAA.center,
+                  mainAxisAlignment: .center,
                   children: [
                     SizedBox(
                       width: 12,
@@ -257,9 +257,9 @@ class _ButtonClear extends ConsumerWidget {
           style: ButtonStyle(
             maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
             minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
-            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
+            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
           child: T(s.clear),
@@ -290,9 +290,9 @@ class _ButtonShowStack extends ConsumerWidget {
           style: ButtonStyle(
             maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
             minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
-            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
+            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: !enable ? null : () => _onPressed(context, ref),
           child: showStack ? T(s.hide_stack) : T(s.show_stack),
@@ -332,7 +332,7 @@ class _UI extends ConsumerWidget {
       T(
         Config.appTitle,
         textAlign: TextAlign.center,
-        s: TS(s: 14 * magnification, w: FontWeight.w500),
+        s: TS(s: 14 * magnification, w: .w500),
       ),
       Container(
         height: 1,
@@ -389,17 +389,17 @@ class _UI extends ConsumerWidget {
                 const Expanded(flex: 7, child: _Sudoku()),
                 Expanded(
                   flex: 3,
-                  child: Column(crossAxisAlignment: CAA.stretch, children: buttons),
+                  child: Column(crossAxisAlignment: .stretch, children: buttons),
                 ),
               ],
             )
           : Row(
-              crossAxisAlignment: CAA.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 const Expanded(flex: 7, child: _Sudoku()),
                 Expanded(
                   flex: 3,
-                  child: Column(crossAxisAlignment: CAA.stretch, children: buttons),
+                  child: Column(crossAxisAlignment: .stretch, children: buttons),
                 ),
               ],
             ),
@@ -416,7 +416,7 @@ class _Sudoku extends ConsumerWidget {
     final double magnification = isDesktop ? 4 : 1;
     return Container(
       decoration: const BoxDecoration(color: _kGridBGColor),
-      padding: EI.a(4 * magnification.toDouble()),
+      padding: .all(4 * magnification.toDouble()),
       child: const Stack(
         children: [
           _Board(),
@@ -559,7 +559,7 @@ class _TokensInfo extends ConsumerWidget {
     final difficulty = ref.watch(P.sudoku.difficulty);
     return shouldUseVerticalLayout
         ? Row(
-            mainAxisAlignment: MAA.center,
+            mainAxisAlignment: .center,
             children: [
               T(
                 "$tokenCount ${tokenCount > 1 ? "tokens" : "token"}",
@@ -663,7 +663,7 @@ class _Grid extends ConsumerWidget {
                 s: TS(
                   c: kB,
                   s: textSize,
-                  w: isDesktop ? FontWeight.w600 : null,
+                  w: isDesktop ? .w600 : null,
                 ),
               ),
             );

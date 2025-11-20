@@ -121,8 +121,8 @@ class Debugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,
@@ -225,8 +225,8 @@ class _SudokuDebugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,
@@ -306,8 +306,8 @@ class _TTSDebugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,
@@ -397,8 +397,8 @@ class _TranslatorDebugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,

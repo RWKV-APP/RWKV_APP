@@ -50,14 +50,14 @@ class TTSBottomInteractions extends ConsumerWidget {
       child: Container(
         decoration: const BoxDecoration(color: kC),
         child: Column(
-          crossAxisAlignment: CAA.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             if (selectedSpkName != null)
               Container(
                 padding: const EI.s(v: 4),
                 child: T(
                   target,
-                  s: TS(c: primary, w: FontWeight.w600),
+                  s: TS(c: primary, w: .w600),
                 ),
               ),
             if (selectSourceAudioPath != null)
@@ -65,7 +65,7 @@ class TTSBottomInteractions extends ConsumerWidget {
                 padding: const EI.s(v: 4),
                 child: T(
                   s.imitate_target + ": " + (sourceWavName ?? ""),
-                  s: TS(c: primary, w: FontWeight.w600),
+                  s: TS(c: primary, w: .w600),
                 ),
               ),
             const _Actions(),
@@ -131,14 +131,14 @@ class _AudioInteractor extends ConsumerWidget {
                         text: s.you_can_record_your_voice_and_let_rwkv_to_copy_it,
                         style: TS(
                           c: primary,
-                          w: FontWeight.w600,
+                          w: .w600,
                         ),
                       ),
                       TextSpan(
                         text: s.or_select_a_wav_file_to_let_rwkv_to_copy_it,
                         style: const TS(
                           c: Colors.blue,
-                          w: FontWeight.w600,
+                          w: .w600,
                         ),
                         recognizer: TapGestureRecognizer()..onTap = _onUploadFilePressed,
                       ),
@@ -447,7 +447,7 @@ class _SpkPanel extends ConsumerWidget {
     return SizedBox(
       height: 250,
       child: Column(
-        crossAxisAlignment: CAA.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -523,7 +523,7 @@ class _SpkPanel extends ConsumerWidget {
                                 Expanded(
                                   child: T(
                                     display,
-                                    s: TS(c: selected ? primary : primary.q(.8), w: selected ? FontWeight.w600 : FontWeight.w400),
+                                    s: TS(c: selected ? primary : primary.q(.8), w: selected ? .w600 : .w400),
                                   ),
                                 ),
                                 if (selected)
@@ -543,7 +543,7 @@ class _SpkPanel extends ConsumerWidget {
                             await P.world.play(path: path);
                           },
                           child: Container(
-                            padding: const EI.a(6.5),
+                            padding: const .all(6.5),
                             decoration: const BoxDecoration(color: kC),
                             child: Icon(
                               Icons.volume_up,
@@ -578,7 +578,7 @@ class _Instruction extends ConsumerWidget {
       children: [
         if (selectSpkName == null)
           Column(
-            crossAxisAlignment: CAA.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               _TextField(preferredDemoType: preferredDemoType),
               if (!hasFocus) const _InstructTabs(),
@@ -663,8 +663,8 @@ class _InstructTabs extends ConsumerWidget {
                       borderRadius: 4.r,
                     ),
                     child: Row(
-                      crossAxisAlignment: CAA.center,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: .center,
+                      mainAxisSize: .min,
                       children: [
                         if (hasValue)
                           Icon(
@@ -803,7 +803,7 @@ class _TextField extends ConsumerWidget {
           minLines: 1,
           decoration: InputDecoration(
             suffixIcon: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 GestureDetector(
                   onTap: P.tts.onClearButtonPressed,

@@ -229,7 +229,7 @@ class ModelItem extends ConsumerWidget {
           border: Border.all(color: qw.q(.1), width: .5),
         ),
         margin: const EI.o(t: 8),
-        padding: const EI.a(8),
+        padding: const .all(8),
         child: Row(
           children: [
             Expanded(
@@ -246,7 +246,7 @@ class ModelItem extends ConsumerWidget {
                       color: loading ? kCG.q(.5) : kCG,
                       borderRadius: 8.r,
                     ),
-                    padding: const EI.a(8),
+                    padding: const .all(8),
                     child: T(
                       loading ? s.loading : startTitle,
                       s: TS(c: qw),
@@ -261,7 +261,7 @@ class ModelItem extends ConsumerWidget {
                       color: kG.q(.5),
                       borderRadius: 8.r,
                     ),
-                    padding: const EI.a(8),
+                    padding: const .all(8),
                     child: T(loadButtonTextShowLoad ? S.current.loaded : s.chatting, s: TS(c: qw)),
                   ),
                 ),
@@ -308,17 +308,17 @@ class DownloadActions extends ConsumerWidget {
     final localFile = ref.watch(P.fileManager.locals(file));
     final hasFile = localFile.hasFile;
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         if (showDownload && !hasFile)
           IconButton(
             onPressed: () => onDownloadTap(context),
             icon: const Icon(Icons.download_rounded),
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
           ),
         if (showCancel)
           IconButton(
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             onPressed: onCancelTap,
             icon: const Icon(Icons.stop_rounded),
           ),
@@ -327,13 +327,13 @@ class DownloadActions extends ConsumerWidget {
             onPressed: () {
               P.fileManager.pauseDownload(fileInfo: file);
             },
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             icon: const Icon(Icons.pause),
           ),
         if (showResume)
           IconButton(
             onPressed: () => onDownloadTap(context),
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             icon: const Icon(Icons.play_arrow_rounded),
           ),
       ],
@@ -373,7 +373,7 @@ class _Delete extends ConsumerWidget {
             color: kC,
           ),
         ),
-        padding: const EI.a(5),
+        padding: const .all(5),
         child: Icon(
           Icons.delete_forever_outlined,
           color: primary,
@@ -408,8 +408,8 @@ class FileKeyItem extends ConsumerWidget {
         : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
 
     return Column(
-      crossAxisAlignment: CAA.start,
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: .start,
+      mainAxisAlignment: .center,
       children: [
         Wrap(
           spacing: 8,
@@ -417,11 +417,11 @@ class FileKeyItem extends ConsumerWidget {
           children: [
             T(
               fileInfo.name,
-              s: const TS(w: FontWeight.w600),
+              s: const TS(w: .w600),
             ),
             T(
               gbDisplay(fileSize),
-              s: TS(c: qb.q(.7), w: FontWeight.w500),
+              s: TS(c: qb.q(.7), w: .w500),
             ),
             if (showDownloaded && localFile.hasFile)
               Icon(
@@ -521,7 +521,7 @@ class _Tags extends ConsumerWidget {
                     tag.toUpperCase(),
                     style: TS(
                       c: textColor,
-                      w: showHighlight ? FontWeight.w500 : FontWeight.w400,
+                      w: showHighlight ? .w500 : .w400,
                     ),
                   ),
                   if (isMLX)

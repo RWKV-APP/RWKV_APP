@@ -15,7 +15,7 @@ class PhotoViewerOverlay extends ConsumerWidget {
     final paddingTop = ref.watch(P.app.paddingTop);
     final paddingRight = ref.watch(P.app.paddingRight);
     return Row(
-      mainAxisAlignment: MAA.end,
+      mainAxisAlignment: .end,
       children: [
         Container(
           margin: EI.o(t: paddingTop + 12, r: paddingRight + 12),

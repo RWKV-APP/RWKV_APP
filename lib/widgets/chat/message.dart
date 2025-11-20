@@ -118,7 +118,7 @@ class Message extends ConsumerWidget {
     final inSee = ref.watch(P.app.pageKey) == PageKey.see;
     final isMine = msg.isMine;
     final isChat = demoType == DemoType.chat;
-    final alignment = isMine ? Alignment.centerRight : Alignment.centerLeft;
+    final Alignment alignment = isMine ? .centerRight : .centerLeft;
     const marginHorizontal = 12.0;
     const marginVertical = .0;
     const kBubbleMinHeight = 44.0;
@@ -244,24 +244,24 @@ class Message extends ConsumerWidget {
       case model.MessageType.userAudio:
     }
 
-    BorderRadius? borderRadius = BorderRadius.only(
-      topLeft: Radius.circular(isMine ? radius : 0),
-      topRight: Radius.circular(radius),
-      bottomLeft: Radius.circular(radius),
-      bottomRight: Radius.circular(isMine ? 0 : radius),
+    BorderRadius? borderRadius = .only(
+      topLeft: .circular(isMine ? radius : 0),
+      topRight: .circular(radius),
+      bottomLeft: .circular(radius),
+      bottomRight: .circular(isMine ? 0 : radius),
     );
 
-    BorderRadius clipBorderRadius = BorderRadius.zero;
+    BorderRadius clipBorderRadius = .zero;
 
     switch (msg.type) {
       case model.MessageType.userImage:
-        padding = EI.zero;
+        padding = .zero;
         border = Border.all(width: 0);
         clipBorderRadius = borderRadius;
         borderRadius = null;
 
       case model.MessageType.userTTS:
-        padding = EI.zero;
+        padding = .zero;
 
       case model.MessageType.text:
         if (!msg.isMine) border = null;
@@ -280,7 +280,7 @@ class Message extends ConsumerWidget {
     if (isChat) {
       border = null;
       padding = const EI.o(t: 12, l: 12, r: 12, b: 4);
-      borderRadius = BorderRadius.circular(16);
+      borderRadius = .circular(16);
     }
 
     final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
@@ -315,7 +315,7 @@ class Message extends ConsumerWidget {
             borderRadius: borderRadius,
           ),
           child: Column(
-            crossAxisAlignment: isMine ? CAA.end : CAA.start,
+            crossAxisAlignment: isMine ? .end : .start,
             children: [
               if (kDebugMode && Args.debugMsgId)
                 Container(
@@ -366,7 +366,7 @@ class Message extends ConsumerWidget {
                 if (worldDemoMessageHeader.isNotEmpty)
                   T(
                     worldDemoMessageHeader,
-                    s: TS(c: qb.q(.5), w: FontWeight.w700, s: 10),
+                    s: TS(c: qb.q(.5), w: .w700, s: 10),
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
@@ -392,7 +392,7 @@ class Message extends ConsumerWidget {
                         children: [
                           T(
                             thisMessageIsReceiving ? s.thinking : s.thought_result,
-                            s: TS(c: qb.q(.5), w: FontWeight.w600),
+                            s: TS(c: qb.q(.5), w: .w600),
                           ),
                           showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
                         ],
@@ -497,20 +497,20 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
     final searching = widget.refInfo.list.isEmpty && widget.generating && !hasError;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: .stretch,
+      mainAxisSize: .min,
       children: [
         if (widget.refInfo.enable)
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: .centerLeft,
             child: InkWell(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: .circular(20),
               onTap: hasError || searching ? null : () => SearchReferenceDialog.show(context, widget.refInfo),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const .symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: primary.q(.1),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: .circular(20),
                 ),
                 child: searching
                     ? _AdvancedBlinkText(text: S.current.searching, color: primary)
@@ -529,10 +529,10 @@ class _ReferenceInfoState extends ConsumerState<_ReferenceInfo> {
           child: AnimatedSize(
             duration: const Duration(milliseconds: 200),
             child: Container(
-              margin: const EdgeInsets.only(bottom: 6),
+              margin: const .only(bottom: 6),
               height: showProgress ? 20 : 0,
               child: Row(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: .max,
                 children: [
                   SizedBox(
                     width: 18,

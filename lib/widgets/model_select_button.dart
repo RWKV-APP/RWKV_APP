@@ -30,23 +30,23 @@ class ModelSelectButton extends ConsumerWidget {
 
     return Ink(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: .circular(16),
         border: Border.all(color: theme.colorScheme.surfaceContainerHighest),
         color: theme.colorScheme.surfaceContainerLow,
       ),
       child: IntrinsicHeight(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
           children: [
             InkWell(
-              borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+              borderRadius: const .horizontal(left: .circular(16)),
               onTap: () {
                 ModelSelector.show();
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Text(modelDisplay, style: const TextStyle(fontSize: 10, height: 1, fontWeight: FontWeight.w500)),
+                padding: const .symmetric(horizontal: 8, vertical: 4),
+                child: Text(modelDisplay, style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500)),
               ),
             ),
             if (currentModel == null)
@@ -62,12 +62,12 @@ class ModelSelectButton extends ConsumerWidget {
             if (currentModel != null)
               PopupMenuTheme(
                 data: PopupMenuThemeData(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  menuPadding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: .circular(8)),
+                  menuPadding: .zero,
                   // elevation: 0,
                 ),
                 child: PopupMenuButton<DecodeParamType?>(
-                  padding: EdgeInsets.zero,
+                  padding: .zero,
                   initialValue: decodeParamType,
                   position: PopupMenuPosition.under,
                   itemBuilder: (c) {
@@ -93,9 +93,9 @@ class ModelSelectButton extends ConsumerWidget {
                       P.rwkv.syncSamplerParamsFromDefault(i!);
                     }
                   },
-                  borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
+                  borderRadius: const .horizontal(right: .circular(16)),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const .symmetric(horizontal: 12, vertical: 4),
                     child: Text(currentName, style: const TextStyle(fontSize: 10, height: 1)),
                   ),
                 ),

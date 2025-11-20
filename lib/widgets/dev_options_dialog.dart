@@ -76,9 +76,9 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const .symmetric(horizontal: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           const SizedBox(height: 8),
           const Row(
@@ -86,7 +86,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
               Expanded(
                 child: Text(
                   "Dev Options",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  style: TextStyle(fontWeight: .w600, fontSize: 18),
                 ),
               ),
               CloseButton(),
@@ -94,8 +94,8 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
           ),
           const SizedBox(height: 16),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-            leading: const Text('Web Search', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            contentPadding: const .symmetric(horizontal: 0),
+            leading: const Text('Web Search', style: TextStyle(fontSize: 16, fontWeight: .w600)),
             trailing: Switch(
               value: featureRollout.webSearch,
               onChanged: (v) {

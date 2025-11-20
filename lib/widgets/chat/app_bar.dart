@@ -121,20 +121,20 @@ class _MainAppBar extends ConsumerWidget {
         child: Container(
           decoration: const BoxDecoration(color: kC),
           child: Column(
-            crossAxisAlignment: CAA.center,
+            crossAxisAlignment: .center,
             children: [
               if (isChat)
                 Row(
-                  mainAxisAlignment: MAA.center,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CAA.end,
+                  mainAxisAlignment: .center,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .end,
                   children: [
                     const T(
                       Config.appTitle,
-                      s: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      s: TextStyle(fontSize: 16, fontWeight: .w600),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 2, left: 1),
+                      padding: const .only(bottom: 2, left: 1),
                       child: T(' $version', s: const TS(s: 8)),
                     ),
                   ],
@@ -164,9 +164,9 @@ class _MainAppBar extends ConsumerWidget {
                     borderRadius: 10.r,
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CAA.center,
-                    mainAxisAlignment: MAA.center,
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .center,
+                    mainAxisAlignment: .center,
                     children: [
                       T(
                         displayName,

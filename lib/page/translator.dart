@@ -46,7 +46,7 @@ class _MobileLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const .all(16),
       children: const [
         _TranslatorInterface(),
         SizedBox(height: 16),
@@ -62,11 +62,11 @@ class _DesktopLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             children: const [
               _TranslatorInterface(),
               SizedBox(height: 16),
@@ -76,7 +76,7 @@ class _DesktopLayout extends ConsumerWidget {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const .all(16),
             children: const [
               _ServiceInfo(),
               SizedBox(height: 16),
@@ -106,11 +106,11 @@ class _TranslatorInterface extends ConsumerWidget {
 
     return Card(
       elevation: 2,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: .zero,
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       clipBehavior: Clip.antiAlias,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           const _Source(),
           Divider(height: 1, color: theme.colorScheme.outline.q(0.2)),
@@ -118,13 +118,13 @@ class _TranslatorInterface extends ConsumerWidget {
           Divider(height: 1, color: theme.colorScheme.outline.q(0.2)),
           const _Result(),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const .all(12.0),
             child: FilledButton.icon(
               onPressed: _onPressTest,
               icon: const Icon(Icons.translate),
               label: Text(s.translate),
               style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const .symmetric(vertical: 12),
                 textStyle: theme.textTheme.titleSmall,
               ),
             ),
@@ -145,9 +145,9 @@ class _Source extends ConsumerWidget {
     final enToZh = ref.watch(P.translator.enToZh);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const .fromLTRB(16, 8, 16, 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: [
@@ -227,10 +227,10 @@ class _ResultState extends ConsumerState<_Result> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const .fromLTRB(16, 8, 16, 16),
       color: theme.colorScheme.surfaceContainerHighest.q(0.3),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: [
@@ -282,14 +282,14 @@ class _InferenceInfo extends ConsumerWidget {
     return Card(
       elevation: 0,
       color: theme.colorScheme.surfaceContainerHighest.q(0.3),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const .all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const .symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
                 s.inference_engine,
                 style: theme.textTheme.titleMedium,
@@ -311,7 +311,7 @@ class _InferenceInfo extends ConsumerWidget {
                   : const Icon(Icons.check_circle, color: Colors.green),
             ),
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: .symmetric(horizontal: 8.0),
               child: PerformanceInfo(),
             ),
           ],
@@ -366,14 +366,14 @@ class _ServiceInfo extends ConsumerWidget {
     return Card(
       elevation: 0,
       color: theme.colorScheme.surfaceContainerHighest.q(0.3),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const .all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const .symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(s.lan_server, style: theme.textTheme.titleMedium),
             ),
             ListTile(
@@ -416,14 +416,14 @@ class _BrowserInfo extends ConsumerWidget {
     return Card(
       elevation: 0,
       color: theme.colorScheme.surfaceContainerHighest.q(0.3),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const .all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const .symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(s.browser_status, style: theme.textTheme.titleMedium),
             ),
             if (browserWindows.isEmpty)
@@ -455,15 +455,15 @@ class _BrowserWindow extends ConsumerWidget {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: .circular(8),
         side: BorderSide(
           color: focused ? theme.colorScheme.primary : theme.colorScheme.outline.q(0.5),
           width: focused ? 2 : 1,
         ),
       ),
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const .symmetric(vertical: 4),
       child: ExpansionTile(
-        title: Text(s.window_id(window.id), style: TextStyle(fontWeight: focused ? FontWeight.bold : FontWeight.normal)),
+        title: Text(s.window_id(window.id), style: TextStyle(fontWeight: focused ? .bold : .normal)),
         subtitle: Text(s.x_tabs(browserTabs.length)),
         initiallyExpanded: focused,
         children: browserTabs.map((e) => _BrowserTab(tab: e)).toList(),
@@ -536,14 +536,14 @@ class _TranslatorDebugInfo extends ConsumerWidget {
     return Card(
       elevation: 0,
       color: theme.colorScheme.surfaceContainerHighest.q(0.3),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const .all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const .symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(s.translator_debug_info, style: theme.textTheme.titleMedium),
             ),
             ListTile(
@@ -594,31 +594,31 @@ class _TranslationDirectionButton extends ConsumerWidget {
     final isMulti = sourceText.trim().split('\n').where((e) => e.trim().isNotEmpty).length > 1;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const .symmetric(vertical: 8, horizontal: 16),
       child: Center(
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             GestureDetector(
               onTap: P.translator.onDirectionButtonPressed,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const .symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer.q(0.3),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: .circular(20),
                   border: Border.all(
                     color: theme.colorScheme.primary.q(0.5),
                     width: 1,
                   ),
                 ),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     Text(
                       enToZh ? 'EN' : 'ZH',
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -632,7 +632,7 @@ class _TranslationDirectionButton extends ConsumerWidget {
                       enToZh ? 'ZH' : 'EN',
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ],

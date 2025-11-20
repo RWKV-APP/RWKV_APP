@@ -89,10 +89,10 @@ class UserTTSContent extends ConsumerWidget {
         b: 6,
       ),
       child: Column(
-        crossAxisAlignment: CAA.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Expanded(
                 child: Container(

@@ -57,8 +57,8 @@ class Empty extends ConsumerWidget {
               if (demoType == DemoType.chat)
                 Positioned.fill(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: .center,
+                    crossAxisAlignment: .stretch,
                     children: [
                       const SizedBox(height: 90),
                       const Flexible(
@@ -79,7 +79,7 @@ class Empty extends ConsumerWidget {
                   left: 32,
                   right: 32,
                   child: Column(
-                    crossAxisAlignment: CAA.center,
+                    crossAxisAlignment: .center,
                     children: [
                       const Spacer(),
                       WithDevOption(child: Image.asset(logoPath, width: 140)),
@@ -92,7 +92,7 @@ class Empty extends ConsumerWidget {
                             opacity: 0.0,
                             child: T(version, s: const TS(s: 10)),
                           ),
-                          T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: FontWeight.w600)),
+                          T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: .w600)),
                           Opacity(
                             opacity: 0.5,
                             child: Padding(
@@ -117,7 +117,7 @@ class Empty extends ConsumerWidget {
                           },
                           child: T(
                             demoType == DemoType.world ? s.select_a_world_type : s.select_a_model,
-                            s: const TS(s: 16, w: FontWeight.w600),
+                            s: const TS(s: 16, w: .w600),
                           ),
                         ),
                       if (!loaded) 12.h,
@@ -132,7 +132,7 @@ class Empty extends ConsumerWidget {
                           ),
                           child: T(
                             currentModel?.name ?? "",
-                            s: TS(s: 16, w: FontWeight.w600, c: primary),
+                            s: TS(s: 16, w: .w600, c: primary),
                           ),
                         ),
                       const Spacer(),
@@ -167,20 +167,20 @@ class _EmptyV2 extends ConsumerWidget {
     final suggestions = ref.watch(P.suggestion.suggestion);
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: .center,
+      crossAxisAlignment: .center,
       children: [
         16.h,
         Text(
           s.hello_ask_me_anything,
-          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 32, fontWeight: .bold),
           textAlign: TextAlign.center,
         ),
         36.h,
         for (final item in suggestions) ...[
           12.h,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const .symmetric(horizontal: 24),
             child: buildSuggestion(item),
           ),
         ],
@@ -195,7 +195,7 @@ class _EmptyV2 extends ConsumerWidget {
                 if (suggestion != null) onTap(suggestion);
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                padding: const .symmetric(horizontal: 22, vertical: 12),
                 child: Text(
                   S.current.more_questions,
                   maxLines: 1,
@@ -216,9 +216,9 @@ class _EmptyV2 extends ConsumerWidget {
         borderRadius: 60.r,
         onTap: () => onTap(item),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+          padding: const .symmetric(horizontal: 22, vertical: 12),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Container(
                 height: 10,

@@ -118,7 +118,7 @@ class _Header extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: T(s.chat_please_select_a_model, s: const TS(s: 18, w: FontWeight.w600)),
+          child: T(s.chat_please_select_a_model, s: const TS(s: 18, w: .w600)),
         ),
         const IconButton(
           onPressed: pop,
@@ -139,17 +139,17 @@ class _Hints extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (demoType == DemoType.world) ...[
-          T(s.please_select_a_world_type, s: const TS(s: 16, w: FontWeight.w500)),
+          T(s.please_select_a_world_type, s: const TS(s: 16, w: .w500)),
           4.h,
         ],
         const _DownloadSource(),
         if (demoType == DemoType.chat)
           T(
             "👉${s.str_model_selection_dialog_hint}👈",
-            s: TS(c: qb.q(.7), s: 12, w: FontWeight.w500),
+            s: TS(c: qb.q(.7), s: 12, w: .w500),
           ),
       ],
     );
@@ -186,7 +186,7 @@ class _ModelList extends ConsumerWidget {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
       availableModels.addAll(P.fileManager.roleplayWeights.q);
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: availableModels.map((e) => RolePlayItem(file: e)).toList(),
       );
     }
@@ -246,7 +246,7 @@ class _ModelList extends ConsumerWidget {
     };
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: items,
     );
   }
@@ -262,12 +262,12 @@ class _DownloadSource extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         4.h,
         T(
           S.current.download_server_,
-          s: TS(c: qb.q(.7), s: 12, w: FontWeight.w600),
+          s: TS(c: qb.q(.7), s: 12, w: .w600),
         ),
         4.h,
         Wrap(

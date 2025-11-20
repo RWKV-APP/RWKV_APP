@@ -114,8 +114,8 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
       width: changing ? 160 : width,
       // height: 50,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CAA.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           if (!allDone)
             Wrap(
@@ -128,7 +128,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       if (e < 1)
                         T(
                           (e * 100).toStringAsFixed(0) + "%",
-                          s: TS(c: qb.q(.8), w: FontWeight.w600, s: 10),
+                          s: TS(c: qb.q(.8), w: .w600, s: 10),
                         ),
                       if (e >= 1) Icon(Icons.check, color: primaryColor, size: 12),
                     ],
@@ -140,7 +140,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
             Padding(
               padding: const EI.o(t: 4, b: 12),
               child: Row(
-                mainAxisAlignment: MAA.start,
+                mainAxisAlignment: .start,
                 children: [
                   TweenAnimationBuilder(
                     tween: Tween(begin: .0, end: 1.0),
@@ -158,7 +158,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   8.w,
                   T(
                     s.generating + "",
-                    s: TS(c: qb.q(.8), w: FontWeight.w500),
+                    s: TS(c: qb.q(.8), w: .w500),
                   ),
                 ],
               ),
@@ -167,7 +167,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
             Padding(
               padding: const EI.o(v: 4),
               child: Row(
-                mainAxisAlignment: MAA.start,
+                mainAxisAlignment: .start,
                 children: [
                   if (_tick % 3 == 0 || !isPlaying || !isLatestClickedMessage)
                     Icon(
@@ -187,7 +187,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   8.w,
                   T(
                     (length / 1000).toStringAsFixed(0) + "s",
-                    s: TS(c: qb.q(.8), w: FontWeight.w600),
+                    s: TS(c: qb.q(.8), w: .w600),
                   ),
                   if (allDone)
                     GestureDetector(
@@ -204,7 +204,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
           if (allDone) 12.h,
           if (!changing && !allDone)
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 GestureDetector(
                   onTap: _onSharePressed,

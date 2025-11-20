@@ -74,7 +74,7 @@ class LogPanel extends ConsumerWidget {
       child: Container(
         margin: const EI.o(t: 8),
         child: Column(
-          crossAxisAlignment: CAA.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Row(
               children: [
@@ -86,14 +86,14 @@ class LogPanel extends ConsumerWidget {
                 ),
                 Expanded(
                   child: Row(
-                    crossAxisAlignment: CAA.center,
-                    mainAxisAlignment: MAA.center,
+                    crossAxisAlignment: .center,
+                    mainAxisAlignment: .center,
                     children: [
                       const Icon(Icons.tune),
                       12.w,
                       T(
                         S.current.runtime_log_panel,
-                        s: const TS(s: 16, w: FontWeight.w500),
+                        s: const TS(s: 16, w: .w500),
                       ),
                     ],
                   ),
@@ -139,26 +139,26 @@ class LogPanel extends ConsumerWidget {
                   return Container(
                     decoration: BoxDecoration(
                       color: kC,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: .circular(4),
                       border: Border.all(color: qb),
                     ),
                     padding: const EI.s(h: 4, v: 4),
                     margin: const EI.o(b: 4),
                     child: Column(
-                      crossAxisAlignment: CAA.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Row(
                           children: [
-                            T(log.tag, s: const TS(w: FontWeight.w700)),
+                            T(log.tag, s: const TS(w: .w700)),
                             if (log.isPrefill) ...[
                               4.w,
                               Container(
                                 decoration: BoxDecoration(
                                   color: kCG.q(.3),
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: .circular(4),
                                 ),
                                 padding: const EI.s(h: 2),
-                                child: const T("Prefill", s: TS(w: FontWeight.w700)),
+                                child: const T("Prefill", s: TS(w: .w700)),
                               ),
                             ],
                             const Spacer(),
@@ -166,10 +166,10 @@ class LogPanel extends ConsumerWidget {
                               Container(
                                 decoration: BoxDecoration(
                                   color: kCG.q(.3),
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: .circular(4),
                                 ),
                                 padding: const EI.s(h: 2),
-                                child: T(log.dateTimeString, s: const TS(w: FontWeight.w600)),
+                                child: T(log.dateTimeString, s: const TS(w: .w600)),
                               ),
                           ],
                         ),

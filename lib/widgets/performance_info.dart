@@ -20,8 +20,8 @@ class PerformanceInfo extends ConsumerWidget {
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final qb = ref.watch(P.app.qb);
     return Column(
-      crossAxisAlignment: CAA.start,
-      mainAxisAlignment: MAA.center,
+      crossAxisAlignment: .start,
+      mainAxisAlignment: .center,
       children: [
         Text.rich(
           style: TS(c: qb.q(.6), s: 10),

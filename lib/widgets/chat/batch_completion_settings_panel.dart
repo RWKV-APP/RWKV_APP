@@ -111,9 +111,9 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
     final batchInference = settings.enabled;
     final batchVW = settings.width;
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(16),
-        topRight: Radius.circular(16),
+      borderRadius: const .only(
+        topLeft: .circular(16),
+        topRight: .circular(16),
       ),
       child: Scaffold(
         backgroundColor: customTheme.setting,
@@ -123,7 +123,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
           backgroundColor: customTheme.setting,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const .only(right: 8),
               child: IconButton(
                 onPressed: () {
                   pop();

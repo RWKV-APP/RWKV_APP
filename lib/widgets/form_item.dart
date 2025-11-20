@@ -47,11 +47,11 @@ class FormItem extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           color: customTheme.settingItem,
-          borderRadius: BorderRadius.only(
-            topLeft: isSectionStart ? 12.rr : Radius.zero,
-            topRight: isSectionStart ? 12.rr : Radius.zero,
-            bottomLeft: isSectionEnd ? 12.rr : Radius.zero,
-            bottomRight: isSectionEnd ? 12.rr : Radius.zero,
+          borderRadius: .only(
+            topLeft: isSectionStart ? 12.rr : .zero,
+            topRight: isSectionStart ? 12.rr : .zero,
+            bottomLeft: isSectionEnd ? 12.rr : .zero,
+            bottomRight: isSectionEnd ? 12.rr : .zero,
           ),
           border: Border(
             bottom: (autoShowBottomBorder && !isSectionEnd)
@@ -71,19 +71,19 @@ class FormItem extends ConsumerWidget {
                 if (icon != null) 8.w,
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CAA.start,
+                    crossAxisAlignment: .start,
                     children: [
                       T(
                         title,
                         textAlign: titleTextAlign,
-                        s: TS(w: FontWeight.w500, s: 16, c: titleColor),
+                        s: TS(w: .w500, s: 16, c: titleColor),
                       ),
                       if (subtitle != null)
                         Opacity(
                           opacity: 0.5,
                           child: T(
                             subtitle!,
-                            s: const TS(w: FontWeight.w500, s: 12),
+                            s: const TS(w: .w500, s: 12),
                           ),
                         ),
                     ],
@@ -93,7 +93,7 @@ class FormItem extends ConsumerWidget {
                   Expanded(
                     child: T(
                       info,
-                      s: const TS(w: FontWeight.w500, s: 12),
+                      s: const TS(w: .w500, s: 12),
                       textAlign: TextAlign.right,
                     ),
                   ),

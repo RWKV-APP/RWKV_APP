@@ -298,11 +298,11 @@ class _CompletionState extends ConsumerState<Completion> {
       }
     });
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const .symmetric(horizontal: 16),
       height: double.infinity,
       width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Row(
             children: [
@@ -310,14 +310,14 @@ class _CompletionState extends ConsumerState<Completion> {
               const Spacer(),
               TextButton(
                 style: TextButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
+                  visualDensity: .compact,
                 ),
                 onPressed: generating ? null : onSuggestTap,
                 child: Text(S.current.suggest),
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
+                  visualDensity: .compact,
                 ),
                 onPressed: generating || !hasPrompt ? null : onClearInputTap,
                 child: Text(S.current.clear),
@@ -377,12 +377,12 @@ class _CompletionState extends ConsumerState<Completion> {
                           height: cs.maxHeight / row,
                           width: cs.maxWidth * colWidthPercent * col,
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: .stretch,
                             children: [
                               for (var j = 0; j < col; j++)
                                 Expanded(
                                   child: Container(
-                                    margin: EdgeInsets.only(right: j == col - 1 ? 0 : 8, bottom: i == row - 1 ? 0 : 8),
+                                    margin: .only(right: j == col - 1 ? 0 : 8, bottom: i == row - 1 ? 0 : 8),
                                     child: i * col + j > batchSize
                                         ? const SizedBox()
                                         : _BatchOutputText(
@@ -411,7 +411,7 @@ class _CompletionState extends ConsumerState<Completion> {
           Expanded(child: Text(S.current.output)),
           TextButton(
             style: TextButton.styleFrom(
-              visualDensity: VisualDensity.compact,
+              visualDensity: .compact,
             ),
             onPressed: generating ? null : onClearOutputTap,
             child: Text(S.current.clear),
@@ -490,7 +490,7 @@ class _CompletionState extends ConsumerState<Completion> {
         const SizedBox(width: 8),
         OutlinedButton(
           style: ButtonStyle(
-            padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
+            padding: const WidgetStatePropertyAll(.symmetric(horizontal: 8)),
             backgroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.primary),
             foregroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
           ),
@@ -544,7 +544,7 @@ class _BatchOutputTextState extends State<_BatchOutputText> {
       focusNode: Platform.isWindows ? FocusNode() : null,
       readOnly: true,
       decoration: const InputDecoration(
-        contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        contentPadding: .symmetric(horizontal: 4, vertical: 6),
         isDense: true,
         border: OutlineInputBorder(),
       ),
@@ -596,11 +596,11 @@ class _SuggestDialogState extends State<_SuggestDialog> {
     return SizedBox(
       width: double.infinity,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const .symmetric(horizontal: 12, vertical: 6),
             child: Row(
               children: [
                 const SizedBox(width: 6),
@@ -613,8 +613,8 @@ class _SuggestDialogState extends State<_SuggestDialog> {
             child: SingleChildScrollView(
               controller: widget.scrollController,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: .min,
+                crossAxisAlignment: .stretch,
                 children: [
                   for (final item in items) ...[
                     ListTile(

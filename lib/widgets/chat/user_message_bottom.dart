@@ -72,8 +72,8 @@ class UserMessageBottom extends ConsumerWidget {
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
     return Row(
-      mainAxisAlignment: MAA.end,
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: .end,
+      mainAxisSize: .min,
       children: [
         BranchSwitcher(msg, index),
         if (showUserEditButton)

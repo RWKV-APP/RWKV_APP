@@ -20,7 +20,7 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             buildGroupTitle(S.current.prompt_template),
             item(
@@ -138,8 +138,8 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
   Widget buildGroupTitle(String title) {
     final surface = Theme.of(context).colorScheme.surface;
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const .only(bottom: 16),
+      padding: const .symmetric(horizontal: 16, vertical: 12),
       color: surface,
       child: Text(title),
     );
@@ -148,8 +148,8 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
   List<Widget> buildRagGroup() {
     return [
       Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        margin: const .only(bottom: 16),
+        padding: const .symmetric(horizontal: 16, vertical: 12),
         color: Colors.grey.shade100,
         child: const Text('知识库'),
       ),

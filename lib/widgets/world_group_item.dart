@@ -143,7 +143,7 @@ class WorldGroupItem extends ConsumerWidget {
       margin: const EI.o(t: 0, l: 0, r: 0, b: 8),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: .circular(16),
         border: Border.all(color: borderColor, width: 0.5),
         boxShadow: isDark
             ? [
@@ -162,22 +162,22 @@ class WorldGroupItem extends ConsumerWidget {
               ],
       ),
       child: Padding(
-        padding: EI.a(isDesktop ? 12 : 8),
+        padding: .all(isDesktop ? 12 : 8),
         child: Column(
-          crossAxisAlignment: CAA.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             // 标题栏
             Row(
               children: [
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CAA.start,
+                    crossAxisAlignment: .start,
                     children: [
                       T(
                         worldType.displayName,
                         s: TS(
                           s: 18,
-                          w: FontWeight.w600,
+                          w: .w600,
                           c: textColor,
                         ),
                       ),
@@ -186,7 +186,7 @@ class WorldGroupItem extends ConsumerWidget {
                         worldType.taskDescription,
                         s: TS(
                           s: 12,
-                          w: FontWeight.w400,
+                          w: .w400,
                           c: secondaryTextColor,
                         ),
                       ),
@@ -254,9 +254,9 @@ class WorldGroupItem extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: fileItemBgColor,
                   border: Border.all(color: fileItemBorderColor, width: 1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: .circular(12),
                 ),
-                padding: EI.a(isDesktop ? 12 : 8),
+                padding: .all(isDesktop ? 12 : 8),
                 margin: const EI.o(t: 8),
                 child: _FileItem(
                   fileInfo: e,
@@ -295,7 +295,7 @@ class _ActionButton extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: .circular(8),
         ),
         child: TextButton(
           onPressed: onPressed,
@@ -303,13 +303,13 @@ class _ActionButton extends StatelessWidget {
             foregroundColor: Colors.white,
             padding: const EI.s(h: 16, v: 8),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: .circular(8),
             ),
           ),
           child: T(
             text,
             s: const TS(
-              w: FontWeight.w600,
+              w: .w600,
               s: 14,
             ),
           ),
@@ -323,13 +323,13 @@ class _ActionButton extends StatelessWidget {
         foregroundColor: color,
         padding: const EI.s(h: 16, v: 8),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: .circular(8),
         ),
       ),
       child: T(
         text,
         s: TS(
-          w: FontWeight.w600,
+          w: .w600,
           s: 14,
           c: color,
         ),
@@ -367,18 +367,18 @@ class _FileItem extends ConsumerWidget {
     if (timeRemaining.isNegative) timeRemaining = Duration.zero;
 
     return Column(
-      crossAxisAlignment: CAA.start,
+      crossAxisAlignment: .start,
       children: [
         Row(
           children: [
             Expanded(
               child: Column(
-                crossAxisAlignment: CAA.start,
+                crossAxisAlignment: .start,
                 children: [
                   T(
                     fileInfo.name,
                     s: TS(
-                      w: FontWeight.w600,
+                      w: .w600,
                       c: textColor,
                       s: 14,
                     ),
@@ -388,7 +388,7 @@ class _FileItem extends ConsumerWidget {
                     gbDisplay(fileSize),
                     s: TS(
                       c: secondaryTextColor,
-                      w: FontWeight.w500,
+                      w: .w500,
                       s: 12,
                     ),
                   ),
@@ -400,7 +400,7 @@ class _FileItem extends ConsumerWidget {
                 padding: const EI.s(h: 8, v: 4),
                 decoration: BoxDecoration(
                   color: primaryColor.q(.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: .circular(12),
                 ),
                 child: Icon(
                   Icons.check_circle,
@@ -426,13 +426,13 @@ class _FileItem extends ConsumerWidget {
                   color: isHighlight
                       ? (tag.toLowerCase() == "gpu" ? Colors.green.q(.2) : Colors.blue.q(.2))
                       : (isDark ? Colors.grey.q(.2) : Colors.grey.q(.1)),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: .circular(8),
                 ),
                 child: T(
                   tag.toUpperCase(),
                   s: TS(
                     c: isHighlight ? (tag.toLowerCase() == "gpu" ? Colors.green : Colors.blue) : secondaryTextColor,
-                    w: FontWeight.w500,
+                    w: .w500,
                     s: 10,
                   ),
                 ),
@@ -447,7 +447,7 @@ class _FileItem extends ConsumerWidget {
             value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
             backgroundColor: isDark ? Colors.grey.q(.3) : Colors.grey.q(.2),
             valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: .circular(4),
           ),
           8.h,
           Wrap(
@@ -457,7 +457,7 @@ class _FileItem extends ConsumerWidget {
                 s.speed,
                 s: TS(
                   c: secondaryTextColor,
-                  w: FontWeight.w500,
+                  w: .w500,
                   s: 11,
                 ),
               ),
@@ -465,7 +465,7 @@ class _FileItem extends ConsumerWidget {
                 "${networkSpeed.toStringAsFixed(1)}MB/s",
                 s: TS(
                   c: textColor,
-                  w: FontWeight.w600,
+                  w: .w600,
                   s: 11,
                 ),
               ),
@@ -474,7 +474,7 @@ class _FileItem extends ConsumerWidget {
                 s.remaining,
                 s: TS(
                   c: secondaryTextColor,
-                  w: FontWeight.w500,
+                  w: .w500,
                   s: 11,
                 ),
               ),
@@ -482,7 +482,7 @@ class _FileItem extends ConsumerWidget {
                 timeRemaining.inMinutes > 0 ? "${timeRemaining.inMinutes}m" : "${timeRemaining.inSeconds}s",
                 s: TS(
                   c: textColor,
-                  w: FontWeight.w600,
+                  w: .w600,
                   s: 11,
                 ),
               ),

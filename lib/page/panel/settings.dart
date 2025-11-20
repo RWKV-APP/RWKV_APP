@@ -91,10 +91,10 @@ class Settings extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: isInDrawerMenu
-          ? BorderRadius.zero
-          : const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
+          ? .zero
+          : const .only(
+              topLeft: .circular(16),
+              topRight: .circular(16),
             ),
       child: Scaffold(
         backgroundColor: demoType == DemoType.chat ? Colors.transparent : customTheme.setting,
@@ -107,7 +107,7 @@ class Settings extends ConsumerWidget {
                 backgroundColor: customTheme.setting,
                 actions: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const .only(right: 8),
                     child: IconButton(
                       onPressed: () {
                         pop();
@@ -128,12 +128,12 @@ class Settings extends ConsumerWidget {
           children: [
             if (isChat) const SizedBox(height: 40),
             Row(
-              mainAxisAlignment: MAA.center,
+              mainAxisAlignment: .center,
               children: [iconWidget],
             ),
             16.h,
             const Row(
-              mainAxisAlignment: MAA.center,
+              mainAxisAlignment: .center,
               children: [
                 Expanded(
                   child: T(
@@ -146,7 +146,7 @@ class Settings extends ConsumerWidget {
             ),
             4.h,
             Row(
-              mainAxisAlignment: MAA.center,
+              mainAxisAlignment: .center,
               children: [
                 T(version, s: const TS(s: 12)),
                 T(" ($buildNumber)", s: const TS(s: 12)),
@@ -154,12 +154,12 @@ class Settings extends ConsumerWidget {
             ),
             16.h,
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 Expanded(
                   child: T(
                     s.application_settings,
-                    s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
+                    s: TS(w: .w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -199,12 +199,12 @@ class Settings extends ConsumerWidget {
             ),
             12.h,
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 Expanded(
                   child: T(
                     s.join_the_community,
-                    s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
+                    s: TS(w: .w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -238,11 +238,11 @@ class Settings extends ConsumerWidget {
             ),
             12.h,
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 T(
                   s.about,
-                  s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
+                  s: TS(w: .w500, c: qb.q(.8), s: 12),
                 ),
               ],
             ),
@@ -365,7 +365,7 @@ class _DumpSwitch extends ConsumerWidget {
       height: 24,
       child: Switch.adaptive(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: EdgeInsets.zero,
+        padding: .zero,
         value: dumpping,
         onChanged: (value) async {
           if (value) {

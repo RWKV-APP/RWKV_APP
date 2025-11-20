@@ -102,7 +102,7 @@ class _WebSearchModeButton extends ConsumerWidget {
               2.w,
               T(
                 webSearchMode == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
-                s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                s: TS(c: textColor, s: 14, height: 1, w: .w500),
               ),
               4.w,
               VerticalDivider(width: 2, indent: 8, endIndent: 8, color: textColor),
@@ -127,8 +127,8 @@ class _WebSearchModeButton extends ConsumerWidget {
                 ),
                 child: Container(
                   height: height,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  alignment: Alignment.center,
+                  padding: const .symmetric(horizontal: 4),
+                  alignment: .center,
                   child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
                 ),
               ),
@@ -160,7 +160,7 @@ class _WenYanWenButton extends ConsumerWidget {
         onTap: _onTap,
         child: AnimatedContainer(
           height: height,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const .symmetric(horizontal: 12),
           duration: 150.ms,
           curve: Curves.easeOutCubic,
           decoration: BoxDecoration(color: wenYanWen ? theme.colorScheme.primary : theme.colorScheme.surfaceContainer, borderRadius: 60.r),

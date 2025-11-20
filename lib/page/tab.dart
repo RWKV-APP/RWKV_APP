@@ -85,7 +85,7 @@ class PageTab extends ConsumerWidget {
         : (isDark ? Colors.grey.shade800 : Colors.grey);
     return InkWell(
       onTap: () => P.app.onTabSelected(index),
-      borderRadius: BorderRadius.circular(100),
+      borderRadius: .circular(100),
       child: Column(
         children: [
           const SizedBox(height: 12),

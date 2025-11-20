@@ -39,17 +39,17 @@ class BranchSwitcher extends ConsumerWidget {
             child: Center(
               child: T(
                 "${index + 1} / $siblingCount",
-                s: TS(c: primary, s: 12, w: FontWeight.w600),
+                s: TS(c: primary, s: 12, w: .w600),
               ),
             ),
           ),
         ),
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             IconButton(
               onPressed: isFirst ? null : _onBackPressed,
-              padding: const EdgeInsets.only(left: 4, right: 16, top: 4, bottom: 4),
+              padding: const .only(left: 4, right: 16, top: 4, bottom: 4),
               constraints: const BoxConstraints(), // override default min size of 48px
               icon: Icon(
                 Icons.arrow_back_ios_new,
@@ -59,7 +59,7 @@ class BranchSwitcher extends ConsumerWidget {
             ),
             IconButton(
               onPressed: isLast ? null : _onForwardPressed,
-              padding: const EdgeInsets.only(left: 16, right: 4, top: 4, bottom: 4),
+              padding: const .only(left: 16, right: 4, top: 4, bottom: 4),
               constraints: const BoxConstraints(), // override default min size of 48px
               icon: Icon(
                 Icons.arrow_forward_ios,

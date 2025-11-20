@@ -116,7 +116,7 @@ class ConversationItem extends ConsumerWidget {
     // 使用showMenu在特定位置显示菜单
     final res = await showMenu<String>(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: .circular(16),
       ),
       color: Theme.of(context).colorScheme.surface,
       context: context,
@@ -206,9 +206,9 @@ class ConversationItem extends ConsumerWidget {
       onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
       child: Container(
         color: Theme.of(context).colorScheme.surface,
-        padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+        padding: const .symmetric(horizontal: 16, vertical: 12),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             if (isBatchMode) ...[
               Center(
@@ -224,10 +224,10 @@ class ConversationItem extends ConsumerWidget {
                 height: 40,
                 width: 40,
                 clipBehavior: Clip.antiAlias,
-                alignment: Alignment.center,
+                alignment: .center,
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: .circular(4),
                 ),
                 child: _buildAvatar(),
               ),
@@ -235,11 +235,11 @@ class ConversationItem extends ConsumerWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Column(
-                crossAxisAlignment: CAA.stretch,
+                crossAxisAlignment: .stretch,
                 children: [
                   T(
                     conversation.title.replaceAll(Config.userMsgModifierSep, ''),
-                    s: TS(s: 16, w: FontWeight.w500, c: qb),
+                    s: TS(s: 16, w: .w500, c: qb),
                     overflow: TextOverflow.ellipsis,
                   ),
                   4.h,

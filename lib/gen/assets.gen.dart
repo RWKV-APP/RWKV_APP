@@ -739,7 +739,7 @@ class AssetGenImage {
     Animation<double>? opacity,
     BlendMode? colorBlendMode,
     BoxFit? fit,
-    AlignmentGeometry alignment = Alignment.center,
+    AlignmentGeometry alignment = .center,
     ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,

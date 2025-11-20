@@ -50,24 +50,24 @@ class Suggestions extends ConsumerWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const .symmetric(horizontal: 8, vertical: 4),
       child: Row(
         children: [
           for (var item in suggestions)
             Padding(
-              padding: const EdgeInsets.only(right: 4),
+              padding: const .only(right: 4),
               child: OutlinedButton(
                 onPressed: () => _onSuggestionTap(item),
                 style: TextButton.styleFrom(
                   foregroundColor: primary,
                   backgroundColor: Platform.isIOS ? qw.q(.9) : qw,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                  visualDensity: VisualDensity.compact,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                  padding: const .symmetric(horizontal: 10, vertical: 0),
+                  visualDensity: .compact,
+                  shape: RoundedRectangleBorder(borderRadius: .circular(6)),
                 ),
                 child: Text(
                   item,
-                  style: TextStyle(fontSize: 14, color: qb, fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 14, color: qb, fontWeight: .w400),
                 ),
               ),
             ),

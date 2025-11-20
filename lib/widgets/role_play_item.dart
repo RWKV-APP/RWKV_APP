@@ -78,16 +78,16 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const .symmetric(vertical: 8),
+      padding: const .symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: .circular(12),
         border: Border.all(color: theme.primaryColor),
         color: theme.colorScheme.surfaceContainerLow,
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           ModelItem(
             widget.file,
@@ -96,13 +96,13 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
             showDelete: currentModelName != widget.file.fileName,
           ),
           if (local.hasFile) const SizedBox(height: 8),
-          if (local.hasFile) Text(S.current.state_list, style: const TextStyle(fontWeight: FontWeight.w500)),
+          if (local.hasFile) Text(S.current.state_list, style: const TextStyle(fontWeight: .w500)),
           if (local.hasFile)
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              margin: const EdgeInsets.only(top: 8),
+              padding: const .symmetric(vertical: 8, horizontal: 12),
+              margin: const .only(top: 8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: .circular(8),
                 color: customTheme.settingItem,
               ),
               child: Column(
@@ -146,13 +146,13 @@ class _ModelStateItem extends ConsumerWidget {
       children: [
         Flexible(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Text(
                 state.name,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: .w500,
                 ),
               ),
             ],
@@ -180,18 +180,18 @@ class _ModelStateItem extends ConsumerWidget {
             onPressed: () {
               P.fileManager.deleteFile(fileInfo: state);
             },
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             icon: const Icon(Icons.delete_outline),
           ),
         if (localFile.hasFile)
           FilledButton(
             onPressed: onSelectTap,
             style: ButtonStyle(
-              visualDensity: VisualDensity.compact,
-              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              visualDensity: .compact,
+              padding: WidgetStateProperty.all(.zero),
               backgroundColor: WidgetStateProperty.all(onSelectTap == null ? Colors.grey.shade300 : Colors.green),
               shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                RoundedRectangleBorder(borderRadius: .circular(8)),
               ),
             ),
             child: Text(onSelectTap == null ? S.current.loaded : S.current.load_),

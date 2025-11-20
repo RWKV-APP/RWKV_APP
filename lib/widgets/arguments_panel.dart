@@ -66,7 +66,7 @@ class ArgumentsPanel extends ConsumerWidget {
       child: Container(
         margin: const EI.o(t: 8),
         child: Column(
-          crossAxisAlignment: CAA.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Row(
               children: [
@@ -80,14 +80,14 @@ class ArgumentsPanel extends ConsumerWidget {
                 ),
                 Expanded(
                   child: Row(
-                    crossAxisAlignment: CAA.center,
-                    mainAxisAlignment: MAA.center,
+                    crossAxisAlignment: .center,
+                    mainAxisAlignment: .center,
                     children: [
                       const Icon(Icons.tune),
                       12.w,
                       T(
                         s.model_settings,
-                        s: const TS(s: 16, w: FontWeight.w500),
+                        s: const TS(s: 16, w: .w500),
                       ),
                     ],
                   ),
@@ -144,7 +144,7 @@ class _SamplerOptions extends ConsumerWidget {
           Expanded(child: T("Sampler Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(
-              padding: EI.zero,
+              padding: .zero,
               iconSize: 16,
             ),
             onPressed: () {
@@ -175,7 +175,7 @@ class _CompletionOptions extends ConsumerWidget {
           Expanded(child: T("Completion Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(
-              padding: EI.zero,
+              padding: .zero,
               iconSize: 16,
             ),
             onPressed: () {

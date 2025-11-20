@@ -50,7 +50,7 @@ class _Page extends ConsumerWidget {
                 const _Score(),
                 4.h,
                 Row(
-                  crossAxisAlignment: CAA.center,
+                  crossAxisAlignment: .center,
                   children: [
                     Expanded(
                       child: Column(
@@ -72,7 +72,7 @@ class _Page extends ConsumerWidget {
               children: [
                 const Expanded(child: _Console()),
                 Column(
-                  crossAxisAlignment: CAA.center,
+                  crossAxisAlignment: .center,
                   children: [
                     const _Title(),
                     4.h,
@@ -93,8 +93,8 @@ class _Page extends ConsumerWidget {
                               maxWidth: screenWidth * .33,
                             ),
                             child: const Column(
-                              crossAxisAlignment: CAA.center,
-                              mainAxisAlignment: MAA.center,
+                              crossAxisAlignment: .center,
+                              mainAxisAlignment: .center,
                               children: [
                                 _ModelSettings(),
                                 _Players(),
@@ -123,14 +123,14 @@ class _Title extends ConsumerWidget {
     final usePortrait = ref.watch(P.othello.usePortrait);
     final qb = ref.watch(P.app.qb);
     return Row(
-      mainAxisAlignment: MAA.center,
+      mainAxisAlignment: .center,
       children: [
         12.w,
         T("$version($buildNumber)", s: TS(c: qb.q(.0), s: 10)),
         if (usePortrait) const Spacer(),
         T(
           s.rwkv_othello,
-          s: const TS(s: 20, w: FontWeight.w700),
+          s: const TS(s: 20, w: .w700),
         ),
         if (usePortrait) const Spacer(),
         if (!usePortrait) 32.w,
@@ -158,14 +158,14 @@ class _ModelSettings extends ConsumerWidget {
     final searchBreadthRemoveAvailable = searchBreadth > 1;
 
     final searchDepthControls = Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MAA.center,
+      mainAxisSize: .min,
+      mainAxisAlignment: .center,
       children: [
         SizedBox(
           width: 32,
           height: 32,
           child: IconButton(
-            padding: EI.zero,
+            padding: .zero,
             onPressed: searchDepthRemoveAvailable
                 ? () {
                     P.othello.searchDepth.ua(-1);
@@ -175,7 +175,7 @@ class _ModelSettings extends ConsumerWidget {
             iconSize: 14,
             style: ButtonStyle(
               minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              padding: WidgetStateProperty.all(.zero),
             ),
           ),
         ),
@@ -193,7 +193,7 @@ class _ModelSettings extends ConsumerWidget {
             iconSize: 14,
             style: ButtonStyle(
               minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              padding: WidgetStateProperty.all(.zero),
             ),
           ),
         ),
@@ -201,8 +201,8 @@ class _ModelSettings extends ConsumerWidget {
     );
 
     final searchBreadthControls = Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MAA.center,
+      mainAxisSize: .min,
+      mainAxisAlignment: .center,
       children: [
         SizedBox(
           width: 32,
@@ -217,7 +217,7 @@ class _ModelSettings extends ConsumerWidget {
             iconSize: 14,
             style: ButtonStyle(
               minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              padding: WidgetStateProperty.all(.zero),
             ),
           ),
         ),
@@ -235,7 +235,7 @@ class _ModelSettings extends ConsumerWidget {
             iconSize: 14,
             style: ButtonStyle(
               minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              padding: WidgetStateProperty.all(.zero),
             ),
           ),
         ),
@@ -247,27 +247,27 @@ class _ModelSettings extends ConsumerWidget {
       color: qb.q(.0),
       textStyle: const TS(ff: "monospace", s: 10),
       child: Container(
-        padding: const EI.a(4),
-        margin: const EI.a(4),
+        padding: const .all(4),
+        margin: const .all(4),
         decoration: BoxDecoration(
           color: qb.q(.0),
           borderRadius: 4.r,
           border: Border.all(color: qb.q(.5), width: .5),
         ),
         child: Column(
-          crossAxisAlignment: CAA.start,
-          mainAxisAlignment: MAA.center,
+          crossAxisAlignment: .start,
+          mainAxisAlignment: .center,
           children: [
             T(
               s.model_settings,
-              s: const TS(w: FontWeight.w700),
+              s: const TS(w: .w700),
             ),
             8.h,
             T(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, s: TS(c: qb.q(.5), s: 10)),
             8.h,
             usePortrait
                 ? Column(
-                    crossAxisAlignment: CAA.stretch,
+                    crossAxisAlignment: .stretch,
                     children: [
                       T(s.search_depth, textAlign: TextAlign.center),
                       searchDepthControls,
@@ -327,12 +327,12 @@ class _Players extends ConsumerWidget {
           T(
             s.black + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: FontWeight.w700),
+            s: const TS(w: .w700),
           ),
           Wrap(
             children: [
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Radio(
                     value: false,
@@ -345,7 +345,7 @@ class _Players extends ConsumerWidget {
                 ],
               ),
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Radio(
                     value: true,
@@ -376,12 +376,12 @@ class _Players extends ConsumerWidget {
           T(
             s.white + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: FontWeight.w700),
+            s: const TS(w: .w700),
           ),
           Wrap(
             children: [
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Radio(
                     value: false,
@@ -394,7 +394,7 @@ class _Players extends ConsumerWidget {
                 ],
               ),
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   Radio(
                     value: true,
@@ -416,24 +416,24 @@ class _Players extends ConsumerWidget {
       color: qb.q(.0),
       textStyle: const TS(ff: "monospace", s: 10),
       child: Container(
-        margin: const EI.a(4),
-        padding: const EI.a(4),
+        margin: const .all(4),
+        padding: const .all(4),
         decoration: BoxDecoration(
           color: qb.q(.0),
           borderRadius: 4.r,
           border: Border.all(color: qb.q(.5), width: .5),
         ),
         child: Column(
-          crossAxisAlignment: CAA.start,
+          crossAxisAlignment: .start,
           children: [
             T(
               s.players,
-              s: const TS(w: FontWeight.w700),
+              s: const TS(w: .w700),
             ),
             12.h,
             if (usePortrait && !playerShouldAtSameColumnWithSettings && !settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
               Row(
-                mainAxisAlignment: MAA.center,
+                mainAxisAlignment: .center,
                 children: [
                   Expanded(
                     child: blackOptions,
@@ -446,7 +446,7 @@ class _Players extends ConsumerWidget {
               ),
             if (settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
               Row(
-                mainAxisAlignment: MAA.center,
+                mainAxisAlignment: .center,
                 children: [
                   Expanded(
                     child: blackOptions,
@@ -488,23 +488,23 @@ class _Score extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     final thinkingWidget = Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         AnimatedOpacity(
           opacity: thinking ? 1.0 : .5,
           duration: const Duration(milliseconds: 150),
           child: T(
             s.thinking,
-            s: TS(s: 10, w: thinking ? FontWeight.w400 : FontWeight.w400),
+            s: TS(s: 10, w: thinking ? .w400 : .w400),
           ),
         ),
         T(
           "${s.prefill}: ${prefillSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: FontWeight.w400),
+          s: const TS(s: 10, w: .w400),
         ),
         T(
           "${s.decode}: ${decodeSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: FontWeight.w400),
+          s: const TS(s: 10, w: .w400),
         ),
       ],
     );
@@ -517,12 +517,12 @@ class _Score extends ConsumerWidget {
             },
       child: T(
         s.new_game,
-        s: const TS(s: 10, w: FontWeight.w500),
+        s: const TS(s: 10, w: .w500),
       ),
     );
 
     return Row(
-      crossAxisAlignment: CAA.center,
+      crossAxisAlignment: .center,
       children: [
         if (usePortrait) Expanded(child: thinkingWidget),
         if (!usePortrait) thinkingWidget,
@@ -652,7 +652,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: T(
                 e,
-                s: const TS(s: 10, w: FontWeight.w700),
+                s: const TS(s: 10, w: .w700),
               ),
             ),
           );
@@ -668,7 +668,7 @@ class _Grid extends ConsumerWidget {
             child: Center(
               child: T(
                 e,
-                s: const TS(s: 10, w: FontWeight.w700),
+                s: const TS(s: 10, w: .w700),
               ),
             ),
           );
@@ -894,7 +894,7 @@ class _Console extends ConsumerWidget {
                   }),
               ],
             ),
-            style: TS(c: qw, s: 12, w: FontWeight.w500),
+            style: TS(c: qw, s: 12, w: .w500),
           );
         },
       ),

@@ -117,15 +117,15 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
       child: Material(
         color: Colors.transparent,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 24),
+          margin: const .symmetric(horizontal: 24),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            borderRadius: const .all(.circular(16)),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: const .symmetric(vertical: 16, horizontal: 16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: .stretch,
+            mainAxisSize: .min,
             children: [
               4.h,
               Text(

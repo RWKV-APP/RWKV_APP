@@ -139,7 +139,7 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     return Row(
-      mainAxisAlignment: MAA.start,
+      mainAxisAlignment: .start,
       children: [
         if (isBatch) 12.w,
         if (changing)
@@ -236,7 +236,7 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
                 child: T(
                   s.chat_resume,
-                  s: TS(c: primaryColor, w: FontWeight.w600, s: 16),
+                  s: TS(c: primaryColor, w: .w600, s: 16),
                 ),
               ),
             ),

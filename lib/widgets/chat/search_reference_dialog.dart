@@ -35,8 +35,8 @@ class SearchReferenceDialog extends StatelessWidget {
       padding: const EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 16),
       width: double.infinity,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           Row(
             children: [
@@ -56,12 +56,12 @@ class SearchReferenceDialog extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final ref = refInfo.list[index % refInfo.list.length];
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: const .only(bottom: 8),
                     child: ListTile(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
                       tileColor: theme.colorScheme.surfaceContainer,
                       title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: .stretch,
                         children: [
                           Text(ref.title),
                           const SizedBox(height: 4),

@@ -30,7 +30,7 @@ class BottomBar extends ConsumerWidget {
         P.chat.inputHeight.q = size.height;
       },
       child: ClipRRect(
-        borderRadius: !isChat ? BorderRadius.zero : const BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: !isChat ? .zero : const .vertical(top: .circular(16)),
         child: Container(
           decoration: BoxDecoration(
             color: theme.cardColor,

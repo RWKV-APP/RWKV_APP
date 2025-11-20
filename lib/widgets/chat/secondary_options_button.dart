@@ -55,8 +55,8 @@ class SecondaryOptionsButton extends ConsumerWidget {
       thinking_mode.Lighting() => null,
       thinking_mode.None() => null,
       _ => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MAA.center,
+        crossAxisAlignment: .start,
+        mainAxisAlignment: .center,
         children: [
           T(s.prefer, s: TS(c: textColor, s: 10, height: 1)),
           2.h,
