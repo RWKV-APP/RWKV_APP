@@ -114,7 +114,6 @@ class AppDatabase extends _$AppDatabase {
         if (!details.hadUpgrade) {
           return;
         }
-        qqq('check');
         if (details.versionNow == 3) {
           final conversations = await select(conversation).get();
           for (final conv in conversations) {
