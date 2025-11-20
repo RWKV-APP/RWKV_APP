@@ -450,7 +450,7 @@ class _PreviewState extends ConsumerState<_Preview> {
                 ),
                 4.w,
                 Padding(
-                  padding: const EI.o(b: 3),
+                  padding: const .only(bottom: 3),
                   child: Text(P.app.version.q, style: const TextStyle(fontSize: 10)),
                 ),
               ],

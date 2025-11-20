@@ -110,7 +110,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
 
     return Container(
       decoration: const BoxDecoration(color: kC),
-      padding: const EI.o(),
+      padding: const .all(0),
       width: changing ? 160 : width,
       // height: 50,
       child: Column(
@@ -138,7 +138,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
             ),
           if (changing && generating)
             Padding(
-              padding: const EI.o(t: 4, b: 12),
+              padding: const .only(top: 4, bottom: 12),
               child: Row(
                 mainAxisAlignment: .start,
                 children: [
@@ -165,7 +165,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
             ),
           if (!changing || widget.msg.ttsHasContent)
             Padding(
-              padding: const EI.o(v: 4),
+              padding: const .only(top: 4, bottom: 4),
               child: Row(
                 mainAxisAlignment: .start,
                 children: [
@@ -194,7 +194,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       onTap: _onSharePressed,
                       child: Container(
                         decoration: const BoxDecoration(color: kC),
-                        padding: const EI.o(l: 8, r: 4),
+                        padding: const .only(left: 8, right: 4),
                         child: const Icon(Icons.share),
                       ),
                     ),
@@ -210,10 +210,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   onTap: _onSharePressed,
                   child: Container(
                     decoration: const BoxDecoration(color: kC),
-                    padding: const EI.s(
-                      v: 12,
-                      h: 3,
-                    ),
+                    padding: const .symmetric(horizontal: 3, vertical: 12),
                     child: const Icon(Icons.share),
                   ),
                 ),

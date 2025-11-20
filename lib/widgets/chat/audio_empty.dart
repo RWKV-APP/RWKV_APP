@@ -51,7 +51,7 @@ class AudioEmpty extends ConsumerWidget {
               mainAxisAlignment: .center,
               children: [
                 Container(
-                  padding: const EI.s(h: 24),
+                  padding: const .symmetric(horizontal: 24),
                   child: T(
                     message,
                     s: TS(s: 20, c: primary),

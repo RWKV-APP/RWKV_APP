@@ -72,7 +72,7 @@ class LogPanel extends ConsumerWidget {
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
-        margin: const EI.o(t: 8),
+        margin: const .only(top: 8),
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
@@ -132,7 +132,7 @@ class LogPanel extends ConsumerWidget {
               child: ListView.builder(
                 controller: scrollController,
                 itemCount: runtimeLog.length,
-                padding: const EI.o(b: 4, l: 4, r: 4, t: 4),
+                padding: const .only(left: 4, top: 4, right: 4, bottom: 4),
                 itemBuilder: (context, index) {
                   final log = runtimeLog[index];
                   final content = showEscapeCharacters ? log.content.replaceAll("\\n", "\n") : log.content;
@@ -142,8 +142,8 @@ class LogPanel extends ConsumerWidget {
                       borderRadius: .circular(4),
                       border: Border.all(color: qb),
                     ),
-                    padding: const EI.s(h: 4, v: 4),
-                    margin: const EI.o(b: 4),
+                    padding: const .symmetric(horizontal: 4, vertical: 4),
+                    margin: const .only(bottom: 4),
                     child: Column(
                       crossAxisAlignment: .start,
                       children: [
@@ -157,7 +157,7 @@ class LogPanel extends ConsumerWidget {
                                   color: kCG.q(.3),
                                   borderRadius: .circular(4),
                                 ),
-                                padding: const EI.s(h: 2),
+                                padding: const .symmetric(horizontal: 2),
                                 child: const T("Prefill", s: TS(w: .w700)),
                               ),
                             ],
@@ -168,7 +168,7 @@ class LogPanel extends ConsumerWidget {
                                   color: kCG.q(.3),
                                   borderRadius: .circular(4),
                                 ),
-                                padding: const EI.s(h: 2),
+                                padding: const .symmetric(horizontal: 2),
                                 child: T(log.dateTimeString, s: const TS(w: .w600)),
                               ),
                           ],

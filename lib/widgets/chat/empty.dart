@@ -96,7 +96,7 @@ class Empty extends ConsumerWidget {
                           Opacity(
                             opacity: 0.5,
                             child: Padding(
-                              padding: const EI.o(b: 4),
+                              padding: const .only(bottom: 4),
                               child: T(version, s: const TS(s: 10)),
                             ),
                           ),
@@ -125,7 +125,7 @@ class Empty extends ConsumerWidget {
                       4.h,
                       if (loaded)
                         Container(
-                          padding: const EI.s(h: 4, v: 2),
+                          padding: const .symmetric(horizontal: 4, vertical: 2),
                           decoration: BoxDecoration(
                             border: Border.all(color: primary),
                             borderRadius: 4.r,

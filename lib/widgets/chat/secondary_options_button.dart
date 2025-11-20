@@ -68,15 +68,15 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
 
-    final padding = switch (thinkingMode) {
-      thinking_mode.Lighting() => const EI.s(h: 0),
-      thinking_mode.Fast() => const EI.s(h: 0),
-      thinking_mode.None() => const EI.s(h: 0),
-      thinking_mode.Free() => const EI.s(h: 12),
-      thinking_mode.PreferChinese() => const EI.s(h: 12),
-      thinking_mode.En() => const EI.s(h: 12),
-      thinking_mode.EnShort() => const EI.s(h: 12),
-      thinking_mode.EnLong() => const EI.s(h: 12),
+    final EdgeInsets padding = switch (thinkingMode) {
+      thinking_mode.Lighting() => const .all(0),
+      thinking_mode.Fast() => const .all(0),
+      thinking_mode.None() => const .all(0),
+      thinking_mode.Free() => const .symmetric(horizontal: 12),
+      thinking_mode.PreferChinese() => const .symmetric(horizontal: 12),
+      thinking_mode.En() => const .symmetric(horizontal: 12),
+      thinking_mode.EnShort() => const .symmetric(horizontal: 12),
+      thinking_mode.EnLong() => const .symmetric(horizontal: 12),
     };
 
     return AnimatedSize(

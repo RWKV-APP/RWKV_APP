@@ -28,7 +28,7 @@ class BottomInteractions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EI.o(t: 8),
+      padding: const .only(top: 8),
       child: Row(
         children: [
           Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
@@ -85,7 +85,7 @@ class _WebSearchModeButton extends ConsumerWidget {
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
-    final padding = const EI.o(l: 8);
+    final padding = const EdgeInsets.only(left: 8);
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
@@ -204,7 +204,7 @@ class _MessageButton extends ConsumerWidget {
         child: GestureDetector(
           onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
           child: Container(
-            padding: const EI.s(h: 10, v: 5),
+            padding: const .symmetric(horizontal: 10, vertical: 5),
             child: Icon(
               (Platform.isIOS || Platform.isMacOS)
                   ? editingBotMessage

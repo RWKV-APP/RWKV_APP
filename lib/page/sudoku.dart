@@ -104,7 +104,7 @@ class _ButtonGenerate extends ConsumerWidget {
     final s = S.of(context);
     final running = ref.watch(P.sudoku.running);
     return Container(
-      padding: const EI.o(b: _kButtonPadding),
+      padding: const .only(bottom: _kButtonPadding),
       child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
@@ -159,7 +159,7 @@ class _ButtonGenerateHardest extends ConsumerWidget {
     final s = S.of(context);
     final running = ref.watch(P.sudoku.running);
     return Container(
-      padding: const EI.o(b: _kButtonPadding),
+      padding: const .only(bottom: _kButtonPadding),
       child: SizedBox(
         height: 48,
         child: FilledButton(
@@ -201,7 +201,7 @@ class _ButtonInference extends ConsumerWidget {
     final running = ref.watch(P.sudoku.running);
     final hasPuzzle = ref.watch(P.sudoku.hasPuzzle);
     return Container(
-      padding: const EI.o(b: _kButtonPadding),
+      padding: const .only(bottom: _kButtonPadding),
       child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
@@ -250,7 +250,7 @@ class _ButtonClear extends ConsumerWidget {
     final s = S.of(context);
     final running = ref.watch(P.sudoku.running);
     return Container(
-      padding: const EI.o(b: _kButtonPadding),
+      padding: const .only(bottom: _kButtonPadding),
       child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
@@ -283,7 +283,7 @@ class _ButtonShowStack extends ConsumerWidget {
     final currentStack = ref.watch(P.sudoku.currentStack);
     final enable = currentStack.isNotEmpty;
     return Container(
-      padding: const EI.o(b: _kButtonPadding),
+      padding: const .only(bottom: _kButtonPadding),
       child: SizedBox(
         height: _kButtonHeight,
         child: FilledButton(
@@ -338,7 +338,7 @@ class _UI extends ConsumerWidget {
         height: 1,
         width: 1,
         decoration: BoxDecoration(color: const Color(0xFF888888).q(0.33)),
-        margin: const EI.s(v: 4, h: 4),
+        margin: const .symmetric(horizontal: 4, vertical: 4),
       ),
       const _TokensInfo(),
       4.h,
@@ -367,13 +367,13 @@ class _UI extends ConsumerWidget {
           ],
         ),
       if (!shouldUseVerticalLayout) ...[
-        const Padding(padding: EI.o(h: 12, v: 0), child: _ButtonGenerate()),
+        const Padding(padding: .only(left: 12, right: 12), child: _ButtonGenerate()),
         if (isDesktop) const SizedBox(width: 6, height: 6),
-        const Padding(padding: EI.s(h: 12, v: 0), child: _ButtonInference()),
+        const Padding(padding: .symmetric(horizontal: 12), child: _ButtonInference()),
         if (isDesktop) const SizedBox(width: 6, height: 6),
-        const Padding(padding: EI.s(h: 12, v: 0), child: _ButtonClear()),
+        const Padding(padding: .symmetric(horizontal: 12), child: _ButtonClear()),
         if (isDesktop) const SizedBox(width: 6, height: 6),
-        const Padding(padding: EI.s(h: 12, v: 0), child: _ButtonShowStack()),
+        const Padding(padding: .symmetric(horizontal: 12), child: _ButtonShowStack()),
       ],
     ];
 
@@ -382,7 +382,7 @@ class _UI extends ConsumerWidget {
       width: shouldUseVerticalLayout ? min / 1.428 : min * (isPortrait ? 1 : 1.428),
       height: shouldUseVerticalLayout ? min : min * (isPortrait ? 0.7 : 1),
       decoration: BoxDecoration(color: qw),
-      margin: !isPortrait ? EI.o(t: paddingTop) : null,
+      margin: !isPortrait ? .only(top: paddingTop) : null,
       child: shouldUseVerticalLayout
           ? Column(
               children: [
@@ -688,11 +688,11 @@ class _Terminal extends ConsumerWidget {
         decoration: const BoxDecoration(color: _kGridBGColor),
         child: ListView.builder(
           controller: P.sudoku.scrollController,
-          padding: EI.o(
-            t: !isPortrait ? padding.top + 8 : 8,
-            l: isDesktop ? 16 : 8,
-            r: isDesktop ? 16 : 8,
-            b: padding.bottom + 16,
+          padding: .only(
+            left: isDesktop ? 16 : 8,
+            top: !isPortrait ? padding.top + 8 : 8,
+            right: isDesktop ? 16 : 8,
+            bottom: padding.bottom + 16,
           ),
           itemCount: logs.length,
           itemBuilder: (context, index) {

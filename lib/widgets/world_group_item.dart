@@ -140,7 +140,7 @@ class WorldGroupItem extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
 
     return Container(
-      margin: const EI.o(t: 0, l: 0, r: 0, b: 8),
+      margin: const .only(bottom: 8),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: .circular(16),
@@ -257,7 +257,7 @@ class WorldGroupItem extends ConsumerWidget {
                   borderRadius: .circular(12),
                 ),
                 padding: .all(isDesktop ? 12 : 8),
-                margin: const EI.o(t: 8),
+                margin: const .only(top: 8),
                 child: _FileItem(
                   fileInfo: e,
                   isDark: isDark,
@@ -301,7 +301,7 @@ class _ActionButton extends StatelessWidget {
           onPressed: onPressed,
           style: TextButton.styleFrom(
             foregroundColor: Colors.white,
-            padding: const EI.s(h: 16, v: 8),
+            padding: const .symmetric(horizontal: 16, vertical: 8),
             shape: RoundedRectangleBorder(
               borderRadius: .circular(8),
             ),
@@ -321,7 +321,7 @@ class _ActionButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         foregroundColor: color,
-        padding: const EI.s(h: 16, v: 8),
+        padding: const .symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: .circular(8),
         ),
@@ -397,7 +397,7 @@ class _FileItem extends ConsumerWidget {
             ),
             if (hasFile)
               Container(
-                padding: const EI.s(h: 8, v: 4),
+                padding: const .symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: primaryColor.q(.1),
                   borderRadius: .circular(12),
@@ -421,7 +421,7 @@ class _FileItem extends ConsumerWidget {
             ...fileInfo.tags.map((tag) {
               final isHighlight = ["GPU", "CPU", "NPU", "gpu", "cpu", "npu"].contains(tag);
               return Container(
-                padding: const EI.s(h: 8, v: 4),
+                padding: const .symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: isHighlight
                       ? (tag.toLowerCase() == "gpu" ? Colors.green.q(.2) : Colors.blue.q(.2))

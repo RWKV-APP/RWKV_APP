@@ -33,7 +33,7 @@ class SelectImageButton extends ConsumerWidget {
           ),
           borderRadius: 12.r,
         ),
-        padding: const EI.o(l: 8, r: 8, t: 8, b: 8),
+        padding: const .only(left: 8, top: 8, right: 8, bottom: 8),
         child: T(
           selectedImagePath == null ? s.select_new_image : s.change_selected_image,
           s: TS(c: color),

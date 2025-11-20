@@ -62,7 +62,7 @@ class FormItem extends ConsumerWidget {
                 : BorderSide.none,
           ),
         ),
-        padding: const EI.o(t: 12, b: 12, r: 8, l: 8),
+        padding: const .only(left: 8, top: 12, right: 8, bottom: 12),
         child: Column(
           children: [
             Row(

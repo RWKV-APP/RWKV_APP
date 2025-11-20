@@ -152,10 +152,7 @@ class ThemeSelector extends ConsumerWidget {
         ),
         body: ListView.builder(
           controller: scrollController,
-          padding: const EI.o(
-            l: 12,
-            r: 12,
-          ),
+          padding: const .only(left: 12, right: 12),
           itemBuilder: (context, index) {
             return items[index];
           },

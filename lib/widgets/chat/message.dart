@@ -231,7 +231,7 @@ class Message extends ConsumerWidget {
 
     String worldDemoMessageHeader = "";
 
-    EdgeInsets padding = const EI.o(t: 12, l: 12, r: 12);
+    EdgeInsets padding = const .only(left: 12, top: 12, right: 12);
     Border? border = Border.all(color: primary.q(.2));
     double radius = 20;
 
@@ -265,7 +265,7 @@ class Message extends ConsumerWidget {
 
       case model.MessageType.text:
         if (!msg.isMine) border = null;
-        if (!msg.isMine) padding = const EI.o(t: 12, l: 6, r: 6);
+        if (!msg.isMine) padding = const .only(left: 6, top: 12, right: 6);
       case model.MessageType.ttsGeneration:
       case model.MessageType.userAudio:
     }
@@ -279,7 +279,7 @@ class Message extends ConsumerWidget {
 
     if (isChat) {
       border = null;
-      padding = const EI.o(t: 12, l: 12, r: 12, b: 4);
+      padding = const .only(left: 12, top: 12, right: 12, bottom: 4);
       borderRadius = .circular(16);
     }
 
@@ -346,7 +346,7 @@ class Message extends ConsumerWidget {
               if (!isMine) ...[
                 if (isBatch)
                   Padding(
-                    padding: const EI.o(l: 14, b: 4, r: 14),
+                    padding: const .only(left: 14, right: 14, bottom: 4),
                     child: Wrap(
                       children: [
                         Text(
@@ -459,7 +459,7 @@ class Message extends ConsumerWidget {
               opacity: opacity,
               duration: 250.ms,
               child: Padding(
-                padding: const EI.s(h: marginHorizontal, v: marginVertical),
+                padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
                 child: Column(
                   children: [
                     if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),

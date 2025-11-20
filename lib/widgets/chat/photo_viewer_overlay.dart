@@ -18,7 +18,7 @@ class PhotoViewerOverlay extends ConsumerWidget {
       mainAxisAlignment: .end,
       children: [
         Container(
-          margin: EI.o(t: paddingTop + 12, r: paddingRight + 12),
+          margin: .only(top: paddingTop + 12, right: paddingRight + 12),
           child: IconButton(
             onPressed: () {
               pop();

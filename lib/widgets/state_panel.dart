@@ -64,7 +64,7 @@ class StatePanel extends ConsumerWidget {
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
-        margin: const EI.o(t: 8),
+        margin: const .only(top: 8),
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
@@ -117,7 +117,7 @@ class StatePanel extends ConsumerWidget {
               child: ListView.builder(
                 controller: scrollController,
                 itemCount: stateLogList.length,
-                padding: const EI.o(b: 8),
+                padding: const .only(bottom: 8),
                 itemBuilder: (context, index) {
                   final log = stateLogList[index];
                   final text = showEscapeCharacters ? log.text.replaceAll("\\n", "\n") : log.text;
@@ -127,7 +127,7 @@ class StatePanel extends ConsumerWidget {
                       borderRadius: 8.r,
                     ),
                     padding: const .all(4),
-                    margin: const EI.o(l: 8, r: 8, t: 4, b: 4),
+                    margin: const .only(left: 8, top: 4, right: 8, bottom: 4),
                     child: Column(
                       crossAxisAlignment: .start,
                       children: [

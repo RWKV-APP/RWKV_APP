@@ -92,9 +92,9 @@ class ModelSelector extends ConsumerWidget {
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
-        margin: const EI.o(t: 12),
+        margin: const .only(top: 12),
         child: ListView(
-          padding: EI.o(l: isDesktop ? 12 : 8, r: isDesktop ? 12 : 8),
+          padding: .only(left: isDesktop ? 12 : 8, right: isDesktop ? 12 : 8),
           controller: scrollController,
           children: [
             const _Header(),
@@ -286,7 +286,7 @@ class _DownloadSource extends ConsumerWidget {
                     color: primary,
                   ),
                 ),
-                padding: const EI.s(h: 6, v: 2),
+                padding: const .symmetric(horizontal: 6, vertical: 2),
                 child: T(
                   e.name + (e == FileDownloadSource.huggingface ? S.current.overseas : ""),
                   s: TS(c: e == currentSource ? qw : qb.q(.7), s: 14),

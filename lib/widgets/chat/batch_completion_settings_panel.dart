@@ -135,10 +135,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
         ),
         body: ListView(
           controller: scrollController,
-          padding: const EI.o(
-            l: 12,
-            r: 12,
-          ),
+          padding: const .only(left: 12, right: 12),
           children: [
             FormItem(
               isSectionStart: true,
@@ -176,7 +173,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                     defaultValue: batchCount,
                     showTitle: false,
                     showValue: false,
-                    padding: const EI.o(l: 4, r: 4, t: 12, b: 8),
+                    padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                   ),
                 ),
               ),
@@ -199,7 +196,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                     defaultValue: batchVW,
                     showTitle: false,
                     showValue: false,
-                    padding: const EI.o(l: 4, r: 4, t: 12, b: 8),
+                    padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                   ),
                 ),
               ),

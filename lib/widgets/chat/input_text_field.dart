@@ -67,12 +67,7 @@ class InputTextField extends ConsumerWidget {
         maxLines: 10,
         minLines: 1,
         decoration: InputDecoration(
-          contentPadding: const EI.o(
-            l: 12,
-            r: 12,
-            t: 4,
-            b: 4,
-          ),
+          contentPadding: const .only(left: 12, top: 4, right: 12, bottom: 4),
           fillColor: qw,
           focusColor: qw,
           hoverColor: qw,

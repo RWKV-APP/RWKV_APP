@@ -43,12 +43,7 @@ class BottomBar extends ConsumerWidget {
                     ),
                   ),
           ),
-          padding: EI.o(
-            l: 8,
-            r: 8,
-            b: paddingBottom + 8,
-            t: 8,
-          ),
+          padding: .only(left: 8, top: 8, right: 8, bottom: paddingBottom + 8),
           child: AnimatedSize(
             duration: 250.ms,
             child: Column(
@@ -79,7 +74,7 @@ class _ImagePreview extends ConsumerWidget {
     return Row(
       children: [
         Padding(
-          padding: const EI.o(b: 8),
+          padding: const .only(bottom: 8),
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: screenWidth * 0.2,

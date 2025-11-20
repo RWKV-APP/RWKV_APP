@@ -20,7 +20,7 @@ class ArgumentValue extends ConsumerWidget {
     super.key,
     this.showTitle = true,
     this.showValue = true,
-    this.padding = const EI.o(l: 12, r: 12),
+    this.padding = const .only(left: 12, right: 12),
     this.defaultValue,
   });
 

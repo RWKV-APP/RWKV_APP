@@ -178,7 +178,7 @@ class Debugger extends ConsumerWidget {
                       T(receivingTokens.toString()),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.55)),
                         child: e,
                       );
@@ -244,7 +244,7 @@ class _SudokuDebugger extends ConsumerWidget {
                       T(modelSelectorShown.toString()),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
@@ -355,7 +355,7 @@ class _TTSDebugger extends ConsumerWidget {
                       T(asExhaust.toString()),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
@@ -408,7 +408,7 @@ class _TranslatorDebugger extends ConsumerWidget {
                       T(currentModel?.fileName ?? "null"),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );

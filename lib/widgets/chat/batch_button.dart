@@ -37,7 +37,7 @@ class BatchButton extends ConsumerWidget {
             borderRadius: 60.r,
             border: Border.all(color: borderColor),
           ),
-          padding: const EI.o(h: 8),
+          padding: const .only(left: 8, right: 8),
           child: Row(
             mainAxisAlignment: .center,
             crossAxisAlignment: .center,

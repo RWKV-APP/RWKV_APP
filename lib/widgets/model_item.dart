@@ -229,7 +229,7 @@ class ModelItem extends ConsumerWidget {
           borderRadius: 8.r,
           border: Border.all(color: qw.q(.1), width: .5),
         ),
-        margin: const EI.o(t: 8),
+        margin: const .only(top: 8),
         padding: const .all(8),
         child: Row(
           children: [
@@ -515,7 +515,7 @@ class _Tags extends ConsumerWidget {
               color: color,
               border: Border.all(color: borderColor, width: .5),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(vertical: 4),
             child: IntrinsicWidth(
               child: Row(
                 children: [
@@ -528,7 +528,7 @@ class _Tags extends ConsumerWidget {
                   ),
                   if (isMLX)
                     Padding(
-                      padding: const EI.o(b: 2),
+                      padding: const .only(bottom: 2),
                       child: Icon(Icons.apple, size: 13, color: qb),
                     ),
                   if (isNPU)
@@ -548,7 +548,7 @@ class _Tags extends ConsumerWidget {
               borderRadius: 4.r,
               border: Border.all(width: .5, color: kCR),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(horizontal: 4),
             child: T("DEBUG", s: TS(c: qw)),
           ),
         if (quantization != null && quantization.isNotEmpty)
@@ -558,7 +558,7 @@ class _Tags extends ConsumerWidget {
               borderRadius: 4.r,
               border: Border.all(width: .5, color: kG.q(.2)),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(horizontal: 4),
             child: T(quantization),
           ),
         if (date != null)
@@ -568,7 +568,7 @@ class _Tags extends ConsumerWidget {
               borderRadius: 4.r,
               border: Border.all(width: .5, color: kG.q(.2)),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(horizontal: 4),
             child: T(date),
           ),
       ],

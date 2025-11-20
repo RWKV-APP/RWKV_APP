@@ -118,12 +118,7 @@ class Settings extends ConsumerWidget {
                 ],
               ),
         body: ListView(
-          padding: EI.o(
-            t: paddingTop,
-            b: max(paddingBottom, 12),
-            l: 12 + paddingLeft,
-            r: 12,
-          ),
+          padding: .only(left: 12 + paddingLeft, top: paddingTop, right: 12, bottom: max(paddingBottom, 12)),
           controller: scrollController,
           children: [
             if (isChat) const SizedBox(height: 40),
@@ -347,7 +342,7 @@ class Settings extends ConsumerWidget {
       applicationName: Config.appTitle,
       applicationVersion: "$version ($buildNumber)",
       applicationIcon: Container(
-        margin: const EI.o(t: 12, b: 12),
+        margin: const .only(top: 12, bottom: 12),
         child: iconWidget,
       ),
       useRootNavigator: true,

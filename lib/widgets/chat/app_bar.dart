@@ -158,7 +158,7 @@ class _MainAppBar extends ConsumerWidget {
               if (isChat) const ModelSelectButton(),
               if (!isChat)
                 Container(
-                  padding: const EI.o(l: 4, r: 4, t: 1, b: 1),
+                  padding: const .only(left: 4, top: 1, right: 4, bottom: 1),
                   decoration: BoxDecoration(
                     color: kB.q(.1),
                     borderRadius: 10.r,

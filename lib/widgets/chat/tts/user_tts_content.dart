@@ -75,19 +75,14 @@ class UserTTSContent extends ConsumerWidget {
     final playing = ref.watch(P.world.playing);
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
-    const buttonPadding = EI.o(t: 8, b: 4, l: 4, r: 4);
+    const buttonPadding = EdgeInsets.only(left: 4, top: 8, right: 4, bottom: 4);
 
     const buttonSize = 24.0;
 
     final qw = ref.watch(P.app.qw);
 
     return Padding(
-      padding: const EI.o(
-        t: 2,
-        l: 6,
-        r: 6,
-        b: 6,
-      ),
+      padding: const .only(left: 6, top: 2, right: 6, bottom: 6),
       child: Column(
         crossAxisAlignment: .start,
         children: [
@@ -101,8 +96,8 @@ class UserTTSContent extends ConsumerWidget {
                     borderRadius: 8.r,
                     border: Border.all(color: primary, width: .5),
                   ),
-                  margin: const EI.o(t: 4),
-                  padding: const EI.o(h: 4, v: 4),
+                  margin: const .only(top: 4),
+                  padding: const .only(left: 4, top: 4, right: 4, bottom: 4),
                   child: Text.rich(
                     TextSpan(
                       children: [

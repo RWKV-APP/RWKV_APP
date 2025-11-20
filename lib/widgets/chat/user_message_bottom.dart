@@ -80,7 +80,7 @@ class UserMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onUserEditPressed,
             child: Padding(
-              padding: const EI.o(v: 12, l: 4, r: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Icon(
                 Icons.edit,
                 color: primary.q(.8),
@@ -92,7 +92,7 @@ class UserMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onTTSPlayPressed,
             child: Padding(
-              padding: const EI.o(v: 12, l: 4, r: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Icon(Icons.play_arrow, color: primary.q(.8), size: 20),
             ),
           ),
@@ -100,7 +100,7 @@ class UserMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onTTSPausePressed,
             child: Padding(
-              padding: const EI.o(v: 12, l: 4, r: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Icon(Icons.pause, color: primary.q(.8), size: 20),
             ),
           ),
@@ -108,7 +108,7 @@ class UserMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onCopyPressed,
             child: Padding(
-              padding: const EI.o(v: 12, l: 4, r: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Icon(
                 Icons.copy,
                 color: primary.q(.8),

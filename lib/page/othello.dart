@@ -320,7 +320,7 @@ class _Players extends ConsumerWidget {
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
       ),
-      padding: const EI.o(l: 8, r: 8, t: 8),
+      padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
@@ -369,7 +369,7 @@ class _Players extends ConsumerWidget {
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
       ),
-      padding: const EI.o(l: 8, r: 8, t: 8),
+      padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
@@ -533,7 +533,7 @@ class _Score extends ConsumerWidget {
         ),
         16.w,
         Container(
-          padding: const EI.o(t: 0, b: 8, l: 8, r: 8),
+          padding: const .only(left: 8, right: 8, bottom: 8),
           decoration: BoxDecoration(
             color: kC,
             borderRadius: 8.r,
@@ -847,11 +847,11 @@ class _Console extends ConsumerWidget {
       color: qb,
       textStyle: TS(ff: (Platform.isIOS || Platform.isMacOS) ? "Menlo" : "Monospace", c: qw, s: 10),
       child: ListView.builder(
-        padding: EI.o(
-          t: 8 + (usePortrait ? 0 : paddingTop),
-          b: 8 + (usePortrait ? paddingBottom : paddingBottom),
-          l: 8 + (usePortrait ? 0 : paddingLeft),
-          r: 8,
+        padding: .only(
+          left: 8 + (usePortrait ? 0 : paddingLeft),
+          top: 8 + (usePortrait ? 0 : paddingTop),
+          right: 8,
+          bottom: 8 + (usePortrait ? paddingBottom : paddingBottom),
         ),
         controller: controller,
         itemCount: received.length,
@@ -925,7 +925,7 @@ class _ConsoleCell extends ConsumerWidget {
     return Container(
       height: 12,
       width: 12,
-      margin: const EI.s(h: 1),
+      margin: const .symmetric(horizontal: 1),
       decoration: BoxDecoration(color: qw.q(.33)),
       child: Center(
         child: Icon(
