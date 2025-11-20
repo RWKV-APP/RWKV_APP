@@ -515,7 +515,7 @@ class _Tags extends ConsumerWidget {
               color: color,
               border: Border.all(color: borderColor, width: .5),
             ),
-            padding: const .symmetric(vertical: 4),
+            padding: const .symmetric(horizontal: 4),
             child: IntrinsicWidth(
               child: Row(
                 children: [

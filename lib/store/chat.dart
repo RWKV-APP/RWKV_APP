@@ -432,8 +432,10 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    // debugger();
-    P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
+    final inSee = P.app.pageKey.q == PageKey.see;
+    final batchSize = inSee ? 1 : (batchEnabled.q ? batchCount.q : 1);
+
+    P.rwkv.sendMessages(history, batchSize: batchSize);
 
     _checkSensitive(raw);
   }
