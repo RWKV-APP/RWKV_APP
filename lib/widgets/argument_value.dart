@@ -13,6 +13,7 @@ class ArgumentValue extends ConsumerWidget {
   final bool showValue;
   final EdgeInsets padding;
   final dynamic defaultValue;
+  final bool enabled;
 
   const ArgumentValue(
     this.argument,
@@ -22,6 +23,7 @@ class ArgumentValue extends ConsumerWidget {
     this.showValue = true,
     this.padding = const .only(left: 12, right: 12),
     this.defaultValue,
+    this.enabled = true,
   });
 
   @override
@@ -72,6 +74,7 @@ class ArgumentValue extends ConsumerWidget {
             14.w,
             Expanded(
               child: Slider(
+                activeColor: enabled ? null : Colors.grey.q(1),
                 padding: .zero,
                 value: (value).toDouble(),
                 min: argument.min,

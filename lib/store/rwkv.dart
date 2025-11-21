@@ -105,6 +105,7 @@ class _RWKV {
   late final receiving = qs(false);
 
   late final supportedBatchSizes = qs<List<int>>([]);
+  late final batchParams = qs<List<DecodeParamType>>([]);
   late final runtimeLog = qs<List<LogItem>>([]);
   late final stateLogList = qs<List<StateLog>>([]);
 
