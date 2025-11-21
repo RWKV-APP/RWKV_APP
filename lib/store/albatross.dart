@@ -15,8 +15,9 @@ import 'package:zone/store/p.dart';
 
 class Albatross {
   static const _port = 9527;
-  late final _dio = Dio(BaseOptions(baseUrl: 'http://localhost:$_port'));
+  late final _dio = Dio(BaseOptions(baseUrl: 'http://192.168.3.4:$_port'));
   CancelToken? _cancelToken;
+  String? _albatrossPath;
 
   final _decodeParam = {
     "temperature": 1.0,
@@ -50,23 +51,48 @@ class Albatross {
     } else {
       // return;
     }
-    final pwd = await Process.run('pwd', []);
-    final dir = pwd.stdout.toString().trim();
-    final albatross = File(join(dir, 'albatross'));
+
+    final status = await _dio.get('/status');
+    final available = status.statusCode == 200;
+
+    P.rwkv.enableAlbatross.q = available;
+    qqq('albatross is ${available ? 'enabled' : 'disabled'}');
+    return;
+
+    final cwd = Platform.resolvedExecutable;
+    final albatross = Directory(join(dirname(cwd), 'albatross'));
     if (await albatross.exists()) {
       P.rwkv.enableAlbatross.q = true;
+      _albatrossPath = albatross.path;
+      qqq('albatross is enabled');
+    } else {
+      P.rwkv.enableAlbatross.q = false;
+      _albatrossPath = null;
+      qqq('albatross not found, disabled');
     }
   }
 
   Future load(FileInfo fileInfo) async {
+    if (!P.rwkv.enableAlbatross.q) {
+      return;
+    }
     await _Service.kill();
-    P.app.demoType.q = DemoType.chat;
-    P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
-    P.rwkv.currentModel.q = fileInfo;
-    P.rwkv.setModelConfig(thinkingMode: Free());
     final local = P.fileManager.locals(fileInfo).q;
     try {
-      await _Service.run(address: '127.0.0.1', port: _port, modelPath: local.targetPath);
+      final r = await _dio.post(
+        '/load-model',
+        data: {'model_path': local.targetPath},
+      );
+      if (r.statusCode == 200) {
+        P.app.demoType.q = DemoType.chat;
+        P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
+        P.rwkv.currentModel.q = fileInfo;
+        P.rwkv.setModelConfig(thinkingMode: Free());
+      } else {
+        final body = r.data['error'];
+        Alert.error("${r.statusCode}: ${body}");
+      }
+      // await _Service.run(cwd: _albatrossPath!, address: '127.0.0.1', port: _port, modelPath: local.targetPath);
     } catch (e) {
       qqe(e);
     }
@@ -229,12 +255,13 @@ class _Service {
   static Isolate? _isolate;
 
   static Future run({
+    required String cwd,
     required String address,
     required int port,
     required String modelPath,
   }) async {
     final receivePort = ReceivePort();
-    final startup = _Startup(sendPort: receivePort.sendPort, port: 8000, modelPath: modelPath);
+    final startup = _Startup(cwd: cwd, sendPort: receivePort.sendPort, port: 8000, modelPath: modelPath);
     _isolate = await Isolate.spawn(_Service._main, startup);
 
     final events = receivePort.asBroadcastStream();
@@ -250,7 +277,7 @@ class _Service {
     /// listen to status changes
     () async {
       final event = await events.first;
-      if (event is Exception) {
+      if (event is String) {
         qqe('Exception in albatross: $event');
       } else if (event is _Shutdown) {
         receivePort.close();
@@ -269,10 +296,10 @@ class _Service {
   static Future _main(_Startup startup) async {
     SendPort port = startup.sendPort;
     try {
-      await _startup(startup);
+      _startup(startup);
     } catch (e) {
       qqe(e);
-      port.send(Exception(e));
+      port.send(e.toString());
       return;
     }
 
@@ -290,30 +317,124 @@ class _Service {
   }
 
   static Future _startup(_Startup message) async {
-    final res = Process.runSync('python main_robyn.py --model-path ${message.modelPath} --port ${message.port}', []);
+    final python = await _findPython();
+    if (python == null) throw Exception('No python executable found');
+
+    final res = await _run(
+      executable: '$python ${message.cwd}/main_robyn.py',
+      args: ["--model-path ${message.modelPath}", "--port ${message.port}"],
+    );
+    qqq(res.stdout);
+    qqq(res.stderr);
   }
 
   static Future _shutdown() async {
     //
   }
+
+  static Future<String?> _findPython() async {
+    for (final envVar in ['VIRTUAL_ENV', 'CONDA_PREFIX']) {
+      final base = Platform.environment[envVar];
+      if (base != null && base.isNotEmpty) {
+        final exe = Platform.isWindows ? '$base\\Scripts\\python.exe' : '$base/bin/python';
+        if (await File(exe).exists()) return exe;
+      }
+    }
+    final candidates = Platform.isWindows ? ['python.exe', 'py.exe', r'C:\Windows\py.exe'] : ['python3', 'python'];
+    for (final name in candidates) {
+      try {
+        final r = await Process.run(name, ['-c', 'print("ok")']);
+        if (r.exitCode == 0 && (r.stdout as String).contains('ok')) {
+          if (name == 'py.exe') {
+            final p = await Process.run('py', ['-3', '-c', 'import sys;print(sys.executable)']);
+            if (p.exitCode == 0) return (p.stdout as String).trim();
+          }
+          return name;
+        }
+      } catch (_) {}
+    }
+    if (Platform.isWindows) return null;
+    final which = await Process.run('which', ['python3']);
+    return which.exitCode == 0 ? (which.stdout as String).toString().trim() : null;
+  }
+
+  static Future<ProcessResult> _run({
+    required String executable,
+    List<String> args = const [],
+    String? cwd,
+  }) async {
+    final env = Map<String, String>.from(Platform.environment);
+
+    final conda = Platform.environment['CONDA_PREFIX'];
+
+    env['PATH'] = '${env['PATH']}:$conda/bin';
+    if (conda != null) {
+      env['LD_LIBRARY_PATH'] = [
+        "$conda/lib",
+        if (env['LD_LIBRARY_PATH'] != null) env['LD_LIBRARY_PATH']!,
+      ].where((e) => e.isNotEmpty).join(':');
+    }
+
+    final useShellForPipes = Platform.isWindows || Platform.isMacOS;
+    if (useShellForPipes) {
+      if (Platform.isWindows) {
+        return Process.run(
+          'powershell',
+          [
+            '-NoProfile',
+            '-ExecutionPolicy',
+            'Bypass',
+            '-Command',
+            ([executable, ...args].map((e) => '"$e"').join(' ')),
+          ],
+          workingDirectory: cwd,
+          environment: env,
+          stdoutEncoding: utf8,
+          stderrEncoding: utf8,
+        ).timeout(const Duration(days: 365));
+      } else {
+        final cmd = ([executable, ...args].map((e) => '"$e"').join(' '));
+        return Process.run(
+          '/bin/bash',
+          ['-lc', cmd],
+          workingDirectory: cwd,
+          environment: env,
+          stdoutEncoding: utf8,
+          stderrEncoding: utf8,
+        ).timeout(const Duration(days: 365));
+      }
+    } else {
+      return Process.run(
+        executable,
+        args,
+        workingDirectory: cwd,
+        environment: env,
+        stdoutEncoding: utf8,
+        stderrEncoding: utf8,
+      ).timeout(const Duration(days: 365));
+    }
+  }
 }
 
 class _Startup {
+  final String cwd;
   final String modelPath;
   final SendPort sendPort;
   final int port;
 
-  _Startup({required this.sendPort, required this.port, required this.modelPath});
+  _Startup({required this.sendPort, required this.port, required this.modelPath, required this.cwd});
 
   _Startup copyWith({
     String? modelPath,
     SendPort? sendPort,
     int? port,
+    String? cwd,
   }) {
     return _Startup(
       modelPath: modelPath ?? this.modelPath,
       sendPort: sendPort ?? this.sendPort,
       port: port ?? this.port,
+      cwd: cwd ?? this.cwd,
     );
   }
 }

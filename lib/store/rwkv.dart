@@ -585,10 +585,16 @@ extension $RWKV on _RWKV {
         await for (final event in stream) {
           _messagesController.add(event);
         }
-        _oldMessagesController.add(LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
-        _messagesController.add(from_rwkv.GenerateStop());
+        /// NOTE: downstream requires this delay
+        Future.delayed(500.ms).then((_) {
+          _messagesController.add(from_rwkv.GenerateStop());
+        });
       } catch (e) {
-        _messagesController.add(from_rwkv.GenerateStop(error: e.toString()));
+        Future.delayed(500.ms).then((_) {
+          _messagesController.add(from_rwkv.GenerateStop(error: e.toString()));
+        });
+      } finally {
+        _oldMessagesController.add(LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
       }
       return;
     }
