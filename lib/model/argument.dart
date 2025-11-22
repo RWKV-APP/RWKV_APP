@@ -84,7 +84,12 @@ enum Argument {
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,
-    batchCount => P.rwkv.supportedBatchSizes.q.max.toDouble(),
+    batchCount => () {
+      final supportedBatchSizes = P.rwkv.supportedBatchSizes.q;
+      if (supportedBatchSizes.isEmpty) return 2.0;
+      final max = supportedBatchSizes.max;
+      return max.toDouble();
+    }(),
     batchVW => 80,
   };
 
