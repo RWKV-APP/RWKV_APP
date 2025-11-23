@@ -325,12 +325,9 @@ extension $Chat on _Chat {
     raw = raw.trim();
     String message = raw;
 
-    final currentModel = P.rwkv.currentModel.q;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
-    if (currentModel == null) {
-      ModelSelector.show();
-      return;
-    }
+    final currentModel = P.rwkv.currentModel.q!;
 
     final thinkingMode = P.rwkv.thinkingMode.q;
 

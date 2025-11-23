@@ -417,10 +417,7 @@ extension $Sudoku on _Sudoku {
   }
 
   Future<void> copyToCache(String assetPath, String cachePath) async {
-    final rawAssetFile = await rootBundle.load(assetPath);
-    final bytes = rawAssetFile.buffer.asUint8List();
-    final libFile = File(cachePath);
-    await libFile.writeAsBytes(bytes);
+    await saveAssetToFile(assetPath, cachePath);
   }
 }
 

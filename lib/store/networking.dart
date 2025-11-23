@@ -1,12 +1,5 @@
 part of 'p.dart';
 
-enum ContentType {
-  /// application/json
-  json,
-
-  /// application/x-www-form-urlencoded
-  urlencoded,
-}
 
 /// Error actions
 enum _EA {

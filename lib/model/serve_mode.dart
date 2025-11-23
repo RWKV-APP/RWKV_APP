@@ -1,0 +1,5 @@
+enum ServeMode {
+  hoverLoop,
+  full,
+}
+

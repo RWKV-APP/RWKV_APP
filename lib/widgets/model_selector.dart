@@ -9,6 +9,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';

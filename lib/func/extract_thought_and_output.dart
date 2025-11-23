@@ -1,6 +1,6 @@
 import 'package:halo/halo.dart';
 
-(String, String) extrackThoughtAndOutput(String text) {
+(String, String) extractThoughtAndOutput(String text) {
   // return ("", text);
   try {
     final thinkTagStartIndex = text.indexOf("<think>");
