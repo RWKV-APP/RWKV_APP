@@ -1,6 +1,19 @@
 part of 'p.dart';
 
 class _RWKV {
+  // ===========================================================================
+  // Static
+  // ===========================================================================
+
+  @Deprecated("Use _broadcastStream instead")
+  static Stream<LLMEvent>? _oldBroadcastStream;
+
+  static Stream<from_rwkv.FromRWKV>? _broadcastStream;
+
+  // ===========================================================================
+  // Infrastructure
+  // ===========================================================================
+
   /// Send message to RWKV isolate
   SendPort? _sendPort;
 
@@ -10,8 +23,19 @@ class _RWKV {
   @Deprecated("Use _streamController instead")
   late final _oldMessagesController = StreamController<LLMEvent>();
 
-  @Deprecated("Use _broadcastStream instead")
-  static Stream<LLMEvent>? _oldBroadcastStream;
+  late final _messagesController = StreamController<from_rwkv.FromRWKV>();
+
+  late Completer<void> _initRuntimeCompleter = Completer<void>();
+
+  Timer? _getTokensTimer;
+
+  Timer? _ttsPerformanceTimer;
+
+  late final argumentUpdatingDebouncer = Debouncer(milliseconds: 300);
+
+  // ===========================================================================
+  // Getters
+  // ===========================================================================
 
   @Deprecated("Use broadcastStream instead")
   Stream<LLMEvent> get oldBroadcastStream {
@@ -19,19 +43,16 @@ class _RWKV {
     return _oldBroadcastStream!;
   }
 
-  late final _messagesController = StreamController<from_rwkv.FromRWKV>();
-
-  static Stream<from_rwkv.FromRWKV>? _broadcastStream;
-
   Stream<from_rwkv.FromRWKV> get broadcastStream {
     _broadcastStream ??= _messagesController.stream.asBroadcastStream();
     return _broadcastStream!;
   }
 
-  late Completer<void> _initRuntimeCompleter = Completer<void>();
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
 
   final generating = qs(false);
-
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
@@ -41,6 +62,38 @@ class _RWKV {
   late final statePanelShown = qs(false);
   late final showEscapeCharacters = qs(false);
   late final showPrefillLogOnly = qs(true);
+
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
+
+  /// 当前加载的权重
+  late final currentModel = qs<FileInfo?>(null);
+
+  late final currentWorldType = qs<WorldType?>(null);
+
+  late final currentGroupInfo = qs<GroupInfo?>(null);
+
+  late final loading = qs(false);
+
+  late final socName = qs("");
+  late final socBrand = qs(SocBrand.unknown);
+
+  late final _qnnLibsCopied = qs(false);
+
+  // TODO: Use it @WangCe
+  late final receiving = qs(false);
+
+  late final supportedBatchSizes = qs<List<int>>([]);
+  late final batchParams = qs<List<DecodeParamType>>([]);
+  late final runtimeLog = qs<List<LogItem>>([]);
+  late final stateLogList = qs<List<StateLog>>([]);
+
+  late final arguments = qsff<Argument, double>((ref, argument) {
+    return argument.defaults;
+  });
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
 
   late final decodeParamType = qp<DecodeParamType>((ref) {
     final temp = ref.watch(arguments(Argument.temperature));
@@ -57,26 +110,14 @@ class _RWKV {
     );
   });
 
-  late final arguments = qsff<Argument, double>((ref, argument) {
-    return argument.defaults;
-  });
-
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
-  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
     final currentModel = ref.watch(this.currentModel);
     return currentModel != null;
   });
-
-  /// 当前加载的权重
-  late final currentModel = qs<FileInfo?>(null);
-
-  late final currentWorldType = qs<WorldType?>(null);
-
-  late final currentGroupInfo = qs<GroupInfo?>(null);
 
   /// 当前模型是否是2025年9月22日之前发布的
   ///
@@ -87,27 +128,6 @@ class _RWKV {
     final date = currentModel.date;
     return date != null && date.isBefore(DateTime(2025, 9, 22));
   });
-
-  late final loading = qs(false);
-
-  late final argumentUpdatingDebouncer = Debouncer(milliseconds: 300);
-
-  Timer? _getTokensTimer;
-
-  late final socName = qs("");
-  late final socBrand = qs(SocBrand.unknown);
-
-  late final _qnnLibsCopied = qs(false);
-
-  Timer? _ttsPerformanceTimer;
-
-  // TODO: Use it @WangCe
-  late final receiving = qs(false);
-
-  late final supportedBatchSizes = qs<List<int>>([]);
-  late final batchParams = qs<List<DecodeParamType>>([]);
-  late final runtimeLog = qs<List<LogItem>>([]);
-  late final stateLogList = qs<List<StateLog>>([]);
 
   late final inTTSTranslateOrSee = qp((ref) {
     final model = ref.watch(P.rwkv.currentModel);
