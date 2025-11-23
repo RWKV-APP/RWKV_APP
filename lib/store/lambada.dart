@@ -43,7 +43,7 @@ extension _$Lambada on _Lambada {
     if (correct) correctCount.q++;
 
     // 困惑度就是拿logits values做平均之后exp(-average)
-    ppl.q = exp(-totalLogits.q / totalFinishCount.q);
+    ppl.q = math.exp(-totalLogits.q / totalFinishCount.q);
 
     acc.q = correctCount.q / totalFinishCount.q;
 

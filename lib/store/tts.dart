@@ -366,9 +366,9 @@ extension $TTS on _TTS {
     const replaceMap = {};
 
     String name = input;
-    replaceMap.forEach((key, value) {
-      name = name.replaceAll(key, value);
-    });
+    for (final entry in replaceMap.entries) {
+      name = name.replaceAll(entry.key, entry.value);
+    }
 
     name = name.replaceAll(name.split("_").first + "_", "");
 
@@ -380,9 +380,9 @@ extension $TTS on _TTS {
   @Deprecated("想想更面向状态的方法")
   String flagChange(String input) {
     String name = input;
-    _TTS._replaceMap.forEach((key, value) {
-      name = name.replaceAll(key, value);
-    });
+    for (final entry in _TTS._replaceMap.entries) {
+      name = name.replaceAll(entry.key, entry.value);
+    }
 
     return name;
   }
@@ -522,28 +522,28 @@ outputWavPath: $outputWavPath""");
   void onRefreshButtonPressed() {
     qq;
     textInInput.q = _TTS._defaultTextInInput;
-    TTSInstruction.values.forEach((action) {
+    for (final action in TTSInstruction.values) {
       instructions(action).q = null;
-    });
+    }
   }
 
   void onClearButtonPressed() {
     qq;
     textInInput.q = "";
-    TTSInstruction.values.forEach((action) {
+    for (final action in TTSInstruction.values) {
       instructions(action).q = null;
-    });
+    }
   }
 
   void syncInstruction() {
     qq;
     String instruction = "请用";
-    TTSInstruction.values.where((e) => e.forInstruction).forEach((action) {
+    for (final action in TTSInstruction.values.where((e) => e.forInstruction)) {
       final index = instructions(action).q;
       if (index != null) {
         instruction += "${action.head}${action.options[index]}${action.tail}";
       }
-    });
+    }
     instruction += "说一下";
     instruction = instruction.replaceAll("用用", "用");
     instruction = instruction.replaceAll("用以", "以");

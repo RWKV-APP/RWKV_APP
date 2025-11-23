@@ -551,8 +551,8 @@ class _TokensInfo extends ConsumerWidget {
     final tokenCount = ref.watch(P.sudoku.tokensCount);
     final tokensPerSecond = ref.watch(P.rwkv.decodeSpeed);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final screenHeight = MediaQuery.sizeOf(context).height;
     final ratio = screenWidth / screenHeight;
     final isDesktop = ref.watch(P.app.isDesktop);
     final shouldUseVerticalLayout = isDesktop && ratio < 2.2 && !isPortrait;

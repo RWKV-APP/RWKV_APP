@@ -32,13 +32,17 @@ class TTSGroupItem extends ConsumerWidget {
     final helperModels = P.fileManager.ttsWeights.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
     final missingFileInfos = [...helperModels, core].where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
-    missingFileInfos.forEach((e) => P.fileManager.getFile(fileInfo: e));
+    for (var e in missingFileInfos) {
+      P.fileManager.getFile(fileInfo: e);
+    }
   }
 
   Future<void> _onDeleteAllTap() async {
     final helperModels = P.fileManager.ttsWeights.q.where((e) => !e.tags.contains("core")).toList();
     final core = fileInfo;
-    [...helperModels, core].forEach((e) => P.fileManager.deleteFile(fileInfo: e));
+    for (var e in [...helperModels, core]) {
+      P.fileManager.deleteFile(fileInfo: e);
+    }
   }
 
   Future<void> _onSparkTap() async {

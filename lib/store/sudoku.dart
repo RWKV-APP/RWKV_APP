@@ -25,7 +25,7 @@ class _Sudoku {
   final List<(int, String)> _tempStackEvents = [];
 
   int _hiddenCounter = 0;
-  late final _random = Random();
+  late final _random = math.Random();
 
   // late final File _file;
   // late IOSink _fileSink;

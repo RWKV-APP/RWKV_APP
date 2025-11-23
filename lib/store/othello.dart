@@ -474,9 +474,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -508,9 +508,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -541,9 +541,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -575,9 +575,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -607,9 +607,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -639,9 +639,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -672,9 +672,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -704,9 +704,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
