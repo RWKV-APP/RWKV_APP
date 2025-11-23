@@ -110,7 +110,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               isSectionEnd: !batchInference,
               title: s.batch_inference,
               subtitle: s.batch_inference_detail,
-              info: batchInference ? s.enabled : s.disabled,
+              infoText: batchInference ? s.enabled : s.disabled,
               showArrow: false,
               trailing: Switch.adaptive(
                 value: P.chat.batchEnabled.q,
@@ -132,7 +132,10 @@ class BatchSettingsPanel extends ConsumerWidget {
                   isSectionStart: !batchInference,
                   title: s.batch_inference_count,
                   subtitle: s.batch_inference_count_detail(batchCount),
-                  info: batchCount.toString(),
+                  infoWidget: Container(
+                    padding: const .only(right: 4),
+                    child: Text(batchCount.toString(), style: const TS(w: .bold, s: 16)),
+                  ),
                   onTap: () {},
                   bottom: ArgumentValue(
                     Argument.batchCount,
@@ -155,7 +158,7 @@ class BatchSettingsPanel extends ConsumerWidget {
                   isSectionEnd: true,
                   title: s.batch_inference_width,
                   subtitle: s.batch_inference_width_detail,
-                  info: batchVW.toString() + "% " + s.screen_width,
+                  infoText: batchVW.toString() + "% " + s.screen_width,
                   onTap: () {},
                   bottom: ArgumentValue(
                     Argument.batchVW,

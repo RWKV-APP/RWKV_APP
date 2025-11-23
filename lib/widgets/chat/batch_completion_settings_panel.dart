@@ -142,7 +142,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
               isSectionEnd: !batchInference,
               title: s.batch_completion,
               subtitle: s.batch_inference_detail,
-              info: batchInference ? s.enabled : s.disabled,
+              infoText: batchInference ? s.enabled : s.disabled,
               showArrow: false,
               trailing: Switch.adaptive(
                 value: batchInference,
@@ -164,11 +164,10 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                   isSectionStart: !batchInference,
                   title: s.batch_inference_count,
                   subtitle: s.batch_inference_count_detail_2(batchCount),
-                  info: batchCount.toString(),
+                  infoText: batchCount.toString(),
                   onTap: () {},
                   bottom: ArgumentValue(
                     Argument.batchCount,
-                    // TODO: @wangce Handle batch count get from backend
                     _onChanged,
                     defaultValue: batchCount,
                     showTitle: false,
@@ -188,7 +187,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                   isSectionEnd: true,
                   title: s.batch_inference_width_2,
                   subtitle: s.batch_inference_width_detail_2,
-                  info: batchVW.toString() + "% " + s.screen_width,
+                  infoText: batchVW.toString() + "% " + s.screen_width,
                   onTap: () {},
                   bottom: ArgumentValue(
                     Argument.batchVW,

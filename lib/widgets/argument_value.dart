@@ -28,6 +28,7 @@ class ArgumentValue extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final _ = ref.watch(P.rwkv.supportedBatchSizes);
     final value =
         defaultValue ??
         switch (argument) {

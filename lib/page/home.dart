@@ -225,7 +225,7 @@ class _VisualButton extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.world, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(s.see, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.visual_understanding_and_ocr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),

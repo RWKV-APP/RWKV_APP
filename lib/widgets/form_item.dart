@@ -8,7 +8,8 @@ class FormItem extends ConsumerWidget {
   final bool isSectionEnd;
   final bool autoShowBottomBorder;
   final String title;
-  final String? info;
+  final String? infoText;
+  final Widget? infoWidget;
   final VoidCallback? onTap;
   final bool showArrow;
   final TextAlign? titleTextAlign;
@@ -26,7 +27,8 @@ class FormItem extends ConsumerWidget {
     this.onTap,
     this.isSectionStart = false,
     this.isSectionEnd = false,
-    this.info,
+    this.infoText,
+    this.infoWidget,
     this.icon,
     this.showArrow = true,
     this.autoShowBottomBorder = true,
@@ -35,7 +37,7 @@ class FormItem extends ConsumerWidget {
     this.subtitle,
     this.trailing,
     this.bottom,
-  });
+  }) : assert(infoText == null || infoWidget == null, "infoText and infoWidget cannot be provided at the same time");
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,15 +91,16 @@ class FormItem extends ConsumerWidget {
                     ],
                   ),
                 ),
-                if (info != null)
+                if (infoText != null)
                   Expanded(
                     child: T(
-                      info,
+                      infoText,
                       s: const TS(w: .w500, s: 12),
                       textAlign: TextAlign.right,
                     ),
                   ),
-                if (!showArrow && info != null) 4.w,
+                if (infoWidget != null) infoWidget!,
+                if (!showArrow && infoText != null) 4.w,
                 ?trailing,
                 if (showArrow) 8.w,
                 if (showArrow)

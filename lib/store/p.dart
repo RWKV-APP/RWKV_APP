@@ -108,25 +108,25 @@ part "tts.dart";
 part "world.dart";
 
 abstract class P {
-  static final app = _App();
-  static final chat = _Chat();
-  static final rwkv = _RWKV();
-  static final othello = _Othello();
-  static final fileManager = _FileManager();
-  static final device = _Device();
   static final adapter = _Adapter();
-  static final world = _World();
+  static final app = _App();
+  static final backend = _Backend();
+  static final chat = _Chat();
   static final conversation = _Conversation();
-  static final tts = _TTS();
-  static final preference = _Preference();
+  static final device = _Device();
+  static final dump = _Dump();
+  static final fileManager = _FileManager();
   static final guard = _Guard();
+  static final lambada = _Lambada();
+  static final msg = _Msg();
+  static final othello = _Othello();
+  static final preference = _Preference();
+  static final rwkv = _RWKV();
   static final sudoku = _Sudoku();
   static final suggestion = _Suggestion();
-  static final dump = _Dump();
-  static final msg = _Msg();
-  static final backend = _Backend();
   static final translator = _Translator();
-  static final lambada = _Lambada();
+  static final tts = _TTS();
+  static final world = _World();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
