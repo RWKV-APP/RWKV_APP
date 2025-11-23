@@ -117,45 +117,6 @@ class _RWKV {
     final isWorld = model.fileName.contains("modrwkv");
     return isTTS || isTranslate || isWorld;
   });
-
-  /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
-  List<LogItem> _parseRuntimeLog(String runtimeLog) {
-    if (runtimeLog.isEmpty) return [];
-
-    final logItems = <LogItem>[];
-    final regex = RegExp(r'\[(INFO|DEBUG|WARN|ERROR|TRACE|FATAL)\]');
-    final matches = regex.allMatches(runtimeLog);
-    final timeRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2}\.\d+)\]');
-    final dateRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\]');
-
-    for (int i = 0; i < matches.length; i++) {
-      final match = matches.elementAt(i);
-      final tag = match.group(1) ?? 'UNKNOWN';
-
-      // 获取当前标签到下一个标签之间的内容
-      final start = match.end;
-      final end = i + 1 < matches.length ? matches.elementAt(i + 1).start : runtimeLog.length;
-
-      String content = runtimeLog.substring(start, end).trim();
-      final timeDisplayString = timeRegex.firstMatch(content)?.group(1) ?? "";
-      final dateDisplayString = dateRegex.firstMatch(content)?.group(0) ?? "";
-      content = content.replaceAll(dateDisplayString, "");
-      final isPrefill = content.startsWith("new text to prefill");
-
-      if (content.isNotEmpty) {
-        logItems.add(
-          LogItem(
-            tag: tag,
-            content: content.trim(),
-            isPrefill: isPrefill,
-            dateTimeString: timeDisplayString.trim(),
-          ),
-        );
-      }
-    }
-
-    return logItems;
-  }
 }
 
 extension $RWKVLoad on _RWKV {
@@ -1010,7 +971,7 @@ extension _$RWKV on _RWKV {
     throw "Not support, please contact the developer";
   }
 
-  void _onMessage(message) {
+  void _onMessage(dynamic message) {
     if (message is SendPort) {
       _sendPort = message;
       return;
@@ -1184,6 +1145,45 @@ extension _$RWKV on _RWKV {
       }
       _qnnLibsCopied.q = true;
     }
+  }
+
+  /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
+  List<LogItem> _parseRuntimeLog(String runtimeLog) {
+    if (runtimeLog.isEmpty) return [];
+
+    final logItems = <LogItem>[];
+    final regex = RegExp(r'\[(INFO|DEBUG|WARN|ERROR|TRACE|FATAL)\]');
+    final matches = regex.allMatches(runtimeLog);
+    final timeRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2}\.\d+)\]');
+    final dateRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\]');
+
+    for (int i = 0; i < matches.length; i++) {
+      final match = matches.elementAt(i);
+      final tag = match.group(1) ?? 'UNKNOWN';
+
+      // 获取当前标签到下一个标签之间的内容
+      final start = match.end;
+      final end = i + 1 < matches.length ? matches.elementAt(i + 1).start : runtimeLog.length;
+
+      String content = runtimeLog.substring(start, end).trim();
+      final timeDisplayString = timeRegex.firstMatch(content)?.group(1) ?? "";
+      final dateDisplayString = dateRegex.firstMatch(content)?.group(0) ?? "";
+      content = content.replaceAll(dateDisplayString, "");
+      final isPrefill = content.startsWith("new text to prefill");
+
+      if (content.isNotEmpty) {
+        logItems.add(
+          LogItem(
+            tag: tag,
+            content: content.trim(),
+            isPrefill: isPrefill,
+            dateTimeString: timeDisplayString.trim(),
+          ),
+        );
+      }
+    }
+
+    return logItems;
   }
 }
 

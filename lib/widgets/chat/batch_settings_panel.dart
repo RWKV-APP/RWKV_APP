@@ -122,57 +122,71 @@ class BatchSettingsPanel extends ConsumerWidget {
               curve: Curves.easeInOut,
               child: batchInference ? const SizedBox.shrink() : 8.h,
             ),
-            IgnorePointer(
+            DimmedWhenInactive(
               ignoring: !batchInference,
-              child: AnimatedOpacity(
-                opacity: batchInference ? 1 : 0.5,
-                duration: const Duration(milliseconds: 200),
-                child: FormItem(
-                  showArrow: false,
-                  isSectionStart: !batchInference,
-                  title: s.batch_inference_count,
-                  subtitle: s.batch_inference_count_detail(batchCount),
-                  infoWidget: Container(
-                    padding: const .only(right: 4),
-                    child: Text(batchCount.toString(), style: const TS(w: .bold, s: 16)),
-                  ),
-                  onTap: () {},
-                  bottom: ArgumentValue(
-                    Argument.batchCount,
-                    enabled: batchInference,
-                    _onChanged,
-                    showTitle: false,
-                    showValue: false,
-                    padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
-                  ),
+              duration: const Duration(milliseconds: 200),
+              child: FormItem(
+                showArrow: false,
+                isSectionStart: !batchInference,
+                title: s.batch_inference_count,
+                subtitle: s.batch_inference_count_detail(batchCount),
+                infoWidget: Container(
+                  padding: const .only(right: 4),
+                  child: Text(batchCount.toString(), style: const TS(w: .bold, s: 16)),
+                ),
+                onTap: () {},
+                bottom: ArgumentValue(
+                  Argument.batchCount,
+                  enabled: batchInference,
+                  _onChanged,
+                  showTitle: false,
+                  showValue: false,
+                  padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                 ),
               ),
             ),
-            IgnorePointer(
+            DimmedWhenInactive(
               ignoring: !batchInference,
-              child: AnimatedOpacity(
-                opacity: batchInference ? 1 : 0.5,
-                duration: const Duration(milliseconds: 300),
-                child: FormItem(
-                  showArrow: false,
-                  isSectionEnd: true,
-                  title: s.batch_inference_width,
-                  subtitle: s.batch_inference_width_detail,
-                  infoText: batchVW.toString() + "% " + s.screen_width,
-                  onTap: () {},
-                  bottom: ArgumentValue(
-                    Argument.batchVW,
-                    enabled: batchInference,
-                    _onChanged,
-                    showTitle: false,
-                    showValue: false,
-                    padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
-                  ),
+              duration: const Duration(milliseconds: 300),
+              child: FormItem(
+                showArrow: false,
+                isSectionEnd: true,
+                title: s.batch_inference_width,
+                subtitle: s.batch_inference_width_detail,
+                infoText: batchVW.toString() + "% " + s.screen_width,
+                onTap: () {},
+                bottom: ArgumentValue(
+                  Argument.batchVW,
+                  enabled: batchInference,
+                  _onChanged,
+                  showTitle: false,
+                  showValue: false,
+                  padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DimmedWhenInactive extends StatelessWidget {
+  final bool ignoring;
+  final Widget child;
+  final Duration duration;
+
+  const DimmedWhenInactive({super.key, required this.ignoring, required this.child, this.duration = const Duration(milliseconds: 200)});
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      ignoring: ignoring,
+      child: AnimatedOpacity(
+        opacity: ignoring ? 0.5 : 1,
+        duration: duration,
+        child: child,
       ),
     );
   }
