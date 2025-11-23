@@ -1,6 +1,18 @@
 part of 'p.dart';
 
 class _Conversation {
+  // ===========================================================================
+  // Static
+  // ===========================================================================
+
+  static final _conversationColors = [
+    for (int i = 0; i < 12; i++) HSLColor.fromAHSL(1.0, 30.0 * i, 0.4, 0.7).toColor(),
+  ];
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   final conversations = qs<List<ConversationData>>([]);
 
   final currentCreatedAtUS = qs<int?>(null);
@@ -10,10 +22,6 @@ class _Conversation {
   // 批量选择相关状态
   final isBatchMode = qs(false);
   final selectedConversations = qs<Set<int>>({});
-
-  static final _conversationColors = [
-    for (int i = 0; i < 12; i++) HSLColor.fromAHSL(1.0, 30.0 * i, 0.4, 0.7).toColor(),
-  ];
 }
 
 /// Private methods

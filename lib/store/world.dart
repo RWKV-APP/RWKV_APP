@@ -1,6 +1,22 @@
 part of 'p.dart';
 
 class _World {
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
+  late final _recorder = ar.AudioRecorder();
+  late final _audioPlayer = ap.AudioPlayer();
+
+  late final audioFileStreamController = StreamController<(File file, int length)>.broadcast();
+  final List<Uint8List> _audioData = [];
+  Stream<Uint8List>? _currentRecorderStream;
+  StreamController<Uint8List>? _currentStreamController;
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   // 🔥 Vision
 
   late final imagePath = qs<String?>(null);
@@ -18,15 +34,9 @@ class _World {
   late final audioDuration = qs(0);
   late final recording = qs(false);
   late final playing = qs(false);
-  late final _recorder = ar.AudioRecorder();
-  late final _audioPlayer = ap.AudioPlayer();
 
   /// TODO: Use it!
   late final streaming = qs(false);
-  late final audioFileStreamController = StreamController<(File file, int length)>.broadcast();
-  final List<Uint8List> _audioData = [];
-  Stream<Uint8List>? _currentRecorderStream;
-  StreamController<Uint8List>? _currentStreamController;
 }
 
 /// Public methods

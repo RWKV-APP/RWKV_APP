@@ -10,7 +10,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/store/web_search_mode.dart';
+import 'package:zone/page/web_search_mode.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/select_image_button.dart';

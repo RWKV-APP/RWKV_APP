@@ -3,14 +3,58 @@ part of 'p.dart';
 const _kMaxStackDepth = 10;
 
 class _Sudoku {
+  // ===========================================================================
+  // Static
+  // ===========================================================================
+
   /// Stop token
   static const tokenStop = 105;
 
   static String merged = '';
+
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
+  // final streamController = StreamController<(int output, String decoded)>.broadcast();
+
+  bool _recordingTagBoard = false;
+  bool _recordingTagStack = false;
+
+  final List<(int, String)> _tempBoardEvents = [];
+  final List<(int, String)> _tempStackEvents = [];
+
+  int _hiddenCounter = 0;
+  late final _random = Random();
+
+  // late final File _file;
+  // late IOSink _fileSink;
+
+  late final scrollController = ScrollController();
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   final staticData = qs<List<List<int>>>([]);
   final dynamicData = qs<List<List<int>>>([]);
   final logs = qs<List<String>>([]);
   final difficulty = qs<int?>(null);
+
+  final running = qs<bool>(false);
+
+  final tokensCount = qs<int>(0);
+
+  final widgetPosition = qs<Map<String, Offset>>(const {});
+  final uiOffset = qs<Offset>(Offset.zero);
+
+  final showStack = qs<bool>(true);
+
+  final currentStack = qs<List<(int, int)>>([]);
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
 
   late final hasPuzzle = qp<bool>((ref) {
     final puzzle = ref.watch(staticData);
@@ -21,31 +65,6 @@ class _Sudoku {
     }
     return false;
   });
-
-  final running = qs<bool>(false);
-
-  // final streamController = StreamController<(int output, String decoded)>.broadcast();
-
-  bool _recordingTagBoard = false;
-  bool _recordingTagStack = false;
-
-  final List<(int, String)> _tempBoardEvents = [];
-  final List<(int, String)> _tempStackEvents = [];
-
-  final tokensCount = qs<int>(0);
-  int _hiddenCounter = 0;
-  late final _random = Random();
-  final widgetPosition = qs<Map<String, Offset>>(const {});
-  final uiOffset = qs<Offset>(Offset.zero);
-
-  final showStack = qs<bool>(true);
-
-  final currentStack = qs<List<(int, int)>>([]);
-
-  // late final File _file;
-  // late IOSink _fileSink;
-
-  late final scrollController = ScrollController();
 }
 
 /// Public methods

@@ -73,10 +73,18 @@ class SuggestionConfig {
 }
 
 class _Suggestion {
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   /// All suggestion config
   final config = qs(_DefaultSuggestion.zh);
 
   final ttsTicker = qs(0);
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
 
   /// suggestion prompt list at top of the text input
   /// item type: [String] or [Suggestion]

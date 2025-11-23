@@ -31,16 +31,29 @@ class _URLCompleter {
 }
 
 class _Translator {
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
   // TODO: 性能问题, 需要优化
+  late final _saveTranslationsThrottler = Throttler(milliseconds: 10000, trailing: true);
+
+  late final textEditingController = TextEditingController(text: _initialSourceEn);
+  late final resultTextEditingController = TextEditingController(text: _initialResult);
+
+  /// 批量任务的定时器
+  Timer? _batchTaskTimer;
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   /// 翻译结果内存缓存
   late final translations = qs<Map<String, String>>({});
   late final translationCountInSandbox = qs(0);
-  late final _saveTranslationsThrottler = Throttler(milliseconds: 10000, trailing: true);
 
   late final source = qs(_initialSourceEn);
-  late final textEditingController = TextEditingController(text: _initialSourceEn);
   late final result = qs(_initialResult);
-  late final resultTextEditingController = TextEditingController(text: _initialResult);
 
   late final runningTaskKey = qs<String?>(null);
   late final runningTaskTabId = qs<int?>(null);
@@ -80,9 +93,6 @@ class _Translator {
 
   /// 批量任务中每一行的翻译结果
   late final batchTranslations = qs<Map<int, String>>({});
-
-  /// 批量任务的定时器
-  Timer? _batchTaskTimer;
 }
 
 /// Private methods

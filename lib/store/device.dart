@@ -1,6 +1,10 @@
 part of 'p.dart';
 
 class _Device {
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   final memUsed = qs(0);
   final memFree = qs(0);
   final memUsedByCurrentModel = qs(0);

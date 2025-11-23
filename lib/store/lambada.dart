@@ -1,6 +1,10 @@
 part of 'p.dart';
 
 class _Lambada {
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   late final testItems = qs<List<LambadaTestItem>>([]);
   late final waitingItems = qs<List<LambadaTestItem>>([]);
 

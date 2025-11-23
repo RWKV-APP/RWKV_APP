@@ -3,11 +3,19 @@
 part of 'p.dart';
 
 class _FileManager {
-  late final downloadSource = qs(P.preference.currentLangIsZh.q ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
-  late final modelSelectorShown = qs(false);
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
 
   /// model-name to download-task map
   late final _downloadTasks = <String, DownloadTask>{};
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
+  late final downloadSource = qs(P.preference.currentLangIsZh.q ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
+  late final modelSelectorShown = qs(false);
 
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
     return LocalFile(targetPath: ref.watch(_paths(key)));
@@ -288,7 +296,8 @@ enum FileDownloadSource {
   hfmirror,
   huggingface,
   github,
-  googleapis;
+  googleapis
+  ;
 
   String get prefix => switch (this) {
     aifasthub => 'https://aifasthub.com/',

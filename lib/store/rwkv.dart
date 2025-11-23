@@ -11,7 +11,7 @@ class _RWKV {
   static Stream<from_rwkv.FromRWKV>? _broadcastStream;
 
   // ===========================================================================
-  // Infrastructure
+  // Instance
   // ===========================================================================
 
   /// Send message to RWKV isolate

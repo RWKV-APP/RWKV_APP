@@ -14,7 +14,8 @@ enum BackendState {
   starting,
   running,
   stopping,
-  stopped;
+  stopped
+  ;
 
   String get name => switch (this) {
     starting => "启动中",
@@ -25,6 +26,22 @@ enum BackendState {
 }
 
 class _Backend {
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
+  late final _webSocketHandler = shelf_ws.webSocketHandler((ws_channel.WebSocketChannel channel, _) {
+    channel.stream.listen(
+      (message) => _onData(channel, message),
+      onDone: () => _onDone(channel),
+      onError: (error, stackTrace) => _onError(channel, error, stackTrace),
+    );
+  });
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   late final httpPort = qs(_httpPort);
   late final httpServer = qs<HttpServer?>(null);
   late final httpState = qs(BackendState.stopped);
@@ -38,14 +55,6 @@ class _Backend {
   late final runningTasks = qs<Set<String>>({});
   late final taskHandledCount = qs(0);
   late final taskReceivedCount = qs(0);
-
-  late final _webSocketHandler = shelf_ws.webSocketHandler((ws_channel.WebSocketChannel channel, _) {
-    channel.stream.listen(
-      (message) => _onData(channel, message),
-      onDone: () => _onDone(channel),
-      onError: (error, stackTrace) => _onError(channel, error, stackTrace),
-    );
-  });
 }
 
 /// Private methods
