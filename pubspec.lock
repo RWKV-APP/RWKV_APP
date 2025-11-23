@@ -1266,9 +1266,11 @@ packages:
   photo_viewer:
     dependency: "direct main"
     description:
-      path: "../photo_viewer"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "38b059552271007d41e79226be22100c30f9b476"
+      url: "https://github.com/HaloWang/photo_viewer"
+    source: git
     version: "0.1.0"
   platform:
     dependency: transitive

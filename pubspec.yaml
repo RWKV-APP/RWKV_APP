@@ -31,11 +31,11 @@ dependencies:
 
   photo_viewer:
     # Local development, fix some bugs
-    path: ../photo_viewer
+    # path: ../photo_viewer
     # Git development, for your company's project
-    # git:
-    #   url: https://github.com/HaloWang/photo_viewer
-    #   ref: main
+    git:
+      url: https://github.com/HaloWang/photo_viewer
+      ref: main
     # Original repository
     # git:
     #   url: https://github.com/kumamotone/photo_viewer
