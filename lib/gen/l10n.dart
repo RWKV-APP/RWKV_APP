@@ -54,9 +54,9 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `World`
+  /// `See`
   String get world {
-    return Intl.message('World', name: 'world', desc: '', args: []);
+    return Intl.message('See', name: 'world', desc: '', args: []);
   }
 
   /// `See`

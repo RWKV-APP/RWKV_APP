@@ -616,7 +616,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Please select a branch to continue the conversation",
         ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
-      "Please select a World Type",
+      "Please select a See Type",
     ),
     "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
       "Please select an image first",
@@ -711,7 +711,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "see": MessageLookupByLibrary.simpleMessage("See"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Select a Model"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
-      "Select a World Type",
+      "Select a See Type",
     ),
     "select_all": MessageLookupByLibrary.simpleMessage("Select All"),
     "select_from_library": MessageLookupByLibrary.simpleMessage(
@@ -898,7 +898,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "window_id": m28,
-    "world": MessageLookupByLibrary.simpleMessage("World"),
+    "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
     "x_tabs": m29,
