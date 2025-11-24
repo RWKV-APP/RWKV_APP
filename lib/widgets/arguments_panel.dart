@@ -7,14 +7,36 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
+import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/argument_value.dart';
 
 class ArgumentsPanel extends ConsumerWidget {
-  static Future<void> show(BuildContext context) async {
-    if (P.rwkv.argumentsPanelShown.q) return;
+  static final temporary = qs<SamplerAndPenaltyParam?>(null);
+
+  static Future<SamplerAndPenaltyParam?> show(
+    BuildContext context, {
+    bool isEditingBatchParams = false,
+    String? title,
+    SamplerAndPenaltyParam? temporarySamplerAndPenaltyParam,
+  }) async {
+    debugger();
+
+    if (P.rwkv.argumentsPanelShown.q) return null;
     P.rwkv.argumentsPanelShown.q = true;
+
+    if (isEditingBatchParams) {
+      // assert(temporarySamplerAndPenaltyParam != null, "temporarySamplerAndPenaltyParam is required when isEditingBatchParams is true");
+      if (temporarySamplerAndPenaltyParam == null) {
+        P.rwkv.argumentsPanelShown.q = false;
+        return null;
+      }
+      temporary.q = temporarySamplerAndPenaltyParam;
+    } else {
+      temporary.q = null;
+    }
+
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -25,17 +47,30 @@ class ArgumentsPanel extends ConsumerWidget {
           expand: false,
           snap: false,
           builder: (BuildContext context, ScrollController scrollController) {
-            return ArgumentsPanel(scrollController: scrollController);
+            return ArgumentsPanel(
+              scrollController: scrollController,
+              isEditingBatchParams: isEditingBatchParams,
+              title: title,
+            );
           },
         );
       },
     );
     P.rwkv.argumentsPanelShown.q = false;
+    return temporary.q;
   }
 
-  const ArgumentsPanel({super.key, required this.scrollController});
+  const ArgumentsPanel({
+    super.key,
+    required this.scrollController,
+    this.isEditingBatchParams = false,
+    this.title,
+  });
 
   final ScrollController scrollController;
+
+  final bool isEditingBatchParams;
+  final String? title;
 
   void _onChanged(Argument argument, double value) {
     double rawNewValue = double.parse(value.toStringAsFixed(argument.fixedDecimals));
@@ -86,7 +121,7 @@ class ArgumentsPanel extends ConsumerWidget {
                       const Icon(Icons.tune),
                       12.w,
                       T(
-                        s.model_settings,
+                        title ?? s.model_settings,
                         s: const TS(s: 16, w: .w500),
                       ),
                     ],
@@ -109,14 +144,14 @@ class ArgumentsPanel extends ConsumerWidget {
                 padding: .only(bottom: paddingBottom),
                 children: [
                   const _SamplerOptions(),
-                  ArgumentValue(Argument.temperature, _onChanged),
-                  ArgumentValue(Argument.topK, _onChanged),
-                  ArgumentValue(Argument.topP, _onChanged),
-                  ArgumentValue(Argument.presencePenalty, _onChanged),
-                  ArgumentValue(Argument.frequencyPenalty, _onChanged),
-                  ArgumentValue(Argument.penaltyDecay, _onChanged),
-                  const _CompletionOptions(),
-                  ArgumentValue(Argument.maxLength, _onChanged),
+                  ArgumentValue(Argument.temperature, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.topK, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.topP, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.presencePenalty, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.frequencyPenalty, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.penaltyDecay, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  if (!isEditingBatchParams) const _CompletionOptions(),
+                  if (!isEditingBatchParams) ArgumentValue(Argument.maxLength, _onChanged),
                 ],
               ),
             ),

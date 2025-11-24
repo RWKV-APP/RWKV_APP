@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
@@ -114,4 +111,6 @@ class SamplerAndPenaltyParam extends Equatable {
         return S.current.custom;
     }
   }
+
+  bool get isCustom => decodeParamType == DecodeParamType.unknown;
 }

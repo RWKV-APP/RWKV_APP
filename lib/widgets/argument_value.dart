@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/arguments_panel.dart';
 
 class ArgumentValue extends ConsumerWidget {
   final Argument argument;
@@ -14,6 +15,7 @@ class ArgumentValue extends ConsumerWidget {
   final EdgeInsets padding;
   final dynamic defaultValue;
   final bool enabled;
+  final bool isEditingBatchParams;
 
   const ArgumentValue(
     this.argument,
@@ -24,18 +26,31 @@ class ArgumentValue extends ConsumerWidget {
     this.padding = const .only(left: 12, right: 12),
     this.defaultValue,
     this.enabled = true,
+    this.isEditingBatchParams = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _ = ref.watch(P.rwkv.supportedBatchSizes);
-    final value =
-        defaultValue ??
-        switch (argument) {
-          Argument.batchCount => ref.watch(P.chat.batchCount),
-          Argument.batchVW => ref.watch(P.chat.batchVW),
-          _ => ref.watch(P.rwkv.arguments(argument)),
-        };
+    final num builtInValue = switch (argument) {
+      Argument.batchCount => ref.watch(P.chat.batchCount),
+      Argument.batchVW => ref.watch(P.chat.batchVW),
+      _ => ref.watch(P.rwkv.arguments(argument)),
+    };
+    num value = defaultValue ?? builtInValue;
+    // final double batchValue = switch (argument) {
+    //   Argument.temperature => value.toDouble(),
+    //   Argument.topP => value = value.toDouble(),
+    //   Argument.presencePenalty => value.toDouble(),
+    //   Argument.frequencyPenalty => value.toDouble(),
+    //   Argument.penaltyDecay => value.toDouble(),
+    //   _ => value = value.toInt(),
+    // }
+    double? batchValue;
+    if (isEditingBatchParams) {
+      final temporary = ref.watch(ArgumentsPanel.temporary);
+      assert(temporary != null, "temporary is null when isEditingBatchParams is true");
+    }
     if (!argument.show) return const SizedBox.shrink();
     final qb = ref.watch(P.app.qb);
     return Column(

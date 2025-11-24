@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/argument_value.dart';
+import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/form_item.dart';
 
 class BatchSettingsPanel extends ConsumerWidget {
@@ -159,7 +162,16 @@ class BatchSettingsPanel extends ConsumerWidget {
                 title: s.decode_params_for_each_message,
                 subtitle: s.decode_params_for_each_message_detail,
                 showArrow: false,
-                infoWidget: IconButton(onPressed: _onTapInfo, icon: const Icon(Icons.info_outline)),
+                infoWidget: IconButton(
+                  onPressed: _onTapInfo,
+                  icon: Row(
+                    children: [
+                      Text(s.decode_param),
+                      4.w,
+                      Icon(Icons.info_outline),
+                    ],
+                  ),
+                ),
                 bottom: _DecodeParams(),
               ),
             ),
@@ -257,38 +269,63 @@ class _DecodeParam extends ConsumerWidget {
   void _onTap() async {
     final context = getContext()!;
     final s = S.of(context);
+    final selectedType = param.decodeParamType;
     final result = await showModalActionSheet<SamplerAndPenaltyParam>(
       context: context,
       title: s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index),
       message: s.select_the_decode_parameters_to_set_all_to_for_index(index),
       actions: [
-        ...DecodeParamType.values.map(
+        ...[
+          DecodeParamType.defaults,
+          DecodeParamType.comprehensive,
+          DecodeParamType.creative,
+          DecodeParamType.fixed,
+          DecodeParamType.conservative,
+          DecodeParamType.unknown,
+        ].map(
           (e) {
-            final key = SamplerAndPenaltyParam.fromDecodeParamType(e);
-            String label = key.displayName;
-            if (key.tolerantEquals(param)) label = "✅ $label";
-            return SheetAction(
-              label: label,
-              key: key,
-            );
+            if (e == DecodeParamType.unknown) {
+              return SheetAction(
+                label: s.custom,
+                key: param,
+              );
+            }
+
+            String label = SamplerAndPenaltyParam.fromDecodeParamType(e).displayName;
+            if (selectedType == e) label = "✅ $label";
+            return SheetAction(label: label, key: SamplerAndPenaltyParam.fromDecodeParamType(e));
           },
         ),
       ],
     );
     if (result == null) return;
-    P.rwkv.frontendBatchParams.q = [
+
+    // debugger();
+
+    if (result.isCustom) {
+      final res = await ArgumentsPanel.show(
+        getContext()!,
+        isEditingBatchParams: true,
+        title: s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index),
+        temporarySamplerAndPenaltyParam: result,
+      );
+      if (res == null) return;
+    }
+
+    final newValue = [
       ...P.rwkv.frontendBatchParams.q.sublist(0, index),
       result,
       ...P.rwkv.frontendBatchParams.q.sublist(index + 1),
     ];
+    P.rwkv.frontendBatchParams.q = newValue;
     P.rwkv.send(
       SetSamplerAndPenaltyParams(
-        temperatures: P.rwkv.frontendBatchParams.q.map((e) => e.temperature).toList(),
-        topKs: P.rwkv.frontendBatchParams.q.map((e) => 500.0).toList(),
-        topPs: P.rwkv.frontendBatchParams.q.map((e) => e.topP).toList(),
-        presencePenalties: P.rwkv.frontendBatchParams.q.map((e) => e.presencePenalty).toList(),
-        frequencyPenalties: P.rwkv.frontendBatchParams.q.map((e) => e.frequencyPenalty).toList(),
-        penaltyDecays: P.rwkv.frontendBatchParams.q.map((e) => e.penaltyDecay).toList(),
+        temperatures: newValue.map((e) => e.temperature).toList(),
+        topKs: newValue.map((e) => 500.0).toList(),
+        topPs: newValue.map((e) => e.topP).toList(),
+        presencePenalties: newValue.map((e) => e.presencePenalty).toList(),
+        frequencyPenalties: newValue.map((e) => e.frequencyPenalty).toList(),
+        penaltyDecays: newValue.map((e) => e.penaltyDecay).toList(),
       ),
     );
     P.rwkv.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q));
@@ -308,8 +345,9 @@ class _DecodeParam extends ConsumerWidget {
         ),
         padding: const .all(4),
         child: Column(
+          crossAxisAlignment: .start,
           children: [
-            T(param.displayName),
+            T("prebuilt: " + param.displayName),
             T(s.temperature_with_value(param.temperature)),
             T(s.top_p_with_value(param.topP)),
             T(s.presence_penalty_with_value(param.presencePenalty)),
