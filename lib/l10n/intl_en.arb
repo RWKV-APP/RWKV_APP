@@ -474,8 +474,7 @@
   "performance_test_title": "Performance Test",
   "performance_test_description": "Use lambada to test perplexity",
   "start_download_updates_": "Start downloading updates...",
-  "switch_to_creative_mode_for_better_exp": "Switch Decode Param to 'Creative' for better experience"
-  "switch_to_creative_mode_for_better_exp": "Switch to 'Creative' mode for better experience",
+  "switch_to_creative_mode_for_better_exp": "Switch Decode Param to 'Creative' for better experience",
   "parameter_description": "Parameter Description",
   "parameter_description_detail": "Temperature: Controls randomness. Higher values (e.g., 0.8) make output more creative/random; lower values (e.g., 0.2) make it more focused/deterministic.\n\nTop P: Controls diversity. The model considers only tokens with cumulative probability summing to Top P. Lower values (e.g., 0.5) ignore low-probability words, making output more relevant.\n\nPresence Penalty: Penalizes tokens based on whether they have appeared in the text. Positive values increase the likelihood of talking about new topics.\n\nFrequency Penalty: Penalizes tokens based on their frequency in the text. Positive values decrease the likelihood of repeating lines verbatim.\n\nPenalty Decay: Controls how the penalty decays over distance.",
   "decode_params_for_each_message": "Decode Params for Each Message",
