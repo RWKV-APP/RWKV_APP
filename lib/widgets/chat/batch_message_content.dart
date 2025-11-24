@@ -8,6 +8,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/extract_thought_and_output.dart';
 import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/router.dart';
@@ -186,7 +187,7 @@ class _MarkdownBody extends ConsumerWidget {
   void _onTapDecodeParam() async {
     final _ = await showConfirmationDialog(
       context: getContext()!,
-      title: "Decode Param",
+      title: S.current.decode_param,
       message:
           """Decode Param: ${decodeParam!.displayName}
       Temperature: ${decodeParam!.temperature.toStringAsFixed(1)}
@@ -206,6 +207,8 @@ class _MarkdownBody extends ConsumerWidget {
 
     final (thought, output) = extractThoughtAndOutput(data);
 
+    final s = S.of(context);
+
     final Widget? decodeParamWidget = decodeParam != null
         ? Align(
             alignment: Alignment.topLeft,
@@ -217,7 +220,7 @@ class _MarkdownBody extends ConsumerWidget {
                   borderRadius: .circular(4),
                 ),
                 padding: const .symmetric(horizontal: 6, vertical: 2),
-                child: T("Decode Param: ${decodeParam!.displayName}"),
+                child: T(s.decode_param + s.colon + decodeParam!.displayName),
               ),
             ),
           )

@@ -229,49 +229,78 @@ class _DecodeParams extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
     final frontendBatchParams = ref.watch(P.rwkv.frontendBatchParams);
-    final backendBatchParams = ref.watch(P.rwkv.backendBatchParams);
-    final frontendBatchParamsAreAllSame = ref.watch(P.rwkv.frontendBatchParamsAreAllSame);
-    final syncingBatchParams = ref.watch(P.rwkv.syncingBatchParams);
     final batchCount = ref.watch(P.chat.batchCount);
     final paramsToShow = frontendBatchParams.take(batchCount).toList();
+    final qb = ref.watch(P.app.qb);
 
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        if (frontendBatchParamsAreAllSame) T(s.all_the_same) else T(s.not_all_the_same),
-        if (syncingBatchParams) T(s.syncing) else T(s.not_syncing),
-        T(batchCount.toString()),
-        T(s.set_all_to_question_mark),
-        Wrap(
-          alignment: .start,
-          crossAxisAlignment: .start,
-          runSpacing: 4,
-          spacing: 4,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final crossAxisCount = width > 500 ? 3 : 2;
+
+        final List<Widget> rows = [];
+        for (int i = 0; i < paramsToShow.length; i += crossAxisCount) {
+          final chunk = paramsToShow.skip(i).take(crossAxisCount).toList();
+          rows.add(
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (int j = 0; j < crossAxisCount; j++) ...[
+                  if (j > 0) 8.w,
+                  Expanded(
+                    child: j < chunk.length ? _DecodeParam(index: i + j, param: chunk[j]) : const SizedBox(),
+                  ),
+                ],
+              ],
+            ),
+          );
+          if (i + crossAxisCount < paramsToShow.length) {
+            rows.add(8.h);
+          }
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            for (int index = 0; index < paramsToShow.length; index++) _DecodeParam(index: index, param: paramsToShow[index]),
+            4.h,
+            ...rows,
+            Divider(color: qb.q(.2)),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _DecodeParam(
+                forAll: true,
+                index: -1,
+              ),
+            ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
 class _DecodeParam extends ConsumerWidget {
   final int index;
-  final SamplerAndPenaltyParam param;
+  final SamplerAndPenaltyParam? param;
+  final bool forAll;
 
-  const _DecodeParam({required this.index, required this.param});
+  const _DecodeParam({
+    required this.index,
+    this.param,
+    this.forAll = false,
+  });
 
   void _onTap() async {
     final context = getContext()!;
     final s = S.of(context);
-    final selectedType = param.decodeParamType;
+    final selectedType = param?.decodeParamType;
     final result = await showModalActionSheet<DecodeParamType>(
       context: context,
-      title: s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index),
-      message: s.select_the_decode_parameters_to_set_all_to_for_index(index),
+      title: forAll
+          ? s.please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages
+          : s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index + 1),
+      message: s.select_the_decode_parameters_to_set_all_to_for_index,
       actions: [
         ...[
           DecodeParamType.defaults,
@@ -283,8 +312,10 @@ class _DecodeParam extends ConsumerWidget {
         ].map(
           (e) {
             if (e == DecodeParamType.unknown) {
+              String label = s.custom;
+              if (param?.isCustom ?? false) label = "✅ $label";
               return SheetAction(
-                label: s.custom,
+                label: label,
                 key: DecodeParamType.unknown,
               );
             }
@@ -299,15 +330,17 @@ class _DecodeParam extends ConsumerWidget {
 
     if (result == null) return;
 
-    SamplerAndPenaltyParam? newParam;
+    late final SamplerAndPenaltyParam newParam;
 
     if (result == DecodeParamType.unknown) {
       final res = await ArgumentsPanel.show(
         getContext()!,
         isEditingBatchParams: true,
-        title: s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index),
+        title: forAll
+            ? s.please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages
+            : s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index + 1),
         // 临时选用当前的 param
-        temporarySamplerAndPenaltyParam: param,
+        temporarySamplerAndPenaltyParam: forAll ? SamplerAndPenaltyParam.fromDecodeParamType(DecodeParamType.defaults) : param,
       );
       if (res == null) return;
       newParam = res;
@@ -315,11 +348,14 @@ class _DecodeParam extends ConsumerWidget {
       newParam = SamplerAndPenaltyParam.fromDecodeParamType(result);
     }
 
-    final newValue = [
-      ...P.rwkv.frontendBatchParams.q.sublist(0, index),
-      newParam,
-      ...P.rwkv.frontendBatchParams.q.sublist(index + 1),
-    ];
+    final newValue = forAll
+        ? List.generate(P.rwkv.frontendBatchParams.q.length, (index) => newParam)
+        : [
+            ...P.rwkv.frontendBatchParams.q.sublist(0, index),
+            newParam,
+            ...P.rwkv.frontendBatchParams.q.sublist(index + 1),
+          ];
+
     P.rwkv.frontendBatchParams.q = newValue;
     P.rwkv.send(
       SetSamplerAndPenaltyParams(
@@ -334,31 +370,77 @@ class _DecodeParam extends ConsumerWidget {
     P.rwkv.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q));
   }
 
+  String _fmt(double value) {
+    return double.parse(value.toStringAsFixed(3)).toString();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
+
     return GD(
       onTap: _onTap,
       child: Container(
+        width: forAll ? double.infinity : null,
         decoration: BD(
-          color: qb.q(.1),
-          border: Border.all(color: qb.q(.5)),
-          borderRadius: .circular(4),
+          color: qb.q(.08),
+          border: Border.all(color: qb.q(.15)),
+          borderRadius: BorderRadius.circular(12),
         ),
-        padding: const .all(4),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            T(s.prebuilt + s.colon + param.displayName),
-            T(s.temperature_with_value(param.temperature)),
-            T(s.top_p_with_value(param.topP)),
-            T(s.presence_penalty_with_value(param.presencePenalty)),
-            T(s.frequency_penalty_with_value(param.frequencyPenalty)),
-            T(s.penalty_decay_with_value(param.penaltyDecay)),
-          ],
-        ),
+        padding: const EdgeInsets.all(12),
+        child: forAll
+            ? Center(
+                child: Text(s.set_all_batch_params, style: const TS(w: .bold)),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: qb.q(.15),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text("#${index + 1}", style: const TS(w: .bold, s: 12)),
+                      ),
+                      8.w,
+                      Flexible(
+                        child: Text(
+                          param?.displayName ?? "",
+                          style: const TS(w: .bold, s: 14),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  8.h,
+                  if (param != null) ...[
+                    _infoRow("Temp", _fmt(param!.temperature), "Top_P", _fmt(param!.topP), qb),
+                    2.h,
+                    _infoRow("PP", _fmt(param!.presencePenalty), "FP", _fmt(param!.frequencyPenalty), qb),
+                    2.h,
+                    Text("Decay: ${_fmt(param!.penaltyDecay)}", style: TS(s: 11, c: qb.q(.7))),
+                  ],
+                ],
+              ),
       ),
+    );
+  }
+
+  Widget _infoRow(String k1, String v1, String k2, String v2, Color qb) {
+    final style = TS(s: 11, c: qb.q(.7));
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text("$k1: $v1", style: style),
+        8.w,
+        Text("$k2: $v2", style: style),
+      ],
     );
   }
 }

@@ -64,6 +64,16 @@ class S {
     return Intl.message('：', name: 'colon', desc: '', args: []);
   }
 
+  /// `设置全部批量参数`
+  String get set_all_batch_params {
+    return Intl.message(
+      '设置全部批量参数',
+      name: 'set_all_batch_params',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `See`
   String get world {
     return Intl.message('See', name: 'world', desc: '', args: []);
@@ -3343,13 +3353,13 @@ class S {
     );
   }
 
-  /// `请选择要为索引 {index} 设置的采样和惩罚参数`
+  /// `请选择要为第 {index} 条消息设置的采样和惩罚参数`
   String
   please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(
     Object index,
   ) {
     return Intl.message(
-      '请选择要为索引 $index 设置的采样和惩罚参数',
+      '请选择要为第 $index 条消息设置的采样和惩罚参数',
       name:
           'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
       desc: '',
@@ -3357,13 +3367,25 @@ class S {
     );
   }
 
-  /// `选择要为索引 {index} 设置的解码参数`
-  String select_the_decode_parameters_to_set_all_to_for_index(Object index) {
+  /// `请选择要为所有消息设置的采样和惩罚参数`
+  String
+  get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
     return Intl.message(
-      '选择要为索引 $index 设置的解码参数',
+      '请选择要为所有消息设置的采样和惩罚参数',
+      name:
+          'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请从下方选择预设参数，或点击“自定义”进行手动配置`
+  String get select_the_decode_parameters_to_set_all_to_for_index {
+    return Intl.message(
+      '请从下方选择预设参数，或点击“自定义”进行手动配置',
       name: 'select_the_decode_parameters_to_set_all_to_for_index',
       desc: '',
-      args: [index],
+      args: [],
     );
   }
 

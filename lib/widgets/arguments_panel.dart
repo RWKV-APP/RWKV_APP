@@ -27,6 +27,7 @@ class ArgumentsPanel extends ConsumerWidget {
     if (isEditingBatchParams) {
       if (temporarySamplerAndPenaltyParam == null) {
         P.rwkv.argumentsPanelShown.q = false;
+        qqe("temporarySamplerAndPenaltyParam is null");
         return null;
       }
       temporary.q = temporarySamplerAndPenaltyParam;

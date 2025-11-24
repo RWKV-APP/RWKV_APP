@@ -56,47 +56,45 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(value) => "Penalty Decay: ${value}";
 
-  static String m17(index) => "인덱스 ${index}에 대해 모두 설정할 샘플러 및 페널티 매개변수를 선택하세요";
+  static String m17(index) => "메시지 ${index}에 설정할 샘플러 및 페널티 매개변수를 선택하세요";
 
   static String m18(value) => "Presence Penalty: ${value}";
 
   static String m19(count) => "대기열: ${count}";
 
-  static String m20(index) => "인덱스 ${index}에 대해 모두 설정할 디코딩 매개변수를 선택하세요";
+  static String m20(count) => "선택됨 ${count}";
 
-  static String m21(count) => "선택됨 ${count}";
+  static String m21(text) => "소스 텍스트: ${text}";
 
-  static String m22(text) => "소스 텍스트: ${text}";
+  static String m22(text) => "타겟 텍스트: ${text}";
 
-  static String m23(text) => "타겟 텍스트: ${text}";
+  static String m23(value) => "Temperature: ${value}";
 
-  static String m24(value) => "Temperature: ${value}";
+  static String m24(footer) => "추론${footer}: 영어";
 
-  static String m25(footer) => "추론${footer}: 영어";
+  static String m25(footer) => "추론${footer}: 영어 길게";
 
-  static String m26(footer) => "추론${footer}: 영어 길게";
+  static String m26(footer) => "추론${footer}: 영어 짧게";
 
-  static String m27(footer) => "추론${footer}: 영어 짧게";
+  static String m27(footer) => "추론${footer}: 빠름";
 
-  static String m28(footer) => "추론${footer}: 빠름";
+  static String m28(footer) => "추론${footer}: 자동";
 
-  static String m29(footer) => "추론${footer}: 자동";
+  static String m29(footer) => "추론${footer}: 높음";
 
-  static String m30(footer) => "추론${footer}: 높음";
+  static String m30(footer) => "추론${footer}: 끔";
 
-  static String m31(footer) => "추론${footer}: 끔";
+  static String m31(value) => "Top P: ${value}";
 
-  static String m32(value) => "Top P: ${value}";
+  static String m32(count) => "총 테스트 항목: ${count}";
 
-  static String m33(count) => "총 테스트 항목: ${count}";
+  static String m33(port) => "WebSocket 서비스 (포트: ${port})";
 
-  static String m34(port) => "WebSocket 서비스 (포트: ${port})";
+  static String m34(id) => "창 ${id}";
 
-  static String m35(id) => "창 ${id}";
+  static String m35(count) => "${count}개의 탭";
 
-  static String m36(count) => "${count}개의 탭";
-
-  static String m37(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
+  static String m36(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -561,6 +559,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
         m17,
+    "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
+        MessageLookupByLibrary.simpleMessage(
+          "모든 메시지에 설정할 샘플러 및 페널티 매개변수를 선택하세요",
+        ),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
       "추론이 완료될 때까지 기다려 주세요",
     ),
@@ -626,13 +628,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
     "select_model": MessageLookupByLibrary.simpleMessage("모델 선택"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("새 이미지 선택"),
-    "select_the_decode_parameters_to_set_all_to_for_index": m20,
-    "selected_count": m21,
+    "select_the_decode_parameters_to_set_all_to_for_index":
+        MessageLookupByLibrary.simpleMessage(
+          "아래에서 사전 설정을 선택하거나 \'사용자 지정\'을 탭하여 수동으로 구성하세요",
+        ),
+    "selected_count": m20,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "RWKV에게 메시지 보내기",
     ),
     "server_error": MessageLookupByLibrary.simpleMessage("서버 오류"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("세션 구성"),
+    "set_all_batch_params": MessageLookupByLibrary.simpleMessage(
+      "모든 배치 매개변수 설정",
+    ),
     "set_all_to_question_mark": MessageLookupByLibrary.simpleMessage(
       "모두 ???로 설정",
     ),
@@ -653,7 +661,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("작게 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("소스 코드"),
-    "source_text": m22,
+    "source_text": m21,
     "speed": MessageLookupByLibrary.simpleMessage("다운로드 속도:"),
     "start": MessageLookupByLibrary.simpleMessage("시작"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("새 채팅 시작"),
@@ -707,11 +715,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "system_mode": MessageLookupByLibrary.simpleMessage("시스템 설정 따르기"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("시스템 프롬프트"),
     "take_photo": MessageLookupByLibrary.simpleMessage("사진 찍기"),
-    "target_text": m23,
+    "target_text": m22,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "기술 연구 그룹",
     ),
-    "temperature_with_value": m24,
+    "temperature_with_value": m23,
     "test_data": MessageLookupByLibrary.simpleMessage("테스트 데이터"),
     "test_result": MessageLookupByLibrary.simpleMessage("테스트 결과"),
     "test_results": MessageLookupByLibrary.simpleMessage("테스트 결과"),
@@ -726,10 +734,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("검정"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("그럼 이제 RWKV와 채팅을 시작할 수 있습니다"),
-    "think_button_mode_en": m25,
-    "think_button_mode_en_long": m26,
-    "think_button_mode_en_short": m27,
-    "think_button_mode_fast": m28,
+    "think_button_mode_en": m24,
+    "think_button_mode_en_long": m25,
+    "think_button_mode_en_short": m26,
+    "think_button_mode_fast": m27,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "추론 모드는 모델의 추론 성능에 영향을 미칩니다",
     ),
@@ -738,9 +746,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("생각 중..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("모드"),
-    "thinking_mode_auto": m29,
-    "thinking_mode_high": m30,
-    "thinking_mode_off": m31,
+    "thinking_mode_auto": m28,
+    "thinking_mode_high": m29,
+    "thinking_mode_off": m30,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("사고 모드 템플릿"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("이것은 세상에서 가장 어려운 스도쿠입니다"),
@@ -749,9 +757,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "이 모델은 병렬 추론을 지원하지 않습니다. \'batch\' 태그가 있는 모델을 선택해주세요",
         ),
     "thought_result": MessageLookupByLibrary.simpleMessage("생각 결과"),
-    "top_p_with_value": m32,
+    "top_p_with_value": m31,
     "total_count": MessageLookupByLibrary.simpleMessage("총 수"),
-    "total_test_items": m33,
+    "total_test_items": m32,
     "translate": MessageLookupByLibrary.simpleMessage("번역"),
     "translating": MessageLookupByLibrary.simpleMessage("번역 중..."),
     "translation": MessageLookupByLibrary.simpleMessage("번역"),
@@ -776,7 +784,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("음성 복제"),
     "web_search": MessageLookupByLibrary.simpleMessage("네트워크 검색"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
-    "websocket_service_port": m34,
+    "websocket_service_port": m33,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "RWKV 채팅에 오신 것을 환영합니다",
     ),
@@ -786,12 +794,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("백"),
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
-    "window_id": m35,
+    "window_id": m34,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d페이지 찾음"),
-    "x_tabs": m36,
-    "you_are_now_using": m37,
+    "x_tabs": m35,
+    "you_are_now_using": m36,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV와 채팅을 시작할 수 있습니다",
     ),
