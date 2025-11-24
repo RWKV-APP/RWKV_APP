@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/feature_rollout.dart';
+import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart' show P, $Preference;
 
 class WithDevOption extends StatefulWidget {
@@ -67,10 +70,23 @@ class _DevOptionsDialog extends StatefulWidget {
 
 class _DevOptionsDialogState extends State<_DevOptionsDialog> {
   late FeatureRollout featureRollout = P.app.featureRollout.q;
+  final TextEditingController _controllerHost = TextEditingController(text: Albatross.instance.host);
 
   @override
   void initState() {
     super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    final host = _controllerHost.text;
+    if (host != Albatross.instance.host) {
+      Albatross.instance.host = host;
+      Albatross.instance.init();
+    }
+    _controllerHost.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,6 +122,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
               },
             ),
           ),
+          // if (Platform.isWindows || Platform.isLinux)
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 0),
             leading: const Text('Albatross', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
@@ -115,6 +132,15 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
                 P.rwkv.enableAlbatross.q = v;
                 setState(() {});
               },
+            ),
+          ),
+          // if (Platform.isWindows || Platform.isLinux)
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+            leading: const Text('Albatross Host', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            title: TextField(
+              keyboardType: TextInputType.url,
+              controller: _controllerHost,
             ),
           ),
         ],

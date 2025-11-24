@@ -15,10 +15,16 @@ import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/store/p.dart';
 
 class Albatross {
-  static const _port = 9527;
-  late final _dio = Dio(BaseOptions(baseUrl: 'http://192.168.3.4:$_port'));
+  late final _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:9527'));
   CancelToken? _cancelToken;
   String? _albatrossPath;
+
+  String get host => _dio.options.baseUrl.replaceFirst('http://', '');
+
+  set host(String host) {
+    _dio.options.baseUrl = 'http://$host';
+    qqq('set service host to $host');
+  }
 
   final _decodeParam = {
     "temperature": 1.0,
@@ -45,19 +51,17 @@ class Albatross {
   }
 
   Future init() async {
-    if (Platform.isWindows) {
+    bool available = false;
+
+    try {
+      final status = await _dio.get('/status');
+      available = status.statusCode == 200;
+    } catch (_) {
       //
-    } else if (Platform.isLinux) {
-      //
-    } else {
-      // return;
     }
 
-    final status = await _dio.get('/status');
-    final available = status.statusCode == 200;
-
     P.rwkv.enableAlbatross.q = available;
-    qqq('albatross is ${available ? 'enabled' : 'disabled'}');
+    qqq('>> albatross is ${available ? 'enabled' : 'disabled'}');
     return;
 
     final cwd = Platform.resolvedExecutable;
