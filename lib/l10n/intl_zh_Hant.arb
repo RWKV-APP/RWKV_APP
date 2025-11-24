@@ -473,6 +473,7 @@
   "target_text": "目標文字: {text}",
   "performance_test_title": "跑分測試",
   "performance_test_description": "使用 lambada 測試 perplexity",
+  "start_download_updates_": "開始後台下載更新...",
   "switch_to_creative_mode_for_better_exp": "建議選擇 “創意模式”, 以便獲得更好的體驗",
   "parameter_description": "參數說明",
   "parameter_description_detail": "Temperature: 控制輸出的隨機性。較高的值（如 0.8）使輸出更具創意和隨機性；較低的值（如 0.2）使輸出更集中和確定。\n\nTop P: 控制輸出的多樣性。模型僅考慮累積機率達到 Top P 的 token。較低的值（如 0.5）會忽略低機率的詞，使輸出更相關。\n\nPresence Penalty: 根據 token 是否已在文字中出現來懲罰它們。正值會增加模型談論新主題的可能性。\n\nFrequency Penalty: 根據 token 在文字中出現的頻率來懲罰它們。正值會減少模型逐字重複同一行的可能性。\n\nPenalty Decay: 控制懲罰隨距離的衰減程度。",

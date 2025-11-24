@@ -659,6 +659,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_a_new_chat_by_clicking_the_button_below":
         MessageLookupByLibrary.simpleMessage("下のボタンをクリックして新しいチャットを開始"),
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("ゲーム開始"),
+    "start_download_updates_": MessageLookupByLibrary.simpleMessage(
+      "アップデートのバックグラウンドダウンロードを開始...",
+    ),
     "start_service": MessageLookupByLibrary.simpleMessage("サービスを開始"),
     "start_service_and_open_browser": MessageLookupByLibrary.simpleMessage(
       "サービスを開始し、サポートされているブラウザページを開いてください。",

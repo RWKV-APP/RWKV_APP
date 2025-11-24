@@ -601,6 +601,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_a_new_chat_by_clicking_the_button_below":
         MessageLookupByLibrary.simpleMessage("點擊下方按鈕開始新聊天"),
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("開始對局"),
+    "start_download_updates_": MessageLookupByLibrary.simpleMessage(
+      "開始後台下載更新...",
+    ),
     "start_service": MessageLookupByLibrary.simpleMessage("啟動服務"),
     "start_service_and_open_browser": MessageLookupByLibrary.simpleMessage(
       "啟動服務並開啟支援的瀏覽器頁面。",

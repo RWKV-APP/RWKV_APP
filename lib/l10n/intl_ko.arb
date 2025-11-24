@@ -473,6 +473,7 @@
   "target_text": "타겟 텍스트: {text}",
   "performance_test_title": "성능 테스트",
   "performance_test_description": "lambada를 사용하여 perplexity 테스트",
+  "start_download_updates_": "백그라운드 업데이트 다운로드 시작...",
   "switch_to_creative_mode_for_better_exp": "더 나은 경험을 위해 '창의적 모드'로 전환하는 것을 권장합니다",
   "parameter_description": "매개변수 설명",
   "parameter_description_detail": "Temperature: 출력의 무작위성을 제어합니다. 높은 값(예: 0.8)은 더 창의적이고 무작위적으로, 낮은 값(예: 0.2)은 더 집중적이고 결정적으로 만듭니다.\n\nTop P: 출력의 다양성을 제어합니다. 모델은 누적 확률이 Top P에 도달하는 토큰만 고려합니다. 낮은 값(예: 0.5)은 확률이 낮은 단어를 무시하여 관련성을 높입니다.\n\nPresence Penalty: 토큰이 텍스트에 이미 나타났는지 여부에 따라 페널티를 부여합니다. 양수 값은 새로운 주제에 대해 이야기할 가능성을 높입니다.\n\nFrequency Penalty: 텍스트 내 빈도에 따라 토큰에 페널티를 부여합니다. 양수 값은 같은 줄을 그대로 반복할 가능성을 줄입니다.\n\nPenalty Decay: 거리에 따른 페널티 감소를 제어합니다.",

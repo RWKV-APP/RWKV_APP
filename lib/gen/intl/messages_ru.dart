@@ -835,6 +835,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "Нажмите кнопку ниже, чтобы начать новый чат",
         ),
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("Начать игру"),
+    "start_download_updates_": MessageLookupByLibrary.simpleMessage(
+      "Начать фоновую загрузку обновлений...",
+    ),
     "start_service": MessageLookupByLibrary.simpleMessage("Запустить службу"),
     "start_service_and_open_browser": MessageLookupByLibrary.simpleMessage(
       "Запустите службу и откройте поддерживаемую страницу браузера.",

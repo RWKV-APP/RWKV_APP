@@ -658,6 +658,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_a_new_chat_by_clicking_the_button_below":
         MessageLookupByLibrary.simpleMessage("아래 버튼을 클릭하여 새 채팅을 시작하세요"),
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("게임 시작"),
+    "start_download_updates_": MessageLookupByLibrary.simpleMessage(
+      "백그라운드 업데이트 다운로드 시작...",
+    ),
     "start_service": MessageLookupByLibrary.simpleMessage("서비스 시작"),
     "start_service_and_open_browser": MessageLookupByLibrary.simpleMessage(
       "서비스를 시작하고 지원되는 브라우저 페이지를 여세요.",
