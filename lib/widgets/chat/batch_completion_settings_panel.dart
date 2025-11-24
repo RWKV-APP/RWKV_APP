@@ -111,9 +111,9 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
     final batchInference = settings.enabled;
     final batchVW = settings.width;
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(16),
-        topRight: Radius.circular(16),
+      borderRadius: const .only(
+        topLeft: .circular(16),
+        topRight: .circular(16),
       ),
       child: Scaffold(
         backgroundColor: customTheme.setting,
@@ -123,7 +123,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
           backgroundColor: customTheme.setting,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const .only(right: 8),
               child: IconButton(
                 onPressed: () {
                   pop();
@@ -135,17 +135,14 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
         ),
         body: ListView(
           controller: scrollController,
-          padding: const EI.o(
-            l: 12,
-            r: 12,
-          ),
+          padding: const .only(left: 12, right: 12),
           children: [
             FormItem(
               isSectionStart: true,
               isSectionEnd: !batchInference,
               title: s.batch_completion,
               subtitle: s.batch_inference_detail,
-              info: batchInference ? s.enabled : s.disabled,
+              infoText: batchInference ? s.enabled : s.disabled,
               showArrow: false,
               trailing: Switch.adaptive(
                 value: batchInference,
@@ -167,16 +164,15 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                   isSectionStart: !batchInference,
                   title: s.batch_inference_count,
                   subtitle: s.batch_inference_count_detail_2(batchCount),
-                  info: batchCount.toString(),
+                  infoText: batchCount.toString(),
                   onTap: () {},
                   bottom: ArgumentValue(
                     Argument.batchCount,
-                    // TODO: @wangce Handle batch count get from backend
                     _onChanged,
                     defaultValue: batchCount,
                     showTitle: false,
                     showValue: false,
-                    padding: const EI.o(l: 4, r: 4, t: 12, b: 8),
+                    padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                   ),
                 ),
               ),
@@ -191,7 +187,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                   isSectionEnd: true,
                   title: s.batch_inference_width_2,
                   subtitle: s.batch_inference_width_detail_2,
-                  info: batchVW.toString() + "% " + s.screen_width,
+                  infoText: batchVW.toString() + "% " + s.screen_width,
                   onTap: () {},
                   bottom: ArgumentValue(
                     Argument.batchVW,
@@ -199,7 +195,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                     defaultValue: batchVW,
                     showTitle: false,
                     showValue: false,
-                    padding: const EI.o(l: 4, r: 4, t: 12, b: 8),
+                    padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                   ),
                 ),
               ),

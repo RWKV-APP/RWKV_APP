@@ -6,6 +6,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/config.dart';
+import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 

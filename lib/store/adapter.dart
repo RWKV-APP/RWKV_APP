@@ -1,6 +1,10 @@
 part of 'p.dart';
 
 class _Adapter {
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
   late final _channel = const MethodChannel("channel");
 
   final Map<FromNative, List<void Function(dynamic arguments)>> _registry = {};

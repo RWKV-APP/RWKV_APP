@@ -1,43 +1,17 @@
 part of 'p.dart';
 
 class _App extends RawApp {
-  final _pageKey = qs(PageKey.first);
-
-  late final pageKey = qp((ref) => ref.watch(_pageKey));
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
 
   late final db.AppDatabase _db;
 
-  /// 当前正在运行的任务
-  late final demoType = qs(DemoType.chat);
+  DownloadTask? _appUpdateTask;
 
-  late final _latestBuild = qs(-1);
-  late final _latestBuildIos = qs(-1);
-  late final _noteZh = qs<List<String>>([]);
-  late final _noteEn = qs<List<String>>([]);
-  late final _androidUrl = qs<String?>(null);
-  late final _androidApkUrl = qs<String?>(null);
-  late final _iosUrl = qs<String?>(null);
-  late final shareChatQrCodeZh = qs<String?>(null);
-  late final shareChatQrCodeEn = qs<String?>(null);
-
-  /// 全部的配置信息, 包含所有功能种类的权重
-  late final _config = qs<Map<String, dynamic>?>(null);
-
-  late final _newVersionDialogShown = qs(false);
-
-  late final isDesktop = qp((ref) => ref.watch(_isDesktop));
-  final _isDesktop = qs(false);
-  late final isMobile = qp((ref) => ref.watch(_isMobile));
-  final _isMobile = qs(true);
-
-  late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
-
-  /// 当前应用的主题
-  late final customTheme = qs<custom_theme.CustomTheme>(custom_theme.Light());
-
-  late final tabIndex = qs(0);
-
-  late final apkDownloadState = qs<TaskUpdate?>(null);
+  // ===========================================================================
+  // Getters
+  // ===========================================================================
 
   SystemUiOverlayStyle get systemOverlayStyleLight {
     final scaffold = customTheme.q.scaffold;
@@ -61,10 +35,53 @@ class _App extends RawApp {
 
   String get _configForAllDemosKey => "configForAllDemosKey_${buildNumber.q}";
 
-  DownloadTask? _appUpdateTask;
-
   @override
   BuildContext? get context => getContext();
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
+  final _pageKey = qs(PageKey.first);
+
+  /// 当前正在运行的任务
+  late final demoType = qs(DemoType.chat);
+
+  late final _latestBuild = qs(-1);
+  late final _latestBuildIos = qs(-1);
+  late final _noteZh = qs<List<String>>([]);
+  late final _noteEn = qs<List<String>>([]);
+  late final _androidUrl = qs<String?>(null);
+  late final _androidApkUrl = qs<String?>(null);
+  late final _iosUrl = qs<String?>(null);
+  late final shareChatQrCodeZh = qs<String?>(null);
+  late final shareChatQrCodeEn = qs<String?>(null);
+
+  /// 全部的配置信息, 包含所有功能种类的权重
+  late final _config = qs<Map<String, dynamic>?>(null);
+
+  late final _newVersionDialogShown = qs(false);
+
+  final _isDesktop = qs(false);
+  final _isMobile = qs(true);
+
+  late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
+
+  /// 当前应用的主题
+  late final customTheme = qs<custom_theme.CustomTheme>(custom_theme.Light());
+
+  late final tabIndex = qs(0);
+
+  late final apkDownloadState = qs<TaskUpdate?>(null);
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
+
+  late final pageKey = qp((ref) => ref.watch(_pageKey));
+
+  late final isDesktop = qp((ref) => ref.watch(_isDesktop));
+  late final isMobile = qp((ref) => ref.watch(_isMobile));
 }
 
 /// Public methods

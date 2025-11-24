@@ -76,11 +76,11 @@ class _ShareChatSheetState extends ConsumerState<ShareChatSheet> {
           right: 0,
           child: Material(
             elevation: 16,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+            shape: const RoundedRectangleBorder(borderRadius: .vertical(top: .circular(16))),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const .symmetric(horizontal: 16, vertical: 12),
               child: Row(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: .max,
                 children: [
                   Expanded(
                     child: TextButton.icon(
@@ -274,7 +274,7 @@ class _PreviewState extends ConsumerState<_Preview> {
             child: Center(
               child: SingleChildScrollView(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 36, vertical: 100),
+                  margin: const .symmetric(horizontal: 36, vertical: 100),
                   child: Image.file(imagePreview!, fit: BoxFit.cover),
                 ),
               ),
@@ -282,11 +282,11 @@ class _PreviewState extends ConsumerState<_Preview> {
           ),
           Material(
             elevation: 16,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+            shape: const RoundedRectangleBorder(borderRadius: .vertical(top: .circular(16))),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const .symmetric(horizontal: 16, vertical: 12),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   TextButton.icon(
                     onPressed: widget.onCancelTap,
@@ -318,10 +318,10 @@ class _PreviewState extends ConsumerState<_Preview> {
           Center(
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: .circular(8),
                 color: theme.colorScheme.surfaceContainer,
               ),
-              padding: const EdgeInsets.all(24),
+              padding: const .all(24),
               child: const CircularProgressIndicator(strokeWidth: 4),
             ),
           ),
@@ -361,7 +361,7 @@ class _PreviewState extends ConsumerState<_Preview> {
                     child: Container(
                       width: 50,
                       color: theme.scaffoldBackgroundColor,
-                      alignment: Alignment.center,
+                      alignment: .center,
                       child: Text(
                         S.current.end,
                         style: const TextStyle(fontSize: 12, color: Colors.grey),
@@ -395,13 +395,13 @@ class _PreviewState extends ConsumerState<_Preview> {
     );
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: .end,
       children: [
         const SizedBox(width: 16),
         Text("v$version\n$date", style: const TextStyle(fontSize: 10, color: Colors.grey)),
         const Spacer(),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: .end,
           children: [
             Text(S.current.scan_qrcode, style: const TextStyle(fontSize: 10, color: Colors.grey, height: 1)),
             const SizedBox(height: 4),
@@ -425,7 +425,7 @@ class _PreviewState extends ConsumerState<_Preview> {
       children: [
         const SizedBox(width: 16),
         ClipRRect(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: .circular(6),
           child: Image.asset(
             "assets/img/chat/icon.png",
             width: 42,
@@ -436,21 +436,21 @@ class _PreviewState extends ConsumerState<_Preview> {
         ),
         const SizedBox(width: 12),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: .end,
               children: [
                 const Text(
                   Config.appTitle,
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: .w500,
                   ),
                 ),
                 4.w,
                 Padding(
-                  padding: const EI.o(b: 3),
+                  padding: const .only(bottom: 3),
                   child: Text(P.app.version.q, style: const TextStyle(fontSize: 10)),
                 ),
               ],

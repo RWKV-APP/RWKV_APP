@@ -26,9 +26,9 @@ class PageBenchmark extends ConsumerWidget {
         title: Text(S.current.performance_test),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const .symmetric(horizontal: 16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             const SizedBox(height: 12),
             _Test(),
@@ -166,8 +166,8 @@ class _TestState extends ConsumerState<_Test> {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: .stretch,
+      mainAxisSize: .min,
       children: [
         _KeyValuePairs(
           title: '',
@@ -188,7 +188,7 @@ class _TestState extends ConsumerState<_Test> {
               child: OutlinedButton.icon(
                 icon: null,
                 onPressed: () => ModelSelector.show(),
-                style: const ButtonStyle(visualDensity: VisualDensity.standard),
+                style: const ButtonStyle(visualDensity: .standard),
                 label: Text(S.current.select_model),
               ),
             ),
@@ -202,7 +202,7 @@ class _TestState extends ConsumerState<_Test> {
                       )
                     : null,
                 onPressed: model == null ? null : () => onStartStopTap(),
-                style: const ButtonStyle(visualDensity: VisualDensity.standard),
+                style: const ButtonStyle(visualDensity: .standard),
                 label: Text(generating ? S.current.stop : S.current.start),
               ),
             ),
@@ -248,27 +248,28 @@ class _BatchSizeSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final options = <int>{1, ...supportedBatchSizes}.toList()..sort();
+    final s = S.of(context);
 
     return Material(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      borderRadius: const .all(.circular(8)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const .symmetric(horizontal: 12, vertical: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text(
               S.current.batch_inference_count,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 14, fontWeight: .w500),
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<int>(
               initialValue: selectedBatchSize,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: .symmetric(horizontal: 12, vertical: 8),
               ),
               items: options.map((size) {
-                final label = size == 1 ? '1 (单线程)' : '$size (多线程)';
+                final label = size == 1 ? '1 (${s.single_thread})' : '$size (${s.multi_thread})';
                 return DropdownMenuItem<int>(
                   value: size,
                   child: Text(label),
@@ -296,22 +297,22 @@ class _KeyValuePairs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      borderRadius: const .all(.circular(8)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const .symmetric(horizontal: 12, vertical: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             if (title.isNotEmpty)
               Text(
                 title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 16, fontWeight: .w500),
               ),
             if (title.isNotEmpty) const SizedBox(height: 6),
             for (final pair in pairs.entries) ...[
               if (pair.key != '---')
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Expanded(flex: 2, child: Text(pair.key)),
                     Expanded(flex: 3, child: Text(pair.value)),

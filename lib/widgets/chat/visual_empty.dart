@@ -57,8 +57,8 @@ class VisualEmpty extends ConsumerWidget {
       width: screenWidth,
       top: paddingTop + kToolbarHeight,
       child: Column(
-        crossAxisAlignment: CAA.center,
-        mainAxisAlignment: MAA.center,
+        crossAxisAlignment: .center,
+        mainAxisAlignment: .center,
         children: [
           Center(
             child: ClipRRect(
@@ -74,12 +74,12 @@ class VisualEmpty extends ConsumerWidget {
                   width: math.min(maxW, maxH) - 16,
                   height: math.min(maxW, maxH) * .75,
                   child: Column(
-                    crossAxisAlignment: CAA.center,
-                    mainAxisAlignment: MAA.center,
+                    crossAxisAlignment: .center,
+                    mainAxisAlignment: .center,
                     children: [
                       if (imagePath == null) const Icon(Icons.image),
                       if (imagePath == null) 8.h,
-                      if (imagePath == null) T(s.click_to_load_image, s: const TS(w: FontWeight.w500, s: 20)),
+                      if (imagePath == null) T(s.click_to_load_image, s: const TS(w: .w500, s: 20)),
                       if (imagePath == null) 8.h,
                       if (imagePath == null) T(s.then_you_can_start_to_chat_with_rwkv),
                     ],

@@ -116,8 +116,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
     return SizedBox(
       width: double.infinity,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           AppBar(
             backgroundColor: Colors.transparent,
@@ -214,11 +214,11 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
       OutlinedButtonTheme(
         data: OutlinedButtonThemeData(
           style: ButtonStyle(
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 12)),
-            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+            padding: WidgetStateProperty.all(const .symmetric(horizontal: 12, vertical: 8)),
             minimumSize: WidgetStateProperty.all(const Size(0, 36)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(12))),
           ),
         ),
         child: Row(

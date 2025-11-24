@@ -269,7 +269,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "comprehensive": MessageLookupByLibrary.simpleMessage("Comprehensive"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "conservative": MessageLookupByLibrary.simpleMessage(
-      "Conservative (suitable for math and code)",
+      "Conservative (math & code)",
     ),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Continue Download",
@@ -506,6 +506,7 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "more_questions": MessageLookupByLibrary.simpleMessage("More Questions"),
+    "multi_thread": MessageLookupByLibrary.simpleMessage("Multi-threaded"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
     "neko": MessageLookupByLibrary.simpleMessage("Neko"),
     "network_error": MessageLookupByLibrary.simpleMessage("Network Error"),
@@ -615,7 +616,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Please select a branch to continue the conversation",
         ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
-      "Please select a World Type",
+      "Please select a See Type",
     ),
     "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
       "Please select an image first",
@@ -710,7 +711,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "see": MessageLookupByLibrary.simpleMessage("See"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Select a Model"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
-      "Select a World Type",
+      "Select a See Type",
     ),
     "select_all": MessageLookupByLibrary.simpleMessage("Select All"),
     "select_from_library": MessageLookupByLibrary.simpleMessage(
@@ -742,6 +743,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Show only Prefill log",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("Show Thought Stack"),
+    "single_thread": MessageLookupByLibrary.simpleMessage("Single-threaded"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "It is recommended to choose at least a 1.5B model for better results",
     ),
@@ -801,7 +803,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "suggest": MessageLookupByLibrary.simpleMessage("Suggest"),
     "switch_to_creative_mode_for_better_exp":
         MessageLookupByLibrary.simpleMessage(
-          "Switch to \'Creative\' mode for better experience",
+          "Switch Decode Param to \'Creative\' for better experience",
         ),
     "system_mode": MessageLookupByLibrary.simpleMessage("System Mode"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("System Prompt"),
@@ -896,7 +898,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "window_id": m28,
-    "world": MessageLookupByLibrary.simpleMessage("World"),
+    "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
     "x_tabs": m29,

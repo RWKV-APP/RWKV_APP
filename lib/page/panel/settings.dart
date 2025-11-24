@@ -91,10 +91,10 @@ class Settings extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: isInDrawerMenu
-          ? BorderRadius.zero
-          : const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
+          ? .zero
+          : const .only(
+              topLeft: .circular(16),
+              topRight: .circular(16),
             ),
       child: Scaffold(
         backgroundColor: demoType == DemoType.chat ? Colors.transparent : customTheme.setting,
@@ -107,7 +107,7 @@ class Settings extends ConsumerWidget {
                 backgroundColor: customTheme.setting,
                 actions: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const .only(right: 8),
                     child: IconButton(
                       onPressed: () {
                         pop();
@@ -118,22 +118,17 @@ class Settings extends ConsumerWidget {
                 ],
               ),
         body: ListView(
-          padding: EI.o(
-            t: paddingTop,
-            b: max(paddingBottom, 12),
-            l: 12 + paddingLeft,
-            r: 12,
-          ),
+          padding: .only(left: 12 + paddingLeft, top: paddingTop, right: 12, bottom: max(paddingBottom, 12)),
           controller: scrollController,
           children: [
             if (isChat) const SizedBox(height: 40),
             Row(
-              mainAxisAlignment: MAA.center,
+              mainAxisAlignment: .center,
               children: [iconWidget],
             ),
             16.h,
             const Row(
-              mainAxisAlignment: MAA.center,
+              mainAxisAlignment: .center,
               children: [
                 Expanded(
                   child: T(
@@ -146,7 +141,7 @@ class Settings extends ConsumerWidget {
             ),
             4.h,
             Row(
-              mainAxisAlignment: MAA.center,
+              mainAxisAlignment: .center,
               children: [
                 T(version, s: const TS(s: 12)),
                 T(" ($buildNumber)", s: const TS(s: 12)),
@@ -154,12 +149,12 @@ class Settings extends ConsumerWidget {
             ),
             16.h,
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 Expanded(
                   child: T(
                     s.application_settings,
-                    s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
+                    s: TS(w: .w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -169,19 +164,19 @@ class Settings extends ConsumerWidget {
               isSectionStart: true,
               icon: Icon(Icons.manage_accounts, color: qb.q(.667), size: 16),
               title: s.application_mode,
-              info: userType.displayName(),
+              infoText: userType.displayName(),
               onTap: P.preference.showUserTypeDialog,
             ),
             FormItem(
               icon: Icon(Icons.format_size_outlined, color: qb.q(.667), size: 16),
               title: s.font_size,
-              info: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
+              infoText: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
               onTap: P.preference.showTextScaleFactorDialog,
             ),
             FormItem(
               icon: Icon(Icons.language_outlined, color: qb.q(.667), size: 16),
               title: s.application_language,
-              info: preferredLanguage.display ?? s.follow_system,
+              infoText: preferredLanguage.display ?? s.follow_system,
               onTap: P.preference.showLocaleDialog,
             ),
             if (isChat && userType.isGreaterThan(UserType.user))
@@ -194,17 +189,17 @@ class Settings extends ConsumerWidget {
               isSectionEnd: true,
               icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.q(.667), size: 16),
               title: s.appearance,
-              info: preferredThemeMode.displayName,
+              infoText: preferredThemeMode.displayName,
               onTap: P.preference.showThemeSettings,
             ),
             12.h,
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 Expanded(
                   child: T(
                     s.join_the_community,
-                    s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
+                    s: TS(w: .w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -238,11 +233,11 @@ class Settings extends ConsumerWidget {
             ),
             12.h,
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 T(
                   s.about,
-                  s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
+                  s: TS(w: .w500, c: qb.q(.8), s: 12),
                 ),
               ],
             ),
@@ -347,7 +342,7 @@ class Settings extends ConsumerWidget {
       applicationName: Config.appTitle,
       applicationVersion: "$version ($buildNumber)",
       applicationIcon: Container(
-        margin: const EI.o(t: 12, b: 12),
+        margin: const .only(top: 12, bottom: 12),
         child: iconWidget,
       ),
       useRootNavigator: true,
@@ -365,7 +360,7 @@ class _DumpSwitch extends ConsumerWidget {
       height: 24,
       child: Switch.adaptive(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: EdgeInsets.zero,
+        padding: .zero,
         value: dumpping,
         onChanged: (value) async {
           if (value) {

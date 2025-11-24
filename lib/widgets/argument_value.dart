@@ -13,6 +13,7 @@ class ArgumentValue extends ConsumerWidget {
   final bool showValue;
   final EdgeInsets padding;
   final dynamic defaultValue;
+  final bool enabled;
 
   const ArgumentValue(
     this.argument,
@@ -20,21 +21,25 @@ class ArgumentValue extends ConsumerWidget {
     super.key,
     this.showTitle = true,
     this.showValue = true,
-    this.padding = const EI.o(l: 12, r: 12),
+    this.padding = const .only(left: 12, right: 12),
     this.defaultValue,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final value = defaultValue ?? switch (argument) {
-      Argument.batchCount => ref.watch(P.chat.batchCount),
-      Argument.batchVW => ref.watch(P.chat.batchVW),
-      _ => ref.watch(P.rwkv.arguments(argument)),
-    };
+    final _ = ref.watch(P.rwkv.supportedBatchSizes);
+    final value =
+        defaultValue ??
+        switch (argument) {
+          Argument.batchCount => ref.watch(P.chat.batchCount),
+          Argument.batchVW => ref.watch(P.chat.batchVW),
+          _ => ref.watch(P.rwkv.arguments(argument)),
+        };
     if (!argument.show) return const SizedBox.shrink();
     final qb = ref.watch(P.app.qb);
     return Column(
-      crossAxisAlignment: CAA.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         padding.top.h,
         Row(
@@ -46,7 +51,7 @@ class ArgumentValue extends ConsumerWidget {
                       argument.name.codeToName,
                       s: const TS(
                         s: 14,
-                        w: FontWeight.w500,
+                        w: .w500,
                       ),
                     )
                   : const SizedBox.shrink(),
@@ -54,7 +59,7 @@ class ArgumentValue extends ConsumerWidget {
             if (showValue)
               T(
                 value.toStringAsFixed(argument.fixedDecimals),
-                s: const TS(s: 14, w: FontWeight.w600),
+                s: const TS(s: 14, w: .w600),
               ),
             padding.right.w,
           ],
@@ -70,7 +75,8 @@ class ArgumentValue extends ConsumerWidget {
             14.w,
             Expanded(
               child: Slider(
-                padding: EI.zero,
+                activeColor: enabled ? null : Colors.grey.q(1),
+                padding: .zero,
                 value: (value).toDouble(),
                 min: argument.min,
                 max: argument.max,

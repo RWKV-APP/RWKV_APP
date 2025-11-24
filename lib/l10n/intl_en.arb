@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "world": "World",
+  "world": "See",
   "see": "See",
   "text": "Text",
   "life_span": "Life Span",
@@ -47,6 +47,8 @@
   "batch_inference_settings": "Batch Inference Settings",
   "batch_inference_count": "Batch Inference Count",
   "batch_inference_count_detail": "Each inference will generate {count} messages",
+  "single_thread": "Single-threaded",
+  "multi_thread": "Multi-threaded",
   "batch_inference_width": "Message Display Width",
   "batch_inference_width_detail": "Batch Inference Each Message Width",
   "thinking_mode_off": "Reasoning{footer}: Off",
@@ -111,8 +113,8 @@
   "you_can_now_start_to_chat_with_rwkv": "You can now start chatting with RWKV",
   "bot_message_edited": "Bot message edited, you can now send a new message",
   "download_source": "Download Source",
-  "select_a_world_type": "Select a World Type",
-  "please_select_a_world_type": "Please select a World Type",
+  "select_a_world_type": "Select a See Type",
+  "please_select_a_world_type": "Please select a See Type",
   "loading": "Loading...",
   "cancel": "Cancel",
   "session_configuration": "Session Configuration",
@@ -437,7 +439,7 @@
   "decode_param": "Decode Param",
   "fixed": "Fixed",
   "creative": "Creative",
-  "conservative": "Conservative (suitable for math and code)",
+  "conservative": "Conservative (math & code)",
   "default_": "Default",
   "balanced": "Balanced",
   "custom": "Custom",
@@ -472,5 +474,5 @@
   "performance_test_title": "Performance Test",
   "performance_test_description": "Use lambada to test perplexity",
   "start_download_updates_": "Start downloading updates...",
-  "switch_to_creative_mode_for_better_exp": "Switch to 'Creative' mode for better experience"
+  "switch_to_creative_mode_for_better_exp": "Switch Decode Param to 'Creative' for better experience"
 }

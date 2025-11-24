@@ -90,6 +90,8 @@ class _Msg extends Table {
   TextColumn get runningMode => text().nullable()();
 
   TextColumn get build => text()();
+
+  TextColumn get rawDecodeParams => text().nullable()();
 }
 
 @DriftDatabase(tables: [_Conversation, _Msg])
@@ -97,7 +99,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -109,12 +111,14 @@ class AppDatabase extends _$AppDatabase {
         from2To3: (m, schema) async {
           await m.addColumn(schema.conv, schema.conv.subtitle);
         },
+        from3To4: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.rawDecodeParams);
+        },
       ),
       beforeOpen: (details) async {
         if (!details.hadUpgrade) {
           return;
         }
-        qqq('check');
         if (details.versionNow == 3) {
           final conversations = await select(conversation).get();
           for (final conv in conversations) {
@@ -176,6 +180,7 @@ class AppDatabase extends _$AppDatabase {
       modelName: Value(message.modelName),
       runningMode: Value(message.runningMode),
       build: P.app.buildNumber.q,
+      rawDecodeParams: Value(message.rawDecodeParams),
     );
   }
 
@@ -326,5 +331,6 @@ model.Message _msgDataToMessage(_MsgData msgData) {
     ttsFilePaths: ttsFilePaths,
     modelName: msgData.modelName,
     runningMode: msgData.runningMode,
+    rawDecodeParams: msgData.rawDecodeParams,
   );
 }

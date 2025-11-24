@@ -1,6 +1,10 @@
 part of 'p.dart';
 
 class _Msg {
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   /// The pool of messages
   late final pool = qs<Map<int, Message>>({});
 
@@ -17,6 +21,17 @@ class _Msg {
 
   /// The node of the message list
   late final msgNode = qs<MsgNode>(MsgNode(0));
+
+  /// The key of it is the id of the message
+  late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
+
+  late final loading = qs(false);
+
+  late final batchSelection = qsf<Message, int?>(null);
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
 
   /// The list of messages rendering in the chat page message list
   late final list = qp<List<Message>>((ref) {
@@ -37,13 +52,6 @@ class _Msg {
     if (editingIndex < 0 || editingIndex >= list.length) return false;
     return list[editingIndex].isMine == false;
   });
-
-  /// The key of it is the id of the message
-  late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
-
-  late final loading = qs(false);
-
-  late final batchSelection = qsf<Message, int?>(null);
 
   late final hasAtLeastOneImage = qp<bool>((ref) {
     final list = ref.watch(this.list);

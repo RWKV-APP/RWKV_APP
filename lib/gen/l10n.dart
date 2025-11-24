@@ -54,9 +54,9 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `World`
+  /// `See`
   String get world {
-    return Intl.message('World', name: 'world', desc: '', args: []);
+    return Intl.message('See', name: 'world', desc: '', args: []);
   }
 
   /// `See`
@@ -449,6 +449,16 @@ class S {
     );
   }
 
+  /// `单线程`
+  String get single_thread {
+    return Intl.message('单线程', name: 'single_thread', desc: '', args: []);
+  }
+
+  /// `多线程`
+  String get multi_thread {
+    return Intl.message('多线程', name: 'multi_thread', desc: '', args: []);
+  }
+
   /// `消息显示宽度`
   String get batch_inference_width {
     return Intl.message(
@@ -519,10 +529,10 @@ class S {
     return Intl.message('让 RWKV 输出语音', name: 'tts_detail', desc: '', args: []);
   }
 
-  /// `线翻译服务器`
+  /// `离线翻译服务器`
   String get offline_translator_server {
     return Intl.message(
-      '线翻译服务器',
+      '离线翻译服务器',
       name: 'offline_translator_server',
       desc: '',
       args: [],
@@ -3243,10 +3253,10 @@ class S {
     );
   }
 
-  /// `建议选择 “创意模式”, 以便获得更好的体验`
+  /// `解码参数建议选择 “创意”, 以便获得更好的体验`
   String get switch_to_creative_mode_for_better_exp {
     return Intl.message(
-      '建议选择 “创意模式”, 以便获得更好的体验',
+      '解码参数建议选择 “创意”, 以便获得更好的体验',
       name: 'switch_to_creative_mode_for_better_exp',
       desc: '',
       args: [],

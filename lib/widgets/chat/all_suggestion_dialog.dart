@@ -75,17 +75,17 @@ class _AllSuggestionDialogState extends State<AllSuggestionDialog> implements Ti
     return SizedBox(
       width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           16.h,
-          T(s.all_prompt, s: const TS(s: 16, w: FontWeight.w600)),
+          T(s.all_prompt, s: const TS(s: 16, w: .w600)),
           16.h,
           SizedBox(
             height: 50,
             child: TabBar(
               isScrollable: true,
               unselectedLabelStyle: const TS(s: 12),
-              labelPadding: const EI.s(v: 0, h: 12),
+              labelPadding: const .symmetric(horizontal: 12),
               tabAlignment: TabAlignment.start,
               controller: tabController,
               onTap: (i) {
@@ -137,20 +137,20 @@ class _SuggestionList extends StatelessWidget {
     final s = S.of(context);
     if (suggestions.isEmpty) {
       return Container(
-        alignment: Alignment.center,
+        alignment: .center,
         child: T(s.no_data, s: const TS(s: 16)),
       );
     }
     return ListView.builder(
       controller: scrollController,
       itemCount: suggestions.length,
-      padding: const EI.o(t: 8, b: 40),
+      padding: const .only(top: 8, bottom: 40),
       itemBuilder: (c, i) {
         final s = suggestions[i];
         return InkWell(
           child: Container(
-            padding: const EI.s(v: 8, h: 12),
-            child: T(s.display, s: const TS(s: 14, w: FontWeight.w500)),
+            padding: const .symmetric(horizontal: 12, vertical: 8),
+            child: T(s.display, s: const TS(s: 14, w: .w500)),
           ),
           onTap: () {
             Navigator.pop(context, s);

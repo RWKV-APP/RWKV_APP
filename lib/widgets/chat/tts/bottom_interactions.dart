@@ -50,22 +50,22 @@ class TTSBottomInteractions extends ConsumerWidget {
       child: Container(
         decoration: const BoxDecoration(color: kC),
         child: Column(
-          crossAxisAlignment: CAA.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             if (selectedSpkName != null)
               Container(
-                padding: const EI.s(v: 4),
+                padding: const .symmetric(vertical: 4),
                 child: T(
                   target,
-                  s: TS(c: primary, w: FontWeight.w600),
+                  s: TS(c: primary, w: .w600),
                 ),
               ),
             if (selectSourceAudioPath != null)
               Container(
-                padding: const EI.s(v: 4),
+                padding: const .symmetric(vertical: 4),
                 child: T(
                   s.imitate_target + ": " + (sourceWavName ?? ""),
-                  s: TS(c: primary, w: FontWeight.w600),
+                  s: TS(c: primary, w: .w600),
                 ),
               ),
             const _Actions(),
@@ -131,14 +131,14 @@ class _AudioInteractor extends ConsumerWidget {
                         text: s.you_can_record_your_voice_and_let_rwkv_to_copy_it,
                         style: TS(
                           c: primary,
-                          w: FontWeight.w600,
+                          w: .w600,
                         ),
                       ),
                       TextSpan(
                         text: s.or_select_a_wav_file_to_let_rwkv_to_copy_it,
                         style: const TS(
                           c: Colors.blue,
-                          w: FontWeight.w600,
+                          w: .w600,
                         ),
                         recognizer: TapGestureRecognizer()..onTap = _onUploadFilePressed,
                       ),
@@ -196,7 +196,7 @@ class _IntonationPanel extends ConsumerWidget {
     return SizedBox(
       height: 250,
       child: Padding(
-        padding: const EI.o(t: 12, b: 12),
+        padding: const .only(top: 12, bottom: 12),
         child: Wrap(
           spacing: 4,
           runSpacing: 4,
@@ -212,7 +212,7 @@ class _IntonationPanel extends ConsumerWidget {
                   border: Border.all(color: qb.q(.5), width: .5),
                   borderRadius: 4.r,
                 ),
-                padding: const EI.o(l: 8, r: 8, t: 4, b: 4),
+                padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                 child: T(emoji + e),
               ),
             );
@@ -237,9 +237,9 @@ class _AudioButton extends ConsumerWidget {
     return GestureDetector(
       onTap: P.tts.onAudioInteractorButtonPressed,
       child: Padding(
-        padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
+        padding: const .only(top: 2, right: 4, bottom: 6),
         child: Container(
-          padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
+          padding: const .only(left: 8, top: 6, right: 8, bottom: 6),
           decoration: BoxDecoration(
             color: primary.q(audioInteractorShown ? 1 : .1),
             borderRadius: borderRadius,
@@ -270,9 +270,9 @@ class _SpkButton extends ConsumerWidget {
     return GestureDetector(
       onTap: P.tts.onSpkButtonPressed,
       child: Padding(
-        padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
+        padding: const .only(top: 2, right: 4, bottom: 6),
         child: Container(
-          padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
+          padding: const .only(left: 8, top: 6, right: 8, bottom: 6),
           decoration: BoxDecoration(
             color: primary.q(spkShown ? 1 : .1),
             borderRadius: borderRadius,
@@ -301,9 +301,9 @@ class _IntonationButton extends ConsumerWidget {
     return GestureDetector(
       onTap: P.tts.onIntonationButtonPressed,
       child: Padding(
-        padding: const EI.o(l: 0, r: 4, t: 2, b: 6),
+        padding: const .only(top: 2, right: 4, bottom: 6),
         child: Container(
-          padding: const EI.o(l: 8, r: 8, t: 6, b: 6),
+          padding: const .only(left: 8, top: 6, right: 8, bottom: 6),
           decoration: BoxDecoration(
             color: primary.q(intonationShown ? 1 : .1),
             borderRadius: borderRadius,
@@ -389,7 +389,7 @@ class _Actions extends ConsumerWidget {
             child: GestureDetector(
               onTap: _onRightButtonPressed,
               child: Container(
-                padding: const EI.s(h: 10, v: 5),
+                padding: const .symmetric(horizontal: 10, vertical: 5),
                 child: Icon(
                   (Platform.isIOS || Platform.isMacOS)
                       ? editingBotMessage
@@ -447,7 +447,7 @@ class _SpkPanel extends ConsumerWidget {
     return SizedBox(
       height: 250,
       child: Column(
-        crossAxisAlignment: CAA.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -465,8 +465,8 @@ class _SpkPanel extends ConsumerWidget {
                     P.app.hapticLight();
                   },
                   child: Container(
-                    padding: const EI.s(h: 4, v: 2),
-                    margin: const EI.o(r: 4),
+                    padding: const .symmetric(horizontal: 4, vertical: 2),
+                    margin: const .only(right: 4),
                     decoration: BoxDecoration(
                       color: filtered ? primary.q(.1) : kC,
                       borderRadius: 4.r,
@@ -487,10 +487,10 @@ class _SpkPanel extends ConsumerWidget {
           Expanded(
             child: RawScrollbar(
               controller: controller,
-              padding: const EI.o(t: 12, b: 12),
+              padding: const .only(top: 12, bottom: 12),
               child: ListView.builder(
                 controller: controller,
-                padding: const EI.o(t: 12, b: 12),
+                padding: const .only(top: 12, bottom: 12),
                 itemCount: spkNames.length,
                 itemBuilder: (context, index) {
                   final k = spkNames.elementAt(index);
@@ -513,7 +513,7 @@ class _SpkPanel extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: Container(
-                            padding: const EI.o(t: 4, b: 4, l: 8, r: 8),
+                            padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                             decoration: BoxDecoration(
                               color: selected ? primary.q(.1) : kC,
                               borderRadius: 6.r,
@@ -523,7 +523,7 @@ class _SpkPanel extends ConsumerWidget {
                                 Expanded(
                                   child: T(
                                     display,
-                                    s: TS(c: selected ? primary : primary.q(.8), w: selected ? FontWeight.w600 : FontWeight.w400),
+                                    s: TS(c: selected ? primary : primary.q(.8), w: selected ? .w600 : .w400),
                                   ),
                                 ),
                                 if (selected)
@@ -543,7 +543,7 @@ class _SpkPanel extends ConsumerWidget {
                             await P.world.play(path: path);
                           },
                           child: Container(
-                            padding: const EI.a(6.5),
+                            padding: const .all(6.5),
                             decoration: const BoxDecoration(color: kC),
                             child: Icon(
                               Icons.volume_up,
@@ -578,7 +578,7 @@ class _Instruction extends ConsumerWidget {
       children: [
         if (selectSpkName == null)
           Column(
-            crossAxisAlignment: CAA.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               _TextField(preferredDemoType: preferredDemoType),
               if (!hasFocus) const _InstructTabs(),
@@ -655,16 +655,16 @@ class _InstructTabs extends ConsumerWidget {
                   opacity: enabled ? 1 : .333,
                   duration: 250.ms,
                   child: Container(
-                    margin: const EI.o(t: 4),
-                    padding: const EI.o(l: 8, r: 8, t: 4, b: 4),
+                    margin: const .only(top: 4),
+                    padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                     decoration: BoxDecoration(
                       color: isSelected ? primary.q(.2) : kC,
                       border: Border.all(color: qb.q(.5), width: .5),
                       borderRadius: 4.r,
                     ),
                     child: Row(
-                      crossAxisAlignment: CAA.center,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: .center,
+                      mainAxisSize: .min,
                       children: [
                         if (hasValue)
                           Icon(
@@ -715,7 +715,7 @@ class _InstructOptions extends ConsumerWidget {
       child: AnimatedContainer(
         duration: 250.ms,
         height: interactingInstruction == TTSInstruction.none ? 0 : 150,
-        margin: const EI.o(t: 4),
+        margin: const .only(top: 4),
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: qb.q(.5), width: .5)),
         ),
@@ -733,8 +733,8 @@ class _InstructOptions extends ConsumerWidget {
                 _onTap(index);
               },
               child: Container(
-                padding: const EI.o(l: 8, r: 8, t: 4, b: 4),
-                margin: const EI.o(t: 4),
+                padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
+                margin: const .only(top: 4),
                 decoration: BoxDecoration(
                   color: selected ? primary.q(.2) : kC,
                   border: Border.all(color: qb.q(.5), width: .5),
@@ -803,7 +803,7 @@ class _TextField extends ConsumerWidget {
           minLines: 1,
           decoration: InputDecoration(
             suffixIcon: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 GestureDetector(
                   onTap: P.tts.onClearButtonPressed,
@@ -811,7 +811,7 @@ class _TextField extends ConsumerWidget {
                     opacity: textInInput.trim().isNotEmpty ? 1 : .5,
                     duration: 250.ms,
                     child: Container(
-                      padding: const EI.s(v: 6, h: 4),
+                      padding: const .symmetric(horizontal: 4, vertical: 6),
                       child: const Icon(Icons.clear),
                     ),
                   ),
@@ -819,18 +819,13 @@ class _TextField extends ConsumerWidget {
                 GestureDetector(
                   onTap: P.tts.onRefreshButtonPressed,
                   child: Container(
-                    padding: const EI.s(v: 6, h: 4),
+                    padding: const .symmetric(horizontal: 4, vertical: 6),
                     child: const Icon(Icons.refresh),
                   ),
                 ),
               ],
             ),
-            contentPadding: const EI.o(
-              l: 12,
-              r: 8,
-              t: 4,
-              b: 4,
-            ),
+            contentPadding: const .only(left: 12, top: 4, right: 8, bottom: 4),
             fillColor: qw,
             focusColor: qw,
             hoverColor: qw,

@@ -31,13 +31,13 @@ class PageHome extends ConsumerWidget {
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .stretch,
+          mainAxisSize: .min,
           children: [
             const SizedBox(height: 100),
             Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: .circular(50),
                 clipBehavior: Clip.antiAlias,
                 child: Image.asset(
                   'assets/img/chat/rwkv.png',
@@ -49,7 +49,7 @@ class PageHome extends ConsumerWidget {
             const SizedBox(height: 24),
             Text(
               s.welcome_to_rwkv_chat,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: .bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
@@ -60,7 +60,7 @@ class PageHome extends ConsumerWidget {
             ),
             const SizedBox(height: 100),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const .symmetric(horizontal: 12),
               child: MasonryGridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -103,19 +103,19 @@ class _ChatButton extends ConsumerWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
           P.chat.startNewChat();
           push(PageKey.chat);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Align(
-                alignment: Alignment.topLeft,
+                alignment: .topLeft,
                 child: Container(
                   height: 48,
                   width: 48,
@@ -123,12 +123,12 @@ class _ChatButton extends ConsumerWidget {
                     color: Colors.blueAccent,
                     shape: BoxShape.circle,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.chat, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.chat, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.chat_with_rwkv_model, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
@@ -149,25 +149,25 @@ class _TTSButton extends ConsumerWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
           P.chat.startNewChat();
           push(PageKey.talk);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               SizedBox(
                 height: 48,
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: .centerLeft,
                   child: Container(
                     height: 48,
                     width: 48,
-                    alignment: Alignment.center,
+                    alignment: .center,
                     decoration: const BoxDecoration(
                       color: Colors.orange,
                       shape: BoxShape.circle,
@@ -180,7 +180,7 @@ class _TTSButton extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.tts, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.tts, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.tts_detail, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
@@ -201,18 +201,18 @@ class _VisualButton extends ConsumerWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
           push(PageKey.see);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Align(
-                alignment: Alignment.topLeft,
+                alignment: .topLeft,
                 child: Container(
                   height: 48,
                   width: 48,
@@ -220,12 +220,12 @@ class _VisualButton extends ConsumerWidget {
                     color: Colors.deepPurpleAccent,
                     shape: BoxShape.circle,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: const Icon(Icons.public, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.world, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.see, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.visual_understanding_and_ocr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
@@ -246,7 +246,7 @@ class _NekoButton extends ConsumerWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () async {
           final current = P.rwkv.currentModel.q;
@@ -269,12 +269,12 @@ class _NekoButton extends ConsumerWidget {
           push(PageKey.neko);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Align(
-                alignment: Alignment.topLeft,
+                alignment: .topLeft,
                 child: Container(
                   height: 48,
                   width: 48,
@@ -282,12 +282,12 @@ class _NekoButton extends ConsumerWidget {
                     color: Colors.pinkAccent,
                     shape: BoxShape.circle,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.neko, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.neko, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.nyan_nyan, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
@@ -308,18 +308,18 @@ class _CompletionButton extends ConsumerWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
           push(PageKey.completion);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Align(
-                alignment: Alignment.topLeft,
+                alignment: .topLeft,
                 child: Container(
                   height: 48,
                   width: 48,
@@ -327,12 +327,12 @@ class _CompletionButton extends ConsumerWidget {
                     color: Colors.lightGreen,
                     shape: BoxShape.circle,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.feather, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.completion_mode, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.completion_mode, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.text_completion_mode, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
@@ -354,18 +354,18 @@ class _TranslatorButton extends ConsumerWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
           push(PageKey.translator);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Align(
-                alignment: Alignment.topLeft,
+                alignment: .topLeft,
                 child: Container(
                   height: 48,
                   width: 48,
@@ -373,14 +373,14 @@ class _TranslatorButton extends ConsumerWidget {
                     color: Colors.blue,
                     shape: BoxShape.circle,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: const Icon(Icons.translate, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
               Text(
                 isDesktop ? s.offline_translator_server : s.offline_translator,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: .bold),
               ),
               const SizedBox(height: 8),
               Text(s.offline_translator_detail, style: const TextStyle(fontSize: 12, color: Colors.grey)),
@@ -401,18 +401,18 @@ class _LambadaButton extends ConsumerWidget {
     final s = S.of(context);
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
           push(PageKey.lambada);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Align(
-                alignment: Alignment.topLeft,
+                alignment: .topLeft,
                 child: Container(
                   height: 48,
                   width: 48,
@@ -420,12 +420,12 @@ class _LambadaButton extends ConsumerWidget {
                     color: Colors.purple,
                     shape: BoxShape.circle,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.bolt, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.lambada_test, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.lambada_test, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.performance_test_description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),
@@ -475,11 +475,11 @@ class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
   Widget build(BuildContext context) {
     return Center(
       child: Material(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: .circular(16),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 24),
+          padding: const .symmetric(horizontal: 36, vertical: 24),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               const CircularProgressIndicator(),
               const SizedBox(height: 16),
@@ -501,18 +501,18 @@ class _RolePlayButton extends ConsumerWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
           push(PageKey.rolePlaying);
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const .all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Align(
-                alignment: Alignment.topLeft,
+                alignment: .topLeft,
                 child: Container(
                   height: 48,
                   width: 48,
@@ -520,12 +520,12 @@ class _RolePlayButton extends ConsumerWidget {
                     color: Colors.yellow,
                     shape: BoxShape.circle,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.role_play, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(s.role_play, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.role_play_intro, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),

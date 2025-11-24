@@ -1,10 +1,10 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 3.0.10+577
+version: 3.1.0+580
 
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.10.0
 
 dependencies:
   flutter:
@@ -30,9 +30,28 @@ dependencies:
       ref: master
 
   photo_viewer:
+    # Local development, fix some bugs
+    # path: ../photo_viewer
+    # Git development, for your company's project
     git:
       url: https://github.com/HaloWang/photo_viewer
       ref: main
+    # Original repository
+    # git:
+    #   url: https://github.com/kumamotone/photo_viewer
+    #   ref: main
+
+  vclibs:
+    # Local development, fix some bugs
+    # path: ../vclibs
+    # Git development, for your company's project
+    git:
+      url: https://github.com/HaloWang/vclibs
+      ref: main
+    # Original repository
+    # git:
+    #   url: https://github.com/leanflutter/vclibs
+    #   ref: main
 
   disable_battery_optimization:
     git:
@@ -102,7 +121,6 @@ dev_dependencies:
   freezed:
   icons_launcher:
   json_serializable:
-  riverpod_lint:
   sentry_dart_plugin:
   test:
 

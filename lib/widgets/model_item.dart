@@ -6,12 +6,12 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
-import 'package:rwkv_mobile_flutter/to_rwkv.dart';
-import 'package:rwkv_mobile_flutter/types.dart';
+import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/func/unzip.dart';
@@ -239,8 +239,8 @@ class ModelItem extends ConsumerWidget {
           borderRadius: 8.r,
           border: Border.all(color: qw.q(.1), width: .5),
         ),
-        margin: const EI.o(t: 8),
-        padding: const EI.a(8),
+        margin: const .only(top: 8),
+        padding: const .all(8),
         child: Row(
           children: [
             Expanded(
@@ -257,7 +257,7 @@ class ModelItem extends ConsumerWidget {
                       color: loading ? kCG.q(.5) : kCG,
                       borderRadius: 8.r,
                     ),
-                    padding: const EI.a(8),
+                    padding: const .all(8),
                     child: T(
                       loading ? s.loading : startTitle,
                       s: TS(c: qw),
@@ -272,7 +272,7 @@ class ModelItem extends ConsumerWidget {
                       color: kG.q(.5),
                       borderRadius: 8.r,
                     ),
-                    padding: const EI.a(8),
+                    padding: const .all(8),
                     child: T(loadButtonTextShowLoad ? S.current.loaded : s.chatting, s: TS(c: qw)),
                   ),
                 ),
@@ -319,17 +319,17 @@ class DownloadActions extends ConsumerWidget {
     final localFile = ref.watch(P.fileManager.locals(file));
     final hasFile = localFile.hasFile;
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         if (showDownload && !hasFile)
           IconButton(
             onPressed: () => onDownloadTap(context),
             icon: const Icon(Icons.download_rounded),
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
           ),
         if (showCancel)
           IconButton(
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             onPressed: onCancelTap,
             icon: const Icon(Icons.stop_rounded),
           ),
@@ -338,13 +338,13 @@ class DownloadActions extends ConsumerWidget {
             onPressed: () {
               P.fileManager.pauseDownload(fileInfo: file);
             },
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             icon: const Icon(Icons.pause),
           ),
         if (showResume)
           IconButton(
             onPressed: () => onDownloadTap(context),
-            visualDensity: VisualDensity.compact,
+            visualDensity: .compact,
             icon: const Icon(Icons.play_arrow_rounded),
           ),
       ],
@@ -384,7 +384,7 @@ class _Delete extends ConsumerWidget {
             color: kC,
           ),
         ),
-        padding: const EI.a(5),
+        padding: const .all(5),
         child: Icon(
           Icons.delete_forever_outlined,
           color: primary,
@@ -419,8 +419,8 @@ class FileKeyItem extends ConsumerWidget {
         : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
 
     return Column(
-      crossAxisAlignment: CAA.start,
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: .start,
+      mainAxisAlignment: .center,
       children: [
         Wrap(
           spacing: 8,
@@ -428,11 +428,11 @@ class FileKeyItem extends ConsumerWidget {
           children: [
             T(
               fileInfo.name,
-              s: const TS(w: FontWeight.w600),
+              s: const TS(w: .w600),
             ),
             T(
               gbDisplay(fileSize),
-              s: TS(c: qb.q(.7), w: FontWeight.w500),
+              s: TS(c: qb.q(.7), w: .w500),
             ),
             if (showDownloaded && localFile.hasFile)
               Icon(
@@ -507,6 +507,7 @@ class _Tags extends ConsumerWidget {
           late final Color color;
           late final Color textColor;
           late final Color borderColor;
+          final isNPU = tag == "npu";
 
           if (isMLX) {
             color = kC;
@@ -524,7 +525,7 @@ class _Tags extends ConsumerWidget {
               color: color,
               border: Border.all(color: borderColor, width: .5),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(horizontal: 4),
             child: IntrinsicWidth(
               child: Row(
                 children: [
@@ -532,17 +533,18 @@ class _Tags extends ConsumerWidget {
                     tag.toUpperCase(),
                     style: TS(
                       c: textColor,
-                      w: showHighlight ? FontWeight.w500 : FontWeight.w400,
+                      w: showHighlight ? .w500 : .w400,
                     ),
                   ),
                   if (isMLX)
                     Padding(
-                      padding: const EI.o(b: 2),
-                      child: Icon(
-                        Icons.apple,
-                        size: 13,
-                        color: qb,
-                      ),
+                      padding: const .only(bottom: 2),
+                      child: Icon(Icons.apple, size: 13, color: qb),
+                    ),
+                  if (isNPU)
+                    Padding(
+                      padding: const .only(left: 4),
+                      child: FaIcon(FontAwesomeIcons.boltLightning, size: 10, color: qw),
                     ),
                 ],
               ),
@@ -556,7 +558,7 @@ class _Tags extends ConsumerWidget {
               borderRadius: 4.r,
               border: Border.all(width: .5, color: kCR),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(horizontal: 4),
             child: T("DEBUG", s: TS(c: qw)),
           ),
         if (quantization != null && quantization.isNotEmpty)
@@ -566,7 +568,7 @@ class _Tags extends ConsumerWidget {
               borderRadius: 4.r,
               border: Border.all(width: .5, color: kG.q(.2)),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(horizontal: 4),
             child: T(quantization),
           ),
         if (date != null)
@@ -576,7 +578,7 @@ class _Tags extends ConsumerWidget {
               borderRadius: 4.r,
               border: Border.all(width: .5, color: kG.q(.2)),
             ),
-            padding: const EI.s(h: 4),
+            padding: const .symmetric(horizontal: 4),
             child: T(date),
           ),
       ],

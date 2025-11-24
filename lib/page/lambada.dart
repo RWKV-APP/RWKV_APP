@@ -19,9 +19,9 @@ class PageLambada extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: const .all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             _TestControlButtons(),
             const SizedBox(height: 8),
@@ -134,9 +134,9 @@ class _TestDataCard extends ConsumerWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const .all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               s.test_data,
@@ -169,9 +169,9 @@ class _TestResultsCard extends ConsumerWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const .all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Row(
               children: [
@@ -182,14 +182,14 @@ class _TestResultsCard extends ConsumerWidget {
                 if (isRunning) ...[
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const .symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange.q(0.2),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: .circular(12),
                       border: Border.all(color: Colors.orange.q(0.5)),
                     ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         const SizedBox(
                           width: 12,
@@ -202,7 +202,7 @@ class _TestResultsCard extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.orange.shade700,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: .w500,
                           ),
                         ),
                       ],
@@ -273,9 +273,9 @@ class _CurrentTestPreview extends ConsumerWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const .all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               s.current_test_item(currentIndex + 1, testItems.length),
@@ -312,10 +312,10 @@ class _ResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EI.a(12),
+      padding: const .all(12),
       decoration: BoxDecoration(
         color: color.q(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: .circular(8),
         border: Border.all(color: color.q(0.3)),
       ),
       child: Column(
@@ -325,7 +325,7 @@ class _ResultCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               color: color,
-              fontWeight: FontWeight.w500,
+              fontWeight: .w500,
             ),
           ),
           const SizedBox(height: 4),
@@ -333,7 +333,7 @@ class _ResultCard extends StatelessWidget {
             value,
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: color,
             ),
           ),

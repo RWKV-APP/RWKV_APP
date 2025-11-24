@@ -47,11 +47,11 @@ class AudioEmpty extends ConsumerWidget {
           child: Container(
             decoration: const BoxDecoration(color: kC),
             child: Column(
-              crossAxisAlignment: CAA.center,
-              mainAxisAlignment: MAA.center,
+              crossAxisAlignment: .center,
+              mainAxisAlignment: .center,
               children: [
                 Container(
-                  padding: const EI.s(h: 24),
+                  padding: const .symmetric(horizontal: 24),
                   child: T(
                     message,
                     s: TS(s: 20, c: primary),

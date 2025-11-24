@@ -126,7 +126,7 @@ class BotMessageBottom extends ConsumerWidget {
         inSee
             ? const SizedBox.shrink()
             : Padding(
-                padding: const EI.o(v: 4, r: 4, l: 4),
+                padding: const .only(left: 4, top: 4, right: 4, bottom: 4),
                 child: Icon(CupertinoIcons.zzz, color: primaryColor.q(.8), size: 14),
               ),
       _ => const SizedBox.shrink(),
@@ -139,12 +139,12 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     return Row(
-      mainAxisAlignment: MAA.start,
+      mainAxisAlignment: .start,
       children: [
         if (isBatch) 12.w,
         if (changing)
           Padding(
-            padding: const EI.o(v: 12, r: 4),
+            padding: const .only(top: 12, right: 4, bottom: 12),
             child: TweenAnimationBuilder(
               tween: Tween(begin: .0, end: 1.0),
               duration: const Duration(milliseconds: 1000000000),
@@ -163,7 +163,7 @@ class BotMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onCopyPressed,
             child: Padding(
-              padding: const EI.o(v: 12, r: 4, l: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Icon(
                 Icons.copy,
                 color: primaryColor.q(.8),
@@ -175,7 +175,7 @@ class BotMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onRegeneratePressed,
             child: Padding(
-              padding: const EI.o(v: 12, r: 4, l: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Icon(
                 Icons.refresh,
                 color: primaryColor.q(.8),
@@ -187,7 +187,7 @@ class BotMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onBotEditPressed,
             child: Padding(
-              padding: const EI.o(v: 12, r: 4, l: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Icon(
                 Icons.edit,
                 color: primaryColor.q(.8),
@@ -199,7 +199,7 @@ class BotMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onSharePressed,
             child: Padding(
-              padding: const EI.o(v: 12, l: 4, r: 4),
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Container(
                 decoration: const BoxDecoration(color: kC),
                 child: Icon(
@@ -218,7 +218,7 @@ class BotMessageBottom extends ConsumerWidget {
               msg.modelName!,
               s: TS(c: primaryColor.q(.8), s: 10),
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           ),
         modeWidget,
@@ -226,9 +226,9 @@ class BotMessageBottom extends ConsumerWidget {
           GestureDetector(
             onTap: _onResumePressed,
             child: Container(
-              padding: const EI.o(v: 9, l: 12),
+              padding: const .only(left: 12, top: 9, bottom: 9),
               child: Container(
-                padding: const EI.s(v: 1, h: 8),
+                padding: const .symmetric(horizontal: 8, vertical: 1),
                 decoration: BoxDecoration(
                   color: kC,
                   border: Border.all(color: primaryColor.q(.67)),
@@ -236,7 +236,7 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
                 child: T(
                   s.chat_resume,
-                  s: TS(c: primaryColor, w: FontWeight.w600, s: 16),
+                  s: TS(c: primaryColor, w: .w600, s: 16),
                 ),
               ),
             ),

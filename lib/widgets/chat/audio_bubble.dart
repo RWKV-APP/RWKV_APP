@@ -59,11 +59,11 @@ class _AudioBubbleState extends ConsumerState<AudioBubble> {
       decoration: const BoxDecoration(color: kC),
       width: width,
       child: Row(
-        mainAxisAlignment: MAA.end,
+        mainAxisAlignment: .end,
         children: [
           T(
             (length / 1000).toStringAsFixed(0) + "s",
-            s: TS(c: qb.q(.8), w: FontWeight.w600),
+            s: TS(c: qb.q(.8), w: .w600),
           ),
           8.w,
           if (_tick % 3 == 0 || !isPlaying || !isLatestClickedMessage)

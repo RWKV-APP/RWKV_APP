@@ -134,16 +134,12 @@ class _List extends ConsumerWidget {
           radius: 100.rr,
           thickness: 4,
           thumbColor: qb.q(.4),
-          padding: EI.o(
-            r: 4,
-            b: scrollBarBottom,
-            t: top,
-          ),
+          padding: .only(top: top, right: 4, bottom: scrollBarBottom),
           controller: P.chat.scrollController,
           child: ListView.separated(
             reverse: true,
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: EI.o(t: top, b: bottom, l: paddingLeft, r: paddingRight),
+            padding: .only(left: paddingLeft, top: top, right: paddingRight, bottom: bottom),
             controller: P.chat.scrollController,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
             itemCount: messages.length,
@@ -196,7 +192,7 @@ class _MessageWrap extends ConsumerWidget {
       onTap: () => toggle(),
       behavior: HitTestBehavior.opaque,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Checkbox(
             value: selected,

@@ -110,12 +110,12 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
 
     return Container(
       decoration: const BoxDecoration(color: kC),
-      padding: const EI.o(),
+      padding: const .all(0),
       width: changing ? 160 : width,
       // height: 50,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CAA.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           if (!allDone)
             Wrap(
@@ -128,7 +128,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       if (e < 1)
                         T(
                           (e * 100).toStringAsFixed(0) + "%",
-                          s: TS(c: qb.q(.8), w: FontWeight.w600, s: 10),
+                          s: TS(c: qb.q(.8), w: .w600, s: 10),
                         ),
                       if (e >= 1) Icon(Icons.check, color: primaryColor, size: 12),
                     ],
@@ -138,9 +138,9 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
             ),
           if (changing && generating)
             Padding(
-              padding: const EI.o(t: 4, b: 12),
+              padding: const .only(top: 4, bottom: 12),
               child: Row(
-                mainAxisAlignment: MAA.start,
+                mainAxisAlignment: .start,
                 children: [
                   TweenAnimationBuilder(
                     tween: Tween(begin: .0, end: 1.0),
@@ -158,16 +158,16 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   8.w,
                   T(
                     s.generating + "",
-                    s: TS(c: qb.q(.8), w: FontWeight.w500),
+                    s: TS(c: qb.q(.8), w: .w500),
                   ),
                 ],
               ),
             ),
           if (!changing || widget.msg.ttsHasContent)
             Padding(
-              padding: const EI.o(v: 4),
+              padding: const .only(top: 4, bottom: 4),
               child: Row(
-                mainAxisAlignment: MAA.start,
+                mainAxisAlignment: .start,
                 children: [
                   if (_tick % 3 == 0 || !isPlaying || !isLatestClickedMessage)
                     Icon(
@@ -187,14 +187,14 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   8.w,
                   T(
                     (length / 1000).toStringAsFixed(0) + "s",
-                    s: TS(c: qb.q(.8), w: FontWeight.w600),
+                    s: TS(c: qb.q(.8), w: .w600),
                   ),
                   if (allDone)
                     GestureDetector(
                       onTap: _onSharePressed,
                       child: Container(
                         decoration: const BoxDecoration(color: kC),
-                        padding: const EI.o(l: 8, r: 4),
+                        padding: const .only(left: 8, right: 4),
                         child: const Icon(Icons.share),
                       ),
                     ),
@@ -204,16 +204,13 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
           if (allDone) 12.h,
           if (!changing && !allDone)
             Row(
-              mainAxisAlignment: MAA.start,
+              mainAxisAlignment: .start,
               children: [
                 GestureDetector(
                   onTap: _onSharePressed,
                   child: Container(
                     decoration: const BoxDecoration(color: kC),
-                    padding: const EI.s(
-                      v: 12,
-                      h: 3,
-                    ),
+                    padding: const .symmetric(horizontal: 3, vertical: 12),
                     child: const Icon(Icons.share),
                   ),
                 ),

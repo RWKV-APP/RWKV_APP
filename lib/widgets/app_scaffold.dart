@@ -35,8 +35,8 @@ class AppGradientBackground extends StatelessWidget {
         gradient: isBlack
             ? null
             : LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomCenter,
+                begin: .topLeft,
+                end: .bottomCenter,
                 colors: isDark
                     ? [
                         const Color(0xFF152D57),

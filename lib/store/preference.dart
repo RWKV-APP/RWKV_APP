@@ -1,27 +1,25 @@
 part of 'p.dart';
 
 class _Preference {
-  /// 空表示根据系统当前的 locale，在可选的 locale 中选择一个
-  ///
-  /// 非空表示使用指定的 locale
-  late final preferredLanguage = qs<Language>(Language.none);
+  // ===========================================================================
+  // Static
+  // ===========================================================================
 
-  late final userType = qs<UserType>(UserType.powerUser);
+  final textScaleFactorSystem = -1.0;
 
-  /// 空表示根据系统当前的 textScaleFactor 来设置应用的 textScaleFactor
-  ///
-  /// 非空表示使用指定的 textScaleFactor
-  late final preferredTextScaleFactor = qs<double>(-1.0);
-
-  /// 偏好的主题模式设置，跟随系统、深色模式、浅色模式
-  late final themeMode = qs<ThemeMode>(ThemeMode.system);
-
-  /// 偏好的深色模式主题
-  late final preferredDarkCustomTheme = qs<custom_theme.CustomTheme>(custom_theme.LightsOut());
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
 
   bool _showBatteryOptimization = true;
 
-  final textScaleFactorSystem = -1.0;
+  var featureRollout = const FeatureRollout();
+
+  var promptTemplate = PromptTemplate.empty();
+
+  // ===========================================================================
+  // Getters
+  // ===========================================================================
 
   // late final availableTextScaleFactors = [_textScaleFactorSystem, .8, .9, 1.0, 1.1, 1.2, 1.3, 1.4];
   // late final availableTextScaleNames = [
@@ -45,14 +43,36 @@ class _Preference {
     1.4: S.current.ultra_large,
   };
 
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
+  /// 空表示根据系统当前的 locale，在可选的 locale 中选择一个
+  ///
+  /// 非空表示使用指定的 locale
+  late final preferredLanguage = qs<Language>(Language.none);
+
+  late final userType = qs<UserType>(UserType.powerUser);
+
+  /// 空表示根据系统当前的 textScaleFactor 来设置应用的 textScaleFactor
+  ///
+  /// 非空表示使用指定的 textScaleFactor
+  late final preferredTextScaleFactor = qs<double>(-1.0);
+
+  /// 偏好的主题模式设置，跟随系统、深色模式、浅色模式
+  late final themeMode = qs<ThemeMode>(ThemeMode.system);
+
+  /// 偏好的深色模式主题
+  late final preferredDarkCustomTheme = qs<custom_theme.CustomTheme>(custom_theme.LightsOut());
+
   @Deprecated("This is not used anymore")
   late final latestRuntimeAddress = qs<int>(0);
 
   late final dumpping = qs(false);
 
-  var featureRollout = const FeatureRollout();
-
-  var promptTemplate = PromptTemplate.empty();
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
 
   late final currentLangIsZh = qp((ref) {
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);

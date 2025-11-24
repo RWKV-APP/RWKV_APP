@@ -73,8 +73,8 @@ class _PageConversationState extends ConsumerState<PageConversation> {
       key: Key(item.id.toString()),
       background: Container(
         color: Colors.redAccent,
-        padding: const EdgeInsets.only(right: 24),
-        alignment: Alignment.centerRight,
+        padding: const .only(right: 24),
+        alignment: .centerRight,
         child: const FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
       ),
       direction: DismissDirection.endToStart,
@@ -162,7 +162,7 @@ class _ConversationList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final conversations = ref.watch(_compositedConversations);
     return ListView.separated(
-      padding: const EdgeInsets.only(bottom: 60),
+      padding: const .only(bottom: 60),
       itemCount: conversations.length,
       cacheExtent: 200,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -236,8 +236,8 @@ class _DismissBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.redAccent,
-      padding: const EdgeInsets.only(right: 24),
-      alignment: Alignment.centerRight,
+      padding: const .only(right: 24),
+      alignment: .centerRight,
       child: const FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
     );
   }
@@ -250,7 +250,7 @@ class _EmptyState extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         Text(
           s.no_conversations_yet,
@@ -273,7 +273,7 @@ class _NewChatButton extends StatelessWidget {
       icon: const FaIcon(FontAwesomeIcons.plus),
       style: const ButtonStyle(
         padding: WidgetStatePropertyAll(
-          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          .symmetric(horizontal: 16, vertical: 12),
         ),
       ),
     );
@@ -297,7 +297,7 @@ class _BatchActionBar extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const .symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(
@@ -315,7 +315,7 @@ class _BatchActionBar extends ConsumerWidget {
                 '已选择: $selectedCount',
                 style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: .w500,
                   color: theme.colorScheme.onSurface,
                 ),
               ),

@@ -1,7 +1,60 @@
 part of 'p.dart';
 
 class _Othello {
+  // ===========================================================================
+  // Static
+  // ===========================================================================
+
+  static final _blackFirst = true;
+
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
+  late final receivedScrollController = ScrollController();
+
+  bool _receivingPlacing = false;
+
+  late final modelPlacingController = StreamController<(int col, int row)>();
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
   late final state = qs<List<List<CellType>>>(List.generate(8, (_) => List.filled(8, CellType.empty)));
+
+  /// row, col
+  late final eatCountMatrixForBlack = qs<List<List<int>>>(List.generate(8, (_) => List.filled(8, 0)));
+
+  /// row, col
+  late final eatCountMatrixForWhite = qs<List<List<int>>>(List.generate(8, (_) => List.filled(8, 0)));
+
+  @Deprecated("Use P.rwkv.receiving instead")
+  late final receivingTokens = qs(false);
+
+  late final blackTurn = qs(_blackFirst);
+
+  late final received = qs("");
+
+  late final searchDepth = qs(1);
+
+  late final searchBreadth = qs(1);
+
+  late final latestPlacing = qs<(int col, int row)?>(null);
+
+  late final usePortrait = qs(true);
+
+  late final playerShouldAtSameColumnWithSettings = qs(true);
+
+  late final settingsAndPlayersShouldAtDifferentColumnIsHorizontal = qs(false);
+
+  late final blackIsAI = qs(false);
+
+  late final whiteIsAI = qs(true);
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
 
   late final blackScore = qp((ref) {
     final state = ref.watch(P.othello.state);
@@ -16,43 +69,6 @@ class _Othello {
     final score = l0.where((e) => e == CellType.white).length;
     return score;
   });
-
-  /// row, col
-  late final eatCountMatrixForBlack = qs<List<List<int>>>(List.generate(8, (_) => List.filled(8, 0)));
-
-  /// row, col
-  late final eatCountMatrixForWhite = qs<List<List<int>>>(List.generate(8, (_) => List.filled(8, 0)));
-
-  @Deprecated("Use P.rwkv.receiving instead")
-  late final receivingTokens = qs(false);
-
-  late final blackTurn = qs(_blackFirst);
-
-  static final _blackFirst = true;
-
-  late final received = qs("");
-
-  late final searchDepth = qs(1);
-
-  late final searchBreadth = qs(1);
-
-  late final receivedScrollController = ScrollController();
-
-  bool _receivingPlacing = false;
-
-  late final modelPlacingController = StreamController<(int col, int row)>();
-
-  late final latestPlacing = qs<(int col, int row)?>(null);
-
-  late final usePortrait = qs(true);
-
-  late final playerShouldAtSameColumnWithSettings = qs(true);
-
-  late final settingsAndPlayersShouldAtDifferentColumnIsHorizontal = qs(false);
-
-  late final blackIsAI = qs(false);
-
-  late final whiteIsAI = qs(true);
 }
 
 /// Public methods
@@ -458,9 +474,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -492,9 +508,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -525,9 +541,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -559,9 +575,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -591,9 +607,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -623,9 +639,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -656,9 +672,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;
@@ -688,9 +704,9 @@ extension _$Othello on _Othello {
         targetCount++;
       } else if (calculatingCellType == currentCellType) {
         if (!dryRun) {
-          eatPositions.forEach((e) {
+          for (var e in eatPositions) {
             state[e.$1][e.$2] = currentCellType;
-          });
+          }
           state[row][col] = currentCellType;
         }
         canEat = true;

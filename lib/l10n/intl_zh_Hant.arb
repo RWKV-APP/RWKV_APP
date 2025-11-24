@@ -1,6 +1,6 @@
 {
   "@@locale": "zh_Hant",
-  "world": "World",
+  "world": "See",
   "see": "See",
   "visual_understanding_and_ocr": "視覺理解與 OCR",
   "please_select_an_image_first": "請先選擇一個圖片",
@@ -47,6 +47,8 @@
   "batch_inference_settings": "並行推理設定",
   "batch_inference_count": "並行推理數量",
   "batch_inference_count_detail": "每次推理將生成 {count} 則訊息",
+  "single_thread": "單執行緒",
+  "multi_thread": "多執行緒",
   "batch_inference_width": "訊息顯示寬度",
   "batch_inference_width_detail": "並行推理每則訊息寬度",
   "thinking_mode_off": "推理{footer}: 關",

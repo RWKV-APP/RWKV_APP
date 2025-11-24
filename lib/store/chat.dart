@@ -1,6 +1,10 @@
 part of 'p.dart';
 
 class _Chat {
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
 
@@ -10,12 +14,13 @@ class _Chat {
   /// The focus node of the chat page input
   late final focusNode = FocusNode();
 
-  late final textInInput = qs("");
+  late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
 
-  late final inputHasContent = qp((ref) {
-    final textInInput = ref.watch(this.textInInput);
-    return textInInput.trim().isNotEmpty;
-  });
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
+  late final textInInput = qs("");
 
   /// Disable sender
   ///
@@ -49,11 +54,18 @@ class _Chat {
   // 使用文言文
   late final wenYanWen = qs(false);
 
-  late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
-
   late final batchEnabled = qs(Args.enableBatchInference);
   late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
   late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
+
+  late final inputHasContent = qp((ref) {
+    final textInInput = ref.watch(this.textInInput);
+    return textInInput.trim().isNotEmpty;
+  });
 }
 
 /// Public methods
@@ -313,12 +325,9 @@ extension $Chat on _Chat {
     raw = raw.trim();
     String message = raw;
 
-    final currentModel = P.rwkv.currentModel.q;
+    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
-    if (currentModel == null) {
-      ModelSelector.show();
-      return;
-    }
+    final currentModel = P.rwkv.currentModel.q!;
 
     final thinkingMode = P.rwkv.thinkingMode.q;
 
@@ -432,8 +441,10 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    // debugger();
-    P.rwkv.sendMessages(history, batchSize: batchEnabled.q ? batchCount.q : 1);
+    final inSee = P.app.pageKey.q == PageKey.see;
+    final batchSize = inSee ? 1 : (batchEnabled.q ? batchCount.q : 1);
+
+    P.rwkv.sendMessages(history, batchSize: batchSize);
 
     _checkSensitive(raw);
   }

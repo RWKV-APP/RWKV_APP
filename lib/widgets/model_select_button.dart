@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/model/argument.dart';
+import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/store/p.dart' show P, $RWKV;
 import 'package:zone/widgets/arguments_panel.dart';
 
@@ -14,39 +14,40 @@ class ModelSelectButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentModel = ref.watch(P.rwkv.currentModel);
     final decodeParamType = ref.watch(P.rwkv.decodeParamType);
-    final modelDisplay = currentModel?.name ?? S.current.click_to_select_model;
+    final s = S.of(context);
+    final modelDisplay = currentModel?.name ?? s.click_to_select_model;
     final theme = Theme.of(context);
 
     final currentName =
         {
-          DecodeParamType.defaults: S.current.default_,
-          DecodeParamType.creative: S.current.creative,
-          DecodeParamType.conservative: S.current.conservative.split('(')[0].trim(),
-          DecodeParamType.fixed: S.current.fixed,
-          DecodeParamType.comprehensive: S.current.comprehensive,
-          DecodeParamType.unknown: S.current.custom,
+          DecodeParamType.defaults: s.default_,
+          DecodeParamType.creative: s.creative,
+          DecodeParamType.conservative: s.conservative.split('(')[0].trim(),
+          DecodeParamType.fixed: s.fixed,
+          DecodeParamType.comprehensive: s.comprehensive,
+          DecodeParamType.unknown: s.custom,
         }[decodeParamType] ??
-        S.current.custom;
+        s.custom;
 
     return Ink(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: .circular(16),
         border: Border.all(color: theme.colorScheme.surfaceContainerHighest),
         color: theme.colorScheme.surfaceContainerLow,
       ),
       child: IntrinsicHeight(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
           children: [
             InkWell(
-              borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+              borderRadius: const .horizontal(left: .circular(16)),
               onTap: () {
                 ModelSelector.show();
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Text(modelDisplay, style: const TextStyle(fontSize: 10, height: 1, fontWeight: FontWeight.w500)),
+                padding: const .symmetric(horizontal: 8, vertical: 4),
+                child: Text(modelDisplay, style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500)),
               ),
             ),
             if (currentModel == null)
@@ -62,12 +63,12 @@ class ModelSelectButton extends ConsumerWidget {
             if (currentModel != null)
               PopupMenuTheme(
                 data: PopupMenuThemeData(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  menuPadding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: .circular(8)),
+                  menuPadding: .zero,
                   // elevation: 0,
                 ),
                 child: PopupMenuButton<DecodeParamType?>(
-                  padding: EdgeInsets.zero,
+                  padding: .zero,
                   initialValue: decodeParamType,
                   position: PopupMenuPosition.under,
                   itemBuilder: (c) {
@@ -76,14 +77,14 @@ class ModelSelectButton extends ConsumerWidget {
                         height: 32,
                         value: DecodeParamType.unknown,
                         enabled: false,
-                        child: Text(S.current.decode_param, style: const TextStyle(fontSize: 12)),
+                        child: Text(s.decode_param, style: const TextStyle(fontSize: 12)),
                       ),
-                      buildMenuItem(S.current.creative, DecodeParamType.creative, decodeParamType),
-                      buildMenuItem(S.current.comprehensive, DecodeParamType.comprehensive, decodeParamType),
-                      buildMenuItem(S.current.default_, DecodeParamType.defaults, decodeParamType),
-                      buildMenuItem(S.current.conservative, DecodeParamType.conservative, decodeParamType),
-                      buildMenuItem(S.current.fixed, DecodeParamType.fixed, decodeParamType),
-                      buildMenuItem(S.current.custom, DecodeParamType.unknown, decodeParamType),
+                      _buildMenuItem(s.creative, DecodeParamType.creative, decodeParamType),
+                      _buildMenuItem(s.comprehensive, DecodeParamType.comprehensive, decodeParamType),
+                      _buildMenuItem(s.default_, DecodeParamType.defaults, decodeParamType),
+                      _buildMenuItem(s.conservative, DecodeParamType.conservative, decodeParamType),
+                      _buildMenuItem(s.fixed, DecodeParamType.fixed, decodeParamType),
+                      _buildMenuItem(s.custom, DecodeParamType.unknown, decodeParamType),
                     ];
                   },
                   onSelected: (i) {
@@ -93,9 +94,9 @@ class ModelSelectButton extends ConsumerWidget {
                       P.rwkv.syncSamplerParamsFromDefault(i!);
                     }
                   },
-                  borderRadius: const BorderRadius.horizontal(right: Radius.circular(16)),
+                  borderRadius: const .horizontal(right: .circular(16)),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const .symmetric(horizontal: 12, vertical: 4),
                     child: Text(currentName, style: const TextStyle(fontSize: 10, height: 1)),
                   ),
                 ),
@@ -106,7 +107,7 @@ class ModelSelectButton extends ConsumerWidget {
     );
   }
 
-  PopupMenuItem<DecodeParamType> buildMenuItem(String text, DecodeParamType value, DecodeParamType current) {
+  PopupMenuItem<DecodeParamType> _buildMenuItem(String text, DecodeParamType value, DecodeParamType current) {
     final checked = value == current;
     return PopupMenuItem(
       value: value,
@@ -116,7 +117,10 @@ class ModelSelectButton extends ConsumerWidget {
           if (checked) const Icon(Icons.check, size: 16),
           if (!checked) const SizedBox(width: 16),
           const SizedBox(width: 8),
-          Text(text, style: const TextStyle(height: 1), overflow: TextOverflow.ellipsis),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: Text(text, style: const TextStyle(height: 1), overflow: .ellipsis),
+          ),
         ],
       ),
     );

@@ -1,79 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/args.dart';
+import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/store/p.dart';
-
-enum DecodeParamType {
-  unknown(temperature: -1, topP: -1, presencePenalty: -1, frequencyPenalty: -1, penaltyDecay: -1),
-  creative(
-    temperature: 0.6,
-    topP: 0.6,
-    presencePenalty: 2,
-    frequencyPenalty: 0.2,
-    penaltyDecay: 0.990,
-  ),
-  conservative(
-    temperature: 0.3,
-    topP: 0.3,
-    presencePenalty: 0,
-    frequencyPenalty: 0,
-    penaltyDecay: 0.99,
-  ),
-  fixed(
-    temperature: 0.2,
-    topP: 0,
-    presencePenalty: 0,
-    frequencyPenalty: 0,
-    penaltyDecay: 0.99,
-  ),
-  comprehensive(
-    temperature: 1,
-    topP: 0.3,
-    presencePenalty: 2,
-    frequencyPenalty: 0.2,
-    penaltyDecay: 0.99,
-  ),
-  defaults(
-    temperature: 1,
-    topP: 0.3,
-    presencePenalty: 1,
-    frequencyPenalty: 0.1,
-    penaltyDecay: 0.99,
-  );
-
-  final double temperature;
-  final double topP;
-  final double presencePenalty;
-  final double frequencyPenalty;
-  final double penaltyDecay;
-
-  const DecodeParamType({
-    required this.temperature,
-    required this.topP,
-    required this.presencePenalty,
-    required this.frequencyPenalty,
-    required this.penaltyDecay,
-  });
-
-  static DecodeParamType fromValue({
-    required double temperature,
-    required double topP,
-    required double presencePenalty,
-    required double frequencyPenalty,
-    required double penaltyDecay,
-  }) {
-    for (final type in values) {
-      if (type.temperature == temperature &&
-          type.topP == topP &&
-          type.presencePenalty == presencePenalty &&
-          type.frequencyPenalty == frequencyPenalty &&
-          type.penaltyDecay == penaltyDecay) {
-        return type;
-      }
-    }
-    return unknown;
-  }
-}
 
 enum Argument {
   temperature,
@@ -84,7 +13,8 @@ enum Argument {
   penaltyDecay,
   maxLength,
   batchCount,
-  batchVW;
+  batchVW
+  ;
 
   bool get configureable => switch (this) {
     temperature => true,
@@ -154,7 +84,12 @@ enum Argument {
     frequencyPenalty => 1.0,
     penaltyDecay => .999,
     maxLength => 10000,
-    batchCount => P.rwkv.supportedBatchSizes.q.max.toDouble(),
+    batchCount => () {
+      final supportedBatchSizes = P.rwkv.supportedBatchSizes.q;
+      if (supportedBatchSizes.isEmpty) return 4.0;
+      final max = supportedBatchSizes.max;
+      return max.toDouble();
+    }(),
     batchVW => 80,
   };
 

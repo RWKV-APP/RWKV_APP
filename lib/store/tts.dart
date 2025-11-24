@@ -1,6 +1,10 @@
 part of 'p.dart';
 
-extension _TTSStatic on _TTS {
+class _TTS {
+  // ===========================================================================
+  // Static
+  // ===========================================================================
+
   static const _defaultTextInInput = "";
   static const _replaceMap = {
     "English": "🇺🇸",
@@ -15,11 +19,23 @@ extension _TTSStatic on _TTS {
     "Chinese(PRC)": Language.zh_Hans,
   };
   static const _defaultSpkName = "Chinese(PRC)_Kafka_8";
-}
 
-class _TTS {
-  late final audioInteractorShown = qs(false);
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
   late final focusNode = FocusNode();
+  late final textEditingController = TextEditingController(text: _TTS._defaultTextInInput);
+
+  mp_audio_stream.AudioStream? audioStream;
+  Timer? _asTimer;
+  Timer? _queryTimer;
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
+  late final audioInteractorShown = qs(false);
   late final hasFocus = qs(false);
   late final instructions = qsf<TTSInstruction, int?>(null);
   late final interactingInstruction = qs(TTSInstruction.none);
@@ -33,18 +49,13 @@ class _TTS {
   late final selectedSpkPanelFilter = qs(Language.none);
   late final spkPairs = qs<Map<String, dynamic>>({});
   late final spkShown = qs(false);
-  late final textEditingController = TextEditingController(text: _TTSStatic._defaultTextInInput);
-  late final textInInput = qs(_TTSStatic._defaultTextInInput);
+  late final textInInput = qs(_TTS._defaultTextInInput);
 
   late final generating = qs(false);
   late final latestBufferLength = qs(0);
 
-  mp_audio_stream.AudioStream? audioStream;
   late final asFull = qs(0);
   late final asExhaust = qs(0);
-  Timer? _asTimer;
-
-  Timer? _queryTimer;
 }
 
 /// Private methods
@@ -60,7 +71,7 @@ extension _$TTS on _TTS {
 
     final spkPairs = this.spkPairs.q;
 
-    final defaultSpk = spkPairs.keys.firstWhereOrNull((e) => e.contains(_TTSStatic._defaultSpkName));
+    final defaultSpk = spkPairs.keys.firstWhereOrNull((e) => e.contains(_TTS._defaultSpkName));
     selectedSpkName.q = defaultSpk ?? spkPairs.keys.where((e) => e.contains("Chinese")).random;
 
     selectSourceAudioPath.q = null;
@@ -100,10 +111,10 @@ extension _$TTS on _TTS {
       return;
     }
 
-    for (final key in _TTSStatic._spkNameToLanguageMap.keys) {
+    for (final key in _TTS._spkNameToLanguageMap.keys) {
       final contains = next.contains(key);
       if (contains) {
-        selectedLanguage.q = _TTSStatic._spkNameToLanguageMap[key]!;
+        selectedLanguage.q = _TTS._spkNameToLanguageMap[key]!;
         break;
       }
     }
@@ -355,9 +366,9 @@ extension $TTS on _TTS {
     const replaceMap = {};
 
     String name = input;
-    replaceMap.forEach((key, value) {
-      name = name.replaceAll(key, value);
-    });
+    for (final entry in replaceMap.entries) {
+      name = name.replaceAll(entry.key, entry.value);
+    }
 
     name = name.replaceAll(name.split("_").first + "_", "");
 
@@ -369,9 +380,9 @@ extension $TTS on _TTS {
   @Deprecated("想想更面向状态的方法")
   String flagChange(String input) {
     String name = input;
-    _TTSStatic._replaceMap.forEach((key, value) {
-      name = name.replaceAll(key, value);
-    });
+    for (final entry in _TTS._replaceMap.entries) {
+      name = name.replaceAll(entry.key, entry.value);
+    }
 
     return name;
   }
@@ -510,29 +521,29 @@ outputWavPath: $outputWavPath""");
 
   void onRefreshButtonPressed() {
     qq;
-    textInInput.q = _TTSStatic._defaultTextInInput;
-    TTSInstruction.values.forEach((action) {
+    textInInput.q = _TTS._defaultTextInInput;
+    for (final action in TTSInstruction.values) {
       instructions(action).q = null;
-    });
+    }
   }
 
   void onClearButtonPressed() {
     qq;
     textInInput.q = "";
-    TTSInstruction.values.forEach((action) {
+    for (final action in TTSInstruction.values) {
       instructions(action).q = null;
-    });
+    }
   }
 
   void syncInstruction() {
     qq;
     String instruction = "请用";
-    TTSInstruction.values.where((e) => e.forInstruction).forEach((action) {
+    for (final action in TTSInstruction.values.where((e) => e.forInstruction)) {
       final index = instructions(action).q;
       if (index != null) {
         instruction += "${action.head}${action.options[index]}${action.tail}";
       }
-    });
+    }
     instruction += "说一下";
     instruction = instruction.replaceAll("用用", "用");
     instruction = instruction.replaceAll("用以", "以");
@@ -548,7 +559,7 @@ outputWavPath: $outputWavPath""");
 
     if (spkName.isEmpty) return (flag, nameCN, nameEN);
 
-    for (final entry in _TTSStatic._replaceMap.entries) {
+    for (final entry in _TTS._replaceMap.entries) {
       final key = entry.key;
       final value = entry.value;
       if (spkName.contains(key)) {

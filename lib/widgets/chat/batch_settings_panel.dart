@@ -79,9 +79,9 @@ class BatchSettingsPanel extends ConsumerWidget {
     final batchInference = ref.watch(P.chat.batchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(16),
-        topRight: Radius.circular(16),
+      borderRadius: const .only(
+        topLeft: .circular(16),
+        topRight: .circular(16),
       ),
       child: Scaffold(
         backgroundColor: customTheme.setting,
@@ -91,7 +91,7 @@ class BatchSettingsPanel extends ConsumerWidget {
           backgroundColor: customTheme.setting,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const .only(right: 8),
               child: IconButton(
                 onPressed: () {
                   pop();
@@ -103,17 +103,14 @@ class BatchSettingsPanel extends ConsumerWidget {
         ),
         body: ListView(
           controller: scrollController,
-          padding: const EI.o(
-            l: 12,
-            r: 12,
-          ),
+          padding: const .only(left: 12, right: 12),
           children: [
             FormItem(
               isSectionStart: true,
               isSectionEnd: !batchInference,
               title: s.batch_inference,
               subtitle: s.batch_inference_detail,
-              info: batchInference ? s.enabled : s.disabled,
+              infoText: batchInference ? s.enabled : s.disabled,
               showArrow: false,
               trailing: Switch.adaptive(
                 value: P.chat.batchEnabled.q,
@@ -125,53 +122,71 @@ class BatchSettingsPanel extends ConsumerWidget {
               curve: Curves.easeInOut,
               child: batchInference ? const SizedBox.shrink() : 8.h,
             ),
-            IgnorePointer(
+            DimmedWhenInactive(
               ignoring: !batchInference,
-              child: AnimatedOpacity(
-                opacity: batchInference ? 1 : 0.5,
-                duration: const Duration(milliseconds: 200),
-                child: FormItem(
-                  showArrow: false,
-                  isSectionStart: !batchInference,
-                  title: s.batch_inference_count,
-                  subtitle: s.batch_inference_count_detail(batchCount),
-                  info: batchCount.toString(),
-                  onTap: () {},
-                  bottom: ArgumentValue(
-                    Argument.batchCount,
-                    // TODO: @wangce Handle batch count get from backend
-                    _onChanged,
-                    showTitle: false,
-                    showValue: false,
-                    padding: const EI.o(l: 4, r: 4, t: 12, b: 8),
-                  ),
+              duration: const Duration(milliseconds: 200),
+              child: FormItem(
+                showArrow: false,
+                isSectionStart: !batchInference,
+                title: s.batch_inference_count,
+                subtitle: s.batch_inference_count_detail(batchCount),
+                infoWidget: Container(
+                  padding: const .only(right: 4),
+                  child: Text(batchCount.toString(), style: const TS(w: .bold, s: 16)),
+                ),
+                onTap: () {},
+                bottom: ArgumentValue(
+                  Argument.batchCount,
+                  enabled: batchInference,
+                  _onChanged,
+                  showTitle: false,
+                  showValue: false,
+                  padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                 ),
               ),
             ),
-            IgnorePointer(
+            DimmedWhenInactive(
               ignoring: !batchInference,
-              child: AnimatedOpacity(
-                opacity: batchInference ? 1 : 0.5,
-                duration: const Duration(milliseconds: 300),
-                child: FormItem(
-                  showArrow: false,
-                  isSectionEnd: true,
-                  title: s.batch_inference_width,
-                  subtitle: s.batch_inference_width_detail,
-                  info: batchVW.toString() + "% " + s.screen_width,
-                  onTap: () {},
-                  bottom: ArgumentValue(
-                    Argument.batchVW,
-                    _onChanged,
-                    showTitle: false,
-                    showValue: false,
-                    padding: const EI.o(l: 4, r: 4, t: 12, b: 8),
-                  ),
+              duration: const Duration(milliseconds: 300),
+              child: FormItem(
+                showArrow: false,
+                isSectionEnd: true,
+                title: s.batch_inference_width,
+                subtitle: s.batch_inference_width_detail,
+                infoText: batchVW.toString() + "% " + s.screen_width,
+                onTap: () {},
+                bottom: ArgumentValue(
+                  Argument.batchVW,
+                  enabled: batchInference,
+                  _onChanged,
+                  showTitle: false,
+                  showValue: false,
+                  padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DimmedWhenInactive extends StatelessWidget {
+  final bool ignoring;
+  final Widget child;
+  final Duration duration;
+
+  const DimmedWhenInactive({super.key, required this.ignoring, required this.child, this.duration = const Duration(milliseconds: 200)});
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      ignoring: ignoring,
+      child: AnimatedOpacity(
+        opacity: ignoring ? 0.5 : 1,
+        duration: duration,
+        child: child,
       ),
     );
   }

@@ -134,8 +134,8 @@ class AudioInput extends ConsumerWidget {
                               customTheme.scaffold,
                               customTheme.scaffold,
                             ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
+                            begin: .topCenter,
+                            end: .bottomCenter,
                           )
                         : null,
                   ),

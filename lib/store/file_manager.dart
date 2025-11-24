@@ -3,11 +3,19 @@
 part of 'p.dart';
 
 class _FileManager {
-  late final downloadSource = qs(P.preference.currentLangIsZh.q ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
-  late final modelSelectorShown = qs(false);
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
 
   /// model-name to download-task map
   late final _downloadTasks = <String, DownloadTask>{};
+
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
+
+  late final downloadSource = qs(P.preference.currentLangIsZh.q ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
+  late final modelSelectorShown = qs(false);
 
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
     return LocalFile(targetPath: ref.watch(_paths(key)));
@@ -286,40 +294,4 @@ extension _$FileManager on _FileManager {
       }
     }
   }
-}
-
-enum FileDownloadSource {
-  aifasthub,
-  hfmirror,
-  huggingface,
-  github,
-  googleapis;
-
-  String get prefix => switch (this) {
-    aifasthub => 'https://aifasthub.com/',
-    hfmirror => 'https://hf-mirror.com/',
-    huggingface => 'https://huggingface.co/',
-    github => 'https://github.com/',
-    googleapis => 'https://googleapis.com/',
-  };
-
-  String get suffix => switch (this) {
-    aifasthub => '?download=true',
-    hfmirror => '?download=true',
-    huggingface => '',
-    github => '',
-    googleapis => '',
-  };
-
-  bool get isDebug => switch (this) {
-    huggingface => false,
-    hfmirror => false,
-    aifasthub => false,
-    github => true,
-    googleapis => true,
-  };
-
-  bool get hidden => switch (this) {
-    _ => false,
-  };
 }

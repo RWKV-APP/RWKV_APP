@@ -9,6 +9,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
@@ -92,9 +93,9 @@ class ModelSelector extends ConsumerWidget {
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
-        margin: const EI.o(t: 12),
+        margin: const .only(top: 12),
         child: ListView(
-          padding: EI.o(l: isDesktop ? 12 : 8, r: isDesktop ? 12 : 8),
+          padding: .only(left: isDesktop ? 12 : 8, right: isDesktop ? 12 : 8),
           controller: scrollController,
           children: [
             const _Header(),
@@ -118,7 +119,7 @@ class _Header extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: T(s.chat_please_select_a_model, s: const TS(s: 18, w: FontWeight.w600)),
+          child: T(s.chat_please_select_a_model, s: const TS(s: 18, w: .w600)),
         ),
         const IconButton(
           onPressed: pop,
@@ -139,17 +140,17 @@ class _Hints extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (demoType == DemoType.world) ...[
-          T(s.please_select_a_world_type, s: const TS(s: 16, w: FontWeight.w500)),
+          T(s.please_select_a_world_type, s: const TS(s: 16, w: .w500)),
           4.h,
         ],
         const _DownloadSource(),
         if (demoType == DemoType.chat)
           T(
             "👉${s.str_model_selection_dialog_hint}👈",
-            s: TS(c: qb.q(.7), s: 12, w: FontWeight.w500),
+            s: TS(c: qb.q(.7), s: 12, w: .w500),
           ),
       ],
     );
@@ -186,7 +187,7 @@ class _ModelList extends ConsumerWidget {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
       availableModels.addAll(P.fileManager.roleplayWeights.q);
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: availableModels.map((e) => RolePlayItem(file: e)).toList(),
       );
     }
@@ -246,7 +247,7 @@ class _ModelList extends ConsumerWidget {
     };
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: items,
     );
   }
@@ -262,12 +263,12 @@ class _DownloadSource extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         4.h,
         T(
           S.current.download_server_,
-          s: TS(c: qb.q(.7), s: 12, w: FontWeight.w600),
+          s: TS(c: qb.q(.7), s: 12, w: .w600),
         ),
         4.h,
         Wrap(
@@ -286,7 +287,7 @@ class _DownloadSource extends ConsumerWidget {
                     color: primary,
                   ),
                 ),
-                padding: const EI.s(h: 6, v: 2),
+                padding: const .symmetric(horizontal: 6, vertical: 2),
                 child: T(
                   e.name + (e == FileDownloadSource.huggingface ? S.current.overseas : ""),
                   s: TS(c: e == currentSource ? qw : qb.q(.7), s: 14),

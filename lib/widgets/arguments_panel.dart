@@ -64,9 +64,9 @@ class ArgumentsPanel extends ConsumerWidget {
     return ClipRRect(
       borderRadius: 16.r,
       child: Container(
-        margin: const EI.o(t: 8),
+        margin: const .only(top: 8),
         child: Column(
-          crossAxisAlignment: CAA.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Row(
               children: [
@@ -80,14 +80,14 @@ class ArgumentsPanel extends ConsumerWidget {
                 ),
                 Expanded(
                   child: Row(
-                    crossAxisAlignment: CAA.center,
-                    mainAxisAlignment: MAA.center,
+                    crossAxisAlignment: .center,
+                    mainAxisAlignment: .center,
                     children: [
                       const Icon(Icons.tune),
                       12.w,
                       T(
                         s.model_settings,
-                        s: const TS(s: 16, w: FontWeight.w500),
+                        s: const TS(s: 16, w: .w500),
                       ),
                     ],
                   ),
@@ -106,7 +106,7 @@ class ArgumentsPanel extends ConsumerWidget {
             Expanded(
               child: ListView(
                 controller: scrollController,
-                padding: EI.o(b: paddingBottom),
+                padding: .only(bottom: paddingBottom),
                 children: [
                   const _SamplerOptions(),
                   ArgumentValue(Argument.temperature, _onChanged),
@@ -136,7 +136,7 @@ class _SamplerOptions extends ConsumerWidget {
     final reasoning = ref.watch(P.rwkv.reasoning);
     final qb = ref.watch(P.app.qb);
     return Container(
-      margin: const EI.s(h: 12),
+      margin: const .symmetric(horizontal: 12),
       decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
@@ -144,7 +144,7 @@ class _SamplerOptions extends ConsumerWidget {
           Expanded(child: T("Sampler Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(
-              padding: EI.zero,
+              padding: .zero,
               iconSize: 16,
             ),
             onPressed: () {
@@ -167,7 +167,7 @@ class _CompletionOptions extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final reasoning = ref.watch(P.rwkv.reasoning);
     return Container(
-      margin: const EI.s(h: 12),
+      margin: const .symmetric(horizontal: 12),
       decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
@@ -175,7 +175,7 @@ class _CompletionOptions extends ConsumerWidget {
           Expanded(child: T("Completion Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(
-              padding: EI.zero,
+              padding: .zero,
               iconSize: 16,
             ),
             onPressed: () {

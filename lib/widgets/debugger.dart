@@ -121,8 +121,8 @@ class Debugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,
@@ -178,7 +178,7 @@ class Debugger extends ConsumerWidget {
                       T(receivingTokens.toString()),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.55)),
                         child: e,
                       );
@@ -225,8 +225,8 @@ class _SudokuDebugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,
@@ -244,7 +244,7 @@ class _SudokuDebugger extends ConsumerWidget {
                       T(modelSelectorShown.toString()),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
@@ -306,8 +306,8 @@ class _TTSDebugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,
@@ -355,7 +355,7 @@ class _TTSDebugger extends ConsumerWidget {
                       T(asExhaust.toString()),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );
@@ -397,8 +397,8 @@ class _TranslatorDebugger extends ConsumerWidget {
             child: Container(
               decoration: const BoxDecoration(color: kC),
               child: Column(
-                mainAxisAlignment: MAA.start,
-                crossAxisAlignment: CAA.end,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .end,
                 children:
                     [
                       paddingTop.h,
@@ -408,7 +408,7 @@ class _TranslatorDebugger extends ConsumerWidget {
                       T(currentModel?.fileName ?? "null"),
                     ].indexMap((index, e) {
                       return Container(
-                        margin: EI.o(t: index % 2 == 0 ? 0 : 1),
+                        margin: .only(top: index % 2 == 0 ? 0 : 1),
                         decoration: BoxDecoration(color: qb.q(.66)),
                         child: e,
                       );

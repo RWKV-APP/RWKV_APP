@@ -637,11 +637,11 @@ class $AssetsLibQnnGen {
   /// File path: assets/lib/qnn/libQnnHtpV79Stub.so
   String get libQnnHtpV79Stub => 'assets/lib/qnn/libQnnHtpV79Stub.so';
 
-  /// File path: assets/lib/qnn/libQnnHtpV81Stub.so
-  String get libQnnHtpV81Stub => 'assets/lib/qnn/libQnnHtpV81Stub.so';
-
   /// File path: assets/lib/qnn/libQnnHtpV81Skel.so
   String get libQnnHtpV81Skel => 'assets/lib/qnn/libQnnHtpV81Skel.so';
+
+  /// File path: assets/lib/qnn/libQnnHtpV81Stub.so
+  String get libQnnHtpV81Stub => 'assets/lib/qnn/libQnnHtpV81Stub.so';
 
   /// File path: assets/lib/qnn/libQnnRwkvWkvOpPackageV68.so
   String get libQnnRwkvWkvOpPackageV68 => 'assets/lib/qnn/libQnnRwkvWkvOpPackageV68.so';
@@ -708,12 +708,13 @@ class Assets {
   static const $AssetsConfigGen config = $AssetsConfigGen();
   static const String filter = 'assets/filter.txt';
   static const $AssetsImgGen img = $AssetsImgGen();
+  static const String lambadaTest = 'assets/lambada_test.jsonl';
   static const $AssetsLibGen lib = $AssetsLibGen();
   static const $AssetsModelGen model = $AssetsModelGen();
   static const $RemoteGen remote = $RemoteGen();
 
   /// List of all assets
-  static List<String> get values => [aEnv, filter];
+  static List<String> get values => [aEnv, filter, lambadaTest];
 }
 
 class AssetGenImage {

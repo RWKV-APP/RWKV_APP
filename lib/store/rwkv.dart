@@ -1,6 +1,19 @@
 part of 'p.dart';
 
 class _RWKV {
+  // ===========================================================================
+  // Static
+  // ===========================================================================
+
+  @Deprecated("Use _broadcastStream instead")
+  static Stream<LLMEvent>? _oldBroadcastStream;
+
+  static Stream<from_rwkv.FromRWKV>? _broadcastStream;
+
+  // ===========================================================================
+  // Instance
+  // ===========================================================================
+
   /// Send message to RWKV isolate
   SendPort? _sendPort;
 
@@ -10,8 +23,19 @@ class _RWKV {
   @Deprecated("Use _streamController instead")
   late final _oldMessagesController = StreamController<LLMEvent>();
 
-  @Deprecated("Use _broadcastStream instead")
-  static Stream<LLMEvent>? _oldBroadcastStream;
+  late final _messagesController = StreamController<from_rwkv.FromRWKV>();
+
+  late Completer<void> _initRuntimeCompleter = Completer<void>();
+
+  Timer? _getTokensTimer;
+
+  Timer? _ttsPerformanceTimer;
+
+  late final argumentUpdatingDebouncer = Debouncer(milliseconds: 300);
+
+  // ===========================================================================
+  // Getters
+  // ===========================================================================
 
   @Deprecated("Use broadcastStream instead")
   Stream<LLMEvent> get oldBroadcastStream {
@@ -19,19 +43,16 @@ class _RWKV {
     return _oldBroadcastStream!;
   }
 
-  late final _messagesController = StreamController<from_rwkv.FromRWKV>();
-
-  static Stream<from_rwkv.FromRWKV>? _broadcastStream;
-
   Stream<from_rwkv.FromRWKV> get broadcastStream {
     _broadcastStream ??= _messagesController.stream.asBroadcastStream();
     return _broadcastStream!;
   }
 
-  late Completer<void> _initRuntimeCompleter = Completer<void>();
+  // ===========================================================================
+  // StateProvider
+  // ===========================================================================
 
   final generating = qs(false);
-
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
@@ -41,6 +62,38 @@ class _RWKV {
   late final statePanelShown = qs(false);
   late final showEscapeCharacters = qs(false);
   late final showPrefillLogOnly = qs(true);
+
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
+
+  /// 当前加载的权重
+  late final currentModel = qs<FileInfo?>(null);
+
+  late final currentWorldType = qs<WorldType?>(null);
+
+  late final currentGroupInfo = qs<GroupInfo?>(null);
+
+  late final loading = qs(false);
+
+  late final socName = qs("");
+  late final socBrand = qs(SocBrand.unknown);
+
+  late final _qnnLibsCopied = qs(false);
+
+  // TODO: Use it @WangCe
+  late final receiving = qs(false);
+
+  late final supportedBatchSizes = qs<List<int>>([]);
+  late final batchParams = qs<List<DecodeParamType>>([]);
+  late final runtimeLog = qs<List<LogItem>>([]);
+  late final stateLogList = qs<List<StateLog>>([]);
+
+  late final arguments = qsff<Argument, double>((ref, argument) {
+    return argument.defaults;
+  });
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
 
   late final decodeParamType = qp<DecodeParamType>((ref) {
     final temp = ref.watch(arguments(Argument.temperature));
@@ -57,13 +110,8 @@ class _RWKV {
     );
   });
 
-  late final arguments = qsff<Argument, double>((ref, argument) {
-    return argument.defaults;
-  });
-
   late final reasoning = qp((ref) => ref.watch(_thinkingMode).hasThinkTag);
   late final thinkingMode = qp((ref) => ref.watch(_thinkingMode));
-  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
@@ -78,13 +126,6 @@ class _RWKV {
 
   late final enableAlbatross = qs(false);
 
-  /// 当前加载的权重
-  late final currentModel = qs<FileInfo?>(null);
-
-  late final currentWorldType = qs<WorldType?>(null);
-
-  late final currentGroupInfo = qs<GroupInfo?>(null);
-
   /// 当前模型是否是2025年9月22日之前发布的
   ///
   /// 新的权重要使用新的 thinking mode 组
@@ -95,26 +136,6 @@ class _RWKV {
     return date != null && date.isBefore(DateTime(2025, 9, 22));
   });
 
-  late final loading = qs(false);
-
-  late final argumentUpdatingDebouncer = Debouncer(milliseconds: 300);
-
-  Timer? _getTokensTimer;
-
-  late final socName = qs("");
-  late final socBrand = qs(SocBrand.unknown);
-
-  late final _qnnLibsCopied = qs(false);
-
-  Timer? _ttsPerformanceTimer;
-
-  // TODO: Use it @WangCe
-  late final receiving = qs(false);
-
-  late final supportedBatchSizes = qs<List<int>>([]);
-  late final runtimeLog = qs<List<LogItem>>([]);
-  late final stateLogList = qs<List<StateLog>>([]);
-
   late final inTTSTranslateOrSee = qp((ref) {
     final model = ref.watch(P.rwkv.currentModel);
     if (model == null) return false;
@@ -123,45 +144,6 @@ class _RWKV {
     final isWorld = model.fileName.contains("modrwkv");
     return isTTS || isTranslate || isWorld;
   });
-
-  /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
-  List<LogItem> _parseRuntimeLog(String runtimeLog) {
-    if (runtimeLog.isEmpty) return [];
-
-    final logItems = <LogItem>[];
-    final regex = RegExp(r'\[(INFO|DEBUG|WARN|ERROR|TRACE|FATAL)\]');
-    final matches = regex.allMatches(runtimeLog);
-    final timeRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2}\.\d+)\]');
-    final dateRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\]');
-
-    for (int i = 0; i < matches.length; i++) {
-      final match = matches.elementAt(i);
-      final tag = match.group(1) ?? 'UNKNOWN';
-
-      // 获取当前标签到下一个标签之间的内容
-      final start = match.end;
-      final end = i + 1 < matches.length ? matches.elementAt(i + 1).start : runtimeLog.length;
-
-      String content = runtimeLog.substring(start, end).trim();
-      final timeDisplayString = timeRegex.firstMatch(content)?.group(1) ?? "";
-      final dateDisplayString = dateRegex.firstMatch(content)?.group(0) ?? "";
-      content = content.replaceAll(dateDisplayString, "");
-      final isPrefill = content.startsWith("new text to prefill");
-
-      if (content.isNotEmpty) {
-        logItems.add(
-          LogItem(
-            tag: tag,
-            content: content.trim(),
-            isPrefill: isPrefill,
-            dateTimeString: timeDisplayString.trim(),
-          ),
-        );
-      }
-    }
-
-    return logItems;
-  }
 }
 
 extension $RWKVLoad on _RWKV {
@@ -1055,7 +1037,7 @@ extension _$RWKV on _RWKV {
     throw "Not support, please contact the developer";
   }
 
-  void _onMessage(message) {
+  void _onMessage(dynamic message) {
     if (message is SendPort) {
       _sendPort = message;
       return;
@@ -1229,6 +1211,45 @@ extension _$RWKV on _RWKV {
       }
       _qnnLibsCopied.q = true;
     }
+  }
+
+  /// 解析运行时日志，按 [INFO]、[DEBUG]、[WARN] 等标签分割
+  List<LogItem> _parseRuntimeLog(String runtimeLog) {
+    if (runtimeLog.isEmpty) return [];
+
+    final logItems = <LogItem>[];
+    final regex = RegExp(r'\[(INFO|DEBUG|WARN|ERROR|TRACE|FATAL)\]');
+    final matches = regex.allMatches(runtimeLog);
+    final timeRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2}\.\d+)\]');
+    final dateRegex = RegExp(r'\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\]');
+
+    for (int i = 0; i < matches.length; i++) {
+      final match = matches.elementAt(i);
+      final tag = match.group(1) ?? 'UNKNOWN';
+
+      // 获取当前标签到下一个标签之间的内容
+      final start = match.end;
+      final end = i + 1 < matches.length ? matches.elementAt(i + 1).start : runtimeLog.length;
+
+      String content = runtimeLog.substring(start, end).trim();
+      final timeDisplayString = timeRegex.firstMatch(content)?.group(1) ?? "";
+      final dateDisplayString = dateRegex.firstMatch(content)?.group(0) ?? "";
+      content = content.replaceAll(dateDisplayString, "");
+      final isPrefill = content.startsWith("new text to prefill");
+
+      if (content.isNotEmpty) {
+        logItems.add(
+          LogItem(
+            tag: tag,
+            content: content.trim(),
+            isPrefill: isPrefill,
+            dateTimeString: timeDisplayString.trim(),
+          ),
+        );
+      }
+    }
+
+    return logItems;
   }
 }
 

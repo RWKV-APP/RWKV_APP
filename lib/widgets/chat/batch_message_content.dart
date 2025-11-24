@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/func/extrack_thought_and_output.dart';
+import 'package:zone/func/extract_thought_and_output.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
@@ -83,8 +83,8 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: .start,
+            crossAxisAlignment: .start,
             children: [
               4.w,
               for (var i = 0; i < batchCount; i++)
@@ -97,11 +97,11 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                       maxWidth: screenWidth * (batchVW / 100),
                       minWidth: screenWidth * (batchVW / 100),
                     ),
-                    padding: const EI.a(8),
+                    padding: const .all(8),
                     decoration: BoxDecoration(
                       color: qw,
                       border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: .circular(8),
                     ),
                     child: _MarkdownBody(data: batch[i]),
                   ),
@@ -127,9 +127,9 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                   decoration: BoxDecoration(
                     color: qw,
                     border: Border.all(color: qb.q(.1)),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: .circular(20),
                   ),
-                  padding: const EI.a(6),
+                  padding: const .all(6),
                   child: Icon(Icons.chevron_left, color: qb.q(.7)),
                 ),
               ),
@@ -153,9 +153,9 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                   decoration: BoxDecoration(
                     color: qw,
                     border: Border.all(color: qb.q(.1)),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: .circular(20),
                   ),
-                  padding: const EI.a(6),
+                  padding: const .all(6),
                   child: Icon(Icons.chevron_right, color: qb.q(.7)),
                 ),
               ),
@@ -179,11 +179,11 @@ class _MarkdownBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
 
-    final (thought, output) = extrackThoughtAndOutput(data);
+    final (thought, output) = extractThoughtAndOutput(data);
 
     if (thought.isEmpty) {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           GptMarkdown(output),
         ],
@@ -212,7 +212,7 @@ class _MarkdownBody extends ConsumerWidget {
         h6: TextStyle(fontSize: rawFontSize * 0.9 * alphaS),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           if (thought.isNotEmpty)
             GptMarkdown(

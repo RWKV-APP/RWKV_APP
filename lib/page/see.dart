@@ -37,8 +37,8 @@ class PageSee extends ConsumerWidget {
             right: 0,
             left: 0,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: .stretch,
+              mainAxisSize: .min,
               children: [
                 Suggestions(),
                 BottomBar(preferredDemoType: DemoType.world),
@@ -77,16 +77,12 @@ class _List extends ConsumerWidget {
           radius: 100.rr,
           thickness: 4,
           thumbColor: qb.q(.4),
-          padding: EI.o(
-            r: 4,
-            b: scrollBarBottom,
-            t: top,
-          ),
+          padding: .only(top: top, right: 4, bottom: scrollBarBottom),
           controller: P.chat.scrollController,
           child: ListView.separated(
             reverse: true,
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: EI.o(t: top, b: bottom, l: paddingLeft, r: paddingRight),
+            padding: .only(left: paddingLeft, top: top, right: paddingRight, bottom: bottom),
             controller: P.chat.scrollController,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
             itemCount: messages.length,
@@ -130,11 +126,11 @@ class _Empty extends ConsumerWidget {
         duration: 200.ms,
         curve: Curves.ease,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: .center,
+          mainAxisAlignment: .center,
           children: [
             logoSquare.image(width: 140),
-            T(s.chat_welcome_to_use("RWKV Chat"), s: const TS(s: 18, w: FontWeight.w600)),
+            T(s.chat_welcome_to_use("RWKV Chat"), s: const TS(s: 18, w: .w600)),
             4.h,
             T("v$version"),
             12.h,
@@ -142,7 +138,7 @@ class _Empty extends ConsumerWidget {
               constraints: const BoxConstraints(maxWidth: 500),
               child: T(
                 s.intro,
-                s: TS(c: qb, w: FontWeight.w500),
+                s: TS(c: qb, w: .w500),
               ),
             ),
             12.h,
@@ -155,7 +151,7 @@ class _Empty extends ConsumerWidget {
             if (!loaded)
               TextButton(
                 onPressed: () => ModelSelector.show(preferredDemoType: DemoType.world),
-                child: T(s.select_a_model, s: const TS(s: 16, w: FontWeight.w600)),
+                child: T(s.select_a_model, s: const TS(s: 16, w: .w600)),
               ),
           ],
         ),

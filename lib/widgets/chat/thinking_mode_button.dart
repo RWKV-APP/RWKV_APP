@@ -47,7 +47,7 @@ class ThinkingModeButton extends ConsumerWidget {
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
-    final padding = const EI.s(h: 8);
+    final padding = const EdgeInsets.symmetric(horizontal: 8);
 
     final text = switch (thinkingMode) {
       thinking_mode.Lighting() => s.thinking_mode_auto(""),
@@ -96,7 +96,7 @@ class ThinkingModeButton extends ConsumerWidget {
                     2.w,
                     T(
                       text,
-                      s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                      s: TS(c: textColor, s: 14, height: 1, w: .w500),
                     ),
                     4.w,
                   ],

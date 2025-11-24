@@ -8,7 +8,8 @@ class FormItem extends ConsumerWidget {
   final bool isSectionEnd;
   final bool autoShowBottomBorder;
   final String title;
-  final String? info;
+  final String? infoText;
+  final Widget? infoWidget;
   final VoidCallback? onTap;
   final bool showArrow;
   final TextAlign? titleTextAlign;
@@ -26,7 +27,8 @@ class FormItem extends ConsumerWidget {
     this.onTap,
     this.isSectionStart = false,
     this.isSectionEnd = false,
-    this.info,
+    this.infoText,
+    this.infoWidget,
     this.icon,
     this.showArrow = true,
     this.autoShowBottomBorder = true,
@@ -35,7 +37,7 @@ class FormItem extends ConsumerWidget {
     this.subtitle,
     this.trailing,
     this.bottom,
-  });
+  }) : assert(infoText == null || infoWidget == null, "infoText and infoWidget cannot be provided at the same time");
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,11 +49,11 @@ class FormItem extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           color: customTheme.settingItem,
-          borderRadius: BorderRadius.only(
-            topLeft: isSectionStart ? 12.rr : Radius.zero,
-            topRight: isSectionStart ? 12.rr : Radius.zero,
-            bottomLeft: isSectionEnd ? 12.rr : Radius.zero,
-            bottomRight: isSectionEnd ? 12.rr : Radius.zero,
+          borderRadius: .only(
+            topLeft: isSectionStart ? 12.rr : .zero,
+            topRight: isSectionStart ? 12.rr : .zero,
+            bottomLeft: isSectionEnd ? 12.rr : .zero,
+            bottomRight: isSectionEnd ? 12.rr : .zero,
           ),
           border: Border(
             bottom: (autoShowBottomBorder && !isSectionEnd)
@@ -62,7 +64,7 @@ class FormItem extends ConsumerWidget {
                 : BorderSide.none,
           ),
         ),
-        padding: const EI.o(t: 12, b: 12, r: 8, l: 8),
+        padding: const .only(left: 8, top: 12, right: 8, bottom: 12),
         child: Column(
           children: [
             Row(
@@ -71,33 +73,34 @@ class FormItem extends ConsumerWidget {
                 if (icon != null) 8.w,
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CAA.start,
+                    crossAxisAlignment: .start,
                     children: [
                       T(
                         title,
                         textAlign: titleTextAlign,
-                        s: TS(w: FontWeight.w500, s: 16, c: titleColor),
+                        s: TS(w: .w500, s: 16, c: titleColor),
                       ),
                       if (subtitle != null)
                         Opacity(
                           opacity: 0.5,
                           child: T(
                             subtitle!,
-                            s: const TS(w: FontWeight.w500, s: 12),
+                            s: const TS(w: .w500, s: 12),
                           ),
                         ),
                     ],
                   ),
                 ),
-                if (info != null)
+                if (infoText != null)
                   Expanded(
                     child: T(
-                      info,
-                      s: const TS(w: FontWeight.w500, s: 12),
+                      infoText,
+                      s: const TS(w: .w500, s: 12),
                       textAlign: TextAlign.right,
                     ),
                   ),
-                if (!showArrow && info != null) 4.w,
+                if (infoWidget != null) infoWidget!,
+                if (!showArrow && infoText != null) 4.w,
                 ?trailing,
                 if (showArrow) 8.w,
                 if (showArrow)

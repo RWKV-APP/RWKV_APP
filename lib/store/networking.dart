@@ -1,12 +1,5 @@
 part of 'p.dart';
 
-enum ContentType {
-  /// application/json
-  json,
-
-  /// application/x-www-form-urlencoded
-  urlencoded,
-}
 
 /// Error actions
 enum _EA {
@@ -184,18 +177,18 @@ Future<Object?> _postMultipart(
   final headers = _buildHeaders();
   final request = http.MultipartRequest("POST", uri);
 
-  headers.forEach((k, v) {
-    request.headers[k] = v;
-  });
+  for (final entry in headers.entries) {
+    request.headers[entry.key] = entry.value;
+  }
 
-  body.forEach((k, v) {
-    request.fields[k] = v.toString();
-  });
+  for (final entry in body.entries) {
+    request.fields[entry.key] = entry.value.toString();
+  }
 
-  files.forEach((f) async {
+  for (final f in files) {
     final http.MultipartFile file = await http.MultipartFile.fromPath("file", f.path);
     request.files.add(file);
-  });
+  }
 
   final res = await _errorWrapper(
     request.send().timeout(timeout),

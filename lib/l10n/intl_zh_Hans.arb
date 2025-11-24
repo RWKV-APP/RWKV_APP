@@ -1,6 +1,6 @@
 {
   "@@locale": "zh_Hans",
-  "world": "World",
+  "world": "See",
   "see": "See",
   "visual_understanding_and_ocr": "视觉理解与 OCR",
   "please_select_an_image_first": "请先选择一个图片",
@@ -47,6 +47,8 @@
   "batch_inference_settings": "并行推理设置",
   "batch_inference_count": "并行推理数量",
   "batch_inference_count_detail": "每次推理将生成 {count} 条消息",
+  "single_thread": "单线程",
+  "multi_thread": "多线程",
   "batch_inference_width": "消息显示宽度",
   "batch_inference_width_detail": "并行推理每条消息宽度",
   "thinking_mode_off": "推理{footer}: 关",
@@ -55,7 +57,7 @@
   "download_all_missing": "下载全部缺失文件",
   "tts": "文本转语音",
   "tts_detail": "让 RWKV 输出语音",
-  "offline_translator_server": "线翻译服务器",
+  "offline_translator_server": "离线翻译服务器",
   "offline_translator": "离线翻译",
   "offline_translator_detail": "离线翻译文本",
   "no_audio_file": "没有音频文件",
@@ -472,5 +474,5 @@
   "performance_test_title": "跑分测试",
   "performance_test_description": "使用 lambada 测试 perplexity",
   "start_download_updates_": "开始后台下载更新...",
-  "switch_to_creative_mode_for_better_exp": "建议选择 “创意模式”, 以便获得更好的体验"
+  "switch_to_creative_mode_for_better_exp": "解码参数建议选择 “创意”, 以便获得更好的体验"
 }

@@ -86,13 +86,13 @@ class ThemeSelector extends ConsumerWidget {
       ),
       12.h,
       Row(
-        mainAxisAlignment: MAA.start,
+        mainAxisAlignment: .start,
         children: [
           4.w,
           Expanded(
             child: T(
               s.dark_mode_theme,
-              s: TS(w: FontWeight.w500, c: qb.q(.8), s: 12),
+              s: TS(w: .w500, c: qb.q(.8), s: 12),
             ),
           ),
         ],
@@ -128,9 +128,9 @@ class ThemeSelector extends ConsumerWidget {
     ];
 
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(16),
-        topRight: Radius.circular(16),
+      borderRadius: const .only(
+        topLeft: .circular(16),
+        topRight: .circular(16),
       ),
       child: Scaffold(
         backgroundColor: customTheme.setting,
@@ -140,7 +140,7 @@ class ThemeSelector extends ConsumerWidget {
           backgroundColor: customTheme.setting,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const .only(right: 8),
               child: IconButton(
                 onPressed: () {
                   pop();
@@ -152,10 +152,7 @@ class ThemeSelector extends ConsumerWidget {
         ),
         body: ListView.builder(
           controller: scrollController,
-          padding: const EI.o(
-            l: 12,
-            r: 12,
-          ),
+          padding: const .only(left: 12, right: 12),
           itemBuilder: (context, index) {
             return items[index];
           },

@@ -38,6 +38,26 @@ extension HaloStateProvider<V> on StateProvider<V> {
 }
 ```
 
+### 状态管理最佳实践 (补充)
+
+- **在 `build` 方法中必须使用 `ref.watch`**: 当你需要 UI 随状态变化而刷新时，必须在 `build` 方法中使用 `ref.watch(provider)`。
+- **在逻辑/回调中使用 `.q`**: 当你只需要读取一次当前值（例如在 `onTap` 回调中，或 `initState` 中），或者在逻辑层中时，使用 `.q`。
+- **禁止在 `build` 中使用 `.q` 来构建依赖数据的 UI**: 这会导致状态更新时 UI 不刷新。
+
+```dart
+// Bad 😡
+Widget build(BuildContext context, WidgetRef ref) {
+  final value = provider.q; // ❌ UI won't update
+  return Text(value);
+}
+
+// Good ✅
+Widget build(BuildContext context, WidgetRef ref) {
+  final value = ref.watch(provider); // ✅ UI updates
+  return Text(value);
+}
+```
+
 ### 文件
 
 - 绝大部分的全局状态都在 `lib/store` 文件夹中

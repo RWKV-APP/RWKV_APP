@@ -10,7 +10,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/store/web_search_mode.dart';
+import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/select_image_button.dart';
@@ -28,7 +28,7 @@ class BottomInteractions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EI.o(t: 8),
+      padding: const .only(top: 8),
       child: Row(
         children: [
           Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
@@ -86,7 +86,7 @@ class _WebSearchModeButton extends ConsumerWidget {
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
-    final padding = const EI.o(l: 8);
+    final padding = const EdgeInsets.only(left: 8);
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
@@ -103,7 +103,7 @@ class _WebSearchModeButton extends ConsumerWidget {
               2.w,
               T(
                 webSearchMode == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
-                s: TS(c: textColor, s: 14, height: 1, w: FontWeight.w500),
+                s: TS(c: textColor, s: 14, height: 1, w: .w500),
               ),
               4.w,
               VerticalDivider(width: 2, indent: 8, endIndent: 8, color: textColor),
@@ -128,8 +128,8 @@ class _WebSearchModeButton extends ConsumerWidget {
                 ),
                 child: Container(
                   height: height,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  alignment: Alignment.center,
+                  padding: const .symmetric(horizontal: 4),
+                  alignment: .center,
                   child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
                 ),
               ),
@@ -161,7 +161,7 @@ class _WenYanWenButton extends ConsumerWidget {
         onTap: _onTap,
         child: AnimatedContainer(
           height: height,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const .symmetric(horizontal: 12),
           duration: 150.ms,
           curve: Curves.easeOutCubic,
           decoration: BoxDecoration(color: wenYanWen ? theme.colorScheme.primary : theme.colorScheme.surfaceContainer, borderRadius: 60.r),
@@ -205,7 +205,7 @@ class _MessageButton extends ConsumerWidget {
         child: GestureDetector(
           onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
           child: Container(
-            padding: const EI.s(h: 10, v: 5),
+            padding: const .symmetric(horizontal: 10, vertical: 5),
             child: Icon(
               (Platform.isIOS || Platform.isMacOS)
                   ? editingBotMessage

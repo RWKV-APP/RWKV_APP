@@ -38,6 +38,7 @@ final class Message extends Equatable {
 
   final String? modelName;
   final String? runningMode;
+  final String? rawDecodeParams;
 
   const Message({
     required this.id,
@@ -61,6 +62,7 @@ final class Message extends Equatable {
     this.ttsFilePaths,
     this.modelName,
     this.runningMode,
+    this.rawDecodeParams,
   });
 
   @override
@@ -86,6 +88,7 @@ final class Message extends Equatable {
     ...ttsFilePaths ?? [],
     modelName,
     runningMode,
+    rawDecodeParams,
   ];
 
   factory Message.fromJson(Map<String, dynamic> json) {
@@ -110,6 +113,7 @@ final class Message extends Equatable {
       ttsFilePaths: json["ttsFilePaths"] as List<String>?,
       modelName: json["modelName"] as String?,
       runningMode: json["runningMode"] as String?,
+      rawDecodeParams: json["rawDecodeParams"] as String?,
     );
   }
 
@@ -136,6 +140,7 @@ final class Message extends Equatable {
       "ttsFilePaths": ttsFilePaths,
       "modelName": modelName,
       "runningMode": runningMode,
+      "rawDecodeParams": rawDecodeParams,
     };
   }
 
@@ -161,6 +166,7 @@ final class Message extends Equatable {
     List<String>? ttsFilePaths,
     String? modelName,
     String? runningMode,
+    String? rawDecodeParams,
   }) {
     return Message(
       id: id ?? this.id,
@@ -183,6 +189,7 @@ final class Message extends Equatable {
       ttsFilePaths: ttsFilePaths ?? this.ttsFilePaths,
       modelName: modelName ?? this.modelName,
       runningMode: runningMode ?? this.runningMode,
+      rawDecodeParams: rawDecodeParams ?? this.rawDecodeParams,
     );
   }
 
@@ -211,6 +218,7 @@ Message(
   ttsFilePaths: $ttsFilePaths,
   modelName: $modelName,
   runningMode: $runningMode,
+  rawDecodeParams: $rawDecodeParams,
 )""";
   }
 }

@@ -430,6 +430,7 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "more": MessageLookupByLibrary.simpleMessage("その他"),
     "more_questions": MessageLookupByLibrary.simpleMessage("その他の質問"),
+    "multi_thread": MessageLookupByLibrary.simpleMessage("マルチスレッド"),
     "my_voice": MessageLookupByLibrary.simpleMessage("私の声"),
     "neko": MessageLookupByLibrary.simpleMessage("ネコ"),
     "network_error": MessageLookupByLibrary.simpleMessage("ネットワークエラー"),
@@ -608,6 +609,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Prefill ログのみ表示",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("思考チェーンスタックを表示"),
+    "single_thread": MessageLookupByLibrary.simpleMessage("シングルスレッド"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "少なくとも1.5Bモデルを選択することをお勧めします。より大きい2.9Bモデルの方が優れています。",
     ),
@@ -735,7 +737,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
     "window_id": m28,
-    "world": MessageLookupByLibrary.simpleMessage("World"),
+    "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
