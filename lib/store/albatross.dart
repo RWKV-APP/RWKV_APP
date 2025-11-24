@@ -15,9 +15,10 @@ import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/store/p.dart';
 
 class Albatross {
+  static const _chunkSize = 3;
+
   late final _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:9527'));
   CancelToken? _cancelToken;
-  String? _albatrossPath;
 
   String get host => _dio.options.baseUrl.replaceFirst('http://', '');
 
@@ -67,12 +68,11 @@ class Albatross {
     final cwd = Platform.resolvedExecutable;
     final albatross = Directory(join(dirname(cwd), 'albatross'));
     if (await albatross.exists()) {
+      await _Service.run(cwd: cwd, port: 9527);
       P.rwkv.enableAlbatross.q = true;
-      _albatrossPath = albatross.path;
       qqq('albatross is enabled');
     } else {
       P.rwkv.enableAlbatross.q = false;
-      _albatrossPath = null;
       qqq('albatross not found, disabled');
     }
   }
@@ -81,9 +81,9 @@ class Albatross {
     if (!P.rwkv.enableAlbatross.q) {
       return;
     }
-    await _Service.kill();
     final local = P.fileManager.locals(fileInfo).q;
     try {
+      P.rwkv.loading.q = true;
       final r = await _dio.post(
         '/load-model',
         data: {'model_path': local.targetPath},
@@ -95,11 +95,12 @@ class Albatross {
         P.rwkv.setModelConfig(thinkingMode: Free());
       } else {
         final body = r.data['error'];
-        Alert.error("${r.statusCode}: ${body}");
+        Alert.error("${r.statusCode}: $body");
       }
-      // await _Service.run(cwd: _albatrossPath!, address: '127.0.0.1', port: _port, modelPath: local.targetPath);
     } catch (e) {
       qqe(e);
+    } finally {
+      P.rwkv.loading.q = false;
     }
   }
 
@@ -126,7 +127,7 @@ class Albatross {
       ],
       "stop_tokens": [0, 261, 24281],
       "pad_zero": true,
-      "chunk_size": 3,
+      "chunk_size": _chunkSize,
       "stream": true,
       "enable_think": enableThink,
       ..._decodeParam,
@@ -193,7 +194,7 @@ class Albatross {
       "contents": List.filled(batchSize, prompt),
       "stop_tokens": [0, 261, 24281],
       "pad_zero": true,
-      "chunk_size": 3,
+      "chunk_size": _chunkSize,
       "stream": true,
       "enable_think": false,
       ..._decodeParam,
@@ -261,12 +262,10 @@ class _Service {
 
   static Future run({
     required String cwd,
-    required String address,
     required int port,
-    required String modelPath,
   }) async {
     final receivePort = ReceivePort();
-    final startup = _Startup(cwd: cwd, sendPort: receivePort.sendPort, port: 8000, modelPath: modelPath);
+    final startup = _Startup(cwd: cwd, sendPort: receivePort.sendPort, port: port);
     _isolate = await Isolate.spawn(_Service._main, startup);
 
     final events = receivePort.asBroadcastStream();
@@ -327,7 +326,7 @@ class _Service {
 
     final res = await _run(
       executable: '$python ${message.cwd}/main_robyn.py',
-      args: ["--model-path ${message.modelPath}", "--port ${message.port}"],
+      args: ["--port ${message.port}"],
     );
     qqq(res.stdout);
     qqq(res.stderr);
@@ -423,11 +422,10 @@ class _Service {
 
 class _Startup {
   final String cwd;
-  final String modelPath;
   final SendPort sendPort;
   final int port;
 
-  _Startup({required this.sendPort, required this.port, required this.modelPath, required this.cwd});
+  _Startup({required this.sendPort, required this.port, required this.cwd});
 
   _Startup copyWith({
     String? modelPath,
@@ -436,7 +434,6 @@ class _Startup {
     String? cwd,
   }) {
     return _Startup(
-      modelPath: modelPath ?? this.modelPath,
       sendPort: sendPort ?? this.sendPort,
       port: port ?? this.port,
       cwd: cwd ?? this.cwd,
