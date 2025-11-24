@@ -1,11 +1,14 @@
 // ignore: unused_import
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
@@ -128,10 +131,15 @@ class UserMessageBottom extends ConsumerWidget {
   void _onCopyPressed() {
     Alert.success(S.current.chat_copied_to_clipboard);
     if (msg.ttsTarget != null) {
-      Clipboard.setData(ClipboardData(text: msg.ttsTarget!));
+      Clipboard.setData(ClipboardData(text: msg.ttsTarget!.replaceAll(Config.userMsgModifierSep, "").trim()));
       return;
     }
-    Clipboard.setData(ClipboardData(text: msg.content));
+    final content = msg.content.replaceAll(Config.userMsgModifierSep, "").trim();
+    if (content.isEmpty) {
+      Alert.warning("No content to copy");
+      return;
+    }
+    Clipboard.setData(ClipboardData(text: content));
   }
 
   void _onTTSPlayPressed() {

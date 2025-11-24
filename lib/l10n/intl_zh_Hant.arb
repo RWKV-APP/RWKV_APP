@@ -472,5 +472,22 @@
   "source_text": "來源文字: {text}",
   "target_text": "目標文字: {text}",
   "performance_test_title": "跑分測試",
-  "performance_test_description": "使用 lambada 測試 perplexity"
+  "performance_test_description": "使用 lambada 測試 perplexity",
+  "switch_to_creative_mode_for_better_exp": "建議選擇 “創意模式”, 以便獲得更好的體驗",
+  "parameter_description": "參數說明",
+  "parameter_description_detail": "Temperature: 控制輸出的隨機性。較高的值（如 0.8）使輸出更具創意和隨機性；較低的值（如 0.2）使輸出更集中和確定。\n\nTop P: 控制輸出的多樣性。模型僅考慮累積機率達到 Top P 的 token。較低的值（如 0.5）會忽略低機率的詞，使輸出更相關。\n\nPresence Penalty: 根據 token 是否已在文字中出現來懲罰它們。正值會增加模型談論新主題的可能性。\n\nFrequency Penalty: 根據 token 在文字中出現的頻率來懲罰它們。正值會減少模型逐字重複同一行的可能性。\n\nPenalty Decay: 控制懲罰隨距離的衰減程度。",
+  "decode_params_for_each_message": "每條訊息的解碼參數",
+  "decode_params_for_each_message_detail": "批量推理中每條訊息的解碼參數。點擊編輯每條訊息的解碼參數。",
+  "all_the_same": "全部相同",
+  "not_all_the_same": "不完全相同",
+  "syncing": "同步中",
+  "not_syncing": "未同步",
+  "set_all_to_question_mark": "全部設定為 ???",
+  "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index": "請選擇要為索引 {index} 設定的取樣和懲罰參數",
+  "select_the_decode_parameters_to_set_all_to_for_index": "選擇要為索引 {index} 設定的解碼參數",
+  "temperature_with_value": "Temperature: {value}",
+  "top_p_with_value": "Top P: {value}",
+  "presence_penalty_with_value": "Presence Penalty: {value}",
+  "frequency_penalty_with_value": "Frequency Penalty: {value}",
+  "penalty_decay_with_value": "Penalty Decay: {value}"
 }

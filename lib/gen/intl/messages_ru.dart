@@ -46,47 +46,63 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m10(path) =>
       "Записи сообщений будут сохранены в следующей папке\n ${path}";
 
-  static String m11(port) => "HTTP-сервис (Порт: ${port})";
+  static String m11(value) => "Frequency Penalty: ${value}";
 
-  static String m12(flag, nameCN, nameEN) =>
+  static String m12(port) => "HTTP-сервис (Порт: ${port})";
+
+  static String m13(flag, nameCN, nameEN) =>
       "Имитировать голос ${flag} ${nameEN} (${nameCN})";
 
-  static String m13(fileName) => "Имитировать ${fileName}";
+  static String m14(fileName) => "Имитировать ${fileName}";
 
-  static String m14(memUsed, memFree) =>
+  static String m15(memUsed, memFree) =>
       "Использовано памяти: ${memUsed}, Свободно памяти: ${memFree}";
 
-  static String m15(count) => "В очереди: ${count}";
+  static String m16(value) => "Penalty Decay: ${value}";
 
-  static String m16(count) => "Выбрано ${count}";
+  static String m17(index) =>
+      "Пожалуйста, выберите параметры сэмплера и штрафов, чтобы установить их все для индекса ${index}";
 
-  static String m17(text) => "Исходный текст: ${text}";
+  static String m18(value) => "Presence Penalty: ${value}";
 
-  static String m18(text) => "Целевой текст: ${text}";
+  static String m19(count) => "В очереди: ${count}";
 
-  static String m19(footer) => "Мышление${footer}: Англ";
+  static String m20(index) =>
+      "Выберите параметры декодирования, чтобы установить их все для индекса ${index}";
 
-  static String m20(footer) => "Мышление${footer}: Англ Длинно";
+  static String m21(count) => "Выбрано ${count}";
 
-  static String m21(footer) => "Мышление${footer}: Англ Коротко";
+  static String m22(text) => "Исходный текст: ${text}";
 
-  static String m22(footer) => "Мышление${footer}: Быстро";
+  static String m23(text) => "Целевой текст: ${text}";
 
-  static String m23(footer) => "Мышление${footer}: Авто";
+  static String m24(value) => "Temperature: ${value}";
 
-  static String m24(footer) => "Мышление${footer}: Вкл";
+  static String m25(footer) => "Мышление${footer}: Англ";
 
-  static String m25(footer) => "Мышление${footer}: Выкл";
+  static String m26(footer) => "Мышление${footer}: Англ Длинно";
 
-  static String m26(count) => "Всего тестовых элементов: ${count}";
+  static String m27(footer) => "Мышление${footer}: Англ Коротко";
 
-  static String m27(port) => "WebSocket-сервис (Порт: ${port})";
+  static String m28(footer) => "Мышление${footer}: Быстро";
 
-  static String m28(id) => "Окно ${id}";
+  static String m29(footer) => "Мышление${footer}: Авто";
 
-  static String m29(count) => "${count} вкладок";
+  static String m30(footer) => "Мышление${footer}: Вкл";
 
-  static String m30(modelName) => "Вы сейчас используете ${modelName}";
+  static String m31(footer) => "Мышление${footer}: Выкл";
+
+  static String m32(value) => "Top P: ${value}";
+
+  static String m33(count) => "Всего тестовых элементов: ${count}";
+
+  static String m34(port) => "WebSocket-сервис (Порт: ${port})";
+
+  static String m35(id) => "Окно ${id}";
+
+  static String m36(count) => "${count} вкладок";
+
+  static String m37(modelName) => "Вы сейчас используете ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -100,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("Все"),
     "all_done": MessageLookupByLibrary.simpleMessage("Все готово"),
     "all_prompt": MessageLookupByLibrary.simpleMessage("Все промпты"),
+    "all_the_same": MessageLookupByLibrary.simpleMessage("Все одинаковые"),
     "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
       "Разрешить фоновые загрузки",
     ),
@@ -322,6 +339,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "decode": MessageLookupByLibrary.simpleMessage("вывод"),
     "decode_param": MessageLookupByLibrary.simpleMessage("Параметры модели"),
+    "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
+      "Параметры декодирования для каждого сообщения",
+    ),
+    "decode_params_for_each_message_detail": MessageLookupByLibrary.simpleMessage(
+      "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
+    ),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("Глубокий поиск"),
     "default_": MessageLookupByLibrary.simpleMessage("По умолчанию"),
     "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
@@ -426,6 +449,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "force_dark_mode": MessageLookupByLibrary.simpleMessage(
       "Принудительный тёмный режим",
     ),
+    "frequency_penalty_with_value": m11,
     "from_model": MessageLookupByLibrary.simpleMessage("От модели: %s"),
     "game_over": MessageLookupByLibrary.simpleMessage("Игра окончена!"),
     "generate": MessageLookupByLibrary.simpleMessage("Сгенерировать"),
@@ -459,14 +483,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Удерживайте для записи, отпустите для отправки",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Главная"),
-    "http_service_port": m11,
+    "http_service_port": m12,
     "human": MessageLookupByLibrary.simpleMessage("Человек"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "Я хочу, чтобы RWKV сказал...",
     ),
     "idle": MessageLookupByLibrary.simpleMessage("Ожидание"),
-    "imitate": m12,
-    "imitate_fle": m13,
+    "imitate": m13,
+    "imitate_fle": m14,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Использовать"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
@@ -525,7 +549,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loaded": MessageLookupByLibrary.simpleMessage("Загружено"),
     "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
     "medium": MessageLookupByLibrary.simpleMessage("Средний (110%)"),
-    "memory_used": m14,
+    "memory_used": m15,
     "message_content": MessageLookupByLibrary.simpleMessage(
       "Содержимое сообщения",
     ),
@@ -577,6 +601,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Модель не выбрана",
     ),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("Нет судоку"),
+    "not_all_the_same": MessageLookupByLibrary.simpleMessage(
+      "Не все одинаковые",
+    ),
+    "not_syncing": MessageLookupByLibrary.simpleMessage("Не синхронизировано"),
     "number": MessageLookupByLibrary.simpleMessage("Число"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Мрр~ Мрявк~"),
     "off": MessageLookupByLibrary.simpleMessage("Выключено"),
@@ -606,7 +634,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
     "overseas": MessageLookupByLibrary.simpleMessage("(за рубежом)"),
+    "parameter_description": MessageLookupByLibrary.simpleMessage(
+      "Описание параметров",
+    ),
+    "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
+      "Temperature: Контролирует случайность вывода. Более высокие значения (например, 0.8) делают вывод более творческим и случайным; более низкие (например, 0.2) — более сфокусированным и детерминированным.\n\nTop P: Контролирует разнообразие вывода. Модель рассматривает только токены с совокупной вероятностью, достигающей Top P. Более низкие значения (например, 0.5) игнорируют маловероятные слова, делая вывод более релевантным.\n\nPresence Penalty: Штрафует токены в зависимости от того, появлялись ли они уже в тексте. Положительные значения увеличивают вероятность обсуждения новых тем.\n\nFrequency Penalty: Штрафует токены в зависимости от частоты их появления в тексте. Положительные значения уменьшают вероятность дословного повторения строк.\n\nPenalty Decay: Контролирует затухание штрафа с расстоянием.",
+    ),
     "pause": MessageLookupByLibrary.simpleMessage("Пауза"),
+    "penalty_decay_with_value": m16,
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Тест производительности",
     ),
@@ -666,6 +701,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, выберите сложность",
     ),
+    "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
+        m17,
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, дождитесь завершения вывода",
     ),
@@ -689,11 +726,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("Использовать"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("Китайский режим"),
     "prefill": MessageLookupByLibrary.simpleMessage("ввод"),
+    "presence_penalty_with_value": m18,
     "prompt": MessageLookupByLibrary.simpleMessage("Промпт"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Шаблон промпта"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("Группа QQ 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("Группа QQ 2"),
-    "queued_x": m15,
+    "queued_x": m19,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Быстрое мышление"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Быстрое мышление включено",
@@ -753,13 +791,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_new_image": MessageLookupByLibrary.simpleMessage(
       "Выбрать новое изображение",
     ),
-    "selected_count": m16,
+    "select_the_decode_parameters_to_set_all_to_for_index": m20,
+    "selected_count": m21,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "Отправить сообщение в RWKV",
     ),
     "server_error": MessageLookupByLibrary.simpleMessage("Ошибка сервера"),
     "session_configuration": MessageLookupByLibrary.simpleMessage(
       "Конфигурация сессии",
+    ),
+    "set_all_to_question_mark": MessageLookupByLibrary.simpleMessage(
+      "Установить все в ???",
     ),
     "set_the_value_of_grid": MessageLookupByLibrary.simpleMessage(
       "Установить значение ячейки",
@@ -782,7 +824,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("Маленький (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Исходный код"),
-    "source_text": m17,
+    "source_text": m22,
     "speed": MessageLookupByLibrary.simpleMessage("Скорость загрузки:"),
     "start": MessageLookupByLibrary.simpleMessage("Начать"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage(
@@ -831,13 +873,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Сложный"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("Средний"),
     "suggest": MessageLookupByLibrary.simpleMessage("Рекомендовать"),
+    "switch_to_creative_mode_for_better_exp":
+        MessageLookupByLibrary.simpleMessage(
+          "Рекомендуется переключиться в режим «Творческий» для лучшего опыта",
+        ),
+    "syncing": MessageLookupByLibrary.simpleMessage("Синхронизация"),
     "system_mode": MessageLookupByLibrary.simpleMessage("Как в системе"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("Системный промпт"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Сделать фото"),
-    "target_text": m18,
+    "target_text": m23,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "Группа технических исследований",
     ),
+    "temperature_with_value": m24,
     "test_data": MessageLookupByLibrary.simpleMessage("Тестовые данные"),
     "test_result": MessageLookupByLibrary.simpleMessage("Результат теста"),
     "test_results": MessageLookupByLibrary.simpleMessage("Результаты тестов"),
@@ -856,10 +904,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Затем вы можете начать общаться с RWKV",
         ),
-    "think_button_mode_en": m19,
-    "think_button_mode_en_long": m20,
-    "think_button_mode_en_short": m21,
-    "think_button_mode_fast": m22,
+    "think_button_mode_en": m25,
+    "think_button_mode_en_long": m26,
+    "think_button_mode_en_short": m27,
+    "think_button_mode_fast": m28,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "Режим мышления влияет на производительность модели при рассуждениях",
     ),
@@ -868,9 +916,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("Думаю..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("Режим"),
-    "thinking_mode_auto": m23,
-    "thinking_mode_high": m24,
-    "thinking_mode_off": m25,
+    "thinking_mode_auto": m29,
+    "thinking_mode_high": m30,
+    "thinking_mode_off": m31,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон режима мышления",
     ),
@@ -883,8 +931,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "thought_result": MessageLookupByLibrary.simpleMessage(
       "Результат размышлений",
     ),
+    "top_p_with_value": m32,
     "total_count": MessageLookupByLibrary.simpleMessage("Общее количество"),
-    "total_test_items": m26,
+    "total_test_items": m33,
     "translate": MessageLookupByLibrary.simpleMessage("Перевод"),
     "translating": MessageLookupByLibrary.simpleMessage("Перевод..."),
     "translation": MessageLookupByLibrary.simpleMessage("Перевод"),
@@ -917,7 +966,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон веб-поиска",
     ),
-    "websocket_service_port": m27,
+    "websocket_service_port": m34,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Добро пожаловать в RWKV Чат",
     ),
@@ -927,14 +976,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("Белые"),
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
-    "window_id": m28,
+    "window_id": m35,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("Найдено %d страниц"),
-    "x_tabs": m29,
-    "you_are_now_using": m30,
+    "x_tabs": m36,
+    "you_are_now_using": m37,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "Теперь вы можете начать общаться с RWKV",
     ),

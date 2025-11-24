@@ -3262,6 +3262,150 @@ class S {
       args: [],
     );
   }
+
+  /// `参数说明`
+  String get parameter_description {
+    return Intl.message(
+      '参数说明',
+      name: 'parameter_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。`
+  String get parameter_description_detail {
+    return Intl.message(
+      'Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。',
+      name: 'parameter_description_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每条消息的解码参数`
+  String get decode_params_for_each_message {
+    return Intl.message(
+      '每条消息的解码参数',
+      name: 'decode_params_for_each_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。`
+  String get decode_params_for_each_message_detail {
+    return Intl.message(
+      '批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。',
+      name: 'decode_params_for_each_message_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `全部相同`
+  String get all_the_same {
+    return Intl.message('全部相同', name: 'all_the_same', desc: '', args: []);
+  }
+
+  /// `不完全相同`
+  String get not_all_the_same {
+    return Intl.message('不完全相同', name: 'not_all_the_same', desc: '', args: []);
+  }
+
+  /// `同步中`
+  String get syncing {
+    return Intl.message('同步中', name: 'syncing', desc: '', args: []);
+  }
+
+  /// `未同步`
+  String get not_syncing {
+    return Intl.message('未同步', name: 'not_syncing', desc: '', args: []);
+  }
+
+  /// `全部设置为 ???`
+  String get set_all_to_question_mark {
+    return Intl.message(
+      '全部设置为 ???',
+      name: 'set_all_to_question_mark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请选择要为索引 {index} 设置的采样和惩罚参数`
+  String
+  please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(
+    Object index,
+  ) {
+    return Intl.message(
+      '请选择要为索引 $index 设置的采样和惩罚参数',
+      name:
+          'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `选择要为索引 {index} 设置的解码参数`
+  String select_the_decode_parameters_to_set_all_to_for_index(Object index) {
+    return Intl.message(
+      '选择要为索引 $index 设置的解码参数',
+      name: 'select_the_decode_parameters_to_set_all_to_for_index',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `Temperature: {value}`
+  String temperature_with_value(Object value) {
+    return Intl.message(
+      'Temperature: $value',
+      name: 'temperature_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Top P: {value}`
+  String top_p_with_value(Object value) {
+    return Intl.message(
+      'Top P: $value',
+      name: 'top_p_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Presence Penalty: {value}`
+  String presence_penalty_with_value(Object value) {
+    return Intl.message(
+      'Presence Penalty: $value',
+      name: 'presence_penalty_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Frequency Penalty: {value}`
+  String frequency_penalty_with_value(Object value) {
+    return Intl.message(
+      'Frequency Penalty: $value',
+      name: 'frequency_penalty_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Penalty Decay: {value}`
+  String penalty_decay_with_value(Object value) {
+    return Intl.message(
+      'Penalty Decay: $value',
+      name: 'penalty_decay_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

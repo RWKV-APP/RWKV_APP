@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
@@ -6,6 +9,8 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/extract_thought_and_output.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/message.dart' as model;
+import 'package:zone/model/sampler_and_penalty_param.dart';
+import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 
 class BatchMessageContent extends ConsumerStatefulWidget {
@@ -77,6 +82,8 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
 
     final qw = ref.watch(P.app.qw);
 
+    final parsedDecodeParams = widget.msg.parsedDecodeParams;
+
     return Stack(
       children: [
         SingleChildScrollView(
@@ -103,7 +110,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                       border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
                       borderRadius: .circular(8),
                     ),
-                    child: _MarkdownBody(data: batch[i]),
+                    child: _MarkdownBody(data: batch[i], decodeParam: parsedDecodeParams[i]),
                   ),
                 ),
               4.w,
@@ -172,8 +179,26 @@ const double _kTextScaleFactorForCotContent = 1;
 
 class _MarkdownBody extends ConsumerWidget {
   final String data;
+  final SamplerAndPenaltyParam? decodeParam;
 
-  const _MarkdownBody({required this.data});
+  const _MarkdownBody({required this.data, this.decodeParam});
+
+  void _onTapDecodeParam() async {
+    final _ = await showConfirmationDialog(
+      context: getContext()!,
+      title: "Decode Param",
+      message:
+          """Decode Param: ${decodeParam!.displayName}
+      Temperature: ${decodeParam!.temperature.toStringAsFixed(1)}
+      TopP: ${decodeParam!.topP.toStringAsFixed(2)}
+      Presence Penalty: ${decodeParam!.presencePenalty.toStringAsFixed(1)}
+      Frequency Penalty: ${decodeParam!.frequencyPenalty.toStringAsFixed(1)}
+      Penalty Decay: ${decodeParam!.penaltyDecay.toStringAsFixed(3)}
+""",
+      okLabel: "OK",
+      cancelLabel: "OK",
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -181,10 +206,28 @@ class _MarkdownBody extends ConsumerWidget {
 
     final (thought, output) = extractThoughtAndOutput(data);
 
+    final Widget? decodeParamWidget = decodeParam != null
+        ? Align(
+            alignment: Alignment.topLeft,
+            child: GD(
+              onTap: _onTapDecodeParam,
+              child: Container(
+                decoration: BD(
+                  border: Border.all(color: kCG.q(.5)),
+                  borderRadius: .circular(4),
+                ),
+                padding: const .symmetric(horizontal: 6, vertical: 2),
+                child: T("Decode Param: ${decodeParam!.displayName}"),
+              ),
+            ),
+          )
+        : null;
+
     if (thought.isEmpty) {
       return Column(
         crossAxisAlignment: .stretch,
         children: [
+          ?decodeParamWidget,
           GptMarkdown(output),
         ],
       );
@@ -214,6 +257,7 @@ class _MarkdownBody extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
+          ?decodeParamWidget,
           if (thought.isNotEmpty)
             GptMarkdown(
               thought,

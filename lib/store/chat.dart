@@ -433,6 +433,7 @@ extension $Chat on _Chat {
       paused: false,
       modelName: currentModel.name,
       runningMode: thinkingMode.toString(),
+      rawDecodeParams: P.rwkv.backendBatchParams.q.rawDecodeParams,
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;
@@ -474,6 +475,44 @@ extension $Chat on _Chat {
       paused: false,
       callingFunction: "resumeMessageById",
     );
+  }
+
+  Future<void> onBatchInferenceSwitchChanged(bool value) async {
+    P.app.hapticLight();
+    P.chat.batchEnabled.q = value;
+
+    if (!value) return;
+
+    final temperature = P.rwkv.arguments(Argument.temperature).q;
+    final topP = P.rwkv.arguments(Argument.topP).q;
+    final presencePenalty = P.rwkv.arguments(Argument.presencePenalty).q;
+    final frequencyPenalty = P.rwkv.arguments(Argument.frequencyPenalty).q;
+    final penaltyDecay = P.rwkv.arguments(Argument.penaltyDecay).q;
+
+    final List<SamplerAndPenaltyParam> newValue = List.generate(
+      100,
+      (index) => SamplerAndPenaltyParam(
+        temperature: temperature,
+        topP: topP,
+        presencePenalty: presencePenalty,
+        frequencyPenalty: frequencyPenalty,
+        penaltyDecay: penaltyDecay,
+      ),
+    );
+
+    P.rwkv.frontendBatchParams.q = newValue;
+    P.rwkv.send(
+      to_rwkv.SetSamplerAndPenaltyParams(
+        temperatures: newValue.map((e) => e.temperature).toList(),
+        topKs: newValue.map((_) => 500.0).toList(),
+        topPs: newValue.map((e) => e.topP).toList(),
+        presencePenalties: newValue.map((e) => e.presencePenalty).toList(),
+        frequencyPenalties: newValue.map((e) => e.frequencyPenalty).toList(),
+        penaltyDecays: newValue.map((e) => e.penaltyDecay).toList(),
+      ),
+    );
+    final batchCount = this.batchCount.q;
+    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: batchCount));
   }
 }
 
@@ -522,6 +561,30 @@ extension _$Chat on _Chat {
     P.preference.preferredLanguage.lv(P.suggestion.loadSuggestions);
 
     P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
+
+    batchCount.l(_onBatchCountChanged);
+  }
+
+  void _onBatchCountChanged(int value) async {
+    late final List<SamplerAndPenaltyParam> newFrontendBatchParams;
+    newFrontendBatchParams = [
+      ...P.rwkv.frontendBatchParams.q,
+      P.rwkv.frontendBatchParams.q.last,
+    ];
+
+    P.rwkv.frontendBatchParams.q = newFrontendBatchParams;
+    P.rwkv.send(
+      to_rwkv.SetSamplerAndPenaltyParams(
+        temperatures: newFrontendBatchParams.map((e) => e.temperature).toList(),
+        topKs: newFrontendBatchParams.map((_) => 500.0).toList(),
+        topPs: newFrontendBatchParams.map((e) => e.topP).toList(),
+        presencePenalties: newFrontendBatchParams.map((e) => e.presencePenalty).toList(),
+        frequencyPenalties: newFrontendBatchParams.map((e) => e.frequencyPenalty).toList(),
+        penaltyDecays: newFrontendBatchParams.map((e) => e.penaltyDecay).toList(),
+      ),
+    );
+    await Future.delayed(1000.ms);
+    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value));
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {

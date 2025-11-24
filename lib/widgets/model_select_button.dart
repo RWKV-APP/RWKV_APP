@@ -29,6 +29,8 @@ class ModelSelectButton extends ConsumerWidget {
         }[decodeParamType] ??
         s.custom;
 
+    final batchEnabled = ref.watch(P.chat.batchEnabled);
+
     return Ink(
       decoration: BoxDecoration(
         borderRadius: .circular(16),
@@ -60,7 +62,7 @@ class ModelSelectButton extends ConsumerWidget {
               ),
             if (currentModel == null) const SizedBox(width: 8),
             if (currentModel != null) const VerticalDivider(thickness: 1, width: 1),
-            if (currentModel != null)
+            if (currentModel != null && !batchEnabled)
               PopupMenuTheme(
                 data: PopupMenuThemeData(
                   shape: RoundedRectangleBorder(borderRadius: .circular(8)),
@@ -99,6 +101,16 @@ class ModelSelectButton extends ConsumerWidget {
                     padding: const .symmetric(horizontal: 12, vertical: 4),
                     child: Text(currentName, style: const TextStyle(fontSize: 10, height: 1)),
                   ),
+                ),
+              ),
+            if (currentModel != null && batchEnabled)
+              InkWell(
+                onTap: () {
+                  P.rwkv.onBatchInferenceTapped();
+                },
+                child: Padding(
+                  padding: const .symmetric(horizontal: 8, vertical: 4),
+                  child: Text("  " + s.batch_inference_short + "  ", style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500)),
                 ),
               ),
           ],

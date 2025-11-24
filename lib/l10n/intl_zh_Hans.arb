@@ -475,4 +475,21 @@
   "performance_test_description": "使用 lambada 测试 perplexity",
   "start_download_updates_": "开始后台下载更新...",
   "switch_to_creative_mode_for_better_exp": "解码参数建议选择 “创意”, 以便获得更好的体验"
+  "switch_to_creative_mode_for_better_exp": "建议选择 “创意模式”, 以便获得更好的体验",
+  "parameter_description": "参数说明",
+  "parameter_description_detail": "Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。",
+  "decode_params_for_each_message": "每条消息的解码参数",
+  "decode_params_for_each_message_detail": "批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。",
+  "all_the_same": "全部相同",
+  "not_all_the_same": "不完全相同",
+  "syncing": "同步中",
+  "not_syncing": "未同步",
+  "set_all_to_question_mark": "全部设置为 ???",
+  "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index": "请选择要为索引 {index} 设置的采样和惩罚参数",
+  "select_the_decode_parameters_to_set_all_to_for_index": "选择要为索引 {index} 设置的解码参数",
+  "temperature_with_value": "Temperature: {value}",
+  "top_p_with_value": "Top P: {value}",
+  "presence_penalty_with_value": "Presence Penalty: {value}",
+  "frequency_penalty_with_value": "Frequency Penalty: {value}",
+  "penalty_decay_with_value": "Penalty Decay: {value}"
 }

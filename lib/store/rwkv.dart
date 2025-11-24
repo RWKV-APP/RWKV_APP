@@ -91,9 +91,39 @@ class _RWKV {
     return argument.defaults;
   });
 
+  // TODO: Working on this.
+  late final frontendBatchParams = qs<List<SamplerAndPenaltyParam>>([]);
+  late final backendBatchParams = qs<List<SamplerAndPenaltyParam>>([]);
+  late final editingBatchParamsIndex = qs<int?>(null);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
+
+  late final frontendBatchParamsAreAllSame = qp((ref) {
+    final frontendBatchParams = ref.watch(this.frontendBatchParams);
+    if (frontendBatchParams.isEmpty) return false;
+    return frontendBatchParams.every((param) => param == frontendBatchParams.first);
+  });
+
+  late final syncingBatchParams = qp(_syncingBatchParams);
+
+  bool _syncingBatchParams(Ref<dynamic> ref) {
+    final frontendBatchParams = ref.watch(this.frontendBatchParams);
+    final backendBatchParams = ref.watch(this.backendBatchParams);
+    if (frontendBatchParams.isEmpty || backendBatchParams.isEmpty) return false;
+    bool areAllSame = true;
+    for (int i = 0; i < backendBatchParams.length; i++) {
+      final frontendParam = frontendBatchParams[i];
+      final backendParam = backendBatchParams[i];
+      final isEqual = frontendParam.tolerantEquals(backendParam);
+      if (!isEqual) {
+        areAllSame = false;
+        break;
+      }
+    }
+    return !areAllSame;
+  }
 
   late final decodeParamType = qp<DecodeParamType>((ref) {
     final temp = ref.watch(arguments(Argument.temperature));
@@ -1064,6 +1094,25 @@ extension _$RWKV on _RWKV {
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
     _messagesController.add(message);
     switch (message) {
+      case from_rwkv.SamplerAndPenaltyParams res:
+        final temperatures = res.temperatures;
+        final topPs = res.topPs;
+        final presencePenalties = res.presencePenalties;
+        final frequencyPenalties = res.frequencyPenalties;
+        final penaltyDecays = res.penaltyDecays;
+        List<SamplerAndPenaltyParam> backendValues = [];
+        for (int i = 0; i < temperatures.length; i++) {
+          backendValues.add(
+            SamplerAndPenaltyParam(
+              temperature: temperatures[i].toDouble(),
+              topP: topPs[i].toDouble(),
+              presencePenalty: presencePenalties[i].toDouble(),
+              frequencyPenalty: frequencyPenalties[i].toDouble(),
+              penaltyDecay: penaltyDecays[i].toDouble(),
+            ),
+          );
+        }
+        backendBatchParams.q = backendValues;
       case from_rwkv.EvaluationResults res:
         P.lambada._onResultsReceived(res);
       case from_rwkv.IsGenerating res:

@@ -472,5 +472,22 @@
   "source_text": "Исходный текст: {text}",
   "target_text": "Целевой текст: {text}",
   "performance_test_title": "Тест производительности",
-  "performance_test_description": "Использовать lambada для тестирования perplexity"
+  "performance_test_description": "Использовать lambada для тестирования perplexity",
+  "switch_to_creative_mode_for_better_exp": "Рекомендуется переключиться в режим «Творческий» для лучшего опыта",
+  "parameter_description": "Описание параметров",
+  "parameter_description_detail": "Temperature: Контролирует случайность вывода. Более высокие значения (например, 0.8) делают вывод более творческим и случайным; более низкие (например, 0.2) — более сфокусированным и детерминированным.\n\nTop P: Контролирует разнообразие вывода. Модель рассматривает только токены с совокупной вероятностью, достигающей Top P. Более низкие значения (например, 0.5) игнорируют маловероятные слова, делая вывод более релевантным.\n\nPresence Penalty: Штрафует токены в зависимости от того, появлялись ли они уже в тексте. Положительные значения увеличивают вероятность обсуждения новых тем.\n\nFrequency Penalty: Штрафует токены в зависимости от частоты их появления в тексте. Положительные значения уменьшают вероятность дословного повторения строк.\n\nPenalty Decay: Контролирует затухание штрафа с расстоянием.",
+  "decode_params_for_each_message": "Параметры декодирования для каждого сообщения",
+  "decode_params_for_each_message_detail": "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
+  "all_the_same": "Все одинаковые",
+  "not_all_the_same": "Не все одинаковые",
+  "syncing": "Синхронизация",
+  "not_syncing": "Не синхронизировано",
+  "set_all_to_question_mark": "Установить все в ???",
+  "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index": "Пожалуйста, выберите параметры сэмплера и штрафов, чтобы установить их все для индекса {index}",
+  "select_the_decode_parameters_to_set_all_to_for_index": "Выберите параметры декодирования, чтобы установить их все для индекса {index}",
+  "temperature_with_value": "Temperature: {value}",
+  "top_p_with_value": "Top P: {value}",
+  "presence_penalty_with_value": "Presence Penalty: {value}",
+  "frequency_penalty_with_value": "Frequency Penalty: {value}",
+  "penalty_decay_with_value": "Penalty Decay: {value}"
 }

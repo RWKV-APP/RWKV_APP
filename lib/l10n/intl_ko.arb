@@ -472,5 +472,22 @@
   "source_text": "소스 텍스트: {text}",
   "target_text": "타겟 텍스트: {text}",
   "performance_test_title": "성능 테스트",
-  "performance_test_description": "lambada를 사용하여 perplexity 테스트"
+  "performance_test_description": "lambada를 사용하여 perplexity 테스트",
+  "switch_to_creative_mode_for_better_exp": "더 나은 경험을 위해 '창의적 모드'로 전환하는 것을 권장합니다",
+  "parameter_description": "매개변수 설명",
+  "parameter_description_detail": "Temperature: 출력의 무작위성을 제어합니다. 높은 값(예: 0.8)은 더 창의적이고 무작위적으로, 낮은 값(예: 0.2)은 더 집중적이고 결정적으로 만듭니다.\n\nTop P: 출력의 다양성을 제어합니다. 모델은 누적 확률이 Top P에 도달하는 토큰만 고려합니다. 낮은 값(예: 0.5)은 확률이 낮은 단어를 무시하여 관련성을 높입니다.\n\nPresence Penalty: 토큰이 텍스트에 이미 나타났는지 여부에 따라 페널티를 부여합니다. 양수 값은 새로운 주제에 대해 이야기할 가능성을 높입니다.\n\nFrequency Penalty: 텍스트 내 빈도에 따라 토큰에 페널티를 부여합니다. 양수 값은 같은 줄을 그대로 반복할 가능성을 줄입니다.\n\nPenalty Decay: 거리에 따른 페널티 감소를 제어합니다.",
+  "decode_params_for_each_message": "각 메시지의 디코딩 매개변수",
+  "decode_params_for_each_message_detail": "배치 추론에서 각 메시지의 디코딩 매개변수입니다. 클릭하여 편집할 수 있습니다.",
+  "all_the_same": "모두 같음",
+  "not_all_the_same": "모두 같지 않음",
+  "syncing": "동기화 중",
+  "not_syncing": "동기화되지 않음",
+  "set_all_to_question_mark": "모두 ???로 설정",
+  "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index": "인덱스 {index}에 대해 모두 설정할 샘플러 및 페널티 매개변수를 선택하세요",
+  "select_the_decode_parameters_to_set_all_to_for_index": "인덱스 {index}에 대해 모두 설정할 디코딩 매개변수를 선택하세요",
+  "temperature_with_value": "Temperature: {value}",
+  "top_p_with_value": "Top P: {value}",
+  "presence_penalty_with_value": "Presence Penalty: {value}",
+  "frequency_penalty_with_value": "Frequency Penalty: {value}",
+  "penalty_decay_with_value": "Penalty Decay: {value}"
 }

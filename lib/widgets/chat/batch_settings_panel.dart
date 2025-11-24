@@ -1,9 +1,13 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:rwkv_mobile_flutter/to_rwkv.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
+import 'package:zone/model/decode_param_type.dart';
+import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
@@ -22,14 +26,15 @@ class BatchSettingsPanel extends ConsumerWidget {
       _shown.q = false;
       return;
     }
+    final isMobile = P.app.isMobile.q;
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return DraggableScrollableSheet(
-          initialChildSize: .6,
-          maxChildSize: .65,
-          minChildSize: .45,
+          initialChildSize: isMobile ? .6 : .75,
+          maxChildSize: isMobile ? .65 : .8,
+          minChildSize: isMobile ? .45 : .6,
           expand: false,
           snap: false,
           builder: (context, scrollController) {
@@ -44,11 +49,6 @@ class BatchSettingsPanel extends ConsumerWidget {
   final ScrollController? scrollController;
 
   const BatchSettingsPanel({super.key, required this.scrollController});
-
-  void _onBatchInferenceSwitchChanged(bool value) {
-    P.app.hapticLight();
-    P.chat.batchEnabled.q = value;
-  }
 
   void _onChanged(Argument argument, double value) {
     int rawNewValue = int.parse(value.toStringAsFixed(argument.fixedDecimals));
@@ -70,10 +70,19 @@ class BatchSettingsPanel extends ConsumerWidget {
     }
   }
 
+  void _onTapInfo() {
+    final context = getContext();
+    if (context == null) return;
+    showOkAlertDialog(
+      context: context,
+      title: S.of(context).parameter_description,
+      message: S.of(context).parameter_description_detail,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
     final batchCount = ref.watch(P.chat.batchCount);
     final customTheme = ref.watch(P.app.customTheme);
     final batchInference = ref.watch(P.chat.batchEnabled);
@@ -103,7 +112,7 @@ class BatchSettingsPanel extends ConsumerWidget {
         ),
         body: ListView(
           controller: scrollController,
-          padding: const .only(left: 12, right: 12),
+          padding: const .only(left: 12, right: 12, bottom: 12),
           children: [
             FormItem(
               isSectionStart: true,
@@ -114,7 +123,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               showArrow: false,
               trailing: Switch.adaptive(
                 value: P.chat.batchEnabled.q,
-                onChanged: _onBatchInferenceSwitchChanged,
+                onChanged: P.chat.onBatchInferenceSwitchChanged,
               ),
             ),
             AnimatedSize(
@@ -124,7 +133,6 @@ class BatchSettingsPanel extends ConsumerWidget {
             ),
             DimmedWhenInactive(
               ignoring: !batchInference,
-              duration: const Duration(milliseconds: 200),
               child: FormItem(
                 showArrow: false,
                 isSectionStart: !batchInference,
@@ -147,7 +155,16 @@ class BatchSettingsPanel extends ConsumerWidget {
             ),
             DimmedWhenInactive(
               ignoring: !batchInference,
-              duration: const Duration(milliseconds: 300),
+              child: FormItem(
+                title: s.decode_params_for_each_message,
+                subtitle: s.decode_params_for_each_message_detail,
+                showArrow: false,
+                infoWidget: IconButton(onPressed: _onTapInfo, icon: const Icon(Icons.info_outline)),
+                bottom: _DecodeParams(),
+              ),
+            ),
+            DimmedWhenInactive(
+              ignoring: !batchInference,
               child: FormItem(
                 showArrow: false,
                 isSectionEnd: true,
@@ -177,7 +194,12 @@ class DimmedWhenInactive extends StatelessWidget {
   final Widget child;
   final Duration duration;
 
-  const DimmedWhenInactive({super.key, required this.ignoring, required this.child, this.duration = const Duration(milliseconds: 200)});
+  const DimmedWhenInactive({
+    super.key,
+    required this.ignoring,
+    required this.child,
+    this.duration = const Duration(milliseconds: 250),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +209,114 @@ class DimmedWhenInactive extends StatelessWidget {
         opacity: ignoring ? 0.5 : 1,
         duration: duration,
         child: child,
+      ),
+    );
+  }
+}
+
+class _DecodeParams extends ConsumerWidget {
+  const _DecodeParams();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final frontendBatchParams = ref.watch(P.rwkv.frontendBatchParams);
+    final backendBatchParams = ref.watch(P.rwkv.backendBatchParams);
+    final frontendBatchParamsAreAllSame = ref.watch(P.rwkv.frontendBatchParamsAreAllSame);
+    final syncingBatchParams = ref.watch(P.rwkv.syncingBatchParams);
+    final batchCount = ref.watch(P.chat.batchCount);
+    final paramsToShow = frontendBatchParams.take(batchCount).toList();
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        if (frontendBatchParamsAreAllSame) T(s.all_the_same) else T(s.not_all_the_same),
+        if (syncingBatchParams) T(s.syncing) else T(s.not_syncing),
+        T(batchCount.toString()),
+        T(s.set_all_to_question_mark),
+        Wrap(
+          alignment: .start,
+          crossAxisAlignment: .start,
+          runSpacing: 4,
+          spacing: 4,
+          children: [
+            for (int index = 0; index < paramsToShow.length; index++) _DecodeParam(index: index, param: paramsToShow[index]),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _DecodeParam extends ConsumerWidget {
+  final int index;
+  final SamplerAndPenaltyParam param;
+
+  const _DecodeParam({required this.index, required this.param});
+
+  void _onTap() async {
+    final context = getContext()!;
+    final s = S.of(context);
+    final result = await showModalActionSheet<SamplerAndPenaltyParam>(
+      context: context,
+      title: s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index),
+      message: s.select_the_decode_parameters_to_set_all_to_for_index(index),
+      actions: [
+        ...DecodeParamType.values.map(
+          (e) {
+            final key = SamplerAndPenaltyParam.fromDecodeParamType(e);
+            String label = key.displayName;
+            if (key.tolerantEquals(param)) label = "✅ $label";
+            return SheetAction(
+              label: label,
+              key: key,
+            );
+          },
+        ),
+      ],
+    );
+    if (result == null) return;
+    P.rwkv.frontendBatchParams.q = [
+      ...P.rwkv.frontendBatchParams.q.sublist(0, index),
+      result,
+      ...P.rwkv.frontendBatchParams.q.sublist(index + 1),
+    ];
+    P.rwkv.send(
+      SetSamplerAndPenaltyParams(
+        temperatures: P.rwkv.frontendBatchParams.q.map((e) => e.temperature).toList(),
+        topKs: P.rwkv.frontendBatchParams.q.map((e) => 500.0).toList(),
+        topPs: P.rwkv.frontendBatchParams.q.map((e) => e.topP).toList(),
+        presencePenalties: P.rwkv.frontendBatchParams.q.map((e) => e.presencePenalty).toList(),
+        frequencyPenalties: P.rwkv.frontendBatchParams.q.map((e) => e.frequencyPenalty).toList(),
+        penaltyDecays: P.rwkv.frontendBatchParams.q.map((e) => e.penaltyDecay).toList(),
+      ),
+    );
+    P.rwkv.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+    return GD(
+      onTap: _onTap,
+      child: Container(
+        decoration: BD(
+          color: qb.q(.1),
+          border: Border.all(color: qb.q(.5)),
+          borderRadius: .circular(4),
+        ),
+        padding: const .all(4),
+        child: Column(
+          children: [
+            T(param.displayName),
+            T(s.temperature_with_value(param.temperature)),
+            T(s.top_p_with_value(param.topP)),
+            T(s.presence_penalty_with_value(param.presencePenalty)),
+            T(s.frequency_penalty_with_value(param.frequencyPenalty)),
+            T(s.penalty_decay_with_value(param.penaltyDecay)),
+          ],
+        ),
       ),
     );
   }

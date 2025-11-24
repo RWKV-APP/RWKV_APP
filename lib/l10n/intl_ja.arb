@@ -472,5 +472,22 @@
   "source_text": "ソーステキスト: {text}",
   "target_text": "ターゲットテキスト: {text}",
   "performance_test_title": "パフォーマンステスト",
-  "performance_test_description": "lambada を使用して perplexity をテスト"
+  "performance_test_description": "lambada を使用して perplexity をテスト",
+  "switch_to_creative_mode_for_better_exp": "より良い体験のために「クリエイティブモード」への切り替えをお勧めします",
+  "parameter_description": "パラメータ説明",
+  "parameter_description_detail": "Temperature: 出力のランダム性を制御します。高い値（例: 0.8）はより創造的でランダムに、低い値（例: 0.2）はより集中的で決定的になります。\n\nTop P: 出力の多様性を制御します。モデルは累積確率がTop Pに達するトークンのみを考慮します。低い値（例: 0.5）は低確率の単語を無視し、関連性を高めます。\n\nPresence Penalty: トークンがテキスト内に既に出現しているかどうかに基づいてペナルティを与えます。正の値は新しいトピックについて話す可能性を高めます。\n\nFrequency Penalty: テキスト内での出現頻度に基づいてペナルティを与えます。正の値は同じ行を逐語的に繰り返す可能性を減らします。\n\nPenalty Decay: 距離に応じたペナルティの減衰を制御します。",
+  "decode_params_for_each_message": "各メッセージのデコードパラメータ",
+  "decode_params_for_each_message_detail": "バッチ推論における各メッセージのデコードパラメータ。クリックして編集できます。",
+  "all_the_same": "すべて同じ",
+  "not_all_the_same": "すべて同じではない",
+  "syncing": "同期中",
+  "not_syncing": "非同期",
+  "set_all_to_question_mark": "すべて???に設定",
+  "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index": "インデックス {index} に設定するサンプラーとペナルティパラメータを選択してください",
+  "select_the_decode_parameters_to_set_all_to_for_index": "インデックス {index} に設定するデコードパラメータを選択してください",
+  "temperature_with_value": "Temperature: {value}",
+  "top_p_with_value": "Top P: {value}",
+  "presence_penalty_with_value": "Presence Penalty: {value}",
+  "frequency_penalty_with_value": "Frequency Penalty: {value}",
+  "penalty_decay_with_value": "Penalty Decay: {value}"
 }
