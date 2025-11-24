@@ -285,6 +285,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нажмите, чтобы выбрать модель",
     ),
     "close": MessageLookupByLibrary.simpleMessage("Закрыть"),
+    "colon": MessageLookupByLibrary.simpleMessage(": "),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Цветовая схема как в системе",
     ),
@@ -720,6 +721,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "power_user": MessageLookupByLibrary.simpleMessage(
       "Продвинутый пользователь",
     ),
+    "prebuilt": MessageLookupByLibrary.simpleMessage("Предустановленный"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage(
       "Предустановленные голоса",
     ),

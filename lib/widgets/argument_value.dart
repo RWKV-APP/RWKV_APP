@@ -38,18 +38,21 @@ class ArgumentValue extends ConsumerWidget {
       _ => ref.watch(P.rwkv.arguments(argument)),
     };
     num value = defaultValue ?? builtInValue;
-    // final double batchValue = switch (argument) {
-    //   Argument.temperature => value.toDouble(),
-    //   Argument.topP => value = value.toDouble(),
-    //   Argument.presencePenalty => value.toDouble(),
-    //   Argument.frequencyPenalty => value.toDouble(),
-    //   Argument.penaltyDecay => value.toDouble(),
-    //   _ => value = value.toInt(),
-    // }
     double? batchValue;
     if (isEditingBatchParams) {
       final temporary = ref.watch(ArgumentsPanel.temporary);
-      assert(temporary != null, "temporary is null when isEditingBatchParams is true");
+      if (temporary == null) return const SizedBox.shrink();
+      batchValue = switch (argument) {
+        Argument.temperature => temporary.temperature,
+        Argument.topP => temporary.topP,
+        Argument.presencePenalty => temporary.presencePenalty,
+        Argument.frequencyPenalty => temporary.frequencyPenalty,
+        Argument.penaltyDecay => temporary.penaltyDecay,
+        _ => null,
+      };
+    }
+    if (batchValue != null) {
+      value = batchValue;
     }
     if (!argument.show) return const SizedBox.shrink();
     final qb = ref.watch(P.app.qb);

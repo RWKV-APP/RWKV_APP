@@ -1,5 +1,7 @@
 {
   "@@locale": "ru",
+  "prebuilt": "Предустановленный",
+  "colon": ": ",
   "world": "See",
   "see": "See",
   "visual_understanding_and_ocr": "Визуальное понимание и OCR",

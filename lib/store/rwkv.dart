@@ -91,7 +91,6 @@ class _RWKV {
     return argument.defaults;
   });
 
-  // TODO: Working on this.
   late final frontendBatchParams = qs<List<SamplerAndPenaltyParam>>([]);
   late final backendBatchParams = qs<List<SamplerAndPenaltyParam>>([]);
   late final editingBatchParamsIndex = qs<int?>(null);

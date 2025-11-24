@@ -21,13 +21,10 @@ class ArgumentsPanel extends ConsumerWidget {
     String? title,
     SamplerAndPenaltyParam? temporarySamplerAndPenaltyParam,
   }) async {
-    debugger();
-
     if (P.rwkv.argumentsPanelShown.q) return null;
     P.rwkv.argumentsPanelShown.q = true;
 
     if (isEditingBatchParams) {
-      // assert(temporarySamplerAndPenaltyParam != null, "temporarySamplerAndPenaltyParam is required when isEditingBatchParams is true");
       if (temporarySamplerAndPenaltyParam == null) {
         P.rwkv.argumentsPanelShown.q = false;
         return null;
@@ -77,18 +74,44 @@ class ArgumentsPanel extends ConsumerWidget {
     if (argument.step != null) {
       rawNewValue = (rawNewValue / argument.step!).round() * argument.step!;
     }
-    final currentValue = P.rwkv.arguments(argument).q;
-    if (currentValue == rawNewValue) return;
-    if (argument.enableGaimon) P.app.hapticLight();
-    P.rwkv.arguments(argument).q = rawNewValue;
-    if (argument == Argument.maxLength) {
-      P.rwkv.argumentUpdatingDebouncer.call(() {
-        P.rwkv.syncMaxLength();
-      });
+
+    if (isEditingBatchParams) {
+      final temporary = ArgumentsPanel.temporary.q;
+      if (temporary == null) return;
+      final currentValue = switch (argument) {
+        Argument.temperature => temporary.temperature,
+        Argument.topP => temporary.topP,
+        Argument.presencePenalty => temporary.presencePenalty,
+        Argument.frequencyPenalty => temporary.frequencyPenalty,
+        Argument.penaltyDecay => temporary.penaltyDecay,
+        _ => null,
+      };
+
+      // debugger();
+
+      if (currentValue == null || currentValue == rawNewValue) return;
+      if (argument.enableGaimon) P.app.hapticLight();
+      ArgumentsPanel.temporary.q = temporary.copyWith(
+        temperature: argument == Argument.temperature ? rawNewValue.toDouble() : temporary.temperature,
+        topP: argument == Argument.topP ? rawNewValue.toDouble() : temporary.topP,
+        presencePenalty: argument == Argument.presencePenalty ? rawNewValue.toDouble() : temporary.presencePenalty,
+        frequencyPenalty: argument == Argument.frequencyPenalty ? rawNewValue.toDouble() : temporary.frequencyPenalty,
+        penaltyDecay: argument == Argument.penaltyDecay ? rawNewValue.toDouble() : temporary.penaltyDecay,
+      );
     } else {
-      P.rwkv.argumentUpdatingDebouncer.call(() {
-        P.rwkv.syncSamplerParams();
-      });
+      final currentValue = P.rwkv.arguments(argument).q;
+      if (currentValue == rawNewValue) return;
+      if (argument.enableGaimon) P.app.hapticLight();
+      P.rwkv.arguments(argument).q = rawNewValue;
+      if (argument == Argument.maxLength) {
+        P.rwkv.argumentUpdatingDebouncer.call(() {
+          P.rwkv.syncMaxLength();
+        });
+      } else {
+        P.rwkv.argumentUpdatingDebouncer.call(() {
+          P.rwkv.syncSamplerParams();
+        });
+      }
     }
   }
 

@@ -220,6 +220,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "click_to_load_image": MessageLookupByLibrary.simpleMessage("点击加载图片"),
     "click_to_select_model": MessageLookupByLibrary.simpleMessage("点击选择模型"),
     "close": MessageLookupByLibrary.simpleMessage("关闭"),
+    "colon": MessageLookupByLibrary.simpleMessage("："),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "色彩模式跟随系统",
     ),
@@ -520,6 +521,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "请等待模型加载",
     ),
     "power_user": MessageLookupByLibrary.simpleMessage("高级模式"),
+    "prebuilt": MessageLookupByLibrary.simpleMessage("预设"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("预设声音"),
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),

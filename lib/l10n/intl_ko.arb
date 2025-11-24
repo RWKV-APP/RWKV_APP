@@ -1,5 +1,7 @@
 {
   "@@locale": "ko",
+  "prebuilt": "사전 정의된",
+  "colon": ": ",
   "world": "See",
   "see": "See",
   "visual_understanding_and_ocr": "시각 이해 및 OCR",

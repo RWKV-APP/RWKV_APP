@@ -113,4 +113,20 @@ class SamplerAndPenaltyParam extends Equatable {
   }
 
   bool get isCustom => decodeParamType == DecodeParamType.unknown;
+
+  SamplerAndPenaltyParam copyWith({
+    double? temperature,
+    double? topP,
+    double? presencePenalty,
+    double? frequencyPenalty,
+    double? penaltyDecay,
+  }) {
+    return SamplerAndPenaltyParam(
+      temperature: temperature ?? this.temperature,
+      topP: topP ?? this.topP,
+      presencePenalty: presencePenalty ?? this.presencePenalty,
+      frequencyPenalty: frequencyPenalty ?? this.frequencyPenalty,
+      penaltyDecay: penaltyDecay ?? this.penaltyDecay,
+    );
+  }
 }

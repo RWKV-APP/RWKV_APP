@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "prebuilt": "Prebuilt",
+  "colon": ": ",
   "world": "See",
   "see": "See",
   "text": "Text",

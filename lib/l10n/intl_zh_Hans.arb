@@ -1,5 +1,7 @@
 {
   "@@locale": "zh_Hans",
+  "prebuilt": "预设",
+  "colon": "：",
   "world": "See",
   "see": "See",
   "visual_understanding_and_ocr": "视觉理解与 OCR",

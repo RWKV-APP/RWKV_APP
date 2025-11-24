@@ -232,6 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "モデルを選択するにはクリック",
     ),
     "close": MessageLookupByLibrary.simpleMessage("閉じる"),
+    "colon": MessageLookupByLibrary.simpleMessage("："),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "カラーテーマはシステムに従う",
     ),
@@ -574,6 +575,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "モデルのロードを待ってください",
     ),
     "power_user": MessageLookupByLibrary.simpleMessage("パワーユーザー"),
+    "prebuilt": MessageLookupByLibrary.simpleMessage("プリセット"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("プリセット音声"),
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("中国語での推論を使用"),

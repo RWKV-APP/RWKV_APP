@@ -583,7 +583,6 @@ extension _$Chat on _Chat {
         penaltyDecays: newFrontendBatchParams.map((e) => e.penaltyDecay).toList(),
       ),
     );
-    await Future.delayed(1000.ms);
     P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value));
   }
 

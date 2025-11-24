@@ -235,6 +235,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "모델 선택을 클릭하세요",
     ),
     "close": MessageLookupByLibrary.simpleMessage("닫기"),
+    "colon": MessageLookupByLibrary.simpleMessage(": "),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "색상 테마 시스템 설정 따르기",
     ),
@@ -571,6 +572,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "모델 로드를 기다려 주세요",
     ),
     "power_user": MessageLookupByLibrary.simpleMessage("고급 사용자"),
+    "prebuilt": MessageLookupByLibrary.simpleMessage("사전 정의된"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("사전 정의된 음성"),
     "prefer": MessageLookupByLibrary.simpleMessage("사용"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("중국어 추론 사용"),

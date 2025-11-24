@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -270,7 +268,7 @@ class _DecodeParam extends ConsumerWidget {
     final context = getContext()!;
     final s = S.of(context);
     final selectedType = param.decodeParamType;
-    final result = await showModalActionSheet<SamplerAndPenaltyParam>(
+    final result = await showModalActionSheet<DecodeParamType>(
       context: context,
       title: s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index),
       message: s.select_the_decode_parameters_to_set_all_to_for_index(index),
@@ -287,34 +285,39 @@ class _DecodeParam extends ConsumerWidget {
             if (e == DecodeParamType.unknown) {
               return SheetAction(
                 label: s.custom,
-                key: param,
+                key: DecodeParamType.unknown,
               );
             }
 
             String label = SamplerAndPenaltyParam.fromDecodeParamType(e).displayName;
             if (selectedType == e) label = "✅ $label";
-            return SheetAction(label: label, key: SamplerAndPenaltyParam.fromDecodeParamType(e));
+            return SheetAction(label: label, key: e);
           },
         ),
       ],
     );
+
     if (result == null) return;
 
-    // debugger();
+    SamplerAndPenaltyParam? newParam;
 
-    if (result.isCustom) {
+    if (result == DecodeParamType.unknown) {
       final res = await ArgumentsPanel.show(
         getContext()!,
         isEditingBatchParams: true,
         title: s.please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(index),
-        temporarySamplerAndPenaltyParam: result,
+        // 临时选用当前的 param
+        temporarySamplerAndPenaltyParam: param,
       );
       if (res == null) return;
+      newParam = res;
+    } else {
+      newParam = SamplerAndPenaltyParam.fromDecodeParamType(result);
     }
 
     final newValue = [
       ...P.rwkv.frontendBatchParams.q.sublist(0, index),
-      result,
+      newParam,
       ...P.rwkv.frontendBatchParams.q.sublist(index + 1),
     ];
     P.rwkv.frontendBatchParams.q = newValue;
@@ -347,7 +350,7 @@ class _DecodeParam extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            T("prebuilt: " + param.displayName),
+            T(s.prebuilt + s.colon + param.displayName),
             T(s.temperature_with_value(param.temperature)),
             T(s.top_p_with_value(param.topP)),
             T(s.presence_penalty_with_value(param.presencePenalty)),

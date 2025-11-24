@@ -1,5 +1,7 @@
 {
   "@@locale": "ja",
+  "prebuilt": "プリセット",
+  "colon": "：",
   "world": "See",
   "see": "See",
   "visual_understanding_and_ocr": "視覚理解とOCR",

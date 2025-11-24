@@ -278,6 +278,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Click to select model",
     ),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
+    "colon": MessageLookupByLibrary.simpleMessage(": "),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Follow system appearance",
     ),
@@ -689,6 +690,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please wait for the model to load",
     ),
     "power_user": MessageLookupByLibrary.simpleMessage("Power User"),
+    "prebuilt": MessageLookupByLibrary.simpleMessage("Prebuilt"),
     "prebuilt_voices": MessageLookupByLibrary.simpleMessage("Prebuilt Voices"),
     "prefer": MessageLookupByLibrary.simpleMessage("Prefer"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage(
