@@ -474,5 +474,5 @@
   "performance_test_title": "Performance Test",
   "performance_test_description": "Use lambada to test perplexity",
   "start_download_updates_": "Start downloading updates...",
-  "switch_to_creative_mode_for_better_exp": "Switch to 'Creative' mode for better experience"
+  "switch_to_creative_mode_for_better_exp": "Switch Decode Param to 'Creative' for better experience"
 }

@@ -803,7 +803,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "suggest": MessageLookupByLibrary.simpleMessage("Suggest"),
     "switch_to_creative_mode_for_better_exp":
         MessageLookupByLibrary.simpleMessage(
-          "Switch to \'Creative\' mode for better experience",
+          "Switch Decode Param to \'Creative\' for better experience",
         ),
     "system_mode": MessageLookupByLibrary.simpleMessage("System Mode"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("System Prompt"),
