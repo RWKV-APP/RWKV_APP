@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gpt_markdown/gpt_markdown.dart';
+import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/markdown.dart';
+import 'package:zone/config.dart';
 
 class PageFontSettings extends ConsumerStatefulWidget {
   const PageFontSettings({super.key});
@@ -57,7 +58,7 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -82,6 +83,10 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
               onUseSystemSizeChanged: (value) async {
                 setState(() {
                   _useSystemSize = value;
+                  if (!value) {
+                    // Reset to default 100% when switching from system to manual
+                    _currentScale = 1.0;
+                  }
                 });
                 if (value) {
                   await _saveScale(P.preference.textScaleFactorSystem);
@@ -123,20 +128,28 @@ class _PreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final theme = Theme.of(context);
-    final body = theme.textTheme.bodyMedium;
 
-    final scale = effectiveScale * 1.1;
+    const fontScale = Config.markdownFontScale;
+    const sizes = Config.markdownHeaderFontSizes;
+    const bodySize = Config.markdownBodyFontSize;
+    final scale = effectiveScale * fontScale;
     final userMessage = s.font_preview_user_message;
     final botMessage = s.font_preview_bot_message(
       _formatSize(scale),
-      _formatSize(20 * scale),
-      _formatSize(19 * scale),
-      _formatSize(18 * scale),
-      _formatSize(17 * scale),
-      _formatSize(16 * scale),
-      _formatSize(15 * scale),
-      _formatSize(14 * scale),
+      _formatSize(sizes[0]), // h1 base
+      _formatSize(sizes[1]), // h2 base
+      _formatSize(sizes[2]), // h3 base
+      _formatSize(sizes[3]), // h4 base
+      _formatSize(sizes[4]), // h5 base
+      _formatSize(sizes[5]), // h6 base
+      _formatSize(bodySize), // body base
+      _formatSize(sizes[0] * scale), // h1
+      _formatSize(sizes[1] * scale), // h2
+      _formatSize(sizes[2] * scale), // h3
+      _formatSize(sizes[3] * scale), // h4
+      _formatSize(sizes[4] * scale), // h5
+      _formatSize(sizes[5] * scale), // h6
+      _formatSize(bodySize * scale), // body
     );
 
     return Column(
@@ -146,10 +159,7 @@ class _PreviewCard extends StatelessWidget {
         Align(
           alignment: Alignment.centerRight,
           child: Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.sizeOf(context).width * 0.75,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: primaryContainer,
               borderRadius: const BorderRadius.only(
@@ -166,7 +176,7 @@ class _PreviewCard extends StatelessWidget {
                 userMessage,
                 style: TextStyle(
                   color: onSurface,
-                  fontSize: 14 * 1.1,
+                  fontSize: bodySize * fontScale,
                 ),
               ),
             ),
@@ -177,10 +187,7 @@ class _PreviewCard extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.sizeOf(context).width * 0.85,
-            ),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: surface,
               borderRadius: const BorderRadius.only(
@@ -251,7 +258,7 @@ class _SettingsControls extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -273,64 +280,65 @@ class _SettingsControls extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              // Slider
-              AnimatedOpacity(
-                opacity: useSystemSize ? 0.4 : 1.0,
+              // Slider - only show when not using system size
+              AnimatedSize(
                 duration: const Duration(milliseconds: 200),
-                child: IgnorePointer(
-                  ignoring: useSystemSize,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'A',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: onSurface.withOpacity(0.6),
+                curve: Curves.easeInOut,
+                child: useSystemSize
+                    ? const SizedBox.shrink()
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'A',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: onSurface.q(.6),
+                                  ),
+                                ),
+                                Text(
+                                  _getScaleLabel(currentScale),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: primary,
+                                  ),
+                                ),
+                                Text(
+                                  'A',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: onSurface.q(.6),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Text(
-                            _getScaleLabel(currentScale),
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: primary,
+                            Slider(
+                              value: currentScale,
+                              min: scaleValues.first,
+                              max: scaleValues.last,
+                              divisions: scaleValues.length - 1,
+                              onChanged: (value) {
+                                // Snap to nearest defined value
+                                double closest = scaleValues.first;
+                                double minDiff = (value - closest).abs();
+                                for (final sv in scaleValues) {
+                                  final diff = (value - sv).abs();
+                                  if (diff < minDiff) {
+                                    minDiff = diff;
+                                    closest = sv;
+                                  }
+                                }
+                                onScaleChanged(closest);
+                              },
                             ),
-                          ),
-                          Text(
-                            'A',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: onSurface.withOpacity(0.6),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Slider(
-                        value: currentScale,
-                        min: scaleValues.first,
-                        max: scaleValues.last,
-                        divisions: scaleValues.length - 1,
-                        onChanged: (value) {
-                          // Snap to nearest defined value
-                          double closest = scaleValues.first;
-                          double minDiff = (value - closest).abs();
-                          for (final sv in scaleValues) {
-                            final diff = (value - sv).abs();
-                            if (diff < minDiff) {
-                              minDiff = diff;
-                              closest = sv;
-                            }
-                          }
-                          onScaleChanged(closest);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),

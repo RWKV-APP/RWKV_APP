@@ -497,10 +497,17 @@
   "frequency_penalty_with_value": "Frequency Penalty: {value}",
   "penalty_decay_with_value": "Penalty Decay: {value}",
   "font_preview_user_message": "Hello! こんにちは！これはユーザーメッセージのプレビューです。",
-  "font_preview_bot_message": "# Markdown 構文テスト (H1)\n\nこれは **Markdown パーサー** と **CSS スタイル** をテストするための標準テストファイルです。\n\n## 1. テキスト書式 (Typography)\n\nここは通常のテキスト段落です。日英混在表示のテスト：The quick brown fox jumps over the lazy dog. 素早い茶色の狐が怠惰な犬を飛び越えた。\n\n* **太字テキスト (Bold)** または __別の太字__\n* *斜体テキスト (Italic)* または _別の斜体_\n* ***太字斜体テキスト (Bold & Italic)***\n* ~~取り消し線 (Strikethrough)~~\n* `インラインコード (Inline Code)`\n* [リンクテキスト (Link)](https://www.google.com)\n\n## 2. 見出しレベル (Headings)\n\n# 見出し1 (H1, font size: 20 * {scale} = {h1Size})\n\n## 見出し2 (H2, font size: 19 * {scale} = {h2Size})\n\n### 見出し3 (H3, font size: 18 * {scale} = {h3Size})\n\n#### 見出し4 (H4, font size: 17 * {scale} = {h4Size})\n\n##### 見出し5 (H5, font size: 16 * {scale} = {h5Size})\n\n###### 見出し6 (H6, font size: 15 * {scale} = {h6Size})\n\n本文 (XX, font size: 14 * {scale} = {bodySize})\n\n## 3. リスト (Lists)\n\n### 番号なしリスト\n* 項目1\n* 項目2\n  * サブ項目 A\n  * サブ項目 B\n    * 以下同様\n\n### 番号付きリスト\n1. ステップ1\n2. ステップ2\n3. ステップ3\n   1. サブステップ I\n   2. サブステップ II\n\n### タスクリスト (Task List)\n- [x] 完了したタスク\n- [ ] 未完了のタスク\n- [ ] 進行中のタスク\n\n## 4. 引用 (Blockquotes)\n\n> これは第1レベルの引用です。\n> > これはネストされた第2レベルの引用です。\n> > 第2レベルに戻る。\n> 第1レベルの引用に戻る。\n\n## 5. コードブロック (Code Blocks)\n\n### 基本コードブロック (Indented)\n\n    // これはインデントされたコードブロックです\n    console.log('Hello');\n\n### シンタックスハイライト (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = \"Hello, Markdown!\";\n  console.log(message);\n  return true;\n}```",
+  "font_preview_bot_message": "# Markdown 構文テスト (H1)\n\nこれは **Markdown パーサー** と **CSS スタイル** をテストするための標準テストファイルです。\n\n## 1. テキスト書式 (Typography)\n\nここは通常のテキスト段落です。日英混在表示のテスト：The quick brown fox jumps over the lazy dog. 素早い茶色の狐が怠惰な犬を飛び越えた。\n\n* **太字テキスト (Bold)** または __別の太字__\n* *斜体テキスト (Italic)* または _別の斜体_\n* ***太字斜体テキスト (Bold & Italic)***\n* ~~取り消し線 (Strikethrough)~~\n* `インラインコード (Inline Code)`\n* [リンクテキスト (Link)](https://www.google.com)\n\n## 2. 見出しレベル (Headings)\n\n# 見出し1 (H1, font size: {h1BaseSize} * {scale} = {h1Size})\n\n## 見出し2 (H2, font size: {h2BaseSize} * {scale} = {h2Size})\n\n### 見出し3 (H3, font size: {h3BaseSize} * {scale} = {h3Size})\n\n#### 見出し4 (H4, font size: {h4BaseSize} * {scale} = {h4Size})\n\n##### 見出し5 (H5, font size: {h5BaseSize} * {scale} = {h5Size})\n\n###### 見出し6 (H6, font size: {h6BaseSize} * {scale} = {h6Size})\n\n本文 (XX, font size: {bodyBaseSize} * {scale} = {bodySize})\n\n## 3. リスト (Lists)\n\n### 番号なしリスト\n* 項目1\n* 項目2\n  * サブ項目 A\n  * サブ項目 B\n    * 以下同様\n\n### 番号付きリスト\n1. ステップ1\n2. ステップ2\n3. ステップ3\n   1. サブステップ I\n   2. サブステップ II\n\n### タスクリスト (Task List)\n- [x] 完了したタスク\n- [ ] 未完了のタスク\n- [ ] 進行中のタスク\n\n## 4. 引用 (Blockquotes)\n\n> これは第1レベルの引用です。\n> > これはネストされた第2レベルの引用です。\n> > 第2レベルに戻る。\n> 第1レベルの引用に戻る。\n\n## 5. コードブロック (Code Blocks)\n\n### 基本コードブロック (Indented)\n\n    // これはインデントされたコードブロックです\n    console.log('Hello');\n\n### シンタックスハイライト (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = \"Hello, Markdown!\";\n  console.log(message);\n  return true;\n}```",
   "@font_preview_bot_message": {
     "placeholders": {
       "scale": {},
+      "h1BaseSize": {},
+      "h2BaseSize": {},
+      "h3BaseSize": {},
+      "h4BaseSize": {},
+      "h5BaseSize": {},
+      "h6BaseSize": {},
+      "bodyBaseSize": {},
       "h1Size": {},
       "h2Size": {},
       "h3Size": {},

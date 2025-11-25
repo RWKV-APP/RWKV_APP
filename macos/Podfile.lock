@@ -22,8 +22,6 @@ PODS:
     - FlutterMacOS
   - mp_audio_stream (0.0.3):
     - FlutterMacOS
-  - objective_c (0.0.1):
-    - FlutterMacOS
   - package_info_plus (0.0.1):
     - FlutterMacOS
   - record_macos (1.1.0):
@@ -83,7 +81,6 @@ DEPENDENCIES:
   - macos_ui (from `Flutter/ephemeral/.symlinks/plugins/macos_ui/macos`)
   - macos_window_utils (from `Flutter/ephemeral/.symlinks/plugins/macos_window_utils/macos`)
   - mp_audio_stream (from `Flutter/ephemeral/.symlinks/plugins/mp_audio_stream/macos`)
-  - objective_c (from `Flutter/ephemeral/.symlinks/plugins/objective_c/macos`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - record_macos (from `Flutter/ephemeral/.symlinks/plugins/record_macos/macos`)
   - rwkv_mobile_flutter (from `Flutter/ephemeral/.symlinks/plugins/rwkv_mobile_flutter/macos`)
@@ -122,8 +119,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/macos_window_utils/macos
   mp_audio_stream:
     :path: Flutter/ephemeral/.symlinks/plugins/mp_audio_stream/macos
-  objective_c:
-    :path: Flutter/ephemeral/.symlinks/plugins/objective_c/macos
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
   record_macos:
@@ -155,7 +150,6 @@ SPEC CHECKSUMS:
   macos_ui: ff29104a215c2e1b76f37aacdcbba648abb25faa
   macos_window_utils: 23f54331a0fd51eea9e0ed347253bf48fd379d1d
   mp_audio_stream: c140c6f5d79ea84f801878e5b89f05ab5f738bde
-  objective_c: ec13431e45ba099cb734eb2829a5c1cd37986cba
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
   record_macos: 43194b6c06ca6f8fa132e2acea72b202b92a0f5b
   rwkv_mobile_flutter: 8ca6e2136af1082006740e7a3072448fd0f210e7

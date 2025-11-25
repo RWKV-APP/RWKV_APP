@@ -48,6 +48,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(
     scale,
+    h1BaseSize,
+    h2BaseSize,
+    h3BaseSize,
+    h4BaseSize,
+    h5BaseSize,
+    h6BaseSize,
+    bodyBaseSize,
     h1Size,
     h2Size,
     h3Size,
@@ -56,7 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
     h6Size,
     bodySize,
   ) =>
-      "# Тест синтаксиса Markdown (H1)\n\nЭто стандартный тестовый файл для проверки **парсера Markdown** и **CSS стилей**.\n\n## 1. Форматирование текста (Typography)\n\nЗдесь обычный текстовый абзац. Тест отображения смешанного текста: The quick brown fox jumps over the lazy dog. Быстрая коричневая лиса перепрыгнула через ленивую собаку.\n\n* **Жирный текст (Bold)** или __Другой жирный__\n* *Курсивный текст (Italic)* или _Другой курсив_\n* ***Жирный курсив (Bold & Italic)***\n* ~~Зачеркнутый (Strikethrough)~~\n* `Строчный код (Inline Code)`\n* [Текст ссылки (Link)](https://www.google.com)\n\n## 2. Уровни заголовков (Headings)\n\n# Заголовок 1 (H1, font size: 20 * ${scale} = ${h1Size})\n\n## Заголовок 2 (H2, font size: 19 * ${scale} = ${h2Size})\n\n### Заголовок 3 (H3, font size: 18 * ${scale} = ${h3Size})\n\n#### Заголовок 4 (H4, font size: 17 * ${scale} = ${h4Size})\n\n##### Заголовок 5 (H5, font size: 16 * ${scale} = ${h5Size})\n\n###### Заголовок 6 (H6, font size: 15 * ${scale} = ${h6Size})\n\nОсновной текст (XX, font size: 14 * ${scale} = ${bodySize})\n\n## 3. Списки (Lists)\n\n### Маркированный список\n* Пункт 1\n* Пункт 2\n  * Подпункт A\n  * Подпункт B\n    * И так далее\n\n### Нумерованный список\n1. Шаг 1\n2. Шаг 2\n3. Шаг 3\n   1. Подшаг I\n   2. Подшаг II\n\n### Список задач (Task List)\n- [x] Выполненная задача\n- [ ] Невыполненная задача\n- [ ] Задача в процессе\n\n## 4. Цитаты (Blockquotes)\n\n> Это цитата первого уровня.\n> > Это вложенная цитата второго уровня.\n> > Возврат ко второму уровню.\n> Возврат к цитате первого уровня.\n\n## 5. Блоки кода (Code Blocks)\n\n### Базовый блок кода (Indented)\n\n    // Это блок кода с отступом\n    console.log(\'Hello\');\n\n### Подсветка синтаксиса (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = \"Hello, Markdown!\";\n  console.log(message);\n  return true;\n}```";
+      "# Тест синтаксиса Markdown (H1)\n\nЭто стандартный тестовый файл для проверки **парсера Markdown** и **CSS стилей**.\n\n## 1. Форматирование текста (Typography)\n\nЗдесь обычный текстовый абзац. Тест отображения смешанного текста: The quick brown fox jumps over the lazy dog. Быстрая коричневая лиса перепрыгнула через ленивую собаку.\n\n* **Жирный текст (Bold)** или __Другой жирный__\n* *Курсивный текст (Italic)* или _Другой курсив_\n* ***Жирный курсив (Bold & Italic)***\n* ~~Зачеркнутый (Strikethrough)~~\n* `Строчный код (Inline Code)`\n* [Текст ссылки (Link)](https://www.google.com)\n\n## 2. Уровни заголовков (Headings)\n\n# Заголовок 1 (H1, font size: ${h1BaseSize} * ${scale} = ${h1Size})\n\n## Заголовок 2 (H2, font size: ${h2BaseSize} * ${scale} = ${h2Size})\n\n### Заголовок 3 (H3, font size: ${h3BaseSize} * ${scale} = ${h3Size})\n\n#### Заголовок 4 (H4, font size: ${h4BaseSize} * ${scale} = ${h4Size})\n\n##### Заголовок 5 (H5, font size: ${h5BaseSize} * ${scale} = ${h5Size})\n\n###### Заголовок 6 (H6, font size: ${h6BaseSize} * ${scale} = ${h6Size})\n\nОсновной текст (XX, font size: ${bodyBaseSize} * ${scale} = ${bodySize})\n\n## 3. Списки (Lists)\n\n### Маркированный список\n* Пункт 1\n* Пункт 2\n  * Подпункт A\n  * Подпункт B\n    * И так далее\n\n### Нумерованный список\n1. Шаг 1\n2. Шаг 2\n3. Шаг 3\n   1. Подшаг I\n   2. Подшаг II\n\n### Список задач (Task List)\n- [x] Выполненная задача\n- [ ] Невыполненная задача\n- [ ] Задача в процессе\n\n## 4. Цитаты (Blockquotes)\n\n> Это цитата первого уровня.\n> > Это вложенная цитата второго уровня.\n> > Возврат ко второму уровню.\n> Возврат к цитате первого уровня.\n\n## 5. Блоки кода (Code Blocks)\n\n### Базовый блок кода (Indented)\n\n    // Это блок кода с отступом\n    console.log(\'Hello\');\n\n### Подсветка синтаксиса (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = \"Hello, Markdown!\";\n  console.log(message);\n  return true;\n}```";
 
   static String m12(value) => "Frequency Penalty: ${value}";
 

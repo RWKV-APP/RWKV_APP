@@ -281,6 +281,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.2"
+  code_assets:
+    dependency: transitive
+    description:
+      name: code_assets
+      sha256: ae0db647e668cbb295a3527f0938e4039e004c80099dce2f964102373f5ce0b5
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.19.10"
   code_builder:
     dependency: transitive
     description:
@@ -723,10 +731,10 @@ packages:
     dependency: transitive
     description:
       name: get
-      sha256: c79eeb4339f1f3deffd9ec912f8a923834bec55f7b49c9e882b8fef2c139d425
+      sha256: "5ed34a7925b85336e15d472cc4cfe7d9ebf4ab8e8b9f688585bf6b50f4c3d79a"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.7.2"
+    version: "4.7.3"
   glob:
     dependency: transitive
     description:
@@ -807,6 +815,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
+  hooks:
+    dependency: transitive
+    description:
+      name: hooks
+      sha256: "5410b9f4f6c9f01e8ff0eb81c9801ea13a3c3d39f8f0b1613cda08e27eab3c18"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.20.5"
   html:
     dependency: transitive
     description:
@@ -1087,6 +1103,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.2"
+  native_toolchain_c:
+    dependency: transitive
+    description:
+      name: native_toolchain_c
+      sha256: f8872ea6c7a50ce08db9ae280ca2b8efdd973157ce462826c82f3c3051d154ce
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.17.2"
   nested:
     dependency: transitive
     description:
@@ -1107,10 +1131,10 @@ packages:
     dependency: transitive
     description:
       name: objective_c
-      sha256: "1f81ed9e41909d44162d7ec8663b2c647c202317cc0b56d3d56f6a13146a0b64"
+      sha256: "3d88b0d084eda819fa5302ec892f0d42e80945495c3fc204b57eb7ebb1440106"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "9.1.0"
+    version: "9.2.0"
   octo_image:
     dependency: transitive
     description:
@@ -1268,7 +1292,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "38b059552271007d41e79226be22100c30f9b476"
+      resolved-ref: "64fb07cf1dd831cbe577409c3ac9cd579220d316"
       url: "https://github.com/HaloWang/photo_viewer"
     source: git
     version: "0.1.0"

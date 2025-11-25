@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zone/config.dart';
 
 class MarkdownRenderer extends ConsumerWidget {
   final String raw;
@@ -17,18 +18,13 @@ class MarkdownRenderer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    final gptMarkdownStyle = TextStyle(color: color, fontSize: 14 * 1.1);
+    const scale = Config.markdownFontScale;
+    final gptMarkdownStyle = TextStyle(
+      color: color,
+      fontSize: Config.markdownBodyFontSize * scale,
+    );
 
-    final rawTheme = GptMarkdownTheme.of(context);
-
-    final headerFontSizes = [
-      rawTheme.h6?.fontSize ?? 14,
-      15,
-      16,
-      17,
-      18,
-      19,
-    ].reversed.map((e) => e.toDouble() * 1.1).toList();
+    final headerFontSizes = Config.markdownHeaderFontSizes.map((e) => e * scale).toList();
 
     final gptThemeData = GptMarkdownTheme.of(context).copyWith(
       h1: TextStyle(fontSize: headerFontSizes[0]),
@@ -54,7 +50,7 @@ class MarkdownRenderer extends ConsumerWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           materialTapTargetSize: .shrinkWrap,
         ),
-        textTheme: theme.textTheme.apply(fontSizeFactor: 1.1),
+        textTheme: theme.textTheme.apply(fontSizeFactor: scale),
       ),
       child: GptMarkdownTheme(
         gptThemeData: gptThemeData,
