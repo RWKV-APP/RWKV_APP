@@ -221,7 +221,7 @@ class _VisualButton extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   alignment: .center,
-                  child: const Icon(Icons.public, color: Colors.white),
+                  child: const Icon(Icons.visibility, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
