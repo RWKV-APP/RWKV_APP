@@ -6,7 +6,7 @@
   "set_all_batch_params": "设置全部批量参数",
   "world": "See",
   "see": "See",
-  "visual_understanding_and_ocr": "视觉理解与 OCR",
+  "visual_understanding_and_ocr": "图片问答",
   "please_select_an_image_first": "请先选择一个图片",
   "change_selected_image": "更换选定图片",
   "show_escape_characters": "换行符显示",

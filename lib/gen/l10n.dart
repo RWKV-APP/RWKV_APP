@@ -89,10 +89,10 @@ class S {
     return Intl.message('See', name: 'see', desc: '', args: []);
   }
 
-  /// `视觉理解与 OCR`
+  /// `图片问答`
   String get visual_understanding_and_ocr {
     return Intl.message(
-      '视觉理解与 OCR',
+      '图片问答',
       name: 'visual_understanding_and_ocr',
       desc: '',
       args: [],

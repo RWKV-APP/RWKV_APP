@@ -6,7 +6,7 @@
   "set_all_batch_params": "모든 배치 매개변수 설정",
   "world": "See",
   "see": "See",
-  "visual_understanding_and_ocr": "시각 이해 및 OCR",
+  "visual_understanding_and_ocr": "이미지 Q&A",
   "please_select_an_image_first": "먼저 이미지를 선택해주세요",
   "change_selected_image": "선택한 이미지 변경",
   "show_escape_characters": "새로운 줄 문자 표시",

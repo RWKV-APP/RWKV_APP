@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("Очень маленький (80%)"),
     "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
-      "Визуальное понимание и OCR",
+      "Вопросы по изображениям",
     ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage(
       "Клонирование голоса",

@@ -709,7 +709,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("非常小 (80%)"),
     "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
-      "視覺理解與 OCR",
+      "圖片問答",
     ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("聲音複製"),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
