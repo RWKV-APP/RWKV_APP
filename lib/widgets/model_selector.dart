@@ -169,7 +169,7 @@ class _ModelList extends ConsumerWidget {
     final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
 
     Set<FileInfo> availableModels = switch (preferredDemoType) {
-      DemoType.world => ref.watch(P.fileManager.worldWeights),
+      DemoType.world => ref.watch(P.fileManager.seeWeights),
       DemoType.tts => ref.watch(P.fileManager.ttsWeights),
       DemoType.chat => ref.watch(P.fileManager.chatWeights),
       DemoType.sudoku => ref.watch(P.fileManager.sudokuWeights),

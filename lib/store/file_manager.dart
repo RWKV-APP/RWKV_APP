@@ -34,7 +34,7 @@ class _FileManager {
   /// 当前平台可用的 chat 权重
   late final chatWeights = qs<Set<FileInfo>>({});
 
-  late final worldWeights = qs<Set<FileInfo>>({});
+  late final seeWeights = qs<Set<FileInfo>>({});
   late final sudokuWeights = qs<Set<FileInfo>>({});
   late final othelloWeights = qs<Set<FileInfo>>({});
 
@@ -71,7 +71,7 @@ extension $FileManager on _FileManager {
     this.ttsWeights.q = ttsWeights.where((e) => e.available).toSet();
     this.sudokuWeights.q = sudokuWeights.where((e) => e.available).toSet();
     this.othelloWeights.q = othelloWeights.where((e) => e.available).toSet();
-    this.worldWeights.q = worldWeights.where((e) => e.available).toSet();
+    this.seeWeights.q = worldWeights.where((e) => e.available).toSet();
     // debugger();
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
   }
@@ -83,7 +83,7 @@ extension $FileManager on _FileManager {
       chatWeights.q,
       roleplayWeights.q,
       ttsWeights.q,
-      worldWeights.q,
+      seeWeights.q,
       sudokuWeights.q,
       othelloWeights.q,
     ].expand((e) => e).where((e) => e.available).toList();
@@ -122,7 +122,7 @@ extension $FileManager on _FileManager {
       chatWeights.q,
       roleplayWeights.q,
       ttsWeights.q,
-      worldWeights.q,
+      seeWeights.q,
       sudokuWeights.q,
       othelloWeights.q,
     ].expand((e) => e).where((e) => e.available).toList();

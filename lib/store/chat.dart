@@ -721,10 +721,11 @@ extension _$Chat on _Chat {
   void _onPageKeyChanged(PageKey pageKey) {
     final model = P.rwkv.currentModel.q;
     final isTTS = model?.isTTS ?? false;
+    final isSee = model?.worldType != null;
     switch (pageKey) {
       case PageKey.chat:
         final isTranslate = model?.tags.contains("translate") ?? false;
-        if (isTTS || isTranslate) P.rwkv.currentModel.q = null;
+        if (isTTS || isTranslate || isSee) P.rwkv.currentModel.q = null;
         break;
       case PageKey.talk:
         if (!isTTS) {

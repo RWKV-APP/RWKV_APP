@@ -72,6 +72,7 @@ class FormItem extends ConsumerWidget {
                 if (icon != null) icon!,
                 if (icon != null) 8.w,
                 Expanded(
+                  flex: 5,
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
@@ -93,6 +94,7 @@ class FormItem extends ConsumerWidget {
                 ),
                 if (infoText != null)
                   Expanded(
+                    flex: 2,
                     child: T(
                       infoText,
                       s: const TS(w: .w500, s: 12),

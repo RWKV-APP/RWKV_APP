@@ -23,7 +23,7 @@ class WorldGroupItem extends ConsumerWidget {
   const WorldGroupItem(this.worldType, {super.key, required this.socPair});
 
   List<FileInfo> get _fileInfos {
-    final worldWeights = P.fileManager.worldWeights.q.where((e) => e.worldType == worldType).where((file) {
+    final worldWeights = P.fileManager.seeWeights.q.where((e) => e.worldType == worldType).where((file) {
       return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == socPair.$2);
     }).toList();
     return worldWeights;
@@ -47,7 +47,7 @@ class WorldGroupItem extends ConsumerWidget {
       Alert.warning("Please wait for the model to load...");
       return;
     }
-    final availableModels = P.fileManager.worldWeights.q;
+    final availableModels = P.fileManager.seeWeights.q;
     final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
     final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
     final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == socPair.$2);
@@ -95,6 +95,10 @@ class WorldGroupItem extends ConsumerWidget {
     }
 
     P.rwkv.currentModel.q = modelFileKey;
+    P.preference.saveLastWorldModel({
+      "worldType": worldType.name,
+      "modelFileName": modelFileKey.fileName,
+    });
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
   }
 
