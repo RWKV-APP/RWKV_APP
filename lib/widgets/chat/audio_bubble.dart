@@ -51,7 +51,7 @@ class _AudioBubbleState extends ConsumerState<AudioBubble> {
     final length = widget.msg.audioLength ?? 2000;
     final base = 4000;
     final width = 200 * (length / (length + base));
-    final isPlaying = ref.watch(P.world.playing);
+    final isPlaying = ref.watch(P.see.playing);
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final isLatestClickedMessage = latestClickedMessage?.id == widget.msg.id;
     final qb = ref.watch(P.app.qb);

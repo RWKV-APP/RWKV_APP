@@ -14,7 +14,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:gaimon/gaimon.dart';
 import 'package:halo/halo.dart';
@@ -111,8 +110,8 @@ part "rwkv.dart";
 part "sudoku.dart";
 part "suggestion.dart";
 part "translator.dart";
-part "tts.dart";
-part "world.dart";
+part "talk.dart";
+part "see.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -132,8 +131,8 @@ abstract class P {
   static final sudoku = _Sudoku();
   static final suggestion = _Suggestion();
   static final translator = _Translator();
-  static final tts = _TTS();
-  static final world = _World();
+  static final talk = _Talk();
+  static final see = _See();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -161,9 +160,9 @@ abstract class P {
       _safeInit(() => fileManager._init(), 'fileManager'),
       _safeInit(() => device._init(), 'device'),
       _safeInit(() => adapter._init(), 'adapter'),
-      _safeInit(() => world._init(), 'world'),
+      _safeInit(() => see._init(), 'world'),
       _safeInit(() => conversation._init(), 'conversation'),
-      _safeInit(() => tts._init(), 'tts'),
+      _safeInit(() => talk._init(), 'tts'),
       _safeInit(() => guard._init(), 'guard'),
       _safeInit(() => sudoku._init(), 'sudoku'),
       _safeInit(() => suggestion._init(), 'suggestion'),

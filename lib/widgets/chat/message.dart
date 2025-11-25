@@ -63,7 +63,7 @@ class Message extends ConsumerWidget {
     }
 
     P.chat.focusNode.unfocus();
-    P.tts.dismissAllShown();
+    P.talk.dismissAllShown();
 
     P.msg.latestClicked.q = msg;
 
@@ -71,10 +71,10 @@ class Message extends ConsumerWidget {
       final audioUrl = msg.audioUrl;
       qqq("audioUrl: $audioUrl");
       if (audioUrl == null) return;
-      if (P.world.playing.q) {
-        P.world.stopPlaying();
+      if (P.see.playing.q) {
+        P.see.stopPlaying();
       } else {
-        P.world.play(path: audioUrl);
+        P.see.play(path: audioUrl);
       }
       return;
     }
@@ -83,11 +83,11 @@ class Message extends ConsumerWidget {
       final start = DateTime.now().millisecondsSinceEpoch;
       final end = DateTime.now().millisecondsSinceEpoch;
       qqq("mergeWavFiles: ${end - start}ms");
-      if (P.world.playing.q) {
-        P.world.stopPlaying();
+      if (P.see.playing.q) {
+        P.see.stopPlaying();
       } else {
         if (!msg.ttsIsDone) Alert.info(S.current.playing_partial_generated_audio);
-        P.world.play(path: msg.audioUrl!);
+        P.see.play(path: msg.audioUrl!);
       }
       return;
     }

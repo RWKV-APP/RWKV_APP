@@ -114,7 +114,7 @@ class _PagerState extends ConsumerState<Pager> {
 
     final ignorePointer = ref.watch(Pager.atMainPage);
 
-    final recording = ref.watch(P.world.recording);
+    final recording = ref.watch(P.see.recording);
 
     final drawerWidth = ref.watch(Pager.drawerWidth);
 
@@ -159,7 +159,7 @@ class _PagerState extends ConsumerState<Pager> {
     if (notification is ScrollStartNotification) {
       if (notification.depth == 0) {
         if (P.chat.focusNode.hasFocus) P.chat.focusNode.unfocus();
-        if (P.tts.focusNode.hasFocus) P.tts.dismissAllShown();
+        if (P.talk.focusNode.hasFocus) P.talk.dismissAllShown();
       }
     }
     return false;

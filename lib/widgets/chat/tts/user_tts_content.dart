@@ -34,11 +34,11 @@ class UserTTSContent extends ConsumerWidget {
       Alert.warning(S.current.no_audio_file);
       return;
     }
-    P.world.play(path: msg.audioUrl!);
+    P.see.play(path: msg.audioUrl!);
   }
 
   void _onTTSPausePressed() {
-    P.world.stopPlaying();
+    P.see.stopPlaying();
   }
 
   void _onSharePressed() async {
@@ -69,10 +69,10 @@ class UserTTSContent extends ConsumerWidget {
     final s = S.of(context);
     final primary = Theme.of(context).colorScheme.primary;
 
-    final (String displayFlag, String displayNameCn, String displayNameEn) = P.tts.getSpkInfo(msg.ttsSpeakerName ?? "");
+    final (String displayFlag, String displayNameCn, String displayNameEn) = P.talk.getSpkInfo(msg.ttsSpeakerName ?? "");
 
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
-    final playing = ref.watch(P.world.playing);
+    final playing = ref.watch(P.see.playing);
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
     const EdgeInsets buttonPadding = .only(left: 4, top: 8, right: 4, bottom: 4);

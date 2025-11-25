@@ -110,7 +110,7 @@ class TTSGroupItem extends ConsumerWidget {
         detokenizePath: localDetokenizeFile.targetPath,
         bicodecTokenzerPath: localTokenizeFile.targetPath,
       );
-      P.tts.getTTSSpkNames();
+      P.talk.getTTSSpkNames();
       Navigator.pop(getContext()!);
     } catch (e) {
       qqe("$e");

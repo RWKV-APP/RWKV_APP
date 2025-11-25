@@ -26,27 +26,27 @@ class TTSBottomInteractions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
-    final intonationShown = ref.watch(P.tts.intonationShown);
-    final spkShown = ref.watch(P.tts.spkShown);
-    final selectedSpkName = ref.watch(P.tts.selectedSpkName);
-    final selectedLanguage = ref.watch(P.tts.selectedLanguage);
+    final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
+    final intonationShown = ref.watch(P.talk.intonationShown);
+    final spkShown = ref.watch(P.talk.spkShown);
+    final selectedSpkName = ref.watch(P.talk.selectedSpkName);
+    final selectedLanguage = ref.watch(P.talk.selectedLanguage);
     final primary = Theme.of(context).colorScheme.primary;
-    final selectSourceAudioPath = ref.watch(P.tts.selectSourceAudioPath);
+    final selectSourceAudioPath = ref.watch(P.talk.selectSourceAudioPath);
     final sourceWavName = selectSourceAudioPath?.split("/").last;
-    final pairs = ref.watch(P.tts.spkPairs);
+    final pairs = ref.watch(P.talk.spkPairs);
 
     String target = "";
 
     if (selectedSpkName != null) {
-      target = s.imitate_target + ": " + (P.tts.safe(selectedSpkName));
+      target = s.imitate_target + ": " + (P.talk.safe(selectedSpkName));
       target += " " + pairs[selectedSpkName];
       final flag = selectedLanguage.flag;
       if (flag != null) target += " " + flag;
     }
 
     return GestureDetector(
-      onTap: P.tts.dismissAllShown,
+      onTap: P.talk.dismissAllShown,
       child: Container(
         decoration: const BoxDecoration(color: kC),
         child: Column(
@@ -106,8 +106,8 @@ class _AudioInteractor extends ConsumerWidget {
       return;
     }
 
-    P.tts.selectSourceAudioPath.q = path;
-    P.tts.selectedSpkName.q = null;
+    P.talk.selectSourceAudioPath.q = path;
+    P.talk.selectedSpkName.q = null;
     P.app.hapticLight();
   }
 
@@ -233,9 +233,9 @@ class _AudioButton extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     const demoType = DemoType.tts;
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
-    final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
+    final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
     return GestureDetector(
-      onTap: P.tts.onAudioInteractorButtonPressed,
+      onTap: P.talk.onAudioInteractorButtonPressed,
       child: Padding(
         padding: const .only(top: 2, right: 4, bottom: 6),
         child: Container(
@@ -264,11 +264,11 @@ class _SpkButton extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     const demoType = DemoType.tts;
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
-    ref.watch(P.tts.intonationShown);
-    ref.watch(P.tts.audioInteractorShown);
-    final spkShown = ref.watch(P.tts.spkShown);
+    ref.watch(P.talk.intonationShown);
+    ref.watch(P.talk.audioInteractorShown);
+    final spkShown = ref.watch(P.talk.spkShown);
     return GestureDetector(
-      onTap: P.tts.onSpkButtonPressed,
+      onTap: P.talk.onSpkButtonPressed,
       child: Padding(
         padding: const .only(top: 2, right: 4, bottom: 6),
         child: Container(
@@ -297,9 +297,9 @@ class _IntonationButton extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     const demoType = DemoType.tts;
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
-    final intonationShown = ref.watch(P.tts.intonationShown);
+    final intonationShown = ref.watch(P.talk.intonationShown);
     return GestureDetector(
-      onTap: P.tts.onIntonationButtonPressed,
+      onTap: P.talk.onIntonationButtonPressed,
       child: Padding(
         padding: const .only(top: 2, right: 4, bottom: 6),
         child: Container(
@@ -323,16 +323,16 @@ class _Actions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final generating = ref.watch(P.tts.generating);
+    final generating = ref.watch(P.talk.generating);
     final canSend = ref.watch(P.chat.inputHasContent);
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
     final loaded = ref.watch(P.rwkv.loaded);
-    final interactingInstruction = ref.watch(P.tts.interactingInstruction);
+    final interactingInstruction = ref.watch(P.talk.interactingInstruction);
 
-    final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
-    final intonationShown = ref.watch(P.tts.intonationShown);
-    final spkShown = ref.watch(P.tts.spkShown);
+    final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
+    final intonationShown = ref.watch(P.talk.intonationShown);
+    final spkShown = ref.watch(P.talk.spkShown);
 
     return Row(
       children: [
@@ -409,7 +409,7 @@ class _Actions extends ConsumerWidget {
 
   void _onRightButtonPressed() async {
     qq;
-    await P.tts.gen();
+    await P.talk.gen();
   }
 }
 
@@ -418,14 +418,14 @@ class _SpkPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final spkPairs = ref.watch(P.tts.spkPairs);
+    final spkPairs = ref.watch(P.talk.spkPairs);
     var spkNames = spkPairs.keys;
-    final selectSpkName = ref.watch(P.tts.selectedSpkName);
+    final selectSpkName = ref.watch(P.talk.selectedSpkName);
     final primary = Theme.of(context).colorScheme.primary;
     final controller = ScrollController();
 
-    final selectedLanguage = ref.watch(P.tts.selectedLanguage);
-    final selectedSpkPanelFilter = ref.watch(P.tts.selectedSpkPanelFilter);
+    final selectedLanguage = ref.watch(P.talk.selectedLanguage);
+    final selectedSpkPanelFilter = ref.watch(P.talk.selectedSpkPanelFilter);
 
     switch (selectedSpkPanelFilter) {
       case Language.none:
@@ -461,7 +461,7 @@ class _SpkPanel extends ConsumerWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    P.tts.selectedSpkPanelFilter.q = e;
+                    P.talk.selectedSpkPanelFilter.q = e;
                     P.app.hapticLight();
                   },
                   child: Container(
@@ -500,13 +500,13 @@ class _SpkPanel extends ConsumerWidget {
 
                   final language = Language.values.where((e) => e.enName != null).firstWhereOrNull((e) => k.contains(e.enName!));
 
-                  final display = P.tts.safe(k) + " " + P.tts.safe(v) + " " + (language?.flag ?? "");
+                  final display = P.talk.safe(k) + " " + P.talk.safe(v) + " " + (language?.flag ?? "");
 
                   return GestureDetector(
                     onTap: () {
                       qq;
-                      P.tts.selectedSpkName.q = k;
-                      P.tts.selectSourceAudioPath.q = null;
+                      P.talk.selectedSpkName.q = k;
+                      P.talk.selectSourceAudioPath.q = null;
                       P.app.hapticLight();
                     },
                     child: Row(
@@ -538,9 +538,9 @@ class _SpkPanel extends ConsumerWidget {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            final path = await P.tts.getPrebuiltSpkAudioPathFromTemp(k);
+                            final path = await P.talk.getPrebuiltSpkAudioPathFromTemp(k);
                             P.msg.latestClicked.q = null;
-                            await P.world.play(path: path);
+                            await P.see.play(path: path);
                           },
                           child: Container(
                             padding: const .all(6.5),
@@ -571,9 +571,9 @@ class _Instruction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasFocus = ref.watch(P.tts.hasFocus);
-    final interactingInstruction = ref.watch(P.tts.interactingInstruction);
-    final selectSpkName = ref.watch(P.tts.selectedSpkName);
+    final hasFocus = ref.watch(P.talk.hasFocus);
+    final interactingInstruction = ref.watch(P.talk.interactingInstruction);
+    final selectSpkName = ref.watch(P.talk.selectedSpkName);
     return Stack(
       children: [
         if (selectSpkName == null)
@@ -595,10 +595,10 @@ class _InstructTabs extends ConsumerWidget {
 
   void _onTap(TTSInstruction e) {
     qq;
-    if (P.tts.interactingInstruction.q == e) {
-      P.tts.interactingInstruction.q = TTSInstruction.none;
+    if (P.talk.interactingInstruction.q == e) {
+      P.talk.interactingInstruction.q = TTSInstruction.none;
     } else {
-      P.tts.interactingInstruction.q = e;
+      P.talk.interactingInstruction.q = e;
     }
 
     P.app.hapticLight();
@@ -612,11 +612,11 @@ class _InstructTabs extends ConsumerWidget {
 
     final primary = Theme.of(context).colorScheme.primary;
 
-    final i1 = ref.watch(P.tts.instructions(TTSInstruction.emotion));
-    final i2 = ref.watch(P.tts.instructions(TTSInstruction.dialect));
-    final i3 = ref.watch(P.tts.instructions(TTSInstruction.speed));
-    final i4 = ref.watch(P.tts.instructions(TTSInstruction.role));
-    final _ = ref.watch(P.tts.interactingInstruction);
+    final i1 = ref.watch(P.talk.instructions(TTSInstruction.emotion));
+    final i2 = ref.watch(P.talk.instructions(TTSInstruction.dialect));
+    final i3 = ref.watch(P.talk.instructions(TTSInstruction.speed));
+    final i4 = ref.watch(P.talk.instructions(TTSInstruction.role));
+    final _ = ref.watch(P.talk.interactingInstruction);
 
     final isZh = Localizations.localeOf(context).languageCode == "zh";
 
@@ -628,7 +628,7 @@ class _InstructTabs extends ConsumerWidget {
             // runSpacing: 4,
             spacing: 4,
             children: TTSInstruction.values.where((e) => e.forInstruction).indexMap((index, e) {
-              final isSelected = P.tts.interactingInstruction.q == e;
+              final isSelected = P.talk.interactingInstruction.q == e;
               String displayText = isZh ? e.nameCN : e.nameEN;
               if (isSelected) displayText += " ×";
 
@@ -693,22 +693,22 @@ class _InstructOptions extends ConsumerWidget {
   void _onTap(int index) {
     qq;
     P.app.hapticLight();
-    final interactingInstruction = P.tts.interactingInstruction.q;
+    final interactingInstruction = P.talk.interactingInstruction.q;
     if (interactingInstruction == TTSInstruction.none) return;
-    if (P.tts.instructions(interactingInstruction).q == index) {
-      P.tts.instructions(interactingInstruction).q = null;
+    if (P.talk.instructions(interactingInstruction).q == index) {
+      P.talk.instructions(interactingInstruction).q = null;
     } else {
-      P.tts.instructions(interactingInstruction).q = index;
+      P.talk.instructions(interactingInstruction).q = index;
     }
-    P.tts.syncInstruction();
+    P.talk.syncInstruction();
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final interactingInstruction = ref.watch(P.tts.interactingInstruction);
+    final interactingInstruction = ref.watch(P.talk.interactingInstruction);
     final primary = Theme.of(context).colorScheme.primary;
     final options = interactingInstruction.options;
-    ref.watch(P.tts.instructions(interactingInstruction));
+    ref.watch(P.talk.instructions(interactingInstruction));
     final qb = ref.watch(P.app.qb);
     return GestureDetector(
       onTap: () {},
@@ -725,7 +725,7 @@ class _InstructOptions extends ConsumerWidget {
           children: options.indexMap((index, e) {
             bool selected = false;
             if (interactingInstruction != TTSInstruction.none) {
-              selected = P.tts.instructions(interactingInstruction).q == index;
+              selected = P.talk.instructions(interactingInstruction).q == index;
             }
 
             return GestureDetector(
@@ -778,7 +778,7 @@ class _TextField extends ConsumerWidget {
 
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
 
-    final textInInput = ref.watch(P.tts.textInInput);
+    final textInInput = ref.watch(P.talk.textInInput);
 
     final qw = ref.watch(P.app.qw);
 
@@ -786,10 +786,10 @@ class _TextField extends ConsumerWidget {
       onTap: textFieldEnabled ? null : _onTapTextFieldWhenItsDisabled,
       child: KeyboardListener(
         onKeyEvent: _onKeyEvent,
-        focusNode: P.tts.focusNode,
+        focusNode: P.talk.focusNode,
         child: TextField(
           enabled: textFieldEnabled,
-          controller: P.tts.textEditingController,
+          controller: P.talk.textEditingController,
           onSubmitted: _onSubmitted,
           onChanged: _onChanged,
           onEditingComplete: _onEditingComplete,
@@ -806,7 +806,7 @@ class _TextField extends ConsumerWidget {
               mainAxisSize: .min,
               children: [
                 GestureDetector(
-                  onTap: P.tts.onClearButtonPressed,
+                  onTap: P.talk.onClearButtonPressed,
                   child: AnimatedOpacity(
                     opacity: textInInput.trim().isNotEmpty ? 1 : .5,
                     duration: 250.ms,
@@ -817,7 +817,7 @@ class _TextField extends ConsumerWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: P.tts.onRefreshButtonPressed,
+                  onTap: P.talk.onRefreshButtonPressed,
                   child: Container(
                     padding: const .symmetric(horizontal: 4, vertical: 6),
                     child: const Icon(Icons.refresh),
@@ -883,8 +883,8 @@ class _TextField extends ConsumerWidget {
         P.chat.textEditingController.value = const TextEditingValue(text: "");
       }
     } else {
-      P.tts.dismissAllShown();
-      P.tts.gen();
+      P.talk.dismissAllShown();
+      P.talk.gen();
     }
   }
 

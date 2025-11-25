@@ -42,7 +42,7 @@ class InputTextField extends ConsumerWidget {
     final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
 
     final textInInput = ref.watch(P.chat.textInInput);
-    final intonationShown = ref.watch(P.tts.intonationShown);
+    final intonationShown = ref.watch(P.talk.intonationShown);
     final keyboardType = intonationShown ? TextInputType.none : TextInputType.multiline;
 
     final qw = ref.watch(P.app.qw);

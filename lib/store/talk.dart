@@ -1,6 +1,6 @@
 part of 'p.dart';
 
-class _TTS {
+class _Talk {
   // ===========================================================================
   // Static
   // ===========================================================================
@@ -25,7 +25,7 @@ class _TTS {
   // ===========================================================================
 
   late final focusNode = FocusNode();
-  late final textEditingController = TextEditingController(text: _TTS._defaultTextInInput);
+  late final textEditingController = TextEditingController(text: _Talk._defaultTextInInput);
 
   mp_audio_stream.AudioStream? audioStream;
   Timer? _asTimer;
@@ -49,7 +49,7 @@ class _TTS {
   late final selectedSpkPanelFilter = qs(Language.none);
   late final spkPairs = qs<Map<String, dynamic>>({});
   late final spkShown = qs(false);
-  late final textInInput = qs(_TTS._defaultTextInInput);
+  late final textInInput = qs(_Talk._defaultTextInInput);
 
   late final generating = qs(false);
   late final latestBufferLength = qs(0);
@@ -59,7 +59,7 @@ class _TTS {
 }
 
 /// Private methods
-extension _$TTS on _TTS {
+extension _$Talk on _Talk {
   Future<void> _init() async {
     if (P.app.demoType.q == DemoType.sudoku) return;
     qq;
@@ -71,7 +71,7 @@ extension _$TTS on _TTS {
 
     final spkPairs = this.spkPairs.q;
 
-    final defaultSpk = spkPairs.keys.firstWhereOrNull((e) => e.contains(_TTS._defaultSpkName));
+    final defaultSpk = spkPairs.keys.firstWhereOrNull((e) => e.contains(_Talk._defaultSpkName));
     selectedSpkName.q = defaultSpk ?? spkPairs.keys.where((e) => e.contains("Chinese")).random;
 
     selectSourceAudioPath.q = null;
@@ -111,10 +111,10 @@ extension _$TTS on _TTS {
       return;
     }
 
-    for (final key in _TTS._spkNameToLanguageMap.keys) {
+    for (final key in _Talk._spkNameToLanguageMap.keys) {
       final contains = next.contains(key);
       if (contains) {
-        selectedLanguage.q = _TTS._spkNameToLanguageMap[key]!;
+        selectedLanguage.q = _Talk._spkNameToLanguageMap[key]!;
         break;
       }
     }
@@ -294,7 +294,7 @@ extension _$TTS on _TTS {
 }
 
 /// Public methods
-extension $TTS on _TTS {
+extension $Talk on _Talk {
   Future<void> startStateSync() async {
     Timer.periodic(500.ms, (timer) {
       //
@@ -380,7 +380,7 @@ extension $TTS on _TTS {
   @Deprecated("想想更面向状态的方法")
   String flagChange(String input) {
     String name = input;
-    for (final entry in _TTS._replaceMap.entries) {
+    for (final entry in _Talk._replaceMap.entries) {
       name = name.replaceAll(entry.key, entry.value);
     }
 
@@ -521,7 +521,7 @@ outputWavPath: $outputWavPath""");
 
   void onRefreshButtonPressed() {
     qq;
-    textInInput.q = _TTS._defaultTextInInput;
+    textInInput.q = _Talk._defaultTextInInput;
     for (final action in TTSInstruction.values) {
       instructions(action).q = null;
     }
@@ -559,7 +559,7 @@ outputWavPath: $outputWavPath""");
 
     if (spkName.isEmpty) return (flag, nameCN, nameEN);
 
-    for (final entry in _TTS._replaceMap.entries) {
+    for (final entry in _Talk._replaceMap.entries) {
       final key = entry.key;
       final value = entry.value;
       if (spkName.contains(key)) {

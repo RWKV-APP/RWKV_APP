@@ -51,5 +51,5 @@ Future<void> showImageSelector() async {
   } else {
     throw Exception("Invalid result: $result");
   }
-  P.world.imagePath.q = image.path;
+  P.see.imagePath.q = image.path;
 }

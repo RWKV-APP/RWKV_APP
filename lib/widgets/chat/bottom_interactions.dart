@@ -191,7 +191,7 @@ class _MessageButton extends ConsumerWidget {
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
     final inSee = ref.watch(P.app.pageKey) == PageKey.see;
-    final imagePath = ref.watch(P.world.imagePath);
+    final imagePath = ref.watch(P.see.imagePath);
     final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
     final inputHasContent = ref.watch(P.chat.inputHasContent);
     double opacity = 1;

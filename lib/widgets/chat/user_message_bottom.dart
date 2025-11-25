@@ -1,6 +1,5 @@
 // ignore: unused_import
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,7 +69,7 @@ class UserMessageBottom extends ConsumerWidget {
     }
 
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
-    final playing = ref.watch(P.world.playing);
+    final playing = ref.watch(P.see.playing);
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
     return Row(
@@ -144,10 +143,10 @@ class UserMessageBottom extends ConsumerWidget {
   void _onTTSPlayPressed() {
     qq;
     P.msg.latestClicked.q = msg;
-    P.world.play(path: msg.audioUrl!);
+    P.see.play(path: msg.audioUrl!);
   }
 
   void _onTTSPausePressed() {
-    P.world.stopPlaying();
+    P.see.stopPlaying();
   }
 }

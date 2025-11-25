@@ -67,7 +67,7 @@ class _ImagePreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedImagePath = ref.watch(P.world.imagePath);
+    final selectedImagePath = ref.watch(P.see.imagePath);
     final screenWidth = ref.watch(P.app.screenWidth);
     if (selectedImagePath == null) return const SizedBox.shrink();
     if (preferredDemoType != DemoType.world) return const SizedBox.shrink();
@@ -92,7 +92,7 @@ class _ImagePreview extends ConsumerWidget {
                     right: 0,
                     child: IconButton(
                       onPressed: () {
-                        P.world.imagePath.q = null;
+                        P.see.imagePath.q = null;
                       },
                       icon: Container(
                         decoration: BD(color: kB.q(.5), borderRadius: 1000.r),

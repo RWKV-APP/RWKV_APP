@@ -17,7 +17,7 @@ class AudioEmpty extends ConsumerWidget {
     final inputHeight = ref.watch(P.chat.inputHeight);
     final primary = Theme.of(context).colorScheme.primary;
 
-    final imagePath = ref.watch(P.world.imagePath);
+    final imagePath = ref.watch(P.see.imagePath);
     if (imagePath != null) {
       return Positioned(child: IgnorePointer(child: Container()));
     }

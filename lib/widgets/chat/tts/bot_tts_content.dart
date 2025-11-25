@@ -89,7 +89,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
       if (mounted) setState(() {});
     });
 
-    final generating = ref.watch(P.tts.generating);
+    final generating = ref.watch(P.talk.generating);
 
     final changing = widget.msg.changing;
     // final changing = true;
@@ -98,7 +98,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final length = _length;
     final base = 4000;
     final width = 80 * (length / (length + base)) + 55;
-    final isPlaying = ref.watch(P.world.playing);
+    final isPlaying = ref.watch(P.see.playing);
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final isLatestClickedMessage = latestClickedMessage?.id == widget.msg.id;
 

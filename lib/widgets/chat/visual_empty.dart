@@ -27,7 +27,7 @@ class VisualEmpty extends ConsumerWidget {
     final maxH = screenHeight - paddingTop - kToolbarHeight - inputHeight;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final primary = Theme.of(context).colorScheme.primary;
-    final imagePath = ref.watch(P.world.imagePath);
+    final imagePath = ref.watch(P.see.imagePath);
     if (imagePath != null) return Positioned(child: IgnorePointer(child: Container()));
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final s = S.of(context);

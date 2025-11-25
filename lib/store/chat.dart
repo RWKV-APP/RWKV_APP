@@ -106,7 +106,7 @@ extension $Chat on _Chat {
     final inSee = P.app.pageKey.q == PageKey.see;
     if (inSee) {
       final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
-      final imagePath = P.world.imagePath.q;
+      final imagePath = P.see.imagePath.q;
       if (!hasAtLeastOneImage && imagePath == null) {
         Alert.info(S.current.please_select_an_image_first);
         await showImageSelector();
@@ -167,11 +167,11 @@ extension $Chat on _Chat {
     }
 
     if (inSee) {
-      final imagePath = P.world.imagePath.q;
+      final imagePath = P.see.imagePath.q;
       if (imagePath == null) {
         await send(textToSend);
       } else {
-        P.world.imagePath.q = null;
+        P.see.imagePath.q = null;
         if (P.msg.hasAtLeastOneImage.q) {
           P.msg._clear();
           await Future.delayed(10.ms);
@@ -203,7 +203,7 @@ extension $Chat on _Chat {
     }
 
     if (P.app.demoType.q == DemoType.tts) {
-      await P.tts.gen();
+      await P.talk.gen();
       return;
     }
 
@@ -217,7 +217,7 @@ extension $Chat on _Chat {
   Future<void> onTapMessageList() async {
     qq;
     P.chat.focusNode.unfocus();
-    P.tts.dismissAllShown();
+    P.talk.dismissAllShown();
     final _editingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (_editingIndex == null) return;
     P.msg.editingOrRegeneratingIndex.q = null;
@@ -549,7 +549,7 @@ extension _$Chat on _Chat {
           P.conversation.updateCurrentConvSubtitle(r);
         });
 
-    P.world.audioFileStreamController.stream.listen(_onNewFileReceived);
+    P.see.audioFileStreamController.stream.listen(_onNewFileReceived);
     focusNode.addListener(_onFocusNodeChanged);
     hasFocus.q = focusNode.hasFocus;
     P.suggestion.loadSuggestions();
@@ -713,8 +713,8 @@ extension _$Chat on _Chat {
       final (file, length) = event;
       final path = file.path;
       qqq("new file received: $path, length: $length");
-      P.tts.selectSourceAudioPath.q = path;
-      P.tts.selectedSpkName.q = null;
+      P.talk.selectSourceAudioPath.q = path;
+      P.talk.selectedSpkName.q = null;
     }
   }
 
