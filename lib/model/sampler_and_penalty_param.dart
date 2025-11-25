@@ -38,11 +38,11 @@ extension SamplerAndPenaltyParamWithString on List<SamplerAndPenaltyParam> {
 }
 
 class SamplerAndPenaltyParam extends Equatable {
-  late final double temperature;
-  late final double topP;
-  late final double presencePenalty;
-  late final double frequencyPenalty;
-  late final double penaltyDecay;
+  final double temperature;
+  final double topP;
+  final double presencePenalty;
+  final double frequencyPenalty;
+  final double penaltyDecay;
 
   const SamplerAndPenaltyParam({
     required this.temperature,
