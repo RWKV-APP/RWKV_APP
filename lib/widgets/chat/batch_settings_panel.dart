@@ -166,11 +166,11 @@ class BatchSettingsPanel extends ConsumerWidget {
                     children: [
                       Text(s.decode_param),
                       4.w,
-                      Icon(Icons.info_outline),
+                      const Icon(Icons.info_outline),
                     ],
                   ),
                 ),
-                bottom: _DecodeParams(),
+                bottom: const _DecodeParams(),
               ),
             ),
             DimmedWhenInactive(
@@ -266,7 +266,7 @@ class _DecodeParams extends ConsumerWidget {
             4.h,
             ...rows,
             Divider(color: qb.q(.2)),
-            Align(
+            const Align(
               alignment: Alignment.centerLeft,
               child: _DecodeParam(
                 forAll: true,

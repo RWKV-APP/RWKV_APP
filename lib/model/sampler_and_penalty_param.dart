@@ -44,7 +44,7 @@ class SamplerAndPenaltyParam extends Equatable {
   late final double frequencyPenalty;
   late final double penaltyDecay;
 
-  SamplerAndPenaltyParam({
+  const SamplerAndPenaltyParam({
     required this.temperature,
     required this.topP,
     required this.presencePenalty,

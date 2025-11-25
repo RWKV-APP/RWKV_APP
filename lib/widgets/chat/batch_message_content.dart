@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';

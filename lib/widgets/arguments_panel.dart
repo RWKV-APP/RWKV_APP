@@ -142,8 +142,8 @@ class ArgumentsPanel extends ConsumerWidget {
                     child: Text.rich(
                       TextSpan(
                         children: [
-                          WidgetSpan(
-                            child: const Icon(
+                          const WidgetSpan(
+                            child: Icon(
                               Icons.tune,
                               size: 18,
                             ),
