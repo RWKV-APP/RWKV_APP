@@ -15,7 +15,7 @@ extension SamplerAndPenaltyParamWithString on List<SamplerAndPenaltyParam> {
 
   static List<SamplerAndPenaltyParam> fromRawDecodeParams(String rawDecodeParams) {
     final List<SamplerAndPenaltyParam> res = [];
-    final List<String> params = rawDecodeParams.split("|");
+    final List<String> params = rawDecodeParams.split("|").where((e) => e.isNotEmpty).toList();
     for (var i = 0; i < params.length; i++) {
       final param = params[i].split(",");
       final temperature = double.parse(param[0]);

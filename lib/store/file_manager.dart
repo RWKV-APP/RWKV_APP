@@ -278,7 +278,7 @@ extension _$FileManager on _FileManager {
         final task = await DownloadTask.create(
           url: url,
           path: path,
-          acceptedSize: fileInfo.fileSize,
+          acceptedSize: kDebugMode ? null : fileInfo.fileSize,
         );
         // qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
         fileState.q = fileState.q.copyWith(

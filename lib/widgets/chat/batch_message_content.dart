@@ -1,4 +1,3 @@
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,7 +109,10 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                       border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
                       borderRadius: .circular(8),
                     ),
-                    child: _MarkdownBody(data: batch[i], decodeParam: parsedDecodeParams[i]),
+                    child: _MarkdownBody(
+                      data: batch[i],
+                      decodeParam: parsedDecodeParams.isNotEmpty ? parsedDecodeParams[i] : null,
+                    ),
                   ),
                 ),
               4.w,
