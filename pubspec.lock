@@ -762,9 +762,11 @@ packages:
   gpt_markdown:
     dependency: "direct main"
     description:
-      path: "../gpt_markdown"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "37dd7fe2db6f5cac477ef33640e8843e45a25351"
+      url: "https://github.com/HaloWang/gpt_markdown"
+    source: git
     version: "1.1.4"
   gradient_borders:
     dependency: transitive
