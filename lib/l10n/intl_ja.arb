@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "got_it": "了解",
   "prebuilt": "プリセット",
   "colon": "：",
   "set_all_batch_params": "すべてのバッチパラメータを設定",

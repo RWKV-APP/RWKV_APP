@@ -348,6 +348,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generating": MessageLookupByLibrary.simpleMessage("產生中..."),
     "github_repository": MessageLookupByLibrary.simpleMessage("Github 倉庫"),
     "go_to_settings": MessageLookupByLibrary.simpleMessage("前往設定"),
+    "got_it": MessageLookupByLibrary.simpleMessage("我知道了"),
     "hello_ask_me_anything": MessageLookupByLibrary.simpleMessage(
       "Hello, 請隨意 \n向我提問...",
     ),

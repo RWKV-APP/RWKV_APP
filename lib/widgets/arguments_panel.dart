@@ -138,17 +138,24 @@ class ArgumentsPanel extends ConsumerWidget {
                   child: T(s.cancel),
                 ),
                 Expanded(
-                  child: Row(
-                    crossAxisAlignment: .center,
-                    mainAxisAlignment: .center,
-                    children: [
-                      const Icon(Icons.tune),
-                      12.w,
-                      T(
-                        title ?? s.model_settings,
-                        s: const TS(s: 16, w: .w500),
+                  child: Center(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          WidgetSpan(
+                            child: const Icon(
+                              Icons.tune,
+                              size: 18,
+                            ),
+                          ),
+                          WidgetSpan(child: 8.w),
+                          TextSpan(
+                            text: title ?? s.model_settings,
+                            style: const TS(s: 16, w: .w500),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 TextButton(

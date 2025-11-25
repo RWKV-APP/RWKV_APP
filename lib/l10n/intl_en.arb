@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "got_it": "Got it",
   "prebuilt": "Prebuilt",
   "colon": ": ",
   "set_all_batch_params": "Set All Batch Params",

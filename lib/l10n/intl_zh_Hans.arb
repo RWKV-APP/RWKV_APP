@@ -1,5 +1,6 @@
 {
   "@@locale": "zh_Hans",
+  "got_it": "我知道了",
   "prebuilt": "预设",
   "colon": "：",
   "set_all_batch_params": "设置全部批量参数",

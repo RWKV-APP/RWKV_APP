@@ -185,7 +185,7 @@ class _MarkdownBody extends ConsumerWidget {
   const _MarkdownBody({required this.data, this.decodeParam});
 
   void _onTapDecodeParam() async {
-    final _ = await showConfirmationDialog(
+    final _ = await showOkAlertDialog(
       context: getContext()!,
       title: S.current.decode_param,
       message:
@@ -196,8 +196,7 @@ class _MarkdownBody extends ConsumerWidget {
       Frequency Penalty: ${decodeParam!.frequencyPenalty.toStringAsFixed(1)}
       Penalty Decay: ${decodeParam!.penaltyDecay.toStringAsFixed(3)}
 """,
-      okLabel: "OK",
-      cancelLabel: "OK",
+      okLabel: S.current.got_it,
     );
   }
 

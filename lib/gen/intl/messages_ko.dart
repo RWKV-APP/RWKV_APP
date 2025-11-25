@@ -375,6 +375,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generating": MessageLookupByLibrary.simpleMessage("생성 중..."),
     "github_repository": MessageLookupByLibrary.simpleMessage("Github 저장소"),
     "go_to_settings": MessageLookupByLibrary.simpleMessage("설정으로 이동"),
+    "got_it": MessageLookupByLibrary.simpleMessage("이해했습니다"),
     "hello_ask_me_anything": MessageLookupByLibrary.simpleMessage(
       "안녕하세요, 무엇이든 \n물어보세요...",
     ),

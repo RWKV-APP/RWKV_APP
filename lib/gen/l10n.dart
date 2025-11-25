@@ -54,6 +54,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `我知道了`
+  String get got_it {
+    return Intl.message('我知道了', name: 'got_it', desc: '', args: []);
+  }
+
   /// `预设`
   String get prebuilt {
     return Intl.message('预设', name: 'prebuilt', desc: '', args: []);

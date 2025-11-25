@@ -442,6 +442,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Github Repository",
     ),
     "go_to_settings": MessageLookupByLibrary.simpleMessage("Go to settings"),
+    "got_it": MessageLookupByLibrary.simpleMessage("Got it"),
     "hello_ask_me_anything": MessageLookupByLibrary.simpleMessage(
       "Hello, Ask Me \nAnything...",
     ),

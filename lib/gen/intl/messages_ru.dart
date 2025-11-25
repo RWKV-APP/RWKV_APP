@@ -465,6 +465,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "go_to_settings": MessageLookupByLibrary.simpleMessage(
       "Перейти в настройки",
     ),
+    "got_it": MessageLookupByLibrary.simpleMessage("Я понял"),
     "hello_ask_me_anything": MessageLookupByLibrary.simpleMessage(
       "Привет, спроси меня \nо чем угодно...",
     ),
