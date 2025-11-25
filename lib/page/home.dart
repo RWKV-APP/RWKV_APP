@@ -121,7 +121,7 @@ class _ChatButton extends ConsumerWidget {
                   width: 48,
                   decoration: const BoxDecoration(
                     color: Colors.blueAccent,
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
@@ -148,7 +148,7 @@ class _TTSButton extends ConsumerWidget {
     final s = S.of(context);
 
     return Material(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
@@ -170,7 +170,7 @@ class _TTSButton extends ConsumerWidget {
                     alignment: .center,
                     decoration: const BoxDecoration(
                       color: Colors.orange,
-                      shape: BoxShape.circle,
+                      shape: .circle,
                     ),
                     child: const Icon(
                       Icons.record_voice_over,
@@ -218,7 +218,7 @@ class _VisualButton extends ConsumerWidget {
                   width: 48,
                   decoration: const BoxDecoration(
                     color: Colors.deepPurpleAccent,
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   alignment: .center,
                   child: const Icon(Icons.visibility, color: Colors.white),
@@ -280,7 +280,7 @@ class _NekoButton extends ConsumerWidget {
                   width: 48,
                   decoration: const BoxDecoration(
                     color: Colors.pinkAccent,
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
@@ -325,7 +325,7 @@ class _CompletionButton extends ConsumerWidget {
                   width: 48,
                   decoration: const BoxDecoration(
                     color: Colors.lightGreen,
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.feather, color: Colors.white),
@@ -371,7 +371,7 @@ class _TranslatorButton extends ConsumerWidget {
                   width: 48,
                   decoration: const BoxDecoration(
                     color: Colors.blue,
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   alignment: .center,
                   child: const Icon(Icons.translate, color: Colors.white),
@@ -418,7 +418,7 @@ class _LambadaButton extends ConsumerWidget {
                   width: 48,
                   decoration: const BoxDecoration(
                     color: Colors.purple,
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   alignment: .center,
                   child: const FaIcon(FontAwesomeIcons.bolt, color: Colors.white),
@@ -518,7 +518,7 @@ class _RolePlayButton extends ConsumerWidget {
                   width: 48,
                   decoration: const BoxDecoration(
                     color: Colors.yellow,
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   alignment: .center,
                   child: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),

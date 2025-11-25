@@ -82,7 +82,7 @@ class _Preference {
 
 /// Private methods
 extension _$Preference on _Preference {
-Future<void> _init() async {
+  Future<void> _init() async {
     final sp = await SharedPreferences.getInstance();
 
     _showBatteryOptimization = sp.getBool("halo_state.showBatteryOptimizationDialog") ?? true;
@@ -195,10 +195,7 @@ extension $Preference on _Preference {
   }
 
   void goToFontSettings() {
-    final context = getContext();
-    if (context == null) return;
-    if (!context.mounted) return;
-    context.push(PageKey.fontSettings.path);
+    push(PageKey.fontSettings);
   }
 
   Future<void> showLocaleDialog() async {

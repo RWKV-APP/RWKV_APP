@@ -40,6 +40,7 @@ class MarkdownRenderer extends ConsumerWidget {
       raw.replaceAll("\n\n", "\n"),
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
+      addNewLineAfterH1: false,
     );
 
     return Theme(
@@ -47,7 +48,7 @@ class MarkdownRenderer extends ConsumerWidget {
         checkboxTheme: CheckboxThemeData(
           visualDensity: VisualDensity(horizontal: -4.0, vertical: -4.0),
           side: BorderSide(width: 1, color: primary),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          shape: RoundedRectangleBorder(borderRadius: .circular(4)),
           materialTapTargetSize: .shrinkWrap,
         ),
         textTheme: theme.textTheme.apply(fontSizeFactor: scale),

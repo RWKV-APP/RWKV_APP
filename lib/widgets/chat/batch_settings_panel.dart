@@ -243,9 +243,9 @@ class _DecodeParams extends ConsumerWidget {
         for (int i = 0; i < paramsToShow.length; i += crossAxisCount) {
           final chunk = paramsToShow.skip(i).take(crossAxisCount).toList();
           rows.add(
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          Row(
+            crossAxisAlignment: .start,
+            children: [
                 for (int j = 0; j < crossAxisCount; j++) ...[
                   if (j > 0) 8.w,
                   Expanded(
@@ -261,13 +261,13 @@ class _DecodeParams extends ConsumerWidget {
         }
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             4.h,
             ...rows,
             Divider(color: qb.q(.2)),
             const Align(
-              alignment: Alignment.centerLeft,
+              alignment: .centerLeft,
               child: _DecodeParam(
                 forAll: true,
                 index: -1,
@@ -388,7 +388,7 @@ class _DecodeParam extends ConsumerWidget {
           border: Border.all(color: qb.q(.15)),
           borderRadius: BorderRadius.circular(12),
         ),
-        padding: const EdgeInsets.all(12),
+        padding: const .all(12),
         child: forAll
             ? Center(
                 child: Text(s.set_all_batch_params, style: const TS(w: .bold)),
@@ -401,7 +401,7 @@ class _DecodeParam extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const .symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: qb.q(.15),
                           borderRadius: BorderRadius.circular(6),

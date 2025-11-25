@@ -208,7 +208,7 @@ class _MarkdownBody extends ConsumerWidget {
 
     final Widget? decodeParamWidget = decodeParam != null
         ? Align(
-            alignment: Alignment.topLeft,
+            alignment: .topLeft,
             child: GD(
               onTap: _onTapDecodeParam,
               child: Container(

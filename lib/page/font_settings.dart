@@ -58,9 +58,9 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(8),
+                padding: const .all(8),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: .stretch,
                   children: [
                     // Preview section
                     _PreviewCard(
@@ -153,24 +153,24 @@ class _PreviewCard extends StatelessWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         // User message preview
         Align(
-          alignment: Alignment.centerRight,
+          alignment: .centerRight,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const .symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: primaryContainer,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-                bottomLeft: Radius.circular(20),
+              borderRadius: const .only(
+                topLeft: .circular(20),
+                topRight: .circular(20),
+                bottomLeft: .circular(20),
               ),
             ),
             child: MediaQuery(
               data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(effectiveScale),
+                textScaler: .linear(effectiveScale),
               ),
               child: Text(
                 userMessage,
@@ -185,21 +185,21 @@ class _PreviewCard extends StatelessWidget {
         const SizedBox(height: 16),
         // Bot message preview
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: .centerLeft,
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: const .all(12),
             decoration: BoxDecoration(
               color: surface,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(0),
-                topRight: Radius.circular(20),
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+              borderRadius: const .only(
+                topLeft: .circular(0),
+                topRight: .circular(20),
+                bottomLeft: .circular(20),
+                bottomRight: .circular(20),
               ),
             ),
             child: MediaQuery(
               data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(effectiveScale),
+                textScaler: .linear(effectiveScale),
               ),
               child: MarkdownRenderer(raw: botMessage),
             ),
@@ -258,9 +258,9 @@ class _SettingsControls extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const .all(8),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               // Use system font size toggle
               Row(
@@ -287,11 +287,11 @@ class _SettingsControls extends StatelessWidget {
                 child: useSystemSize
                     ? const SizedBox.shrink()
                     : Padding(
-                        padding: const EdgeInsets.only(top: 8),
+                        padding: const .only(top: 8),
                         child: Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: .spaceBetween,
                               children: [
                                 Text(
                                   'A',
@@ -304,7 +304,7 @@ class _SettingsControls extends StatelessWidget {
                                   _getScaleLabel(currentScale),
                                   style: TextStyle(
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: .w500,
                                     color: primary,
                                   ),
                                 ),

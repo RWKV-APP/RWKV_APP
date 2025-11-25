@@ -38,7 +38,8 @@ enum PageKey {
   talk,
   neko,
   lambada,
-  see;
+  see
+  ;
 
   String get path => "/$name";
 

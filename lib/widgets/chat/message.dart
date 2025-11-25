@@ -67,7 +67,7 @@ class Message extends ConsumerWidget {
 
     P.msg.latestClicked.q = msg;
 
-    if (msg.type == model.MessageType.userAudio) {
+    if (msg.type == .userAudio) {
       final audioUrl = msg.audioUrl;
       qqq("audioUrl: $audioUrl");
       if (audioUrl == null) return;
@@ -79,7 +79,7 @@ class Message extends ConsumerWidget {
       return;
     }
 
-    if (msg.type == model.MessageType.ttsGeneration) {
+    if (msg.type == .ttsGeneration) {
       final start = DateTime.now().millisecondsSinceEpoch;
       final end = DateTime.now().millisecondsSinceEpoch;
       qqq("mergeWavFiles: ${end - start}ms");
@@ -205,36 +205,36 @@ class Message extends ConsumerWidget {
     double? cotContentHeight;
 
     switch (cotDisplayState) {
-      case CoTDisplayState.showCotHeaderIfCotResultIsEmpty:
+      case .showCotHeaderIfCotResultIsEmpty:
         if (cotResult.isEmpty) {
           cotContentHeight = null;
         } else {
           cotContentHeight = 0;
         }
-      case CoTDisplayState.showCotHeaderAndCotContent:
+      case .showCotHeaderAndCotContent:
         cotContentHeight = null;
-      case CoTDisplayState.hideCotHeader:
+      case .hideCotHeader:
         cotContentHeight = 0;
     }
 
     final showingCotContent = cotContentHeight != 0;
 
-    final isUserImage = msg.type == model.MessageType.userImage;
-    final isUserAudio = msg.type == model.MessageType.userAudio;
+    final isUserImage = msg.type == .userImage;
+    final isUserAudio = msg.type == .userAudio;
 
     String worldDemoMessageHeader = "";
 
     EdgeInsets padding = const .only(left: 12, top: 12, right: 12);
-    Border? border = Border.all(color: primary.q(.2));
+    Border? border = .all(color: primary.q(.2));
     double radius = 20;
 
     switch (msg.type) {
-      case model.MessageType.userTTS:
-      case model.MessageType.ttsGeneration:
+      case .userTTS:
+      case .ttsGeneration:
         radius = 16;
-      case model.MessageType.userImage:
-      case model.MessageType.text:
-      case model.MessageType.userAudio:
+      case .userImage:
+      case .text:
+      case .userAudio:
     }
 
     BorderRadius? borderRadius = .only(
@@ -247,20 +247,20 @@ class Message extends ConsumerWidget {
     BorderRadius clipBorderRadius = .zero;
 
     switch (msg.type) {
-      case model.MessageType.userImage:
+      case .userImage:
         padding = .zero;
         border = Border.all(width: 0);
         clipBorderRadius = borderRadius;
         borderRadius = null;
 
-      case model.MessageType.userTTS:
+      case .userTTS:
         padding = .zero;
 
-      case model.MessageType.text:
+      case .text:
         if (!msg.isMine) border = null;
         if (!msg.isMine) padding = const .only(left: 6, top: 12, right: 6);
-      case model.MessageType.ttsGeneration:
-      case model.MessageType.userAudio:
+      case .ttsGeneration:
+      case .userAudio:
     }
 
     final screenWidth = ref.watch(P.app.screenWidth);
@@ -364,9 +364,9 @@ class Message extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       if (showingCotContent) {
-                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.hideCotHeader;
+                        P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
                       } else {
-                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.showCotHeaderAndCotContent;
+                        P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
                       }
                     },
                     child: Container(

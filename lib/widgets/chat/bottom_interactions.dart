@@ -85,7 +85,7 @@ class _WebSearchModeButton extends ConsumerWidget {
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
-    final padding = const EdgeInsets.only(left: 8);
+    const EdgeInsets padding = .only(left: 8);
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,

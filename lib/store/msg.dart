@@ -23,7 +23,7 @@ class _Msg {
   late final msgNode = qs<MsgNode>(MsgNode(0));
 
   /// The key of it is the id of the message
-  late final cotDisplayState = qsf<int, CoTDisplayState>(CoTDisplayState.showCotHeaderAndCotContent);
+  late final cotDisplayState = qsf<int, CoTDisplayState>(.showCotHeaderAndCotContent);
 
   late final loading = qs(false);
 
