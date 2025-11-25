@@ -530,11 +530,7 @@ class _Tags extends ConsumerWidget {
                       padding: const .only(bottom: 2),
                       child: Icon(Icons.apple, size: 13, color: qb),
                     ),
-                  if (isNPU)
-                    Padding(
-                      padding: const .only(left: 4),
-                      child: FaIcon(FontAwesomeIcons.boltLightning, size: 10, color: qw),
-                    ),
+                  if (isNPU) T("⚡"),
                 ],
               ),
             ),
