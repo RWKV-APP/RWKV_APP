@@ -103,9 +103,12 @@ extension $FileManager on _FileManager {
             qqw("fileSize: $fileSize");
           }
         }
-        if (!kDebugMode) {
-          if (!fileSizeVerified) File(path).delete();
-        }
+
+        final isNotDebug = !kDebugMode;
+        final fileSizeNotCorrect = expectFileSize != fileSize;
+        final shouldDelete = isNotDebug && fileSizeNotCorrect;
+
+        if (shouldDelete) File(path).delete();
       }
       final state = locals(fileInfo);
       state.q = state.q.copyWith(hasFile: fileSizeVerified);
