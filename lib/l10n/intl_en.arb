@@ -495,5 +495,19 @@
   "top_p_with_value": "Top P: {value}",
   "presence_penalty_with_value": "Presence Penalty: {value}",
   "frequency_penalty_with_value": "Frequency Penalty: {value}",
-  "penalty_decay_with_value": "Penalty Decay: {value}"
+  "penalty_decay_with_value": "Penalty Decay: {value}",
+  "font_preview_user_message": "Hello! This is a preview of user messages.",
+  "font_preview_bot_message": "# Markdown Syntax Test (H1)\n\nThis is a standard test file for testing **Markdown parser** and **CSS styles**.\n\n## 1. Text Formatting (Typography)\n\nThis is a normal text paragraph. Testing mixed language display: The quick brown fox jumps over the lazy dog.\n\n* **Bold Text** or __Another Bold__\n* *Italic Text* or _Another Italic_\n* ***Bold & Italic***\n* ~~Strikethrough~~\n* `Inline Code`\n* [Link Text](https://www.google.com)\n\n## 2. Heading Levels\n\n# H1 (font size: 20 * {scale} = {h1Size})\n\n## H2 (font size: 19 * {scale} = {h2Size})\n\n### H3 (font size: 18 * {scale} = {h3Size})\n\n#### H4 (font size: 17 * {scale} = {h4Size})\n\n##### H5 (font size: 16 * {scale} = {h5Size})\n\n###### H6 (font size: 15 * {scale} = {h6Size})\n\nBody text (font size: 14 * {scale} = {bodySize})\n\n## 3. Lists\n\n### Unordered List\n* Item One\n* Item Two\n  * Sub-item A\n  * Sub-item B\n    * And so on\n\n### Ordered List\n1. Step One\n2. Step Two\n3. Step Three\n   1. Sub-step I\n   2. Sub-step II\n\n### Task List\n- [x] Completed task\n- [ ] Incomplete task\n- [ ] In progress task\n\n## 4. Blockquotes\n\n> This is a first-level quote.\n> > This is a nested second-level quote.\n> > Back to second level.\n> Back to first-level quote.\n\n## 5. Code Blocks\n\n### Basic Code Block (Indented)\n\n    // This is an indented code block\n    console.log('Hello');\n\n### Syntax Highlighting (Fenced)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = \"Hello, Markdown!\";\n  console.log(message);\n  return true;\n}```",
+  "@font_preview_bot_message": {
+    "placeholders": {
+      "scale": {},
+      "h1Size": {},
+      "h2Size": {},
+      "h3Size": {},
+      "h4Size": {},
+      "h5Size": {},
+      "h6Size": {},
+      "bodySize": {}
+    }
+  }
 }

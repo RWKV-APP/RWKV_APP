@@ -495,5 +495,19 @@
   "top_p_with_value": "Top P: {value}",
   "presence_penalty_with_value": "Presence Penalty: {value}",
   "frequency_penalty_with_value": "Frequency Penalty: {value}",
-  "penalty_decay_with_value": "Penalty Decay: {value}"
+  "penalty_decay_with_value": "Penalty Decay: {value}",
+  "font_preview_user_message": "Hello! 你好！這是使用者訊息的預覽。",
+  "font_preview_bot_message": "# Markdown 語法全集測試 (H1)\n\n這是一個用於測試 **Markdown 解析器** 和 **CSS 樣式** 的標準測試檔案。\n\n## 1. 文字格式 (Typography)\n\n這裡是普通文字段落。測試中英文混排的表現：The quick brown fox jumps over the lazy dog. 敏捷的棕色狐狸跳過了懶惰的狗。\n\n* **粗體文字 (Bold)** 或 __另一種粗體__\n* *斜體文字 (Italic)* 或 _另一種斜體_\n* ***粗斜體文字 (Bold & Italic)***\n* ~~刪除線 (Strikethrough)~~\n* `行內程式碼 (Inline Code)`\n* [連結文字 (Link)](https://www.google.com)\n\n## 2. 標題層級 (Headings)\n\n# 一級標題 (H1, font size: 20 * {scale} = {h1Size})\n\n## 二級標題 (H2, font size: 19 * {scale} = {h2Size})\n\n### 三級標題 (H3, font size: 18 * {scale} = {h3Size})\n\n#### 四級標題 (H4, font size: 17 * {scale} = {h4Size})\n\n##### 五級標題 (H5, font size: 16 * {scale} = {h5Size})\n\n###### 六級標題 (H6, font size: 15 * {scale} = {h6Size})\n\n正文內容 (XX, font size: 14 * {scale} = {bodySize})\n\n## 3. 列表 (Lists)\n\n### 無序列表\n* 項目一\n* 項目二\n  * 子項目 A\n  * 子項目 B\n    * 以此類推\n\n### 有序列表\n1. 第一步\n2. 第二步\n3. 第三步\n   1. 子步驟 I\n   2. 子步驟 II\n\n### 任務列表 (Task List)\n- [x] 已完成的任務\n- [ ] 未完成的任務\n- [ ] 正在進行的任務\n\n## 4. 引用 (Blockquotes)\n\n> 這是一個一級引用。\n> > 這是一個巢狀的二級引用。\n> > 回到二級。\n> 回到一級引用。\n\n## 5. 程式碼區塊 (Code Blocks)\n\n### 基礎程式碼區塊 (Indented)\n\n    // 這是一個縮排程式碼區塊\n    console.log('Hello');\n\n### 語法高亮 (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = \"Hello, Markdown!\";\n  console.log(message);\n  return true;\n}```",
+  "@font_preview_bot_message": {
+    "placeholders": {
+      "scale": {},
+      "h1Size": {},
+      "h2Size": {},
+      "h3Size": {},
+      "h4Size": {},
+      "h5Size": {},
+      "h6Size": {},
+      "bodySize": {}
+    }
+  }
 }

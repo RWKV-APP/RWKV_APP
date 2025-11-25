@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
@@ -33,9 +32,9 @@ import 'package:zone/widgets/chat/tts/bot_tts_content.dart';
 import 'package:zone/widgets/chat/photo_viewer_overlay.dart';
 import 'package:zone/widgets/chat/user_message_bottom.dart';
 import 'package:zone/widgets/chat/tts/user_tts_content.dart';
+import 'package:zone/widgets/markdown.dart';
 
 const double _kTextScaleFactor = 1.1;
-const double _kTextScaleFactorForCotContent = 1;
 
 class Message extends ConsumerWidget {
   final model.Message msg;
@@ -202,10 +201,6 @@ class Message extends ConsumerWidget {
 
     final thisMessageIsReceiving = receiveId == msg.id && receiving;
 
-    final textScaleFactorForCotContent = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactorForCotContent));
-
-    final textScaleFactor = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactor));
-
     final rawFontSize = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14.0;
     final userMessageStyle = TS(s: rawFontSize * _kTextScaleFactor);
 
@@ -298,11 +293,6 @@ class Message extends ConsumerWidget {
 
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
 
-    final gptMarkdownStyle = TextStyle(
-      // color: kCR,
-      fontSize: rawFontSize * _kTextScaleFactor,
-    );
-
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
@@ -370,12 +360,7 @@ class Message extends ConsumerWidget {
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
-                if (!reasoning && !isBatch)
-                  GptMarkdown(
-                    finalContent.replaceAll("\n\n", "\n"),
-                    onLinkTap: _onTapLink,
-                    style: gptMarkdownStyle,
-                  ),
+                if (!reasoning && !isBatch) MarkdownRenderer(raw: finalContent),
                 // 🔥 Bot message cot header
                 if (reasoning && !isQuickThinking && !isBatch)
                   GestureDetector(
@@ -405,29 +390,11 @@ class Message extends ConsumerWidget {
                   AnimatedContainer(
                     duration: 250.ms,
                     height: cotContentHeight,
-                    child: GptMarkdown(
-                      cotContent.replaceAll("\n\n", "\n"),
-                      onLinkTap: _onTapLink,
-                      style: TextStyle(
-                        color: qb.q(.6),
-                        fontSize: rawFontSize * _kTextScaleFactorForCotContent,
-                      ),
-                    ),
+                    child: MarkdownRenderer(raw: cotContent, color: qb.q(.6)),
                   ),
                 // 🔥 Bot message cot result
                 if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) 12.h,
-                if (cotResult.isNotEmpty && reasoning && !isBatch)
-                  GptMarkdown(
-                    cotResult.replaceAll("\n\n", "\n"),
-                    onLinkTap: _onTapLink,
-                    style: gptMarkdownStyle,
-                    orderedListBuilder: (context, no, child, config) {
-                      return MediaQuery.withNoTextScaling(child: child);
-                    },
-                    unOrderedListBuilder: (context, child, config) {
-                      return MediaQuery.withNoTextScaling(child: child);
-                    },
-                  ),
+                if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRenderer(raw: cotResult),
                 if (isBatch) BatchMessageContent(msg, index, finalContent),
                 if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
                 if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
@@ -438,34 +405,21 @@ class Message extends ConsumerWidget {
       ),
     );
 
-    final v = textScaleFactor.scale(14.0) / 14.0;
-    final alphaS = 1.5 / v;
-
-    return GptMarkdownTheme(
-      gptThemeData: GptMarkdownTheme.of(context).copyWith(
-        h1: TextStyle(fontSize: rawFontSize * 1.0 * alphaS),
-        h2: TextStyle(fontSize: rawFontSize * 0.98 * alphaS),
-        h3: TextStyle(fontSize: rawFontSize * 0.96 * alphaS),
-        h4: TextStyle(fontSize: rawFontSize * 0.94 * alphaS),
-        h5: TextStyle(fontSize: rawFontSize * 0.92 * alphaS),
-        h6: TextStyle(fontSize: rawFontSize * 0.9 * alphaS),
-      ),
-      child: GestureDetector(
-        child: Align(
-          alignment: alignment,
-          child: IgnorePointer(
-            ignoring: editingIndex != null && editingIndex != index,
-            child: AnimatedOpacity(
-              opacity: opacity,
-              duration: 250.ms,
-              child: Padding(
-                padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
-                child: Column(
-                  children: [
-                    if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                    GestureDetector(onTap: _onTap, child: bubbleContent),
-                  ],
-                ),
+    return GestureDetector(
+      child: Align(
+        alignment: alignment,
+        child: IgnorePointer(
+          ignoring: editingIndex != null && editingIndex != index,
+          child: AnimatedOpacity(
+            opacity: opacity,
+            duration: 250.ms,
+            child: Padding(
+              padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
+              child: Column(
+                children: [
+                  if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
+                  GestureDetector(onTap: _onTap, child: bubbleContent),
+                ],
               ),
             ),
           ),

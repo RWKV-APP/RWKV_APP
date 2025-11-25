@@ -3443,6 +3443,35 @@ class S {
       args: [value],
     );
   }
+
+  /// `Hello! 你好！这是用户消息的预览。`
+  String get font_preview_user_message {
+    return Intl.message(
+      'Hello! 你好！这是用户消息的预览。',
+      name: 'font_preview_user_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `# Markdown 语法全集测试 (H1)\n\n这是一个用于测试 **Markdown 解析器** 和 **CSS 样式** 的标准测试文件。\n\n## 1. 文本格式 (Typography)\n\n这里是普通文本段落。测试中英文混排的表现：The quick brown fox jumps over the lazy dog. 敏捷的棕色狐狸跳过了懒惰的狗。\n\n* **加粗文本 (Bold)** 或 __另一种加粗__\n* *斜体文本 (Italic)* 或 _另一种斜体_\n* ***粗斜体文本 (Bold & Italic)***\n* ~~删除线 (Strikethrough)~~\n* '行内代码 (Inline Code)'\n* [链接文本 (Link)](https://www.google.com)\n\n## 2. 标题层级 (Headings)\n\n# 一级标题 (H1, font size: 20 * {scale} = {h1Size})\n\n## 二级标题 (H2, font size: 19 * {scale} = {h2Size})\n\n### 三级标题 (H3, font size: 18 * {scale} = {h3Size})\n\n#### 四级标题 (H4, font size: 17 * {scale} = {h4Size})\n\n##### 五级标题 (H5, font size: 16 * {scale} = {h5Size})\n\n###### 六级标题 (H6, font size: 15 * {scale} = {h6Size})\n\n正文内容 (XX, font size: 14 * {scale} = {bodySize})\n\n## 3. 列表 (Lists)\n\n### 无序列表\n* 项目一\n* 项目二\n  * 子项目 A\n  * 子项目 B\n    *以此类推\n\n### 有序列表\n1. 第一步\n2. 第二步\n3. 第三步\n   1. 子步骤 I\n   2. 子步骤 II\n\n### 任务列表 (Task List)\n- [x] 已完成的任务\n- [ ] 未完成的任务\n- [ ] 正在进行的任务\n\n## 4. 引用 (Blockquotes)\n\n> 这是一个一级引用。\n> > 这是一个嵌套的二级引用。\n> > 回到二级。\n> 回到一级引用。\n\n## 5. 代码块 (Code Blocks)\n\n### 基础代码块 (Indented)\n\n    // 这是一个缩进代码块\n    console.log('Hello');\n\n### 语法高亮 (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n'''javascript\nfunction helloWorld() {\n  const message = "Hello, Markdown!";\n  console.log(message);\n  return true;\n}'''`
+  String font_preview_bot_message(
+    Object scale,
+    Object h1Size,
+    Object h2Size,
+    Object h3Size,
+    Object h4Size,
+    Object h5Size,
+    Object h6Size,
+    Object bodySize,
+  ) {
+    return Intl.message(
+      '# Markdown 语法全集测试 (H1)\n\n这是一个用于测试 **Markdown 解析器** 和 **CSS 样式** 的标准测试文件。\n\n## 1. 文本格式 (Typography)\n\n这里是普通文本段落。测试中英文混排的表现：The quick brown fox jumps over the lazy dog. 敏捷的棕色狐狸跳过了懒惰的狗。\n\n* **加粗文本 (Bold)** 或 __另一种加粗__\n* *斜体文本 (Italic)* 或 _另一种斜体_\n* ***粗斜体文本 (Bold & Italic)***\n* ~~删除线 (Strikethrough)~~\n* `行内代码 (Inline Code)`\n* [链接文本 (Link)](https://www.google.com)\n\n## 2. 标题层级 (Headings)\n\n# 一级标题 (H1, font size: 20 * $scale = $h1Size)\n\n## 二级标题 (H2, font size: 19 * $scale = $h2Size)\n\n### 三级标题 (H3, font size: 18 * $scale = $h3Size)\n\n#### 四级标题 (H4, font size: 17 * $scale = $h4Size)\n\n##### 五级标题 (H5, font size: 16 * $scale = $h5Size)\n\n###### 六级标题 (H6, font size: 15 * $scale = $h6Size)\n\n正文内容 (XX, font size: 14 * $scale = $bodySize)\n\n## 3. 列表 (Lists)\n\n### 无序列表\n* 项目一\n* 项目二\n  * 子项目 A\n  * 子项目 B\n    *以此类推\n\n### 有序列表\n1. 第一步\n2. 第二步\n3. 第三步\n   1. 子步骤 I\n   2. 子步骤 II\n\n### 任务列表 (Task List)\n- [x] 已完成的任务\n- [ ] 未完成的任务\n- [ ] 正在进行的任务\n\n## 4. 引用 (Blockquotes)\n\n> 这是一个一级引用。\n> > 这是一个嵌套的二级引用。\n> > 回到二级。\n> 回到一级引用。\n\n## 5. 代码块 (Code Blocks)\n\n### 基础代码块 (Indented)\n\n    // 这是一个缩进代码块\n    console.log(\'Hello\');\n\n### 语法高亮 (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = "Hello, Markdown!";\n  console.log(message);\n  return true;\n}```',
+      name: 'font_preview_bot_message',
+      desc: '',
+      args: [scale, h1Size, h2Size, h3Size, h4Size, h5Size, h6Size, bodySize],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

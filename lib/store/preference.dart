@@ -82,7 +82,7 @@ class _Preference {
 
 /// Private methods
 extension _$Preference on _Preference {
-  Future<void> _init() async {
+Future<void> _init() async {
     final sp = await SharedPreferences.getInstance();
 
     _showBatteryOptimization = sp.getBool("halo_state.showBatteryOptimizationDialog") ?? true;
@@ -194,30 +194,11 @@ extension $Preference on _Preference {
     await sp.setInt("halo_state.user_type", res.index);
   }
 
-  Future<void> showTextScaleFactorDialog() async {
+  void goToFontSettings() {
     final context = getContext();
     if (context == null) return;
     if (!context.mounted) return;
-    final currentQ = preferredTextScaleFactor.q;
-    final res = await showConfirmationDialog<double?>(
-      context: context,
-      title: S.current.font_setting,
-      message: S.current.please_select_font_size,
-      initialSelectedActionKey: currentQ,
-      actions: textScalePairs.indexMap(
-        (key, value) => AlertDialogAction<double>(
-          label: value,
-          key: key,
-        ),
-      ),
-    );
-    qqq("$res");
-
-    if (res == null) return;
-
-    preferredTextScaleFactor.q = res;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setDouble("halo_state.textScaleFactor", res);
+    context.push(PageKey.fontSettings.path);
   }
 
   Future<void> showLocaleDialog() async {

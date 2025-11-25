@@ -495,5 +495,19 @@
   "top_p_with_value": "Top P: {value}",
   "presence_penalty_with_value": "Presence Penalty: {value}",
   "frequency_penalty_with_value": "Frequency Penalty: {value}",
-  "penalty_decay_with_value": "Penalty Decay: {value}"
+  "penalty_decay_with_value": "Penalty Decay: {value}",
+  "font_preview_user_message": "Hello! 안녕하세요! 이것은 사용자 메시지의 미리보기입니다.",
+  "font_preview_bot_message": "# Markdown 구문 테스트 (H1)\n\n이것은 **Markdown 파서** 와 **CSS 스타일** 을 테스트하기 위한 표준 테스트 파일입니다.\n\n## 1. 텍스트 서식 (Typography)\n\n여기는 일반 텍스트 단락입니다. 한영 혼합 표시 테스트: The quick brown fox jumps over the lazy dog. 빠른 갈색 여우가 게으른 개를 뛰어넘었다.\n\n* **굵은 텍스트 (Bold)** 또는 __다른 굵은체__\n* *기울임 텍스트 (Italic)* 또는 _다른 기울임체_\n* ***굵은 기울임 텍스트 (Bold & Italic)***\n* ~~취소선 (Strikethrough)~~\n* `인라인 코드 (Inline Code)`\n* [링크 텍스트 (Link)](https://www.google.com)\n\n## 2. 제목 수준 (Headings)\n\n# 제목 1 (H1, font size: 20 * {scale} = {h1Size})\n\n## 제목 2 (H2, font size: 19 * {scale} = {h2Size})\n\n### 제목 3 (H3, font size: 18 * {scale} = {h3Size})\n\n#### 제목 4 (H4, font size: 17 * {scale} = {h4Size})\n\n##### 제목 5 (H5, font size: 16 * {scale} = {h5Size})\n\n###### 제목 6 (H6, font size: 15 * {scale} = {h6Size})\n\n본문 (XX, font size: 14 * {scale} = {bodySize})\n\n## 3. 목록 (Lists)\n\n### 순서 없는 목록\n* 항목 1\n* 항목 2\n  * 하위 항목 A\n  * 하위 항목 B\n    * 이하 동일\n\n### 순서 있는 목록\n1. 단계 1\n2. 단계 2\n3. 단계 3\n   1. 하위 단계 I\n   2. 하위 단계 II\n\n### 작업 목록 (Task List)\n- [x] 완료된 작업\n- [ ] 미완료 작업\n- [ ] 진행 중인 작업\n\n## 4. 인용문 (Blockquotes)\n\n> 이것은 1단계 인용문입니다.\n> > 이것은 중첩된 2단계 인용문입니다.\n> > 2단계로 돌아가기.\n> 1단계 인용문으로 돌아가기.\n\n## 5. 코드 블록 (Code Blocks)\n\n### 기본 코드 블록 (Indented)\n\n    // 이것은 들여쓰기된 코드 블록입니다\n    console.log('Hello');\n\n### 구문 강조 (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = \"Hello, Markdown!\";\n  console.log(message);\n  return true;\n}```",
+  "@font_preview_bot_message": {
+    "placeholders": {
+      "scale": {},
+      "h1Size": {},
+      "h2Size": {},
+      "h3Size": {},
+      "h4Size": {},
+      "h5Size": {},
+      "h6Size": {},
+      "bodySize": {}
+    }
+  }
 }
