@@ -18,7 +18,7 @@ class MarkdownRenderer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    const scale = Config.markdownFontScale;
+    const scale = Config.msgFontScale;
     final gptMarkdownStyle = TextStyle(
       color: color,
       fontSize: Config.markdownBodyFontSize * scale,

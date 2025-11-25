@@ -34,8 +34,6 @@ import 'package:zone/widgets/chat/user_message_bottom.dart';
 import 'package:zone/widgets/chat/tts/user_tts_content.dart';
 import 'package:zone/widgets/markdown.dart';
 
-const double _kTextScaleFactor = 1.1;
-
 class Message extends ConsumerWidget {
   final model.Message msg;
   final bool selectMode;
@@ -202,7 +200,7 @@ class Message extends ConsumerWidget {
     final thisMessageIsReceiving = receiveId == msg.id && receiving;
 
     final rawFontSize = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14.0;
-    final userMessageStyle = TS(s: rawFontSize * _kTextScaleFactor);
+    final userMessageStyle = TS(s: rawFontSize * Config.msgFontScale);
 
     double? cotContentHeight;
 

@@ -129,7 +129,7 @@ class _PreviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    const fontScale = Config.markdownFontScale;
+    const fontScale = Config.msgFontScale;
     const sizes = Config.markdownHeaderFontSizes;
     const bodySize = Config.markdownBodyFontSize;
     final scale = effectiveScale * fontScale;
