@@ -46,7 +46,7 @@ class MarkdownRenderer extends ConsumerWidget {
     return Theme(
       data: ThemeData(
         checkboxTheme: CheckboxThemeData(
-          visualDensity: VisualDensity(horizontal: -4.0, vertical: -4.0),
+          visualDensity: const VisualDensity(horizontal: -4.0, vertical: -4.0),
           side: BorderSide(width: 1, color: primary),
           shape: RoundedRectangleBorder(borderRadius: .circular(4)),
           materialTapTargetSize: .shrinkWrap,

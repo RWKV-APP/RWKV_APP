@@ -6,7 +6,6 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -530,7 +529,7 @@ class _Tags extends ConsumerWidget {
                       padding: const .only(bottom: 2),
                       child: Icon(Icons.apple, size: 13, color: qb),
                     ),
-                  if (isNPU) T("⚡"),
+                  if (isNPU) const T("⚡"),
                 ],
               ),
             ),

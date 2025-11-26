@@ -71,7 +71,7 @@ extension $FileManager on _FileManager {
     this.ttsWeights.q = ttsWeights.where((e) => e.available).toSet();
     this.sudokuWeights.q = sudokuWeights.where((e) => e.available).toSet();
     this.othelloWeights.q = othelloWeights.where((e) => e.available).toSet();
-    this.seeWeights.q = worldWeights.where((e) => e.available).toSet();
+    seeWeights.q = worldWeights.where((e) => e.available).toSet();
     // debugger();
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
   }
