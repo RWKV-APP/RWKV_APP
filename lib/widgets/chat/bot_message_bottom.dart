@@ -201,7 +201,7 @@ class BotMessageBottom extends ConsumerWidget {
             child: Padding(
               padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
               child: Container(
-                decoration: const BoxDecoration(color: kC),
+                decoration: const BoxDecoration(color: Colors.transparent),
                 child: Icon(
                   Icons.share_rounded,
                   color: primaryColor.q(.8),
@@ -230,7 +230,7 @@ class BotMessageBottom extends ConsumerWidget {
               child: Container(
                 padding: const .symmetric(horizontal: 8, vertical: 1),
                 decoration: BoxDecoration(
-                  color: kC,
+                  color: Colors.transparent,
                   border: Border.all(color: primaryColor.q(.67)),
                   borderRadius: 4.r,
                 ),

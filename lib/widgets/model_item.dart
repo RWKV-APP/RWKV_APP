@@ -366,10 +366,10 @@ class _Delete extends ConsumerWidget {
       onTap: _onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: kC,
+          color: Colors.transparent,
           borderRadius: 8.r,
           border: Border.all(
-            color: kC,
+            color: Colors.transparent,
           ),
         ),
         padding: const .all(5),
@@ -498,7 +498,7 @@ class _Tags extends ConsumerWidget {
           final isNPU = tag == "npu";
 
           if (isMLX) {
-            color = kC;
+            color = Colors.transparent;
             textColor = qb;
             borderColor = qb;
           } else {
@@ -538,9 +538,9 @@ class _Tags extends ConsumerWidget {
         if (kDebugMode && fileInfo.isDebug)
           Container(
             decoration: BoxDecoration(
-              color: kCR,
+              color: Colors.red,
               borderRadius: 4.r,
-              border: Border.all(width: .5, color: kCR),
+              border: Border.all(width: .5, color: Colors.red),
             ),
             padding: const .symmetric(horizontal: 4),
             child: T("DEBUG", s: TS(c: qw)),

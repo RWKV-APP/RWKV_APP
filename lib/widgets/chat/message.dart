@@ -305,7 +305,7 @@ class Message extends ConsumerWidget {
             children: [
               if (kDebugMode && Args.debugMsgId)
                 Container(
-                  decoration: BoxDecoration(color: kCR.q(1)),
+                  decoration: BoxDecoration(color: Colors.red.q(1)),
                   child: T("Debug: ${msg.id}", s: const TS(c: kW)),
                 ),
               if (isMine) ...[
@@ -368,7 +368,7 @@ class Message extends ConsumerWidget {
                       }
                     },
                     child: Container(
-                      decoration: const BoxDecoration(color: kC),
+                      decoration: const BoxDecoration(color: Colors.transparent),
                       child: Row(
                         children: [
                           T(

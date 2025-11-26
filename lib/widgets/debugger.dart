@@ -116,10 +116,10 @@ class Debugger extends ConsumerWidget {
             c: qw,
             s: 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
@@ -220,10 +220,10 @@ class _SudokuDebugger extends ConsumerWidget {
             c: qw,
             s: 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
@@ -301,10 +301,10 @@ class _TTSDebugger extends ConsumerWidget {
             c: qw,
             s: isDesktop ? 20 : 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
@@ -392,10 +392,10 @@ class _TranslatorDebugger extends ConsumerWidget {
             c: qw,
             s: 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,

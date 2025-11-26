@@ -189,7 +189,7 @@ class _Dim extends ConsumerWidget {
         child: Opacity(
           opacity: drawerOpacity.clamp(0, 1),
           child: Material(
-            color: kC,
+            color: Colors.transparent,
             child: Container(
               width: screenWidth,
               height: screenHeight,

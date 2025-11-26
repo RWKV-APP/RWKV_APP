@@ -109,7 +109,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final qb = ref.watch(P.app.qb);
 
     return Container(
-      decoration: const BoxDecoration(color: kC),
+      decoration: const BoxDecoration(color: Colors.transparent),
       padding: const .all(0),
       width: changing ? 160 : width,
       // height: 50,
@@ -193,7 +193,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                     GestureDetector(
                       onTap: _onSharePressed,
                       child: Container(
-                        decoration: const BoxDecoration(color: kC),
+                        decoration: const BoxDecoration(color: Colors.transparent),
                         padding: const .only(left: 8, right: 4),
                         child: const Icon(Icons.share),
                       ),
@@ -209,7 +209,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                 GestureDetector(
                   onTap: _onSharePressed,
                   child: Container(
-                    decoration: const BoxDecoration(color: kC),
+                    decoration: const BoxDecoration(color: Colors.transparent),
                     padding: const .symmetric(horizontal: 3, vertical: 12),
                     child: const Icon(Icons.share),
                   ),

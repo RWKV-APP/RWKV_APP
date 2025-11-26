@@ -223,7 +223,7 @@ class _MessageButton extends ConsumerWidget {
     return GestureDetector(
       onTap: P.chat.onStopButtonPressed,
       child: Container(
-        decoration: const BoxDecoration(color: kC),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: Stack(
           children: [
             SizedBox(

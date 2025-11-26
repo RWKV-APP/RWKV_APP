@@ -281,7 +281,7 @@ class _DownloadSource extends ConsumerWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: e == currentSource ? primary : kC,
+                  color: e == currentSource ? primary : Colors.transparent,
                   borderRadius: 4.r,
                   border: Border.all(
                     color: primary,

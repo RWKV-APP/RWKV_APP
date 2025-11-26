@@ -48,7 +48,7 @@ class TTSBottomInteractions extends ConsumerWidget {
     return GestureDetector(
       onTap: P.talk.dismissAllShown,
       child: Container(
-        decoration: const BoxDecoration(color: kC),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
@@ -146,7 +146,7 @@ class _AudioInteractor extends ConsumerWidget {
                         child: GestureDetector(
                           onTap: _onUploadFilePressed,
                           child: Container(
-                            decoration: const BoxDecoration(color: kC),
+                            decoration: const BoxDecoration(color: Colors.transparent),
                             child: const Icon(
                               Icons.upload_file,
                               color: Colors.blue,
@@ -208,7 +208,7 @@ class _IntonationPanel extends ConsumerWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: kC,
+                  color: Colors.transparent,
                   border: Border.all(color: qb.q(.5), width: .5),
                   borderRadius: 4.r,
                 ),
@@ -350,7 +350,7 @@ class _Actions extends ConsumerWidget {
         ),
         if (generating)
           Container(
-            decoration: const BoxDecoration(color: kC),
+            decoration: const BoxDecoration(color: Colors.transparent),
             child: Stack(
               children: [
                 SizedBox(
@@ -358,7 +358,7 @@ class _Actions extends ConsumerWidget {
                   height: 34,
                   child: Center(
                     child: Container(
-                      decoration: BoxDecoration(color: kC, borderRadius: 2.r),
+                      decoration: BoxDecoration(color: Colors.transparent, borderRadius: 2.r),
                       width: 12,
                       height: 12,
                     ),
@@ -468,7 +468,7 @@ class _SpkPanel extends ConsumerWidget {
                     padding: const .symmetric(horizontal: 4, vertical: 2),
                     margin: const .only(right: 4),
                     decoration: BoxDecoration(
-                      color: filtered ? primary.q(.1) : kC,
+                      color: filtered ? primary.q(.1) : Colors.transparent,
                       borderRadius: 4.r,
                       border: Border.all(color: qb.q(.5), width: .5),
                     ),
@@ -515,7 +515,7 @@ class _SpkPanel extends ConsumerWidget {
                           child: Container(
                             padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                             decoration: BoxDecoration(
-                              color: selected ? primary.q(.1) : kC,
+                              color: selected ? primary.q(.1) : Colors.transparent,
                               borderRadius: 6.r,
                             ),
                             child: Row(
@@ -544,7 +544,7 @@ class _SpkPanel extends ConsumerWidget {
                           },
                           child: Container(
                             padding: const .all(6.5),
-                            decoration: const BoxDecoration(color: kC),
+                            decoration: const BoxDecoration(color: Colors.transparent),
                             child: Icon(
                               Icons.volume_up,
                               color: primary,
@@ -658,7 +658,7 @@ class _InstructTabs extends ConsumerWidget {
                     margin: const .only(top: 4),
                     padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                     decoration: BoxDecoration(
-                      color: isSelected ? primary.q(.2) : kC,
+                      color: isSelected ? primary.q(.2) : Colors.transparent,
                       border: Border.all(color: qb.q(.5), width: .5),
                       borderRadius: 4.r,
                     ),
@@ -736,7 +736,7 @@ class _InstructOptions extends ConsumerWidget {
                 padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                 margin: const .only(top: 4),
                 decoration: BoxDecoration(
-                  color: selected ? primary.q(.2) : kC,
+                  color: selected ? primary.q(.2) : Colors.transparent,
                   border: Border.all(color: qb.q(.5), width: .5),
                   borderRadius: 4.r,
                 ),
