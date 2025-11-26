@@ -190,7 +190,6 @@ extension $RWKVLoad on _RWKV {
 
     if (_sendPort != null) {
       try {
-        send(to_rwkv.ReleaseWhisperEncoder());
         send(to_rwkv.ReleaseModel());
         final startMS = HF.milliseconds;
         await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
