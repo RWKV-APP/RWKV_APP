@@ -5,9 +5,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
+import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:gaimon/gaimon.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -113,6 +116,7 @@ part "suggestion.dart";
 part "translator.dart";
 part "talk.dart";
 part "see.dart";
+part "ocr.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -134,6 +138,7 @@ abstract class P {
   static final translator = _Translator();
   static final talk = _Talk();
   static final see = _See();
+  static final ocr = _Ocr();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -172,6 +177,7 @@ abstract class P {
       _safeInit(() => backend._init(), 'backend'),
       _safeInit(() => translator._init(), 'translator'),
       _safeInit(() => lambada._init(), 'lambada'),
+      _safeInit(() => ocr._init(), 'ocr'),
     ]);
   }
 
