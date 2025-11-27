@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 3.1.13+595
+version: 3.2.0+588
 
 environment:
   sdk: ^3.10.0
@@ -77,6 +77,7 @@ dependencies:
   audioplayers:
   background_downloader:
   cached_network_image: ^3.4.1
+  camera:
   collection:
   crypto:
   cupertino_icons:
@@ -94,6 +95,7 @@ dependencies:
   gaimon:
   gal:
   go_router:
+  google_mlkit_text_recognition:
   halo: ^1.0.0
   halo_alert: ^1.0.0
   halo_state: ^1.0.0

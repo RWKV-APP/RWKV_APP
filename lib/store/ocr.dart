@@ -2,18 +2,33 @@ part of 'p.dart';
 
 class _Ocr {
   late final CameraController _controller;
+
   CameraController get controller => _controller;
+
   late final List<CameraDescription> _cameraDescriptions;
+
   late final controllerCreated = qs(false);
+
   late final initialized = qs(false);
-  final _orientations = {
+
+  static final _orientations = {
     DeviceOrientation.portraitUp: 0,
     DeviceOrientation.landscapeLeft: 90,
     DeviceOrientation.portraitDown: 180,
     DeviceOrientation.landscapeRight: 270,
   };
+
   late final TextRecognizer _textRecognizer;
+
   TextRecognizer get textRecognizer => _textRecognizer;
+
+  late final paragraphs = qs<Set<BBox>>({});
+
+  late final lines = qs<Set<BBox>>({});
+
+  late final words = qs<Set<BBox>>({});
+
+  late final cameraRect = qs<Rect?>(null);
 }
 
 /// Private methods
@@ -87,7 +102,7 @@ extension _$Ocr on _Ocr {
     if (Platform.isIOS) {
       rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
     } else if (Platform.isAndroid) {
-      var rotationCompensation = _orientations[_controller!.value.deviceOrientation];
+      var rotationCompensation = _Ocr._orientations[controller.value.deviceOrientation];
       if (rotationCompensation == null) return null;
       if (camera.lensDirection == CameraLensDirection.front) {
         // front-facing
