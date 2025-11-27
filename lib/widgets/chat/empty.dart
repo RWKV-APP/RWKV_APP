@@ -50,7 +50,7 @@ class Empty extends ConsumerWidget {
         child: GestureDetector(
           onTap: () {
             P.chat.focusNode.unfocus();
-            P.tts.dismissAllShown();
+            P.talk.dismissAllShown();
           },
           child: Stack(
             children: [

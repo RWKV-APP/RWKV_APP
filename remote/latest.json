@@ -1309,5 +1309,30 @@
         "tags": ["gpu"]
       }
     ]
+  },
+  "albatross": {
+    "model_config": [
+      {
+        "name": "RWKV7-G1a 0.1B",
+        "fileSize": 382223868,
+        "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g1a-0.1b-20250728-ctx4096.pth",
+        "platforms": ["windows", "linux"],
+        "tags": ["batch", "albatross"]
+      },
+      {
+        "name": "RWKV7-G0a4 13.3B",
+        "fileSize": 26540871429,
+        "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g0a4-13.3b-20251114-ctx8192.pth",
+        "platforms": ["windows", "linux"],
+        "tags": ["batch", "albatross"]
+      },
+      {
+        "name": "RWKV7-G0a3 7.2B",
+        "fileSize": 14400009405,
+        "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g0a3-7.2b-20251029-ctx8192.pth",
+        "platforms": ["windows", "linux"],
+        "tags": ["batch", "albatross"]
+      }
+    ]
   }
 }

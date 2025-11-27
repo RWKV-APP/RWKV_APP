@@ -106,7 +106,7 @@ extension $Chat on _Chat {
     final inSee = P.app.pageKey.q == PageKey.see;
     if (inSee) {
       final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
-      final imagePath = P.world.imagePath.q;
+      final imagePath = P.see.imagePath.q;
       if (!hasAtLeastOneImage && imagePath == null) {
         Alert.info(S.current.please_select_an_image_first);
         await showImageSelector();
@@ -167,11 +167,11 @@ extension $Chat on _Chat {
     }
 
     if (inSee) {
-      final imagePath = P.world.imagePath.q;
+      final imagePath = P.see.imagePath.q;
       if (imagePath == null) {
         await send(textToSend);
       } else {
-        P.world.imagePath.q = null;
+        P.see.imagePath.q = null;
         if (P.msg.hasAtLeastOneImage.q) {
           P.msg._clear();
           await Future.delayed(10.ms);
@@ -203,7 +203,7 @@ extension $Chat on _Chat {
     }
 
     if (P.app.demoType.q == DemoType.tts) {
-      await P.tts.gen();
+      await P.talk.gen();
       return;
     }
 
@@ -217,7 +217,7 @@ extension $Chat on _Chat {
   Future<void> onTapMessageList() async {
     qq;
     P.chat.focusNode.unfocus();
-    P.tts.dismissAllShown();
+    P.talk.dismissAllShown();
     final _editingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (_editingIndex == null) return;
     P.msg.editingOrRegeneratingIndex.q = null;
@@ -433,6 +433,7 @@ extension $Chat on _Chat {
       paused: false,
       modelName: currentModel.name,
       runningMode: thinkingMode.toString(),
+      rawDecodeParams: P.rwkv.backendBatchParams.q.rawDecodeParams,
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;
@@ -475,6 +476,44 @@ extension $Chat on _Chat {
       callingFunction: "resumeMessageById",
     );
   }
+
+  Future<void> onBatchInferenceSwitchChanged(bool value) async {
+    P.app.hapticLight();
+    P.chat.batchEnabled.q = value;
+
+    if (!value) return;
+
+    final temperature = P.rwkv.arguments(Argument.temperature).q;
+    final topP = P.rwkv.arguments(Argument.topP).q;
+    final presencePenalty = P.rwkv.arguments(Argument.presencePenalty).q;
+    final frequencyPenalty = P.rwkv.arguments(Argument.frequencyPenalty).q;
+    final penaltyDecay = P.rwkv.arguments(Argument.penaltyDecay).q;
+
+    final List<SamplerAndPenaltyParam> newValue = List.generate(
+      100,
+      (index) => SamplerAndPenaltyParam(
+        temperature: temperature,
+        topP: topP,
+        presencePenalty: presencePenalty,
+        frequencyPenalty: frequencyPenalty,
+        penaltyDecay: penaltyDecay,
+      ),
+    );
+
+    P.rwkv.frontendBatchParams.q = newValue;
+    P.rwkv.send(
+      to_rwkv.SetSamplerAndPenaltyParams(
+        temperatures: newValue.map((e) => e.temperature).toList(),
+        topKs: newValue.map((_) => 500.0).toList(),
+        topPs: newValue.map((e) => e.topP).toList(),
+        presencePenalties: newValue.map((e) => e.presencePenalty).toList(),
+        frequencyPenalties: newValue.map((e) => e.frequencyPenalty).toList(),
+        penaltyDecays: newValue.map((e) => e.penaltyDecay).toList(),
+      ),
+    );
+    final batchCount = this.batchCount.q;
+    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: batchCount));
+  }
 }
 
 /// Private methods
@@ -510,7 +549,7 @@ extension _$Chat on _Chat {
           P.conversation.updateCurrentConvSubtitle(r);
         });
 
-    P.world.audioFileStreamController.stream.listen(_onNewFileReceived);
+    P.see.audioFileStreamController.stream.listen(_onNewFileReceived);
     focusNode.addListener(_onFocusNodeChanged);
     hasFocus.q = focusNode.hasFocus;
     P.suggestion.loadSuggestions();
@@ -522,6 +561,29 @@ extension _$Chat on _Chat {
     P.preference.preferredLanguage.lv(P.suggestion.loadSuggestions);
 
     P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
+
+    batchCount.l(_onBatchCountChanged);
+  }
+
+  void _onBatchCountChanged(int value) async {
+    late final List<SamplerAndPenaltyParam> newFrontendBatchParams;
+    newFrontendBatchParams = [
+      ...P.rwkv.frontendBatchParams.q,
+      P.rwkv.frontendBatchParams.q.last,
+    ];
+
+    P.rwkv.frontendBatchParams.q = newFrontendBatchParams;
+    P.rwkv.send(
+      to_rwkv.SetSamplerAndPenaltyParams(
+        temperatures: newFrontendBatchParams.map((e) => e.temperature).toList(),
+        topKs: newFrontendBatchParams.map((_) => 500.0).toList(),
+        topPs: newFrontendBatchParams.map((e) => e.topP).toList(),
+        presencePenalties: newFrontendBatchParams.map((e) => e.presencePenalty).toList(),
+        frequencyPenalties: newFrontendBatchParams.map((e) => e.frequencyPenalty).toList(),
+        penaltyDecays: newFrontendBatchParams.map((e) => e.penaltyDecay).toList(),
+      ),
+    );
+    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value));
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {
@@ -651,18 +713,19 @@ extension _$Chat on _Chat {
       final (file, length) = event;
       final path = file.path;
       qqq("new file received: $path, length: $length");
-      P.tts.selectSourceAudioPath.q = path;
-      P.tts.selectedSpkName.q = null;
+      P.talk.selectSourceAudioPath.q = path;
+      P.talk.selectedSpkName.q = null;
     }
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
     final model = P.rwkv.currentModel.q;
     final isTTS = model?.isTTS ?? false;
+    final isSee = model?.worldType != null;
     switch (pageKey) {
       case PageKey.chat:
         final isTranslate = model?.tags.contains("translate") ?? false;
-        if (isTTS || isTranslate) P.rwkv.currentModel.q = null;
+        if (isTTS || isTranslate || isSee) P.rwkv.currentModel.q = null;
         break;
       case PageKey.talk:
         if (!isTTS) {

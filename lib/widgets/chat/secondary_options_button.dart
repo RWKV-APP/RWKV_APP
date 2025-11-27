@@ -24,10 +24,10 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
 
     final color = switch (thinkingMode) {
-      thinking_mode.Lighting() => kC,
-      thinking_mode.Fast() => kC,
+      thinking_mode.Lighting() => Colors.transparent,
+      thinking_mode.Fast() => Colors.transparent,
       thinking_mode.Free() => theme.colorScheme.surfaceContainer,
-      thinking_mode.None() => kC,
+      thinking_mode.None() => Colors.transparent,
       thinking_mode.PreferChinese() => primary,
       thinking_mode.En() => primary,
       thinking_mode.EnShort() => primary,

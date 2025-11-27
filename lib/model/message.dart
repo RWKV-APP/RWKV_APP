@@ -5,6 +5,7 @@ import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/message_type.dart';
 import 'package:zone/model/ref_info.dart';
+import 'package:zone/model/sampler_and_penalty_param.dart';
 
 @immutable
 final class Message extends Equatable {
@@ -300,4 +301,6 @@ extension BatchMessage on Message {
   (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) get batchInfo => getBatchInfo(content);
 
   List<String> get contentAndTails => content.split(Config.userMsgModifierSep);
+
+  List<SamplerAndPenaltyParam> get parsedDecodeParams => SamplerAndPenaltyParamWithString.fromRawDecodeParams(rawDecodeParams ?? "");
 }

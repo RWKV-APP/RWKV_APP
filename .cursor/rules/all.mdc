@@ -8,6 +8,14 @@ alwaysApply: true
 - 我们会将这个项目部署到 iOS / Android / Windows / macOS / Linux 上
 - 这是一个在本地运行大语言模型的 App, 使用 NPU / GPU / CPU 来运行模型, 权重加载到显存或统一内存中
 
+## Tech Stack
+
+- **Framework**: Flutter 3.38.3+ (latest stable).
+- **Language**: Dart 3.10+ (Heavily utilizing new features like Dot Shorthands).
+- **State Management**: Riverpod (Customized Wrapper with `qs`/`qp`).
+- **Routing**: go_router.
+- **Inference Engine**: RWKV (Weight loading to VRAM/Unified Memory).
+
 ## 架构解释
 
 ### 状态管理
@@ -169,13 +177,48 @@ color = color.withOpacity(0.5); // Bad 😡
 color = color.q(.5); // Good ✅
 ```
 
-## 输出信息的方式
+## 辅助代码的存放位置
 
-- qq; // 输出当然函数名
-- qw; // 输出当前函数名, 并且在前面加上 "🚧"
-- qr; // 输出当前函数名, 并且在前面加上 "✅"
-- qe; // 输出当前函数名, 并且在前面加上 "😡"
-- qqq(dynamic anything); // 输出当前函数名和 message
-- qqw(dynamic anything); // 输出当前函数名和 message, 并且在前面加上 "🚧"
-- qqr(dynamic anything); // 输出当前函数名和 message, 并且在前面加上 "✅"
-- qqe(dynamic anything); // 输出当前函数名和 message, 并且在前面加上 "😡"
+如果你要写 python 或者 dart, 以及任何其他的工具性代码来作为工程本身的辅助函数 / 检查工具 / dev 实现, 请在 ./tools 目录下实现
+
+## 国际化
+
+不要编辑任何 lib/gen/intl 目录下的文件, 这些文件交给专业的插件来维护!
+
+## dot shortcuts
+
+参考下面的 dot shorthands 优化你写的 flutter / dart 代码
+
+```dart
+// Use dot shorthand syntax on enums:
+enum Status { none, running, stopped, paused }
+
+Status currentStatus = .running; // Instead of Status.running
+
+// Use dot shorthand syntax on a static method:
+int port = .parse('8080'); // Instead of int.parse('8080')
+
+// Uses dot shorthand syntax on a constructor:
+class Point {
+  final int x, y;
+  Point(this.x, this.y);
+  Point.origin() : x = 0, y = 0;
+}
+
+Point origin = .origin(); // Instead of Point.origin()
+```
+
+### 已知的可以用 dot shorthands 的 Symbols
+
+```dart
+Alignment
+BoxShape
+CrossAxisAlignment
+EdgeInsets
+EdgeInsets
+FontWeight
+MainAxisAlignment
+MainAxisSize
+Radius
+TextScaler
+```

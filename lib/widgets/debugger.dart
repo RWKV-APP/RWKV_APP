@@ -43,9 +43,9 @@ class Debugger extends ConsumerWidget {
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final currentModel = ref.watch(P.rwkv.currentModel);
-    final visualFloatHeight = ref.watch(P.world.visualFloatHeight);
+    final visualFloatHeight = ref.watch(P.see.visualFloatHeight);
     final loading = ref.watch(P.rwkv.loading);
-    final playing = ref.watch(P.world.playing);
+    final playing = ref.watch(P.see.playing);
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final inputHeight = ref.watch(P.chat.inputHeight);
     final hasFocus = ref.watch(P.chat.hasFocus);
@@ -116,10 +116,10 @@ class Debugger extends ConsumerWidget {
             c: qw,
             s: 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
@@ -220,10 +220,10 @@ class _SudokuDebugger extends ConsumerWidget {
             c: qw,
             s: 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
@@ -263,30 +263,30 @@ class _TTSDebugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final audioInteractorShown = ref.watch(P.tts.audioInteractorShown);
-    final endTime = ref.watch(P.world.endTime);
-    final interactingInstruction = ref.watch(P.tts.interactingInstruction);
-    final intonationShown = ref.watch(P.tts.intonationShown);
+    final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
+    final endTime = ref.watch(P.see.endTime);
+    final interactingInstruction = ref.watch(P.talk.interactingInstruction);
+    final intonationShown = ref.watch(P.talk.intonationShown);
     final qb = ref.watch(P.app.qb);
     final paddingTop = ref.watch(P.app.paddingTop);
     final receiveId = ref.watch(P.chat.receiveId);
-    final recording = ref.watch(P.world.recording);
-    final selectSourceAudioPath = ref.watch(P.tts.selectSourceAudioPath);
-    final selectSpkName = ref.watch(P.tts.selectedSpkName);
-    final selectedIndex = ref.watch(P.tts.instructions(interactingInstruction));
+    final recording = ref.watch(P.see.recording);
+    final selectSourceAudioPath = ref.watch(P.talk.selectSourceAudioPath);
+    final selectSpkName = ref.watch(P.talk.selectedSpkName);
+    final selectedIndex = ref.watch(P.talk.instructions(interactingInstruction));
     final selectedInstruction = selectedIndex != null ? interactingInstruction.options[selectedIndex] : null;
-    final selectedLanguage = ref.watch(P.tts.selectedLanguage);
-    final selectedSpkName = ref.watch(P.tts.selectedSpkName);
-    final selectedSpkPanelFilter = ref.watch(P.tts.selectedSpkPanelFilter);
-    final spkNames = ref.watch(P.tts.spkPairs);
-    final spkShown = ref.watch(P.tts.spkShown);
-    final startTime = ref.watch(P.world.startTime);
-    final textInInput = ref.watch(P.tts.textInInput);
+    final selectedLanguage = ref.watch(P.talk.selectedLanguage);
+    final selectedSpkName = ref.watch(P.talk.selectedSpkName);
+    final selectedSpkPanelFilter = ref.watch(P.talk.selectedSpkPanelFilter);
+    final spkNames = ref.watch(P.talk.spkPairs);
+    final spkShown = ref.watch(P.talk.spkShown);
+    final startTime = ref.watch(P.see.startTime);
+    final textInInput = ref.watch(P.talk.textInInput);
     final qw = ref.watch(P.app.qw);
     final isDesktop = ref.watch(P.app.isDesktop);
-    final generating = ref.watch(P.tts.generating);
-    final asFull = ref.watch(P.tts.asFull);
-    final asExhaust = ref.watch(P.tts.asExhaust);
+    final generating = ref.watch(P.talk.generating);
+    final asFull = ref.watch(P.talk.asFull);
+    final asExhaust = ref.watch(P.talk.asExhaust);
     final currentModel = ref.watch(P.rwkv.currentModel);
 
     return Positioned(
@@ -301,10 +301,10 @@ class _TTSDebugger extends ConsumerWidget {
             c: qw,
             s: isDesktop ? 20 : 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,
@@ -392,10 +392,10 @@ class _TranslatorDebugger extends ConsumerWidget {
             c: qw,
             s: 8,
           ),
-          color: kC,
+          color: Colors.transparent,
           child: SizedBox(
             child: Container(
-              decoration: const BoxDecoration(color: kC),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 mainAxisAlignment: .start,
                 crossAxisAlignment: .end,

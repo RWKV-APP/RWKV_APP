@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
@@ -16,10 +15,8 @@ import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/model/cot_display_state.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
-import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/page_key.dart';
@@ -33,9 +30,7 @@ import 'package:zone/widgets/chat/tts/bot_tts_content.dart';
 import 'package:zone/widgets/chat/photo_viewer_overlay.dart';
 import 'package:zone/widgets/chat/user_message_bottom.dart';
 import 'package:zone/widgets/chat/tts/user_tts_content.dart';
-
-const double _kTextScaleFactor = 1.1;
-const double _kTextScaleFactorForCotContent = 1;
+import 'package:zone/widgets/markdown.dart';
 
 class Message extends ConsumerWidget {
   final model.Message msg;
@@ -66,31 +61,31 @@ class Message extends ConsumerWidget {
     }
 
     P.chat.focusNode.unfocus();
-    P.tts.dismissAllShown();
+    P.talk.dismissAllShown();
 
     P.msg.latestClicked.q = msg;
 
-    if (msg.type == model.MessageType.userAudio) {
+    if (msg.type == .userAudio) {
       final audioUrl = msg.audioUrl;
       qqq("audioUrl: $audioUrl");
       if (audioUrl == null) return;
-      if (P.world.playing.q) {
-        P.world.stopPlaying();
+      if (P.see.playing.q) {
+        P.see.stopPlaying();
       } else {
-        P.world.play(path: audioUrl);
+        P.see.play(path: audioUrl);
       }
       return;
     }
 
-    if (msg.type == model.MessageType.ttsGeneration) {
+    if (msg.type == .ttsGeneration) {
       final start = DateTime.now().millisecondsSinceEpoch;
       final end = DateTime.now().millisecondsSinceEpoch;
       qqq("mergeWavFiles: ${end - start}ms");
-      if (P.world.playing.q) {
-        P.world.stopPlaying();
+      if (P.see.playing.q) {
+        P.see.stopPlaying();
       } else {
         if (!msg.ttsIsDone) Alert.info(S.current.playing_partial_generated_audio);
-        P.world.play(path: msg.audioUrl!);
+        P.see.play(path: msg.audioUrl!);
       }
       return;
     }
@@ -202,46 +197,42 @@ class Message extends ConsumerWidget {
 
     final thisMessageIsReceiving = receiveId == msg.id && receiving;
 
-    final textScaleFactorForCotContent = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactorForCotContent));
-
-    final textScaleFactor = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactor));
-
     final rawFontSize = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14.0;
-    final userMessageStyle = TS(s: rawFontSize * _kTextScaleFactor);
+    final userMessageStyle = TS(s: rawFontSize * Config.msgFontScale);
 
     double? cotContentHeight;
 
     switch (cotDisplayState) {
-      case CoTDisplayState.showCotHeaderIfCotResultIsEmpty:
+      case .showCotHeaderIfCotResultIsEmpty:
         if (cotResult.isEmpty) {
           cotContentHeight = null;
         } else {
           cotContentHeight = 0;
         }
-      case CoTDisplayState.showCotHeaderAndCotContent:
+      case .showCotHeaderAndCotContent:
         cotContentHeight = null;
-      case CoTDisplayState.hideCotHeader:
+      case .hideCotHeader:
         cotContentHeight = 0;
     }
 
     final showingCotContent = cotContentHeight != 0;
 
-    final isUserImage = msg.type == model.MessageType.userImage;
-    final isUserAudio = msg.type == model.MessageType.userAudio;
+    final isUserImage = msg.type == .userImage;
+    final isUserAudio = msg.type == .userAudio;
 
     String worldDemoMessageHeader = "";
 
     EdgeInsets padding = const .only(left: 12, top: 12, right: 12);
-    Border? border = Border.all(color: primary.q(.2));
+    Border? border = .all(color: primary.q(.2));
     double radius = 20;
 
     switch (msg.type) {
-      case model.MessageType.userTTS:
-      case model.MessageType.ttsGeneration:
+      case .userTTS:
+      case .ttsGeneration:
         radius = 16;
-      case model.MessageType.userImage:
-      case model.MessageType.text:
-      case model.MessageType.userAudio:
+      case .userImage:
+      case .text:
+      case .userAudio:
     }
 
     BorderRadius? borderRadius = .only(
@@ -254,20 +245,20 @@ class Message extends ConsumerWidget {
     BorderRadius clipBorderRadius = .zero;
 
     switch (msg.type) {
-      case model.MessageType.userImage:
+      case .userImage:
         padding = .zero;
         border = Border.all(width: 0);
         clipBorderRadius = borderRadius;
         borderRadius = null;
 
-      case model.MessageType.userTTS:
+      case .userTTS:
         padding = .zero;
 
-      case model.MessageType.text:
+      case .text:
         if (!msg.isMine) border = null;
         if (!msg.isMine) padding = const .only(left: 6, top: 12, right: 6);
-      case model.MessageType.ttsGeneration:
-      case model.MessageType.userAudio:
+      case .ttsGeneration:
+      case .userAudio:
     }
 
     final screenWidth = ref.watch(P.app.screenWidth);
@@ -298,11 +289,6 @@ class Message extends ConsumerWidget {
 
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
 
-    final gptMarkdownStyle = TextStyle(
-      // color: kCR,
-      fontSize: rawFontSize * _kTextScaleFactor,
-    );
-
     final bubbleContent = ConstrainedBox(
       constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
       child: ClipRRect(
@@ -319,7 +305,7 @@ class Message extends ConsumerWidget {
             children: [
               if (kDebugMode && Args.debugMsgId)
                 Container(
-                  decoration: BoxDecoration(color: kCR.q(1)),
+                  decoration: BoxDecoration(color: Colors.red.q(1)),
                   child: T("Debug: ${msg.id}", s: const TS(c: kW)),
                 ),
               if (isMine) ...[
@@ -370,24 +356,19 @@ class Message extends ConsumerWidget {
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
-                if (!reasoning && !isBatch)
-                  GptMarkdown(
-                    finalContent.replaceAll("\n\n", "\n"),
-                    onLinkTap: _onTapLink,
-                    style: gptMarkdownStyle,
-                  ),
+                if (!reasoning && !isBatch) MarkdownRenderer(raw: finalContent),
                 // 🔥 Bot message cot header
                 if (reasoning && !isQuickThinking && !isBatch)
                   GestureDetector(
                     onTap: () {
                       if (showingCotContent) {
-                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.hideCotHeader;
+                        P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
                       } else {
-                        P.msg.cotDisplayState(msg.id).q = CoTDisplayState.showCotHeaderAndCotContent;
+                        P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
                       }
                     },
                     child: Container(
-                      decoration: const BoxDecoration(color: kC),
+                      decoration: const BoxDecoration(color: Colors.transparent),
                       child: Row(
                         children: [
                           T(
@@ -405,29 +386,11 @@ class Message extends ConsumerWidget {
                   AnimatedContainer(
                     duration: 250.ms,
                     height: cotContentHeight,
-                    child: GptMarkdown(
-                      cotContent.replaceAll("\n\n", "\n"),
-                      onLinkTap: _onTapLink,
-                      style: TextStyle(
-                        color: qb.q(.6),
-                        fontSize: rawFontSize * _kTextScaleFactorForCotContent,
-                      ),
-                    ),
+                    child: MarkdownRenderer(raw: cotContent, color: qb.q(.6)),
                   ),
                 // 🔥 Bot message cot result
                 if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) 12.h,
-                if (cotResult.isNotEmpty && reasoning && !isBatch)
-                  GptMarkdown(
-                    cotResult.replaceAll("\n\n", "\n"),
-                    onLinkTap: _onTapLink,
-                    style: gptMarkdownStyle,
-                    orderedListBuilder: (context, no, child, config) {
-                      return MediaQuery.withNoTextScaling(child: child);
-                    },
-                    unOrderedListBuilder: (context, child, config) {
-                      return MediaQuery.withNoTextScaling(child: child);
-                    },
-                  ),
+                if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRenderer(raw: cotResult),
                 if (isBatch) BatchMessageContent(msg, index, finalContent),
                 if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
                 if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
@@ -438,34 +401,21 @@ class Message extends ConsumerWidget {
       ),
     );
 
-    final v = textScaleFactor.scale(14.0) / 14.0;
-    final alphaS = 1.5 / v;
-
-    return GptMarkdownTheme(
-      gptThemeData: GptMarkdownTheme.of(context).copyWith(
-        h1: TextStyle(fontSize: rawFontSize * 1.0 * alphaS),
-        h2: TextStyle(fontSize: rawFontSize * 0.98 * alphaS),
-        h3: TextStyle(fontSize: rawFontSize * 0.96 * alphaS),
-        h4: TextStyle(fontSize: rawFontSize * 0.94 * alphaS),
-        h5: TextStyle(fontSize: rawFontSize * 0.92 * alphaS),
-        h6: TextStyle(fontSize: rawFontSize * 0.9 * alphaS),
-      ),
-      child: GestureDetector(
-        child: Align(
-          alignment: alignment,
-          child: IgnorePointer(
-            ignoring: editingIndex != null && editingIndex != index,
-            child: AnimatedOpacity(
-              opacity: opacity,
-              duration: 250.ms,
-              child: Padding(
-                padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
-                child: Column(
-                  children: [
-                    if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                    GestureDetector(onTap: _onTap, child: bubbleContent),
-                  ],
-                ),
+    return GestureDetector(
+      child: Align(
+        alignment: alignment,
+        child: IgnorePointer(
+          ignoring: editingIndex != null && editingIndex != index,
+          child: AnimatedOpacity(
+            opacity: opacity,
+            duration: 250.ms,
+            child: Padding(
+              padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
+              child: Column(
+                children: [
+                  if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
+                  GestureDetector(onTap: _onTap, child: bubbleContent),
+                ],
               ),
             ),
           ),

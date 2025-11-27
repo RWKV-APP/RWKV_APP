@@ -7,14 +7,34 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
+import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/argument_value.dart';
 
 class ArgumentsPanel extends ConsumerWidget {
-  static Future<void> show(BuildContext context) async {
-    if (P.rwkv.argumentsPanelShown.q) return;
+  static final temporary = qs<SamplerAndPenaltyParam?>(null);
+
+  static Future<SamplerAndPenaltyParam?> show(
+    BuildContext context, {
+    bool isEditingBatchParams = false,
+    String? title,
+    SamplerAndPenaltyParam? temporarySamplerAndPenaltyParam,
+  }) async {
+    if (P.rwkv.argumentsPanelShown.q) return null;
     P.rwkv.argumentsPanelShown.q = true;
+
+    if (isEditingBatchParams) {
+      if (temporarySamplerAndPenaltyParam == null) {
+        P.rwkv.argumentsPanelShown.q = false;
+        qqe("temporarySamplerAndPenaltyParam is null");
+        return null;
+      }
+      temporary.q = temporarySamplerAndPenaltyParam;
+    } else {
+      temporary.q = null;
+    }
+
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -25,35 +45,74 @@ class ArgumentsPanel extends ConsumerWidget {
           expand: false,
           snap: false,
           builder: (BuildContext context, ScrollController scrollController) {
-            return ArgumentsPanel(scrollController: scrollController);
+            return ArgumentsPanel(
+              scrollController: scrollController,
+              isEditingBatchParams: isEditingBatchParams,
+              title: title,
+            );
           },
         );
       },
     );
     P.rwkv.argumentsPanelShown.q = false;
+    return temporary.q;
   }
 
-  const ArgumentsPanel({super.key, required this.scrollController});
+  const ArgumentsPanel({
+    super.key,
+    required this.scrollController,
+    this.isEditingBatchParams = false,
+    this.title,
+  });
 
   final ScrollController scrollController;
+
+  final bool isEditingBatchParams;
+  final String? title;
 
   void _onChanged(Argument argument, double value) {
     double rawNewValue = double.parse(value.toStringAsFixed(argument.fixedDecimals));
     if (argument.step != null) {
       rawNewValue = (rawNewValue / argument.step!).round() * argument.step!;
     }
-    final currentValue = P.rwkv.arguments(argument).q;
-    if (currentValue == rawNewValue) return;
-    if (argument.enableGaimon) P.app.hapticLight();
-    P.rwkv.arguments(argument).q = rawNewValue;
-    if (argument == Argument.maxLength) {
-      P.rwkv.argumentUpdatingDebouncer.call(() {
-        P.rwkv.syncMaxLength();
-      });
+
+    if (isEditingBatchParams) {
+      final temporary = ArgumentsPanel.temporary.q;
+      if (temporary == null) return;
+      final currentValue = switch (argument) {
+        Argument.temperature => temporary.temperature,
+        Argument.topP => temporary.topP,
+        Argument.presencePenalty => temporary.presencePenalty,
+        Argument.frequencyPenalty => temporary.frequencyPenalty,
+        Argument.penaltyDecay => temporary.penaltyDecay,
+        _ => null,
+      };
+
+      // debugger();
+
+      if (currentValue == null || currentValue == rawNewValue) return;
+      if (argument.enableGaimon) P.app.hapticLight();
+      ArgumentsPanel.temporary.q = temporary.copyWith(
+        temperature: argument == Argument.temperature ? rawNewValue.toDouble() : temporary.temperature,
+        topP: argument == Argument.topP ? rawNewValue.toDouble() : temporary.topP,
+        presencePenalty: argument == Argument.presencePenalty ? rawNewValue.toDouble() : temporary.presencePenalty,
+        frequencyPenalty: argument == Argument.frequencyPenalty ? rawNewValue.toDouble() : temporary.frequencyPenalty,
+        penaltyDecay: argument == Argument.penaltyDecay ? rawNewValue.toDouble() : temporary.penaltyDecay,
+      );
     } else {
-      P.rwkv.argumentUpdatingDebouncer.call(() {
-        P.rwkv.syncSamplerParams();
-      });
+      final currentValue = P.rwkv.arguments(argument).q;
+      if (currentValue == rawNewValue) return;
+      if (argument.enableGaimon) P.app.hapticLight();
+      P.rwkv.arguments(argument).q = rawNewValue;
+      if (argument == Argument.maxLength) {
+        P.rwkv.argumentUpdatingDebouncer.call(() {
+          P.rwkv.syncMaxLength();
+        });
+      } else {
+        P.rwkv.argumentUpdatingDebouncer.call(() {
+          P.rwkv.syncSamplerParams();
+        });
+      }
     }
   }
 
@@ -79,17 +138,24 @@ class ArgumentsPanel extends ConsumerWidget {
                   child: T(s.cancel),
                 ),
                 Expanded(
-                  child: Row(
-                    crossAxisAlignment: .center,
-                    mainAxisAlignment: .center,
-                    children: [
-                      const Icon(Icons.tune),
-                      12.w,
-                      T(
-                        s.model_settings,
-                        s: const TS(s: 16, w: .w500),
+                  child: Center(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          const WidgetSpan(
+                            child: Icon(
+                              Icons.tune,
+                              size: 18,
+                            ),
+                          ),
+                          WidgetSpan(child: 8.w),
+                          TextSpan(
+                            text: title ?? s.model_settings,
+                            style: const TS(s: 16, w: .w500),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 TextButton(
@@ -109,14 +175,14 @@ class ArgumentsPanel extends ConsumerWidget {
                 padding: .only(bottom: paddingBottom),
                 children: [
                   const _SamplerOptions(),
-                  ArgumentValue(Argument.temperature, _onChanged),
-                  ArgumentValue(Argument.topK, _onChanged),
-                  ArgumentValue(Argument.topP, _onChanged),
-                  ArgumentValue(Argument.presencePenalty, _onChanged),
-                  ArgumentValue(Argument.frequencyPenalty, _onChanged),
-                  ArgumentValue(Argument.penaltyDecay, _onChanged),
-                  const _CompletionOptions(),
-                  ArgumentValue(Argument.maxLength, _onChanged),
+                  ArgumentValue(Argument.temperature, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.topK, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.topP, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.presencePenalty, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.frequencyPenalty, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  ArgumentValue(Argument.penaltyDecay, _onChanged, isEditingBatchParams: isEditingBatchParams),
+                  if (!isEditingBatchParams) const _CompletionOptions(),
+                  if (!isEditingBatchParams) ArgumentValue(Argument.maxLength, _onChanged),
                 ],
               ),
             ),

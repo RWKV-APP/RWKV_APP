@@ -6,7 +6,6 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -378,10 +377,10 @@ class _Delete extends ConsumerWidget {
       onTap: _onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: kC,
+          color: Colors.transparent,
           borderRadius: 8.r,
           border: Border.all(
-            color: kC,
+            color: Colors.transparent,
           ),
         ),
         padding: const .all(5),
@@ -510,7 +509,7 @@ class _Tags extends ConsumerWidget {
           final isNPU = tag == "npu";
 
           if (isMLX) {
-            color = kC;
+            color = Colors.transparent;
             textColor = qb;
             borderColor = qb;
           } else {
@@ -541,11 +540,7 @@ class _Tags extends ConsumerWidget {
                       padding: const .only(bottom: 2),
                       child: Icon(Icons.apple, size: 13, color: qb),
                     ),
-                  if (isNPU)
-                    Padding(
-                      padding: const .only(left: 4),
-                      child: FaIcon(FontAwesomeIcons.boltLightning, size: 10, color: qw),
-                    ),
+                  if (isNPU) const T("⚡"),
                 ],
               ),
             ),
@@ -554,9 +549,9 @@ class _Tags extends ConsumerWidget {
         if (kDebugMode && fileInfo.isDebug)
           Container(
             decoration: BoxDecoration(
-              color: kCR,
+              color: Colors.red,
               borderRadius: 4.r,
-              border: Border.all(width: .5, color: kCR),
+              border: Border.all(width: .5, color: Colors.red),
             ),
             padding: const .symmetric(horizontal: 4),
             child: T("DEBUG", s: TS(c: qw)),

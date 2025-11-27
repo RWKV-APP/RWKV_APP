@@ -17,7 +17,7 @@ class SelectImageButton extends ConsumerWidget {
     final color = Theme.of(context).colorScheme.primary;
     final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
     final s = S.of(context);
-    final selectedImagePath = ref.watch(P.world.imagePath);
+    final selectedImagePath = ref.watch(P.see.imagePath);
     return GestureDetector(
       onTap: () async {
         if (!checkModelSelection(preferredDemoType: DemoType.world)) return;

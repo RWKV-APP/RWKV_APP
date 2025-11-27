@@ -1,12 +1,16 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/extract_thought_and_output.dart';
 import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
+import 'package:zone/model/sampler_and_penalty_param.dart';
+import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/markdown.dart';
 
 class BatchMessageContent extends ConsumerStatefulWidget {
   final model.Message msg;
@@ -77,6 +81,8 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
 
     final qw = ref.watch(P.app.qw);
 
+    final parsedDecodeParams = widget.msg.parsedDecodeParams;
+
     return Stack(
       children: [
         SingleChildScrollView(
@@ -103,7 +109,10 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                       border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
                       borderRadius: .circular(8),
                     ),
-                    child: _MarkdownBody(data: batch[i]),
+                    child: _MarkdownBody(
+                      data: batch[i],
+                      decodeParam: parsedDecodeParams.isNotEmpty ? parsedDecodeParams[i] : null,
+                    ),
                   ),
                 ),
               4.w,
@@ -167,13 +176,27 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
   }
 }
 
-const double _kTextScaleFactor = 1.1;
-const double _kTextScaleFactorForCotContent = 1;
-
 class _MarkdownBody extends ConsumerWidget {
   final String data;
+  final SamplerAndPenaltyParam? decodeParam;
 
-  const _MarkdownBody({required this.data});
+  const _MarkdownBody({required this.data, this.decodeParam});
+
+  void _onTapDecodeParam() async {
+    final _ = await showOkAlertDialog(
+      context: getContext()!,
+      title: S.current.decode_param,
+      message:
+          """Decode Param: ${decodeParam!.displayName}
+      Temperature: ${decodeParam!.temperature.toStringAsFixed(1)}
+      TopP: ${decodeParam!.topP.toStringAsFixed(2)}
+      Presence Penalty: ${decodeParam!.presencePenalty.toStringAsFixed(1)}
+      Frequency Penalty: ${decodeParam!.frequencyPenalty.toStringAsFixed(1)}
+      Penalty Decay: ${decodeParam!.penaltyDecay.toStringAsFixed(3)}
+""",
+      okLabel: S.current.got_it,
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -181,61 +204,43 @@ class _MarkdownBody extends ConsumerWidget {
 
     final (thought, output) = extractThoughtAndOutput(data);
 
+    final s = S.of(context);
+
+    final Widget? decodeParamWidget = decodeParam != null
+        ? Align(
+            alignment: .topLeft,
+            child: GD(
+              onTap: _onTapDecodeParam,
+              child: Container(
+                decoration: BD(
+                  border: Border.all(color: kCG.q(.5)),
+                  borderRadius: .circular(4),
+                ),
+                padding: const .symmetric(horizontal: 6, vertical: 2),
+                child: T(s.decode_param + s.colon + decodeParam!.displayName),
+              ),
+            ),
+          )
+        : null;
+
     if (thought.isEmpty) {
       return Column(
         crossAxisAlignment: .stretch,
         children: [
-          GptMarkdown(output),
+          ?decodeParamWidget,
+          MarkdownRenderer(raw: output),
         ],
       );
     }
 
-    final rawFontSize = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14.0;
-
-    final textScaleFactor = TextScaler.linear(MediaQuery.textScalerOf(context).scale(_kTextScaleFactor));
-
-    final v = textScaleFactor.scale(14.0) / 14.0;
-    final alphaS = 1.5 / v;
-
-    final gptMarkdownStyle = TextStyle(
-      // color: kCR,
-      fontSize: rawFontSize * _kTextScaleFactor,
-    );
-
-    return GptMarkdownTheme(
-      gptThemeData: GptMarkdownTheme.of(context).copyWith(
-        h1: TextStyle(fontSize: rawFontSize * 1.0 * alphaS),
-        h2: TextStyle(fontSize: rawFontSize * 0.98 * alphaS),
-        h3: TextStyle(fontSize: rawFontSize * 0.96 * alphaS),
-        h4: TextStyle(fontSize: rawFontSize * 0.94 * alphaS),
-        h5: TextStyle(fontSize: rawFontSize * 0.92 * alphaS),
-        h6: TextStyle(fontSize: rawFontSize * 0.9 * alphaS),
-      ),
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          if (thought.isNotEmpty)
-            GptMarkdown(
-              thought,
-              style: TextStyle(
-                color: qb.q(.6),
-                fontSize: rawFontSize * _kTextScaleFactorForCotContent,
-              ),
-            ),
-          if (output.isNotEmpty) 4.h,
-          if (output.isNotEmpty)
-            GptMarkdown(
-              output,
-              style: gptMarkdownStyle,
-              orderedListBuilder: (context, no, child, config) {
-                return MediaQuery.withNoTextScaling(child: child);
-              },
-              unOrderedListBuilder: (context, child, config) {
-                return MediaQuery.withNoTextScaling(child: child);
-              },
-            ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        ?decodeParamWidget,
+        if (thought.isNotEmpty) MarkdownRenderer(raw: thought, color: qb.q(.6)),
+        if (output.isNotEmpty) 4.h,
+        if (output.isNotEmpty) MarkdownRenderer(raw: output),
+      ],
     );
   }
 }

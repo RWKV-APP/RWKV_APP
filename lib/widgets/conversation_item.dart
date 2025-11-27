@@ -170,12 +170,6 @@ class ConversationItem extends ConsumerWidget {
       elevation: 8.0,
     );
 
-    // if (res == 'rename') {
-    //   await P.conversation.rename(conversation.createdAtUS);
-    // } else if (res == 'delete') {
-    //   await P.conversation.delete(conversation.createdAtUS);
-    // }
-
     if (!context.mounted) {
       return;
     }

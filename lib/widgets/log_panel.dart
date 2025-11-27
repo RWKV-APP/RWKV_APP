@@ -138,7 +138,7 @@ class LogPanel extends ConsumerWidget {
                   final content = showEscapeCharacters ? log.content.replaceAll("\\n", "\n") : log.content;
                   return Container(
                     decoration: BoxDecoration(
-                      color: kC,
+                      color: Colors.transparent,
                       borderRadius: .circular(4),
                       border: Border.all(color: qb),
                     ),

@@ -214,7 +214,7 @@ extension _$App on _App {
       case DemoType.sudoku:
       case DemoType.tts:
       case DemoType.world:
-        HF.wait(latency).then((_) {
+        Future.delayed(latency.ms).then((_) {
           final loaded = P.rwkv.loaded.q;
           if (loaded) return;
           if (!Args.disableAutoShowOfWeightsPanel) ModelSelector.show();

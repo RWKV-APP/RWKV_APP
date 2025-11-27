@@ -34,7 +34,7 @@ class _FileManager {
   /// 当前平台可用的 chat 权重
   late final chatWeights = qs<Set<FileInfo>>({});
 
-  late final worldWeights = qs<Set<FileInfo>>({});
+  late final seeWeights = qs<Set<FileInfo>>({});
   late final sudokuWeights = qs<Set<FileInfo>>({});
   late final othelloWeights = qs<Set<FileInfo>>({});
 
@@ -72,7 +72,7 @@ extension $FileManager on _FileManager {
     this.ttsWeights.q = ttsWeights.where((e) => e.available).toSet();
     this.sudokuWeights.q = sudokuWeights.where((e) => e.available).toSet();
     this.othelloWeights.q = othelloWeights.where((e) => e.available).toSet();
-    this.worldWeights.q = worldWeights.where((e) => e.available).toSet();
+    seeWeights.q = worldWeights.where((e) => e.available).toSet();
     // debugger();
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
 
@@ -88,7 +88,7 @@ extension $FileManager on _FileManager {
       chatWeights.q,
       roleplayWeights.q,
       ttsWeights.q,
-      worldWeights.q,
+      seeWeights.q,
       sudokuWeights.q,
       othelloWeights.q,
     ].expand((e) => e).where((e) => e.available).toList();
@@ -108,9 +108,12 @@ extension $FileManager on _FileManager {
             qqw("fileSize: $fileSize");
           }
         }
-        if (!kDebugMode) {
-          if (!fileSizeVerified) File(path).delete();
-        }
+
+        final isNotDebug = !kDebugMode;
+        final fileSizeNotCorrect = expectFileSize != fileSize;
+        final shouldDelete = isNotDebug && fileSizeNotCorrect;
+
+        if (shouldDelete) File(path).delete();
       }
       final state = locals(fileInfo);
       state.q = state.q.copyWith(hasFile: fileSizeVerified);
@@ -120,18 +123,21 @@ extension $FileManager on _FileManager {
 
   Future<void> removeFilesNotInConfig() async {
     qq;
+
+    const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+
     final fileInfos = [
       chatWeights.q,
       roleplayWeights.q,
       ttsWeights.q,
-      worldWeights.q,
+      seeWeights.q,
       sudokuWeights.q,
       othelloWeights.q,
     ].expand((e) => e).where((e) => e.available).toList();
     final documentsDir = P.app.documentsDir.q;
     if (documentsDir == null) return;
     final fileSystemEntities = documentsDir.listSync();
-    const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+
     for (final entity in fileSystemEntities) {
       if (entity is! File) continue;
       if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
@@ -280,7 +286,7 @@ extension _$FileManager on _FileManager {
         final task = await DownloadTask.create(
           url: url,
           path: path,
-          acceptedSize: fileInfo.fileSize,
+          acceptedSize: kDebugMode ? null : fileInfo.fileSize,
         );
         // qqq('init download task state: ${fileInfo.fileName}: ${task.state}');
         fileState.q = fileState.q.copyWith(

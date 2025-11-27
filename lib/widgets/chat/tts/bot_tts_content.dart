@@ -89,7 +89,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
       if (mounted) setState(() {});
     });
 
-    final generating = ref.watch(P.tts.generating);
+    final generating = ref.watch(P.talk.generating);
 
     final changing = widget.msg.changing;
     // final changing = true;
@@ -98,7 +98,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final length = _length;
     final base = 4000;
     final width = 80 * (length / (length + base)) + 55;
-    final isPlaying = ref.watch(P.world.playing);
+    final isPlaying = ref.watch(P.see.playing);
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final isLatestClickedMessage = latestClickedMessage?.id == widget.msg.id;
 
@@ -109,7 +109,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final qb = ref.watch(P.app.qb);
 
     return Container(
-      decoration: const BoxDecoration(color: kC),
+      decoration: const BoxDecoration(color: Colors.transparent),
       padding: const .all(0),
       width: changing ? 160 : width,
       // height: 50,
@@ -193,7 +193,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                     GestureDetector(
                       onTap: _onSharePressed,
                       child: Container(
-                        decoration: const BoxDecoration(color: kC),
+                        decoration: const BoxDecoration(color: Colors.transparent),
                         padding: const .only(left: 8, right: 4),
                         child: const Icon(Icons.share),
                       ),
@@ -209,7 +209,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                 GestureDetector(
                   onTap: _onSharePressed,
                   child: Container(
-                    decoration: const BoxDecoration(color: kC),
+                    decoration: const BoxDecoration(color: Colors.transparent),
                     padding: const .symmetric(horizontal: 3, vertical: 12),
                     child: const Icon(Icons.share),
                   ),

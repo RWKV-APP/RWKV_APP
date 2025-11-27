@@ -17,7 +17,6 @@ import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/empty.dart';
 import 'package:zone/widgets/chat/message.dart';
 import 'package:zone/widgets/chat/share_chat.dart';
-import 'package:zone/widgets/chat/visual_empty.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageChat extends StatefulWidget {
@@ -72,7 +71,6 @@ class _Page extends ConsumerWidget {
           const AppGradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
-          const VisualEmpty(),
           const Positioned(
             top: 0,
             left: 0,

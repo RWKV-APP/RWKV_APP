@@ -316,7 +316,7 @@ class _Players extends ConsumerWidget {
 
     final blackOptions = Container(
       decoration: BoxDecoration(
-        color: kC,
+        color: Colors.transparent,
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
       ),
@@ -365,7 +365,7 @@ class _Players extends ConsumerWidget {
 
     final whiteOptions = Container(
       decoration: BoxDecoration(
-        color: kC,
+        color: Colors.transparent,
         borderRadius: 4.r,
         border: Border.all(color: qb.q(.5), width: .5),
       ),
@@ -535,7 +535,7 @@ class _Score extends ConsumerWidget {
         Container(
           padding: const .only(left: 8, right: 8, bottom: 8),
           decoration: BoxDecoration(
-            color: kC,
+            color: Colors.transparent,
             borderRadius: 8.r,
             border: Border.all(color: qb.q(.5), width: .5),
           ),
@@ -677,7 +677,7 @@ class _Grid extends ConsumerWidget {
         return Container(
           width: size,
           height: size,
-          decoration: const BoxDecoration(color: kC),
+          decoration: const BoxDecoration(color: Colors.transparent),
           child: Stack(
             children: [
               ...cells,
@@ -910,7 +910,7 @@ class _ConsoleCell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qw = ref.watch(P.app.qw);
-    Color color = kC;
+    Color color = Colors.transparent;
     switch (cellType) {
       case CellType.black:
         color = Colors.black;
@@ -919,7 +919,7 @@ class _ConsoleCell extends ConsumerWidget {
         color = Colors.white;
         break;
       case CellType.empty:
-        color = kC;
+        color = Colors.transparent;
         break;
     }
     return Container(

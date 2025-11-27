@@ -54,14 +54,39 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `我知道了`
+  String get got_it {
+    return Intl.message('我知道了', name: 'got_it', desc: '', args: []);
+  }
+
+  /// `预设`
+  String get prebuilt {
+    return Intl.message('预设', name: 'prebuilt', desc: '', args: []);
+  }
+
+  /// `：`
+  String get colon {
+    return Intl.message('：', name: 'colon', desc: '', args: []);
+  }
+
+  /// `设置全部批量参数`
+  String get set_all_batch_params {
+    return Intl.message(
+      '设置全部批量参数',
+      name: 'set_all_batch_params',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `See`
   String get world {
     return Intl.message('See', name: 'world', desc: '', args: []);
   }
 
-  /// `See`
+  /// `图片问答`
   String get see {
-    return Intl.message('See', name: 'see', desc: '', args: []);
+    return Intl.message('图片问答', name: 'see', desc: '', args: []);
   }
 
   /// `视觉理解与 OCR`
@@ -3260,6 +3285,214 @@ class S {
       name: 'switch_to_creative_mode_for_better_exp',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `参数说明`
+  String get parameter_description {
+    return Intl.message(
+      '参数说明',
+      name: 'parameter_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。`
+  String get parameter_description_detail {
+    return Intl.message(
+      'Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。',
+      name: 'parameter_description_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `每条消息的解码参数`
+  String get decode_params_for_each_message {
+    return Intl.message(
+      '每条消息的解码参数',
+      name: 'decode_params_for_each_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。`
+  String get decode_params_for_each_message_detail {
+    return Intl.message(
+      '批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。',
+      name: 'decode_params_for_each_message_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `全部相同`
+  String get all_the_same {
+    return Intl.message('全部相同', name: 'all_the_same', desc: '', args: []);
+  }
+
+  /// `不完全相同`
+  String get not_all_the_same {
+    return Intl.message('不完全相同', name: 'not_all_the_same', desc: '', args: []);
+  }
+
+  /// `同步中`
+  String get syncing {
+    return Intl.message('同步中', name: 'syncing', desc: '', args: []);
+  }
+
+  /// `未同步`
+  String get not_syncing {
+    return Intl.message('未同步', name: 'not_syncing', desc: '', args: []);
+  }
+
+  /// `全部设置为 ???`
+  String get set_all_to_question_mark {
+    return Intl.message(
+      '全部设置为 ???',
+      name: 'set_all_to_question_mark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请选择要为第 {index} 条消息设置的采样和惩罚参数`
+  String
+  please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(
+    Object index,
+  ) {
+    return Intl.message(
+      '请选择要为第 $index 条消息设置的采样和惩罚参数',
+      name:
+          'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `请选择要为所有消息设置的采样和惩罚参数`
+  String
+  get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
+    return Intl.message(
+      '请选择要为所有消息设置的采样和惩罚参数',
+      name:
+          'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请从下方选择预设参数，或点击“自定义”进行手动配置`
+  String get select_the_decode_parameters_to_set_all_to_for_index {
+    return Intl.message(
+      '请从下方选择预设参数，或点击“自定义”进行手动配置',
+      name: 'select_the_decode_parameters_to_set_all_to_for_index',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Temperature: {value}`
+  String temperature_with_value(Object value) {
+    return Intl.message(
+      'Temperature: $value',
+      name: 'temperature_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Top P: {value}`
+  String top_p_with_value(Object value) {
+    return Intl.message(
+      'Top P: $value',
+      name: 'top_p_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Presence Penalty: {value}`
+  String presence_penalty_with_value(Object value) {
+    return Intl.message(
+      'Presence Penalty: $value',
+      name: 'presence_penalty_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Frequency Penalty: {value}`
+  String frequency_penalty_with_value(Object value) {
+    return Intl.message(
+      'Frequency Penalty: $value',
+      name: 'frequency_penalty_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Penalty Decay: {value}`
+  String penalty_decay_with_value(Object value) {
+    return Intl.message(
+      'Penalty Decay: $value',
+      name: 'penalty_decay_with_value',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Hello! 你好！这是用户消息的预览。`
+  String get font_preview_user_message {
+    return Intl.message(
+      'Hello! 你好！这是用户消息的预览。',
+      name: 'font_preview_user_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `# Markdown 语法全集测试 (H1)\n\n这是一个用于测试 **Markdown 解析器** 和 **CSS 样式** 的标准测试文件。\n\n## 1. 文本格式 (Typography)\n\n这里是普通文本段落。测试中英文混排的表现：The quick brown fox jumps over the lazy dog. 敏捷的棕色狐狸跳过了懒惰的狗。\n\n* **加粗文本 (Bold)** 或 __另一种加粗__\n* *斜体文本 (Italic)* 或 _另一种斜体_\n* ***粗斜体文本 (Bold & Italic)***\n* ~~删除线 (Strikethrough)~~\n* '行内代码 (Inline Code)'\n* [链接文本 (Link)](https://www.google.com)\n\n## 2. 标题层级 (Headings)\n\n# 一级标题 (H1, font size: {h1BaseSize} * {scale} = {h1Size})\n\n## 二级标题 (H2, font size: {h2BaseSize} * {scale} = {h2Size})\n\n### 三级标题 (H3, font size: {h3BaseSize} * {scale} = {h3Size})\n\n#### 四级标题 (H4, font size: {h4BaseSize} * {scale} = {h4Size})\n\n##### 五级标题 (H5, font size: {h5BaseSize} * {scale} = {h5Size})\n\n###### 六级标题 (H6, font size: {h6BaseSize} * {scale} = {h6Size})\n\n正文内容 (XX, font size: {bodyBaseSize} * {scale} = {bodySize})\n\n## 3. 列表 (Lists)\n\n### 无序列表\n* 项目一\n* 项目二\n  * 子项目 A\n  * 子项目 B\n    *以此类推\n\n### 有序列表\n1. 第一步\n2. 第二步\n3. 第三步\n   1. 子步骤 I\n   2. 子步骤 II\n\n### 任务列表 (Task List)\n- [x] 已完成的任务\n- [ ] 未完成的任务\n- [ ] 正在进行的任务\n\n## 4. 引用 (Blockquotes)\n\n> 这是一个一级引用。\n> > 这是一个嵌套的二级引用。\n> > 回到二级。\n> 回到一级引用。\n\n## 5. 代码块 (Code Blocks)\n\n### 基础代码块 (Indented)\n\n    // 这是一个缩进代码块\n    console.log('Hello');\n\n### 语法高亮 (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n'''javascript\nfunction helloWorld() {\n  const message = "Hello, Markdown!";\n  console.log(message);\n  return true;\n}'''`
+  String font_preview_bot_message(
+    Object scale,
+    Object h1BaseSize,
+    Object h2BaseSize,
+    Object h3BaseSize,
+    Object h4BaseSize,
+    Object h5BaseSize,
+    Object h6BaseSize,
+    Object bodyBaseSize,
+    Object h1Size,
+    Object h2Size,
+    Object h3Size,
+    Object h4Size,
+    Object h5Size,
+    Object h6Size,
+    Object bodySize,
+  ) {
+    return Intl.message(
+      '# Markdown 语法全集测试 (H1)\n\n这是一个用于测试 **Markdown 解析器** 和 **CSS 样式** 的标准测试文件。\n\n## 1. 文本格式 (Typography)\n\n这里是普通文本段落。测试中英文混排的表现：The quick brown fox jumps over the lazy dog. 敏捷的棕色狐狸跳过了懒惰的狗。\n\n* **加粗文本 (Bold)** 或 __另一种加粗__\n* *斜体文本 (Italic)* 或 _另一种斜体_\n* ***粗斜体文本 (Bold & Italic)***\n* ~~删除线 (Strikethrough)~~\n* `行内代码 (Inline Code)`\n* [链接文本 (Link)](https://www.google.com)\n\n## 2. 标题层级 (Headings)\n\n# 一级标题 (H1, font size: $h1BaseSize * $scale = $h1Size)\n\n## 二级标题 (H2, font size: $h2BaseSize * $scale = $h2Size)\n\n### 三级标题 (H3, font size: $h3BaseSize * $scale = $h3Size)\n\n#### 四级标题 (H4, font size: $h4BaseSize * $scale = $h4Size)\n\n##### 五级标题 (H5, font size: $h5BaseSize * $scale = $h5Size)\n\n###### 六级标题 (H6, font size: $h6BaseSize * $scale = $h6Size)\n\n正文内容 (XX, font size: $bodyBaseSize * $scale = $bodySize)\n\n## 3. 列表 (Lists)\n\n### 无序列表\n* 项目一\n* 项目二\n  * 子项目 A\n  * 子项目 B\n    *以此类推\n\n### 有序列表\n1. 第一步\n2. 第二步\n3. 第三步\n   1. 子步骤 I\n   2. 子步骤 II\n\n### 任务列表 (Task List)\n- [x] 已完成的任务\n- [ ] 未完成的任务\n- [ ] 正在进行的任务\n\n## 4. 引用 (Blockquotes)\n\n> 这是一个一级引用。\n> > 这是一个嵌套的二级引用。\n> > 回到二级。\n> 回到一级引用。\n\n## 5. 代码块 (Code Blocks)\n\n### 基础代码块 (Indented)\n\n    // 这是一个缩进代码块\n    console.log(\'Hello\');\n\n### 语法高亮 (Fenced with Syntax Highlighting)\n\n**JavaScript:**\n```javascript\nfunction helloWorld() {\n  const message = "Hello, Markdown!";\n  console.log(message);\n  return true;\n}```',
+      name: 'font_preview_bot_message',
+      desc: '',
+      args: [
+        scale,
+        h1BaseSize,
+        h2BaseSize,
+        h3BaseSize,
+        h4BaseSize,
+        h5BaseSize,
+        h6BaseSize,
+        bodyBaseSize,
+        h1Size,
+        h2Size,
+        h3Size,
+        h4Size,
+        h5Size,
+        h6Size,
+        bodySize,
+      ],
     );
   }
 }

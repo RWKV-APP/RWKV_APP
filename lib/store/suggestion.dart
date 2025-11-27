@@ -89,7 +89,7 @@ class _Suggestion {
   /// suggestion prompt list at top of the text input
   /// item type: [String] or [Suggestion]
   final suggestion = qp<List<dynamic>>((ref) {
-    final imagePath = ref.watch(P.world.imagePath);
+    final imagePath = ref.watch(P.see.imagePath);
     final demoType = ref.watch(P.app.demoType);
     final messages = ref.watch(P.msg.list);
     final _ = ref.watch(P.suggestion.ttsTicker);

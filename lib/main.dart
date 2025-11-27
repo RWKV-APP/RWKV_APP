@@ -29,7 +29,7 @@ void main() async {
     await _sentryAppRunner();
   }
   // runApp(const _TestApp());
-  await HF.wait(Args.nativeSplashPreserveDurationInMS);
+  await Future.delayed(Args.nativeSplashPreserveDurationInMS.ms);
   FlutterNativeSplash.remove();
 }
 

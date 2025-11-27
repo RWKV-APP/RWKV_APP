@@ -171,7 +171,7 @@ class Settings extends ConsumerWidget {
               icon: Icon(Icons.format_size_outlined, color: qb.q(.667), size: 16),
               title: s.font_size,
               infoText: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
-              onTap: P.preference.showTextScaleFactorDialog,
+              onTap: P.preference.goToFontSettings,
             ),
             FormItem(
               icon: Icon(Icons.language_outlined, color: qb.q(.667), size: 16),

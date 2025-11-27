@@ -65,6 +65,8 @@ class _Preference {
   /// 偏好的深色模式主题
   late final preferredDarkCustomTheme = qs<custom_theme.CustomTheme>(custom_theme.LightsOut());
 
+  late final lastWorldModel = qs<Map<String, dynamic>?>(null);
+
   @Deprecated("This is not used anymore")
   late final latestRuntimeAddress = qs<int>(0);
 
@@ -154,6 +156,13 @@ extension _$Preference on _Preference {
         promptTemplate = PromptTemplate.deserialize(tt);
       } finally {}
     }
+
+    final lastWorldModel = sp.getString("halo_state.lastWorldModel");
+    if (lastWorldModel != null) {
+      try {
+        this.lastWorldModel.q = jsonDecode(lastWorldModel);
+      } catch (_) {}
+    }
   }
 
   Future<void> _saveDumpping(bool dumpping) async {
@@ -194,30 +203,8 @@ extension $Preference on _Preference {
     await sp.setInt("halo_state.user_type", res.index);
   }
 
-  Future<void> showTextScaleFactorDialog() async {
-    final context = getContext();
-    if (context == null) return;
-    if (!context.mounted) return;
-    final currentQ = preferredTextScaleFactor.q;
-    final res = await showConfirmationDialog<double?>(
-      context: context,
-      title: S.current.font_setting,
-      message: S.current.please_select_font_size,
-      initialSelectedActionKey: currentQ,
-      actions: textScalePairs.indexMap(
-        (key, value) => AlertDialogAction<double>(
-          label: value,
-          key: key,
-        ),
-      ),
-    );
-    qqq("$res");
-
-    if (res == null) return;
-
-    preferredTextScaleFactor.q = res;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setDouble("halo_state.textScaleFactor", res);
+  void goToFontSettings() {
+    push(PageKey.fontSettings);
   }
 
   Future<void> showLocaleDialog() async {
@@ -288,5 +275,11 @@ extension $Preference on _Preference {
     promptTemplate = template;
     final sp = await SharedPreferences.getInstance();
     sp.setString('app.promptTemplate', template.serialize());
+  }
+
+  void saveLastWorldModel(Map<String, dynamic> data) async {
+    lastWorldModel.q = data;
+    final sp = await SharedPreferences.getInstance();
+    sp.setString("halo_state.lastWorldModel", jsonEncode(data));
   }
 }

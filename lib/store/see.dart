@@ -1,6 +1,6 @@
 part of 'p.dart';
 
-class _World {
+class _See {
   // ===========================================================================
   // Instance
   // ===========================================================================
@@ -40,7 +40,7 @@ class _World {
 }
 
 /// Public methods
-extension $World on _World {
+extension $See on _See {
   Future<void> startRecord() async {
     qq;
     await stopPlaying();
@@ -137,20 +137,94 @@ extension $World on _World {
     P.app.hapticLight();
 
     await _audioPlayer.play(source);
-    P.tts.audioStream?.resetStat();
-    P.tts.audioStream?.uninit();
+    P.talk.audioStream?.resetStat();
+    P.talk.audioStream?.uninit();
   }
 
   Future<void> stopPlaying() async {
     playing.q = false;
     await _audioPlayer.stop();
-    P.tts.audioStream?.resetStat();
-    P.tts.audioStream?.uninit();
+    P.talk.audioStream?.resetStat();
+    P.talk.audioStream?.uninit();
+  }
+
+  Future<void> _tryLoadLastWorldModel() async {
+    if (P.app.pageKey.q != PageKey.see) return;
+
+    await Future.delayed(500.ms);
+
+    final last = P.preference.lastWorldModel.q;
+    if (last == null) {
+      if (P.app.pageKey.q == PageKey.see) {
+        ModelSelector.show(preferredDemoType: DemoType.world);
+      }
+      return;
+    }
+
+    try {
+      final worldTypeString = last["worldType"];
+      final modelFileName = last["modelFileName"];
+      final worldType = WorldType.values.byName(worldTypeString);
+
+      final availableModels = P.fileManager.seeWeights.q;
+      final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
+
+      final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
+      final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == modelFileName);
+      final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
+
+      final encoderLocalFile = P.fileManager.locals(encoderFileKey).q;
+      final modelLocalFile = P.fileManager.locals(modelFileKey).q;
+      final adapterLocalFile = adapterFileKey != null ? P.fileManager.locals(adapterFileKey).q : null;
+
+      if (!encoderLocalFile.hasFile || !modelLocalFile.hasFile || (adapterLocalFile != null && !adapterLocalFile.hasFile)) {
+        if (P.app.pageKey.q == PageKey.see) {
+          ModelSelector.show(preferredDemoType: DemoType.world);
+        }
+        return;
+      }
+
+      P.rwkv.currentWorldType.q = worldType;
+      P.rwkv.clearStates();
+      P.chat.clearMessages();
+
+      switch (worldType) {
+        case WorldType.reasoningQA:
+        case WorldType.ocr:
+          await P.rwkv.loadWorldVision(
+            modelPath: modelLocalFile.targetPath,
+            encoderPath: encoderLocalFile.targetPath,
+            backend: modelFileKey.backend!,
+            enableReasoning: worldType.isReasoning,
+            adapterPath: null,
+          );
+        case WorldType.modrwkvV2:
+        case WorldType.modrwkvV3:
+          await P.rwkv.loadWorldVision(
+            modelPath: modelLocalFile.targetPath,
+            encoderPath: encoderLocalFile.targetPath,
+            backend: modelFileKey.backend!,
+            enableReasoning: worldType.isReasoning,
+            adapterPath: adapterLocalFile?.targetPath,
+          );
+          P.rwkv.send(SetImageUniqueIdentifier("image"));
+          P.rwkv.send(SetSpaceAfterRoles(false));
+      }
+
+      if (P.app.pageKey.q != PageKey.see) return;
+
+      P.rwkv.currentModel.q = modelFileKey;
+    } catch (e) {
+      qqe("Failed to auto load world model: $e");
+      if (P.app.pageKey.q == PageKey.see) {
+        ModelSelector.show(preferredDemoType: DemoType.world);
+      }
+    }
   }
 }
 
 /// Private methods
-extension _$World on _World {
+extension _$See on _See {
   Future<void> _init() async {
     switch (P.app.demoType.q) {
       case DemoType.fifthteenPuzzle:
@@ -163,7 +237,7 @@ extension _$World on _World {
     }
     qq;
     P.rwkv.currentWorldType.lv(_onWorldTypeChanged);
-    P.tts.audioInteractorShown.lv(_onAudioInteractorShown);
+    P.talk.audioInteractorShown.lv(_onAudioInteractorShown);
     P.app.demoType.lv(_onWorldTypeChanged);
     _audioPlayer.eventStream.listen(_onPlayerChanged);
     _audioPlayer.onPlayerStateChanged.listen(_onPlayerStateChanged);
@@ -177,15 +251,30 @@ extension _$World on _World {
       visualFloatHeight.q = null;
       P.rwkv.clearStates();
       P.chat.clearMessages();
-      P.rwkv.currentWorldType.q = null;
-      P.rwkv.currentModel.q = null;
+      // P.rwkv.currentWorldType.q = null;
+      // P.rwkv.currentModel.q = null;
     } else if (previous != PageKey.see && next == PageKey.see) {
-      P.rwkv.clearStates();
-      P.chat.clearMessages();
       imagePath.q = null;
       imageHeight.q = null;
       visualFloatHeight.q = null;
-      P.rwkv.currentModel.q = null;
+      P.rwkv.clearStates();
+      P.chat.clearMessages();
+
+      bool isWorldModelLoaded = false;
+      final currentModel = P.rwkv.currentModel.q;
+      if (currentModel != null) {
+        if (currentModel.worldType != null) {
+          isWorldModelLoaded = true;
+        }
+      }
+
+      if (isWorldModelLoaded) {
+        // OK
+      } else {
+        P.rwkv.currentWorldType.q = null;
+        P.rwkv.currentModel.q = null;
+        _tryLoadLastWorldModel();
+      }
     } else {}
   }
 
@@ -233,7 +322,7 @@ extension _$World on _World {
     playing.q = false;
     audioPath.q = "";
 
-    if (!P.tts.audioInteractorShown.q) {
+    if (!P.talk.audioInteractorShown.q) {
       await _recorder.pause();
       await _recorder.stop();
       await _audioPlayer.stop();

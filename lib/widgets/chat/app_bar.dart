@@ -119,7 +119,7 @@ class _MainAppBar extends ConsumerWidget {
       title: GestureDetector(
         onTap: _onTitlePressed,
         child: Container(
-          decoration: const BoxDecoration(color: kC),
+          decoration: const BoxDecoration(color: Colors.transparent),
           child: Column(
             crossAxisAlignment: .center,
             children: [
@@ -145,7 +145,7 @@ class _MainAppBar extends ConsumerWidget {
                     children: [
                       TextSpan(
                         text: version,
-                        style: const TS(s: 10, c: kC),
+                        style: const TS(s: 10, c: Colors.transparent),
                       ),
                       const TextSpan(text: Config.appTitle, style: TS(s: 18)),
                       TextSpan(

@@ -86,7 +86,7 @@ class _WebSearchModeButton extends ConsumerWidget {
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
-    final padding = const EdgeInsets.only(left: 8);
+    const EdgeInsets padding = .only(left: 8);
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
@@ -192,7 +192,7 @@ class _MessageButton extends ConsumerWidget {
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
     final inSee = ref.watch(P.app.pageKey) == PageKey.see;
-    final imagePath = ref.watch(P.world.imagePath);
+    final imagePath = ref.watch(P.see.imagePath);
     final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
     final inputHasContent = ref.watch(P.chat.inputHasContent);
     double opacity = 1;
@@ -224,7 +224,7 @@ class _MessageButton extends ConsumerWidget {
     return GestureDetector(
       onTap: P.chat.onStopButtonPressed,
       child: Container(
-        decoration: const BoxDecoration(color: kC),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: Stack(
           children: [
             SizedBox(
