@@ -644,7 +644,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("검색 깊이"),
     "search_failed": MessageLookupByLibrary.simpleMessage("검색 실패"),
     "searching": MessageLookupByLibrary.simpleMessage("검색 중..."),
-    "see": MessageLookupByLibrary.simpleMessage("See"),
+    "see": MessageLookupByLibrary.simpleMessage("이미지 문답"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("모델 선택"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("작업 유형 선택"),
     "select_all": MessageLookupByLibrary.simpleMessage("모두 선택"),
@@ -803,7 +803,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("매우 작게 (80%)"),
     "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
-      "이미지 Q&A",
+      "시각적 이해 및 OCR",
     ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("음성 복제"),
     "web_search": MessageLookupByLibrary.simpleMessage("네트워크 검색"),

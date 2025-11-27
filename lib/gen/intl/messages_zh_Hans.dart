@@ -589,7 +589,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("搜索深度"),
     "search_failed": MessageLookupByLibrary.simpleMessage("搜索失败"),
     "searching": MessageLookupByLibrary.simpleMessage("搜索中..."),
-    "see": MessageLookupByLibrary.simpleMessage("See"),
+    "see": MessageLookupByLibrary.simpleMessage("图片问答"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("选择模型"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("选择任务类型"),
     "select_all": MessageLookupByLibrary.simpleMessage("全选"),
@@ -732,7 +732,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("非常小 (80%)"),
     "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
-      "图片问答",
+      "视觉理解与 OCR",
     ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),

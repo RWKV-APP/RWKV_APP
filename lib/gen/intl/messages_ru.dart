@@ -804,7 +804,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("Глубина поиска"),
     "search_failed": MessageLookupByLibrary.simpleMessage("Ошибка поиска"),
     "searching": MessageLookupByLibrary.simpleMessage("Поиск..."),
-    "see": MessageLookupByLibrary.simpleMessage("See"),
+    "see": MessageLookupByLibrary.simpleMessage("Вопросы по изображению"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Выберите модель"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Выберите тип задачи",
@@ -993,7 +993,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("Очень маленький (80%)"),
     "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
-      "Вопросы по изображениям",
+      "Визуальное понимание и OCR",
     ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage(
       "Клонирование голоса",

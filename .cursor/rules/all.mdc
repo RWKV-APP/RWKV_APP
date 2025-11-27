@@ -8,6 +8,14 @@ alwaysApply: true
 - 我们会将这个项目部署到 iOS / Android / Windows / macOS / Linux 上
 - 这是一个在本地运行大语言模型的 App, 使用 NPU / GPU / CPU 来运行模型, 权重加载到显存或统一内存中
 
+## Tech Stack
+
+- **Framework**: Flutter 3.38.3+ (latest stable).
+- **Language**: Dart 3.10+ (Heavily utilizing new features like Dot Shorthands).
+- **State Management**: Riverpod (Customized Wrapper with `qs`/`qp`).
+- **Routing**: go_router.
+- **Inference Engine**: RWKV (Weight loading to VRAM/Unified Memory).
+
 ## 架构解释
 
 ### 状态管理

@@ -773,7 +773,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("Search Depth"),
     "search_failed": MessageLookupByLibrary.simpleMessage("Search Failed"),
     "searching": MessageLookupByLibrary.simpleMessage("Searching..."),
-    "see": MessageLookupByLibrary.simpleMessage("See"),
+    "see": MessageLookupByLibrary.simpleMessage("Image Q&A"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("Select a Model"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Select a See Type",
@@ -958,7 +958,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("Very Small (80%)"),
     "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
-      "Image Q&A",
+      "Visual Understanding & OCR",
     ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("Voice Cloning"),
     "web_search": MessageLookupByLibrary.simpleMessage("Network Search"),

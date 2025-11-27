@@ -91,8 +91,33 @@ extension _$Talk on _Talk {
   }
 
   void _onPageKeyChanged(PageKey? previous, PageKey next) {
-    if (previous == PageKey.talk) {
+    if (previous == PageKey.talk && next != PageKey.talk) {
       P.msg._clear(syncNode: false);
+    } else if (previous != PageKey.talk && next == PageKey.talk) {
+      P.msg._clear(syncNode: false);
+
+      bool isTTSModelLoaded = false;
+      final currentModel = P.rwkv.currentModel.q;
+      if (currentModel != null) {
+        if (currentModel.isTTS) {
+          isTTSModelLoaded = true;
+        }
+      }
+
+      if (!isTTSModelLoaded) {
+        P.rwkv.currentModel.q = null;
+        _showModelSelector();
+      }
+    }
+  }
+
+  Future<void> _showModelSelector() async {
+    if (P.app.pageKey.q != PageKey.talk) return;
+
+    await Future.delayed(500.ms);
+
+    if (P.app.pageKey.q == PageKey.talk) {
+      ModelSelector.show(preferredDemoType: DemoType.tts);
     }
   }
 

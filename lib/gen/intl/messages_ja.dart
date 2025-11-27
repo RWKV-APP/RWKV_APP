@@ -647,7 +647,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_depth": MessageLookupByLibrary.simpleMessage("検索深度"),
     "search_failed": MessageLookupByLibrary.simpleMessage("検索に失敗しました"),
     "searching": MessageLookupByLibrary.simpleMessage("検索中..."),
-    "see": MessageLookupByLibrary.simpleMessage("See"),
+    "see": MessageLookupByLibrary.simpleMessage("画像Q&A"),
     "select_a_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("タスクの種類を選択"),
     "select_all": MessageLookupByLibrary.simpleMessage("すべて選択"),
@@ -804,7 +804,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "very_small": MessageLookupByLibrary.simpleMessage("非常に小さい (80%)"),
     "visual_understanding_and_ocr": MessageLookupByLibrary.simpleMessage(
-      "画像Q&A",
+      "視覚理解とOCR",
     ),
     "voice_cloning": MessageLookupByLibrary.simpleMessage("音声クローン"),
     "web_search": MessageLookupByLibrary.simpleMessage("ネットワーク検索"),
