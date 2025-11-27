@@ -2,7 +2,11 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-blue.svg)](./README.md)
-[![Chinese](https://img.shields.io/badge/README-中文-blue.svg)](./README.zh.md)
+[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh.md)
+[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-TW.md)
+[![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
+[![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
+[![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **Explore and experience running Large Language Models offline on your edge devices with the RWKV App.**
 
@@ -40,14 +44,14 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 <tbody>
 <tr>
 <td style="text-align: center;">Android APK Download Link</td>
-<td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
+<td style="text-align: center;"><a href="https://play.google.com/store/apps/details?id=com.rwkvzone.chat">Google Play</a> / <a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Sudoku/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-sudoku">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Othello/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-othello">pgyer</a></td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-music">pgyer</a></td>
 </tr>
 <tr>
 <td style="text-align: center;">iOS</td>
-<td style="text-align: center;"><a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
+<td style="text-align: center;"><a href="https://apps.apple.com/us/app/rwkv-chat/id6740192639">App Store</a> / <a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
 <td style="text-align: center;">-</td>
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/f5SVf76c">testflight</a></td>
 <td style="text-align: center;">-</td>

@@ -2,7 +2,11 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-blue.svg)](./README.md)
-[![中文](https://img.shields.io/badge/README-中文-blue.svg)](./README.zh.md)
+[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh.md)
+[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-TW.md)
+[![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
+[![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
+[![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **通过 RWKV App，探索、体验在端侧设备上离线运行大语言模型**
 
@@ -39,13 +43,13 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 <tbody>
 <tr>
 <td style="text-align: center;">Android APK 下载链接</td>
-<td style="text-align: center;"><a href="https://www.pgyer.com/rwkvchat">蒲公英</a></td>
+<td style="text-align: center;"><a href="https://play.google.com/store/apps/details?id=com.rwkvzone.chat">Google Play</a> / <a href="https://www.pgyer.com/rwkvchat">蒲公英</a></td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-sudoku">蒲公英</a></td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-othello">蒲公英</a></td>
 </tr>
 <tr>
 <td style="text-align: center;">iOS</td>
-<td style="text-align: center;"><a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
+<td style="text-align: center;"><a href="https://apps.apple.com/us/app/rwkv-chat/id6740192639">App Store</a> / <a href="https://testflight.apple.com/join/DaMqCNKh">testflight</a></td>
 <td style="text-align: center;">-</td>
 <td style="text-align: center;"><a href="https://testflight.apple.com/join/f5SVf76c">testflight</a></td>
 </tr>
