@@ -7,7 +7,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:zone/model/file_info.dart';
-import 'package:zone/store/p.dart' show P, $FileManager;
+import 'package:zone/store/p.dart' show P, $FileManager, $RWKVLoad;
 import 'package:zone/widgets/model_item.dart';
 
 import 'package:zone/gen/l10n.dart' show S;
@@ -38,7 +38,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     qqq('current model name: $currentModelName, current state name: ${currentStateFile?.fileName}');
   }
 
-  void onLoadTap(ModelStateFile? state) {
+  void onLoadTap(ModelStateFile? state) async {
     setState(() {
       currentStateFile = state;
     });
@@ -54,8 +54,15 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       frequencyPenalty: state?.decodeParam['frequencyPenalty']?.toDouble(),
       modelType: RoleplayManageModelType.chat,
     );
-    RoleplayManage.onModelDownloadComplete(info);
-    Navigator.pop(context);
+    final sp = await P.rwkv.loadChat(
+      modelPath: info.modelPath, //
+      backend: widget.file.backend!,
+      enableReasoning: false,
+    );
+    if (sp != null) {
+      RoleplayManage.onModelDownloadComplete(info, sp, P.rwkv.receivePort);
+      Navigator.pop(context);
+    }
   }
 
   @override

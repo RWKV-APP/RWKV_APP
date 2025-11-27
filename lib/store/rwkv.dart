@@ -17,6 +17,8 @@ class _RWKV {
   /// Send message to RWKV isolate
   SendPort? _sendPort;
 
+  ReceivePort? get receivePort => _receivePort;
+
   /// Receive message from RWKV isolate
   late final _receivePort = ReceivePort();
 
@@ -388,7 +390,7 @@ extension $RWKVLoad on _RWKV {
     if (!batchAllowed) P.chat.batchEnabled.q = false;
   }
 
-  Future<void> loadChat({
+  Future<SendPort?> loadChat({
     required String modelPath,
     required Backend backend,
     required bool enableReasoning,
@@ -413,7 +415,7 @@ extension $RWKVLoad on _RWKV {
         qqe("initRuntime failed: $e");
         if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
         Alert.error("Failed to load model: $e");
-        return;
+        return null;
       }
     } else {
       final options = StartOptions(
@@ -446,6 +448,8 @@ extension $RWKVLoad on _RWKV {
     Future.delayed(1500.ms).then((_) {
       send(to_rwkv.GetSupportedBatchSizes());
     });
+
+    return _sendPort;
   }
 
   Future<void> loadOthello() async {
@@ -1022,6 +1026,7 @@ extension _$RWKV on _RWKV {
   void _onMessage(dynamic message) {
     if (message is SendPort) {
       _sendPort = message;
+      // RoleplayManage.onSendPortAndReceivePortChange(_sendPort, _receivePort);
       return;
     }
 
