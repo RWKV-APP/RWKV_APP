@@ -118,6 +118,9 @@ extension $FileManager on _FileManager {
 
   Future<void> removeFilesNotInConfig() async {
     qq;
+
+    const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+
     final fileInfos = [
       chatWeights.q,
       roleplayWeights.q,
@@ -129,7 +132,7 @@ extension $FileManager on _FileManager {
     final documentsDir = P.app.documentsDir.q;
     if (documentsDir == null) return;
     final fileSystemEntities = documentsDir.listSync();
-    const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+
     for (final entity in fileSystemEntities) {
       if (entity is! File) continue;
       if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
