@@ -604,7 +604,7 @@ extension $RWKV on _RWKV {
           _messagesController.add(from_rwkv.GenerateStop(error: e.toString()));
         });
       } finally {
-        _oldMessagesController.add(LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
+        _oldMessagesController.add(const LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
       }
       return;
     }

@@ -340,7 +340,7 @@ class _CompletionState extends ConsumerState<Completion> {
                 border: OutlineInputBorder(
                   borderRadius: .circular(4),
                 ),
-                contentPadding: .symmetric(horizontal: 4, vertical: 0),
+                contentPadding: const .symmetric(horizontal: 4, vertical: 0),
               ),
             ),
           ),
@@ -445,7 +445,7 @@ class _CompletionState extends ConsumerState<Completion> {
             controller: isSensitive ? TextEditingController(text: S.current.filter) : controllerOutput,
             maxLines: 999999999,
             readOnly: generating || isSensitive,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: .only(
                   topLeft: .circular(4),
