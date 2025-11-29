@@ -28,6 +28,8 @@ class _Ocr {
 
   late final words = qs<Set<BBox>>({});
 
+  late final imageSize = qs<Size>(Size.zero);
+
   late final cameraRect = qs<Rect?>(null);
 }
 
@@ -72,23 +74,40 @@ extension _$Ocr on _Ocr {
     final inputImage = _inputImageFromCameraImage(image);
     if (inputImage == null) return;
 
+    final metadata = inputImage.metadata;
+    if (metadata != null) {
+      var width = metadata.size.width;
+      var height = metadata.size.height;
+      final rotation = metadata.rotation;
+      if (rotation == InputImageRotation.rotation90deg || rotation == InputImageRotation.rotation270deg) {
+        final temp = width;
+        width = height;
+        height = temp;
+      }
+      imageSize.q = Size(width, height);
+    }
+
     final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
 
-    String text = recognizedText.text;
+    final Set<BBox> newWords = {};
     for (TextBlock block in recognizedText.blocks) {
-      final Rect rect = block.boundingBox;
-      final List<Point<int>> cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
       for (TextLine line in block.lines) {
-        // Same getters as TextBlock
         for (TextElement element in line.elements) {
-          // Same getters as TextBlock
-          qqr(element.text);
+          newWords.add(
+            BBox(
+              x: element.boundingBox.left.toInt(),
+              y: element.boundingBox.top.toInt(),
+              width: element.boundingBox.width.toInt(),
+              height: element.boundingBox.height.toInt(),
+              text: element.text,
+              r: 0,
+              p: 1,
+            ),
+          );
         }
       }
     }
+    words.q = newWords;
   }
 
   InputImage? _inputImageFromCameraImage(CameraImage image) {
