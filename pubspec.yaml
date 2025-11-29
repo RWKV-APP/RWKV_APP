@@ -82,6 +82,7 @@ dependencies:
   crypto:
   cupertino_icons:
   device_info_plus:
+  dio: ^5.9.0
   drift:
   drift_flutter:
   equatable:
@@ -121,7 +122,6 @@ dependencies:
   system_info2:
   url_launcher:
   web_socket_channel:
-  dio: ^5.9.0
 
 dependency_overrides:
   rwkv_mobile_flutter:
