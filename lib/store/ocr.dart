@@ -79,11 +79,12 @@ extension _$Ocr on _Ocr {
       var width = metadata.size.width;
       var height = metadata.size.height;
       final rotation = metadata.rotation;
-      if (rotation == InputImageRotation.rotation90deg || rotation == InputImageRotation.rotation270deg) {
+      if (rotation != InputImageRotation.rotation90deg && rotation != InputImageRotation.rotation270deg) {
         final temp = width;
         width = height;
         height = temp;
       }
+      qqr("width: $width, height: $height");
       imageSize.q = Size(width, height);
     }
 
@@ -115,11 +116,17 @@ extension _$Ocr on _Ocr {
     // it is used in android to convert the InputImage from Dart to Java
     // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C
     // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas
-    final camera = _cameraDescriptions[1];
+    final camera = _controller.description;
     final sensorOrientation = camera.sensorOrientation;
     InputImageRotation? rotation;
     if (Platform.isIOS) {
       rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
+      // Fix: Force rotation90deg if we are in portrait mode but sensor is landscape
+      if (rotation == InputImageRotation.rotation0deg &&
+          image.width > image.height &&
+          controller.value.deviceOrientation == DeviceOrientation.portraitUp) {
+        rotation = InputImageRotation.rotation90deg;
+      }
     } else if (Platform.isAndroid) {
       var rotationCompensation = _Ocr._orientations[controller.value.deviceOrientation];
       if (rotationCompensation == null) return null;
@@ -151,7 +158,7 @@ extension _$Ocr on _Ocr {
     final plane = image.planes.first;
 
     // compose InputImage using bytes
-    return InputImage.fromBytes(
+    final res = InputImage.fromBytes(
       bytes: plane.bytes,
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
@@ -160,6 +167,7 @@ extension _$Ocr on _Ocr {
         bytesPerRow: plane.bytesPerRow, // used only in iOS
       ),
     );
+    return res;
   }
 }
 
