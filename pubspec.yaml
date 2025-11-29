@@ -122,8 +122,6 @@ dependencies:
   url_launcher:
   web_socket_channel:
   dio: ^5.9.0
-  google_mlkit_text_recognition:
-  camera:
 
 dependency_overrides:
   rwkv_mobile_flutter:
