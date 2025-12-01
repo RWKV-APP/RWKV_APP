@@ -1,7 +1,5 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/prompt_template.dart' show PromptTemplate;
 import 'package:zone/store/p.dart' show P, $Preference, $RWKV;
 

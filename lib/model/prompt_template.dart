@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/store/p.dart';
 
