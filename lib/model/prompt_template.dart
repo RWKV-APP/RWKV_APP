@@ -45,7 +45,7 @@ class PromptTemplate {
     var map = jsonDecode(json);
     String system = map['systemPrompt'] ?? '';
     if (system == '') {
-      system = PromptTemplate.empty().systemPrompt;
+      // system = PromptTemplate.empty().systemPrompt;
     }
     return PromptTemplate(
       thinkingWithChinese: map['thinkingWithChinese'] ?? '',
