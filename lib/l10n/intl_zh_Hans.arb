@@ -516,5 +516,8 @@
       "h6Size": {},
       "bodySize": {}
     }
-  }
+  },
+  "tag_date": "日期",
+  "tag_time": "时间",
+  "tag_day_of_week": "星期"
 }

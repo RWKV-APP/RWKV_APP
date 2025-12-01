@@ -516,5 +516,8 @@
       "h6Size": {},
       "bodySize": {}
     }
-  }
+  },
+  "tag_date": "Date",
+  "tag_time": "Time",
+  "tag_day_of_week": "Day of Week"
 }

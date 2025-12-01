@@ -3495,6 +3495,21 @@ class S {
       ],
     );
   }
+
+  /// `日期`
+  String get tag_date {
+    return Intl.message('日期', name: 'tag_date', desc: '', args: []);
+  }
+
+  /// `时间`
+  String get tag_time {
+    return Intl.message('时间', name: 'tag_time', desc: '', args: []);
+  }
+
+  /// `星期`
+  String get tag_day_of_week {
+    return Intl.message('星期', name: 'tag_day_of_week', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

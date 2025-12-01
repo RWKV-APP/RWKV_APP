@@ -883,6 +883,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "syncing": MessageLookupByLibrary.simpleMessage("Syncing"),
     "system_mode": MessageLookupByLibrary.simpleMessage("System Mode"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("System Prompt"),
+    "tag_date": MessageLookupByLibrary.simpleMessage("Date"),
+    "tag_day_of_week": MessageLookupByLibrary.simpleMessage("Day of Week"),
+    "tag_time": MessageLookupByLibrary.simpleMessage("Time"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Take Photo"),
     "target_text": m23,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(

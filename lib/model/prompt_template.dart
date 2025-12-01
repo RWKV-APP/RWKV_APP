@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/store/p.dart';
 
@@ -50,6 +51,47 @@ class PromptTemplate {
       webSearchChineseTemplate: map['webSearchChineseTemplate'] ?? '',
       systemPrompt: map['systemPrompt'] ?? '',
     );
+  }
+
+  String formatedSystemPrompt({
+    bool chinese = false,
+  }) {
+    if (systemPrompt.isEmpty) return '';
+
+    final now = DateTime.now();
+    final date = '${now.year}-${now.month}-${now.day}';
+    final time = '${now.hour}:${now.minute}';
+    final dayOfWeek = now.weekday;
+
+    final chinese = P.preference.currentLangIsZh.q;
+    final cn =
+        {
+          1: "星期一",
+          2: "星期二",
+          3: "星期三",
+          4: "星期四",
+          5: "星期五",
+          6: "星期六",
+          7: "星期日",
+        }[dayOfWeek] ??
+        '';
+    final en =
+        {
+          1: 'Monday',
+          2: 'Tuesday',
+          3: 'Wednesday',
+          4: 'Thursday',
+          5: 'Friday',
+          6: 'Saturday',
+          7: 'Sunday',
+        }[dayOfWeek] ??
+        '';
+
+    String p = systemPrompt;
+    p = p.replaceAll('{{date}}', date);
+    p = p.replaceAll('{{time}}', time);
+    p = p.replaceAll('{{day_of_week}}', chinese ? cn : en);
+    return p;
   }
 
   String apply(ThinkingMode mode) {

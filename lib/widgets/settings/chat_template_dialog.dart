@@ -1,7 +1,9 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:halo_alert/halo_alert.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/prompt_template.dart' show PromptTemplate;
-import 'package:zone/store/p.dart' show P, $Preference;
+import 'package:zone/store/p.dart' show P, $Preference, $RWKV;
 
 import 'package:zone/gen/l10n.dart' show S;
 
@@ -131,17 +133,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
               child: Column(
                 children: [
                   const SizedBox(height: 12),
-                  if (widget.systemPrompt)
-                    TextField(
-                      controller: _controllerSystemPrompt,
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        labelText: S.current.system_prompt,
-                        labelStyle: const TextStyle(fontSize: 16),
-                        border: const OutlineInputBorder(),
-                        hintText: S.current.hint_system_prompt,
-                      ),
-                    ),
+                  if (widget.systemPrompt) ...buildSystemPromptWidget(),
+
                   if (widget.newChat)
                     TextField(
                       controller: _controllerNewChat,
@@ -186,6 +179,57 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         ],
       ),
     );
+  }
+
+  List<Widget> buildSystemPromptWidget() {
+    return [
+      TextField(
+        controller: _controllerSystemPrompt,
+        maxLines: 4,
+        decoration: InputDecoration(
+          labelText: S.current.system_prompt,
+          labelStyle: const TextStyle(fontSize: 16),
+          border: const OutlineInputBorder(),
+          hintText: S.current.hint_system_prompt,
+        ),
+      ),
+      const SizedBox(height: 8),
+      OutlinedButtonTheme(
+        data: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            visualDensity: .compact,
+            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 12)),
+            padding: WidgetStateProperty.all(const .symmetric(horizontal: 12, vertical: 8)),
+            minimumSize: WidgetStateProperty.all(const Size(0, 36)),
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(12))),
+          ),
+        ),
+        child: Row(
+          children: [
+            OutlinedButton(
+              onPressed: () {
+                _controllerSystemPrompt.text = _controllerSystemPrompt.text + '{{date}}';
+              },
+              child: Text(S.current.tag_date),
+            ),
+            const SizedBox(width: 6),
+            OutlinedButton(
+              onPressed: () {
+                _controllerSystemPrompt.text = _controllerSystemPrompt.text + '{{time}}';
+              },
+              child: Text(S.current.tag_time),
+            ),
+            const SizedBox(width: 6),
+            OutlinedButton(
+              onPressed: () {
+                _controllerSystemPrompt.text = _controllerSystemPrompt.text + '{{day_of_week}}';
+              },
+              child: Text(S.current.tag_day_of_week),
+            ),
+          ],
+        ),
+      ),
+    ];
   }
 
   List<Widget> buildThinkingWidget() {
