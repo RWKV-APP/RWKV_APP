@@ -35,12 +35,18 @@ class PromptTemplate {
       newChatTemplate: '',
       webSearchTemplate: '%s\nPlease answer according to the above information:\n%s',
       webSearchChineseTemplate: '%s\n请根据以上信息回答:\n%s',
-      systemPrompt: '',
+      systemPrompt:
+          'System: You are RWKV, a next-gen RNN chatbot developed by RWKV foundation. '
+          'You are a helpful assistant. Today is {{date}}, {{day_of_week}}.',
     );
   }
 
   static PromptTemplate deserialize(String json) {
     var map = jsonDecode(json);
+    String system = map['systemPrompt'] ?? '';
+    if (system == '') {
+      system = PromptTemplate.empty().systemPrompt;
+    }
     return PromptTemplate(
       thinkingWithChinese: map['thinkingWithChinese'] ?? '',
       thinkingLighting: map['thinkingLighting'] ?? '',
@@ -49,7 +55,7 @@ class PromptTemplate {
       newChatTemplate: map['newChatTemplate'] ?? '',
       webSearchTemplate: map['webSearchTemplate'] ?? '',
       webSearchChineseTemplate: map['webSearchChineseTemplate'] ?? '',
-      systemPrompt: map['systemPrompt'] ?? '',
+      systemPrompt: system,
     );
   }
 
