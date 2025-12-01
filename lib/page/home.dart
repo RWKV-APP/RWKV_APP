@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -13,14 +15,29 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/model_selector.dart';
 
-class PageHome extends ConsumerWidget {
+class PageHome extends ConsumerStatefulWidget {
   const PageHome({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final version = ref.watch(P.app.version);
+  ConsumerState<PageHome> createState() => _PageHomeState();
+}
 
+class _PageHomeState extends ConsumerState<PageHome> {
+  final controller = ScrollController();
+  static final _pixels = qs(0.0);
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      final position = controller.position;
+      final pixels = position.pixels;
+      _pixels.q = pixels;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
 
     final isLandscape = width > 600;
@@ -28,67 +45,39 @@ class PageHome extends ConsumerWidget {
     final maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
 
     return AppScaffold(
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: .stretch,
-          mainAxisSize: .min,
-          children: [
-            const SizedBox(height: 100),
-            Center(
-              child: ClipRRect(
-                borderRadius: .circular(50),
-                clipBehavior: Clip.antiAlias,
-                child: Image.asset(
-                  'assets/img/chat/rwkv.png',
-                  height: 80,
-                  width: 80,
-                ),
-              ),
+      body: Stack(
+        children: [
+          _Welcome(),
+          SingleChildScrollView(
+            controller: controller,
+            padding: .only(top: 300, left: 12, right: 12),
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: MasonryGridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              itemBuilder: (context, index) {
+                final widgets = [
+                  const _ChatButton(),
+                  const _VisualButton(),
+                  const _TTSButton(),
+                  const _RolePlayButton(),
+                  const _CompletionButton(),
+                  const _TranslatorButton(),
+                  const _NekoButton(),
+                  const _LambadaButton(),
+                ];
+                return ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: maxWidth),
+                  child: widgets[index],
+                );
+              },
+              itemCount: 8,
             ),
-            const SizedBox(height: 24),
-            Text(
-              s.welcome_to_rwkv_chat,
-              style: const TextStyle(fontSize: 24, fontWeight: .bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              "v$version",
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 100),
-            Padding(
-              padding: const .symmetric(horizontal: 12),
-              child: MasonryGridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                itemBuilder: (context, index) {
-                  final widgets = [
-                    const _ChatButton(),
-                    const _VisualButton(),
-                    const _TTSButton(),
-                    const _RolePlayButton(),
-                    const _CompletionButton(),
-                    const _TranslatorButton(),
-                    const _NekoButton(),
-                    const _LambadaButton(),
-                  ];
-                  return ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: maxWidth),
-                    child: widgets[index],
-                  );
-                },
-                itemCount: 8,
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -535,6 +524,58 @@ class _RolePlayButton extends ConsumerWidget {
               const SizedBox(height: 6),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Welcome extends ConsumerWidget {
+  const _Welcome();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final version = ref.watch(P.app.version);
+    final s = S.of(context);
+    final pixels = ref.watch(_PageHomeState._pixels);
+    double opacity = 1 - pixels / 200 + 0.5;
+
+    if (opacity < 0) opacity = 0;
+    if (opacity > 1) opacity = 1;
+    return Positioned(
+      top: -pixels / 1.5,
+      left: 0,
+      right: 0,
+      child: Opacity(
+        opacity: opacity,
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            Center(
+              child: ClipRRect(
+                borderRadius: .circular(50),
+                clipBehavior: Clip.antiAlias,
+                child: Image.asset(
+                  'assets/img/chat/rwkv.png',
+                  height: 80,
+                  width: 80,
+                ),
+              ),
+            ),
+            SizedBox(height: 24 * opacity),
+            Text(
+              s.welcome_to_rwkv_chat,
+              style: TextStyle(fontSize: 24 * pow(opacity, 0.1).toDouble(), fontWeight: .bold),
+              textAlign: .center,
+            ),
+            SizedBox(height: 12 * opacity),
+            Text(
+              "v$version",
+              style: TextStyle(fontSize: 14 * pow(opacity, 0.1).toDouble(), color: Colors.grey),
+              textAlign: .center,
+            ),
+            SizedBox(height: 100 * opacity),
+          ],
         ),
       ),
     );
