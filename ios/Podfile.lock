@@ -81,25 +81,25 @@ PODS:
   - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
-  - sqlite3 (3.50.4):
-    - sqlite3/common (= 3.50.4)
-  - sqlite3/common (3.50.4)
-  - sqlite3/dbstatvtab (3.50.4):
+  - sqlite3 (3.51.1):
+    - sqlite3/common (= 3.51.1)
+  - sqlite3/common (3.51.1)
+  - sqlite3/dbstatvtab (3.51.1):
     - sqlite3/common
-  - sqlite3/fts5 (3.50.4):
+  - sqlite3/fts5 (3.51.1):
     - sqlite3/common
-  - sqlite3/math (3.50.4):
+  - sqlite3/math (3.51.1):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.50.4):
+  - sqlite3/perf-threadsafe (3.51.1):
     - sqlite3/common
-  - sqlite3/rtree (3.50.4):
+  - sqlite3/rtree (3.51.1):
     - sqlite3/common
-  - sqlite3/session (3.50.4):
+  - sqlite3/session (3.51.1):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
     - FlutterMacOS
-    - sqlite3 (~> 3.50.4)
+    - sqlite3 (~> 3.51.1)
     - sqlite3/dbstatvtab
     - sqlite3/fts5
     - sqlite3/math
@@ -207,18 +207,18 @@ SPEC CHECKSUMS:
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   record_ios: f75fa1d57f840012775c0e93a38a7f3ceea1a374
-  rwkv_mobile_flutter: d26d6688381bfa42489a48d3730722abc4b3abcc
+  rwkv_mobile_flutter: 1ac221dbc3469b5cb1aab8248b34e1804e68aa98
   SDWebImage: d0184764be51240d49c761c37f53dd017e1ccaaf
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 4c33648b7e83310aa1fdb1b10c5491027d9643f0
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
-  sqlite3: 73513155ec6979715d3904ef53a8d68892d4032b
-  sqlite3_flutter_libs: 83f8e9f5b6554077f1d93119fe20ebaa5f3a9ef1
+  sqlite3: 8d708bc63e9f4ce48f0ad9d6269e478c5ced1d9b
+  sqlite3_flutter_libs: d13b8b3003f18f596e542bcb9482d105577eff41
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
-PODFILE CHECKSUM: 963453f5050e3dddb14cf00822a35e43cc1c5269
+PODFILE CHECKSUM: f6e0e11f280911c69ffb587d41e1e71192df362a
 
 COCOAPODS: 1.16.2
