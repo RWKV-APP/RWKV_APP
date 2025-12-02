@@ -135,7 +135,7 @@ class _MainAppBar extends ConsumerWidget {
                     ),
                     Padding(
                       padding: const .only(bottom: 2, left: 1),
-                      child: T(' $version', s: const TS(s: 8)),
+                      child: T(' $version', s: const TS(s: 8, w: .bold)),
                     ),
                   ],
                 ),
