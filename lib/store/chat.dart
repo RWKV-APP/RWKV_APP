@@ -723,7 +723,12 @@ extension _$Chat on _Chat {
     final isTTS = model?.isTTS ?? false;
     final isSee = model?.worldType != null;
     switch (pageKey) {
+      case PageKey.completion:
+        final isTranslate = model?.tags.contains("translate") ?? false;
+        if (isTTS || isTranslate || isSee) P.rwkv.currentModel.q = null;
+        break;
       case PageKey.chat:
+        P.rwkv.updateSystemPrompt();
         final isTranslate = model?.tags.contains("translate") ?? false;
         if (isTTS || isTranslate || isSee) P.rwkv.currentModel.q = null;
         break;

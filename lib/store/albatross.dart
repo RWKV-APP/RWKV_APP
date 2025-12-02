@@ -92,7 +92,7 @@ class Albatross {
         P.app.demoType.q = DemoType.chat;
         P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
         P.rwkv.currentModel.q = fileInfo;
-        P.rwkv.setModelConfig(thinkingMode: Free());
+        P.rwkv.setModelConfig(thinkingMode: const Free());
       } else {
         final body = r.data['error'];
         Alert.error("${r.statusCode}: $body");

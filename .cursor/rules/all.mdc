@@ -141,7 +141,7 @@ class _SubWidgetName extends ConsumerWidget {
 
 ### 使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度
 
-使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度, 不要使用 `MediaQuery.of(context).size.width`, 因为 `MediaQuery.of(context).size.width` 会触发 `MediaQuery.of(context)` 会坚挺各种 MediaQuery 的变化, 导致非必要的重回, 比如键盘展示 / 收起事件
+- 使用 `MediaQuery.sizeOf(context).width` 来获取屏幕宽度, 不要使用 `MediaQuery.of(context).size.width`, 因为 `MediaQuery.of(context).size.width` 会触发 `MediaQuery.of(context)` 会监听各种 MediaQuery 的变化, 导致非必要的重回, 比如键盘展示 / 收起事件
 
 ```dart
 Widget build(BuildContext context, WidgetRef ref) {
@@ -150,6 +150,10 @@ Widget build(BuildContext context, WidgetRef ref) {
   return SizedBox(width: width0, height: 100);
 }
 ```
+
+### 使用 `MediaQuery.paddingOf(context)` 来获取屏幕内边距
+
+- 使用 `MediaQuery.paddingOf(context)` 来获取屏幕内边距, 不要使用 `MediaQuery.of(context).padding`, 因为 `MediaQuery.of(context).padding` 会触发 `MediaQuery.of(context)` 会监听各种 MediaQuery 的变化, 导致非必要的重回, 比如键盘展示 / 收起事件
 
 ### 不要使用 `then`
 

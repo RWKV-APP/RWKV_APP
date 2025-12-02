@@ -35,11 +35,17 @@ class PromptTemplate {
       webSearchTemplate: '%s\nPlease answer according to the above information:\n%s',
       webSearchChineseTemplate: '%s\n请根据以上信息回答:\n%s',
       systemPrompt: '',
+          // 'System: You are RWKV, a next-gen RNN chatbot developed by RWKV foundation. '
+          // 'You are a helpful assistant. Today is {{date}}, {{day_of_week}}.',
     );
   }
 
   static PromptTemplate deserialize(String json) {
     var map = jsonDecode(json);
+    String system = map['systemPrompt'] ?? '';
+    if (system == '') {
+      // system = PromptTemplate.empty().systemPrompt;
+    }
     return PromptTemplate(
       thinkingWithChinese: map['thinkingWithChinese'] ?? '',
       thinkingLighting: map['thinkingLighting'] ?? '',
@@ -48,8 +54,49 @@ class PromptTemplate {
       newChatTemplate: map['newChatTemplate'] ?? '',
       webSearchTemplate: map['webSearchTemplate'] ?? '',
       webSearchChineseTemplate: map['webSearchChineseTemplate'] ?? '',
-      systemPrompt: map['systemPrompt'] ?? '',
+      systemPrompt: system,
     );
+  }
+
+  String formatedSystemPrompt({
+    bool chinese = false,
+  }) {
+    if (systemPrompt.isEmpty) return '';
+
+    final now = DateTime.now();
+    final date = '${now.year}-${now.month}-${now.day}';
+    final time = '${now.hour}:${now.minute}';
+    final dayOfWeek = now.weekday;
+
+    final chinese = P.preference.currentLangIsZh.q;
+    final cn =
+        {
+          1: "星期一",
+          2: "星期二",
+          3: "星期三",
+          4: "星期四",
+          5: "星期五",
+          6: "星期六",
+          7: "星期日",
+        }[dayOfWeek] ??
+        '';
+    final en =
+        {
+          1: 'Monday',
+          2: 'Tuesday',
+          3: 'Wednesday',
+          4: 'Thursday',
+          5: 'Friday',
+          6: 'Saturday',
+          7: 'Sunday',
+        }[dayOfWeek] ??
+        '';
+
+    String p = systemPrompt;
+    p = p.replaceAll('{{date}}', date);
+    p = p.replaceAll('{{time}}', time);
+    p = p.replaceAll('{{day_of_week}}', chinese ? cn : en);
+    return p;
   }
 
   String apply(ThinkingMode mode) {

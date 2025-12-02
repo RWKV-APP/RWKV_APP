@@ -281,6 +281,7 @@ class _CompletionState extends ConsumerState<Completion> {
 
   @override
   Widget build(BuildContext context) {
+    final qb = ref.watch(P.app.qb);
     ref.listen(P.rwkv.generating, (_, v) {
       if (generating != v) {
         qqq('generating=>$v');
@@ -297,8 +298,9 @@ class _CompletionState extends ConsumerState<Completion> {
         setState(() {});
       }
     });
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
     return Container(
-      padding: const .symmetric(horizontal: 16),
+      padding: .only(left: 8, right: 8, bottom: bottomPadding > 0 ? bottomPadding : 8),
       height: double.infinity,
       width: double.infinity,
       child: Column(
@@ -311,6 +313,8 @@ class _CompletionState extends ConsumerState<Completion> {
               TextButton(
                 style: TextButton.styleFrom(
                   visualDensity: .compact,
+                  padding: .zero,
+                  minimumSize: const Size(48, 32),
                 ),
                 onPressed: generating ? null : onSuggestTap,
                 child: Text(S.current.suggest),
@@ -318,6 +322,8 @@ class _CompletionState extends ConsumerState<Completion> {
               TextButton(
                 style: TextButton.styleFrom(
                   visualDensity: .compact,
+                  padding: .zero,
+                  minimumSize: const Size(48, 32),
                 ),
                 onPressed: generating || !hasPrompt ? null : onClearInputTap,
                 child: Text(S.current.clear),
@@ -325,19 +331,23 @@ class _CompletionState extends ConsumerState<Completion> {
             ],
           ),
           Expanded(
+            flex: 2,
             child: TextField(
               maxLines: 999999999,
               readOnly: generating,
               controller: controllerPrompt,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: .circular(4),
+                ),
+                contentPadding: const .symmetric(horizontal: 4, vertical: 0),
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
           _buildActions(),
           Expanded(
-            flex: 3,
+            flex: 5,
             child: Column(
               children: [
                 if (batchSize == 1) ..._buildSingleOutput(),
@@ -345,7 +355,6 @@ class _CompletionState extends ConsumerState<Completion> {
               ],
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
         ],
       ),
     );
@@ -353,7 +362,7 @@ class _CompletionState extends ConsumerState<Completion> {
 
   List<Widget> _buildMultiOutput() {
     return [
-      const SizedBox(height: 12),
+      const SizedBox(height: 6),
       Expanded(
         child: ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(
@@ -412,6 +421,8 @@ class _CompletionState extends ConsumerState<Completion> {
           TextButton(
             style: TextButton.styleFrom(
               visualDensity: .compact,
+              padding: .zero,
+              minimumSize: const Size(48, 32),
             ),
             onPressed: generating ? null : onClearOutputTap,
             child: Text(S.current.clear),
@@ -435,7 +446,15 @@ class _CompletionState extends ConsumerState<Completion> {
             maxLines: 999999999,
             readOnly: generating || isSensitive,
             decoration: const InputDecoration(
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: .only(
+                  topLeft: .circular(4),
+                  topRight: .circular(4),
+                  bottomLeft: .circular(24),
+                  bottomRight: .circular(24),
+                ),
+              ),
+              contentPadding: .symmetric(horizontal: 4, vertical: 0),
             ),
           ),
         ),
@@ -481,16 +500,18 @@ class _CompletionState extends ConsumerState<Completion> {
                 : const Icon(Icons.play_arrow_rounded),
           ),
 
-        if ((showResume || showPause) && !batchCompletion) const SizedBox(width: 8),
+        if ((showResume || showPause) && !batchCompletion) const SizedBox(width: 6),
         if ((showResume || showPause) && !batchCompletion)
           IconButton.outlined(
             onPressed: generating ? null : onSubmitTap,
             icon: const Icon(Icons.refresh_rounded),
+            visualDensity: .compact,
           ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 6),
         OutlinedButton(
           style: ButtonStyle(
-            padding: const WidgetStatePropertyAll(.symmetric(horizontal: 8)),
+            padding: const WidgetStatePropertyAll(.symmetric(horizontal: 6)),
+            visualDensity: .compact,
             backgroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.primary),
             foregroundColor: !batchCompletion ? null : WidgetStatePropertyAll(Theme.of(context).colorScheme.onPrimary),
           ),
@@ -498,7 +519,7 @@ class _CompletionState extends ConsumerState<Completion> {
           child: Text(!batchCompletion ? S.current.batch_inference_short : S.current.batch_inference_button(batchSize)),
         ),
         const Spacer(),
-        const SizedBox(width: 8),
+        const SizedBox(width: 6),
         const PerformanceInfo(),
       ],
     );

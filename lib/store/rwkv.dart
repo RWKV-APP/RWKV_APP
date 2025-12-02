@@ -604,7 +604,7 @@ extension $RWKV on _RWKV {
           _messagesController.add(from_rwkv.GenerateStop(error: e.toString()));
         });
       } finally {
-        _oldMessagesController.add(LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
+        _oldMessagesController.add(const LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
       }
       return;
     }
@@ -761,6 +761,20 @@ extension $RWKV on _RWKV {
     }
   }
 
+  void updateSystemPrompt({String? prompt}) {
+    final systemPrompt = P.preference.promptTemplate.formatedSystemPrompt().trim();
+    if (prompt != null) {
+      send(to_rwkv.SetPrompt(prompt));
+    } else {
+      String p = prompt ?? "<EOD>";
+      if (systemPrompt.isNotEmpty) {
+        p = "$systemPrompt\n\n";
+      }
+      send(to_rwkv.SetPrompt(p));
+    }
+    qqw("setPrompt: $prompt");
+  }
+
   Future<void> setModelConfig({
     thinking_mode.ThinkingMode? thinkingMode,
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? enableReasoning,
@@ -772,19 +786,8 @@ extension $RWKV on _RWKV {
     qqr(thinkingMode);
     _thinkingMode.q = thinkingMode ?? const thinking_mode.Fast();
 
-    final systemPrompt = P.preference.promptTemplate.systemPrompt.trim();
-
     if (setPrompt) {
-      if (prompt != null) {
-        send(to_rwkv.SetPrompt(prompt));
-      } else {
-        String p = prompt ?? "<EOD>";
-        if (systemPrompt.isNotEmpty) {
-          p = "$systemPrompt\n\n";
-        }
-        send(to_rwkv.SetPrompt(p));
-      }
-      qqw("setPrompt: $prompt");
+      updateSystemPrompt(prompt: prompt);
     }
 
     final custom = P.preference.promptTemplate;
