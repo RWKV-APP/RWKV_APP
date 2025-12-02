@@ -729,9 +729,12 @@ extension _$Chat on _Chat {
         break;
       case PageKey.chat:
         P.rwkv.updateSystemPrompt();
-        P.rwkv.currentWorldType.q = null;
+
         final isTranslate = model?.tags.contains("translate") ?? false;
-        if (isTTS || isTranslate || isSee) P.rwkv.currentModel.q = null;
+        if (isTTS || isTranslate || isSee) {
+          P.rwkv.currentWorldType.q = null;
+          P.rwkv.currentModel.q = null;
+        }
         break;
       case PageKey.talk:
         if (!isTTS) {
