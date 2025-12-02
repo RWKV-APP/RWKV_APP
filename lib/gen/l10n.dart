@@ -84,9 +84,9 @@ class S {
     return Intl.message('See', name: 'world', desc: '', args: []);
   }
 
-  /// `图片问答`
+  /// `图像问答`
   String get see {
-    return Intl.message('图片问答', name: 'see', desc: '', args: []);
+    return Intl.message('图像问答', name: 'see', desc: '', args: []);
   }
 
   /// `视觉理解与 OCR`
@@ -1973,9 +1973,9 @@ class S {
     );
   }
 
-  /// `选择新图片`
+  /// `选择新图像`
   String get select_new_image {
-    return Intl.message('选择新图片', name: 'select_new_image', desc: '', args: []);
+    return Intl.message('选择新图像', name: 'select_new_image', desc: '', args: []);
   }
 
   /// `存储权限未授予`
