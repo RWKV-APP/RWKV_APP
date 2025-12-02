@@ -12,6 +12,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 import argparse
+from email.utils import parsedate_to_datetime
 
 # 全局锁用于线程安全的打印
 print_lock = Lock()
@@ -38,7 +39,7 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int]:
         # 格式: mollysama/rwkv-mobile-models/resolve/main/...
         if not url.startswith("mollysama/rwkv-mobile-models/resolve/main/"):
             safe_print(f"\033[91m不支持的URL格式: {url}\033[0m")
-            return url, 0
+            return url, 0, 0
 
         # 提取文件路径
         file_path = url.replace("mollysama/rwkv-mobile-models/resolve/main/", "")
@@ -56,8 +57,17 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int]:
         if response.status_code == 200:
             # 从Content-Length头获取文件大小
             content_length = response.headers.get("Content-Length")
+            date_str = response.headers.get("Date")
+            timestamp = 0
+            if date_str:
+                try:
+                    dt = parsedate_to_datetime(date_str)
+                    timestamp = int(dt.timestamp())
+                except Exception:
+                    pass
+
             if content_length:
-                return url, int(content_length)
+                return url, int(content_length), timestamp
 
         # 如果HEAD请求失败，尝试GET请求
         safe_print(f"  HEAD请求失败，尝试GET请求")
@@ -65,15 +75,24 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int]:
 
         if response.status_code == 200:
             content_length = response.headers.get("Content-Length")
+            date_str = response.headers.get("Date")
+            timestamp = 0
+            if date_str:
+                try:
+                    dt = parsedate_to_datetime(date_str)
+                    timestamp = int(dt.timestamp())
+                except Exception:
+                    pass
+
             if content_length:
-                return url, int(content_length)
+                return url, int(content_length), timestamp
 
         safe_print(f"\033[91m  无法获取文件大小，状态码: {response.status_code}\033[0m")
-        return url, 0
+        return url, 0, 0
 
     except Exception as e:
         safe_print(f"\033[91m  获取文件大小时出错: {e}\033[0m")
-        return url, 0
+        return url, 0, 0
 
 
 def find_models(config: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -128,8 +147,8 @@ def update_filesizes(config_file: str, max_workers: int = 5):
         for future in as_completed(future_to_url):
             url = future_to_url[future]
             try:
-                url_key, file_size = future.result()
-                results[url_key] = file_size
+                url_key, file_size, timestamp = future.result()
+                results[url_key] = (file_size, timestamp)
 
                 # 显示进度
                 completed = len(results)
@@ -138,7 +157,7 @@ def update_filesizes(config_file: str, max_workers: int = 5):
 
             except Exception as e:
                 safe_print(f"\033[91m处理URL时出错 {url}: {e}\033[0m")
-                results[url] = 0
+                results[url] = (0, 0)
 
     # 更新模型配置
     safe_print(f"\n开始更新模型配置...")
@@ -149,14 +168,29 @@ def update_filesizes(config_file: str, max_workers: int = 5):
         model_name = model.get("name", "Unknown")
 
         if "url" in model and model["url"] in results:
+            file_size_info = results[model["url"]]
+            # 兼容旧代码，如果results只存了size（理论上不会，但为了健壮性）
+            if isinstance(file_size_info, tuple):
+                new_size, new_timestamp = file_size_info
+            else:
+                new_size = file_size_info
+                new_timestamp = 0
+
             old_size = model.get("fileSize", 0)
-            new_size = results[model["url"]]
 
             if new_size > 0:
+                changed = False
                 if old_size != new_size:
                     model["fileSize"] = new_size
                     safe_print(f"  更新: {model_name}")
                     safe_print(f"    文件大小: {old_size:,} -> {new_size:,} 字节 ({new_size / 1024 / 1024:.2f} MB)")
+                    changed = True
+
+                if new_timestamp > 0:
+                    model["date"] = new_timestamp
+                    # 这里不打印日期更新日志，以免太啰嗦，除非需要
+
+                if changed:
                     updated_count += 1
                 else:
                     safe_print(f"  跳过: {model_name}（文件大小未变化）")

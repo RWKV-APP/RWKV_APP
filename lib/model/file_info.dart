@@ -67,6 +67,10 @@ class FileInfo extends Equatable {
 
   final String? updatedAt;
 
+  final int? timestamp;
+
+  final DateTime? date;
+
   /// e.g.
   ///
   /// ["encoder", ...]
@@ -95,6 +99,8 @@ class FileInfo extends Equatable {
     required this.modelSize,
     required this.quantization,
     required this.updatedAt,
+    required this.timestamp,
+    required this.date,
     required this.tags,
     required this.socLimitations,
     required this.unsupportedSocBrand,
@@ -124,6 +130,8 @@ class FileInfo extends Equatable {
       modelSize: json['modelSize'] as double?,
       quantization: json['quantization'] as String?,
       updatedAt: json['updatedAt'] as String?,
+      timestamp: json['date'] as int?,
+      date: json['date'] != null ? DateTime.fromMillisecondsSinceEpoch(json['date'] * 1000) : null,
       tags: HF.list(json['tags'] ?? []).map((e) => e.toString()).toList(),
       socLimitations: socLimitations,
       unsupportedSocBrand: unsupportedSocBrand,
@@ -192,6 +200,14 @@ class FileInfo extends Equatable {
   bool get isAlbatross => tags.contains('albatross');
 
   String? get dateDisplayString {
+    if (date != null) {
+      final chinaTime = date!.toUtc().add(const Duration(hours: 8));
+      final y = chinaTime.year.toString().substring(2);
+      final m = chinaTime.month.toString().padLeft(2, '0');
+      final d = chinaTime.day.toString().padLeft(2, '0');
+      return '$y$m$d';
+    }
+
     // 用正则表达式匹配 "20250317", "20381101" 这样的日期
     final re = RegExp(r'(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])');
 
@@ -216,12 +232,6 @@ class FileInfo extends Equatable {
     return null;
   }
 
-  DateTime? get date {
-    final dateDisplayString = this.dateDisplayString;
-    if (dateDisplayString == null) return null;
-    return DateTime.parse("20" + dateDisplayString);
-  }
-
   @override
   List<Object?> get props => [raw, name];
 
@@ -241,6 +251,7 @@ FileInfo($name,
   modelSize: $modelSize,
   quantization: $quantization,
   updatedAt: $updatedAt,
+  timestamp: $timestamp,
   tags: $tags,
   socLimitations: $socLimitations,
   unsupportedSocBrand: $unsupportedSocBrand,
@@ -264,6 +275,8 @@ class ModelStateFile extends FileInfo {
     required super.fileSize,
     required super.raw,
     super.updatedAt = '',
+    super.timestamp,
+    super.date,
     super.fileType = FileType.weights,
     super.isDebug = false,
     super.availableIn = const [],

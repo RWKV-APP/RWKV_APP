@@ -22,7 +22,8 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1764560656
       },
       {
         "name": "RWKV7-G1a 0.1B",
@@ -32,7 +33,8 @@
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1763924253
       },
       {
         "name": "RWKV7-G1a 0.4B",
@@ -42,7 +44,8 @@
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1763724526
       },
       {
         "name": "RWKV7-G1a3 1.5B",
@@ -52,7 +55,8 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1763632409
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
@@ -63,7 +67,8 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1757205064
       },
       {
         "name": "RWKV7-G1a4 2.9B",
@@ -73,7 +78,8 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1763627040
       },
       {
         "name": "RWKV7-G0a3 7.2B",
@@ -85,7 +91,8 @@
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1763574594
       },
       {
         "name": "RWKV7-G1a 0.1B",
@@ -96,7 +103,8 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1764560656
       },
       {
         "name": "RWKV7-G1a 0.4B",
@@ -107,7 +115,8 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1763949581
       },
       {
         "name": "RWKV7-G1a3 1.5B",
@@ -118,7 +127,8 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1763949859
       },
       {
         "name": "RWKV7-G1a4 2.9B",
@@ -129,7 +139,8 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1764613895
       },
       {
         "name": "RWKV7-G1a 0.1B (MLX INT6)",
@@ -139,7 +150,8 @@
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"]
+        "tags": ["reason", "mlx", "gpu"],
+        "date": 1764560640
       },
       {
         "name": "RWKV7-G1a 0.4B (MLX INT6)",
@@ -149,7 +161,8 @@
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"]
+        "tags": ["reason", "mlx", "gpu"],
+        "date": 1763677775
       },
       {
         "name": "RWKV7-G1a3 1.5B (MLX INT6)",
@@ -159,7 +172,8 @@
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"]
+        "tags": ["reason", "mlx", "gpu"],
+        "date": 1763693368
       },
       {
         "name": "RWKV7-G1a4 2.9B (MLX INT6)",
@@ -169,7 +183,8 @@
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
-        "tags": ["reason", "mlx", "gpu"]
+        "tags": ["reason", "mlx", "gpu"],
+        "date": 1763951137
       },
       {
         "name": "RWKV7-G0a3 7.2B",
@@ -180,7 +195,8 @@
         "platforms": ["macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1763949338
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
@@ -192,7 +208,8 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1763949466
       },
       {
         "name": "RWKV7-G1a 0.4B Translate",
@@ -203,7 +220,8 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["gpu", "translate"]
+        "tags": ["gpu", "translate"],
+        "date": 1763949083
       },
       {
         "name": "RWKV7-G1 1.5B Translate",
@@ -214,7 +232,8 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["gpu", "translate"]
+        "tags": ["gpu", "translate"],
+        "date": 1763948944
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -224,7 +243,8 @@
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["cpu", "translate"]
+        "tags": ["cpu", "translate"],
+        "date": 1763888970
       },
       {
         "name": "RWKV7-G1a 0.4B Translate",
@@ -235,7 +255,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "translate"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763955999
       },
       {
         "name": "RWKV7-G1a 0.4B Translate",
@@ -246,7 +267,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763956034
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -257,7 +279,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763956063
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -268,7 +291,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763956091
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -279,7 +303,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
-        "socLimitations": ["8s Gen 3", "7+ Gen 3"]
+        "socLimitations": ["8s Gen 3", "7+ Gen 3"],
+        "date": 1763956121
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Elite)",
@@ -290,7 +315,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763100549
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Elite Gen5)",
@@ -301,7 +327,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763956382
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Gen 3)",
@@ -312,7 +339,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763956403
       },
       {
         "name": "RWKV7-G1a 0.1B (8s Gen 3)",
@@ -323,7 +351,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763956412
       },
       {
         "name": "RWKV7-G1a 0.1B (7+ Gen 3)",
@@ -334,7 +363,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["7+ Gen 3"]
+        "socLimitations": ["7+ Gen 3"],
+        "date": 1763956412
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Gen 2)",
@@ -345,7 +375,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763956393
       },
       {
         "name": "RWKV7a-G1b 0.1B (8 Elite)",
@@ -357,7 +388,8 @@
         "backends": ["qnn"],
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8 Elite"],
-        "isDebug": true
+        "isDebug": true,
+        "date": 1763955453
       },
       {
         "name": "RWKV7a-G1b 0.1B (8 Gen 3)",
@@ -369,7 +401,8 @@
         "backends": ["qnn"],
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8 Gen 3"],
-        "isDebug": true
+        "isDebug": true,
+        "date": 1763955740
       },
       {
         "name": "RWKV7a-G1b 0.1B (8s Gen 3)",
@@ -381,7 +414,8 @@
         "backends": ["qnn"],
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8s Gen 3"],
-        "isDebug": true
+        "isDebug": true,
+        "date": 1763955869
       },
       {
         "name": "RWKV7a-G1b 0.1B (7+ Gen 3)",
@@ -393,7 +427,8 @@
         "backends": ["qnn"],
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
-        "isDebug": true
+        "isDebug": true,
+        "date": 1763955869
       },
       {
         "name": "RWKV7a-G1b 0.1B (8 Gen 2)",
@@ -405,7 +440,8 @@
         "backends": ["qnn"],
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "isDebug": true
+        "isDebug": true,
+        "date": 1763955603
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Elite Gen5)",
@@ -416,7 +452,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763956440
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Elite)",
@@ -427,7 +464,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763956421
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Gen 3)",
@@ -438,7 +476,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763956467
       },
       {
         "name": "RWKV7-G1a 0.4B (8s Gen 3)",
@@ -449,7 +488,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763956479
       },
       {
         "name": "RWKV7-G1a 0.4B (7+ Gen 3)",
@@ -460,7 +500,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["7+ Gen 3"]
+        "socLimitations": ["7+ Gen 3"],
+        "date": 1763956479
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Gen 2)",
@@ -471,7 +512,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763956453
       },
       {
         "name": "RWKV7-G1a3 1.5B (8 Elite)",
@@ -482,7 +524,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763957296
       },
       {
         "name": "RWKV7-G1a3 1.5B (8 Elite Gen5)",
@@ -493,7 +536,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763957364
       },
       {
         "name": "RWKV7-G1a3 1.5B (8 Gen 3)",
@@ -504,7 +548,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1764574479
       },
       {
         "name": "RWKV7-G1a3 1.5B (8s Gen 3)",
@@ -515,7 +560,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763957530
       },
       {
         "name": "RWKV7-G1a3 1.5B (7+ Gen 3)",
@@ -526,7 +572,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["7+ Gen 3"]
+        "socLimitations": ["7+ Gen 3"],
+        "date": 1763957530
       },
       {
         "name": "RWKV7-G1a3 1.5B (8 Gen 2)",
@@ -537,7 +584,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763957421
       },
       {
         "name": "RWKV7-G1a4 2.9B (8 Elite)",
@@ -548,7 +596,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1764660260
       },
       {
         "name": "RWKV7-G1a4 2.9B (8 Elite Gen5)",
@@ -559,7 +608,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1764666313
       },
       {
         "name": "RWKV7-G1a4 2.9B (8 Gen 3)",
@@ -570,7 +620,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1764659865
       },
       {
         "name": "RWKV7-G1a4 2.9B (8s Gen 3)",
@@ -581,7 +632,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1764661968
       },
       {
         "name": "RWKV7-G1a4 2.9B (7+ Gen 3)",
@@ -592,7 +644,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["7+ Gen 3"]
+        "socLimitations": ["7+ Gen 3"],
+        "date": 1764661968
       },
       {
         "name": "RWKV7-G1a4 2.9B (8 Gen 2)",
@@ -603,7 +656,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1764659865
       },
       {
         "name": "RWKV7-G1 1.5B Neko (8 Elite)",
@@ -615,7 +669,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763956149
       },
       {
         "name": "RWKV7-G1 1.5B Neko (8 Elite Gen5)",
@@ -627,7 +682,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763956211
       },
       {
         "name": "RWKV7-G1 1.5B Neko (8 Gen 3)",
@@ -639,7 +695,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763956293
       },
       {
         "name": "RWKV7-G1 1.5B Neko (8s Gen 3)",
@@ -651,7 +708,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763956331
       },
       {
         "name": "RWKV7-G1 1.5B Neko (7+ Gen 3)",
@@ -663,7 +721,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["7+ Gen 3"]
+        "socLimitations": ["7+ Gen 3"],
+        "date": 1763956331
       },
       {
         "name": "RWKV7-G1 1.5B Neko (8 Gen 2)",
@@ -675,7 +734,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763956253
       },
       {
         "name": "test: github-releases",
@@ -729,7 +789,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763957085
       },
       {
         "name": "RWKV7-G1a3 1.5B (8 Elite Gen5)",
@@ -740,7 +801,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763957132
       },
       {
         "name": "RWKV7-G1a3 1.5B (8 Gen 2)",
@@ -751,7 +813,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763957171
       },
       {
         "name": "RWKV7-G1a3 1.5B (8 Gen 3)",
@@ -762,7 +825,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763957211
       },
       {
         "name": "RWKV7-G1a3 1.5B (8s Gen 3)",
@@ -773,7 +837,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763957251
       },
       {
         "name": "RWKV7-G1a3 1.5B",
@@ -783,7 +848,8 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1763791182
       },
       {
         "name": "RWKV7-G1a3 1.5B",
@@ -794,7 +860,8 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"]
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1763949769
       }
     ]
   },
@@ -814,7 +881,8 @@
         "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["encoder"]
+        "tags": ["encoder"],
+        "date": 1763951445
       },
       {
         "name": "ModRWKV7-V-0.4B-thinking",
@@ -824,7 +892,8 @@
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["cpu", "core", "reason"]
+        "tags": ["cpu", "core", "reason"],
+        "date": 1763951413
       },
       {
         "name": "ModRWKV7-V-0.4B-thinking (8 Elite)",
@@ -835,7 +904,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "reason"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763951873
       },
       {
         "name": "ModRWKV7-V-0.4B-thinking (8 Gen 3)",
@@ -846,7 +916,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "reason"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763951894
       },
       {
         "name": "ModRWKV7-V-0.4B-thinking (8 Gen 2)",
@@ -857,7 +928,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "reason"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763951884
       },
       {
         "name": "RWKV7 Whisper Small adapter For 0.4B ENQA",
@@ -867,7 +939,8 @@
         "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["encoder"]
+        "tags": ["encoder"],
+        "date": 1763952496
       },
       {
         "name": "RWKV7 WhisperS ENQA 0.4B",
@@ -876,7 +949,8 @@
         "fileSize": 501496864,
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android", "ios"],
-        "backends": ["llamacpp"]
+        "backends": ["llamacpp"],
+        "date": 1763951486
       },
       {
         "name": "RWKV7 Whisper Base adapter For 0.1B ENASR",
@@ -886,7 +960,8 @@
         "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["encoder"]
+        "tags": ["encoder"],
+        "date": 1763952489
       },
       {
         "name": "SigLIP2 Encoder",
@@ -895,7 +970,8 @@
         "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["encoder"]
+        "tags": ["encoder"],
+        "date": 1763885335
       },
       {
         "name": "ModRWKV V2 Vision Adapter",
@@ -904,7 +980,8 @@
         "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["adapter"]
+        "tags": ["adapter"],
+        "date": 1763951670
       },
       {
         "name": "SigLIP Encoder(Patch16-384-q8)",
@@ -913,7 +990,8 @@
         "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["encoder"]
+        "tags": ["encoder"],
+        "date": 1763951683
       },
       {
         "name": "ModRWKV V3 Vision Adapter",
@@ -922,7 +1000,8 @@
         "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["adapter"]
+        "tags": ["adapter"],
+        "date": 1763885334
       },
       {
         "name": "ModRWKV V2 1.5B",
@@ -932,7 +1011,8 @@
         "quantization": "q6_K",
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
-        "tags": ["core"]
+        "tags": ["core"],
+        "date": 1763951643
       },
       {
         "name": "ModRWKV V2 1.5B (8 Gen 2)",
@@ -943,7 +1023,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763951935
       },
       {
         "name": "ModRWKV V2 1.5B (8 Gen 3)",
@@ -954,7 +1035,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763951964
       },
       {
         "name": "ModRWKV V2 1.5B (8 Elite)",
@@ -965,7 +1047,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763951905
       },
       {
         "name": "ModRWKV V3 0.4B",
@@ -975,7 +1058,8 @@
         "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "cpu"]
+        "tags": ["reason", "cpu"],
+        "date": 1763885335
       },
       {
         "name": "ModRWKV V3 0.4B (8 Elite)",
@@ -986,7 +1070,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763951744
       },
       {
         "name": "ModRWKV V3 0.4B (8 Elite Gen5)",
@@ -997,7 +1082,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763951778
       },
       {
         "name": "ModRWKV V3 0.4B (8 Gen 2)",
@@ -1008,7 +1094,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763951802
       },
       {
         "name": "ModRWKV V3 0.4B (8 Gen 3)",
@@ -1019,7 +1106,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763951825
       },
       {
         "name": "ModRWKV V3 0.4B (8s Gen 3)",
@@ -1030,7 +1118,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763951850
       }
     ]
   },
@@ -1051,7 +1140,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763952183
       },
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Elite) 🇨🇳🇺🇸🇯🇵",
@@ -1062,7 +1152,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763952141
       },
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
@@ -1073,7 +1164,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763952252
       },
       {
         "name": "RWKV7 SparkTTS 0.4B (8s Gen 3) 🇨🇳🇺🇸🇯🇵",
@@ -1084,7 +1176,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763952285
       },
       {
         "name": "RWKV7 SparkTTS 0.4B (7+ Gen 3) 🇨🇳🇺🇸🇯🇵",
@@ -1095,7 +1188,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["7+ Gen 3"]
+        "socLimitations": ["7+ Gen 3"],
+        "date": 1763952285
       },
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Gen 2) 🇨🇳🇺🇸🇯🇵",
@@ -1106,7 +1200,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763952219
       },
       {
         "name": "RWKV7 SparkTTS 0.4B 🇨🇳🇺🇸🇯🇵",
@@ -1116,7 +1211,8 @@
         "quantization": "fp16",
         "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webrwkv"],
-        "tags": ["gpu", "core", "spark"]
+        "tags": ["gpu", "core", "spark"],
+        "date": 1764473636
       },
       {
         "name": "RWKV7 SparkTTS 0.4B 🇨🇳🇺🇸🇯🇵",
@@ -1126,7 +1222,8 @@
         "quantization": "fp16",
         "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["llamacpp"],
-        "tags": ["cpu", "core", "spark"]
+        "tags": ["cpu", "core", "spark"],
+        "date": 1762584107
       },
       {
         "name": "RWKV7 SparkTTS 0.1B (8 Elite Gen5) 🇨🇳🇺🇸🇯🇵",
@@ -1137,7 +1234,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763952103
       },
       {
         "name": "RWKV7 SparkTTS 0.1B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
@@ -1148,7 +1246,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763952122
       },
       {
         "name": "RWKV7 SparkTTS 0.1B (8s Gen 3) 🇨🇳🇺🇸🇯🇵",
@@ -1159,7 +1258,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8s Gen 3"]
+        "socLimitations": ["8s Gen 3"],
+        "date": 1763952132
       },
       {
         "name": "RWKV7 SparkTTS 0.1B (7+ Gen 3) 🇨🇳🇺🇸🇯🇵",
@@ -1170,7 +1270,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["7+ Gen 3"]
+        "socLimitations": ["7+ Gen 3"],
+        "date": 1763952132
       },
       {
         "name": "RWKV7 SparkTTS 0.1B (8 Gen 2) 🇨🇳🇺🇸🇯🇵",
@@ -1181,7 +1282,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763952113
       },
       {
         "name": "RWKV7 SparkTTS 0.1B 🇨🇳🇺🇸🇯🇵",
@@ -1191,7 +1293,8 @@
         "quantization": "fp16",
         "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webrwkv"],
-        "tags": ["gpu", "core", "spark"]
+        "tags": ["gpu", "core", "spark"],
+        "date": 1763952386
       },
       {
         "name": "RWKV7 SparkTTS 0.1B 🇨🇳🇺🇸🇯🇵",
@@ -1201,7 +1304,8 @@
         "quantization": "q8_0",
         "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["llamacpp"],
-        "tags": ["cpu", "core", "spark"]
+        "tags": ["cpu", "core", "spark"],
+        "date": 1763943141
       },
       {
         "name": "wav2vec2-large-xlsr-53.mnn",
@@ -1252,7 +1356,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu"],
-        "socLimitations": ["8 Elite Gen5"]
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1763950001
       },
       {
         "name": "RWKV7 Sudoku (8 Elite)",
@@ -1263,7 +1368,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu"],
-        "socLimitations": ["8 Elite"]
+        "socLimitations": ["8 Elite"],
+        "date": 1763949998
       },
       {
         "name": "RWKV7 Sudoku (8 Gen 3)",
@@ -1274,7 +1380,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu"],
-        "socLimitations": ["8 Gen 3"]
+        "socLimitations": ["8 Gen 3"],
+        "date": 1763950009
       },
       {
         "name": "RWKV7 Sudoku (8 Gen 2)",
@@ -1285,7 +1392,8 @@
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu"],
-        "socLimitations": ["8 Gen 2"]
+        "socLimitations": ["8 Gen 2"],
+        "date": 1763950006
       },
       {
         "name": "RWKV7 Sudoku (CPU)",
@@ -1295,7 +1403,8 @@
         "quantization": "fp16",
         "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["ncnn"],
-        "tags": ["cpu"]
+        "tags": ["cpu"],
+        "date": 1763950015
       },
       {
         "name": "RWKV7 Sudoku (GPU)",
@@ -1306,7 +1415,8 @@
         "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["gpu"]
+        "tags": ["gpu"],
+        "date": 1763950014
       }
     ]
   }
