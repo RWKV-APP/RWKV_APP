@@ -120,6 +120,7 @@ dependencies:
   url_launcher:
   web_socket_channel:
   dio: ^5.9.0
+  flutter_svg: ^2.2.3
 
 dependency_overrides:
   rwkv_mobile_flutter:
