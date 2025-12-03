@@ -70,7 +70,6 @@ extension _$Ocr on _Ocr {
 
   void _onImageStream(CameraImage image) async {
     if (HF.randomBool(truePercentage: .9)) return;
-    qr;
     final inputImage = _inputImageFromCameraImage(image);
     if (inputImage == null) return;
 
@@ -84,31 +83,54 @@ extension _$Ocr on _Ocr {
         width = height;
         height = temp;
       }
-      qqr("width: $width, height: $height");
       imageSize.q = Size(width, height);
     }
 
     final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
 
     final Set<BBox> newWords = {};
-    for (TextBlock block in recognizedText.blocks) {
-      for (TextLine line in block.lines) {
-        for (TextElement element in line.elements) {
-          newWords.add(
-            BBox(
-              x: element.boundingBox.left.toInt(),
-              y: element.boundingBox.top.toInt(),
-              width: element.boundingBox.width.toInt(),
-              height: element.boundingBox.height.toInt(),
-              text: element.text,
-              r: 0,
-              p: 1,
-            ),
+    final Set<BBox> newLines = {};
+    final Set<BBox> newParagraphs = {};
+    for (TextBlock paragraphBlock in recognizedText.blocks) {
+      final paragraph = BBox(
+        x: paragraphBlock.boundingBox.left.toInt(),
+        y: paragraphBlock.boundingBox.top.toInt(),
+        width: paragraphBlock.boundingBox.width.toInt(),
+        height: paragraphBlock.boundingBox.height.toInt(),
+        text: paragraphBlock.text,
+        r: 0,
+        p: 1,
+      );
+      newParagraphs.add(paragraph);
+      for (TextLine lineBlock in paragraphBlock.lines) {
+        final line = BBox(
+          x: lineBlock.boundingBox.left.toInt(),
+          y: lineBlock.boundingBox.top.toInt(),
+          width: lineBlock.boundingBox.width.toInt(),
+          height: lineBlock.boundingBox.height.toInt(),
+          text: lineBlock.text,
+          r: 0,
+          p: 1,
+        );
+        newLines.add(line);
+
+        for (TextElement wordBlock in lineBlock.elements) {
+          final word = BBox(
+            x: wordBlock.boundingBox.left.toInt(),
+            y: wordBlock.boundingBox.top.toInt(),
+            width: wordBlock.boundingBox.width.toInt(),
+            height: wordBlock.boundingBox.height.toInt(),
+            text: wordBlock.text,
+            r: 0,
+            p: 1,
           );
+          newWords.add(word);
         }
       }
     }
     words.q = newWords;
+    lines.q = newLines;
+    paragraphs.q = newParagraphs;
   }
 
   InputImage? _inputImageFromCameraImage(CameraImage image) {
