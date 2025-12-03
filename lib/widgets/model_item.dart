@@ -21,7 +21,7 @@ import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
-import 'package:zone/store/albatross.dart';
+import 'package:zone/store/albatross/albatross.dart';
 import 'package:zone/store/p.dart';
 
 class ModelItem extends ConsumerWidget {
