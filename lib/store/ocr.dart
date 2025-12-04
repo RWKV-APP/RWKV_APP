@@ -31,6 +31,12 @@ class _Ocr {
   late final imageSize = qs<Size>(Size.zero);
 
   late final cameraRect = qs<Rect?>(null);
+
+  late final isRecordingVideo = qs(false);
+  late final isStreamingImages = qs(false);
+  late final isPreviewPaused = qs(false);
+  late final previewPauseOrientation = qs<DeviceOrientation?>(null);
+  late final isRecordingPaused = qs(false);
 }
 
 /// Private methods
@@ -44,15 +50,14 @@ extension _$Ocr on _Ocr {
       ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: Platform.isAndroid
-          ? ImageFormatGroup
-                .nv21 // for Android
-          : ImageFormatGroup.bgra8888, // for iOS
+          ? .nv21 // for Android
+          : .bgra8888, // for iOS
     );
     _controller.addListener(_onControllerStateChanged);
     controllerCreated.q = true;
     await Future.delayed(1000.ms);
-    await prepareController();
-    _controller.startImageStream(_onImageStream);
+    // await _prepareController();
+    // _controller.startImageStream(_onImageStream);
     _textRecognizer = TextRecognizer(
       script: TextRecognitionScript.latin,
     );
@@ -66,6 +71,11 @@ extension _$Ocr on _Ocr {
     } else {
       initialized.q = false;
     }
+    isRecordingVideo.q = value.isRecordingVideo;
+    isStreamingImages.q = value.isStreamingImages;
+    isPreviewPaused.q = value.isPreviewPaused;
+    previewPauseOrientation.q = value.previewPauseOrientation;
+    isRecordingPaused.q = value.isRecordingPaused;
   }
 
   void _onImageStream(CameraImage image) async {
@@ -191,12 +201,23 @@ extension _$Ocr on _Ocr {
     );
     return res;
   }
+
+  Future<void> _prepareController() async {
+    qr;
+    await _controller.initialize();
+  }
 }
 
 /// Public methods
 extension $Ocr on _Ocr {
-  Future<void> prepareController() async {
+  Future<void> onTapStart() async {
     qr;
-    await _controller.initialize();
+    // 1. 检测权限
+    // 2. 渲染相机
+    // 3. 开始识别
+    // 4. 显示识别结果
+    // 5. 调整识别结果
+    await _prepareController();
+    _controller.startImageStream(_onImageStream);
   }
 }

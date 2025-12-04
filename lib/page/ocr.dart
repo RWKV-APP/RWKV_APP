@@ -1,7 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:halo/halo.dart';
 import 'package:zone/model/bbox.dart';
+import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 
 class PageOcr extends ConsumerWidget {
@@ -11,22 +14,31 @@ class PageOcr extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controllerCreated = ref.watch(P.ocr.controllerCreated);
     final initialized = ref.watch(P.ocr.initialized);
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final paddingTop = ref.watch(P.app.paddingTop);
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+    final shouldRenderCamera = controllerCreated && initialized;
     return Scaffold(
       appBar: AppBar(
         title: const Text("OCR"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              push(.translator);
+            },
+            child: const Text("Offline Translatior"),
+          ),
+        ],
       ),
       body: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: .center,
         children: [
-          Text(controllerCreated ? "Controller created" : "Controller not created"),
-          Text(initialized ? "Initialized" : "Not initialized"),
-          if (controllerCreated && initialized)
-            Expanded(
-              child: CameraPreview(
-                P.ocr.controller,
-                child: const _OcrOverlay(),
-              ),
-            ),
+          screenWidth.w,
+          // Text(controllerCreated ? "Controller created" : "Controller not created"),
+          // Text(initialized ? "Initialized" : "Not initialized"),
+          if (shouldRenderCamera) const Expanded(child: _Camera()),
+          // Icon(Icons.camera),
+          if (!shouldRenderCamera) const Expanded(child: _Guide()),
         ],
       ),
     );
@@ -186,5 +198,99 @@ class _BBoxPainter extends CustomPainter {
         oldDelegate.lines != lines ||
         oldDelegate.paragraphs != paragraphs ||
         oldDelegate.imageSize != imageSize;
+  }
+}
+
+class _Guide extends ConsumerWidget {
+  const _Guide();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
+    final qw = ref.watch(P.app.qw);
+    return Container(
+      // decoration: BD(color: Colors.red.q(.2)),
+      child: Column(
+        crossAxisAlignment: .center,
+        mainAxisAlignment: .center,
+        children: [
+          Container(
+            // decoration: BD(color: Colors.red.q(.2)),
+            padding: const .all(32),
+            width: screenWidth,
+            height: screenWidth,
+            child: Column(
+              crossAxisAlignment: .center,
+              mainAxisAlignment: .center,
+              children: [
+                FaIcon(FontAwesomeIcons.camera, size: 48, color: qb.q(.6667)),
+                16.h,
+                const Text.rich(
+                  textAlign: .center,
+                  TextSpan(
+                    children: [
+                      TextSpan(text: "Click "),
+                      TextSpan(
+                        text: "Start",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 14,
+                          fontWeight: .bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: " to open the camera on your phone. RWKV can now translate the text you see in the camera.",
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GD(
+            onTap: P.ocr.onTapStart,
+            child: C(
+              decoration: BD(
+                // border: Border.all(color: Colors.blue, width: 1),
+                borderRadius: 48.r,
+                color: primary.q(1),
+                boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
+              ),
+              height: 96,
+              width: 96,
+              child: Center(
+                child: T(
+                  "Start",
+                  s: TS(c: qw, s: 24, w: .w600),
+                ),
+              ),
+            ),
+          ),
+          paddingBottom.h,
+        ],
+      ),
+    );
+  }
+}
+
+class _Camera extends ConsumerWidget {
+  const _Camera();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+    return Column(
+      children: [
+        Expanded(
+          child: CameraPreview(
+            P.ocr.controller,
+            child: const _OcrOverlay(),
+          ),
+        ),
+      ],
+    );
   }
 }

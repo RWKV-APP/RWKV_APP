@@ -14,7 +14,7 @@ import 'package:zone/model/language.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
-import 'package:zone/widgets/debugger.dart';
+import 'package:zone/widgets/debugger/container.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
