@@ -41,7 +41,6 @@ class CompletionTitleBar extends ConsumerWidget {
         s.custom;
 
     final theme = Theme.of(context);
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,47 +74,95 @@ class CompletionTitleBar extends ConsumerWidget {
                   CompletionController.current.onModelSelectTap();
                 },
                 style: buttonStyle,
-                child: Text('RWKV g1a 12b v1', maxLines: 1, overflow: TextOverflow.ellipsis),
+                child: Text(model?.name ?? '选择模型', maxLines: 1, overflow: TextOverflow.ellipsis),
               ),
             ),
             const SizedBox(width: 8),
             OutlinedButton(
               onPressed: () {
-                CompletionController.current.onDecodeParamTap();
+                CompletionController.current.onParallelTap();
               },
               style: buttonStyle,
               child: Text('并行 X 4'),
             ),
             const SizedBox(width: 8),
-            DecodeParamTypeButton(
-              borderRadius: const BorderRadius.all(Radius.circular(100)),
-              decodeParamType: decodeParamType,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                decoration: BoxDecoration(
-                  color: theme.primaryColor.withAlpha(0x2B),
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: theme.primaryColor),
-                ),
-                child: Text(
-                  '创意',
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: theme.primaryColor),
-                ),
-              ),
-              onSelected: (v) {
-                if (v == DecodeParamType.unknown) {
-                  ArgumentsPanel.show(context);
-                } else {
-                  P.rwkv.syncSamplerParamsFromDefault(v);
-                }
+            LayoutBuilder(
+              builder: (ctx, cs) {
+                return OutlinedButton(
+                  onPressed: () async {
+                    final pos = ctx.findRenderObject() as RenderBox;
+                    final offset = pos.localToGlobal(Offset.zero);
+                    final position = RelativeRect.fromLTRB(offset.dx - 100, offset.dy + 24, 0, 0);
+                    final v = await showDecodeParamTypeSelect(context, position, decodeParamType);
+                    if (v == null) return;
+                    if (v == DecodeParamType.unknown) {
+                      ArgumentsPanel.show(context);
+                    } else {
+                      P.rwkv.syncSamplerParamsFromDefault(v);
+                    }
+                  },
+                  style: buttonStyle,
+                  child: Text(currentName),
+                );
               },
             ),
+
             const SizedBox(width: 16),
           ],
         ),
         const SizedBox(height: 24),
         Divider(indent: 28, endIndent: 28),
       ],
+    );
+  }
+
+  Future<DecodeParamType?> showDecodeParamTypeSelect(
+    BuildContext context, //
+    RelativeRect positioned,
+    DecodeParamType decodeParamType,
+  ) async {
+    final s = S.current;
+    final v = await showMenu(
+      context: context,
+      position: positioned,
+      items: [
+        PopupMenuItem<DecodeParamType?>(
+          height: 32,
+          value: DecodeParamType.unknown,
+          enabled: false,
+          child: Text(s.decode_param, style: const TextStyle(fontSize: 12)),
+        ),
+        _buildMenuItem(s.creative, DecodeParamType.creative, decodeParamType),
+        _buildMenuItem(s.comprehensive, DecodeParamType.comprehensive, decodeParamType),
+        _buildMenuItem(s.default_, DecodeParamType.defaults, decodeParamType),
+        _buildMenuItem(s.conservative, DecodeParamType.conservative, decodeParamType),
+        _buildMenuItem(s.fixed, DecodeParamType.fixed, decodeParamType),
+        _buildMenuItem(s.custom, DecodeParamType.unknown, decodeParamType),
+      ],
+    );
+    return v;
+  }
+
+  PopupMenuItem<DecodeParamType> _buildMenuItem(
+    String text, //
+    DecodeParamType value,
+    DecodeParamType current,
+  ) {
+    final checked = value == current;
+    return PopupMenuItem(
+      value: value,
+      height: 32,
+      child: Row(
+        children: [
+          if (checked) const Icon(Icons.check, size: 16),
+          if (!checked) const SizedBox(width: 16),
+          const SizedBox(width: 8),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: Text(text, style: const TextStyle(height: 1), overflow: .ellipsis),
+          ),
+        ],
+      ),
     );
   }
 }

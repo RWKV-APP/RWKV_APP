@@ -30,24 +30,30 @@ class _CompletionPageState extends State<CompletionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Color(0xFF8C3A3A);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = isDark ? Color(0xFF9E7C59) : Color(0xFF8C3A3A);
     final themeV2 = ThemeData(
       cardColor: Colors.white,
       bottomSheetTheme: theme.bottomSheetTheme,
-      colorSchemeSeed: primaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       dividerTheme: DividerThemeData(
         space: 0,
         thickness: 1,
-        color: Color(0x26000000),
+        color: isDark ? Color(0x99FFFFFF) : Color(0x26000000),
       ),
-      scaffoldBackgroundColor: Color(0xFFFDFBF7),
+      scaffoldBackgroundColor: isDark ? Color(0xFF242424) : Color(0xFFFDFBF7),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: Size(120, 50),
           textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
+      ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryColor,
+        primary: primaryColor,
+        onPrimary: Colors.white,
+        brightness: theme.brightness,
       ),
       popupMenuTheme: PopupMenuThemeData(
         shape: RoundedRectangleBorder(borderRadius: .circular(8)),
@@ -57,7 +63,7 @@ class _CompletionPageState extends State<CompletionPage> {
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           minimumSize: WidgetStatePropertyAll(Size.zero),
-          backgroundColor: WidgetStatePropertyAll(Color(0x2B8C3A3A)),
+          backgroundColor: WidgetStatePropertyAll(primaryColor.withAlpha(0x2B)),
           side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
         ),
       ),
@@ -168,10 +174,11 @@ class _UserInputArea extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final generating = ref.watch(CompletionState.generating);
     final controller = ref.watch(CompletionState.controllerInput);
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          left: BorderSide(color: Colors.black, width: 1),
+          left: BorderSide(color: theme.dividerColor, width: 1),
         ),
       ),
       padding: EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),

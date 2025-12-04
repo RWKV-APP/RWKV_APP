@@ -16,10 +16,10 @@ class CompletionListItem extends ConsumerWidget {
     final content = Container(
       margin: footer != null ? null : EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-        color: item.isUser ? null : theme.primaryColor.withAlpha(12),
+        color: item.isUser ? null : theme.colorScheme.primary.withAlpha(0x1A),
         border: Border(
           left: BorderSide(
-            color: item.isUser ? Colors.black : theme.primaryColor,
+            color: item.isUser ? theme.dividerColor : theme.colorScheme.primary,
             width: 1,
           ),
         ),
@@ -80,6 +80,7 @@ class CompletionListItemFooter extends ConsumerWidget {
               children: [
                 IconButton(
                   onPressed: item.index == 0 ? null : () => CompletionController.current.onPrevChooseTap(item),
+                  color: theme.colorScheme.primary,
                   icon: Icon(
                     Icons.arrow_circle_left_outlined,
                     size: 18,
@@ -88,13 +89,13 @@ class CompletionListItemFooter extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Text(
                   '${item.index + 1}/${item.chooses.length}',
-                  style: TextStyle(fontSize: 10, color: theme.primaryColor, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 10, color: theme.colorScheme.primary, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: item.index == item.chooses.length - 1 ? null : () => CompletionController.current.onNextChooseTap(item),
                   icon: Icon(Icons.arrow_circle_right_outlined, size: 18),
-                  color: theme.primaryColor,
+                  color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
                 Flexible(child: speed),
