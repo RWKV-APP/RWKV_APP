@@ -84,6 +84,7 @@ extension _$Ocr on _Ocr {
     if (inputImage == null) return;
 
     final metadata = inputImage.metadata;
+    // debugger();
     if (metadata != null) {
       var width = metadata.size.width;
       var height = metadata.size.height;
@@ -92,6 +93,13 @@ extension _$Ocr on _Ocr {
         final temp = width;
         width = height;
         height = temp;
+      }
+      if (Platform.isAndroid) {
+        if (rotation == InputImageRotation.rotation90deg || rotation == InputImageRotation.rotation270deg) {
+          final temp = width;
+          width = height;
+          height = temp;
+        }
       }
       imageSize.q = Size(width, height);
     }
