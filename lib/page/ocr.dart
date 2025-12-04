@@ -299,6 +299,12 @@ class _Camera extends ConsumerWidget {
 class _CameraControls extends ConsumerWidget {
   const _CameraControls();
 
+  Future<void> _onSelectWeightsTap() async {}
+
+  Future<void> _onModeTap() async {}
+
+  Future<void> _onStopTap() async {}
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.paddingBottom);
