@@ -290,7 +290,48 @@ class _Camera extends ConsumerWidget {
             child: const _OcrOverlay(),
           ),
         ),
+        _CameraControls(),
       ],
+    );
+  }
+}
+
+class _CameraControls extends ConsumerWidget {
+  const _CameraControls();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+    return SizedBox(
+      height: paddingBottom + 100,
+      child: Row(
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .center,
+        spacing: 8,
+        children: [
+          C(
+            decoration: BD(
+              color: Colors.red.q(.2),
+            ),
+            padding: .all(8),
+            child: T("Mode"),
+          ),
+          C(
+            decoration: BD(
+              color: Colors.red.q(.2),
+            ),
+            padding: .all(8),
+            child: T("Stop"),
+          ),
+          C(
+            decoration: BD(
+              color: Colors.red.q(.2),
+            ),
+            padding: .all(8),
+            child: T("Select Weights"),
+          ),
+        ],
+      ),
     );
   }
 }
