@@ -102,7 +102,6 @@
       "configurations": [
         //,
         "debug (Halo) - Android",
-        "debug (Halo) - macOS",
         "debug (Halo) - iOS"
       ]
     }

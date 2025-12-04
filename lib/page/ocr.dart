@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +8,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/bbox.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/model_selector.dart';
 
 class PageOcr extends ConsumerWidget {
   const PageOcr({super.key});
@@ -15,8 +18,6 @@ class PageOcr extends ConsumerWidget {
     final controllerCreated = ref.watch(P.ocr.controllerCreated);
     final initialized = ref.watch(P.ocr.initialized);
     final screenWidth = ref.watch(P.app.screenWidth);
-    final paddingTop = ref.watch(P.app.paddingTop);
-    final paddingBottom = ref.watch(P.app.paddingBottom);
     final shouldRenderCamera = controllerCreated && initialized;
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +55,6 @@ class _OcrOverlay extends ConsumerWidget {
     final lines = ref.watch(P.ocr.lines);
     final paragraphs = ref.watch(P.ocr.paragraphs);
     final imageSize = ref.watch(P.ocr.imageSize);
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return CustomPaint(
@@ -281,7 +281,6 @@ class _Camera extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paddingBottom = ref.watch(P.app.paddingBottom);
     return Column(
       children: [
         Expanded(
@@ -290,7 +289,7 @@ class _Camera extends ConsumerWidget {
             child: const _OcrOverlay(),
           ),
         ),
-        _CameraControls(),
+        const _CameraControls(),
       ],
     );
   }
@@ -299,7 +298,9 @@ class _Camera extends ConsumerWidget {
 class _CameraControls extends ConsumerWidget {
   const _CameraControls();
 
-  Future<void> _onSelectWeightsTap() async {}
+  Future<void> _onSelectWeightsTap() async {
+    ModelSelector.show();
+  }
 
   Future<void> _onModeTap() async {}
 
@@ -315,26 +316,35 @@ class _CameraControls extends ConsumerWidget {
         crossAxisAlignment: .center,
         spacing: 8,
         children: [
-          C(
-            decoration: BD(
-              color: Colors.red.q(.2),
+          GD(
+            onTap: _onModeTap,
+            child: C(
+              decoration: BD(
+                color: Colors.red.q(.2),
+              ),
+              padding: .all(8),
+              child: T("Mode"),
             ),
-            padding: .all(8),
-            child: T("Mode"),
           ),
-          C(
-            decoration: BD(
-              color: Colors.red.q(.2),
+          GD(
+            onTap: _onStopTap,
+            child: C(
+              decoration: BD(
+                color: Colors.blue.q(.2),
+              ),
+              padding: .all(8),
+              child: T("Stop"),
             ),
-            padding: .all(8),
-            child: T("Stop"),
           ),
-          C(
-            decoration: BD(
-              color: Colors.red.q(.2),
+          GD(
+            onTap: _onSelectWeightsTap,
+            child: C(
+              decoration: BD(
+                color: Colors.green.q(.2),
+              ),
+              padding: .all(8),
+              child: T("Select Weights"),
             ),
-            padding: .all(8),
-            child: T("Select Weights"),
           ),
         ],
       ),
