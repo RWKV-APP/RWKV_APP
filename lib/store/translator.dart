@@ -7,24 +7,6 @@ So it's combining the best of RNN and transformer - great performance, linear ti
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
 
-class _URLCompleter {
-  final String? url;
-  final int? tabId;
-  final Completer<String> completer;
-  final int? priority;
-  final String? nodeName;
-  final int? tick;
-
-  const _URLCompleter({
-    required this.url,
-    required this.tabId,
-    required this.completer,
-    required this.priority,
-    required this.nodeName,
-    required this.tick,
-  });
-}
-
 class _Translator {
   // ===========================================================================
   // Instance
@@ -696,4 +678,22 @@ extension $Translator on _Translator {
     }
     batchEnabled.q = next;
   }
+}
+
+class _URLCompleter {
+  final String? url;
+  final int? tabId;
+  final Completer<String> completer;
+  final int? priority;
+  final String? nodeName;
+  final int? tick;
+
+  const _URLCompleter({
+    required this.url,
+    required this.tabId,
+    required this.completer,
+    required this.priority,
+    required this.nodeName,
+    required this.tick,
+  });
 }
