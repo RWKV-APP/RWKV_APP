@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -188,8 +186,8 @@ class _BBoxPainter extends CustomPainter {
     // Draw in order: Paragraphs -> Lines -> Words
     // Use different stroke widths to make them visible when overlapping
     _drawBBoxes(paragraphs, Colors.blue, 1.0, false);
-    // _drawBBoxes(lines, Colors.green, 1.0);
-    // _drawBBoxes(words, Colors.red, 1.0);
+    // _drawBBoxes(lines, Colors.green, 1.0, true);
+    // _drawBBoxes(words, Colors.red, 1.0, true);
   }
 
   @override

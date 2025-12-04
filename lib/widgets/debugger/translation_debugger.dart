@@ -20,6 +20,7 @@ class TranslationDebugger extends ConsumerWidget {
     final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
     final previewPauseOrientation = ref.watch(P.ocr.previewPauseOrientation);
     final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
+    final paragraphs = ref.watch(P.ocr.paragraphs);
 
     return Positioned(
       left: 0,
@@ -55,6 +56,8 @@ class TranslationDebugger extends ConsumerWidget {
                       T(isPreviewPaused.toString()),
                       T("previewPauseOrientation".codeToName),
                       T(previewPauseOrientation?.toString() ?? "null"),
+                      T("paragraphs".codeToName),
+                      T(paragraphs.length.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),
