@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/model/decode_param_type.dart';
+import 'package:zone/page/completion/_suggestions_dialog.dart';
+import 'package:zone/store/p.dart';
+import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -12,52 +16,122 @@ class CompletionController {
 
   CompletionController._();
 
-  void init() {
-    CompletionState.controllerList.q = ScrollController();
-    CompletionState.controllerInput.q = TextEditingController();
+  void dispose() {
+    P.rwkv.stop();
+  }
 
-    CompletionState.items.q = [
-      CompletionItemState(
-        isUser: true, //
-        chooses: [
-          CompletionResultState(
-            content: '看看吧，这就是虫子，它们的技术与我们的差距，远大于我们与三体文明的差距。',
-            completed: true, //
+  void init() {
+    qqq('completion controller init');
+    CompletionState.controllerInput.q = TextEditingController()
+      ..addListener(() {
+        final empty = CompletionState.controllerInput.q?.text.isEmpty ?? true;
+        if (empty == CompletionState.showSuggestionButton.q) return;
+        if (CompletionState.items.q.isNotEmpty) return;
+        CompletionState.showSuggestionButton.q = empty;
+      });
+    CompletionState.batchSettings.q = BatchCompletionSettings.initial();
+    CompletionState.controllerInputScroll.q = ScrollController();
+    CompletionState.showSuggestionButton.q = true;
+    CompletionState.generating.q = false;
+    CompletionState.generateButtonEnabled.q = true;
+    CompletionState.items.q = [];
+    if (CompletionState.model.q == null) {
+      onModelSelectTap();
+    }
+  }
+
+  void onStopTap() async {
+    CompletionState.generateButtonEnabled.q = false;
+    P.rwkv.stop();
+    await Future.delayed(Duration(seconds: 1));
+    CompletionState.generating.q = false;
+    CompletionState.generateButtonEnabled.q = true;
+  }
+
+  void onCompletionTap({bool regenerate = false}) async {
+    final input = regenerate ? '' : (CompletionState.controllerInput.q?.text ?? '');
+    if (!regenerate && input.isEmpty) {
+      Alert.warning('Please enter some text first');
+      return;
+    }
+
+    CompletionState.generating.q = true;
+    CompletionState.generateButtonEnabled.q = false;
+
+    final batchSetting = CompletionState.batchSettings.q;
+    final items = CompletionState.items.q;
+    final prompt = items.map((e) => e.content).join() + input;
+
+    qqq('completion:$prompt');
+
+    try {
+      final batch = batchSetting.enabled ? batchSetting.batchCount : 1;
+      await P.rwkv.clearStates();
+      final stream = P.rwkv
+          .completion(prompt, batchSize: batch)
+          .takeWhile((e) => e.eosFound.any((e) => !e) && CompletionState.generating.q);
+      bool firstOutput = true;
+      final trimLen = prompt.length;
+      await for (final v in stream) {
+        final outputs = v.responseBufferContent
+            .map((e) {
+              String r = e;
+              if (r.length > trimLen) {
+                r = r.substring(prompt.length);
+              } else {
+                return '';
+              }
+              if (r.endsWith('<EOD>')) {
+                r = r.substring(0, r.length - 5);
+              }
+              return r;
+            }) //
+            .toList();
+        /// if (outputs.every((e) => e.isEmpty)) continue;
+        final newList = [
+          ...items, //
+          if (input.isNotEmpty) CompletionItemState.user(input),
+          CompletionItemState.ai(
+            output: outputs,
+            completed: v.eosFound,
           ),
-        ],
-      ),
-      CompletionItemState(
-        isUser: false,
-        chooses: [
-          CompletionResultState(
-            content: '人类竭尽全力消灭它们，用尽各种毒剂，用飞机喷洒，引进和培养它们的天敌，搜寻并毁掉它们的卵，用基因改造使它们绝育；用火烧它们，用水淹它们，每个家庭都有对付它们的灭害灵，每个办公桌下都有像苍蝇拍这种击杀它们的武器……',
-            completed: true,
-          ),
-          CompletionResultState(
-            content: '人类竭尽全力消灭它们，用尽各种毒剂，用飞机喷洒，引进和培养它们的天敌，搜寻并毁掉它们的卵',
-            completed: true,
-          ),
-        ],
-      ),
-    ];
+        ];
+        if (firstOutput) {
+          CompletionState.controllerInput.q?.clear();
+          CompletionState.generateButtonEnabled.q = true;
+        }
+        CompletionState.items.q = newList;
+        firstOutput = false;
+      }
+    } catch (e) {
+      qqe(e);
+      onStopTap();
+    }
+    CompletionState.generating.q = false;
+    CompletionState.showSuggestionButton.q = false;
+    qqq('completion done');
   }
 
   void onModelSelectTap() {
     ModelSelector.show();
   }
 
-  void onParallelTap() async {
-    final settings = await BatchCompletionSettingsPanel.show();
+  void onParallelTap(BuildContext ctx) async {
+    final settings = await BatchCompletionSettingsPanel.show(ctx: ctx);
+    CompletionState.batchSettings.q = settings;
   }
 
-  void onDecodeParamTap() {}
-
-  void onCompletionTap() {
-    //
+  void onDecodeParamChanged(BuildContext ctx, DecodeParamType type) {
+    if (type == DecodeParamType.unknown) {
+      ArgumentsPanel.show(ctx);
+    } else {
+      P.rwkv.syncSamplerParamsFromDefault(type);
+    }
   }
 
   void onRegenerateTap(CompletionItemState item) {
-    //
+    CompletionState.items.q = [...CompletionState.items.q]..removeLast();
+    onCompletionTap(regenerate: true);
   }
 
   void onPrevChooseTap(CompletionItemState item) {
@@ -76,24 +150,17 @@ class CompletionController {
         .toList();
   }
 
-  void onKeyboardVisibleChanged(bool visible) async {
-    if (visible) {
-      await Future.delayed(Duration(milliseconds: 500));
-      final controller = CompletionState.controllerList.q;
-      if (controller == null) return;
-      controller.animateTo(
-        controller.offset + 60,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeOutQuart,
-      );
-    }
+  void onKeyboardVisibleChanged(bool visible) async {}
+
+  void onSuggestionTap(BuildContext context) async {
+    final r = await CompletionSuggestionDialog.show(context);
+    if (r == null) return;
+    CompletionState.controllerInput.q?.text = r;
   }
 
   void onClearAllTap() {
-    //
-  }
-
-  void dispose() {
-    //
+    CompletionState.controllerInput.q?.clear();
+    CompletionState.showSuggestionButton.q = true;
+    CompletionState.items.q = [];
   }
 }

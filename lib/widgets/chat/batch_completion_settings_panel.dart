@@ -4,51 +4,22 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
+import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/argument_value.dart';
 import 'package:zone/widgets/form_item.dart';
 
-class BatchCompletionSettings {
-  final bool enabled;
-  final int batchCount;
-  final int width;
-
-  final int row = 1;
-
-  int get col => enabled ? batchCount : 1;
-
-  double get colWidthPercent => width / 100.0;
-
-  int get batchSize => row * col;
-
-  factory BatchCompletionSettings.initial() => BatchCompletionSettings(enabled: false, batchCount: 2, width: 65);
-
-  BatchCompletionSettings({required this.enabled, required this.batchCount, required this.width});
-
-  BatchCompletionSettings copyWith({
-    bool? enabled,
-    int? batchCount,
-    int? width,
-  }) {
-    return BatchCompletionSettings(
-      enabled: enabled ?? this.enabled,
-      batchCount: batchCount ?? this.batchCount,
-      width: width ?? this.width,
-    );
-  }
-}
-
 class BatchCompletionSettingsPanel extends ConsumerWidget {
   static final _shown = qs(false);
   static final settings = qs(BatchCompletionSettings.initial());
 
-  static Future<BatchCompletionSettings> show() async {
+  static Future<BatchCompletionSettings> show({BuildContext? ctx}) async {
     qq;
     if (_shown.q) return settings.q;
     _shown.q = true;
-    final context = getContext();
+    final context = ctx ?? getContext();
     if (context == null || !context.mounted) {
       _shown.q = false;
       return settings.q;

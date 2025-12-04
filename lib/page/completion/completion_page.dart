@@ -4,6 +4,7 @@ import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/page/completion/_completion_titlebar.dart';
 
+import '../../gen/l10n.dart' show S;
 import '_completion_list_item.dart';
 
 class CompletionPage extends StatefulWidget {
@@ -42,10 +43,13 @@ class _CompletionPageState extends State<CompletionPage> {
         thickness: 1,
         color: isDark ? Color(0x99FFFFFF) : Color(0x26000000),
       ),
+      fontFamily: theme.textTheme.bodyMedium?.fontFamily,
+      fontFamilyFallback: theme.textTheme.bodyMedium?.fontFamilyFallback,
       scaffoldBackgroundColor: isDark ? Color(0xFF242424) : Color(0xFFFDFBF7),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: Size(120, 50),
+          disabledBackgroundColor: Colors.grey.shade400,
           textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
@@ -62,6 +66,7 @@ class _CompletionPageState extends State<CompletionPage> {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.standard,
           minimumSize: WidgetStatePropertyAll(Size.zero),
           backgroundColor: WidgetStatePropertyAll(primaryColor.withAlpha(0x2B)),
           side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
@@ -79,7 +84,7 @@ class _CompletionPageState extends State<CompletionPage> {
       data: themeV2,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80 + kToolbarHeight), //
+          preferredSize: Size.fromHeight(90 + kToolbarHeight), //
           child: CompletionTitleBar(),
         ),
         resizeToAvoidBottomInset: true,
@@ -91,47 +96,31 @@ class _CompletionPageState extends State<CompletionPage> {
   }
 }
 
-class _FloatButton extends ConsumerStatefulWidget {
+class _FloatButton extends ConsumerWidget {
   @override
-  ConsumerState<_FloatButton> createState() => _FloatButtonState();
-}
-
-class _FloatButtonState extends ConsumerState<_FloatButton> with WidgetsBindingObserver {
-  bool _isKeyboardVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    final keyboardHeight = View.of(context).viewInsets.bottom;
-    final bool isNowVisible = keyboardHeight > 0.0;
-    if (isNowVisible != _isKeyboardVisible) {
-      _isKeyboardVisible = isNowVisible;
-      setState(() {});
-      // CompletionController.current.onKeyboardVisibleChanged(isNowVisible);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final generating = ref.watch(CompletionState.generating);
-    return Visibility(
-      visible: !_isKeyboardVisible,
-      child: FilledButton(
-        onPressed: generating ? null : () => CompletionController.current.onCompletionTap(),
-        child: Text("续写"),
-      ),
+    final enabled = ref.watch(CompletionState.generateButtonEnabled);
+
+    VoidCallback? onTap;
+
+    if (enabled) {
+      onTap =
+          generating //
+          ? () => CompletionController.current.onStopTap()
+          : () => CompletionController.current.onCompletionTap();
+    }
+
+    return FilledButton.icon(
+      icon: !generating
+          ? null
+          : SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(strokeWidth: 3, color: Theme.of(context).colorScheme.onPrimary),
+            ),
+      onPressed: onTap,
+      label: Text(generating ? S.current.stop : S.current.continue2),
     );
   }
 }
@@ -142,12 +131,10 @@ class _PageBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(CompletionState.items);
-    final controller = ref.watch(CompletionState.controllerList);
     return Stack(
       children: [
         Positioned.fill(
           child: ListView.builder(
-            controller: controller,
             itemCount: items.length + 1,
             padding: EdgeInsets.only(left: 32, right: 32, top: 16, bottom: 100),
             itemBuilder: (ctx, index) {
@@ -174,6 +161,7 @@ class _UserInputArea extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final generating = ref.watch(CompletionState.generating);
     final controller = ref.watch(CompletionState.controllerInput);
+    final showSuggestions = ref.watch(CompletionState.showSuggestionButton);
     final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
@@ -182,19 +170,47 @@ class _UserInputArea extends ConsumerWidget {
         ),
       ),
       padding: EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
-      child: TextField(
-        controller: controller,
-        enabled: !generating,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.zero,
-          hintText: "输入要续写的段落",
-          border: InputBorder.none,
-        ),
-        onTapUpOutside: (details) {
-          //
-        },
-        minLines: 1,
-        maxLines: 999999999,
+      child: Stack(
+        children: [
+          TextField(
+            controller: controller,
+            enabled: !generating,
+            autofocus: false,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.zero,
+              hintText: S.current.enter_text_to_expand,
+              border: InputBorder.none,
+            ),
+            style: TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
+            scrollPadding: EdgeInsets.only(bottom: 100),
+            minLines: 1,
+            maxLines: null,
+          ),
+          if (showSuggestions)
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: OutlinedButton(
+                  onPressed: () {
+                    CompletionController.current.onSuggestionTap(context);
+                  },
+                  style: ButtonStyle(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minimumSize: WidgetStatePropertyAll(Size.zero),
+                    padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
+                    backgroundColor: WidgetStatePropertyAll(theme.dividerColor.withAlpha(0x2B)),
+                    side: WidgetStatePropertyAll(BorderSide(color: theme.dividerColor, width: 1)),
+                  ),
+                  child: Text(
+                    S.current.suggest,
+                    style: TextStyle(fontSize: 10, color: theme.dividerColor),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

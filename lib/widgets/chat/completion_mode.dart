@@ -11,6 +11,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:zone/func/check_model_selection.dart' show checkModelSelection;
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
 import 'package:zone/widgets/performance_info.dart' show PerformanceInfo;

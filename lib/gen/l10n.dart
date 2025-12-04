@@ -3003,6 +3003,16 @@ class S {
     return Intl.message('创意', name: 'creative', desc: '', args: []);
   }
 
+  /// `创意 (推荐)`
+  String get creative_recommended {
+    return Intl.message(
+      '创意 (推荐)',
+      name: 'creative_recommended',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `保守 (适合数学和代码)`
   String get conservative {
     return Intl.message(
@@ -3509,6 +3519,21 @@ class S {
   /// `星期`
   String get tag_day_of_week {
     return Intl.message('星期', name: 'tag_day_of_week', desc: '', args: []);
+  }
+
+  /// `输入要续写的段落`
+  String get enter_text_to_expand {
+    return Intl.message(
+      '输入要续写的段落',
+      name: 'enter_text_to_expand',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `续写`
+  String get continue2 {
+    return Intl.message('续写', name: 'continue2', desc: '', args: []);
   }
 }
 

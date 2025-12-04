@@ -443,6 +443,7 @@
   "decode_param": "Decode Param",
   "fixed": "Fixed",
   "creative": "Creative",
+  "creative_recommended": "Creative (recommended)",
   "conservative": "Conservative (math & code)",
   "default_": "Default",
   "balanced": "Balanced",
@@ -519,5 +520,7 @@
   },
   "tag_date": "Date",
   "tag_time": "Time",
-  "tag_day_of_week": "Day of Week"
+  "tag_day_of_week": "Day of Week",
+  "enter_text_to_expand": "Enter text to expand",
+  "continue2": "Continue"
 }

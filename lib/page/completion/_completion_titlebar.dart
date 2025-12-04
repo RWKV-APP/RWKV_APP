@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
-import 'package:zone/store/p.dart';
-import 'package:zone/widgets/arguments_panel.dart';
-import 'package:zone/widgets/decode_param_type_button.dart';
 
 import '_completion_state.dart';
 
@@ -14,16 +11,8 @@ class CompletionTitleBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showTips = !ref.watch(CompletionState.tipsDisabled);
-    final mode = ref.watch(CompletionState.decodeParamType);
     final model = ref.watch(CompletionState.model);
-
-    final showBanner = showTips && mode != DecodeParamType.creative && model != null;
-
-    final buttonStyle = OutlinedButton.styleFrom(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      textStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
-    );
+    final batchSettings = ref.watch(CompletionState.batchSettings);
 
     final decodeParamType = ref.watch(CompletionState.decodeParamType);
 
@@ -40,7 +29,10 @@ class CompletionTitleBar extends ConsumerWidget {
         }[decodeParamType] ??
         s.custom;
 
-    final theme = Theme.of(context);
+    final buttonStyle = OutlinedButton.styleFrom(
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      textStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,7 +40,14 @@ class CompletionTitleBar extends ConsumerWidget {
         SizedBox(height: kToolbarHeight),
         Row(
           children: [
-            const SizedBox(width: 24 + 20),
+            const SizedBox(width: 24),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back),
+              iconSize: 20,
+            ),
             Expanded(
               child: Text(
                 'RWKV·续写',
@@ -57,7 +56,9 @@ class CompletionTitleBar extends ConsumerWidget {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                CompletionController.current.onClearAllTap();
+              },
               icon: Icon(Icons.add),
               iconSize: 20,
             ),
@@ -74,16 +75,20 @@ class CompletionTitleBar extends ConsumerWidget {
                   CompletionController.current.onModelSelectTap();
                 },
                 style: buttonStyle,
-                child: Text(model?.name ?? '选择模型', maxLines: 1, overflow: TextOverflow.ellipsis),
+                child: Text(model?.name ?? s.select_model, maxLines: 1, overflow: TextOverflow.ellipsis),
               ),
             ),
             const SizedBox(width: 8),
             OutlinedButton(
               onPressed: () {
-                CompletionController.current.onParallelTap();
+                CompletionController.current.onParallelTap(context);
               },
               style: buttonStyle,
-              child: Text('并行 X 4'),
+              child: Text(
+                batchSettings.enabled
+                    ? s.batch_inference_button(batchSettings.batchSize) //
+                    : s.batch_inference_short,
+              ),
             ),
             const SizedBox(width: 8),
             LayoutBuilder(
@@ -94,19 +99,14 @@ class CompletionTitleBar extends ConsumerWidget {
                     final offset = pos.localToGlobal(Offset.zero);
                     final position = RelativeRect.fromLTRB(offset.dx - 100, offset.dy + 24, 0, 0);
                     final v = await showDecodeParamTypeSelect(context, position, decodeParamType);
-                    if (v == null) return;
-                    if (v == DecodeParamType.unknown) {
-                      ArgumentsPanel.show(context);
-                    } else {
-                      P.rwkv.syncSamplerParamsFromDefault(v);
-                    }
+                    if (v == null || !ctx.mounted) return;
+                    CompletionController.current.onDecodeParamChanged(ctx, v);
                   },
                   style: buttonStyle,
                   child: Text(currentName),
                 );
               },
             ),
-
             const SizedBox(width: 16),
           ],
         ),
@@ -132,7 +132,7 @@ class CompletionTitleBar extends ConsumerWidget {
           enabled: false,
           child: Text(s.decode_param, style: const TextStyle(fontSize: 12)),
         ),
-        _buildMenuItem(s.creative, DecodeParamType.creative, decodeParamType),
+        _buildMenuItem(s.creative_recommended, DecodeParamType.creative, decodeParamType),
         _buildMenuItem(s.comprehensive, DecodeParamType.comprehensive, decodeParamType),
         _buildMenuItem(s.default_, DecodeParamType.defaults, decodeParamType),
         _buildMenuItem(s.conservative, DecodeParamType.conservative, decodeParamType),

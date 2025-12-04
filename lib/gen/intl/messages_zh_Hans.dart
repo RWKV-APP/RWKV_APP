@@ -246,6 +246,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "comprehensive": MessageLookupByLibrary.simpleMessage("综合"),
     "confirm": MessageLookupByLibrary.simpleMessage("确认"),
     "conservative": MessageLookupByLibrary.simpleMessage("保守 (适合数学和代码)"),
+    "continue2": MessageLookupByLibrary.simpleMessage("续写"),
     "continue_download": MessageLookupByLibrary.simpleMessage("继续下载"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "继续使用较小模型",
@@ -261,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("点击上方按钮创建新会话"),
     "created_at": MessageLookupByLibrary.simpleMessage("创建时间"),
     "creative": MessageLookupByLibrary.simpleMessage("创意"),
+    "creative_recommended": MessageLookupByLibrary.simpleMessage("创意 (推荐)"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("当前任务标签页 ID"),
@@ -322,6 +324,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ensure_you_have_enough_memory_to_load_the_model":
         MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
+    "enter_text_to_expand": MessageLookupByLibrary.simpleMessage("输入要续写的段落"),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "输入要翻译的文本...",
     ),

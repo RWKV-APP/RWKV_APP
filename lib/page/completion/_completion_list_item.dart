@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/page/completion/_completion_state.dart';
+import 'package:zone/store/p.dart';
 
 import '_completion_controller.dart';
 
-class CompletionListItem extends ConsumerWidget {
+class CompletionListItem extends StatelessWidget {
   final CompletionItemState item;
   final Widget? footer;
 
   CompletionListItem({super.key, required this.item, this.footer});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final content = Container(
+    Widget content = Container(
+      width: double.infinity,
       margin: footer != null ? null : EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         color: item.isUser ? null : theme.colorScheme.primary.withAlpha(0x1A),
@@ -31,6 +34,24 @@ class CompletionListItem extends ConsumerWidget {
       ),
     );
     if (footer == null) return content;
+    if (!item.isUser) {
+      content = MeasureSize(
+        onChange: (s) {
+          if (s.isEmpty) return;
+          final excepted = MediaQuery.of(context).size.height - 100;
+          final offset = s.bottom - excepted;
+          if (offset > 0) {
+            final sc = Scrollable.of(context);
+            sc.position.animateTo(
+              sc.position.pixels + offset, //
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+          }
+        },
+        child: content,
+      );
+    }
     return Column(
       children: [
         content,
@@ -50,10 +71,14 @@ class CompletionListItemFooter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final hasChooses = item.chooses.length > 1;
+    final generating = ref.watch(CompletionState.generating);
+
+    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
+    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
 
     final speed = Text(
-      "Prefill：0.0t/s  Decode:0.0t/s",
-      style: TextStyle(fontSize: 8),
+      "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
+      style: TextStyle(fontSize: 8, fontFamily: 'monospace'),
       textAlign: TextAlign.end,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -62,15 +87,16 @@ class CompletionListItemFooter extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Transform.translate(
-          offset: Offset(-8, 0),
-          child: IconButton(
-            onPressed: () {
-              CompletionController.current.onRegenerateTap(item);
-            },
-            icon: Icon(Icons.refresh_rounded, size: 18),
+        if (!generating)
+          Transform.translate(
+            offset: Offset(-8, 0),
+            child: IconButton(
+              onPressed: () {
+                CompletionController.current.onRegenerateTap(item);
+              },
+              icon: Icon(Icons.refresh_rounded, size: 18),
+            ),
           ),
-        ),
         if (!hasChooses) Expanded(child: speed),
         if (hasChooses)
           Expanded(
@@ -104,5 +130,50 @@ class CompletionListItemFooter extends ConsumerWidget {
           ),
       ],
     );
+  }
+}
+
+class MeasureSize extends SingleChildRenderObjectWidget {
+  final void Function(Rect size) onChange;
+
+  const MeasureSize({
+    super.key,
+    required this.onChange,
+    required Widget super.child,
+  });
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _MeasureSizeRenderObject(onChange);
+  }
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _MeasureSizeRenderObject renderObject,
+  ) {
+    renderObject.onChange = onChange;
+  }
+}
+
+class _MeasureSizeRenderObject extends RenderProxyBox {
+  Size? oldSize;
+
+  void Function(Rect size) onChange;
+
+  _MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    Size newSize = child!.size;
+    if (oldSize == newSize) return;
+
+    oldSize = newSize;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final offset = localToGlobal(Offset.zero);
+      onChange(offset & newSize);
+    });
   }
 }
