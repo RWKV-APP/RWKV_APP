@@ -175,7 +175,19 @@ class _BBoxPainter extends CustomPainter {
         final translation = translations[box.text];
         if (translation != null) {
           final textPainter = TextPainter(
-            text: TextSpan(text: translation),
+            text: TextSpan(
+              text: translation,
+              style: TextStyle(fontSize: 8),
+            ),
+            textDirection: TextDirection.ltr,
+          );
+          textPainter.layout();
+          textPainter.paint(
+            canvas,
+            Offset(
+              box.x.toDouble() * scale,
+              box.y.toDouble() * scale,
+            ),
           );
         }
       }
