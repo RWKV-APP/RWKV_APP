@@ -10,17 +10,19 @@ class TranslationDebugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-    final paddingTop = ref.watch(P.app.paddingTop);
-    final pageKey = ref.watch(P.app.pageKey);
     final currentModel = ref.watch(P.rwkv.currentModel);
+    final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
+    final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
     final isRecordingVideo = ref.watch(P.ocr.isRecordingVideo);
     final isStreamingImages = ref.watch(P.ocr.isStreamingImages);
-    final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
-    final previewPauseOrientation = ref.watch(P.ocr.previewPauseOrientation);
-    final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
+    final paddingTop = ref.watch(P.app.paddingTop);
+    final pageKey = ref.watch(P.app.pageKey);
     final paragraphs = ref.watch(P.ocr.paragraphs);
+    final previewPauseOrientation = ref.watch(P.ocr.previewPauseOrientation);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final translations = ref.watch(P.ocr.translations);
+    final onScreenTexts = ref.watch(P.ocr.onScreenTexts);
 
     return Positioned(
       left: 0,
@@ -56,8 +58,10 @@ class TranslationDebugger extends ConsumerWidget {
                       T(isPreviewPaused.toString()),
                       T("previewPauseOrientation".codeToName),
                       T(previewPauseOrientation?.toString() ?? "null"),
-                      T("paragraphs".codeToName),
+                      T("paragraphs".codeToName + " Count"),
                       T(paragraphs.length.toString()),
+                      T("onScreenTexts".codeToName + " Count"),
+                      T(onScreenTexts.length.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

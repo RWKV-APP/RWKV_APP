@@ -401,9 +401,8 @@ extension _$Translator on _Translator {
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         // 只有在非批量模式下才处理单行响应
-        if (batchTaskLines.q.isEmpty) {
-          _handleResponseBufferContent(res);
-        }
+        if (batchTaskLines.q.isEmpty) _handleResponseBufferContent(res);
+
         break;
       case from_rwkv.ResponseBatchBufferContent res:
         _handleBatchResponseBufferContent(res);

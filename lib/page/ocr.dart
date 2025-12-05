@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
+import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/model/bbox.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
@@ -16,7 +17,11 @@ class PageOcr extends ConsumerWidget {
     final controllerCreated = ref.watch(P.ocr.controllerCreated);
     final initialized = ref.watch(P.ocr.initialized);
     final screenWidth = ref.watch(P.app.screenWidth);
-    final shouldRenderCamera = controllerCreated && initialized;
+    final isStreamingImages = ref.watch(P.ocr.isStreamingImages);
+    final isRecordingVideo = ref.watch(P.ocr.isRecordingVideo);
+    final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
+    final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
+    final shouldRenderCamera = controllerCreated && initialized && !isPreviewPaused;
     return Scaffold(
       appBar: AppBar(
         title: const Text("OCR"),
@@ -300,13 +305,19 @@ class _CameraControls extends ConsumerWidget {
     ModelSelector.show();
   }
 
-  Future<void> _onModeTap() async {}
+  Future<void> _onModeTap() async {
+    qr;
+  }
 
-  Future<void> _onStopTap() async {}
+  Future<void> _onStopTap() async {
+    qr;
+    P.ocr.onTapStop();
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.paddingBottom);
+
     return SizedBox(
       height: paddingBottom + 100,
       child: Row(
