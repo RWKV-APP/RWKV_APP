@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
@@ -12,11 +14,16 @@ import 'package:zone/widgets/model_selector.dart';
 import '_completion_state.dart';
 
 class CompletionController {
+  StreamSubscription? _subscription;
+  CompletionItemNode _node = CompletionItemNode.user('');
+
   static final current = CompletionController._();
 
   CompletionController._();
 
   void dispose() {
+    _subscription?.cancel();
+    _subscription = null;
     P.rwkv.stop();
   }
 
@@ -24,10 +31,11 @@ class CompletionController {
     qqq('completion controller init');
     CompletionState.controllerInput.q = TextEditingController()
       ..addListener(() {
-        final empty = CompletionState.controllerInput.q?.text.isEmpty ?? true;
-        if (empty == CompletionState.showSuggestionButton.q) return;
-        if (CompletionState.items.q.isNotEmpty) return;
-        CompletionState.showSuggestionButton.q = empty;
+        final isEmpty = CompletionState.controllerInput.q?.text.isEmpty ?? true;
+        CompletionState.generateButtonEnabled.q = !isEmpty;
+        final show = (isEmpty) && _node.isTail;
+        if (show == CompletionState.showSuggestionButton.q) return;
+        CompletionState.showSuggestionButton.q = show;
       });
     CompletionState.batchSettings.q = BatchCompletionSettings.initial();
     CompletionState.controllerInputScroll.q = ScrollController();
@@ -35,6 +43,7 @@ class CompletionController {
     CompletionState.generating.q = false;
     CompletionState.generateButtonEnabled.q = true;
     CompletionState.items.q = [];
+    _node = CompletionItemNode.user('');
     if (CompletionState.model.q == null) {
       onModelSelectTap();
     }
@@ -49,67 +58,76 @@ class CompletionController {
   }
 
   void onCompletionTap({bool regenerate = false}) async {
+    if (CompletionState.model.q == null) {
+      onModelSelectTap();
+      return;
+    }
+
     final input = regenerate ? '' : (CompletionState.controllerInput.q?.text ?? '');
     if (!regenerate && input.isEmpty) {
       Alert.warning('Please enter some text first');
       return;
     }
+    final batchSetting = CompletionState.batchSettings.q;
+
+    CompletionState.controllerInput.q?.clear();
+    CompletionState.showSuggestionButton.q = false;
+
+    final lastNode = regenerate ? _node.tail : CompletionItemNode.user(input);
+    if (!regenerate) {
+      _node.tail = lastNode;
+    }
 
     CompletionState.generating.q = true;
     CompletionState.generateButtonEnabled.q = false;
 
-    final batchSetting = CompletionState.batchSettings.q;
-    final items = CompletionState.items.q;
-    final prompt = items.map((e) => e.content).join() + input;
+    final batch = batchSetting.enabled ? batchSetting.batchCount : 1;
+    final outputs = CompletionItemNode.fromResult(
+      outputs: List.filled(batch, ''),
+      completed: List.filled(batch, false),
+    );
+    lastNode.children = outputs;
+    lastNode.next = outputs[0];
+    _notifyItemChanged();
 
-    qqq('completion:$prompt');
+    await P.rwkv.clearStates();
 
-    try {
-      final batch = batchSetting.enabled ? batchSetting.batchCount : 1;
-      await P.rwkv.clearStates();
-      final stream = P.rwkv
-          .completion(prompt, batchSize: batch)
-          .takeWhile((e) => e.eosFound.any((e) => !e) && CompletionState.generating.q);
-      bool firstOutput = true;
-      final trimLen = prompt.length;
-      await for (final v in stream) {
-        final outputs = v.responseBufferContent
-            .map((e) {
-              String r = e;
-              if (r.length > trimLen) {
-                r = r.substring(prompt.length);
+    final prompt = _node.joinedContent;
+    final trimLen = prompt.length;
+    bool firstOutput = true;
+
+    _subscription?.cancel();
+    _subscription = P.rwkv
+        .completion(prompt, batchSize: batch)
+        .listen(
+          (v) {
+            if (firstOutput) CompletionState.generateButtonEnabled.q = true;
+            firstOutput = false;
+            for (var i = 0; i < v.responseBufferContent.length; i++) {
+              String content = v.responseBufferContent[i];
+              if (content.isEmpty) continue;
+              if (content.length > trimLen) {
+                content = content.substring(prompt.length);
               } else {
-                return '';
+                content = '';
               }
-              if (r.endsWith('<EOD>')) {
-                r = r.substring(0, r.length - 5);
+              if (content.endsWith('<EOD>')) {
+                content = content.substring(0, content.length - 5);
               }
-              return r;
-            }) //
-            .toList();
-        /// if (outputs.every((e) => e.isEmpty)) continue;
-        final newList = [
-          ...items, //
-          if (input.isNotEmpty) CompletionItemState.user(input),
-          CompletionItemState.ai(
-            output: outputs,
-            completed: v.eosFound,
-          ),
-        ];
-        if (firstOutput) {
-          CompletionState.controllerInput.q?.clear();
-          CompletionState.generateButtonEnabled.q = true;
-        }
-        CompletionState.items.q = newList;
-        firstOutput = false;
-      }
-    } catch (e) {
-      qqe(e);
-      onStopTap();
-    }
-    CompletionState.generating.q = false;
-    CompletionState.showSuggestionButton.q = false;
-    qqq('completion done');
+              outputs[i].content = content;
+              outputs[i].completed = v.eosFound[i];
+            }
+            _notifyItemChanged();
+          },
+          onDone: () {
+            CompletionState.generating.q = false;
+            qqq('completion done');
+          },
+          onError: (e) {
+            qqe(e);
+            onStopTap();
+          },
+        );
   }
 
   void onModelSelectTap() {
@@ -129,28 +147,24 @@ class CompletionController {
     }
   }
 
-  void onRegenerateTap(CompletionItemState item) {
-    CompletionState.items.q = [...CompletionState.items.q]..removeLast();
-    onCompletionTap(regenerate: true);
+  void onRegenerateTap(CompletionItemNode item) {
+    try {
+      _node.tail = null;
+      onCompletionTap(regenerate: true);
+    }catch(e, s){
+      qqe(s);
+    }
   }
 
-  void onPrevChooseTap(CompletionItemState item) {
-    CompletionState.items.q = CompletionState.items.q
-        .map(
-          (e) => e == item ? item.copyWith(index: item.index - 1) : e,
-        )
-        .toList();
+  void onPrevChooseTap(CompletionItemNode item) {
+    item.replaceToSibling(item.index - 1);
+    _notifyItemChanged();
   }
 
-  void onNextChooseTap(CompletionItemState item) {
-    CompletionState.items.q = CompletionState.items.q
-        .map(
-          (e) => e == item ? item.copyWith(index: item.index + 1) : e,
-        )
-        .toList();
+  void onNextChooseTap(CompletionItemNode item) {
+    item.replaceToSibling(item.index + 1);
+    _notifyItemChanged();
   }
-
-  void onKeyboardVisibleChanged(bool visible) async {}
 
   void onSuggestionTap(BuildContext context) async {
     final r = await CompletionSuggestionDialog.show(context);
@@ -161,6 +175,11 @@ class CompletionController {
   void onClearAllTap() {
     CompletionState.controllerInput.q?.clear();
     CompletionState.showSuggestionButton.q = true;
+    _node = CompletionItemNode.user('');
     CompletionState.items.q = [];
+  }
+
+  void _notifyItemChanged() {
+    CompletionState.items.q = _node.list;
   }
 }

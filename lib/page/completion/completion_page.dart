@@ -34,6 +34,7 @@ class _CompletionPageState extends State<CompletionPage> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final primaryColor = isDark ? Color(0xFF9E7C59) : Color(0xFF8C3A3A);
+    final backgroundColor = isDark ? Color(0xFF242424) : Color(0xFFFDFBF7);
     final themeV2 = ThemeData(
       cardColor: Colors.white,
       bottomSheetTheme: theme.bottomSheetTheme,
@@ -45,7 +46,7 @@ class _CompletionPageState extends State<CompletionPage> {
       ),
       fontFamily: theme.textTheme.bodyMedium?.fontFamily,
       fontFamilyFallback: theme.textTheme.bodyMedium?.fontFamilyFallback,
-      scaffoldBackgroundColor: isDark ? Color(0xFF242424) : Color(0xFFFDFBF7),
+      scaffoldBackgroundColor: backgroundColor,
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: Size(120, 50),
@@ -62,6 +63,7 @@ class _CompletionPageState extends State<CompletionPage> {
       popupMenuTheme: PopupMenuThemeData(
         shape: RoundedRectangleBorder(borderRadius: .circular(8)),
         menuPadding: .zero,
+        color: isDark ? Color(0xFF2E2E2E) : Colors.white,
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
@@ -80,6 +82,7 @@ class _CompletionPageState extends State<CompletionPage> {
       ),
     );
 
+    bool autoScrolling = true;
     return Theme(
       data: themeV2,
       child: Scaffold(
@@ -90,7 +93,26 @@ class _CompletionPageState extends State<CompletionPage> {
         resizeToAvoidBottomInset: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _FloatButton(),
-        body: SafeArea(child: _PageBody()),
+        body: SafeArea(
+          child: Listener(
+            child: _PageBody(),
+            onPointerDown: (_) {
+              if (CompletionState.autoScrolling) {
+                CompletionState.autoScrolling = false;
+                autoScrolling = true;
+              } else {
+                autoScrolling = false;
+              }
+            },
+            onPointerUp: (_) async {
+              if (autoScrolling) {
+                Future.delayed(Duration(milliseconds: 1000), () {
+                  CompletionState.autoScrolling = true;
+                });
+              }
+            },
+          ),
+        ),
       ),
     );
   }
@@ -141,10 +163,13 @@ class _PageBody extends ConsumerWidget {
               if (index == items.length) {
                 return _UserInputArea();
               }
+              if (index == 0) {
+                return SizedBox.shrink();
+              }
               final item = items[index];
               return CompletionListItem(
                 item: item,
-                footer: index == items.length - 1 ? CompletionListItemFooter(item: item) : null,
+                footer: item.isUser ? null : CompletionListItemFooter(item: item, isLast: items.length - 1 == index),
               );
             },
           ),

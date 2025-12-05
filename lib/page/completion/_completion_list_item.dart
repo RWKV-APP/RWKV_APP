@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/store/p.dart';
 
 import '_completion_controller.dart';
 
 class CompletionListItem extends StatelessWidget {
-  final CompletionItemState item;
+  final CompletionItemNode item;
   final Widget? footer;
 
   CompletionListItem({super.key, required this.item, this.footer});
@@ -28,19 +29,27 @@ class CompletionListItem extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
-      child: SelectableText(
-        item.chooses[item.index].content, //
-        style: TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
-      ),
+      child: item.content.isEmpty
+          ? Align(
+              alignment: Alignment.centerLeft,
+              child: SizedBox(height: 14, width: 14, child: CircularProgressIndicator(strokeWidth: 2)),
+            )
+          : SelectableText(
+              item.content, //
+              style: TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
+            ),
     );
     if (footer == null) return content;
     if (!item.isUser) {
       content = MeasureSize(
         onChange: (s) {
-          if (s.isEmpty) return;
+          if (s.isEmpty || !CompletionState.autoScrolling) return;
           final excepted = MediaQuery.of(context).size.height - 100;
           final offset = s.bottom - excepted;
           if (offset > 0) {
+            if (!CompletionState.generating.q) {
+              return;
+            }
             final sc = Scrollable.of(context);
             sc.position.animateTo(
               sc.position.pixels + offset, //
@@ -63,14 +72,15 @@ class CompletionListItem extends StatelessWidget {
 }
 
 class CompletionListItemFooter extends ConsumerWidget {
-  final CompletionItemState item;
+  final CompletionItemNode item;
+  final bool isLast;
 
-  CompletionListItemFooter({super.key, required this.item});
+  CompletionListItemFooter({super.key, required this.item, required this.isLast});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final hasChooses = item.chooses.length > 1;
+    final hasChooses = item.siblingCount > 1;
     final generating = ref.watch(CompletionState.generating);
 
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
@@ -87,7 +97,7 @@ class CompletionListItemFooter extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (!generating)
+        if (!generating && isLast)
           Transform.translate(
             offset: Offset(-8, 0),
             child: IconButton(
@@ -97,7 +107,7 @@ class CompletionListItemFooter extends ConsumerWidget {
               icon: Icon(Icons.refresh_rounded, size: 18),
             ),
           ),
-        if (!hasChooses) Expanded(child: speed),
+        if (!hasChooses && isLast) Expanded(child: speed),
         if (hasChooses)
           Expanded(
             child: Row(
@@ -114,17 +124,17 @@ class CompletionListItemFooter extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${item.index + 1}/${item.chooses.length}',
+                  '${item.index + 1}/${item.siblingCount}',
                   style: TextStyle(fontSize: 10, color: theme.colorScheme.primary, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  onPressed: item.index == item.chooses.length - 1 ? null : () => CompletionController.current.onNextChooseTap(item),
+                  onPressed: item.index == item.siblingCount - 1 ? null : () => CompletionController.current.onNextChooseTap(item),
                   icon: Icon(Icons.arrow_circle_right_outlined, size: 18),
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
-                Flexible(child: speed),
+                if (isLast) const SizedBox(width: 8),
+                if (isLast) Flexible(child: speed),
               ],
             ),
           ),

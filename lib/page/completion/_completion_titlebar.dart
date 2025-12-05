@@ -50,7 +50,7 @@ class CompletionTitleBar extends ConsumerWidget {
             ),
             Expanded(
               child: Text(
-                'RWKV·续写',
+                'RWKV·${s.continue2}',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, height: 1),
               ),
@@ -97,7 +97,12 @@ class CompletionTitleBar extends ConsumerWidget {
                   onPressed: () async {
                     final pos = ctx.findRenderObject() as RenderBox;
                     final offset = pos.localToGlobal(Offset.zero);
-                    final position = RelativeRect.fromLTRB(offset.dx - 100, offset.dy + 24, 0, 0);
+                    final position = RelativeRect.fromLTRB(
+                      offset.dx - 100,
+                      offset.dy + 24,
+                      offset.dx + cs.maxWidth,
+                      offset.dy + cs.maxHeight,
+                    );
                     final v = await showDecodeParamTypeSelect(context, position, decodeParamType);
                     if (v == null || !ctx.mounted) return;
                     CompletionController.current.onDecodeParamChanged(ctx, v);
