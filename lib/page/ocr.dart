@@ -16,10 +16,7 @@ class PageOcr extends ConsumerWidget {
     final controllerCreated = ref.watch(P.ocr.controllerCreated);
     final initialized = ref.watch(P.ocr.initialized);
     final screenWidth = ref.watch(P.app.screenWidth);
-    final isStreamingImages = ref.watch(P.ocr.isStreamingImages);
-    final isRecordingVideo = ref.watch(P.ocr.isRecordingVideo);
     final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
-    final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
     final shouldRenderCamera = controllerCreated && initialized && !isPreviewPaused;
     qqq(controllerCreated);
     qqq(initialized);
@@ -41,10 +38,7 @@ class PageOcr extends ConsumerWidget {
         crossAxisAlignment: .center,
         children: [
           screenWidth.w,
-          // Text(controllerCreated ? "Controller created" : "Controller not created"),
-          // Text(initialized ? "Initialized" : "Not initialized"),
           if (shouldRenderCamera) const Expanded(child: _Camera()),
-          // Icon(Icons.camera),
           if (!shouldRenderCamera) const Expanded(child: _Guide()),
         ],
       ),
@@ -61,6 +55,7 @@ class _OcrOverlay extends ConsumerWidget {
     final lines = ref.watch(P.ocr.lines);
     final paragraphs = ref.watch(P.ocr.paragraphs);
     final imageSize = ref.watch(P.ocr.imageSize);
+    final translations = ref.watch(P.ocr.translations);
     return LayoutBuilder(
       builder: (context, constraints) {
         return CustomPaint(
@@ -70,6 +65,7 @@ class _OcrOverlay extends ConsumerWidget {
             lines: lines,
             paragraphs: paragraphs,
             imageSize: imageSize,
+            translations: translations,
           ),
         );
       },
@@ -82,12 +78,14 @@ class _BBoxPainter extends CustomPainter {
   final Set<BBox> lines;
   final Set<BBox> paragraphs;
   final Size imageSize;
+  final Map<String, String> translations;
 
-  _BBoxPainter({
+  const _BBoxPainter({
     required this.words,
     required this.lines,
     required this.paragraphs,
     required this.imageSize,
+    required this.translations,
   });
 
   @override
@@ -145,7 +143,13 @@ class _BBoxPainter extends CustomPainter {
     debugTextPainter.paint(canvas, const Offset(10, 10));
 
     // Helper to draw bboxes and text
-    void _drawBBoxes(Set<BBox> boxes, Color color, double strokeWidth, bool printText) {
+    void _drawBBoxes({
+      required Set<BBox> boxes,
+      required Color color,
+      required double strokeWidth,
+      required bool printTargetText,
+      required Map<String, String> translations,
+    }) {
       final paint = Paint()
         ..color = color
         ..style = PaintingStyle.stroke
@@ -167,8 +171,17 @@ class _BBoxPainter extends CustomPainter {
       }
       canvas.restore();
 
+      for (final box in boxes) {
+        final translation = translations[box.text];
+        if (translation != null) {
+          final textPainter = TextPainter(
+            text: TextSpan(text: translation),
+          );
+        }
+      }
+
       // Draw texts separately to maintain readable font size
-      if (printText) {
+      if (printTargetText) {
         for (final box in boxes) {
           // Map box coordinates to screen coordinates
           final double left = box.x * scale + offsetX;
@@ -193,7 +206,13 @@ class _BBoxPainter extends CustomPainter {
 
     // Draw in order: Paragraphs -> Lines -> Words
     // Use different stroke widths to make them visible when overlapping
-    _drawBBoxes(paragraphs, Colors.blue, 1.0, false);
+    _drawBBoxes(
+      boxes: paragraphs,
+      color: Colors.blue,
+      strokeWidth: 1.0,
+      printTargetText: false,
+      translations: translations,
+    );
     // _drawBBoxes(lines, Colors.green, 1.0, true);
     // _drawBBoxes(words, Colors.red, 1.0, true);
   }

@@ -22,8 +22,8 @@ class TranslationDebugger extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final onScreenTexts = ref.watch(P.ocr.onScreenTexts);
-    final batchTaskLines = ref.watch(P.ocr.batchTaskLines);
-    final batchTranslations = ref.watch(P.ocr.translations);
+    final batchTaskLines = ref.watch(P.ocr.runningTasks);
+    final translations = ref.watch(P.ocr.translations);
     final isGenerating = ref.watch(P.ocr.isGenerating);
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
 
@@ -67,8 +67,8 @@ class TranslationDebugger extends ConsumerWidget {
                       T(onScreenTexts.length.toString()),
                       T("batchTaskLines".codeToName + " Count"),
                       T(batchTaskLines.length.toString()),
-                      T("batchTranslations".codeToName + " Count"),
-                      T(batchTranslations.length.toString()),
+                      T("translations".codeToName + " Count"),
+                      T(translations.length.toString()),
                       T("isGenerating".codeToName),
                       T(isGenerating.toString()),
                       T("supportedBatchSizes".codeToName),
