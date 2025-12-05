@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
-import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/model/bbox.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
@@ -331,8 +330,8 @@ class _CameraControls extends ConsumerWidget {
               decoration: BD(
                 color: Colors.red.q(.2),
               ),
-              padding: .all(8),
-              child: T("Mode"),
+              padding: const .all(8),
+              child: const T("Mode"),
             ),
           ),
           GD(
@@ -341,8 +340,8 @@ class _CameraControls extends ConsumerWidget {
               decoration: BD(
                 color: Colors.blue.q(.2),
               ),
-              padding: .all(8),
-              child: T("Stop"),
+              padding: const .all(8),
+              child: const T("Stop"),
             ),
           ),
           GD(
@@ -351,8 +350,8 @@ class _CameraControls extends ConsumerWidget {
               decoration: BD(
                 color: Colors.green.q(.2),
               ),
-              padding: .all(8),
-              child: T("Select Weights"),
+              padding: const .all(8),
+              child: const T("Select Weights"),
             ),
           ),
         ],

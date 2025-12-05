@@ -23,6 +23,8 @@ class TranslationDebugger extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final translations = ref.watch(P.ocr.translations);
     final onScreenTexts = ref.watch(P.ocr.onScreenTexts);
+    final batchTaskLines = ref.watch(P.ocr.batchTaskLines);
+    final batchTranslations = ref.watch(P.ocr.batchTranslations);
 
     return Positioned(
       left: 0,
@@ -62,6 +64,10 @@ class TranslationDebugger extends ConsumerWidget {
                       T(paragraphs.length.toString()),
                       T("onScreenTexts".codeToName + " Count"),
                       T(onScreenTexts.length.toString()),
+                      T("batchTaskLines".codeToName + " Count"),
+                      T(batchTaskLines.length.toString()),
+                      T("batchTranslations".codeToName + " Count"),
+                      T(batchTranslations.length.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

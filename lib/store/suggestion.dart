@@ -147,8 +147,6 @@ class _Suggestion {
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
 
-    // debugger();
-
     switch (currentWorldType) {
       case WorldType.reasoningQA:
         return config.seeReasoningQa;

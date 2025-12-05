@@ -122,7 +122,7 @@ extension _$Ocr on _Ocr {
     if (inputImage == null) return;
 
     final metadata = inputImage.metadata;
-    // debugger();
+
     if (metadata != null) {
       var width = metadata.size.width;
       var height = metadata.size.height;
@@ -295,7 +295,7 @@ extension _$Ocr on _Ocr {
   }
 
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
-    debugger();
+    qq;
     final responseBufferContents = res.responseBufferContent;
     final batchLines = batchTaskLines.q;
 
@@ -313,7 +313,6 @@ extension _$Ocr on _Ocr {
     if (P.app.pageKey.q != PageKey.ocr) return;
     qr;
 
-    debugger();
     switch (event) {
       case from_rwkv.ResponseBatchBufferContent res:
         _handleBatchResponseBufferContent(res);
@@ -411,7 +410,7 @@ extension $Ocr on _Ocr {
       ModelSelector.show();
       return;
     }
-    debugger();
+
     await _controller.initialize();
     await _controller.startImageStream(_onImageStream);
     if (_controller.value.isPreviewPaused) await _controller.resumePreview();

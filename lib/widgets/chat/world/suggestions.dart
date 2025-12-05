@@ -38,8 +38,6 @@ class Suggestions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestions = ref.watch(P.suggestion.worldSuggestion);
 
-    // debugger();
-
     if (suggestions.isEmpty) {
       return const SizedBox.shrink();
     }
