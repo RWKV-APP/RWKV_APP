@@ -2,7 +2,10 @@ part of 'p.dart';
 
 class _Ocr {
   /// 批量任务的定时器
-  Timer? _batchTaskTimer;
+  Timer? _getResponseTimer;
+
+  /// 不断查询当前还有哪些待执行的任务
+  Timer? _pullingTimer;
 
   late final CameraController _controller;
 
@@ -32,8 +35,6 @@ class _Ocr {
     return paragraphs.map((paragraph) => paragraph.text).toSet();
   });
 
-  late final translations = qs<Map<String, String>>({});
-
   late final lines = qs<Set<BBox>>({});
 
   late final words = qs<Set<BBox>>({});
@@ -49,7 +50,7 @@ class _Ocr {
   late final isRecordingPaused = qs(false);
 
   /// 批量任务中每一行的翻译结果
-  late final batchTranslations = qs<Map<int, String>>({});
+  late final translations = qs<Map<int, String>>({});
 
   late final runningTaskKey = qs<String?>(null);
   late final isGenerating = qs(false);
@@ -93,10 +94,8 @@ extension _$Ocr on _Ocr {
       case PageKey.translator:
         break;
       default:
-        _controller.stopImageStream();
+        _stop();
         isStreamingImages.q = false;
-        _controller.pausePreview();
-        _controller.stopVideoRecording();
         break;
     }
   }
@@ -249,8 +248,9 @@ extension _$Ocr on _Ocr {
   }
 
   void _handleIsGenerating(from_rwkv.IsGenerating res) {
+    qr;
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.see || pageKey == PageKey.talk || pageKey == PageKey.chat) return;
+    if (pageKey != PageKey.ocr) return;
     final generatingStateFromEvent = res.isGenerating;
     final generatingStateInFrontend = isGenerating.q;
 
@@ -269,29 +269,30 @@ extension _$Ocr on _Ocr {
   }
 
   void _appendBatchEndString() {
-    final batchLines = batchTaskLines.q;
-    if (batchLines.isEmpty) return;
+    qw;
+    // final batchLines = batchTaskLines.q;
+    // if (batchLines.isEmpty) return;
 
-    // 清理定时器
-    if (_batchTaskTimer != null) {
-      _batchTaskTimer!.cancel();
-      _batchTaskTimer = null;
-    }
+    // // 清理定时器
+    // if (_getResponseTimer != null) {
+    //   _getResponseTimer!.cancel();
+    //   _getResponseTimer = null;
+    // }
 
-    for (var i = 0; i < batchLines.length; i++) {
-      final translation = batchTranslations.q[i] ?? "";
-      // combinedResult.add(translation);
-      // TODO: 更新结果数组
-    }
-    // final finalResult = combinedResult.join("\n");
+    // for (var i = 0; i < batchLines.length; i++) {
+    //   final translation = batchTranslations.q[i] ?? "";
+    //   // combinedResult.add(translation);
+    //   // TODO: 更新结果数组
+    // }
+    // // final finalResult = combinedResult.join("\n");
 
-    // 更新 result
-    // result.q = finalResult;
+    // // 更新 result
+    // // result.q = finalResult;
 
-    // 清空批量任务状态
-    batchTaskLines.q = [];
-    batchTranslations.q = {};
-    runningTaskKey.q = null;
+    // // 清空批量任务状态
+    // batchTaskLines.q = [];
+    // batchTranslations.q = {};
+    // runningTaskKey.q = null;
   }
 
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
@@ -306,7 +307,7 @@ extension _$Ocr on _Ocr {
       updatedTranslations[i] = responseBufferContents[i];
     }
 
-    batchTranslations.q = {...batchTranslations.q, ...updatedTranslations};
+    translations.q = {...translations.q, ...updatedTranslations};
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
@@ -316,11 +317,17 @@ extension _$Ocr on _Ocr {
     switch (event) {
       case from_rwkv.ResponseBatchBufferContent res:
         _handleBatchResponseBufferContent(res);
+      case from_rwkv.ResponseBufferContent res:
+        _handleResponseBufferContent(res);
       case from_rwkv.IsGenerating res:
         _handleIsGenerating(res);
       default:
         break;
     }
+  }
+
+  void _handleResponseBufferContent(from_rwkv.ResponseBufferContent res) {
+    qq;
   }
 
   void _onStreamDone() async {
@@ -333,31 +340,29 @@ extension _$Ocr on _Ocr {
     qe;
   }
 
-  void _startBatchTask(List<String> paragraphs) {
+  void _sendTasks(List<String> tasks) {
+    debugger();
     qq;
     P.rwkv.stop();
 
-    // 清理之前的定时器
-    if (_batchTaskTimer != null) {
-      _batchTaskTimer!.cancel();
-      _batchTaskTimer = null;
-    }
+    if (tasks.isEmpty) return;
 
-    batchTranslations.q = {};
-    final batchSize = paragraphs.length;
+    translations.q = {};
+    final batchSize = tasks.length;
 
     // 设置 runningTaskKey 为整个输入文本，用于标识当前任务
-    runningTaskKey.q = paragraphs.join("\n");
+    runningTaskKey.q = tasks.join("\n");
 
     // 为每一行创建消息列表
     final batchMessages = <List<String>>[];
-    for (var paragraph in paragraphs) {
-      batchMessages.add([paragraph.trim()]);
+    for (var task in tasks) {
+      batchMessages.add([task.trim()]);
     }
 
     // 使用批量模式发送：每个批次是一条独立的消息列表
     final thinkingMode = P.rwkv.thinkingMode.q;
     final reasoning = thinkingMode.hasThinkTag;
+    isGenerating.q = true;
     P.rwkv.send(
       to_rwkv.ChatBatchAsync(
         batchMessages,
@@ -365,22 +370,14 @@ extension _$Ocr on _Ocr {
         batchSize: batchSize,
       ),
     );
-
-    // 启动定时器获取响应
-    _batchTaskTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
-      // 获取批量响应（无参数版本会返回所有批次的响应）
-      P.rwkv.send(to_rwkv.GetBatchResponseBufferContent());
-      P.rwkv.send(to_rwkv.GetIsGenerating());
-      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
-    });
   }
 
   Future<void> _stop() async {
     P.rwkv.stop();
-    _batchTaskTimer?.cancel();
-    _batchTaskTimer = null;
+    _getResponseTimer?.cancel();
+    _getResponseTimer = null;
     batchTaskLines.q = [];
-    batchTranslations.q = {};
+    translations.q = {};
     runningTaskKey.q = null;
     isGenerating.q = false;
     isRecordingVideo.q = false;
@@ -390,7 +387,65 @@ extension _$Ocr on _Ocr {
     isRecordingPaused.q = false;
     _controller.stopImageStream();
     _controller.pausePreview();
-    _controller.stopVideoRecording();
+    _stopPulling();
+  }
+
+  void _startPulling() {
+    _pullingTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+      _sendRequest();
+    });
+    // 启动定时器获取响应
+    _getResponseTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+      _getResponse();
+    });
+  }
+
+  void _sendRequest() {
+    // 生成中则跳过
+    final isGenerating = this.isGenerating.q;
+    qqq("isGenerating: $isGenerating");
+    if (isGenerating) return;
+    qq;
+
+    // TODO: 如果缓存里有, 且结束标识已拼接, 则跳过
+    // TODO: 如果缓存里有, 且结束标识未拼接, 则...等待后端支持
+    // TODO: 发起任务
+    // TODO: 标记当前任务
+
+    final onScreenTexts = this.onScreenTexts.q.toList();
+    final batchTranslations = this.translations.q;
+    final batchTaskLines = this.batchTaskLines.q;
+    int supportedBatchSize = 1;
+    if (P.rwkv.supportedBatchSizes.q.isNotEmpty) {
+      supportedBatchSize = P.rwkv.supportedBatchSizes.q.max;
+    }
+
+    final List<String> newTasks = [];
+    for (var i = 0; i < onScreenTexts.length; i++) {
+      final text = onScreenTexts[i];
+      final hasDone = batchTranslations.containsKey(i);
+      if (!hasDone) newTasks.add(text);
+      if (newTasks.length == supportedBatchSize) break;
+    }
+
+    qqq("newTasks: $newTasks");
+
+    if (newTasks.isEmpty) return;
+
+    this.isGenerating.q = true;
+    this.batchTaskLines.q = newTasks;
+    _sendTasks(newTasks);
+  }
+
+  void _getResponse() {
+    P.rwkv.send(to_rwkv.GetBatchResponseBufferContent());
+    P.rwkv.send(to_rwkv.GetIsGenerating());
+    P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
+  }
+
+  void _stopPulling() {
+    _pullingTimer?.cancel();
+    _pullingTimer = null;
   }
 }
 
@@ -414,11 +469,11 @@ extension $Ocr on _Ocr {
     await _controller.initialize();
     await _controller.startImageStream(_onImageStream);
     if (_controller.value.isPreviewPaused) await _controller.resumePreview();
-    _startBatchTask(onScreenTexts.q.toList().sublist(0, 4));
+    _startPulling();
   }
 
   Future<void> onTapStop() async {
     qr;
-    await _stop();
+    _stop();
   }
 }

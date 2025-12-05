@@ -21,6 +21,10 @@ class PageOcr extends ConsumerWidget {
     final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
     final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
     final shouldRenderCamera = controllerCreated && initialized && !isPreviewPaused;
+    qqq(controllerCreated);
+    qqq(initialized);
+    qqq(isPreviewPaused);
+    qqq(shouldRenderCamera);
     return Scaffold(
       appBar: AppBar(
         title: const Text("OCR"),

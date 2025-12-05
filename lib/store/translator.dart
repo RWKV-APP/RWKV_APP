@@ -244,6 +244,7 @@ extension _$Translator on _Translator {
   }
 
   void _handleResponseBufferContent(from_rwkv.ResponseBufferContent res) {
+    qr;
     // 得到的翻译
     final content = res.responseBufferContent;
     // 更新 result
@@ -281,6 +282,7 @@ extension _$Translator on _Translator {
   }
 
   void _appendBatchEndString() {
+    qw;
     final batchLines = batchTaskLines.q;
     if (batchLines.isEmpty) return;
 
@@ -402,7 +404,6 @@ extension _$Translator on _Translator {
       case from_rwkv.ResponseBufferContent res:
         // 只有在非批量模式下才处理单行响应
         if (batchTaskLines.q.isEmpty) _handleResponseBufferContent(res);
-
         break;
       case from_rwkv.ResponseBatchBufferContent res:
         _handleBatchResponseBufferContent(res);
@@ -480,7 +481,7 @@ extension _$Translator on _Translator {
   }
 
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
-    qq;
+    qr;
 
     final responseBufferContents = res.responseBufferContent;
     final batchLines = batchTaskLines.q;
