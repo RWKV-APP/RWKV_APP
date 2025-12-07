@@ -4,26 +4,6 @@ class _Ocr {
   /// 批量任务的定时器
   Timer? _getResponseTimer;
 
-  /// 不断查询当前还有哪些待执行的任务
-  Timer? _pullingTimer;
-
-  late final CameraController _controller;
-
-  CameraController get controller => _controller;
-
-  late final List<CameraDescription> _cameraDescriptions;
-
-  late final controllerCreated = qs(false);
-
-  late final initialized = qs(false);
-
-  static final _orientations = {
-    DeviceOrientation.portraitUp: 0,
-    DeviceOrientation.landscapeLeft: 90,
-    DeviceOrientation.portraitDown: 180,
-    DeviceOrientation.landscapeRight: 270,
-  };
-
   late final TextRecognizer _textRecognizer;
 
   TextRecognizer get textRecognizer => _textRecognizer;
@@ -41,13 +21,7 @@ class _Ocr {
 
   late final imageSize = qs<Size>(Size.zero);
 
-  late final cameraRect = qs<Rect?>(null);
-
-  late final isRecordingVideo = qs(false);
-  late final isStreamingImages = qs(false);
-  late final isPreviewPaused = qs(false);
-  late final previewPauseOrientation = qs<DeviceOrientation?>(null);
-  late final isRecordingPaused = qs(false);
+  late final image = qs<XFile?>(null);
 
   /// 批量任务中每一行的翻译结果
   ///
@@ -66,19 +40,6 @@ class _Ocr {
 /// Private methods
 extension _$Ocr on _Ocr {
   FV _init() async {
-    controllerCreated.q = false;
-    _cameraDescriptions = await availableCameras();
-    _controller = CameraController(
-      _cameraDescriptions.first,
-      ResolutionPreset.high,
-      enableAudio: false,
-      imageFormatGroup: Platform.isAndroid
-          ? .nv21 // for Android
-          : .bgra8888, // for iOS
-    );
-    _controller.addListener(_onControllerStateChanged);
-    controllerCreated.q = true;
-    await Future.delayed(1000.ms);
     _textRecognizer = TextRecognizer(
       script: TextRecognitionScript.latin,
     );
@@ -98,51 +59,11 @@ extension _$Ocr on _Ocr {
         break;
       default:
         _stop();
-        isStreamingImages.q = false;
         break;
     }
   }
 
-  void _onControllerStateChanged() {
-    final CameraValue value = _controller.value;
-    if (value.isInitialized) {
-      initialized.q = true;
-    } else {
-      initialized.q = false;
-    }
-    isRecordingVideo.q = value.isRecordingVideo;
-    isStreamingImages.q = value.isStreamingImages;
-    isPreviewPaused.q = value.isPreviewPaused;
-    previewPauseOrientation.q = value.previewPauseOrientation;
-    isRecordingPaused.q = value.isRecordingPaused;
-  }
-
-  void _onImageStream(CameraImage image) async {
-    if (HF.randomBool(truePercentage: .9)) return;
-    final inputImage = _inputImageFromCameraImage(image);
-    if (inputImage == null) return;
-
-    final metadata = inputImage.metadata;
-
-    if (metadata != null) {
-      var width = metadata.size.width;
-      var height = metadata.size.height;
-      final rotation = metadata.rotation;
-      if (rotation != InputImageRotation.rotation90deg && rotation != InputImageRotation.rotation270deg) {
-        final temp = width;
-        width = height;
-        height = temp;
-      }
-      if (Platform.isAndroid) {
-        if (rotation == InputImageRotation.rotation90deg || rotation == InputImageRotation.rotation270deg) {
-          final temp = width;
-          width = height;
-          height = temp;
-        }
-      }
-      imageSize.q = Size(width, height);
-    }
-
+  Future<void> _processImage(InputImage inputImage) async {
     final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
 
     final Set<BBox> newWords = {};
@@ -190,65 +111,6 @@ extension _$Ocr on _Ocr {
     paragraphs.q = newParagraphs;
   }
 
-  InputImage? _inputImageFromCameraImage(CameraImage image) {
-    // get image rotation
-    // it is used in android to convert the InputImage from Dart to Java
-    // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C
-    // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas
-    final camera = _controller.description;
-    final sensorOrientation = camera.sensorOrientation;
-    InputImageRotation? rotation;
-    if (Platform.isIOS) {
-      rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
-      // Fix: Force rotation90deg if we are in portrait mode but sensor is landscape
-      if (rotation == InputImageRotation.rotation0deg &&
-          image.width > image.height &&
-          controller.value.deviceOrientation == DeviceOrientation.portraitUp) {
-        rotation = InputImageRotation.rotation90deg;
-      }
-    } else if (Platform.isAndroid) {
-      var rotationCompensation = _Ocr._orientations[controller.value.deviceOrientation];
-      if (rotationCompensation == null) return null;
-      if (camera.lensDirection == CameraLensDirection.front) {
-        // front-facing
-        rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
-      } else {
-        // back-facing
-        rotationCompensation = (sensorOrientation - rotationCompensation + 360) % 360;
-      }
-      rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
-    }
-    if (rotation == null) return null;
-
-    // get image format
-    final format = InputImageFormatValue.fromRawValue(image.format.raw);
-    // validate format depending on platform
-    // only supported formats:
-    // * nv21 for Android
-    // * bgra8888 for iOS
-    if (format == null ||
-        (Platform.isAndroid && format != InputImageFormat.nv21) ||
-        (Platform.isIOS && format != InputImageFormat.bgra8888)) {
-      return null;
-    }
-
-    // since format is constraint to nv21 or bgra8888, both only have one plane
-    if (image.planes.length != 1) return null;
-    final plane = image.planes.first;
-
-    // compose InputImage using bytes
-    final res = InputImage.fromBytes(
-      bytes: plane.bytes,
-      metadata: InputImageMetadata(
-        size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: rotation, // used only in Android
-        format: format, // used only in iOS
-        bytesPerRow: plane.bytesPerRow, // used only in iOS
-      ),
-    );
-    return res;
-  }
-
   void _handleIsGenerating(from_rwkv.IsGenerating res) {
     final pageKey = P.app.pageKey.q;
     if (pageKey != PageKey.ocr) return;
@@ -261,38 +123,18 @@ extension _$Ocr on _Ocr {
     final isStopEvent = generatingStateInFrontend && !generatingStateFromEvent;
     if (!isStopEvent) return;
 
-    // 如果是批量任务，处理批量任务的结束
-    if (runningTasks.q.isNotEmpty) {
-      _appendBatchEndString();
-    } else {
-      // TODO: 处理串行翻译结果
+    if (!generatingStateFromEvent) {
+      _getResponseTimer?.cancel();
+      _getResponseTimer = null;
     }
-  }
 
-  void _appendBatchEndString() {
-    // final batchLines = batchTaskLines.q;
-    // if (batchLines.isEmpty) return;
-
-    // // 清理定时器
-    // if (_getResponseTimer != null) {
-    //   _getResponseTimer!.cancel();
-    //   _getResponseTimer = null;
-    // }
-
-    // for (var i = 0; i < batchLines.length; i++) {
-    //   final translation = batchTranslations.q[i] ?? "";
-    //   // combinedResult.add(translation);
-    //   // TODO: 更新结果数组
-    // }
-    // // final finalResult = combinedResult.join("\n");
-
-    // // 更新 result
-    // // result.q = finalResult;
-
-    // // 清空批量任务状态
-    // batchTaskLines.q = [];
-    // batchTranslations.q = {};
-    // runningTaskKey.q = null;
+    // 尝试发送下一批任务
+    if (runningTasks.q.isNotEmpty) {
+      // 当前批次结束，清空运行中任务
+      runningTasks.q = [];
+      // 触发下一次检查
+      _sendRequest();
+    }
   }
 
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
@@ -353,7 +195,6 @@ extension _$Ocr on _Ocr {
   }
 
   void _sendTasks(List<String> tasks) {
-    // debugger();
     P.rwkv.stop();
 
     if (tasks.isEmpty) return;
@@ -380,6 +221,12 @@ extension _$Ocr on _Ocr {
         batchSize: batchSize,
       ),
     );
+
+    // 启动定时器获取响应
+    _getResponseTimer?.cancel();
+    _getResponseTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+      _getResponse();
+    });
   }
 
   Future<void> _stop() async {
@@ -389,35 +236,13 @@ extension _$Ocr on _Ocr {
     runningTasks.q = [];
     runningTaskKey.q = null;
     isGenerating.q = false;
-    isRecordingVideo.q = false;
-    isStreamingImages.q = false;
-    isPreviewPaused.q = false;
-    previewPauseOrientation.q = null;
-    isRecordingPaused.q = false;
-    _controller.stopImageStream();
-    _controller.pausePreview();
-    _stopPulling();
-  }
-
-  void _startPulling() {
-    _pullingTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
-      _sendRequest();
-    });
-    // 启动定时器获取响应
-    _getResponseTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
-      _getResponse();
-    });
+    image.q = null;
   }
 
   void _sendRequest() {
     // 生成中则跳过
     final isGenerating = this.isGenerating.q;
     if (isGenerating) return;
-
-    // TODO: 如果缓存里有, 且结束标识已拼接, 则跳过
-    // TODO: 如果缓存里有, 且结束标识未拼接, 则...等待后端支持
-    // TODO: 发起任务
-    // TODO: 标记当前任务
 
     final onScreenTexts = this.onScreenTexts.q.toList();
     final batchTranslations = translations.q;
@@ -436,7 +261,6 @@ extension _$Ocr on _Ocr {
     for (var i = 0; i < onScreenTexts.length; i++) {
       final text = onScreenTexts[i];
       final hasDone = batchTranslations.containsKey(text);
-      // if (hasDone) [];
       if (!hasDone) newTasks.add(text);
       if (newTasks.length == supportedBatchSize) break;
     }
@@ -453,37 +277,34 @@ extension _$Ocr on _Ocr {
     P.rwkv.send(to_rwkv.GetIsGenerating());
     P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
   }
-
-  void _stopPulling() {
-    _pullingTimer?.cancel();
-    _pullingTimer = null;
-  }
 }
 
 /// Public methods
 extension $Ocr on _Ocr {
-  Future<void> onTapStart() async {
-    // 1. 检测权限
-    // 2. 渲染相机
-    // 3. 开始识别
-    // 4. 显示识别结果
-    // 5. 调整识别结果
-    final v = _controller.value;
-    // if (!checkModelSelection()) return;
+  Future<void> takePhoto() async {
     final currentModel = P.rwkv.currentModel.q;
     if (currentModel == null) {
       ModelSelector.show();
       return;
     }
 
-    await _controller.initialize();
-    await _controller.startImageStream(_onImageStream);
-    if (_controller.value.isPreviewPaused) await _controller.resumePreview();
-    _startPulling();
-  }
+    final picker = ImagePicker();
+    final photo = await picker.pickImage(source: ImageSource.camera);
+    if (photo == null) return;
 
-  Future<void> onTapStop() async {
-    _stop();
+    image.q = photo;
+    translations.q = {};
+    runningTasks.q = [];
+
+    // Get image size
+    final data = await photo.readAsBytes();
+    final decoded = await decodeImageFromList(data);
+    imageSize.q = Size(decoded.width.toDouble(), decoded.height.toDouble());
+
+    final inputImage = InputImage.fromFilePath(photo.path);
+    await _processImage(inputImage);
+
+    _sendRequest();
   }
 }
 

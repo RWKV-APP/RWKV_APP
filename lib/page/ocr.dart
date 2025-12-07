@@ -1,31 +1,32 @@
-import 'package:camera/camera.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:zone/model/bbox.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/model_selector.dart';
-
 class PageOcr extends ConsumerWidget {
   const PageOcr({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controllerCreated = ref.watch(P.ocr.controllerCreated);
-    final initialized = ref.watch(P.ocr.initialized);
+    final image = ref.watch(P.ocr.image);
     final screenWidth = ref.watch(P.app.screenWidth);
-    final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
-    final shouldRenderCamera = controllerCreated && initialized && !isPreviewPaused;
-    qqq(controllerCreated);
-    qqq(initialized);
-    qqq(isPreviewPaused);
-    qqq(shouldRenderCamera);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("OCR"),
         actions: [
+          if (image != null)
+            IconButton(
+              icon: const Icon(Icons.cameraswitch),
+              onPressed: () {
+                P.ocr.takePhoto();
+              },
+            ),
           TextButton(
             onPressed: () {
               push(.translator);
@@ -38,10 +39,35 @@ class PageOcr extends ConsumerWidget {
         crossAxisAlignment: .center,
         children: [
           screenWidth.w,
-          if (shouldRenderCamera) const Expanded(child: _Camera()),
-          if (!shouldRenderCamera) const Expanded(child: _Guide()),
+          if (image != null) Expanded(child: _ImageView(image: image)) else const Expanded(child: _Guide()),
         ],
       ),
+    );
+  }
+}
+
+class _ImageView extends ConsumerWidget {
+  final XFile image;
+  const _ImageView({required this.image});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Stack(
+          children: [
+            SizedBox.expand(
+              child: Image.file(
+                File(image.path),
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox.expand(
+              child: _OcrOverlay(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -92,10 +118,11 @@ class _BBoxPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (imageSize == Size.zero) return;
 
-    // Calculate scale to "cover" the canvas (similar to CameraPreview)
+    // Calculate scale to "contain" the canvas
     final double scaleX = size.width / imageSize.width;
     final double scaleY = size.height / imageSize.height;
-    final double scale = scaleX > scaleY ? scaleX : scaleY;
+    // Use min scale for contain
+    final double scale = scaleX < scaleY ? scaleX : scaleY;
 
     // Calculate offset to center the image
     final double offsetX = (size.width - imageSize.width * scale) / 2;
@@ -121,8 +148,7 @@ class _BBoxPainter extends CustomPainter {
     // Draw debug info (reset transform for text)
     canvas.restore();
 
-    final debugText =
-        "Img: ${imageSize.width.toInt()}x${imageSize.height.toInt()}\n"
+    final debugText = "Img: ${imageSize.width.toInt()}x${imageSize.height.toInt()}\n"
         "Canvas: ${size.width.toInt()}x${size.height.toInt()}\n"
         "Scale: ${scale.toStringAsFixed(3)} (X:${scaleX.toStringAsFixed(3)}, Y:${scaleY.toStringAsFixed(3)})\n"
         "P:${paragraphs.length} L:${lines.length} W:${words.length}";
@@ -177,7 +203,7 @@ class _BBoxPainter extends CustomPainter {
           final textPainter = TextPainter(
             text: TextSpan(
               text: translation,
-              style: TextStyle(fontSize: 8),
+              style: TextStyle(fontSize: 8, color: kB),
             ),
             textDirection: TextDirection.ltr,
           );
@@ -185,8 +211,8 @@ class _BBoxPainter extends CustomPainter {
           textPainter.paint(
             canvas,
             Offset(
-              box.x.toDouble() * scale,
-              box.y.toDouble() * scale,
+              box.x.toDouble() * scale + offsetX,
+              box.y.toDouble() * scale + offsetY,
             ),
           );
         }
@@ -234,7 +260,8 @@ class _BBoxPainter extends CustomPainter {
     return oldDelegate.words != words ||
         oldDelegate.lines != lines ||
         oldDelegate.paragraphs != paragraphs ||
-        oldDelegate.imageSize != imageSize;
+        oldDelegate.imageSize != imageSize ||
+        oldDelegate.translations != translations;
   }
 }
 
@@ -271,7 +298,7 @@ class _Guide extends ConsumerWidget {
                     children: [
                       TextSpan(text: "Click "),
                       TextSpan(
-                        text: "Start",
+                        text: "Take Photo",
                         style: TextStyle(
                           color: Colors.blue,
                           fontSize: 14,
@@ -279,7 +306,7 @@ class _Guide extends ConsumerWidget {
                         ),
                       ),
                       TextSpan(
-                        text: " to open the camera on your phone. RWKV can now translate the text you see in the camera.",
+                        text: " to take a picture. RWKV will translate the text in the image.",
                       ),
                     ],
                   ),
@@ -288,7 +315,7 @@ class _Guide extends ConsumerWidget {
             ),
           ),
           GD(
-            onTap: P.ocr.onTapStart,
+            onTap: P.ocr.takePhoto,
             child: C(
               decoration: BD(
                 // border: Border.all(color: Colors.blue, width: 1),
@@ -300,95 +327,14 @@ class _Guide extends ConsumerWidget {
               width: 96,
               child: Center(
                 child: T(
-                  "Start",
-                  s: TS(c: qw, s: 24, w: .w600),
+                  "Take Photo",
+                  s: TS(c: qw, s: 16, w: .w600),
+                  textAlign: .center,
                 ),
               ),
             ),
           ),
           paddingBottom.h,
-        ],
-      ),
-    );
-  }
-}
-
-class _Camera extends ConsumerWidget {
-  const _Camera();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        Expanded(
-          child: CameraPreview(
-            P.ocr.controller,
-            child: const _OcrOverlay(),
-          ),
-        ),
-        const _CameraControls(),
-      ],
-    );
-  }
-}
-
-class _CameraControls extends ConsumerWidget {
-  const _CameraControls();
-
-  Future<void> _onSelectWeightsTap() async {
-    ModelSelector.show();
-  }
-
-  Future<void> _onModeTap() async {
-    qr;
-  }
-
-  Future<void> _onStopTap() async {
-    qr;
-    P.ocr.onTapStop();
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final paddingBottom = ref.watch(P.app.paddingBottom);
-
-    return SizedBox(
-      height: paddingBottom + 100,
-      child: Row(
-        mainAxisAlignment: .center,
-        crossAxisAlignment: .center,
-        spacing: 8,
-        children: [
-          GD(
-            onTap: _onModeTap,
-            child: C(
-              decoration: BD(
-                color: Colors.red.q(.2),
-              ),
-              padding: const .all(8),
-              child: const T("Mode"),
-            ),
-          ),
-          GD(
-            onTap: _onStopTap,
-            child: C(
-              decoration: BD(
-                color: Colors.blue.q(.2),
-              ),
-              padding: const .all(8),
-              child: const T("Stop"),
-            ),
-          ),
-          GD(
-            onTap: _onSelectWeightsTap,
-            child: C(
-              decoration: BD(
-                color: Colors.green.q(.2),
-              ),
-              padding: const .all(8),
-              child: const T("Select Weights"),
-            ),
-          ),
         ],
       ),
     );

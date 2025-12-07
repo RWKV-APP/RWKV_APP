@@ -77,7 +77,6 @@ dependencies:
   audioplayers:
   background_downloader:
   cached_network_image: ^3.4.1
-  camera:
   collection:
   crypto:
   cupertino_icons:
