@@ -127,6 +127,9 @@ class _OcrOverlay extends ConsumerWidget {
     final imageSize = ref.watch(P.ocr.imageSize);
     final translations = ref.watch(P.ocr.translations);
     final showTranslation = ref.watch(P.ocr.showTranslation);
+    final theme = Theme.of(context);
+    final translationColor = theme.colorScheme.onSurface;
+    final translationBackgroundColor = theme.colorScheme.surface.q(.8);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -139,6 +142,8 @@ class _OcrOverlay extends ConsumerWidget {
             imageSize: imageSize,
             translations: translations,
             showTranslation: showTranslation,
+            translationColor: translationColor,
+            translationBackgroundColor: translationBackgroundColor,
           ),
         );
       },
@@ -153,6 +158,8 @@ class _BBoxPainter extends CustomPainter {
   final Size imageSize;
   final Map<String, String> translations;
   final bool showTranslation;
+  final Color? translationColor;
+  final Color? translationBackgroundColor;
 
   const _BBoxPainter({
     required this.words,
@@ -161,6 +168,8 @@ class _BBoxPainter extends CustomPainter {
     required this.imageSize,
     required this.translations,
     required this.showTranslation,
+    this.translationColor,
+    this.translationBackgroundColor,
   });
 
   @override
@@ -255,7 +264,11 @@ class _BBoxPainter extends CustomPainter {
             final textPainter = TextPainter(
               text: TextSpan(
                 text: translation,
-                style: TextStyle(fontSize: 8, color: kB),
+                style: TextStyle(
+                  fontSize: 8,
+                  color: translationColor ?? kB,
+                  backgroundColor: translationBackgroundColor,
+                ),
               ),
               textDirection: TextDirection.ltr,
             );
@@ -316,7 +329,9 @@ class _BBoxPainter extends CustomPainter {
         oldDelegate.paragraphs != paragraphs ||
         oldDelegate.imageSize != imageSize ||
         oldDelegate.translations != translations ||
-        oldDelegate.showTranslation != showTranslation;
+        oldDelegate.showTranslation != showTranslation ||
+        oldDelegate.translationColor != translationColor ||
+        oldDelegate.translationBackgroundColor != translationBackgroundColor;
   }
 }
 
