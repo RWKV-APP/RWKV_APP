@@ -88,8 +88,6 @@ class ArgumentsPanel extends ConsumerWidget {
         _ => null,
       };
 
-      // debugger();
-
       if (currentValue == null || currentValue == rawNewValue) return;
       if (argument.enableGaimon) P.app.hapticLight();
       ArgumentsPanel.temporary.q = temporary.copyWith(

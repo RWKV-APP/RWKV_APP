@@ -444,15 +444,7 @@ extension $RWKVLoad on _RWKV {
     await resetMaxLength(enableReasoning: enableReasoning);
     send(to_rwkv.GetSamplerParams());
     loading.q = false;
-    Future.delayed(500.ms).then((_) {
-      send(to_rwkv.GetSupportedBatchSizes());
-    });
-    Future.delayed(1000.ms).then((_) {
-      send(to_rwkv.GetSupportedBatchSizes());
-    });
-    Future.delayed(1500.ms).then((_) {
-      send(to_rwkv.GetSupportedBatchSizes());
-    });
+    _syncMaxBatchCount();
   }
 
   Future<void> loadOthello() async {
@@ -595,6 +587,7 @@ extension $RWKV on _RWKV {
         await for (final event in stream) {
           _messagesController.add(event);
         }
+
         /// NOTE: downstream requires this delay
         Future.delayed(500.ms).then((_) {
           _messagesController.add(from_rwkv.GenerateStop());
@@ -1021,6 +1014,18 @@ extension _$RWKV on _RWKV {
     socBrand.q = r.$2;
     currentModel.lb(_onCurrentModelChanged);
     Albatross.instance.init();
+  }
+
+  void _syncMaxBatchCount() {
+    Future.delayed(500.ms).then((_) {
+      send(to_rwkv.GetSupportedBatchSizes());
+    });
+    Future.delayed(1000.ms).then((_) {
+      send(to_rwkv.GetSupportedBatchSizes());
+    });
+    Future.delayed(1500.ms).then((_) {
+      send(to_rwkv.GetSupportedBatchSizes());
+    });
   }
 
   void _onCurrentModelChanged(FileInfo? oldModel, FileInfo? newModel) async {

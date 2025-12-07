@@ -519,5 +519,19 @@
   },
   "tag_date": "Date",
   "tag_time": "Time",
-  "tag_day_of_week": "Day of Week"
+  "tag_day_of_week": "Day of Week",
+  "ocr_title": "OCR",
+  "hide_translations": "Hide Translations",
+  "show_translations": "Show Translations",
+  "en_to_zh": "EN->ZH",
+  "zh_to_en": "ZH->EN",
+  "pick_from_gallery": "Pick from Gallery",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "ocr_guide_text": "Click {takePhoto}. RWKV will translate the text in the image.",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
+  }
 }

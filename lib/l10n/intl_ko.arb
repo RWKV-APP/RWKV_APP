@@ -516,5 +516,19 @@
       "h6Size": {},
       "bodySize": {}
     }
+  },
+  "ocr_title": "OCR",
+  "hide_translations": "번역 숨기기",
+  "show_translations": "번역 표시",
+  "en_to_zh": "영->중",
+  "zh_to_en": "중->영",
+  "pick_from_gallery": "갤러리에서 선택",
+  "camera": "카메라",
+  "gallery": "갤러리",
+  "ocr_guide_text": "{takePhoto}를 클릭하세요. RWKV가 이미지의 텍스트를 번역합니다.",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
   }
 }

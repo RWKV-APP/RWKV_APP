@@ -7,24 +7,6 @@ So it's combining the best of RNN and transformer - great performance, linear ti
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
 
-class _URLCompleter {
-  final String? url;
-  final int? tabId;
-  final Completer<String> completer;
-  final int? priority;
-  final String? nodeName;
-  final int? tick;
-
-  const _URLCompleter({
-    required this.url,
-    required this.tabId,
-    required this.completer,
-    required this.priority,
-    required this.nodeName,
-    required this.tick,
-  });
-}
-
 class _Translator {
   // ===========================================================================
   // Instance
@@ -262,6 +244,7 @@ extension _$Translator on _Translator {
   }
 
   void _handleResponseBufferContent(from_rwkv.ResponseBufferContent res) {
+    qr;
     // 得到的翻译
     final content = res.responseBufferContent;
     // 更新 result
@@ -299,6 +282,7 @@ extension _$Translator on _Translator {
   }
 
   void _appendBatchEndString() {
+    qw;
     final batchLines = batchTaskLines.q;
     if (batchLines.isEmpty) return;
 
@@ -415,13 +399,11 @@ extension _$Translator on _Translator {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.chat || pageKey == PageKey.talk || pageKey == PageKey.benchmark) return;
+    if (pageKey == PageKey.chat || pageKey == PageKey.talk || pageKey == PageKey.benchmark || pageKey == PageKey.ocr) return;
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         // 只有在非批量模式下才处理单行响应
-        if (batchTaskLines.q.isEmpty) {
-          _handleResponseBufferContent(res);
-        }
+        if (batchTaskLines.q.isEmpty) _handleResponseBufferContent(res);
         break;
       case from_rwkv.ResponseBatchBufferContent res:
         _handleBatchResponseBufferContent(res);
@@ -499,7 +481,7 @@ extension _$Translator on _Translator {
   }
 
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
-    qq;
+    qr;
 
     final responseBufferContents = res.responseBufferContent;
     final batchLines = batchTaskLines.q;
@@ -696,4 +678,22 @@ extension $Translator on _Translator {
     }
     batchEnabled.q = next;
   }
+}
+
+class _URLCompleter {
+  final String? url;
+  final int? tabId;
+  final Completer<String> completer;
+  final int? priority;
+  final String? nodeName;
+  final int? tick;
+
+  const _URLCompleter({
+    required this.url,
+    required this.tabId,
+    required this.completer,
+    required this.priority,
+    required this.nodeName,
+    required this.tick,
+  });
 }

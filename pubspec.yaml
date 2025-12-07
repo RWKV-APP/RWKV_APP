@@ -81,6 +81,7 @@ dependencies:
   crypto:
   cupertino_icons:
   device_info_plus:
+  dio: ^5.9.0
   drift:
   drift_flutter:
   equatable:
@@ -94,6 +95,7 @@ dependencies:
   gaimon:
   gal:
   go_router:
+  google_mlkit_text_recognition:
   halo: ^1.0.0
   halo_alert: ^1.0.0
   halo_state: ^1.0.0
@@ -119,7 +121,6 @@ dependencies:
   system_info2:
   url_launcher:
   web_socket_channel:
-  dio: ^5.9.0
 
 dependency_overrides:
   rwkv_mobile_flutter:
