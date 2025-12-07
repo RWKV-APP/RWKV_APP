@@ -3510,6 +3510,56 @@ class S {
   String get tag_day_of_week {
     return Intl.message('星期', name: 'tag_day_of_week', desc: '', args: []);
   }
+
+  /// `OCR`
+  String get ocr_title {
+    return Intl.message('OCR', name: 'ocr_title', desc: '', args: []);
+  }
+
+  /// `隐藏翻译`
+  String get hide_translations {
+    return Intl.message('隐藏翻译', name: 'hide_translations', desc: '', args: []);
+  }
+
+  /// `显示翻译`
+  String get show_translations {
+    return Intl.message('显示翻译', name: 'show_translations', desc: '', args: []);
+  }
+
+  /// `英->中`
+  String get en_to_zh {
+    return Intl.message('英->中', name: 'en_to_zh', desc: '', args: []);
+  }
+
+  /// `中->英`
+  String get zh_to_en {
+    return Intl.message('中->英', name: 'zh_to_en', desc: '', args: []);
+  }
+
+  /// `从相册选择`
+  String get pick_from_gallery {
+    return Intl.message('从相册选择', name: 'pick_from_gallery', desc: '', args: []);
+  }
+
+  /// `相机`
+  String get camera {
+    return Intl.message('相机', name: 'camera', desc: '', args: []);
+  }
+
+  /// `相册`
+  String get gallery {
+    return Intl.message('相册', name: 'gallery', desc: '', args: []);
+  }
+
+  /// `点击 {takePhoto} 拍照。RWKV 将翻译图片中的文本。`
+  String ocr_guide_text(Object takePhoto) {
+    return Intl.message(
+      '点击 $takePhoto 拍照。RWKV 将翻译图片中的文本。',
+      name: 'ocr_guide_text',
+      desc: '',
+      args: [takePhoto],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -519,5 +519,19 @@
   },
   "tag_date": "日期",
   "tag_time": "时间",
-  "tag_day_of_week": "星期"
+  "tag_day_of_week": "星期",
+  "ocr_title": "OCR",
+  "hide_translations": "隐藏翻译",
+  "show_translations": "显示翻译",
+  "en_to_zh": "英->中",
+  "zh_to_en": "中->英",
+  "pick_from_gallery": "从相册选择",
+  "camera": "相机",
+  "gallery": "相册",
+  "ocr_guide_text": "点击 {takePhoto} 拍照。RWKV 将翻译图片中的文本。",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
+  }
 }

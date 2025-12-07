@@ -516,5 +516,19 @@
       "h6Size": {},
       "bodySize": {}
     }
+  },
+  "ocr_title": "OCR",
+  "hide_translations": "Скрыть переводы",
+  "show_translations": "Показать переводы",
+  "en_to_zh": "АН->КН",
+  "zh_to_en": "КН->АН",
+  "pick_from_gallery": "Выбрать из галереи",
+  "camera": "Камера",
+  "gallery": "Галерея",
+  "ocr_guide_text": "Нажмите {takePhoto}, чтобы сделать снимок. RWKV переведет текст на изображении.",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
   }
 }

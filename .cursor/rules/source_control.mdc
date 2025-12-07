@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+# 严禁你自动 commit 任何代码, 必须由用户来手动 commit

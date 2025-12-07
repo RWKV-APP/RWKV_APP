@@ -11,14 +11,14 @@ class TranslationDebugger extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentModel = ref.watch(P.rwkv.currentModel);
-    final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
-    final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
-    final isRecordingVideo = ref.watch(P.ocr.isRecordingVideo);
-    final isStreamingImages = ref.watch(P.ocr.isStreamingImages);
+    // final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
+    // final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
+    // final isRecordingVideo = ref.watch(P.ocr.isRecordingVideo);
+    // final isStreamingImages = ref.watch(P.ocr.isStreamingImages);
     final paddingTop = ref.watch(P.app.paddingTop);
     final pageKey = ref.watch(P.app.pageKey);
     final paragraphs = ref.watch(P.ocr.paragraphs);
-    final previewPauseOrientation = ref.watch(P.ocr.previewPauseOrientation);
+    // final previewPauseOrientation = ref.watch(P.ocr.previewPauseOrientation);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final onScreenTexts = ref.watch(P.ocr.onScreenTexts);
@@ -53,14 +53,14 @@ class TranslationDebugger extends ConsumerWidget {
                       T(pageKey.toString()),
                       T("currentModel".codeToName),
                       T(currentModel?.fileName ?? "null"),
-                      T("isRecordingVideo".codeToName),
-                      T(isRecordingVideo.toString()),
-                      T("isStreamingImages".codeToName),
-                      T(isStreamingImages.toString()),
-                      T("isPreviewPaused".codeToName),
-                      T(isPreviewPaused.toString()),
-                      T("previewPauseOrientation".codeToName),
-                      T(previewPauseOrientation?.toString() ?? "null"),
+                      // T("isRecordingVideo".codeToName),
+                      // T(isRecordingVideo.toString()),
+                      // T("isStreamingImages".codeToName),
+                      // T(isStreamingImages.toString()),
+                      // T("isPreviewPaused".codeToName),
+                      // T(isPreviewPaused.toString()),
+                      // T("previewPauseOrientation".codeToName),
+                      // T(previewPauseOrientation?.toString() ?? "null"),
                       T("paragraphs".codeToName + " Count"),
                       T(paragraphs.length.toString()),
                       T("onScreenTexts".codeToName + " Count"),

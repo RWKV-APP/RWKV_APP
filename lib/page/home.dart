@@ -379,14 +379,14 @@ class _TranslatorButton extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                "Translation",
-                style: TextStyle(fontSize: 16, fontWeight: .bold),
+              Text(
+                s.offline_translator,
+                style: const TextStyle(fontSize: 16, fontWeight: .bold),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "Translate text without internet using RWKV",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              Text(
+                s.offline_translator_detail,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 6),
             ],

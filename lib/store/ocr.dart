@@ -35,6 +35,12 @@ class _Ocr {
 
   /// 当前批量任务的原始行列表（用于多行翻译）
   late final runningTasks = qs<List<String>>([]);
+
+  /// 是否是英译中 (true: EN->ZH, false: ZH->EN)
+  late final enToZh = qs(true);
+
+  /// 是否显示翻译结果
+  late final showTranslation = qs(true);
 }
 
 /// Private methods
@@ -213,6 +219,15 @@ extension _$Ocr on _Ocr {
       batchMessages.add([task.trimCustom()]);
     }
 
+    // Set roles based on enToZh
+    if (enToZh.q) {
+      P.rwkv.send(to_rwkv.SetUserRole("English"));
+      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+    } else {
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+    }
+
     // 使用批量模式发送：每个批次是一条独立的消息列表
     final thinkingMode = P.rwkv.thinkingMode.q;
     final reasoning = thinkingMode.hasThinkTag;
@@ -285,6 +300,14 @@ extension _$Ocr on _Ocr {
 /// Public methods
 extension $Ocr on _Ocr {
   Future<void> takePhoto() async {
+    await _pickImage(ImageSource.camera);
+  }
+
+  Future<void> pickFromGallery() async {
+    await _pickImage(ImageSource.gallery);
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
     final currentModel = P.rwkv.currentModel.q;
     if (currentModel == null) {
       ModelSelector.show();
@@ -292,7 +315,7 @@ extension $Ocr on _Ocr {
     }
 
     final picker = ImagePicker();
-    final photo = await picker.pickImage(source: ImageSource.camera);
+    final photo = await picker.pickImage(source: source);
     if (photo == null) return;
 
     image.q = photo;
@@ -308,6 +331,30 @@ extension $Ocr on _Ocr {
     await _processImage(inputImage);
 
     _sendRequest();
+  }
+
+  void toggleLanguage() {
+    enToZh.q = !enToZh.q;
+    // 重置翻译并重新开始
+    if (image.q != null) {
+      translations.q = {};
+      runningTasks.q = [];
+      P.rwkv.stop();
+      isGenerating.q = false;
+      _sendRequest();
+    }
+  }
+
+  void toggleShowTranslation() {
+    showTranslation.q = !showTranslation.q;
+  }
+
+  void clearImage() {
+    image.q = null;
+    translations.q = {};
+    runningTasks.q = [];
+    P.rwkv.stop();
+    isGenerating.q = false;
   }
 }
 

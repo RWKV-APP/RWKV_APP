@@ -72,47 +72,49 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
 
-  static String m17(value) => "Penalty Decay: ${value}";
+  static String m17(takePhoto) => "點擊 ${takePhoto} 拍照。RWKV 將翻譯圖片中的文本。";
 
-  static String m18(index) => "請選擇要為第 ${index} 條消息設定的取樣和懲罰參數";
+  static String m18(value) => "Penalty Decay: ${value}";
 
-  static String m19(value) => "Presence Penalty: ${value}";
+  static String m19(index) => "請選擇要為第 ${index} 條消息設定的取樣和懲罰參數";
 
-  static String m20(count) => "排隊中: ${count}";
+  static String m20(value) => "Presence Penalty: ${value}";
 
-  static String m21(count) => "已選擇 ${count}";
+  static String m21(count) => "排隊中: ${count}";
 
-  static String m22(text) => "來源文字: ${text}";
+  static String m22(count) => "已選擇 ${count}";
 
-  static String m23(text) => "目標文字: ${text}";
+  static String m23(text) => "來源文字: ${text}";
 
-  static String m24(value) => "Temperature: ${value}";
+  static String m24(text) => "目標文字: ${text}";
 
-  static String m25(footer) => "推理${footer}: 英";
+  static String m25(value) => "Temperature: ${value}";
 
-  static String m26(footer) => "推理${footer}: 英長";
+  static String m26(footer) => "推理${footer}: 英";
 
-  static String m27(footer) => "推理${footer}: 英短";
+  static String m27(footer) => "推理${footer}: 英長";
 
-  static String m28(footer) => "推理${footer}: 快";
+  static String m28(footer) => "推理${footer}: 英短";
 
-  static String m29(footer) => "推理${footer}: 中";
+  static String m29(footer) => "推理${footer}: 快";
 
-  static String m30(footer) => "推理${footer}: 高";
+  static String m30(footer) => "推理${footer}: 中";
 
-  static String m31(footer) => "推理${footer}: 關";
+  static String m31(footer) => "推理${footer}: 高";
 
-  static String m32(value) => "Top P: ${value}";
+  static String m32(footer) => "推理${footer}: 關";
 
-  static String m33(count) => "總測試項: ${count}";
+  static String m33(value) => "Top P: ${value}";
 
-  static String m34(port) => "WebSocket 服務 (連接埠: ${port})";
+  static String m34(count) => "總測試項: ${count}";
 
-  static String m35(id) => "視窗 ${id}";
+  static String m35(port) => "WebSocket 服務 (連接埠: ${port})";
 
-  static String m36(count) => "${count} 個分頁";
+  static String m36(id) => "視窗 ${id}";
 
-  static String m37(modelName) => "您目前正在使用 ${modelName}";
+  static String m37(count) => "${count} 個分頁";
+
+  static String m38(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -188,6 +190,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cached_translations_memory": MessageLookupByLibrary.simpleMessage(
       "快取的翻譯 (記憶體)",
     ),
+    "camera": MessageLookupByLibrary.simpleMessage("相機"),
     "can_not_generate": MessageLookupByLibrary.simpleMessage("無法產生"),
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
     "cancel_all_selection": MessageLookupByLibrary.simpleMessage("取消全選"),
@@ -315,6 +318,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dump_started": MessageLookupByLibrary.simpleMessage("自動 dump 已開啟"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自動 dump 已關閉"),
+    "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
     "enabled": MessageLookupByLibrary.simpleMessage("開啟"),
     "end": MessageLookupByLibrary.simpleMessage("完"),
     "english_translation_result": MessageLookupByLibrary.simpleMessage(
@@ -361,6 +365,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("強制使用深色模式"),
     "frequency_penalty_with_value": m12,
     "from_model": MessageLookupByLibrary.simpleMessage("來自模型: %s"),
+    "gallery": MessageLookupByLibrary.simpleMessage("相冊"),
     "game_over": MessageLookupByLibrary.simpleMessage("遊戲結束！"),
     "generate": MessageLookupByLibrary.simpleMessage("產生"),
     "generate_hardest_sudoku_in_the_world":
@@ -376,6 +381,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hello, 請隨意 \n向我提問...",
     ),
     "hide_stack": MessageLookupByLibrary.simpleMessage("隱藏思維鏈堆疊"),
+    "hide_translations": MessageLookupByLibrary.simpleMessage("隱藏翻譯"),
     "hint_chinese_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "預設使用 \'<think>好的\', 在 2025-09-21 前發佈的模型中, 會自動使用 \'<think>嗯\'",
     ),
@@ -466,6 +472,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "not_syncing": MessageLookupByLibrary.simpleMessage("未同步"),
     "number": MessageLookupByLibrary.simpleMessage("數字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
+    "ocr_guide_text": m17,
+    "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("關閉"),
     "offline_translator": MessageLookupByLibrary.simpleMessage("離線翻譯"),
     "offline_translator_detail": MessageLookupByLibrary.simpleMessage("離線翻譯文字"),
@@ -488,13 +496,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Temperature: 控制輸出的隨機性。較高的值（如 0.8）使輸出更具創意和隨機性；較低的值（如 0.2）使輸出更集中和確定。\n\nTop P: 控制輸出的多樣性。模型僅考慮累積機率達到 Top P 的 token。較低的值（如 0.5）會忽略低機率的詞，使輸出更相關。\n\nPresence Penalty: 根據 token 是否已在文字中出現來懲罰它們。正值會增加模型談論新主題的可能性。\n\nFrequency Penalty: 根據 token 在文字中出現的頻率來懲罰它們。正值會減少模型逐字重複同一行的可能性。\n\nPenalty Decay: 控制懲罰隨距離的衰減程度。",
     ),
     "pause": MessageLookupByLibrary.simpleMessage("暫停"),
-    "penalty_decay_with_value": m17,
+    "penalty_decay_with_value": m18,
     "performance_test": MessageLookupByLibrary.simpleMessage("效能測試"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
       "使用 lambada 測試 perplexity",
     ),
     "performance_test_title": MessageLookupByLibrary.simpleMessage("跑分測試"),
     "perplexity": MessageLookupByLibrary.simpleMessage("困惑度"),
+    "pick_from_gallery": MessageLookupByLibrary.simpleMessage("從相冊選擇"),
     "players": MessageLookupByLibrary.simpleMessage("玩家"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "正在播放部分已產生的語音",
@@ -531,7 +540,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "請選擇難度",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m18,
+        m19,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage("請選擇要為所有消息設定的取樣和懲罰參數"),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
@@ -550,12 +559,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
     "prefill": MessageLookupByLibrary.simpleMessage("預填"),
-    "presence_penalty_with_value": m19,
+    "presence_penalty_with_value": m20,
     "prompt": MessageLookupByLibrary.simpleMessage("提示詞"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 範本"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
-    "queued_x": m20,
+    "queued_x": m21,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已經開啟"),
     "real_time_update": MessageLookupByLibrary.simpleMessage("即時更新"),
@@ -599,7 +608,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_new_image": MessageLookupByLibrary.simpleMessage("選擇新圖像"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage("請從下方選擇預設參數，或點擊「自定義」進行手動配置"),
-    "selected_count": m21,
+    "selected_count": m22,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("傳送訊息給 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("伺服器錯誤"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("會話組態"),
@@ -616,13 +625,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "僅顯示 Prefill 日誌",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("顯示思維鏈堆疊"),
+    "show_translations": MessageLookupByLibrary.simpleMessage("顯示翻譯"),
     "single_thread": MessageLookupByLibrary.simpleMessage("單執行緒"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "推薦至少選擇 1.5B 模型，效果更好",
     ),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("原始碼"),
-    "source_text": m22,
+    "source_text": m23,
     "speed": MessageLookupByLibrary.simpleMessage("下載速度："),
     "start": MessageLookupByLibrary.simpleMessage("開始"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("開始新聊天"),
@@ -674,9 +684,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system_mode": MessageLookupByLibrary.simpleMessage("跟隨系統"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("系統提示詞"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
-    "target_text": m23,
+    "target_text": m24,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技術研發群"),
-    "temperature_with_value": m24,
+    "temperature_with_value": m25,
     "test_data": MessageLookupByLibrary.simpleMessage("測試資料"),
     "test_result": MessageLookupByLibrary.simpleMessage("測試結果"),
     "test_results": MessageLookupByLibrary.simpleMessage("測試結果"),
@@ -689,10 +699,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然後您就可以開始與 RWKV 對話了"),
-    "think_button_mode_en": m25,
-    "think_button_mode_en_long": m26,
-    "think_button_mode_en_short": m27,
-    "think_button_mode_fast": m28,
+    "think_button_mode_en": m26,
+    "think_button_mode_en_long": m27,
+    "think_button_mode_en_short": m28,
+    "think_button_mode_fast": m29,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式會影響模型在推理時的表現",
     ),
@@ -701,18 +711,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
-    "thinking_mode_auto": m29,
-    "thinking_mode_high": m30,
-    "thinking_mode_off": m31,
+    "thinking_mode_auto": m30,
+    "thinking_mode_high": m31,
+    "thinking_mode_off": m32,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式範本"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("這是世界上最難的數獨"),
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage("此模型不支援並行推理，請選擇帶有 batch 標籤的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考結果"),
-    "top_p_with_value": m32,
+    "top_p_with_value": m33,
     "total_count": MessageLookupByLibrary.simpleMessage("總數"),
-    "total_test_items": m33,
+    "total_test_items": m34,
     "translate": MessageLookupByLibrary.simpleMessage("翻譯"),
     "translating": MessageLookupByLibrary.simpleMessage("翻譯中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻譯結果"),
@@ -737,7 +747,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("聲音複製"),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
-    "websocket_service_port": m34,
+    "websocket_service_port": m35,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "歡迎探索 RWKV Chat",
     ),
@@ -745,12 +755,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
-    "window_id": m35,
+    "window_id": m36,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
-    "x_tabs": m36,
-    "you_are_now_using": m37,
+    "x_tabs": m37,
+    "you_are_now_using": m38,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),
@@ -765,5 +775,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "your_voice_is_too_short": MessageLookupByLibrary.simpleMessage(
       "您的聲音太短，請長按按鈕更久以獲取您的聲音。",
     ),
+    "zh_to_en": MessageLookupByLibrary.simpleMessage("中->英"),
   };
 }
