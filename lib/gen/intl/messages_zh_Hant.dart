@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
 
-  static String m17(takePhoto) => "點擊 ${takePhoto} 拍照。RWKV 將翻譯圖片中的文本。";
+  static String m17(takePhoto) => "點擊 ${takePhoto}。RWKV 將翻譯圖片中的文本。";
 
   static String m18(value) => "Penalty Decay: ${value}";
 

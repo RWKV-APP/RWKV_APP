@@ -3551,10 +3551,10 @@ class S {
     return Intl.message('相册', name: 'gallery', desc: '', args: []);
   }
 
-  /// `点击 {takePhoto} 拍照。RWKV 将翻译图片中的文本。`
+  /// `点击 {takePhoto}。RWKV 将翻译图片中的文本。`
   String ocr_guide_text(Object takePhoto) {
     return Intl.message(
-      '点击 $takePhoto 拍照。RWKV 将翻译图片中的文本。',
+      '点击 $takePhoto。RWKV 将翻译图片中的文本。',
       name: 'ocr_guide_text',
       desc: '',
       args: [takePhoto],

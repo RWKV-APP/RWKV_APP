@@ -73,8 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m16(memUsed, memFree) =>
       "사용된 메모리: ${memUsed}, 남은 메모리: ${memFree}";
 
-  static String m17(takePhoto) =>
-      "${takePhoto}를 클릭하여 사진을 촬영하세요. RWKV가 이미지의 텍스트를 번역합니다.";
+  static String m17(takePhoto) => "${takePhoto}를 클릭하세요. RWKV가 이미지의 텍스트를 번역합니다.";
 
   static String m18(value) => "Penalty Decay: ${value}";
 

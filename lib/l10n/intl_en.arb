@@ -528,7 +528,7 @@
   "pick_from_gallery": "Pick from Gallery",
   "camera": "Camera",
   "gallery": "Gallery",
-  "ocr_guide_text": "Click {takePhoto} to take a picture. RWKV will translate the text in the image.",
+  "ocr_guide_text": "Click {takePhoto}. RWKV will translate the text in the image.",
   "@ocr_guide_text": {
     "placeholders": {
       "takePhoto": {}

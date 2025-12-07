@@ -77,7 +77,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Memory Used: ${memUsed}, Memory Free: ${memFree}";
 
   static String m17(takePhoto) =>
-      "Click ${takePhoto} to take a picture. RWKV will translate the text in the image.";
+      "Click ${takePhoto}. RWKV will translate the text in the image.";
 
   static String m18(value) => "Penalty Decay: ${value}";
 

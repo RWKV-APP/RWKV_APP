@@ -525,7 +525,7 @@
   "pick_from_gallery": "從相冊選擇",
   "camera": "相機",
   "gallery": "相冊",
-  "ocr_guide_text": "點擊 {takePhoto} 拍照。RWKV 將翻譯圖片中的文本。",
+  "ocr_guide_text": "點擊 {takePhoto}。RWKV 將翻譯圖片中的文本。",
   "@ocr_guide_text": {
     "placeholders": {
       "takePhoto": {}

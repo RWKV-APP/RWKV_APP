@@ -525,7 +525,7 @@
   "pick_from_gallery": "Выбрать из галереи",
   "camera": "Камера",
   "gallery": "Галерея",
-  "ocr_guide_text": "Нажмите {takePhoto}, чтобы сделать снимок. RWKV переведет текст на изображении.",
+  "ocr_guide_text": "Нажмите {takePhoto}. RWKV переведет текст на изображении.",
   "@ocr_guide_text": {
     "placeholders": {
       "takePhoto": {}
