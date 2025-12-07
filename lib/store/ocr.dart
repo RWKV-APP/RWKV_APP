@@ -70,12 +70,15 @@ extension _$Ocr on _Ocr {
     final Set<BBox> newLines = {};
     final Set<BBox> newParagraphs = {};
     for (TextBlock paragraphBlock in recognizedText.blocks) {
+      final paragraphText = paragraphBlock.text.trimCustom();
+      if (_isNumeric(paragraphText)) continue;
+
       final paragraph = BBox(
         x: paragraphBlock.boundingBox.left.toInt(),
         y: paragraphBlock.boundingBox.top.toInt(),
         width: paragraphBlock.boundingBox.width.toInt(),
         height: paragraphBlock.boundingBox.height.toInt(),
-        text: paragraphBlock.text.trimCustom(),
+        text: paragraphText,
         r: 0,
         p: 1,
       );
@@ -317,4 +320,9 @@ extension _StringTrimCustom on String {
       '',
     );
   }
+}
+
+bool _isNumeric(String s) {
+  if (s.isEmpty) return false;
+  return RegExp(r'^[0-9]+$').hasMatch(s);
 }
