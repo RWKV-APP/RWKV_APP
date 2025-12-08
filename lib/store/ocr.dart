@@ -4,9 +4,14 @@ class _Ocr {
   /// 批量任务的定时器
   Timer? _getResponseTimer;
 
-  late final TextRecognizer _textRecognizer;
+  TextRecognizer? _textRecognizer;
 
-  TextRecognizer get textRecognizer => _textRecognizer;
+  TextRecognizer get textRecognizer {
+    if (_textRecognizer == null) {
+      _updateTextRecognizer();
+    }
+    return _textRecognizer!;
+  }
 
   late final paragraphs = qs<Set<BBox>>({});
 
@@ -46,9 +51,7 @@ class _Ocr {
 /// Private methods
 extension _$Ocr on _Ocr {
   FV _init() async {
-    _textRecognizer = TextRecognizer(
-      script: TextRecognitionScript.latin,
-    );
+    _updateTextRecognizer();
 
     P.rwkv.broadcastStream.listen(
       _onStreamEvent,
@@ -56,6 +59,18 @@ extension _$Ocr on _Ocr {
       onError: _onStreamError,
     );
     P.app.pageKey.l(_onPageKeyChanged);
+  }
+
+  void _updateTextRecognizer() {
+    // 关闭旧的识别器
+    _textRecognizer?.close();
+
+    // 根据翻译方向选择识别器
+    // enToZh = true: 英译中，使用 latin 识别器识别英文
+    // enToZh = false: 中译英，使用 chinese 识别器识别中文
+    _textRecognizer = TextRecognizer(
+      script: enToZh.q ? TextRecognitionScript.latin : TextRecognitionScript.chinese,
+    );
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
@@ -255,6 +270,7 @@ extension _$Ocr on _Ocr {
     runningTaskKey.q = null;
     isGenerating.q = false;
     image.q = null;
+    // 注意：不在这里关闭 _textRecognizer，因为可能还会继续使用
   }
 
   void _sendRequest() {
@@ -333,14 +349,23 @@ extension $Ocr on _Ocr {
     _sendRequest();
   }
 
-  void toggleLanguage() {
+  Future<void> toggleLanguage() async {
     enToZh.q = !enToZh.q;
-    // 重置翻译并重新开始
+    // 更新文本识别器
+    _updateTextRecognizer();
+
+    // 重置翻译并重新处理图片
     if (image.q != null) {
       translations.q = {};
       runningTasks.q = [];
       P.rwkv.stop();
       isGenerating.q = false;
+
+      // 使用新的识别器重新处理图片
+      final currentImage = image.q!;
+      final inputImage = InputImage.fromFilePath(currentImage.path);
+      await _processImage(inputImage);
+
       _sendRequest();
     }
   }
@@ -355,6 +380,8 @@ extension $Ocr on _Ocr {
     runningTasks.q = [];
     P.rwkv.stop();
     isGenerating.q = false;
+    _textRecognizer?.close();
+    _textRecognizer = null;
   }
 }
 
