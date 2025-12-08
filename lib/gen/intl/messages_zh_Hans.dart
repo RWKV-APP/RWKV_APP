@@ -512,6 +512,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "请输入难度",
     ),
+    "please_entry_some_text_to_continue": MessageLookupByLibrary.simpleMessage(
+      "请先输入要续写的段落",
+    ),
     "please_grant_permission_to_use_microphone":
         MessageLookupByLibrary.simpleMessage("请授予使用麦克风的权限"),
     "please_load_model_first": MessageLookupByLibrary.simpleMessage("请先加载模型"),

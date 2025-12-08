@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:rwkv_mobile_flutter/from_rwkv.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/page/completion/_suggestions_dialog.dart';
 import 'package:zone/store/p.dart';
@@ -65,7 +68,7 @@ class CompletionController {
 
     final input = regenerate ? '' : (CompletionState.controllerInput.q?.text ?? '');
     if (!regenerate && input.isEmpty) {
-      Alert.warning('Please enter some text first');
+      Alert.warning(S.current.please_entry_some_text_to_continue);
       return;
     }
     final batchSetting = CompletionState.batchSettings.q;
@@ -128,15 +131,35 @@ class CompletionController {
             onStopTap();
           },
         );
+
+    P.rwkv.broadcastStream
+        .whereType<IsGenerating>() //
+        .where((e) => !e.isGenerating)
+        .take(1)
+        .listen((_) {
+          CompletionState.generating.q = false;
+          _subscription?.cancel();
+          _subscription = null;
+        });
   }
 
-  void onModelSelectTap() {
-    ModelSelector.show();
+  void onModelSelectTap() async {
+    await ModelSelector.show();
+    if (CompletionState.batchSettings.q.enabled) {
+      final batch = CompletionState.model.q?.tags.contains('batch') == true;
+      if (!batch) {
+        CompletionState.batchSettings.q = CompletionState.batchSettings.q.copyWith(enabled: false);
+      }
+    }
   }
 
   void onParallelTap(BuildContext ctx) async {
-    final settings = await BatchCompletionSettingsPanel.show(ctx: ctx);
-    CompletionState.batchSettings.q = settings;
+    final batch = CompletionState.model.q?.tags.contains('batch') == true;
+    if (!batch) {
+      Alert.warning(S.current.this_model_does_not_support_batch_inference);
+      return;
+    }
+    await BatchCompletionSettingsPanel.show(ctx: ctx);
   }
 
   void onDecodeParamChanged(BuildContext ctx, DecodeParamType type) {
@@ -151,7 +174,7 @@ class CompletionController {
     try {
       _node.tail = null;
       onCompletionTap(regenerate: true);
-    }catch(e, s){
+    } catch (e, s) {
       qqe(s);
     }
   }

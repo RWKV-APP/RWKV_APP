@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
 
 class CompletionState {
   static final tipsDisabled = qs(false);
@@ -13,7 +14,7 @@ class CompletionState {
 
   static final decodeParamType = P.rwkv.decodeParamType;
 
-  static final batchSettings = qs(BatchCompletionSettings.initial());
+  static final batchSettings = BatchCompletionSettingsPanel.settings;
 
   static final items = qs<List<CompletionItemNode>>([]);
 

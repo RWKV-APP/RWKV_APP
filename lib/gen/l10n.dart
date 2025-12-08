@@ -3535,6 +3535,16 @@ class S {
   String get continue2 {
     return Intl.message('续写', name: 'continue2', desc: '', args: []);
   }
+
+  /// `请先输入要续写的段落`
+  String get please_entry_some_text_to_continue {
+    return Intl.message(
+      '请先输入要续写的段落',
+      name: 'please_entry_some_text_to_continue',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/store/p.dart';
 
@@ -10,8 +12,9 @@ import '_completion_controller.dart';
 class CompletionListItem extends StatelessWidget {
   final CompletionItemNode item;
   final Widget? footer;
+  final bool isLast;
 
-  CompletionListItem({super.key, required this.item, this.footer});
+  CompletionListItem({super.key, required this.item, this.footer, required this.isLast});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +68,7 @@ class CompletionListItem extends StatelessWidget {
       children: [
         content,
         footer!,
-        const SizedBox(height: 20),
+        if (isLast) const SizedBox(height: 20),
       ],
     );
   }
@@ -86,12 +89,15 @@ class CompletionListItemFooter extends ConsumerWidget {
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
 
-    final speed = Text(
-      "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
-      style: TextStyle(fontSize: 8, fontFamily: 'monospace'),
-      textAlign: TextAlign.end,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+    final speed = Padding(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: Text(
+        "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
+        style: TextStyle(fontSize: 8, fontFamily: 'monospace'),
+        textAlign: TextAlign.end,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
 
     return Row(
@@ -104,7 +110,15 @@ class CompletionListItemFooter extends ConsumerWidget {
               onPressed: () {
                 CompletionController.current.onRegenerateTap(item);
               },
-              icon: Icon(Icons.refresh_rounded, size: 18),
+              icon: SvgPicture.asset(
+                Assets.img.chat.regenerate,
+                width: 16,
+                height: 16,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).iconTheme.color!,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
           ),
         if (!hasChooses && isLast) Expanded(child: speed),

@@ -522,5 +522,6 @@
   "tag_time": "Time",
   "tag_day_of_week": "Day of Week",
   "enter_text_to_expand": "Enter text to expand",
-  "continue2": "Continue"
+  "continue2": "Continue",
+  "please_entry_some_text_to_continue": "Please entry some text to continue"
 }

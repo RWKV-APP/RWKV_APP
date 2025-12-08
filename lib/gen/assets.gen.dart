@@ -108,11 +108,17 @@ class $AssetsImgChatGen {
   /// File path: assets/img/chat/logo.square.png
   AssetGenImage get logoSquare => const AssetGenImage('assets/img/chat/logo.square.png');
 
+  /// File path: assets/img/chat/new_chat.svg
+  String get newChat => 'assets/img/chat/new_chat.svg';
+
+  /// File path: assets/img/chat/regenerate.svg
+  String get regenerate => 'assets/img/chat/regenerate.svg';
+
   /// File path: assets/img/chat/rwkv.png
   AssetGenImage get rwkv => const AssetGenImage('assets/img/chat/rwkv.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [downloadQrcode, icon, logoSquare, rwkv];
+  List<dynamic> get values => [downloadQrcode, icon, logoSquare, newChat, regenerate, rwkv];
 }
 
 class $AssetsLibChatGen {

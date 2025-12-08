@@ -169,6 +169,7 @@ class _PageBody extends ConsumerWidget {
               final item = items[index];
               return CompletionListItem(
                 item: item,
+                isLast: items.length - 1 == index,
                 footer: item.isUser ? null : CompletionListItemFooter(item: item, isLast: items.length - 1 == index),
               );
             },

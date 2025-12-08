@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
@@ -59,7 +61,13 @@ class CompletionTitleBar extends ConsumerWidget {
               onPressed: () {
                 CompletionController.current.onClearAllTap();
               },
-              icon: Icon(Icons.add),
+              icon: SvgPicture.asset(
+                Assets.img.chat.newChat,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).iconTheme.color!,
+                  BlendMode.srcIn,
+                ),
+              ),
               iconSize: 20,
             ),
             const SizedBox(width: 24),

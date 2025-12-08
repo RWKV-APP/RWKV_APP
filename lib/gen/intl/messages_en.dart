@@ -668,6 +668,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "Please enter the difficulty",
     ),
+    "please_entry_some_text_to_continue": MessageLookupByLibrary.simpleMessage(
+      "Please entry some text to continue",
+    ),
     "please_grant_permission_to_use_microphone":
         MessageLookupByLibrary.simpleMessage(
           "Please grant permission to use the microphone",
