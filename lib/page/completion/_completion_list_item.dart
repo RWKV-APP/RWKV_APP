@@ -68,7 +68,7 @@ class CompletionListItem extends StatelessWidget {
       children: [
         content,
         footer!,
-        if (isLast) const SizedBox(height: 20),
+        if (isLast || item.siblingCount == 1) const SizedBox(height: 20),
       ],
     );
   }
