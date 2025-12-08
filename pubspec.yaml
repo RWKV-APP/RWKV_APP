@@ -81,7 +81,6 @@ dependencies:
   crypto:
   cupertino_icons:
   device_info_plus:
-  dio: ^5.9.0
   drift:
   drift_flutter:
   equatable:
