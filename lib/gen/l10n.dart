@@ -3003,16 +3003,6 @@ class S {
     return Intl.message('创意', name: 'creative', desc: '', args: []);
   }
 
-  /// `创意 (推荐)`
-  String get creative_recommended {
-    return Intl.message(
-      '创意 (推荐)',
-      name: 'creative_recommended',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `保守 (适合数学和代码)`
   String get conservative {
     return Intl.message(
@@ -3521,28 +3511,53 @@ class S {
     return Intl.message('星期', name: 'tag_day_of_week', desc: '', args: []);
   }
 
-  /// `输入要续写的段落`
-  String get enter_text_to_expand {
-    return Intl.message(
-      '输入要续写的段落',
-      name: 'enter_text_to_expand',
-      desc: '',
-      args: [],
-    );
+  /// `OCR`
+  String get ocr_title {
+    return Intl.message('OCR', name: 'ocr_title', desc: '', args: []);
   }
 
-  /// `续写`
-  String get continue2 {
-    return Intl.message('续写', name: 'continue2', desc: '', args: []);
+  /// `隐藏翻译`
+  String get hide_translations {
+    return Intl.message('隐藏翻译', name: 'hide_translations', desc: '', args: []);
   }
 
-  /// `请先输入要续写的段落`
-  String get please_entry_some_text_to_continue {
+  /// `显示翻译`
+  String get show_translations {
+    return Intl.message('显示翻译', name: 'show_translations', desc: '', args: []);
+  }
+
+  /// `英->中`
+  String get en_to_zh {
+    return Intl.message('英->中', name: 'en_to_zh', desc: '', args: []);
+  }
+
+  /// `中->英`
+  String get zh_to_en {
+    return Intl.message('中->英', name: 'zh_to_en', desc: '', args: []);
+  }
+
+  /// `从相册选择`
+  String get pick_from_gallery {
+    return Intl.message('从相册选择', name: 'pick_from_gallery', desc: '', args: []);
+  }
+
+  /// `相机`
+  String get camera {
+    return Intl.message('相机', name: 'camera', desc: '', args: []);
+  }
+
+  /// `相册`
+  String get gallery {
+    return Intl.message('相册', name: 'gallery', desc: '', args: []);
+  }
+
+  /// `点击 {takePhoto}。RWKV 将翻译图片中的文本。`
+  String ocr_guide_text(Object takePhoto) {
     return Intl.message(
-      '请先输入要续写的段落',
-      name: 'please_entry_some_text_to_continue',
+      '点击 $takePhoto。RWKV 将翻译图片中的文本。',
+      name: 'ocr_guide_text',
       desc: '',
-      args: [],
+      args: [takePhoto],
     );
   }
 }

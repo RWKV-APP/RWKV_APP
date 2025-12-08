@@ -93,6 +93,10 @@ extension _$Talk on _Talk {
   void _onPageKeyChanged(PageKey? previous, PageKey next) {
     if (previous == PageKey.talk && next != PageKey.talk) {
       P.msg._clear(syncNode: false);
+      _asTimer?.cancel();
+      _asTimer = null;
+      _queryTimer?.cancel();
+      _queryTimer = null;
     } else if (previous != PageKey.talk && next == PageKey.talk) {
       P.msg._clear(syncNode: false);
 

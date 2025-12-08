@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
@@ -16,10 +17,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:gaimon/gaimon.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
 import 'package:path_provider/path_provider.dart';
@@ -30,6 +33,18 @@ import 'package:rwkv_mobile_flutter/from_rwkv.dart' as from_rwkv;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 import 'package:rxdart/rxdart.dart';
+import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
+import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
+import 'package:sprintf/sprintf.dart' show sprintf;
+import 'package:zone/db/db.dart';
+import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/model/bbox.dart';
+import 'package:zone/model/browser_tab.dart';
+import 'package:zone/model/browser_window.dart';
+import 'package:zone/model/backend_state.dart';
+import 'package:zone/model/content_type.dart';
+import 'package:zone/model/custom_theme.dart' as custom_theme;
+import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -112,6 +127,8 @@ part "sudoku.dart";
 part "suggestion.dart";
 part "talk.dart";
 part "translator.dart";
+part "see.dart";
+part "ocr.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -133,6 +150,7 @@ abstract class P {
   static final translator = _Translator();
   static final talk = _Talk();
   static final see = _See();
+  static final ocr = _Ocr();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -171,6 +189,7 @@ abstract class P {
       _safeInit(() => backend._init(), 'backend'),
       _safeInit(() => translator._init(), 'translator'),
       _safeInit(() => lambada._init(), 'lambada'),
+      _safeInit(() => ocr._init(), 'ocr'),
     ]);
   }
 
