@@ -255,6 +255,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "모델 선택을 클릭하세요",
     ),
     "close": MessageLookupByLibrary.simpleMessage("닫기"),
+    "code_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
+      "코드가 클립보드에 복사되었습니다",
+    ),
     "colon": MessageLookupByLibrary.simpleMessage(": "),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "색상 테마 시스템 설정 따르기",
@@ -273,6 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m6,
     "conversations": MessageLookupByLibrary.simpleMessage("대화"),
+    "copy_code": MessageLookupByLibrary.simpleMessage("코드 복사"),
     "copy_text": MessageLookupByLibrary.simpleMessage("텍스트 복사"),
     "correct_count": MessageLookupByLibrary.simpleMessage("정답 수"),
     "create_a_new_one_by_clicking_the_button_above":

@@ -155,6 +155,7 @@ flutter:
     - .env
     - assets/filter.txt
     - assets/lambada_test.jsonl
+    - assets/config/code_highlights/
 
 flutter_intl:
   enabled: true # Required. Must be set to true to activate the plugin. Default: false

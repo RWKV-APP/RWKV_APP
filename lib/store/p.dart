@@ -45,37 +45,27 @@ import 'package:zone/model/browser_window.dart';
 import 'package:zone/model/backend_state.dart';
 import 'package:zone/model/content_type.dart';
 import 'package:zone/model/custom_theme.dart' as custom_theme;
-import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
-import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
-import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:system_info2/system_info2.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/db/db.dart' as db;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
-import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/func/save_asset_to_file.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/io.dart';
 import 'package:zone/model/argument.dart';
-import 'package:zone/model/backend_state.dart';
-import 'package:zone/model/browser_tab.dart';
-import 'package:zone/model/browser_window.dart';
 import 'package:zone/model/cell_type.dart';
-import 'package:zone/model/content_type.dart';
 import 'package:zone/model/cot_display_state.dart';
-import 'package:zone/model/custom_theme.dart' as custom_theme;
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/feature_rollout.dart';
@@ -129,6 +119,7 @@ part "suggestion.dart";
 part "talk.dart";
 part "translator.dart";
 part "ocr.dart";
+part "md_render.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -151,6 +142,7 @@ abstract class P {
   static final talk = _Talk();
   static final see = _See();
   static final ocr = _Ocr();
+  static final mdRender = _MDRender();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -172,31 +164,33 @@ abstract class P {
 
   static Future<void> _unorderedInit() async {
     await Future.wait([
-      _safeInit(() => rwkv._init(), 'rwkv'),
-      _safeInit(() => chat._init(), 'chat'),
-      _safeInit(() => othello._init(), 'othello'),
-      _safeInit(() => fileManager._init(), 'fileManager'),
-      _safeInit(() => device._init(), 'device'),
-      _safeInit(() => adapter._init(), 'adapter'),
-      _safeInit(() => see._init(), 'world'),
-      _safeInit(() => conversation._init(), 'conversation'),
-      _safeInit(() => talk._init(), 'tts'),
-      _safeInit(() => guard._init(), 'guard'),
-      _safeInit(() => sudoku._init(), 'sudoku'),
-      _safeInit(() => suggestion._init(), 'suggestion'),
-      _safeInit(() => dump._init(), 'dump'),
-      _safeInit(() => msg._init(), 'msg'),
-      _safeInit(() => backend._init(), 'backend'),
-      _safeInit(() => translator._init(), 'translator'),
-      _safeInit(() => lambada._init(), 'lambada'),
-      _safeInit(() => ocr._init(), 'ocr'),
+      _safeInit(() => rwkv._init()),
+      _safeInit(() => chat._init()),
+      _safeInit(() => othello._init()),
+      _safeInit(() => fileManager._init()),
+      _safeInit(() => device._init()),
+      _safeInit(() => adapter._init()),
+      _safeInit(() => see._init()),
+      _safeInit(() => conversation._init()),
+      _safeInit(() => talk._init()),
+      _safeInit(() => guard._init()),
+      _safeInit(() => sudoku._init()),
+      _safeInit(() => suggestion._init()),
+      _safeInit(() => dump._init()),
+      _safeInit(() => msg._init()),
+      _safeInit(() => backend._init()),
+      _safeInit(() => translator._init()),
+      _safeInit(() => lambada._init()),
+      _safeInit(() => ocr._init()),
+      _safeInit(() => mdRender._init()),
     ]);
   }
 
-  static Future<void> _safeInit(Future<void> Function() initFunc, String name) async {
+  static Future<void> _safeInit(Future<void> Function() initFunc) async {
     try {
       await initFunc();
     } catch (e) {
+      final name = initFunc.runtimeType.toString();
       qqe('Error initializing $name: $e');
     }
   }

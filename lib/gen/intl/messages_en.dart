@@ -298,6 +298,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Click to select model",
     ),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
+    "code_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
+      "Code copied to clipboard",
+    ),
     "colon": MessageLookupByLibrary.simpleMessage(": "),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Follow system appearance",
@@ -321,6 +324,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m6,
     "conversations": MessageLookupByLibrary.simpleMessage("Conversations"),
+    "copy_code": MessageLookupByLibrary.simpleMessage("Copy code"),
     "copy_text": MessageLookupByLibrary.simpleMessage("Copy text"),
     "correct_count": MessageLookupByLibrary.simpleMessage("Correct Count"),
     "create_a_new_one_by_clicking_the_button_above":

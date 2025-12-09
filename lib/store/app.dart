@@ -258,7 +258,7 @@ extension _$App on _App {
     await Highlighter.initialize(['dart', 'yaml', 'sql', 'python', "javascript"]);
     Future.delayed(const Duration(milliseconds: 1000)).then((_) async {
       qqr("load light theme");
-      var theme = await HighlighterTheme.loadLightTheme();
+      var theme = await HighlighterTheme.loadDarkTheme();
       highlighter.q = Highlighter(
         language: 'javascript',
         theme: theme,

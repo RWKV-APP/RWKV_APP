@@ -761,6 +761,16 @@ class S {
     );
   }
 
+  /// `代码已复制到剪贴板`
+  String get code_copied_to_clipboard {
+    return Intl.message(
+      '代码已复制到剪贴板',
+      name: 'code_copied_to_clipboard',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `请输入消息内容`
   String get chat_empty_message {
     return Intl.message(
@@ -2731,6 +2741,11 @@ class S {
   /// `复制文本`
   String get copy_text {
     return Intl.message('复制文本', name: 'copy_text', desc: '', args: []);
+  }
+
+  /// `复制代码`
+  String get copy_code {
+    return Intl.message('复制代码', name: 'copy_code', desc: '', args: []);
   }
 
   /// `推理引擎`

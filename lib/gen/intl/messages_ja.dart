@@ -253,6 +253,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "モデルを選択するにはクリック",
     ),
     "close": MessageLookupByLibrary.simpleMessage("閉じる"),
+    "code_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
+      "コードがクリップボードにコピーされました",
+    ),
     "colon": MessageLookupByLibrary.simpleMessage("："),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "カラーテーマはシステムに従う",
@@ -271,6 +274,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m6,
     "conversations": MessageLookupByLibrary.simpleMessage("会話"),
+    "copy_code": MessageLookupByLibrary.simpleMessage("コードをコピー"),
     "copy_text": MessageLookupByLibrary.simpleMessage("テキストをコピー"),
     "correct_count": MessageLookupByLibrary.simpleMessage("正解数"),
     "create_a_new_one_by_clicking_the_button_above":
