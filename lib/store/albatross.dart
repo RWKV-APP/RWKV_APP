@@ -17,7 +17,14 @@ import 'package:zone/store/p.dart';
 class Albatross {
   static const _chunkSize = 3;
 
-  late final _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:9527'));
+  late final _dio = Dio(
+    BaseOptions(
+      baseUrl: 'http://127.0.0.1:9527',
+      connectTimeout: Duration(seconds: 30),
+      receiveTimeout: Duration(seconds: 30),
+      sendTimeout: Duration(seconds: 30),
+    ),
+  );
   CancelToken? _cancelToken;
 
   String get host => _dio.options.baseUrl.replaceFirst('http://', '');
@@ -162,6 +169,9 @@ class Albatross {
           final index = c['index'];
           final content = c['delta']['content'] as String;
           buffer[index] += content;
+          if (enableThink && !buffer[index].startsWith('<think')) {
+            buffer[index] = '<think${buffer[index]}';
+          }
           if (batchSize == 1) {
             yield ResponseBufferContent(responseBufferContent: buffer[0], eosFound: false);
           } else {
