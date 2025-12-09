@@ -177,8 +177,6 @@ class _ModelList extends ConsumerWidget {
       DemoType.fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
     };
 
-    // debugger();
-
     final ttsCores = ref.watch(P.fileManager.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
@@ -192,7 +190,7 @@ class _ModelList extends ConsumerWidget {
       );
     }
 
-    final inTranslator = pageKey == PageKey.translator;
+    final inTranslator = pageKey == PageKey.translator || pageKey == PageKey.ocr;
     final inBenchmark = pageKey == PageKey.benchmark;
 
     if (inTranslator) {

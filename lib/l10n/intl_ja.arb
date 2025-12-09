@@ -516,5 +516,19 @@
       "h6Size": {},
       "bodySize": {}
     }
+  },
+  "ocr_title": "OCR",
+  "hide_translations": "翻訳を非表示",
+  "show_translations": "翻訳を表示",
+  "en_to_zh": "英->中",
+  "zh_to_en": "中->英",
+  "pick_from_gallery": "ギャラリーから選択",
+  "camera": "カメラ",
+  "gallery": "ギャラリー",
+  "ocr_guide_text": "{takePhoto} をクリックしてください。RWKV が画像内のテキストを翻訳します。",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
   }
 }

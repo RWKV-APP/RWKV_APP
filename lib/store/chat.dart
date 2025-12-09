@@ -764,7 +764,7 @@ extension _$Chat on _Chat {
 
   void _fullyReceived({String? callingFunction}) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.translator || pageKey == PageKey.benchmark || pageKey == PageKey.completion) return;
+    if (pageKey == PageKey.translator || pageKey == PageKey.ocr || pageKey == PageKey.benchmark || pageKey == PageKey.completion) return;
     qqq("callingFunction: $callingFunction");
 
     final id = receiveId.q;

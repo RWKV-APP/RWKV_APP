@@ -357,7 +357,8 @@ class _TranslatorButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
-          push(PageKey.translator);
+          if (isDesktop) push(.translator);
+          if (!isDesktop) push(.ocr);
         },
         child: Padding(
           padding: const .all(16),
@@ -379,11 +380,14 @@ class _TranslatorButton extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                isDesktop ? s.offline_translator_server : s.offline_translator,
+                s.offline_translator,
                 style: const TextStyle(fontSize: 16, fontWeight: .bold),
               ),
               const SizedBox(height: 8),
-              Text(s.offline_translator_detail, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(
+                s.offline_translator_detail,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
               const SizedBox(height: 6),
             ],
           ),
