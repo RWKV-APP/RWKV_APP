@@ -63,6 +63,7 @@ class MarkdownRenderer extends ConsumerWidget {
           closed: closed,
         );
       },
+      highlightBuilder: (context, text, style) => _Highlight(text: text, style: style),
     );
 
     return Theme(
@@ -83,6 +84,38 @@ class MarkdownRenderer extends ConsumerWidget {
   }
 }
 
+// For inline code highlight
+class _Highlight extends ConsumerWidget {
+  final String text;
+  final TextStyle style;
+  const _Highlight({required this.text, required this.style});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dark = ref.watch(P.app.dark);
+    final qw = ref.watch(P.app.qw);
+    final qb = ref.watch(P.app.qb);
+    return C(
+      decoration: BoxDecoration(
+        color: dark ? qw.q(.5) : qb.q(.04),
+        borderRadius: .circular(6),
+        border: Border.all(color: dark ? qb.q(.2) : qb.q(.2)),
+      ),
+      padding: .only(left: 4, right: 4, top: 0, bottom: 0),
+      child: Text.rich(
+        TextSpan(
+          text: text,
+          style: style.copyWith(
+            fontSize: (style.fontSize ?? 14) - 2,
+            fontFamily: P.mdRender.codeFontFamily,
+            fontFamilyFallback: P.mdRender.codeFontFamilyFallback,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// For code block highlight
 class _Code extends ConsumerStatefulWidget {
   final BuildContext context;
   final String name;
@@ -275,15 +308,9 @@ class _CodeState extends ConsumerState<_Code> {
               padding: .only(left: 8, right: 8),
               child: Text.rich(
                 highlightedCode,
-                style: const TextStyle(
-                  fontFamily: 'monospace',
-                  fontFamilyFallback: [
-                    'Menlo', // iOS, macOS
-                    'Roboto Mono', // Android
-                    'Consolas', // Windows
-                    'DejaVu Sans Mono', // Linux
-                    'Courier New', // Fallback
-                  ],
+                style: TextStyle(
+                  fontFamily: P.mdRender.codeFontFamily,
+                  fontFamilyFallback: P.mdRender.codeFontFamilyFallback,
                 ),
               ),
             ),

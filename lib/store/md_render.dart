@@ -19,6 +19,15 @@ class _MDRender {
     "yaml",
   ];
 
+  late final codeFontFamily = 'monospace';
+  late final codeFontFamilyFallback = [
+    'Menlo', // iOS, macOS
+    'Roboto Mono', // Android
+    'Consolas', // Windows
+    'DejaVu Sans Mono', // Linux
+    'Courier New', // Fallback
+  ];
+
   late final defaultCodeLanguage = "python";
 
   late final highlighters = qsf<String, Highlighter?>(null);
@@ -51,6 +60,7 @@ extension _$MDRender on _MDRender {
 /// Public methods
 extension $MDRender on _MDRender {
   Future<bool> tryToLoadLanguageHighlighter(String language) async {
+    if (language.trim() == "") return true;
     final contains = _MDRender.supportedCodeLanguages.contains(language);
     if (!contains) {
       qqw("Language $language is not supported");
