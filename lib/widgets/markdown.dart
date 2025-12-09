@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gpt_markdown/custom_widgets/code_field.dart' show CodeField;
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart' show OrderedListView;
 import 'package:gpt_markdown/gpt_markdown.dart';
+import 'package:halo/halo.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/config.dart';
+import 'package:zone/store/p.dart';
 
 class MarkdownRenderer extends ConsumerWidget {
   final String raw;
@@ -49,12 +51,18 @@ class MarkdownRenderer extends ConsumerWidget {
         style: (config.style ?? const TextStyle()),
         child: child,
       ),
-      codeBuilder: (context, name, code, closed) => CodeField(
-        name: "Code",
-        codes: code,
-        backgroundColor: const Color(0xFF1E1E1E),
-        textColor: const Color(0xFFE0E0E0),
-      ),
+      codeBuilder: (context, name, code, closed) {
+        qqr(name);
+        qqr(code);
+        var highlightedCode = P.app.highlighter.q!.highlight(code);
+        return SingleChildScrollView(
+          scrollDirection: .horizontal,
+          child: Container(
+            decoration: BD(color: kB),
+            child: Text.rich(highlightedCode),
+          ),
+        );
+      },
     );
 
     return Theme(

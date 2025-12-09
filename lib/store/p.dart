@@ -34,6 +34,7 @@ import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 import 'package:rxdart/rxdart.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
+import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/db/db.dart';
