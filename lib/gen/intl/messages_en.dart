@@ -309,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "conservative": MessageLookupByLibrary.simpleMessage(
       "Conservative (math & code)",
     ),
+    "continue2": MessageLookupByLibrary.simpleMessage("Continue"),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Continue Download",
     ),
@@ -328,6 +329,9 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "created_at": MessageLookupByLibrary.simpleMessage("Created at"),
     "creative": MessageLookupByLibrary.simpleMessage("Creative"),
+    "creative_recommended": MessageLookupByLibrary.simpleMessage(
+      "Creative (recommended)",
+    ),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
@@ -415,6 +419,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Please ensure your device has enough memory, otherwise the application might crash",
         ),
+    "enter_text_to_expand": MessageLookupByLibrary.simpleMessage(
+      "Enter text to expand",
+    ),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "Enter text to translate...",
     ),
@@ -674,6 +681,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "Please enter the difficulty",
+    ),
+    "please_entry_some_text_to_continue": MessageLookupByLibrary.simpleMessage(
+      "Please entry some text to continue",
     ),
     "please_grant_permission_to_use_microphone":
         MessageLookupByLibrary.simpleMessage(

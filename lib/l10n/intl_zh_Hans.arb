@@ -440,6 +440,7 @@
   "decode_param": "解码参数",
   "fixed": "固定",
   "creative": "创意",
+  "creative_recommended": "创意 (推荐)",
   "conservative": "保守 (适合数学和代码)",
   "default_": "默认",
   "balanced": "均衡",
@@ -533,5 +534,8 @@
     "placeholders": {
       "takePhoto": {}
     }
-  }
+  },
+  "enter_text_to_expand": "输入要续写的段落",
+  "continue2": "续写",
+  "please_entry_some_text_to_continue": "请先输入要续写的段落"
 }

@@ -121,6 +121,7 @@ dependencies:
   system_info2:
   url_launcher:
   web_socket_channel:
+  flutter_svg: ^2.2.3
 
 dependency_overrides:
   rwkv_mobile_flutter:
