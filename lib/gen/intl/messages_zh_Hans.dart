@@ -240,6 +240,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "click_to_load_image": MessageLookupByLibrary.simpleMessage("点击加载图片"),
     "click_to_select_model": MessageLookupByLibrary.simpleMessage("点击选择模型"),
     "close": MessageLookupByLibrary.simpleMessage("关闭"),
+    "code_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
+      "代码已复制到剪贴板",
+    ),
     "colon": MessageLookupByLibrary.simpleMessage("："),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "色彩模式跟随系统",
@@ -259,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m6,
     "conversations": MessageLookupByLibrary.simpleMessage("会话"),
+    "copy_code": MessageLookupByLibrary.simpleMessage("复制代码"),
     "copy_text": MessageLookupByLibrary.simpleMessage("复制文本"),
     "correct_count": MessageLookupByLibrary.simpleMessage("正确数"),
     "create_a_new_one_by_clicking_the_button_above":

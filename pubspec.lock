@@ -770,11 +770,9 @@ packages:
   gpt_markdown:
     dependency: "direct main"
     description:
-      path: "."
-      ref: main
-      resolved-ref: "3cefeea2c7d41916ce1ec62a38777aa01d28a53b"
-      url: "https://github.com/HaloWang/gpt_markdown"
-    source: git
+      path: "../gpt_markdown"
+      relative: true
+    source: path
     version: "1.1.4"
   gradient_borders:
     dependency: transitive
@@ -1782,6 +1780,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.4.0"
+  syntax_highlight:
+    dependency: "direct main"
+    description:
+      name: syntax_highlight
+      sha256: ee33b6aa82cc722bb9b40152a792181dee222353b486c0255fde666a3e3a4997
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.4.0"
   system_info2:
     dependency: "direct main"
     description:

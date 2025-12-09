@@ -238,6 +238,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "click_to_load_image": MessageLookupByLibrary.simpleMessage("點擊載入圖片"),
     "click_to_select_model": MessageLookupByLibrary.simpleMessage("點擊選擇模型"),
     "close": MessageLookupByLibrary.simpleMessage("關閉"),
+    "code_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
+      "代碼已複製到剪貼簿",
+    ),
     "colon": MessageLookupByLibrary.simpleMessage("："),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "色彩模式跟隨系統",
@@ -256,6 +259,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m6,
     "conversations": MessageLookupByLibrary.simpleMessage("對話"),
+    "copy_code": MessageLookupByLibrary.simpleMessage("複製代碼"),
     "copy_text": MessageLookupByLibrary.simpleMessage("複製文字"),
     "correct_count": MessageLookupByLibrary.simpleMessage("正確數"),
     "create_a_new_one_by_clicking_the_button_above":

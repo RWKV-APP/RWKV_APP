@@ -305,6 +305,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нажмите, чтобы выбрать модель",
     ),
     "close": MessageLookupByLibrary.simpleMessage("Закрыть"),
+    "code_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
+      "Код скопирован в буфер обмена",
+    ),
     "colon": MessageLookupByLibrary.simpleMessage(": "),
     "color_theme_follow_system": MessageLookupByLibrary.simpleMessage(
       "Цветовая схема как в системе",
@@ -327,6 +330,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "conversation_name_cannot_be_longer_than_30_characters": m6,
     "conversations": MessageLookupByLibrary.simpleMessage("Диалоги"),
+    "copy_code": MessageLookupByLibrary.simpleMessage("Копировать код"),
     "copy_text": MessageLookupByLibrary.simpleMessage("Копировать текст"),
     "correct_count": MessageLookupByLibrary.simpleMessage(
       "Количество правильных",
