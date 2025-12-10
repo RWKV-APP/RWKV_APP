@@ -141,10 +141,10 @@ packages:
     dependency: "direct main"
     description:
       name: background_downloader
-      sha256: a3b340e42bc45598918944e378dc6a05877e587fcd0e1b8d2ea26339de87bdf9
+      sha256: efe41340f6518449f6c5f116d9bcecc97bbff7708efe47d7a645478117ce15fd
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "9.4.0"
+    version: "9.4.1"
   boolean_selector:
     dependency: transitive
     description:
