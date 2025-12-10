@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/store/p.dart';
 
@@ -44,6 +45,8 @@ class PageTab extends ConsumerWidget {
           selectedIndex: tabIndex,
           onDestinationSelected: P.app.onTabSelected,
           labelType: NavigationRailLabelType.all,
+          leading: 12.h,
+          trailing: 12.h,
           destinations: <NavigationRailDestination>[
             NavigationRailDestination(
               icon: const Icon(Icons.home_outlined),

@@ -44,18 +44,19 @@ class _PageHomeState extends ConsumerState<PageHome> {
     final ratio = width / height;
 
     late final int crossAxisCount;
-    if (ratio > 1.2) {
+
+    if (ratio > 1.2 && width > 1024) {
       crossAxisCount = 4;
-    } else if (ratio > 1.0) {
-      crossAxisCount = 3;
-    } else {
+    } else if (ratio < 1.0 && width < 900) {
       crossAxisCount = 2;
+    } else {
+      crossAxisCount = 3;
     }
 
     final isLandscape = ratio > 1;
     final maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
-    final containerPaddingTop = (isLandscape ? 300 : 295) - paddingTop;
-    final containerPaddingHorizontal = ratio > 0.9 ? 24.0 : 12.0;
+    final containerPaddingTop = 300 - paddingTop;
+    final containerPaddingHorizontal = crossAxisCount == 3 ? 24.0 : 12.0;
 
     return AppScaffold(
       body: Stack(
