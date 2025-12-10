@@ -478,7 +478,7 @@
   "source_text": "소스 텍스트: {text}",
   "target_text": "타겟 텍스트: {text}",
   "performance_test_title": "성능 테스트",
-  "performance_test_description": "lambada를 사용하여 perplexity 테스트",
+  "performance_test_description": "LAMBADA ppl 테스트",
   "start_download_updates_": "백그라운드 업데이트 다운로드 시작...",
   "switch_to_creative_mode_for_better_exp": "더 나은 경험을 위해 '창의적 모드'로 전환하는 것을 권장합니다",
   "parameter_description": "매개변수 설명",

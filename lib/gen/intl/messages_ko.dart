@@ -548,7 +548,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "penalty_decay_with_value": m18,
     "performance_test": MessageLookupByLibrary.simpleMessage("성능 테스트"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "lambada를 사용하여 perplexity 테스트",
+      "LAMBADA ppl 테스트",
     ),
     "performance_test_title": MessageLookupByLibrary.simpleMessage("성능 테스트"),
     "perplexity": MessageLookupByLibrary.simpleMessage("혼란도"),

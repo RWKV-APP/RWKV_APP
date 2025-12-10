@@ -478,7 +478,7 @@
   "source_text": "ソーステキスト: {text}",
   "target_text": "ターゲットテキスト: {text}",
   "performance_test_title": "パフォーマンステスト",
-  "performance_test_description": "lambada を使用して perplexity をテスト",
+  "performance_test_description": "LAMBADA ppl テスト",
   "start_download_updates_": "アップデートのバックグラウンドダウンロードを開始...",
   "switch_to_creative_mode_for_better_exp": "より良い体験のために「クリエイティブモード」への切り替えをお勧めします",
   "parameter_description": "パラメータ説明",

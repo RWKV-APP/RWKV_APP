@@ -661,7 +661,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Performance Test",
     ),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "Use lambada to test perplexity",
+      "Test LAMBADA ppl",
     ),
     "performance_test_title": MessageLookupByLibrary.simpleMessage(
       "Performance Test",

@@ -3283,10 +3283,10 @@ class S {
     );
   }
 
-  /// `使用 lambada 测试 perplexity`
+  /// `测试 LAMBADA ppl`
   String get performance_test_description {
     return Intl.message(
-      '使用 lambada 测试 perplexity',
+      '测试 LAMBADA ppl',
       name: 'performance_test_description',
       desc: '',
       args: [],

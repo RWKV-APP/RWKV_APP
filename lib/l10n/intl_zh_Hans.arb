@@ -479,7 +479,7 @@
   "source_text": "源文本: {text}",
   "target_text": "目标文本: {text}",
   "performance_test_title": "跑分测试",
-  "performance_test_description": "使用 lambada 测试 perplexity",
+  "performance_test_description": "测试 LAMBADA ppl",
   "start_download_updates_": "开始后台下载更新...",
   "switch_to_creative_mode_for_better_exp": "解码参数建议选择 “创意”, 以便获得更好的体验",
   "parameter_description": "参数说明",

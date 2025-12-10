@@ -503,7 +503,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "penalty_decay_with_value": m18,
     "performance_test": MessageLookupByLibrary.simpleMessage("效能測試"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "使用 lambada 測試 perplexity",
+      "測試 LAMBADA ppl",
     ),
     "performance_test_title": MessageLookupByLibrary.simpleMessage("跑分測試"),
     "perplexity": MessageLookupByLibrary.simpleMessage("困惑度"),

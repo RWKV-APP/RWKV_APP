@@ -478,7 +478,7 @@
   "source_text": "Исходный текст: {text}",
   "target_text": "Целевой текст: {text}",
   "performance_test_title": "Тест производительности",
-  "performance_test_description": "Использовать lambada для тестирования perplexity",
+  "performance_test_description": "Тест LAMBADA ppl",
   "start_download_updates_": "Начать фоновую загрузку обновлений...",
   "switch_to_creative_mode_for_better_exp": "Рекомендуется переключиться в режим «Творческий» для лучшего опыта",
   "parameter_description": "Описание параметров",
