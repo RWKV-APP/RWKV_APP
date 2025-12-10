@@ -61,7 +61,7 @@ class _PageHomeState extends ConsumerState<PageHome> {
     return AppScaffold(
       body: Stack(
         children: [
-          _Welcome(),
+          const _Welcome(),
           Positioned.fill(
             child: SingleChildScrollView(
               controller: controller,

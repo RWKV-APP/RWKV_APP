@@ -32,14 +32,14 @@ class CompletionTitleBar extends ConsumerWidget {
         s.custom;
 
     final buttonStyle = OutlinedButton.styleFrom(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      textStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
     );
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: kToolbarHeight),
+        const SizedBox(height: kToolbarHeight),
         Row(
           children: [
             const SizedBox(width: 24),
@@ -47,14 +47,14 @@ class CompletionTitleBar extends ConsumerWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               iconSize: 20,
             ),
             Expanded(
               child: Text(
                 'RWKV·${s.continue2}',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, height: 1),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400, height: 1),
               ),
             ),
             IconButton(
@@ -124,7 +124,7 @@ class CompletionTitleBar extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 24),
-        Divider(indent: 28, endIndent: 28),
+        const Divider(indent: 28, endIndent: 28),
       ],
     );
   }

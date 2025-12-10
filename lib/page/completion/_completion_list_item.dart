@@ -14,14 +14,14 @@ class CompletionListItem extends StatelessWidget {
   final Widget? footer;
   final bool isLast;
 
-  CompletionListItem({super.key, required this.item, this.footer, required this.isLast});
+  const CompletionListItem({super.key, required this.item, this.footer, required this.isLast});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget content = Container(
       width: double.infinity,
-      margin: footer != null ? null : EdgeInsets.only(bottom: 20),
+      margin: footer != null ? null : const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         color: item.isUser ? null : theme.colorScheme.primary.withAlpha(0x1A),
         border: Border(
@@ -31,15 +31,15 @@ class CompletionListItem extends StatelessWidget {
           ),
         ),
       ),
-      padding: EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
+      padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
       child: item.content.isEmpty
-          ? Align(
+          ? const Align(
               alignment: Alignment.centerLeft,
               child: SizedBox(height: 14, width: 14, child: CircularProgressIndicator(strokeWidth: 2)),
             )
           : SelectableText(
               item.content, //
-              style: TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
+              style: const TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
             ),
     );
     if (footer == null) return content;
@@ -56,7 +56,7 @@ class CompletionListItem extends StatelessWidget {
             final sc = Scrollable.of(context);
             sc.position.animateTo(
               sc.position.pixels + offset, //
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
             );
           }
@@ -78,7 +78,7 @@ class CompletionListItemFooter extends ConsumerWidget {
   final CompletionItemNode item;
   final bool isLast;
 
-  CompletionListItemFooter({super.key, required this.item, required this.isLast});
+  const CompletionListItemFooter({super.key, required this.item, required this.isLast});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,10 +90,10 @@ class CompletionListItemFooter extends ConsumerWidget {
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
 
     final speed = Padding(
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Text(
         "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
-        style: TextStyle(fontSize: 8, fontFamily: 'monospace'),
+        style: const TextStyle(fontSize: 8, fontFamily: 'monospace'),
         textAlign: TextAlign.end,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -105,7 +105,7 @@ class CompletionListItemFooter extends ConsumerWidget {
       children: [
         if (!generating && isLast)
           Transform.translate(
-            offset: Offset(-8, 0),
+            offset: const Offset(-8, 0),
             child: IconButton(
               onPressed: () {
                 CompletionController.current.onRegenerateTap(item);
@@ -131,7 +131,7 @@ class CompletionListItemFooter extends ConsumerWidget {
                 IconButton(
                   onPressed: item.index == 0 ? null : () => CompletionController.current.onPrevChooseTap(item),
                   color: theme.colorScheme.primary,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_circle_left_outlined,
                     size: 18,
                   ),
@@ -144,7 +144,7 @@ class CompletionListItemFooter extends ConsumerWidget {
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: item.index == item.siblingCount - 1 ? null : () => CompletionController.current.onNextChooseTap(item),
-                  icon: Icon(Icons.arrow_circle_right_outlined, size: 18),
+                  icon: const Icon(Icons.arrow_circle_right_outlined, size: 18),
                   color: theme.colorScheme.primary,
                 ),
                 if (isLast) const SizedBox(width: 8),

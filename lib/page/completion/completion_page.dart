@@ -33,8 +33,8 @@ class _CompletionPageState extends State<CompletionPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = isDark ? Color(0xFF9E7C59) : Color(0xFF8C3A3A);
-    final backgroundColor = isDark ? Color(0xFF242424) : Color(0xFFFDFBF7);
+    final primaryColor = isDark ? const Color(0xFF9E7C59) : const Color(0xFF8C3A3A);
+    final backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
     final themeV2 = ThemeData(
       cardColor: Colors.white,
       bottomSheetTheme: theme.bottomSheetTheme,
@@ -42,16 +42,16 @@ class _CompletionPageState extends State<CompletionPage> {
       dividerTheme: DividerThemeData(
         space: 0,
         thickness: 1,
-        color: isDark ? Color(0x99FFFFFF) : Color(0x26000000),
+        color: isDark ? const Color(0x99FFFFFF) : const Color(0x26000000),
       ),
       fontFamily: theme.textTheme.bodyMedium?.fontFamily,
       fontFamilyFallback: theme.textTheme.bodyMedium?.fontFamilyFallback,
       scaffoldBackgroundColor: backgroundColor,
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: Size(120, 50),
+          minimumSize: const Size(120, 50),
           disabledBackgroundColor: Colors.grey.shade400,
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
       colorScheme: ColorScheme.fromSeed(
@@ -63,18 +63,18 @@ class _CompletionPageState extends State<CompletionPage> {
       popupMenuTheme: PopupMenuThemeData(
         shape: RoundedRectangleBorder(borderRadius: .circular(8)),
         menuPadding: .zero,
-        color: isDark ? Color(0xFF2E2E2E) : Colors.white,
+        color: isDark ? const Color(0xFF2E2E2E) : Colors.white,
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           visualDensity: VisualDensity.standard,
-          minimumSize: WidgetStatePropertyAll(Size.zero),
+          minimumSize: const WidgetStatePropertyAll(Size.zero),
           backgroundColor: WidgetStatePropertyAll(primaryColor.withAlpha(0x2B)),
           side: WidgetStatePropertyAll(BorderSide(color: primaryColor, width: 1)),
         ),
       ),
-      iconButtonTheme: IconButtonThemeData(
+      iconButtonTheme: const IconButtonThemeData(
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           minimumSize: WidgetStatePropertyAll(Size.zero),
@@ -86,7 +86,7 @@ class _CompletionPageState extends State<CompletionPage> {
     return Theme(
       data: themeV2,
       child: Scaffold(
-        appBar: PreferredSize(
+        appBar: const PreferredSize(
           preferredSize: Size.fromHeight(90 + kToolbarHeight), //
           child: CompletionTitleBar(),
         ),
@@ -95,7 +95,7 @@ class _CompletionPageState extends State<CompletionPage> {
         floatingActionButton: _FloatButton(),
         body: SafeArea(
           child: Listener(
-            child: _PageBody(),
+            child: const _PageBody(),
             onPointerDown: (_) {
               if (CompletionState.autoScrolling) {
                 CompletionState.autoScrolling = false;
@@ -106,7 +106,7 @@ class _CompletionPageState extends State<CompletionPage> {
             },
             onPointerUp: (_) async {
               if (autoScrolling) {
-                Future.delayed(Duration(milliseconds: 1000), () {
+                Future.delayed(const Duration(milliseconds: 1000), () {
                   CompletionState.autoScrolling = true;
                 });
               }
@@ -158,13 +158,13 @@ class _PageBody extends ConsumerWidget {
         Positioned.fill(
           child: ListView.builder(
             itemCount: items.length + 1,
-            padding: EdgeInsets.only(left: 32, right: 32, top: 16, bottom: 100),
+            padding: const EdgeInsets.only(left: 32, right: 32, top: 16, bottom: 100),
             itemBuilder: (ctx, index) {
               if (index == items.length) {
-                return _UserInputArea();
+                return const _UserInputArea();
               }
               if (index == 0) {
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               }
               final item = items[index];
               return CompletionListItem(
@@ -195,7 +195,7 @@ class _UserInputArea extends ConsumerWidget {
           left: BorderSide(color: theme.dividerColor, width: 1),
         ),
       ),
-      padding: EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
+      padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
       child: Stack(
         children: [
           TextField(
@@ -207,8 +207,8 @@ class _UserInputArea extends ConsumerWidget {
               hintText: S.current.enter_text_to_expand,
               border: InputBorder.none,
             ),
-            style: TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
-            scrollPadding: EdgeInsets.only(bottom: 100),
+            style: const TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
+            scrollPadding: const EdgeInsets.only(bottom: 100),
             minLines: 1,
             maxLines: null,
           ),
@@ -224,8 +224,8 @@ class _UserInputArea extends ConsumerWidget {
                   },
                   style: ButtonStyle(
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    minimumSize: WidgetStatePropertyAll(Size.zero),
-                    padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
+                    minimumSize: const WidgetStatePropertyAll(Size.zero),
+                    padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
                     backgroundColor: WidgetStatePropertyAll(theme.dividerColor.withAlpha(0x2B)),
                     side: WidgetStatePropertyAll(BorderSide(color: theme.dividerColor, width: 1)),
                   ),

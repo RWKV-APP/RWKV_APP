@@ -20,9 +20,9 @@ class Albatross {
   late final _dio = Dio(
     BaseOptions(
       baseUrl: 'http://127.0.0.1:9527',
-      connectTimeout: Duration(seconds: 30),
-      receiveTimeout: Duration(seconds: 30),
-      sendTimeout: Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
     ),
   );
   CancelToken? _cancelToken;

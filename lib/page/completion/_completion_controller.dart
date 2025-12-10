@@ -55,7 +55,7 @@ class CompletionController {
   void onStopTap() async {
     CompletionState.generateButtonEnabled.q = false;
     P.rwkv.stop();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     CompletionState.generating.q = false;
     CompletionState.generateButtonEnabled.q = true;
   }

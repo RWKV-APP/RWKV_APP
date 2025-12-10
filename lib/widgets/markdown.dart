@@ -100,7 +100,7 @@ class _Highlight extends ConsumerWidget {
         borderRadius: .circular(6),
         border: Border.all(color: dark ? qb.q(.2) : qb.q(.2)),
       ),
-      padding: .only(left: 4, right: 4, top: 0, bottom: 0),
+      padding: const .only(left: 4, right: 4, top: 0, bottom: 0),
       child: Text.rich(
         TextSpan(
           text: text,
@@ -260,8 +260,8 @@ class _CodeState extends ConsumerState<_Code> {
         color: dark ? qw.q(.5) : qb.q(.04),
         borderRadius: .circular(8),
       ),
-      padding: .only(left: 0, right: 0, top: 4, bottom: 4),
-      margin: .only(bottom: 4, top: 4),
+      padding: const .only(left: 0, right: 0, top: 4, bottom: 4),
+      margin: const .only(bottom: 4, top: 4),
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
@@ -273,7 +273,7 @@ class _CodeState extends ConsumerState<_Code> {
                 widget.name,
                 s: TS(s: 14, w: .w500, c: qb.q(.5)),
               ),
-              Spacer(),
+              const Spacer(),
               IconButton(
                 onPressed: _onCopyPressed,
                 icon: const Icon(Icons.copy),
@@ -305,7 +305,7 @@ class _CodeState extends ConsumerState<_Code> {
             child: SingleChildScrollView(
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
-              padding: .only(left: 8, right: 8),
+              padding: const .only(left: 8, right: 8),
               child: Text.rich(
                 highlightedCode,
                 style: TextStyle(
