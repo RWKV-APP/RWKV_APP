@@ -19,18 +19,6 @@ dependencies:
   #      url: https://github.com/MollySophia/rwkv_mobile_flutter
   #      ref: dev
 
-  flutter_roleplay:
-    git:
-      url: https://github.com/chenqi2013/flutter_roleplay
-      ref: 6ba659b74764d4395a4a193ccfa1342b0bde5a7b
-
-  rwkv_downloader:
-    # Local development, fix some bugs
-    # path: ../rwkv_downloader
-    git:
-      url: https://github.com/RWKV-APP/rwkv_downloader.git
-      ref: master
-
   photo_viewer:
     # Local development, fix some bugs
     # path: ../photo_viewer
@@ -67,6 +55,30 @@ dependencies:
     #   url: https://github.com/Infinitix-LLC/gpt_markdown
     #   ref: main
 
+  syntax_highlight:
+    # Local development, fix some bugs
+    # path: ../syntax_highlight
+    # Git development, for your company's project
+    git:
+      url: https://github.com/HaloWang/syntax_highlight
+      ref: main
+    # Original repository
+    # git:
+    #   url: https://github.com/serverpod/syntax_highlight
+    #   ref: main
+
+  rwkv_downloader:
+    # Local development, fix some bugs
+    # path: ../rwkv_downloader
+    git:
+      url: https://github.com/RWKV-APP/rwkv_downloader.git
+      ref: master
+
+  flutter_roleplay:
+    git:
+      url: https://github.com/chenqi2013/flutter_roleplay
+      ref: 6ba659b74764d4395a4a193ccfa1342b0bde5a7b
+
   disable_battery_optimization:
     git:
       url: https://github.com/pvsvamsi/Disable-Battery-Optimizations
@@ -84,7 +96,6 @@ dependencies:
   dio: ^5.9.0
   drift:
   drift_flutter:
-  syntax_highlight:
   equatable:
   file_picker:
   flutter_dotenv:
