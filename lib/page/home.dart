@@ -38,43 +38,62 @@ class _PageHomeState extends ConsumerState<PageHome> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
+    final width = ref.watch(P.app.screenWidth);
+    final height = ref.watch(P.app.screenHeight);
+    final paddingTop = ref.watch(P.app.paddingTop);
+    final ratio = width / height;
 
-    final isLandscape = width > 600;
-    final crossAxisCount = isLandscape ? 3 : 2;
+    late final int crossAxisCount;
+    if (ratio > 1.2) {
+      crossAxisCount = 4;
+    } else if (ratio > 1.0) {
+      crossAxisCount = 3;
+    } else {
+      crossAxisCount = 2;
+    }
+
+    final isLandscape = ratio > 1;
     final maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
+    final containerPaddingTop = (isLandscape ? 300 : 295) - paddingTop;
+    final containerPaddingHorizontal = ratio > 0.9 ? 24.0 : 12.0;
 
     return AppScaffold(
       body: Stack(
         children: [
           _Welcome(),
-          SingleChildScrollView(
-            controller: controller,
-            padding: .only(top: 300, left: 12, right: 12),
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: MasonryGridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: crossAxisCount,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              itemBuilder: (context, index) {
-                final widgets = [
-                  const _ChatButton(),
-                  const _VisualButton(),
-                  const _TTSButton(),
-                  const _RolePlayButton(),
-                  const _CompletionButton(),
-                  const _TranslatorButton(),
-                  const _NekoButton(),
-                  const _LambadaButton(),
-                ];
-                return ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: maxWidth),
-                  child: widgets[index],
-                );
-              },
-              itemCount: 8,
+          Positioned.fill(
+            child: SingleChildScrollView(
+              controller: controller,
+              padding: .only(
+                top: containerPaddingTop,
+                left: containerPaddingHorizontal,
+                right: containerPaddingHorizontal,
+              ),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: MasonryGridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                itemBuilder: (context, index) {
+                  final widgets = [
+                    const _ChatButton(),
+                    const _VisualButton(),
+                    const _TTSButton(),
+                    const _RolePlayButton(),
+                    const _CompletionButton(),
+                    const _TranslatorButton(),
+                    const _NekoButton(),
+                    const _LambadaButton(),
+                  ];
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: widgets[index],
+                  );
+                },
+                itemCount: 8,
+              ),
             ),
           ),
         ],
@@ -538,7 +557,7 @@ class _Welcome extends ConsumerWidget {
     final version = ref.watch(P.app.version);
     final s = S.of(context);
     final pixels = ref.watch(_PageHomeState._pixels);
-    double opacity = 1 - pixels / 200 + 0.5;
+    double opacity = 1 - pixels / 150 + 0.5;
 
     if (opacity < 0) opacity = 0;
     if (opacity > 1) opacity = 1;
