@@ -25,6 +25,7 @@ class PageHome extends ConsumerStatefulWidget {
 class _PageHomeState extends ConsumerState<PageHome> {
   final controller = ScrollController();
   static final _pixels = qs(0.0);
+  static final _pixelsFromBottom = qs(1.0);
 
   @override
   void initState() {
@@ -32,7 +33,9 @@ class _PageHomeState extends ConsumerState<PageHome> {
     controller.addListener(() {
       final position = controller.position;
       final pixels = position.pixels;
+      final pixelsFromBottom = position.maxScrollExtent - pixels;
       _pixels.q = pixels;
+      _pixelsFromBottom.q = pixelsFromBottom;
     });
   }
 
@@ -69,8 +72,9 @@ class _PageHomeState extends ConsumerState<PageHome> {
                 top: containerPaddingTop,
                 left: containerPaddingHorizontal,
                 right: containerPaddingHorizontal,
+                bottom: 36,
               ),
-              physics: const AlwaysScrollableScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: MasonryGridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -97,7 +101,37 @@ class _PageHomeState extends ConsumerState<PageHome> {
               ),
             ),
           ),
+          const _NoMore(),
         ],
+      ),
+    );
+  }
+}
+
+class _NoMore extends ConsumerWidget {
+  const _NoMore();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pixels = ref.watch(_PageHomeState._pixels);
+    final pixelsFromBottom = ref.watch(_PageHomeState._pixelsFromBottom);
+
+    double opacity = (-10 - pixelsFromBottom) / 40;
+    if (opacity < 0) opacity = 0;
+    if (opacity > 1) opacity = 1;
+    opacity = opacity * 0.5;
+
+    return Positioned(
+      bottom: -3 + (-10 - pixelsFromBottom) / 40 * 25,
+      left: 0,
+      right: 0,
+      child: IgnorePointer(
+        child: Center(
+          child: Opacity(
+            opacity: opacity,
+            child: T("- 敬请期待 -"),
+          ),
+        ),
       ),
     );
   }
