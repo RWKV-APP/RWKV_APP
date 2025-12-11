@@ -532,5 +532,6 @@
     "placeholders": {
       "takePhoto": {}
     }
-  }
+  },
+  "reached_bottom": "お楽しみに"
 }

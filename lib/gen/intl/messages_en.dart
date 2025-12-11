@@ -760,6 +760,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Quick Reasoning Enabled",
     ),
+    "reached_bottom": MessageLookupByLibrary.simpleMessage("Stay tuned"),
     "real_time_update": MessageLookupByLibrary.simpleMessage(
       "Real-time Update",
     ),

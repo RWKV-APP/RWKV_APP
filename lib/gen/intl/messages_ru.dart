@@ -781,6 +781,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Быстрое мышление включено",
     ),
+    "reached_bottom": MessageLookupByLibrary.simpleMessage(
+      "Следите за обновлениями",
+    ),
     "real_time_update": MessageLookupByLibrary.simpleMessage(
       "Обновление в реальном времени",
     ),

@@ -630,6 +630,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "高速思考が有効になりました",
     ),
+    "reached_bottom": MessageLookupByLibrary.simpleMessage("お楽しみに"),
     "real_time_update": MessageLookupByLibrary.simpleMessage("リアルタイム更新"),
     "reason": MessageLookupByLibrary.simpleMessage("推論"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推論モード"),

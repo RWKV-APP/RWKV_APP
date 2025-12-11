@@ -532,5 +532,6 @@
     "placeholders": {
       "takePhoto": {}
     }
-  }
+  },
+  "reached_bottom": "기대해 주세요"
 }

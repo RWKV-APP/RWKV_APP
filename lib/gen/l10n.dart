@@ -3610,6 +3610,11 @@ class S {
       args: [],
     );
   }
+
+  /// `敬请期待`
+  String get reached_bottom {
+    return Intl.message('敬请期待', name: 'reached_bottom', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -72,7 +72,7 @@ class _PageHomeState extends ConsumerState<PageHome> {
                 top: containerPaddingTop,
                 left: containerPaddingHorizontal,
                 right: containerPaddingHorizontal,
-                bottom: 36,
+                bottom: 48,
               ),
               physics: const BouncingScrollPhysics(),
               child: MasonryGridView.count(
@@ -113,7 +113,7 @@ class _NoMore extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pixels = ref.watch(_PageHomeState._pixels);
+    final s = S.of(context);
     final pixelsFromBottom = ref.watch(_PageHomeState._pixelsFromBottom);
 
     double opacity = (-10 - pixelsFromBottom) / 40;
@@ -121,15 +121,17 @@ class _NoMore extends ConsumerWidget {
     if (opacity > 1) opacity = 1;
     opacity = opacity * 0.5;
 
+    final bottomOffset = -25 + (-10 - pixelsFromBottom) / 40 * 15;
+
     return Positioned(
-      bottom: -3 + (-10 - pixelsFromBottom) / 40 * 25,
+      bottom: bottomOffset,
       left: 0,
       right: 0,
       child: IgnorePointer(
         child: Center(
           child: Opacity(
             opacity: opacity,
-            child: T("- 敬请期待 -"),
+            child: T("- " + s.reached_bottom + " -"),
           ),
         ),
       ),

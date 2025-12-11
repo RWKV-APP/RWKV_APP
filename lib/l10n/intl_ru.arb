@@ -532,5 +532,6 @@
     "placeholders": {
       "takePhoto": {}
     }
-  }
+  },
+  "reached_bottom": "Следите за обновлениями"
 }

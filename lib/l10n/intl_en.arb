@@ -539,5 +539,6 @@
     "placeholders": {
       "takePhoto": {}
     }
-  }
+  },
+  "reached_bottom": "Stay tuned"
 }

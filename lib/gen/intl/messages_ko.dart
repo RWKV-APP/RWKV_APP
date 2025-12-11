@@ -626,6 +626,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "빠른 사고가 활성화되었습니다",
     ),
+    "reached_bottom": MessageLookupByLibrary.simpleMessage("기대해 주세요"),
     "real_time_update": MessageLookupByLibrary.simpleMessage("실시간 업데이트"),
     "reason": MessageLookupByLibrary.simpleMessage("추론"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("추론 모드"),

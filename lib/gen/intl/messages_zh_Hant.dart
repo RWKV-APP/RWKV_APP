@@ -571,6 +571,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "queued_x": m21,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已經開啟"),
+    "reached_bottom": MessageLookupByLibrary.simpleMessage("敬請期待"),
     "real_time_update": MessageLookupByLibrary.simpleMessage("即時更新"),
     "reason": MessageLookupByLibrary.simpleMessage("推理"),
     "reasoning_enabled": MessageLookupByLibrary.simpleMessage("推理模式"),
