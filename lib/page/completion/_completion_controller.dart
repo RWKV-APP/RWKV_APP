@@ -7,6 +7,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/argument.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/page/completion/_suggestions_dialog.dart';
 import 'package:zone/store/p.dart';
@@ -19,6 +20,14 @@ import '_completion_state.dart';
 class CompletionController {
   StreamSubscription? _subscription;
   CompletionItemNode _node = CompletionItemNode.user('');
+  static final _originDecodeParam = <Argument, double>{};
+  static final _decodeParam = <Argument, double>{
+    Argument.temperature: DecodeParamType.creative.temperature,
+    Argument.topP: DecodeParamType.creative.topP,
+    Argument.presencePenalty: DecodeParamType.creative.presencePenalty,
+    Argument.frequencyPenalty: DecodeParamType.creative.frequencyPenalty,
+    Argument.penaltyDecay: DecodeParamType.creative.penaltyDecay,
+  };
 
   static final current = CompletionController._();
 
@@ -28,9 +37,19 @@ class CompletionController {
     _subscription?.cancel();
     _subscription = null;
     P.rwkv.stop();
+
+    for (final arg in _decodeParam.keys) {
+      _decodeParam[arg] = P.rwkv.arguments(arg).q;
+      P.rwkv.arguments(arg).q = _originDecodeParam[arg]!;
+    }
   }
 
   void init() {
+    for (final arg in _decodeParam.keys) {
+      _originDecodeParam[arg] = P.rwkv.arguments(arg).q;
+      P.rwkv.arguments(arg).q = _decodeParam[arg]!;
+    }
+
     qqq('completion controller init');
     CompletionState.controllerInput.q = TextEditingController()
       ..addListener(() {

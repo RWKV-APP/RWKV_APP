@@ -26,7 +26,9 @@ class _CompletionPageState extends State<CompletionPage> {
   @override
   void dispose() {
     super.dispose();
-    CompletionController.current.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      CompletionController.current.dispose();
+    });
   }
 
   @override
