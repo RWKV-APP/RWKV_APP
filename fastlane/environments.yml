@@ -36,44 +36,6 @@ chat:
   args: __chat__
   fp: static final firstPage = PageKey.chat.name;
 
-world:
-  app_icon: assets/design/light/icon/world.png
-  app_icon_dark: assets/design/dark/icon/world.png
-  app_icon_macos: assets/design/light/icon/macos/world.png
-  app_icon_windows: assets/design/light/icon/windows/world.png
-  app_icon_linux: assets/design/light/icon/linux/world.png
-  app_splash: assets/design/light/splash/world.png
-  app_splash_dark: assets/design/dark/splash/world.png
-  bundle_id_android: com.worldrwkv.android
-  bundle_id_ios: com.world.rwkv.ios
-  file_android_path: android/app/src/main/kotlin/com/worldrwkv/android/MainActivity.kt
-  app_name: RWKV See
-  assets_config_0: assets/model/world
-  assets_config_1: assets/config/world
-  assets_config_2: assets/img/world
-  assets_config_3: assets/lib/world
-  args: __world__
-  fp: static final firstPage = PageKey.chat.name;
-
-tts:
-  app_icon: assets/design/light/icon/tts.png
-  app_icon_dark: assets/design/dark/icon/tts.png
-  app_icon_macos: assets/design/light/icon/macos/tts.png
-  app_icon_windows: assets/design/light/icon/windows/tts.png
-  app_icon_linux: assets/design/light/icon/linux/tts.png
-  app_splash: assets/design/light/splash/tts.png
-  app_splash_dark: assets/design/dark/splash/tts.png
-  bundle_id_android: com.rwkv.tts
-  bundle_id_ios: com.rwkvtts.ios
-  file_android_path: android/app/src/main/kotlin/com/rwkv/tts/MainActivity.kt
-  app_name: RWKV Talk
-  assets_config_0: assets/model/tts
-  assets_config_1: assets/config/tts
-  assets_config_2: assets/img/tts
-  assets_config_3: assets/lib/tts
-  args: __tts__
-  fp: static final firstPage = PageKey.chat.name;
-
 sudoku:
   app_icon: assets/design/light/icon/sudoku.png
   app_icon_dark: assets/design/dark/icon/sudoku.png
@@ -97,119 +59,93 @@ app_icon:
   [
     assets/design/light/icon/othello.png,
     assets/design/light/icon/chat.png,
-    assets/design/light/icon/world.png,
-    assets/design/light/icon/tts.png,
-    assets/design/light/icon/sudoku.png
+    assets/design/light/icon/sudoku.png,
   ]
 app_icon_dark:
   [
     assets/design/dark/icon/othello.png,
     assets/design/dark/icon/chat.png,
-    assets/design/dark/icon/world.png,
-    assets/design/dark/icon/tts.png,
-    assets/design/dark/icon/sudoku.png
+    assets/design/dark/icon/sudoku.png,
   ]
 app_icon_macos:
   [
     assets/design/light/icon/macos/othello.png,
     assets/design/light/icon/macos/chat.png,
-    assets/design/light/icon/macos/world.png,
-    assets/design/light/icon/macos/tts.png,
-    assets/design/light/icon/macos/sudoku.png
+    assets/design/light/icon/macos/sudoku.png,
   ]
 app_icon_windows:
   [
     assets/design/light/icon/windows/othello.png,
     assets/design/light/icon/windows/chat.png,
-    assets/design/light/icon/windows/world.png,
-    assets/design/light/icon/windows/tts.png,
-    assets/design/light/icon/windows/sudoku.png
+    assets/design/light/icon/windows/sudoku.png,
   ]
 app_icon_linux:
   [
     assets/design/light/icon/linux/othello.png,
     assets/design/light/icon/linux/chat.png,
-    assets/design/light/icon/linux/world.png,
-    assets/design/light/icon/linux/tts.png,
-    assets/design/light/icon/linux/sudoku.png
+    assets/design/light/icon/linux/sudoku.png,
   ]
 app_splash:
   [
     assets/design/light/splash/othello.png,
     assets/design/light/splash/chat.png,
-    assets/design/light/splash/world.png,
-    assets/design/light/splash/tts.png,
-    assets/design/light/splash/sudoku.png
+    assets/design/light/splash/sudoku.png,
   ]
 app_splash_dark:
   [
     assets/design/dark/splash/othello.png,
     assets/design/dark/splash/chat.png,
-    assets/design/dark/splash/world.png,
-    assets/design/dark/splash/tts.png,
-    assets/design/dark/splash/sudoku.png
+    assets/design/dark/splash/sudoku.png,
   ]
 bundle_id_ios:
   [
     com.rwkvothello.ios,
     com.rwkv.chat.v7.100m,
-    com.world.rwkv.ios,
-    com.rwkvtts.ios,
-    com.rwkvsudoku.ios
+    com.rwkvsudoku.ios,
   ]
 bundle_id_android:
   [
     com.rwkv.othello,
     com.rwkvzone.chat,
-    com.worldrwkv.android,
-    com.rwkv.tts,
-    com.rwkv.sudoku
+    com.rwkv.sudoku,
   ]
-app_name: [RWKV Othello, RWKV Chat, RWKV See, RWKV Talk, RWKV Sudoku]
+app_name:
+  [RWKV Othello, RWKV Chat, RWKV Sudoku]
 file_android_path:
   [
     android/app/src/main/kotlin/com/rwkv/zone/MainActivity.kt,
     android/app/src/main/kotlin/com/rwkvzone/chat/MainActivity.kt,
-    android/app/src/main/kotlin/com/worldrwkv/android/MainActivity.kt,
-    android/app/src/main/kotlin/com/rwkv/tts/MainActivity.kt,
-    android/app/src/main/kotlin/com/rwkv/sudoku/MainActivity.kt
+    android/app/src/main/kotlin/com/rwkv/sudoku/MainActivity.kt,
   ]
 assets_config_0:
   [
     assets/model/othello,
     assets/model/chat,
-    assets/model/world,
-    assets/model/tts,
-    assets/model/sudoku
+    assets/model/sudoku,
   ]
 assets_config_1:
   [
     assets/config/othello,
     assets/config/chat,
-    assets/config/world,
-    assets/config/tts,
-    assets/config/sudoku
+    assets/config/sudoku,
   ]
 assets_config_2:
   [
     assets/img/othello,
     assets/img/chat,
-    assets/img/world,
-    assets/img/tts,
-    assets/img/sudoku
+    assets/img/sudoku,
   ]
 assets_config_3:
   [
     assets/lib/othello,
     assets/lib/chat,
-    assets/lib/world,
-    assets/lib/tts,
-    assets/lib/sudoku
+    assets/lib/sudoku,
   ]
-args: [__othello__, __chat__, __world__, __tts__, __sudoku__]
+args:
+  [__othello__, __chat__, __sudoku__]
 fp:
   [
     static final firstPage = PageKey.chat.name;,
     static final firstPage = PageKey.othello.name;,
-    static final firstPage = PageKey.sudoku.name;
+    static final firstPage = PageKey.sudoku.name;,
   ]
