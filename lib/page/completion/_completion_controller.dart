@@ -19,6 +19,7 @@ import '_completion_state.dart';
 
 class CompletionController {
   StreamSubscription? _subscription;
+  StreamSubscription? _subscription2;
   CompletionItemNode _node = CompletionItemNode.user('');
   static final _originDecodeParam = <Argument, double>{};
   static final _decodeParam = <Argument, double>{
@@ -35,7 +36,9 @@ class CompletionController {
 
   void dispose() {
     _subscription?.cancel();
+    _subscription2?.cancel();
     _subscription = null;
+    _subscription2 = null;
     P.rwkv.stop();
 
     for (final arg in _decodeParam.keys) {
@@ -49,7 +52,6 @@ class CompletionController {
       _originDecodeParam[arg] = P.rwkv.arguments(arg).q;
       P.rwkv.arguments(arg).q = _decodeParam[arg]!;
     }
-
     qqq('completion controller init');
     CompletionState.controllerInput.q = TextEditingController()
       ..addListener(() {
@@ -69,6 +71,23 @@ class CompletionController {
     if (CompletionState.model.q == null) {
       onModelSelectTap();
     }
+    // avoid decode param override by model load
+    _subscription2?.cancel();
+    var model = CompletionState.model.q;
+    _subscription2 = P.rwkv.broadcastStream.whereType<SamplerParams>().listen((e) async {
+      if (model != CompletionState.model.q) {
+        for (final arg in _decodeParam.keys) {
+          P.rwkv.arguments(arg).q = _decodeParam[arg]!;
+        }
+        qqq('DEBUG: decode param restored');
+        model = CompletionState.model.q;
+      } else {
+        for (final arg in _decodeParam.keys) {
+          _decodeParam[arg] = P.rwkv.arguments(arg).q;
+        }
+        qqq('DEBUG: decode param stored');
+      }
+    });
   }
 
   void onStopTap() async {

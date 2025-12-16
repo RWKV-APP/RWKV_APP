@@ -442,7 +442,7 @@ extension $RWKVLoad on _RWKV {
     await setModelConfig(enableReasoning: enableReasoning);
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
-    send(to_rwkv.GetSamplerParams());
+    // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
     loading.q = false;
     _syncMaxBatchCount();
   }
