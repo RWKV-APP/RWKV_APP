@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
@@ -70,7 +71,13 @@ class PageTab extends ConsumerWidget {
       ],
     );
 
-    return Scaffold(body: useBottomNavigationBar ? verticalLayout : horizontalLayout);
+    final theme = ref.watch(P.app.customTheme);
+    final systemOverlayStyle = theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: systemOverlayStyle,
+      child: Scaffold(body: useBottomNavigationBar ? verticalLayout : horizontalLayout),
+    );
   }
 
   Widget _buildItem(
