@@ -175,7 +175,7 @@ extension $Chat on _Chat {
         if (P.msg.hasAtLeastOneImage.q) {
           P.msg._clear();
           await Future.delayed(10.ms);
-          P.rwkv.send(to_rwkv.ClearStates());
+          P.rwkv.clearStates();
           await Future.delayed(10.ms);
         }
         await send("", type: MessageType.userImage, imageUrl: imagePath);
@@ -501,6 +501,10 @@ extension $Chat on _Chat {
     );
 
     P.rwkv.frontendBatchParams.q = newValue;
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     P.rwkv.send(
       to_rwkv.SetSamplerAndPenaltyParams(
         temperatures: newValue.map((e) => e.temperature).toList(),
@@ -509,10 +513,11 @@ extension $Chat on _Chat {
         presencePenalties: newValue.map((e) => e.presencePenalty).toList(),
         frequencyPenalties: newValue.map((e) => e.frequencyPenalty).toList(),
         penaltyDecays: newValue.map((e) => e.penaltyDecay).toList(),
+        modelID: modelID,
       ),
     );
     final batchCount = this.batchCount.q;
-    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: batchCount));
+    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: batchCount, modelID: modelID));
   }
 }
 
@@ -573,6 +578,10 @@ extension _$Chat on _Chat {
     ];
 
     P.rwkv.frontendBatchParams.q = newFrontendBatchParams;
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     P.rwkv.send(
       to_rwkv.SetSamplerAndPenaltyParams(
         temperatures: newFrontendBatchParams.map((e) => e.temperature).toList(),
@@ -581,9 +590,10 @@ extension _$Chat on _Chat {
         presencePenalties: newFrontendBatchParams.map((e) => e.presencePenalty).toList(),
         frequencyPenalties: newFrontendBatchParams.map((e) => e.frequencyPenalty).toList(),
         penaltyDecays: newFrontendBatchParams.map((e) => e.penaltyDecay).toList(),
+        modelID: modelID,
       ),
     );
-    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value));
+    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value, modelID: modelID));
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {

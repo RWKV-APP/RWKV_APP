@@ -29,7 +29,7 @@ extension _$Lambada on _Lambada {
   }
 
   void _onResultsReceived(from_rwkv.EvaluationResults res) async {
-    final req = res.toRWKV;
+    final req = res.req;
     if (req != currentRequest.q) {
       qqe("Received results for unexpected request: $req");
       return;
@@ -51,7 +51,13 @@ extension _$Lambada on _Lambada {
 
     final item = waitingItems.q.first;
     waitingItems.q = waitingItems.q.skip(1).toList();
-    final newRequest = to_rwkv.RunEvaluation(item.sourceText, item.targetText);
+
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
+
+    final newRequest = to_rwkv.RunEvaluation(item.sourceText, item.targetText, modelID: modelID);
     currentItem.q = item;
     currentRequest.q = newRequest;
     P.rwkv.send(newRequest);
@@ -103,7 +109,11 @@ extension $Lambada on _Lambada {
     waitingItems.q = testItems.q;
     final item = waitingItems.q.first;
     currentItem.q = item;
-    final request = to_rwkv.RunEvaluation(item.sourceText, item.targetText);
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
+    final request = to_rwkv.RunEvaluation(item.sourceText, item.targetText, modelID: modelID);
     currentRequest.q = request;
     waitingItems.q = waitingItems.q.skip(1).toList();
     P.rwkv.send(request);

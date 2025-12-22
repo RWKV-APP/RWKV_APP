@@ -94,7 +94,7 @@ class TTSGroupItem extends ConsumerWidget {
         backend: fileInfo.backend!,
         modelType: RoleplayManageModelType.tts,
       );
-      RoleplayManage.onModelDownloadComplete(info);
+      RoleplayManage.onModelDownloadComplete(info, null, null);
       Navigator.pop(getContext()!);
       return;
     }
@@ -103,12 +103,13 @@ class TTSGroupItem extends ConsumerWidget {
     P.chat.clearMessages();
 
     try {
-      await P.rwkv.loadSparkTTS(
+      await P.rwkv.loadTTS(
         modelPath: modelLocalFile.targetPath,
         backend: fileInfo.backend!,
         wav2vec2Path: localWav2vec2File.targetPath,
         detokenizePath: localDetokenizeFile.targetPath,
         bicodecTokenzerPath: localTokenizeFile.targetPath,
+        fileInfo: fileInfo,
       );
       P.talk.getTTSSpkNames();
       Navigator.pop(getContext()!);

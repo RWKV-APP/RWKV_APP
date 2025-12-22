@@ -142,11 +142,7 @@ class ModelItem extends ConsumerWidget {
 
     try {
       P.rwkv.clearStates();
-      await P.rwkv.loadChat(
-        modelPath: modelPath,
-        backend: backend,
-        enableReasoning: fileInfo.isReasoning,
-      );
+      await P.rwkv.loadChat(fileInfo: fileInfo);
     } catch (e) {
       qqe;
       Alert.error(e.toString());
@@ -159,19 +155,23 @@ class ModelItem extends ConsumerWidget {
     final tags = fileInfo.tags;
 
     final isTranslate = tags.contains("translate");
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     if (isTranslate) {
       if (P.translator.enToZh.q) {
-        P.rwkv.send(SetUserRole("English"));
-        P.rwkv.send(SetResponseRole("Chinese"));
+        P.rwkv.send(SetUserRole("English", modelID: modelID));
+        P.rwkv.send(SetResponseRole(responseRole: "Chinese", modelID: modelID));
       } else {
-        P.rwkv.send(SetUserRole("Chinese"));
-        P.rwkv.send(SetResponseRole("English"));
+        P.rwkv.send(SetUserRole("Chinese", modelID: modelID));
+        P.rwkv.send(SetResponseRole(responseRole: "English", modelID: modelID));
       }
       await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "<EOD>", setPrompt: true);
       P.backend.start();
     } else {
-      P.rwkv.send(SetUserRole("User"));
-      P.rwkv.send(SetResponseRole("Assistant"));
+      P.rwkv.send(SetUserRole("User", modelID: modelID));
+      P.rwkv.send(SetResponseRole(responseRole: "Assistant", modelID: modelID));
     }
 
     P.rwkv.currentModel.q = fileInfo;
@@ -193,7 +193,7 @@ class ModelItem extends ConsumerWidget {
 
     for (var i = 0; i < 3; i++) {
       Future.delayed(Duration(milliseconds: 500 * i)).then((_) {
-        P.rwkv.send(GetSupportedBatchSizes());
+        P.rwkv.send(GetSupportedBatchSizes(modelID: modelID));
       });
     }
   }

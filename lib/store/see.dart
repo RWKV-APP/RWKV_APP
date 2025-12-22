@@ -191,24 +191,26 @@ extension $See on _See {
       switch (worldType) {
         case WorldType.reasoningQA:
         case WorldType.ocr:
-          await P.rwkv.loadWorldVision(
+          await P.rwkv.loadSee(
             modelPath: modelLocalFile.targetPath,
             encoderPath: encoderLocalFile.targetPath,
             backend: modelFileKey.backend!,
             enableReasoning: worldType.isReasoning,
             adapterPath: null,
+            fileInfo: modelFileKey,
           );
         case WorldType.modrwkvV2:
         case WorldType.modrwkvV3:
-          await P.rwkv.loadWorldVision(
+          final modelID = await P.rwkv.loadSee(
             modelPath: modelLocalFile.targetPath,
             encoderPath: encoderLocalFile.targetPath,
             backend: modelFileKey.backend!,
             enableReasoning: worldType.isReasoning,
             adapterPath: adapterLocalFile?.targetPath,
+            fileInfo: modelFileKey,
           );
-          P.rwkv.send(SetImageUniqueIdentifier("image"));
-          P.rwkv.send(SetSpaceAfterRoles(false));
+          if (modelID != null) P.rwkv.send(SetImageUniqueIdentifier("image"));
+          if (modelID != null) P.rwkv.send(SetSpaceAfterRoles(false, modelID: modelID));
       }
 
       if (P.app.pageKey.q != PageKey.see) return;

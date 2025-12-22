@@ -175,9 +175,13 @@ extension _$Talk on _Talk {
   }
 
   void _pulse() {
-    P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
-    P.rwkv.send(to_rwkv.GetTTSStreamingBuffer());
-    P.rwkv.send(to_rwkv.GetIsGenerating());
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .tts);
+    if (modelID == null) {
+      return;
+    }
+    P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+    P.rwkv.send(to_rwkv.GetTTSStreamingBuffer(modelID: modelID));
+    P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
   }
 
   void _stopQueryTimer() {
@@ -218,6 +222,10 @@ extension _$Talk on _Talk {
 
     this.audioStream = audioStream;
 
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .tts);
+    if (modelID == null) {
+      return;
+    }
     P.rwkv.send(
       to_rwkv.StartTTS(
         ttsText: ttsText,
@@ -225,6 +233,7 @@ extension _$Talk on _Talk {
         promptWavPath: promptWavPath,
         outputWavPath: outputWavPath,
         promptSpeechText: promptSpeechText,
+        modelID: modelID,
       ),
     );
 

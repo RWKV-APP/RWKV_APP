@@ -143,12 +143,14 @@ extension $Sudoku on _Sudoku {
 
     func_sudoku.SudokuGrid grid = staticData.q;
     final prompt = _genPrompt(grid);
-    P.rwkv.send(to_rwkv.ClearStates());
+    P.rwkv.clearStates();
     P.rwkv.send(
       to_rwkv.SudokuOthelloGenerate(
         prompt,
         decodeStream: false,
         wantRawJSON: false,
+        // TODO: support model id for Sudoku
+        modelID: -1,
       ),
     );
   }
