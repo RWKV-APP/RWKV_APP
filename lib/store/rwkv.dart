@@ -103,6 +103,8 @@ class _RWKV {
 
   late final backendStatus = qs<BackendStatus>(.none);
 
+  late final unzipping = qs(false);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -167,12 +169,12 @@ class _RWKV {
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
-    final currentModel = ref.watch(this.latestModel);
+    final currentModel = ref.watch(latestModel);
     return currentModel != null;
   });
 
   late final isAlbatrossLoaded = qp((ref) {
-    final currentModel = ref.watch(this.latestModel);
+    final currentModel = ref.watch(latestModel);
     return currentModel?.tags.contains('albatross') ?? false;
   });
 
@@ -182,7 +184,7 @@ class _RWKV {
   ///
   /// 新的权重要使用新的 thinking mode 组
   late final currentModelIsBefore20250922 = qp((ref) {
-    final currentModel = ref.watch(this.latestModel);
+    final currentModel = ref.watch(latestModel);
     if (currentModel == null) return false;
     final date = currentModel.date;
     return date != null && date.isBefore(DateTime(2025, 9, 22));
@@ -1225,11 +1227,16 @@ extension _$RWKV on _RWKV {
         Alert.error("Failed to load model $name, error: $info");
 
       case .released:
+        if (modelReleasingCompleter != null) {
+          modelReleasingCompleter.complete();
+        } else {
+          qqe("modelReleasingCompleter is null, but status is .released, this is impossible");
+        }
       case .failedInReleasing:
         if (modelReleasingCompleter != null) {
           modelReleasingCompleter.complete();
         } else {
-          qqe("modelReleasingCompleter is null,  but status is failedInReleasing, this is impossible");
+          qqe("modelReleasingCompleter is null, but status is .failedInReleasing, this is impossible");
         }
       case .none:
       case .loading:

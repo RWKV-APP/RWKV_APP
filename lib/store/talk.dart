@@ -112,9 +112,7 @@ extension _$Talk on _Talk {
         await P.rwkv._releaseAllModels();
         _showModelSelector();
       }
-    } else {
-      qqe("Page changed but no handler: $previous -> $next");
-    }
+    } else {}
   }
 
   Future<void> _showModelSelector() async {
