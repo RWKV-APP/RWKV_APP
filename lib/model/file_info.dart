@@ -232,6 +232,22 @@ class FileInfo extends Equatable {
     return null;
   }
 
+  WeightType? get weightType => switch (fileType) {
+    FileType.weights => () {
+      if (P.fileManager.chatWeights.q.contains(this)) return WeightType.chat;
+      if (P.fileManager.seeWeights.q.contains(this)) return WeightType.see;
+      if (P.fileManager.ttsWeights.q.contains(this)) return WeightType.tts;
+      if (P.fileManager.sudokuWeights.q.contains(this)) return WeightType.sudoku;
+      if (P.fileManager.othelloWeights.q.contains(this)) return WeightType.othello;
+      if (P.fileManager.roleplayWeights.q.contains(this)) return WeightType.roleplay;
+      qqw('unknown weight type: $this');
+      return null;
+    }(),
+    FileType.encoder => null,
+    FileType.runtime => null,
+    FileType.downloadTest => null,
+  };
+
   @override
   List<Object?> get props => [raw, name];
 
@@ -264,6 +280,16 @@ enum FileType {
   encoder,
   runtime,
   downloadTest,
+}
+
+enum WeightType {
+  /// Translate and Completion are included in Chat
+  chat,
+  see,
+  tts,
+  sudoku,
+  othello,
+  roleplay,
 }
 
 class ModelStateFile extends FileInfo {

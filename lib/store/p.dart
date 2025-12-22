@@ -39,6 +39,7 @@ import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/model/backend_status.dart';
 import 'package:zone/model/bbox.dart';
 import 'package:zone/model/browser_tab.dart';
 import 'package:zone/model/browser_window.dart';
@@ -97,6 +98,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/widgets/chat/batch_settings_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/func/unzip.dart';
 
 part "adapter.dart";
 part "app.dart";

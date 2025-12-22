@@ -809,6 +809,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("초대형 (140%)"),
     "unknown": MessageLookupByLibrary.simpleMessage("알 수 없음"),
+    "unzipping": MessageLookupByLibrary.simpleMessage("압축 해제 중"),
     "update_now": MessageLookupByLibrary.simpleMessage("지금 업데이트"),
     "updated_at": MessageLookupByLibrary.simpleMessage("업데이트 시간"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("지금 사용하기"),

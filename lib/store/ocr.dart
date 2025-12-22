@@ -223,6 +223,11 @@ extension _$Ocr on _Ocr {
 
     if (tasks.isEmpty) return;
 
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
+
     final batchSize = tasks.length;
 
     // 设置 runningTaskKey 为整个输入文本，用于标识当前任务
@@ -236,11 +241,11 @@ extension _$Ocr on _Ocr {
 
     // Set roles based on enToZh
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English"));
-      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
-      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
 
     // 使用批量模式发送：每个批次是一条独立的消息列表
@@ -252,6 +257,7 @@ extension _$Ocr on _Ocr {
         batchMessages,
         reasoning: reasoning,
         batchSize: batchSize,
+        modelID: modelID,
       ),
     );
 
@@ -307,9 +313,13 @@ extension _$Ocr on _Ocr {
   }
 
   void _getResponse() {
-    P.rwkv.send(to_rwkv.GetBatchResponseBufferContent());
-    P.rwkv.send(to_rwkv.GetIsGenerating());
-    P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
+    P.rwkv.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
+    P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+    P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
   }
 }
 
@@ -324,7 +334,7 @@ extension $Ocr on _Ocr {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final currentModel = P.rwkv.currentModel.q;
+    final currentModel = P.rwkv.latestModel.q;
     if (currentModel == null) {
       ModelSelector.show();
       return;

@@ -107,7 +107,7 @@ class _ModelSelectionButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
 
     return Row(
       children: [

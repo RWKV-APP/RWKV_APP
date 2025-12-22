@@ -152,7 +152,7 @@ class _TestState extends ConsumerState<_Test> {
   @override
   Widget build(BuildContext context) {
     listen();
-    final model = ref.watch(P.rwkv.currentModel);
+    final model = ref.watch(P.rwkv.latestModel);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);

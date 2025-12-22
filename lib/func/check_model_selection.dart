@@ -13,9 +13,9 @@ bool checkModelSelection({
   bool showModelSelector = true,
   required DemoType preferredDemoType,
 }) {
-  final currentModel = P.rwkv.currentModel.q;
+  final loadedModelsCount = P.rwkv.loadedModelsCount.q;
 
-  if (currentModel == null) {
+  if (loadedModelsCount == 0) {
     if (showAlert) Alert.info(S.current.please_load_model_first);
     if (showModelSelector) ModelSelector.show(preferredDemoType: preferredDemoType);
     return false;

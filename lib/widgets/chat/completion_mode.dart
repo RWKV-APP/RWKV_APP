@@ -75,7 +75,7 @@ class _CompletionState extends ConsumerState<Completion> {
     super.initState();
 
     settings = BatchCompletionSettingsPanel.settings.q;
-    if (P.rwkv.currentModel.q?.tags.contains('batch') == false && settings.enabled) {
+    if (P.rwkv.latestModel.q?.tags.contains('batch') == false && settings.enabled) {
       settings = settings.copyWith(enabled: false);
     }
 
@@ -144,7 +144,7 @@ class _CompletionState extends ConsumerState<Completion> {
 
   void onBatchTap() async {
     if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
-    final unavailable = P.rwkv.currentModel.q?.tags.contains('batch') == false;
+    final unavailable = P.rwkv.latestModel.q?.tags.contains('batch') == false;
     if (unavailable) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference);
       return;
@@ -291,7 +291,7 @@ class _CompletionState extends ConsumerState<Completion> {
         });
       }
     });
-    ref.listen(P.rwkv.currentModel, (_, v) {
+    ref.listen(P.rwkv.latestModel, (_, v) {
       final batchUnavailable = v?.tags.contains('batch') == false;
       if (batchUnavailable && settings.enabled) {
         settings = settings.copyWith(enabled: false);

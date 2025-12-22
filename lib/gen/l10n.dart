@@ -54,6 +54,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `解压中`
+  String get unzipping {
+    return Intl.message('解压中', name: 'unzipping', desc: '', args: []);
+  }
+
   /// `我知道了`
   String get got_it {
     return Intl.message('我知道了', name: 'got_it', desc: '', args: []);

@@ -6,7 +6,7 @@ import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
 class CompletionState {
   static final tipsDisabled = qs(false);
 
-  static final model = P.rwkv.currentModel;
+  static final model = P.rwkv.latestModel;
 
   static final generating = qs(false);
 

@@ -8,6 +8,7 @@ import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart';
+import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
@@ -90,7 +91,7 @@ class Albatross {
     }
     final local = P.fileManager.locals(fileInfo).q;
     try {
-      P.rwkv.loading.q = true;
+      P.rwkv.loadingStatus.q = {...P.rwkv.loadingStatus.q, fileInfo: LoadingStatus.loading};
       final r = await _dio.post(
         '/load-model',
         data: {'model_path': local.targetPath},
@@ -98,7 +99,8 @@ class Albatross {
       if (r.statusCode == 200) {
         P.app.demoType.q = DemoType.chat;
         P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
-        P.rwkv.currentModel.q = fileInfo;
+        // TODO: @dengzi, 如果是 Albatross 模型，我就直接取使用 -1 作为模型 ID 了
+        P.rwkv.loadedModels.q = {...P.rwkv.loadedModels.q, fileInfo: -1};
         P.rwkv.setModelConfig(thinkingMode: const Free());
       } else {
         final body = r.data['error'];
@@ -107,7 +109,7 @@ class Albatross {
     } catch (e) {
       qqe(e);
     } finally {
-      P.rwkv.loading.q = false;
+      P.rwkv.loadingStatus.q = {...P.rwkv.loadingStatus.q, fileInfo: LoadingStatus.none};
     }
   }
 

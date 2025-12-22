@@ -99,7 +99,7 @@ extension _$Translator on _Translator {
   }
 
   void _checkTask() async {
-    final model = P.rwkv.currentModel.q;
+    final model = P.rwkv.latestModel.q;
     if (model == null) return;
     final wsRunning = P.backend.websocketState.q == BackendState.running;
     if (!wsRunning) return;
@@ -214,17 +214,17 @@ extension _$Translator on _Translator {
     if (next != textInController) resultTextEditingController.text = next;
   }
 
-  void _onPageKeyChanged(PageKey pageKey) {
+  void _onPageKeyChanged(PageKey pageKey) async {
     switch (pageKey) {
       case PageKey.translator:
-        final currentModel = P.rwkv.currentModel.q;
+        final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
           Future.delayed(const Duration(milliseconds: 500)).then((_) {
             ModelSelector.show();
           });
         } else {
           if (!currentModel.tags.contains("translate")) {
-            P.rwkv.currentModel.q = null;
+            await P.rwkv._releaseAllModels();
             Alert.info(S.current.please_load_model_first);
             Future.delayed(const Duration(milliseconds: 500)).then((_) {
               ModelSelector.show();
@@ -251,7 +251,7 @@ extension _$Translator on _Translator {
     result.q = content;
     // TODO: 复杂任务的准确映射?
     // 更新 caches
-    final request = res.toRWKV as to_rwkv.GetResponseBufferContent;
+    final request = res.req as to_rwkv.GetResponseBufferContent;
     final key = request.messages.firstOrNull;
     if (key == null) {
       qqw("key is null");
@@ -336,7 +336,7 @@ extension _$Translator on _Translator {
       final urlCompleter = pool[key];
       if (urlCompleter == null) continue;
       urlCompleter.completer.complete(translation + _endString);
-      final newPool = Map.from(pool)..remove(key);
+      final newPool = {...Map.from(pool)..remove(key)};
       this.pool(tab).q = {...newPool};
     }
 
@@ -463,20 +463,25 @@ extension _$Translator on _Translator {
     // 使用批量模式发送：每个批次是一条独立的消息列表
     final thinkingMode = P.rwkv.thinkingMode.q;
     final reasoning = thinkingMode.hasThinkTag;
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     P.rwkv.send(
       to_rwkv.ChatBatchAsync(
         batchMessages,
         reasoning: reasoning,
         batchSize: batchSize,
+        modelID: modelID,
       ),
     );
 
     // 启动定时器获取响应
     _batchTaskTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
       // 获取批量响应（无参数版本会返回所有批次的响应）
-      P.rwkv.send(to_rwkv.GetBatchResponseBufferContent());
-      P.rwkv.send(to_rwkv.GetIsGenerating());
-      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
+      P.rwkv.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
+      P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
   }
 
@@ -588,13 +593,17 @@ extension $Translator on _Translator {
       ModelSelector.show();
       return;
     }
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     // 确保角色与方向一致
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English"));
-      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
-      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
     result.q = "";
     resultTextEditingController.text = "";
@@ -641,12 +650,16 @@ extension $Translator on _Translator {
 
   void onDirectionButtonPressed() async {
     enToZh.q = !enToZh.q;
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English"));
-      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
-      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
 
     // 将下方结果文本移动到上方输入；若结果为空，则会清空上方，实现“清除全部”

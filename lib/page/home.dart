@@ -294,7 +294,7 @@ class _NekoButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () async {
-          final current = P.rwkv.currentModel.q;
+          final current = P.rwkv.latestModel.q;
           if (current == null || !current.isNeko) {
             final nekoList = P.fileManager.getNekoModel();
             final downloaded = nekoList.where((e) => P.fileManager.locals(e).q.hasFile).toList();
@@ -510,8 +510,7 @@ class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        // await Future<void>.delayed(const Duration(milliseconds: 10000));
-        await P.rwkv.switchChatModel(widget.file).timeout(const Duration(seconds: 10));
+        await P.rwkv.loadChat(fileInfo: widget.file).timeout(const Duration(seconds: 10));
         if (mounted) Navigator.pop(context, true);
       } catch (e) {
         qqe('load model failed: $e');

@@ -811,6 +811,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("超大 (140%)"),
     "unknown": MessageLookupByLibrary.simpleMessage("不明"),
+    "unzipping": MessageLookupByLibrary.simpleMessage("展開中"),
     "update_now": MessageLookupByLibrary.simpleMessage("今すぐ更新"),
     "updated_at": MessageLookupByLibrary.simpleMessage("更新日時"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("今すぐ使用"),

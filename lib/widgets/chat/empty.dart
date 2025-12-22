@@ -23,7 +23,7 @@ class Empty extends ConsumerWidget {
     final messages = ref.watch(P.msg.list);
     if (messages.isNotEmpty) return Positioned.fill(child: IgnorePointer(child: Container()));
     final loaded = ref.watch(P.rwkv.loaded);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
 
     final demoType = ref.watch(P.app.demoType);
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
