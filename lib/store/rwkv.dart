@@ -84,8 +84,6 @@ class _RWKV {
 
   late final currentGroupInfo = qs<GroupInfo?>(null);
 
-  late final loading = qs(false);
-
   late final socName = qs("");
   late final socBrand = qs(SocBrand.unknown);
 
@@ -112,6 +110,11 @@ class _RWKV {
   // ===========================================================================
   // Provider
   // ===========================================================================
+
+  late final loading = qp((ref) {
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    return loadingStatus.values.any((e) => e == LoadingStatus.loading);
+  });
 
   late final frontendBatchParamsAreAllSame = qp((ref) {
     final frontendBatchParams = ref.watch(this.frontendBatchParams);
@@ -199,7 +202,6 @@ extension $RWKVLoad on _RWKV {
     required FileInfo fileInfo,
   }) async {
     qq;
-    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     _thinkingMode.q = enableReasoning ? const thinking_mode.Free() : const thinking_mode.None();
@@ -244,7 +246,6 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.SetEosToken("\x17", modelID: modelID));
     send(to_rwkv.SetBosToken("\x16", modelID: modelID));
     send(to_rwkv.SetTokenBanned([0], modelID: modelID));
-    loading.q = false;
 
     return modelID;
   }
@@ -258,7 +259,6 @@ extension $RWKVLoad on _RWKV {
     required FileInfo fileInfo,
   }) async {
     qq;
-    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
@@ -309,23 +309,25 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerDatePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerNumberPath));
-
-    loading.q = false;
   }
 
   Future<void> loadChat({
     required FileInfo fileInfo,
   }) async {
     qq;
-    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
 
     final localFile = P.fileManager.locals(fileInfo).q;
-    final modelPath = localFile.targetPath;
+    String modelPath = localFile.targetPath;
+
     final backend = fileInfo.backend;
     final enableReasoning = fileInfo.isReasoning;
+
+    if (backend == Backend.mlx || backend == Backend.coreml) {
+      modelPath = await unzipInPlace(modelPath);
+    }
 
     await _ensureQNNCopied();
     await _createRWKVIsolateIfNeeded();
@@ -352,7 +354,6 @@ extension $RWKVLoad on _RWKV {
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
     // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
-    loading.q = false;
     _syncMaxBatchCount();
   }
 
@@ -463,7 +464,6 @@ extension $RWKVLoad on _RWKV {
     );
     send(to_rwkv.SetGenerationStopToken(_Sudoku.tokenStop, modelID: modelID));
     send(to_rwkv.ClearStates(modelID: modelID));
-    loading.q = false;
   }
 }
 

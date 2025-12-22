@@ -98,6 +98,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/widgets/chat/batch_settings_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/func/unzip.dart';
 
 part "adapter.dart";
 part "app.dart";

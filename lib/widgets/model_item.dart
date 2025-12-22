@@ -13,7 +13,6 @@ import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/gb_display.dart';
-import 'package:zone/func/unzip.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
@@ -109,8 +108,6 @@ class ModelItem extends ConsumerWidget {
       }
     }
 
-    final localFile = P.fileManager.locals(fileInfo).q;
-    String modelPath = localFile.targetPath;
     final backend = fileInfo.backend;
 
     if (backend == null) {
@@ -126,18 +123,6 @@ class ModelItem extends ConsumerWidget {
       }
       Alert.error("Backend is null");
       return;
-    }
-
-    switch (backend) {
-      case Backend.mlx:
-      case Backend.coreml:
-        P.rwkv.loading.q = true;
-        await Future.delayed(const Duration(milliseconds: 20));
-        modelPath = await unzipInPlace(modelPath);
-        await Future.delayed(const Duration(milliseconds: 20));
-        P.rwkv.loading.q = false;
-      default:
-        break;
     }
 
     try {
@@ -205,7 +190,10 @@ class ModelItem extends ConsumerWidget {
     final hasFile = localFile.hasFile;
     final currentModel = ref.watch(P.rwkv.currentModel);
     final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
-    final loading = ref.watch(P.rwkv.loading);
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+
+    final loading = loadingStatus[fileInfo] == LoadingStatus.loading;
+
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
 
