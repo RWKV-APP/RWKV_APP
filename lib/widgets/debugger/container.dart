@@ -80,6 +80,9 @@ class Debugger extends ConsumerWidget {
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
     final receivingTokens = ref.watch(P.chat.receivingTokens);
 
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -144,6 +147,11 @@ class Debugger extends ConsumerWidget {
                       T(hasFocus.toString()),
                       if (showAtMainPage) ...[T("atMainPage".codeToName), T(atMainPage.toString())],
                       if (showPage) ...[T("page".codeToName), T(page.toString())],
+
+                      T("loadedModels".codeToName),
+                      T(loadedModels.toString()),
+                      T("loadingStatus".codeToName),
+                      T(loadingStatus.entries.map((e) => "${e.key.fileName} ${e.value.toString()}").join("\n")),
 
                       T("receiveId".codeToName),
                       T(receiveId.toString()),

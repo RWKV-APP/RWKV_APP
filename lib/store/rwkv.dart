@@ -1175,13 +1175,16 @@ extension _$RWKV on _RWKV {
             loadedModels.q = {...loadedModels.q, extra: response.modelID!};
           case .none:
           case .loading:
-          case .failedInLoading:
           case .releasing:
           case .released:
           case .failedInReleasing:
           case .setQnnLibraryPath:
           case .loadModelWithExtra:
             break;
+          case .failedInLoading:
+            qqe("failed in loading model ${extra.fileName}, status: ${response.status}");
+            qqe("error: ${response.info}");
+            Alert.error("Failed to load model ${extra.fileName}, error: ${response.info}");
         }
         loadingStatus.q = {...loadingStatus.q, extra: response.status};
       } else {

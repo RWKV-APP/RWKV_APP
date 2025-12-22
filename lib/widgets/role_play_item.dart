@@ -54,7 +54,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       frequencyPenalty: state?.decodeParam['frequencyPenalty']?.toDouble(),
       modelType: RoleplayManageModelType.chat,
     );
-    RoleplayManage.onModelDownloadComplete(info, null, null);
+    RoleplayManage.onModelDownloadComplete(info);
     Navigator.pop(context);
   }
 

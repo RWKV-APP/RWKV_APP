@@ -94,7 +94,7 @@ class TTSGroupItem extends ConsumerWidget {
         backend: fileInfo.backend!,
         modelType: RoleplayManageModelType.tts,
       );
-      RoleplayManage.onModelDownloadComplete(info, null, null);
+      RoleplayManage.onModelDownloadComplete(info);
       Navigator.pop(getContext()!);
       return;
     }
