@@ -111,6 +111,7 @@ class _MainAppBar extends ConsumerWidget {
     final version = ref.watch(P.app.version);
     final light = ref.watch(P.app.light);
     final transparentColor = light ? const Color.fromRGBO(239, 243, 251, 0.5) : kB.q(.5);
+
     return AppBar(
       elevation: 0,
       centerTitle: true,

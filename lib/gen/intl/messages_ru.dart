@@ -1008,6 +1008,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Огромный (140%)"),
     "unknown": MessageLookupByLibrary.simpleMessage("Неизвестно"),
+    "unzipping": MessageLookupByLibrary.simpleMessage("Распаковка"),
     "update_now": MessageLookupByLibrary.simpleMessage("Обновить сейчас"),
     "updated_at": MessageLookupByLibrary.simpleMessage("Обновлено"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("Использовать сейчас"),

@@ -74,7 +74,8 @@ class _RWKV {
   late final loadedModels = qs<Map<FileInfo, int>>({});
   late final loadingStatus = qs<Map<FileInfo, LoadingStatus>>({});
   late final modelLoadingCompleters = qs<Map<FileInfo, Completer<int?>>>({});
-  late final modelReleasingCompleters = qs<Map<int, Completer<void>>>({});
+  late final modelReleasingCompleters = qs<Map<int, Completer<bool>>>({});
+  late final unzippingStatus = qsf<FileInfo, bool>(false);
 
   late final currentWorldType = qs<WorldType?>(null);
 
@@ -334,7 +335,9 @@ extension $RWKVLoad on _RWKV {
     final enableReasoning = fileInfo.isReasoning;
 
     if (backend == Backend.mlx || backend == Backend.coreml) {
+      unzippingStatus(fileInfo).q = true;
       modelPath = await unzipInPlace(modelPath);
+      unzippingStatus(fileInfo).q = false;
     }
 
     await _ensureQNNCopied();
@@ -515,7 +518,17 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    final modelID = findModelIDByWeightType(weightType: .chat);
+    final weightType = switch (P.app.demoType.q) {
+      DemoType.chat => WeightType.chat,
+      DemoType.world => WeightType.see,
+      DemoType.tts => WeightType.tts,
+      DemoType.sudoku => WeightType.sudoku,
+      DemoType.othello => WeightType.othello,
+      // TODO: Handle this case.
+      DemoType.fifthteenPuzzle => throw UnimplementedError(),
+    };
+
+    final modelID = findModelIDByWeightType(weightType: weightType);
     if (modelID == null) {
       return;
     }
@@ -938,7 +951,8 @@ extension $RWKV on _RWKV {
     final value = loaded?.value;
 
     if (value == null) {
-      qqw("model id for weight type $weightType, maybe model is not loaded");
+      final msg = "model id for weight type $weightType, maybe model is not loaded";
+      qqq(msg);
     }
 
     return value;
@@ -996,30 +1010,38 @@ extension _$RWKV on _RWKV {
     );
     send(req);
     final modelID = await completer.future;
-    modelLoadingCompleters.q = modelLoadingCompleters.q..remove(fileInfo);
+    modelLoadingCompleters.q = {...modelLoadingCompleters.q..remove(fileInfo)};
     // 如果我们得到的 modelID 为 null, 则表示加载失败
     return modelID;
   }
 
   Future<void> _releaseModelById({required int modelID}) async {
-    final completer = Completer<void>();
+    if (modelReleasingCompleters.q.containsKey(modelID)) {
+      qqw("modelReleasingCompleters already contains completer for modelID: $modelID");
+      return;
+    }
+    qqq("releasing model by id: $modelID");
+    final completer = Completer<bool>();
     modelReleasingCompleters.q = {...modelReleasingCompleters.q, modelID: completer};
     final fileInfo = loadedModels.q.entries.firstWhereOrNull((e) => e.value == modelID)?.key;
     final req = to_rwkv.ReleaseRWKVModel(modelID: modelID, extra: fileInfo);
     send(req);
-    await completer.future;
-    modelReleasingCompleters.q = modelReleasingCompleters.q..remove(modelID);
+    final success = await completer.future;
+    modelReleasingCompleters.q = {...modelReleasingCompleters.q..remove(modelID)};
+    if (success) loadedModels.q = {...loadedModels.q..remove(fileInfo)};
   }
 
   Future<void> _releaseModelByWeightTypeIfNeeded({required WeightType weightType}) async {
     final loaded = loadedModels.q.entries.firstWhereOrNull((e) => e.key.weightType == weightType);
     final modelID = loaded?.value;
     final fileInfo = loaded?.key;
+
     if (modelID == null) {
       final msg = "ModelID is null, maybe no model is loaded for weight type $weightType, so no need to release";
       qqq(msg);
       return;
     }
+
     if (fileInfo == null) {
       final msg = "FileInfo is null, maybe no model is loaded for weight type $weightType, so no need to release";
       qqq(msg);
@@ -1043,12 +1065,14 @@ extension _$RWKV on _RWKV {
     }
 
     await _releaseModelById(modelID: modelID);
-    loadedModels.q = loadedModels.q..remove(fileInfo);
+    loadedModels.q = {...loadedModels.q..remove(fileInfo)};
     final msg = "Released model $modelID for $weightType";
     qqr(msg);
   }
 
   Future<void> _releaseAllModels() async {
+    currentGroupInfo.q = null;
+    currentWorldType.q = null;
     await Future.wait(loadedModels.q.entries.map((e) => _releaseModelById(modelID: e.value)));
   }
 
@@ -1206,7 +1230,7 @@ extension _$RWKV on _RWKV {
     switch (status) {
       case .loaded:
         if (modelID == null) {
-          qqe("modelID is null,  but status is loaded, this is impossible");
+          qqe("modelID is null,  but status is loaded, this should not happen");
           return;
         }
         loadedModels.q = {...loadedModels.q, extra: modelID};
@@ -1220,7 +1244,7 @@ extension _$RWKV on _RWKV {
         if (modelLoadingCompleter != null) {
           modelLoadingCompleter.complete(null);
         } else {
-          qqe("modelLoadingCompleter is null,  but status is loaded, this is impossible");
+          qqe("modelLoadingCompleter is null,  but status is loaded, this should not happen");
         }
         qqe("failed in loading model $name, status: $status");
         qqe("error: $info");
@@ -1228,15 +1252,19 @@ extension _$RWKV on _RWKV {
 
       case .released:
         if (modelReleasingCompleter != null) {
-          modelReleasingCompleter.complete();
+          modelReleasingCompleter.complete(true);
         } else {
-          qqe("modelReleasingCompleter is null, but status is .released, this is impossible");
+          qqe("modelReleasingCompleter is null, but status is .released, this should not happen");
+          qqe("modelReleasingCompleters: ${modelReleasingCompleters.q}");
+          qqe("trying to find completer by id: $modelID");
         }
       case .failedInReleasing:
         if (modelReleasingCompleter != null) {
-          modelReleasingCompleter.complete();
+          modelReleasingCompleter.complete(false);
         } else {
-          qqe("modelReleasingCompleter is null, but status is .failedInReleasing, this is impossible");
+          qqe("modelReleasingCompleter is null, but status is .failedInReleasing, this should not happen");
+          qqe("modelReleasingCompleters: ${modelReleasingCompleters.q}");
+          qqe("trying to find completer by id: $modelID");
         }
       case .none:
       case .loading:

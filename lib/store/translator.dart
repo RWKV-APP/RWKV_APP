@@ -336,7 +336,7 @@ extension _$Translator on _Translator {
       final urlCompleter = pool[key];
       if (urlCompleter == null) continue;
       urlCompleter.completer.complete(translation + _endString);
-      final newPool = Map.from(pool)..remove(key);
+      final newPool = {...Map.from(pool)..remove(key)};
       this.pool(tab).q = {...newPool};
     }
 

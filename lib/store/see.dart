@@ -259,7 +259,7 @@ extension _$See on _See {
       visualFloatHeight.q = null;
       P.rwkv.clearStates();
       P.chat.clearMessages();
-
+      P.app.demoType.q = DemoType.world;
       bool isWorldModelLoaded = false;
       final currentModel = P.rwkv.latestModel.q;
       if (currentModel != null) {

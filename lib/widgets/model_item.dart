@@ -214,6 +214,11 @@ class ModelItem extends ConsumerWidget {
       startTitle = S.current.load_;
     }
 
+    final unzipping = ref.watch(P.rwkv.unzippingStatus(fileInfo));
+    if (unzipping) {
+      startTitle = s.unzipping;
+    }
+
     final qw = ref.watch(P.app.qw);
 
     return ClipRRect(
