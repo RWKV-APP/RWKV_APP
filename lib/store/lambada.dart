@@ -26,6 +26,21 @@ class _Lambada {
 extension _$Lambada on _Lambada {
   Future<void> _init() async {
     qq;
+    P.app.pageKey.l(_onPageKeyChanged);
+  }
+
+  void _onPageKeyChanged(PageKey pageKey) async {
+    final model = P.rwkv.latestModel.q;
+    final isTTS = model?.isTTS ?? false;
+    final isSee = model?.worldType != null;
+    final isTranslate = model?.tags.contains("translate") ?? false;
+    switch (pageKey) {
+      case PageKey.lambada:
+        if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
+        break;
+      default:
+        break;
+    }
   }
 
   void _onResultsReceived(from_rwkv.EvaluationResults res) async {
