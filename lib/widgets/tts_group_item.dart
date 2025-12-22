@@ -121,7 +121,6 @@ class TTSGroupItem extends ConsumerWidget {
     }
 
     P.rwkv.currentGroupInfo.q = GroupInfo(displayName: fileInfo.name);
-    P.rwkv.currentModel.q = fileInfo;
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
   }
 
@@ -162,7 +161,7 @@ class TTSGroupItem extends ConsumerWidget {
     final allMissing = files.every((e) => !e.hasFile);
     final downloading = files.any((e) => e.downloading);
 
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     bool alreadyStarted = currentModel == fileInfo;
     final loading = ref.watch(P.rwkv.loading);
     final isDesktop = ref.watch(P.app.isDesktop);

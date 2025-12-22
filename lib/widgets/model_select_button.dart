@@ -13,7 +13,7 @@ class ModelSelectButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final decodeParamType = ref.watch(P.rwkv.decodeParamType);
     final s = S.of(context);
     final modelDisplay = currentModel?.name ?? s.click_to_select_model;

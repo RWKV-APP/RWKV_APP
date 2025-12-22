@@ -334,7 +334,7 @@ extension $Ocr on _Ocr {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final currentModel = P.rwkv.currentModel.q;
+    final currentModel = P.rwkv.latestModel.q;
     if (currentModel == null) {
       ModelSelector.show();
       return;

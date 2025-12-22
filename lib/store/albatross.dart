@@ -99,7 +99,8 @@ class Albatross {
       if (r.statusCode == 200) {
         P.app.demoType.q = DemoType.chat;
         P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
-        P.rwkv.currentModel.q = fileInfo;
+        // TODO: @dengzi, 如果是 Albatross 模型，我就直接取使用 -1 作为模型 ID 了
+        P.rwkv.loadedModels.q = {...P.rwkv.loadedModels.q, fileInfo: -1};
         P.rwkv.setModelConfig(thinkingMode: const Free());
       } else {
         final body = r.data['error'];

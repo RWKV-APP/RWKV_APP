@@ -44,7 +44,7 @@ class Debugger extends ConsumerWidget {
     }
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final visualFloatHeight = ref.watch(P.see.visualFloatHeight);
     final loading = ref.watch(P.rwkv.loading);
     final playing = ref.watch(P.see.playing);
@@ -86,7 +86,6 @@ class Debugger extends ConsumerWidget {
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
-    const showUnavailableModels = false;
     const showSocName = false;
     const showSocBrand = false;
     const showIds = false;
@@ -149,9 +148,11 @@ class Debugger extends ConsumerWidget {
                       if (showPage) ...[T("page".codeToName), T(page.toString())],
 
                       T("loadedModels".codeToName),
-                      T(loadedModels.toString()),
+                      T(loadedModels.entries.map((e) => "${e.key.name} id: ${e.value}").join("\n")),
                       T("loadingStatus".codeToName),
-                      T(loadingStatus.entries.map((e) => "${e.key.fileName} ${e.value.toString()}").join("\n")),
+                      T(
+                        loadingStatus.entries.map((e) => "${e.key.name} ${e.value.toString().replaceAll("LoadingStatus", "")}").join("\n"),
+                      ),
 
                       T("receiveId".codeToName),
                       T(receiveId.toString()),
@@ -297,7 +298,7 @@ class _TTSDebugger extends ConsumerWidget {
     final generating = ref.watch(P.talk.generating);
     final asFull = ref.watch(P.talk.asFull);
     final asExhaust = ref.watch(P.talk.asExhaust);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
 
     return Positioned(
       left: 0,

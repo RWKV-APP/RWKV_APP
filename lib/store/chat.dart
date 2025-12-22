@@ -327,7 +327,7 @@ extension $Chat on _Chat {
 
     if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
-    final currentModel = P.rwkv.currentModel.q!;
+    final currentModel = P.rwkv.latestModel.q!;
 
     final thinkingMode = P.rwkv.thinkingMode.q;
 
@@ -728,14 +728,14 @@ extension _$Chat on _Chat {
     }
   }
 
-  void _onPageKeyChanged(PageKey pageKey) {
-    final model = P.rwkv.currentModel.q;
+  void _onPageKeyChanged(PageKey pageKey) async {
+    final model = P.rwkv.latestModel.q;
     final isTTS = model?.isTTS ?? false;
     final isSee = model?.worldType != null;
     switch (pageKey) {
       case PageKey.completion:
         final isTranslate = model?.tags.contains("translate") ?? false;
-        if (isTTS || isTranslate || isSee) P.rwkv.currentModel.q = null;
+        if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
         break;
       case PageKey.chat:
         P.rwkv.updateSystemPrompt();
@@ -743,13 +743,13 @@ extension _$Chat on _Chat {
         final isTranslate = model?.tags.contains("translate") ?? false;
         if (isTTS || isTranslate || isSee) {
           P.rwkv.currentWorldType.q = null;
-          P.rwkv.currentModel.q = null;
+          await P.rwkv._releaseAllModels();
         }
         break;
       case PageKey.talk:
         if (!isTTS) {
           P.rwkv.currentGroupInfo.q = null;
-          P.rwkv.currentModel.q = null;
+          await P.rwkv._releaseAllModels();
         }
         break;
       default:

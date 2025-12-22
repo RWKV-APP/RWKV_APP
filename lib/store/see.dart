@@ -214,8 +214,6 @@ extension $See on _See {
       }
 
       if (P.app.pageKey.q != PageKey.see) return;
-
-      P.rwkv.currentModel.q = modelFileKey;
     } catch (e) {
       qqe("Failed to auto load world model: $e");
       if (P.app.pageKey.q == PageKey.see) {
@@ -246,7 +244,7 @@ extension _$See on _See {
     P.app.pageKey.lb(_onPageKeyChanged);
   }
 
-  void _onPageKeyChanged(PageKey? previous, PageKey next) {
+  void _onPageKeyChanged(PageKey? previous, PageKey next) async {
     if (previous == PageKey.see && next != PageKey.see) {
       imagePath.q = null;
       imageHeight.q = null;
@@ -263,7 +261,7 @@ extension _$See on _See {
       P.chat.clearMessages();
 
       bool isWorldModelLoaded = false;
-      final currentModel = P.rwkv.currentModel.q;
+      final currentModel = P.rwkv.latestModel.q;
       if (currentModel != null) {
         if (currentModel.worldType != null) {
           isWorldModelLoaded = true;
@@ -274,7 +272,7 @@ extension _$See on _See {
         // OK
       } else {
         P.rwkv.currentWorldType.q = null;
-        P.rwkv.currentModel.q = null;
+        await P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .see);
         _tryLoadLastWorldModel();
       }
     } else {}

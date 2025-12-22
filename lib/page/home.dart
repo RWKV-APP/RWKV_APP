@@ -294,7 +294,7 @@ class _NekoButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () async {
-          final current = P.rwkv.currentModel.q;
+          final current = P.rwkv.latestModel.q;
           if (current == null || !current.isNeko) {
             final nekoList = P.fileManager.getNekoModel();
             final downloaded = nekoList.where((e) => P.fileManager.locals(e).q.hasFile).toList();

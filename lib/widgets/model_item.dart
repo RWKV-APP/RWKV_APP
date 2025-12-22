@@ -75,7 +75,6 @@ class ModelItem extends ConsumerWidget {
       Alert.error(e.toString());
     }
 
-    P.rwkv.currentModel.q = fileInfo;
     if (!loadButtonTextShowLoad) {
       Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     }
@@ -159,7 +158,6 @@ class ModelItem extends ConsumerWidget {
       P.rwkv.send(SetResponseRole(responseRole: "Assistant", modelID: modelID));
     }
 
-    P.rwkv.currentModel.q = fileInfo;
     if (!loadButtonTextShowLoad) {
       Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     }
@@ -188,7 +186,7 @@ class ModelItem extends ConsumerWidget {
     final s = S.of(context);
     final localFile = ref.watch(P.fileManager.locals(fileInfo));
     final hasFile = localFile.hasFile;
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
 

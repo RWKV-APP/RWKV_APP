@@ -90,7 +90,7 @@ extension _$Talk on _Talk {
     P.app.pageKey.lb(_onPageKeyChanged);
   }
 
-  void _onPageKeyChanged(PageKey? previous, PageKey next) {
+  void _onPageKeyChanged(PageKey? previous, PageKey next) async {
     if (previous == PageKey.talk && next != PageKey.talk) {
       P.msg._clear(syncNode: false);
       _asTimer?.cancel();
@@ -101,7 +101,7 @@ extension _$Talk on _Talk {
       P.msg._clear(syncNode: false);
 
       bool isTTSModelLoaded = false;
-      final currentModel = P.rwkv.currentModel.q;
+      final currentModel = P.rwkv.latestModel.q;
       if (currentModel != null) {
         if (currentModel.isTTS) {
           isTTSModelLoaded = true;
@@ -109,9 +109,11 @@ extension _$Talk on _Talk {
       }
 
       if (!isTTSModelLoaded) {
-        P.rwkv.currentModel.q = null;
+        await P.rwkv._releaseAllModels();
         _showModelSelector();
       }
+    } else {
+      qqe("Page changed but no handler: $previous -> $next");
     }
   }
 

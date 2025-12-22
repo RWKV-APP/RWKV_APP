@@ -34,7 +34,7 @@ class ChatAppBar extends ConsumerWidget {
     final s = S.of(context);
 
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
     final selectMessageMode = ref.watch(P.chat.isSharing);
 

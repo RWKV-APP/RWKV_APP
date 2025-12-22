@@ -278,7 +278,7 @@ class _InferenceInfo extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final isGenerating = ref.watch(P.translator.isGenerating);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
 
     return Card(
       elevation: 0,
@@ -337,7 +337,7 @@ class _ServiceInfo extends ConsumerWidget {
       case BackendState.stopping:
         return;
       case BackendState.stopped:
-        final currentModel = P.rwkv.currentModel.q;
+        final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
           ModelSelector.show();
           return;

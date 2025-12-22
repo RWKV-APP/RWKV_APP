@@ -10,7 +10,7 @@ class TranslationDebugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     // final isPreviewPaused = ref.watch(P.ocr.isPreviewPaused);
     // final isRecordingPaused = ref.watch(P.ocr.isRecordingPaused);
     // final isRecordingVideo = ref.watch(P.ocr.isRecordingVideo);

@@ -99,7 +99,7 @@ extension _$Translator on _Translator {
   }
 
   void _checkTask() async {
-    final model = P.rwkv.currentModel.q;
+    final model = P.rwkv.latestModel.q;
     if (model == null) return;
     final wsRunning = P.backend.websocketState.q == BackendState.running;
     if (!wsRunning) return;
@@ -214,17 +214,17 @@ extension _$Translator on _Translator {
     if (next != textInController) resultTextEditingController.text = next;
   }
 
-  void _onPageKeyChanged(PageKey pageKey) {
+  void _onPageKeyChanged(PageKey pageKey) async {
     switch (pageKey) {
       case PageKey.translator:
-        final currentModel = P.rwkv.currentModel.q;
+        final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
           Future.delayed(const Duration(milliseconds: 500)).then((_) {
             ModelSelector.show();
           });
         } else {
           if (!currentModel.tags.contains("translate")) {
-            P.rwkv.currentModel.q = null;
+            await P.rwkv._releaseAllModels();
             Alert.info(S.current.please_load_model_first);
             Future.delayed(const Duration(milliseconds: 500)).then((_) {
               ModelSelector.show();

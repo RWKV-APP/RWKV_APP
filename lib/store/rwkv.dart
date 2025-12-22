@@ -68,10 +68,6 @@ class _RWKV {
 
   late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
-  /// 当前加载的权重
-  @Deprecated("Use models instead")
-  late final currentModel = qs<FileInfo?>(null);
-
   /// 已经加载到内存中的模型，key 为 FuncType，value 为模型 ID
   ///
   /// 如果 value 为 null, 则表示该该功能的模型尚未被加载
@@ -114,6 +110,16 @@ class _RWKV {
   late final loading = qp((ref) {
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
     return loadingStatus.values.any((e) => e == LoadingStatus.loading);
+  });
+
+  late final loadedModelsCount = qp((ref) {
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+    return loadedModels.length;
+  });
+
+  late final latestModel = qp((ref) {
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+    return loadedModels.keys.lastOrNull;
   });
 
   late final frontendBatchParamsAreAllSame = qp((ref) {
@@ -161,12 +167,12 @@ class _RWKV {
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
-    final currentModel = ref.watch(this.currentModel);
+    final currentModel = ref.watch(this.latestModel);
     return currentModel != null;
   });
 
   late final isAlbatrossLoaded = qp((ref) {
-    final currentModel = ref.watch(this.currentModel);
+    final currentModel = ref.watch(this.latestModel);
     return currentModel?.tags.contains('albatross') ?? false;
   });
 
@@ -176,14 +182,14 @@ class _RWKV {
   ///
   /// 新的权重要使用新的 thinking mode 组
   late final currentModelIsBefore20250922 = qp((ref) {
-    final currentModel = ref.watch(this.currentModel);
+    final currentModel = ref.watch(this.latestModel);
     if (currentModel == null) return false;
     final date = currentModel.date;
     return date != null && date.isBefore(DateTime(2025, 9, 22));
   });
 
   late final inTTSTranslateOrSee = qp((ref) {
-    final model = ref.watch(P.rwkv.currentModel);
+    final model = ref.watch(P.rwkv.latestModel);
     if (model == null) return false;
     final isTTS = model.isTTS;
     final isTranslate = model.tags.contains("translate");
@@ -552,7 +558,7 @@ extension $RWKV on _RWKV {
       return const Stream.empty();
     }
 
-    // TODO: @Dengzi, please test this logic
+    // TODO: @dengzi, please test this logic
     final modelID = findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return const Stream.empty();
@@ -875,7 +881,7 @@ extension $RWKV on _RWKV {
 
     if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
-    final currentModel = P.rwkv.currentModel.q;
+    final currentModel = P.rwkv.latestModel.q;
 
     final batchAllowed = currentModel!.tags.contains("batch");
 
@@ -950,7 +956,7 @@ extension _$RWKV on _RWKV {
     }, []);
     socName.q = r.$1;
     socBrand.q = r.$2;
-    currentModel.lb(_onCurrentModelChanged);
+    latestModel.lb(_onCurrentModelChanged);
     Albatross.instance.init();
   }
 
@@ -989,13 +995,15 @@ extension _$RWKV on _RWKV {
     send(req);
     final modelID = await completer.future;
     modelLoadingCompleters.q = modelLoadingCompleters.q..remove(fileInfo);
+    // 如果我们得到的 modelID 为 null, 则表示加载失败
     return modelID;
   }
 
   Future<void> _releaseModelById({required int modelID}) async {
     final completer = Completer<void>();
     modelReleasingCompleters.q = {...modelReleasingCompleters.q, modelID: completer};
-    final req = to_rwkv.ReleaseRWKVModel(modelID: modelID);
+    final fileInfo = loadedModels.q.entries.firstWhereOrNull((e) => e.value == modelID)?.key;
+    final req = to_rwkv.ReleaseRWKVModel(modelID: modelID, extra: fileInfo);
     send(req);
     await completer.future;
     modelReleasingCompleters.q = modelReleasingCompleters.q..remove(modelID);
@@ -1036,6 +1044,10 @@ extension _$RWKV on _RWKV {
     loadedModels.q = loadedModels.q..remove(fileInfo);
     final msg = "Released model $modelID for $weightType";
     qqr(msg);
+  }
+
+  Future<void> _releaseAllModels() async {
+    await Future.wait(loadedModels.q.entries.map((e) => _releaseModelById(modelID: e.value)));
   }
 
   void _syncMaxBatchCount() {
@@ -1166,31 +1178,67 @@ extension _$RWKV on _RWKV {
   }
 
   void _handleLoadModelSteps(from_rwkv.LoadModelSteps response) {
-    final req = response.req as to_rwkv.LoadRWKVModel;
-    final extra = req.extra;
-    if (extra != null) {
-      if (extra is FileInfo) {
-        switch (response.status) {
-          case .loaded:
-            loadedModels.q = {...loadedModels.q, extra: response.modelID!};
-          case .none:
-          case .loading:
-          case .releasing:
-          case .released:
-          case .failedInReleasing:
-          case .setQnnLibraryPath:
-          case .loadModelWithExtra:
-            break;
-          case .failedInLoading:
-            qqe("failed in loading model ${extra.fileName}, status: ${response.status}");
-            qqe("error: ${response.info}");
-            Alert.error("Failed to load model ${extra.fileName}, error: ${response.info}");
-        }
-        loadingStatus.q = {...loadingStatus.q, extra: response.status};
-      } else {
-        qqe("extra is not FileInfo, it is ${extra.runtimeType}");
-      }
+    final req = response.req;
+
+    late final FileInfo extra;
+
+    if (req is to_rwkv.LoadRWKVModel) {
+      extra = req.extra as FileInfo;
+    } else if (req is to_rwkv.ReleaseRWKVModel) {
+      extra = req.extra as FileInfo;
+    } else {
+      qqe("unknown request: $req");
+      return;
     }
+
+    final modelID = response.modelID;
+    final status = response.status;
+    final info = response.info;
+    final name = extra.name;
+
+    qqq("$name, modelID: $modelID, status: $status");
+
+    final modelLoadingCompleter = modelLoadingCompleters.q[extra];
+    final modelReleasingCompleter = modelReleasingCompleters.q[modelID];
+
+    switch (status) {
+      case .loaded:
+        if (modelID == null) {
+          qqe("modelID is null,  but status is loaded, this is impossible");
+          return;
+        }
+        loadedModels.q = {...loadedModels.q, extra: modelID};
+
+        if (modelLoadingCompleter != null) {
+          modelLoadingCompleter.complete(modelID);
+        } else {
+          qqe("modelLoadingCompleter is null,  but status is loaded, this is impossible");
+        }
+      case .failedInLoading:
+        if (modelLoadingCompleter != null) {
+          modelLoadingCompleter.complete(null);
+        } else {
+          qqe("modelLoadingCompleter is null,  but status is loaded, this is impossible");
+        }
+        qqe("failed in loading model $name, status: $status");
+        qqe("error: $info");
+        Alert.error("Failed to load model $name, error: $info");
+
+      case .released:
+      case .failedInReleasing:
+        if (modelReleasingCompleter != null) {
+          modelReleasingCompleter.complete();
+        } else {
+          qqe("modelReleasingCompleter is null,  but status is failedInReleasing, this is impossible");
+        }
+      case .none:
+      case .loading:
+      case .releasing:
+      case .setQnnLibraryPath:
+      case .loadModelWithExtra:
+        break;
+    }
+    loadingStatus.q = {...loadingStatus.q, extra: status};
   }
 
   void _handleFromRWKV(from_rwkv.FromRWKV message) {

@@ -96,7 +96,6 @@ class WorldGroupItem extends ConsumerWidget {
       return;
     }
 
-    P.rwkv.currentModel.q = modelFileKey;
     P.preference.saveLastWorldModel({
       "worldType": worldType.name,
       "modelFileName": modelFileKey.fileName,
@@ -138,7 +137,7 @@ class WorldGroupItem extends ConsumerWidget {
     final allMissing = files.every((e) => !e.hasFile);
     final downloading = files.any((e) => e.downloading);
 
-    final isCurrentModel = P.rwkv.currentModel.q?.fileName == socPair.$2;
+    final isCurrentModel = P.rwkv.latestModel.q?.fileName == socPair.$2;
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final alreadyStarted = currentWorldType == worldType && isCurrentModel;
