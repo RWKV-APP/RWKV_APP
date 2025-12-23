@@ -69,12 +69,18 @@ class _RWKV {
   late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
   /// 已经加载到内存中的模型，key 为 FuncType，value 为模型 ID
-  ///
-  /// 如果 value 为 null, 则表示该该功能的模型尚未被加载
   late final loadedModels = qs<Map<FileInfo, int>>({});
+
+  /// 模型加载状态, 曾经被加载过的模型, 也会显示在这里
   late final loadingStatus = qs<Map<FileInfo, LoadingStatus>>({});
+
+  /// 模型加载完成器, 用于等待模型加载完成
   late final modelLoadingCompleters = qs<Map<FileInfo, Completer<int?>>>({});
+
+  /// 模型释放完成器, 用于等待模型释放完成
   late final modelReleasingCompleters = qs<Map<int, Completer<bool>>>({});
+
+  /// 模型解压状态, 用于等待模型解压完成
   late final unzippingStatus = qsf<FileInfo, bool>(false);
 
   late final currentWorldType = qs<WorldType?>(null);
