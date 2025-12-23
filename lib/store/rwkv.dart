@@ -396,7 +396,7 @@ extension $RWKVLoad on _RWKV {
       tokenizerPath: tokenizerPath,
       backend: backend,
       // TODO: fileInfo is null for othello
-      fileInfo: FileInfo.fromJSON({}),
+      fileInfo: FileInfo.fromJSON(const {}),
     );
     if (modelID == null) {
       final msg = "Failed to load model, modelID is null";
@@ -448,7 +448,7 @@ extension $RWKVLoad on _RWKV {
       tokenizerPath: tokenizerPath,
       backend: backend,
       // TODO: fileInfo is null for othello
-      fileInfo: FileInfo.fromJSON({}),
+      fileInfo: FileInfo.fromJSON(const {}),
     );
     if (modelID == null) {
       final msg = "Failed to load model, modelID is null";

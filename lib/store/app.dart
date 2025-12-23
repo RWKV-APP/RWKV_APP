@@ -15,7 +15,7 @@ class _App extends RawApp {
 
   SystemUiOverlayStyle get systemOverlayStyleLight {
     final scaffold = customTheme.q.scaffold;
-    return SystemUiOverlayStyle(
+    return const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
