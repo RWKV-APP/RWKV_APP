@@ -573,7 +573,6 @@ extension $RWKV on _RWKV {
       return const Stream.empty();
     }
 
-    // TODO: @dengzi, please test this logic
     final modelID = findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       return const Stream.empty();
