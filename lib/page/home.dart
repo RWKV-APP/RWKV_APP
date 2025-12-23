@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -13,54 +15,66 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/model_selector.dart';
 
-class PageHome extends ConsumerWidget {
+class PageHome extends ConsumerStatefulWidget {
   const PageHome({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final version = ref.watch(P.app.version);
+  ConsumerState<PageHome> createState() => _PageHomeState();
+}
 
-    final width = MediaQuery.sizeOf(context).width;
+class _PageHomeState extends ConsumerState<PageHome> {
+  final controller = ScrollController();
+  static final _pixels = qs(0.0);
+  static final _pixelsFromBottom = qs(1.0);
 
-    final isLandscape = width > 600;
-    final crossAxisCount = isLandscape ? 3 : 2;
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      final position = controller.position;
+      final pixels = position.pixels;
+      final pixelsFromBottom = position.maxScrollExtent - pixels;
+      _pixels.q = pixels;
+      _pixelsFromBottom.q = pixelsFromBottom;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final width = ref.watch(P.app.screenWidth);
+    final height = ref.watch(P.app.screenHeight);
+    final paddingTop = ref.watch(P.app.paddingTop);
+    final ratio = width / height;
+
+    late final int crossAxisCount;
+
+    if (ratio > 1.2 && width > 1024) {
+      crossAxisCount = 4;
+    } else if (ratio < 1.0 && width < 900) {
+      crossAxisCount = 2;
+    } else {
+      crossAxisCount = 3;
+    }
+
+    final isLandscape = ratio > 1;
     final maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
+    final containerPaddingTop = 300 - paddingTop;
+    final containerPaddingHorizontal = crossAxisCount == 3 ? 24.0 : 12.0;
 
     return AppScaffold(
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: .stretch,
-          mainAxisSize: .min,
-          children: [
-            const SizedBox(height: 100),
-            Center(
-              child: ClipRRect(
-                borderRadius: .circular(50),
-                clipBehavior: Clip.antiAlias,
-                child: Image.asset(
-                  'assets/img/chat/rwkv.png',
-                  height: 80,
-                  width: 80,
-                ),
+      body: Stack(
+        children: [
+          const _Welcome(),
+          Positioned.fill(
+            child: SingleChildScrollView(
+              controller: controller,
+              padding: .only(
+                top: containerPaddingTop,
+                left: containerPaddingHorizontal,
+                right: containerPaddingHorizontal,
+                bottom: 48,
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              s.welcome_to_rwkv_chat,
-              style: const TextStyle(fontSize: 24, fontWeight: .bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              "v$version",
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 100),
-            Padding(
-              padding: const .symmetric(horizontal: 12),
+              physics: const BouncingScrollPhysics(),
               child: MasonryGridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -86,8 +100,39 @@ class PageHome extends ConsumerWidget {
                 itemCount: 8,
               ),
             ),
-            const SizedBox(height: 20),
-          ],
+          ),
+          const _NoMore(),
+        ],
+      ),
+    );
+  }
+}
+
+class _NoMore extends ConsumerWidget {
+  const _NoMore();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final pixelsFromBottom = ref.watch(_PageHomeState._pixelsFromBottom);
+
+    double opacity = (-10 - pixelsFromBottom) / 40;
+    if (opacity < 0) opacity = 0;
+    if (opacity > 1) opacity = 1;
+    opacity = opacity * 0.5;
+
+    final bottomOffset = -25 + (-10 - pixelsFromBottom) / 40 * 15;
+
+    return Positioned(
+      bottom: bottomOffset,
+      left: 0,
+      right: 0,
+      child: IgnorePointer(
+        child: Center(
+          child: Opacity(
+            opacity: opacity,
+            child: T("- " + s.reached_bottom + " -"),
+          ),
         ),
       ),
     );
@@ -249,7 +294,7 @@ class _NekoButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () async {
-          final current = P.rwkv.currentModel.q;
+          final current = P.rwkv.latestModel.q;
           if (current == null || !current.isNeko) {
             final nekoList = P.fileManager.getNekoModel();
             final downloaded = nekoList.where((e) => P.fileManager.locals(e).q.hasFile).toList();
@@ -357,7 +402,8 @@ class _TranslatorButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
-          push(PageKey.translator);
+          if (isDesktop) push(.translator);
+          if (!isDesktop) push(.ocr);
         },
         child: Padding(
           padding: const .all(16),
@@ -379,11 +425,14 @@ class _TranslatorButton extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                isDesktop ? s.offline_translator_server : s.offline_translator,
+                s.offline_translator,
                 style: const TextStyle(fontSize: 16, fontWeight: .bold),
               ),
               const SizedBox(height: 8),
-              Text(s.offline_translator_detail, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(
+                s.offline_translator_detail,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
               const SizedBox(height: 6),
             ],
           ),
@@ -461,8 +510,7 @@ class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        // await Future<void>.delayed(const Duration(milliseconds: 10000));
-        await P.rwkv.switchChatModel(widget.file).timeout(const Duration(seconds: 10));
+        await P.rwkv.loadChat(fileInfo: widget.file).timeout(const Duration(seconds: 10));
         if (mounted) Navigator.pop(context, true);
       } catch (e) {
         qqe('load model failed: $e');
@@ -531,6 +579,58 @@ class _RolePlayButton extends ConsumerWidget {
               const SizedBox(height: 6),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Welcome extends ConsumerWidget {
+  const _Welcome();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final version = ref.watch(P.app.version);
+    final s = S.of(context);
+    final pixels = ref.watch(_PageHomeState._pixels);
+    double opacity = 1 - pixels / 150 + 0.5;
+
+    if (opacity < 0) opacity = 0;
+    if (opacity > 1) opacity = 1;
+    return Positioned(
+      top: -pixels / 1.5,
+      left: 0,
+      right: 0,
+      child: Opacity(
+        opacity: opacity,
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            Center(
+              child: ClipRRect(
+                borderRadius: .circular(50),
+                clipBehavior: Clip.antiAlias,
+                child: Image.asset(
+                  'assets/img/chat/rwkv.png',
+                  height: 80,
+                  width: 80,
+                ),
+              ),
+            ),
+            SizedBox(height: 24 * opacity),
+            Text(
+              s.welcome_to_rwkv_chat,
+              style: TextStyle(fontSize: 24 * pow(opacity, 0.1).toDouble(), fontWeight: .bold),
+              textAlign: .center,
+            ),
+            SizedBox(height: 12 * opacity),
+            Text(
+              "v$version",
+              style: TextStyle(fontSize: 14 * pow(opacity, 0.1).toDouble(), color: Colors.grey),
+              textAlign: .center,
+            ),
+            SizedBox(height: 100 * opacity),
+          ],
         ),
       ),
     );

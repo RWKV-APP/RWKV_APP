@@ -48,6 +48,7 @@ class _Interactions extends ConsumerWidget {
     final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);
+    final albatross = ref.watch(P.rwkv.isAlbatrossLoaded);
     return Wrap(
       spacing: 4,
       runSpacing: 4,
@@ -56,8 +57,8 @@ class _Interactions extends ConsumerWidget {
         if (preferredDemoType == DemoType.world) const IntrinsicWidth(child: SelectImageButton()),
         if (features.webSearch && preferredDemoType == DemoType.chat) const _WebSearchModeButton(),
         if (preferredDemoType == DemoType.chat) const ThinkingModeButton(),
-        if (preferredDemoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
-        if (preferredDemoType == DemoType.chat) const BatchButton(),
+        if (!albatross && preferredDemoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
+        if (!albatross && preferredDemoType == DemoType.chat) const BatchButton(),
         if (preferredDemoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],

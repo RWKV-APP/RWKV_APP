@@ -13,7 +13,6 @@ import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/gb_display.dart';
-import 'package:zone/func/unzip.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
@@ -21,6 +20,7 @@ import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
+import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
 
 class ModelItem extends ConsumerWidget {
@@ -75,7 +75,6 @@ class ModelItem extends ConsumerWidget {
       Alert.error(e.toString());
     }
 
-    P.rwkv.currentModel.q = fileInfo;
     if (!loadButtonTextShowLoad) {
       Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     }
@@ -108,34 +107,26 @@ class ModelItem extends ConsumerWidget {
       }
     }
 
-    final localFile = P.fileManager.locals(fileInfo).q;
-    String modelPath = localFile.targetPath;
     final backend = fileInfo.backend;
 
     if (backend == null) {
+      if (fileInfo.isAlbatross) {
+        try {
+          await Albatross.instance.load(fileInfo);
+          Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+          pop();
+        } catch (e) {
+          Alert.error(e.toString());
+        }
+        return;
+      }
       Alert.error("Backend is null");
       return;
     }
 
-    switch (backend) {
-      case Backend.mlx:
-      case Backend.coreml:
-        P.rwkv.loading.q = true;
-        await Future.delayed(const Duration(milliseconds: 20));
-        modelPath = await unzipInPlace(modelPath);
-        await Future.delayed(const Duration(milliseconds: 20));
-        P.rwkv.loading.q = false;
-      default:
-        break;
-    }
-
     try {
       P.rwkv.clearStates();
-      await P.rwkv.loadChat(
-        modelPath: modelPath,
-        backend: backend,
-        enableReasoning: fileInfo.isReasoning,
-      );
+      await P.rwkv.loadChat(fileInfo: fileInfo);
     } catch (e) {
       qqe;
       Alert.error(e.toString());
@@ -148,22 +139,25 @@ class ModelItem extends ConsumerWidget {
     final tags = fileInfo.tags;
 
     final isTranslate = tags.contains("translate");
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     if (isTranslate) {
       if (P.translator.enToZh.q) {
-        P.rwkv.send(SetUserRole("English"));
-        P.rwkv.send(SetResponseRole("Chinese"));
+        P.rwkv.send(SetUserRole("English", modelID: modelID));
+        P.rwkv.send(SetResponseRole(responseRole: "Chinese", modelID: modelID));
       } else {
-        P.rwkv.send(SetUserRole("Chinese"));
-        P.rwkv.send(SetResponseRole("English"));
+        P.rwkv.send(SetUserRole("Chinese", modelID: modelID));
+        P.rwkv.send(SetResponseRole(responseRole: "English", modelID: modelID));
       }
       await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "<EOD>", setPrompt: true);
       P.backend.start();
     } else {
-      P.rwkv.send(SetUserRole("User"));
-      P.rwkv.send(SetResponseRole("Assistant"));
+      P.rwkv.send(SetUserRole("User", modelID: modelID));
+      P.rwkv.send(SetResponseRole(responseRole: "Assistant", modelID: modelID));
     }
 
-    P.rwkv.currentModel.q = fileInfo;
     if (!loadButtonTextShowLoad) {
       Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     }
@@ -182,7 +176,7 @@ class ModelItem extends ConsumerWidget {
 
     for (var i = 0; i < 3; i++) {
       Future.delayed(Duration(milliseconds: 500 * i)).then((_) {
-        P.rwkv.send(GetSupportedBatchSizes());
+        P.rwkv.send(GetSupportedBatchSizes(modelID: modelID));
       });
     }
   }
@@ -192,9 +186,12 @@ class ModelItem extends ConsumerWidget {
     final s = S.of(context);
     final localFile = ref.watch(P.fileManager.locals(fileInfo));
     final hasFile = localFile.hasFile;
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
-    final loading = ref.watch(P.rwkv.loading);
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+
+    final loading = loadingStatus[fileInfo] == LoadingStatus.loading;
+
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
 
@@ -215,6 +212,11 @@ class ModelItem extends ConsumerWidget {
 
     if (loadButtonTextShowLoad) {
       startTitle = S.current.load_;
+    }
+
+    final unzipping = ref.watch(P.rwkv.unzippingStatus(fileInfo));
+    if (unzipping) {
+      startTitle = s.unzipping;
     }
 
     final qw = ref.watch(P.app.qw);

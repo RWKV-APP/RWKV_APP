@@ -5,6 +5,7 @@ import 'package:zone/store/p.dart' show P, $RWKV;
 import 'package:zone/widgets/arguments_panel.dart';
 
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/widgets/decode_param_type_button.dart';
 import 'model_selector.dart';
 
 class ModelSelectButton extends ConsumerWidget {
@@ -12,7 +13,7 @@ class ModelSelectButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final decodeParamType = ref.watch(P.rwkv.decodeParamType);
     final s = S.of(context);
     final modelDisplay = currentModel?.name ?? s.click_to_select_model;
@@ -63,46 +64,21 @@ class ModelSelectButton extends ConsumerWidget {
             if (currentModel == null) const SizedBox(width: 8),
             if (currentModel != null) const VerticalDivider(thickness: 1, width: 1),
             if (currentModel != null && !batchEnabled)
-              PopupMenuTheme(
-                data: PopupMenuThemeData(
-                  shape: RoundedRectangleBorder(borderRadius: .circular(8)),
-                  menuPadding: .zero,
-                  // elevation: 0,
+              DecodeParamTypeButton(
+                decodeParamType: decodeParamType,
+                child: Padding(
+                  padding: const .symmetric(horizontal: 12, vertical: 4),
+                  child: Text(currentName, style: const TextStyle(fontSize: 10, height: 1)),
                 ),
-                child: PopupMenuButton<DecodeParamType?>(
-                  padding: .zero,
-                  initialValue: decodeParamType,
-                  position: PopupMenuPosition.under,
-                  itemBuilder: (c) {
-                    return [
-                      PopupMenuItem<DecodeParamType?>(
-                        height: 32,
-                        value: DecodeParamType.unknown,
-                        enabled: false,
-                        child: Text(s.decode_param, style: const TextStyle(fontSize: 12)),
-                      ),
-                      _buildMenuItem(s.creative, DecodeParamType.creative, decodeParamType),
-                      _buildMenuItem(s.comprehensive, DecodeParamType.comprehensive, decodeParamType),
-                      _buildMenuItem(s.default_, DecodeParamType.defaults, decodeParamType),
-                      _buildMenuItem(s.conservative, DecodeParamType.conservative, decodeParamType),
-                      _buildMenuItem(s.fixed, DecodeParamType.fixed, decodeParamType),
-                      _buildMenuItem(s.custom, DecodeParamType.unknown, decodeParamType),
-                    ];
-                  },
-                  onSelected: (i) {
-                    if (i == DecodeParamType.unknown) {
-                      ArgumentsPanel.show(context);
-                    } else {
-                      P.rwkv.syncSamplerParamsFromDefault(i!);
-                    }
-                  },
-                  borderRadius: const .horizontal(right: .circular(16)),
-                  child: Padding(
-                    padding: const .symmetric(horizontal: 12, vertical: 4),
-                    child: Text(currentName, style: const TextStyle(fontSize: 10, height: 1)),
-                  ),
-                ),
+                onSelected: (v) {
+                  if (v == DecodeParamType.unknown) {
+                    ArgumentsPanel.show(context);
+                  } else {
+                    P.rwkv.syncSamplerParamsFromDefault(v);
+                  }
+                },
               ),
+
             if (currentModel != null && batchEnabled)
               InkWell(
                 onTap: () {
@@ -115,25 +91,6 @@ class ModelSelectButton extends ConsumerWidget {
               ),
           ],
         ),
-      ),
-    );
-  }
-
-  PopupMenuItem<DecodeParamType> _buildMenuItem(String text, DecodeParamType value, DecodeParamType current) {
-    final checked = value == current;
-    return PopupMenuItem(
-      value: value,
-      height: 32,
-      child: Row(
-        children: [
-          if (checked) const Icon(Icons.check, size: 16),
-          if (!checked) const SizedBox(width: 16),
-          const SizedBox(width: 8),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 200),
-            child: Text(text, style: const TextStyle(height: 1), overflow: .ellipsis),
-          ),
-        ],
       ),
     );
   }

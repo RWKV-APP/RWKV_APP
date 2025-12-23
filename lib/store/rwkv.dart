@@ -14,10 +14,10 @@ class _RWKV {
   // Instance
   // ===========================================================================
 
-  /// Send message to RWKV isolate
+  /// We use it to send message to rwkv_mobile_flutter isolate
+  ///
+  /// This sendPort is created rwkv_mobile_flutter isolate
   SendPort? _sendPort;
-
-  ReceivePort? get receivePort => _receivePort;
 
   /// Receive message from RWKV isolate
   late final _receivePort = ReceivePort();
@@ -27,7 +27,8 @@ class _RWKV {
 
   late final _messagesController = StreamController<from_rwkv.FromRWKV>();
 
-  late Completer<void> _initRuntimeCompleter = Completer<void>();
+  /// 我们等着这个的主要目的是等着 rwkv_mobile_flutter isolate 把 sendPort 发过来, 我们好用 sendport 来让 rwkv_mobile_flutter isolate 加载模型, 并执行后继操作
+  Completer<void>? _createRWKVIsolateCompleter;
 
   Timer? _getTokensTimer;
 
@@ -67,14 +68,18 @@ class _RWKV {
 
   late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
 
-  /// 当前加载的权重
-  late final currentModel = qs<FileInfo?>(null);
+  /// 已经加载到内存中的模型，key 为 FuncType，value 为模型 ID
+  ///
+  /// 如果 value 为 null, 则表示该该功能的模型尚未被加载
+  late final loadedModels = qs<Map<FileInfo, int>>({});
+  late final loadingStatus = qs<Map<FileInfo, LoadingStatus>>({});
+  late final modelLoadingCompleters = qs<Map<FileInfo, Completer<int?>>>({});
+  late final modelReleasingCompleters = qs<Map<int, Completer<bool>>>({});
+  late final unzippingStatus = qsf<FileInfo, bool>(false);
 
   late final currentWorldType = qs<WorldType?>(null);
 
   late final currentGroupInfo = qs<GroupInfo?>(null);
-
-  late final loading = qs(false);
 
   late final socName = qs("");
   late final socBrand = qs(SocBrand.unknown);
@@ -97,9 +102,28 @@ class _RWKV {
   late final backendBatchParams = qs<List<SamplerAndPenaltyParam>>([]);
   late final editingBatchParamsIndex = qs<int?>(null);
 
+  late final backendStatus = qs<BackendStatus>(.none);
+
+  late final unzipping = qs(false);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
+
+  late final loading = qp((ref) {
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    return loadingStatus.values.any((e) => e == LoadingStatus.loading);
+  });
+
+  late final loadedModelsCount = qp((ref) {
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+    return loadedModels.length;
+  });
+
+  late final latestModel = qp((ref) {
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+    return loadedModels.keys.lastOrNull;
+  });
 
   late final frontendBatchParamsAreAllSame = qp((ref) {
     final frontendBatchParams = ref.watch(this.frontendBatchParams);
@@ -146,22 +170,29 @@ class _RWKV {
 
   /// 模型是否已加载
   late final loaded = qp((ref) {
-    final currentModel = ref.watch(this.currentModel);
+    final currentModel = ref.watch(latestModel);
     return currentModel != null;
   });
+
+  late final isAlbatrossLoaded = qp((ref) {
+    final currentModel = ref.watch(latestModel);
+    return currentModel?.tags.contains('albatross') ?? false;
+  });
+
+  late final enableAlbatross = qs(false);
 
   /// 当前模型是否是2025年9月22日之前发布的
   ///
   /// 新的权重要使用新的 thinking mode 组
   late final currentModelIsBefore20250922 = qp((ref) {
-    final currentModel = ref.watch(this.currentModel);
+    final currentModel = ref.watch(latestModel);
     if (currentModel == null) return false;
     final date = currentModel.date;
     return date != null && date.isBefore(DateTime(2025, 9, 22));
   });
 
   late final inTTSTranslateOrSee = qp((ref) {
-    final model = ref.watch(P.rwkv.currentModel);
+    final model = ref.watch(P.rwkv.latestModel);
     if (model == null) return false;
     final isTTS = model.isTTS;
     final isTranslate = model.tags.contains("translate");
@@ -171,15 +202,15 @@ class _RWKV {
 }
 
 extension $RWKVLoad on _RWKV {
-  Future<void> loadWorldVision({
+  Future<int?> loadSee({
     required String modelPath,
     required String encoderPath,
     required Backend backend,
     required bool enableReasoning,
     required String? adapterPath,
+    required FileInfo fileInfo,
   }) async {
     qq;
-    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     _thinkingMode.q = enableReasoning ? const thinking_mode.Free() : const thinking_mode.None();
@@ -187,42 +218,30 @@ extension $RWKVLoad on _RWKV {
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
 
     await _ensureQNNCopied();
+    await _createRWKVIsolateIfNeeded();
+    await _releaseModelByWeightTypeIfNeeded(weightType: .see);
 
-    final rootIsolateToken = RootIsolateToken.instance;
-
-    if (_sendPort != null) {
-      try {
-        send(to_rwkv.ReleaseModel());
-        final startMS = HF.milliseconds;
-        await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-        final endMS = HF.milliseconds;
-        qqr("initRuntime done in ${endMS - startMS}ms");
-      } catch (e) {
-        qqe("initRuntime failed: $e");
-        if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
-        Alert.error("Failed to load model: $e");
-        return;
-      }
-    } else {
-      final options = StartOptions(
-        modelPath: modelPath,
-        tokenizerPath: tokenizerPath,
-        backend: backend,
-        sendPort: _receivePort.sendPort,
-        rootIsolateToken: rootIsolateToken!,
-      );
-      await RWKVMobile().runIsolate(options);
+    final modelID = await _loadModel(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      backend: backend,
+      fileInfo: fileInfo,
+    );
+    if (modelID == null) {
+      final msg = "Failed to load model, modelID is null";
+      qqw(msg);
+      return null;
     }
-
-    while (_sendPort == null) {
-      qqq("waiting for sendPort...");
-      await Future.delayed(const Duration(milliseconds: 50));
-    }
+    P.app.demoType.q = DemoType.world;
+    loadedModels.q = {
+      ...loadedModels.q,
+      fileInfo: modelID,
+    };
 
     if (adapterPath != null) {
-      send(to_rwkv.LoadVisionEncoderAndAdapter(encoderPath, adapterPath));
+      send(to_rwkv.LoadVisionEncoderAndAdapter(encoderPath, adapterPath, modelID: modelID));
     } else {
-      send(to_rwkv.LoadVisionEncoder(encoderPath));
+      send(to_rwkv.LoadVisionEncoder(encoderPath, modelID: modelID));
     }
 
     await setModelConfig(
@@ -233,108 +252,47 @@ extension $RWKVLoad on _RWKV {
     );
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
-    send(to_rwkv.SetEosToken("\x17"));
-    send(to_rwkv.SetBosToken("\x16"));
-    send(to_rwkv.SetTokenBanned([0]));
-    loading.q = false;
+    send(to_rwkv.SetEosToken("\x17", modelID: modelID));
+    send(to_rwkv.SetBosToken("\x16", modelID: modelID));
+    send(to_rwkv.SetTokenBanned([0], modelID: modelID));
+
+    return modelID;
   }
 
-  Future<void> loadWorldEngAudioQA({
-    required String modelPath,
-    required String encoderPath,
-    required Backend backend,
-  }) async {
-    qq;
-    loading.q = true;
-    prefillSpeed.q = 0;
-    decodeSpeed.q = 0;
-
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
-
-    final rootIsolateToken = RootIsolateToken.instance;
-
-    if (_sendPort != null) {
-      send(to_rwkv.ReleaseVisionEncoder());
-      send(to_rwkv.ReleaseModel());
-      final startMS = HF.milliseconds;
-      await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-      final endMS = HF.milliseconds;
-      qqr("initRuntime done in ${endMS - startMS}ms");
-    } else {
-      final options = StartOptions(
-        modelPath: modelPath,
-        tokenizerPath: tokenizerPath,
-        backend: backend,
-        sendPort: _receivePort.sendPort,
-        rootIsolateToken: rootIsolateToken!,
-      );
-      await RWKVMobile().runIsolate(options);
-    }
-
-    while (_sendPort == null) {
-      qqq("waiting for sendPort...");
-      await Future.delayed(const Duration(milliseconds: 50));
-    }
-
-    send(to_rwkv.LoadWhisperEncoder(encoderPath));
-    await setModelConfig(
-      enableReasoning: false,
-      preferChinese: false,
-      setPrompt: false,
-    );
-    await resetSamplerParams(enableReasoning: false);
-    await resetMaxLength(enableReasoning: false);
-    send(to_rwkv.SetEosToken("\x17"));
-    send(to_rwkv.SetBosToken("\x16"));
-    send(to_rwkv.SetTokenBanned([0]));
-    send(to_rwkv.SetUserRole(""));
-    loading.q = false;
-  }
-
-  Future<void> loadSparkTTS({
+  Future<void> loadTTS({
     required String modelPath,
     required String wav2vec2Path,
     required String detokenizePath,
     required String bicodecTokenzerPath,
     required Backend backend,
+    required FileInfo fileInfo,
   }) async {
     qq;
-    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/vocab_talk.txt");
+
     await _ensureQNNCopied();
-    final rootIsolateToken = RootIsolateToken.instance;
+    await _createRWKVIsolateIfNeeded();
+    await _releaseModelByWeightTypeIfNeeded(weightType: .tts);
+    final modelID = await _loadModel(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      backend: backend,
+      fileInfo: fileInfo,
+    );
 
-    if (_sendPort != null) {
-      try {
-        send(to_rwkv.ReleaseTTSModels());
-        final startMS = HF.milliseconds;
-        await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-        final endMS = HF.milliseconds;
-        qqr("initRuntime done in ${endMS - startMS}ms");
-      } catch (e) {
-        qqe("initRuntime failed: $e");
-        if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
-        Alert.error("Failed to load model: $e");
-        return;
-      }
-    } else {
-      final options = StartOptions(
-        modelPath: modelPath,
-        tokenizerPath: tokenizerPath,
-        backend: backend,
-        sendPort: _receivePort.sendPort,
-        rootIsolateToken: rootIsolateToken!,
-      );
-      await RWKVMobile().runIsolate(options);
+    if (modelID == null) {
+      final msg = "Failed to load model, modelID is null";
+      qqw(msg);
+      return;
     }
-
-    while (_sendPort == null) {
-      qqq("waiting for sendPort...");
-      await Future.delayed(const Duration(milliseconds: 50));
-    }
+    P.app.demoType.q = DemoType.tts;
+    loadedModels.q = {
+      ...loadedModels.q,
+      fileInfo: modelID,
+    };
 
     if (_ttsPerformanceTimer != null) {
       _ttsPerformanceTimer!.cancel();
@@ -342,7 +300,7 @@ extension $RWKVLoad on _RWKV {
     }
 
     _ttsPerformanceTimer = Timer.periodic(225.ms, (timer) async {
-      send(to_rwkv.GetPrefillAndDecodeSpeed());
+      send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
 
     send(
@@ -360,96 +318,54 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerDatePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerNumberPath));
-
-    loading.q = false;
   }
 
-  Future switchChatModel(FileInfo fileInfo) async {
-    final current = P.rwkv.currentModel.q;
-    if (current == fileInfo) {
-      return;
-    }
-    final localFile = P.fileManager.locals(fileInfo).q;
-    final modelPath = localFile.targetPath;
-    final backend = fileInfo.backend;
-    try {
-      P.rwkv.clearStates();
-      await P.rwkv.loadChat(
-        modelPath: modelPath,
-        backend: backend!,
-        enableReasoning: fileInfo.isReasoning,
-      );
-      P.rwkv.currentModel.q = fileInfo;
-    } catch (e) {
-      qqe;
-      Alert.error(e.toString());
-      return;
-    }
-
-    final batchAllowed = fileInfo.tags.contains("batch");
-    if (!batchAllowed) P.chat.batchEnabled.q = false;
-  }
-
-  Future<SendPort?> loadChat({
-    required String modelPath,
-    required Backend backend,
-    required bool enableReasoning,
+  Future<void> loadChat({
+    required FileInfo fileInfo,
   }) async {
     qq;
-    loading.q = true;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
 
+    final localFile = P.fileManager.locals(fileInfo).q;
+    String modelPath = localFile.targetPath;
+
+    final backend = fileInfo.backend;
+    final enableReasoning = fileInfo.isReasoning;
+
+    if (backend == Backend.mlx || backend == Backend.coreml) {
+      unzippingStatus(fileInfo).q = true;
+      modelPath = await unzipInPlace(modelPath);
+      unzippingStatus(fileInfo).q = false;
+    }
+
     await _ensureQNNCopied();
+    await _createRWKVIsolateIfNeeded();
+    await _releaseModelByWeightTypeIfNeeded(weightType: .chat);
 
-    final rootIsolateToken = RootIsolateToken.instance;
-
-    if (_sendPort != null) {
-      try {
-        final startMS = HF.milliseconds;
-        await reInitRuntime(backend: backend, modelPath: modelPath, tokenizerPath: tokenizerPath);
-        final endMS = HF.milliseconds;
-        qqr("initRuntime done in ${endMS - startMS}ms");
-      } catch (e) {
-        qqe("initRuntime failed: $e");
-        if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
-        Alert.error("Failed to load model: $e");
-        return null;
-      }
-    } else {
-      final options = StartOptions(
-        modelPath: modelPath,
-        tokenizerPath: tokenizerPath,
-        backend: backend,
-        sendPort: _receivePort.sendPort,
-        rootIsolateToken: rootIsolateToken!,
-      );
-      await RWKVMobile().runIsolate(options);
+    final modelID = await _loadModel(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      backend: backend!,
+      fileInfo: fileInfo,
+    );
+    if (modelID == null) {
+      final msg = "Failed to load model, modelID is null";
+      qqw(msg);
+      return;
     }
-
-    while (_sendPort == null) {
-      qqq("waiting for sendPort...");
-      await Future.delayed(const Duration(milliseconds: 50));
-    }
-
     P.app.demoType.q = DemoType.chat;
+    loadedModels.q = {
+      ...loadedModels.q,
+      fileInfo: modelID,
+    };
+
     await setModelConfig(enableReasoning: enableReasoning);
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
-    send(to_rwkv.GetSamplerParams());
-    loading.q = false;
-    Future.delayed(500.ms).then((_) {
-      send(to_rwkv.GetSupportedBatchSizes());
-    });
-    Future.delayed(1000.ms).then((_) {
-      send(to_rwkv.GetSupportedBatchSizes());
-    });
-    Future.delayed(1500.ms).then((_) {
-      send(to_rwkv.GetSupportedBatchSizes());
-    });
-
-    return _sendPort;
+    // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
+    _syncMaxBatchCount();
   }
 
   Future<void> loadOthello() async {
@@ -470,35 +386,30 @@ extension $RWKVLoad on _RWKV {
       backend = Backend.ncnn;
     }
 
-    final rootIsolateToken = RootIsolateToken.instance;
+    await _createRWKVIsolateIfNeeded();
+    await _releaseModelByWeightTypeIfNeeded(weightType: .othello);
 
-    if (_sendPort != null) {
-      send(
-        to_rwkv.ReInitRuntime(
-          modelPath: modelPath,
-          backend: backend,
-          tokenizerPath: tokenizerPath,
-        ),
-      );
-    } else {
-      final options = StartOptions(
-        modelPath: modelPath,
-        tokenizerPath: tokenizerPath,
-        backend: backend,
-        sendPort: _receivePort.sendPort,
-        rootIsolateToken: rootIsolateToken!,
-      );
-      await RWKVMobile().runIsolate(options);
-    }
-
-    while (_sendPort == null) {
-      qqq("waiting for sendPort...");
-      await Future.delayed(const Duration(milliseconds: 50));
+    final modelID = await _loadModel(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      backend: backend,
+      // TODO: fileInfo is null for othello
+      fileInfo: FileInfo.fromJSON({}),
+    );
+    if (modelID == null) {
+      final msg = "Failed to load model, modelID is null";
+      qqw(msg);
+      return;
     }
 
     P.app.demoType.q = DemoType.othello;
+    loadedModels.q = {
+      ...loadedModels.q,
+      // TODO: fileInfo is null for othello
+      // fileInfo: modelID,
+    };
 
-    send(to_rwkv.SetMaxLength(64000));
+    send(to_rwkv.SetMaxLength(64000, modelID: modelID));
     send(
       to_rwkv.SetSamplerParams(
         temperature: 1.0,
@@ -507,10 +418,11 @@ extension $RWKVLoad on _RWKV {
         presencePenalty: .0,
         frequencyPenalty: .0,
         penaltyDecay: .0,
+        modelID: modelID,
       ),
     );
-    send(to_rwkv.SetGenerationStopToken(0));
-    send(to_rwkv.ClearStates());
+    send(to_rwkv.SetGenerationStopToken(0, modelID: modelID));
+    send(to_rwkv.ClearStates(modelID: modelID));
   }
 
   Future<void> loadSudoku({
@@ -526,35 +438,30 @@ extension $RWKVLoad on _RWKV {
     await paramFile.writeAsBytes(data.buffer.asUint8List());
 
     await _ensureQNNCopied();
-    final rootIsolateToken = RootIsolateToken.instance;
+    await _createRWKVIsolateIfNeeded();
+    await _releaseModelByWeightTypeIfNeeded(weightType: .sudoku);
 
-    if (_sendPort != null) {
-      send(
-        to_rwkv.ReInitRuntime(
-          modelPath: modelPath,
-          backend: backend,
-          tokenizerPath: tokenizerPath,
-        ),
-      );
-    } else {
-      final options = StartOptions(
-        modelPath: modelPath,
-        tokenizerPath: tokenizerPath,
-        backend: backend,
-        sendPort: _receivePort.sendPort,
-        rootIsolateToken: rootIsolateToken!,
-      );
-      await RWKVMobile().runIsolate(options);
-    }
-
-    while (_sendPort == null) {
-      qqq("waiting for sendPort...");
-      await Future.delayed(const Duration(milliseconds: 50));
+    final modelID = await _loadModel(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      backend: backend,
+      // TODO: fileInfo is null for othello
+      fileInfo: FileInfo.fromJSON({}),
+    );
+    if (modelID == null) {
+      final msg = "Failed to load model, modelID is null";
+      qqw(msg);
+      return;
     }
 
     P.app.demoType.q = DemoType.sudoku;
+    loadedModels.q = {
+      ...loadedModels.q,
+      // TODO: fileInfo is null for sudoku
+      // fileInfo: modelID,
+    };
 
-    send(to_rwkv.SetMaxLength(6000_000));
+    send(to_rwkv.SetMaxLength(6000_000, modelID: modelID));
     send(
       to_rwkv.SetSamplerParams(
         temperature: 1.0,
@@ -563,18 +470,22 @@ extension $RWKVLoad on _RWKV {
         presencePenalty: .0,
         frequencyPenalty: .0,
         penaltyDecay: .0,
+        modelID: modelID,
       ),
     );
-    send(to_rwkv.SetGenerationStopToken(_Sudoku.tokenStop));
-    send(to_rwkv.ClearStates());
-    loading.q = false;
+    send(to_rwkv.SetGenerationStopToken(_Sudoku.tokenStop, modelID: modelID));
+    send(to_rwkv.ClearStates(modelID: modelID));
   }
 }
 
 /// Public methods
 extension $RWKV on _RWKV {
   Future<void> setAudioPrompt({required String path}) async {
-    send(to_rwkv.SetAudioPrompt(path));
+    final modelID = findModelIDByWeightType(weightType: .tts);
+    if (modelID == null) {
+      return;
+    }
+    send(to_rwkv.SetAudioPrompt(path, modelID: modelID));
   }
 
   Future<void> sendMessages(
@@ -586,10 +497,39 @@ extension $RWKV on _RWKV {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
-    final sendPort = _sendPort;
+    if (isAlbatrossLoaded.q) {
+      final stream = Albatross.instance.chat(messages, batchSize: 1);
+      try {
+        await for (final event in stream) {
+          _messagesController.add(event);
+        }
 
-    if (sendPort == null) {
-      qqw("sendPort is null");
+        /// NOTE: downstream requires this delay
+        Future.delayed(500.ms).then((_) {
+          _messagesController.add(from_rwkv.GenerateStop());
+        });
+      } catch (e) {
+        Future.delayed(500.ms).then((_) {
+          _messagesController.add(from_rwkv.GenerateStop(error: e.toString()));
+        });
+      } finally {
+        _oldMessagesController.add(const LLMEvent(type: _RWKVMessageType.isGenerating, content: 'false'));
+      }
+      return;
+    }
+
+    final weightType = switch (P.app.demoType.q) {
+      DemoType.chat => WeightType.chat,
+      DemoType.world => WeightType.see,
+      DemoType.tts => WeightType.tts,
+      DemoType.sudoku => WeightType.sudoku,
+      DemoType.othello => WeightType.othello,
+      // TODO: Handle this case.
+      DemoType.fifthteenPuzzle => throw UnimplementedError(),
+    };
+
+    final modelID = findModelIDByWeightType(weightType: weightType);
+    if (modelID == null) {
       return;
     }
 
@@ -603,41 +543,52 @@ extension $RWKV on _RWKV {
       batchMessages.add(messages);
     }
     final request = isBatch
-        ? to_rwkv.ChatBatchAsync(batchMessages, reasoning: reasoning, batchSize: batchSize) //
-        : to_rwkv.ChatAsync(messages, reasoning: reasoning);
+        ? to_rwkv.ChatBatchAsync(batchMessages, reasoning: reasoning, batchSize: batchSize, modelID: modelID) //
+        : to_rwkv.ChatAsync(messages, reasoning: reasoning, modelID: modelID);
     send(request);
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
       final getResponseCalling = isBatch
-          ? to_rwkv.GetBatchResponseBufferContent(messages) //
-          : to_rwkv.GetResponseBufferContent(messages);
+          ? to_rwkv.GetBatchResponseBufferContent(messages: messages, modelID: modelID) //
+          : to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
       send(getResponseCalling);
-      if (HF.randomBool(truePercentage: getIsGeneratingRate)) send(to_rwkv.GetIsGenerating());
-      if (HF.randomBool(truePercentage: getResponseBufferContentRate)) send(to_rwkv.GetPrefillAndDecodeSpeed());
+      if (HF.randomBool(truePercentage: getIsGeneratingRate)) send(to_rwkv.GetIsGenerating(modelID: modelID));
+      if (HF.randomBool(truePercentage: getResponseBufferContentRate)) send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
   }
 
   Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+
+    if (isAlbatrossLoaded.q) {
+      return Albatross.instance.completion(prompt, batchSize: batchSize);
+    }
+
     final sendPort = _sendPort;
     if (sendPort == null) {
       qqw("sendPort is null");
       return const Stream.empty();
     }
-    final request = to_rwkv.GenerateAsync(prompt, batch: batchSize);
+
+    final modelID = findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return const Stream.empty();
+    }
+
+    final request = to_rwkv.GenerateAsync(prompt, batch: batchSize, modelID: modelID);
     send(request);
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
       final getResponseCalling = batchSize > 1
-          ? to_rwkv.GetBatchResponseBufferContent() //
-          : to_rwkv.GetResponseBufferContent();
+          ? to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID) //
+          : to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID);
       send(getResponseCalling);
-      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating());
-      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed());
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetIsGenerating(modelID: modelID));
+      if (HF.randomBool(truePercentage: .5)) send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
     return broadcastStream.mapNotNull((e) {
       if (e is from_rwkv.ResponseBatchBufferContent) {
@@ -662,23 +613,25 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-    send(to_rwkv.SudokuOthelloGenerate(prompt));
+
+    final modelID = findModelIDByWeightType(weightType: .othello);
+    if (modelID == null) {
+      return;
+    }
+
+    send(to_rwkv.SudokuOthelloGenerate(prompt, modelID: modelID));
 
     if (_getTokensTimer != null) {
       _getTokensTimer!.cancel();
     }
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      send(to_rwkv.GetResponseBufferIds());
-      send(to_rwkv.GetPrefillAndDecodeSpeed());
-      send(to_rwkv.GetResponseBufferContent());
+      send(to_rwkv.GetResponseBufferIds(modelID: modelID));
+      send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+      send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
       await Future.delayed(const Duration(milliseconds: 1000));
-      send(to_rwkv.GetIsGenerating());
+      send(to_rwkv.GetIsGenerating(modelID: modelID));
     });
-  }
-
-  Future<void> setImagePath({required String path}) async {
-    send(to_rwkv.SetVisionPrompt(path));
   }
 
   Future<void> clearStates() async {
@@ -689,7 +642,10 @@ extension $RWKV on _RWKV {
       qqw("sendPort is null");
       return;
     }
-    send(to_rwkv.ClearStates());
+    for (final entry in loadedModels.q.entries) {
+      final modelID = entry.value;
+      send(to_rwkv.ClearStates(modelID: modelID));
+    }
   }
 
   void send(to_rwkv.ToRWKV toRwkv) {
@@ -702,31 +658,39 @@ extension $RWKV on _RWKV {
     return;
   }
 
-  Future<void> stop() async => send(to_rwkv.Stop());
-
-  Future<void> reInitRuntime({
-    required String modelPath,
-    required Backend backend,
-    required String tokenizerPath,
-  }) async {
-    prefillSpeed.q = 0;
-    decodeSpeed.q = 0;
-    _initRuntimeCompleter = Completer<void>();
-    send(
-      to_rwkv.ReInitRuntime(
-        modelPath: modelPath,
-        backend: backend,
-        tokenizerPath: tokenizerPath,
-      ),
-    );
-    return _initRuntimeCompleter.future;
+  Future<void> stop() async {
+    if (isAlbatrossLoaded.q) return Albatross.instance.stop();
+    for (final entry in loadedModels.q.entries) {
+      final modelID = entry.value;
+      send(to_rwkv.Stop(modelID: modelID));
+    }
   }
 
   void setGenerateMode(bool isGenerateMode) {
     if (isGenerateMode) {
-      send(to_rwkv.SetPrompt(""));
+      for (final entry in loadedModels.q.entries) {
+        final modelID = entry.value;
+        send(to_rwkv.SetPrompt("", modelID: modelID));
+      }
     } else {
       setModelConfig(thinkingMode: _thinkingMode.q);
+    }
+  }
+
+  void updateSystemPrompt({String? prompt}) {
+    final systemPrompt = P.preference.promptTemplate.formatedSystemPrompt().trim();
+    for (final entry in loadedModels.q.entries) {
+      final modelID = entry.value;
+      if (prompt != null) {
+        send(to_rwkv.SetPrompt(prompt, modelID: modelID));
+      } else {
+        String p = prompt ?? "<EOD>";
+        if (systemPrompt.isNotEmpty) {
+          p = "$systemPrompt\n\n";
+        }
+        send(to_rwkv.SetPrompt(p, modelID: modelID));
+      }
+      qqw("setPrompt: $prompt");
     }
   }
 
@@ -741,36 +705,34 @@ extension $RWKV on _RWKV {
     qqr(thinkingMode);
     _thinkingMode.q = thinkingMode ?? const thinking_mode.Fast();
 
-    final systemPrompt = P.preference.promptTemplate.systemPrompt.trim();
-
     if (setPrompt) {
-      if (prompt != null) {
-        send(to_rwkv.SetPrompt(prompt));
-      } else {
-        String p = prompt ?? "<EOD>";
-        if (systemPrompt.isNotEmpty) {
-          p = "$systemPrompt\n\n";
-        }
-        send(to_rwkv.SetPrompt(p));
-      }
-      qqw("setPrompt: $prompt");
+      updateSystemPrompt(prompt: prompt);
     }
 
     final custom = P.preference.promptTemplate;
     final thinkingToken = custom.apply(_thinkingMode.q);
     qqq("setThinkingToken: $thinkingToken");
-    send(to_rwkv.SetThinkingToken(thinkingToken));
+    for (final entry in loadedModels.q.entries) {
+      final modelID = entry.value;
+      send(to_rwkv.SetThinkingToken(thinkingToken, modelID: modelID));
+    }
   }
 
   Future<void> resetSamplerParams({required bool enableReasoning}) async {
-    await syncSamplerParams(
-      temperature: enableReasoning ? Argument.temperature.reasonDefaults : Argument.temperature.defaults,
-      topK: enableReasoning ? Argument.topK.reasonDefaults : Argument.topK.defaults,
-      topP: enableReasoning ? Argument.topP.reasonDefaults : Argument.topP.defaults,
-      presencePenalty: enableReasoning ? Argument.presencePenalty.reasonDefaults : Argument.presencePenalty.defaults,
-      frequencyPenalty: enableReasoning ? Argument.frequencyPenalty.reasonDefaults : Argument.frequencyPenalty.defaults,
-      penaltyDecay: enableReasoning ? Argument.penaltyDecay.reasonDefaults : Argument.penaltyDecay.defaults,
-    );
+    for (final entry in loadedModels.q.entries) {
+      final modelID = entry.value;
+      send(
+        to_rwkv.SetSamplerParams(
+          temperature: enableReasoning ? Argument.temperature.reasonDefaults : Argument.temperature.defaults,
+          topK: enableReasoning ? Argument.topK.reasonDefaults : Argument.topK.defaults,
+          topP: enableReasoning ? Argument.topP.reasonDefaults : Argument.topP.defaults,
+          presencePenalty: enableReasoning ? Argument.presencePenalty.reasonDefaults : Argument.presencePenalty.defaults,
+          frequencyPenalty: enableReasoning ? Argument.frequencyPenalty.reasonDefaults : Argument.frequencyPenalty.defaults,
+          penaltyDecay: enableReasoning ? Argument.penaltyDecay.reasonDefaults : Argument.penaltyDecay.defaults,
+          modelID: modelID,
+        ),
+      );
+    }
   }
 
   Future syncSamplerParamsFromDefault(DecodeParamType param) async {
@@ -798,29 +760,39 @@ extension $RWKV on _RWKV {
     if (frequencyPenalty != null) arguments(Argument.frequencyPenalty).q = frequencyPenalty;
     if (penaltyDecay != null) arguments(Argument.penaltyDecay).q = penaltyDecay;
 
-    send(
-      to_rwkv.SetSamplerParams(
-        temperature: _intIfFixedDecimalsIsZero(Argument.temperature),
-        topK: _intIfFixedDecimalsIsZero(Argument.topK),
-        topP: _intIfFixedDecimalsIsZero(Argument.topP),
-        presencePenalty: _intIfFixedDecimalsIsZero(Argument.presencePenalty),
-        frequencyPenalty: _intIfFixedDecimalsIsZero(Argument.frequencyPenalty),
-        penaltyDecay: _intIfFixedDecimalsIsZero(Argument.penaltyDecay),
-      ),
-    );
+    for (final entry in loadedModels.q.entries) {
+      final modelID = entry.value;
+      send(
+        to_rwkv.SetSamplerParams(
+          temperature: _intIfFixedDecimalsIsZero(Argument.temperature),
+          topK: _intIfFixedDecimalsIsZero(Argument.topK),
+          topP: _intIfFixedDecimalsIsZero(Argument.topP),
+          presencePenalty: _intIfFixedDecimalsIsZero(Argument.presencePenalty),
+          frequencyPenalty: _intIfFixedDecimalsIsZero(Argument.frequencyPenalty),
+          penaltyDecay: _intIfFixedDecimalsIsZero(Argument.penaltyDecay),
+          modelID: modelID,
+        ),
+      );
+    }
 
-    if (kDebugMode) send(to_rwkv.GetSamplerParams());
+    if (kDebugMode) {
+      for (final entry in loadedModels.q.entries) {
+        final modelID = entry.value;
+        send(to_rwkv.GetSamplerParams(modelID: modelID));
+      }
+    }
   }
 
   Future<void> resetMaxLength({required bool enableReasoning}) async {
-    await syncMaxLength(
-      maxLength: enableReasoning ? Argument.maxLength.reasonDefaults : Argument.maxLength.defaults,
-    );
+    await syncMaxLength(maxLength: enableReasoning ? Argument.maxLength.reasonDefaults : Argument.maxLength.defaults);
   }
 
   Future<void> syncMaxLength({num? maxLength}) async {
     if (maxLength != null) arguments(Argument.maxLength).q = maxLength.toDouble();
-    send(to_rwkv.SetMaxLength(_intIfFixedDecimalsIsZero(Argument.maxLength).toInt()));
+    for (final entry in loadedModels.q.entries) {
+      final modelID = entry.value;
+      send(to_rwkv.SetMaxLength(_intIfFixedDecimalsIsZero(Argument.maxLength).toInt(), modelID: modelID));
+    }
   }
 
   Future<void> onThinkModeTapped() async {
@@ -835,6 +807,16 @@ extension $RWKV on _RWKV {
     P.app.hapticLight();
 
     final s = S.current;
+
+    if (isAlbatrossLoaded.q) {
+      final current = thinkingMode.q;
+      if (current is! thinking_mode.None) {
+        setModelConfig(thinkingMode: const thinking_mode.None());
+      } else {
+        setModelConfig(thinkingMode: const thinking_mode.Free());
+      }
+      return;
+    }
 
     final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
     if (currentModelIsBefore20250922) {
@@ -913,7 +895,7 @@ extension $RWKV on _RWKV {
 
     if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
 
-    final currentModel = P.rwkv.currentModel.q;
+    final currentModel = P.rwkv.latestModel.q;
 
     final batchAllowed = currentModel!.tags.contains("batch");
 
@@ -958,7 +940,21 @@ extension $RWKV on _RWKV {
   }
 
   Future<void> refreshStatePanel() async {
-    send(to_rwkv.DumpStateInfo());
+    final modelID = findModelIDByWeightType(weightType: .chat);
+    if (modelID != null) send(to_rwkv.DumpStateInfo(modelID: modelID));
+  }
+
+  int? findModelIDByWeightType({required WeightType weightType}) {
+    final loaded = loadedModels.q.entries.firstWhereOrNull((e) => e.key.weightType == weightType);
+
+    final value = loaded?.value;
+
+    if (value == null) {
+      final msg = "model id for weight type $weightType, maybe model is not loaded";
+      qqq(msg);
+    }
+
+    return value;
   }
 }
 
@@ -975,7 +971,117 @@ extension _$RWKV on _RWKV {
     }, []);
     socName.q = r.$1;
     socBrand.q = r.$2;
-    currentModel.lb(_onCurrentModelChanged);
+    latestModel.lb(_onCurrentModelChanged);
+    Albatross.instance.init();
+  }
+
+  Future<void> _createRWKVIsolateIfNeeded() async {
+    if (backendStatus.q != .none) {
+      final msg = "Backend is not in none status, so isolate should be created before, current status: ${backendStatus.q}";
+      qqw(msg);
+      return;
+    }
+
+    backendStatus.q = .creatingIsolate;
+    _createRWKVIsolateCompleter = Completer<void>();
+    final options = StartOptions(
+      sendPort: _receivePort.sendPort,
+      rootIsolateToken: RootIsolateToken.instance!,
+    );
+    await RWKVMobile().runIsolate(options);
+    await _createRWKVIsolateCompleter!.future;
+    backendStatus.q = .ready;
+  }
+
+  Future<int?> _loadModel({
+    required String modelPath,
+    required String tokenizerPath,
+    required Backend backend,
+    required FileInfo fileInfo,
+  }) async {
+    final completer = Completer<int?>();
+    modelLoadingCompleters.q = {...modelLoadingCompleters.q, fileInfo: completer};
+    final req = to_rwkv.LoadRWKVModel(
+      modelPath: modelPath,
+      backend: backend,
+      tokenizerPath: tokenizerPath,
+      extra: fileInfo,
+    );
+    send(req);
+    final modelID = await completer.future;
+    modelLoadingCompleters.q = {...modelLoadingCompleters.q..remove(fileInfo)};
+    // 如果我们得到的 modelID 为 null, 则表示加载失败
+    return modelID;
+  }
+
+  Future<void> _releaseModelById({required int modelID}) async {
+    if (modelReleasingCompleters.q.containsKey(modelID)) {
+      qqw("modelReleasingCompleters already contains completer for modelID: $modelID");
+      return;
+    }
+    qqq("releasing model by id: $modelID");
+    final completer = Completer<bool>();
+    modelReleasingCompleters.q = {...modelReleasingCompleters.q, modelID: completer};
+    final fileInfo = loadedModels.q.entries.firstWhereOrNull((e) => e.value == modelID)?.key;
+    final req = to_rwkv.ReleaseRWKVModel(modelID: modelID, extra: fileInfo);
+    send(req);
+    final success = await completer.future;
+    modelReleasingCompleters.q = {...modelReleasingCompleters.q..remove(modelID)};
+    if (success) loadedModels.q = {...loadedModels.q..remove(fileInfo)};
+  }
+
+  Future<void> _releaseModelByWeightTypeIfNeeded({required WeightType weightType}) async {
+    final loaded = loadedModels.q.entries.firstWhereOrNull((e) => e.key.weightType == weightType);
+    final modelID = loaded?.value;
+    final fileInfo = loaded?.key;
+
+    if (modelID == null) {
+      final msg = "ModelID is null, maybe no model is loaded for weight type $weightType, so no need to release";
+      qqq(msg);
+      return;
+    }
+
+    if (fileInfo == null) {
+      final msg = "FileInfo is null, maybe no model is loaded for weight type $weightType, so no need to release";
+      qqq(msg);
+      return;
+    }
+
+    switch (weightType) {
+      case WeightType.chat:
+        break;
+      case WeightType.see:
+        break;
+      case WeightType.tts:
+        send(to_rwkv.ReleaseTTSModels());
+        break;
+      case WeightType.sudoku:
+        break;
+      case WeightType.othello:
+        break;
+      case WeightType.roleplay:
+        break;
+    }
+
+    await _releaseModelById(modelID: modelID);
+    loadedModels.q = {...loadedModels.q..remove(fileInfo)};
+    final msg = "Released model $modelID for $weightType";
+    qqr(msg);
+  }
+
+  Future<void> _releaseAllModels() async {
+    currentGroupInfo.q = null;
+    currentWorldType.q = null;
+    await Future.wait(loadedModels.q.entries.map((e) => _releaseModelById(modelID: e.value)));
+  }
+
+  void _syncMaxBatchCount() {
+    for (final delay in [500.ms, 1000.ms, 2000.ms]) {
+      Future.delayed(delay).then((_) {
+        final modelID = findModelIDByWeightType(weightType: .chat);
+        if (modelID != null) send(to_rwkv.GetSupportedBatchSizes(modelID: modelID));
+      });
+    }
   }
 
   void _onCurrentModelChanged(FileInfo? oldModel, FileInfo? newModel) async {
@@ -1006,7 +1112,8 @@ extension _$RWKV on _RWKV {
         break;
       case PageKey.chat:
         qq;
-        send(to_rwkv.GetSupportedBatchSizes());
+        final modelID = findModelIDByWeightType(weightType: .chat);
+        if (modelID != null) send(to_rwkv.GetSupportedBatchSizes(modelID: modelID));
         break;
       default:
         break;
@@ -1026,7 +1133,8 @@ extension _$RWKV on _RWKV {
   void _onMessage(dynamic message) {
     if (message is SendPort) {
       _sendPort = message;
-      // RoleplayManage.onSendPortAndReceivePortChange(_sendPort, _receivePort);
+      _createRWKVIsolateCompleter?.complete();
+      _createRWKVIsolateCompleter = null;
       return;
     }
 
@@ -1094,9 +1202,85 @@ extension _$RWKV on _RWKV {
     if (!kDebugMode) Sentry.captureException(Exception("unknown message: $message"), stackTrace: StackTrace.current);
   }
 
+  void _handleLoadModelSteps(from_rwkv.LoadModelSteps response) {
+    final req = response.req;
+
+    late final FileInfo extra;
+
+    if (req is to_rwkv.LoadRWKVModel) {
+      extra = req.extra as FileInfo;
+    } else if (req is to_rwkv.ReleaseRWKVModel) {
+      extra = req.extra as FileInfo;
+    } else {
+      qqe("unknown request: $req");
+      return;
+    }
+
+    final modelID = response.modelID;
+    final status = response.status;
+    final info = response.info;
+    final name = extra.name;
+
+    qqq("$name, modelID: $modelID, status: $status");
+
+    final modelLoadingCompleter = modelLoadingCompleters.q[extra];
+    final modelReleasingCompleter = modelReleasingCompleters.q[modelID];
+
+    switch (status) {
+      case .loaded:
+        if (modelID == null) {
+          qqe("modelID is null,  but status is loaded, this should not happen");
+          return;
+        }
+        loadedModels.q = {...loadedModels.q, extra: modelID};
+
+        if (modelLoadingCompleter != null) {
+          modelLoadingCompleter.complete(modelID);
+        } else {
+          qqe("modelLoadingCompleter is null,  but status is loaded, this is impossible");
+        }
+      case .failedInLoading:
+        if (modelLoadingCompleter != null) {
+          modelLoadingCompleter.complete(null);
+        } else {
+          qqe("modelLoadingCompleter is null,  but status is loaded, this should not happen");
+        }
+        qqe("failed in loading model $name, status: $status");
+        qqe("error: $info");
+        Alert.error("Failed to load model $name, error: $info");
+
+      case .released:
+        if (modelReleasingCompleter != null) {
+          modelReleasingCompleter.complete(true);
+        } else {
+          qqe("modelReleasingCompleter is null, but status is .released, this should not happen");
+          qqe("modelReleasingCompleters: ${modelReleasingCompleters.q}");
+          qqe("trying to find completer by id: $modelID");
+        }
+      case .failedInReleasing:
+        if (modelReleasingCompleter != null) {
+          modelReleasingCompleter.complete(false);
+        } else {
+          qqe("modelReleasingCompleter is null, but status is .failedInReleasing, this should not happen");
+          qqe("modelReleasingCompleters: ${modelReleasingCompleters.q}");
+          qqe("trying to find completer by id: $modelID");
+        }
+      case .none:
+      case .loading:
+      case .releasing:
+      case .setQnnLibraryPath:
+      case .loadModelWithExtra:
+        break;
+    }
+    loadingStatus.q = {...loadingStatus.q, extra: status};
+  }
+
   void _handleFromRWKV(from_rwkv.FromRWKV message) {
     _messagesController.add(message);
     switch (message) {
+      case from_rwkv.LoadModelSteps res:
+        _handleLoadModelSteps(res);
+
       case from_rwkv.SamplerAndPenaltyParams res:
         final temperatures = res.temperatures;
         final topPs = res.topPs;
@@ -1116,29 +1300,14 @@ extension _$RWKV on _RWKV {
           );
         }
         backendBatchParams.q = backendValues;
+
       case from_rwkv.EvaluationResults res:
         P.lambada._onResultsReceived(res);
+
       case from_rwkv.IsGenerating res:
         if (res.isGenerating != generating.q) {
           generating.q = res.isGenerating;
           qqq('generating=${res.isGenerating}');
-        }
-      case from_rwkv.ReInitSteps res:
-        final done = res.done;
-        final success = res.success;
-        final error = res.error;
-
-        if (done) {
-          if (success == true) {
-            if (_initRuntimeCompleter.isCompleted) return;
-            _initRuntimeCompleter.complete();
-          } else if (success == false) {
-            qqe("initRuntime failed: $error");
-            final exception = Exception("initRuntime failed: $error");
-            if (!kDebugMode) Sentry.captureException(exception, stackTrace: StackTrace.current);
-            if (_initRuntimeCompleter.isCompleted) return;
-            _initRuntimeCompleter.completeError(exception);
-          } else {}
         }
 
       case from_rwkv.StateInfo response:

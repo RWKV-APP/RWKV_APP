@@ -243,9 +243,9 @@ class _DecodeParams extends ConsumerWidget {
         for (int i = 0; i < paramsToShow.length; i += crossAxisCount) {
           final chunk = paramsToShow.skip(i).take(crossAxisCount).toList();
           rows.add(
-          Row(
-            crossAxisAlignment: .start,
-            children: [
+            Row(
+              crossAxisAlignment: .start,
+              children: [
                 for (int j = 0; j < crossAxisCount; j++) ...[
                   if (j > 0) 8.w,
                   Expanded(
@@ -356,6 +356,11 @@ class _DecodeParam extends ConsumerWidget {
             ...P.rwkv.frontendBatchParams.q.sublist(index + 1),
           ];
 
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
+
     P.rwkv.frontendBatchParams.q = newValue;
     P.rwkv.send(
       SetSamplerAndPenaltyParams(
@@ -365,9 +370,10 @@ class _DecodeParam extends ConsumerWidget {
         presencePenalties: newValue.map((e) => e.presencePenalty).toList(),
         frequencyPenalties: newValue.map((e) => e.frequencyPenalty).toList(),
         penaltyDecays: newValue.map((e) => e.penaltyDecay).toList(),
+        modelID: modelID,
       ),
     );
-    P.rwkv.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q));
+    P.rwkv.send(GetSamplerAndPenaltyParams(batchSize: P.chat.batchCount.q, modelID: modelID));
   }
 
   String _fmt(double value) {

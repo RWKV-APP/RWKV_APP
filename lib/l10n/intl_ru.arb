@@ -1,5 +1,6 @@
 {
   "@@locale": "ru",
+  "unzipping": "Распаковка",
   "got_it": "Я понял",
   "prebuilt": "Предустановленный",
   "colon": ": ",
@@ -88,6 +89,7 @@
   "othello_title": "RWKV Отелло",
   "send_message_to_rwkv": "Отправить сообщение в RWKV",
   "chat_copied_to_clipboard": "Скопировано в буфер обмена",
+  "code_copied_to_clipboard": "Код скопирован в буфер обмена",
   "chat_empty_message": "Пожалуйста, введите сообщение",
   "chat_welcome_to_use": "Добро пожаловать в {demoName}",
   "chat_please_select_a_model": "Пожалуйста, выберите модель",
@@ -374,6 +376,7 @@
   "chinese_translation_result": "Результат перевода на китайский",
   "english_translation_result": "Результат перевода на английский",
   "copy_text": "Копировать текст",
+  "copy_code": "Копировать код",
   "inference_engine": "ИИ-Движок",
   "model": "Модель",
   "no_model_selected": "Модель не выбрана",
@@ -476,7 +479,7 @@
   "source_text": "Исходный текст: {text}",
   "target_text": "Целевой текст: {text}",
   "performance_test_title": "Тест производительности",
-  "performance_test_description": "Использовать lambada для тестирования perplexity",
+  "performance_test_description": "Тест LAMBADA ppl",
   "start_download_updates_": "Начать фоновую загрузку обновлений...",
   "switch_to_creative_mode_for_better_exp": "Рекомендуется переключиться в режим «Творческий» для лучшего опыта",
   "parameter_description": "Описание параметров",
@@ -516,5 +519,20 @@
       "h6Size": {},
       "bodySize": {}
     }
-  }
+  },
+  "ocr_title": "OCR",
+  "hide_translations": "Скрыть переводы",
+  "show_translations": "Показать переводы",
+  "en_to_zh": "АН->КН",
+  "zh_to_en": "КН->АН",
+  "pick_from_gallery": "Выбрать из галереи",
+  "camera": "Камера",
+  "gallery": "Галерея",
+  "ocr_guide_text": "Нажмите {takePhoto}. RWKV переведет текст на изображении.",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
+  },
+  "reached_bottom": "Следите за обновлениями"
 }

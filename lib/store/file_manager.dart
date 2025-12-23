@@ -61,6 +61,7 @@ extension $FileManager on _FileManager {
     final worldWeights = HF.listJSON(config["world"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final sudokuWeights = HF.listJSON(config["sudoku"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
     final othelloWeights = HF.listJSON(config["othello"]["model_config"]).map((e) => FileInfo.fromJSON(e)).toSet();
+    final albatrossWeights = HF.listJSON(config["albatross"]?["model_config"] ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
 
     final roleplayConfig = (config["roleplay"] ?? <String, dynamic>{})["model_config"];
     final roleplayWeights = HF.listJSON(roleplayConfig ?? []).map((e) => FileInfo.fromJSON(e)).toSet();
@@ -72,8 +73,12 @@ extension $FileManager on _FileManager {
     this.sudokuWeights.q = sudokuWeights.where((e) => e.available).toSet();
     this.othelloWeights.q = othelloWeights.where((e) => e.available).toSet();
     seeWeights.q = worldWeights.where((e) => e.available).toSet();
-    // debugger();
+
     ttsCores.q = this.ttsWeights.q.where((e) => e.tags.contains("core")).toSet();
+
+    if (P.rwkv.enableAlbatross.q) {
+      this.chatWeights.q = this.chatWeights.q.union(albatrossWeights.where((e) => e.available).toSet());
+    }
   }
 
   Future<void> checkLocal() async {

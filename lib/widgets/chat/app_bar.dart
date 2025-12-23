@@ -34,7 +34,7 @@ class ChatAppBar extends ConsumerWidget {
     final s = S.of(context);
 
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
     final selectMessageMode = ref.watch(P.chat.isSharing);
 
@@ -111,6 +111,7 @@ class _MainAppBar extends ConsumerWidget {
     final version = ref.watch(P.app.version);
     final light = ref.watch(P.app.light);
     final transparentColor = light ? const Color.fromRGBO(239, 243, 251, 0.5) : kB.q(.5);
+
     return AppBar(
       elevation: 0,
       centerTitle: true,
@@ -135,7 +136,7 @@ class _MainAppBar extends ConsumerWidget {
                     ),
                     Padding(
                       padding: const .only(bottom: 2, left: 1),
-                      child: T(' $version', s: const TS(s: 8)),
+                      child: T(' $version', s: const TS(s: 8, w: .bold)),
                     ),
                   ],
                 ),

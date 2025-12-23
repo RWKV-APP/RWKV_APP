@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
@@ -16,41 +17,46 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:gaimon/gaimon.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart' as ar;
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart' as from_rwkv;
+import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 import 'package:rxdart/rxdart.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart' as shelf_ws;
+import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/model/backend_status.dart';
+import 'package:zone/model/bbox.dart';
 import 'package:zone/model/browser_tab.dart';
 import 'package:zone/model/browser_window.dart';
 import 'package:zone/model/backend_state.dart';
 import 'package:zone/model/content_type.dart';
 import 'package:zone/model/custom_theme.dart' as custom_theme;
-import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:system_info2/system_info2.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
-
+import 'package:system_info2/system_info2.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/db/db.dart' as db;
+import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
 import 'package:zone/func/save_asset_to_file.dart';
@@ -60,7 +66,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/io.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/cell_type.dart';
-import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/model/cot_display_state.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/demo_type.dart';
@@ -78,19 +83,22 @@ import 'package:zone/model/msg_node.dart';
 import 'package:zone/model/prompt_template.dart';
 import 'package:zone/model/ref_info.dart';
 import 'package:zone/model/reference.dart';
+import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/model/serve_mode.dart';
 import 'package:zone/model/state_log.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/model/user_type.dart';
+import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/page/panel/theme_selector.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
-import 'package:zone/model/web_search_mode.dart';
+import 'package:zone/store/albatross.dart';
 import 'package:zone/widgets/chat/batch_settings_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/func/unzip.dart';
 
 part "adapter.dart";
 part "app.dart";
@@ -107,11 +115,13 @@ part "networking.dart";
 part "othello.dart";
 part "preference.dart";
 part "rwkv.dart";
+part "see.dart";
 part "sudoku.dart";
 part "suggestion.dart";
-part "translator.dart";
 part "talk.dart";
-part "see.dart";
+part "translator.dart";
+part "ocr.dart";
+part "md_render.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -133,6 +143,8 @@ abstract class P {
   static final translator = _Translator();
   static final talk = _Talk();
   static final see = _See();
+  static final ocr = _Ocr();
+  static final mdRender = _MDRender();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -154,30 +166,33 @@ abstract class P {
 
   static Future<void> _unorderedInit() async {
     await Future.wait([
-      _safeInit(() => rwkv._init(), 'rwkv'),
-      _safeInit(() => chat._init(), 'chat'),
-      _safeInit(() => othello._init(), 'othello'),
-      _safeInit(() => fileManager._init(), 'fileManager'),
-      _safeInit(() => device._init(), 'device'),
-      _safeInit(() => adapter._init(), 'adapter'),
-      _safeInit(() => see._init(), 'world'),
-      _safeInit(() => conversation._init(), 'conversation'),
-      _safeInit(() => talk._init(), 'tts'),
-      _safeInit(() => guard._init(), 'guard'),
-      _safeInit(() => sudoku._init(), 'sudoku'),
-      _safeInit(() => suggestion._init(), 'suggestion'),
-      _safeInit(() => dump._init(), 'dump'),
-      _safeInit(() => msg._init(), 'msg'),
-      _safeInit(() => backend._init(), 'backend'),
-      _safeInit(() => translator._init(), 'translator'),
-      _safeInit(() => lambada._init(), 'lambada'),
+      _safeInit(() => rwkv._init()),
+      _safeInit(() => chat._init()),
+      _safeInit(() => othello._init()),
+      _safeInit(() => fileManager._init()),
+      _safeInit(() => device._init()),
+      _safeInit(() => adapter._init()),
+      _safeInit(() => see._init()),
+      _safeInit(() => conversation._init()),
+      _safeInit(() => talk._init()),
+      _safeInit(() => guard._init()),
+      _safeInit(() => sudoku._init()),
+      _safeInit(() => suggestion._init()),
+      _safeInit(() => dump._init()),
+      _safeInit(() => msg._init()),
+      _safeInit(() => backend._init()),
+      _safeInit(() => translator._init()),
+      _safeInit(() => lambada._init()),
+      _safeInit(() => ocr._init()),
+      _safeInit(() => mdRender._init()),
     ]);
   }
 
-  static Future<void> _safeInit(Future<void> Function() initFunc, String name) async {
+  static Future<void> _safeInit(Future<void> Function() initFunc) async {
     try {
       await initFunc();
     } catch (e) {
+      final name = initFunc.runtimeType.toString();
       qqe('Error initializing $name: $e');
     }
   }

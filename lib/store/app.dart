@@ -16,7 +16,7 @@ class _App extends RawApp {
   SystemUiOverlayStyle get systemOverlayStyleLight {
     final scaffold = customTheme.q.scaffold;
     return SystemUiOverlayStyle(
-      systemNavigationBarColor: scaffold,
+      systemNavigationBarColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.light,
@@ -82,6 +82,8 @@ class _App extends RawApp {
 
   late final isDesktop = qp((ref) => ref.watch(_isDesktop));
   late final isMobile = qp((ref) => ref.watch(_isMobile));
+
+  late final highlighter = qs<Highlighter?>(null);
 }
 
 /// Public methods
@@ -252,6 +254,16 @@ extension _$App on _App {
         push(PageKey.translator);
       });
     }
+
+    await Highlighter.initialize(['dart', 'yaml', 'sql', 'python', "javascript"]);
+    Future.delayed(const Duration(milliseconds: 1000)).then((_) async {
+      qqr("load light theme");
+      var theme = await HighlighterTheme.loadDarkTheme();
+      highlighter.q = Highlighter(
+        language: 'javascript',
+        theme: theme,
+      );
+    });
   }
 
   void _initDB() async {

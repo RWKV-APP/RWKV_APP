@@ -19,7 +19,7 @@
       "flutterMode": "debug",
       "args": [
         // "--dart-define=autoShowTranslator=true",
-        // "--dart-define=logLevel=3",
+        "--dart-define=logLevel=3",
         // "--dart-define=enableBatchInference=true",
         // "--dart-define=batchCount=3",
         // "--dart-define=batchVW=50",
@@ -100,9 +100,9 @@
     {
       "name": "All (Halo)",
       "configurations": [
-        //,
-        "debug (Halo) - Android",
+        // 同时启动, 方便同时 debug 多个平台
         "debug (Halo) - macOS",
+        "debug (Halo) - Android",
         "debug (Halo) - iOS"
       ]
     }

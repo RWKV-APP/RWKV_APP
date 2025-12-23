@@ -34,7 +34,7 @@ class _PageChatState extends State<PageChat> {
     // 自动展示模型选择器
     if (P.app.demoType.q == DemoType.chat) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        final loaded = P.rwkv.currentModel.q != null;
+        final loaded = P.rwkv.latestModel.q != null;
         if (!loaded) {
           await Future.delayed(const Duration(milliseconds: 200));
           ModelSelector.show(showNeko: P.app.pageKey.q == PageKey.neko);

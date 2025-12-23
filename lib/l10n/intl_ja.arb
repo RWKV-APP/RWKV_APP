@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "unzipping": "展開中",
   "got_it": "了解",
   "prebuilt": "プリセット",
   "colon": "：",
@@ -88,6 +89,7 @@
   "othello_title": "RWKV オセロ",
   "send_message_to_rwkv": "RWKVにメッセージを送信",
   "chat_copied_to_clipboard": "クリップボードにコピーされました",
+  "code_copied_to_clipboard": "コードがクリップボードにコピーされました",
   "chat_empty_message": "メッセージ内容を入力してください",
   "chat_welcome_to_use": "{demoName}へようこそ",
   "chat_please_select_a_model": "モデルを選択してください",
@@ -374,6 +376,7 @@
   "chinese_translation_result": "中国語翻訳結果",
   "english_translation_result": "英語翻訳結果",
   "copy_text": "テキストをコピー",
+  "copy_code": "コードをコピー",
   "inference_engine": "推論エンジン",
   "model": "モデル",
   "no_model_selected": "モデルが選択されていません",
@@ -476,7 +479,7 @@
   "source_text": "ソーステキスト: {text}",
   "target_text": "ターゲットテキスト: {text}",
   "performance_test_title": "パフォーマンステスト",
-  "performance_test_description": "lambada を使用して perplexity をテスト",
+  "performance_test_description": "LAMBADA ppl テスト",
   "start_download_updates_": "アップデートのバックグラウンドダウンロードを開始...",
   "switch_to_creative_mode_for_better_exp": "より良い体験のために「クリエイティブモード」への切り替えをお勧めします",
   "parameter_description": "パラメータ説明",
@@ -516,5 +519,20 @@
       "h6Size": {},
       "bodySize": {}
     }
-  }
+  },
+  "ocr_title": "OCR",
+  "hide_translations": "翻訳を非表示",
+  "show_translations": "翻訳を表示",
+  "en_to_zh": "英->中",
+  "zh_to_en": "中->英",
+  "pick_from_gallery": "ギャラリーから選択",
+  "camera": "カメラ",
+  "gallery": "ギャラリー",
+  "ocr_guide_text": "{takePhoto} をクリックしてください。RWKV が画像内のテキストを翻訳します。",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
+  },
+  "reached_bottom": "お楽しみに"
 }

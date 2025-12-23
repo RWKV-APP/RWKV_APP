@@ -93,7 +93,7 @@ class _Suggestion {
     final demoType = ref.watch(P.app.demoType);
     final messages = ref.watch(P.msg.list);
     final _ = ref.watch(P.suggestion.ttsTicker);
-    final _ = ref.watch(P.rwkv.currentModel);
+    final _ = ref.watch(P.rwkv.latestModel);
     final _ = ref.watch(P.msg.length);
 
     final hideCases = [
@@ -140,14 +140,12 @@ class _Suggestion {
 
   final worldSuggestion = qp<List<String>>((ref) {
     final _ = ref.watch(P.suggestion.ttsTicker);
-    final _ = ref.watch(P.rwkv.currentModel);
+    final _ = ref.watch(P.rwkv.latestModel);
     final _ = ref.watch(P.msg.length);
 
     final config = ref.watch(P.suggestion.config);
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
-
-    // debugger();
 
     switch (currentWorldType) {
       case WorldType.reasoningQA:
@@ -164,7 +162,7 @@ class _Suggestion {
 
   final talkSuggestion = qp<List<String>>((ref) {
     final _ = ref.watch(P.suggestion.ttsTicker);
-    final _ = ref.watch(P.rwkv.currentModel);
+    final _ = ref.watch(P.rwkv.latestModel);
     final _ = ref.watch(P.msg.length);
 
     final config = ref.watch(P.suggestion.config);

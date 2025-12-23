@@ -1,9 +1,10 @@
 // ignore_for_file: dead_code
 
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:zone/args.dart';
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,32 +18,14 @@ class Debugger extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (!Args.showHaloDebugger) return const SizedBox.shrink();
     if (!kDebugMode) return const SizedBox.shrink();
+
     final demoType = ref.watch(P.app.demoType);
     final pageKey = ref.watch(P.app.pageKey);
 
     final qw = ref.watch(P.app.qw);
 
-    switch (pageKey) {
-      case PageKey.translator:
-        return const _TranslatorDebugger();
-      case PageKey.talk:
-        return const _TTSDebugger();
-      default:
-        break;
-    }
-
-    switch (demoType) {
-      case DemoType.sudoku:
-        return const _SudokuDebugger();
-      case DemoType.tts:
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.world:
-    }
-
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
     final visualFloatHeight = ref.watch(P.see.visualFloatHeight);
     final loading = ref.watch(P.rwkv.loading);
     final playing = ref.watch(P.see.playing);
@@ -78,10 +61,18 @@ class Debugger extends ConsumerWidget {
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
     final receivingTokens = ref.watch(P.chat.receivingTokens);
 
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+
+    final unzipping = ref.watch(P.rwkv.unzipping);
+
+    final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
+
+    final latestModel = ref.watch(P.rwkv.latestModel);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
-    const showUnavailableModels = false;
     const showSocName = false;
     const showSocBrand = false;
     const showIds = false;
@@ -125,57 +116,19 @@ class Debugger extends ConsumerWidget {
                 crossAxisAlignment: .end,
                 children:
                     [
-                      paddingTop.h,
-                      if (currentWorldType != null && !isOthello) T("currentWorldType".codeToName),
-                      if (currentWorldType != null && !isOthello) T(currentWorldType.toString()),
-                      if (currentWorldType != null && !isOthello) T("visualFloatHeight".codeToName),
-                      if (currentWorldType != null) T(visualFloatHeight.toString()),
-                      if (showCurrentModel) ...[T("currentModel".codeToName), T(currentModel?.fileName ?? "null")],
-                      if (showLoading) ...[T("loading".codeToName), T(loading.toString())],
-                      if (currentWorldType != null) T("playing".codeToName),
-                      if (currentWorldType != null) T(playing.toString()),
-                      if (!isOthello) T("latestClickedMessage".codeToName),
-                      T((latestClickedMessage?.id.toString() ?? "null")),
-                      if (!isOthello) T("inputHeight".codeToName),
-                      T(inputHeight.toString()),
-                      if (!isOthello) T("hasFocus".codeToName),
-                      T(hasFocus.toString()),
-                      if (showAtMainPage) ...[T("atMainPage".codeToName), T(atMainPage.toString())],
-                      if (showPage) ...[T("page".codeToName), T(page.toString())],
-
-                      T("receiveId".codeToName),
-                      T(receiveId.toString()),
-                      if (showEditingIndex) ...[T("editingIndex".codeToName), T(editingIndex.toString())],
-                      if (showDrawerWidth) ...[T("drawerWidth".codeToName), T(drawerWidth.toString())],
-                      if (showScreenWidth) ...[T("screenWidth".codeToName), T(screenWidth.toString())],
-                      if (showThinkingMode) ...[T("thinkingMode".codeToName), T(thinkingMode.toString())],
-                      if (showEditingBotMessage) ...[T("editingBotMessage".codeToName), T(editingBotMessage.toString())],
-                      if (showMessages) ...[T("messages length".codeToName), T(messages.length.toString())],
-                      if (showMessages) ...[T("messages changing".codeToName), T(messages.m((e) => e.changing).join(", "))],
-                      if (showIds) ...[T("ids".codeToName), T(ids.toString())],
-                      if (showSocName) ...[T("socName".codeToName), T(socName)],
-                      if (showSocBrand) ...[T("socBrand".codeToName), T(socBrand.toString())],
-                      if (showAvailableModels) ...[T("availableModels".codeToName), T(availableModels.map((e) => e.name).join("\n"))],
-                      if (showDisableRemoteConfig) ...[T("disableRemoteConfig".codeToName), T(disableRemoteConfig.toString())],
-                      if (showPreferredThemeMode) ...[T("preferredThemeMode".codeToName), T(preferredThemeMode.toString())],
-                      if (showCustomTheme) ...[T("customTheme".codeToName), T(customTheme.runtimeType.toString())],
-                      if (showThemeMode) ...[T("themeMode".codeToName), T(themeMode.toString())],
-                      if (showPreferredDarkCustomTheme) ...[
-                        T("preferredDarkCustomTheme".codeToName),
-                        T(preferredDarkCustomTheme.runtimeType.toString()),
-                      ],
-                      if (showCheckingLatency) ...[T("checkingLatency".codeToName), T(checkingLatency.toString())],
-                      if (showConversation) ...[T("currentCreatedAtUS".codeToName), T(currentCreatedAtUS.toString())],
-                      if (showMsgNode) ...[T("msgNode.createAtInUS".codeToName), T(msgNode.createAtInUS.toString())],
-                      if (showPool) ...[T("pool".codeToName), T((pool.values.m((e) => e.id)).toString())],
-                      if (showConversation) ...[T("conversations".codeToName), T(conversations.length.toString())],
-                      if (showSupportedBatchSizes) ...[T("supportedBatchSizes".codeToName), T(supportedBatchSizes.toString())],
-                      T("pageKey".codeToName),
-                      T(pageKey.toString()),
-                      T("pageKey".codeToName),
-                      T(pageKey.toString()),
-                      T("receivingTokens".codeToName),
-                      T(receivingTokens.toString()),
+                      (max(paddingTop, 40)).h,
+                      T("loadedModels".codeToName),
+                      T(loadedModels.entries.map((e) => "${e.key.name} id: ${e.value}").join("\n")),
+                      T("loadingStatus".codeToName),
+                      T(loadingStatus.entries.map((e) => "${e.key.name} ${e.value.toString().replaceAll("LoadingStatus", "")}").join("\n")),
+                      T("unzipping".codeToName),
+                      T(unzipping.toString()),
+                      T("demoType".codeToName),
+                      T(demoType.toString()),
+                      T("currentGroupInfo".codeToName),
+                      T(currentGroupInfo?.displayName ?? "null"),
+                      T("latestModel".codeToName),
+                      T(latestModel?.name ?? "null"),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),
@@ -287,7 +240,7 @@ class _TTSDebugger extends ConsumerWidget {
     final generating = ref.watch(P.talk.generating);
     final asFull = ref.watch(P.talk.asFull);
     final asExhaust = ref.watch(P.talk.asExhaust);
-    final currentModel = ref.watch(P.rwkv.currentModel);
+    final currentModel = ref.watch(P.rwkv.latestModel);
 
     return Positioned(
       left: 0,
@@ -353,59 +306,6 @@ class _TTSDebugger extends ConsumerWidget {
                       T(asFull.toString()),
                       T("asExhaust".codeToName),
                       T(asExhaust.toString()),
-                    ].indexMap((index, e) {
-                      return Container(
-                        margin: .only(top: index % 2 == 0 ? 0 : 1),
-                        decoration: BoxDecoration(color: qb.q(.66)),
-                        child: e,
-                      );
-                    }),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TranslatorDebugger extends ConsumerWidget {
-  const _TranslatorDebugger();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-    final paddingTop = ref.watch(P.app.paddingTop);
-    final pageKey = ref.watch(P.app.pageKey);
-    final currentModel = ref.watch(P.rwkv.currentModel);
-
-    return Positioned(
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-      child: IgnorePointer(
-        child: Material(
-          textStyle: TS(
-            ff: "Monospace",
-            c: qw,
-            s: 8,
-          ),
-          color: Colors.transparent,
-          child: SizedBox(
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.transparent),
-              child: Column(
-                mainAxisAlignment: .start,
-                crossAxisAlignment: .end,
-                children:
-                    [
-                      paddingTop.h,
-                      T("pageKey".codeToName),
-                      T(pageKey.toString()),
-                      T("currentModel".codeToName),
-                      T(currentModel?.fileName ?? "null"),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

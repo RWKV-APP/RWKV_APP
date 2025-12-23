@@ -52,7 +52,12 @@ android {
         }
         release {
             signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    dependencies {
+        implementation 'com.google.mlkit:text-recognition-chinese:16.0.0'
     }
 }
 

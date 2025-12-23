@@ -7,10 +7,11 @@ import 'package:zone/page/advanced_sesttings.dart' show PageAdvancedSettings;
 import 'package:zone/page/font_settings.dart' show PageFontSettings;
 import 'package:zone/page/benchmark.dart' show PageBenchmark;
 import 'package:zone/page/chat.dart';
-import 'package:zone/page/completion.dart';
+import 'package:zone/page/completion/completion_page.dart';
 import 'package:zone/page/conversation.dart';
 import 'package:zone/page/home.dart';
 import 'package:zone/page/lambada.dart';
+import 'package:zone/page/ocr.dart';
 import 'package:zone/page/othello.dart';
 import 'package:zone/page/see.dart';
 import 'package:zone/page/settings.dart';
@@ -38,7 +39,8 @@ enum PageKey {
   talk,
   neko,
   lambada,
-  see
+  see,
+  ocr,
   ;
 
   String get path => "/$name";
@@ -82,6 +84,7 @@ enum PageKey {
       },
     ),
     PageKey.lambada => const PageLambada(),
+    PageKey.ocr => const PageOcr(),
   };
 
   GoRoute get route {

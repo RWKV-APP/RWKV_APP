@@ -7,24 +7,6 @@ So it's combining the best of RNN and transformer - great performance, linear ti
 const _initialResult = "";
 const _endString = "hlcc_h2evlj_[END]_hlcc_j12hcnu2";
 
-class _URLCompleter {
-  final String? url;
-  final int? tabId;
-  final Completer<String> completer;
-  final int? priority;
-  final String? nodeName;
-  final int? tick;
-
-  const _URLCompleter({
-    required this.url,
-    required this.tabId,
-    required this.completer,
-    required this.priority,
-    required this.nodeName,
-    required this.tick,
-  });
-}
-
 class _Translator {
   // ===========================================================================
   // Instance
@@ -117,7 +99,7 @@ extension _$Translator on _Translator {
   }
 
   void _checkTask() async {
-    final model = P.rwkv.currentModel.q;
+    final model = P.rwkv.latestModel.q;
     if (model == null) return;
     final wsRunning = P.backend.websocketState.q == BackendState.running;
     if (!wsRunning) return;
@@ -232,17 +214,17 @@ extension _$Translator on _Translator {
     if (next != textInController) resultTextEditingController.text = next;
   }
 
-  void _onPageKeyChanged(PageKey pageKey) {
+  void _onPageKeyChanged(PageKey pageKey) async {
     switch (pageKey) {
       case PageKey.translator:
-        final currentModel = P.rwkv.currentModel.q;
+        final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
           Future.delayed(const Duration(milliseconds: 500)).then((_) {
             ModelSelector.show();
           });
         } else {
           if (!currentModel.tags.contains("translate")) {
-            P.rwkv.currentModel.q = null;
+            await P.rwkv._releaseAllModels();
             Alert.info(S.current.please_load_model_first);
             Future.delayed(const Duration(milliseconds: 500)).then((_) {
               ModelSelector.show();
@@ -262,13 +244,14 @@ extension _$Translator on _Translator {
   }
 
   void _handleResponseBufferContent(from_rwkv.ResponseBufferContent res) {
+    qr;
     // 得到的翻译
     final content = res.responseBufferContent;
     // 更新 result
     result.q = content;
     // TODO: 复杂任务的准确映射?
     // 更新 caches
-    final request = res.toRWKV as to_rwkv.GetResponseBufferContent;
+    final request = res.req as to_rwkv.GetResponseBufferContent;
     final key = request.messages.firstOrNull;
     if (key == null) {
       qqw("key is null");
@@ -299,6 +282,7 @@ extension _$Translator on _Translator {
   }
 
   void _appendBatchEndString() {
+    qw;
     final batchLines = batchTaskLines.q;
     if (batchLines.isEmpty) return;
 
@@ -352,7 +336,7 @@ extension _$Translator on _Translator {
       final urlCompleter = pool[key];
       if (urlCompleter == null) continue;
       urlCompleter.completer.complete(translation + _endString);
-      final newPool = Map.from(pool)..remove(key);
+      final newPool = {...Map.from(pool)..remove(key)};
       this.pool(tab).q = {...newPool};
     }
 
@@ -415,13 +399,11 @@ extension _$Translator on _Translator {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.chat || pageKey == PageKey.talk || pageKey == PageKey.benchmark) return;
+    if (pageKey == PageKey.chat || pageKey == PageKey.talk || pageKey == PageKey.benchmark || pageKey == PageKey.ocr) return;
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         // 只有在非批量模式下才处理单行响应
-        if (batchTaskLines.q.isEmpty) {
-          _handleResponseBufferContent(res);
-        }
+        if (batchTaskLines.q.isEmpty) _handleResponseBufferContent(res);
         break;
       case from_rwkv.ResponseBatchBufferContent res:
         _handleBatchResponseBufferContent(res);
@@ -481,25 +463,30 @@ extension _$Translator on _Translator {
     // 使用批量模式发送：每个批次是一条独立的消息列表
     final thinkingMode = P.rwkv.thinkingMode.q;
     final reasoning = thinkingMode.hasThinkTag;
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     P.rwkv.send(
       to_rwkv.ChatBatchAsync(
         batchMessages,
         reasoning: reasoning,
         batchSize: batchSize,
+        modelID: modelID,
       ),
     );
 
     // 启动定时器获取响应
     _batchTaskTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
       // 获取批量响应（无参数版本会返回所有批次的响应）
-      P.rwkv.send(to_rwkv.GetBatchResponseBufferContent());
-      P.rwkv.send(to_rwkv.GetIsGenerating());
-      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed());
+      P.rwkv.send(to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID));
+      P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
   }
 
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
-    qq;
+    qr;
 
     final responseBufferContents = res.responseBufferContent;
     final batchLines = batchTaskLines.q;
@@ -606,13 +593,17 @@ extension $Translator on _Translator {
       ModelSelector.show();
       return;
     }
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     // 确保角色与方向一致
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English"));
-      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
-      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
     result.q = "";
     resultTextEditingController.text = "";
@@ -659,12 +650,16 @@ extension $Translator on _Translator {
 
   void onDirectionButtonPressed() async {
     enToZh.q = !enToZh.q;
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      return;
+    }
     if (enToZh.q) {
-      P.rwkv.send(to_rwkv.SetUserRole("English"));
-      P.rwkv.send(to_rwkv.SetResponseRole("Chinese"));
+      P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
     } else {
-      P.rwkv.send(to_rwkv.SetUserRole("Chinese"));
-      P.rwkv.send(to_rwkv.SetResponseRole("English"));
+      P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+      P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
     }
 
     // 将下方结果文本移动到上方输入；若结果为空，则会清空上方，实现“清除全部”
@@ -696,4 +691,22 @@ extension $Translator on _Translator {
     }
     batchEnabled.q = next;
   }
+}
+
+class _URLCompleter {
+  final String? url;
+  final int? tabId;
+  final Completer<String> completer;
+  final int? priority;
+  final String? nodeName;
+  final int? tick;
+
+  const _URLCompleter({
+    required this.url,
+    required this.tabId,
+    required this.completer,
+    required this.priority,
+    required this.nodeName,
+    required this.tick,
+  });
 }

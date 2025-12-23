@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "unzipping": "Unzipping",
   "got_it": "Got it",
   "prebuilt": "Prebuilt",
   "colon": ": ",
@@ -88,6 +89,7 @@
   "othello_title": "RWKV Othello",
   "send_message_to_rwkv": "Message RWKV",
   "chat_copied_to_clipboard": "Copied to clipboard",
+  "code_copied_to_clipboard": "Code copied to clipboard",
   "chat_empty_message": "Please enter a message",
   "chat_welcome_to_use": "Welcome to {demoName}",
   "chat_please_select_a_model": "Please select a model",
@@ -374,6 +376,7 @@
   "chinese_translation_result": "Chinese Translation Result",
   "english_translation_result": "English Translation Result",
   "copy_text": "Copy text",
+  "copy_code": "Copy code",
   "inference_engine": "Inference Engine",
   "model": "Model",
   "no_model_selected": "No model selected",
@@ -443,6 +446,7 @@
   "decode_param": "Decode Param",
   "fixed": "Fixed",
   "creative": "Creative",
+  "creative_recommended": "Creative (recommended)",
   "conservative": "Conservative (math & code)",
   "default_": "Default",
   "balanced": "Balanced",
@@ -476,7 +480,7 @@
   "source_text": "Source Text: {text}",
   "target_text": "Target Text: {text}",
   "performance_test_title": "Performance Test",
-  "performance_test_description": "Use lambada to test perplexity",
+  "performance_test_description": "Test LAMBADA ppl",
   "start_download_updates_": "Start downloading updates...",
   "switch_to_creative_mode_for_better_exp": "Switch Decode Param to 'Creative' for better experience",
   "parameter_description": "Parameter Description",
@@ -516,5 +520,26 @@
       "h6Size": {},
       "bodySize": {}
     }
-  }
+  },
+  "tag_date": "Date",
+  "tag_time": "Time",
+  "tag_day_of_week": "Day of Week",
+  "enter_text_to_expand": "Enter text to expand",
+  "continue2": "Continue",
+  "please_entry_some_text_to_continue": "Please entry some text to continue",
+  "ocr_title": "OCR",
+  "hide_translations": "Hide Translations",
+  "show_translations": "Show Translations",
+  "en_to_zh": "EN->ZH",
+  "zh_to_en": "ZH->EN",
+  "pick_from_gallery": "Pick from Gallery",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "ocr_guide_text": "Click {takePhoto}. RWKV will translate the text in the image.",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
+  },
+  "reached_bottom": "Stay tuned"
 }

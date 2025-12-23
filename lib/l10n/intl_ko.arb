@@ -1,5 +1,6 @@
 {
   "@@locale": "ko",
+  "unzipping": "압축 해제 중",
   "got_it": "이해했습니다",
   "prebuilt": "사전 정의된",
   "colon": ": ",
@@ -88,6 +89,7 @@
   "othello_title": "RWKV 오셀로",
   "send_message_to_rwkv": "RWKV에게 메시지 보내기",
   "chat_copied_to_clipboard": "클립보드에 복사되었습니다",
+  "code_copied_to_clipboard": "코드가 클립보드에 복사되었습니다",
   "chat_empty_message": "메시지 내용을 입력해주세요",
   "chat_welcome_to_use": "{demoName}을(를) 탐험해 보세요",
   "chat_please_select_a_model": "모델을 선택해주세요",
@@ -374,6 +376,7 @@
   "chinese_translation_result": "중국어 번역 결과",
   "english_translation_result": "영어 번역 결과",
   "copy_text": "텍스트 복사",
+  "copy_code": "코드 복사",
   "inference_engine": "추론 엔진",
   "model": "모델",
   "no_model_selected": "선택된 모델 없음",
@@ -476,7 +479,7 @@
   "source_text": "소스 텍스트: {text}",
   "target_text": "타겟 텍스트: {text}",
   "performance_test_title": "성능 테스트",
-  "performance_test_description": "lambada를 사용하여 perplexity 테스트",
+  "performance_test_description": "LAMBADA ppl 테스트",
   "start_download_updates_": "백그라운드 업데이트 다운로드 시작...",
   "switch_to_creative_mode_for_better_exp": "더 나은 경험을 위해 '창의적 모드'로 전환하는 것을 권장합니다",
   "parameter_description": "매개변수 설명",
@@ -516,5 +519,20 @@
       "h6Size": {},
       "bodySize": {}
     }
-  }
+  },
+  "ocr_title": "OCR",
+  "hide_translations": "번역 숨기기",
+  "show_translations": "번역 표시",
+  "en_to_zh": "영->중",
+  "zh_to_en": "중->영",
+  "pick_from_gallery": "갤러리에서 선택",
+  "camera": "카메라",
+  "gallery": "갤러리",
+  "ocr_guide_text": "{takePhoto}를 클릭하세요. RWKV가 이미지의 텍스트를 번역합니다.",
+  "@ocr_guide_text": {
+    "placeholders": {
+      "takePhoto": {}
+    }
+  },
+  "reached_bottom": "기대해 주세요"
 }
