@@ -54,11 +54,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       frequencyPenalty: state?.decodeParam['frequencyPenalty']?.toDouble(),
       modelType: RoleplayManageModelType.chat,
     );
-    final sp = await P.rwkv.loadChat(
-      modelPath: info.modelPath, //
-      backend: widget.file.backend!,
-      enableReasoning: false,
-    );
+    final sp = await P.rwkv.loadChat(fileInfo: widget.file);
     if (sp != null) {
       RoleplayManage.onModelDownloadComplete(info, sp, P.rwkv.receivePort);
       Navigator.pop(context);
