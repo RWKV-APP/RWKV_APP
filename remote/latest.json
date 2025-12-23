@@ -307,7 +307,7 @@
         "date": 1766483162
       },
       {
-        "name": "🎉 RWKV7-G1a 0.1B (Dimensity 9300)",
+        "name": "RWKV7-G1a 0.1B (Dimensity 9300)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1a-0.1b-20250728-ctx4096-MT6989.rmpack",
         "fileSize": 247525376,
@@ -1155,6 +1155,18 @@
         "backends": ["qnn"],
         "tags": ["npu", "core"],
         "socLimitations": ["8s Gen 3"],
+        "date": 1766483163
+      },
+      {
+        "name": "ModRWKV V3 0.4B (Dimensity 9300)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/modrwkv-v3-0.4b-251113-MT6989.rmpack",
+        "fileSize": 530038784,
+        "quantization": "w8afp16",
+        "platforms": ["android"],
+        "backends": ["mtk_np7"],
+        "tags": ["npu", "core"],
+        "socLimitations": ["Dimensity 9300"],
         "date": 1766483163
       }
     ]

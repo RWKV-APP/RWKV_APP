@@ -57,6 +57,7 @@ enum WorldType {
       ("8s Gen 3", "modrwkv-v3-0.4b-251113-a16w8-8sgen3.bin"),
       ("8 Gen 2", "modrwkv-v3-0.4b-251113-a16w8-8gen2.bin"),
       ("8 Elite Gen5", "modrwkv-v3-0.4b-251113-a16w8-8elitegen5.bin"),
+      ("Dimensity 9300", "modrwkv-v3-0.4b-251113-MT6989.rmpack"),
     ],
   };
 }
