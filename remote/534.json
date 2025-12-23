@@ -1,11 +1,11 @@
 {
   "chat": {
-    "latest_build": 584,
-    "latest_build_ios": 583,
+    "latest_build": 602,
+    "latest_build_ios": 602,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
     "android_url": "https://www.pgyer.com/rwkvchat",
-    "android_apk_url":"",
+    "android_apk_url": "",
     "share_chat_qrcode_zh": "https://rwkvos.com/",
     "share_chat_qrcode_en": "https://github.com/RWKV-APP/RWKV_APP",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
@@ -621,12 +621,12 @@
     ]
   },
   "world": {
-    "latest_build": 584,
-    "latest_build_ios": 583,
+    "latest_build": 602,
+    "latest_build_ios": 602,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
     "android_url": "https://www.pgyer.com/rwkvchat",
-    "android_apk_url":"",
+    "android_apk_url": "",
     "share_chat_qrcode_zh": "https://rwkvos.com/",
     "share_chat_qrcode_en": "https://github.com/RWKV-APP/RWKV_APP",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
@@ -798,12 +798,12 @@
     ]
   },
   "tts": {
-    "latest_build": 584,
-    "latest_build_ios": 583,
+    "latest_build": 602,
+    "latest_build_ios": 602,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
     "android_url": "https://www.pgyer.com/rwkvchat",
-    "android_apk_url":"",
+    "android_apk_url": "",
     "share_chat_qrcode_zh": "https://rwkvos.com/",
     "share_chat_qrcode_en": "https://github.com/RWKV-APP/RWKV_APP",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
