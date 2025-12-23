@@ -156,7 +156,7 @@ extension $See on _See {
     final last = P.preference.lastWorldModel.q;
     if (last == null) {
       if (P.app.pageKey.q == PageKey.see) {
-        ModelSelector.show(preferredDemoType: DemoType.world);
+        ModelSelector.show(preferredDemoType: .world);
       }
       return;
     }
@@ -254,6 +254,8 @@ extension _$See on _See {
       // P.rwkv.currentWorldType.q = null;
       // P.rwkv.currentModel.q = null;
     } else if (previous != PageKey.see && next == PageKey.see) {
+      P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .chat);
+      P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .tts);
       imagePath.q = null;
       imageHeight.q = null;
       visualFloatHeight.q = null;

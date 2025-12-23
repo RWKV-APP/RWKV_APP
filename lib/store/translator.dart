@@ -217,6 +217,7 @@ extension _$Translator on _Translator {
   void _onPageKeyChanged(PageKey pageKey) async {
     switch (pageKey) {
       case PageKey.translator:
+      case PageKey.ocr:
         final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
           Future.delayed(const Duration(milliseconds: 500)).then((_) {

@@ -112,7 +112,9 @@ class _RWKV {
 
   late final loading = qp((ref) {
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
-    return loadingStatus.values.any((e) => e == LoadingStatus.loading);
+    return loadingStatus.values.any((e) {
+      return e == LoadingStatus.loading || e == LoadingStatus.loadModelWithExtra || e == LoadingStatus.setQnnLibraryPath;
+    });
   });
 
   late final loadedModelsCount = qp((ref) {

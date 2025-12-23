@@ -190,7 +190,10 @@ class ModelItem extends ConsumerWidget {
     final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
 
-    final loading = loadingStatus[fileInfo] == LoadingStatus.loading;
+    final loading =
+        loadingStatus[fileInfo] == .loading ||
+        loadingStatus[fileInfo] == .loadModelWithExtra ||
+        loadingStatus[fileInfo] == .setQnnLibraryPath;
 
     final demoType = ref.watch(P.app.demoType);
     final customTheme = ref.watch(P.app.customTheme);
@@ -244,7 +247,7 @@ class ModelItem extends ConsumerWidget {
                   onTap: _onStartTap,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: loading ? kCG.q(.5) : kCG,
+                      color: (loading || unzipping) ? kCG.q(.5) : kCG,
                       borderRadius: 8.r,
                     ),
                     padding: const .all(8),

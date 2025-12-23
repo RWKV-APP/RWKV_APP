@@ -57,9 +57,11 @@ class _PageHomeState extends ConsumerState<PageHome> {
     }
 
     final isLandscape = ratio > 1;
-    final maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
+    double maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
     final containerPaddingTop = 300 - paddingTop;
     final containerPaddingHorizontal = crossAxisCount == 3 ? 24.0 : 12.0;
+
+    if (maxWidth < 0) maxWidth = double.infinity;
 
     return AppScaffold(
       body: Stack(
