@@ -51,6 +51,8 @@ class _Ocr {
 /// Private methods
 extension _$Ocr on _Ocr {
   FV _init() async {
+    if (P.app.isDesktop.q) return;
+
     _updateTextRecognizer();
 
     P.rwkv.broadcastStream.listen(
