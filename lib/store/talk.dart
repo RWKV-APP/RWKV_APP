@@ -99,7 +99,7 @@ extension _$Talk on _Talk {
       _queryTimer = null;
     } else if (previous != PageKey.talk && next == PageKey.talk) {
       P.msg._clear(syncNode: false);
-
+      P.app.demoType.q = DemoType.tts;
       bool isTTSModelLoaded = false;
       final currentModel = P.rwkv.latestModel.q;
       if (currentModel != null) {
