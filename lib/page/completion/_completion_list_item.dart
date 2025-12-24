@@ -9,6 +9,37 @@ import 'package:zone/store/p.dart';
 
 import '_completion_controller.dart';
 
+class CompletionItemDecoration extends StatelessWidget {
+  final Widget child;
+  final bool isUser;
+  final bool gray;
+
+  const CompletionItemDecoration({super.key, required this.isUser, required this.child, this.gray = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final bg = isUser ? null : theme.colorScheme.primary.withAlpha(0x1A);
+    final border = isUser ? theme.dividerColor : theme.colorScheme.primary;
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: gray ? Colors.grey.withAlpha(0x1A) : bg,
+        border: Border(
+          left: BorderSide(
+            color: gray ? Colors.grey : border,
+            width: 1,
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
+      child: child,
+    );
+  }
+}
+
 class CompletionListItem extends StatelessWidget {
   final CompletionItemNode item;
   final Widget? footer;
@@ -18,20 +49,8 @@ class CompletionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    Widget content = Container(
-      width: double.infinity,
-      margin: footer != null ? null : const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: item.isUser ? null : theme.colorScheme.primary.withAlpha(0x1A),
-        border: Border(
-          left: BorderSide(
-            color: item.isUser ? theme.dividerColor : theme.colorScheme.primary,
-            width: 1,
-          ),
-        ),
-      ),
-      padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12, right: 16),
+    Widget content = CompletionItemDecoration(
+      isUser: item.isUser,
       child: item.content.isEmpty
           ? const Align(
               alignment: Alignment.centerLeft,
@@ -42,7 +61,7 @@ class CompletionListItem extends StatelessWidget {
               style: const TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
             ),
     );
-    if (footer == null) return content;
+    if (footer == null) return Padding(padding: const EdgeInsets.only(bottom: 20), child: content);
     if (!item.isUser) {
       content = MeasureSize(
         onChange: (s) {
@@ -53,12 +72,12 @@ class CompletionListItem extends StatelessWidget {
             if (!CompletionState.generating.q) {
               return;
             }
-            final sc = Scrollable.of(context);
-            sc.position.animateTo(
-              sc.position.pixels + offset, //
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-            );
+            // final sc = Scrollable.of(context);
+            // sc.position.animateTo(
+            //   sc.position.pixels + offset, //
+            //   duration: const Duration(milliseconds: 200),
+            //   curve: Curves.easeInOut,
+            // );
           }
         },
         child: content,
@@ -74,6 +93,57 @@ class CompletionListItem extends StatelessWidget {
   }
 }
 
+class CompletionSpeed extends ConsumerWidget {
+  final CompletionItemNode? item;
+
+  const CompletionSpeed({super.key, this.item});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prefillSpeed = item?.prefillSpeed ?? ref.watch(P.rwkv.prefillSpeed) ?? 0;
+    final decodeSpeed = item?.decodeSpeed ?? ref.watch(P.rwkv.decodeSpeed) ?? 0;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Text(
+        "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
+        style: const TextStyle(fontSize: 8, fontFamily: 'monospace'),
+        textAlign: TextAlign.end,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+}
+
+class CompletionRegenerationButton extends ConsumerWidget {
+  final CompletionItemNode item;
+
+  const CompletionRegenerationButton({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final generating = ref.watch(CompletionState.generating);
+    if (generating) return const SizedBox();
+    return Transform.translate(
+      offset: const Offset(-8, 0),
+      child: IconButton(
+        onPressed: () {
+          CompletionController.current.onRegenerateTap(item);
+        },
+        icon: SvgPicture.asset(
+          Assets.img.chat.regenerate,
+          width: 16,
+          height: 16,
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).iconTheme.color!,
+            BlendMode.srcIn,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class CompletionListItemFooter extends ConsumerWidget {
   final CompletionItemNode item;
   final bool isLast;
@@ -84,44 +154,12 @@ class CompletionListItemFooter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final hasChooses = item.siblingCount > 1;
-    final generating = ref.watch(CompletionState.generating);
-
-    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
-    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
-
-    final speed = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Text(
-        "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
-        style: const TextStyle(fontSize: 8, fontFamily: 'monospace'),
-        textAlign: TextAlign.end,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (!generating && isLast)
-          Transform.translate(
-            offset: const Offset(-8, 0),
-            child: IconButton(
-              onPressed: () {
-                CompletionController.current.onRegenerateTap(item);
-              },
-              icon: SvgPicture.asset(
-                Assets.img.chat.regenerate,
-                width: 16,
-                height: 16,
-                colorFilter: ColorFilter.mode(
-                  Theme.of(context).iconTheme.color!,
-                  BlendMode.srcIn,
-                ),
-              ),
-            ),
-          ),
-        if (!hasChooses && isLast) Expanded(child: speed),
+        if (isLast) CompletionRegenerationButton(item: item),
+        if (!hasChooses && isLast) Expanded(child: CompletionSpeed()),
         if (hasChooses)
           Expanded(
             child: Row(
@@ -148,7 +186,7 @@ class CompletionListItemFooter extends ConsumerWidget {
                   color: theme.colorScheme.primary,
                 ),
                 if (isLast) const SizedBox(width: 8),
-                if (isLast) Flexible(child: speed),
+                if (isLast) Flexible(child: CompletionSpeed()),
               ],
             ),
           ),

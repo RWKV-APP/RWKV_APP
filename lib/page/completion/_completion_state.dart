@@ -35,14 +35,25 @@ class CompletionItemNode {
 
   String content;
   bool completed;
+  bool switched;
+  double decodeSpeed;
+  double prefillSpeed;
 
   List<CompletionItemNode> children;
   CompletionItemNode? _next;
   CompletionItemNode? _parent;
 
-  int get index => _parent?.children.indexOf(this) ?? 0;
+  CompletionItemNode get parent => _parent!;
+
+  int get index => _parent?.children.indexOf(this) ?? -1;
+
+  bool get siblingSelected => _parent?.children.any((element) => element.selected) ?? false;
+
+  bool get selected => _parent?._next == this;
 
   int get siblingCount => _parent?.children.length ?? 0;
+
+  List<CompletionItemNode> get siblings => _parent?.children ?? [];
 
   set next(CompletionItemNode? value) {
     if (value == null) {
@@ -57,6 +68,8 @@ class CompletionItemNode {
   }
 
   bool get isTail => _next == null;
+
+  bool get isRoot => _parent == null;
 
   List<CompletionItemNode> get list => [this, if (_next != null) ..._next!.list];
 
@@ -86,6 +99,11 @@ class CompletionItemNode {
     _parent?.next = _parent?.children[index];
   }
 
+  void switchToSibling(CompletionItemNode node) {
+    _parent?.switched = true;
+    _parent?.next = node;
+  }
+
   static int _incrementId = 0;
 
   CompletionItemNode({
@@ -94,6 +112,9 @@ class CompletionItemNode {
     required this.children,
     required this.content,
     required this.completed,
+    this.switched = false,
+    this.decodeSpeed = 0,
+    this.prefillSpeed = 0,
   });
 
   factory CompletionItemNode.user(String prompt) {
@@ -107,6 +128,7 @@ class CompletionItemNode {
   }
 
   static List<CompletionItemNode> fromResult({
+    required CompletionItemNode parent,
     required List<String> outputs,
     required List<bool> completed,
   }) {
@@ -118,7 +140,7 @@ class CompletionItemNode {
           children: [],
           content: outputs[i],
           completed: completed[i],
-        ),
+        ).._parent = parent,
     ];
   }
 
@@ -129,6 +151,9 @@ class CompletionItemNode {
         children: children,
         content: content,
         completed: completed,
+        switched: switched,
+        decodeSpeed: decodeSpeed,
+        prefillSpeed: prefillSpeed,
       )
       ..next = _next
       .._parent = _parent;

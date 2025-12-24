@@ -56,7 +56,6 @@ class CompletionController {
     CompletionState.controllerInput.q = TextEditingController()
       ..addListener(() {
         final isEmpty = CompletionState.controllerInput.q?.text.isEmpty ?? true;
-        CompletionState.generateButtonEnabled.q = !isEmpty;
         final show = (isEmpty) && _node.isTail;
         if (show == CompletionState.showSuggestionButton.q) return;
         CompletionState.showSuggestionButton.q = show;
@@ -105,7 +104,7 @@ class CompletionController {
     }
 
     final input = regenerate ? '' : (CompletionState.controllerInput.q?.text ?? '');
-    if (!regenerate && input.isEmpty) {
+    if (!regenerate && input.isEmpty && CompletionState.items.q.length == 1) {
       Alert.warning(S.current.please_entry_some_text_to_continue);
       return;
     }
@@ -116,7 +115,15 @@ class CompletionController {
 
     final lastNode = regenerate ? _node.tail : CompletionItemNode.user(input);
     if (!regenerate) {
+      final tail = _node.tail;
+      if (!tail.isUser) {
+        tail.decodeSpeed = P.rwkv.decodeSpeed.q;
+        tail.prefillSpeed = P.rwkv.prefillSpeed.q;
+        tail.parent.switched = true;
+      }
       _node.tail = lastNode;
+    } else {
+      _node.tail.switched = false;
     }
 
     CompletionState.generating.q = true;
@@ -124,6 +131,7 @@ class CompletionController {
 
     final batch = batchSetting.enabled ? batchSetting.batchCount : 1;
     final outputs = CompletionItemNode.fromResult(
+      parent: lastNode,
       outputs: List.filled(batch, ''),
       completed: List.filled(batch, false),
     );
@@ -224,6 +232,11 @@ class CompletionController {
 
   void onNextChooseTap(CompletionItemNode item) {
     item.replaceToSibling(item.index + 1);
+    _notifyItemChanged();
+  }
+
+  void switchChooseTo(CompletionItemNode item) {
+    item.switchToSibling(item);
     _notifyItemChanged();
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
+import 'package:zone/page/completion/_completion_item_batch.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/page/completion/_completion_titlebar.dart';
 
@@ -155,29 +156,44 @@ class _PageBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(CompletionState.items);
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: ListView.builder(
-            itemCount: items.length + 1,
-            padding: const EdgeInsets.only(left: 32, right: 32, top: 16, bottom: 100),
-            itemBuilder: (ctx, index) {
-              if (index == items.length) {
-                return const _UserInputArea();
-              }
-              if (index == 0) {
-                return const SizedBox.shrink();
-              }
-              final item = items[index];
-              return CompletionListItem(
-                item: item,
-                isLast: items.length - 1 == index,
-                footer: item.isUser ? null : CompletionListItemFooter(item: item, isLast: items.length - 1 == index),
-              );
-            },
-          ),
-        ),
-      ],
+    return ListView.builder(
+      itemCount: items.length + 1,
+      padding: const EdgeInsets.only(left: 32, right: 32, top: 16, bottom: 100),
+      itemBuilder: (ctx, index) {
+        final last = index == items.length - 1;
+        final input = index == items.length;
+
+        if (input) {
+          return const _UserInputArea();
+        }
+        final item = items[index];
+        // root item, do not show
+        if (item.isRoot) {
+          return const SizedBox();
+        }
+        // user input is empty, do not show
+        if (item.content.isEmpty && item.isUser) {
+          return const SizedBox();
+        }
+        if (!item.isUser && item.siblingCount > 1) {
+          return CompletionItemBatch(
+            item: item,
+            isLast: last,
+            footer: Row(
+              children: [
+                if (last) CompletionRegenerationButton(item: item),
+                Spacer(),
+                CompletionSpeed(item: last ? null : item),
+              ],
+            ),
+          );
+        }
+        return CompletionListItem(
+          item: item,
+          isLast: last,
+          footer: item.isUser ? null : CompletionListItemFooter(item: item, isLast: last),
+        );
+      },
     );
   }
 }
