@@ -73,15 +73,8 @@ extension _$Ocr on _Ocr {
     );
   }
 
-  void _onPageKeyChanged(PageKey pageKey) {
-    switch (pageKey) {
-      case PageKey.ocr:
-      case PageKey.translator:
-        break;
-      default:
-        _stop();
-        break;
-    }
+  void _onPageKeyChanged(PageKey pageKey) async {
+    await P.translator._onPageKeyChanged(pageKey);
   }
 
   Future<void> _processImage(InputImage inputImage) async {

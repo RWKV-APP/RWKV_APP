@@ -214,10 +214,11 @@ extension _$Translator on _Translator {
     if (next != textInController) resultTextEditingController.text = next;
   }
 
-  void _onPageKeyChanged(PageKey pageKey) async {
+  Future<void> _onPageKeyChanged(PageKey pageKey) async {
     switch (pageKey) {
       case PageKey.translator:
       case PageKey.ocr:
+        P.app.demoType.q = DemoType.chat;
         final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
           Future.delayed(const Duration(milliseconds: 500)).then((_) {
