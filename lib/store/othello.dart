@@ -147,7 +147,7 @@ extension _$Othello on _Othello {
       case DemoType.sudoku:
       case DemoType.chat:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
         return;
       case DemoType.othello:
     }

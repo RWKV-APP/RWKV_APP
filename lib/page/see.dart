@@ -30,7 +30,7 @@ class PageSee extends ConsumerWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: ChatAppBar(preferredDemoType: DemoType.world),
+            child: ChatAppBar(preferredDemoType: DemoType.see),
           ),
           Positioned(
             bottom: 0,
@@ -41,7 +41,7 @@ class PageSee extends ConsumerWidget {
               mainAxisSize: .min,
               children: [
                 Suggestions(),
-                BottomBar(preferredDemoType: DemoType.world),
+                BottomBar(preferredDemoType: DemoType.see),
               ],
             ),
           ),
@@ -89,7 +89,7 @@ class _List extends ConsumerWidget {
             itemBuilder: (context, index) {
               final finalIndex = messages.length - 1 - index;
               final msg = messages[finalIndex];
-              return Message(msg, finalIndex, preferredDemoType: DemoType.world);
+              return Message(msg, finalIndex, preferredDemoType: DemoType.see);
             },
             separatorBuilder: (context, index) {
               return const SizedBox(height: 15);
@@ -150,7 +150,7 @@ class _Empty extends ConsumerWidget {
             12.h,
             if (!loaded)
               TextButton(
-                onPressed: () => ModelSelector.show(preferredDemoType: DemoType.world),
+                onPressed: () => ModelSelector.show(preferredDemoType: DemoType.see),
                 child: T(s.select_a_model, s: const TS(s: 16, w: .w600)),
               ),
           ],

@@ -240,7 +240,7 @@ extension $RWKVLoad on _RWKV {
       qqw(msg);
       return null;
     }
-    P.app.demoType.q = DemoType.world;
+    P.app.demoType.q = DemoType.see;
     loadedModels.q = {
       ...loadedModels.q,
       fileInfo: modelID,
@@ -528,7 +528,7 @@ extension $RWKV on _RWKV {
 
     final weightType = switch (P.app.demoType.q) {
       DemoType.chat => WeightType.chat,
-      DemoType.world => WeightType.see,
+      DemoType.see => WeightType.see,
       DemoType.tts => WeightType.tts,
       DemoType.sudoku => WeightType.sudoku,
       DemoType.othello => WeightType.othello,

@@ -24,7 +24,7 @@ extension _$Dump on _Dump {
       case DemoType.sudoku:
       case DemoType.tts:
         return;
-      case DemoType.world:
+      case DemoType.see:
     }
     qq;
     P.msg.list.lv(_onMessagesChanged);

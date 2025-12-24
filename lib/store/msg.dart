@@ -69,7 +69,7 @@ extension _$Msg on _Msg {
         return;
       case DemoType.chat:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
     }
     qq;
   }

@@ -57,7 +57,7 @@ class ModelItem extends ConsumerWidget {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
         await _onStartTapInChat();
     }
   }
@@ -209,7 +209,7 @@ class ModelItem extends ConsumerWidget {
         startTitle = s.start_a_new_game;
       case DemoType.chat:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
         startTitle = isTranslate ? s.use_it_now : s.start_to_chat;
     }
 

@@ -433,7 +433,7 @@ extension _$Sudoku on _Sudoku {
       case DemoType.othello:
       case DemoType.chat:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
         return;
     }
 

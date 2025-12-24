@@ -70,7 +70,7 @@ class _ImagePreview extends ConsumerWidget {
     final selectedImagePath = ref.watch(P.see.imagePath);
     final screenWidth = ref.watch(P.app.screenWidth);
     if (selectedImagePath == null) return const SizedBox.shrink();
-    if (preferredDemoType != DemoType.world) return const SizedBox.shrink();
+    if (preferredDemoType != DemoType.see) return const SizedBox.shrink();
     return Row(
       children: [
         Padding(

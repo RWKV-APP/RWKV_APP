@@ -768,7 +768,7 @@ class _TextField extends ConsumerWidget {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
       case DemoType.sudoku:
-      case DemoType.world:
+      case DemoType.see:
         hintText = "";
       case DemoType.tts:
         hintText = "Enter your instruction here";

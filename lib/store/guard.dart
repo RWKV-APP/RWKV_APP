@@ -61,7 +61,7 @@ extension _$Guard on _Guard {
         return;
       case DemoType.chat:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
     }
     qq;
     try {

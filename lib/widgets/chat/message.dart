@@ -142,7 +142,7 @@ class Message extends ConsumerWidget {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
       case DemoType.sudoku:
-      case DemoType.world:
+      case DemoType.see:
         break;
     }
 

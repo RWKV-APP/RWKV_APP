@@ -142,7 +142,7 @@ class _Hints extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        if (demoType == DemoType.world) ...[
+        if (demoType == DemoType.see) ...[
           T(s.please_select_a_world_type, s: const TS(s: 16, w: .w500)),
           4.h,
         ],
@@ -169,7 +169,7 @@ class _ModelList extends ConsumerWidget {
     final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
 
     Set<FileInfo> availableModels = switch (preferredDemoType) {
-      DemoType.world => ref.watch(P.fileManager.seeWeights),
+      DemoType.see => ref.watch(P.fileManager.seeWeights),
       DemoType.tts => ref.watch(P.fileManager.ttsWeights),
       DemoType.chat => ref.watch(P.fileManager.chatWeights),
       DemoType.sudoku => ref.watch(P.fileManager.sudokuWeights),
@@ -204,7 +204,7 @@ class _ModelList extends ConsumerWidget {
     }
 
     List<Widget> items = switch (preferredDemoType) {
-      DemoType.world =>
+      DemoType.see =>
         WorldType.values
             .where((e) => e.available)
             .expand(

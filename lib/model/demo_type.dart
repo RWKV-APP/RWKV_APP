@@ -16,11 +16,9 @@ enum DemoType {
   /// RWKV_Sudoku
   sudoku,
 
-  /// RWKV_Talk
   tts,
 
-  /// RWKV_See
-  world
+  see
   ;
 
   Color get _seedColor => switch (this) {

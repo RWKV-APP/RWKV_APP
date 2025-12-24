@@ -28,7 +28,7 @@ class InputTextField extends ConsumerWidget {
       case DemoType.fifthteenPuzzle:
       case DemoType.othello:
       case DemoType.sudoku:
-      case DemoType.world:
+      case DemoType.see:
         hintText = s.send_message_to_rwkv;
       case DemoType.tts:
         hintText = s.i_want_rwkv_to_say;

@@ -60,7 +60,7 @@ class AudioInput extends ConsumerWidget {
 
     bool shouldShow = false;
 
-    if (demoType == DemoType.world) {
+    if (demoType == DemoType.see) {
       switch (currentWorldType) {
         case null:
         case WorldType.reasoningQA:
@@ -74,7 +74,7 @@ class AudioInput extends ConsumerWidget {
     String bottomMessage = "";
     double bottomMessageSize = 12;
 
-    if (demoType == DemoType.world) {
+    if (demoType == DemoType.see) {
       switch (currentWorldType) {
         case null:
         case WorldType.reasoningQA:

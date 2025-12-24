@@ -29,7 +29,7 @@ class Empty extends ConsumerWidget {
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     String logoPath = "assets/img/${demoType.name}/logo.square.png";
 
-    final hasSpecificEmpty = demoType == DemoType.world && currentWorldType != null;
+    final hasSpecificEmpty = demoType == DemoType.see && currentWorldType != null;
 
     final primary = Theme.of(context).colorScheme.primary;
 
@@ -116,7 +116,7 @@ class Empty extends ConsumerWidget {
                             ModelSelector.show();
                           },
                           child: T(
-                            demoType == DemoType.world ? s.select_a_world_type : s.select_a_model,
+                            demoType == DemoType.see ? s.select_a_world_type : s.select_a_model,
                             s: const TS(s: 16, w: .w600),
                           ),
                         ),

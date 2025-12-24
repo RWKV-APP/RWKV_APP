@@ -531,7 +531,7 @@ extension _$Chat on _Chat {
         return;
       case DemoType.chat:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
     }
     qq;
 
@@ -704,7 +704,7 @@ extension _$Chat on _Chat {
 
   Future<void> _onNewFileReceived((File, int) event) async {
     final demoType = P.app.demoType.q;
-    if (demoType == DemoType.world) {
+    if (demoType == DemoType.see) {
       final (file, length) = event;
       final path = file.path;
 
@@ -904,7 +904,7 @@ extension _$Chat on _Chat {
     if (pageKey == PageKey.translator) return;
     qq;
     final demoType = P.app.demoType.q;
-    if (demoType != DemoType.chat && demoType != DemoType.world) return;
+    if (demoType != DemoType.chat && demoType != DemoType.see) return;
     receivingTokens.q = false;
   }
 
@@ -914,7 +914,7 @@ extension _$Chat on _Chat {
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
-    if (demoType != DemoType.chat && demoType != DemoType.world) return;
+    if (demoType != DemoType.chat && demoType != DemoType.see) return;
     receivingTokens.q = false;
   }
 

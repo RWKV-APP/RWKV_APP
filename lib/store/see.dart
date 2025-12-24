@@ -156,7 +156,7 @@ extension $See on _See {
     final last = P.preference.lastWorldModel.q;
     if (last == null) {
       if (P.app.pageKey.q == PageKey.see) {
-        ModelSelector.show(preferredDemoType: .world);
+        ModelSelector.show(preferredDemoType: .see);
       }
       return;
     }
@@ -179,7 +179,7 @@ extension $See on _See {
 
       if (!encoderLocalFile.hasFile || !modelLocalFile.hasFile || (adapterLocalFile != null && !adapterLocalFile.hasFile)) {
         if (P.app.pageKey.q == PageKey.see) {
-          ModelSelector.show(preferredDemoType: DemoType.world);
+          ModelSelector.show(preferredDemoType: DemoType.see);
         }
         return;
       }
@@ -217,7 +217,7 @@ extension $See on _See {
     } catch (e) {
       qqe("Failed to auto load world model: $e");
       if (P.app.pageKey.q == PageKey.see) {
-        ModelSelector.show(preferredDemoType: DemoType.world);
+        ModelSelector.show(preferredDemoType: DemoType.see);
       }
     }
   }
@@ -233,7 +233,7 @@ extension _$See on _See {
         return;
       case DemoType.chat:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
     }
     qq;
     P.rwkv.currentWorldType.lv(_onWorldTypeChanged);
@@ -261,7 +261,7 @@ extension _$See on _See {
       visualFloatHeight.q = null;
       P.rwkv.clearStates();
       P.chat.clearMessages();
-      P.app.demoType.q = DemoType.world;
+      P.app.demoType.q = DemoType.see;
       bool isWorldModelLoaded = false;
       final currentModel = P.rwkv.latestModel.q;
       if (currentModel != null) {
@@ -378,7 +378,7 @@ extension _$See on _See {
     qq;
 
     final demoType = P.app.demoType.q;
-    final isWorldDemo = demoType == DemoType.world;
+    final isWorldDemo = demoType == DemoType.see;
 
     P.chat.clearMessages();
     imagePath.q = null;

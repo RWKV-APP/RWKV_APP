@@ -255,7 +255,7 @@ class Settings extends ConsumerWidget {
                 P.app.checkUpdates();
               },
             ),
-            if (demoType == DemoType.world && Platform.isAndroid)
+            if (demoType == DemoType.see && Platform.isAndroid)
               FormItem(
                 isSectionStart: false,
                 title: S.current.dump_see_files,

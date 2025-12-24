@@ -105,7 +105,7 @@ class _MainAppBar extends ConsumerWidget {
     final scaffold = customTheme.scaffold;
     final isChat = preferredDemoType == DemoType.chat;
     final isTTS = preferredDemoType == DemoType.tts;
-    final isWorld = preferredDemoType == DemoType.world;
+    final isWorld = preferredDemoType == DemoType.see;
 
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);
@@ -192,7 +192,7 @@ class _MainAppBar extends ConsumerWidget {
         ),
       ),
       actions: [
-        if ((preferredDemoType == DemoType.chat || preferredDemoType == DemoType.world) && !completionMode)
+        if ((preferredDemoType == DemoType.chat || preferredDemoType == DemoType.see) && !completionMode)
           _NewConversationButton(preferredDemoType: preferredDemoType),
         if (preferredDemoType == DemoType.chat && userType.isGreaterThan(UserType.user))
           _MorePopupMenuButton(preferredDemoType: preferredDemoType),

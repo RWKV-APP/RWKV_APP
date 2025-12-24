@@ -54,10 +54,11 @@ class _Interactions extends ConsumerWidget {
       runSpacing: 4,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (preferredDemoType == DemoType.world) const IntrinsicWidth(child: SelectImageButton()),
+        if (preferredDemoType == DemoType.see) const IntrinsicWidth(child: SelectImageButton()),
         if (features.webSearch && preferredDemoType == DemoType.chat) const _WebSearchModeButton(),
         if (preferredDemoType == DemoType.chat) const ThinkingModeButton(),
-        if (!albatross && preferredDemoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
+        if (!albatross && preferredDemoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922)
+          const SecondaryOptionsButton(),
         if (!albatross && preferredDemoType == DemoType.chat) const BatchButton(),
         if (preferredDemoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),

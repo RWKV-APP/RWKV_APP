@@ -98,7 +98,7 @@ class _Suggestion {
 
     final hideCases = [
       demoType == DemoType.chat && messages.isNotEmpty,
-      demoType == DemoType.world && (imagePath == null || imagePath.isEmpty || messages.length != 1),
+      demoType == DemoType.see && (imagePath == null || imagePath.isEmpty || messages.length != 1),
     ];
     if (hideCases.any((e) => e)) {
       return [];
@@ -113,7 +113,7 @@ class _Suggestion {
           return s;
         }
         return s.take(5).toList();
-      case DemoType.world:
+      case DemoType.see:
         switch (currentWorldType) {
           case WorldType.reasoningQA:
             return config.seeReasoningQa;

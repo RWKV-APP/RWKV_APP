@@ -215,7 +215,7 @@ extension _$App on _App {
     switch (demoType.q) {
       case DemoType.sudoku:
       case DemoType.tts:
-      case DemoType.world:
+      case DemoType.see:
         Future.delayed(latency.ms).then((_) {
           final loaded = P.rwkv.loaded.q;
           if (loaded) return;

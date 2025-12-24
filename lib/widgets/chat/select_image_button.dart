@@ -20,7 +20,7 @@ class SelectImageButton extends ConsumerWidget {
     final selectedImagePath = ref.watch(P.see.imagePath);
     return GestureDetector(
       onTap: () async {
-        if (!checkModelSelection(preferredDemoType: DemoType.world)) return;
+        if (!checkModelSelection(preferredDemoType: DemoType.see)) return;
         await showImageSelector();
       },
       child: AnimatedContainer(

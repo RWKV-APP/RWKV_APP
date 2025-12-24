@@ -120,7 +120,7 @@ extension _$Preference on _Preference {
     final latestRuntimeAddress = sp.getInt("halo_state.latestRuntimeAddress");
     if (latestRuntimeAddress != null) this.latestRuntimeAddress.q = latestRuntimeAddress;
 
-    if (Platform.isAndroid && P.app.demoType.q == DemoType.world) {
+    if (Platform.isAndroid && P.app.demoType.q == DemoType.see) {
       final status = await Permission.storage.status;
       if (status.isGranted) {
         final dumpping = sp.getBool("halo_state.dumpping");
