@@ -70,6 +70,31 @@ jobs:
       - name: Run Flutter Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
+      # ... (Create dummy .env 之后) ...
+
+      - name: Decrypt filter.txt
+        run: |
+          mkdir -p assets
+
+          if [ -n "${{ secrets.FILTER_DECRYPT_PASS }}" ]; then
+            echo "🔐 发现解密密码，正在还原近 200KB 的 filter.txt..."
+            
+            # 使用 gpg 解密
+            # --quiet: 减少日志输出
+            # --batch --yes: 非交互模式
+            # --passphrase: 传入密码
+            # --output: 输出路径
+            # 最后的参数是加密文件的路径
+            gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.FILTER_DECRYPT_PASS }}" \
+            --output assets/filter.txt assets/filter.txt.gpg
+
+          else
+            echo "⚠️ 未找到密码 (可能是 Fork 仓库)，正在生成占位文件..."
+            echo "" > assets/filter.txt
+          fi
+
+          ls -lh assets/filter.txt
+
       - name: Try Build APK (Debug)
         env:
           SENTRY_SKIP_UPLOAD: true
