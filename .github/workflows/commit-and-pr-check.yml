@@ -1,0 +1,77 @@
+name: Build Check
+
+# 触发机制：
+# 只有在有人向 main 或 dev 分支推送代码(commit)时触发
+# 这样保证了每次合并或直接提交都会被检查
+on:
+  push:
+    branches: [main, dev]
+  # 也可以加上 PR 触发，双重保险 (建议加上)
+  pull_request:
+    branches: [main, dev]
+
+# 资源优化：
+# 如果同一个分支短时间内连续提交，自动取消上一次正在跑的，只跑最新的
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+
+      # 1. 拉取依赖库 (必须步骤，否则无法编译)
+      - name: Checkout rwkv_mobile_flutter dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MollySophia/rwkv_mobile_flutter
+          ref: dev
+          path: rwkv_mobile_flutter
+          fetch-depth: 1 # 只拉最新代码，速度快
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.5"
+          channel: "stable"
+          cache: true
+
+      # 2. 核心魔法：修正依赖路径
+      # 强行把 pubspec.yaml 里的 ../ 指向改为 ./
+      - name: Override Dependency Path
+        run: |
+          echo "dependency_overrides:" > pubspec_overrides.yaml
+          echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
+          echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
+
+      # 3. 生成假 .env 文件
+      # 防止代码中引用 assets/.env 导致报错
+      - name: Create dummy .env
+        run: echo "DUMMY_ENV=true" > .env
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4. 第一道关卡：静态分析
+      # 检查语法错误、类型不匹配、未使用的变量等
+      # 如果这里报错，Action 会直接变红，GitHub 自动发邮件给作者
+      - name: Run Flutter Analyze
+        run: flutter analyze
+
+      # 5. 第二道关卡：尝试编译
+      # 使用 --debug 模式，速度最快，不需要签名配置
+      # 开启 SENTRY_SKIP_UPLOAD 环境变量，彻底忽略 Sentry 配置
+      - name: Try Build APK (Debug)
+        env:
+          SENTRY_SKIP_UPLOAD: true
+        run: flutter build apk --debug
