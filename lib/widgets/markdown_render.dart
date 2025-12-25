@@ -11,10 +11,10 @@ import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 
-class MarkdownRenderer extends ConsumerWidget {
+class MarkdownRender extends ConsumerWidget {
   final String raw;
   final Color? color;
-  const MarkdownRenderer({super.key, required this.raw, this.color});
+  const MarkdownRender({super.key, required this.raw, this.color});
 
   void _onTapLink(String? href, String title) async {
     if (href == null) return;
@@ -44,7 +44,7 @@ class MarkdownRenderer extends ConsumerWidget {
     );
 
     final GptMarkdown gptMarkdown = GptMarkdown(
-      raw.replaceAll("\n\n", "\n"),
+      raw.replaceAll("\n\n", "\n").trim(),
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
       addNewLineAfterH1: false,

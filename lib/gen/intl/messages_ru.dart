@@ -655,6 +655,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Офлайн-сервер перевода",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("ОК"),
+    "open_database_folder": MessageLookupByLibrary.simpleMessage(
+      "Открыть папку базы данных",
+    ),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "Открыть панель отладки",
     ),

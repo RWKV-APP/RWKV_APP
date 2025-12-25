@@ -633,6 +633,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Offline Translator Server",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "open_database_folder": MessageLookupByLibrary.simpleMessage(
+      "Open Database Folder",
+    ),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "Open Debug Log Panel",
     ),

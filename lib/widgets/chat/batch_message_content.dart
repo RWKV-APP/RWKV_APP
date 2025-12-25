@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/func/extract_thought_and_output.dart';
+import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/markdown.dart';
+import 'package:zone/widgets/markdown_render.dart';
 
 class BatchMessageContent extends ConsumerStatefulWidget {
   final model.Message msg;
@@ -202,7 +202,7 @@ class _MarkdownBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
 
-    final (thought, output) = extractThoughtAndOutput(data);
+    final (thought, output) = extractThoughtAndOutputForBatchInference(data);
 
     final s = S.of(context);
 
@@ -228,7 +228,7 @@ class _MarkdownBody extends ConsumerWidget {
         crossAxisAlignment: .stretch,
         children: [
           ?decodeParamWidget,
-          MarkdownRenderer(raw: output),
+          MarkdownRender(raw: output),
         ],
       );
     }
@@ -237,9 +237,9 @@ class _MarkdownBody extends ConsumerWidget {
       crossAxisAlignment: .stretch,
       children: [
         ?decodeParamWidget,
-        if (thought.isNotEmpty) MarkdownRenderer(raw: thought, color: qb.q(.6)),
+        if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.6)),
         if (output.isNotEmpty) 4.h,
-        if (output.isNotEmpty) MarkdownRenderer(raw: output),
+        if (output.isNotEmpty) MarkdownRender(raw: output),
       ],
     );
   }

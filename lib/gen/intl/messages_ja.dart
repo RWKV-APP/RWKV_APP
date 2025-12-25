@@ -528,6 +528,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "オフライン翻訳サーバー",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "open_database_folder": MessageLookupByLibrary.simpleMessage(
+      "データベースフォルダを開く",
+    ),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "デバッグログパネルを開く",
     ),

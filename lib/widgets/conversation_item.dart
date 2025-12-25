@@ -195,6 +195,9 @@ class ConversationItem extends ConsumerWidget {
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
 
+    String title = conversation.title.replaceAll(Config.userMsgModifierSep, '').trim();
+    title = title.replaceAll(Config.userMsgModifierSep.substring(0, Config.userMsgModifierSep.length - 1), '');
+
     return GestureDetector(
       onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
       onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
@@ -232,7 +235,7 @@ class ConversationItem extends ConsumerWidget {
                 crossAxisAlignment: .stretch,
                 children: [
                   T(
-                    conversation.title.replaceAll(Config.userMsgModifierSep, ''),
+                    title,
                     s: TS(s: 16, w: .w500, c: qb),
                     overflow: .ellipsis,
                   ),

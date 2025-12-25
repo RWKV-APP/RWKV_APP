@@ -534,5 +534,6 @@
       "takePhoto": {}
     }
   },
-  "reached_bottom": "Следите за обновлениями"
+  "reached_bottom": "Следите за обновлениями",
+  "open_database_folder": "Открыть папку базы данных"
 }

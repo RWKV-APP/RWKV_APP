@@ -541,5 +541,6 @@
       "takePhoto": {}
     }
   },
-  "reached_bottom": "Stay tuned"
+  "reached_bottom": "Stay tuned",
+  "open_database_folder": "Open Database Folder"
 }

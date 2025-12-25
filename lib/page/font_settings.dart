@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
-import 'package:zone/widgets/markdown.dart';
+import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/config.dart';
 
 class PageFontSettings extends ConsumerStatefulWidget {
@@ -201,7 +201,7 @@ class _PreviewCard extends StatelessWidget {
               data: MediaQuery.of(context).copyWith(
                 textScaler: .linear(effectiveScale),
               ),
-              child: MarkdownRenderer(raw: botMessage),
+              child: MarkdownRender(raw: botMessage),
             ),
           ),
         ),

@@ -534,5 +534,6 @@
       "takePhoto": {}
     }
   },
-  "reached_bottom": "기대해 주세요"
+  "reached_bottom": "기대해 주세요",
+  "open_database_folder": "데이터베이스 폴더 열기"
 }

@@ -485,6 +485,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "離線翻譯伺服器",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("確定"),
+    "open_database_folder": MessageLookupByLibrary.simpleMessage("開啟資料庫資料夾"),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage("打開調試日誌面板"),
     "open_state_panel": MessageLookupByLibrary.simpleMessage("打開狀態面板"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":

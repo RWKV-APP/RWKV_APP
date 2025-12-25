@@ -3620,6 +3620,16 @@ class S {
   String get reached_bottom {
     return Intl.message('敬请期待', name: 'reached_bottom', desc: '', args: []);
   }
+
+  /// `打开数据库文件夹`
+  String get open_database_folder {
+    return Intl.message(
+      '打开数据库文件夹',
+      name: 'open_database_folder',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

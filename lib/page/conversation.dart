@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayMa
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
@@ -113,6 +116,7 @@ class _ConversationAppBar extends ConsumerWidget {
     final selectedCount = selectedConversations.length;
     final conversations = ref.watch(P.conversation.conversations);
     final isEmpty = conversations.isEmpty;
+    final isDesktop = ref.watch(P.app.isDesktop);
     final s = S.of(context);
 
     return AppBar(
@@ -121,6 +125,12 @@ class _ConversationAppBar extends ConsumerWidget {
       systemOverlayStyle: theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       primary: true,
       actions: [
+        if (isDesktop && !isBatchMode)
+          IconButton(
+            onPressed: _openDatabaseFolder,
+            icon: const FaIcon(FontAwesomeIcons.folderOpen, size: 18),
+            tooltip: s.open_database_folder,
+          ),
         if (!isBatchMode)
           IconButton(
             onPressed: _handleNewChat,
@@ -152,6 +162,23 @@ class _ConversationAppBar extends ConsumerWidget {
   Future<void> _handleNewChat() async {
     await P.chat.startNewChat();
     push(PageKey.chat);
+  }
+
+  Future<void> _openDatabaseFolder() async {
+    try {
+      final appSupportDir = await getApplicationSupportDirectory();
+      final dbPath = appSupportDir.path;
+
+      if (Platform.isMacOS) {
+        await Process.run('open', [dbPath]);
+      } else if (Platform.isWindows) {
+        await Process.run('explorer', [dbPath]);
+      } else if (Platform.isLinux) {
+        await Process.run('xdg-open', [dbPath]);
+      }
+    } catch (e) {
+      qqe(e);
+    }
   }
 }
 

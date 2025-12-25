@@ -526,6 +526,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "오프라인 번역 서버",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("확인"),
+    "open_database_folder": MessageLookupByLibrary.simpleMessage(
+      "데이터베이스 폴더 열기",
+    ),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage(
       "디버그 로그 패널 열기",
     ),

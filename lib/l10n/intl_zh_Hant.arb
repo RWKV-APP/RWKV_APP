@@ -534,5 +534,6 @@
       "takePhoto": {}
     }
   },
-  "reached_bottom": "敬請期待"
+  "reached_bottom": "敬請期待",
+  "open_database_folder": "開啟資料庫資料夾"
 }

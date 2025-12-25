@@ -534,5 +534,6 @@
       "takePhoto": {}
     }
   },
-  "reached_bottom": "お楽しみに"
+  "reached_bottom": "お楽しみに",
+  "open_database_folder": "データベースフォルダを開く"
 }

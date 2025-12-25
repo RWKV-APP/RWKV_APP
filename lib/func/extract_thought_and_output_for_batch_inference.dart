@@ -1,7 +1,8 @@
 import 'package:halo/halo.dart';
 
-(String, String) extractThoughtAndOutput(String text) {
-  // return ("", text);
+(String, String) extractThoughtAndOutputForBatchInference(String text) {
+  final lengthOfThinkEndTag = "</think>".length;
+
   try {
     final thinkTagStartIndex = text.indexOf("<think>");
     final isThinkingMessage = thinkTagStartIndex == 0;
@@ -13,15 +14,25 @@ import 'package:halo/halo.dart';
       }
       return (text.replaceFirst("<think>", "").trim(), "");
     }
-    final thought = text
+
+    int offsetAfterThinkingTag = lengthOfThinkEndTag;
+    offsetAfterThinkingTag = lengthOfThinkEndTag;
+
+    String thought = text
         .substring(thinkTagStartIndex, thinkTagEndIndex)
         .replaceFirst("<think>", "")
         .replaceFirst("</think>\n", "")
         .replaceFirst("</think>", "");
-    int outputStartIndex = thinkTagEndIndex + 9;
+    thought = thought.trim();
+
+    int outputStartIndex = thinkTagEndIndex + offsetAfterThinkingTag;
     if (outputStartIndex >= text.length) return (thought, "");
-    final output = text.substring(outputStartIndex).replaceAll("<EOD>", "");
-    return (thought.trim().replaceAll("\n\n", "\n"), output.trim().replaceAll("\n\n", "\n"));
+
+    String output = text.substring(outputStartIndex).replaceAll("<EOD>", "");
+    output = output.replaceAll("\n\n", "\n");
+    output = output.trim();
+
+    return (thought, output);
   } catch (e) {
     final startIndex = text.indexOf("<think>");
     final isThinkingMessage = startIndex == 0;

@@ -541,5 +541,6 @@
   "enter_text_to_expand": "输入要续写的段落",
   "continue2": "续写",
   "please_entry_some_text_to_continue": "请先输入要续写的段落",
-  "reached_bottom": "敬请期待"
+  "reached_bottom": "敬请期待",
+  "open_database_folder": "打开数据库文件夹"
 }

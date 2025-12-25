@@ -30,7 +30,7 @@ import 'package:zone/widgets/chat/tts/bot_tts_content.dart';
 import 'package:zone/widgets/chat/photo_viewer_overlay.dart';
 import 'package:zone/widgets/chat/user_message_bottom.dart';
 import 'package:zone/widgets/chat/tts/user_tts_content.dart';
-import 'package:zone/widgets/markdown.dart';
+import 'package:zone/widgets/markdown_render.dart';
 
 class Message extends ConsumerWidget {
   final model.Message msg;
@@ -47,11 +47,6 @@ class Message extends ConsumerWidget {
     this.selectMode = false,
     this.preferredDemoType,
   });
-
-  void _onTapLink(String? href, String title) async {
-    if (href == null) return;
-    await launchUrl(Uri.parse(href));
-  }
 
   void _onTap() async {
     qq;
@@ -162,7 +157,7 @@ class Message extends ConsumerWidget {
           cotContent = finalContent.substring(7, endIndex);
           if (endIndex + subStringCount < finalContent.length) {
             final startIndex = endIndex + subStringCount;
-            cotResult = finalContent.substring(startIndex);
+            cotResult = finalContent.substring(startIndex).trim();
             if (worldType == WorldType.reasoningQA) {
               if (cotResult.endsWith("</answer>")) cotResult = cotResult.replaceFirst("</answer>", "");
               if (cotResult.startsWith("<answer>")) cotResult = cotResult.replaceFirst("<answer>", "");
@@ -356,7 +351,7 @@ class Message extends ConsumerWidget {
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
-                if (!reasoning && !isBatch) MarkdownRenderer(raw: finalContent),
+                if (!reasoning && !isBatch) MarkdownRender(raw: finalContent),
                 // 🔥 Bot message cot header
                 if (reasoning && !isQuickThinking && !isBatch)
                   GestureDetector(
@@ -386,11 +381,11 @@ class Message extends ConsumerWidget {
                   AnimatedContainer(
                     duration: 250.ms,
                     height: cotContentHeight,
-                    child: MarkdownRenderer(raw: cotContent, color: qb.q(.6)),
+                    child: MarkdownRender(raw: cotContent, color: qb.q(.6)),
                   ),
                 // 🔥 Bot message cot result
                 if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) 12.h,
-                if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRenderer(raw: cotResult),
+                if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRender(raw: cotResult),
                 if (isBatch) BatchMessageContent(msg, index, finalContent),
                 if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
                 if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
