@@ -56,7 +56,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     );
     final sp = await P.rwkv.loadChat(fileInfo: widget.file);
     if (sp != null) {
-      RoleplayManage.onModelDownloadComplete(info, sp, P.rwkv.receivePort);
+      RoleplayManage.onModelDownloadComplete(info, [sp.$1, sp.$2], P.rwkv.receivePort);
       Navigator.pop(context);
     }
   }

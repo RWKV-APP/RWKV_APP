@@ -102,7 +102,7 @@ class TTSGroupItem extends ConsumerWidget {
         bicodecTokenzerPath: localTokenizeFile.targetPath,
         fileInfo: fileInfo,
       );
-      RoleplayManage.onModelDownloadComplete(info, sp, P.rwkv.receivePort);
+      RoleplayManage.onModelDownloadComplete(info, [sp.$1, sp.$2], P.rwkv.receivePort);
       Navigator.pop(getContext()!);
       return;
     }
