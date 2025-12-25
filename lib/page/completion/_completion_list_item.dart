@@ -159,7 +159,7 @@ class CompletionListItemFooter extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (isLast) CompletionRegenerationButton(item: item),
-        if (!hasChooses && isLast) Expanded(child: CompletionSpeed()),
+        if (!hasChooses && isLast) const Expanded(child: CompletionSpeed()),
         if (hasChooses)
           Expanded(
             child: Row(
@@ -186,7 +186,7 @@ class CompletionListItemFooter extends ConsumerWidget {
                   color: theme.colorScheme.primary,
                 ),
                 if (isLast) const SizedBox(width: 8),
-                if (isLast) Flexible(child: CompletionSpeed()),
+                if (isLast) const Flexible(child: CompletionSpeed()),
               ],
             ),
           ),

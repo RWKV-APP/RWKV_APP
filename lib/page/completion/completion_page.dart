@@ -182,7 +182,7 @@ class _PageBody extends ConsumerWidget {
             footer: Row(
               children: [
                 if (last) CompletionRegenerationButton(item: item),
-                Spacer(),
+                const Spacer(),
                 CompletionSpeed(item: last ? null : item),
               ],
             ),

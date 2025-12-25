@@ -9,7 +9,7 @@ class CompletionItemBatch extends StatefulWidget {
   final Widget? footer;
   final bool isLast;
 
-  CompletionItemBatch({super.key, required this.item, this.footer, required this.isLast});
+  const CompletionItemBatch({super.key, required this.item, this.footer, required this.isLast});
 
   @override
   State<CompletionItemBatch> createState() => _CompletionItemBatchState();
