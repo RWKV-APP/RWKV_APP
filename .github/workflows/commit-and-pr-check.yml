@@ -21,17 +21,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space-action@v1.3.1
+        with:
+          android: false
+          tool-cache: false
+          dotnet: true
+          haskell: true
+          swap-storage: true
+          docker-images: true
+          large-packages: true
+
       - name: Checkout main repo
         uses: actions/checkout@v4
 
-      # 1. 拉取依赖库 (必须步骤，否则无法编译)
       - name: Checkout rwkv_mobile_flutter dependency
         uses: actions/checkout@v4
         with:
           repository: MollySophia/rwkv_mobile_flutter
           ref: dev
           path: rwkv_mobile_flutter
-          fetch-depth: 1 # 只拉最新代码，速度快
+          fetch-depth: 1
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -51,16 +61,12 @@ jobs:
           cd tools
           dart pub get
 
-      # 2. 核心魔法：修正依赖路径
-      # 强行把 pubspec.yaml 里的 ../ 指向改为 ./
       - name: Override Dependency Path
         run: |
           echo "dependency_overrides:" > pubspec_overrides.yaml
           echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
           echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
 
-      # 3. 生成假 .env 文件
-      # 防止代码中引用 assets/.env 导致报错
       - name: Create dummy .env
         run: echo "DUMMY_ENV=true" > .env
 
@@ -69,8 +75,6 @@ jobs:
 
       - name: Run Flutter Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
-
-      # ... (Create dummy .env 之后) ...
 
       - name: Decrypt filter.txt
         run: |
@@ -98,4 +102,4 @@ jobs:
       - name: Try Build APK (Debug)
         env:
           SENTRY_SKIP_UPLOAD: true
-        run: flutter build apk --debug
+        run: flutter build apk --debug --target-platform android-arm64
