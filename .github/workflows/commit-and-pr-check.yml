@@ -33,11 +33,6 @@ jobs:
           path: rwkv_mobile_flutter
           fetch-depth: 1 # 只拉最新代码，速度快
 
-      - name: Setup Tools
-        run: |
-          cd tools
-          dart pub get
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -50,6 +45,11 @@ jobs:
           flutter-version: "3.38.5"
           channel: "stable"
           cache: true
+
+      - name: Setup Tools
+        run: |
+          cd tools
+          dart pub get
 
       # 2. 核心魔法：修正依赖路径
       # 强行把 pubspec.yaml 里的 ../ 指向改为 ./
