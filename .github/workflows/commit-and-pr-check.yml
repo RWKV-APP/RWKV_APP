@@ -5,10 +5,10 @@ name: Build Check
 # 这样保证了每次合并或直接提交都会被检查
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, ci_dev]
   # 也可以加上 PR 触发，双重保险 (建议加上)
   pull_request:
-    branches: [main, dev]
+    branches: [main, dev, ci_dev]
 
 # 资源优化：
 # 如果同一个分支短时间内连续提交，自动取消上一次正在跑的，只跑最新的
