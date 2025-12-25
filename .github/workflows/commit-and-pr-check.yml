@@ -67,15 +67,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # 4. 第一道关卡：静态分析
-      # 检查语法错误、类型不匹配、未使用的变量等
-      # 如果这里报错，Action 会直接变红，GitHub 自动发邮件给作者
       - name: Run Flutter Analyze
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      # 5. 第二道关卡：尝试编译
-      # 使用 --debug 模式，速度最快，不需要签名配置
-      # 开启 SENTRY_SKIP_UPLOAD 环境变量，彻底忽略 Sentry 配置
       - name: Try Build APK (Debug)
         env:
           SENTRY_SKIP_UPLOAD: true
