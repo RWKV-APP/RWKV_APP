@@ -116,7 +116,6 @@ dependencies:
   intl:
   json_annotation:
   mp_audio_stream:
-  package_info_plus:
   path:
   path_provider:
   permission_handler:
