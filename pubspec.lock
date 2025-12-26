@@ -640,8 +640,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "6a3a5f8e8e91c15ab4e59ef4785f71cebb44f959"
-      resolved-ref: "6a3a5f8e8e91c15ab4e59ef4785f71cebb44f959"
+      ref: "01228b51e34fac863a1624fefb648c9a5953f601"
+      resolved-ref: "01228b51e34fac863a1624fefb648c9a5953f601"
       url: "https://github.com/chenqi2013/flutter_roleplay"
     source: git
     version: "0.0.1"
