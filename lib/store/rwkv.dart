@@ -22,6 +22,8 @@ class _RWKV {
   /// Receive message from RWKV isolate
   late final _receivePort = ReceivePort();
 
+  ReceivePort get receivePort => _receivePort;
+
   @Deprecated("Use _streamController instead")
   late final _oldMessagesController = StreamController<LLMEvent>();
 
@@ -130,7 +132,11 @@ class _RWKV {
 
   late final latestModel = qp((ref) {
     final loadedModels = ref.watch(P.rwkv.loadedModels);
-    return loadedModels.keys.lastOrNull;
+    final m = loadedModels.keys.lastOrNull;
+    if (m?.weightType == WeightType.roleplay) {
+      return null;
+    }
+    return m;
   });
 
   late final frontendBatchParamsAreAllSame = qp((ref) {
@@ -267,7 +273,7 @@ extension $RWKVLoad on _RWKV {
     return modelID;
   }
 
-  Future<void> loadTTS({
+  Future<(SendPort?, int?)> loadTTS({
     required String modelPath,
     required String wav2vec2Path,
     required String detokenizePath,
@@ -294,7 +300,7 @@ extension $RWKVLoad on _RWKV {
     if (modelID == null) {
       final msg = "Failed to load model, modelID is null";
       qqw(msg);
-      return;
+      return (_sendPort, null);
     }
     P.app.demoType.q = DemoType.tts;
     loadedModels.q = {
@@ -326,9 +332,10 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerDatePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerNumberPath));
+    return (_sendPort, modelID);
   }
 
-  Future<void> loadChat({
+  Future<(SendPort?, int?)> loadChat({
     required FileInfo fileInfo,
   }) async {
     qq;
@@ -351,6 +358,7 @@ extension $RWKVLoad on _RWKV {
     await _ensureQNNCopied();
     await _createRWKVIsolateIfNeeded();
     await _releaseModelByWeightTypeIfNeeded(weightType: .chat);
+    await _releaseModelByWeightTypeIfNeeded(weightType: .roleplay);
 
     final modelID = await _loadModel(
       modelPath: modelPath,
@@ -361,7 +369,7 @@ extension $RWKVLoad on _RWKV {
     if (modelID == null) {
       final msg = "Failed to load model, modelID is null";
       qqw(msg);
-      return;
+      return (_sendPort, null);
     }
     P.app.demoType.q = DemoType.chat;
     loadedModels.q = {
@@ -374,6 +382,8 @@ extension $RWKVLoad on _RWKV {
     await resetMaxLength(enableReasoning: enableReasoning);
     // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
     _syncMaxBatchCount();
+
+    return (_sendPort, modelID);
   }
 
   Future<void> loadOthello() async {
@@ -1144,6 +1154,10 @@ extension _$RWKV on _RWKV {
       _createRWKVIsolateCompleter?.complete();
       _createRWKVIsolateCompleter = null;
       return;
+    }
+    // debugPrint('_onMessage==$message');
+    if (RoleplayManage.isRolePlayMessage) {
+      RoleplayManage.operationMessage(message);
     }
 
     if (message is from_rwkv.FromRWKV) {

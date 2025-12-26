@@ -94,7 +94,15 @@ class TTSGroupItem extends ConsumerWidget {
         backend: fileInfo.backend!,
         modelType: RoleplayManageModelType.tts,
       );
-      RoleplayManage.onModelDownloadComplete(info);
+      final sp = await P.rwkv.loadTTS(
+        modelPath: modelLocalFile.targetPath,
+        backend: fileInfo.backend!,
+        wav2vec2Path: localWav2vec2File.targetPath,
+        detokenizePath: localDetokenizeFile.targetPath,
+        bicodecTokenzerPath: localTokenizeFile.targetPath,
+        fileInfo: fileInfo,
+      );
+      RoleplayManage.onModelDownloadComplete(info, [sp.$1, sp.$2], P.rwkv.receivePort);
       Navigator.pop(getContext()!);
       return;
     }
