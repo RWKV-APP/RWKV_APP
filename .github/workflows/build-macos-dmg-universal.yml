@@ -38,18 +38,18 @@ jobs:
           CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
         run: |
           echo "::group::🔐 Importing Code-Signing Certificates"
-          
+
           # 检查必要的环境变量
           if [ -z "$CERTIFICATE_BASE64" ]; then
             echo "❌ Error: CERTIFICATE_BASE64 is empty or not set"
             exit 1
           fi
-          
+
           if [ -z "$CERTIFICATE_PASSWORD" ]; then
             echo "❌ Error: CERTIFICATE_PASSWORD is empty or not set"
             exit 1
           fi
-          
+
           # 1. 定义临时钥匙串路径 (使用 RUNNER_TEMP 更安全)
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
@@ -65,15 +65,15 @@ jobs:
           # 4. 导入证书
           # macOS 上的 base64 命令使用 -d 参数（而不是 --decode）
           echo "$CERTIFICATE_BASE64" | base64 -d > certificate.p12
-          
+
           # 验证 P12 文件是否创建成功
           if [ ! -f certificate.p12 ] || [ ! -s certificate.p12 ]; then
             echo "❌ Error: Failed to decode certificate. P12 file is missing or empty."
             exit 1
           fi
-          
+
           echo "✅ Certificate decoded successfully. File size: $(ls -lh certificate.p12 | awk '{print $5}')"
-          
+
           security import certificate.p12 -k "$KEYCHAIN_PATH" -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
 
           # 5. 授权 codesign 访问（防止弹窗卡死）
@@ -84,10 +84,10 @@ jobs:
           # 如果显示 "0 valid identities found"，说明你的 P12 文件里没有私钥，必须重新导出！
           echo "👇 Listing identities in keychain:"
           security find-identity -v -p codesigning
-          
+
           # 清理临时证书文件
           rm -f certificate.p12
-          
+
           echo "::endgroup::"
 
       - name: Setup Flutter
@@ -162,7 +162,7 @@ jobs:
       - name: ✍️ Sign App Bundle
         run: |
           # 定义 App 路径
-          APP_PATH="build/macos/Build/Products/Release/zone.app"
+          APP_PATH="build/macos/Build/Products/Release/RWKV Chat.app"
 
           # 定义你的证书身份 (从你提供的证书信息中获取)
           IDENTITY="Developer ID Application: Shenzhen Yuanshi Intelligence Co., Ltd. (3FTQ9PH6TL)"
@@ -189,7 +189,7 @@ jobs:
           if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
 
           DMG_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_macos-universal.dmg"
-          APP_NAME="zone.app"
+          APP_NAME="RWKV Chat.app"
           VOLUME_NAME="RWKV Chat"
 
           # 进入 Release 目录
