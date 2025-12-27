@@ -59,15 +59,19 @@ jobs:
           Write-Host "::group::🔓 Decryption Process"
           if ("${{ secrets.FILTER_DECRYPT_PASS }}") {
             Write-Host "🔐 Secret found! Decrypting filter.txt..."
-            $env:GNUPGHOME = "$env:RUNNER_TEMP\.gnupg"
-            New-Item -ItemType Directory -Force -Path $env:GNUPGHOME | Out-Null
             # 使用 gpg 解密（需要先安装 gpg）
             # 如果 gpg 不可用，创建占位符
             if (Get-Command gpg -ErrorAction SilentlyContinue) {
               $passphrase = "${{ secrets.FILTER_DECRYPT_PASS }}"
-              echo $passphrase | gpg --quiet --batch --yes --decrypt --passphrase-fd 0 --output assets/filter.txt assets/filter.txt.gpg
-              $fileSize = (Get-Item assets/filter.txt).Length
-              Write-Host "✅ Decryption success. File size: $fileSize bytes"
+              # 使用 --passphrase 参数，而不是 --passphrase-fd（Windows 上更可靠）
+              gpg --quiet --batch --yes --decrypt --passphrase="$passphrase" --output assets/filter.txt assets/filter.txt.gpg
+              if ($LASTEXITCODE -eq 0 -and (Test-Path assets/filter.txt)) {
+                $fileSize = (Get-Item assets/filter.txt).Length
+                Write-Host "✅ Decryption success. File size: $fileSize bytes"
+              } else {
+                Write-Host "⚠️ Decryption failed. Creating placeholder..."
+                "" | Out-File -FilePath assets/filter.txt -Encoding utf8
+              }
             } else {
               Write-Host "⚠️ gpg not found. Creating placeholder..."
               "" | Out-File -FilePath assets/filter.txt -Encoding utf8

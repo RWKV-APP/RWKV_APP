@@ -82,7 +82,7 @@ jobs:
             FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
             echo "✅ Decryption success. File size: $FILE_SIZE"
           else
-            echo "⚠️ Secret not found. Creating placeholder..."
+            echo "⚠️ Secret not found (Forked repo?). Creating placeholder..."
             echo "" > assets/filter.txt
           fi
           echo "::endgroup::"
