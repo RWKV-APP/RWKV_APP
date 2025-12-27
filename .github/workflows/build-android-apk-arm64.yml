@@ -1,0 +1,277 @@
+name: Android apk arm64
+
+run-name: ${{ github.ref_name }} Android apk arm64
+
+on:
+  push:
+    tags:
+      - '[0-9]*'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-android-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧹 Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: false
+          tool-cache: false
+          dotnet: true
+          haskell: true
+          swap-storage: true
+          docker-images: true
+          large-packages: true
+
+      - name: 📥 Checkout main repo
+        uses: actions/checkout@v4
+
+      - name: 📦 Checkout rwkv_mobile_flutter dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MollySophia/rwkv_mobile_flutter
+          ref: dev
+          path: rwkv_mobile_flutter
+          fetch-depth: 1
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+          cache: true
+
+      - name: 📝 Generate Config Files
+        run: |
+          echo "::group::🔧 Configuring Dependencies & Env"
+          echo "dependency_overrides:" > pubspec_overrides.yaml
+          echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
+          echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
+          echo "✅ pubspec_overrides.yaml created"
+          echo "::endgroup::"
+
+      - name: 🐍 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: 📦 Install fastlane dependencies
+        run: |
+          cd fastlane
+          bundle install
+
+      - name: 🔧 Fastlane: Prepare environment
+        run: |
+          echo "::group::🔧 Fastlane: Environment preparation"
+          cd fastlane
+          # 执行环境替换（chat 环境）
+          bundle exec fastlane global_replace env:chat
+          echo "::endgroup::"
+
+      - name: 📦 Install tools dependencies
+        run: |
+          echo "::group::📦 Installing tools dependencies"
+          cd tools
+          dart pub get
+          echo "✅ Tools dependencies installed"
+          echo "::endgroup::"
+
+      - name: 🎨 Build assets (via fastlane)
+        run: |
+          echo "::group::🎨 Building assets"
+          cd fastlane
+          # 构建 assets（包括生成版本号图片、启动画面、应用图标）
+          bundle exec fastlane build_assets
+          echo "✅ Assets built successfully"
+          echo "::endgroup::"
+
+      - name: 🧶 Install Flutter Dependencies
+        run: flutter pub get
+
+      - name: 🔍 Verify Flutter Setup
+        run: flutter doctor -v
+
+      - name: 🏗️ Build apk (Release - arm64 Only via fastlane)
+        id: build-apk
+        run: |
+          echo "::group::🏗️ Building Android APK"
+          echo "::notice title=Build Started::Building release apk for Android (arm64)..."
+          
+          cd fastlane
+          # 使用 fastlane 构建 APK（注意：fastlane action 会构建 arm64）
+          APK_RELATIVE_PATH=$(bundle exec fastlane run_flutter_build_apk)
+          cd ..
+          
+          # fastlane action 返回的是相对路径（如 ./build/app/outputs/flutter-apk/xxx.apk）
+          # 需要去掉开头的 ./
+          APK_PATH="${APK_RELATIVE_PATH#./}"
+          APK_FULL_PATH="$(pwd)/$APK_PATH"
+          
+          if [ -f "$APK_FULL_PATH" ]; then
+            APK_SIZE=$(ls -lh "$APK_FULL_PATH" | awk '{print $5}')
+            echo "::notice title=Build Success::apk built successfully! Size: $APK_SIZE"
+            echo "✅ apk location: $APK_FULL_PATH"
+            echo "apk_path=$APK_FULL_PATH" >> $GITHUB_OUTPUT
+            echo "apk_name=$(basename $APK_FULL_PATH)" >> $GITHUB_OUTPUT
+          else
+            echo "::error title=Build Failed::apk file not found at $APK_FULL_PATH!"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+      - name: 🔐 Sign APK with JKS
+        run: |
+          echo "::group::🔐 Signing APK"
+
+          # 1. 从 Secret 恢复 JKS 文件
+          mkdir -p android/app
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/keystore.jks
+          chmod 600 android/app/keystore.jks
+
+          # 2. 查找 Android SDK 路径
+          ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          if [ -z "$ANDROID_SDK_ROOT" ]; then
+            ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+          fi
+
+          APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
+
+          # 3. 尝试使用 apksigner（推荐方式，支持 v1+v2 签名）
+          APKSIGNER=$(find "$ANDROID_SDK_ROOT/build-tools" -name apksigner 2>/dev/null | head -n 1)
+
+          if [ -n "$APKSIGNER" ]; then
+            echo "✅ Using apksigner for signing"
+            $APKSIGNER sign \
+              --ks android/app/keystore.jks \
+              --ks-pass pass:"${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+              --key-pass pass:"${{ secrets.ANDROID_KEY_PASSWORD }}" \
+              --ks-key-alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
+              --out "${APK_PATH}.signed" \
+              "$APK_PATH"
+            
+            mv "${APK_PATH}.signed" "$APK_PATH"
+            
+            # 验证签名
+            $APKSIGNER verify "$APK_PATH" && echo "✅ APK signed and verified successfully"
+          else
+            # 备用方案：使用 jarsigner
+            echo "⚠️ apksigner not found, using jarsigner instead"
+            jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+              -keystore android/app/keystore.jks \
+              -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+              -keypass "${{ secrets.ANDROID_KEY_PASSWORD }}" \
+              "$APK_PATH" \
+              "${{ secrets.ANDROID_KEY_ALIAS }}"
+            
+            # 对齐 APK（zipalign）
+            ZIPALIGN=$(find "$ANDROID_SDK_ROOT/build-tools" -name zipalign 2>/dev/null | head -n 1)
+            if [ -n "$ZIPALIGN" ]; then
+              mv "$APK_PATH" "${APK_PATH}.unsigned"
+              $ZIPALIGN -v 4 "${APK_PATH}.unsigned" "$APK_PATH"
+              rm "${APK_PATH}.unsigned"
+            fi
+            
+            # 验证签名
+            jarsigner -verify -verbose -certs "$APK_PATH" && echo "✅ APK signed and verified successfully"
+          fi
+
+          # 4. 清理 JKS 文件
+          rm -f android/app/keystore.jks
+
+          echo "::endgroup::"
+
+      - name: 📝 Extract version info
+        id: version-info
+        run: |
+          echo "::group::📝 Extracting version info"
+          VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          BUILD_NUMBER=$(grep "^version:" pubspec.yaml | sed 's/.*+//')
+          
+          if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
+          if [ -z "$VERSION" ]; then echo "😡 Failed to extract version"; exit 1; fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "✅ Version: $VERSION, Build: $BUILD_NUMBER"
+          echo "::endgroup::"
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: false
+          files: ${{ steps.build-apk.outputs.apk_path }}
+
+      - name: 🛠️ Setup Python
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Install dependencies
+        if: startsWith(github.ref, 'refs/tags/')
+        run: pip install huggingface_hub
+
+      - name: 📤 Upload to HuggingFace
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID || 'rwkv-app/RWKV-Chat' }}
+        run: |
+          echo "::group::📤 Uploading to HuggingFace"
+          python scripts/upload_to_hf.py \
+            --repo-id "$HF_REPO_ID" \
+            --file "${{ steps.build-apk.outputs.apk_path }}" \
+            --path-in-repo "android-arm64/${{ steps.build-apk.outputs.apk_name }}" \
+            --hf-token "$HF_TOKEN" \
+            --hf-endpoint "$HF_ENDPOINT"
+          echo "✅ Upload completed"
+          echo "::endgroup::"
+
+      - name: 📱 Upload to Pgyer (蒲公英)
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          PGYER_API_KEY: ${{ secrets.PGYER_API_KEY || '8d0497fc24901e6b22c8f272d04791bb' }}
+        run: |
+          echo "::group::📱 Uploading to Pgyer"
+          # 使用 fastlane 的 pgyer action 上传
+          # 注意：APK 路径需要转换为相对路径（从项目根目录）
+          APK_RELATIVE_PATH="${{ steps.build-apk.outputs.apk_path }}"
+          # 如果 APK 路径是绝对路径，提取相对路径部分
+          if [[ "$APK_RELATIVE_PATH" == /* ]]; then
+            # 获取项目根目录
+            PROJECT_ROOT=$(pwd)
+            APK_RELATIVE_PATH="${APK_RELATIVE_PATH#$PROJECT_ROOT/}"
+          fi
+          
+          cd fastlane
+          bundle exec fastlane run pgyer \
+            api_key:"$PGYER_API_KEY" \
+            apk:"../$APK_RELATIVE_PATH" \
+            user_download_file_name:"${{ steps.build-apk.outputs.apk_name }}"
+          echo "✅ Upload completed"
+          echo "::endgroup::"
+
+      - name: 🎉 Build Summary
+        if: success()
+        run: |
+          echo "### ✅ Release Build Successful" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.version-info.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Number:** ${{ steps.version-info.outputs.build_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**File:** \`${{ steps.build-apk.outputs.apk_name }}\`" >> $GITHUB_STEP_SUMMARY

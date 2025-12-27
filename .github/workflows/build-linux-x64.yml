@@ -1,0 +1,152 @@
+name: Linux x64
+
+run-name: ${{ github.ref_name }} Linux x64
+
+on:
+  push:
+    tags:
+      - "[0-9]*" # 仅在打 tag 时触发
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux-x64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout rwkv_mobile_flutter dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MollySophia/rwkv_mobile_flutter
+          ref: dev
+          path: rwkv_mobile_flutter
+          fetch-depth: 1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.5"
+          channel: "stable"
+          cache: true
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang \
+            cmake \
+            ninja-build \
+            pkg-config \
+            libgtk-3-dev \
+            liblzma-dev
+
+      - name: Override dependency path
+        run: |
+          echo "dependency_overrides:" > pubspec_overrides.yaml
+          echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
+          echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify Flutter setup
+        run: flutter doctor -v
+
+      - name: Build Linux x64
+        run: flutter build linux --release --target-platform linux-x64
+
+      - name: 🧹 Remove aarch64 libraries
+        run: |
+          echo "::group::🧹 Cleaning up aarch64 libraries"
+          LIB_DIR="build/linux/x64/release/bundle/lib"
+          if [ -d "$LIB_DIR" ]; then
+            # 删除 aarch64 相关的库文件
+            REMOVED_COUNT=0
+            for file in "$LIB_DIR"/*aarch64*.so "$LIB_DIR"/*arm64*.so; do
+              if [ -f "$file" ]; then
+                echo "✅ Removing: $(basename "$file")"
+                rm -f "$file"
+                REMOVED_COUNT=$((REMOVED_COUNT + 1))
+              fi
+            done
+            if [ $REMOVED_COUNT -eq 0 ]; then
+              echo "ℹ️ No aarch64 libraries found to remove"
+            else
+              echo "✅ Removed $REMOVED_COUNT aarch64 library file(s)"
+            fi
+          else
+            echo "🚧 Library directory not found: $LIB_DIR"
+          fi
+          echo "::endgroup::"
+
+      - name: 📦 Create Linux Archive
+        id: create-archive
+        run: |
+          echo "::group::📦 Creating Linux Archive"
+
+          VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          BUILD_NUMBER=$(grep "^version:" pubspec.yaml | sed 's/.*+//')
+
+          if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
+          if [ -z "$VERSION" ]; then echo "😡 Failed to extract version"; exit 1; fi
+
+          # 命名格式: rwkv_chat_1.0.0_1_linux-x64.tar.gz
+          ARCHIVE_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_linux-x64.tar.gz"
+
+          # 进入 bundle 目录打包，这样解压出来直接就是文件
+          cd build/linux/x64/release/bundle
+          tar -czf "$ARCHIVE_NAME" *
+
+          ARCHIVE_FULL_PATH="$(pwd)/$ARCHIVE_NAME"
+
+          echo "archive_path=$ARCHIVE_FULL_PATH" >> $GITHUB_OUTPUT
+          echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+          echo "✅ Archive created: $ARCHIVE_NAME"
+          echo "::endgroup::"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: false
+          # 👇 这里的 files 变干净了，只上传上面生成的那个压缩包
+          files: ${{ steps.create-archive.outputs.archive_path }}
+
+      - name: 🛠️ Setup Python
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: 📦 Install dependencies
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          pip install huggingface_hub
+
+      - name: 📤 Upload to HuggingFace
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID || 'rwkv-app/RWKV-Chat' }}
+        run: |
+          echo "::group::📤 Uploading to HuggingFace"
+          python scripts/upload_to_hf.py \
+            --repo-id "$HF_REPO_ID" \
+            --file "${{ steps.create-archive.outputs.archive_path }}" \
+            --path-in-repo "linux-x64/${{ steps.create-archive.outputs.archive_name }}" \
+            --hf-token "$HF_TOKEN" \
+            --hf-endpoint "$HF_ENDPOINT"
+          echo "✅ Upload completed"
+          echo "::endgroup::"

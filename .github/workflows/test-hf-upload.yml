@@ -1,0 +1,75 @@
+name: Test HF Upload
+
+run-name: ${{ github.ref_name }} Test HF Upload
+
+on:
+  push:
+    tags:
+      - "[0-9]*" # 仅在打 tag 时触发
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  test-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: 📦 Install dependencies
+        run: pip install huggingface_hub
+
+      - name: 📝 Create test file
+        id: create-test-file
+        run: |
+          echo "::group::📝 Creating test file"
+          # 生成带时间戳的文件名
+          TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+          TEST_FILE="test_file_${TIMESTAMP}.txt"
+
+          # 创建测试文件内容
+          echo "This is a test file uploaded at $(date)" > "$TEST_FILE"
+          echo "Timestamp: $TIMESTAMP" >> "$TEST_FILE"
+          echo "GitHub Run ID: ${{ github.run_id }}" >> "$TEST_FILE"
+          echo "GitHub Run Number: ${{ github.run_number }}" >> "$TEST_FILE"
+
+          echo "test_file=$TEST_FILE" >> $GITHUB_OUTPUT
+          echo "✅ Created test file: $TEST_FILE"
+          echo "::endgroup::"
+
+      - name: 📤 Upload to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID || 'rwkv-app/RWKV-Chat' }}
+        run: |
+          echo "::group::📤 Uploading to HuggingFace"
+          python scripts/upload_to_hf.py \
+            --repo-id "$HF_REPO_ID" \
+            --file "${{ steps.create-test-file.outputs.test_file }}" \
+            --path-in-repo "test-files/${{ steps.create-test-file.outputs.test_file }}" \
+            --hf-token "$HF_TOKEN" \
+            --hf-endpoint "$HF_ENDPOINT"
+          echo "✅ Upload completed"
+          echo "::endgroup::"
+
+      - name: 📋 Upload Summary
+        if: success()
+        run: |
+          echo "### ✅ Test Upload Successful" >> $GITHUB_STEP_SUMMARY
+          echo "**File:** \`${{ steps.create-test-file.outputs.test_file }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository:** \`${{ secrets.HF_REPO_ID || 'rwkv-app/RWKV-Chat' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Path in repo:** \`test-files/${{ steps.create-test-file.outputs.test_file }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Uploaded at:** $(date)" >> $GITHUB_STEP_SUMMARY

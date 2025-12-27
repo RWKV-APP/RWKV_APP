@@ -1,0 +1,296 @@
+name: macOS .dmg universal
+
+run-name: ${{ github.ref_name }} macOS .dmg universal + Notarization
+
+on:
+  push:
+    tags:
+      - '[0-9]*'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos-dmg:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout rwkv_mobile_flutter dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MollySophia/rwkv_mobile_flutter
+          ref: dev
+          path: rwkv_mobile_flutter
+          fetch-depth: 1
+
+      # 替换原来的 Import 步骤
+      - name: 🔐 Import Code-Signing Certificates
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE }}
+          CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+        run: |
+          # 1. 定义临时钥匙串路径 (使用 RUNNER_TEMP 更安全)
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # 2. 创建并解锁新钥匙串
+          security create-keychain -p "" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "" "$KEYCHAIN_PATH"
+
+          # 3. 【关键修复】将新钥匙串加入系统搜索列表
+          # 如果没有这一步，codesign 可能找不到证书
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+
+          # 4. 导入证书
+          echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          security import certificate.p12 -k "$KEYCHAIN_PATH" -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+
+          # 5. 授权 codesign 访问（防止弹窗卡死）
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" "$KEYCHAIN_PATH"
+
+          # 6. 【调试】打印所有可用证书
+          # 请在运行失败后查看这一步的输出：
+          # 如果显示 "0 valid identities found"，说明你的 P12 文件里没有私钥，必须重新导出！
+          echo "👇 Listing identities in keychain:"
+          security find-identity -v -p codesigning
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Override dependency path
+        run: |
+          echo "dependency_overrides:" > pubspec_overrides.yaml
+          echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
+          echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
+
+      - name: 🐍 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: 📦 Install fastlane dependencies
+        run: |
+          cd fastlane
+          bundle install
+
+      - name: 🔧 Fastlane: Prepare environment
+        run: |
+          echo "::group::🔧 Fastlane: Environment preparation"
+          cd fastlane
+          # 执行环境替换（chat 环境）
+          bundle exec fastlane global_replace env:chat
+          echo "::endgroup::"
+
+      - name: 📦 Install tools dependencies
+        run: |
+          echo "::group::📦 Installing tools dependencies"
+          cd tools
+          dart pub get
+          echo "✅ Tools dependencies installed"
+          echo "::endgroup::"
+
+      - name: 🎨 Build assets (via fastlane)
+        run: |
+          echo "::group::🎨 Building assets"
+          cd fastlane
+          # 构建 assets（包括生成版本号图片、启动画面、应用图标）
+          bundle exec fastlane build_assets
+          echo "✅ Assets built successfully"
+          echo "::endgroup::"
+
+      - name: 🧶 Install Flutter dependencies
+        run: flutter pub get
+
+      - name: 🏗️ Build macOS app (Universal)
+        run: flutter build macos --release
+
+      # ----------------------------------------------------------------
+      # 2. 签名 .app 文件 (新增步骤)
+      # 注意：必须在打包 DMG 之前对 .app 进行签名
+      # ----------------------------------------------------------------
+      - name: ✍️ Sign App Bundle
+        run: |
+          # 定义 App 路径
+          APP_PATH="build/macos/Build/Products/Release/zone.app"
+
+          # 定义你的证书身份 (从你提供的证书信息中获取)
+          IDENTITY="Developer ID Application: Shenzhen Yuanshi Intelligence Co., Ltd. (3FTQ9PH6TL)"
+
+          echo "Signing $APP_PATH with identity: $IDENTITY"
+
+          # 执行签名 (开启 Hardened Runtime，这是公证必须的)
+          codesign --deep --force --verbose --options runtime --timestamp --sign "$IDENTITY" "$APP_PATH"
+
+          # 验证签名
+          codesign --verify --verbose "$APP_PATH"
+
+      # ----------------------------------------------------------------
+      # 3. 创建并签名 DMG (修改步骤)
+      # DMG 也需要签名，否则公证时可能会警告
+      # ----------------------------------------------------------------
+      - name: 📦 Create and Sign DMG
+        id: create-dmg
+        run: |
+          echo "::group::📦 Creating drag-to-install DMG"
+
+          VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          BUILD_NUMBER=$(grep "^version:" pubspec.yaml | sed 's/.*+//')
+          if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
+
+          DMG_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_macos-universal.dmg"
+          APP_NAME="zone.app"
+          VOLUME_NAME="RWKV Chat"
+          
+          # 进入 Release 目录
+          cd build/macos/Build/Products/Release
+          
+          # 创建临时 DMG 目录
+          DMG_TEMP_DIR=$(mktemp -d)
+          DMG_TEMP_PATH="$DMG_TEMP_DIR/dmg"
+          mkdir -p "$DMG_TEMP_PATH"
+          
+          # 复制 .app 到临时目录
+          cp -R "$APP_NAME" "$DMG_TEMP_PATH/"
+          
+          # 创建 Applications 文件夹的符号链接（经典的拖拽安装形式）
+          ln -s /Applications "$DMG_TEMP_PATH/Applications"
+          
+          # 创建临时 DMG（未压缩，用于自定义）
+          TEMP_DMG="$DMG_TEMP_DIR/temp.dmg"
+          hdiutil create -srcfolder "$DMG_TEMP_PATH" -volname "$VOLUME_NAME" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size 200m "$TEMP_DMG"
+          
+          # 挂载临时 DMG
+          DEVICE=$(hdiutil attach -readwrite -noverify -noautoopen "$TEMP_DMG" | egrep '^/dev/' | sed 1q | awk '{print $1}')
+          MOUNT_POINT=$(hdiutil info | grep "$DEVICE" | awk 'END {print $3}')
+          
+          # 等待挂载完成
+          sleep 2
+          
+          # 设置窗口大小和位置（经典的拖拽安装布局）
+          # 设置图标大小和网格
+          osascript <<EOF
+            tell application "Finder"
+              tell disk "$VOLUME_NAME"
+                open
+                set current view of container window to icon view
+                set toolbar visible of container window to false
+                set statusbar visible of container window to false
+                set the bounds of container window to {400, 100, 920, 420}
+                set viewOptions to the icon view options of container window
+                set arrangement of viewOptions to not arranged
+                set icon size of viewOptions to 72
+                set position of item "$APP_NAME" of container window to {160, 205}
+                set position of item "Applications" of container window to {360, 205}
+                close
+                open
+                update without registering applications
+                delay 1
+                close
+              end tell
+            end tell
+          EOF
+          
+          # 卸载 DMG
+          hdiutil detach "$DEVICE"
+          
+          # 转换为压缩的只读 DMG
+          hdiutil convert "$TEMP_DMG" -format UDZO -imagekey zlib-level=9 -o "$DMG_NAME"
+          
+          # 清理临时文件
+          rm -rf "$DMG_TEMP_DIR"
+          
+          # ✅ 签名 DMG 文件
+          IDENTITY="Developer ID Application: Shenzhen Yuanshi Intelligence Co., Ltd. (3FTQ9PH6TL)"
+          echo "Signing DMG..."
+          codesign --force --sign "$IDENTITY" "$DMG_NAME"
+
+          DMG_PATH="$(pwd)/$DMG_NAME"
+
+          echo "dmg_path=$DMG_PATH" >> $GITHUB_OUTPUT
+          echo "dmg_name=$DMG_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          echo "✅ Drag-to-install DMG created and signed: $DMG_NAME"
+          echo "::endgroup::"
+
+      # ----------------------------------------------------------------
+      # 4. 提交公证 (Notarization) (新增步骤)
+      # 只有公证通过，macOS 才能在不修改安全设置的情况下打开你的 App
+      # ----------------------------------------------------------------
+      - name: 🛡️ Notarize Software
+        env:
+          # Apple ID 账号
+          APPLE_ID: ${{ secrets.APPLE_ID_EMAIL }}
+          # App 专用密码
+          APP_PASSWORD: ${{ secrets.MACOS_APP_PASSWORD }}
+          # Team ID
+          TEAM_ID: ${{ secrets.MACOS_IDENTITY_ID }}
+          # 要公证的文件
+          FILE_PATH: ${{ steps.create-dmg.outputs.dmg_path }}
+        run: |
+          echo "::group::🛡️ Notarizing..."
+
+          xcrun notarytool submit "$FILE_PATH" \
+            --apple-id "$APPLE_ID" \
+            --password "$APP_PASSWORD" \
+            --team-id "$TEAM_ID" \
+            --wait
+
+          echo "✅ Notarization request submitted and approved."
+          echo "::endgroup::"
+
+      # ----------------------------------------------------------------
+      # 5. 装订公证票据 (Staple) (新增步骤)
+      # 让用户离线时也能验证公证状态
+      # ----------------------------------------------------------------
+      - name: 📎 Staple Ticket
+        run: |
+          xcrun stapler staple "${{ steps.create-dmg.outputs.dmg_path }}"
+          echo "✅ Stapled notarization ticket to DMG."
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: false
+          files: ${{ steps.create-dmg.outputs.dmg_path }}
+
+      - name: 🛠️ Setup Python
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Install dependencies
+        if: startsWith(github.ref, 'refs/tags/')
+        run: pip install huggingface_hub
+
+      - name: 📤 Upload to HuggingFace
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID || 'rwkv-app/RWKV-Chat' }}
+        run: |
+          echo "::group::📤 Uploading to HuggingFace"
+          python scripts/upload_to_hf.py \
+            --repo-id "$HF_REPO_ID" \
+            --file "${{ steps.create-dmg.outputs.dmg_path }}" \
+            --path-in-repo "macos-universal/${{ steps.create-dmg.outputs.dmg_name }}" \
+            --hf-token "$HF_TOKEN" \
+            --hf-endpoint "$HF_ENDPOINT"
+          echo "✅ Upload completed"
+          echo "::endgroup::"

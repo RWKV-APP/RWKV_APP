@@ -1,0 +1,146 @@
+name: iOS TestFlight
+
+run-name: ${{ github.ref_name }} iOS TestFlight
+
+on:
+  push:
+    tags:
+      - '[0-9]*' # 仅在打 tag 时触发
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-ios-testflight:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout rwkv_mobile_flutter dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MollySophia/rwkv_mobile_flutter
+          ref: dev
+          path: rwkv_mobile_flutter
+          fetch-depth: 1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Override dependency path
+        run: |
+          echo "dependency_overrides:" > pubspec_overrides.yaml
+          echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
+          echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
+
+      - name: 🐍 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: 📦 Install fastlane dependencies
+        run: |
+          cd fastlane
+          bundle install
+
+      - name: 🔧 Fastlane: Prepare environment
+        run: |
+          echo "::group::🔧 Fastlane: Environment preparation"
+          cd fastlane
+          # 执行环境替换（chat 环境）
+          bundle exec fastlane global_replace env:chat
+          echo "::endgroup::"
+
+      - name: 📦 Install tools dependencies
+        run: |
+          echo "::group::📦 Installing tools dependencies"
+          cd tools
+          dart pub get
+          echo "✅ Tools dependencies installed"
+          echo "::endgroup::"
+
+      - name: 🎨 Build assets (via fastlane)
+        run: |
+          echo "::group::🎨 Building assets"
+          cd fastlane
+          # 构建 assets（包括生成版本号图片、启动画面、应用图标）
+          bundle exec fastlane build_assets
+          echo "✅ Assets built successfully"
+          echo "::endgroup::"
+
+      - name: 🧶 Install Flutter dependencies
+        run: flutter pub get
+
+      - name: 🔍 Verify Flutter setup
+        run: flutter doctor -v
+
+      - name: 🏗️ Build iOS for TestFlight (via fastlane)
+        run: |
+          echo "::group::🏗️ Building iOS IPA"
+          cd fastlane
+          bundle exec fastlane run_flutter_build_ipa
+          echo "::endgroup::"
+
+      - name: 📝 Rename IPA
+        id: rename-ipa
+        run: |
+          echo "::group::📝 Renaming IPA File"
+
+          VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          BUILD_NUMBER=$(grep "^version:" pubspec.yaml | sed 's/.*+//')
+
+          if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
+          if [ -z "$VERSION" ]; then echo "😡 Failed to extract version"; exit 1; fi
+
+          # 命名格式: rwkv_chat_1.0.0_1_ios-arm64.ipa
+          NEW_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_ios-arm64.ipa"
+
+          # 检查 IPA 文件是否存在
+          IPA_FILE=$(ls build/ios/ipa/*.ipa 2>/dev/null | head -n 1)
+          if [ -z "$IPA_FILE" ] || [ ! -f "$IPA_FILE" ]; then
+            echo "😡 IPA file not found!"
+            exit 1
+          fi
+
+          mv "$IPA_FILE" "build/ios/ipa/$NEW_NAME"
+
+          echo "ipa_path=build/ios/ipa/$NEW_NAME" >> $GITHUB_OUTPUT
+          echo "ipa_name=$NEW_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+          echo "✅ Renamed to: $NEW_NAME"
+          echo "::endgroup::"
+
+      - name: 🚀 Upload to TestFlight (via fastlane)
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID_EMAIL }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.MACOS_APP_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.APPLE_ID_EMAIL }}
+        run: |
+          echo "::group::🚀 Uploading to TestFlight"
+          cd fastlane
+          # 使用 fastlane 上传到 TestFlight
+          bundle exec fastlane ios_upload groups:External
+          echo "::endgroup::"
+
+      # --- 也可以上传到 GitHub Release 作为备份 ---
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: false
+          files: ${{ steps.rename-ipa.outputs.ipa_path }}
