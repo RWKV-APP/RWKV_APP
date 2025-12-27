@@ -65,27 +65,14 @@ jobs:
           echo "::endgroup::"
 
       - name: 📝 Create .env file
-        run: |
-          echo "::group::📝 Creating .env file"
-          echo "x-api-key=${{ secrets.X_API_KEY }}" > .env
-          echo "✅ .env created"
-          echo "::endgroup::"
+        uses: ./.github/actions/create-env
+        with:
+          x_api_key: ${{ secrets.X_API_KEY }}
 
       - name: 🔐 Decrypt Sensitive Assets
-        run: |
-          mkdir -p assets
-          echo "::group::🔓 Decryption Process"
-          if [ -n "${{ secrets.FILTER_DECRYPT_PASS }}" ]; then
-            echo "🔐 Secret found! Decrypting filter.txt..."
-            gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.FILTER_DECRYPT_PASS }}" \
-              --output assets/filter.txt assets/filter.txt.gpg
-            FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
-            echo "✅ Decryption success. File size: $FILE_SIZE"
-          else
-            echo "⚠️ Secret not found (Forked repo?). Creating placeholder..."
-            echo "" > assets/filter.txt
-          fi
-          echo "::endgroup::"
+        uses: ./.github/actions/decrypt-assets
+        with:
+          filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
 
       - name: 🧶 Install Dependencies
         run: flutter pub get
@@ -245,12 +232,12 @@ jobs:
           # 使用 curl 直接上传到 Pgyer
           APK_PATH="${{ steps.rename-apk.outputs.apk_path }}"
           APK_NAME="${{ steps.rename-apk.outputs.apk_name }}"
-          
+
           RESPONSE=$(curl -F "file=@$APK_PATH" \
             -F "_api_key=$PGYER_API_KEY" \
             -F "buildUpdateDescription=Automated build from GitHub Actions" \
             "https://www.pgyer.com/apiv2/app/upload")
-          
+
           if echo "$RESPONSE" | grep -q '"code":0'; then
             echo "✅ Upload completed successfully"
             echo "$RESPONSE" | grep -o '"buildShortcutUrl":"[^"]*"' | head -1

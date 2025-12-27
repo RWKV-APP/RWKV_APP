@@ -37,6 +37,19 @@ jobs:
           CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE }}
           CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
         run: |
+          echo "::group::🔐 Importing Code-Signing Certificates"
+          
+          # 检查必要的环境变量
+          if [ -z "$CERTIFICATE_BASE64" ]; then
+            echo "❌ Error: CERTIFICATE_BASE64 is empty or not set"
+            exit 1
+          fi
+          
+          if [ -z "$CERTIFICATE_PASSWORD" ]; then
+            echo "❌ Error: CERTIFICATE_PASSWORD is empty or not set"
+            exit 1
+          fi
+          
           # 1. 定义临时钥匙串路径 (使用 RUNNER_TEMP 更安全)
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
@@ -50,7 +63,17 @@ jobs:
           security list-keychains -d user -s "$KEYCHAIN_PATH"
 
           # 4. 导入证书
-          echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          # macOS 上的 base64 命令使用 -d 参数（而不是 --decode）
+          echo "$CERTIFICATE_BASE64" | base64 -d > certificate.p12
+          
+          # 验证 P12 文件是否创建成功
+          if [ ! -f certificate.p12 ] || [ ! -s certificate.p12 ]; then
+            echo "❌ Error: Failed to decode certificate. P12 file is missing or empty."
+            exit 1
+          fi
+          
+          echo "✅ Certificate decoded successfully. File size: $(ls -lh certificate.p12 | awk '{print $5}')"
+          
           security import certificate.p12 -k "$KEYCHAIN_PATH" -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
 
           # 5. 授权 codesign 访问（防止弹窗卡死）
@@ -61,6 +84,11 @@ jobs:
           # 如果显示 "0 valid identities found"，说明你的 P12 文件里没有私钥，必须重新导出！
           echo "👇 Listing identities in keychain:"
           security find-identity -v -p codesigning
+          
+          # 清理临时证书文件
+          rm -f certificate.p12
+          
+          echo "::endgroup::"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -76,27 +104,14 @@ jobs:
           echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
 
       - name: 📝 Create .env file
-        run: |
-          echo "::group::📝 Creating .env file"
-          echo "x-api-key=${{ secrets.X_API_KEY }}" > .env
-          echo "✅ .env created"
-          echo "::endgroup::"
+        uses: ./.github/actions/create-env
+        with:
+          x_api_key: ${{ secrets.X_API_KEY }}
 
       - name: 🔐 Decrypt Sensitive Assets
-        run: |
-          mkdir -p assets
-          echo "::group::🔓 Decryption Process"
-          if [ -n "${{ secrets.FILTER_DECRYPT_PASS }}" ]; then
-            echo "🔐 Secret found! Decrypting filter.txt..."
-            gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.FILTER_DECRYPT_PASS }}" \
-              --output assets/filter.txt assets/filter.txt.gpg
-            FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
-            echo "✅ Decryption success. File size: $FILE_SIZE"
-          else
-            echo "⚠️ Secret not found (Forked repo?). Creating placeholder..."
-            echo "" > assets/filter.txt
-          fi
-          echo "::endgroup::"
+        uses: ./.github/actions/decrypt-assets
+        with:
+          filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
 
       - name: 🐍 Setup Ruby
         uses: ruby/setup-ruby@v1

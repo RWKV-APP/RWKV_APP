@@ -1,0 +1,19 @@
+name: 'Create .env file (Windows)'
+description: 'Create .env file with x-api-key from secrets on Windows'
+
+inputs:
+  x_api_key:
+    description: 'X-API-KEY value from secrets'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 📝 Create .env file
+      shell: pwsh
+      run: |
+        Write-Host "::group::📝 Creating .env file"
+        "x-api-key=${{ inputs.x_api_key }}" | Out-File -FilePath .env -Encoding utf8 -NoNewline
+        Write-Host "✅ .env created"
+        Write-Host "::endgroup::"
+
