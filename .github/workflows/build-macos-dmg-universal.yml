@@ -75,6 +75,29 @@ jobs:
           echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
           echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
 
+      - name: 📝 Create .env file
+        run: |
+          echo "::group::📝 Creating .env file"
+          echo "x-api-key=${{ secrets.X_API_KEY }}" > .env
+          echo "✅ .env created"
+          echo "::endgroup::"
+
+      - name: 🔐 Decrypt Sensitive Assets
+        run: |
+          mkdir -p assets
+          echo "::group::🔓 Decryption Process"
+          if [ -n "${{ secrets.FILTER_DECRYPT_PASS }}" ]; then
+            echo "🔐 Secret found! Decrypting filter.txt..."
+            gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.FILTER_DECRYPT_PASS }}" \
+              --output assets/filter.txt assets/filter.txt.gpg
+            FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
+            echo "✅ Decryption success. File size: $FILE_SIZE"
+          else
+            echo "⚠️ Secret not found. Creating placeholder..."
+            echo "" > assets/filter.txt
+          fi
+          echo "::endgroup::"
+
       - name: 🐍 Setup Ruby
         uses: ruby/setup-ruby@v1
         with:

@@ -64,72 +64,53 @@ jobs:
           echo "✅ pubspec_overrides.yaml created"
           echo "::endgroup::"
 
-      - name: 🐍 Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.2"
-          bundler-cache: true
-
-      - name: 📦 Install fastlane dependencies
+      - name: 📝 Create .env file
         run: |
-          cd fastlane
-          bundle install
-
-      - name: "🔧 Fastlane: Prepare environment"
-        run: |
-          echo "::group::🔧 Fastlane: Environment preparation"
-          cd fastlane
-          # 执行环境替换（chat 环境）
-          bundle exec fastlane global_replace env:chat
+          echo "::group::📝 Creating .env file"
+          echo "x-api-key=${{ secrets.X_API_KEY }}" > .env
+          echo "✅ .env created"
           echo "::endgroup::"
 
-      - name: 📦 Install tools dependencies
+      - name: 🔐 Decrypt Sensitive Assets
         run: |
-          echo "::group::📦 Installing tools dependencies"
-          cd tools
-          dart pub get
-          echo "✅ Tools dependencies installed"
+          mkdir -p assets
+          echo "::group::🔓 Decryption Process"
+          if [ -n "${{ secrets.FILTER_DECRYPT_PASS }}" ]; then
+            echo "🔐 Secret found! Decrypting filter.txt..."
+            gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.FILTER_DECRYPT_PASS }}" \
+              --output assets/filter.txt assets/filter.txt.gpg
+            FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
+            echo "✅ Decryption success. File size: $FILE_SIZE"
+          else
+            echo "⚠️ Secret not found. Creating placeholder..."
+            echo "" > assets/filter.txt
+          fi
           echo "::endgroup::"
 
-      - name: 🎨 Build assets (via fastlane)
-        run: |
-          echo "::group::🎨 Building assets"
-          cd fastlane
-          # 构建 assets（包括生成版本号图片、启动画面、应用图标）
-          bundle exec fastlane build_assets
-          echo "✅ Assets built successfully"
-          echo "::endgroup::"
-
-      - name: 🧶 Install Flutter Dependencies
+      - name: 🧶 Install Dependencies
         run: flutter pub get
 
       - name: 🔍 Verify Flutter Setup
         run: flutter doctor -v
 
-      - name: 🏗️ Build apk (Release - arm64 Only via fastlane)
+      - name: 🏗️ Build apk (Release - arm64 Only)
         id: build-apk
         run: |
           echo "::group::🏗️ Building Android APK"
           echo "::notice title=Build Started::Building release apk for Android (arm64)..."
 
-          cd fastlane
-          # 使用 fastlane 构建 APK（注意：fastlane action 会构建 arm64）
-          APK_RELATIVE_PATH=$(bundle exec fastlane run_flutter_build_apk)
-          cd ..
+          # 👇 显式指定只构建 android-arm64
+          flutter build apk --release --target-platform android-arm64
 
-          # fastlane action 返回的是相对路径（如 ./build/app/outputs/flutter-apk/xxx.apk）
-          # 需要去掉开头的 ./
-          APK_PATH="${APK_RELATIVE_PATH#./}"
-          APK_FULL_PATH="$(pwd)/$APK_PATH"
-
-          if [ -f "$APK_FULL_PATH" ]; then
-            APK_SIZE=$(ls -lh "$APK_FULL_PATH" | awk '{print $5}')
+          APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
+          if [ -f "$APK_PATH" ]; then
+            APK_SIZE=$(ls -lh "$APK_PATH" | awk '{print $5}')
             echo "::notice title=Build Success::apk built successfully! Size: $APK_SIZE"
-            echo "✅ apk location: $APK_FULL_PATH"
-            echo "apk_path=$APK_FULL_PATH" >> $GITHUB_OUTPUT
-            echo "apk_name=$(basename $APK_FULL_PATH)" >> $GITHUB_OUTPUT
+            echo "✅ apk location: $APK_PATH"
+            echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+            echo "apk_name=$(basename $APK_PATH)" >> $GITHUB_OUTPUT
           else
-            echo "::error title=Build Failed::apk file not found at $APK_FULL_PATH!"
+            echo "::error title=Build Failed::apk file not found!"
             exit 1
           fi
           echo "::endgroup::"
@@ -195,19 +176,30 @@ jobs:
 
           echo "::endgroup::"
 
-      - name: 📝 Extract version info
-        id: version-info
+      - name: 📝 Rename apk File
+        id: rename-apk
         run: |
-          echo "::group::📝 Extracting version info"
+          echo "::group::📝 Renaming apk File"
+
           VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
           BUILD_NUMBER=$(grep "^version:" pubspec.yaml | sed 's/.*+//')
 
           if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
           if [ -z "$VERSION" ]; then echo "😡 Failed to extract version"; exit 1; fi
 
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
-          echo "✅ Version: $VERSION, Build: $BUILD_NUMBER"
+          # 👇 命名改为 android-arm64
+          NEW_APK_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_android-arm64.apk"
+          OLD_APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
+          NEW_APK_PATH="build/app/outputs/flutter-apk/${NEW_APK_NAME}"
+
+          mv "$OLD_APK_PATH" "$NEW_APK_PATH"
+
+          echo "apk_path=${NEW_APK_PATH}" >> $GITHUB_OUTPUT
+          echo "apk_name=${NEW_APK_NAME}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+
+          echo "✅ Renamed to: ${NEW_APK_NAME}"
           echo "::endgroup::"
 
       - name: 🚀 Create GitHub Release
@@ -215,7 +207,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           generate_release_notes: false
-          files: ${{ steps.build-apk.outputs.apk_path }}
+          files: ${{ steps.rename-apk.outputs.apk_path }}
 
       - name: 🛠️ Setup Python
         if: startsWith(github.ref, 'refs/tags/')
@@ -237,8 +229,8 @@ jobs:
           echo "::group::📤 Uploading to HuggingFace"
           python scripts/upload_to_hf.py \
             --repo-id "$HF_REPO_ID" \
-            --file "${{ steps.build-apk.outputs.apk_path }}" \
-            --path-in-repo "android-arm64/${{ steps.build-apk.outputs.apk_name }}" \
+            --file "${{ steps.rename-apk.outputs.apk_path }}" \
+            --path-in-repo "android-arm64/${{ steps.rename-apk.outputs.apk_name }}" \
             --hf-token "$HF_TOKEN" \
             --hf-endpoint "$HF_ENDPOINT"
           echo "✅ Upload completed"
@@ -250,28 +242,27 @@ jobs:
           PGYER_API_KEY: ${{ secrets.PGYER_API_KEY || '8d0497fc24901e6b22c8f272d04791bb' }}
         run: |
           echo "::group::📱 Uploading to Pgyer"
-          # 使用 fastlane 的 pgyer action 上传
-          # 注意：APK 路径需要转换为相对路径（从项目根目录）
-          APK_RELATIVE_PATH="${{ steps.build-apk.outputs.apk_path }}"
-          # 如果 APK 路径是绝对路径，提取相对路径部分
-          if [[ "$APK_RELATIVE_PATH" == /* ]]; then
-            # 获取项目根目录
-            PROJECT_ROOT=$(pwd)
-            APK_RELATIVE_PATH="${APK_RELATIVE_PATH#$PROJECT_ROOT/}"
+          # 使用 curl 直接上传到 Pgyer
+          APK_PATH="${{ steps.rename-apk.outputs.apk_path }}"
+          APK_NAME="${{ steps.rename-apk.outputs.apk_name }}"
+          
+          RESPONSE=$(curl -F "file=@$APK_PATH" \
+            -F "_api_key=$PGYER_API_KEY" \
+            -F "buildUpdateDescription=Automated build from GitHub Actions" \
+            "https://www.pgyer.com/apiv2/app/upload")
+          
+          if echo "$RESPONSE" | grep -q '"code":0'; then
+            echo "✅ Upload completed successfully"
+            echo "$RESPONSE" | grep -o '"buildShortcutUrl":"[^"]*"' | head -1
+          else
+            echo "⚠️ Upload may have failed. Response: $RESPONSE"
           fi
-
-          cd fastlane
-          bundle exec fastlane run pgyer \
-            api_key:"$PGYER_API_KEY" \
-            apk:"../$APK_RELATIVE_PATH" \
-            user_download_file_name:"${{ steps.build-apk.outputs.apk_name }}"
-          echo "✅ Upload completed"
           echo "::endgroup::"
 
       - name: 🎉 Build Summary
         if: success()
         run: |
           echo "### ✅ Release Build Successful" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ steps.version-info.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Build Number:** ${{ steps.version-info.outputs.build_number }}" >> $GITHUB_STEP_SUMMARY
-          echo "**File:** \`${{ steps.build-apk.outputs.apk_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.rename-apk.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Number:** ${{ steps.rename-apk.outputs.build_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**File:** \`${{ steps.rename-apk.outputs.apk_name }}\`" >> $GITHUB_STEP_SUMMARY

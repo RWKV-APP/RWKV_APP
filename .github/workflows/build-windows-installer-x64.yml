@@ -48,6 +48,40 @@ jobs:
           echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
           echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
 
+      - name: 📝 Create .env file
+        shell: pwsh
+        run: |
+          Write-Host "::group::📝 Creating .env file"
+          "x-api-key=${{ secrets.X_API_KEY }}" | Out-File -FilePath .env -Encoding utf8 -NoNewline
+          Write-Host "✅ .env created"
+          Write-Host "::endgroup::"
+
+      - name: 🔐 Decrypt Sensitive Assets
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path assets | Out-Null
+          Write-Host "::group::🔓 Decryption Process"
+          if ("${{ secrets.FILTER_DECRYPT_PASS }}") {
+            Write-Host "🔐 Secret found! Decrypting filter.txt..."
+            $env:GNUPGHOME = "$env:RUNNER_TEMP\.gnupg"
+            New-Item -ItemType Directory -Force -Path $env:GNUPGHOME | Out-Null
+            # 使用 gpg 解密（需要先安装 gpg）
+            # 如果 gpg 不可用，创建占位符
+            if (Get-Command gpg -ErrorAction SilentlyContinue) {
+              $passphrase = "${{ secrets.FILTER_DECRYPT_PASS }}"
+              echo $passphrase | gpg --quiet --batch --yes --decrypt --passphrase-fd 0 --output assets/filter.txt assets/filter.txt.gpg
+              $fileSize = (Get-Item assets/filter.txt).Length
+              Write-Host "✅ Decryption success. File size: $fileSize bytes"
+            } else {
+              Write-Host "⚠️ gpg not found. Creating placeholder..."
+              "" | Out-File -FilePath assets/filter.txt -Encoding utf8
+            }
+          } else {
+            Write-Host "⚠️ Secret not found. Creating placeholder..."
+            "" | Out-File -FilePath assets/filter.txt -Encoding utf8
+          }
+          Write-Host "::endgroup::"
+
       - name: Install dependencies
         run: flutter pub get
 
