@@ -32,15 +32,67 @@ jobs:
           fetch-depth: 1
 
       - name: 🧹 Free Disk Space (macOS)
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          android: true
-          tool-cache: false
-          dotnet: true
-          haskell: true
-          swap-storage: true
-          docker-images: true
-          large-packages: true
+        run: |
+          echo "::group::🧹 Freeing disk space on macOS"
+
+          echo "📊 Disk usage before cleanup:"
+          df -h /
+
+          echo ""
+          echo "🧹 Cleaning up macOS-specific caches and temporary files..."
+
+          # 清理 Xcode DerivedData
+          if [ -d ~/Library/Developer/Xcode/DerivedData ]; then
+            echo "  - Cleaning Xcode DerivedData..."
+            rm -rf ~/Library/Developer/Xcode/DerivedData/*
+            echo "    ✅ Xcode DerivedData cleaned"
+          fi
+
+          # 清理 Xcode Archives
+          if [ -d ~/Library/Developer/Xcode/Archives ]; then
+            echo "  - Cleaning Xcode Archives..."
+            rm -rf ~/Library/Developer/Xcode/Archives/*
+            echo "    ✅ Xcode Archives cleaned"
+          fi
+
+          # 清理 CocoaPods cache
+          if [ -d ~/Library/Caches/CocoaPods ]; then
+            echo "  - Cleaning CocoaPods cache..."
+            rm -rf ~/Library/Caches/CocoaPods/*
+            echo "    ✅ CocoaPods cache cleaned"
+          fi
+
+          # 清理 Homebrew cache（如果存在）
+          if command -v brew &> /dev/null; then
+            echo "  - Cleaning Homebrew cache..."
+            brew cleanup --prune=all 2>/dev/null || true
+            echo "    ✅ Homebrew cache cleaned"
+          fi
+
+          # 清理系统缓存
+          echo "  - Cleaning system caches..."
+          sudo rm -rf /Library/Caches/* 2>/dev/null || true
+          rm -rf ~/Library/Caches/* 2>/dev/null || true
+          echo "    ✅ System caches cleaned"
+
+          # 清理临时文件
+          echo "  - Cleaning temporary files..."
+          sudo rm -rf /tmp/* 2>/dev/null || true
+          rm -rf ~/tmp/* 2>/dev/null || true
+          echo "    ✅ Temporary files cleaned"
+
+          # 清理 Flutter build cache（可选，如果空间仍然不足）
+          if [ -d ~/.flutter ]; then
+            echo "  - Cleaning Flutter build cache..."
+            flutter clean 2>/dev/null || true
+            echo "    ✅ Flutter build cache cleaned"
+          fi
+
+          echo ""
+          echo "📊 Disk usage after cleanup:"
+          df -h /
+
+          echo "::endgroup::"
 
       # 替换原来的 Import 步骤
       - name: 🔐 Import Code-Signing Certificates
