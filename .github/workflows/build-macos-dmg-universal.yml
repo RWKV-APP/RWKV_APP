@@ -31,6 +31,17 @@ jobs:
           path: rwkv_mobile_flutter
           fetch-depth: 1
 
+      - name: 🧹 Free Disk Space (macOS)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: true
+          tool-cache: false
+          dotnet: true
+          haskell: true
+          swap-storage: true
+          docker-images: true
+          large-packages: true
+
       # 替换原来的 Import 步骤
       - name: 🔐 Import Code-Signing Certificates
         env:
