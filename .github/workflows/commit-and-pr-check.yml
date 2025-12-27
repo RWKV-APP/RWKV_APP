@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 清理空间
       - name: 🧹 Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
@@ -28,7 +27,6 @@ jobs:
           docker-images: true
           large-packages: true
 
-      # 2. 拉取代码
       - name: 📥 Checkout main repo
         uses: actions/checkout@v4
 
@@ -40,7 +38,6 @@ jobs:
           path: rwkv_mobile_flutter
           fetch-depth: 1
 
-      # 3. 环境准备 (Java + Flutter)
       - name: ☕ Setup Java
         uses: actions/setup-java@v4
         with:
@@ -54,7 +51,6 @@ jobs:
           channel: "stable"
           cache: true
 
-      # 4. 初始化工具 (这里用了 ::group:: 语法，让日志折叠起来)
       - name: 🛠️ Setup Tools
         run: |
           echo "::group::🚀 Initializing Tools..."
@@ -63,63 +59,47 @@ jobs:
           echo "✅ Tools initialized!"
           echo "::endgroup::"
 
-      # 5. 生成配置文件 (带颜色的输出)
       - name: 📝 Generate Config Files
         run: |
-          # 定义颜色变量
-          GREEN='\033[0;32m'
-          NC='\033[0m' # No Color
-
           echo "::group::🔧 Configuring Dependencies & Env"
 
-          # 1. Override Path
           echo "dependency_overrides:" > pubspec_overrides.yaml
           echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
           echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
-          echo -e "${GREEN}✅ pubspec_overrides.yaml created${NC}"
+          echo "✅ pubspec_overrides.yaml created"
 
-          # 2. Dummy Env
           echo "DUMMY_ENV=true" > .env
-          echo -e "${GREEN}✅ .env created${NC}"
+          echo "✅ .env created"
 
           echo "::endgroup::"
 
-      # 6. 安装依赖
       - name: 🧶 Install Dependencies
         run: flutter pub get
 
-      # 7. 静态分析
       - name: 🔍 Run Flutter Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      # 8. 解密文件 (逻辑没变，加了日志提示)
       - name: 🔐 Decrypt Sensitive Assets
         run: |
           mkdir -p assets
 
-          # 定义颜色
-          YELLOW='\033[1;33m'
-          CYAN='\033[0;36m'
-          NC='\033[0m'
-
           echo "::group::🔓 Decryption Process"
 
           if [ -n "${{ secrets.FILTER_DECRYPT_PASS }}" ]; then
-            echo -e "${CYAN}🔐 Secret found! Decrypting filter.txt...${NC}"
+            echo "🔐 Secret found! Decrypting filter.txt..."
             
             gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.FILTER_DECRYPT_PASS }}" \
             --output assets/filter.txt assets/filter.txt.gpg
             
             FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
-            echo -e "✅ Decryption success. File size: ${GREEN}$FILE_SIZE${NC}"
+            echo "✅ Decryption success. File size: $FILE_SIZE"
           else
-            echo -e "${YELLOW}⚠️ Secret not found (Forked repo?). Creating placeholder...${NC}"
+            echo "⚠️ Secret not found (Forked repo?). Creating placeholder..."
             echo "" > assets/filter.txt
           fi
 
           echo "::endgroup::"
 
-      # 9. 构建 APK
       - name: 🏗️ Build APK (Debug - ARM64)
         env:
           SENTRY_SKIP_UPLOAD: true
@@ -127,7 +107,6 @@ jobs:
           echo "::notice title=Build Started::Building debug APK for Android ARM64..."
           flutter build apk --debug --target-platform android-arm64
 
-      # 10. (新增) 生成构建摘要，显示在 Action 首页
       - name: 🎉 Build Summary
         if: success()
         run: |
