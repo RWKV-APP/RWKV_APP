@@ -28,7 +28,7 @@ Future<File?> gen() async {
     final version = versionParts[0]; // 例如 "1.8.1"
     final buildNumber = versionParts[1]; // 例如 "439"
 
-    final text = "RWKV Chat $version ($buildNumber)";
+    final text = "debug mode";
 
     // 创建输出目录
     final outputDir = Directory('tools/output');
