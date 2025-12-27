@@ -5,7 +5,7 @@ run-name: ${{ github.ref_name }} macOS .dmg universal + Notarization
 on:
   push:
     tags:
-      - '[0-9]*'
+      - "[0-9]*"
   workflow_dispatch:
 
 concurrency:
@@ -65,8 +65,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.38.5'
-          channel: 'stable'
+          flutter-version: "3.38.5"
+          channel: "stable"
           cache: true
 
       - name: Override dependency path
@@ -78,7 +78,7 @@ jobs:
       - name: 🐍 Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: "3.2"
           bundler-cache: true
 
       - name: 📦 Install fastlane dependencies
@@ -86,9 +86,9 @@ jobs:
           cd fastlane
           bundle install
 
-      - name: 🔧 Fastlane: Prepare environment
+      - name: "🔧 Fastlane: Prepare environment"
         run: |
-          echo "::group::🔧 Fastlane: Environment preparation"
+          echo "::group:: 🔧 Fastlane: Environment preparation"
           cd fastlane
           # 执行环境替换（chat 环境）
           bundle exec fastlane global_replace env:chat
@@ -153,32 +153,32 @@ jobs:
           DMG_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_macos-universal.dmg"
           APP_NAME="zone.app"
           VOLUME_NAME="RWKV Chat"
-          
+
           # 进入 Release 目录
           cd build/macos/Build/Products/Release
-          
+
           # 创建临时 DMG 目录
           DMG_TEMP_DIR=$(mktemp -d)
           DMG_TEMP_PATH="$DMG_TEMP_DIR/dmg"
           mkdir -p "$DMG_TEMP_PATH"
-          
+
           # 复制 .app 到临时目录
           cp -R "$APP_NAME" "$DMG_TEMP_PATH/"
-          
+
           # 创建 Applications 文件夹的符号链接（经典的拖拽安装形式）
           ln -s /Applications "$DMG_TEMP_PATH/Applications"
-          
+
           # 创建临时 DMG（未压缩，用于自定义）
           TEMP_DMG="$DMG_TEMP_DIR/temp.dmg"
           hdiutil create -srcfolder "$DMG_TEMP_PATH" -volname "$VOLUME_NAME" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size 200m "$TEMP_DMG"
-          
+
           # 挂载临时 DMG
           DEVICE=$(hdiutil attach -readwrite -noverify -noautoopen "$TEMP_DMG" | egrep '^/dev/' | sed 1q | awk '{print $1}')
           MOUNT_POINT=$(hdiutil info | grep "$DEVICE" | awk 'END {print $3}')
-          
+
           # 等待挂载完成
           sleep 2
-          
+
           # 设置窗口大小和位置（经典的拖拽安装布局）
           # 设置图标大小和网格
           osascript <<EOF
@@ -202,16 +202,16 @@ jobs:
               end tell
             end tell
           EOF
-          
+
           # 卸载 DMG
           hdiutil detach "$DEVICE"
-          
+
           # 转换为压缩的只读 DMG
           hdiutil convert "$TEMP_DMG" -format UDZO -imagekey zlib-level=9 -o "$DMG_NAME"
-          
+
           # 清理临时文件
           rm -rf "$DMG_TEMP_DIR"
-          
+
           # ✅ 签名 DMG 文件
           IDENTITY="Developer ID Application: Shenzhen Yuanshi Intelligence Co., Ltd. (3FTQ9PH6TL)"
           echo "Signing DMG..."
@@ -272,7 +272,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: 📦 Install dependencies
         if: startsWith(github.ref, 'refs/tags/')

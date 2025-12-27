@@ -5,7 +5,7 @@ run-name: ${{ github.ref_name }} iOS TestFlight
 on:
   push:
     tags:
-      - '[0-9]*' # 仅在打 tag 时触发
+      - "[0-9]*" # 仅在打 tag 时触发
   workflow_dispatch:
 
 concurrency:
@@ -34,8 +34,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.38.5'
-          channel: 'stable'
+          flutter-version: "3.38.5"
+          channel: "stable"
           cache: true
 
       - name: Override dependency path
@@ -47,7 +47,7 @@ jobs:
       - name: 🐍 Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: "3.2"
           bundler-cache: true
 
       - name: 📦 Install fastlane dependencies
@@ -55,7 +55,7 @@ jobs:
           cd fastlane
           bundle install
 
-      - name: 🔧 Fastlane: Prepare environment
+      - name: "🔧 Fastlane: Prepare environment"
         run: |
           echo "::group::🔧 Fastlane: Environment preparation"
           cd fastlane
