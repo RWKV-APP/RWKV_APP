@@ -139,11 +139,11 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
-          HF_REPO_ID: ${{ secrets.HF_REPO_ID || 'rwkv-app/RWKV-Chat' }}
+          HF_DATASETS_ID: ${{ secrets.HF_DATASETS_ID || 'HaloWang/rwkv-chat' }}
         run: |
           Write-Host "::group::📤 Uploading to HuggingFace"
           python scripts/upload_to_hf.py `
-            --repo-id "$env:HF_REPO_ID" `
+            --repo-id "$env:HF_DATASETS_ID" `
             --file "${{ steps.create-zip.outputs.zip_path }}" `
             --path-in-repo "windows-x64/${{ steps.create-zip.outputs.zip_name }}" `
             --hf-token "$env:HF_TOKEN" `
