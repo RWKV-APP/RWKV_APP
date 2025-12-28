@@ -99,7 +99,7 @@ module Fastlane
         end
 
         # 创建 DMG
-        dmg_name = "#{project_name}_#{version_number}_#{build_number}_macos.dmg"
+        dmg_name = "#{project_name}_#{version_number}_#{build_number}_macos-universal.dmg"
         dmg_path = File.join(project_root, "build/macos/#{dmg_name}")
         
         UI.message("Creating DMG: #{dmg_name}...")
