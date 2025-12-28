@@ -5,19 +5,24 @@ module Fastlane
         UI.message("The github_release plugin is working.")
 
         repo = params[:repo]
-        version = params[:version]
+        full_version = params[:version]
         file_path = params[:file_path]
         branch = params[:branch] || "dev"
-        release_name = params[:release_name] || version
-        release_notes = params[:release_notes] || "Release #{version}"
+        release_name = params[:release_name] || full_version
+        release_notes = params[:release_notes] || "Release #{full_version}"
 
         if repo.nil? || repo.empty?
           UI.user_error!("You have to provide a repo (e.g., 'RWKV-APP/RWKV_APP')")
         end
 
-        if version.nil? || version.empty?
+        if full_version.nil? || full_version.empty?
           UI.user_error!("You have to provide a version")
         end
+
+        # Extract semantic version (e.g., "3.4.0" from "3.4.0+612")
+        # Tag name should only be the semantic version, not including build number
+        version_parts = full_version.split('+')
+        version = version_parts[0] # e.g., "3.4.0"
 
         if file_path.nil? || !File.exist?(file_path)
           UI.user_error!("File not found at path: #{file_path}")
@@ -37,9 +42,9 @@ module Fastlane
           UI.user_error!("You are not authenticated with GitHub CLI. Please run: gh auth login")
         end
 
-        UI.message("Checking for existing release: #{version} in #{repo}")
+        UI.message("Checking for existing release: #{version} (tag) in #{repo}")
 
-        # Check if release exists
+        # Check if release exists (using semantic version as tag name)
         release_check = `gh release view #{version} --repo #{repo} 2>&1`
         release_exists = $?.success?
 
@@ -71,22 +76,34 @@ module Fastlane
           end
           commit_sha = commit_sha[1]
 
-          UI.message("Creating release #{version} from branch #{branch} (commit: #{commit_sha[0..7]})...")
+          UI.message("Creating release #{version} (tag) from branch #{branch} (commit: #{commit_sha[0..7]})...")
 
-          # Check if tag exists
+          # Check if tag exists (using semantic version as tag name)
           tag_check = `gh api repos/#{repo}/git/refs/tags/#{version} 2>&1`
           tag_exists = $?.success?
 
           if tag_exists
             UI.message("Tag #{version} already exists. Using existing tag...")
-            # Create release from existing tag
-            release_result = sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes '#{release_notes}' --target #{version}")
+            # Get the commit SHA that the tag points to
+            tag_ref = `gh api repos/#{repo}/git/refs/tags/#{version} 2>&1`
+            unless $?.success?
+              UI.user_error!("Failed to get tag #{version} from repository #{repo}")
+            end
+            tag_commit_sha = tag_ref.match(/"sha":"([^"]+)"/)
+            if tag_commit_sha.nil?
+              UI.user_error!("Failed to get commit SHA from tag #{version}")
+            end
+            tag_commit_sha = tag_commit_sha[1]
+            # Create release from existing tag using the commit SHA
+            # Use semantic version as tag name, but full version in release name
+            release_result = sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes '#{release_notes}' --target #{tag_commit_sha}")
           else
             UI.message("Creating tag #{version} on branch #{branch}...")
-            # Create tag first
+            # Create tag first (using semantic version as tag name)
             tag_result = sh("gh api repos/#{repo}/git/refs -X POST -f ref=refs/tags/#{version} -f sha=#{commit_sha}")
-            # Create release from the new tag
-            release_result = sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes '#{release_notes}' --target #{version}")
+            # Create release from the new tag using the commit SHA
+            # Use semantic version as tag name, but full version in release name
+            release_result = sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes '#{release_notes}' --target #{commit_sha}")
           end
 
           UI.success("Successfully created release #{version}")
