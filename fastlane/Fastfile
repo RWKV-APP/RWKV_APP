@@ -17,8 +17,7 @@ lane :all do |params|
   end
   if env == 'chat'
     git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: '*')
-    # Push to git remote using git command directly
-    sh('cd ..;git push;cd fastlane')
+    push_to_git_remote()
   end
   global_replace(env: env) # 替换环境变量
   build_assets() # 构建 assets
@@ -57,7 +56,7 @@ lane :all do |params|
     pubspec = YAML.load_file(pubspec_path)
     full_version = pubspec['version'] # e.g., "3.4.0+609"
 
-    upload_to_github_release(
+    github_release(
       repo: 'RWKV-APP/RWKV_APP',
       version: full_version,
       file_path: apk_path,
@@ -197,118 +196,6 @@ end
 
 # ✅ Shared
 
-lane :upload_to_github_release do |params|
-  repo = params[:repo] || 'RWKV-APP/RWKV_APP'
-  full_version = params[:version]
-  file_path = params[:file_path]
-  branch = params[:branch] || 'dev'
-  release_name = params[:release_name] || full_version
-  release_notes = params[:release_notes] || "Release #{full_version}"
-
-  if repo.nil? || repo.empty?
-    UI.user_error!("You have to provide a repo (e.g., 'RWKV-APP/RWKV_APP')")
-  end
-
-  if full_version.nil? || full_version.empty?
-    UI.user_error!('You have to provide a version')
-  end
-
-  # Extract semantic version (e.g., "3.4.0" from "3.4.0+612")
-  # Tag name should only be the semantic version, not including build number
-  version_parts = full_version.split('+')
-  version = version_parts[0] # e.g., "3.4.0"
-
-  if file_path.nil? || !File.exist?(file_path)
-    UI.user_error!("File not found at path: #{file_path}")
-  end
-
-  # Convert to absolute path
-  file_path = File.expand_path(file_path)
-
-  # Check if gh CLI is installed
-  unless system('which gh > /dev/null 2>&1')
-    UI.user_error!('GitHub CLI (gh) is not installed. Please install it first: https://cli.github.com/')
-  end
-
-  # Check if user is authenticated
-  auth_status = `gh auth status 2>&1`
-  unless $?.success?
-    UI.user_error!('You are not authenticated with GitHub CLI. Please run: gh auth login')
-  end
-
-  UI.message("Checking for existing release: #{version} (tag) in #{repo}")
-
-  # Check if release exists (using semantic version as tag name)
-  release_check = `gh release view #{version} --repo #{repo} 2>&1`
-  release_exists = $?.success?
-
-  if release_exists
-    UI.message("Release #{version} already exists. Uploading file to existing release...")
-    # Upload file to existing release (--clobber will overwrite if file exists)
-    sh("gh release upload #{version} '#{file_path}' --repo #{repo} --clobber")
-    UI.success("Successfully uploaded #{File.basename(file_path)} to release #{version}")
-  else
-    UI.message("Release #{version} does not exist. Creating new release...")
-
-    # Get the latest commit from the branch
-    branch_ref = `gh api repos/#{repo}/git/refs/heads/#{branch} 2>&1`
-    unless $?.success?
-      UI.user_error!("Failed to get branch #{branch} from repository #{repo}")
-    end
-
-    commit_sha = branch_ref.match(/"sha":"([^"]+)"/)
-    if commit_sha.nil?
-      UI.user_error!("Failed to get commit SHA from branch #{branch}")
-    end
-    commit_sha = commit_sha[1]
-
-    UI.message("Creating release #{version} (tag) from branch #{branch} (commit: #{commit_sha[0..7]})...")
-
-    # Check if tag exists (using semantic version as tag name)
-    tag_check = `gh api repos/#{repo}/git/refs/tags/#{version} 2>&1`
-    tag_exists = $?.success?
-
-    # Create temporary file for release notes to handle multi-line text safely
-    notes_file = File.join(Dir.tmpdir, "github_release_notes_#{Time.now.to_i}.txt")
-    File.write(notes_file, release_notes)
-
-    begin
-      if tag_exists
-        UI.message("Tag #{version} already exists. Using existing tag...")
-        # Get the commit SHA that the tag points to
-        tag_ref = `gh api repos/#{repo}/git/refs/tags/#{version} 2>&1`
-        unless $?.success?
-          UI.user_error!("Failed to get tag #{version} from repository #{repo}")
-        end
-        tag_commit_sha = tag_ref.match(/"sha":"([^"]+)"/)
-        if tag_commit_sha.nil?
-          UI.user_error!("Failed to get commit SHA from tag #{version}")
-        end
-        tag_commit_sha = tag_commit_sha[1]
-        # Create release from existing tag using the commit SHA
-        # Use semantic version as tag name, but full version in release name
-        sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes-file '#{notes_file}' --target #{tag_commit_sha} '#{file_path}'")
-      else
-        UI.message("Creating tag #{version} on branch #{branch}...")
-        # Create tag first (using semantic version as tag name)
-        sh("gh api repos/#{repo}/git/refs -X POST -f ref=refs/tags/#{version} -f sha=#{commit_sha}")
-        # Create release from the new tag using the commit SHA and upload file in one command
-        # Use semantic version as tag name, but full version in release name
-        sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes-file '#{notes_file}' --target #{commit_sha} '#{file_path}'")
-      end
-    ensure
-      # Clean up temporary notes file
-      if File.exist?(notes_file)
-        File.delete(notes_file)
-      end
-    end
-
-    UI.success("Successfully created release #{version} and uploaded #{File.basename(file_path)}")
-  end
-
-  UI.success("Release URL: https://github.com/#{repo}/releases/tag/#{version}")
-end
-
 lane :dart_fix do
   sh 'cd ..;dart fix --apply;cd fastlane'
 end
@@ -384,7 +271,7 @@ lane :macos_build_and_upload do |params|
 
   # 🔥 上传到 GitHub Release
   if upload_to_github
-    upload_to_github_release(
+    github_release(
       repo: 'RWKV-APP/RWKV_APP',
       version: full_version,
       file_path: dmg_path,
