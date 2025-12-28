@@ -69,8 +69,12 @@ module Fastlane
             sh("security unlock-keychain -p '#{keychain_password}' #{keychain_name}")
             sh("security default-keychain -s #{keychain_name}")
             
-            # 导入证书
-            sh("security import '#{temp_cert_path}' -k #{keychain_name} -P '#{certificate_password}' -T /usr/bin/codesign -T /usr/bin/security")
+            # 导入证书，使用 -A 允许所有应用程序访问
+            # 使用 -f pkcs12 明确指定格式
+            sh("security import '#{temp_cert_path}' -k #{keychain_name} -P '#{certificate_password}' -T /usr/bin/codesign -T /usr/bin/security -A -f pkcs12")
+            
+            # 设置 keychain 为可信任
+            sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k '#{keychain_password}' #{keychain_name}") rescue nil
             
             # 查找证书身份
             identity = identity_id || `security find-identity -v -p codesigning #{keychain_name} | grep -o '"[^"]*"' | head -1 | tr -d '"'`.strip
@@ -81,13 +85,37 @@ module Fastlane
             
             UI.message("Signing with identity: #{identity}")
             
-            # 签名应用
-            sh("codesign --force --deep --sign '#{identity}' '#{app_path}'")
+            # 递归签名所有嵌套的框架和插件（不使用 --deep，手动签名更可靠）
+            frameworks_path = File.join(app_path, 'Contents/Frameworks')
+            if File.exist?(frameworks_path)
+              UI.message("Signing nested frameworks...")
+              Dir.glob(File.join(frameworks_path, '*.framework')).each do |framework|
+                UI.message("  Signing: #{File.basename(framework)}")
+                sh("codesign --force --sign '#{identity}' --options runtime --timestamp --verbose '#{framework}'")
+              end
+              
+              # 签名插件
+              Dir.glob(File.join(frameworks_path, '*.dylib')).each do |dylib|
+                UI.message("  Signing: #{File.basename(dylib)}")
+                sh("codesign --force --sign '#{identity}' --options runtime --timestamp --verbose '#{dylib}'")
+              end
+            end
+            
+            # 签名主应用（不使用 --deep，因为所有嵌套组件已经手动签名）
+            UI.message("Signing main application...")
+            sh("codesign --force --sign '#{identity}' --options runtime --timestamp --verbose '#{app_path}'")
             
             # 验证签名
-            sh("codesign --verify --verbose '#{app_path}'")
+            UI.message("Verifying signature...")
+            sh("codesign --verify --verbose --strict '#{app_path}'")
+            
+            # 检查签名详情
+            sh("codesign -dv --verbose=4 '#{app_path}'")
+            
             UI.success("macOS app signed successfully")
             
+          rescue => e
+            UI.user_error!("Failed to sign macOS app: #{e.message}")
           ensure
             # 清理 keychain
             sh("security delete-keychain #{keychain_name}") rescue nil

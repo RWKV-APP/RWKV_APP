@@ -261,6 +261,7 @@ lane :macos_build_and_upload do |params|
 
   # Build macOS DMG
   dmg_path = run_flutter_build_macos_dmg(
+    certificate_path: ENV['MACOS_CERTIFICATE_PATH'],
     certificate_base64: ENV['MACOS_CERTIFICATE'],
     certificate_password: ENV['MACOS_CERTIFICATE_PWD'],
     identity_id: ENV['MACOS_IDENTITY_ID'],
