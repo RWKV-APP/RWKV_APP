@@ -1,0 +1,41 @@
+name: 'Decrypt Sensitive Assets (Windows)'
+description: 'Decrypt assets/filter.txt from assets/filter.txt.gpg using GPG on Windows'
+
+inputs:
+  filter_decrypt_pass:
+    description: 'Password for decrypting filter.txt.gpg'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 🔐 Decrypt Sensitive Assets
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path assets | Out-Null
+        Write-Host "::group::🔓 Decryption Process"
+        if ("${{ inputs.filter_decrypt_pass }}") {
+          Write-Host "🔐 Secret found! Decrypting filter.txt..."
+          # 使用 gpg 解密（需要先安装 gpg）
+          # 如果 gpg 不可用，创建占位符
+          if (Get-Command gpg -ErrorAction SilentlyContinue) {
+            $passphrase = "${{ inputs.filter_decrypt_pass }}"
+            # 使用 --passphrase 参数，而不是 --passphrase-fd（Windows 上更可靠）
+            gpg --quiet --batch --yes --decrypt --passphrase="$passphrase" --output assets/filter.txt assets/filter.txt.gpg
+            if ($LASTEXITCODE -eq 0 -and (Test-Path assets/filter.txt)) {
+              $fileSize = (Get-Item assets/filter.txt).Length
+              Write-Host "✅ Decryption success. File size: $fileSize bytes"
+            } else {
+              Write-Host "⚠️ Decryption failed. Creating placeholder..."
+              "" | Out-File -FilePath assets/filter.txt -Encoding utf8
+            }
+          } else {
+            Write-Host "⚠️ gpg not found. Creating placeholder..."
+            "" | Out-File -FilePath assets/filter.txt -Encoding utf8
+          }
+        } else {
+          Write-Host "⚠️ Secret not found. Creating placeholder..."
+          "" | Out-File -FilePath assets/filter.txt -Encoding utf8
+        }
+        Write-Host "::endgroup::"
+

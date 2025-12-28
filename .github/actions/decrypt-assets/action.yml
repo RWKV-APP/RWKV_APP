@@ -1,0 +1,28 @@
+name: 'Decrypt Sensitive Assets'
+description: 'Decrypt assets/filter.txt from assets/filter.txt.gpg using GPG'
+
+inputs:
+  filter_decrypt_pass:
+    description: 'Password for decrypting filter.txt.gpg'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 🔐 Decrypt Sensitive Assets
+      shell: bash
+      run: |
+        mkdir -p assets
+        echo "::group::🔓 Decryption Process"
+        if [ -n "${{ inputs.filter_decrypt_pass }}" ]; then
+          echo "🔐 Secret found! Decrypting filter.txt..."
+          gpg --quiet --batch --yes --decrypt --passphrase="${{ inputs.filter_decrypt_pass }}" \
+            --output assets/filter.txt assets/filter.txt.gpg
+          FILE_SIZE=$(ls -lh assets/filter.txt | awk '{print $5}')
+          echo "✅ Decryption success. File size: $FILE_SIZE"
+        else
+          echo "⚠️ Secret not found (Forked repo?). Creating placeholder..."
+          echo "" > assets/filter.txt
+        fi
+        echo "::endgroup::"
+

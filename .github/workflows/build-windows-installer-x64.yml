@@ -1,0 +1,194 @@
+name: Windows Installer x64
+
+run-name: ${{ github.ref_name }} Windows Installer x64
+
+on:
+  push:
+    tags:
+      - "[0-9]*"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows-installer-x64:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout rwkv_mobile_flutter dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MollySophia/rwkv_mobile_flutter
+          ref: dev
+          path: rwkv_mobile_flutter
+          fetch-depth: 1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.5"
+          channel: "stable"
+          cache: true
+
+      - name: 💿 Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --yes
+
+      - name: Override dependency path
+        run: |
+          echo "dependency_overrides:" > pubspec_overrides.yaml
+          echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
+          echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
+
+      - name: 📝 Create .env file
+        uses: ./.github/actions/create-env-windows
+        with:
+          x_api_key: ${{ secrets.X_API_KEY }}
+
+      - name: 🔐 Decrypt Sensitive Assets
+        uses: ./.github/actions/decrypt-assets-windows
+        with:
+          filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Windows x64
+        run: flutter build windows --release
+
+      - name: 🧹 Remove arm64/aarch64 DLLs
+        shell: pwsh
+        run: |
+          echo "::group::🧹 Cleaning up arm64/aarch64 DLLs"
+          $sourceDir = "build\windows\x64\runner\Release"
+          if (Test-Path $sourceDir) {
+            # 删除 arm64/aarch64 相关的 DLL 文件
+            $filesToRemove = @(
+              "*arm64*.dll",
+              "*aarch64*.dll",
+              "libomp140.aarch64.dll",
+              "rwkv_mobile-arm64.dll"
+            )
+            $removedCount = 0
+            foreach ($pattern in $filesToRemove) {
+              $files = Get-ChildItem -Path $sourceDir -Filter $pattern -ErrorAction SilentlyContinue
+              foreach ($file in $files) {
+                Remove-Item -Path $file.FullName -Force
+                Write-Host "✅ Removed: $($file.Name)"
+                $removedCount++
+              }
+            }
+            if ($removedCount -eq 0) {
+              Write-Host "ℹ️ No arm64/aarch64 DLLs found to remove"
+            } else {
+              Write-Host "✅ Removed $removedCount arm64/aarch64 DLL file(s)"
+            }
+          } else {
+            Write-Host "🚧 Source directory not found: $sourceDir"
+          }
+          echo "::endgroup::"
+
+      - name: 📦 Create Installer (Inno Setup)
+        id: create-installer
+        shell: pwsh
+        run: |
+          echo "::group::📦 Creating Windows Installer"
+          $versionLine = Get-Content pubspec.yaml | Select-String "^version:"
+          $version = ($versionLine -replace "version:\s*", "").Split("+")[0]
+          $buildNumber = ($versionLine -replace ".*\+", "")
+          if ([string]::IsNullOrEmpty($buildNumber)) { $buildNumber = "1" }
+
+          $installerName = "rwkv_chat_${version}_${buildNumber}_windows-x64-setup"
+          $installerFilename = "$installerName.exe"
+          $sourceDir = "build\windows\x64\runner\Release"
+          $outputDir = "build\windows\installer"
+          New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
+
+          $issContent = @"
+          [Setup]
+          AppId={{B8263530-8329-4360-844C-964687593675}
+          AppName=RWKV Chat
+          AppVersion=$version
+          AppPublisher=RWKV Community
+          DefaultDirName={autopf}\RWKV Chat
+          DisableProgramGroupPage=yes
+          OutputDir=$outputDir
+          OutputBaseFilename=$installerName
+          Compression=lzma
+          SolidCompression=yes
+          ArchitecturesInstallIn64BitMode=x64
+
+          [Languages]
+          Name: "english"; MessagesFile: "compiler:Default.isl"
+
+          [Tasks]
+          Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+
+          [Files]
+          Source: "$sourceDir\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+          [Icons]
+          Name: "{autoprograms}\RWKV Chat"; Filename: "{app}\zone.exe"
+          Name: "{autodesktop}\RWKV Chat"; Filename: "{app}\zone.exe"; Tasks: desktopicon
+
+          [Run]
+          Filename: "{app}\zone.exe"; Description: "{cm:LaunchProgram,RWKV Chat}"; Flags: nowait postinstall skipifsilent
+          "@
+
+          $issContent | Out-File -FilePath "setup.iss" -Encoding ASCII
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
+
+          # 这里的输出路径虽然包含反斜杠，但既然我们下面改用了通配符，这里仅作为日志检查即可，不影响上传
+          $installerPath = Join-Path $outputDir $installerFilename
+          if (Test-Path $installerPath) {
+            echo "installer_path=$installerPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            echo "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          } else { exit 1 }
+          echo "::endgroup::"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: false
+          # 修改点：使用正斜杠路径和通配符，确保能找到文件
+          files: build/windows/installer/*.exe
+
+      - name: 🛠️ Setup Python
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: 📦 Install dependencies
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: pip install huggingface_hub
+
+      - name: 📤 Upload to HuggingFace
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID || 'rwkv-app/RWKV-Chat' }}
+        run: |
+          Write-Host "::group::📤 Uploading to HuggingFace"
+          $installerPath = "${{ steps.create-installer.outputs.installer_path }}"
+          $installerName = Split-Path -Leaf $installerPath
+          python scripts/upload_to_hf.py `
+            --repo-id "$env:HF_REPO_ID" `
+            --file "$installerPath" `
+            --path-in-repo "windows-x64-installer/$installerName" `
+            --hf-token "$env:HF_TOKEN" `
+            --hf-endpoint "$env:HF_ENDPOINT"
+          Write-Host "✅ Upload completed"
+          Write-Host "::endgroup::"

@@ -1,0 +1,19 @@
+name: 'Create .env file'
+description: 'Create .env file with x-api-key from secrets'
+
+inputs:
+  x_api_key:
+    description: 'X-API-KEY value from secrets'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 📝 Create .env file
+      shell: bash
+      run: |
+        echo "::group::📝 Creating .env file"
+        echo "x-api-key=${{ inputs.x_api_key }}" > .env
+        echo "✅ .env created"
+        echo "::endgroup::"
+
