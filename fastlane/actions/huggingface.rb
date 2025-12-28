@@ -26,9 +26,37 @@ module Fastlane
         UI.message("Uploading #{file_path} to Hugging Face repository: #{repo_id} (type: #{repo_type})")
         UI.message("Path in repo: #{path_in_repo}")
 
-        # Check if huggingface_hub is installed
+        # Check if huggingface_hub is installed, install if missing
         unless system("python3 -c 'import huggingface_hub' 2>/dev/null")
-          UI.user_error!("huggingface_hub is not installed. Please install it with: pip install huggingface_hub")
+          UI.important("huggingface_hub is not installed. Installing it now...")
+          # Try multiple installation methods
+          installed = false
+          
+          # Try pip3 with --break-system-packages (for externally-managed environments)
+          if system("pip3 install --break-system-packages huggingface_hub 2>/dev/null")
+            installed = true
+          # Try pip3 with --user flag
+          elsif system("pip3 install --user huggingface_hub 2>/dev/null")
+            installed = true
+          # Try pip3 without flags
+          elsif system("pip3 install huggingface_hub 2>/dev/null")
+            installed = true
+          # Try pip with --break-system-packages
+          elsif system("pip install --break-system-packages huggingface_hub 2>/dev/null")
+            installed = true
+          # Try pip with --user flag
+          elsif system("pip install --user huggingface_hub 2>/dev/null")
+            installed = true
+          # Try pip without flags
+          elsif system("pip install huggingface_hub 2>/dev/null")
+            installed = true
+          end
+          
+          if installed
+            UI.success("Successfully installed huggingface_hub")
+          else
+            UI.user_error!("Failed to install huggingface_hub. Please install it manually with: pip install --break-system-packages huggingface_hub")
+          end
         end
 
         # Get absolute path to ensure Python script can find the file
@@ -39,6 +67,13 @@ module Fastlane
           from huggingface_hub import HfApi, login
           import sys
           import os
+          
+          # Clear proxy environment variables to avoid SOCKS proxy issues
+          proxy_vars = ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy', 
+                       'ALL_PROXY', 'all_proxy', 'SOCKS_PROXY', 'socks_proxy']
+          for var in proxy_vars:
+              if var in os.environ:
+                  del os.environ[var]
           
           repo_id = "#{repo_id}"
           file_path = "#{absolute_file_path}"
