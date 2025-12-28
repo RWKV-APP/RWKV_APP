@@ -24,10 +24,6 @@ lane :all do |params|
 
   apk_path = run_flutter_build_apk()
 
-  puts "apk_path: #{apk_path}"
-
-  return
-
   # 🔥 上传到蒲公英
   if upload_to_pgyer
     pgyer_api_key = ENV['PGYER_API_KEY']
@@ -69,6 +65,13 @@ lane :all do |params|
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
     )
   end
+
+  # 🔥 构建并上传 macOS DMG
+  macos_build_and_upload(
+    upload_to_github: true,
+    upload_to_huggingface: true,
+    huggingface_repo_id: huggingface_repo_id,
+  )
 
   # 🔥 上传到 TestFlight
   if upload_to_testflight
@@ -194,4 +197,52 @@ lane :upload_to_huggingface do |params|
     commit_message: params[:commit_message] || "Upload #{File.basename(file_path)}",
     repo_type: params[:repo_type] || 'dataset',
   )
+end
+
+lane :macos_build_and_upload do |params|
+  upload_to_github = params[:upload_to_github] == false ? false : true
+  upload_to_huggingface = params[:upload_to_huggingface] == false ? false : true
+  huggingface_repo_id = params[:huggingface_repo_id] || ENV['HF_REPO_ID'] || ENV['HF_DATABASE_ID']
+
+  # Get version info
+  require 'yaml'
+  project_root = File.expand_path('..', __dir__)
+  pubspec_path = File.join(project_root, 'pubspec.yaml')
+  pubspec = YAML.load_file(pubspec_path)
+  full_version = pubspec['version'] # e.g., "3.4.0+609"
+  version_parts = full_version.split('+')
+  version_number = version_parts[0]
+  build_number = version_parts[1] || '1'
+
+  # Build macOS DMG
+  dmg_path = run_flutter_build_macos_dmg(
+    certificate_base64: ENV['MACOS_CERTIFICATE'],
+    certificate_password: ENV['MACOS_CERTIFICATE_PWD'],
+    identity_id: ENV['MACOS_IDENTITY_ID'],
+  )
+
+  dmg_filename = File.basename(dmg_path)
+
+  # 🔥 上传到 GitHub Release
+  if upload_to_github
+    github_release(
+      repo: 'RWKV-APP/RWKV_APP',
+      version: full_version,
+      file_path: dmg_path,
+      branch: 'dev',
+      release_name: full_version,
+      release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
+    )
+  end
+
+  # 🔥 上传到 Hugging Face
+  if upload_to_huggingface && !huggingface_repo_id.nil? && !huggingface_repo_id.empty?
+    huggingface(
+      repo_id: huggingface_repo_id,
+      file_path: dmg_path,
+      path_in_repo: "macos-universal/#{dmg_filename}",
+      commit_message: "Upload #{version_number} (#{build_number}) - #{dmg_filename}",
+      repo_type: 'dataset',
+    )
+  end
 end
