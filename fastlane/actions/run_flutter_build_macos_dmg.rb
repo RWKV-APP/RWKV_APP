@@ -29,7 +29,7 @@ module Fastlane
         sh "cd #{project_root}; flutter build macos --release"
 
         # 构建后的 app 路径
-        app_path = File.join(project_root, 'build/macos/Build/Products/Release/Runner.app')
+        app_path = File.join(project_root, 'build/macos/Build/Products/Release/RWKV Chat.app')
         
         unless File.exist?(app_path)
           UI.user_error!("macOS app build failed: #{app_path} not found")
