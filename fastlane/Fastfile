@@ -41,21 +41,23 @@ lane :all do |params|
     pubspec_path = File.join(project_root, 'pubspec.yaml')
     pubspec = YAML.load_file(pubspec_path)
     full_version = pubspec['version'] # e.g., "3.4.0+609"
+    # Extract semantic version for release name (tag name is also semantic version)
+    semantic_version = full_version.split('+')[0] # e.g., "3.4.0"
 
     github_release(
       repo: 'RWKV-APP/RWKV_APP',
       version: full_version,
       file_path: apk_path,
       branch: 'dev',
-      release_name: full_version,
+      release_name: semantic_version,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
     )
   end
 
   # 🔥 构建并上传 macOS DMG
-  macos_build_and_upload(
-    upload_to_github: true,
-  )
+  # macos_build_and_upload(
+  #   upload_to_github: true,
+  # )
 
   # 🔥 上传到 TestFlight
   if upload_to_testflight
@@ -192,7 +194,7 @@ lane :macos_build_and_upload do |params|
       version: full_version,
       file_path: dmg_path,
       branch: 'dev',
-      release_name: full_version,
+      release_name: version_number,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
     )
   end

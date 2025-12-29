@@ -22,7 +22,14 @@ module Fastlane
         # Extract semantic version (e.g., "3.4.0" from "3.4.0+612")
         # Tag name should only be the semantic version, not including build number
         version_parts = full_version.split('+')
-        version = version_parts[0] # e.g., "3.4.0"
+        version = version_parts[0].strip # e.g., "3.4.0"
+        
+        # Ensure version doesn't contain build number (safety check)
+        if version.include?('+')
+          UI.user_error!("Invalid version format: tag name should not contain '+'. Got: #{version}")
+        end
+        
+        UI.message("Full version: #{full_version}, Tag name: #{version}")
 
         if file_path.nil? || !File.exist?(file_path)
           UI.user_error!("File not found at path: #{file_path}")
@@ -62,28 +69,37 @@ module Fastlane
           upload_result = sh("gh release upload #{version} '#{file_path}' --repo #{repo} --clobber")
           UI.success("Successfully uploaded #{file_name} to release #{version}")
         else
-          UI.message("Release #{version} does not exist. Creating new release...")
+          # Release doesn't exist, check if tag exists
+          project_root = File.expand_path('../..', __dir__)
           
-          # Get the latest commit from the branch
-          branch_ref = `gh api repos/#{repo}/git/refs/heads/#{branch} 2>&1`
-          unless $?.success?
-            UI.user_error!("Failed to get branch #{branch} from repository #{repo}")
+          # Clean up any incorrect tags that contain '+' (e.g., "3.4.0+612")
+          # These should not exist - tag name should only be semantic version
+          UI.message("Checking for incorrect tags containing '+' symbol...")
+          incorrect_local_tags = `cd #{project_root} && git tag -l "*+*" 2>&1`.split("\n").select { |t| t.strip == full_version }
+          incorrect_local_tags.each do |incorrect_tag|
+            UI.important("Found incorrect local tag: #{incorrect_tag}. Deleting...")
+            sh("cd #{project_root} && git tag -d #{incorrect_tag} 2>&1")
           end
           
-          commit_sha = branch_ref.match(/"sha":"([^"]+)"/)
-          if commit_sha.nil?
-            UI.user_error!("Failed to get commit SHA from branch #{branch}")
+          # Check for incorrect remote tags
+          incorrect_remote_tag_check = `gh api repos/#{repo}/git/refs/tags/#{full_version} 2>&1`
+          if $?.success?
+            UI.important("Found incorrect remote tag: #{full_version}. Deleting...")
+            sh("gh api repos/#{repo}/git/refs/tags/#{full_version} -X DELETE 2>&1")
+            UI.success("Deleted incorrect remote tag: #{full_version}")
           end
-          commit_sha = commit_sha[1]
 
-          UI.message("Creating release #{version} (tag) from branch #{branch} (commit: #{commit_sha[0..7]})...")
+          # Check if tag exists locally
+          local_tag_check = `cd #{project_root} && git tag -l #{version} 2>&1`
+          local_tag_exists = local_tag_check.strip == version
 
-          # Check if tag exists (using semantic version as tag name)
+          # Check if tag exists on remote (using semantic version as tag name)
           tag_check = `gh api repos/#{repo}/git/refs/tags/#{version} 2>&1`
-          tag_exists = $?.success?
+          remote_tag_exists = $?.success?
 
-          if tag_exists
-            UI.message("Tag #{version} already exists. Using existing tag...")
+          if remote_tag_exists
+            UI.message("Tag #{version} already exists on remote. Release does not exist. Creating release from existing tag...")
+            
             # Get the commit SHA that the tag points to
             tag_ref = `gh api repos/#{repo}/git/refs/tags/#{version} 2>&1`
             unless $?.success?
@@ -94,22 +110,68 @@ module Fastlane
               UI.user_error!("Failed to get commit SHA from tag #{version}")
             end
             tag_commit_sha = tag_commit_sha[1]
-            # Create release from existing tag using the commit SHA
-            # Use semantic version as tag name, but full version in release name
+            
+            # Ensure local tag exists too (for consistency)
+            unless local_tag_exists
+              UI.message("Creating local tag #{version} to match remote...")
+              tag_create_result = sh("cd #{project_root} && git tag #{version} #{tag_commit_sha}")
+              UI.success("Created local tag #{version}")
+            end
+            
+            # Create release from existing tag
             release_result = sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes '#{release_notes}' --target #{tag_commit_sha}")
+            UI.success("Successfully created release #{version} from existing tag")
           else
-            UI.message("Creating tag #{version} on branch #{branch}...")
-            # Create tag first (using semantic version as tag name)
-            tag_result = sh("gh api repos/#{repo}/git/refs -X POST -f ref=refs/tags/#{version} -f sha=#{commit_sha}")
-            # Create release from the new tag using the commit SHA
-            # Use semantic version as tag name, but full version in release name
+            UI.message("Tag #{version} does not exist. Creating tag and release...")
+            
+            # Get the latest commit from the branch
+            branch_ref = `gh api repos/#{repo}/git/refs/heads/#{branch} 2>&1`
+            unless $?.success?
+              UI.user_error!("Failed to get branch #{branch} from repository #{repo}")
+            end
+            
+            commit_sha = branch_ref.match(/"sha":"([^"]+)"/)
+            if commit_sha.nil?
+              UI.user_error!("Failed to get commit SHA from branch #{branch}")
+            end
+            commit_sha = commit_sha[1]
+
+            UI.message("Creating tag #{version} on branch #{branch} (commit: #{commit_sha[0..7]})...")
+            
+            # Create tag in local git repository first (if it doesn't exist)
+            unless local_tag_exists
+              UI.message("Creating local tag #{version}...")
+              tag_create_result = sh("cd #{project_root} && git tag #{version} #{commit_sha}")
+              UI.success("Created local tag #{version}")
+            else
+              UI.message("Local tag #{version} already exists")
+            end
+            
+            # Push tag to remote
+            UI.message("Pushing tag #{version} to remote...")
+            tag_push_result = sh("cd #{project_root} && git push origin #{version} 2>&1")
+            unless $?.success?
+              # If push fails, try to create via API as fallback
+              tag_check_retry = `gh api repos/#{repo}/git/refs/tags/#{version} 2>&1`
+              unless $?.success?
+                UI.message("Git push failed, creating tag via GitHub API...")
+                tag_result = sh("gh api repos/#{repo}/git/refs -X POST -f ref=refs/tags/#{version} -f sha=#{commit_sha}")
+                UI.success("Created tag #{version} via GitHub API")
+              else
+                UI.message("Tag #{version} already exists on remote (push was not needed)")
+              end
+            else
+              UI.success("Pushed tag #{version} to remote")
+            end
+            
+            # Create release from the new tag
+            UI.message("Creating release #{version} from new tag...")
             release_result = sh("gh release create #{version} --repo #{repo} --title '#{release_name}' --notes '#{release_notes}' --target #{commit_sha}")
+            UI.success("Successfully created release #{version}")
           end
 
-          UI.success("Successfully created release #{version}")
-
-          # Upload file to the new release
-          upload_result = sh("gh release upload #{version} '#{file_path}' --repo #{repo}")
+          # Upload file to the release (whether it was just created or already existed)
+          upload_result = sh("gh release upload #{version} '#{file_path}' --repo #{repo} --clobber")
           UI.success("Successfully uploaded #{File.basename(file_path)} to release #{version}")
         end
 
