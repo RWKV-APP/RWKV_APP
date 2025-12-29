@@ -72,12 +72,12 @@ class CompletionListItem extends StatelessWidget {
             if (!CompletionState.generating.q) {
               return;
             }
-            // final sc = Scrollable.of(context);
-            // sc.position.animateTo(
-            //   sc.position.pixels + offset, //
-            //   duration: const Duration(milliseconds: 200),
-            //   curve: Curves.easeInOut,
-            // );
+            final sc = Scrollable.of(context);
+            sc.position.animateTo(
+              sc.position.pixels + offset, //
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
           }
         },
         child: content,
