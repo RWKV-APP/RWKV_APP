@@ -3,8 +3,6 @@ lane :all do |params|
   increase_version = params[:increase_version] == false ? false : true
   upload_to_testflight = params[:upload_to_testflight] == false ? false : true
   upload_to_pgyer = params[:upload_to_pgyer] == false ? false : true
-  upload_to_huggingface = params[:upload_to_huggingface] == false ? false : true
-  huggingface_repo_id = params[:huggingface_repo_id] || ENV['HF_DATASETS_ID']
   skip_git_reset = params[:skip_git_reset] == true ? true : false
 
   build_number = raw_increase_build_number()
@@ -34,18 +32,6 @@ lane :all do |params|
     )
   end
 
-  # 🔥 上传到 Hugging Face
-  if upload_to_huggingface && !huggingface_repo_id.nil? && !huggingface_repo_id.empty?
-    apk_filename = apk_path.split('/').last
-    huggingface(
-      repo_id: huggingface_repo_id,
-      file_path: apk_path,
-      path_in_repo: "android-arm64/#{apk_filename}",
-      commit_message: "Upload #{version_number} (#{build_number}) - #{apk_filename}",
-      repo_type: 'dataset',
-    )
-  end
-
   # 🔥 上传到 GitHub Release
   upload_to_github = params[:upload_to_github] == false ? false : true
   if upload_to_github
@@ -69,8 +55,6 @@ lane :all do |params|
   # 🔥 构建并上传 macOS DMG
   macos_build_and_upload(
     upload_to_github: true,
-    upload_to_huggingface: true,
-    huggingface_repo_id: huggingface_repo_id,
   )
 
   # 🔥 上传到 TestFlight
@@ -138,51 +122,6 @@ lane :test do |params|
   ios_upload(groups: ['External'])
 end
 
-lane :test_huggingface_upload do |params|
-  # 获取 Hugging Face 配置
-  repo_id = params[:repo_id] || ENV['HF_DATASETS_ID']
-  repo_type = params[:repo_type] || 'dataset'
-  path_in_repo = params[:path_in_repo] || 'test/empty_file.txt'
-
-  if repo_id.nil? || repo_id.empty?
-    UI.user_error!("You must provide :repo_id parameter or set HF_DATASETS_ID environment variable (e.g., 'HaloWang/rwkv-chat')")
-  end
-
-  # 创建临时空文件
-  test_file_path = File.join(Dir.tmpdir, "huggingface_test_empty_#{Time.now.to_i}.txt")
-  File.write(test_file_path, '')
-
-  UI.message('🧪 Testing Hugging Face upload with empty file')
-  UI.message("Repository: #{repo_id}")
-  UI.message("File path: #{test_file_path}")
-  UI.message("Path in repo: #{path_in_repo}")
-
-  begin
-    # 上传空文件到 Hugging Face
-    huggingface(
-      repo_id: repo_id,
-      file_path: test_file_path,
-      path_in_repo: path_in_repo,
-      commit_message: params[:commit_message] || "Test upload empty file - #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}",
-      repo_type: repo_type,
-    )
-
-    UI.success('✅ Successfully uploaded empty file to Hugging Face!')
-    UI.success("Repository: https://huggingface.co/datasets/#{repo_id}") if repo_type == 'dataset'
-    UI.success("Repository: https://huggingface.co/#{repo_id}") if repo_type == 'model'
-    UI.success("File: https://huggingface.co/datasets/#{repo_id}/resolve/main/#{path_in_repo}") if repo_type == 'dataset'
-    UI.success("File: https://huggingface.co/#{repo_id}/resolve/main/#{path_in_repo}") if repo_type == 'model'
-  rescue => e
-    UI.user_error!("❌ Failed to upload empty file to Hugging Face: #{e.message}")
-  ensure
-    # 清理临时文件
-    if File.exist?(test_file_path)
-      File.delete(test_file_path)
-      UI.message('🧹 Cleaned up temporary test file')
-    end
-  end
-end
-
 lane :lint do |params|
   raw_change_analysis_options()
   dart_fix()
@@ -223,31 +162,8 @@ lane :android_play_store do
   )
 end
 
-lane :upload_to_huggingface do |params|
-  repo_id = params[:repo_id] || ENV['HF_DATASETS_ID']
-  file_path = params[:file_path]
-
-  if repo_id.nil? || repo_id.empty?
-    UI.user_error!("You must provide :repo_id parameter or set HF_DATASETS_ID environment variable (e.g., 'HaloWang/rwkv-chat')")
-  end
-
-  if file_path.nil? || !File.exist?(file_path)
-    UI.user_error!("File not found: #{file_path}")
-  end
-
-  huggingface(
-    repo_id: repo_id,
-    file_path: file_path,
-    path_in_repo: params[:path_in_repo] || File.basename(file_path),
-    commit_message: params[:commit_message] || "Upload #{File.basename(file_path)}",
-    repo_type: params[:repo_type] || 'dataset',
-  )
-end
-
 lane :macos_build_and_upload do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
-  upload_to_huggingface = params[:upload_to_huggingface] == false ? false : true
-  huggingface_repo_id = params[:huggingface_repo_id] || ENV['HF_DATASETS_ID']
 
   # Get version info
   require 'yaml'
@@ -278,17 +194,6 @@ lane :macos_build_and_upload do |params|
       branch: 'dev',
       release_name: full_version,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
-    )
-  end
-
-  # 🔥 上传到 Hugging Face
-  if upload_to_huggingface && !huggingface_repo_id.nil? && !huggingface_repo_id.empty?
-    huggingface(
-      repo_id: huggingface_repo_id,
-      file_path: dmg_path,
-      path_in_repo: "macos-universal/#{dmg_filename}",
-      commit_message: "Upload #{version_number} (#{build_number}) - #{dmg_filename}",
-      repo_type: 'dataset',
     )
   end
 end
