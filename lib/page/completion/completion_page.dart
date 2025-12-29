@@ -36,7 +36,7 @@ class _CompletionPageState extends State<CompletionPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFF9E7C59) : const Color(0xFF8C3A3A);
+    final primaryColor = isDark ? const Color(0xFF9E7C59) : const Color(0xFF80B0CC);
     final backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
     final themeV2 = ThemeData(
       cardColor: Colors.white,
