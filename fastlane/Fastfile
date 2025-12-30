@@ -169,23 +169,82 @@ lane :macos_build_and_upload do |params|
 
   # Get version info
   require 'yaml'
+  require 'shellwords' # 必须引入，用于处理密码转义
   project_root = File.expand_path('..', __dir__)
   pubspec_path = File.join(project_root, 'pubspec.yaml')
   pubspec = YAML.load_file(pubspec_path)
-  full_version = pubspec['version'] # e.g., "3.4.0+609"
+  full_version = pubspec['version']
   version_parts = full_version.split('+')
   version_number = version_parts[0]
   build_number = version_parts[1] || '1'
 
-  # Build macOS DMG
-  dmg_path = run_flutter_build_macos_dmg(
-    certificate_path: ENV['MACOS_CERTIFICATE_PATH'],
-    certificate_base64: ENV['MACOS_CERTIFICATE'],
-    certificate_password: ENV['MACOS_CERTIFICATE_PWD'],
-    identity_id: ENV['MACOS_IDENTITY_ID'],
-  )
+  p12_path = ENV['MACOS_CERTIFICATE_PATH']
+  p12_pwd = ENV['MACOS_CERTIFICATE_PWD']
+  identity_id = ENV['MACOS_IDENTITY_ID']
 
-  dmg_filename = File.basename(dmg_path)
+  if p12_path && !p12_path.empty?
+    UI.user_error!("找不到证书文件：#{p12_path}") unless File.exist?(p12_path)
+  end
+
+  keychain_name = 'build_temp_keychain'
+  keychain_pwd = 'temp_password_123'
+  # 1. 核心修复：使用绝对路径，并在底层命令中包含 .keychain-db 后缀
+  keychain_db_path = File.expand_path("~/Library/Keychains/#{keychain_name}.keychain-db")
+  signing_identity = nil
+
+  if p12_path && !p12_path.empty? && p12_pwd && !p12_pwd.empty?
+    create_keychain(
+      name: keychain_name,
+      password: keychain_pwd,
+      default_keychain: false,
+      unlock: true,
+      timeout: 3600,
+    )
+
+    import_certificate(
+      keychain_name: keychain_name,
+      keychain_password: keychain_pwd,
+      certificate_path: p12_path,
+      certificate_password: p12_pwd,
+    )
+
+    unlock_keychain(
+      path: keychain_name, # 这里只传名字 "build_temp_keychain"
+      password: keychain_pwd,
+      add_to_search_list: true,
+    )
+
+    # 构造 macOS 10.12+ 要求的标准后缀路径
+    keychain_db_path = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
+
+    # 如果 shell 命令报错找不到，尝试这种写法：
+    sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k #{Shellwords.escape(keychain_pwd)} #{keychain_db_path}")
+
+    if identity_id && !identity_id.empty?
+      signing_identity = identity_id
+    else
+      # 3. 核心修复：指定从该特定钥匙串数据库查找身份
+      identity_output = `security find-identity -v -p codesigning #{keychain_db_path} | grep -o '"[^"]*"' | head -1 | tr -d '"'`.strip
+      signing_identity = identity_output
+      if signing_identity.empty?
+        UI.user_error!('无法从导入的证书中找到签名标识，请检查 .p12 内容')
+      end
+    end
+
+    UI.message("Using signing identity: #{signing_identity}")
+  end
+
+  begin
+    dmg_path = run_flutter_build_macos_dmg(
+      identity_id: signing_identity,
+      # 4. 传递全路径以确保 run_flutter_build_macos_dmg action 能够定位钥匙串
+      keychain_name: signing_identity ? keychain_db_path : nil,
+    )
+  ensure
+    if p12_path && !p12_path.empty?
+      delete_keychain(name: keychain_name)
+    end
+  end
 
   # 🔥 上传到 GitHub Release
   if upload_to_github

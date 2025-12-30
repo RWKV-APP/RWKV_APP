@@ -1,5 +1,3 @@
-require 'securerandom'
-require 'base64'
 require 'fileutils'
 
 module Fastlane
@@ -37,73 +35,33 @@ module Fastlane
 
         UI.message("macOS app built successfully: #{app_path}")
 
-        # 签名应用
-        certificate_path = params[:certificate_path]
-        certificate_base64 = params[:certificate_base64]
-        certificate_password = params[:certificate_password]
+        # 签名应用（证书和钥匙串已在 lane 中管理）
         identity_id = params[:identity_id]
+        keychain_name = params[:keychain_name]
 
-        # 处理证书：优先使用文件路径，如果没有则从 base64 解码
-        temp_cert_path = nil
-        if certificate_path && File.exist?(certificate_path)
-          temp_cert_path = certificate_path
-        elsif certificate_base64 && !certificate_base64.empty?
-          # 从 base64 解码证书
-          temp_cert_path = File.join(project_root, "build/macos/temp_cert_#{Time.now.to_i}.p12")
-          cert_data = Base64.decode64(certificate_base64)
-          File.binwrite(temp_cert_path, cert_data)
-          UI.message("Decoded certificate from base64")
-        end
-
-        if temp_cert_path && File.exist?(temp_cert_path)
-          UI.message("Signing macOS app with certificate...")
-          
-          # 导入证书到 keychain
-          keychain_name = "fastlane_macos_#{Time.now.to_i}"
-          keychain_password = SecureRandom.hex(16)
+        if identity_id && !identity_id.empty?
+          UI.message("Signing macOS app with identity: #{identity_id}...")
           
           begin
-            # 创建临时 keychain
-            sh("security create-keychain -p '#{keychain_password}' #{keychain_name}")
-            sh("security set-keychain-settings -t 3600 -u #{keychain_name}")
-            sh("security unlock-keychain -p '#{keychain_password}' #{keychain_name}")
-            sh("security default-keychain -s #{keychain_name}")
-            
-            # 导入证书，使用 -A 允许所有应用程序访问
-            # 使用 -f pkcs12 明确指定格式
-            sh("security import '#{temp_cert_path}' -k #{keychain_name} -P '#{certificate_password}' -T /usr/bin/codesign -T /usr/bin/security -A -f pkcs12")
-            
-            # 设置 keychain 为可信任
-            sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k '#{keychain_password}' #{keychain_name}") rescue nil
-            
-            # 查找证书身份
-            identity = identity_id || `security find-identity -v -p codesigning #{keychain_name} | grep -o '"[^"]*"' | head -1 | tr -d '"'`.strip
-            
-            if identity.empty?
-              UI.user_error!("Failed to find signing identity in certificate")
-            end
-            
-            UI.message("Signing with identity: #{identity}")
-            
             # 递归签名所有嵌套的框架和插件（不使用 --deep，手动签名更可靠）
             frameworks_path = File.join(app_path, 'Contents/Frameworks')
             if File.exist?(frameworks_path)
               UI.message("Signing nested frameworks...")
               Dir.glob(File.join(frameworks_path, '*.framework')).each do |framework|
                 UI.message("  Signing: #{File.basename(framework)}")
-                sh("codesign --force --sign '#{identity}' --options runtime --timestamp --verbose '#{framework}'")
+                sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{framework}'")
               end
               
               # 签名插件
               Dir.glob(File.join(frameworks_path, '*.dylib')).each do |dylib|
                 UI.message("  Signing: #{File.basename(dylib)}")
-                sh("codesign --force --sign '#{identity}' --options runtime --timestamp --verbose '#{dylib}'")
+                sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{dylib}'")
               end
             end
             
             # 签名主应用（不使用 --deep，因为所有嵌套组件已经手动签名）
             UI.message("Signing main application...")
-            sh("codesign --force --sign '#{identity}' --options runtime --timestamp --verbose '#{app_path}'")
+            sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{app_path}'")
             
             # 验证签名
             UI.message("Verifying signature...")
@@ -113,17 +71,11 @@ module Fastlane
             sh("codesign -dv --verbose=4 '#{app_path}'")
             
             UI.success("macOS app signed successfully")
-            
           rescue => e
             UI.user_error!("Failed to sign macOS app: #{e.message}")
-          ensure
-            # 清理 keychain
-            sh("security delete-keychain #{keychain_name}") rescue nil
-            # 清理临时证书文件
-            File.delete(temp_cert_path) if temp_cert_path && temp_cert_path.include?('temp_cert') && File.exist?(temp_cert_path)
           end
         else
-          UI.message("No certificate provided, skipping signing")
+          UI.message("No signing identity provided, skipping signing")
         end
 
         # 创建 DMG
@@ -162,26 +114,13 @@ module Fastlane
 
       def self.available_options
         [
-          FastlaneCore::ConfigItem.new(key: :certificate_path,
-                                       env_name: "MACOS_CERTIFICATE_PATH",
-                                       description: "Path to the p12 certificate file",
-                                       optional: true,
-                                       type: String),
-          FastlaneCore::ConfigItem.new(key: :certificate_base64,
-                                       env_name: "MACOS_CERTIFICATE",
-                                       description: "Base64 encoded p12 certificate",
-                                       optional: true,
-                                       sensitive: true,
-                                       type: String),
-          FastlaneCore::ConfigItem.new(key: :certificate_password,
-                                       env_name: "MACOS_CERTIFICATE_PWD",
-                                       description: "Password for the p12 certificate",
-                                       optional: true,
-                                       sensitive: true,
-                                       type: String),
           FastlaneCore::ConfigItem.new(key: :identity_id,
                                        env_name: "MACOS_IDENTITY_ID",
-                                       description: "Signing identity ID (Team ID)",
+                                       description: "Signing identity ID (e.g., 'Developer ID Application: Your Name (TEAM_ID)')",
+                                       optional: true,
+                                       type: String),
+          FastlaneCore::ConfigItem.new(key: :keychain_name,
+                                       description: "Keychain name where certificate is stored (for reference only, managed by lane)",
                                        optional: true,
                                        type: String),
         ]
@@ -189,4 +128,5 @@ module Fastlane
     end
   end
 end
+
 
