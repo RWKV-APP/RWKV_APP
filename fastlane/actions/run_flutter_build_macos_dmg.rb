@@ -6,127 +6,85 @@ module Fastlane
       def self.run(params)
         project_root = File.expand_path('../..', __dir__)
         pubspec_path = File.join(project_root, 'pubspec.yaml')
-
         pubspec_content = File.read(pubspec_path)
-        name_match = pubspec_content.match(/^name:\s*(.+)$/)
+
+        # 解析版本信息
         version_match = pubspec_content.match(/^version:\s*(.+)$/)
-
-        project_name = 'rwkv_chat'
-        version_info = version_match ? version_match[1].strip : '2.0.0+500'
-
-        # 解析版本号和构建号
+        version_info = version_match ? version_match[1].strip : '1.0.0+1'
         version_parts = version_info.split('+')
         version_number = version_parts[0]
         build_number = version_parts[1] || '1'
 
-        UI.message("Building macOS app for version #{version_info}...")
+        project_name = 'rwkv_chat'
+        UI.message("开始构建 macOS 版本: #{version_info}...")
 
-        # 执行构建命令
-        sh "cd #{project_root}; flutter clean"
-        sh "cd #{project_root}; flutter pub get"
-        sh "cd #{project_root}; flutter build macos --release"
+        # 1. Flutter 构建
+        sh "cd #{project_root} && flutter clean"
+        sh "cd #{project_root} && flutter pub get"
+        sh "cd #{project_root} && flutter build macos --release"
 
-        # 构建后的 app 路径
-        app_path = File.join(project_root, 'build/macos/Build/Products/Release/RWKV Chat.app')
-        
-        unless File.exist?(app_path)
-          UI.user_error!("macOS app build failed: #{app_path} not found")
-        end
+        app_folder_name = 'RWKV Chat.app'
+        app_path = File.join(project_root, "build/macos/Build/Products/Release/#{app_folder_name}")
 
-        UI.message("macOS app built successfully: #{app_path}")
+        UI.user_error!("构建失败，找不到 App: #{app_path}") unless File.exist?(app_path)
 
-        # 签名应用（证书和钥匙串已在 lane 中管理）
+        # 2. 签名 .app 内部组件（这是公证成功的关键）
         identity_id = params[:identity_id]
-        keychain_name = params[:keychain_name]
-
         if identity_id && !identity_id.empty?
-          UI.message("Signing macOS app with identity: #{identity_id}...")
-          
-          begin
-            # 递归签名所有嵌套的框架和插件（不使用 --deep，手动签名更可靠）
-            frameworks_path = File.join(app_path, 'Contents/Frameworks')
-            if File.exist?(frameworks_path)
-              UI.message("Signing nested frameworks...")
-              Dir.glob(File.join(frameworks_path, '*.framework')).each do |framework|
-                UI.message("  Signing: #{File.basename(framework)}")
-                sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{framework}'")
-              end
-              
-              # 签名插件
-              Dir.glob(File.join(frameworks_path, '*.dylib')).each do |dylib|
-                UI.message("  Signing: #{File.basename(dylib)}")
-                sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{dylib}'")
-              end
+          UI.header '正在签名 .app 内容...'
+          # 签名 Frameworks 和 dylib
+          frameworks_path = File.join(app_path, 'Contents/Frameworks')
+          if File.exist?(frameworks_path)
+            Dir.glob(File.join(frameworks_path, '*.{framework,dylib}')).each do |file|
+              sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{file}'")
             end
-            
-            # 签名主应用（不使用 --deep，因为所有嵌套组件已经手动签名）
-            UI.message("Signing main application...")
-            sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{app_path}'")
-            
-            # 验证签名
-            UI.message("Verifying signature...")
-            sh("codesign --verify --verbose --strict '#{app_path}'")
-            
-            # 检查签名详情
-            sh("codesign -dv --verbose=4 '#{app_path}'")
-            
-            UI.success("macOS app signed successfully")
-          rescue => e
-            UI.user_error!("Failed to sign macOS app: #{e.message}")
           end
-        else
-          UI.message("No signing identity provided, skipping signing")
+          # 签名主程序
+          sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{app_path}'")
         end
 
-        # 创建 DMG
-        dmg_name = "#{project_name}_#{version_number}_#{build_number}_macos-universal.dmg"
+        # 3. 创建带引导界面的 DMG
+        dmg_name = "#{project_name}_#{version_number}_#{build_number}_macos.dmg"
         dmg_path = File.join(project_root, "build/macos/#{dmg_name}")
-        
-        UI.message("Creating DMG: #{dmg_name}...")
-        
-        # 确保 build/macos 目录存在
+        background_path = File.join(project_root, 'assets/dmg_bg.png')
+
         FileUtils.mkdir_p(File.dirname(dmg_path))
-        
-        # 使用 create-dmg 或 hdiutil 创建 DMG
-        # 检查是否有 create-dmg
-        if system("which create-dmg > /dev/null 2>&1")
-          sh("create-dmg --volname '#{project_name}' --window-pos 200 120 --window-size 800 400 --icon-size 100 --app-drop-link 600 185 '#{dmg_path}' '#{app_path}'")
+        File.delete(dmg_path) if File.exist?(dmg_path)
+
+        UI.header '使用 create-dmg 生成视觉引导安装包...'
+
+        if system('which create-dmg > /dev/null 2>&1')
+          # 核心：配置拖拽坐标和背景
+          sh("create-dmg \
+            --volname 'RWKV Chat Installer' \
+            --background '#{background_path}' \
+            --window-pos 200 120 \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --icon '#{app_folder_name}' 160 190 \
+            --hide-extension '#{app_folder_name}' \
+            --app-drop-link 440 190 \
+            '#{dmg_path}' \
+            '#{app_path}'")
         else
-          # 使用 hdiutil 创建简单的 DMG
-          UI.message("Using hdiutil to create DMG...")
-          sh("hdiutil create -volname '#{project_name}' -srcfolder '#{app_path}' -ov -format UDZO '#{dmg_path}'")
+          UI.important('未找到 create-dmg，改用基础 hdiutil 打包')
+          sh("hdiutil create -volname 'RWKV Chat' -srcfolder '#{app_path}' -ov -format UDZO '#{dmg_path}'")
         end
 
-        unless File.exist?(dmg_path)
-          UI.user_error!("DMG creation failed: #{dmg_path} not found")
-        end
+        UI.success("DMG 创建成功: #{dmg_path}")
+        return "./build/macos/#{dmg_name}" # 返回相对路径供 Lane 使用
+      end
 
-        UI.success("DMG created successfully: #{dmg_name}")
-        UI.message("Output path: #{dmg_path}")
-
-        # Return the relative path for use in the lane
-        return "./build/macos/#{dmg_name}"
+      def self.available_options
+        [
+          FastlaneCore::ConfigItem.new(key: :identity_id, optional: true, type: String),
+          FastlaneCore::ConfigItem.new(key: :keychain_name, optional: true, type: String),
+        ]
       end
 
       def self.is_supported?(platform)
         platform == :mac
       end
-
-      def self.available_options
-        [
-          FastlaneCore::ConfigItem.new(key: :identity_id,
-                                       env_name: "MACOS_IDENTITY_ID",
-                                       description: "Signing identity ID (e.g., 'Developer ID Application: Your Name (TEAM_ID)')",
-                                       optional: true,
-                                       type: String),
-          FastlaneCore::ConfigItem.new(key: :keychain_name,
-                                       description: "Keychain name where certificate is stored (for reference only, managed by lane)",
-                                       optional: true,
-                                       type: String),
-        ]
-      end
     end
   end
 end
-
-
