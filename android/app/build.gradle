@@ -1,25 +1,16 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-// -----------------------------------------------------------
-// 1. 定义读取签名的逻辑
-// -----------------------------------------------------------
-def keystoreProperties = new Properties()
-// 这里的 rootProject 指的是 android 目录
-def keystorePropertiesFile = rootProject.file('key.properties')
-def isReleaseSigningReady = false
-
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    // 简单校验一下关键字段是否存在
-    if (keystoreProperties['storeFile'] && keystoreProperties['storePassword'] &&
-        keystoreProperties['keyAlias'] && keystoreProperties['keyPassword']) {
-        isReleaseSigningReady = true
-    }
-}
+// Load signing configuration
+// def keystoreProperties = new Properties()
+// def keystorePropertiesFile = rootProject.file('app/signing.properties')
+// if (keystorePropertiesFile.exists()) {
+//     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+// }
 
 android {
     namespace = "com.rwkvzone.chat"
@@ -37,6 +28,8 @@ android {
 
     defaultConfig {
         applicationId = "com.rwkvzone.chat"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdkVersion flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -44,22 +37,6 @@ android {
 
         ndk {
             abiFilters "arm64-v8a"
-        }
-    }
-
-    // -----------------------------------------------------------
-    // 2. 配置签名 Config
-    // -----------------------------------------------------------
-    signingConfigs {
-        release {
-            if (isReleaseSigningReady) {
-                keyAlias = keystoreProperties['keyAlias']
-                keyPassword = keystoreProperties['keyPassword']
-                // 注意：这里用 file() 包裹，路径是相对于 android/app/ 的
-                // 或者你在 key.properties 里写绝对路径
-                storeFile = file(keystoreProperties['storeFile'])
-                storePassword = keystoreProperties['storePassword']
-            }
         }
     }
 
@@ -71,24 +48,10 @@ android {
 
     buildTypes {
         debug {
-            // -----------------------------------------------------------
-            // 3. 核心逻辑：平滑降级
-            // 如果签名准备好了，Debug 模式也用 Release 签名（解决你的痛点）
-            // 如果没准备好（开源用户），自动回退到默认 debug 签名
-            // -----------------------------------------------------------
-            if (isReleaseSigningReady) {
-                signingConfig signingConfigs.release
-            } else {
-                signingConfig signingConfigs.debug
-            }
+            signingConfig signingConfigs.debug
         }
-        
         release {
-            // 如果签名没配置，这里打 Release 包会报错，这是正常的（防止别人乱发包）
-            if (isReleaseSigningReady) {
-                signingConfig signingConfigs.release
-            }
-            // 你的混淆配置
+            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
