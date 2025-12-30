@@ -138,7 +138,7 @@ module Fastlane
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :repo_id,
-                                       env_name: 'HF_DATASETS_ID',
+                                       env_name: 'HF_DATASETS_ID', # Updated to use HF_DATASETS_ID for consistency
                                        description: "Hugging Face repository ID (e.g., 'username/repo-name')",
                                        optional: false,
                                        type: String),

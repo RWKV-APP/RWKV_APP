@@ -15,6 +15,7 @@ lane :all do |params|
   end
   if env == 'chat'
     git_commit(message: version_number.to_s + '(' + build_number.to_s + ')', path: '*')
+    # Push changes to remote repository
     push_to_git_remote()
   end
   global_replace(env: env) # 替换环境变量
@@ -33,6 +34,7 @@ lane :all do |params|
   end
 
   # 🔥 上传到 GitHub Release
+  # Use github_release action for consistent release management
   upload_to_github = params[:upload_to_github] == false ? false : true
   if upload_to_github
     # Get full version from pubspec.yaml (read from project root)
@@ -286,6 +288,7 @@ lane :macos_build_and_upload do |params|
   end
 
   # 6. 上传到 GitHub Release
+  # Use github_release action for consistent release management
   if upload_to_github
     github_release(
       repo: 'RWKV-APP/RWKV_APP',
