@@ -55,9 +55,9 @@ lane :all do |params|
   end
 
   # 🔥 构建并上传 macOS DMG
-  # macos_build_and_upload(
-  #   upload_to_github: true,
-  # )
+  macos_build_and_upload(
+    upload_to_github: true,
+  )
 
   # 🔥 上传到 TestFlight
   if upload_to_testflight
@@ -167,9 +167,9 @@ end
 lane :macos_build_and_upload do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
 
-  # Get version info
+  # 1. 基础信息准备
   require 'yaml'
-  require 'shellwords' # 必须引入，用于处理密码转义
+  require 'shellwords'
   project_root = File.expand_path('..', __dir__)
   pubspec_path = File.join(project_root, 'pubspec.yaml')
   pubspec = YAML.load_file(pubspec_path)
@@ -178,21 +178,28 @@ lane :macos_build_and_upload do |params|
   version_number = version_parts[0]
   build_number = version_parts[1] || '1'
 
+  # 请确保此 Bundle ID 与 Apple Developer 后台一致
+  bundle_id = 'com.rwkv.chat.v7.100m'
+
   p12_path = ENV['MACOS_CERTIFICATE_PATH']
   p12_pwd = ENV['MACOS_CERTIFICATE_PWD']
-  identity_id = ENV['MACOS_IDENTITY_ID']
+  identity_id = ENV['MACOS_TEAM_ID']
 
-  if p12_path && !p12_path.empty?
-    UI.user_error!("找不到证书文件：#{p12_path}") unless File.exist?(p12_path)
-  end
-
+  # 2. Keychain 配置
   keychain_name = 'build_temp_keychain'
   keychain_pwd = 'temp_password_123'
-  # 1. 核心修复：使用绝对路径，并在底层命令中包含 .keychain-db 后缀
-  keychain_db_path = File.expand_path("~/Library/Keychains/#{keychain_name}.keychain-db")
+  # 关键修复：使用 -db 后缀，这是 macOS 的标准物理文件名后缀
+  keychain_db_path = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
   signing_identity = nil
 
-  if p12_path && !p12_path.empty? && p12_pwd && !p12_pwd.empty?
+  if p12_path && File.exist?(p12_path)
+    # 彻底清理旧的
+    # 只有当文件确实存在时才尝试删除
+    if File.exist?(keychain_db_path)
+      delete_keychain(name: keychain_name)
+    end
+
+    # 创建 Keychain
     create_keychain(
       name: keychain_name,
       password: keychain_pwd,
@@ -201,6 +208,7 @@ lane :macos_build_and_upload do |params|
       timeout: 3600,
     )
 
+    # 导入证书
     import_certificate(
       keychain_name: keychain_name,
       keychain_password: keychain_pwd,
@@ -208,45 +216,59 @@ lane :macos_build_and_upload do |params|
       certificate_password: p12_pwd,
     )
 
+    # 关键步骤：使用 Fastlane 原生 action 解锁并将其加入搜索列表 (add_to_search_list)
+    # 这一步是后续 security 命令能“看到”该钥匙串的前提
     unlock_keychain(
-      path: keychain_name, # 这里只传名字 "build_temp_keychain"
+      path: keychain_name,
       password: keychain_pwd,
       add_to_search_list: true,
     )
 
-    # 构造 macOS 10.12+ 要求的标准后缀路径
-    keychain_db_path = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
-
-    # 如果 shell 命令报错找不到，尝试这种写法：
+    # 核心修复：手动设置 Partition List，防止签名时弹出密码输入框
+    # 注意这里使用的是上面定义的带 -db 的绝对路径
     sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k #{Shellwords.escape(keychain_pwd)} #{keychain_db_path}")
 
-    if identity_id && !identity_id.empty?
-      signing_identity = identity_id
-    else
-      # 3. 核心修复：指定从该特定钥匙串数据库查找身份
-      identity_output = `security find-identity -v -p codesigning #{keychain_db_path} | grep -o '"[^"]*"' | head -1 | tr -d '"'`.strip
-      signing_identity = identity_output
-      if signing_identity.empty?
-        UI.user_error!('无法从导入的证书中找到签名标识，请检查 .p12 内容')
-      end
-    end
-
+    # 获取签名标识
+    identity_output = `security find-identity -v -p codesigning #{keychain_db_path} | grep -o '"[^"]*"' | head -1 | tr -d '"'`.strip
+    signing_identity = identity_output
     UI.message("Using signing identity: #{signing_identity}")
   end
 
   begin
+    # 3. 编译 DMG (确保已开启 Hardened Runtime 以通过公证)
     dmg_path = run_flutter_build_macos_dmg(
       identity_id: signing_identity,
-      # 4. 传递全路径以确保 run_flutter_build_macos_dmg action 能够定位钥匙串
       keychain_name: signing_identity ? keychain_db_path : nil,
     )
+
+    # 核心修复：确保 dmg_path 是绝对路径
+    # 使用之前定义的 project_root 来锚定路径
+    absolute_dmg_path = File.expand_path(dmg_path, project_root)
+    UI.message("准备公证文件，绝对路径为: #{absolute_dmg_path}")
+
+    # 4. 🔥 公证 (Notarization)
+    UI.header '开始公证 (Notarizing)...'
+
+    # 使用绝对路径调用 notarytool
+    sh("xcrun notarytool submit #{Shellwords.escape(absolute_dmg_path)} " \
+    "--apple-id #{Shellwords.escape(ENV['APPLE_ID_EMAIL'])} " \
+    "--password #{Shellwords.escape(ENV['MACOS_APP_PASSWORD'])} " \
+    "--team-id #{Shellwords.escape(ENV['MACOS_TEAM_ID'])} " \
+    '--wait')
+
+    # 5. 🔥 钉住证书 (Stapler)
+    UI.message '公证成功，正在执行 Staple...'
+    sh("xcrun stapler staple #{Shellwords.escape(absolute_dmg_path)}")
+
+    UI.success '✅ macOS 应用公证并缝合完成！'
   ensure
-    if p12_path && !p12_path.empty?
+    # 无论结果如何，清理临时钥匙串
+    if p12_path && File.exist?(p12_path)
       delete_keychain(name: keychain_name)
     end
   end
 
-  # 🔥 上传到 GitHub Release
+  # 6. 上传到 GitHub Release
   if upload_to_github
     github_release(
       repo: 'RWKV-APP/RWKV_APP',
