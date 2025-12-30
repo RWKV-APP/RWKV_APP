@@ -52,6 +52,23 @@ lane :all do |params|
       release_name: semantic_version,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
     )
+
+    # 🔥 上传到 Hugging Face (android-arm64)
+    if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
+      absolute_apk_path = File.expand_path(apk_path, project_root)
+      apk_filename = File.basename(apk_path)
+      UI.header '上传 APK 到 Hugging Face'
+      huggingface(
+        repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+        file_path: absolute_apk_path,
+        path_in_repo: "android-arm64/#{apk_filename}",
+        commit_message: "Upload APK #{apk_filename} (v#{full_version})",
+        repo_type: 'dataset',
+      )
+      UI.success '✅ APK 已上传到 Hugging Face'
+    else
+      UI.important '跳过 Hugging Face 上传 (HF_TOKEN 未设置)'
+    end
   end
 
   # 🔥 构建并上传 macOS DMG
@@ -278,5 +295,62 @@ lane :macos_build_and_upload do |params|
       release_name: version_number,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
     )
+
+    # 🔥 上传到 Hugging Face (macos-universal)
+    if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
+      dmg_filename = File.basename(dmg_path)
+      UI.header '上传 DMG 到 Hugging Face'
+      huggingface(
+        repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+        file_path: absolute_dmg_path,
+        path_in_repo: "macos-universal/#{dmg_filename}",
+        commit_message: "Upload DMG #{dmg_filename} (v#{full_version})",
+        repo_type: 'dataset',
+      )
+      UI.success '✅ DMG 已上传到 Hugging Face'
+    else
+      UI.important '跳过 Hugging Face 上传 (HF_TOKEN 未设置)'
+    end
   end
+end
+
+# 测试上传到 Hugging Face
+lane :test_huggingface do |params|
+  # 从参数或环境变量获取配置
+  repo_id = params[:repo_id] || ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat'
+  file_path = params[:file_path] || ENV['HF_FILE_PATH']
+  path_in_repo = params[:path_in_repo] || ENV['HF_PATH_IN_REPO']
+  commit_message = params[:commit_message] || ENV['HF_COMMIT_MESSAGE'] || 'Test upload via fastlane'
+  repo_type = params[:repo_type] || ENV['HF_REPO_TYPE'] || 'dataset'
+
+  # 如果没有提供文件路径，创建一个测试文件
+  if file_path.nil? || file_path.empty?
+    require 'fileutils'
+    test_file_path = File.join(Dir.tmpdir, "fastlane_test_#{Time.now.to_i}.txt")
+    test_content = <<~CONTENT
+      Fastlane Hugging Face Upload Test
+      Created at: #{Time.now}
+      This is a test file for verifying the Hugging Face upload functionality.
+    CONTENT
+    File.write(test_file_path, test_content)
+    file_path = test_file_path
+    UI.message("创建测试文件: #{file_path}")
+  end
+
+  UI.header '准备上传到 Hugging Face'
+  UI.message("Repository: #{repo_id}")
+  UI.message("File: #{file_path}")
+  UI.message("Path in repo: #{path_in_repo || File.basename(file_path)}")
+  UI.message("Repo type: #{repo_type}")
+
+  # 调用 huggingface action
+  huggingface(
+    repo_id: repo_id,
+    file_path: file_path,
+    path_in_repo: path_in_repo,
+    commit_message: commit_message,
+    repo_type: repo_type,
+  )
+
+  UI.success '✅ 上传完成！'
 end

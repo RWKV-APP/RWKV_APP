@@ -103,8 +103,8 @@ module Fastlane
         File.write(script_file, script)
 
         begin
-          # Execute the Python script without timeout (for large file uploads)
-          result = sh("python3 #{script_file}", timeout: nil)
+          # Execute the Python script (for large file uploads, this may take a while)
+          result = sh("python3 #{script_file}")
           UI.success('Successfully uploaded to Hugging Face!')
           UI.success("Repository: https://huggingface.co/datasets/#{repo_id}") if repo_type == 'dataset'
           UI.success("Repository: https://huggingface.co/#{repo_id}") if repo_type == 'model'
