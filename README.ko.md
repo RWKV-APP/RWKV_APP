@@ -31,6 +31,8 @@ RWKV App은 멀티턴 대화, 텍스트 음성 변환(TTS), 시각적 이해 및
 
 ### 다운로드
 
+**공식 다운로드 페이지：[https://rwkv.halowang.cloud/](https://rwkv.halowang.cloud/)**
+
 <table>
 <thead>
 <tr>
@@ -44,7 +46,7 @@ RWKV App은 멀티턴 대화, 텍스트 음성 변환(TTS), 시각적 이해 및
 <tbody>
 <tr>
 <td style="text-align: center;">Android APK 다운로드 링크</td>
-<td style="text-align: center;"><a href="https://play.google.com/store/apps/details?id=com.rwkvzone.chat">Google Play</a> / <a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
+<td style="text-align: center;"><a href="https://play.google.com/store/apps/details?id=com.rwkvzone.chat">Google Play</a> / <a href="https://github.com/RWKV-APP/RWKV_APP/releases">GitHub Release</a> / <a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main/android-arm64">huggingface</a> / <a href="https://www.pgyer.com/rwkvchat">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Sudoku/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-sudoku">pgyer</a></td>
 <td style="text-align: center;"><a href="https://huggingface.co/datasets/rwkv-app/RWKV-Othello/tree/main">huggingface</a> / <a href="https://www.pgyer.com/rwkv-othello">pgyer</a></td>
 <td style="text-align: center;"><a href="https://www.pgyer.com/rwkv-music">pgyer</a></td>
@@ -58,13 +60,13 @@ RWKV App은 멀티턴 대화, 텍스트 음성 변환(TTS), 시각적 이해 및
 </tr>
 <tr>
 <td style="text-align: center;" rowspan="2">Windows</td>
-<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://github.com/RWKV-APP/RWKV_APP/releases">GitHub Release</a> / <a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main/windows-x64">huggingface (zip)</a> / <a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main/windows-x64-installer">huggingface (installer)</a> / <a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
 <td style="text-align: center;" colspan="1" ><a href="https://apps.microsoft.com/detail/xpdc65wjh8ws17?hl=en-US&gl=US">Microsoft Store</a></td>
 </tr>
 <tr></tr>
 <tr>
 <td style="text-align: center;" rowspan="2">macOS</td>
-<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
+<td style="text-align: center;" colspan="3" rowspan="2"><a href="https://github.com/RWKV-APP/RWKV_APP/releases">GitHub Release</a> / <a href="https://huggingface.co/datasets/rwkv-app/RWKV-Chat/tree/main/macos-universal">huggingface</a> / <a href="https://qm.qq.com/q/y0gOHcguty">QQ Group</a> / <a href="https://discord.gg/8NvyXcAP5W">Discord</a></td>
 <td style="text-align: center;">-</td>
 </tr>
 <tr></tr>
