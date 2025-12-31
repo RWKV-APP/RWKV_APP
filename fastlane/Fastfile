@@ -357,3 +357,87 @@ lane :test_huggingface do |params|
 
   UI.success '✅ 上传完成！'
 end
+
+# -----------------------------------------------------------------------
+#  🚑 紧急恢复专用 Lane
+#  用于 all lane 构建成功但在上传阶段失败时，从上传 APK 开始继续执行
+# -----------------------------------------------------------------------
+lane :resume_upload do |params|
+  # 1. 读取当前 pubspec.yaml 中的版本号 (因为之前的 all lane 已经修改并提交了)
+  require 'yaml'
+  project_root = File.expand_path('..', __dir__)
+  pubspec_path = File.join(project_root, 'pubspec.yaml')
+  pubspec = YAML.load_file(pubspec_path)
+
+  full_version = pubspec['version'] # e.g., "3.4.3+629"
+  version_parts = full_version.split('+')
+  semantic_version = version_parts[0] # "3.4.3"
+  build_number = version_parts[1]     # "629"
+
+  UI.message "🔄 恢复上传流程: 版本 #{full_version}"
+
+  # 2. 尝试定位之前构建好的 APK 文件
+  # 根据你的日志，文件名格式似乎是 rwkv_chat_版本_构建号.apk
+  apk_name = "rwkv_chat_#{semantic_version}_#{build_number}.apk"
+  apk_path = File.join(project_root, "build/app/outputs/flutter-apk/#{apk_name}")
+
+  # 如果找不到带版本号的，尝试找默认的 app-release.apk
+  unless File.exist?(apk_path)
+    UI.important "未找到 #{apk_name}，尝试查找 app-release.apk..."
+    apk_path = File.join(project_root, 'build/app/outputs/flutter-apk/app-release.apk')
+  end
+
+  if File.exist?(apk_path)
+    UI.success "✅ 找到 APK 文件: #{apk_path}"
+
+    # 3. 🔥 重试上传到 GitHub Release (Android)
+    # 注意：如果 Release 已存在但为空，github_release 可能会报错，这里假设它能处理或只是上传资源
+    # 如果 github_release 报错说 tag 已存在，你可能需要手动在网页上传一次 APK，或者暂时注释掉这块
+    begin
+      github_release(
+        repo: 'RWKV-APP/RWKV_APP',
+        version: full_version,
+        file_path: apk_path,
+        branch: 'dev',
+        release_name: semantic_version,
+        release_notes: "Release #{full_version}\n\nVersion: #{semantic_version}\nBuild: #{build_number}",
+      )
+    rescue => e
+      UI.error "GitHub Release 上传遇到问题 (可能是 Release 已存在): #{e.message}"
+      UI.important '请尝试手动上传 APK，脚本将继续执行后续步骤...'
+    end
+
+    # 4. 🔥 恢复上传到 Hugging Face (Android)
+    if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
+      apk_filename = File.basename(apk_path)
+      huggingface(
+        repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+        file_path: apk_path,
+        path_in_repo: "android-arm64/#{apk_filename}",
+        commit_message: "Upload APK #{apk_filename} (v#{full_version})",
+        repo_type: 'dataset',
+      )
+    end
+  else
+    UI.user_error! '❌ 无法找到构建好的 APK 文件，无法恢复 Android 上传。'
+  end
+
+  # 5. 🔥 继续 macOS 流程 (macOS lane 内部会自己构建，所以是安全的)
+  macos_build_and_upload(
+    upload_to_github: true,
+  )
+
+  # 6. 🔥 继续 iOS 流程 (iOS lane 内部会自己构建，所以是安全的)
+  upload_to_testflight_flag = params[:upload_to_testflight] == false ? false : true
+  if upload_to_testflight_flag
+    ios_upload(groups: ['External'])
+  end
+
+  # 7. Git Reset (清理)
+  skip_git_reset = params[:skip_git_reset] == true ? true : false
+  if !skip_git_reset
+    git_reset()
+  end
+
+  UI.success '🎉 恢复流程执行完毕！'
+end
