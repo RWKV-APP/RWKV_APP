@@ -10,21 +10,22 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 # Try loading from project root or tools directory
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(project_root, '.env'))
+load_dotenv(os.path.join(project_root, ".env"))
 
 # Configuration
-HOSTNAME = os.getenv('RWKV_REMOTE_HOST')
-PORT = int(os.getenv('RWKV_REMOTE_PORT', 22))
-USERNAME = os.getenv('RWKV_REMOTE_USER')
-PASSWORD = os.getenv('RWKV_REMOTE_PASS')
+HOSTNAME = os.getenv("RWKV_REMOTE_HOST")
+PORT = int(os.getenv("RWKV_REMOTE_PORT", 22))
+USERNAME = os.getenv("RWKV_REMOTE_USER")
+PASSWORD = os.getenv("RWKV_REMOTE_PASS")
 
 # Remote directory which holds all the JSON config files
-REMOTE_DIR = '/opt/rwkv/apps/api-model/json'
+REMOTE_DIR = "/opt/rwkv/apps/api-model/json"
 
 # Local directory which holds all the JSON config files (this repo's /remote)
-LOCAL_DIR = os.path.join(project_root, 'remote')
+LOCAL_DIR = os.path.join(project_root, "remote")
 
-RESTART_CMD = 'pm2 reload 9'
+RESTART_CMD = "pm2 reload api-model"
+
 
 def deploy():
     # Check for missing credentials
@@ -32,9 +33,9 @@ def deploy():
         print("❌ Error: Missing configuration. Please set RWKV_REMOTE_HOST, RWKV_REMOTE_USER, and RWKV_REMOTE_PASS in your .env file.")
         sys.exit(1)
 
-    parser = argparse.ArgumentParser(description='Deploy all JSON files in ./remote to remote server with diff check.')
-    parser.add_argument('-y', '--yes', action='store_true', help='Skip confirmation prompt and overwrite')
-    parser.add_argument('--diff-only', action='store_true', help='Download remote files, show diff, and exit without uploading')
+    parser = argparse.ArgumentParser(description="Deploy all JSON files in ./remote to remote server with diff check.")
+    parser.add_argument("-y", "--yes", action="store_true", help="Skip confirmation prompt and overwrite")
+    parser.add_argument("--diff-only", action="store_true", help="Download remote files, show diff, and exit without uploading")
     args = parser.parse_args()
 
     # 1. Collect local JSON files
@@ -48,7 +49,7 @@ def deploy():
         if not os.path.isfile(path):
             continue
         # Only sync JSON files, skip things like README.md / .DS_Store
-        if not name.lower().endswith('.json'):
+        if not name.lower().endswith(".json"):
             continue
         local_files.append((name, path))
 
@@ -62,7 +63,7 @@ def deploy():
     for name, path in local_files:
         print(f"  - {path}")
         try:
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, "r", encoding="utf-8") as f:
                 content = f.read()
             json.loads(content)
         except Exception as e:
@@ -82,7 +83,7 @@ def deploy():
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(HOSTNAME, PORT, USERNAME, PASSWORD)
-        
+
         sftp = ssh.open_sftp()
 
         # 4. Compare each local file with its remote counterpart
@@ -94,16 +95,16 @@ def deploy():
             remote_path = os.path.join(REMOTE_DIR, name)
             print(f"\n=== {name} ===")
 
-            with open(local_path, 'r', encoding='utf-8') as f:
+            with open(local_path, "r", encoding="utf-8") as f:
                 local_content = f.read()
 
             remote_content = ""
             tmp_path = None
             try:
-                with tempfile.NamedTemporaryFile(mode='w+', delete=False) as tmp:
+                with tempfile.NamedTemporaryFile(mode="w+", delete=False) as tmp:
                     tmp_path = tmp.name
                 sftp.get(remote_path, tmp_path)
-                with open(tmp_path, 'r', encoding='utf-8') as f:
+                with open(tmp_path, "r", encoding="utf-8") as f:
                     remote_content = f.read()
             except FileNotFoundError:
                 print("Remote file not found. This will be a new file.")
@@ -118,13 +119,8 @@ def deploy():
             else:
                 any_diff = True
                 print("⚠️ Differences found (Local vs Remote):")
-                diff = difflib.unified_diff(
-                    remote_content.splitlines(keepends=True),
-                    local_content.splitlines(keepends=True),
-                    fromfile=f'Remote ({remote_path})',
-                    tofile=f'Local ({local_path})'
-                )
-                diff_text = ''.join(diff)
+                diff = difflib.unified_diff(remote_content.splitlines(keepends=True), local_content.splitlines(keepends=True), fromfile=f"Remote ({remote_path})", tofile=f"Local ({local_path})")
+                diff_text = "".join(diff)
                 if diff_text:
                     print(diff_text)
                 else:
@@ -151,7 +147,7 @@ def deploy():
                 # Interactive confirmation (single prompt for all files)
                 try:
                     confirm = input("Do you want to overwrite the above remote files? (y/N): ")
-                    if confirm.lower() != 'y':
+                    if confirm.lower() != "y":
                         print("Deployment aborted by user.")
                         sftp.close()
                         return
@@ -168,14 +164,14 @@ def deploy():
 
             sftp.close()
             print("Upload complete.")
-        
+
         # 6. Restart
         print(f"🔄 Executing restart command: {RESTART_CMD}")
         stdin, stdout, stderr = ssh.exec_command(RESTART_CMD)
         exit_status = stdout.channel.recv_exit_status()
         out = stdout.read().decode().strip()
         err = stderr.read().decode().strip()
-        
+
         if exit_status == 0:
             print("✅ Restart successful.")
             print(out)
@@ -184,7 +180,7 @@ def deploy():
             print(f"Stdout: {out}")
             print(f"Stderr: {err}")
             sys.exit(exit_status)
-            
+
     except Exception as e:
         print(f"❌ Deployment failed: {e}")
         sys.exit(1)
@@ -192,5 +188,6 @@ def deploy():
         if ssh:
             ssh.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     deploy()
