@@ -1001,13 +1001,13 @@
       },
       {
         "name": "SigLIP2 Encoder",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/vision_encoder/siglip2-encoder-patch16-384-w8.mnn",
-        "fileSize": 172640484,
-        "quantization": "w8a16",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/vision_encoder/siglip2-encoder-patch16-384-q8_0.gguf",
+        "fileSize": 99950656,
+        "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
-        "backends": ["mnn"],
+        "backends": ["llamacpp"],
         "tags": ["encoder"],
-        "date": 1767159809
+        "date": 1766114960
       },
       {
         "name": "ModRWKV V2 Vision Adapter",
@@ -1031,13 +1031,13 @@
       },
       {
         "name": "ModRWKV V3 Vision Adapter",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/modrwkv-v3-0.4b-251113-vision-adapter.mnn",
-        "fileSize": 7422864,
-        "quantization": "w8a16",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/modrwkv-v3-0.4b-251113-vision-adapter.gguf",
+        "fileSize": 14717568,
+        "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
-        "backends": ["mnn"],
+        "backends": ["llamacpp"],
         "tags": ["adapter"],
-        "date": 1767159809
+        "date": 1766325723
       },
       {
         "name": "ModRWKV V2 1.5B",

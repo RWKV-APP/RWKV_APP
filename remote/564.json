@@ -1,6 +1,6 @@
 {
   "chat": {
-    "latest_build": 605,
+    "latest_build": 628,
     "latest_build_ios": 602,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
@@ -774,7 +774,7 @@
     ]
   },
   "world": {
-    "latest_build": 605,
+    "latest_build": 628,
     "latest_build_ios": 602,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
@@ -951,7 +951,7 @@
     ]
   },
   "tts": {
-    "latest_build": 605,
+    "latest_build": 628,
     "latest_build_ios": 602,
     "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
     "note_en": ["Improve application stability", "Fix known issues"],
