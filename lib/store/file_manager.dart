@@ -22,6 +22,10 @@ class _FileManager {
   });
 
   late final _paths = qsff<FileInfo, String>((ref, key) {
+    final customDir = ref.watch(P.preference.customModelsDir);
+    if (customDir != null && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+      return "$customDir/${key.fileName}";
+    }
     final dir = ref.watch(P.app.documentsDir);
     final fileName = key.fileName;
     final dirPath = dir!.path;
@@ -250,6 +254,85 @@ extension $FileManager on _FileManager {
     final path = _paths(fileInfo).q;
     await File(path).delete();
     state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
+  }
+
+  Future<void> openModelDirectory() async {
+    final customDir = P.preference.customModelsDir.q;
+    final defaultDir = P.app.documentsDir.q?.path;
+    final path = customDir ?? defaultDir;
+    if (path == null) return;
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await launchUrl(Uri.directory(path));
+    }
+  }
+
+  Future<void> updateCustomDirectory(String? newPath, {void Function(String currentFile, int completed, int total)? onProgress}) async {
+    final customDir = P.preference.customModelsDir.q;
+    final defaultDir = P.app.documentsDir.q?.path;
+    final oldPath = customDir ?? defaultDir;
+
+    if (newPath == oldPath) return;
+
+    if (oldPath != null) {
+      final targetPath = newPath ?? defaultDir;
+      if (targetPath == null) return;
+
+      final allWeights = <dynamic>{
+        ...chatWeights.q,
+        ...ttsWeights.q,
+        ...roleplayWeights.q,
+        ...seeWeights.q,
+        ...sudokuWeights.q,
+        ...othelloWeights.q,
+      }.toList();
+
+      final existingFiles = <FileInfo>[];
+      for (final weight in allWeights) {
+        final oldFile = File("$oldPath/${weight.fileName}");
+        if (await oldFile.exists()) {
+          existingFiles.add(weight);
+        }
+      }
+
+      final total = existingFiles.length;
+      int completed = 0;
+
+      for (final weight in existingFiles) {
+        if (onProgress != null) {
+          onProgress(weight.fileName, completed, total);
+        }
+
+        final oldFile = File("$oldPath/${weight.fileName}");
+        final newFile = File("$targetPath/${weight.fileName}");
+        if (!await newFile.exists()) {
+          try {
+            await oldFile.rename(newFile.path);
+          } catch (e) {
+            await oldFile.copy(newFile.path);
+            await oldFile.delete();
+          }
+        }
+
+        final nameWithoutExtension = path.basenameWithoutExtension(weight.fileName);
+        final oldFolder = Directory("$oldPath/$nameWithoutExtension");
+        if (await oldFolder.exists()) {
+          try {
+            await oldFolder.delete(recursive: true);
+            qqq("Deleted old folder: ${oldFolder.path}");
+          } catch (e) {
+            qqe("Failed to delete old folder: $e");
+          }
+        }
+        
+        completed++;
+      }
+      
+      if (onProgress != null) {
+          onProgress("", completed, total);
+      }
+    }
+
+    P.preference.setCustomModelsDir(newPath);
   }
 }
 

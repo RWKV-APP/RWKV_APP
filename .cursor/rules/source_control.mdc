@@ -2,4 +2,5 @@
 alwaysApply: true
 ---
 
-# 严禁你自动 commit 任何代码, 必须由用户来手动 commit
+- 严禁你自动 commit 任何代码, 必须由用户来手动 commit
+- 不要向用户提供任何 git 建议, 除非你被用户明确要求了

@@ -173,7 +173,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
       "每條結果的寬度",
     ),
-    "batch_management": MessageLookupByLibrary.simpleMessage("批量管理"),
+    "batch_management": MessageLookupByLibrary.simpleMessage("權重檔案管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "benchmark": MessageLookupByLibrary.simpleMessage("基準測試"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("基準測試結果"),

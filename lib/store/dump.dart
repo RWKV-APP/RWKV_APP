@@ -5,7 +5,7 @@ class _Dump {
   // Static
   // ===========================================================================
 
-  final path = "/storage/emulated/0/Download/rwkvsee";
+  final defaultDumpPath = "/storage/emulated/0/Download/rwkvsee";
 
   // ===========================================================================
   // StateProvider
@@ -94,7 +94,7 @@ extension _$Dump on _Dump {
 
     Directory? externalDir;
     if (Platform.isAndroid) {
-      externalDir = Directory(path);
+      externalDir = Directory(defaultDumpPath);
       if (!await externalDir.exists()) {
         await externalDir.create(recursive: true);
       }
@@ -147,7 +147,7 @@ extension $Dump on _Dump {
     await showOkAlertDialog(
       context: getContext()!,
       title: S.current.dump_started,
-      message: S.current.dump_see_files_alert_message(path),
+      message: S.current.dump_see_files_alert_message(defaultDumpPath),
     );
     _dumpChatMessages();
   }

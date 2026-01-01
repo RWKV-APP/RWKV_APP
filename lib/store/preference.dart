@@ -72,6 +72,9 @@ class _Preference {
 
   late final dumpping = qs(false);
 
+  /// Custom directory for storing models (Desktop only)
+  late final customModelsDir = qs<String?>(null);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -163,6 +166,9 @@ extension _$Preference on _Preference {
         this.lastWorldModel.q = jsonDecode(lastWorldModel);
       } catch (_) {}
     }
+
+    final customModelsDir = sp.getString("halo_state.customModelsDir");
+    if (customModelsDir != null) this.customModelsDir.q = customModelsDir;
   }
 
   Future<void> _saveDumpping(bool dumpping) async {
@@ -281,5 +287,16 @@ extension $Preference on _Preference {
     lastWorldModel.q = data;
     final sp = await SharedPreferences.getInstance();
     sp.setString("halo_state.lastWorldModel", jsonEncode(data));
+  }
+
+  void setCustomModelsDir(String? path) async {
+    customModelsDir.q = path;
+    final sp = await SharedPreferences.getInstance();
+    if (path == null) {
+      await sp.remove("halo_state.customModelsDir");
+    } else {
+      await sp.setString("halo_state.customModelsDir", path);
+    }
+    P.fileManager.checkLocal();
   }
 }

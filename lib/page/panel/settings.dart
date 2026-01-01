@@ -186,11 +186,17 @@ class Settings extends ConsumerWidget {
                 onTap: () => push(PageKey.advancedSettings),
               ),
             FormItem(
-              isSectionEnd: true,
+              isSectionEnd: false,
               icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.q(.667), size: 16),
               title: s.appearance,
               infoText: preferredThemeMode.displayName,
               onTap: P.preference.showThemeSettings,
+            ),
+            FormItem(
+              isSectionEnd: true,
+              icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
+              title: s.batch_management,
+              onTap: () => push(PageKey.weightManager),
             ),
             12.h,
             Row(
