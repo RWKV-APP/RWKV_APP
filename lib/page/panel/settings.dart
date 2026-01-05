@@ -272,7 +272,7 @@ class Settings extends ConsumerWidget {
             //       if (P.preference.dumpping.q == true) {
             //         P.dump.stopDump();
             //       } else {
-            //         P.dump.startDump();
+            //         P.dump.startDump(); 
             //       }
             //     },
             //     showArrow: false,

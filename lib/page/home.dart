@@ -620,7 +620,7 @@ class _Welcome extends ConsumerWidget {
         opacity: opacity,
         child: Column(
           children: [
-            const SizedBox(height: 100),
+            SizedBox(height: 100 + (1 - opacity) * 25),
             Center(
               child: ClipRRect(
                 borderRadius: .circular(50),
