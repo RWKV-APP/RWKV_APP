@@ -536,7 +536,7 @@
   },
   "reached_bottom": "敬請期待",
   "open_database_folder": "開啟資料庫資料夾",
-  "npu_not_supported_title": "暫未對您手機的芯片 {socName} 提供 NPU 加速支持",
+  "npu_not_supported_title": "暫未支持您的芯片 {socName} 的 NPU 加速",
   "@npu_not_supported_title": {
     "placeholders": {
       "socName": {}

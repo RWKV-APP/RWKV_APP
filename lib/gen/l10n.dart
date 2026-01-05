@@ -3636,10 +3636,10 @@ class S {
     );
   }
 
-  /// `暂未对您手机的芯片 {socName} 提供 NPU 加速支持`
+  /// `暂未支持您的芯片 {socName} 的 NPU 加速`
   String npu_not_supported_title(Object socName) {
     return Intl.message(
-      '暂未对您手机的芯片 $socName 提供 NPU 加速支持',
+      '暂未支持您的芯片 $socName 的 NPU 加速',
       name: 'npu_not_supported_title',
       desc: '',
       args: [socName],

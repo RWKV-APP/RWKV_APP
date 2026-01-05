@@ -77,7 +77,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Memory Used: ${memUsed}, Memory Free: ${memFree}";
 
   static String m17(socName) =>
-      "Currently do not provide NPU acceleration support for the chip ${socName} in your phone";
+      "NPU support for your chip ${socName} not yet available";
 
   static String m18(takePhoto) =>
       "Click ${takePhoto}. RWKV will translate the text in the image.";

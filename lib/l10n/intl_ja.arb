@@ -536,7 +536,7 @@
   },
   "reached_bottom": "お楽しみに",
   "open_database_folder": "データベースフォルダを開く",
-  "npu_not_supported_title": "現在、お使いのスマートフォンのチップ {socName} の NPU アクセラレーションには対応していません",
+  "npu_not_supported_title": "お使いのチップ {socName} の NPU サポートはまだ利用できません",
   "@npu_not_supported_title": {
     "placeholders": {
       "socName": {}

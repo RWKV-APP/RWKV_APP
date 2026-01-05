@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(memUsed, memFree) => "已用記憶體：${memUsed}，剩餘記憶體：${memFree}";
 
-  static String m17(socName) => "暫未對您手機的芯片 ${socName} 提供 NPU 加速支持";
+  static String m17(socName) => "暫未支持您的芯片 ${socName} 的 NPU 加速";
 
   static String m18(takePhoto) => "點擊 ${takePhoto}。RWKV 將翻譯圖片中的文本。";
 

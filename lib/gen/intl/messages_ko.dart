@@ -73,8 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m16(memUsed, memFree) =>
       "사용된 메모리: ${memUsed}, 남은 메모리: ${memFree}";
 
-  static String m17(socName) =>
-      "현재 귀하의 휴대폰 칩 ${socName}에 대한 NPU 가속 지원을 제공하지 않습니다";
+  static String m17(socName) => "귀하의 칩 ${socName}에 대한 NPU 지원은 아직 사용할 수 없습니다";
 
   static String m18(takePhoto) => "${takePhoto}를 클릭하세요. RWKV가 이미지의 텍스트를 번역합니다.";
 

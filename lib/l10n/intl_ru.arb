@@ -536,7 +536,7 @@
   },
   "reached_bottom": "Следите за обновлениями",
   "open_database_folder": "Открыть папку базы данных",
-  "npu_not_supported_title": "В настоящее время не предоставляем поддержку ускорения NPU для чипа {socName} в вашем телефоне",
+  "npu_not_supported_title": "Поддержка NPU для вашего чипа {socName} пока недоступна",
   "@npu_not_supported_title": {
     "placeholders": {
       "socName": {}

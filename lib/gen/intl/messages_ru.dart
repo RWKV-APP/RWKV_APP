@@ -78,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Использовано памяти: ${memUsed}, Свободно памяти: ${memFree}";
 
   static String m17(socName) =>
-      "В настоящее время не предоставляем поддержку ускорения NPU для чипа ${socName} в вашем телефоне";
+      "Поддержка NPU для вашего чипа ${socName} пока недоступна";
 
   static String m18(takePhoto) =>
       "Нажмите ${takePhoto}. RWKV переведет текст на изображении.";
