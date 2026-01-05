@@ -261,7 +261,7 @@ class Settings extends ConsumerWidget {
                 P.app.checkUpdates();
               },
             ),
-            if (demoType == DemoType.see && Platform.isAndroid)
+            if (Platform.isAndroid)
               FormItem(
                 isSectionStart: false,
                 title: S.current.dump_see_files,
@@ -277,12 +277,11 @@ class Settings extends ConsumerWidget {
                 },
                 showArrow: false,
               ),
-            if (isChat)
-              FormItem(
-                icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
-                title: S.current.performance_test,
-                onTap: () => push(PageKey.benchmark),
-              ),
+            FormItem(
+              icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
+              title: S.current.performance_test,
+              onTap: () => push(PageKey.benchmark),
+            ),
             FormItem(
               title: s.github_repository,
               icon: Icon(Icons.code, color: qb.q(.667), size: 16),
