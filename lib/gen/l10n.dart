@@ -3630,6 +3630,26 @@ class S {
       args: [],
     );
   }
+
+  /// `暂未对您手机的芯片 {socName} 提供 NPU 加速支持`
+  String npu_not_supported_title(Object socName) {
+    return Intl.message(
+      '暂未对您手机的芯片 $socName 提供 NPU 加速支持',
+      name: 'npu_not_supported_title',
+      desc: '',
+      args: [socName],
+    );
+  }
+
+  /// `我们正在持续适配更多的推理芯片，敬请期待。`
+  String get adapting_more_inference_chips {
+    return Intl.message(
+      '我们正在持续适配更多的推理芯片，敬请期待。',
+      name: 'adapting_more_inference_chips',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

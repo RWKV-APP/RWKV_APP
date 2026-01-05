@@ -542,5 +542,12 @@
     }
   },
   "reached_bottom": "Stay tuned",
-  "open_database_folder": "Open Database Folder"
+  "open_database_folder": "Open Database Folder",
+  "npu_not_supported_title": "Currently do not provide NPU acceleration support for the chip {socName} in your phone",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "We are continuously adapting more inference chips, please stay tuned."
 }

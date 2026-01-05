@@ -542,5 +542,12 @@
   "continue2": "续写",
   "please_entry_some_text_to_continue": "请先输入要续写的段落",
   "reached_bottom": "敬请期待",
-  "open_database_folder": "打开数据库文件夹"
+  "open_database_folder": "打开数据库文件夹",
+  "npu_not_supported_title": "暂未对您手机的芯片 {socName} 提供 NPU 加速支持",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "我们正在持续适配更多的推理芯片，敬请期待。"
 }

@@ -72,49 +72,51 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
 
-  static String m17(takePhoto) => "点击 ${takePhoto}。RWKV 将翻译图片中的文本。";
+  static String m17(socName) => "暂未对您手机的芯片 ${socName} 提供 NPU 加速支持";
 
-  static String m18(value) => "Penalty Decay: ${value}";
+  static String m18(takePhoto) => "点击 ${takePhoto}。RWKV 将翻译图片中的文本。";
 
-  static String m19(index) => "请选择要为第 ${index} 条消息设置的采样和惩罚参数";
+  static String m19(value) => "Penalty Decay: ${value}";
 
-  static String m20(value) => "Presence Penalty: ${value}";
+  static String m20(index) => "请选择要为第 ${index} 条消息设置的采样和惩罚参数";
 
-  static String m21(count) => "排队中: ${count}";
+  static String m21(value) => "Presence Penalty: ${value}";
 
-  static String m22(count) => "已选择 ${count}";
+  static String m22(count) => "排队中: ${count}";
 
-  static String m23(text) => "源文本: ${text}";
+  static String m23(count) => "已选择 ${count}";
 
-  static String m24(text) => "目标文本: ${text}";
+  static String m24(text) => "源文本: ${text}";
 
-  static String m25(value) => "Temperature: ${value}";
+  static String m25(text) => "目标文本: ${text}";
 
-  static String m26(footer) => "推理${footer}: 英";
+  static String m26(value) => "Temperature: ${value}";
 
-  static String m27(footer) => "推理${footer}: 英长";
+  static String m27(footer) => "推理${footer}: 英";
 
-  static String m28(footer) => "推理${footer}: 英短";
+  static String m28(footer) => "推理${footer}: 英长";
 
-  static String m29(footer) => "推理${footer}: 快";
+  static String m29(footer) => "推理${footer}: 英短";
 
-  static String m30(footer) => "推理${footer}: 中";
+  static String m30(footer) => "推理${footer}: 快";
 
-  static String m31(footer) => "推理${footer}: 高";
+  static String m31(footer) => "推理${footer}: 中";
 
-  static String m32(footer) => "推理${footer}: 关";
+  static String m32(footer) => "推理${footer}: 高";
 
-  static String m33(value) => "Top P: ${value}";
+  static String m33(footer) => "推理${footer}: 关";
 
-  static String m34(count) => "总测试项: ${count}";
+  static String m34(value) => "Top P: ${value}";
 
-  static String m35(port) => "WebSocket 服务 (端口: ${port})";
+  static String m35(count) => "总测试项: ${count}";
 
-  static String m36(id) => "窗口 ${id}";
+  static String m36(port) => "WebSocket 服务 (端口: ${port})";
 
-  static String m37(count) => "${count} 个标签页";
+  static String m37(id) => "窗口 ${id}";
 
-  static String m38(modelName) => "您当前正在使用 ${modelName}";
+  static String m38(count) => "${count} 个标签页";
+
+  static String m39(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -122,6 +124,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "according_to_the_following_audio_file":
         MessageLookupByLibrary.simpleMessage("根据: "),
     "accuracy": MessageLookupByLibrary.simpleMessage("准确率"),
+    "adapting_more_inference_chips": MessageLookupByLibrary.simpleMessage(
+      "我们正在持续适配更多的推理芯片，敬请期待。",
+    ),
     "advance_settings": MessageLookupByLibrary.simpleMessage("高级设置"),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
@@ -477,9 +482,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_puzzle": MessageLookupByLibrary.simpleMessage("没有数独"),
     "not_all_the_same": MessageLookupByLibrary.simpleMessage("不完全相同"),
     "not_syncing": MessageLookupByLibrary.simpleMessage("未同步"),
+    "npu_not_supported_title": m17,
     "number": MessageLookupByLibrary.simpleMessage("数字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
-    "ocr_guide_text": m17,
+    "ocr_guide_text": m18,
     "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("关闭"),
     "offline_translator": MessageLookupByLibrary.simpleMessage("离线翻译"),
@@ -504,7 +510,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。",
     ),
     "pause": MessageLookupByLibrary.simpleMessage("暂停"),
-    "penalty_decay_with_value": m18,
+    "penalty_decay_with_value": m19,
     "performance_test": MessageLookupByLibrary.simpleMessage("性能测试"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
       "测试 LAMBADA ppl",
@@ -551,7 +557,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "请选择难度",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m19,
+        m20,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage("请选择要为所有消息设置的采样和惩罚参数"),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
@@ -570,12 +576,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
     "prefill": MessageLookupByLibrary.simpleMessage("预填"),
-    "presence_penalty_with_value": m20,
+    "presence_penalty_with_value": m21,
     "prompt": MessageLookupByLibrary.simpleMessage("提示词"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 模板"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
-    "queued_x": m21,
+    "queued_x": m22,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已经开启"),
     "reached_bottom": MessageLookupByLibrary.simpleMessage("敬请期待"),
@@ -620,7 +626,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_new_image": MessageLookupByLibrary.simpleMessage("选择新图像"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage("请从下方选择预设参数，或点击“自定义”进行手动配置"),
-    "selected_count": m22,
+    "selected_count": m23,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("发送消息给 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("服务器错误"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("会话配置"),
@@ -644,7 +650,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("源代码"),
-    "source_text": m23,
+    "source_text": m24,
     "speed": MessageLookupByLibrary.simpleMessage("下载速度："),
     "start": MessageLookupByLibrary.simpleMessage("开始"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("开始新聊天"),
@@ -699,9 +705,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_day_of_week": MessageLookupByLibrary.simpleMessage("星期"),
     "tag_time": MessageLookupByLibrary.simpleMessage("时间"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
-    "target_text": m24,
+    "target_text": m25,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技术研发群"),
-    "temperature_with_value": m25,
+    "temperature_with_value": m26,
     "test_data": MessageLookupByLibrary.simpleMessage("测试数据"),
     "test_result": MessageLookupByLibrary.simpleMessage("测试结果"),
     "test_results": MessageLookupByLibrary.simpleMessage("测试结果"),
@@ -714,10 +720,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
-    "think_button_mode_en": m26,
-    "think_button_mode_en_long": m27,
-    "think_button_mode_en_short": m28,
-    "think_button_mode_fast": m29,
+    "think_button_mode_en": m27,
+    "think_button_mode_en_long": m28,
+    "think_button_mode_en_short": m29,
+    "think_button_mode_fast": m30,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式会影响模型在推理时的表现",
     ),
@@ -726,18 +732,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
-    "thinking_mode_auto": m30,
-    "thinking_mode_high": m31,
-    "thinking_mode_off": m32,
+    "thinking_mode_auto": m31,
+    "thinking_mode_high": m32,
+    "thinking_mode_off": m33,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage("这个模型不支持并行推理, 请选择带有 batch 标签的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考结果"),
-    "top_p_with_value": m33,
+    "top_p_with_value": m34,
     "total_count": MessageLookupByLibrary.simpleMessage("总数"),
-    "total_test_items": m34,
+    "total_test_items": m35,
     "translate": MessageLookupByLibrary.simpleMessage("翻译"),
     "translating": MessageLookupByLibrary.simpleMessage("翻译中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻译结果"),
@@ -763,7 +769,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
-    "websocket_service_port": m35,
+    "websocket_service_port": m36,
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV Chat",
     ),
@@ -771,12 +777,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
-    "window_id": m36,
+    "window_id": m37,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m37,
-    "you_are_now_using": m38,
+    "x_tabs": m38,
+    "you_are_now_using": m39,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

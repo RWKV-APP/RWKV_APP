@@ -535,5 +535,12 @@
     }
   },
   "reached_bottom": "기대해 주세요",
-  "open_database_folder": "데이터베이스 폴더 열기"
+  "open_database_folder": "데이터베이스 폴더 열기",
+  "npu_not_supported_title": "현재 귀하의 휴대폰 칩 {socName}에 대한 NPU 가속 지원을 제공하지 않습니다",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "더 많은 추론 칩에 대한 지원을 지속적으로 추가하고 있습니다. 기대해 주세요."
 }

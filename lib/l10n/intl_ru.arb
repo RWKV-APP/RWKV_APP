@@ -535,5 +535,12 @@
     }
   },
   "reached_bottom": "Следите за обновлениями",
-  "open_database_folder": "Открыть папку базы данных"
+  "open_database_folder": "Открыть папку базы данных",
+  "npu_not_supported_title": "В настоящее время не предоставляем поддержку ускорения NPU для чипа {socName} в вашем телефоне",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "Мы продолжаем адаптировать больше чипов для вывода, следите за обновлениями."
 }

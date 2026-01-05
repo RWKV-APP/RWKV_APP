@@ -48,6 +48,65 @@ class _FileManager {
   /// 当前平台可用的 tts 权重, 包含 core 和 non-core 两种
   late final ttsWeights = qs<Set<FileInfo>>({});
   late final ttsCores = qs<Set<FileInfo>>({});
+
+  /// 获取所有支持的NPU芯片列表（从所有模型的socLimitations中提取）
+  List<String> getSupportedNpuChips() {
+    final config = P.app._config.q;
+    if (config == null) return [];
+
+    final allModelConfigs = <Map<String, dynamic>>[];
+    
+    // 收集所有demo类型的模型配置
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        allModelConfigs.addAll(HF.listJSON(demoConfig['model_config']));
+      }
+    }
+
+    // 提取所有NPU模型的socLimitations
+    final supportedNpus = <String>{};
+    for (final modelConfig in allModelConfigs) {
+      final tags = HF.list(modelConfig['tags'] ?? []).map((e) => e.toString().toLowerCase()).toList();
+      if (tags.contains('npu')) {
+        final socLimitations = HF.list(modelConfig['socLimitations'] ?? []);
+        for (final soc in socLimitations) {
+          final socName = soc.toString();
+          if (socName.isNotEmpty) {
+            supportedNpus.add(socName);
+          }
+        }
+      }
+    }
+
+    // 排序：先按品牌分组，然后按型号排序
+    final qualcomm = <String>[];
+    final mediatek = <String>[];
+    final others = <String>[];
+
+    for (final soc in supportedNpus) {
+      if (soc.contains('8 Elite') || soc.contains('8 Gen') || soc.contains('7+ Gen')) {
+        qualcomm.add(soc);
+      } else if (soc.contains('Dimensity')) {
+        mediatek.add(soc);
+      } else {
+        others.add(soc);
+      }
+    }
+
+    // 排序：8 Elite Gen5 > 8 Elite > 8 Gen 3 > 8s Gen 3 > 7+ Gen 3 > 8 Gen 2
+    qualcomm.sort((a, b) {
+      final order = ['8 Elite Gen5', '8 Elite', '8 Gen 3', '8s Gen 3', '7+ Gen 3', '8 Gen 2'];
+      final aIndex = order.indexWhere((e) => a.contains(e));
+      final bIndex = order.indexWhere((e) => b.contains(e));
+      if (aIndex == -1 && bIndex == -1) return a.compareTo(b);
+      if (aIndex == -1) return 1;
+      if (bIndex == -1) return -1;
+      return aIndex.compareTo(bIndex);
+    });
+
+    return [...qualcomm, ...mediatek, ...others];
+  }
 }
 
 /// Public methods

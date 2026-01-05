@@ -535,5 +535,12 @@
     }
   },
   "reached_bottom": "敬請期待",
-  "open_database_folder": "開啟資料庫資料夾"
+  "open_database_folder": "開啟資料庫資料夾",
+  "npu_not_supported_title": "暫未對您手機的芯片 {socName} 提供 NPU 加速支持",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "我們正在持續適配更多的推理芯片，敬請期待。"
 }
