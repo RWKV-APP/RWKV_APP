@@ -180,7 +180,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
       "每条结果的宽度",
     ),
-    "batch_management": MessageLookupByLibrary.simpleMessage("批量管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "benchmark": MessageLookupByLibrary.simpleMessage("基准测试"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("基准测试结果"),
@@ -770,6 +769,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
     "websocket_service_port": m36,
+    "weights_mangement": MessageLookupByLibrary.simpleMessage("权重文件管理"),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV Chat",
     ),

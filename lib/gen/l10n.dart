@@ -244,9 +244,14 @@ class S {
     );
   }
 
-  /// `批量管理`
-  String get batch_management {
-    return Intl.message('批量管理', name: 'batch_management', desc: '', args: []);
+  /// `权重文件管理`
+  String get weights_mangement {
+    return Intl.message(
+      '权重文件管理',
+      name: 'weights_mangement',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `模式`

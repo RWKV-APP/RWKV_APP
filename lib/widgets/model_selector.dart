@@ -262,11 +262,18 @@ class _ModelList extends ConsumerWidget {
   }
 }
 
-class _NpuNotSupportedHint extends ConsumerWidget {
+class _NpuNotSupportedHint extends ConsumerStatefulWidget {
   const _NpuNotSupportedHint();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_NpuNotSupportedHint> createState() => _NpuNotSupportedHintState();
+}
+
+class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
@@ -279,121 +286,130 @@ class _NpuNotSupportedHint extends ConsumerWidget {
 
     final hasValidSoc = currentSocName.isNotEmpty && currentSocName != "Unknown";
 
-    return Container(
-      margin: const .only(top: 8, bottom: 8),
-      padding: const .all(8),
-      decoration: BoxDecoration(
-        color: qb.q(.1),
-        borderRadius: 8.r,
-        border: Border.all(color: qb.q(.2), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.info_outline, size: 18, color: qb.q(.8)),
-              4.w,
-              Expanded(
-                child: T(
-                  hasValidSoc ? s.npu_not_supported_title(currentSocName) : s.npu_not_supported_title("Unknown"),
-                  s: TS(c: qb.q(.9), s: 14, w: .w600),
-                ),
-              ),
-            ],
-          ),
-          8.h,
-          if (hasValidSoc) ...[
+    return GD(
+      onTap: () {
+        setState(() {
+          _expanded = !_expanded;
+        });
+      },
+      child: Container(
+        margin: const .only(top: 8, bottom: 8),
+        padding: const .all(8),
+        decoration: BoxDecoration(
+          color: qb.q(.1),
+          borderRadius: 8.r,
+          border: Border.all(color: qb.q(.2), width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
             Row(
               children: [
-                T(
-                  "您的设备：",
-                  s: TS(c: qb.q(.7), s: 12),
-                ),
-                6.w,
-                Container(
-                  padding: const .symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: qb.q(.2),
-                    borderRadius: 6.r,
-                    border: Border.all(
-                      color: qb.q(.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: .min,
-                    children: [
-                      Icon(
-                        Icons.phone_android,
-                        size: 14,
-                        color: qb.q(.8),
-                      ),
-                      4.w,
-                      T(
-                        currentSocName,
-                        s: TS(
-                          c: qb.q(.9),
-                          s: 11,
-                          w: .w600,
-                        ),
-                      ),
-                    ],
+                Icon(Icons.info_outline, size: 18, color: qb.q(.8)),
+                4.w,
+                Expanded(
+                  child: T(
+                    hasValidSoc ? s.npu_not_supported_title(currentSocName) : s.npu_not_supported_title("Unknown"),
+                    s: TS(c: qb.q(.9), s: 14, w: .w600),
                   ),
                 ),
               ],
             ),
-            8.h,
-          ],
-          T(
-            "我们目前支持以下SoC芯片中的NPU：",
-            s: TS(c: qb.q(.7), s: 12),
-          ),
-          8.h,
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: supportedNpus.map((chip) {
-              return Container(
-                padding: const .symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: primary.q(.2),
-                  borderRadius: 4.r,
-                  border: Border.all(
-                    color: primary.q(.9),
-                    width: 0.5,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: .min,
+            if (_expanded) ...[
+              8.h,
+              if (hasValidSoc) ...[
+                Row(
                   children: [
-                    Padding(
-                      padding: const .only(right: 4),
-                      child: Icon(
-                        Icons.memory,
-                        size: 14,
-                        color: primary,
-                      ),
-                    ),
                     T(
-                      chip,
-                      s: TS(
-                        c: primary,
-                        s: 11,
-                        w: .w500,
+                      "您的设备：",
+                      s: TS(c: qb.q(.7), s: 12),
+                    ),
+                    6.w,
+                    Container(
+                      padding: const .symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: qb.q(.2),
+                        borderRadius: 6.r,
+                        border: Border.all(
+                          color: qb.q(.4),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: .min,
+                        children: [
+                          Icon(
+                            Icons.phone_android,
+                            size: 14,
+                            color: qb.q(.8),
+                          ),
+                          4.w,
+                          T(
+                            currentSocName,
+                            s: TS(
+                              c: qb.q(.9),
+                              s: 11,
+                              w: .w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              );
-            }).toList(),
-          ),
-          8.h,
-          T(
-            s.adapting_more_inference_chips,
-            s: TS(c: qb.q(.7), s: 12),
-          ),
-        ],
+                8.h,
+              ],
+              T(
+                "我们目前支持以下SoC芯片中的NPU：",
+                s: TS(c: qb.q(.7), s: 12),
+              ),
+              8.h,
+              Wrap(
+                spacing: 4,
+                runSpacing: 4,
+                children: supportedNpus.map((chip) {
+                  return Container(
+                    padding: const .symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: primary.q(.2),
+                      borderRadius: 4.r,
+                      border: Border.all(
+                        color: primary.q(.9),
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: .min,
+                      children: [
+                        Padding(
+                          padding: const .only(right: 4),
+                          child: Icon(
+                            Icons.memory,
+                            size: 14,
+                            color: primary,
+                          ),
+                        ),
+                        T(
+                          chip,
+                          s: TS(
+                            c: primary,
+                            s: 11,
+                            w: .w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+              8.h,
+              T(
+                s.adapting_more_inference_chips,
+                s: TS(c: qb.q(.7), s: 12),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

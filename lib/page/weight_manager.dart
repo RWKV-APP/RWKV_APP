@@ -15,7 +15,7 @@ class PageWeightManager extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.batch_management)),
+      appBar: AppBar(title: Text(S.current.weights_mangement)),
       body: const _Body(),
     );
   }
@@ -56,99 +56,98 @@ class _CustomDirectoryTile extends ConsumerWidget {
               P.fileManager.openModelDirectory();
             },
           ),
-                     if (customDir != null)
-                      IconButton(
-                        icon: const Icon(Icons.restore),
-                        onPressed: () async {
-                           final result = await showOkCancelAlertDialog(
-                              context: context,
-                              title: "Reset to Default?",
-                              message: "Weights will be moved back to the default directory.",
-                              okLabel: S.current.ok,
-                          );
-                          if (result == OkCancelResult.ok) {
-                              await _showMigrationDialog(context, null);
-                          }
-                        },
-                      ),
-          
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () async {
-                        String? result = await FilePicker.platform.getDirectoryPath();
-                        if (result != null) {
-                           final confirm = await showOkCancelAlertDialog(
-                              context: context,
-                              title: "Change Directory?",
-                              message: "Existing weights will be moved to the new directory.",
-                              okLabel: S.current.ok,
-                          );
-                          if (confirm == OkCancelResult.ok) {
-                              await _showMigrationDialog(context, result);
-                          }
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }
-          
-            Future<void> _showMigrationDialog(BuildContext context, String? newPath) async {
-              final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, 0));
-              
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => _MigrationProgressDialog(progressNotifier: progressNotifier),
-              );
-          
-              await P.fileManager.updateCustomDirectory(
-                newPath,
-                onProgress: (currentFile, completed, total) {
-                  progressNotifier.value = (currentFile, completed, total);
-                },
-              );
-          
-              if (context.mounted) {
-                Navigator.of(context).pop(); 
+          if (customDir != null)
+            IconButton(
+              icon: const Icon(Icons.restore),
+              onPressed: () async {
+                final result = await showOkCancelAlertDialog(
+                  context: context,
+                  title: "Reset to Default?",
+                  message: "Weights will be moved back to the default directory.",
+                  okLabel: S.current.ok,
+                );
+                if (result == OkCancelResult.ok) {
+                  await _showMigrationDialog(context, null);
+                }
+              },
+            ),
+
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () async {
+              String? result = await FilePicker.platform.getDirectoryPath();
+              if (result != null) {
+                final confirm = await showOkCancelAlertDialog(
+                  context: context,
+                  title: "Change Directory?",
+                  message: "Existing weights will be moved to the new directory.",
+                  okLabel: S.current.ok,
+                );
+                if (confirm == OkCancelResult.ok) {
+                  await _showMigrationDialog(context, result);
+                }
               }
-            }
-          }
-          
-          class _MigrationProgressDialog extends StatelessWidget {
-            final ValueNotifier<(String, int, int)> progressNotifier;
-          
-            const _MigrationProgressDialog({required this.progressNotifier});
-          
-            @override
-            Widget build(BuildContext context) {
-              return AlertDialog(
-                title: const Text("Moving Weights..."),
-                content: ValueListenableBuilder<(String, int, int)>(
-                  valueListenable: progressNotifier,
-                  builder: (context, value, child) {
-                    final (currentFile, completed, total) = value;
-                    final progress = total > 0 ? completed / total : 0.0;
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Moving: $currentFile"),
-                        const SizedBox(height: 8),
-                        LinearProgressIndicator(value: progress),
-                        const SizedBox(height: 8),
-                        Text("$completed / $total"),
-                      ],
-                    );
-                  },
-                ),
-              );
-            }
-          }
-          
-          class _WeightList extends ConsumerWidget {
-          
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showMigrationDialog(BuildContext context, String? newPath) async {
+    final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, 0));
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => _MigrationProgressDialog(progressNotifier: progressNotifier),
+    );
+
+    await P.fileManager.updateCustomDirectory(
+      newPath,
+      onProgress: (currentFile, completed, total) {
+        progressNotifier.value = (currentFile, completed, total);
+      },
+    );
+
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+class _MigrationProgressDialog extends StatelessWidget {
+  final ValueNotifier<(String, int, int)> progressNotifier;
+
+  const _MigrationProgressDialog({required this.progressNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Moving Weights..."),
+      content: ValueListenableBuilder<(String, int, int)>(
+        valueListenable: progressNotifier,
+        builder: (context, value, child) {
+          final (currentFile, completed, total) = value;
+          final progress = total > 0 ? completed / total : 0.0;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Moving: $currentFile"),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(value: progress),
+              const SizedBox(height: 8),
+              Text("$completed / $total"),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _WeightList extends ConsumerWidget {
   const _WeightList();
 
   @override

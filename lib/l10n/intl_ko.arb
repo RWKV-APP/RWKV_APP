@@ -26,7 +26,7 @@
   "selected_count": "선택됨 {count}",
   "select_all": "모두 선택",
   "cancel_all_selection": "모두 선택 취소",
-  "batch_management": "배치 관리",
+  "weights_mangement": "가중치 파일 관리",
   "thinking_mode_alert_footer": "모드",
   "think_mode_selector_title": "추론 모드를 선택해주세요",
   "think_mode_selector_message": "추론 모드는 모델의 추론 성능에 영향을 미칩니다",

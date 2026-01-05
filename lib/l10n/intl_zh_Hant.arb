@@ -26,7 +26,7 @@
   "selected_count": "已選擇 {count}",
   "select_all": "全選",
   "cancel_all_selection": "取消全選",
-  "batch_management": "批量管理",
+  "weights_mangement": "權重檔案管理",
   "thinking_mode_alert_footer": "模式",
   "think_mode_selector_title": "請選擇推理模式",
   "think_mode_selector_message": "推理模式會影響模型在推理時的表現",

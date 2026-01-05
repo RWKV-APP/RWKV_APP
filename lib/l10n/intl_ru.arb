@@ -26,7 +26,7 @@
   "selected_count": "Выбрано {count}",
   "select_all": "Выбрать все",
   "cancel_all_selection": "Отменить выбор всех",
-  "batch_management": "Параллельное управление",
+  "weights_mangement": "Управление файлами весов",
   "thinking_mode_alert_footer": "Режим",
   "think_mode_selector_title": "Выберите режим мышления",
   "think_mode_selector_message": "Режим мышления влияет на производительность модели при рассуждениях",

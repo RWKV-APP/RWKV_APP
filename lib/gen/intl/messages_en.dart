@@ -213,9 +213,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
       "Width of Each Result",
     ),
-    "batch_management": MessageLookupByLibrary.simpleMessage(
-      "Batch Management",
-    ),
     "beginner": MessageLookupByLibrary.simpleMessage("Beginner"),
     "benchmark": MessageLookupByLibrary.simpleMessage("Benchmark"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage(
@@ -1012,6 +1009,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Web Search Template",
     ),
     "websocket_service_port": m36,
+    "weights_mangement": MessageLookupByLibrary.simpleMessage(
+      "Weight File Management",
+    ),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV Chat",
     ),

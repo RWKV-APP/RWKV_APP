@@ -214,9 +214,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
       "Ширина каждого результата",
     ),
-    "batch_management": MessageLookupByLibrary.simpleMessage(
-      "Параллельное управление",
-    ),
     "beginner": MessageLookupByLibrary.simpleMessage("Новичок"),
     "benchmark": MessageLookupByLibrary.simpleMessage(
       "Тест производительности",
@@ -1038,6 +1035,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Шаблон веб-поиска",
     ),
     "websocket_service_port": m36,
+    "weights_mangement": MessageLookupByLibrary.simpleMessage(
+      "Управление файлами весов",
+    ),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Добро пожаловать в RWKV Чат",
     ),

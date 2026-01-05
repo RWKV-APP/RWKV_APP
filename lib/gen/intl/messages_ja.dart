@@ -184,7 +184,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
       "各結果の幅",
     ),
-    "batch_management": MessageLookupByLibrary.simpleMessage("バッチ管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("初心者"),
     "benchmark": MessageLookupByLibrary.simpleMessage("ベンチマーク"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("ベンチマーク結果"),
@@ -837,6 +836,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search": MessageLookupByLibrary.simpleMessage("ネットワーク検索"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("ウェブ検索テンプレート"),
     "websocket_service_port": m36,
+    "weights_mangement": MessageLookupByLibrary.simpleMessage("重みファイル管理"),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "RWKVチャットへようこそ",
     ),

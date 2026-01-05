@@ -195,7 +195,7 @@ class Settings extends ConsumerWidget {
             FormItem(
               isSectionEnd: true,
               icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
-              title: s.batch_management,
+              title: s.weights_mangement,
               onTap: () => push(PageKey.weightManager),
             ),
             12.h,

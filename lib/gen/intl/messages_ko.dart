@@ -186,7 +186,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
       "각 결과의 너비",
     ),
-    "batch_management": MessageLookupByLibrary.simpleMessage("배치 관리"),
     "beginner": MessageLookupByLibrary.simpleMessage("초보자"),
     "benchmark": MessageLookupByLibrary.simpleMessage("벤치마크"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("벤치마크 결과"),
@@ -835,6 +834,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search": MessageLookupByLibrary.simpleMessage("네트워크 검색"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
     "websocket_service_port": m36,
+    "weights_mangement": MessageLookupByLibrary.simpleMessage("가중치 파일 관리"),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "RWKV 채팅에 오신 것을 환영합니다",
     ),

@@ -178,7 +178,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_inference_width_detail_2": MessageLookupByLibrary.simpleMessage(
       "每條結果的寬度",
     ),
-    "batch_management": MessageLookupByLibrary.simpleMessage("批量管理"),
     "beginner": MessageLookupByLibrary.simpleMessage("新手模式"),
     "benchmark": MessageLookupByLibrary.simpleMessage("基準測試"),
     "benchmark_result": MessageLookupByLibrary.simpleMessage("基準測試結果"),
@@ -761,6 +760,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
     "websocket_service_port": m36,
+    "weights_mangement": MessageLookupByLibrary.simpleMessage("權重檔案管理"),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "歡迎探索 RWKV Chat",
     ),
