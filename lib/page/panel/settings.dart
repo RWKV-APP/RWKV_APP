@@ -261,22 +261,22 @@ class Settings extends ConsumerWidget {
                 P.app.checkUpdates();
               },
             ),
-            if (Platform.isAndroid)
-              FormItem(
-                isSectionStart: false,
-                title: S.current.dump_see_files,
-                subtitle: S.current.dump_see_files_subtitle,
-                icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
-                trailing: const _DumpSwitch(),
-                onTap: () {
-                  if (P.preference.dumpping.q == true) {
-                    P.dump.stopDump();
-                  } else {
-                    P.dump.startDump();
-                  }
-                },
-                showArrow: false,
-              ),
+            // if (Platform.isAndroid)
+            //   FormItem(
+            //     isSectionStart: false,
+            //     title: S.current.dump_see_files,
+            //     subtitle: S.current.dump_see_files_subtitle,
+            //     icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
+            //     trailing: const _DumpSwitch(),
+            //     onTap: () {
+            //       if (P.preference.dumpping.q == true) {
+            //         P.dump.stopDump();
+            //       } else {
+            //         P.dump.startDump();
+            //       }
+            //     },
+            //     showArrow: false,
+            //   ),
             FormItem(
               icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
               title: S.current.performance_test,
