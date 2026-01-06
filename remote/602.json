@@ -1,9 +1,23 @@
 {
   "chat": {
-    "latest_build": 628,
+    "latest_build": 631,
     "latest_build_ios": 602,
-    "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
-    "note_en": ["Improve application stability", "Fix known issues"],
+    "note_zh": [
+      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
+      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
+      "[优化] Lambada 测试现在可以渲染模型输出结果了",
+      "[优化] 优化了 Android 对 NPU 支持的描述",
+      "[优化] 优化了推理引擎的表现",
+      "[修复] 修复了多处 bug"
+    ],
+    "note_en": [
+      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
+      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
+      "[Improve] Lambada benchmark can now render model outputs in the UI",
+      "[Improve] Clarified the Android NPU support description",
+      "[Improve] Improved the performance of the inference engine",
+      "[Fix] Fixed multiple bugs"
+    ],
     "android_url": "https://www.pgyer.com/rwkvchat",
     "android_apk_url": "",
     "share_chat_qrcode_zh": "https://rwkvos.com/",
@@ -23,7 +37,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1764560656
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.1B",
@@ -34,7 +48,7 @@
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1763924253
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.4B",
@@ -45,7 +59,7 @@
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1763724526
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1b 1.5B",
@@ -56,7 +70,7 @@
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1764856619
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
@@ -79,7 +93,7 @@
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1767517939
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1c 7.2B",
@@ -92,7 +106,7 @@
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1767518294
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1a 0.1B",
@@ -104,7 +118,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1764560656
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.4B",
@@ -116,7 +130,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1763949581
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1b 1.5B",
@@ -128,7 +142,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1763949859
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1c 2.9B",
@@ -140,7 +154,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1767517939
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1a 0.1B (MLX INT6)",
@@ -151,7 +165,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1764560640
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.4B (MLX INT6)",
@@ -162,7 +176,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1763677775
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1b 1.5B (MLX INT6)",
@@ -173,7 +187,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1765769752
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1c 2.9B (MLX INT6)",
@@ -184,7 +198,7 @@
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1767522493
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1c 7.2B",
@@ -196,7 +210,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1767518295
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
@@ -221,7 +235,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["gpu", "translate"],
-        "date": 1763949083
+        "date": 1757894400
       },
       {
         "name": "RWKV7-G1 1.5B Translate",
@@ -233,7 +247,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["gpu", "translate"],
-        "date": 1763948944
+        "date": 1752624000
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -244,7 +258,7 @@
         "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
         "tags": ["cpu", "translate"],
-        "date": 1763888970
+        "date": 1753056000
       },
       {
         "name": "RWKV7-G1a 0.4B Translate",
@@ -256,7 +270,7 @@
         "backends": ["qnn"],
         "tags": ["npu", "translate"],
         "socLimitations": ["8 Elite"],
-        "date": 1763955999
+        "date": 1757894400
       },
       {
         "name": "RWKV7-G1a 0.4B Translate",
@@ -268,7 +282,7 @@
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1763956034
+        "date": 1757894400
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -280,7 +294,7 @@
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1763956063
+        "date": 1757894400
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -292,7 +306,7 @@
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1763956091
+        "date": 1757894400
       },
       {
         "name": "RWKV7-G1 0.4B Translate",
@@ -304,7 +318,7 @@
         "backends": ["qnn"],
         "tags": ["npu", "translate", "batch"],
         "socLimitations": ["8s Gen 3", "7+ Gen 3"],
-        "date": 1763956121
+        "date": 1757894400
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Elite)",
@@ -316,7 +330,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite"],
-        "date": 1763100549
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Elite Gen5)",
@@ -328,7 +342,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1763956382
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Gen 3)",
@@ -340,7 +354,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1763956403
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.1B (8s Gen 3)",
@@ -352,7 +366,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1763956412
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.1B (7+ Gen 3)",
@@ -364,7 +378,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1763956412
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G1a 0.1B (8 Gen 2)",
@@ -376,7 +390,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1763956393
+        "date": 1753660800
       },
       {
         "name": "RWKV7a-G1b 0.1B (8 Elite)",
@@ -389,7 +403,7 @@
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8 Elite"],
         "isDebug": true,
-        "date": 1763955453
+        "date": 1755561600
       },
       {
         "name": "RWKV7a-G1b 0.1B (8 Gen 3)",
@@ -402,7 +416,7 @@
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8 Gen 3"],
         "isDebug": true,
-        "date": 1763955740
+        "date": 1755561600
       },
       {
         "name": "RWKV7a-G1b 0.1B (8s Gen 3)",
@@ -415,7 +429,7 @@
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8s Gen 3"],
         "isDebug": true,
-        "date": 1763955869
+        "date": 1755561600
       },
       {
         "name": "RWKV7a-G1b 0.1B (7+ Gen 3)",
@@ -428,7 +442,7 @@
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
         "isDebug": true,
-        "date": 1763955869
+        "date": 1755561600
       },
       {
         "name": "RWKV7a-G1b 0.1B (8 Gen 2)",
@@ -441,7 +455,7 @@
         "tags": ["DeepEmbedding", "reason", "npu"],
         "socLimitations": ["8 Gen 2"],
         "isDebug": true,
-        "date": 1763955603
+        "date": 1755561600
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Elite Gen5)",
@@ -453,7 +467,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1763956440
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Elite)",
@@ -465,7 +479,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite"],
-        "date": 1763956421
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Gen 3)",
@@ -477,7 +491,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1763956467
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1a 0.4B (8s Gen 3)",
@@ -489,7 +503,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1763956479
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1a 0.4B (7+ Gen 3)",
@@ -501,7 +515,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1763956479
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1a 0.4B (8 Gen 2)",
@@ -513,7 +527,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1763956453
+        "date": 1757030400
       },
       {
         "name": "RWKV7-G1b 1.5B (8 Elite)",
@@ -525,7 +539,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1764857283
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1b 1.5B (8 Elite Gen5)",
@@ -537,7 +551,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1764857283
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1b 1.5B (8 Gen 3)",
@@ -549,7 +563,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1764857283
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1b 1.5B (8s Gen 3)",
@@ -561,7 +575,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1764857283
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1b 1.5B (7+ Gen 3)",
@@ -573,7 +587,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1764857283
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1b 1.5B (8 Gen 2)",
@@ -585,7 +599,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1764857284
+        "date": 1764633600
       },
       {
         "name": "RWKV7-G1c 2.9B (8 Elite)",
@@ -597,7 +611,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1767518189
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1c 2.9B (8 Elite Gen5)",
@@ -609,7 +623,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1767518189
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1c 2.9B (8 Gen 3)",
@@ -621,7 +635,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1767518190
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1c 2.9B (8s Gen 3)",
@@ -633,7 +647,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1767518190
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1c 2.9B (7+ Gen 3)",
@@ -645,7 +659,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1767518190
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1c 2.9B (8 Gen 2)",
@@ -657,7 +671,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1767518190
+        "date": 1767139200
       },
       {
         "name": "RWKV7-G1 1.5B Neko (8 Elite)",
@@ -760,21 +774,24 @@
         "fileSize": 382223868,
         "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g1a-0.1b-20250728-ctx4096.pth",
         "platforms": ["windows", "linux"],
-        "tags": ["batch", "albatross"]
+        "tags": ["batch", "albatross"],
+        "date": 1753660800
       },
       {
         "name": "RWKV7-G0a4 13.3B",
         "fileSize": 26540871429,
         "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g0a4-13.3b-20251114-ctx8192.pth",
         "platforms": ["windows", "linux"],
-        "tags": ["batch", "albatross"]
+        "tags": ["batch", "albatross"],
+        "date": 1763078400
       },
       {
         "name": "RWKV7-G0a3 7.2B",
         "fileSize": 14400009405,
         "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g0a3-7.2b-20251029-ctx8192.pth",
         "platforms": ["windows", "linux"],
-        "tags": ["batch", "albatross"]
+        "tags": ["batch", "albatross"],
+        "date": 1761696000
       }
     ]
   },
@@ -866,10 +883,24 @@
     ]
   },
   "world": {
-    "latest_build": 628,
+    "latest_build": 631,
     "latest_build_ios": 602,
-    "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
-    "note_en": ["Improve application stability", "Fix known issues"],
+    "note_zh": [
+      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
+      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
+      "[优化] Lambada 测试现在可以渲染模型输出结果了",
+      "[优化] 优化了 Android 对 NPU 支持的描述",
+      "[优化] 优化了推理引擎的表现",
+      "[修复] 修复了多处 bug"
+    ],
+    "note_en": [
+      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
+      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
+      "[Improve] Lambada benchmark can now render model outputs in the UI",
+      "[Improve] Clarified the Android NPU support description",
+      "[Improve] Improved the performance of the inference engine",
+      "[Fix] Fixed multiple bugs"
+    ],
     "android_url": "https://www.pgyer.com/rwkv-see",
     "ios_url": "https://testflight.apple.com/join/vAjawMJc",
     "model_config": [
@@ -1124,10 +1155,24 @@
     ]
   },
   "tts": {
-    "latest_build": 628,
+    "latest_build": 631,
     "latest_build_ios": 602,
-    "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
-    "note_en": ["Improve application stability", "Fix known issues"],
+    "note_zh": [
+      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
+      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
+      "[优化] Lambada 测试现在可以渲染模型输出结果了",
+      "[优化] 优化了 Android 对 NPU 支持的描述",
+      "[优化] 优化了推理引擎的表现",
+      "[修复] 修复了多处 bug"
+    ],
+    "note_en": [
+      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
+      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
+      "[Improve] Lambada benchmark can now render model outputs in the UI",
+      "[Improve] Clarified the Android NPU support description",
+      "[Improve] Improved the performance of the inference engine",
+      "[Fix] Fixed multiple bugs"
+    ],
     "android_url": "https://www.pgyer.com/rwkvchat",
     "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "model_config": [
@@ -1333,8 +1378,22 @@
   "othello": {
     "latest_build": 408,
     "latest_build_ios": 408,
-    "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
-    "note_en": ["Improve application stability", "Fix known issues"],
+    "note_zh": [
+      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
+      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
+      "[优化] Lambada 测试现在可以渲染模型输出结果了",
+      "[优化] 优化了 Android 对 NPU 支持的描述",
+      "[优化] 优化了推理引擎的表现",
+      "[修复] 修复了多处 bug"
+    ],
+    "note_en": [
+      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
+      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
+      "[Improve] Lambada benchmark can now render model outputs in the UI",
+      "[Improve] Clarified the Android NPU support description",
+      "[Improve] Improved the performance of the inference engine",
+      "[Fix] Fixed multiple bugs"
+    ],
     "android_url": "https://www.pgyer.com/rwkv-othello",
     "ios_url": "https://testflight.apple.com/join/f5SVf76c",
     "model_config": []
@@ -1342,8 +1401,22 @@
   "sudoku": {
     "latest_build": 415,
     "latest_build_ios": 1,
-    "note_zh": ["提升应用程序的稳定性", "修复了已知问题"],
-    "note_en": ["Improve application stability", "Fix known issues"],
+    "note_zh": [
+      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
+      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
+      "[优化] Lambada 测试现在可以渲染模型输出结果了",
+      "[优化] 优化了 Android 对 NPU 支持的描述",
+      "[优化] 优化了推理引擎的表现",
+      "[修复] 修复了多处 bug"
+    ],
+    "note_en": [
+      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
+      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
+      "[Improve] Lambada benchmark can now render model outputs in the UI",
+      "[Improve] Clarified the Android NPU support description",
+      "[Improve] Improved the performance of the inference engine",
+      "[Fix] Fixed multiple bugs"
+    ],
     "android_url": "https://www.pgyer.com/rwkv-sudoku",
     "ios_url": "https://testflight.apple.com/join/CCc7rY5k",
     "model_config": [
@@ -1357,7 +1430,7 @@
         "backends": ["qnn"],
         "tags": ["npu"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1763950001
+        "date": 1732060800
       },
       {
         "name": "RWKV7 Sudoku (8 Elite)",
@@ -1369,7 +1442,7 @@
         "backends": ["qnn"],
         "tags": ["npu"],
         "socLimitations": ["8 Elite"],
-        "date": 1763949998
+        "date": 1732060800
       },
       {
         "name": "RWKV7 Sudoku (8 Gen 3)",
@@ -1381,7 +1454,7 @@
         "backends": ["qnn"],
         "tags": ["npu"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1763950009
+        "date": 1732060800
       },
       {
         "name": "RWKV7 Sudoku (8 Gen 2)",
@@ -1393,7 +1466,7 @@
         "backends": ["qnn"],
         "tags": ["npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1763950006
+        "date": 1732060800
       },
       {
         "name": "RWKV7 Sudoku (CPU)",
@@ -1404,7 +1477,7 @@
         "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["ncnn"],
         "tags": ["cpu"],
-        "date": 1763950015
+        "date": 1732060800
       },
       {
         "name": "RWKV7 Sudoku (GPU)",
@@ -1416,7 +1489,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["gpu"],
-        "date": 1763950014
+        "date": 1732060800
       }
     ]
   }
