@@ -309,6 +309,12 @@
   "chat_mode": "對話模式",
   "prompt": "提示詞",
   "output": "輸出",
+  "model_output": "模型輸出: {text}",
+  "@model_output": {
+    "placeholders": {
+      "text": {}
+    }
+  },
   "submit": "提交",
   "regenerate": "重新產生",
   "resume": "恢復",

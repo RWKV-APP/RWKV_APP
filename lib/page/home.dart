@@ -105,7 +105,7 @@ class _PageHomeState extends ConsumerState<PageHome> {
                     const _CompletionButton(),
                     const _TranslatorButton(),
                     const _NekoButton(),
-                    const _LambadaButton(),
+                    const _BenchmarkButton(),
                   ];
                   return ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
@@ -457,8 +457,8 @@ class _TranslatorButton extends ConsumerWidget {
   }
 }
 
-class _LambadaButton extends ConsumerWidget {
-  const _LambadaButton();
+class _BenchmarkButton extends ConsumerWidget {
+  const _BenchmarkButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -468,7 +468,7 @@ class _LambadaButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
-          push(PageKey.lambada);
+          push(PageKey.benchmark);
         },
         child: Padding(
           padding: const .all(16),
@@ -485,11 +485,11 @@ class _LambadaButton extends ConsumerWidget {
                     shape: .circle,
                   ),
                   alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.bolt, color: Colors.white),
+                  child: const FaIcon(FontAwesomeIcons.gauge, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(s.lambada_test, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(s.performance_test, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
               const SizedBox(height: 8),
               Text(s.performance_test_description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 6),

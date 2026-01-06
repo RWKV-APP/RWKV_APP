@@ -309,6 +309,12 @@
   "chat_mode": "Режим чата",
   "prompt": "Промпт",
   "output": "Вывод",
+  "model_output": "Вывод модели: {text}",
+  "@model_output": {
+    "placeholders": {
+      "text": {}
+    }
+  },
   "submit": "Отправить",
   "regenerate": "Сгенерировать заново",
   "resume": "Возобновить",

@@ -21,6 +21,9 @@ class _Lambada {
 
   /// 是否在收到 engine 的测试结果后, 自动执行下一个 lambada 测试项目
   late final autoStartNextTest = qs(false);
+
+  /// 存储每次测试的结果，每个 Map 包含 sourceText、targetText、outputText
+  late final testResults = qs<List<Map<String, String>>>([]);
 }
 
 extension _$Lambada on _Lambada {
@@ -35,7 +38,7 @@ extension _$Lambada on _Lambada {
     final isSee = model?.worldType != null;
     final isTranslate = model?.tags.contains("translate") ?? false;
     switch (pageKey) {
-      case PageKey.lambada:
+      case PageKey.benchmark:
         if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
         break;
       default:
@@ -56,6 +59,17 @@ extension _$Lambada on _Lambada {
     totalLogits.q += logits;
     final correct = res.corrects.first;
     if (correct) correctCount.q++;
+
+    // 存储测试结果
+    final currentTestItem = currentItem.q;
+    if (currentTestItem != null && res.outputTexts.isNotEmpty) {
+      final result = {
+        'sourceText': currentTestItem.sourceText,
+        'targetText': currentTestItem.targetText,
+        'outputText': res.outputTexts.first,
+      };
+      testResults.q = [...testResults.q, result];
+    }
 
     // 困惑度就是拿logits values做平均之后exp(-average)
     ppl.q = math.exp(-totalLogits.q / totalFinishCount.q);
@@ -119,6 +133,7 @@ extension $Lambada on _Lambada {
     ppl.q = 0.0;
     acc.q = 0.0;
     totalLogits.q = 0.0;
+    testResults.q = [];
     autoStartNextTest.q = true;
 
     waitingItems.q = testItems.q;

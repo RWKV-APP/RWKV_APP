@@ -10,7 +10,6 @@ import 'package:zone/page/chat.dart';
 import 'package:zone/page/completion/completion_page.dart';
 import 'package:zone/page/conversation.dart';
 import 'package:zone/page/home.dart';
-import 'package:zone/page/lambada.dart';
 import 'package:zone/page/ocr.dart';
 import 'package:zone/page/othello.dart';
 import 'package:zone/page/see.dart';
@@ -62,6 +61,7 @@ enum PageKey {
     PageKey.weightManager => const PageWeightManager(),
     PageKey.translator => const PageTranslator(),
     PageKey.benchmark => const PageBenchmark(),
+    PageKey.lambada => const PageBenchmark(),
     PageKey.advancedSettings => const PageAdvancedSettings(),
     PageKey.fontSettings => const PageFontSettings(),
     PageKey.see => const PageSee(),
@@ -86,7 +86,6 @@ enum PageKey {
         }
       },
     ),
-    PageKey.lambada => const PageLambada(),
     PageKey.ocr => const PageOcr(),
   };
 

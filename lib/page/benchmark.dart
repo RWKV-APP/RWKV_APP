@@ -5,33 +5,100 @@ import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
-import 'package:zone/store/p.dart' show P, $Chat, $RWKV;
+import 'package:zone/store/p.dart' show P, $Chat, $RWKV, $Lambada;
 import 'package:zone/widgets/model_selector.dart';
 
 import 'package:zone/gen/l10n.dart' show S;
 
-class PageBenchmark extends ConsumerWidget {
+class PageBenchmark extends ConsumerStatefulWidget {
   const PageBenchmark({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(S.current.performance_test),
-      ),
-      body: SingleChildScrollView(
-        padding: const .symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: .stretch,
+  ConsumerState<PageBenchmark> createState() => _PageBenchmarkState();
+}
+
+class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_onTabChanged);
+  }
+
+  void _onTabChanged() {
+    // 当标签页切换完成时（动画结束），停止所有测试
+    if (!_tabController.indexIsChanging) {
+      _stopAllTests();
+    }
+  }
+
+  void _stopAllTests() {
+    // 停止性能测试
+    if (P.chat.receivingTokens.q) {
+      P.chat.stopCompletion();
+    }
+    // 停止 LAMBADA 测试
+    if (P.lambada.autoStartNextTest.q) {
+      P.lambada.stopTest();
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_onTabChanged);
+    _stopAllTests();
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          _stopAllTests();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(S.current.performance_test),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: s.performance_test),
+              Tab(text: s.lambada_test),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          controller: _tabController,
           children: [
-            const SizedBox(height: 12),
-            _Test(),
+            SingleChildScrollView(
+              padding: const .symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  const SizedBox(height: 12),
+                  _Test(),
+                ],
+              ),
+            ),
+            SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const .all(16),
+              child: _LambadaTest(),
+            ),
           ],
         ),
       ),
@@ -410,5 +477,453 @@ class _Utils {
       //
     }
     return null;
+  }
+}
+
+class _LambadaTest extends ConsumerWidget {
+  const _LambadaTest();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        const _LambadaTestControlButtons(),
+        const SizedBox(height: 8),
+        const _LambadaModelSelectionButton(),
+        const SizedBox(height: 16),
+        const _LambadaTestDataCard(),
+        const SizedBox(height: 16),
+        const _LambadaTestResultsCard(),
+        const SizedBox(height: 16),
+        const _LambadaCurrentTestPreview(),
+        const SizedBox(height: 16),
+        const _LambadaTestHistoryCard(),
+      ],
+    );
+  }
+}
+
+class _LambadaTestControlButtons extends ConsumerWidget {
+  const _LambadaTestControlButtons();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final isRunning = ref.watch(P.lambada.autoStartNextTest);
+
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: isRunning ? null : () => P.lambada.startTest(),
+            icon: isRunning
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.play_arrow),
+            label: Text(isRunning ? s.testing : s.start_test),
+          ),
+        ),
+        const SizedBox(width: 8),
+        if (isRunning)
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: () => P.lambada.stopTest(),
+              icon: const Icon(Icons.stop),
+              label: Text(s.stop_test),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          )
+        else
+          ElevatedButton.icon(
+            onPressed: () => P.lambada.loadTestData(),
+            icon: const Icon(Icons.refresh),
+            label: Text(s.load_data),
+          ),
+      ],
+    );
+  }
+}
+
+class _LambadaModelSelectionButton extends ConsumerWidget {
+  const _LambadaModelSelectionButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final isRunning = ref.watch(P.lambada.autoStartNextTest);
+    final currentModel = ref.watch(P.rwkv.latestModel);
+
+    return Row(
+      children: [
+        if (currentModel != null) Expanded(child: Text(s.current_model(currentModel.name))),
+        if (currentModel == null) Expanded(child: Text(s.please_select_model)),
+        ElevatedButton.icon(
+          onPressed: isRunning ? null : () => P.lambada.reselectModel(),
+          icon: const Icon(Icons.model_training),
+          label: currentModel == null ? Text(s.please_select_model) : Text(s.reselect_model),
+        ),
+      ],
+    );
+  }
+}
+
+class _LambadaTestDataCard extends ConsumerWidget {
+  const _LambadaTestDataCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final testItems = ref.watch(P.lambada.testItems);
+    final isRunning = ref.watch(P.lambada.autoStartNextTest);
+    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
+    final progress = ((totalFinishCount / (testItems.isEmpty ? 1 : testItems.length)).toDouble()).clamp(0, 1.0).toDouble();
+
+    return Card(
+      child: Padding(
+        padding: const .all(16.0),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Text(
+              s.test_data,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(s.total_test_items(testItems.length)),
+            if (isRunning) ...[
+              const SizedBox(height: 8),
+              Text(s.current_progress(totalFinishCount, testItems.length)),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(value: progress),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LambadaTestResultsCard extends ConsumerWidget {
+  const _LambadaTestResultsCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final isRunning = ref.watch(P.lambada.autoStartNextTest);
+    final ppl = ref.watch(P.lambada.ppl);
+    final acc = ref.watch(P.lambada.acc);
+    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
+    final correctCount = ref.watch(P.lambada.correctCount);
+
+    return Card(
+      child: Padding(
+        padding: const .all(16.0),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  s.test_results,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                if (isRunning) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const .symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.q(0.2),
+                      borderRadius: .circular(12),
+                      border: Border.all(color: Colors.orange.q(0.5)),
+                    ),
+                    child: Row(
+                      mainAxisSize: .min,
+                      children: [
+                        const SizedBox(
+                          width: 12,
+                          height: 12,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          s.real_time_update,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.orange.shade700,
+                            fontWeight: .w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _LambadaResultCard(
+                    title: s.accuracy,
+                    value: '${(acc * 100).toStringAsFixed(2)}%',
+                    color: Colors.green,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _LambadaResultCard(
+                    title: s.perplexity,
+                    value: ppl.toStringAsFixed(2),
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: _LambadaResultCard(
+                    title: s.correct_count,
+                    value: '$correctCount',
+                    color: Colors.orange,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _LambadaResultCard(
+                    title: s.total_count,
+                    value: '$totalFinishCount',
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LambadaCurrentTestPreview extends ConsumerWidget {
+  const _LambadaCurrentTestPreview();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final testItems = ref.watch(P.lambada.testItems);
+    final isRunning = ref.watch(P.lambada.autoStartNextTest);
+    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
+    final currentIndex = totalFinishCount;
+
+    if (!isRunning || testItems.isEmpty || currentIndex >= testItems.length) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      child: Padding(
+        padding: const .all(16.0),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Text(
+              s.current_test_item(currentIndex + 1, testItems.length),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              s.source_text(testItems[currentIndex].sourceText),
+              style: const TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              s.target_text(testItems[currentIndex].targetText),
+              style: const TextStyle(fontSize: 12, color: Colors.blue),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LambadaResultCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final Color color;
+
+  const _LambadaResultCard({
+    required this.title,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const .all(12),
+      decoration: BoxDecoration(
+        color: color.q(0.1),
+        borderRadius: .circular(8),
+        border: Border.all(color: color.q(0.3)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: color,
+              fontWeight: .w500,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: .bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LambadaTestHistoryCard extends ConsumerWidget {
+  const _LambadaTestHistoryCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final testResults = ref.watch(P.lambada.testResults);
+
+    if (testResults.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    int crossAxisCount = 1;
+    if (screenWidth > 1024) {
+      crossAxisCount = 3;
+    } else if (screenWidth > 600) {
+      crossAxisCount = 2;
+    }
+
+    return Card(
+      child: Padding(
+        padding: const .all(16.0),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Text(
+              s.test_results,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            MasonryGridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              itemCount: testResults.length,
+              itemBuilder: (context, index) {
+                final result = testResults[index];
+                final targetText = result['targetText'] ?? '';
+                final outputText = result['outputText'] ?? '';
+                final isCorrect = targetText == outputText;
+                return _LambadaTestHistoryItem(
+                  index: index + 1,
+                  sourceText: result['sourceText'] ?? '',
+                  targetText: targetText,
+                  outputText: outputText,
+                  isCorrect: isCorrect,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LambadaTestHistoryItem extends StatelessWidget {
+  final int index;
+  final String sourceText;
+  final String targetText;
+  final String outputText;
+  final bool isCorrect;
+
+  const _LambadaTestHistoryItem({
+    required this.index,
+    required this.sourceText,
+    required this.targetText,
+    required this.outputText,
+    required this.isCorrect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    return Container(
+      padding: const .all(12),
+      decoration: BoxDecoration(
+        borderRadius: .circular(8),
+        border: Border.all(color: Colors.grey.q(0.4)),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Text(
+            '#$index',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: .w600,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            s.source_text(sourceText),
+            style: const TextStyle(fontSize: 12),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  s.target_text(targetText),
+                  style: const TextStyle(fontSize: 12, color: Colors.blue),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  s.model_output(outputText),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isCorrect ? Colors.green.shade700 : Colors.red.shade700,
+                    fontWeight: isCorrect ? FontWeight.w500 : FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -309,6 +309,12 @@
   "chat_mode": "채팅 모드",
   "prompt": "프롬프트",
   "output": "출력",
+  "model_output": "모델 출력: {text}",
+  "@model_output": {
+    "placeholders": {
+      "text": {}
+    }
+  },
   "submit": "제출",
   "regenerate": "재생성",
   "resume": "재개",

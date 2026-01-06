@@ -309,6 +309,12 @@
   "chat_mode": "チャットモード",
   "prompt": "プロンプト",
   "output": "出力",
+  "model_output": "モデル出力: {text}",
+  "@model_output": {
+    "placeholders": {
+      "text": {}
+    }
+  },
   "submit": "送信",
   "regenerate": "再生成",
   "resume": "再開",

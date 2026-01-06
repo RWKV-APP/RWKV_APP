@@ -309,6 +309,12 @@
   "chat_mode": "Chat Mode",
   "prompt": "Prompt",
   "output": "Output",
+  "model_output": "Model output: {text}",
+  "@model_output": {
+    "placeholders": {
+      "text": {}
+    }
+  },
   "submit": "Submit",
   "regenerate": "Regenerate",
   "resume": "Resume",

@@ -2288,6 +2288,16 @@ class S {
     return Intl.message('输出', name: 'output', desc: '', args: []);
   }
 
+  /// `模型输出: {text}`
+  String model_output(Object text) {
+    return Intl.message(
+      '模型输出: $text',
+      name: 'model_output',
+      desc: '',
+      args: [text],
+    );
+  }
+
   /// `提交`
   String get submit {
     return Intl.message('提交', name: 'submit', desc: '', args: []);

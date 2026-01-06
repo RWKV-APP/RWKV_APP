@@ -289,6 +289,8 @@ class _WeightItem extends ConsumerWidget {
     return ListTile(
       title: Text(fileInfo.name),
       subtitle: Wrap(
+        runSpacing: 4,
+        spacing: 4,
         children: [
           Container(
             decoration: BoxDecoration(

@@ -303,11 +303,6 @@ class Settings extends ConsumerWidget {
             //     showArrow: false,
             //   ),
             FormItem(
-              icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
-              title: S.current.performance_test,
-              onTap: () => push(PageKey.benchmark),
-            ),
-            FormItem(
               title: s.github_repository,
               icon: Icon(Icons.code, color: qb.q(.667), size: 16),
               onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP", mode: LaunchMode.externalApplication),
