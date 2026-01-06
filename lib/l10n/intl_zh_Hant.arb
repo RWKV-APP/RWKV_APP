@@ -542,5 +542,6 @@
       "socName": {}
     }
   },
-  "adapting_more_inference_chips": "我們正在持續適配更多的推理芯片，敬請期待。"
+  "adapting_more_inference_chips": "我們正在持續適配更多的推理芯片，敬請期待。",
+  "other_files": "其他檔案"
 }

@@ -549,5 +549,6 @@
       "socName": {}
     }
   },
-  "adapting_more_inference_chips": "We are continuously adapting more inference chips, please stay tuned."
+  "adapting_more_inference_chips": "We are continuously adapting more inference chips, please stay tuned.",
+  "other_files": "Other Files"
 }

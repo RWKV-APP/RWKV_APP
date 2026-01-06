@@ -3655,6 +3655,11 @@ class S {
       args: [],
     );
   }
+
+  /// `其他文件`
+  String get other_files {
+    return Intl.message('其他文件', name: 'other_files', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

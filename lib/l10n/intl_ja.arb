@@ -542,5 +542,6 @@
       "socName": {}
     }
   },
-  "adapting_more_inference_chips": "より多くの推論チップへの対応を継続しています。ご期待ください。"
+  "adapting_more_inference_chips": "より多くの推論チップへの対応を継続しています。ご期待ください。",
+  "other_files": "その他のファイル"
 }
