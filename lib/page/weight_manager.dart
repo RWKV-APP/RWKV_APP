@@ -297,7 +297,7 @@ class _WeightItem extends ConsumerWidget {
               color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(4),
             ),
-            padding: .symmetric(horizontal: 4, vertical: 2),
+            padding: const .symmetric(horizontal: 4, vertical: 2),
             child: Text(_formatBytes(fileInfo.fileSize)),
           ),
           Text(local.targetPath.split("/").last),

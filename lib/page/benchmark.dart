@@ -5,7 +5,6 @@ import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:halo/halo.dart';
@@ -94,9 +93,9 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
                 ],
               ),
             ),
-            SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const .all(16),
+            const SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: .all(16),
               child: _LambadaTest(),
             ),
           ],
@@ -485,20 +484,20 @@ class _LambadaTest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+    return const Column(
       crossAxisAlignment: .stretch,
       children: [
-        const _LambadaTestControlButtons(),
-        const SizedBox(height: 8),
-        const _LambadaModelSelectionButton(),
-        const SizedBox(height: 16),
-        const _LambadaTestDataCard(),
-        const SizedBox(height: 16),
-        const _LambadaTestResultsCard(),
-        const SizedBox(height: 16),
-        const _LambadaCurrentTestPreview(),
-        const SizedBox(height: 16),
-        const _LambadaTestHistoryCard(),
+        _LambadaTestControlButtons(),
+        SizedBox(height: 8),
+        _LambadaModelSelectionButton(),
+        SizedBox(height: 16),
+        _LambadaTestDataCard(),
+        SizedBox(height: 16),
+        _LambadaTestResultsCard(),
+        SizedBox(height: 16),
+        _LambadaCurrentTestPreview(),
+        SizedBox(height: 16),
+        _LambadaTestHistoryCard(),
       ],
     );
   }
