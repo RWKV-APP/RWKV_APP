@@ -18,6 +18,7 @@ import 'package:zone/page/settings.dart';
 import 'package:zone/page/sudoku.dart';
 import 'package:zone/page/talk.dart';
 import 'package:zone/page/translator.dart';
+import 'package:zone/page/weight_manager.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/role_play_item.dart';
@@ -41,6 +42,7 @@ enum PageKey {
   lambada,
   see,
   ocr,
+  weightManager,
   ;
 
   String get path => "/$name";
@@ -57,6 +59,7 @@ enum PageKey {
     PageKey.home => const PageHome(),
     PageKey.conversation => const PageConversation(),
     PageKey.settings => const PageSettings(),
+    PageKey.weightManager => const PageWeightManager(),
     PageKey.translator => const PageTranslator(),
     PageKey.benchmark => const PageBenchmark(),
     PageKey.advancedSettings => const PageAdvancedSettings(),

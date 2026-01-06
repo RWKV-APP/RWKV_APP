@@ -26,7 +26,7 @@
   "selected_count": "已選擇 {count}",
   "select_all": "全選",
   "cancel_all_selection": "取消全選",
-  "batch_management": "批量管理",
+  "weights_mangement": "權重檔案管理",
   "thinking_mode_alert_footer": "模式",
   "think_mode_selector_title": "請選擇推理模式",
   "think_mode_selector_message": "推理模式會影響模型在推理時的表現",
@@ -535,5 +535,13 @@
     }
   },
   "reached_bottom": "敬請期待",
-  "open_database_folder": "開啟資料庫資料夾"
+  "open_database_folder": "開啟資料庫資料夾",
+  "npu_not_supported_title": "暫未支持您的芯片 {socName} 的 NPU 加速",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "我們正在持續適配更多的推理芯片，敬請期待。",
+  "other_files": "其他檔案"
 }

@@ -1,7 +1,7 @@
 // ignore: unused_import
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,9 +19,31 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
 import 'package:zone/widgets/form_item.dart';
+import 'package:zone/page/weight_manager.dart';
 
 class Settings extends ConsumerWidget {
   static final _shown = qs(false);
+
+  static String _getTotalUsage(WidgetRef ref) {
+    final chatWeights = ref.read(P.fileManager.chatWeights);
+    final ttsWeights = ref.read(P.fileManager.ttsWeights);
+    final roleplayWeights = ref.read(P.fileManager.roleplayWeights);
+    final seeWeights = ref.read(P.fileManager.seeWeights);
+    final sudokuWeights = ref.read(P.fileManager.sudokuWeights);
+    final othelloWeights = ref.read(P.fileManager.othelloWeights);
+
+    final allWeights = [
+      ...chatWeights,
+      ...ttsWeights,
+      ...roleplayWeights,
+      ...seeWeights,
+      ...sudokuWeights,
+      ...othelloWeights,
+    ];
+
+    final totalBytes = WeightManagerUtils.calculateTotalUsage(ref, allWeights);
+    return WeightManagerUtils.formatBytes(totalBytes);
+  }
 
   static Future<void> show() async {
     qq;
@@ -80,6 +102,8 @@ class Settings extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == DemoType.chat;
 
+    final totalUsage = _getTotalUsage(ref);
+
     final iconWidget = SizedBox(
       width: 64,
       height: 64,
@@ -118,7 +142,7 @@ class Settings extends ConsumerWidget {
                 ],
               ),
         body: ListView(
-          padding: .only(left: 12 + paddingLeft, top: paddingTop, right: 12, bottom: max(paddingBottom, 12)),
+          padding: .only(left: 12 + paddingLeft, top: paddingTop, right: 12, bottom: math.max(paddingBottom, 12)),
           controller: scrollController,
           children: [
             if (isChat) const SizedBox(height: 40),
@@ -186,11 +210,18 @@ class Settings extends ConsumerWidget {
                 onTap: () => push(PageKey.advancedSettings),
               ),
             FormItem(
-              isSectionEnd: true,
+              isSectionEnd: false,
               icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.q(.667), size: 16),
               title: s.appearance,
               infoText: preferredThemeMode.displayName,
               onTap: P.preference.showThemeSettings,
+            ),
+            FormItem(
+              isSectionEnd: true,
+              icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
+              title: s.weights_mangement,
+              infoText: totalUsage,
+              onTap: () => push(PageKey.weightManager),
             ),
             12.h,
             Row(
@@ -255,28 +286,27 @@ class Settings extends ConsumerWidget {
                 P.app.checkUpdates();
               },
             ),
-            if (demoType == DemoType.see && Platform.isAndroid)
-              FormItem(
-                isSectionStart: false,
-                title: S.current.dump_see_files,
-                subtitle: S.current.dump_see_files_subtitle,
-                icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
-                trailing: const _DumpSwitch(),
-                onTap: () {
-                  if (P.preference.dumpping.q == true) {
-                    P.dump.stopDump();
-                  } else {
-                    P.dump.startDump();
-                  }
-                },
-                showArrow: false,
-              ),
-            if (isChat)
-              FormItem(
-                icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
-                title: S.current.performance_test,
-                onTap: () => push(PageKey.benchmark),
-              ),
+            // if (Platform.isAndroid)
+            //   FormItem(
+            //     isSectionStart: false,
+            //     title: S.current.dump_see_files,
+            //     subtitle: S.current.dump_see_files_subtitle,
+            //     icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
+            //     trailing: const _DumpSwitch(),
+            //     onTap: () {
+            //       if (P.preference.dumpping.q == true) {
+            //         P.dump.stopDump();
+            //       } else {
+            //         P.dump.startDump();
+            //       }
+            //     },
+            //     showArrow: false,
+            //   ),
+            FormItem(
+              icon: Icon(Icons.perm_device_information_outlined, color: qb.q(.667), size: 16),
+              title: S.current.performance_test,
+              onTap: () => push(PageKey.benchmark),
+            ),
             FormItem(
               title: s.github_repository,
               icon: Icon(Icons.code, color: qb.q(.667), size: 16),

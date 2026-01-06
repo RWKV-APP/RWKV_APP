@@ -26,7 +26,7 @@
   "selected_count": "Выбрано {count}",
   "select_all": "Выбрать все",
   "cancel_all_selection": "Отменить выбор всех",
-  "batch_management": "Параллельное управление",
+  "weights_mangement": "Управление файлами весов",
   "thinking_mode_alert_footer": "Режим",
   "think_mode_selector_title": "Выберите режим мышления",
   "think_mode_selector_message": "Режим мышления влияет на производительность модели при рассуждениях",
@@ -535,5 +535,13 @@
     }
   },
   "reached_bottom": "Следите за обновлениями",
-  "open_database_folder": "Открыть папку базы данных"
+  "open_database_folder": "Открыть папку базы данных",
+  "npu_not_supported_title": "Поддержка NPU для вашего чипа {socName} пока недоступна",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "Мы продолжаем адаптировать больше чипов для вывода, следите за обновлениями.",
+  "other_files": "Другие файлы"
 }

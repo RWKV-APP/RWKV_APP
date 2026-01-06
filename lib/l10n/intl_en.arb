@@ -26,7 +26,7 @@
   "selected_count": "Selected {count}",
   "select_all": "Select All",
   "cancel_all_selection": "Cancel All Selection",
-  "batch_management": "Batch Management",
+  "weights_mangement": "Weight File Management",
   "thinking_mode_alert_footer": " Mode",
   "think_mode_selector_title": "Please select a reasoning mode",
   "think_mode_selector_message": "The reasoning mode affects the model's performance during reasoning",
@@ -542,5 +542,13 @@
     }
   },
   "reached_bottom": "Stay tuned",
-  "open_database_folder": "Open Database Folder"
+  "open_database_folder": "Open Database Folder",
+  "npu_not_supported_title": "NPU support for your chip {socName} not yet available",
+  "@npu_not_supported_title": {
+    "placeholders": {
+      "socName": {}
+    }
+  },
+  "adapting_more_inference_chips": "We are continuously adapting more inference chips, please stay tuned.",
+  "other_files": "Other Files"
 }

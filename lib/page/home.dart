@@ -23,20 +23,32 @@ class PageHome extends ConsumerStatefulWidget {
 }
 
 class _PageHomeState extends ConsumerState<PageHome> {
-  final controller = ScrollController();
+  static ScrollController? controller;
   static final _pixels = qs(0.0);
   static final _pixelsFromBottom = qs(1.0);
 
   @override
   void initState() {
     super.initState();
-    controller.addListener(() {
-      final position = controller.position;
-      final pixels = position.pixels;
-      final pixelsFromBottom = position.maxScrollExtent - pixels;
-      _pixels.q = pixels;
-      _pixelsFromBottom.q = pixelsFromBottom;
-    });
+    controller = ScrollController(initialScrollOffset: _pixels.q);
+    controller?.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    controller?.removeListener(_onScroll);
+    controller?.dispose();
+    controller = null;
+    super.dispose();
+  }
+
+  void _onScroll() async {
+    final position = controller?.position;
+    if (position == null) return;
+    final pixels = position.pixels;
+    final pixelsFromBottom = position.maxScrollExtent - pixels;
+    if ((_pixels.q - pixels).abs() > 1) _pixels.q = pixels;
+    if ((_pixelsFromBottom.q - pixelsFromBottom).abs() > 1) _pixelsFromBottom.q = pixelsFromBottom;
   }
 
   @override
@@ -608,7 +620,7 @@ class _Welcome extends ConsumerWidget {
         opacity: opacity,
         child: Column(
           children: [
-            const SizedBox(height: 100),
+            SizedBox(height: 100 + (1 - opacity) * 25),
             Center(
               child: ClipRRect(
                 borderRadius: .circular(50),

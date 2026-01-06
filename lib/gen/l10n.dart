@@ -244,9 +244,14 @@ class S {
     );
   }
 
-  /// `批量管理`
-  String get batch_management {
-    return Intl.message('批量管理', name: 'batch_management', desc: '', args: []);
+  /// `权重文件管理`
+  String get weights_mangement {
+    return Intl.message(
+      '权重文件管理',
+      name: 'weights_mangement',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `模式`
@@ -3629,6 +3634,31 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `暂未支持您的芯片 {socName} 的 NPU 加速`
+  String npu_not_supported_title(Object socName) {
+    return Intl.message(
+      '暂未支持您的芯片 $socName 的 NPU 加速',
+      name: 'npu_not_supported_title',
+      desc: '',
+      args: [socName],
+    );
+  }
+
+  /// `我们正在持续适配更多的推理芯片，敬请期待。`
+  String get adapting_more_inference_chips {
+    return Intl.message(
+      '我们正在持续适配更多的推理芯片，敬请期待。',
+      name: 'adapting_more_inference_chips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `其他文件`
+  String get other_files {
+    return Intl.message('其他文件', name: 'other_files', desc: '', args: []);
   }
 }
 
