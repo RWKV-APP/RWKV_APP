@@ -676,6 +676,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Или начать пустой чат",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),
+    "other_files": MessageLookupByLibrary.simpleMessage("Другие файлы"),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
     "overseas": MessageLookupByLibrary.simpleMessage("(за рубежом)"),
     "parameter_description": MessageLookupByLibrary.simpleMessage(

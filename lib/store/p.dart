@@ -88,6 +88,7 @@ import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/model/serve_mode.dart';
 import 'package:zone/model/state_log.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
+import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/web_search_mode.dart';

@@ -654,6 +654,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Or start a new empty chat",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
+    "other_files": MessageLookupByLibrary.simpleMessage("Other Files"),
     "output": MessageLookupByLibrary.simpleMessage("Output"),
     "overseas": MessageLookupByLibrary.simpleMessage("(Overseas)"),
     "parameter_description": MessageLookupByLibrary.simpleMessage(

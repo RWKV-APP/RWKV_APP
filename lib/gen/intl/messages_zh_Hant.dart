@@ -499,6 +499,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "或開始一個空白聊天",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
+    "other_files": MessageLookupByLibrary.simpleMessage("其他檔案"),
     "output": MessageLookupByLibrary.simpleMessage("輸出"),
     "overseas": MessageLookupByLibrary.simpleMessage("(境外)"),
     "parameter_description": MessageLookupByLibrary.simpleMessage("參數說明"),

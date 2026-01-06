@@ -250,7 +250,8 @@ extension _$Ocr on _Ocr {
     P.rwkv.send(
       to_rwkv.ChatBatchAsync(
         batchMessages,
-        reasoning: reasoning,
+        enableReasoning: reasoning,
+        forceReasoning: thinkingMode is EnLong,
         batchSize: batchSize,
         modelID: modelID,
       ),

@@ -548,6 +548,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "または、新しい空のチャットを開始できます",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV オセロ"),
+    "other_files": MessageLookupByLibrary.simpleMessage("その他のファイル"),
     "output": MessageLookupByLibrary.simpleMessage("出力"),
     "overseas": MessageLookupByLibrary.simpleMessage("(海外)"),
     "parameter_description": MessageLookupByLibrary.simpleMessage("パラメータ説明"),

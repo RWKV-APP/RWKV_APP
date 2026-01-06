@@ -546,6 +546,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "또는 새 빈 채팅을 시작할 수 있습니다",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 오셀로"),
+    "other_files": MessageLookupByLibrary.simpleMessage("기타 파일"),
     "output": MessageLookupByLibrary.simpleMessage("출력"),
     "overseas": MessageLookupByLibrary.simpleMessage("(해외)"),
     "parameter_description": MessageLookupByLibrary.simpleMessage("매개변수 설명"),

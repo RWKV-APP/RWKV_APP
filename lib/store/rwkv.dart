@@ -560,9 +560,21 @@ extension $RWKV on _RWKV {
     for (var i = 0; i < batchSize; i++) {
       batchMessages.add(messages);
     }
+    final forceReasoning = thinkingMode is EnLong;
     final request = isBatch
-        ? to_rwkv.ChatBatchAsync(batchMessages, reasoning: reasoning, batchSize: batchSize, modelID: modelID) //
-        : to_rwkv.ChatAsync(messages, reasoning: reasoning, modelID: modelID);
+        ? to_rwkv.ChatBatchAsync(
+            batchMessages,
+            enableReasoning: reasoning,
+            forceReasoning: forceReasoning,
+            batchSize: batchSize,
+            modelID: modelID,
+          ) //
+        : to_rwkv.ChatAsync(
+            messages,
+            enableReasoning: reasoning,
+            forceReasoning: forceReasoning,
+            modelID: modelID,
+          );
     send(request);
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
