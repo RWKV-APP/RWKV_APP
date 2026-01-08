@@ -136,11 +136,11 @@ jobs:
           Source: "$sourceDir\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
           [Icons]
-          Name: "{autoprograms}\RWKV Chat"; Filename: "{app}\zone.exe"
-          Name: "{autodesktop}\RWKV Chat"; Filename: "{app}\zone.exe"; Tasks: desktopicon
+          Name: "{autoprograms}\RWKV Chat"; Filename: "{app}\RWKV_Chat.exe"
+          Name: "{autodesktop}\RWKV Chat"; Filename: "{app}\RWKV_Chat.exe"; Tasks: desktopicon
 
           [Run]
-          Filename: "{app}\zone.exe"; Description: "{cm:LaunchProgram,RWKV Chat}"; Flags: nowait postinstall skipifsilent
+          Filename: "{app}\RWKV_Chat.exe"; Description: "{cm:LaunchProgram,RWKV Chat}"; Flags: nowait postinstall skipifsilent
           "@
 
           $issContent | Out-File -FilePath "setup.iss" -Encoding ASCII
