@@ -99,10 +99,10 @@ class _PageHomeState extends ConsumerState<PageHome> {
                 itemBuilder: (context, index) {
                   final widgets = [
                     const _ChatButton(),
+                    const _CompletionButton(),
                     const _VisualButton(),
                     const _TTSButton(),
                     const _RolePlayButton(),
-                    const _CompletionButton(),
                     const _TranslatorButton(),
                     const _NekoButton(),
                     const _BenchmarkButton(),

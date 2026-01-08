@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "conversation_management": "Management",
   "weights_saving_directory": "Weights Saving Directory",
   "unzipping": "Unzipping",
   "got_it": "Got it",
@@ -486,8 +487,7 @@
   "current_test_item": "Current Test Item ({current}/{total})",
   "source_text": "Source Text: {text}",
   "target_text": "Target Text: {text}",
-  "performance_test_title": "Performance Test",
-  "performance_test_description": "Test LAMBADA ppl",
+  "performance_test_description": "Test speed and accuracy",
   "start_download_updates_": "Start downloading updates...",
   "switch_to_creative_mode_for_better_exp": "Switch Decode Param to 'Creative' for better experience",
   "parameter_description": "Parameter Description",

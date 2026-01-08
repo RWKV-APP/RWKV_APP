@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `管理`
+  String get conversation_management {
+    return Intl.message(
+      '管理',
+      name: 'conversation_management',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `权重文件保存目录`
   String get weights_saving_directory {
     return Intl.message(
@@ -3303,20 +3313,10 @@ class S {
     );
   }
 
-  /// `跑分测试`
-  String get performance_test_title {
-    return Intl.message(
-      '跑分测试',
-      name: 'performance_test_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `测试 LAMBADA ppl`
+  /// `测试速度和准确率`
   String get performance_test_description {
     return Intl.message(
-      '测试 LAMBADA ppl',
+      '测试速度和准确率',
       name: 'performance_test_description',
       desc: '',
       args: [],

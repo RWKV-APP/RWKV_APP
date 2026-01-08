@@ -277,6 +277,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "더 작은 모델 계속 사용",
     ),
+    "conversation_management": MessageLookupByLibrary.simpleMessage("관리"),
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "대화 이름은 비워둘 수 없습니다",
     ),
@@ -560,9 +561,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "penalty_decay_with_value": m20,
     "performance_test": MessageLookupByLibrary.simpleMessage("성능 테스트"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "LAMBADA ppl 테스트",
+      "속도와 정확도 테스트",
     ),
-    "performance_test_title": MessageLookupByLibrary.simpleMessage("성능 테스트"),
     "perplexity": MessageLookupByLibrary.simpleMessage("혼란도"),
     "pick_from_gallery": MessageLookupByLibrary.simpleMessage("갤러리에서 선택"),
     "players": MessageLookupByLibrary.simpleMessage("플레이어"),

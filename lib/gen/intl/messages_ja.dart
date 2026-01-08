@@ -275,6 +275,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "より小さいモデルの使用を続行",
     ),
+    "conversation_management": MessageLookupByLibrary.simpleMessage("管理"),
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "会話名は空にできません",
     ),
@@ -562,10 +563,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "penalty_decay_with_value": m20,
     "performance_test": MessageLookupByLibrary.simpleMessage("パフォーマンステスト"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "LAMBADA ppl テスト",
-    ),
-    "performance_test_title": MessageLookupByLibrary.simpleMessage(
-      "パフォーマンステスト",
+      "速度と精度をテスト",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("困惑度"),
     "pick_from_gallery": MessageLookupByLibrary.simpleMessage("ギャラリーから選択"),

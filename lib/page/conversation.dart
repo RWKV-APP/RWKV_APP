@@ -139,7 +139,7 @@ class _ConversationAppBar extends ConsumerWidget {
         if (!isEmpty && !isBatchMode)
           TextButton(
             onPressed: () => P.conversation.toggleBatchMode(),
-            child: Text(s.weights_mangement),
+            child: Text(s.conversation_management),
           ),
         if (isBatchMode)
           TextButton(

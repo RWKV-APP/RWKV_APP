@@ -330,6 +330,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "Продолжить использовать меньшую модель",
     ),
+    "conversation_management": MessageLookupByLibrary.simpleMessage(
+      "Управление",
+    ),
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "Название диалога не может быть пустым",
     ),
@@ -694,10 +697,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Тест производительности",
     ),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "Тест LAMBADA ppl",
-    ),
-    "performance_test_title": MessageLookupByLibrary.simpleMessage(
-      "Тест производительности",
+      "Тест скорости и точности",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("Перплексия"),
     "pick_from_gallery": MessageLookupByLibrary.simpleMessage(

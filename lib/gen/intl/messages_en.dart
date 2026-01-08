@@ -324,6 +324,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "Continue using smaller model",
     ),
+    "conversation_management": MessageLookupByLibrary.simpleMessage(
+      "Management",
+    ),
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "Conversation name cannot be empty",
     ),
@@ -672,10 +675,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Performance Test",
     ),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "Test LAMBADA ppl",
-    ),
-    "performance_test_title": MessageLookupByLibrary.simpleMessage(
-      "Performance Test",
+      "Test speed and accuracy",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("Perplexity"),
     "pick_from_gallery": MessageLookupByLibrary.simpleMessage(

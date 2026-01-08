@@ -263,6 +263,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "继续使用较小模型",
     ),
+    "conversation_management": MessageLookupByLibrary.simpleMessage("管理"),
     "conversation_name_cannot_be_empty": MessageLookupByLibrary.simpleMessage(
       "会话名称不能为空",
     ),
@@ -516,9 +517,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "penalty_decay_with_value": m20,
     "performance_test": MessageLookupByLibrary.simpleMessage("性能测试"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
-      "测试 LAMBADA ppl",
+      "测试速度和准确率",
     ),
-    "performance_test_title": MessageLookupByLibrary.simpleMessage("跑分测试"),
     "perplexity": MessageLookupByLibrary.simpleMessage("困惑度"),
     "pick_from_gallery": MessageLookupByLibrary.simpleMessage("从相册选择"),
     "players": MessageLookupByLibrary.simpleMessage("玩家"),

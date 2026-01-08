@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "conversation_management": "管理",
   "weights_saving_directory": "重みファイル保存ディレクトリ",
   "unzipping": "展開中",
   "got_it": "了解",
@@ -485,8 +486,7 @@
   "current_test_item": "現在のテスト項目 ({current}/{total})",
   "source_text": "ソーステキスト: {text}",
   "target_text": "ターゲットテキスト: {text}",
-  "performance_test_title": "パフォーマンステスト",
-  "performance_test_description": "LAMBADA ppl テスト",
+  "performance_test_description": "速度と精度をテスト",
   "start_download_updates_": "アップデートのバックグラウンドダウンロードを開始...",
   "switch_to_creative_mode_for_better_exp": "より良い体験のために「クリエイティブモード」への切り替えをお勧めします",
   "parameter_description": "パラメータ説明",

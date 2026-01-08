@@ -1,5 +1,6 @@
 {
   "@@locale": "ru",
+  "conversation_management": "Управление",
   "weights_saving_directory": "Директория сохранения файлов весов",
   "unzipping": "Распаковка",
   "got_it": "Я понял",
@@ -485,8 +486,7 @@
   "current_test_item": "Текущий тестовый элемент ({current}/{total})",
   "source_text": "Исходный текст: {text}",
   "target_text": "Целевой текст: {text}",
-  "performance_test_title": "Тест производительности",
-  "performance_test_description": "Тест LAMBADA ppl",
+  "performance_test_description": "Тест скорости и точности",
   "start_download_updates_": "Начать фоновую загрузку обновлений...",
   "switch_to_creative_mode_for_better_exp": "Рекомендуется переключиться в режим «Творческий» для лучшего опыта",
   "parameter_description": "Описание параметров",
