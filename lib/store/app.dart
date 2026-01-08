@@ -524,6 +524,7 @@ extension _$App on _App {
     } catch (e) {
       qqe(e);
       Alert.error(S.current.download_failed);
+      Sentry.captureException(e, stackTrace: StackTrace.current);
     }
   }
 

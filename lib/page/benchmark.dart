@@ -6,11 +6,11 @@ import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
+import 'package:zone/model/lambada_test_item.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $RWKV, $Lambada;
 import 'package:zone/widgets/model_selector.dart';
 
@@ -93,11 +93,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
                 ],
               ),
             ),
-            const SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: .all(16),
-              child: _LambadaTest(),
-            ),
+            _LambadaTest(),
           ],
         ),
       ),
@@ -484,21 +480,67 @@ class _LambadaTest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        _LambadaTestControlButtons(),
-        SizedBox(height: 8),
-        _LambadaModelSelectionButton(),
-        SizedBox(height: 16),
-        _LambadaTestDataCard(),
-        SizedBox(height: 16),
-        _LambadaTestResultsCard(),
-        SizedBox(height: 16),
-        _LambadaCurrentTestPreview(),
-        SizedBox(height: 16),
-        _LambadaTestHistoryCard(),
-      ],
+    final testItems = ref.watch(P.lambada.testItems);
+    final isRunning = ref.watch(P.lambada.autoStartNextTest);
+    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
+    final currentItem = ref.watch(P.lambada.currentItem);
+    final testResults = ref.watch(P.lambada.testResults);
+
+    // 计算列表项数量：1个当前项 + 历史项数量
+    final historyItemCount = testResults.length;
+
+    return ListView.builder(
+      padding: .only(left: 12, right: 12, top: 12, bottom: 12),
+      itemCount: historyItemCount + 1 + 4,
+      itemBuilder: (context, index) {
+        // 第一个条目是当前正在测试的项
+        if (index == 0) {
+          return Padding(
+            padding: .only(bottom: 8),
+            child: const _LambadaTestControlButtons(),
+          );
+        }
+        if (index == 1) {
+          return Padding(
+            padding: .only(bottom: 8),
+            child: const _LambadaModelSelectionButton(),
+          );
+        }
+        if (index == 2) {
+          return const _LambadaTestDataCard();
+        }
+        if (index == 3) {
+          return const _LambadaTestResultsCard();
+        }
+        if (index == 4) {
+          return _LambadaTestListItem(
+            isCurrentItem: true,
+            testItems: testItems,
+            totalFinishCount: totalFinishCount - (isRunning ? 0 : 1),
+            currentItem: currentItem,
+            testResults: testResults,
+          );
+        }
+        // 后续条目是历史项（倒序）
+        final historyIndex = (index - (isRunning ? 1 : 0)) - 4;
+        final reversedIndex = historyItemCount - 1 - historyIndex;
+        if (reversedIndex >= 0 && reversedIndex < testResults.length) {
+          final result = testResults[reversedIndex];
+          final targetText = result['targetText'] ?? '';
+          final outputText = result['outputText'] ?? '';
+          final isCorrect = targetText == outputText;
+          return _LambadaTestListItem(
+            isCurrentItem: false,
+            index: reversedIndex + (isRunning ? 0 : 1),
+            sourceText: result['sourceText'] ?? '',
+            targetText: targetText,
+            outputText: outputText,
+            isCorrect: isCorrect,
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 }
@@ -712,45 +754,163 @@ class _LambadaTestResultsCard extends ConsumerWidget {
   }
 }
 
-class _LambadaCurrentTestPreview extends ConsumerWidget {
-  const _LambadaCurrentTestPreview();
+class _LambadaTestListItem extends ConsumerWidget {
+  final bool isCurrentItem;
+  final List<LambadaTestItem>? testItems;
+  final int? totalFinishCount;
+  final LambadaTestItem? currentItem;
+  final List<Map<String, String>>? testResults;
+  final int? index;
+  final String? sourceText;
+  final String? targetText;
+  final String? outputText;
+  final bool? isCorrect;
+
+  const _LambadaTestListItem({
+    required this.isCurrentItem,
+    this.testItems,
+    this.totalFinishCount,
+    this.currentItem,
+    this.testResults,
+    this.index,
+    this.sourceText,
+    this.targetText,
+    this.outputText,
+    this.isCorrect,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final testItems = ref.watch(P.lambada.testItems);
-    final isRunning = ref.watch(P.lambada.autoStartNextTest);
-    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
-    final currentIndex = totalFinishCount;
 
-    if (!isRunning || testItems.isEmpty || currentIndex >= testItems.length) {
-      return const SizedBox.shrink();
-    }
+    if (isCurrentItem) {
+      // 当前正在测试的项
+      if (testItems == null || totalFinishCount == null) {
+        return const SizedBox.shrink();
+      }
 
-    return Card(
-      child: Padding(
-        padding: const .all(16.0),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text(
-              s.current_test_item(currentIndex + 1, testItems.length),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              s.source_text(testItems[currentIndex].sourceText),
-              style: const TextStyle(fontSize: 12),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              s.target_text(testItems[currentIndex].targetText),
-              style: const TextStyle(fontSize: 12, color: Colors.blue),
-            ),
-          ],
+      final currentIndex = totalFinishCount!;
+      if (testItems!.isEmpty || currentIndex >= testItems!.length) {
+        return const SizedBox.shrink();
+      }
+
+      // 查找当前测试项目的结果
+      Map<String, String>? currentResult;
+      if (currentItem != null && testResults != null) {
+        for (final result in testResults!) {
+          if (result['sourceText'] == currentItem!.sourceText && result['targetText'] == currentItem!.targetText) {
+            currentResult = result;
+            break;
+          }
+        }
+      }
+
+      final displayTargetText = currentItem?.targetText ?? testItems![currentIndex].targetText;
+      final displaySourceText = currentItem?.sourceText ?? testItems![currentIndex].sourceText;
+      final displayOutputText = currentResult?['outputText'] ?? '';
+      final displayIsCorrect = displayOutputText.isNotEmpty && displayTargetText == displayOutputText;
+
+      return Card(
+        child: Padding(
+          padding: const .all(16.0),
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                s.current_test_item(currentIndex + 1, testItems!.length),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                s.source_text(displaySourceText),
+                style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              if (displayOutputText.isEmpty)
+                Text(
+                  s.target_text(displayTargetText),
+                  style: const TextStyle(fontSize: 12, color: Colors.blue),
+                )
+              else
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        s.target_text(displayTargetText),
+                        style: const TextStyle(fontSize: 12, color: Colors.blue),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        s.model_output(displayOutputText),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: displayIsCorrect ? Colors.green.shade700 : Colors.red.shade700,
+                          fontWeight: displayIsCorrect ? FontWeight.w500 : FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      // 历史项
+      if (index == null || sourceText == null || targetText == null || outputText == null || isCorrect == null) {
+        return const SizedBox.shrink();
+      }
+
+      return Card(
+        child: Padding(
+          padding: const .all(16.0),
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                '#$index',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: .w600,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                s.source_text(sourceText!),
+                style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      s.target_text(targetText!),
+                      style: const TextStyle(fontSize: 12, color: Colors.blue),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      s.model_output(outputText!),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isCorrect! ? Colors.green.shade700 : Colors.red.shade700,
+                        fontWeight: isCorrect! ? FontWeight.w500 : FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }
 
@@ -792,134 +952,6 @@ class _LambadaResultCard extends StatelessWidget {
               fontWeight: .bold,
               color: color,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LambadaTestHistoryCard extends ConsumerWidget {
-  const _LambadaTestHistoryCard();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final testResults = ref.watch(P.lambada.testResults);
-
-    if (testResults.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    int crossAxisCount = 1;
-    if (screenWidth > 1024) {
-      crossAxisCount = 3;
-    } else if (screenWidth > 600) {
-      crossAxisCount = 2;
-    }
-
-    return Card(
-      child: Padding(
-        padding: const .all(16.0),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text(
-              s.test_results,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 12),
-            MasonryGridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: crossAxisCount,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              itemCount: testResults.length,
-              itemBuilder: (context, index) {
-                final result = testResults[index];
-                final targetText = result['targetText'] ?? '';
-                final outputText = result['outputText'] ?? '';
-                final isCorrect = targetText == outputText;
-                return _LambadaTestHistoryItem(
-                  index: index + 1,
-                  sourceText: result['sourceText'] ?? '',
-                  targetText: targetText,
-                  outputText: outputText,
-                  isCorrect: isCorrect,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _LambadaTestHistoryItem extends StatelessWidget {
-  final int index;
-  final String sourceText;
-  final String targetText;
-  final String outputText;
-  final bool isCorrect;
-
-  const _LambadaTestHistoryItem({
-    required this.index,
-    required this.sourceText,
-    required this.targetText,
-    required this.outputText,
-    required this.isCorrect,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-    return Container(
-      padding: const .all(12),
-      decoration: BoxDecoration(
-        borderRadius: .circular(8),
-        border: Border.all(color: Colors.grey.q(0.4)),
-      ),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Text(
-            '#$index',
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: .w600,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            s.source_text(sourceText),
-            style: const TextStyle(fontSize: 12),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  s.target_text(targetText),
-                  style: const TextStyle(fontSize: 12, color: Colors.blue),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  s.model_output(outputText),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isCorrect ? Colors.green.shade700 : Colors.red.shade700,
-                    fontWeight: isCorrect ? FontWeight.w500 : FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),

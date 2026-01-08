@@ -55,7 +55,7 @@ class _FileManager {
     if (config == null) return [];
 
     final allModelConfigs = <Map<String, dynamic>>[];
-    
+
     // 收集所有demo类型的模型配置
     for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
       final demoConfig = config[demoType];
@@ -260,6 +260,7 @@ extension $FileManager on _FileManager {
           onError: (e) {
             qqe(e);
             Alert.error(S.current.download_failed);
+            Sentry.captureException(e, stackTrace: StackTrace.current);
           },
           onDone: () {
             qqq('event done');
@@ -280,6 +281,7 @@ extension $FileManager on _FileManager {
       } else {
         qqe(e);
         Alert.error(S.current.download_failed);
+        Sentry.captureException(e, stackTrace: StackTrace.current);
       }
       state.q = state.q.copyWith(state: TaskState.stopped);
     }
@@ -382,12 +384,12 @@ extension $FileManager on _FileManager {
             qqe("Failed to delete old folder: $e");
           }
         }
-        
+
         completed++;
       }
-      
+
       if (onProgress != null) {
-          onProgress("", completed, total);
+        onProgress("", completed, total);
       }
     }
 
