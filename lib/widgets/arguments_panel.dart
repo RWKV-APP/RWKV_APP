@@ -60,13 +60,14 @@ class ArgumentsPanel extends ConsumerWidget {
 
   const ArgumentsPanel({
     super.key,
-    required this.scrollController,
+    this.scrollController,
     this.isEditingBatchParams = false,
+    this.showTitleBar = true,
     this.title,
   });
 
-  final ScrollController scrollController;
-
+  final ScrollController? scrollController;
+  final bool showTitleBar;
   final bool isEditingBatchParams;
   final String? title;
 
@@ -125,7 +126,7 @@ class ArgumentsPanel extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            Row(
+            if(showTitleBar) Row(
               children: [
                 8.w,
                 TextButton(
@@ -166,7 +167,7 @@ class ArgumentsPanel extends ConsumerWidget {
                 8.w,
               ],
             ),
-            12.h,
+            if(showTitleBar)  12.h,
             Expanded(
               child: ListView(
                 controller: scrollController,

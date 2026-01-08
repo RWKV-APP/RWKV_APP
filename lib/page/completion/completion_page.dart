@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_item_batch.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/page/completion/_completion_titlebar.dart';
+import 'package:zone/widgets/arguments_panel.dart';
 
 import '../../gen/l10n.dart' show S;
 import '_completion_list_item.dart';
@@ -85,7 +88,6 @@ class _CompletionPageState extends State<CompletionPage> {
       ),
     );
 
-    bool autoScrolling = true;
     return Theme(
       data: themeV2,
       child: Scaffold(
@@ -95,28 +97,84 @@ class _CompletionPageState extends State<CompletionPage> {
         ),
         resizeToAvoidBottomInset: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: _FloatButton(),
+        floatingActionButton: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: _FloatButton(),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: const SizedBox(),
+            ),
+          ],
+        ),
         body: SafeArea(
-          child: Listener(
-            child: const _PageBody(),
-            onPointerDown: (_) {
-              if (CompletionState.autoScrolling) {
-                CompletionState.autoScrolling = false;
-                autoScrolling = true;
-              } else {
-                autoScrolling = false;
-              }
-            },
-            onPointerUp: (_) async {
-              if (autoScrolling) {
-                Future.delayed(const Duration(milliseconds: 1000), () {
-                  CompletionState.autoScrolling = true;
-                });
-              }
-            },
-          ),
+          child: _buildBody(),
         ),
       ),
+    );
+  }
+
+  Widget _buildBody() {
+    bool autoScrolling = true;
+    final list = Listener(
+      child: const _ContentList(),
+      onPointerDown: (_) {
+        if (CompletionState.autoScrolling) {
+          CompletionState.autoScrolling = false;
+          autoScrolling = true;
+        } else {
+          autoScrolling = false;
+        }
+      },
+      onPointerUp: (_) async {
+        if (autoScrolling) {
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            CompletionState.autoScrolling = true;
+          });
+        }
+      },
+    );
+
+    if (Platform.isAndroid || Platform.isIOS) {
+      return list;
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          flex: 2,
+          child: list,
+        ),
+        VerticalDivider(),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 12),
+                  child: Text(
+                    S.current.decode_param,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Expanded(
+                  child: ArgumentsPanel(showTitleBar: false),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -150,8 +208,8 @@ class _FloatButton extends ConsumerWidget {
   }
 }
 
-class _PageBody extends ConsumerWidget {
-  const _PageBody();
+class _ContentList extends ConsumerWidget {
+  const _ContentList();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
