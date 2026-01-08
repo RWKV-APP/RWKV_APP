@@ -474,7 +474,7 @@ class _Tags extends ConsumerWidget {
   final FileInfo fileInfo;
 
   static const _blockedTags = ["encoder", "reason", "ENCODER", "REASON"];
-  static final _highlightTags = ["mlx", "npu", "gpu", "DeepEmbedding", "batch"].map((e) => e.toLowerCase()).toList();
+  static final _highlightTags = ["mlx", "npu", "gpu", "DeepEmbedding", "batch", "webrwkv"].map((e) => e.toLowerCase()).toList();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -484,9 +484,8 @@ class _Tags extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final date = fileInfo.dateDisplayString;
     List<String> hiddenTags = [];
-    if (Platform.isIOS || Platform.isMacOS) {
-      hiddenTags = ["gpu"];
-    }
+
+    if (Platform.isIOS || Platform.isMacOS) hiddenTags = ["gpu"];
 
     return Wrap(
       spacing: 4,
@@ -501,6 +500,10 @@ class _Tags extends ConsumerWidget {
           late final Color textColor;
           late final Color borderColor;
           final isNPU = tag == "npu";
+
+          if (fileInfo.backend == Backend.webRwkv) {
+            tag = "WebRWKV";
+          }
 
           if (isMLX) {
             color = Colors.transparent;
