@@ -26,54 +26,36 @@ module Fastlane
         UI.message("Uploading #{file_path} to Hugging Face repository: #{repo_id} (type: #{repo_type})")
         UI.message("Path in repo: #{path_in_repo}")
 
-        # Check if huggingface_hub is installed, install if missing
-        unless system("python3 -c 'import huggingface_hub' 2>/dev/null")
-          UI.important('huggingface_hub is not installed. Installing it now...')
-          # Try multiple installation methods
-          installed = false
+        # --- 依赖检查与安装 ---
+        packages_to_install = []
+        packages_to_install << 'huggingface_hub' unless system("python3 -c 'import huggingface_hub' 2>/dev/null")
+        packages_to_install << 'hf_transfer' unless system("python3 -c 'import hf_transfer' 2>/dev/null")
 
-          # Try pip3 with --break-system-packages (for externally-managed environments)
-          if system('pip3 install --break-system-packages huggingface_hub 2>/dev/null')
-            installed = true
-            # Try pip3 with --user flag
-          elsif system('pip3 install --user huggingface_hub 2>/dev/null')
-            installed = true
-            # Try pip3 without flags
-          elsif system('pip3 install huggingface_hub 2>/dev/null')
-            installed = true
-            # Try pip with --break-system-packages
-          elsif system('pip install --break-system-packages huggingface_hub 2>/dev/null')
-            installed = true
-            # Try pip with --user flag
-          elsif system('pip install --user huggingface_hub 2>/dev/null')
-            installed = true
-            # Try pip without flags
-          elsif system('pip install huggingface_hub 2>/dev/null')
-            installed = true
+        unless packages_to_install.empty?
+          UI.important("Installing missing packages: #{packages_to_install.join(', ')}...")
+          packages_to_install.each do |pkg|
+            # 优先使用 --break-system-packages 适配现代 Python 环境
+            unless system("pip3 install --break-system-packages #{pkg} 2>/dev/null") ||
+                   system("pip3 install --user #{pkg} 2>/dev/null") ||
+                   system("pip3 install #{pkg} 2>/dev/null")
+              UI.user_error!("Failed to install #{pkg}. Please run: pip3 install --break-system-packages #{pkg}")
+            end
           end
-
-          if installed
-            UI.success('Successfully installed huggingface_hub')
-          else
-            UI.user_error!('Failed to install huggingface_hub. Please install it manually with: pip install --break-system-packages huggingface_hub')
-          end
+          UI.success('Successfully installed dependencies')
         end
 
-        # Get absolute path to ensure Python script can find the file
+        # 获取绝对路径
         absolute_file_path = File.expand_path(file_path)
 
-        # Create a Python script to upload the file
+        # --- 优化后的 Python 脚本 ---
         script = <<~PYTHON
           from huggingface_hub import HfApi, login
           import sys
           import os
-          
-          # Clear proxy environment variables to avoid SOCKS proxy issues
-          proxy_vars = ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy', 
-                       'ALL_PROXY', 'all_proxy', 'SOCKS_PROXY', 'socks_proxy']
-          for var in proxy_vars:
-              if var in os.environ:
-                  del os.environ[var]
+          import time
+
+          # 启用 hf_transfer 加速
+          os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "1"
           
           repo_id = "#{repo_id}"
           file_path = "#{absolute_file_path}"
@@ -82,73 +64,76 @@ module Fastlane
           commit_message = "#{commit_message}"
           repo_type = "#{repo_type}"
           
-          try:
-              login(token=token)
-              api = HfApi()
-              api.upload_file(
-                  path_or_fileobj=file_path,
-                  path_in_repo=path_in_repo,
-                  repo_id=repo_id,
-                  repo_type=repo_type,
-                  commit_message=commit_message
-              )
-              print(f"Successfully uploaded {file_path} to {repo_id}/{path_in_repo}")
-          except Exception as e:
-              print(f"Error: {e}", file=sys.stderr)
+          max_retries = 3
+          success = False
+
+          for attempt in range(max_retries):
+              try:
+                  if attempt > 0:
+                      print(f"Retrying upload (Attempt {attempt + 1}/{max_retries})...")
+                  
+                  login(token=token)
+                  api = HfApi()
+                  api.upload_file(
+                      path_or_fileobj=file_path,
+                      path_in_repo=path_in_repo,
+                      repo_id=repo_id,
+                      repo_type=repo_type,
+                      commit_message=commit_message
+                  )
+                  print(f"Successfully uploaded {file_path} to {repo_id}/{path_in_repo}")
+                  success = True
+                  break
+              except Exception as e:
+                  print(f"Error on attempt {attempt + 1}: {e}", file=sys.stderr)
+                  if attempt < max_retries - 1:
+                      time.sleep(10) # 失败后等待 10 秒重试
+                  else:
+                      print("All upload attempts failed.", file=sys.stderr)
+
+          if not success:
               sys.exit(1)
         PYTHON
 
-        # Write script to temporary file
+        # 写入临时脚本
         script_file = File.join(Dir.tmpdir, "huggingface_upload_#{Time.now.to_i}.py")
         File.write(script_file, script)
 
         begin
-          # Execute the Python script (for large file uploads, this may take a while)
-          result = sh("python3 #{script_file}")
+          # 执行 Python 脚本
+          sh("python3 #{script_file}")
           UI.success('Successfully uploaded to Hugging Face!')
-          UI.success("Repository: https://huggingface.co/datasets/#{repo_id}") if repo_type == 'dataset'
-          UI.success("Repository: https://huggingface.co/#{repo_id}") if repo_type == 'model'
-          UI.success("File: https://huggingface.co/datasets/#{repo_id}/resolve/main/#{path_in_repo}") if repo_type == 'dataset'
-          UI.success("File: https://huggingface.co/#{repo_id}/resolve/main/#{path_in_repo}") if repo_type == 'model'
-          result
+
+          # 打印链接
+          base_url = "https://huggingface.co/#{repo_type == 'dataset' ? 'datasets/' : ''}#{repo_id}"
+          UI.success("Repository: #{base_url}")
+          UI.success("File: #{base_url}/resolve/main/#{path_in_repo}")
         rescue => e
-          UI.user_error!("Failed to upload to Hugging Face: #{e.message}")
+          UI.user_error!("Failed to upload to Hugging Face after retries: #{e.message}")
         ensure
-          # Clean up temporary script file
           File.delete(script_file) if File.exist?(script_file)
         end
       end
 
       def self.description
-        'Upload file to Hugging Face repository'
+        'Upload file to Hugging Face repository with hf_transfer support'
       end
 
       def self.authors
         ['rwkv_app']
       end
 
-      def self.return_value
-        'Returns the upload result'
-      end
-
-      def self.details
-        'Upload a file (APK, IPA, etc.) to a specified Hugging Face repository'
-      end
-
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :repo_id,
-                                       env_name: 'HF_DATASETS_ID', # Updated to use HF_DATASETS_ID for consistency
-                                       description: "Hugging Face repository ID (e.g., 'username/repo-name')",
+                                       env_name: 'HF_DATASETS_ID',
+                                       description: 'Hugging Face repository ID',
                                        optional: false,
                                        type: String),
           FastlaneCore::ConfigItem.new(key: :file_path,
                                        env_name: 'HF_FILE_PATH',
                                        description: 'Path to the file to upload',
                                        optional: false,
-                                       verify_block: proc do |value|
-                                         UI.user_error!("Couldn't find file at path '#{value}'") unless File.exist?(value)
-                                       end,
                                        type: String),
           FastlaneCore::ConfigItem.new(key: :token,
                                        env_name: 'HF_TOKEN',
@@ -158,17 +143,17 @@ module Fastlane
                                        type: String),
           FastlaneCore::ConfigItem.new(key: :path_in_repo,
                                        env_name: 'HF_PATH_IN_REPO',
-                                       description: 'Path in the repository (defaults to filename)',
+                                       description: 'Path in the repository',
                                        optional: true,
                                        type: String),
           FastlaneCore::ConfigItem.new(key: :commit_message,
                                        env_name: 'HF_COMMIT_MESSAGE',
-                                       description: 'Commit message for the upload',
+                                       description: 'Commit message',
                                        optional: true,
                                        type: String),
           FastlaneCore::ConfigItem.new(key: :repo_type,
                                        env_name: 'HF_REPO_TYPE',
-                                       description: "Repository type: 'model' or 'dataset' (default: 'dataset')",
+                                       description: "Repository type: 'model' or 'dataset'",
                                        optional: true,
                                        default_value: 'dataset',
                                        type: String),
