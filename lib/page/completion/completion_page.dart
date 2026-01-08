@@ -97,22 +97,24 @@ class _CompletionPageState extends State<CompletionPage> {
         ),
         resizeToAvoidBottomInset: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 3,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: _FloatButton(),
+        floatingActionButton: Platform.isAndroid || Platform.isIOS
+            ? _FloatButton()
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _FloatButton(),
+                    ),
+                  ),
+                  const Expanded(
+                    flex: 2,
+                    child: SizedBox(),
+                  ),
+                ],
               ),
-            ),
-            const Expanded(
-              flex: 2,
-              child: SizedBox(),
-            ),
-          ],
-        ),
         body: SafeArea(
           child: _buildBody(),
         ),
