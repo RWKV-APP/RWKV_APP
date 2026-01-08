@@ -6,19 +6,19 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 # Try loading from project root or tools directory
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(project_root, '.env'))
+load_dotenv(os.path.join(project_root, ".env"))
 
 # Configuration (same as deploy script)
-HOSTNAME = os.getenv('RWKV_REMOTE_HOST')
-PORT = int(os.getenv('RWKV_REMOTE_PORT', 22))
-USERNAME = os.getenv('RWKV_REMOTE_USER')
-PASSWORD = os.getenv('RWKV_REMOTE_PASS')
+HOSTNAME = os.getenv("RWKV_REMOTE_HOST")
+PORT = int(os.getenv("RWKV_REMOTE_PORT", 22))
+USERNAME = os.getenv("RWKV_REMOTE_USER")
+PASSWORD = os.getenv("RWKV_REMOTE_PASS")
 
 # Remote directory which holds all the JSON/config files
-REMOTE_DIR = '/opt/rwkv/apps/api-model/json'
+REMOTE_DIR = "/opt/rwkv/apps/api-model/json"
 
 # Local directory to store downloaded files (this repo's /remote)
-LOCAL_DIR = os.path.join(project_root, 'remote')
+LOCAL_DIR = os.path.join(project_root, "remote")
 
 
 def download_all():
@@ -62,6 +62,10 @@ def download_all():
             if is_dir:
                 continue
 
+            # Skip suggestions.json
+            if attr.filename == "suggestions.json":
+                continue
+
             remote_path = os.path.join(REMOTE_DIR, attr.filename)
             local_path = os.path.join(LOCAL_DIR, attr.filename)
             files.append((remote_path, local_path))
@@ -88,7 +92,5 @@ def download_all():
             ssh.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     download_all()
-
-

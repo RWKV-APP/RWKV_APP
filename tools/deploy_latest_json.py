@@ -51,6 +51,9 @@ def deploy():
         # Only sync JSON files, skip things like README.md / .DS_Store
         if not name.lower().endswith(".json"):
             continue
+        # Skip suggestions.json
+        if name == "suggestions.json":
+            continue
         local_files.append((name, path))
 
     if not local_files:
