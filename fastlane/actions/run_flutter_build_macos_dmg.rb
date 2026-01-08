@@ -23,7 +23,7 @@ module Fastlane
         sh "cd #{project_root} && flutter pub get"
         sh "cd #{project_root} && flutter build macos --release"
 
-        app_folder_name = 'RWKV Chat.app'
+        app_folder_name = 'RWKV_Chat.app'
         app_path = File.join(project_root, "build/macos/Build/Products/Release/#{app_folder_name}")
 
         UI.user_error!("构建失败，找不到 App: #{app_path}") unless File.exist?(app_path)

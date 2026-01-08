@@ -185,6 +185,7 @@ end
 
 lane :macos_build_and_upload do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
+  upload_to_huggingface = params[:upload_to_huggingface] == false ? false : true
 
   # 1. 基础信息准备
   require 'yaml'
@@ -287,8 +288,6 @@ lane :macos_build_and_upload do |params|
     end
   end
 
-  # 6. 上传到 GitHub Release
-  # Use github_release action for consistent release management
   if upload_to_github
     github_release(
       repo: 'RWKV-APP/RWKV_APP',
@@ -298,22 +297,21 @@ lane :macos_build_and_upload do |params|
       release_name: version_number,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
     )
+  end
 
-    # 🔥 上传到 Hugging Face (macos-universal)
-    if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
-      dmg_filename = File.basename(dmg_path)
-      UI.header '上传 DMG 到 Hugging Face'
-      huggingface(
-        repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
-        file_path: absolute_dmg_path,
-        path_in_repo: "macos-universal/#{dmg_filename}",
-        commit_message: "Upload DMG #{dmg_filename} (v#{full_version})",
-        repo_type: 'dataset',
-      )
-      UI.success '✅ DMG 已上传到 Hugging Face'
-    else
-      UI.important '跳过 Hugging Face 上传 (HF_TOKEN 未设置)'
-    end
+  if upload_to_huggingface && ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
+    dmg_filename = File.basename(dmg_path)
+    UI.header '上传 DMG 到 Hugging Face'
+    huggingface(
+      repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+      file_path: absolute_dmg_path,
+      path_in_repo: "macos-universal/#{dmg_filename}",
+      commit_message: "Upload DMG #{dmg_filename} (v#{full_version})",
+      repo_type: 'dataset',
+    )
+    UI.success '✅ DMG 已上传到 Hugging Face'
+  else
+    UI.important '跳过 Hugging Face 上传 (HF_TOKEN 未设置)'
   end
 end
 

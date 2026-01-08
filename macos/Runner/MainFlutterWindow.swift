@@ -7,6 +7,9 @@ class MainFlutterWindow: NSWindow {
     let windowFrame = self.frame
     self.contentViewController = flutterViewController
     self.setFrame(windowFrame, display: true)
+    
+    // Set window title to display name with space
+    self.title = "RWKV Chat"
 
     RegisterGeneratedPlugins(registry: flutterViewController)
 
