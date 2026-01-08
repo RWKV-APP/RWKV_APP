@@ -40,6 +40,7 @@ extension _$Lambada on _Lambada {
     switch (pageKey) {
       case PageKey.benchmark:
         if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
+        P.app.demoType.q = DemoType.chat;
         break;
       default:
         break;

@@ -501,7 +501,7 @@ class _Tags extends ConsumerWidget {
           late final Color borderColor;
           final isNPU = tag == "npu";
 
-          if (fileInfo.backend == Backend.webRwkv) {
+          if (fileInfo.backend == Backend.webRwkv && tag == "gpu") {
             tag = "WebRWKV";
           }
 

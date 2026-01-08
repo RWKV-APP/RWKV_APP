@@ -482,7 +482,7 @@ class _FileItem extends ConsumerWidget {
           children: [
             ...fileInfo.tags.map((tag) {
               final isHighlight = ["GPU", "CPU", "NPU", "gpu", "cpu", "npu"].contains(tag);
-              if (fileInfo.backend == Backend.webRwkv) {
+              if (fileInfo.backend == Backend.webRwkv && tag == "gpu") {
                 tag = "WebRWKV";
               }
               return Container(
