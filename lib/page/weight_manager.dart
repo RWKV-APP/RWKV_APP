@@ -60,9 +60,10 @@ class _CustomDirectoryTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final customDir = ref.watch(P.preference.customModelsDir);
     final defaultDir = ref.watch(P.app.documentsDir)?.path ?? "";
+    final s = S.of(context);
 
     return ListTile(
-      title: const Text("Custom Model Directory"),
+      title: Text(s.weights_saving_directory),
       subtitle: Text(customDir ?? defaultDir),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,6 @@
 {
   "@@locale": "zh_Hans",
+  "weights_saving_directory": "权重文件保存目录",
   "unzipping": "解压中",
   "got_it": "我知道了",
   "prebuilt": "预设",

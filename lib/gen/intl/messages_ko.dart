@@ -838,6 +838,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage("웹 검색 템플릿"),
     "websocket_service_port": m37,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("가중치 파일 관리"),
+    "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
+      "가중치 파일 저장 디렉토리",
+    ),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "RWKV 채팅에 오신 것을 환영합니다",
     ),

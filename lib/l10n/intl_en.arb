@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "weights_saving_directory": "Weights Saving Directory",
   "unzipping": "Unzipping",
   "got_it": "Got it",
   "prebuilt": "Prebuilt",

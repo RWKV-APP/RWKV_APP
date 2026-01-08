@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "weights_saving_directory": "重みファイル保存ディレクトリ",
   "unzipping": "展開中",
   "got_it": "了解",
   "prebuilt": "プリセット",

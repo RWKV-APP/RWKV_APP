@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `权重文件保存目录`
+  String get weights_saving_directory {
+    return Intl.message(
+      '权重文件保存目录',
+      name: 'weights_saving_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `解压中`
   String get unzipping {
     return Intl.message('解压中', name: 'unzipping', desc: '', args: []);

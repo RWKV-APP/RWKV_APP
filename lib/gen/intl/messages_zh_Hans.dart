@@ -774,6 +774,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
     "websocket_service_port": m37,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("权重文件管理"),
+    "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
+      "权重文件保存目录",
+    ),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "欢迎探索 RWKV Chat",
     ),

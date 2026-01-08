@@ -1,5 +1,6 @@
 {
   "@@locale": "ru",
+  "weights_saving_directory": "Директория сохранения файлов весов",
   "unzipping": "Распаковка",
   "got_it": "Я понял",
   "prebuilt": "Предустановленный",

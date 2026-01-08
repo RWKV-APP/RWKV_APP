@@ -1042,6 +1042,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Управление файлами весов",
     ),
+    "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
+      "Директория сохранения файлов весов",
+    ),
     "welcome_to_rwkv_chat": MessageLookupByLibrary.simpleMessage(
       "Добро пожаловать в RWKV Чат",
     ),
