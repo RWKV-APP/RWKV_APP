@@ -107,9 +107,9 @@ class _CompletionPageState extends State<CompletionPage> {
                 child: _FloatButton(),
               ),
             ),
-            Expanded(
+            const Expanded(
               flex: 2,
-              child: const SizedBox(),
+              child: SizedBox(),
             ),
           ],
         ),
@@ -152,22 +152,22 @@ class _CompletionPageState extends State<CompletionPage> {
           flex: 2,
           child: list,
         ),
-        VerticalDivider(),
+        const VerticalDivider(),
         Expanded(
           flex: 1,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 12),
+                  padding: const EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 12),
                   child: Text(
                     S.current.decode_param,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: ArgumentsPanel(showTitleBar: false),
                 ),
               ],

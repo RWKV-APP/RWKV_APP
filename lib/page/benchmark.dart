@@ -93,7 +93,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
                 ],
               ),
             ),
-            _LambadaTest(),
+            const _LambadaTest(),
           ],
         ),
       ),
@@ -490,20 +490,20 @@ class _LambadaTest extends ConsumerWidget {
     final historyItemCount = testResults.length;
 
     return ListView.builder(
-      padding: .only(left: 12, right: 12, top: 12, bottom: 12),
+      padding: const .only(left: 12, right: 12, top: 12, bottom: 12),
       itemCount: historyItemCount + 1 + 4,
       itemBuilder: (context, index) {
         // 第一个条目是当前正在测试的项
         if (index == 0) {
-          return Padding(
+          return const Padding(
             padding: .only(bottom: 8),
-            child: const _LambadaTestControlButtons(),
+            child: _LambadaTestControlButtons(),
           );
         }
         if (index == 1) {
-          return Padding(
+          return const Padding(
             padding: .only(bottom: 8),
-            child: const _LambadaModelSelectionButton(),
+            child: _LambadaModelSelectionButton(),
           );
         }
         if (index == 2) {
