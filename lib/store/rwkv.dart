@@ -560,7 +560,7 @@ extension $RWKV on _RWKV {
     for (var i = 0; i < batchSize; i++) {
       batchMessages.add(messages);
     }
-    final forceReasoning = thinkingMode is EnLong;
+    final forceReasoning = thinkingMode.forceReasoning;
     final request = isBatch
         ? to_rwkv.ChatBatchAsync(
             batchMessages,

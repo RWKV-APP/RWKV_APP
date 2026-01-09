@@ -1,5 +1,6 @@
 sealed class ThinkingMode {
   abstract final String header;
+  abstract final bool forceReasoning;
   final String userMsgFooter = "";
 
   bool get hasThinkTag => header.startsWith("<think");
@@ -29,13 +30,19 @@ sealed class ThinkingMode {
 class Lighting extends ThinkingMode {
   @override
   final String header = '<think>\n</think>';
-
+  
+  @override
+  final bool forceReasoning = false;
+  
   const Lighting();
 }
 
 class Fast extends ThinkingMode {
   @override
   final String header = '<think>\n</think';
+
+  @override
+  final bool forceReasoning = false;
 
   const Fast();
 }
@@ -44,12 +51,17 @@ class Free extends ThinkingMode {
   @override
   final String header = '<think';
 
+  @override
+  final bool forceReasoning = true;
+
   const Free();
 }
 
 class PreferChinese extends ThinkingMode {
   @override
   final String header = '<think>嗯';
+  @override
+  final bool forceReasoning = true;
 
   const PreferChinese();
 }
@@ -57,6 +69,9 @@ class PreferChinese extends ThinkingMode {
 class None extends ThinkingMode {
   @override
   String get header => "";
+
+  @override
+  final bool forceReasoning = false;
 
   const None();
 }
@@ -68,6 +83,9 @@ class En extends ThinkingMode {
   @override
   String get userMsgFooter => " think";
 
+  @override
+  final bool forceReasoning = true;
+
   const En();
 }
 
@@ -78,6 +96,9 @@ class EnShort extends ThinkingMode {
   @override
   String get userMsgFooter => " think a bit";
 
+  @override
+  final bool forceReasoning = true;
+
   const EnShort();
 }
 
@@ -87,6 +108,9 @@ class EnLong extends ThinkingMode {
 
   @override
   String get userMsgFooter => " think a lot";
+
+  @override
+  final bool forceReasoning = true;
 
   const EnLong();
 }

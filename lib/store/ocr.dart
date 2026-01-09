@@ -251,7 +251,7 @@ extension _$Ocr on _Ocr {
       to_rwkv.ChatBatchAsync(
         batchMessages,
         enableReasoning: reasoning,
-        forceReasoning: thinkingMode is EnLong,
+        forceReasoning: thinkingMode.forceReasoning,
         batchSize: batchSize,
         modelID: modelID,
       ),

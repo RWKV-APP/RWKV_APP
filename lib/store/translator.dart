@@ -469,12 +469,11 @@ extension _$Translator on _Translator {
     if (modelID == null) {
       return;
     }
-    final forceReasoning = thinkingMode is EnLong;
     P.rwkv.send(
       to_rwkv.ChatBatchAsync(
         batchMessages,
         enableReasoning: reasoning,
-        forceReasoning: forceReasoning,
+        forceReasoning: thinkingMode.forceReasoning,
         batchSize: batchSize,
         modelID: modelID,
       ),
