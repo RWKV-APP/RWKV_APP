@@ -36,10 +36,10 @@ enum DecodeParamType {
   /// - 低 topP 值，聚焦高概率 token
   /// - 无惩罚机制，允许重复以保持一致性
   conservative(
-    temperature: 0.3,
-    topP: 0.3,
-    presencePenalty: 0,
-    frequencyPenalty: 0,
+    temperature: 0.4,
+    topP: 0.4,
+    presencePenalty: 1,
+    frequencyPenalty: 0.1,
     penaltyDecay: 0.99,
   ),
 
