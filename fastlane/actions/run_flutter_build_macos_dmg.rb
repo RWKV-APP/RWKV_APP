@@ -1,5 +1,7 @@
 require 'fileutils'
 
+# macos_build_and_upload
+
 module Fastlane
   module Actions
     class RunFlutterBuildMacosDmgAction < Action
@@ -32,6 +34,10 @@ module Fastlane
         identity_id = params[:identity_id]
         if identity_id && !identity_id.empty?
           UI.header '正在签名 .app 内容...'
+          # 获取 entitlements 文件路径
+          entitlements_path = File.join(project_root, 'macos/Runner/Release.entitlements')
+          UI.user_error!("找不到 entitlements 文件: #{entitlements_path}") unless File.exist?(entitlements_path)
+
           # 签名 Frameworks 和 dylib
           frameworks_path = File.join(app_path, 'Contents/Frameworks')
           if File.exist?(frameworks_path)
@@ -39,8 +45,8 @@ module Fastlane
               sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{file}'")
             end
           end
-          # 签名主程序
-          sh("codesign --force --sign '#{identity_id}' --options runtime --timestamp --verbose '#{app_path}'")
+          # 签名主程序（必须包含 entitlements 以保持沙盒配置）
+          sh("codesign --force --sign '#{identity_id}' --entitlements '#{entitlements_path}' --options runtime --timestamp --verbose '#{app_path}'")
         end
 
         # 3. 创建带引导界面的 DMG

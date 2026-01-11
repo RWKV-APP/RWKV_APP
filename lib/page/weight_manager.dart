@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:intl/number_symbols_data.dart';
 import 'package:path/path.dart' as path;
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
@@ -62,9 +63,11 @@ class _CustomDirectoryTile extends ConsumerWidget {
     final defaultDir = ref.watch(P.app.documentsDir)?.path ?? "";
     final s = S.of(context);
 
+    final finalDirString = customDir ?? defaultDir;
+
     return ListTile(
       title: Text(s.weights_saving_directory),
-      subtitle: Text(customDir ?? defaultDir),
+      subtitle: Text(finalDirString),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
