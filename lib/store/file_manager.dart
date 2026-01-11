@@ -199,14 +199,14 @@ extension $FileManager on _FileManager {
     ].expand((e) => e).where((e) => e.available).toList();
     final documentsDir = P.app.effectiveDocumentsDir.q;
     if (documentsDir == null) return;
-    
+
     // Scan both Documents root and models subfolder
     final directoriesToScan = <Directory>[documentsDir];
     final modelsDir = Directory("${documentsDir.path}/${Config.modelsDirName}");
     if (await modelsDir.exists()) {
       directoriesToScan.add(modelsDir);
     }
-    
+
     for (final dir in directoriesToScan) {
       final fileSystemEntities = dir.listSync();
 
@@ -414,8 +414,15 @@ extension _$FileManager on _FileManager {
     try {
       await syncAvailableModels();
       // Check and perform migration if needed
+      // Only migrate for users with build number < 637
       if (!P.preference.weightsMigrationCompleted.q) {
-        await _migrateFilesToWeightsFolder();
+        final currentBuildNumber = int.tryParse(P.app.buildNumber.q) ?? 0;
+        if (currentBuildNumber < 637) {
+          await _migrateFilesToWeightsFolder();
+        } else {
+          // Mark as completed for users with build >= 637
+          P.preference.setWeightsMigrationCompleted(true);
+        }
       }
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);
@@ -425,7 +432,7 @@ extension _$FileManager on _FileManager {
   /// Migrate files from Documents root to Documents/models folder
   Future<void> _migrateFilesToWeightsFolder() async {
     qq;
-    
+
     // Skip migration if custom directory is set
     if (P.preference.customModelsDir.q != null) {
       P.preference.setWeightsMigrationCompleted(true);
@@ -441,7 +448,7 @@ extension _$FileManager on _FileManager {
 
     final documentsPath = documentsDir.path;
     final modelsDir = Directory("$documentsPath/${Config.modelsDirName}");
-    
+
     // Create models directory if it doesn't exist
     if (!await modelsDir.exists()) {
       await modelsDir.create(recursive: true);
@@ -478,19 +485,29 @@ extension _$FileManager on _FileManager {
 
     // Pattern-based file extensions
     const modelFileExtensions = ['.st', '.gguf', '.prefab', '.bin', '.rmpack', '.mnn', '.zip'];
-    
+
     // Scan Documents directory for files to migrate
     final filesToMigrate = <File>[];
     try {
       final entities = documentsDir.listSync();
       for (final entity in entities) {
         if (entity is! File) continue;
-        
+
         final fileName = path.basename(entity.path);
-        final shouldMigrate = knownFileNames.contains(fileName) ||
+
+        // Skip database files (.sqlite, .sqlite3, .db) - they should be in AppData, not Documents
+        if (fileName.toLowerCase().endsWith('.sqlite') ||
+            fileName.toLowerCase().endsWith('.sqlite3') ||
+            fileName.toLowerCase().endsWith('.db')) {
+          qqw("Skipping database file (should be in AppData): $fileName");
+          continue;
+        }
+
+        final shouldMigrate =
+            knownFileNames.contains(fileName) ||
             fileName.toLowerCase().contains('rwkv') ||
             modelFileExtensions.any((ext) => fileName.toLowerCase().endsWith(ext));
-        
+
         if (shouldMigrate) {
           filesToMigrate.add(entity);
         }
@@ -509,7 +526,7 @@ extension _$FileManager on _FileManager {
     for (final file in filesToMigrate) {
       final fileName = path.basename(file.path);
       final targetFile = File("${modelsDir.path}/$fileName");
-      
+
       // Skip if target file already exists
       if (await targetFile.exists()) {
         qqq("Target file already exists, skipping: $fileName");
@@ -539,16 +556,16 @@ extension _$FileManager on _FileManager {
       final entities = documentsDir.listSync();
       for (final entity in entities) {
         if (entity is! Directory) continue;
-        
+
         final dirName = path.basename(entity.path);
         // Skip the models directory itself
         if (dirName == Config.modelsDirName) continue;
-        
+
         // Check if this directory corresponds to a migrated file
         final correspondingFile = filesToMigrate.firstWhereOrNull(
           (f) => path.basenameWithoutExtension(f.path) == dirName,
         );
-        
+
         if (correspondingFile != null) {
           final targetDir = Directory("${modelsDir.path}/$dirName");
           if (!await targetDir.exists()) {

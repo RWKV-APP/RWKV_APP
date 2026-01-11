@@ -93,9 +93,15 @@ class _App extends RawApp {
   late final effectiveDocumentsDir = qp<Directory?>((ref) {
     if (Platform.isWindows) {
       final windowsDir = ref.watch(_windowsDocumentsDir);
+      // On Windows, always prefer AppData directory if available
       if (windowsDir != null) {
         return windowsDir;
       }
+      // If _windowsDocumentsDir is null on Windows, it means initialization hasn't completed yet
+      // or initialization failed. In either case, we should NOT use documentsDir as it's not sandboxed.
+      // Return null to indicate the directory is not ready yet.
+      // This will cause callers to handle the null case appropriately.
+      return null;
     }
     return ref.watch(documentsDir);
   });
@@ -200,13 +206,17 @@ extension _$App on _App {
         final appSupportDir = await getApplicationSupportDirectory();
         _windowsDocumentsDir.q = appSupportDir;
         qqq("Windows: Using AppData directory: ${appSupportDir.path}");
+        // Verify the path is actually in AppData, not Documents
+        final path = appSupportDir.path.toLowerCase();
+        if (path.contains('documents') && !path.contains('appdata')) {
+          qqw("WARNING: getApplicationSupportDirectory returned Documents path instead of AppData: ${appSupportDir.path}");
+        }
       } catch (e) {
         qqe("Failed to get Windows AppData directory: $e");
-        // Fallback to documentsDir if AppData is not available
-        final fallbackDir = documentsDir.q;
-        if (fallbackDir != null) {
-          _windowsDocumentsDir.q = fallbackDir;
-        }
+        // On Windows, we should NOT fallback to documentsDir as it's not sandboxed
+        // Instead, leave _windowsDocumentsDir as null, which will cause effectiveDocumentsDir to return null
+        // This will force callers to handle the error appropriately
+        qqw("Windows: AppData directory initialization failed, effectiveDocumentsDir will return null");
       }
     }
 
