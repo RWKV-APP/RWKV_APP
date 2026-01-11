@@ -452,7 +452,7 @@ extension $RWKVLoad on _RWKV {
 
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_sudoku_vocab.txt");
     final data = await rootBundle.load("assets/config/chat/sudoku_rwkv_20241120_ncnn.param");
-    final paramFile = File(P.app.documentsDir.q!.path + "/sudoku_rwkv_20241120_ncnn.param");
+    final paramFile = File(P.app.effectiveDocumentsDir.q!.path + "/sudoku_rwkv_20241120_ncnn.param");
     await paramFile.writeAsBytes(data.buffer.asUint8List());
 
     await _ensureQNNCopied();

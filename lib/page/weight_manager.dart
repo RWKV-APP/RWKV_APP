@@ -1,14 +1,20 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:path/path.dart' as path;
+import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 
 class PageWeightManager extends ConsumerWidget {
@@ -17,8 +23,378 @@ class PageWeightManager extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.weights_mangement)),
+      appBar: AppBar(
+        title: Text(S.current.weights_mangement),
+      ),
       body: const _Body(),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton.icon(
+              onPressed: () => _exportAllWeightFiles(context, ref),
+              icon: const Icon(Icons.share),
+              label: Text(S.current.export_all_weight_files),
+            ),
+            TextButton.icon(
+              onPressed: () => _importWeightFile(context, ref),
+              icon: const Icon(Icons.add),
+              label: Text(S.current.import_weight_file),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _importWeightFile(BuildContext context, WidgetRef ref) async {
+    try {
+      final result = await file_picker.FilePicker.platform.pickFiles(
+        type: file_picker.FileType.custom,
+        allowMultiple: true,
+        allowedExtensions: ['st', 'gguf', 'prefab', 'bin', 'rmpack', 'mnn', 'zip'],
+      );
+
+      if (result == null || result.files.isEmpty) return;
+
+      final pickedFiles = result.files;
+      final totalFiles = pickedFiles.length;
+
+      // First, validate all files and check for existing files
+      final List<_FileImportInfo> fileInfos = [];
+      bool hasExistingFiles = false;
+
+      for (final pickedFile in pickedFiles) {
+        final sourcePath = pickedFile.path;
+        final fileName = pickedFile.name;
+
+        File? sourceFile;
+        Uint8List? fileBytes;
+
+        if (sourcePath != null) {
+          sourceFile = File(sourcePath);
+          if (!await sourceFile.exists()) {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: null,
+              fileBytes: null,
+              existingFileInfo: null,
+              error: "${S.current.file_not_found}",
+            ));
+            continue;
+          }
+        } else {
+          if (pickedFile.bytes == null) {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: null,
+              fileBytes: null,
+              existingFileInfo: null,
+              error: S.current.file_path_not_found,
+            ));
+            continue;
+          }
+          fileBytes = pickedFile.bytes;
+        }
+
+        FileInfo? existingFileInfo;
+        try {
+          final fileNameToCheck = fileName.isNotEmpty ? fileName : (sourceFile != null ? path.basename(sourceFile.path) : "unknown");
+          existingFileInfo = await P.fileManager.checkFileExistsInConfig(fileNameToCheck);
+          if (existingFileInfo != null) {
+            hasExistingFiles = true;
+          }
+        } catch (e) {
+          final errorMessage = e.toString();
+          if (errorMessage.contains("not found in configuration")) {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: sourceFile,
+              fileBytes: fileBytes,
+              existingFileInfo: null,
+              error: S.current.file_not_supported,
+            ));
+            continue;
+          } else {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: sourceFile,
+              fileBytes: fileBytes,
+              existingFileInfo: null,
+              error: e.toString(),
+            ));
+            continue;
+          }
+        }
+
+        fileInfos.add(_FileImportInfo(
+          pickedFile: pickedFile,
+          sourceFile: sourceFile,
+          fileBytes: fileBytes,
+          existingFileInfo: existingFileInfo,
+          error: null,
+        ));
+      }
+
+      // If there are existing files, ask user for confirmation
+      bool shouldOverwrite = false;
+      if (hasExistingFiles) {
+        final s = S.of(context);
+        final existingCount = fileInfos.where((info) => info.existingFileInfo != null && info.error == null).length;
+        final message = existingCount == 1
+            ? s.overwrite_file_confirmation
+            : "${s.overwrite_file_confirmation}\n\n($existingCount ${S.current.files})";
+
+        final confirmResult = await showOkCancelAlertDialog(
+          context: context,
+          title: s.file_already_exists,
+          message: message,
+          okLabel: s.overwrite,
+          cancelLabel: s.cancel,
+          isDestructiveAction: true,
+        );
+
+        if (confirmResult != OkCancelResult.ok) {
+          return; // User cancelled
+        }
+        shouldOverwrite = true;
+      }
+
+      // Show progress dialog
+      final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, totalFiles));
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => _ImportProgressDialog(progressNotifier: progressNotifier),
+        );
+      }
+
+      int successCount = 0;
+      int failCount = 0;
+      final List<String> failedFiles = [];
+
+      // Process each file
+      for (var i = 0; i < fileInfos.length; i++) {
+        final fileInfo = fileInfos[i];
+        final pickedFile = fileInfo.pickedFile;
+        final fileName = pickedFile.name;
+
+        // Update progress
+        progressNotifier.value = (fileName, i, totalFiles);
+
+        // Skip files with errors
+        if (fileInfo.error != null) {
+          failCount++;
+          failedFiles.add("$fileName: ${fileInfo.error}");
+          continue;
+        }
+
+        // Import the file
+        try {
+          final fileNameToUse = pickedFile.name.isNotEmpty
+              ? pickedFile.name
+              : (fileInfo.sourceFile != null
+                  ? path.basename(fileInfo.sourceFile!.path)
+                  : "unknown");
+
+          final success = await P.fileManager.importWeightFile(
+            sourceFile: fileInfo.sourceFile,
+            fileBytes: fileInfo.fileBytes,
+            fileName: fileNameToUse,
+            overwrite: shouldOverwrite && fileInfo.existingFileInfo != null,
+          );
+
+          if (success) {
+            successCount++;
+          } else {
+            failCount++;
+            failedFiles.add("$fileName: ${S.current.import_failed}");
+          }
+        } catch (e) {
+          failCount++;
+          failedFiles.add("$fileName: ${e.toString()}");
+        }
+      }
+
+      // Close progress dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show result summary
+      if (successCount > 0 && failCount == 0) {
+        Alert.success(totalFiles == 1 ? S.current.import_success : "$successCount ${S.current.import_success}");
+      } else if (successCount > 0 && failCount > 0) {
+        final message = "$successCount ${S.current.import_success}\n$failCount ${S.current.import_failed}\n\n${failedFiles.join('\n')}";
+        Alert.warning(message);
+      } else {
+        final message = "${S.current.import_failed}:\n${failedFiles.join('\n')}";
+        Alert.error(message);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close progress dialog if still open
+        final errorMessage = e.toString();
+        if (errorMessage.contains("not found in configuration")) {
+          Alert.error(S.current.file_not_supported);
+        } else {
+          Alert.error("${S.current.import_failed}: $e");
+        }
+      }
+    }
+  }
+
+  Future<void> _exportAllWeightFiles(BuildContext context, WidgetRef ref) async {
+    try {
+      final s = S.of(context);
+
+      // Check if there are any files to export
+      final allWeights = [
+        ...ref.read(P.fileManager.chatWeights),
+        ...ref.read(P.fileManager.roleplayWeights),
+        ...ref.read(P.fileManager.ttsWeights),
+        ...ref.read(P.fileManager.seeWeights),
+        ...ref.read(P.fileManager.sudokuWeights),
+        ...ref.read(P.fileManager.othelloWeights),
+      ];
+
+      final filesToExport = allWeights.where((fileInfo) {
+        final local = ref.read(P.fileManager.locals(fileInfo));
+        return local.hasFile;
+      }).toList();
+
+      if (filesToExport.isEmpty) {
+        Alert.warning(s.no_weight_files_to_export);
+        return;
+      }
+
+      // Show confirmation dialog explaining what will happen
+      final confirmResult = await showOkCancelAlertDialog(
+        context: context,
+        title: s.export_all_weight_files,
+        message: s.export_all_weight_files_description,
+        okLabel: s.export_all_weight_files,
+        cancelLabel: s.cancel,
+      );
+
+      if (confirmResult != OkCancelResult.ok) {
+        return; // User cancelled
+      }
+
+      // Select target directory
+      final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+      if (targetDirectory == null) {
+        return; // User cancelled
+      }
+
+      // Show progress dialog
+      final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, 0));
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => _ExportProgressDialog(progressNotifier: progressNotifier),
+        );
+      }
+
+      // Export all files
+      try {
+        final exportDirectory = await P.fileManager.exportAllWeightFiles(
+          targetDirectory: targetDirectory,
+          onProgress: (currentFile, completed, total) {
+            progressNotifier.value = (currentFile, completed, total);
+          },
+        );
+
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close progress dialog
+          Alert.success("${S.current.export_success}\n\nDirectory: $exportDirectory");
+        }
+      } catch (e) {
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close progress dialog
+          Alert.error("${S.current.export_failed}: $e");
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Alert.error("${S.current.export_failed}: $e");
+      }
+    }
+  }
+}
+
+class _ExportProgressDialog extends StatelessWidget {
+  final ValueNotifier<(String, int, int)> progressNotifier;
+
+  const _ExportProgressDialog({required this.progressNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: ValueListenableBuilder<(String, int, int)>(
+        valueListenable: progressNotifier,
+        builder: (context, value, _) {
+          final (currentFile, completed, total) = value;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              if (currentFile.isNotEmpty)
+                Text(
+                  currentFile,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              if (total > 0)
+                Text(
+                  "$completed / $total",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ImportProgressDialog extends StatelessWidget {
+  final ValueNotifier<(String, int, int)> progressNotifier;
+
+  const _ImportProgressDialog({required this.progressNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: ValueListenableBuilder<(String, int, int)>(
+        valueListenable: progressNotifier,
+        builder: (context, value, _) {
+          final (currentFile, completed, total) = value;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              if (currentFile.isNotEmpty)
+                Text(
+                  currentFile,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              if (total > 0)
+                Text(
+                  "$completed / $total",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -33,8 +409,26 @@ class _Body extends ConsumerStatefulWidget {
 class _BodyState extends ConsumerState<_Body> {
   final GlobalKey<_OtherFilesSectionState> _otherFilesSectionKey = GlobalKey<_OtherFilesSectionState>();
 
+  @override
+  void initState() {
+    super.initState();
+    // Automatically refresh on page load without showing pull-to-refresh UI
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onRefresh();
+    });
+  }
+
   Future<void> _onRefresh() async {
-    await P.fileManager.checkLocal();
+    await Future.wait([
+      Future.delayed(500.ms),
+      P.fileManager.checkLocal(),
+    ]);
+
+    _otherFilesSectionKey.currentState?._loadFiles();
+  }
+
+  // Expose method to refresh other files section from outside
+  void refreshOtherFiles() {
     _otherFilesSectionKey.currentState?._loadFiles();
   }
 
@@ -59,12 +453,15 @@ class _CustomDirectoryTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final customDir = ref.watch(P.preference.customModelsDir);
-    final defaultDir = ref.watch(P.app.documentsDir)?.path ?? "";
+    final documentsDir = ref.watch(P.app.effectiveDocumentsDir)?.path;
+    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : "";
     final s = S.of(context);
+
+    final finalDirString = customDir ?? defaultDir;
 
     return ListTile(
       title: Text(s.weights_saving_directory),
-      subtitle: Text(customDir ?? defaultDir),
+      subtitle: Text(finalDirString),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -144,6 +541,22 @@ class _UnrecognizedFile {
   });
 }
 
+class _FileImportInfo {
+  final file_picker.PlatformFile pickedFile;
+  final File? sourceFile;
+  final Uint8List? fileBytes;
+  final FileInfo? existingFileInfo;
+  final String? error;
+
+  const _FileImportInfo({
+    required this.pickedFile,
+    required this.sourceFile,
+    required this.fileBytes,
+    required this.existingFileInfo,
+    required this.error,
+  });
+}
+
 class _WeightList extends ConsumerWidget {
   final GlobalKey<_OtherFilesSectionState>? otherFilesSectionKey;
 
@@ -171,6 +584,17 @@ class _WeightList extends ConsumerWidget {
       ...sudokuWeights,
       ...othelloWeights,
     ];
+
+    // Check if there are any downloaded files
+    final hasDownloadedFiles = allWeights.any((fileInfo) {
+      final local = ref.watch(P.fileManager.locals(fileInfo));
+      return local.hasFile;
+    });
+
+    // Show empty state if no downloaded files
+    if (!hasDownloadedFiles) {
+      return const _EmptyStateGuide();
+    }
 
     return Column(
       children: [
@@ -234,11 +658,12 @@ class _WeightSection extends ConsumerWidget {
 }
 
 class WeightManagerUtils {
-  static int calculateTotalUsage(List<FileInfo> allWeights) {
+  static int calculateTotalUsage(List<FileInfo> allWeights, WidgetRef ref) {
     int totalBytes = 0;
 
     for (final weight in allWeights) {
-      final local = P.fileManager.locals(weight).q;
+      // Use ref.watch to ensure this widget rebuilds when locals state changes
+      final local = ref.watch(P.fileManager.locals(weight));
 
       if (local.hasFile) {
         totalBytes += weight.fileSize;
@@ -266,7 +691,12 @@ class _TotalUsageTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights);
+    // Watch all locals to ensure this widget rebuilds when any file state changes
+    for (final weight in allWeights) {
+      ref.watch(P.fileManager.locals(weight));
+    }
+
+    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights, ref);
 
     return ListTile(
       title: const Text("Total Disk Usage"),
@@ -279,6 +709,52 @@ class _TotalUsageTile extends ConsumerWidget {
 class _WeightItem extends ConsumerWidget {
   final FileInfo fileInfo;
   const _WeightItem({required this.fileInfo});
+
+  Future<void> _exportWeightFile(BuildContext context, WidgetRef ref) async {
+    try {
+      // Select target directory
+      final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+      if (targetDirectory == null) {
+        return; // User cancelled
+      }
+
+      // Show loading dialog
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      // Export the file
+      try {
+        await P.fileManager.exportWeightFile(
+          fileInfo: fileInfo,
+          targetDirectory: targetDirectory,
+        );
+
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close loading dialog
+          Alert.success(S.current.export_success);
+        }
+      } catch (e) {
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close loading dialog
+          final errorMessage = e.toString();
+          if (errorMessage.contains("already exists")) {
+            Alert.error(S.current.file_already_exists);
+          } else {
+            Alert.error("${S.current.export_failed}: $e");
+          }
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Alert.error("${S.current.export_failed}: $e");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -304,20 +780,30 @@ class _WeightItem extends ConsumerWidget {
           Text(local.targetPath.split("/").last),
         ],
       ),
-      trailing: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () async {
-          final result = await showOkCancelAlertDialog(
-            context: context,
-            title: S.current.delete,
-            message: "${S.current.are_you_sure_you_want_to_delete_this_model} (${fileInfo.name})",
-            okLabel: S.current.delete,
-            isDestructiveAction: true,
-          );
-          if (result == OkCancelResult.ok) {
-            await P.fileManager.deleteFile(fileInfo: fileInfo);
-          }
-        },
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () => _exportWeightFile(context, ref),
+            tooltip: S.current.export_weight_file,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () async {
+              final result = await showOkCancelAlertDialog(
+                context: context,
+                title: S.current.delete,
+                message: "${S.current.are_you_sure_you_want_to_delete_this_model} (${fileInfo.name})",
+                okLabel: S.current.delete,
+                isDestructiveAction: true,
+              );
+              if (result == OkCancelResult.ok) {
+                await P.fileManager.deleteFile(fileInfo: fileInfo);
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -341,10 +827,12 @@ class _OtherFilesSection extends ConsumerStatefulWidget {
 
 class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
   Future<List<_UnrecognizedFile>>? _filesFuture;
+  Set<FileInfo>? _lastWatchedWeights;
 
   Future<List<_UnrecognizedFile>> _getUnrecognizedFiles() async {
     final customDir = P.preference.customModelsDir.q;
-    final defaultDir = P.app.documentsDir.q?.path;
+    final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : null;
     final targetDir = customDir ?? defaultDir;
 
     if (targetDir == null) return [];
@@ -352,8 +840,9 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
     final directory = Directory(targetDir);
     if (!await directory.exists()) return [];
 
-    const minSizeBytes = 5 * 1024 * 1024; // 5MB
-    final weightFileNames = widget.allWeights.map((w) => w.fileName).toSet();
+    // Get all file names from config (not just available ones)
+    // This ensures we correctly identify files even if they're not available on current platform
+    final allWeightFileNames = P.fileManager.getAllConfigFileNames();
 
     final unrecognizedFiles = <_UnrecognizedFile>[];
 
@@ -363,10 +852,9 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
         if (entity is! File) continue;
 
         final fileName = path.basename(entity.path);
-        if (weightFileNames.contains(fileName)) continue;
+        if (allWeightFileNames.contains(fileName)) continue;
 
         final fileSize = await entity.length();
-        if (fileSize <= minSizeBytes) continue;
 
         unrecognizedFiles.add(
           _UnrecognizedFile(
@@ -397,6 +885,34 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch weight lists to trigger refresh when they change (e.g., after import)
+    final chatWeights = ref.watch(P.fileManager.chatWeights);
+    final roleplayWeights = ref.watch(P.fileManager.roleplayWeights);
+    final ttsWeights = ref.watch(P.fileManager.ttsWeights);
+    final seeWeights = ref.watch(P.fileManager.seeWeights);
+    final sudokuWeights = ref.watch(P.fileManager.sudokuWeights);
+    final othelloWeights = ref.watch(P.fileManager.othelloWeights);
+
+    // Check if weight lists have changed
+    final currentWeights = {
+      ...chatWeights,
+      ...roleplayWeights,
+      ...ttsWeights,
+      ...seeWeights,
+      ...sudokuWeights,
+      ...othelloWeights,
+    };
+
+    // Reload files when weight lists change
+    if (_lastWatchedWeights != currentWeights) {
+      _lastWatchedWeights = currentWeights;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _loadFiles();
+        }
+      });
+    }
+
     return FutureBuilder<List<_UnrecognizedFile>>(
       future: _filesFuture,
       builder: (context, snapshot) {
@@ -450,10 +966,11 @@ class _OtherFileItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       title: Text(file.fileName),
-      subtitle: Row(
+      subtitle: Wrap(
+        spacing: 4,
+        runSpacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Text(file.filePath.split("/").last),
-          8.w,
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -462,6 +979,7 @@ class _OtherFileItem extends ConsumerWidget {
             ),
             child: Text(_formatBytes(file.fileSize)),
           ),
+          Text(file.filePath.split("/").last),
         ],
       ),
       trailing: IconButton(
@@ -499,5 +1017,49 @@ class _OtherFileItem extends ConsumerWidget {
     const suffixes = ["B", "KB", "MB", "GB", "TB"];
     var i = (log(bytes) / log(1024)).floor();
     return ((bytes / pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
+  }
+}
+
+class _EmptyStateGuide extends ConsumerWidget {
+  const _EmptyStateGuide();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    return Center(
+      child: Padding(
+        padding: const .all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.folder_open,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary.q(.5),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              s.no_weight_files_guide_title,
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              s.no_weight_files_guide_message,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            FilledButton.icon(
+              onPressed: () {
+                go(PageKey.home);
+              },
+              icon: const Icon(Icons.home),
+              label: Text(s.go_to_home_page),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

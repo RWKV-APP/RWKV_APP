@@ -9,6 +9,8 @@ abstract class Config {
 
   static const reasonTag = "reason";
 
+  static const modelsDirName = "rwkv_chat_models";
+
   static const domain = "https://api-model.rwkvos.com";
 
   static const timeout = Duration(seconds: 60);

@@ -439,3 +439,13 @@ lane :resume_upload do |params|
 
   UI.success '🎉 恢复流程执行完毕！'
 end
+
+# 测试 macOS DMG 构建流程（不签名）
+lane :test_macos_dmg do |params|
+  UI.header '测试 macOS DMG 构建流程'
+  dmg_path = run_flutter_build_macos_dmg(
+    identity_id: params[:identity_id], # 可选：如果提供则进行签名测试
+    keychain_name: params[:keychain_name], # 可选
+  )
+  UI.success "✅ DMG 构建完成: #{dmg_path}"
+end

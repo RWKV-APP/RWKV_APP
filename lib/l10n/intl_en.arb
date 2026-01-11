@@ -557,5 +557,36 @@
     }
   },
   "adapting_more_inference_chips": "We are continuously adapting more inference chips, please stay tuned.",
-  "other_files": "Other Files"
+  "other_files": "Other Files (These files may be outdated or no longer supported weights. You can safely delete them)",
+  "import_weight_file": "Import Weight File",
+  "import_success": "Import successful",
+  "import_failed": "Import failed",
+  "file_path_not_found": "File path not found",
+  "file_not_found": "File not found",
+  "file_not_supported": "This file is not yet supported. Please check if the file name is correct",
+  "file_already_exists": "File already exists",
+  "overwrite_file_confirmation": "File already exists. Do you want to overwrite it?",
+  "overwrite": "Overwrite",
+  "export_weight_file": "Export Weight File",
+  "export_all_weight_files": "Export All Weight Files",
+  "export_success": "Export successful",
+  "export_failed": "Export failed",
+  "files": "files",
+  "no_weight_files_to_export": "No weight files to export",
+  "export_all_weight_files_description": "All downloaded weight files will be exported as individual files to the selected directory. Existing files with the same name will be skipped.",
+  "no_weight_files_guide_title": "No Weight Files",
+  "no_weight_files_guide_message": "You haven't downloaded any weight files yet. Go to the home page to download and experience the app.",
+  "go_to_home_page": "Go to Home Page",
+  "import_all_weight_files": "Import All Weight Files",
+  "import_all_weight_files_description": "Select a ZIP file exported from this app. All weight files in the ZIP will be imported. Existing files will be overwritten if they have the same name.",
+  "import_all_weight_files_success": "Import successful: {count} files imported",
+  "@import_all_weight_files_success": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invalid_zip_file": "Invalid ZIP file or file format not recognized",
+  "no_files_in_zip": "No valid weight files found in the ZIP file"
 }

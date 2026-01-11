@@ -26,10 +26,10 @@ class _FileManager {
     if (customDir != null && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       return "$customDir/${key.fileName}";
     }
-    final dir = ref.watch(P.app.documentsDir);
+    final dir = ref.watch(P.app.effectiveDocumentsDir);
     final fileName = key.fileName;
     final dirPath = dir!.path;
-    return "$dirPath/$fileName";
+    return "$dirPath/${Config.modelsDirName}/$fileName";
   });
 
   /// 全部 chat 权重
@@ -197,27 +197,37 @@ extension $FileManager on _FileManager {
       sudokuWeights.q,
       othelloWeights.q,
     ].expand((e) => e).where((e) => e.available).toList();
-    final documentsDir = P.app.documentsDir.q;
+    final documentsDir = P.app.effectiveDocumentsDir.q;
     if (documentsDir == null) return;
-    final fileSystemEntities = documentsDir.listSync();
 
-    for (final entity in fileSystemEntities) {
-      if (entity is! File) continue;
-      if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
+    // Scan both Documents root and models subfolder
+    final directoriesToScan = <Directory>[documentsDir];
+    final modelsDir = Directory("${documentsDir.path}/${Config.modelsDirName}");
+    if (await modelsDir.exists()) {
+      directoriesToScan.add(modelsDir);
+    }
 
-      // 不移除以 .tmp 结尾的文件
-      if (entity.path.endsWith('.tmp')) {
-        continue;
+    for (final dir in directoriesToScan) {
+      final fileSystemEntities = dir.listSync();
+
+      for (final entity in fileSystemEntities) {
+        if (entity is! File) continue;
+        if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
+
+        // 不移除以 .tmp 结尾的文件
+        if (entity.path.endsWith('.tmp')) {
+          continue;
+        }
+
+        // 检查文件大小，只删除大于 20MB 的文件
+        final fileSize = await File(entity.path).length();
+        if (fileSize <= maxSizeBytes) {
+          continue;
+        }
+
+        await entity.delete();
+        qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
       }
-
-      // 检查文件大小，只删除大于 20MB 的文件
-      final fileSize = await File(entity.path).length();
-      if (fileSize <= maxSizeBytes) {
-        continue;
-      }
-
-      await entity.delete();
-      qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
     }
   }
 
@@ -319,7 +329,8 @@ extension $FileManager on _FileManager {
 
   Future<void> openModelDirectory() async {
     final customDir = P.preference.customModelsDir.q;
-    final defaultDir = P.app.documentsDir.q?.path;
+    final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : null;
     final path = customDir ?? defaultDir;
     if (path == null) return;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -329,7 +340,7 @@ extension $FileManager on _FileManager {
 
   Future<void> updateCustomDirectory(String? newPath, {void Function(String currentFile, int completed, int total)? onProgress}) async {
     final customDir = P.preference.customModelsDir.q;
-    final defaultDir = P.app.documentsDir.q?.path;
+    final defaultDir = P.app.effectiveDocumentsDir.q?.path;
     final oldPath = customDir ?? defaultDir;
 
     if (newPath == oldPath) return;
@@ -395,6 +406,587 @@ extension $FileManager on _FileManager {
 
     P.preference.setCustomModelsDir(newPath);
   }
+
+  /// Get all file names from configuration (including unavailable ones)
+  /// This is used to determine which files are recognized vs "other files"
+  Set<String> getAllConfigFileNames() {
+    final config = P.app._config.q;
+    if (config == null) {
+      return {};
+    }
+
+    final allFileNames = <String>{};
+
+    // Extract from all demo types
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileNames.add(fileInfo.fileName);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    return allFileNames;
+  }
+
+  /// Check if a file would already exist at the target location
+  /// Returns the FileInfo if file is in config, null otherwise
+  /// Throws exception if file is not in configuration
+  Future<FileInfo?> checkFileExistsInConfig(String fileName) async {
+    final config = P.app._config.q;
+    if (config == null) {
+      throw Exception("Configuration not loaded");
+    }
+
+    final allFileInfos = <FileInfo>{};
+
+    // Extract from all demo types
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileInfos.add(fileInfo);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    // Find matching file info by fileName
+    try {
+      final matchingFileInfo = allFileInfos.firstWhere(
+        (info) => info.fileName == fileName,
+      );
+
+      // Check if target file already exists
+      final targetPath = _paths(matchingFileInfo).q;
+      final targetFile = File(targetPath);
+      if (await targetFile.exists()) {
+        return matchingFileInfo;
+      }
+      return null; // File is in config but doesn't exist yet
+    } catch (e) {
+      throw Exception("File not found in configuration");
+    }
+  }
+
+  /// Import a weight file from external source
+  /// Returns true if import was successful, false otherwise
+  /// [overwrite] if true, will overwrite existing file; if false, will throw exception if file exists
+  /// [sourceFile] the source file (used when path is available, e.g., Android, desktop)
+  /// [fileBytes] the file bytes (used when path is null, e.g., iOS iCloud Drive)
+  /// [fileName] the file name (required when using fileBytes)
+  Future<bool> importWeightFile({
+    File? sourceFile,
+    Uint8List? fileBytes,
+    String? fileName,
+    bool overwrite = false,
+  }) async {
+    qq;
+
+    // Get the file name
+    final actualFileName = fileName ?? (sourceFile != null ? path.basename(sourceFile.path) : throw Exception("File name is required"));
+
+    // Validate that we have either sourceFile or fileBytes
+    if (sourceFile == null && fileBytes == null) {
+      throw Exception("Either sourceFile or fileBytes must be provided");
+    }
+
+    // Check if the file exists in the configuration
+    // Get all file infos from config (not just available ones)
+    final config = P.app._config.q;
+    if (config == null) {
+      throw Exception("Configuration not loaded");
+    }
+
+    final allFileInfos = <FileInfo>{};
+
+    // Extract from all demo types
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileInfos.add(fileInfo);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    // Find matching file info by fileName
+    FileInfo? matchingFileInfo;
+    try {
+      matchingFileInfo = allFileInfos.firstWhere(
+        (info) => info.fileName == actualFileName,
+      );
+    } catch (e) {
+      throw Exception("File not found in configuration");
+    }
+
+    // Get the target path
+    final targetPath = _paths(matchingFileInfo).q;
+    final targetFile = File(targetPath);
+
+    // Check if target file already exists
+    if (await targetFile.exists()) {
+      if (!overwrite) {
+        qqw("Target file already exists: $targetPath");
+        throw Exception("File already exists");
+      } else {
+        // Delete existing file if overwrite is true
+        try {
+          await targetFile.delete();
+          qqq("Deleted existing file for overwrite: $targetPath");
+        } catch (e) {
+          qqe("Failed to delete existing file: $e");
+          throw Exception("Failed to delete existing file");
+        }
+      }
+    }
+
+    // Ensure target directory exists
+    final targetDir = Directory(path.dirname(targetPath));
+    if (!await targetDir.exists()) {
+      await targetDir.create(recursive: true);
+    }
+
+    // Copy the file
+    try {
+      if (sourceFile != null) {
+        // Use file copy (faster for large files when path is available)
+        await sourceFile.copy(targetPath);
+      } else if (fileBytes != null) {
+        // Write bytes directly (for iOS when path is null)
+        await File(targetPath).writeAsBytes(fileBytes);
+      } else {
+        throw Exception("No file data available");
+      }
+      qqq("Successfully imported file: $actualFileName to $targetPath");
+
+      // Verify file size if available
+      if (matchingFileInfo.fileSize > 0) {
+        final copiedFileSize = await targetFile.length();
+        if (copiedFileSize != matchingFileInfo.fileSize) {
+          qqw("File size mismatch: expected ${matchingFileInfo.fileSize}, got $copiedFileSize");
+          // In non-debug mode, delete the file if size doesn't match
+          if (!kDebugMode) {
+            await targetFile.delete();
+            throw Exception("File size mismatch");
+          }
+        }
+      }
+
+      // Update local file status for this specific file only (much faster than checkLocal)
+      final state = locals(matchingFileInfo);
+      state.q = state.q.copyWith(
+        hasFile: true,
+        state: TaskState.completed,
+        progress: 1.0,
+      );
+
+      return true;
+    } catch (e) {
+      qqe("Failed to import file: $e");
+      // Clean up if file was partially copied
+      if (await targetFile.exists()) {
+        try {
+          await targetFile.delete();
+        } catch (deleteError) {
+          qqe("Failed to delete partially copied file: $deleteError");
+        }
+      }
+      rethrow;
+    }
+  }
+
+  /// Import all weight files from a ZIP file
+  /// Returns the number of files successfully imported
+  Future<int> importAllWeightFiles({
+    required File zipFile,
+    void Function(String currentFile, int completed, int total)? onProgress,
+  }) async {
+    qq;
+
+    // Read and decode ZIP file
+    final zipBytes = await zipFile.readAsBytes();
+    final archive = ZipDecoder().decodeBytes(zipBytes);
+
+    if (archive.isEmpty) {
+      throw Exception("ZIP file is empty");
+    }
+
+    // Get all file infos from config
+    final config = P.app._config.q;
+    if (config == null) {
+      throw Exception("Configuration not loaded");
+    }
+
+    final allFileInfos = <FileInfo>{};
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileInfos.add(fileInfo);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    // Find files in ZIP that match config
+    final filesToImport = <ArchiveFile>[];
+    for (final file in archive) {
+      if (!file.isFile) continue;
+      final fileName = path.basename(file.name);
+      final matchingFileInfo = allFileInfos.where((info) => info.fileName == fileName).firstOrNull;
+      if (matchingFileInfo != null) {
+        filesToImport.add(file);
+      }
+    }
+
+    if (filesToImport.isEmpty) {
+      throw Exception("No valid weight files found in ZIP");
+    }
+
+    final total = filesToImport.length;
+    int completed = 0;
+    int successCount = 0;
+
+    // Import each file
+    for (final archiveFile in filesToImport) {
+      final fileName = path.basename(archiveFile.name);
+      if (onProgress != null) {
+        onProgress(fileName, completed, total);
+      }
+
+      try {
+        // Find matching file info
+        final matchingFileInfo = allFileInfos.firstWhere((info) => info.fileName == fileName);
+
+        // Get target path
+        final targetPath = _paths(matchingFileInfo).q;
+        final targetFile = File(targetPath);
+
+        // Delete existing file if it exists (overwrite)
+        if (await targetFile.exists()) {
+          try {
+            await targetFile.delete();
+            qqq("Deleted existing file for overwrite: $targetPath");
+          } catch (e) {
+            qqe("Failed to delete existing file: $e");
+            completed++;
+            continue;
+          }
+        }
+
+        // Ensure target directory exists
+        final targetDir = Directory(path.dirname(targetPath));
+        if (!await targetDir.exists()) {
+          await targetDir.create(recursive: true);
+        }
+
+        // Extract file from archive
+        final fileBytes = archiveFile.content;
+        await targetFile.writeAsBytes(fileBytes);
+        qqq("Successfully imported file: $fileName to $targetPath");
+
+        // Verify file size if available
+        if (matchingFileInfo.fileSize > 0) {
+          final copiedFileSize = await targetFile.length();
+          if (copiedFileSize != matchingFileInfo.fileSize) {
+            qqw("File size mismatch: expected ${matchingFileInfo.fileSize}, got $copiedFileSize");
+            // In non-debug mode, delete the file if size doesn't match
+            if (!kDebugMode) {
+              await targetFile.delete();
+              completed++;
+              continue;
+            }
+          }
+        }
+
+        // Update local file status
+        final state = locals(matchingFileInfo);
+        state.q = state.q.copyWith(
+          hasFile: true,
+          state: TaskState.completed,
+          progress: 1.0,
+        );
+
+        successCount++;
+      } catch (e) {
+        qqe("Failed to import $fileName: $e");
+      }
+
+      completed++;
+    }
+
+    if (onProgress != null) {
+      onProgress("", completed, total);
+    }
+
+    qqq("Import completed: $successCount/$total files imported");
+    return successCount;
+  }
+
+  /// Export a single weight file to a user-selected directory
+  /// Returns true if export was successful, false otherwise
+  Future<bool> exportWeightFile({
+    required FileInfo fileInfo,
+    required String targetDirectory,
+  }) async {
+    qq;
+
+    final sourcePath = _paths(fileInfo).q;
+    final sourceFile = File(sourcePath);
+
+    if (!await sourceFile.exists()) {
+      qqe("Source file does not exist: $sourcePath");
+      throw Exception("Source file does not exist");
+    }
+
+    final targetFile = File("$targetDirectory/${fileInfo.fileName}");
+
+    // Check if target file already exists
+    if (await targetFile.exists()) {
+      qqw("Target file already exists: ${targetFile.path}");
+      throw Exception("Target file already exists");
+    }
+
+    // Ensure target directory exists
+    final targetDir = Directory(targetDirectory);
+    if (!await targetDir.exists()) {
+      try {
+        await targetDir.create(recursive: true);
+      } catch (e) {
+        qqe("Failed to create target directory: $e");
+        throw Exception("Failed to create target directory");
+      }
+    }
+
+    // On iOS, try to access security-scoped resource if needed
+    bool? securityScopedAccessGranted;
+    if (Platform.isIOS) {
+      try {
+        securityScopedAccessGranted = await P.adapter.call<bool>(
+          ToNative.startAccessingSecurityScopedResource,
+          targetDirectory,
+        );
+        if (securityScopedAccessGranted == true) {
+          qqq("Successfully accessed security-scoped resource: $targetDirectory");
+        }
+      } catch (e) {
+        qqw("Failed to access security-scoped resource: $e");
+      }
+    }
+
+    try {
+      // Try direct copy first (faster for large files)
+      try {
+        await sourceFile.copy(targetFile.path);
+        qqq("Successfully exported file: ${fileInfo.fileName} to ${targetFile.path}");
+        return true;
+      } catch (copyError) {
+        // If direct copy fails (e.g., iOS permission issue), read and write bytes
+        qqw("Direct copy failed, trying read-write method: $copyError");
+        try {
+          final fileBytes = await sourceFile.readAsBytes();
+          await targetFile.writeAsBytes(fileBytes);
+          qqq("Successfully exported file (via bytes): ${fileInfo.fileName} to ${targetFile.path}");
+          return true;
+        } catch (writeError) {
+          // If both methods fail, check if it's an iOS permission issue
+          final errorStr = writeError.toString();
+          if (Platform.isIOS && (errorStr.contains("Operation not permitted") || errorStr.contains("errno: 1"))) {
+            qqe("iOS permission error: Cannot access selected directory. The selected directory may require special permissions.");
+            throw Exception(
+              "Permission denied: The selected directory cannot be accessed. Please try selecting a different location, such as Files app or iCloud Drive.",
+            );
+          }
+          rethrow;
+        }
+      }
+    } catch (e) {
+      qqe("Failed to export file: $e");
+      // Clean up if file was partially written
+      if (await targetFile.exists()) {
+        try {
+          await targetFile.delete();
+        } catch (deleteError) {
+          qqe("Failed to delete partially written file: $deleteError");
+        }
+      }
+      rethrow;
+    } finally {
+      // On iOS, stop accessing security-scoped resource
+      if (Platform.isIOS && securityScopedAccessGranted == true) {
+        try {
+          await P.adapter.call(ToNative.stopAccessingSecurityScopedResource, targetDirectory);
+          qqq("Stopped accessing security-scoped resource: $targetDirectory");
+        } catch (e) {
+          qqw("Failed to stop accessing security-scoped resource: $e");
+        }
+      }
+    }
+  }
+
+  /// Export all weight files to user-selected directory (individual files, not zipped)
+  /// Only exports files that exist locally
+  /// Returns the target directory path
+  Future<String> exportAllWeightFiles({
+    required String targetDirectory,
+    void Function(String currentFile, int completed, int total)? onProgress,
+  }) async {
+    qq;
+
+    // Get all weight files that exist locally
+    final allWeights = [
+      ...chatWeights.q,
+      ...roleplayWeights.q,
+      ...ttsWeights.q,
+      ...seeWeights.q,
+      ...sudokuWeights.q,
+      ...othelloWeights.q,
+    ];
+
+    final filesToExport = <FileInfo>[];
+    for (final fileInfo in allWeights) {
+      final local = locals(fileInfo).q;
+      if (local.hasFile) {
+        filesToExport.add(fileInfo);
+      }
+    }
+
+    if (filesToExport.isEmpty) {
+      throw Exception("No files to export");
+    }
+
+    final total = filesToExport.length;
+    int completed = 0;
+    int successCount = 0;
+
+    // Ensure target directory exists
+    final targetDir = Directory(targetDirectory);
+    if (!await targetDir.exists()) {
+      try {
+        await targetDir.create(recursive: true);
+      } catch (e) {
+        qqe("Failed to create target directory: $e");
+        throw Exception("Failed to create target directory");
+      }
+    }
+
+    // On iOS, try to access security-scoped resource if needed
+    bool? securityScopedAccessGranted;
+    if (Platform.isIOS) {
+      try {
+        securityScopedAccessGranted = await P.adapter.call<bool>(
+          ToNative.startAccessingSecurityScopedResource,
+          targetDirectory,
+        );
+        if (securityScopedAccessGranted == true) {
+          qqq("Successfully accessed security-scoped resource: $targetDirectory");
+        }
+      } catch (e) {
+        qqw("Failed to access security-scoped resource: $e");
+      }
+    }
+
+    try {
+      for (final fileInfo in filesToExport) {
+        if (onProgress != null) {
+          onProgress(fileInfo.fileName, completed, total);
+        }
+
+        try {
+          final sourcePath = _paths(fileInfo).q;
+          final sourceFile = File(sourcePath);
+
+          if (!await sourceFile.exists()) {
+            qqw("Source file does not exist, skipping: $sourcePath");
+            completed++;
+            continue;
+          }
+
+          final targetFile = File("$targetDirectory/${fileInfo.fileName}");
+
+          // Check if target file already exists
+          if (await targetFile.exists()) {
+            qqw("Target file already exists, skipping: ${fileInfo.fileName}");
+            completed++;
+            continue;
+          }
+
+          // Try direct copy first (faster for large files)
+          try {
+            await sourceFile.copy(targetFile.path);
+            qqq("Exported: ${fileInfo.fileName}");
+            successCount++;
+          } catch (copyError) {
+            // If direct copy fails (e.g., iOS permission issue), read and write bytes
+            qqw("Direct copy failed, trying read-write method: $copyError");
+            try {
+              final fileBytes = await sourceFile.readAsBytes();
+              await targetFile.writeAsBytes(fileBytes);
+              qqq("Exported (via bytes): ${fileInfo.fileName}");
+              successCount++;
+            } catch (writeError) {
+              qqe("Failed to export ${fileInfo.fileName}: $writeError");
+            }
+          }
+
+          completed++;
+        } catch (e) {
+          qqe("Failed to export ${fileInfo.fileName}: $e");
+          completed++;
+        }
+      }
+
+      if (onProgress != null) {
+        onProgress("", completed, total);
+      }
+
+      qqq("Export completed: $successCount/$total files exported to $targetDirectory");
+      return targetDirectory;
+    } catch (e) {
+      final errorStr = e.toString();
+      if (Platform.isIOS && (errorStr.contains("Operation not permitted") || errorStr.contains("errno: 1"))) {
+        qqe("iOS permission error: Cannot access selected directory. The selected directory may require special permissions.");
+        throw Exception(
+          "Permission denied: The selected directory cannot be accessed. Please try selecting a different location, such as Files app or iCloud Drive.",
+        );
+      }
+      rethrow;
+    } finally {
+      // On iOS, stop accessing security-scoped resource
+      if (Platform.isIOS && securityScopedAccessGranted == true) {
+        try {
+          await P.adapter.call(ToNative.stopAccessingSecurityScopedResource, targetDirectory);
+          qqq("Stopped accessing security-scoped resource: $targetDirectory");
+        } catch (e) {
+          qqw("Failed to stop accessing security-scoped resource: $e");
+        }
+      }
+    }
+  }
 }
 
 /// Private methods
@@ -402,9 +994,177 @@ extension _$FileManager on _FileManager {
   Future<void> _init() async {
     try {
       await syncAvailableModels();
+      // Check and perform migration if needed
+      // Only migrate for users with build number < 637
+      if (!P.preference.weightsMigrationCompleted.q) {
+        final currentBuildNumber = int.tryParse(P.app.buildNumber.q) ?? 0;
+        if (currentBuildNumber < 637) {
+          await _migrateFilesToWeightsFolder();
+        } else {
+          // Mark as completed for users with build >= 637
+          P.preference.setWeightsMigrationCompleted(true);
+        }
+      }
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);
     }
+  }
+
+  /// Migrate files from Documents root to Documents/models folder
+  Future<void> _migrateFilesToWeightsFolder() async {
+    qq;
+
+    // Skip migration if custom directory is set
+    if (P.preference.customModelsDir.q != null) {
+      P.preference.setWeightsMigrationCompleted(true);
+      return;
+    }
+
+    final documentsDir = P.app.effectiveDocumentsDir.q;
+    if (documentsDir == null) {
+      qqw("Documents directory is null, skipping migration");
+      P.preference.setWeightsMigrationCompleted(true);
+      return;
+    }
+
+    final documentsPath = documentsDir.path;
+    final modelsDir = Directory("$documentsPath/${Config.modelsDirName}");
+
+    // Create models directory if it doesn't exist
+    if (!await modelsDir.exists()) {
+      await modelsDir.create(recursive: true);
+      qqq("Created models directory: ${modelsDir.path}");
+    }
+
+    // Extract known file names from current config
+    final knownFileNames = <String>{};
+    final config = P.app._config.q;
+    if (config != null) {
+      for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+        final demoConfig = config[demoType];
+        if (demoConfig is Map && demoConfig['model_config'] is List) {
+          final modelConfigs = HF.listJSON(demoConfig['model_config']);
+          for (final modelConfig in modelConfigs) {
+            // Try to get fileName from fileName field
+            if (modelConfig['fileName'] is String) {
+              knownFileNames.add(modelConfig['fileName'] as String);
+            }
+            // Also extract from url if fileName is not available
+            if (modelConfig['url'] is String) {
+              final url = modelConfig['url'] as String;
+              final fileName = url.split('/').last;
+              if (fileName.isNotEmpty && !fileName.contains('/')) {
+                knownFileNames.add(fileName);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    qqq("Known file names from config: ${knownFileNames.length} files");
+
+    // Pattern-based file extensions
+    const modelFileExtensions = ['.st', '.gguf', '.prefab', '.bin', '.rmpack', '.mnn', '.zip'];
+
+    // Scan Documents directory for files to migrate
+    final filesToMigrate = <File>[];
+    try {
+      final entities = documentsDir.listSync();
+      for (final entity in entities) {
+        if (entity is! File) continue;
+
+        final fileName = path.basename(entity.path);
+
+        // Skip database files (.sqlite, .sqlite3, .db) - they should be in AppData, not Documents
+        if (fileName.toLowerCase().endsWith('.sqlite') ||
+            fileName.toLowerCase().endsWith('.sqlite3') ||
+            fileName.toLowerCase().endsWith('.db')) {
+          qqw("Skipping database file (should be in AppData): $fileName");
+          continue;
+        }
+
+        final shouldMigrate =
+            knownFileNames.contains(fileName) ||
+            fileName.toLowerCase().contains('rwkv') ||
+            modelFileExtensions.any((ext) => fileName.toLowerCase().endsWith(ext));
+
+        if (shouldMigrate) {
+          filesToMigrate.add(entity);
+        }
+      }
+    } catch (e) {
+      qqe("Error scanning Documents directory: $e");
+      P.preference.setWeightsMigrationCompleted(true);
+      return;
+    }
+
+    qqq("Found ${filesToMigrate.length} files to migrate");
+
+    // Migrate files
+    int migratedCount = 0;
+    int skippedCount = 0;
+    for (final file in filesToMigrate) {
+      final fileName = path.basename(file.path);
+      final targetFile = File("${modelsDir.path}/$fileName");
+
+      // Skip if target file already exists
+      if (await targetFile.exists()) {
+        qqq("Target file already exists, skipping: $fileName");
+        skippedCount++;
+        continue;
+      }
+
+      try {
+        // Try to rename first (faster)
+        try {
+          await file.rename(targetFile.path);
+          qqq("Migrated file (renamed): $fileName");
+        } catch (e) {
+          // If rename fails (e.g., cross-device), copy and delete
+          await file.copy(targetFile.path);
+          await file.delete();
+          qqq("Migrated file (copied): $fileName");
+        }
+        migratedCount++;
+      } catch (e) {
+        qqe("Failed to migrate file $fileName: $e");
+      }
+    }
+
+    // Also migrate associated folders (for extracted files)
+    try {
+      final entities = documentsDir.listSync();
+      for (final entity in entities) {
+        if (entity is! Directory) continue;
+
+        final dirName = path.basename(entity.path);
+        // Skip the models directory itself
+        if (dirName == Config.modelsDirName) continue;
+
+        // Check if this directory corresponds to a migrated file
+        final correspondingFile = filesToMigrate.firstWhereOrNull(
+          (f) => path.basenameWithoutExtension(f.path) == dirName,
+        );
+
+        if (correspondingFile != null) {
+          final targetDir = Directory("${modelsDir.path}/$dirName");
+          if (!await targetDir.exists()) {
+            try {
+              await entity.rename(targetDir.path);
+              qqq("Migrated directory: $dirName");
+            } catch (e) {
+              qqe("Failed to migrate directory $dirName: $e");
+            }
+          }
+        }
+      }
+    } catch (e) {
+      qqe("Error migrating directories: $e");
+    }
+
+    qqq("Migration completed: $migratedCount files migrated, $skippedCount files skipped");
+    P.preference.setWeightsMigrationCompleted(true);
   }
 
   Future<void> _initModelDownloadTaskState() async {

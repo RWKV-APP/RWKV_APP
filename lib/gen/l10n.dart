@@ -3676,9 +3676,214 @@ class S {
     );
   }
 
-  /// `其他文件`
+  /// `其他文件 (这些文件可以是已经过期或不再支持的权重, 您可以放心地删除他们)`
   String get other_files {
-    return Intl.message('其他文件', name: 'other_files', desc: '', args: []);
+    return Intl.message(
+      '其他文件 (这些文件可以是已经过期或不再支持的权重, 您可以放心地删除他们)',
+      name: 'other_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导入权重文件`
+  String get import_weight_file {
+    return Intl.message(
+      '导入权重文件',
+      name: 'import_weight_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导入成功`
+  String get import_success {
+    return Intl.message('导入成功', name: 'import_success', desc: '', args: []);
+  }
+
+  /// `导入失败`
+  String get import_failed {
+    return Intl.message('导入失败', name: 'import_failed', desc: '', args: []);
+  }
+
+  /// `文件路径未找到`
+  String get file_path_not_found {
+    return Intl.message(
+      '文件路径未找到',
+      name: 'file_path_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件未找到`
+  String get file_not_found {
+    return Intl.message('文件未找到', name: 'file_not_found', desc: '', args: []);
+  }
+
+  /// `当前文件尚未支持，请检查文件名是否正确`
+  String get file_not_supported {
+    return Intl.message(
+      '当前文件尚未支持，请检查文件名是否正确',
+      name: 'file_not_supported',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件已存在`
+  String get file_already_exists {
+    return Intl.message(
+      '文件已存在',
+      name: 'file_already_exists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件已存在，是否要覆盖？`
+  String get overwrite_file_confirmation {
+    return Intl.message(
+      '文件已存在，是否要覆盖？',
+      name: 'overwrite_file_confirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `覆盖`
+  String get overwrite {
+    return Intl.message('覆盖', name: 'overwrite', desc: '', args: []);
+  }
+
+  /// `导出权重文件`
+  String get export_weight_file {
+    return Intl.message(
+      '导出权重文件',
+      name: 'export_weight_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导出全部权重文件`
+  String get export_all_weight_files {
+    return Intl.message(
+      '导出全部权重文件',
+      name: 'export_all_weight_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导出成功`
+  String get export_success {
+    return Intl.message('导出成功', name: 'export_success', desc: '', args: []);
+  }
+
+  /// `导出失败`
+  String get export_failed {
+    return Intl.message('导出失败', name: 'export_failed', desc: '', args: []);
+  }
+
+  /// `个文件`
+  String get files {
+    return Intl.message('个文件', name: 'files', desc: '', args: []);
+  }
+
+  /// `没有可导出的权重文件`
+  String get no_weight_files_to_export {
+    return Intl.message(
+      '没有可导出的权重文件',
+      name: 'no_weight_files_to_export',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `所有已下载的权重文件将作为单独文件导出到所选目录。同名文件将被跳过。`
+  String get export_all_weight_files_description {
+    return Intl.message(
+      '所有已下载的权重文件将作为单独文件导出到所选目录。同名文件将被跳过。',
+      name: 'export_all_weight_files_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无权重文件`
+  String get no_weight_files_guide_title {
+    return Intl.message(
+      '暂无权重文件',
+      name: 'no_weight_files_guide_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `您还没有下载任何权重文件。前往首页下载并体验应用。`
+  String get no_weight_files_guide_message {
+    return Intl.message(
+      '您还没有下载任何权重文件。前往首页下载并体验应用。',
+      name: 'no_weight_files_guide_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `前往首页`
+  String get go_to_home_page {
+    return Intl.message('前往首页', name: 'go_to_home_page', desc: '', args: []);
+  }
+
+  /// `导入全部权重文件`
+  String get import_all_weight_files {
+    return Intl.message(
+      '导入全部权重文件',
+      name: 'import_all_weight_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择从此应用导出的 ZIP 文件。ZIP 文件中的所有权重文件将被导入。如果文件名相同，现有文件将被覆盖。`
+  String get import_all_weight_files_description {
+    return Intl.message(
+      '选择从此应用导出的 ZIP 文件。ZIP 文件中的所有权重文件将被导入。如果文件名相同，现有文件将被覆盖。',
+      name: 'import_all_weight_files_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导入成功：已导入 {count} 个文件`
+  String import_all_weight_files_success(int count) {
+    return Intl.message(
+      '导入成功：已导入 $count 个文件',
+      name: 'import_all_weight_files_success',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `无效的 ZIP 文件或文件格式无法识别`
+  String get invalid_zip_file {
+    return Intl.message(
+      '无效的 ZIP 文件或文件格式无法识别',
+      name: 'invalid_zip_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ZIP 文件中未找到有效的权重文件`
+  String get no_files_in_zip {
+    return Intl.message(
+      'ZIP 文件中未找到有效的权重文件',
+      name: 'no_files_in_zip',
+      desc: '',
+      args: [],
+    );
   }
 }
 

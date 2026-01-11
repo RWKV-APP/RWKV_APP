@@ -23,7 +23,7 @@ import 'package:zone/page/weight_manager.dart';
 class Settings extends ConsumerWidget {
   static final _shown = qs(false);
 
-  static String _getTotalUsage() {
+  static String _getTotalUsage(WidgetRef ref) {
     final chatWeights = P.fileManager.chatWeights.q;
     final ttsWeights = P.fileManager.ttsWeights.q;
     final roleplayWeights = P.fileManager.roleplayWeights.q;
@@ -40,7 +40,7 @@ class Settings extends ConsumerWidget {
       ...othelloWeights,
     ];
 
-    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights);
+    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights, ref);
     return WeightManagerUtils.formatBytes(totalBytes);
   }
 
@@ -101,7 +101,7 @@ class Settings extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == DemoType.chat;
 
-    final totalUsage = _getTotalUsage();
+    final totalUsage = _getTotalUsage(ref);
 
     final iconWidget = SizedBox(
       width: 64,

@@ -550,5 +550,36 @@
     }
   },
   "adapting_more_inference_chips": "より多くの推論チップへの対応を継続しています。ご期待ください。",
-  "other_files": "その他のファイル"
+  "other_files": "その他のファイル (これらのファイルは期限切れまたはサポートされなくなった重みファイルである可能性があります。安全に削除できます)",
+  "import_weight_file": "重みファイルをインポート",
+  "import_success": "インポート成功",
+  "import_failed": "インポート失敗",
+  "file_path_not_found": "ファイルパスが見つかりません",
+  "file_not_found": "ファイルが見つかりません",
+  "file_not_supported": "このファイルはまだサポートされていません。ファイル名が正しいか確認してください",
+  "file_already_exists": "ファイルは既に存在します",
+  "overwrite_file_confirmation": "ファイルは既に存在します。上書きしますか？",
+  "overwrite": "上書き",
+  "export_weight_file": "重みファイルをエクスポート",
+  "export_all_weight_files": "すべての重みファイルをエクスポート",
+  "export_success": "エクスポート成功",
+  "export_failed": "エクスポート失敗",
+  "files": "ファイル",
+  "no_weight_files_to_export": "エクスポートする重みファイルがありません",
+  "export_all_weight_files_description": "ダウンロード済みのすべての重みファイルが個別のファイルとして選択したディレクトリにエクスポートされます。同じ名前のファイルはスキップされます。",
+  "no_weight_files_guide_title": "重みファイルがありません",
+  "no_weight_files_guide_message": "まだ重みファイルをダウンロードしていません。ホームページに移動してダウンロードし、アプリを体験してください。",
+  "go_to_home_page": "ホームページへ",
+  "import_all_weight_files": "すべての重みファイルをインポート",
+  "import_all_weight_files_description": "このアプリからエクスポートされたZIPファイルを選択してください。ZIPファイル内のすべての重みファイルがインポートされます。同じ名前のファイルが存在する場合、既存のファイルが上書きされます。",
+  "import_all_weight_files_success": "インポート成功：{count} 個のファイルをインポートしました",
+  "@import_all_weight_files_success": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invalid_zip_file": "無効なZIPファイルまたはファイル形式が認識されません",
+  "no_files_in_zip": "ZIPファイル内に有効な重みファイルが見つかりませんでした"
 }

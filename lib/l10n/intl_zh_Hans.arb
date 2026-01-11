@@ -557,5 +557,36 @@
     }
   },
   "adapting_more_inference_chips": "我们正在持续适配更多的推理芯片，敬请期待。",
-  "other_files": "其他文件"
+  "other_files": "其他文件 (这些文件可以是已经过期或不再支持的权重, 您可以放心地删除他们)",
+  "import_weight_file": "导入权重文件",
+  "import_success": "导入成功",
+  "import_failed": "导入失败",
+  "file_path_not_found": "文件路径未找到",
+  "file_not_found": "文件未找到",
+  "file_not_supported": "当前文件尚未支持，请检查文件名是否正确",
+  "file_already_exists": "文件已存在",
+  "overwrite_file_confirmation": "文件已存在，是否要覆盖？",
+  "overwrite": "覆盖",
+  "export_weight_file": "导出权重文件",
+  "export_all_weight_files": "导出全部权重文件",
+  "export_success": "导出成功",
+  "export_failed": "导出失败",
+  "files": "个文件",
+  "no_weight_files_to_export": "没有可导出的权重文件",
+  "export_all_weight_files_description": "所有已下载的权重文件将作为单独文件导出到所选目录。同名文件将被跳过。",
+  "no_weight_files_guide_title": "暂无权重文件",
+  "no_weight_files_guide_message": "您还没有下载任何权重文件。前往首页下载并体验应用。",
+  "go_to_home_page": "前往首页",
+  "import_all_weight_files": "导入全部权重文件",
+  "import_all_weight_files_description": "选择从此应用导出的 ZIP 文件。ZIP 文件中的所有权重文件将被导入。如果文件名相同，现有文件将被覆盖。",
+  "import_all_weight_files_success": "导入成功：已导入 {count} 个文件",
+  "@import_all_weight_files_success": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invalid_zip_file": "无效的 ZIP 文件或文件格式无法识别",
+  "no_files_in_zip": "ZIP 文件中未找到有效的权重文件"
 }
