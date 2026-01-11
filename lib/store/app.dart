@@ -84,6 +84,21 @@ class _App extends RawApp {
   late final isMobile = qp((ref) => ref.watch(_isMobile));
 
   late final highlighter = qs<Highlighter?>(null);
+
+  /// Windows-specific documents directory using AppData (for sandbox-like behavior)
+  late final _windowsDocumentsDir = qs<Directory?>(null);
+
+  /// Get the effective documents directory for the current platform
+  /// On Windows, returns AppData directory; on other platforms, returns the standard documentsDir
+  late final effectiveDocumentsDir = qp<Directory?>((ref) {
+    if (Platform.isWindows) {
+      final windowsDir = ref.watch(_windowsDocumentsDir);
+      if (windowsDir != null) {
+        return windowsDir;
+      }
+    }
+    return ref.watch(documentsDir);
+  });
 }
 
 /// Public methods
@@ -178,6 +193,22 @@ extension _$App on _App {
 
     _isDesktop.q = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
     _isMobile.q = Platform.isAndroid || Platform.isIOS;
+
+    // On Windows, use AppData instead of Documents for sandbox-like behavior
+    if (Platform.isWindows) {
+      try {
+        final appSupportDir = await getApplicationSupportDirectory();
+        _windowsDocumentsDir.q = appSupportDir;
+        qqq("Windows: Using AppData directory: ${appSupportDir.path}");
+      } catch (e) {
+        qqe("Failed to get Windows AppData directory: $e");
+        // Fallback to documentsDir if AppData is not available
+        final fallbackDir = documentsDir.q;
+        if (fallbackDir != null) {
+          _windowsDocumentsDir.q = fallbackDir;
+        }
+      }
+    }
 
     await init();
 

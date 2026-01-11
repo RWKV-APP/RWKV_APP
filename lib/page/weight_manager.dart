@@ -8,6 +8,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:intl/number_symbols_data.dart';
 import 'package:path/path.dart' as path;
+import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart';
@@ -35,7 +36,11 @@ class _BodyState extends ConsumerState<_Body> {
   final GlobalKey<_OtherFilesSectionState> _otherFilesSectionKey = GlobalKey<_OtherFilesSectionState>();
 
   Future<void> _onRefresh() async {
-    await P.fileManager.checkLocal();
+    await Future.wait([
+      Future.delayed(500.ms),
+      P.fileManager.checkLocal(),
+    ]);
+
     _otherFilesSectionKey.currentState?._loadFiles();
   }
 
@@ -60,7 +65,8 @@ class _CustomDirectoryTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final customDir = ref.watch(P.preference.customModelsDir);
-    final defaultDir = ref.watch(P.app.documentsDir)?.path ?? "";
+    final documentsDir = ref.watch(P.app.effectiveDocumentsDir)?.path;
+    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : "";
     final s = S.of(context);
 
     final finalDirString = customDir ?? defaultDir;
@@ -347,7 +353,8 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
 
   Future<List<_UnrecognizedFile>> _getUnrecognizedFiles() async {
     final customDir = P.preference.customModelsDir.q;
-    final defaultDir = P.app.documentsDir.q?.path;
+    final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : null;
     final targetDir = customDir ?? defaultDir;
 
     if (targetDir == null) return [];
@@ -355,7 +362,6 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
     final directory = Directory(targetDir);
     if (!await directory.exists()) return [];
 
-    const minSizeBytes = 5 * 1024 * 1024; // 5MB
     final weightFileNames = widget.allWeights.map((w) => w.fileName).toSet();
 
     final unrecognizedFiles = <_UnrecognizedFile>[];
@@ -369,7 +375,6 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
         if (weightFileNames.contains(fileName)) continue;
 
         final fileSize = await entity.length();
-        if (fileSize <= minSizeBytes) continue;
 
         unrecognizedFiles.add(
           _UnrecognizedFile(
@@ -453,10 +458,11 @@ class _OtherFileItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       title: Text(file.fileName),
-      subtitle: Row(
+      subtitle: Wrap(
+        spacing: 4,
+        runSpacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Text(file.filePath.split("/").last),
-          8.w,
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -465,6 +471,7 @@ class _OtherFileItem extends ConsumerWidget {
             ),
             child: Text(_formatBytes(file.fileSize)),
           ),
+          Text(file.filePath.split("/").last),
         ],
       ),
       trailing: IconButton(

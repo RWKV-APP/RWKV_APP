@@ -26,10 +26,10 @@ class _FileManager {
     if (customDir != null && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       return "$customDir/${key.fileName}";
     }
-    final dir = ref.watch(P.app.documentsDir);
+    final dir = ref.watch(P.app.effectiveDocumentsDir);
     final fileName = key.fileName;
     final dirPath = dir!.path;
-    return "$dirPath/$fileName";
+    return "$dirPath/${Config.modelsDirName}/$fileName";
   });
 
   /// 全部 chat 权重
@@ -197,27 +197,37 @@ extension $FileManager on _FileManager {
       sudokuWeights.q,
       othelloWeights.q,
     ].expand((e) => e).where((e) => e.available).toList();
-    final documentsDir = P.app.documentsDir.q;
+    final documentsDir = P.app.effectiveDocumentsDir.q;
     if (documentsDir == null) return;
-    final fileSystemEntities = documentsDir.listSync();
+    
+    // Scan both Documents root and models subfolder
+    final directoriesToScan = <Directory>[documentsDir];
+    final modelsDir = Directory("${documentsDir.path}/${Config.modelsDirName}");
+    if (await modelsDir.exists()) {
+      directoriesToScan.add(modelsDir);
+    }
+    
+    for (final dir in directoriesToScan) {
+      final fileSystemEntities = dir.listSync();
 
-    for (final entity in fileSystemEntities) {
-      if (entity is! File) continue;
-      if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
+      for (final entity in fileSystemEntities) {
+        if (entity is! File) continue;
+        if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
 
-      // 不移除以 .tmp 结尾的文件
-      if (entity.path.endsWith('.tmp')) {
-        continue;
+        // 不移除以 .tmp 结尾的文件
+        if (entity.path.endsWith('.tmp')) {
+          continue;
+        }
+
+        // 检查文件大小，只删除大于 20MB 的文件
+        final fileSize = await File(entity.path).length();
+        if (fileSize <= maxSizeBytes) {
+          continue;
+        }
+
+        await entity.delete();
+        qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
       }
-
-      // 检查文件大小，只删除大于 20MB 的文件
-      final fileSize = await File(entity.path).length();
-      if (fileSize <= maxSizeBytes) {
-        continue;
-      }
-
-      await entity.delete();
-      qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
     }
   }
 
@@ -319,7 +329,8 @@ extension $FileManager on _FileManager {
 
   Future<void> openModelDirectory() async {
     final customDir = P.preference.customModelsDir.q;
-    final defaultDir = P.app.documentsDir.q?.path;
+    final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : null;
     final path = customDir ?? defaultDir;
     if (path == null) return;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -329,7 +340,7 @@ extension $FileManager on _FileManager {
 
   Future<void> updateCustomDirectory(String? newPath, {void Function(String currentFile, int completed, int total)? onProgress}) async {
     final customDir = P.preference.customModelsDir.q;
-    final defaultDir = P.app.documentsDir.q?.path;
+    final defaultDir = P.app.effectiveDocumentsDir.q?.path;
     final oldPath = customDir ?? defaultDir;
 
     if (newPath == oldPath) return;
@@ -402,9 +413,160 @@ extension _$FileManager on _FileManager {
   Future<void> _init() async {
     try {
       await syncAvailableModels();
+      // Check and perform migration if needed
+      if (!P.preference.weightsMigrationCompleted.q) {
+        await _migrateFilesToWeightsFolder();
+      }
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);
     }
+  }
+
+  /// Migrate files from Documents root to Documents/models folder
+  Future<void> _migrateFilesToWeightsFolder() async {
+    qq;
+    
+    // Skip migration if custom directory is set
+    if (P.preference.customModelsDir.q != null) {
+      P.preference.setWeightsMigrationCompleted(true);
+      return;
+    }
+
+    final documentsDir = P.app.effectiveDocumentsDir.q;
+    if (documentsDir == null) {
+      qqw("Documents directory is null, skipping migration");
+      P.preference.setWeightsMigrationCompleted(true);
+      return;
+    }
+
+    final documentsPath = documentsDir.path;
+    final modelsDir = Directory("$documentsPath/${Config.modelsDirName}");
+    
+    // Create models directory if it doesn't exist
+    if (!await modelsDir.exists()) {
+      await modelsDir.create(recursive: true);
+      qqq("Created models directory: ${modelsDir.path}");
+    }
+
+    // Extract known file names from current config
+    final knownFileNames = <String>{};
+    final config = P.app._config.q;
+    if (config != null) {
+      for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+        final demoConfig = config[demoType];
+        if (demoConfig is Map && demoConfig['model_config'] is List) {
+          final modelConfigs = HF.listJSON(demoConfig['model_config']);
+          for (final modelConfig in modelConfigs) {
+            // Try to get fileName from fileName field
+            if (modelConfig['fileName'] is String) {
+              knownFileNames.add(modelConfig['fileName'] as String);
+            }
+            // Also extract from url if fileName is not available
+            if (modelConfig['url'] is String) {
+              final url = modelConfig['url'] as String;
+              final fileName = url.split('/').last;
+              if (fileName.isNotEmpty && !fileName.contains('/')) {
+                knownFileNames.add(fileName);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    qqq("Known file names from config: ${knownFileNames.length} files");
+
+    // Pattern-based file extensions
+    const modelFileExtensions = ['.st', '.gguf', '.prefab', '.bin', '.rmpack', '.mnn', '.zip'];
+    
+    // Scan Documents directory for files to migrate
+    final filesToMigrate = <File>[];
+    try {
+      final entities = documentsDir.listSync();
+      for (final entity in entities) {
+        if (entity is! File) continue;
+        
+        final fileName = path.basename(entity.path);
+        final shouldMigrate = knownFileNames.contains(fileName) ||
+            fileName.toLowerCase().contains('rwkv') ||
+            modelFileExtensions.any((ext) => fileName.toLowerCase().endsWith(ext));
+        
+        if (shouldMigrate) {
+          filesToMigrate.add(entity);
+        }
+      }
+    } catch (e) {
+      qqe("Error scanning Documents directory: $e");
+      P.preference.setWeightsMigrationCompleted(true);
+      return;
+    }
+
+    qqq("Found ${filesToMigrate.length} files to migrate");
+
+    // Migrate files
+    int migratedCount = 0;
+    int skippedCount = 0;
+    for (final file in filesToMigrate) {
+      final fileName = path.basename(file.path);
+      final targetFile = File("${modelsDir.path}/$fileName");
+      
+      // Skip if target file already exists
+      if (await targetFile.exists()) {
+        qqq("Target file already exists, skipping: $fileName");
+        skippedCount++;
+        continue;
+      }
+
+      try {
+        // Try to rename first (faster)
+        try {
+          await file.rename(targetFile.path);
+          qqq("Migrated file (renamed): $fileName");
+        } catch (e) {
+          // If rename fails (e.g., cross-device), copy and delete
+          await file.copy(targetFile.path);
+          await file.delete();
+          qqq("Migrated file (copied): $fileName");
+        }
+        migratedCount++;
+      } catch (e) {
+        qqe("Failed to migrate file $fileName: $e");
+      }
+    }
+
+    // Also migrate associated folders (for extracted files)
+    try {
+      final entities = documentsDir.listSync();
+      for (final entity in entities) {
+        if (entity is! Directory) continue;
+        
+        final dirName = path.basename(entity.path);
+        // Skip the models directory itself
+        if (dirName == Config.modelsDirName) continue;
+        
+        // Check if this directory corresponds to a migrated file
+        final correspondingFile = filesToMigrate.firstWhereOrNull(
+          (f) => path.basenameWithoutExtension(f.path) == dirName,
+        );
+        
+        if (correspondingFile != null) {
+          final targetDir = Directory("${modelsDir.path}/$dirName");
+          if (!await targetDir.exists()) {
+            try {
+              await entity.rename(targetDir.path);
+              qqq("Migrated directory: $dirName");
+            } catch (e) {
+              qqe("Failed to migrate directory $dirName: $e");
+            }
+          }
+        }
+      }
+    } catch (e) {
+      qqe("Error migrating directories: $e");
+    }
+
+    qqq("Migration completed: $migratedCount files migrated, $skippedCount files skipped");
+    P.preference.setWeightsMigrationCompleted(true);
   }
 
   Future<void> _initModelDownloadTaskState() async {

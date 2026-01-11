@@ -75,6 +75,9 @@ class _Preference {
   /// Custom directory for storing models (Desktop only)
   late final customModelsDir = qs<String?>(null);
 
+  /// Whether the weights migration to weights folder has been completed
+  late final weightsMigrationCompleted = qs<bool>(false);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -169,6 +172,9 @@ extension _$Preference on _Preference {
 
     final customModelsDir = sp.getString("halo_state.customModelsDir");
     if (customModelsDir != null) this.customModelsDir.q = customModelsDir;
+
+    final weightsMigrationCompleted = sp.getBool("halo_state.weightsMigrationCompleted");
+    if (weightsMigrationCompleted != null) this.weightsMigrationCompleted.q = weightsMigrationCompleted;
   }
 
   Future<void> _saveDumpping(bool dumpping) async {
@@ -298,5 +304,11 @@ extension $Preference on _Preference {
       await sp.setString("halo_state.customModelsDir", path);
     }
     P.fileManager.checkLocal();
+  }
+
+  void setWeightsMigrationCompleted(bool completed) async {
+    weightsMigrationCompleted.q = completed;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool("halo_state.weightsMigrationCompleted", completed);
   }
 }
