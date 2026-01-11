@@ -51,102 +51,190 @@ class PageWeightManager extends ConsumerWidget {
     try {
       final result = await file_picker.FilePicker.platform.pickFiles(
         type: file_picker.FileType.custom,
-        allowMultiple: false,
+        allowMultiple: true,
         allowedExtensions: ['st', 'gguf', 'prefab', 'bin', 'rmpack', 'mnn', 'zip'],
       );
 
       if (result == null || result.files.isEmpty) return;
 
-      final pickedFile = result.files.single;
-      final sourcePath = pickedFile.path;
-      final fileName = pickedFile.name;
+      final pickedFiles = result.files;
+      final totalFiles = pickedFiles.length;
 
-      // On iOS, path might be null (e.g., when selecting from iCloud Drive)
-      // In that case, we need to use bytes instead
-      File? sourceFile;
-      Uint8List? fileBytes;
+      // First, validate all files and check for existing files
+      final List<_FileImportInfo> fileInfos = [];
+      bool hasExistingFiles = false;
 
-      if (sourcePath != null) {
-        sourceFile = File(sourcePath);
-        if (!await sourceFile.exists()) {
-          Alert.error(S.current.file_not_found);
-          return;
-        }
-      } else {
-        // iOS: path is null, read bytes instead
-        if (pickedFile.bytes == null) {
-          Alert.error(S.current.file_path_not_found);
-          return;
-        }
-        fileBytes = pickedFile.bytes;
-      }
+      for (final pickedFile in pickedFiles) {
+        final sourcePath = pickedFile.path;
+        final fileName = pickedFile.name;
 
-      // Single file import logic
-      // Check if file exists in config and at target location
-      FileInfo? existingFileInfo;
-      try {
-        final fileNameToCheck = fileName.isNotEmpty ? fileName : (sourceFile != null ? path.basename(sourceFile.path) : "unknown");
-        existingFileInfo = await P.fileManager.checkFileExistsInConfig(fileNameToCheck);
-      } catch (e) {
-        final errorMessage = e.toString();
-        if (errorMessage.contains("not found in configuration")) {
-          Alert.error(S.current.file_not_supported);
-          return;
+        File? sourceFile;
+        Uint8List? fileBytes;
+
+        if (sourcePath != null) {
+          sourceFile = File(sourcePath);
+          if (!await sourceFile.exists()) {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: null,
+              fileBytes: null,
+              existingFileInfo: null,
+              error: "${S.current.file_not_found}",
+            ));
+            continue;
+          }
         } else {
-          Alert.error("${S.current.import_failed}: $e");
-          return;
+          if (pickedFile.bytes == null) {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: null,
+              fileBytes: null,
+              existingFileInfo: null,
+              error: S.current.file_path_not_found,
+            ));
+            continue;
+          }
+          fileBytes = pickedFile.bytes;
         }
+
+        FileInfo? existingFileInfo;
+        try {
+          final fileNameToCheck = fileName.isNotEmpty ? fileName : (sourceFile != null ? path.basename(sourceFile.path) : "unknown");
+          existingFileInfo = await P.fileManager.checkFileExistsInConfig(fileNameToCheck);
+          if (existingFileInfo != null) {
+            hasExistingFiles = true;
+          }
+        } catch (e) {
+          final errorMessage = e.toString();
+          if (errorMessage.contains("not found in configuration")) {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: sourceFile,
+              fileBytes: fileBytes,
+              existingFileInfo: null,
+              error: S.current.file_not_supported,
+            ));
+            continue;
+          } else {
+            fileInfos.add(_FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: sourceFile,
+              fileBytes: fileBytes,
+              existingFileInfo: null,
+              error: e.toString(),
+            ));
+            continue;
+          }
+        }
+
+        fileInfos.add(_FileImportInfo(
+          pickedFile: pickedFile,
+          sourceFile: sourceFile,
+          fileBytes: fileBytes,
+          existingFileInfo: existingFileInfo,
+          error: null,
+        ));
       }
 
-      // If file exists, ask user for confirmation
+      // If there are existing files, ask user for confirmation
       bool shouldOverwrite = false;
-      if (existingFileInfo != null) {
+      if (hasExistingFiles) {
         final s = S.of(context);
-        final result = await showOkCancelAlertDialog(
+        final existingCount = fileInfos.where((info) => info.existingFileInfo != null && info.error == null).length;
+        final message = existingCount == 1
+            ? s.overwrite_file_confirmation
+            : "${s.overwrite_file_confirmation}\n\n($existingCount ${S.current.files})";
+
+        final confirmResult = await showOkCancelAlertDialog(
           context: context,
           title: s.file_already_exists,
-          message: s.overwrite_file_confirmation,
+          message: message,
           okLabel: s.overwrite,
           cancelLabel: s.cancel,
           isDestructiveAction: true,
         );
 
-        if (result != OkCancelResult.ok) {
+        if (confirmResult != OkCancelResult.ok) {
           return; // User cancelled
         }
         shouldOverwrite = true;
       }
 
-      // Show loading dialog
+      // Show progress dialog
+      final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, totalFiles));
       if (context.mounted) {
         showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) => const Center(child: CircularProgressIndicator()),
+          builder: (context) => _ImportProgressDialog(progressNotifier: progressNotifier),
         );
       }
 
-      // Import with overwrite if file exists
-      final success = await P.fileManager.importWeightFile(
-        sourceFile: sourceFile,
-        fileBytes: fileBytes,
-        fileName: fileName.isNotEmpty ? fileName : (sourceFile != null ? path.basename(sourceFile.path) : "unknown"),
-        overwrite: shouldOverwrite,
-      );
+      int successCount = 0;
+      int failCount = 0;
+      final List<String> failedFiles = [];
 
-      if (context.mounted) {
-        Navigator.of(context).pop(); // Close loading dialog
+      // Process each file
+      for (var i = 0; i < fileInfos.length; i++) {
+        final fileInfo = fileInfos[i];
+        final pickedFile = fileInfo.pickedFile;
+        final fileName = pickedFile.name;
+
+        // Update progress
+        progressNotifier.value = (fileName, i, totalFiles);
+
+        // Skip files with errors
+        if (fileInfo.error != null) {
+          failCount++;
+          failedFiles.add("$fileName: ${fileInfo.error}");
+          continue;
+        }
+
+        // Import the file
+        try {
+          final fileNameToUse = pickedFile.name.isNotEmpty
+              ? pickedFile.name
+              : (fileInfo.sourceFile != null
+                  ? path.basename(fileInfo.sourceFile!.path)
+                  : "unknown");
+
+          final success = await P.fileManager.importWeightFile(
+            sourceFile: fileInfo.sourceFile,
+            fileBytes: fileInfo.fileBytes,
+            fileName: fileNameToUse,
+            overwrite: shouldOverwrite && fileInfo.existingFileInfo != null,
+          );
+
+          if (success) {
+            successCount++;
+          } else {
+            failCount++;
+            failedFiles.add("$fileName: ${S.current.import_failed}");
+          }
+        } catch (e) {
+          failCount++;
+          failedFiles.add("$fileName: ${e.toString()}");
+        }
       }
 
-      if (success) {
-        Alert.success(S.current.import_success);
-        // Note: We don't need to invalidate weight lists or call checkLocal() here
-        // because importWeightFile already updates the locals state for the imported file.
-        // The UI will automatically refresh because _WeightSection watches locals().
+      // Close progress dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show result summary
+      if (successCount > 0 && failCount == 0) {
+        Alert.success(totalFiles == 1 ? S.current.import_success : "$successCount ${S.current.import_success}");
+      } else if (successCount > 0 && failCount > 0) {
+        final message = "$successCount ${S.current.import_success}\n$failCount ${S.current.import_failed}\n\n${failedFiles.join('\n')}";
+        Alert.warning(message);
+      } else {
+        final message = "${S.current.import_failed}:\n${failedFiles.join('\n')}";
+        Alert.error(message);
       }
     } catch (e) {
       if (context.mounted) {
-        Navigator.of(context).pop(); // Close loading dialog if still open
+        Navigator.of(context).pop(); // Close progress dialog if still open
         final errorMessage = e.toString();
         if (errorMessage.contains("not found in configuration")) {
           Alert.error(S.current.file_not_supported);
@@ -241,6 +329,43 @@ class _ExportProgressDialog extends StatelessWidget {
   final ValueNotifier<(String, int, int)> progressNotifier;
 
   const _ExportProgressDialog({required this.progressNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: ValueListenableBuilder<(String, int, int)>(
+        valueListenable: progressNotifier,
+        builder: (context, value, _) {
+          final (currentFile, completed, total) = value;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              if (currentFile.isNotEmpty)
+                Text(
+                  currentFile,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              if (total > 0)
+                Text(
+                  "$completed / $total",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ImportProgressDialog extends StatelessWidget {
+  final ValueNotifier<(String, int, int)> progressNotifier;
+
+  const _ImportProgressDialog({required this.progressNotifier});
 
   @override
   Widget build(BuildContext context) {
@@ -413,6 +538,22 @@ class _UnrecognizedFile {
     required this.fileName,
     required this.filePath,
     required this.fileSize,
+  });
+}
+
+class _FileImportInfo {
+  final file_picker.PlatformFile pickedFile;
+  final File? sourceFile;
+  final Uint8List? fileBytes;
+  final FileInfo? existingFileInfo;
+  final String? error;
+
+  const _FileImportInfo({
+    required this.pickedFile,
+    required this.sourceFile,
+    required this.fileBytes,
+    required this.existingFileInfo,
+    required this.error,
   });
 }
 
