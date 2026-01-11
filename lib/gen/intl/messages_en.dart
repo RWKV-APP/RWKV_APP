@@ -453,6 +453,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("Conversation title:"),
     "extra_large": MessageLookupByLibrary.simpleMessage("Extra Large (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
+    "file_already_exists": MessageLookupByLibrary.simpleMessage(
+      "File already exists",
+    ),
+    "file_not_found": MessageLookupByLibrary.simpleMessage("File not found"),
+    "file_not_supported": MessageLookupByLibrary.simpleMessage(
+      "This file is not yet supported. Please check if the file name is correct",
+    ),
+    "file_path_not_found": MessageLookupByLibrary.simpleMessage(
+      "File path not found",
+    ),
     "filter": MessageLookupByLibrary.simpleMessage(
       "Hello, I can\'t answer this question right now. Let\'s talk about something else.",
     ),
@@ -517,6 +527,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "imitate": m14,
     "imitate_fle": m15,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Use"),
+    "import_failed": MessageLookupByLibrary.simpleMessage("Import failed"),
+    "import_success": MessageLookupByLibrary.simpleMessage("Import successful"),
+    "import_weight_file": MessageLookupByLibrary.simpleMessage(
+      "Import Weight File",
+    ),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
           "In-context search will be activated when both breadth and depth are greater than 2",
@@ -660,9 +675,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Or start a new empty chat",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
-    "other_files": MessageLookupByLibrary.simpleMessage("Other Files"),
+    "other_files": MessageLookupByLibrary.simpleMessage(
+      "Other Files (These files may be outdated or no longer supported weights. You can safely delete them)",
+    ),
     "output": MessageLookupByLibrary.simpleMessage("Output"),
     "overseas": MessageLookupByLibrary.simpleMessage("(Overseas)"),
+    "overwrite": MessageLookupByLibrary.simpleMessage("Overwrite"),
+    "overwrite_file_confirmation": MessageLookupByLibrary.simpleMessage(
+      "File already exists. Do you want to overwrite it?",
+    ),
     "parameter_description": MessageLookupByLibrary.simpleMessage(
       "Parameter Description",
     ),

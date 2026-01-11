@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:intl/number_symbols_data.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:path/path.dart' as path;
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
@@ -19,9 +21,130 @@ class PageWeightManager extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.weights_mangement)),
+      appBar: AppBar(
+        title: Text(S.current.weights_mangement),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextButton.icon(
+              onPressed: () => _importWeightFile(context, ref),
+              icon: const Icon(Icons.add),
+              label: Text(S.current.import_weight_file),
+            ),
+          ),
+        ],
+      ),
       body: const _Body(),
     );
+  }
+
+  Future<void> _importWeightFile(BuildContext context, WidgetRef ref) async {
+    try {
+      final result = await file_picker.FilePicker.platform.pickFiles(
+        type: file_picker.FileType.custom,
+        allowMultiple: false,
+        allowedExtensions: ['st', 'gguf', 'prefab', 'bin', 'rmpack', 'mnn', 'zip'],
+      );
+
+      if (result == null || result.files.isEmpty) return;
+
+      final pickedFile = result.files.single;
+      final sourcePath = pickedFile.path;
+      final fileName = pickedFile.name;
+
+      // On iOS, path might be null (e.g., when selecting from iCloud Drive)
+      // In that case, we need to use bytes instead
+      File? sourceFile;
+      Uint8List? fileBytes;
+
+      if (sourcePath != null) {
+        sourceFile = File(sourcePath);
+        if (!await sourceFile.exists()) {
+          Alert.error(S.current.file_not_found);
+          return;
+        }
+      } else {
+        // iOS: path is null, read bytes instead
+        if (pickedFile.bytes == null) {
+          Alert.error(S.current.file_path_not_found);
+          return;
+        }
+        fileBytes = pickedFile.bytes;
+      }
+
+      // Check if file exists in config and at target location
+      FileInfo? existingFileInfo;
+      try {
+        final fileNameToCheck = fileName.isNotEmpty ? fileName : (sourceFile != null ? path.basename(sourceFile.path) : "unknown");
+        existingFileInfo = await P.fileManager.checkFileExistsInConfig(fileNameToCheck);
+      } catch (e) {
+        final errorMessage = e.toString();
+        if (errorMessage.contains("not found in configuration")) {
+          Alert.error(S.current.file_not_supported);
+          return;
+        } else {
+          Alert.error("${S.current.import_failed}: $e");
+          return;
+        }
+      }
+
+      // If file exists, ask user for confirmation
+      bool shouldOverwrite = false;
+      if (existingFileInfo != null) {
+        final s = S.of(context);
+        final result = await showOkCancelAlertDialog(
+          context: context,
+          title: s.file_already_exists,
+          message: s.overwrite_file_confirmation,
+          okLabel: s.overwrite,
+          cancelLabel: s.cancel,
+          isDestructiveAction: true,
+        );
+
+        if (result != OkCancelResult.ok) {
+          return; // User cancelled
+        }
+        shouldOverwrite = true;
+      }
+
+      // Show loading dialog
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      // Import with overwrite if file exists
+      final success = await P.fileManager.importWeightFile(
+        sourceFile: sourceFile,
+        fileBytes: fileBytes,
+        fileName: fileName.isNotEmpty ? fileName : (sourceFile != null ? path.basename(sourceFile.path) : "unknown"),
+        overwrite: shouldOverwrite,
+      );
+
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+      }
+
+      if (success) {
+        Alert.success(S.current.import_success);
+        // Note: We don't need to invalidate weight lists or call checkLocal() here
+        // because importWeightFile already updates the locals state for the imported file.
+        // The UI will automatically refresh because _WeightSection watches locals().
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close loading dialog if still open
+        final errorMessage = e.toString();
+        if (errorMessage.contains("not found in configuration")) {
+          Alert.error(S.current.file_not_supported);
+        } else {
+          Alert.error("${S.current.import_failed}: $e");
+        }
+      }
+    }
   }
 }
 
@@ -35,12 +158,26 @@ class _Body extends ConsumerStatefulWidget {
 class _BodyState extends ConsumerState<_Body> {
   final GlobalKey<_OtherFilesSectionState> _otherFilesSectionKey = GlobalKey<_OtherFilesSectionState>();
 
+  @override
+  void initState() {
+    super.initState();
+    // Automatically refresh on page load without showing pull-to-refresh UI
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onRefresh();
+    });
+  }
+
   Future<void> _onRefresh() async {
     await Future.wait([
       Future.delayed(500.ms),
       P.fileManager.checkLocal(),
     ]);
 
+    _otherFilesSectionKey.currentState?._loadFiles();
+  }
+
+  // Expose method to refresh other files section from outside
+  void refreshOtherFiles() {
     _otherFilesSectionKey.currentState?._loadFiles();
   }
 
@@ -243,11 +380,12 @@ class _WeightSection extends ConsumerWidget {
 }
 
 class WeightManagerUtils {
-  static int calculateTotalUsage(List<FileInfo> allWeights) {
+  static int calculateTotalUsage(List<FileInfo> allWeights, WidgetRef ref) {
     int totalBytes = 0;
 
     for (final weight in allWeights) {
-      final local = P.fileManager.locals(weight).q;
+      // Use ref.watch to ensure this widget rebuilds when locals state changes
+      final local = ref.watch(P.fileManager.locals(weight));
 
       if (local.hasFile) {
         totalBytes += weight.fileSize;
@@ -275,7 +413,12 @@ class _TotalUsageTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights);
+    // Watch all locals to ensure this widget rebuilds when any file state changes
+    for (final weight in allWeights) {
+      ref.watch(P.fileManager.locals(weight));
+    }
+
+    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights, ref);
 
     return ListTile(
       title: const Text("Total Disk Usage"),
@@ -350,6 +493,7 @@ class _OtherFilesSection extends ConsumerStatefulWidget {
 
 class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
   Future<List<_UnrecognizedFile>>? _filesFuture;
+  Set<FileInfo>? _lastWatchedWeights;
 
   Future<List<_UnrecognizedFile>> _getUnrecognizedFiles() async {
     final customDir = P.preference.customModelsDir.q;
@@ -362,7 +506,9 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
     final directory = Directory(targetDir);
     if (!await directory.exists()) return [];
 
-    final weightFileNames = widget.allWeights.map((w) => w.fileName).toSet();
+    // Get all file names from config (not just available ones)
+    // This ensures we correctly identify files even if they're not available on current platform
+    final allWeightFileNames = P.fileManager.getAllConfigFileNames();
 
     final unrecognizedFiles = <_UnrecognizedFile>[];
 
@@ -372,7 +518,7 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
         if (entity is! File) continue;
 
         final fileName = path.basename(entity.path);
-        if (weightFileNames.contains(fileName)) continue;
+        if (allWeightFileNames.contains(fileName)) continue;
 
         final fileSize = await entity.length();
 
@@ -405,6 +551,34 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch weight lists to trigger refresh when they change (e.g., after import)
+    final chatWeights = ref.watch(P.fileManager.chatWeights);
+    final roleplayWeights = ref.watch(P.fileManager.roleplayWeights);
+    final ttsWeights = ref.watch(P.fileManager.ttsWeights);
+    final seeWeights = ref.watch(P.fileManager.seeWeights);
+    final sudokuWeights = ref.watch(P.fileManager.sudokuWeights);
+    final othelloWeights = ref.watch(P.fileManager.othelloWeights);
+
+    // Check if weight lists have changed
+    final currentWeights = {
+      ...chatWeights,
+      ...roleplayWeights,
+      ...ttsWeights,
+      ...seeWeights,
+      ...sudokuWeights,
+      ...othelloWeights,
+    };
+
+    // Reload files when weight lists change
+    if (_lastWatchedWeights != currentWeights) {
+      _lastWatchedWeights = currentWeights;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _loadFiles();
+        }
+      });
+    }
+
     return FutureBuilder<List<_UnrecognizedFile>>(
       future: _filesFuture,
       builder: (context, snapshot) {

@@ -406,6 +406,213 @@ extension $FileManager on _FileManager {
 
     P.preference.setCustomModelsDir(newPath);
   }
+
+  /// Get all file names from configuration (including unavailable ones)
+  /// This is used to determine which files are recognized vs "other files"
+  Set<String> getAllConfigFileNames() {
+    final config = P.app._config.q;
+    if (config == null) {
+      return {};
+    }
+
+    final allFileNames = <String>{};
+
+    // Extract from all demo types
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileNames.add(fileInfo.fileName);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    return allFileNames;
+  }
+
+  /// Check if a file would already exist at the target location
+  /// Returns the FileInfo if file is in config, null otherwise
+  /// Throws exception if file is not in configuration
+  Future<FileInfo?> checkFileExistsInConfig(String fileName) async {
+    final config = P.app._config.q;
+    if (config == null) {
+      throw Exception("Configuration not loaded");
+    }
+
+    final allFileInfos = <FileInfo>{};
+
+    // Extract from all demo types
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileInfos.add(fileInfo);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    // Find matching file info by fileName
+    try {
+      final matchingFileInfo = allFileInfos.firstWhere(
+        (info) => info.fileName == fileName,
+      );
+
+      // Check if target file already exists
+      final targetPath = _paths(matchingFileInfo).q;
+      final targetFile = File(targetPath);
+      if (await targetFile.exists()) {
+        return matchingFileInfo;
+      }
+      return null; // File is in config but doesn't exist yet
+    } catch (e) {
+      throw Exception("File not found in configuration");
+    }
+  }
+
+  /// Import a weight file from external source
+  /// Returns true if import was successful, false otherwise
+  /// [overwrite] if true, will overwrite existing file; if false, will throw exception if file exists
+  /// [sourceFile] the source file (used when path is available, e.g., Android, desktop)
+  /// [fileBytes] the file bytes (used when path is null, e.g., iOS iCloud Drive)
+  /// [fileName] the file name (required when using fileBytes)
+  Future<bool> importWeightFile({
+    File? sourceFile,
+    Uint8List? fileBytes,
+    String? fileName,
+    bool overwrite = false,
+  }) async {
+    qq;
+
+    // Get the file name
+    final actualFileName = fileName ?? (sourceFile != null ? path.basename(sourceFile.path) : throw Exception("File name is required"));
+
+    // Validate that we have either sourceFile or fileBytes
+    if (sourceFile == null && fileBytes == null) {
+      throw Exception("Either sourceFile or fileBytes must be provided");
+    }
+
+    // Check if the file exists in the configuration
+    // Get all file infos from config (not just available ones)
+    final config = P.app._config.q;
+    if (config == null) {
+      throw Exception("Configuration not loaded");
+    }
+
+    final allFileInfos = <FileInfo>{};
+
+    // Extract from all demo types
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileInfos.add(fileInfo);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    // Find matching file info by fileName
+    FileInfo? matchingFileInfo;
+    try {
+      matchingFileInfo = allFileInfos.firstWhere(
+        (info) => info.fileName == actualFileName,
+      );
+    } catch (e) {
+      throw Exception("File not found in configuration");
+    }
+
+    // Get the target path
+    final targetPath = _paths(matchingFileInfo).q;
+    final targetFile = File(targetPath);
+
+    // Check if target file already exists
+    if (await targetFile.exists()) {
+      if (!overwrite) {
+        qqw("Target file already exists: $targetPath");
+        throw Exception("File already exists");
+      } else {
+        // Delete existing file if overwrite is true
+        try {
+          await targetFile.delete();
+          qqq("Deleted existing file for overwrite: $targetPath");
+        } catch (e) {
+          qqe("Failed to delete existing file: $e");
+          throw Exception("Failed to delete existing file");
+        }
+      }
+    }
+
+    // Ensure target directory exists
+    final targetDir = Directory(path.dirname(targetPath));
+    if (!await targetDir.exists()) {
+      await targetDir.create(recursive: true);
+    }
+
+    // Copy the file
+    try {
+      if (sourceFile != null) {
+        // Use file copy (faster for large files when path is available)
+        await sourceFile.copy(targetPath);
+      } else if (fileBytes != null) {
+        // Write bytes directly (for iOS when path is null)
+        await File(targetPath).writeAsBytes(fileBytes);
+      } else {
+        throw Exception("No file data available");
+      }
+      qqq("Successfully imported file: $actualFileName to $targetPath");
+
+      // Verify file size if available
+      if (matchingFileInfo.fileSize > 0) {
+        final copiedFileSize = await targetFile.length();
+        if (copiedFileSize != matchingFileInfo.fileSize) {
+          qqw("File size mismatch: expected ${matchingFileInfo.fileSize}, got $copiedFileSize");
+          // In non-debug mode, delete the file if size doesn't match
+          if (!kDebugMode) {
+            await targetFile.delete();
+            throw Exception("File size mismatch");
+          }
+        }
+      }
+
+      // Update local file status for this specific file only (much faster than checkLocal)
+      final state = locals(matchingFileInfo);
+      state.q = state.q.copyWith(
+        hasFile: true,
+        state: TaskState.completed,
+        progress: 1.0,
+      );
+
+      return true;
+    } catch (e) {
+      qqe("Failed to import file: $e");
+      // Clean up if file was partially copied
+      if (await targetFile.exists()) {
+        try {
+          await targetFile.delete();
+        } catch (deleteError) {
+          qqe("Failed to delete partially copied file: $deleteError");
+        }
+      }
+      rethrow;
+    }
+  }
 }
 
 /// Private methods

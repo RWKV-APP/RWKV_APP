@@ -463,6 +463,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("Название диалога:"),
     "extra_large": MessageLookupByLibrary.simpleMessage("Очень большой (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("Обратная связь"),
+    "file_already_exists": MessageLookupByLibrary.simpleMessage(
+      "Файл уже существует",
+    ),
+    "file_not_found": MessageLookupByLibrary.simpleMessage("Файл не найден"),
+    "file_not_supported": MessageLookupByLibrary.simpleMessage(
+      "Этот файл пока не поддерживается. Пожалуйста, проверьте, правильно ли указано имя файла",
+    ),
+    "file_path_not_found": MessageLookupByLibrary.simpleMessage(
+      "Путь к файлу не найден",
+    ),
     "filter": MessageLookupByLibrary.simpleMessage(
       "Я пока не могу ответить на этот вопрос. Давайте поговорим на другую тему.",
     ),
@@ -535,6 +545,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "imitate": m14,
     "imitate_fle": m15,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Использовать"),
+    "import_failed": MessageLookupByLibrary.simpleMessage("Импорт не удался"),
+    "import_success": MessageLookupByLibrary.simpleMessage("Импорт успешен"),
+    "import_weight_file": MessageLookupByLibrary.simpleMessage(
+      "Импортировать файл весов",
+    ),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
           "Контекстный поиск будет активирован, когда глубина и ширина поиска будут больше 2",
@@ -682,9 +697,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Или начать пустой чат",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),
-    "other_files": MessageLookupByLibrary.simpleMessage("Другие файлы"),
+    "other_files": MessageLookupByLibrary.simpleMessage(
+      "Другие файлы (Эти файлы могут быть устаревшими или больше не поддерживаемыми весами. Вы можете безопасно удалить их)",
+    ),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
     "overseas": MessageLookupByLibrary.simpleMessage("(за рубежом)"),
+    "overwrite": MessageLookupByLibrary.simpleMessage("Перезаписать"),
+    "overwrite_file_confirmation": MessageLookupByLibrary.simpleMessage(
+      "Файл уже существует. Вы хотите перезаписать его?",
+    ),
     "parameter_description": MessageLookupByLibrary.simpleMessage(
       "Описание параметров",
     ),

@@ -557,5 +557,14 @@
     }
   },
   "adapting_more_inference_chips": "We are continuously adapting more inference chips, please stay tuned.",
-  "other_files": "Other Files"
+  "other_files": "Other Files (These files may be outdated or no longer supported weights. You can safely delete them)",
+  "import_weight_file": "Import Weight File",
+  "import_success": "Import successful",
+  "import_failed": "Import failed",
+  "file_path_not_found": "File path not found",
+  "file_not_found": "File not found",
+  "file_not_supported": "This file is not yet supported. Please check if the file name is correct",
+  "file_already_exists": "File already exists",
+  "overwrite_file_confirmation": "File already exists. Do you want to overwrite it?",
+  "overwrite": "Overwrite"
 }

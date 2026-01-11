@@ -383,6 +383,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("会話のタイトル："),
     "extra_large": MessageLookupByLibrary.simpleMessage("特大 (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("フィードバック"),
+    "file_already_exists": MessageLookupByLibrary.simpleMessage("ファイルは既に存在します"),
+    "file_not_found": MessageLookupByLibrary.simpleMessage("ファイルが見つかりません"),
+    "file_not_supported": MessageLookupByLibrary.simpleMessage(
+      "このファイルはまだサポートされていません。ファイル名が正しいか確認してください",
+    ),
+    "file_path_not_found": MessageLookupByLibrary.simpleMessage(
+      "ファイルパスが見つかりません",
+    ),
     "filter": MessageLookupByLibrary.simpleMessage(
       "こんにちは、この質問にはまだお答えできません。別の話題について話しましょう。",
     ),
@@ -439,6 +447,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "imitate": m14,
     "imitate_fle": m15,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
+    "import_failed": MessageLookupByLibrary.simpleMessage("インポート失敗"),
+    "import_success": MessageLookupByLibrary.simpleMessage("インポート成功"),
+    "import_weight_file": MessageLookupByLibrary.simpleMessage("重みファイルをインポート"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
           "検索深度と検索幅の両方が2より大きい場合、インコンテキスト検索がアクティブになります",
@@ -552,9 +563,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "または、新しい空のチャットを開始できます",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV オセロ"),
-    "other_files": MessageLookupByLibrary.simpleMessage("その他のファイル"),
+    "other_files": MessageLookupByLibrary.simpleMessage(
+      "その他のファイル (これらのファイルは期限切れまたはサポートされなくなった重みファイルである可能性があります。安全に削除できます)",
+    ),
     "output": MessageLookupByLibrary.simpleMessage("出力"),
     "overseas": MessageLookupByLibrary.simpleMessage("(海外)"),
+    "overwrite": MessageLookupByLibrary.simpleMessage("上書き"),
+    "overwrite_file_confirmation": MessageLookupByLibrary.simpleMessage(
+      "ファイルは既に存在します。上書きしますか？",
+    ),
     "parameter_description": MessageLookupByLibrary.simpleMessage("パラメータ説明"),
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: 出力のランダム性を制御します。高い値（例: 0.8）はより創造的でランダムに、低い値（例: 0.2）はより集中的で決定的になります。\n\nTop P: 出力の多様性を制御します。モデルは累積確率がTop Pに達するトークンのみを考慮します。低い値（例: 0.5）は低確率の単語を無視し、関連性を高めます。\n\nPresence Penalty: トークンがテキスト内に既に出現しているかどうかに基づいてペナルティを与えます。正の値は新しいトピックについて話す可能性を高めます。\n\nFrequency Penalty: テキスト内での出現頻度に基づいてペナルティを与えます。正の値は同じ行を逐語的に繰り返す可能性を減らします。\n\nPenalty Decay: 距離に応じたペナルティの減衰を制御します。",

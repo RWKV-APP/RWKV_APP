@@ -3676,9 +3676,84 @@ class S {
     );
   }
 
-  /// `其他文件`
+  /// `其他文件 (这些文件可以是已经过期或不再支持的权重, 您可以放心地删除他们)`
   String get other_files {
-    return Intl.message('其他文件', name: 'other_files', desc: '', args: []);
+    return Intl.message(
+      '其他文件 (这些文件可以是已经过期或不再支持的权重, 您可以放心地删除他们)',
+      name: 'other_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导入权重文件`
+  String get import_weight_file {
+    return Intl.message(
+      '导入权重文件',
+      name: 'import_weight_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导入成功`
+  String get import_success {
+    return Intl.message('导入成功', name: 'import_success', desc: '', args: []);
+  }
+
+  /// `导入失败`
+  String get import_failed {
+    return Intl.message('导入失败', name: 'import_failed', desc: '', args: []);
+  }
+
+  /// `文件路径未找到`
+  String get file_path_not_found {
+    return Intl.message(
+      '文件路径未找到',
+      name: 'file_path_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件未找到`
+  String get file_not_found {
+    return Intl.message('文件未找到', name: 'file_not_found', desc: '', args: []);
+  }
+
+  /// `当前文件尚未支持，请检查文件名是否正确`
+  String get file_not_supported {
+    return Intl.message(
+      '当前文件尚未支持，请检查文件名是否正确',
+      name: 'file_not_supported',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件已存在`
+  String get file_already_exists {
+    return Intl.message(
+      '文件已存在',
+      name: 'file_already_exists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件已存在，是否要覆盖？`
+  String get overwrite_file_confirmation {
+    return Intl.message(
+      '文件已存在，是否要覆盖？',
+      name: 'overwrite_file_confirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `覆盖`
+  String get overwrite {
+    return Intl.message('覆盖', name: 'overwrite', desc: '', args: []);
   }
 }
 

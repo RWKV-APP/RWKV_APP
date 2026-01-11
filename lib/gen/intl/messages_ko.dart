@@ -383,6 +383,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("대화 제목:"),
     "extra_large": MessageLookupByLibrary.simpleMessage("매우 크게 (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("문제 보고"),
+    "file_already_exists": MessageLookupByLibrary.simpleMessage("파일이 이미 존재합니다"),
+    "file_not_found": MessageLookupByLibrary.simpleMessage("파일을 찾을 수 없습니다"),
+    "file_not_supported": MessageLookupByLibrary.simpleMessage(
+      "이 파일은 아직 지원되지 않습니다. 파일 이름이 올바른지 확인하세요",
+    ),
+    "file_path_not_found": MessageLookupByLibrary.simpleMessage(
+      "파일 경로를 찾을 수 없습니다",
+    ),
     "filter": MessageLookupByLibrary.simpleMessage(
       "안녕하세요, 이 질문에는 아직 답변할 수 없습니다. 다른 주제로 이야기해 볼까요?",
     ),
@@ -439,6 +447,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "imitate": m14,
     "imitate_fle": m15,
     "imitate_target": MessageLookupByLibrary.simpleMessage("사용"),
+    "import_failed": MessageLookupByLibrary.simpleMessage("가져오기 실패"),
+    "import_success": MessageLookupByLibrary.simpleMessage("가져오기 성공"),
+    "import_weight_file": MessageLookupByLibrary.simpleMessage("가중치 파일 가져오기"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage(
           "검색 깊이와 폭이 모두 2보다 클 때 컨텍스트 검색이 활성화됩니다",
@@ -550,9 +561,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "또는 새 빈 채팅을 시작할 수 있습니다",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 오셀로"),
-    "other_files": MessageLookupByLibrary.simpleMessage("기타 파일"),
+    "other_files": MessageLookupByLibrary.simpleMessage(
+      "기타 파일 (이러한 파일은 만료되었거나 더 이상 지원되지 않는 가중치일 수 있습니다. 안전하게 삭제할 수 있습니다)",
+    ),
     "output": MessageLookupByLibrary.simpleMessage("출력"),
     "overseas": MessageLookupByLibrary.simpleMessage("(해외)"),
+    "overwrite": MessageLookupByLibrary.simpleMessage("덮어쓰기"),
+    "overwrite_file_confirmation": MessageLookupByLibrary.simpleMessage(
+      "파일이 이미 존재합니다. 덮어쓰시겠습니까?",
+    ),
     "parameter_description": MessageLookupByLibrary.simpleMessage("매개변수 설명"),
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: 출력의 무작위성을 제어합니다. 높은 값(예: 0.8)은 더 창의적이고 무작위적으로, 낮은 값(예: 0.2)은 더 집중적이고 결정적으로 만듭니다.\n\nTop P: 출력의 다양성을 제어합니다. 모델은 누적 확률이 Top P에 도달하는 토큰만 고려합니다. 낮은 값(예: 0.5)은 확률이 낮은 단어를 무시하여 관련성을 높입니다.\n\nPresence Penalty: 토큰이 텍스트에 이미 나타났는지 여부에 따라 페널티를 부여합니다. 양수 값은 새로운 주제에 대해 이야기할 가능성을 높입니다.\n\nFrequency Penalty: 텍스트 내 빈도에 따라 토큰에 페널티를 부여합니다. 양수 값은 같은 줄을 그대로 반복할 가능성을 줄입니다.\n\nPenalty Decay: 거리에 따른 페널티 감소를 제어합니다.",

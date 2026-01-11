@@ -550,5 +550,14 @@
     }
   },
   "adapting_more_inference_chips": "より多くの推論チップへの対応を継続しています。ご期待ください。",
-  "other_files": "その他のファイル"
+  "other_files": "その他のファイル (これらのファイルは期限切れまたはサポートされなくなった重みファイルである可能性があります。安全に削除できます)",
+  "import_weight_file": "重みファイルをインポート",
+  "import_success": "インポート成功",
+  "import_failed": "インポート失敗",
+  "file_path_not_found": "ファイルパスが見つかりません",
+  "file_not_found": "ファイルが見つかりません",
+  "file_not_supported": "このファイルはまだサポートされていません。ファイル名が正しいか確認してください",
+  "file_already_exists": "ファイルは既に存在します",
+  "overwrite_file_confirmation": "ファイルは既に存在します。上書きしますか？",
+  "overwrite": "上書き"
 }

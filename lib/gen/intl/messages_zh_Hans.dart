@@ -359,6 +359,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("会话标题:"),
     "extra_large": MessageLookupByLibrary.simpleMessage("特大 (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("反馈问题"),
+    "file_already_exists": MessageLookupByLibrary.simpleMessage("文件已存在"),
+    "file_not_found": MessageLookupByLibrary.simpleMessage("文件未找到"),
+    "file_not_supported": MessageLookupByLibrary.simpleMessage(
+      "当前文件尚未支持，请检查文件名是否正确",
+    ),
+    "file_path_not_found": MessageLookupByLibrary.simpleMessage("文件路径未找到"),
     "filter": MessageLookupByLibrary.simpleMessage(
       "你好，这个问题我暂时无法回答，让我们换个话题再聊聊吧。",
     ),
@@ -413,6 +419,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "imitate": m14,
     "imitate_fle": m15,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
+    "import_failed": MessageLookupByLibrary.simpleMessage("导入失败"),
+    "import_success": MessageLookupByLibrary.simpleMessage("导入成功"),
+    "import_weight_file": MessageLookupByLibrary.simpleMessage("导入权重文件"),
     "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
         MessageLookupByLibrary.simpleMessage("当搜索深度和宽度都大于 2 时，将激活上下文搜索"),
     "inference_engine": MessageLookupByLibrary.simpleMessage("推理引擎"),
@@ -506,9 +515,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "或开始一个空白聊天",
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
-    "other_files": MessageLookupByLibrary.simpleMessage("其他文件"),
+    "other_files": MessageLookupByLibrary.simpleMessage(
+      "其他文件 (这些文件可以是已经过期或不再支持的权重, 您可以放心地删除他们)",
+    ),
     "output": MessageLookupByLibrary.simpleMessage("输出"),
     "overseas": MessageLookupByLibrary.simpleMessage("(境外)"),
+    "overwrite": MessageLookupByLibrary.simpleMessage("覆盖"),
+    "overwrite_file_confirmation": MessageLookupByLibrary.simpleMessage(
+      "文件已存在，是否要覆盖？",
+    ),
     "parameter_description": MessageLookupByLibrary.simpleMessage("参数说明"),
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。",
