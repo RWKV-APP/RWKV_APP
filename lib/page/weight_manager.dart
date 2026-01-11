@@ -234,11 +234,11 @@ class _WeightSection extends ConsumerWidget {
 }
 
 class WeightManagerUtils {
-  static int calculateTotalUsage(WidgetRef ref, List<FileInfo> allWeights) {
+  static int calculateTotalUsage(List<FileInfo> allWeights) {
     int totalBytes = 0;
 
     for (final weight in allWeights) {
-      final local = ref.read(P.fileManager.locals(weight));
+      final local = P.fileManager.locals(weight).q;
 
       if (local.hasFile) {
         totalBytes += weight.fileSize;
@@ -266,7 +266,7 @@ class _TotalUsageTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final totalBytes = WeightManagerUtils.calculateTotalUsage(ref, allWeights);
+    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights);
 
     return ListTile(
       title: const Text("Total Disk Usage"),
@@ -343,8 +343,8 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
   Future<List<_UnrecognizedFile>>? _filesFuture;
 
   Future<List<_UnrecognizedFile>> _getUnrecognizedFiles() async {
-    final customDir = ref.read(P.preference.customModelsDir);
-    final defaultDir = ref.read(P.app.documentsDir)?.path;
+    final customDir = P.preference.customModelsDir.q;
+    final defaultDir = P.app.documentsDir.q?.path;
     final targetDir = customDir ?? defaultDir;
 
     if (targetDir == null) return [];

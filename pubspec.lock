@@ -141,10 +141,10 @@ packages:
     dependency: "direct main"
     description:
       name: background_downloader
-      sha256: "1e8b71f7fe841da0b24f672318e8d0038d3bae0c9939bd05b60e411adf40ab59"
+      sha256: "8050e5efacbb44227e4fb45dceff90a23321f4e3d81fbfbee2cd83f6dddea2fe"
       url: "https://pub.dev"
     source: hosted
-    version: "9.5.0"
+    version: "9.5.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -1980,10 +1980,10 @@ packages:
     dependency: transitive
     description:
       name: watcher
-      sha256: f52385d4f73589977c80797e60fe51014f7f2b957b5e9a62c3f6ada439889249
+      sha256: "1398c9f081a753f9226febe8900fce8f7d0a67163334e1c94a2438339d79d635"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   web:
     dependency: transitive
     description:

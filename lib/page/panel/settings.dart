@@ -23,13 +23,13 @@ import 'package:zone/page/weight_manager.dart';
 class Settings extends ConsumerWidget {
   static final _shown = qs(false);
 
-  static String _getTotalUsage(WidgetRef ref) {
-    final chatWeights = ref.read(P.fileManager.chatWeights);
-    final ttsWeights = ref.read(P.fileManager.ttsWeights);
-    final roleplayWeights = ref.read(P.fileManager.roleplayWeights);
-    final seeWeights = ref.read(P.fileManager.seeWeights);
-    final sudokuWeights = ref.read(P.fileManager.sudokuWeights);
-    final othelloWeights = ref.read(P.fileManager.othelloWeights);
+  static String _getTotalUsage() {
+    final chatWeights = P.fileManager.chatWeights.q;
+    final ttsWeights = P.fileManager.ttsWeights.q;
+    final roleplayWeights = P.fileManager.roleplayWeights.q;
+    final seeWeights = P.fileManager.seeWeights.q;
+    final sudokuWeights = P.fileManager.sudokuWeights.q;
+    final othelloWeights = P.fileManager.othelloWeights.q;
 
     final allWeights = [
       ...chatWeights,
@@ -40,7 +40,7 @@ class Settings extends ConsumerWidget {
       ...othelloWeights,
     ];
 
-    final totalBytes = WeightManagerUtils.calculateTotalUsage(ref, allWeights);
+    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights);
     return WeightManagerUtils.formatBytes(totalBytes);
   }
 
@@ -101,7 +101,7 @@ class Settings extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == DemoType.chat;
 
-    final totalUsage = _getTotalUsage(ref);
+    final totalUsage = _getTotalUsage();
 
     final iconWidget = SizedBox(
       width: 64,
