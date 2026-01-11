@@ -70,55 +70,57 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m15(fileName) => "模仿 ${fileName}";
 
-  static String m16(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
+  static String m16(count) => "导入成功：已导入 ${count} 个文件";
 
-  static String m17(text) => "模型输出: ${text}";
+  static String m17(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
 
-  static String m18(socName) => "暂未支持您的芯片 ${socName} 的 NPU 加速";
+  static String m18(text) => "模型输出: ${text}";
 
-  static String m19(takePhoto) => "点击 ${takePhoto}。RWKV 将翻译图片中的文本。";
+  static String m19(socName) => "暂未支持您的芯片 ${socName} 的 NPU 加速";
 
-  static String m20(value) => "Penalty Decay: ${value}";
+  static String m20(takePhoto) => "点击 ${takePhoto}。RWKV 将翻译图片中的文本。";
 
-  static String m21(index) => "请选择要为第 ${index} 条消息设置的采样和惩罚参数";
+  static String m21(value) => "Penalty Decay: ${value}";
 
-  static String m22(value) => "Presence Penalty: ${value}";
+  static String m22(index) => "请选择要为第 ${index} 条消息设置的采样和惩罚参数";
 
-  static String m23(count) => "排队中: ${count}";
+  static String m23(value) => "Presence Penalty: ${value}";
 
-  static String m24(count) => "已选择 ${count}";
+  static String m24(count) => "排队中: ${count}";
 
-  static String m25(text) => "源文本: ${text}";
+  static String m25(count) => "已选择 ${count}";
 
-  static String m26(text) => "目标文本: ${text}";
+  static String m26(text) => "源文本: ${text}";
 
-  static String m27(value) => "Temperature: ${value}";
+  static String m27(text) => "目标文本: ${text}";
 
-  static String m28(footer) => "推理${footer}: 英";
+  static String m28(value) => "Temperature: ${value}";
 
-  static String m29(footer) => "推理${footer}: 英长";
+  static String m29(footer) => "推理${footer}: 英";
 
-  static String m30(footer) => "推理${footer}: 英短";
+  static String m30(footer) => "推理${footer}: 英长";
 
-  static String m31(footer) => "推理${footer}: 快";
+  static String m31(footer) => "推理${footer}: 英短";
 
-  static String m32(footer) => "推理${footer}: 中";
+  static String m32(footer) => "推理${footer}: 快";
 
-  static String m33(footer) => "推理${footer}: 高";
+  static String m33(footer) => "推理${footer}: 中";
 
-  static String m34(footer) => "推理${footer}: 关";
+  static String m34(footer) => "推理${footer}: 高";
 
-  static String m35(value) => "Top P: ${value}";
+  static String m35(footer) => "推理${footer}: 关";
 
-  static String m36(count) => "总测试项: ${count}";
+  static String m36(value) => "Top P: ${value}";
 
-  static String m37(port) => "WebSocket 服务 (端口: ${port})";
+  static String m37(count) => "总测试项: ${count}";
 
-  static String m38(id) => "窗口 ${id}";
+  static String m38(port) => "WebSocket 服务 (端口: ${port})";
 
-  static String m39(count) => "${count} 个标签页";
+  static String m39(id) => "窗口 ${id}";
 
-  static String m40(modelName) => "您当前正在使用 ${modelName}";
+  static String m40(count) => "${count} 个标签页";
+
+  static String m41(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -349,6 +351,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "expert": MessageLookupByLibrary.simpleMessage("专家模式"),
     "explore_rwkv": MessageLookupByLibrary.simpleMessage("探索RWKV"),
     "exploring": MessageLookupByLibrary.simpleMessage("探索中..."),
+    "export_all_weight_files": MessageLookupByLibrary.simpleMessage("导出全部权重文件"),
+    "export_all_weight_files_description": MessageLookupByLibrary.simpleMessage(
+      "所有已下载的权重文件将作为单独文件导出到所选目录。同名文件将被跳过。",
+    ),
     "export_conversation_failed": MessageLookupByLibrary.simpleMessage(
       "导出会话失败",
     ),
@@ -356,7 +362,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "导出会话为 .txt 文件",
     ),
     "export_data": MessageLookupByLibrary.simpleMessage("导出数据"),
+    "export_failed": MessageLookupByLibrary.simpleMessage("导出失败"),
+    "export_success": MessageLookupByLibrary.simpleMessage("导出成功"),
     "export_title": MessageLookupByLibrary.simpleMessage("会话标题:"),
+    "export_weight_file": MessageLookupByLibrary.simpleMessage("导出权重文件"),
     "extra_large": MessageLookupByLibrary.simpleMessage("特大 (130%)"),
     "feedback": MessageLookupByLibrary.simpleMessage("反馈问题"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("文件已存在"),
@@ -365,6 +374,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "当前文件尚未支持，请检查文件名是否正确",
     ),
     "file_path_not_found": MessageLookupByLibrary.simpleMessage("文件路径未找到"),
+    "files": MessageLookupByLibrary.simpleMessage("个文件"),
     "filter": MessageLookupByLibrary.simpleMessage(
       "你好，这个问题我暂时无法回答，让我们换个话题再聊聊吧。",
     ),
@@ -395,6 +405,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "generating": MessageLookupByLibrary.simpleMessage("生成中..."),
     "github_repository": MessageLookupByLibrary.simpleMessage("Github 仓库"),
+    "go_to_home_page": MessageLookupByLibrary.simpleMessage("前往首页"),
     "go_to_settings": MessageLookupByLibrary.simpleMessage("去设置"),
     "got_it": MessageLookupByLibrary.simpleMessage("我知道了"),
     "hello_ask_me_anything": MessageLookupByLibrary.simpleMessage(
@@ -419,6 +430,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "imitate": m14,
     "imitate_fle": m15,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
+    "import_all_weight_files": MessageLookupByLibrary.simpleMessage("导入全部权重文件"),
+    "import_all_weight_files_description": MessageLookupByLibrary.simpleMessage(
+      "选择从此应用导出的 ZIP 文件。ZIP 文件中的所有权重文件将被导入。如果文件名相同，现有文件将被覆盖。",
+    ),
+    "import_all_weight_files_success": m16,
     "import_failed": MessageLookupByLibrary.simpleMessage("导入失败"),
     "import_success": MessageLookupByLibrary.simpleMessage("导入成功"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage("导入权重文件"),
@@ -435,6 +451,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invalid_puzzle": MessageLookupByLibrary.simpleMessage("无效数独"),
     "invalid_value": MessageLookupByLibrary.simpleMessage("无效值"),
+    "invalid_zip_file": MessageLookupByLibrary.simpleMessage(
+      "无效的 ZIP 文件或文件格式无法识别",
+    ),
     "its_your_turn": MessageLookupByLibrary.simpleMessage("轮到你了~"),
     "join_our_discord_server": MessageLookupByLibrary.simpleMessage(
       "加入我们的 Discord 服务器",
@@ -457,12 +476,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "loaded": MessageLookupByLibrary.simpleMessage("已加载"),
     "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m16,
+    "memory_used": m17,
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
     "mode": MessageLookupByLibrary.simpleMessage("模式"),
     "model": MessageLookupByLibrary.simpleMessage("模型"),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
-    "model_output": m17,
+    "model_output": m18,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage("模型大小增加，请打开一个新的对话, 以提升对话质量"),
@@ -489,15 +508,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_conversation_yet": MessageLookupByLibrary.simpleMessage("目前还没有对话"),
     "no_conversations_yet": MessageLookupByLibrary.simpleMessage("暂时还没有任何对话"),
     "no_data": MessageLookupByLibrary.simpleMessage("无数据"),
+    "no_files_in_zip": MessageLookupByLibrary.simpleMessage(
+      "ZIP 文件中未找到有效的权重文件",
+    ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("没有消息可导出"),
     "no_model_selected": MessageLookupByLibrary.simpleMessage("未选择模型"),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("没有数独"),
+    "no_weight_files_guide_message": MessageLookupByLibrary.simpleMessage(
+      "您还没有下载任何权重文件。前往首页下载并体验应用。",
+    ),
+    "no_weight_files_guide_title": MessageLookupByLibrary.simpleMessage(
+      "暂无权重文件",
+    ),
+    "no_weight_files_to_export": MessageLookupByLibrary.simpleMessage(
+      "没有可导出的权重文件",
+    ),
     "not_all_the_same": MessageLookupByLibrary.simpleMessage("不完全相同"),
     "not_syncing": MessageLookupByLibrary.simpleMessage("未同步"),
-    "npu_not_supported_title": m18,
+    "npu_not_supported_title": m19,
     "number": MessageLookupByLibrary.simpleMessage("数字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
-    "ocr_guide_text": m19,
+    "ocr_guide_text": m20,
     "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("关闭"),
     "offline_translator": MessageLookupByLibrary.simpleMessage("离线翻译"),
@@ -529,7 +560,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。",
     ),
     "pause": MessageLookupByLibrary.simpleMessage("暂停"),
-    "penalty_decay_with_value": m20,
+    "penalty_decay_with_value": m21,
     "performance_test": MessageLookupByLibrary.simpleMessage("性能测试"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
       "测试速度和准确率",
@@ -575,7 +606,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "请选择难度",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m21,
+        m22,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage("请选择要为所有消息设置的采样和惩罚参数"),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
@@ -594,12 +625,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
     "prefill": MessageLookupByLibrary.simpleMessage("预填"),
-    "presence_penalty_with_value": m22,
+    "presence_penalty_with_value": m23,
     "prompt": MessageLookupByLibrary.simpleMessage("提示词"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 模板"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
-    "queued_x": m23,
+    "queued_x": m24,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已经开启"),
     "reached_bottom": MessageLookupByLibrary.simpleMessage("敬请期待"),
@@ -644,7 +675,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_new_image": MessageLookupByLibrary.simpleMessage("选择新图像"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage("请从下方选择预设参数，或点击“自定义”进行手动配置"),
-    "selected_count": m24,
+    "selected_count": m25,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("发送消息给 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("服务器错误"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("会话配置"),
@@ -668,7 +699,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("源代码"),
-    "source_text": m25,
+    "source_text": m26,
     "speed": MessageLookupByLibrary.simpleMessage("下载速度："),
     "start": MessageLookupByLibrary.simpleMessage("开始"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("开始新聊天"),
@@ -723,9 +754,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_day_of_week": MessageLookupByLibrary.simpleMessage("星期"),
     "tag_time": MessageLookupByLibrary.simpleMessage("时间"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
-    "target_text": m26,
+    "target_text": m27,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技术研发群"),
-    "temperature_with_value": m27,
+    "temperature_with_value": m28,
     "test_data": MessageLookupByLibrary.simpleMessage("测试数据"),
     "test_result": MessageLookupByLibrary.simpleMessage("测试结果"),
     "test_results": MessageLookupByLibrary.simpleMessage("测试结果"),
@@ -738,10 +769,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
-    "think_button_mode_en": m28,
-    "think_button_mode_en_long": m29,
-    "think_button_mode_en_short": m30,
-    "think_button_mode_fast": m31,
+    "think_button_mode_en": m29,
+    "think_button_mode_en_long": m30,
+    "think_button_mode_en_short": m31,
+    "think_button_mode_fast": m32,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式会影响模型在推理时的表现",
     ),
@@ -750,18 +781,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
-    "thinking_mode_auto": m32,
-    "thinking_mode_high": m33,
-    "thinking_mode_off": m34,
+    "thinking_mode_auto": m33,
+    "thinking_mode_high": m34,
+    "thinking_mode_off": m35,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage("这个模型不支持并行推理, 请选择带有 batch 标签的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考结果"),
-    "top_p_with_value": m35,
+    "top_p_with_value": m36,
     "total_count": MessageLookupByLibrary.simpleMessage("总数"),
-    "total_test_items": m36,
+    "total_test_items": m37,
     "translate": MessageLookupByLibrary.simpleMessage("翻译"),
     "translating": MessageLookupByLibrary.simpleMessage("翻译中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻译结果"),
@@ -787,7 +818,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "voice_cloning": MessageLookupByLibrary.simpleMessage("声音克隆"),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
-    "websocket_service_port": m37,
+    "websocket_service_port": m38,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("权重文件管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "权重文件保存目录",
@@ -799,12 +830,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
-    "window_id": m38,
+    "window_id": m39,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m39,
-    "you_are_now_using": m40,
+    "x_tabs": m40,
+    "you_are_now_using": m41,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

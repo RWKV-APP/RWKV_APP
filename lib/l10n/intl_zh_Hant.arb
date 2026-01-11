@@ -559,5 +559,27 @@
   "file_not_supported": "目前檔案尚未支援，請檢查檔案名稱是否正確",
   "file_already_exists": "檔案已存在",
   "overwrite_file_confirmation": "檔案已存在，是否要覆蓋？",
-  "overwrite": "覆蓋"
+  "overwrite": "覆蓋",
+  "export_weight_file": "匯出權重檔案",
+  "export_all_weight_files": "匯出全部權重檔案",
+  "export_success": "匯出成功",
+  "export_failed": "匯出失敗",
+  "files": "個檔案",
+  "no_weight_files_to_export": "沒有可匯出的權重檔案",
+  "export_all_weight_files_description": "所有已下載的權重檔案將作為單獨檔案匯出到所選目錄。同名檔案將被跳過。",
+  "no_weight_files_guide_title": "暫無權重檔案",
+  "no_weight_files_guide_message": "您還沒有下載任何權重檔案。前往首頁下載並體驗應用。",
+  "go_to_home_page": "前往首頁",
+  "import_all_weight_files": "匯入全部權重檔案",
+  "import_all_weight_files_description": "選擇從此應用匯出的 ZIP 檔案。ZIP 檔案中的所有權重檔案將被匯入。如果檔案名稱相同，現有檔案將被覆蓋。",
+  "import_all_weight_files_success": "匯入成功：已匯入 {count} 個檔案",
+  "@import_all_weight_files_success": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invalid_zip_file": "無效的 ZIP 檔案或檔案格式無法識別",
+  "no_files_in_zip": "ZIP 檔案中未找到有效的權重檔案"
 }

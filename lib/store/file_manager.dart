@@ -613,6 +613,380 @@ extension $FileManager on _FileManager {
       rethrow;
     }
   }
+
+  /// Import all weight files from a ZIP file
+  /// Returns the number of files successfully imported
+  Future<int> importAllWeightFiles({
+    required File zipFile,
+    void Function(String currentFile, int completed, int total)? onProgress,
+  }) async {
+    qq;
+
+    // Read and decode ZIP file
+    final zipBytes = await zipFile.readAsBytes();
+    final archive = ZipDecoder().decodeBytes(zipBytes);
+
+    if (archive.isEmpty) {
+      throw Exception("ZIP file is empty");
+    }
+
+    // Get all file infos from config
+    final config = P.app._config.q;
+    if (config == null) {
+      throw Exception("Configuration not loaded");
+    }
+
+    final allFileInfos = <FileInfo>{};
+    for (final demoType in ['chat', 'tts', 'world', 'sudoku', 'othello', 'roleplay', 'albatross']) {
+      final demoConfig = config[demoType];
+      if (demoConfig is Map && demoConfig['model_config'] is List) {
+        final modelConfigs = HF.listJSON(demoConfig['model_config']);
+        for (final modelConfig in modelConfigs) {
+          try {
+            final fileInfo = FileInfo.fromJSON(modelConfig);
+            allFileInfos.add(fileInfo);
+          } catch (e) {
+            qqe("Failed to parse file info from config: $e");
+          }
+        }
+      }
+    }
+
+    // Find files in ZIP that match config
+    final filesToImport = <ArchiveFile>[];
+    for (final file in archive) {
+      if (!file.isFile) continue;
+      final fileName = path.basename(file.name);
+      final matchingFileInfo = allFileInfos.where((info) => info.fileName == fileName).firstOrNull;
+      if (matchingFileInfo != null) {
+        filesToImport.add(file);
+      }
+    }
+
+    if (filesToImport.isEmpty) {
+      throw Exception("No valid weight files found in ZIP");
+    }
+
+    final total = filesToImport.length;
+    int completed = 0;
+    int successCount = 0;
+
+    // Import each file
+    for (final archiveFile in filesToImport) {
+      final fileName = path.basename(archiveFile.name);
+      if (onProgress != null) {
+        onProgress(fileName, completed, total);
+      }
+
+      try {
+        // Find matching file info
+        final matchingFileInfo = allFileInfos.firstWhere((info) => info.fileName == fileName);
+
+        // Get target path
+        final targetPath = _paths(matchingFileInfo).q;
+        final targetFile = File(targetPath);
+
+        // Delete existing file if it exists (overwrite)
+        if (await targetFile.exists()) {
+          try {
+            await targetFile.delete();
+            qqq("Deleted existing file for overwrite: $targetPath");
+          } catch (e) {
+            qqe("Failed to delete existing file: $e");
+            completed++;
+            continue;
+          }
+        }
+
+        // Ensure target directory exists
+        final targetDir = Directory(path.dirname(targetPath));
+        if (!await targetDir.exists()) {
+          await targetDir.create(recursive: true);
+        }
+
+        // Extract file from archive
+        final fileBytes = archiveFile.content;
+        await targetFile.writeAsBytes(fileBytes);
+        qqq("Successfully imported file: $fileName to $targetPath");
+
+        // Verify file size if available
+        if (matchingFileInfo.fileSize > 0) {
+          final copiedFileSize = await targetFile.length();
+          if (copiedFileSize != matchingFileInfo.fileSize) {
+            qqw("File size mismatch: expected ${matchingFileInfo.fileSize}, got $copiedFileSize");
+            // In non-debug mode, delete the file if size doesn't match
+            if (!kDebugMode) {
+              await targetFile.delete();
+              completed++;
+              continue;
+            }
+          }
+        }
+
+        // Update local file status
+        final state = locals(matchingFileInfo);
+        state.q = state.q.copyWith(
+          hasFile: true,
+          state: TaskState.completed,
+          progress: 1.0,
+        );
+
+        successCount++;
+      } catch (e) {
+        qqe("Failed to import $fileName: $e");
+      }
+
+      completed++;
+    }
+
+    if (onProgress != null) {
+      onProgress("", completed, total);
+    }
+
+    qqq("Import completed: $successCount/$total files imported");
+    return successCount;
+  }
+
+  /// Export a single weight file to a user-selected directory
+  /// Returns true if export was successful, false otherwise
+  Future<bool> exportWeightFile({
+    required FileInfo fileInfo,
+    required String targetDirectory,
+  }) async {
+    qq;
+
+    final sourcePath = _paths(fileInfo).q;
+    final sourceFile = File(sourcePath);
+
+    if (!await sourceFile.exists()) {
+      qqe("Source file does not exist: $sourcePath");
+      throw Exception("Source file does not exist");
+    }
+
+    final targetFile = File("$targetDirectory/${fileInfo.fileName}");
+
+    // Check if target file already exists
+    if (await targetFile.exists()) {
+      qqw("Target file already exists: ${targetFile.path}");
+      throw Exception("Target file already exists");
+    }
+
+    // Ensure target directory exists
+    final targetDir = Directory(targetDirectory);
+    if (!await targetDir.exists()) {
+      try {
+        await targetDir.create(recursive: true);
+      } catch (e) {
+        qqe("Failed to create target directory: $e");
+        throw Exception("Failed to create target directory");
+      }
+    }
+
+    // On iOS, try to access security-scoped resource if needed
+    bool? securityScopedAccessGranted;
+    if (Platform.isIOS) {
+      try {
+        securityScopedAccessGranted = await P.adapter.call<bool>(
+          ToNative.startAccessingSecurityScopedResource,
+          targetDirectory,
+        );
+        if (securityScopedAccessGranted == true) {
+          qqq("Successfully accessed security-scoped resource: $targetDirectory");
+        }
+      } catch (e) {
+        qqw("Failed to access security-scoped resource: $e");
+      }
+    }
+
+    try {
+      // Try direct copy first (faster for large files)
+      try {
+        await sourceFile.copy(targetFile.path);
+        qqq("Successfully exported file: ${fileInfo.fileName} to ${targetFile.path}");
+        return true;
+      } catch (copyError) {
+        // If direct copy fails (e.g., iOS permission issue), read and write bytes
+        qqw("Direct copy failed, trying read-write method: $copyError");
+        try {
+          final fileBytes = await sourceFile.readAsBytes();
+          await targetFile.writeAsBytes(fileBytes);
+          qqq("Successfully exported file (via bytes): ${fileInfo.fileName} to ${targetFile.path}");
+          return true;
+        } catch (writeError) {
+          // If both methods fail, check if it's an iOS permission issue
+          final errorStr = writeError.toString();
+          if (Platform.isIOS && (errorStr.contains("Operation not permitted") || errorStr.contains("errno: 1"))) {
+            qqe("iOS permission error: Cannot access selected directory. The selected directory may require special permissions.");
+            throw Exception(
+              "Permission denied: The selected directory cannot be accessed. Please try selecting a different location, such as Files app or iCloud Drive.",
+            );
+          }
+          rethrow;
+        }
+      }
+    } catch (e) {
+      qqe("Failed to export file: $e");
+      // Clean up if file was partially written
+      if (await targetFile.exists()) {
+        try {
+          await targetFile.delete();
+        } catch (deleteError) {
+          qqe("Failed to delete partially written file: $deleteError");
+        }
+      }
+      rethrow;
+    } finally {
+      // On iOS, stop accessing security-scoped resource
+      if (Platform.isIOS && securityScopedAccessGranted == true) {
+        try {
+          await P.adapter.call(ToNative.stopAccessingSecurityScopedResource, targetDirectory);
+          qqq("Stopped accessing security-scoped resource: $targetDirectory");
+        } catch (e) {
+          qqw("Failed to stop accessing security-scoped resource: $e");
+        }
+      }
+    }
+  }
+
+  /// Export all weight files to user-selected directory (individual files, not zipped)
+  /// Only exports files that exist locally
+  /// Returns the target directory path
+  Future<String> exportAllWeightFiles({
+    required String targetDirectory,
+    void Function(String currentFile, int completed, int total)? onProgress,
+  }) async {
+    qq;
+
+    // Get all weight files that exist locally
+    final allWeights = [
+      ...chatWeights.q,
+      ...roleplayWeights.q,
+      ...ttsWeights.q,
+      ...seeWeights.q,
+      ...sudokuWeights.q,
+      ...othelloWeights.q,
+    ];
+
+    final filesToExport = <FileInfo>[];
+    for (final fileInfo in allWeights) {
+      final local = locals(fileInfo).q;
+      if (local.hasFile) {
+        filesToExport.add(fileInfo);
+      }
+    }
+
+    if (filesToExport.isEmpty) {
+      throw Exception("No files to export");
+    }
+
+    final total = filesToExport.length;
+    int completed = 0;
+    int successCount = 0;
+
+    // Ensure target directory exists
+    final targetDir = Directory(targetDirectory);
+    if (!await targetDir.exists()) {
+      try {
+        await targetDir.create(recursive: true);
+      } catch (e) {
+        qqe("Failed to create target directory: $e");
+        throw Exception("Failed to create target directory");
+      }
+    }
+
+    // On iOS, try to access security-scoped resource if needed
+    bool? securityScopedAccessGranted;
+    if (Platform.isIOS) {
+      try {
+        securityScopedAccessGranted = await P.adapter.call<bool>(
+          ToNative.startAccessingSecurityScopedResource,
+          targetDirectory,
+        );
+        if (securityScopedAccessGranted == true) {
+          qqq("Successfully accessed security-scoped resource: $targetDirectory");
+        }
+      } catch (e) {
+        qqw("Failed to access security-scoped resource: $e");
+      }
+    }
+
+    try {
+      for (final fileInfo in filesToExport) {
+        if (onProgress != null) {
+          onProgress(fileInfo.fileName, completed, total);
+        }
+
+        try {
+          final sourcePath = _paths(fileInfo).q;
+          final sourceFile = File(sourcePath);
+
+          if (!await sourceFile.exists()) {
+            qqw("Source file does not exist, skipping: $sourcePath");
+            completed++;
+            continue;
+          }
+
+          final targetFile = File("$targetDirectory/${fileInfo.fileName}");
+
+          // Check if target file already exists
+          if (await targetFile.exists()) {
+            qqw("Target file already exists, skipping: ${fileInfo.fileName}");
+            completed++;
+            continue;
+          }
+
+          // Try direct copy first (faster for large files)
+          try {
+            await sourceFile.copy(targetFile.path);
+            qqq("Exported: ${fileInfo.fileName}");
+            successCount++;
+          } catch (copyError) {
+            // If direct copy fails (e.g., iOS permission issue), read and write bytes
+            qqw("Direct copy failed, trying read-write method: $copyError");
+            try {
+              final fileBytes = await sourceFile.readAsBytes();
+              await targetFile.writeAsBytes(fileBytes);
+              qqq("Exported (via bytes): ${fileInfo.fileName}");
+              successCount++;
+            } catch (writeError) {
+              qqe("Failed to export ${fileInfo.fileName}: $writeError");
+            }
+          }
+
+          completed++;
+        } catch (e) {
+          qqe("Failed to export ${fileInfo.fileName}: $e");
+          completed++;
+        }
+      }
+
+      if (onProgress != null) {
+        onProgress("", completed, total);
+      }
+
+      qqq("Export completed: $successCount/$total files exported to $targetDirectory");
+      return targetDirectory;
+    } catch (e) {
+      final errorStr = e.toString();
+      if (Platform.isIOS && (errorStr.contains("Operation not permitted") || errorStr.contains("errno: 1"))) {
+        qqe("iOS permission error: Cannot access selected directory. The selected directory may require special permissions.");
+        throw Exception(
+          "Permission denied: The selected directory cannot be accessed. Please try selecting a different location, such as Files app or iCloud Drive.",
+        );
+      }
+      rethrow;
+    } finally {
+      // On iOS, stop accessing security-scoped resource
+      if (Platform.isIOS && securityScopedAccessGranted == true) {
+        try {
+          await P.adapter.call(ToNative.stopAccessingSecurityScopedResource, targetDirectory);
+          qqq("Stopped accessing security-scoped resource: $targetDirectory");
+        } catch (e) {
+          qqw("Failed to stop accessing security-scoped resource: $e");
+        }
+      }
+    }
+  }
 }
 
 /// Private methods

@@ -3,6 +3,8 @@ import UIKit
 
 enum FromFlutter: String {
   case checkMemory
+  case startAccessingSecurityScopedResource
+  case stopAccessingSecurityScopedResource
 }
 
 @main
@@ -40,6 +42,22 @@ enum FromFlutter: String {
         result([mem_used, mem_free])
       } catch {
         result(FlutterError(code: "-1", message: "Failed to check memory", details: error))
+      }
+    case .startAccessingSecurityScopedResource:
+      if let path = arguments as? String {
+        let url = URL(fileURLWithPath: path)
+        let success = url.startAccessingSecurityScopedResource()
+        result(success)
+      } else {
+        result(FlutterError(code: "INVALID_ARGUMENT", message: "Path is required", details: nil))
+      }
+    case .stopAccessingSecurityScopedResource:
+      if let path = arguments as? String {
+        let url = URL(fileURLWithPath: path)
+        url.stopAccessingSecurityScopedResource()
+        result(true)
+      } else {
+        result(FlutterError(code: "INVALID_ARGUMENT", message: "Path is required", details: nil))
       }
     default: result(FlutterMethodNotImplemented)
     }

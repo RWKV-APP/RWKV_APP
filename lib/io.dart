@@ -4,4 +4,6 @@ enum FromNative {
 
 enum ToNative {
   checkMemory,
+  startAccessingSecurityScopedResource,
+  stopAccessingSecurityScopedResource,
 }

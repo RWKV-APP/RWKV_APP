@@ -13,6 +13,8 @@ import 'package:path/path.dart' as path;
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 
 class PageWeightManager extends ConsumerWidget {
@@ -23,18 +25,25 @@ class PageWeightManager extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.current.weights_mangement),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextButton.icon(
+      ),
+      body: const _Body(),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton.icon(
+              onPressed: () => _exportAllWeightFiles(context, ref),
+              icon: const Icon(Icons.share),
+              label: Text(S.current.export_all_weight_files),
+            ),
+            TextButton.icon(
               onPressed: () => _importWeightFile(context, ref),
               icon: const Icon(Icons.add),
               label: Text(S.current.import_weight_file),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-      body: const _Body(),
     );
   }
 
@@ -72,6 +81,7 @@ class PageWeightManager extends ConsumerWidget {
         fileBytes = pickedFile.bytes;
       }
 
+      // Single file import logic
       // Check if file exists in config and at target location
       FileInfo? existingFileInfo;
       try {
@@ -145,6 +155,122 @@ class PageWeightManager extends ConsumerWidget {
         }
       }
     }
+  }
+
+  Future<void> _exportAllWeightFiles(BuildContext context, WidgetRef ref) async {
+    try {
+      final s = S.of(context);
+
+      // Check if there are any files to export
+      final allWeights = [
+        ...ref.read(P.fileManager.chatWeights),
+        ...ref.read(P.fileManager.roleplayWeights),
+        ...ref.read(P.fileManager.ttsWeights),
+        ...ref.read(P.fileManager.seeWeights),
+        ...ref.read(P.fileManager.sudokuWeights),
+        ...ref.read(P.fileManager.othelloWeights),
+      ];
+
+      final filesToExport = allWeights.where((fileInfo) {
+        final local = ref.read(P.fileManager.locals(fileInfo));
+        return local.hasFile;
+      }).toList();
+
+      if (filesToExport.isEmpty) {
+        Alert.warning(s.no_weight_files_to_export);
+        return;
+      }
+
+      // Show confirmation dialog explaining what will happen
+      final confirmResult = await showOkCancelAlertDialog(
+        context: context,
+        title: s.export_all_weight_files,
+        message: s.export_all_weight_files_description,
+        okLabel: s.export_all_weight_files,
+        cancelLabel: s.cancel,
+      );
+
+      if (confirmResult != OkCancelResult.ok) {
+        return; // User cancelled
+      }
+
+      // Select target directory
+      final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+      if (targetDirectory == null) {
+        return; // User cancelled
+      }
+
+      // Show progress dialog
+      final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, 0));
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => _ExportProgressDialog(progressNotifier: progressNotifier),
+        );
+      }
+
+      // Export all files
+      try {
+        final exportDirectory = await P.fileManager.exportAllWeightFiles(
+          targetDirectory: targetDirectory,
+          onProgress: (currentFile, completed, total) {
+            progressNotifier.value = (currentFile, completed, total);
+          },
+        );
+
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close progress dialog
+          Alert.success("${S.current.export_success}\n\nDirectory: $exportDirectory");
+        }
+      } catch (e) {
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close progress dialog
+          Alert.error("${S.current.export_failed}: $e");
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Alert.error("${S.current.export_failed}: $e");
+      }
+    }
+  }
+}
+
+class _ExportProgressDialog extends StatelessWidget {
+  final ValueNotifier<(String, int, int)> progressNotifier;
+
+  const _ExportProgressDialog({required this.progressNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: ValueListenableBuilder<(String, int, int)>(
+        valueListenable: progressNotifier,
+        builder: (context, value, _) {
+          final (currentFile, completed, total) = value;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              if (currentFile.isNotEmpty)
+                Text(
+                  currentFile,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              if (total > 0)
+                Text(
+                  "$completed / $total",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -318,6 +444,17 @@ class _WeightList extends ConsumerWidget {
       ...othelloWeights,
     ];
 
+    // Check if there are any downloaded files
+    final hasDownloadedFiles = allWeights.any((fileInfo) {
+      final local = ref.watch(P.fileManager.locals(fileInfo));
+      return local.hasFile;
+    });
+
+    // Show empty state if no downloaded files
+    if (!hasDownloadedFiles) {
+      return const _EmptyStateGuide();
+    }
+
     return Column(
       children: [
         _TotalUsageTile(allWeights: allWeights),
@@ -432,6 +569,52 @@ class _WeightItem extends ConsumerWidget {
   final FileInfo fileInfo;
   const _WeightItem({required this.fileInfo});
 
+  Future<void> _exportWeightFile(BuildContext context, WidgetRef ref) async {
+    try {
+      // Select target directory
+      final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+      if (targetDirectory == null) {
+        return; // User cancelled
+      }
+
+      // Show loading dialog
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      // Export the file
+      try {
+        await P.fileManager.exportWeightFile(
+          fileInfo: fileInfo,
+          targetDirectory: targetDirectory,
+        );
+
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close loading dialog
+          Alert.success(S.current.export_success);
+        }
+      } catch (e) {
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close loading dialog
+          final errorMessage = e.toString();
+          if (errorMessage.contains("already exists")) {
+            Alert.error(S.current.file_already_exists);
+          } else {
+            Alert.error("${S.current.export_failed}: $e");
+          }
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Alert.error("${S.current.export_failed}: $e");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final local = ref.watch(P.fileManager.locals(fileInfo));
@@ -456,20 +639,30 @@ class _WeightItem extends ConsumerWidget {
           Text(local.targetPath.split("/").last),
         ],
       ),
-      trailing: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () async {
-          final result = await showOkCancelAlertDialog(
-            context: context,
-            title: S.current.delete,
-            message: "${S.current.are_you_sure_you_want_to_delete_this_model} (${fileInfo.name})",
-            okLabel: S.current.delete,
-            isDestructiveAction: true,
-          );
-          if (result == OkCancelResult.ok) {
-            await P.fileManager.deleteFile(fileInfo: fileInfo);
-          }
-        },
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () => _exportWeightFile(context, ref),
+            tooltip: S.current.export_weight_file,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () async {
+              final result = await showOkCancelAlertDialog(
+                context: context,
+                title: S.current.delete,
+                message: "${S.current.are_you_sure_you_want_to_delete_this_model} (${fileInfo.name})",
+                okLabel: S.current.delete,
+                isDestructiveAction: true,
+              );
+              if (result == OkCancelResult.ok) {
+                await P.fileManager.deleteFile(fileInfo: fileInfo);
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -683,5 +876,49 @@ class _OtherFileItem extends ConsumerWidget {
     const suffixes = ["B", "KB", "MB", "GB", "TB"];
     var i = (log(bytes) / log(1024)).floor();
     return ((bytes / pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
+  }
+}
+
+class _EmptyStateGuide extends ConsumerWidget {
+  const _EmptyStateGuide();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    return Center(
+      child: Padding(
+        padding: const .all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.folder_open,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary.q(.5),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              s.no_weight_files_guide_title,
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              s.no_weight_files_guide_message,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            FilledButton.icon(
+              onPressed: () {
+                go(PageKey.home);
+              },
+              icon: const Icon(Icons.home),
+              label: Text(s.go_to_home_page),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
