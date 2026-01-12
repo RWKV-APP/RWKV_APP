@@ -169,33 +169,51 @@ abstract class P {
 
   static Future<void> _unorderedInit() async {
     await Future.wait([
-      _safeInit(() => rwkv._init()),
-      _safeInit(() => chat._init()),
-      _safeInit(() => othello._init()),
-      _safeInit(() => fileManager._init()),
-      _safeInit(() => device._init()),
-      _safeInit(() => adapter._init()),
-      _safeInit(() => see._init()),
-      _safeInit(() => conversation._init()),
-      _safeInit(() => talk._init()),
-      _safeInit(() => guard._init()),
-      _safeInit(() => sudoku._init()),
-      _safeInit(() => suggestion._init()),
-      _safeInit(() => dump._init()),
-      _safeInit(() => msg._init()),
-      _safeInit(() => backend._init()),
-      _safeInit(() => translator._init()),
-      _safeInit(() => lambada._init()),
-      _safeInit(() => ocr._init()),
-      _safeInit(() => mdRender._init()),
+      _safeInit(() => rwkv._init(), mark: "rwkv"),
+      _safeInit(() => chat._init(), mark: "chat"),
+      _safeInit(() => othello._init(), mark: "othello"),
+      _safeInit(() => fileManager._init(), mark: "fileManager"),
+      _safeInit(() => device._init(), mark: "device"),
+      _safeInit(() => adapter._init(), mark: "adapter"),
+      _safeInit(() => see._init(), mark: "see"),
+      _safeInit(() => conversation._init(), mark: "conversation"),
+      _safeInit(() => talk._init(), mark: "talk"),
+      _safeInit(() => guard._init(), mark: "guard"),
+      _safeInit(() => sudoku._init(), mark: "sudoku"),
+      _safeInit(() => suggestion._init(), mark: "suggestion"),
+      _safeInit(() => dump._init(), mark: "dump"),
+      _safeInit(() => msg._init(), mark: "msg"),
+      _safeInit(() => backend._init(), mark: "backend"),
+      _safeInit(() => translator._init(), mark: "translator"),
+      _safeInit(() => lambada._init(), mark: "lambada"),
+      _safeInit(() => ocr._init(), mark: "ocr"),
+      _safeInit(() => mdRender._init(), mark: "mdRender"),
     ]);
   }
 
-  static Future<void> _safeInit(Future<void> Function() initFunc) async {
+  static Future<void> _safeInit(Future<void> Function() initFunc, {String? mark}) async {
+    final name = mark;
+    var isCompleted = false;
+    var hasWarned = false;
+
+    const check = 2000;
+    const timeout = 4000;
+
+    // 启动超时检测
+    Future.delayed(const Duration(milliseconds: check), () {
+      if (!isCompleted && !hasWarned) {
+        hasWarned = true;
+        qqe('Warning: $name initialization is taking longer than ${check}ms');
+      }
+    });
+
     try {
-      await initFunc();
+      await initFunc().timeout(const Duration(milliseconds: timeout));
+      isCompleted = true;
+    } on TimeoutException {
+      qqe('Error: $name initialization timed out after ${timeout}ms');
     } catch (e) {
-      final name = initFunc.runtimeType.toString();
+      isCompleted = true;
       qqe('Error initializing $name: $e');
     }
   }
