@@ -14,7 +14,7 @@ class _FileManager {
   // StateProvider
   // ===========================================================================
 
-  late final downloadSource = qs(P.preference.currentLangIsZh.q ? FileDownloadSource.hfmirror : FileDownloadSource.huggingface);
+  late final downloadSource = qs<FileDownloadSource>(P.preference.currentLangIsZh.q ? .aifasthub : .huggingface);
   late final modelSelectorShown = qs(false);
 
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
@@ -233,6 +233,7 @@ extension $FileManager on _FileManager {
         qqw("fileNameExistsInConfig: $fileNameExistsInConfig");
         if (!fileNameExistsInConfig) {
           qqw("fileName: ${entity.path.split('/').last}");
+          qqw("All config file names: ${getAllConfigFileNames().join("\n")}");
         }
         qqw("needToCheckBecauseTheFileIsBigEnough: $needToCheckBecauseTheFileIsBigEnough");
       }
