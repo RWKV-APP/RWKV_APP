@@ -5,6 +5,7 @@ import 'package:zone/model/file_info.dart';
 
 @immutable
 class LocalFile extends Equatable {
+  /// from 0 to 100
   final double progress;
   final double networkSpeed;
   final Duration timeRemaining;
@@ -32,17 +33,10 @@ class LocalFile extends Equatable {
     String? targetPath,
     bool? hasFile,
   }) {
-    if (progress != null) {
-      if (progress.isNaN) {
-        progress = 0.0;
-      } else if (progress.isInfinite) {
-        progress = 1.0;
-      } else if (progress < 0) {
-        progress = 0.0;
-      } else if (progress > 1) {
-        progress = 1.0;
-      }
-    }
+    progress = _shouldBeCorrect(progress);
+    if (progress != null) progress = progress.clamp(0.0, 100.0);
+
+    networkSpeed = _shouldBeCorrect(networkSpeed);
 
     return LocalFile(
       progress: progress ?? this.progress,
@@ -63,4 +57,25 @@ class LocalFile extends Equatable {
     targetPath,
     hasFile,
   ];
+}
+
+double? _shouldBeCorrect(double? value) {
+  if (value == null) {
+    return null;
+  }
+  if (value.isNaN) {
+    return 0.0;
+  }
+  //
+  else if (value.isInfinite) {
+    return 0.0;
+  }
+  //
+  else if (value.isNegative) {
+    return 0.0;
+  }
+  //
+  else {
+    return value;
+  }
 }

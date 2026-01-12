@@ -286,7 +286,8 @@ extension $FileManager on _FileManager {
           },
         );
 
-    state.q = state.q.copyWith(progress: 0, state: TaskState.running);
+    // 开始下载时，重置进度并确保 hasFile 为 false（避免进度计算错误）
+    state.q = state.q.copyWith(progress: 0, state: TaskState.running, hasFile: false);
 
     try {
       await task.start();

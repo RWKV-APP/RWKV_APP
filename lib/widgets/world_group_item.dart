@@ -1,30 +1,39 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/rwkv.dart';
+import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/world_type.dart';
-import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
+import 'package:sprintf/sprintf.dart';
 
-class WorldGroupItem extends ConsumerWidget {
+class WorldGroupItem extends ConsumerStatefulWidget {
   final WorldType worldType;
   final (String, String) socPair;
 
   const WorldGroupItem(this.worldType, {super.key, required this.socPair});
 
+  @override
+  ConsumerState<WorldGroupItem> createState() => _WorldGroupItemState();
+}
+
+class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
+  bool _expanded = false;
+
   List<FileInfo> get _fileInfos {
-    final worldWeights = P.fileManager.seeWeights.q.where((e) => e.worldType == worldType).where((file) {
-      return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == socPair.$2);
+    final worldWeights = P.fileManager.seeWeights.q.where((e) => e.worldType == widget.worldType).where((file) {
+      return file.isEncoder || file.isAdapter || (!file.isEncoder && file.fileName == widget.socPair.$2);
     }).toList();
     return worldWeights;
   }
@@ -42,36 +51,116 @@ class WorldGroupItem extends ConsumerWidget {
     }
   }
 
+  String _getModelName() {
+    return _fileInfos.firstWhere((e) => e.fileName == widget.socPair.$2).name;
+  }
+
+  int _getTotalSize() {
+    return _fileInfos.fold(0, (sum, file) => sum + file.fileSize);
+  }
+
+  int _getDownloadedSize() {
+    int downloaded = 0;
+    for (var fileInfo in _fileInfos) {
+      final localFile = P.fileManager.locals(fileInfo).q;
+      if (localFile.downloading) {
+        final progress = localFile.progress.clamp(0.0, 100.0) / 100.0;
+        downloaded += (fileInfo.fileSize * progress).round();
+      } else if (localFile.hasFile) {
+        final fileSize = fileInfo.fileSize;
+        downloaded += fileSize;
+      }
+    }
+
+    return downloaded;
+  }
+
+  double _getOverallProgress() {
+    final totalSize = _getTotalSize();
+    if (totalSize == 0) return 0.0;
+    final downloadedSize = _getDownloadedSize();
+    return downloadedSize / totalSize;
+  }
+
+  bool _isDownloading() {
+    for (var fileInfo in _fileInfos) {
+      final localFile = P.fileManager.locals(fileInfo).q;
+      if (localFile.downloading) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  double _getTotalSpeed() {
+    double totalSpeed = 0.0;
+    for (var fileInfo in _fileInfos) {
+      final localFile = P.fileManager.locals(fileInfo).q;
+      if (localFile.downloading && localFile.networkSpeed > 0) {
+        totalSpeed += localFile.networkSpeed;
+      }
+    }
+    return totalSpeed;
+  }
+
+  Duration _getAverageRemaining() {
+    Duration totalRemaining = Duration.zero;
+    int downloadingCount = 0;
+    for (var fileInfo in _fileInfos) {
+      final localFile = P.fileManager.locals(fileInfo).q;
+      if (localFile.downloading && !localFile.timeRemaining.isNegative) {
+        totalRemaining += localFile.timeRemaining;
+        downloadingCount++;
+      }
+    }
+    if (downloadingCount == 0) return Duration.zero;
+    return totalRemaining ~/ downloadingCount; // divide and round down
+  }
+
+  TaskState _getOverallState() {
+    final files = _fileInfos.map((e) => P.fileManager.locals(e).q).toList();
+    final allDownloaded = files.every((e) => e.hasFile);
+    if (allDownloaded) return TaskState.completed;
+
+    final anyRunning = files.any((e) => e.state == TaskState.running);
+    if (anyRunning) return TaskState.running;
+
+    final anyStopped = files.any((e) => e.state == TaskState.stopped);
+    if (anyStopped) return TaskState.stopped;
+
+    return TaskState.idle;
+  }
+
   void _onStartToChatTap() async {
     if (P.rwkv.loading.q) {
       Alert.warning("Please wait for the model to load...");
       return;
     }
     final availableModels = P.fileManager.seeWeights.q;
-    final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
+    final fileInfos = availableModels.where((e) => e.worldType == widget.worldType).toList();
     final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
-    final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == socPair.$2);
+    final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
     final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
     final encoderLocalFile = P.fileManager.locals(encoderFileKey).q;
     final modelLocalFile = P.fileManager.locals(modelFileKey).q;
     final adapterLocalFile = adapterFileKey != null ? P.fileManager.locals(adapterFileKey).q : null;
 
-    P.rwkv.currentWorldType.q = worldType;
+    P.rwkv.currentWorldType.q = widget.worldType;
 
-    qqq("worldType: $worldType");
+    qqq("worldType: ${widget.worldType}");
 
     P.rwkv.clearStates();
     P.chat.clearMessages();
 
     try {
-      switch (worldType) {
+      switch (widget.worldType) {
         case WorldType.reasoningQA:
         case WorldType.ocr:
           await P.rwkv.loadSee(
             modelPath: modelLocalFile.targetPath,
             encoderPath: encoderLocalFile.targetPath,
             backend: modelFileKey.backend!,
-            enableReasoning: worldType.isReasoning,
+            enableReasoning: widget.worldType.isReasoning,
             adapterPath: null,
             fileInfo: modelFileKey,
           );
@@ -81,7 +170,7 @@ class WorldGroupItem extends ConsumerWidget {
             modelPath: modelLocalFile.targetPath,
             encoderPath: encoderLocalFile.targetPath,
             backend: modelFileKey.backend!,
-            enableReasoning: worldType.isReasoning,
+            enableReasoning: widget.worldType.isReasoning,
             adapterPath: adapterLocalFile?.targetPath,
             fileInfo: modelFileKey,
           );
@@ -97,181 +186,206 @@ class WorldGroupItem extends ConsumerWidget {
     }
 
     P.preference.saveLastWorldModel({
-      "worldType": worldType.name,
+      "worldType": widget.worldType.name,
       "modelFileName": modelFileKey.fileName,
     });
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
   }
 
-  void _onContinueTap() async {
-    qq;
-    pop();
+  void _onDownloadTap(BuildContext context) async {
+    await P.preference.tryShowBatteryOptimizationDialog(context);
+    _onDownloadAllTap();
+  }
+
+  void _onCancelTap() async {
+    final result = await showOkCancelAlertDialog(
+      context: getContext()!,
+      title: S.current.cancel_download + "?",
+      okLabel: S.current.cancel,
+      isDestructiveAction: true,
+      cancelLabel: S.current.continue_download,
+    );
+    if (result == OkCancelResult.ok) {
+      for (var fileInfo in _fileInfos) {
+        await P.fileManager.cancelDownload(fileInfo: fileInfo);
+      }
+    }
+  }
+
+  void _onPauseTap() {
+    for (var fileInfo in _fileInfos) {
+      P.fileManager.pauseDownload(fileInfo: fileInfo);
+    }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final s = S.of(context);
     if (_fileInfos.isEmpty) {
-      qqw("fileInfos is empty, worldType: $worldType");
+      qqw("fileInfos is empty, worldType: ${widget.worldType}");
       return const SizedBox.shrink();
     }
 
     final customTheme = ref.watch(P.app.customTheme);
-    final colorScheme = Theme.of(context).colorScheme;
-    final isDark = !customTheme.light;
-
-    // 适配深色和浅色模式的颜色
-    final cardColor = isDark ? const Color(0xFF1E1E1E) : const Color(0xFFFFFFFF);
-    final borderColor = isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE0E0E0);
-    final fileItemBgColor = isDark ? const Color(0xFF252525) : const Color(0xFFF8F9FA);
-    final fileItemBorderColor = isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE8E8E8);
-    final primaryColor = colorScheme.primary;
-    final textColor = isDark ? Colors.white : Colors.black87;
-    final secondaryTextColor = isDark ? Colors.white70 : Colors.black54;
+    final qw = ref.watch(P.app.qw);
+    final qb = ref.watch(P.app.qb);
 
     final files = _fileInfos.m((e) {
       return ref.watch(P.fileManager.locals(e));
     });
 
     final allDownloaded = files.every((e) => e.hasFile);
-    final allMissing = files.every((e) => !e.hasFile);
-    final downloading = files.any((e) => e.downloading);
+    final downloading = _isDownloading();
+    final overallState = _getOverallState();
+    final overallProgress = _getOverallProgress();
+    final totalSize = _getTotalSize();
+    final networkSpeed = _getTotalSpeed();
+    final timeRemaining = _getAverageRemaining();
 
-    final isCurrentModel = P.rwkv.latestModel.q?.fileName == socPair.$2;
-
+    final isCurrentModel = P.rwkv.latestModel.q?.fileName == widget.socPair.$2;
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
-    final alreadyStarted = currentWorldType == worldType && isCurrentModel;
+    final alreadyStarted = currentWorldType == widget.worldType && isCurrentModel;
     final loading = ref.watch(P.rwkv.loading);
-    final isDesktop = ref.watch(P.app.isDesktop);
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
 
-    return Container(
-      margin: const .only(bottom: 8),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: .circular(16),
-        border: Border.all(color: borderColor, width: 0.5),
-        boxShadow: isDark
-            ? [
-                BoxShadow(
-                  color: Colors.black.q(.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : [
-                BoxShadow(
-                  color: Colors.black.q(.05),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-      ),
-      child: Padding(
-        padding: .all(isDesktop ? 12 : 8),
+    final modelFileKey = _fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    final modelLoading =
+        loadingStatus[modelFileKey] == .loading ||
+        loadingStatus[modelFileKey] == .loadModelWithExtra ||
+        loadingStatus[modelFileKey] == .setQnnLibraryPath;
+
+    String startTitle = s.start_to_chat;
+    if (loading || modelLoading) {
+      startTitle = s.loading;
+    }
+
+    final remainText = timeRemaining.inMinutes == 0
+        ? '${timeRemaining.inSeconds}s'
+        : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
+
+    return ClipRRect(
+      borderRadius: 8.r,
+      child: Container(
+        decoration: BoxDecoration(
+          color: customTheme.settingItem,
+          borderRadius: 8.r,
+          border: Border.all(color: qw.q(.1), width: .5),
+        ),
+        margin: const .only(top: 8),
+        padding: const .all(8),
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            // 标题栏
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      T(
-                        worldType.displayName,
-                        s: TS(
-                          s: 18,
-                          w: .w600,
-                          c: textColor,
-                        ),
+            // 折叠状态的主行
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _expanded = !_expanded;
+                });
+              },
+              child: Container(
+                decoration: BD(color: kC),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _CollapsedContent(
+                        modelName: _getModelName(),
+                        totalSize: totalSize,
+                        overallProgress: overallProgress,
+                        downloading: downloading,
+                        networkSpeed: networkSpeed,
+                        remainText: remainText,
+                        socPair: widget.socPair,
                       ),
-                      4.h,
-                      T(
-                        worldType.taskDescription,
-                        s: TS(
-                          s: 12,
-                          w: .w400,
-                          c: secondaryTextColor,
+                    ),
+                    8.w,
+                    _DownloadActionsWidget(
+                      state: overallState,
+                      hasFile: allDownloaded,
+                      onDownload: () => _onDownloadTap(context),
+                      onCancel: _onCancelTap,
+                      onPause: _onPauseTap,
+                      onResume: () => _onDownloadTap(context),
+                    ),
+                    if (allDownloaded) ...[
+                      if (!alreadyStarted)
+                        GestureDetector(
+                          onTap: (loading || modelLoading) ? null : _onStartToChatTap,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: (loading || modelLoading) ? kCG.q(.5) : kCG,
+                              borderRadius: 8.r,
+                            ),
+                            padding: const .all(8),
+                            child: T(
+                              startTitle,
+                              s: TS(c: qw),
+                            ),
+                          ),
                         ),
-                      ),
+                      if (alreadyStarted)
+                        GestureDetector(
+                          onTap: null,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: kG.q(.5),
+                              borderRadius: 8.r,
+                            ),
+                            padding: const .all(8),
+                            child: T(s.chatting, s: TS(c: qw)),
+                          ),
+                        ),
+                      if (!alreadyStarted) 8.w,
+                      if (!alreadyStarted)
+                        GestureDetector(
+                          onTap: () async {
+                            final result = await showOkCancelAlertDialog(
+                              context: getContext()!,
+                              title: S.current.are_you_sure_you_want_to_delete_this_model,
+                              okLabel: S.current.delete,
+                              isDestructiveAction: true,
+                              cancelLabel: S.current.cancel,
+                            );
+                            if (result == OkCancelResult.ok) {
+                              _onDeleteAllTap();
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: 8.r,
+                              border: Border.all(
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            padding: const .all(5),
+                            child: Icon(
+                              Icons.delete_forever_outlined,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
                     ],
-                  ),
-                ),
-              ],
-            ),
-
-            // 操作按钮
-            Row(
-              children: [
-                if (downloading) 8.h,
-                if (allMissing && !downloading)
-                  _ActionButton(
-                    text: s.download_all,
-                    onPressed: _onDownloadAllTap,
-                    color: primaryColor,
-                    isDark: isDark,
-                  ),
-                if (!allMissing && !allDownloaded && !downloading)
-                  _ActionButton(
-                    text: s.download_missing,
-                    onPressed: _onDownloadAllTap,
-                    color: primaryColor,
-                    isDark: isDark,
-                  ),
-                if (allDownloaded && !alreadyStarted)
-                  _ActionButton(
-                    text: s.delete_all,
-                    onPressed: _onDeleteAllTap,
-                    color: Colors.red,
-                    isDark: isDark,
-                  ),
-                if (alreadyStarted)
-                  _ActionButton(
-                    text: s.exploring,
-                    onPressed: null,
-                    color: Colors.grey,
-                    isDark: isDark,
-                  ),
-                const Spacer(),
-                if (allDownloaded && !alreadyStarted)
-                  _ActionButton(
-                    text: loading ? s.loading : s.start_to_chat,
-                    onPressed: loading ? null : _onStartToChatTap,
-                    color: primaryColor,
-                    isDark: isDark,
-                    isPrimary: true,
-                  ),
-                if (alreadyStarted)
-                  _ActionButton(
-                    text: loading ? s.loading : s.back_to_chat,
-                    onPressed: loading ? null : _onContinueTap,
-                    color: primaryColor,
-                    isDark: isDark,
-                    isPrimary: true,
-                  ),
-              ],
-            ),
-
-            // 文件列表
-            ..._fileInfos.m(
-              (e) => Container(
-                decoration: BoxDecoration(
-                  color: fileItemBgColor,
-                  border: Border.all(color: fileItemBorderColor, width: 1),
-                  borderRadius: .circular(12),
-                ),
-                padding: .all(isDesktop ? 12 : 8),
-                margin: const .only(top: 8),
-                child: _FileItem(
-                  fileInfo: e,
-                  isDark: isDark,
-                  primaryColor: primaryColor,
-                  textColor: textColor,
-                  secondaryTextColor: secondaryTextColor,
+                  ],
                 ),
               ),
             ),
+            // 展开状态的文件列表
+            if (_expanded) ...[
+              8.h,
+              ..._fileInfos.map(
+                (e) => Container(
+                  margin: const .only(top: 8),
+                  padding: const .all(8),
+                  decoration: BoxDecoration(
+                    color: qb.q(.05),
+                    borderRadius: 8.r,
+                    border: Border.all(color: qb.q(.1), width: 1),
+                  ),
+                  child: _ExpandedFileItem(fileInfo: e),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -279,88 +393,206 @@ class WorldGroupItem extends ConsumerWidget {
   }
 }
 
-class _ActionButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onPressed;
-  final Color color;
-  final bool isDark;
-  final bool isPrimary;
+class _CollapsedContent extends ConsumerWidget {
+  final String modelName;
+  final int totalSize;
+  final double overallProgress;
+  final bool downloading;
+  final double networkSpeed;
+  final String remainText;
+  final (String, String) socPair;
 
-  const _ActionButton({
-    required this.text,
-    required this.onPressed,
-    required this.color,
-    required this.isDark,
-    this.isPrimary = false,
+  const _CollapsedContent({
+    required this.modelName,
+    required this.totalSize,
+    required this.overallProgress,
+    required this.downloading,
+    required this.networkSpeed,
+    required this.remainText,
+    required this.socPair,
   });
 
   @override
-  Widget build(BuildContext context) {
-    if (isPrimary) {
-      return Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: .circular(8),
-        ),
-        child: TextButton(
-          onPressed: onPressed,
-          style: TextButton.styleFrom(
-            minimumSize: .zero,
-            foregroundColor: Colors.white,
-            visualDensity: .compact,
-            splashFactory: NoSplash.splashFactory,
-            shape: RoundedRectangleBorder(
-              borderRadius: .circular(8),
-            ),
-          ),
-          child: T(
-            text,
-            s: const TS(
-              w: .w600,
-              s: 14,
-            ),
-          ),
-        ),
-      );
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
 
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        minimumSize: .zero,
-        foregroundColor: Colors.white,
-        visualDensity: .compact,
-        splashFactory: NoSplash.splashFactory,
-        shape: RoundedRectangleBorder(
-          borderRadius: .circular(8),
+    return Column(
+      crossAxisAlignment: .start,
+      mainAxisAlignment: .center,
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 0,
+          children: [
+            T(
+              modelName,
+              s: const TS(w: .w600),
+            ),
+            T(
+              gbDisplay(totalSize),
+              s: TS(c: qb.q(.7), w: .w500),
+            ),
+          ],
         ),
-      ),
-      child: T(
-        text,
-        s: TS(
-          w: .w600,
-          s: 14,
-          c: color,
-        ),
-      ),
+        4.h,
+        _WorldTags(socPair: socPair),
+        if (downloading) ...[
+          8.h,
+          Padding(
+            padding: const EdgeInsetsGeometry.only(right: 40),
+            child: LinearProgressIndicator(
+              value: (overallProgress.isNaN || overallProgress <= 0 || overallProgress.isInfinite) ? null : overallProgress,
+              borderRadius: 8.r,
+            ),
+          ),
+          4.h,
+          Wrap(
+            children: [
+              T(
+                sprintf(S.current.str_downloading_info, [
+                  (overallProgress.isNaN || overallProgress <= 0 || overallProgress.isInfinite) ? 0.0 : overallProgress * 100.0,
+                  networkSpeed,
+                  remainText,
+                ]),
+                s: const TextStyle(
+                  fontFamily: 'monospace',
+                  fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }
 
-class _FileItem extends ConsumerWidget {
-  final FileInfo fileInfo;
-  final bool isDark;
-  final Color primaryColor;
-  final Color textColor;
-  final Color secondaryTextColor;
+class _WorldTags extends ConsumerWidget {
+  final (String, String) socPair;
 
-  const _FileItem({
-    required this.fileInfo,
-    required this.isDark,
-    required this.primaryColor,
-    required this.textColor,
-    required this.secondaryTextColor,
+  const _WorldTags({required this.socPair});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qw = ref.watch(P.app.qw);
+    final qb = ref.watch(P.app.qb);
+    final isNPU = socPair.$1.isNotEmpty;
+
+    return Wrap(
+      spacing: 4,
+      runSpacing: 8,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: 4.r,
+            color: isNPU ? kCG : kG.q(.2),
+            border: Border.all(
+              color: isNPU ? kCG : kG.q(.2),
+              width: .5,
+            ),
+          ),
+          padding: const .symmetric(horizontal: 4),
+          child: Row(
+            mainAxisSize: .min,
+            children: [
+              Text(
+                isNPU ? "NPU" : "CPU",
+                style: TS(
+                  c: isNPU ? qw : qb,
+                  w: isNPU ? .w500 : .w400,
+                ),
+              ),
+              if (isNPU) const T("⚡"),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DownloadActionsWidget extends StatelessWidget {
+  final TaskState state;
+  final bool hasFile;
+  final VoidCallback onDownload;
+  final VoidCallback onCancel;
+  final VoidCallback onPause;
+  final VoidCallback onResume;
+
+  const _DownloadActionsWidget({
+    required this.state,
+    required this.hasFile,
+    required this.onDownload,
+    required this.onCancel,
+    required this.onPause,
+    required this.onResume,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    final showDownload = state == TaskState.idle && !hasFile;
+    final showResume = state == TaskState.stopped;
+    final showPause = state == TaskState.running;
+    final showCancel = showPause || showResume;
+
+    return Row(
+      mainAxisSize: .min,
+      children: [
+        if (showDownload)
+          IconButton(
+            onPressed: onDownload,
+            icon: const Icon(Icons.download_rounded),
+            visualDensity: .compact,
+          ),
+        if (showCancel)
+          IconButton(
+            visualDensity: .compact,
+            onPressed: onCancel,
+            icon: const Icon(Icons.stop_rounded),
+          ),
+        if (showPause)
+          IconButton(
+            onPressed: onPause,
+            visualDensity: .compact,
+            icon: const Icon(Icons.pause),
+          ),
+        if (showResume)
+          IconButton(
+            onPressed: onResume,
+            visualDensity: .compact,
+            icon: const Icon(Icons.play_arrow_rounded),
+          ),
+      ],
+    );
+  }
+}
+
+class _ExpandedFileItem extends ConsumerWidget {
+  final FileInfo fileInfo;
+
+  const _ExpandedFileItem({required this.fileInfo});
+
+  void _onDownloadTap(BuildContext context) async {
+    await P.preference.tryShowBatteryOptimizationDialog(context);
+    await P.fileManager.getFile(fileInfo: fileInfo);
+  }
+
+  void _onCancelTap() async {
+    final result = await showOkCancelAlertDialog(
+      context: getContext()!,
+      title: S.current.cancel_download + "?",
+      okLabel: S.current.cancel,
+      isDestructiveAction: true,
+      cancelLabel: S.current.continue_download,
+    );
+    if (result == OkCancelResult.ok) {
+      await P.fileManager.cancelDownload(fileInfo: fileInfo);
+    }
+  }
+
+  void _onPauseTap() {
+    P.fileManager.pauseDownload(fileInfo: fileInfo);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -370,138 +602,134 @@ class _FileItem extends ConsumerWidget {
     final downloading = localFile.downloading;
     final progress = localFile.progress / 100;
     final fileSize = fileInfo.fileSize;
-    double networkSpeed = localFile.networkSpeed;
-    if (networkSpeed < 0) networkSpeed = 0;
+    final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
+    final state = localFile.state;
+    double networkSpeed = localFile.networkSpeed.clamp(0, 99999999).toDouble();
     Duration timeRemaining = localFile.timeRemaining;
     if (timeRemaining.isNegative) timeRemaining = Duration.zero;
 
-    return Column(
-      crossAxisAlignment: .start,
+    final remainText = timeRemaining.inMinutes == 0
+        ? '${timeRemaining.inSeconds}s'
+        : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
+
+    final showDownload = state == TaskState.idle && !hasFile;
+    final showResume = state == TaskState.stopped;
+    final showPause = state == TaskState.running;
+    final showCancel = showPause || showResume;
+
+    return Row(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: .start,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Row(
                 children: [
-                  T(
-                    fileInfo.name,
-                    s: TS(
-                      w: .w600,
-                      c: textColor,
-                      s: 14,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        T(
+                          fileInfo.name,
+                          s: TS(
+                            w: .w600,
+                            s: 14,
+                          ),
+                        ),
+                        4.h,
+                        T(
+                          gbDisplay(fileSize),
+                          s: TS(
+                            c: qb.q(.7),
+                            w: .w500,
+                            s: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  4.h,
-                  T(
-                    gbDisplay(fileSize),
-                    s: TS(
-                      c: secondaryTextColor,
-                      w: .w500,
-                      s: 12,
+                  if (hasFile)
+                    Icon(
+                      Icons.download_done,
+                      color: primary,
+                      size: 20,
                     ),
-                  ),
                 ],
               ),
-            ),
-            if (hasFile)
-              Container(
-                padding: const .symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: primaryColor.q(.1),
-                  borderRadius: .circular(12),
+              if (downloading) ...[
+                8.h,
+                LinearProgressIndicator(
+                  value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
+                  borderRadius: 8.r,
                 ),
-                child: Icon(
-                  Icons.check_circle,
-                  color: primaryColor,
-                  size: 16,
+                4.h,
+                Wrap(
+                  children: [
+                    T(
+                      sprintf(s.str_downloading_info, [
+                        (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0.0 : progress * 100.0,
+                        networkSpeed,
+                        remainText,
+                      ]),
+                      s: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-          ],
-        ),
-
-        8.h,
-
-        // 标签
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
-          children: [
-            ...fileInfo.tags.map((tag) {
-              final isHighlight = ["GPU", "CPU", "NPU", "gpu", "cpu", "npu"].contains(tag);
-              if (fileInfo.backend == Backend.webRwkv && tag == "gpu") {
-                tag = "WebRWKV";
-              }
-              if (tag != "WebRWKV") tag = tag.toUpperCase();
-              return Container(
-                padding: const .symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: isHighlight
-                      ? (tag.toLowerCase() == "gpu" ? Colors.green.q(.2) : Colors.blue.q(.2))
-                      : (isDark ? Colors.grey.q(.2) : Colors.grey.q(.1)),
-                  borderRadius: .circular(8),
-                ),
-                child: T(
-                  tag,
-                  s: TS(
-                    c: isHighlight ? (tag.toLowerCase() == "gpu" ? Colors.green : Colors.blue) : secondaryTextColor,
-                    w: .w500,
-                    s: 10,
-                  ),
-                ),
-              );
-            }),
-          ],
-        ),
-
-        if (downloading) ...[
-          12.h,
-          LinearProgressIndicator(
-            value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
-            backgroundColor: isDark ? Colors.grey.q(.3) : Colors.grey.q(.2),
-            valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-            borderRadius: .circular(4),
-          ),
-          8.h,
-          Wrap(
-            spacing: 8,
-            children: [
-              T(
-                s.speed,
-                s: TS(
-                  c: secondaryTextColor,
-                  w: .w500,
-                  s: 11,
-                ),
-              ),
-              T(
-                "${networkSpeed.toStringAsFixed(1)}MB/s",
-                s: TS(
-                  c: textColor,
-                  w: .w600,
-                  s: 11,
-                ),
-              ),
-              16.w,
-              T(
-                s.remaining,
-                s: TS(
-                  c: secondaryTextColor,
-                  w: .w500,
-                  s: 11,
-                ),
-              ),
-              T(
-                timeRemaining.inMinutes > 0 ? "${timeRemaining.inMinutes}m" : "${timeRemaining.inSeconds}s",
-                s: TS(
-                  c: textColor,
-                  w: .w600,
-                  s: 11,
-                ),
-              ),
+              ],
             ],
           ),
-        ],
+        ),
+        8.w,
+        Row(
+          mainAxisSize: .min,
+          children: [
+            if (showDownload)
+              IconButton(
+                onPressed: () => _onDownloadTap(context),
+                icon: const Icon(Icons.download_rounded),
+                visualDensity: .compact,
+              ),
+            if (showCancel)
+              IconButton(
+                visualDensity: .compact,
+                onPressed: _onCancelTap,
+                icon: const Icon(Icons.stop_rounded),
+              ),
+            if (showPause)
+              IconButton(
+                onPressed: _onPauseTap,
+                visualDensity: .compact,
+                icon: const Icon(Icons.pause),
+              ),
+            if (showResume)
+              IconButton(
+                onPressed: () => _onDownloadTap(context),
+                visualDensity: .compact,
+                icon: const Icon(Icons.play_arrow_rounded),
+              ),
+            if (hasFile)
+              IconButton(
+                onPressed: () async {
+                  final result = await showOkCancelAlertDialog(
+                    context: getContext()!,
+                    title: S.current.are_you_sure_you_want_to_delete_this_model,
+                    okLabel: S.current.delete,
+                    isDestructiveAction: true,
+                    cancelLabel: S.current.cancel,
+                  );
+                  if (result == OkCancelResult.ok) {
+                    await P.fileManager.deleteFile(fileInfo: fileInfo);
+                  }
+                },
+                visualDensity: .compact,
+                icon: const Icon(Icons.delete_forever_outlined),
+              ),
+          ],
+        ),
       ],
     );
   }
