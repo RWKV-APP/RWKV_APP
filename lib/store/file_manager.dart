@@ -338,75 +338,6 @@ extension $FileManager on _FileManager {
     }
   }
 
-  Future<void> updateCustomDirectory(String? newPath, {void Function(String currentFile, int completed, int total)? onProgress}) async {
-    final customDir = P.preference.customModelsDir.q;
-    final defaultDir = P.app.effectiveDocumentsDir.q?.path;
-    final oldPath = customDir ?? defaultDir;
-
-    if (newPath == oldPath) return;
-
-    if (oldPath != null) {
-      final targetPath = newPath ?? defaultDir;
-      if (targetPath == null) return;
-
-      final allWeights = <dynamic>{
-        ...chatWeights.q,
-        ...ttsWeights.q,
-        ...roleplayWeights.q,
-        ...seeWeights.q,
-        ...sudokuWeights.q,
-        ...othelloWeights.q,
-      }.toList();
-
-      final existingFiles = <FileInfo>[];
-      for (final weight in allWeights) {
-        final oldFile = File("$oldPath/${weight.fileName}");
-        if (await oldFile.exists()) {
-          existingFiles.add(weight);
-        }
-      }
-
-      final total = existingFiles.length;
-      int completed = 0;
-
-      for (final weight in existingFiles) {
-        if (onProgress != null) {
-          onProgress(weight.fileName, completed, total);
-        }
-
-        final oldFile = File("$oldPath/${weight.fileName}");
-        final newFile = File("$targetPath/${weight.fileName}");
-        if (!await newFile.exists()) {
-          try {
-            await oldFile.rename(newFile.path);
-          } catch (e) {
-            await oldFile.copy(newFile.path);
-            await oldFile.delete();
-          }
-        }
-
-        final nameWithoutExtension = path.basenameWithoutExtension(weight.fileName);
-        final oldFolder = Directory("$oldPath/$nameWithoutExtension");
-        if (await oldFolder.exists()) {
-          try {
-            await oldFolder.delete(recursive: true);
-            qqq("Deleted old folder: ${oldFolder.path}");
-          } catch (e) {
-            qqe("Failed to delete old folder: $e");
-          }
-        }
-
-        completed++;
-      }
-
-      if (onProgress != null) {
-        onProgress("", completed, total);
-      }
-    }
-
-    P.preference.setCustomModelsDir(newPath);
-  }
-
   /// Get all file names from configuration (including unavailable ones)
   /// This is used to determine which files are recognized vs "other files"
   Set<String> getAllConfigFileNames() {
@@ -997,13 +928,13 @@ extension _$FileManager on _FileManager {
       // Check and perform migration if needed
       // Only migrate for users with build number < 637
       if (!P.preference.weightsMigrationCompleted.q) {
-        final currentBuildNumber = int.tryParse(P.app.buildNumber.q) ?? 0;
-        if (currentBuildNumber < 637) {
-          await _migrateFilesToWeightsFolder();
-        } else {
-          // Mark as completed for users with build >= 637
-          P.preference.setWeightsMigrationCompleted(true);
-        }
+        // final currentBuildNumber = int.tryParse(P.app.buildNumber.q) ?? 0;
+        // if (currentBuildNumber < 637) {
+        await _migrateFilesToWeightsFolder();
+        // } else {
+        //   // Mark as completed for users with build >= 637
+        //   P.preference.setWeightsMigrationCompleted(true);
+        // }
       }
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);

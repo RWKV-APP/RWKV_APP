@@ -31,15 +31,19 @@ class PageWeightManager extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton.icon(
-              onPressed: () => _exportAllWeightFiles(context, ref),
-              icon: const Icon(Icons.share),
-              label: Text(S.current.export_all_weight_files),
+            Expanded(
+              child: TextButton.icon(
+                onPressed: () => _exportAllWeightFiles(context, ref),
+                icon: const Icon(Icons.share),
+                label: Text(S.current.export_all_weight_files),
+              ),
             ),
-            TextButton.icon(
-              onPressed: () => _importWeightFile(context, ref),
-              icon: const Icon(Icons.add),
-              label: Text(S.current.import_weight_file),
+            Expanded(
+              child: TextButton.icon(
+                onPressed: () => _importWeightFile(context, ref),
+                icon: const Icon(Icons.add),
+                label: Text(S.current.import_weight_file),
+              ),
             ),
           ],
         ),
@@ -74,24 +78,28 @@ class PageWeightManager extends ConsumerWidget {
         if (sourcePath != null) {
           sourceFile = File(sourcePath);
           if (!await sourceFile.exists()) {
-            fileInfos.add(_FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: null,
-              fileBytes: null,
-              existingFileInfo: null,
-              error: S.current.file_not_found,
-            ));
+            fileInfos.add(
+              _FileImportInfo(
+                pickedFile: pickedFile,
+                sourceFile: null,
+                fileBytes: null,
+                existingFileInfo: null,
+                error: S.current.file_not_found,
+              ),
+            );
             continue;
           }
         } else {
           if (pickedFile.bytes == null) {
-            fileInfos.add(_FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: null,
-              fileBytes: null,
-              existingFileInfo: null,
-              error: S.current.file_path_not_found,
-            ));
+            fileInfos.add(
+              _FileImportInfo(
+                pickedFile: pickedFile,
+                sourceFile: null,
+                fileBytes: null,
+                existingFileInfo: null,
+                error: S.current.file_path_not_found,
+              ),
+            );
             continue;
           }
           fileBytes = pickedFile.bytes;
@@ -107,33 +115,39 @@ class PageWeightManager extends ConsumerWidget {
         } catch (e) {
           final errorMessage = e.toString();
           if (errorMessage.contains("not found in configuration")) {
-            fileInfos.add(_FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: sourceFile,
-              fileBytes: fileBytes,
-              existingFileInfo: null,
-              error: S.current.file_not_supported,
-            ));
+            fileInfos.add(
+              _FileImportInfo(
+                pickedFile: pickedFile,
+                sourceFile: sourceFile,
+                fileBytes: fileBytes,
+                existingFileInfo: null,
+                error: S.current.file_not_supported,
+              ),
+            );
             continue;
           } else {
-            fileInfos.add(_FileImportInfo(
-              pickedFile: pickedFile,
-              sourceFile: sourceFile,
-              fileBytes: fileBytes,
-              existingFileInfo: null,
-              error: e.toString(),
-            ));
+            fileInfos.add(
+              _FileImportInfo(
+                pickedFile: pickedFile,
+                sourceFile: sourceFile,
+                fileBytes: fileBytes,
+                existingFileInfo: null,
+                error: e.toString(),
+              ),
+            );
             continue;
           }
         }
 
-        fileInfos.add(_FileImportInfo(
-          pickedFile: pickedFile,
-          sourceFile: sourceFile,
-          fileBytes: fileBytes,
-          existingFileInfo: existingFileInfo,
-          error: null,
-        ));
+        fileInfos.add(
+          _FileImportInfo(
+            pickedFile: pickedFile,
+            sourceFile: sourceFile,
+            fileBytes: fileBytes,
+            existingFileInfo: existingFileInfo,
+            error: null,
+          ),
+        );
       }
 
       // If there are existing files, ask user for confirmation
@@ -194,9 +208,7 @@ class PageWeightManager extends ConsumerWidget {
         try {
           final fileNameToUse = pickedFile.name.isNotEmpty
               ? pickedFile.name
-              : (fileInfo.sourceFile != null
-                  ? path.basename(fileInfo.sourceFile!.path)
-                  : "unknown");
+              : (fileInfo.sourceFile != null ? path.basename(fileInfo.sourceFile!.path) : "unknown");
 
           final success = await P.fileManager.importWeightFile(
             sourceFile: fileInfo.sourceFile,
@@ -472,58 +484,6 @@ class _CustomDirectoryTile extends ConsumerWidget {
             },
           ),
         ],
-      ),
-    );
-  }
-
-  Future<void> _showMigrationDialog(BuildContext context, String? newPath) async {
-    final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, 0));
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => _MigrationProgressDialog(progressNotifier: progressNotifier),
-    );
-
-    await P.fileManager.updateCustomDirectory(
-      newPath,
-      onProgress: (currentFile, completed, total) {
-        progressNotifier.value = (currentFile, completed, total);
-      },
-    );
-
-    if (context.mounted) {
-      Navigator.of(context).pop();
-    }
-  }
-}
-
-class _MigrationProgressDialog extends StatelessWidget {
-  final ValueNotifier<(String, int, int)> progressNotifier;
-
-  const _MigrationProgressDialog({required this.progressNotifier});
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Moving Weights..."),
-      content: ValueListenableBuilder<(String, int, int)>(
-        valueListenable: progressNotifier,
-        builder: (context, value, child) {
-          final (currentFile, completed, total) = value;
-          final progress = total > 0 ? completed / total : 0.0;
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Moving: $currentFile"),
-              const SizedBox(height: 8),
-              LinearProgressIndicator(value: progress),
-              const SizedBox(height: 8),
-              Text("$completed / $total"),
-            ],
-          );
-        },
       ),
     );
   }

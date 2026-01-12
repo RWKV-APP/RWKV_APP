@@ -173,7 +173,7 @@ extension _$Preference on _Preference {
     final customModelsDir = sp.getString("halo_state.customModelsDir");
     if (customModelsDir != null) this.customModelsDir.q = customModelsDir;
 
-    final weightsMigrationCompleted = sp.getBool("halo_state.weightsMigrationCompleted");
+    final weightsMigrationCompleted = sp.getBool("halo_state.weightsMigrationCompletedv640");
     if (weightsMigrationCompleted != null) this.weightsMigrationCompleted.q = weightsMigrationCompleted;
   }
 
@@ -309,6 +309,6 @@ extension $Preference on _Preference {
   void setWeightsMigrationCompleted(bool completed) async {
     weightsMigrationCompleted.q = completed;
     final sp = await SharedPreferences.getInstance();
-    await sp.setBool("halo_state.weightsMigrationCompleted", completed);
+    await sp.setBool("halo_state.weightsMigrationCompletedv640", completed);
   }
 }
