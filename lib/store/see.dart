@@ -159,6 +159,8 @@ extension $See on _See {
     final imagePath = await showImageSelector();
     if (imagePath == null) return;
     this.imagePath.q = imagePath;
+
+    // TODO: Prefill the chat with the image
   }
 
   Future<void> _tryLoadLastWorldModel() async {

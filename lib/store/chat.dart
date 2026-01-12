@@ -123,7 +123,6 @@ extension $Chat on _Chat {
 
         if (focusNode.hasFocus) {
           focusNode.unfocus();
-          return;
         }
 
         final imagePath = await showImageSelector();
@@ -134,7 +133,7 @@ extension $Chat on _Chat {
     }
 
     if (!inputHasContent.q) {
-      Alert.info("Please enter a message");
+      Alert.info(S.current.chat_empty_message);
       return;
     }
 
@@ -187,7 +186,8 @@ extension $Chat on _Chat {
 
     if (inSee) {
       final imagePath = P.see.imagePath.q;
-      if (imagePath == null) {
+      final isPureText = imagePath == null;
+      if (isPureText) {
         await send(textToSend);
       } else {
         P.see.imagePath.q = null;
