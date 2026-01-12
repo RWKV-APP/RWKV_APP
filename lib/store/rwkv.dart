@@ -246,7 +246,7 @@ extension $RWKVLoad on _RWKV {
       qqw(msg);
       return null;
     }
-    P.app.demoType.q = DemoType.see;
+    P.app.demoType.q = .see;
     loadedModels.q = {
       ...loadedModels.q,
       fileInfo: modelID,
@@ -302,7 +302,7 @@ extension $RWKVLoad on _RWKV {
       qqw(msg);
       return (_sendPort, null);
     }
-    P.app.demoType.q = DemoType.tts;
+    P.app.demoType.q = .tts;
     loadedModels.q = {
       ...loadedModels.q,
       fileInfo: modelID,
@@ -371,7 +371,7 @@ extension $RWKVLoad on _RWKV {
       qqw(msg);
       return (_sendPort, null);
     }
-    P.app.demoType.q = DemoType.chat;
+    P.app.demoType.q = .chat;
     loadedModels.q = {
       ...loadedModels.q,
       fileInfo: modelID,
@@ -420,7 +420,7 @@ extension $RWKVLoad on _RWKV {
       return;
     }
 
-    P.app.demoType.q = DemoType.othello;
+    P.app.demoType.q = .othello;
     loadedModels.q = {
       ...loadedModels.q,
       // TODO: fileInfo is null for othello
@@ -472,7 +472,7 @@ extension $RWKVLoad on _RWKV {
       return;
     }
 
-    P.app.demoType.q = DemoType.sudoku;
+    P.app.demoType.q = .sudoku;
     loadedModels.q = {
       ...loadedModels.q,
       // TODO: fileInfo is null for sudoku
@@ -511,6 +511,7 @@ extension $RWKV on _RWKV {
     double getIsGeneratingRate = .5,
     double getResponseBufferContentRate = .5,
     int batchSize = 1,
+    int? maxLength,
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -537,13 +538,13 @@ extension $RWKV on _RWKV {
     }
 
     final weightType = switch (P.app.demoType.q) {
-      DemoType.chat => WeightType.chat,
-      DemoType.see => WeightType.see,
-      DemoType.tts => WeightType.tts,
-      DemoType.sudoku => WeightType.sudoku,
-      DemoType.othello => WeightType.othello,
+      .chat => WeightType.chat,
+      .see => WeightType.see,
+      .tts => WeightType.tts,
+      .sudoku => WeightType.sudoku,
+      .othello => WeightType.othello,
       // TODO: Handle this case.
-      DemoType.fifthteenPuzzle => throw UnimplementedError(),
+      .fifthteenPuzzle => throw UnimplementedError(),
     };
 
     final modelID = findModelIDByWeightType(weightType: weightType);
@@ -579,12 +580,14 @@ extension $RWKV on _RWKV {
             forceReasoning: forceReasoning,
             batchSize: batchSize,
             modelID: modelID,
+            maxLength: maxLength,
           ) //
         : to_rwkv.ChatAsync(
             messages,
             enableReasoning: reasoning,
             forceReasoning: forceReasoning,
             modelID: modelID,
+            maxLength: maxLength,
           );
     send(request);
 
@@ -843,7 +846,7 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     P.app.hapticLight();
 
@@ -934,7 +937,7 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final currentModel = P.rwkv.latestModel.q;
 
@@ -957,7 +960,7 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final current = thinkingMode.q;
     P.app.hapticLight();
