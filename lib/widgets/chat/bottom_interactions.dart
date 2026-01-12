@@ -159,7 +159,11 @@ class _WenYanWenButton extends ConsumerWidget {
     final height = textScaleFactor.scale(14) + 20;
 
     final bgColor = mode == WenyanMode.off ? theme.colorScheme.surfaceContainer : theme.colorScheme.primary;
-    final textColor = mode == WenyanMode.off ? Colors.black.q(.667) : theme.colorScheme.onPrimary;
+
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final textColor = mode != WenyanMode.off ? qw.q(1) : qb.q(.667);
+
     String label = '';
     if (mode == WenyanMode.off) {
       label = '文言';
