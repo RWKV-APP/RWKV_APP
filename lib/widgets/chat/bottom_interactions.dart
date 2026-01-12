@@ -46,7 +46,7 @@ class BottomInteractions extends ConsumerWidget {
 class _Interactions extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  const _Interactions({this.preferredDemoType = DemoType.chat});
+  const _Interactions({this.preferredDemoType = .chat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,13 +59,12 @@ class _Interactions extends ConsumerWidget {
       runSpacing: 4,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (preferredDemoType == DemoType.see) const IntrinsicWidth(child: SelectImageButton()),
-        if (features.webSearch && preferredDemoType == DemoType.chat) const _WebSearchModeButton(),
-        if (preferredDemoType == DemoType.chat) const ThinkingModeButton(),
-        if (!albatross && preferredDemoType == DemoType.chat && currentLangIsZh && currentModelIsBefore20250922)
-          const SecondaryOptionsButton(),
-        if (!albatross && preferredDemoType == DemoType.chat) const BatchButton(),
-        if (preferredDemoType == DemoType.chat && currentLangIsZh) const _WenYanWenButton(),
+        if (preferredDemoType == .see) const IntrinsicWidth(child: SelectImageButton()),
+        if (features.webSearch && preferredDemoType == .chat) const _WebSearchModeButton(),
+        if (preferredDemoType == .chat) const ThinkingModeButton(),
+        if (!albatross && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
+        if (!albatross && preferredDemoType == .chat) const BatchButton(),
+        if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
     );

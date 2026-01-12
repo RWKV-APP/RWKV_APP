@@ -148,6 +148,19 @@ extension $See on _See {
     P.talk.audioStream?.uninit();
   }
 
+  Future<void> selectImage() async {
+    if (P.chat.focusNode.hasFocus) {
+      P.chat.focusNode.unfocus();
+      return;
+    }
+
+    if (!checkModelSelection(preferredDemoType: DemoType.see)) return;
+
+    final imagePath = await showImageSelector();
+    if (imagePath == null) return;
+    this.imagePath.q = imagePath;
+  }
+
   Future<void> _tryLoadLastWorldModel() async {
     if (P.app.pageKey.q != PageKey.see) return;
 
