@@ -58,11 +58,6 @@ jobs:
           echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
           echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
 
-      - name: 📝 Create .env file
-        uses: ./.github/actions/create-env
-        with:
-          x_api_key: ${{ secrets.X_API_KEY }}
-
       - name: 🔐 Decrypt Sensitive Assets
         uses: ./.github/actions/decrypt-assets
         with:
@@ -75,7 +70,7 @@ jobs:
         run: flutter doctor -v
 
       - name: Build Linux x64
-        run: flutter build linux --release --target-platform linux-x64
+        run: flutter build linux --release --target-platform linux-x64 --dart-define=X_API_KEY=${{ secrets.X_API_KEY }}
 
       - name: 🧹 Remove aarch64 libraries
         run: |

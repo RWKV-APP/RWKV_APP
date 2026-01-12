@@ -15,7 +15,7 @@ abstract class Config {
 
   static const timeout = Duration(seconds: 60);
 
-  static late final String xApiKey;
+  static const String xApiKey = String.fromEnvironment("X_API_KEY");
 
   static const appTitle = "RWKV Chat";
 

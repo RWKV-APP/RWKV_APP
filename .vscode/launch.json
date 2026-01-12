@@ -18,6 +18,7 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "args": [
+        // "--dart-define=X_API_KEY=your_key_here",
         // "--dart-define=autoShowTranslator=true",
         "--dart-define=logLevel=3",
         // "--dart-define=enableBatchInference=true",

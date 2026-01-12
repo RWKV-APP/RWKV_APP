@@ -98,7 +98,6 @@ dependencies:
   drift_flutter:
   equatable:
   file_picker:
-  flutter_dotenv:
   flutter_native_splash:
   flutter_riverpod: 2.6.1
   flutter_staggered_grid_view: ^0.7.0
@@ -162,7 +161,6 @@ flutter:
     - assets/img/chat/
     - assets/lib/qnn/
     - remote/latest.json
-    - .env
     - assets/filter.txt
     - assets/lambada_test.jsonl
     - assets/config/code_highlights/
