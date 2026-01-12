@@ -212,7 +212,10 @@ extension $FileManager on _FileManager {
 
       for (final entity in fileSystemEntities) {
         if (entity is! File) continue;
-        if (fileInfos.any((e) => entity.path.contains(e.fileName))) continue;
+
+        final fileNameExistsInConfig = fileInfos.any((e) => entity.path.contains(e.fileName));
+
+        if (fileNameExistsInConfig) continue;
 
         // 不移除以 .tmp 结尾的文件
         if (entity.path.endsWith('.tmp')) {
@@ -221,12 +224,17 @@ extension $FileManager on _FileManager {
 
         // 检查文件大小，只删除大于 20MB 的文件
         final fileSize = await File(entity.path).length();
-        if (fileSize <= maxSizeBytes) {
-          continue;
-        }
+        final needToCheckBecauseTheFileIsBigEnough = fileSize > maxSizeBytes;
+        if (!needToCheckBecauseTheFileIsBigEnough) continue;
 
         await entity.delete();
+
         qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
+        qqw("fileNameExistsInConfig: $fileNameExistsInConfig");
+        if (!fileNameExistsInConfig) {
+          qqw("fileName: ${entity.path.split('/').last}");
+        }
+        qqw("needToCheckBecauseTheFileIsBigEnough: $needToCheckBecauseTheFileIsBigEnough");
       }
     }
   }
