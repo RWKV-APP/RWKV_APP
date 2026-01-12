@@ -14,7 +14,6 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'dart:io';
@@ -52,7 +51,7 @@ class ModelSelector extends ConsumerWidget {
       P.fileManager.checkLocal();
     })();
 
-    if (P.app.pageKey.q == PageKey.talk) {
+    if (P.app.pageKey.q == .talk) {
       _preferredDemoType = .tts;
     }
 
@@ -60,7 +59,7 @@ class ModelSelector extends ConsumerWidget {
       _preferredDemoType = preferredDemoType;
     }
 
-    if (rolePlayOnly && P.app.pageKey.q != PageKey.rolePlaying) {
+    if (rolePlayOnly && P.app.pageKey.q != .rolePlaying) {
       return;
     }
 
@@ -184,7 +183,7 @@ class _ModelList extends ConsumerWidget {
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
 
-    if (rolePlayOnly && pageKey == PageKey.rolePlaying) {
+    if (rolePlayOnly && pageKey == .rolePlaying) {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
       availableModels.addAll(P.fileManager.roleplayWeights.q);
       return Column(
@@ -193,8 +192,8 @@ class _ModelList extends ConsumerWidget {
       );
     }
 
-    final inTranslator = pageKey == PageKey.translator || pageKey == PageKey.ocr;
-    final inBenchmark = pageKey == PageKey.benchmark;
+    final inTranslator = pageKey == .translator || pageKey == .ocr;
+    final inBenchmark = pageKey == .benchmark;
 
     if (inTranslator) {
       availableModels = availableModels.where((e) => e.tags.contains("translate")).toSet();
@@ -246,7 +245,7 @@ class _ModelList extends ConsumerWidget {
               (fileInfo) => ModelItem(
                 fileInfo,
                 userType.isGreaterThan(UserType.user),
-                loadButtonTextShowLoad: pageKey == PageKey.benchmark,
+                loadButtonTextShowLoad: pageKey == .benchmark,
               ),
             )
             .toList(),

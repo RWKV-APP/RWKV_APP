@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/group_info.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
@@ -201,7 +200,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     final localDetokenizeFile = P.fileManager.locals(detokenizeFileKey).q;
     final localTokenizeFile = P.fileManager.locals(bicodecTokenizeFileKey).q;
 
-    if (P.app.pageKey.q == PageKey.rolePlaying) {
+    if (P.app.pageKey.q == .rolePlaying) {
       final info = ModelInfo(
         id: widget.fileInfo.fileName,
         modelPath: modelLocalFile.targetPath,
@@ -247,7 +246,6 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
   }
 
-
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -275,7 +273,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     bool alreadyStarted = currentModel == widget.fileInfo;
     final loading = ref.watch(P.rwkv.loading);
 
-    if (P.app.pageKey.q == PageKey.rolePlaying) {
+    if (P.app.pageKey.q == .rolePlaying) {
       alreadyStarted = widget.fileInfo.fileName == rolePlayTTSModel?.id;
     }
 

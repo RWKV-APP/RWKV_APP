@@ -166,13 +166,13 @@ extension $See on _See {
   }
 
   Future<void> _tryLoadLastWorldModel() async {
-    if (P.app.pageKey.q != PageKey.see) return;
+    if (P.app.pageKey.q != .see) return;
 
     await Future.delayed(500.ms);
 
     final last = P.preference.lastWorldModel.q;
     if (last == null) {
-      if (P.app.pageKey.q == PageKey.see) {
+      if (P.app.pageKey.q == .see) {
         ModelSelector.show(preferredDemoType: .see);
       }
       return;
@@ -195,7 +195,7 @@ extension $See on _See {
       final adapterLocalFile = adapterFileKey != null ? P.fileManager.locals(adapterFileKey).q : null;
 
       if (!encoderLocalFile.hasFile || !modelLocalFile.hasFile || (adapterLocalFile != null && !adapterLocalFile.hasFile)) {
-        if (P.app.pageKey.q == PageKey.see) {
+        if (P.app.pageKey.q == .see) {
           ModelSelector.show(preferredDemoType: .see);
         }
         return;
@@ -230,10 +230,10 @@ extension $See on _See {
           if (modelID != null) P.rwkv.send(SetSpaceAfterRoles(false, modelID: modelID));
       }
 
-      if (P.app.pageKey.q != PageKey.see) return;
+      if (P.app.pageKey.q != .see) return;
     } catch (e) {
       qqe("Failed to auto load world model: $e");
-      if (P.app.pageKey.q == PageKey.see) {
+      if (P.app.pageKey.q == .see) {
         ModelSelector.show(preferredDemoType: .see);
       }
     }
@@ -273,7 +273,7 @@ extension _$See on _See {
   }
 
   void _onPageKeyChanged(PageKey? previous, PageKey next) async {
-    if (previous == PageKey.see && next != PageKey.see) {
+    if (previous == .see && next != .see) {
       imagePath.q = null;
       imageHeight.q = null;
       visualFloatHeight.q = null;
@@ -282,7 +282,7 @@ extension _$See on _See {
       P.chat.clearMessages();
       // P.rwkv.currentWorldType.q = null;
       // P.rwkv.currentModel.q = null;
-    } else if (previous != PageKey.see && next == PageKey.see) {
+    } else if (previous != .see && next == .see) {
       P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .chat);
       P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .tts);
       imagePath.q = null;

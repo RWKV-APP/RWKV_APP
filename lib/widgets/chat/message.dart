@@ -18,7 +18,6 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/model/world_type.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_message_content.dart';
@@ -91,7 +90,7 @@ class Message extends ConsumerWidget {
     final receiveId = ref.watch(P.chat.receiveId);
     final receiving = ref.watch(P.chat.receivingTokens);
 
-    final inSee = ref.watch(P.app.pageKey) == PageKey.see;
+    final inSee = ref.watch(P.app.pageKey) == .see;
     final isMine = msg.isMine;
     final isChat = demoType == .chat;
     final Alignment alignment = isMine ? .centerRight : .centerLeft;

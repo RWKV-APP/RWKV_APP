@@ -11,7 +11,6 @@ import 'package:zone/config.dart';
 import 'package:zone/db/db.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -95,7 +94,7 @@ class ConversationItem extends ConsumerWidget {
 
   void _onTap(BuildContext context) async {
     if (conversation.isRoleplay) {
-      push(PageKey.rolePlaying, extra: {'roleName': conversation.roleName!});
+      push(.rolePlaying, extra: {'roleName': conversation.roleName!});
       return;
     }
     await P.conversation.onTapInList(conversation.conv!);

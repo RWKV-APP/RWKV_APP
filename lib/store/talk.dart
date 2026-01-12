@@ -78,7 +78,7 @@ extension _$Talk on _Talk {
 
     focusNode.addListener(() {
       final pageKey = P.app.pageKey.q;
-      if (pageKey != PageKey.talk) return;
+      if (pageKey != .talk) return;
       hasFocus.q = focusNode.hasFocus;
     });
 
@@ -91,13 +91,13 @@ extension _$Talk on _Talk {
   }
 
   void _onPageKeyChanged(PageKey? previous, PageKey next) async {
-    if (previous == PageKey.talk && next != PageKey.talk) {
+    if (previous == .talk && next != .talk) {
       P.msg._clear(syncNode: false);
       _asTimer?.cancel();
       _asTimer = null;
       _queryTimer?.cancel();
       _queryTimer = null;
-    } else if (previous != PageKey.talk && next == PageKey.talk) {
+    } else if (previous != .talk && next == .talk) {
       P.msg._clear(syncNode: false);
       P.app.demoType.q = .tts;
       bool isTTSModelLoaded = false;
@@ -116,24 +116,24 @@ extension _$Talk on _Talk {
   }
 
   Future<void> _showModelSelector() async {
-    if (P.app.pageKey.q != PageKey.talk) return;
+    if (P.app.pageKey.q != .talk) return;
 
     await Future.delayed(500.ms);
 
-    if (P.app.pageKey.q == PageKey.talk) {
+    if (P.app.pageKey.q == .talk) {
       ModelSelector.show(preferredDemoType: .tts);
     }
   }
 
   void _onSpkShownChanged(bool next) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     selectedSpkPanelFilter.q = selectedLanguage.q;
   }
 
   void _onSelectSpkNameChanged(String? next) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     qq;
     if (next == null) {
       selectedLanguage.q = Language.none;
@@ -151,21 +151,21 @@ extension _$Talk on _Talk {
 
   void _onChatFocusNodeChanged() {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     qqq("P.chat.focusNode.hasFocus: ${P.chat.focusNode.hasFocus}");
     if (P.chat.focusNode.hasFocus) dismissAllShown(intonationShown: intonationShown.q);
   }
 
   void _onTextChanged(String next) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     final textInController = textEditingController.text;
     if (next != textInController) textEditingController.text = next;
   }
 
   void _onTextEditingControllerValueChanged() {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     final textInController = textEditingController.text;
     if (textInInput.q != textInController) textInInput.q = textInController;
   }
@@ -255,7 +255,7 @@ extension _$Talk on _Talk {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     switch (event) {
       case from_rwkv.TTSStreamingBuffer res:
         _onTTSStreamingBuffer(res);
@@ -319,13 +319,13 @@ extension _$Talk on _Talk {
 
   void _onStreamDone() {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     qq;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.talk) return;
+    if (pageKey != .talk) return;
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
   }
@@ -546,7 +546,7 @@ outputWavPath: $outputWavPath""");
   }
 
   void dismissAllShown({bool intonationShown = false}) {
-    if (P.app.pageKey.q != PageKey.talk) return;
+    if (P.app.pageKey.q != .talk) return;
     qqq("intonationShown: $intonationShown");
 
     audioInteractorShown.q = false;

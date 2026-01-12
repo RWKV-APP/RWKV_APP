@@ -154,7 +154,7 @@ extension _$Othello on _Othello {
     qq;
 
     P.app.pageKey.lb((_, next) {
-      if (next == PageKey.othello) {
+      if (next == .othello) {
         start();
       }
     }, fireImmediately: true);
@@ -364,14 +364,14 @@ extension _$Othello on _Othello {
 
   void _onStreamDone() async {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.othello) return;
+    if (pageKey != .othello) return;
     qqq("_onStreamDone");
     receivingTokens.q = false;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.othello) return;
+    if (pageKey != .othello) return;
     qqq("_onStreamError");
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);

@@ -48,23 +48,23 @@ enum PageKey {
   bool get hasTransition => {chat, completion, advancedSettings, fontSettings, rolePlaying}.contains(this);
 
   Widget scaffold(Map<String, String> param) => switch (this) {
-    PageKey.chat => const PageChat(),
-    PageKey.neko => const PageChat(),
-    PageKey.talk => const PageTalk(),
-    PageKey.othello => const PageOthello(),
-    PageKey.completion => const CompletionPage(),
-    PageKey.sudoku => const PageSudoku(),
-    PageKey.home => const PageHome(),
-    PageKey.conversation => const PageConversation(),
-    PageKey.settings => const PageSettings(),
-    PageKey.weightManager => const PageWeightManager(),
-    PageKey.translator => const PageTranslator(),
-    PageKey.benchmark => const PageBenchmark(),
-    PageKey.lambada => const PageBenchmark(),
-    PageKey.advancedSettings => const PageAdvancedSettings(),
-    PageKey.fontSettings => const PageFontSettings(),
-    PageKey.see => const PageSee(),
-    PageKey.rolePlaying => RoleplayManage.goRolePlay(
+    .chat => const PageChat(),
+    .neko => const PageChat(),
+    .talk => const PageTalk(),
+    .othello => const PageOthello(),
+    .completion => const CompletionPage(),
+    .sudoku => const PageSudoku(),
+    .home => const PageHome(),
+    .conversation => const PageConversation(),
+    .settings => const PageSettings(),
+    .weightManager => const PageWeightManager(),
+    .translator => const PageTranslator(),
+    .benchmark => const PageBenchmark(),
+    .lambada => const PageBenchmark(),
+    .advancedSettings => const PageAdvancedSettings(),
+    .fontSettings => const PageFontSettings(),
+    .see => const PageSee(),
+    .rolePlaying => RoleplayManage.goRolePlay(
       param['roleName'] ?? '',
       getContext()!,
       onUpdateRolePlaySessionRequired: () => updateRolePlayConversations(),
@@ -85,7 +85,7 @@ enum PageKey {
         }
       },
     ),
-    PageKey.ocr => const PageOcr(),
+    .ocr => const PageOcr(),
   };
 
   GoRoute get route {
@@ -106,7 +106,7 @@ enum PageKey {
   static String get initialLocation => first.path;
 
   static PageKey get first {
-    return PageKey.home;
+    return .home;
   }
 
   static List<PageKey> get tabs => [home, conversation, settings];

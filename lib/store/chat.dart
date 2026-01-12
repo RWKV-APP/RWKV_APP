@@ -114,7 +114,7 @@ extension $Chat on _Chat {
     qq;
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
-    final inSee = P.app.pageKey.q == PageKey.see;
+    final inSee = P.app.pageKey.q == .see;
     if (inSee) {
       final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
       final imagePath = P.see.imagePath.q;
@@ -451,7 +451,7 @@ extension $Chat on _Chat {
     P.conversation._syncNode();
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
-    final inSee = P.app.pageKey.q == PageKey.see;
+    final inSee = P.app.pageKey.q == .see;
     final batchSize = inSee ? 1 : (batchEnabled.q ? batchCount.q : 1);
 
     P.rwkv.sendMessages(history, batchSize: batchSize);
@@ -734,11 +734,11 @@ extension _$Chat on _Chat {
     final isTTS = model?.isTTS ?? false;
     final isSee = model?.worldType != null;
     switch (pageKey) {
-      case PageKey.completion:
+      case .completion:
         final isTranslate = model?.tags.contains("translate") ?? false;
         if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
         break;
-      case PageKey.chat:
+      case .chat:
         P.rwkv.updateSystemPrompt();
         P.app.demoType.q = .chat;
         final isTranslate = model?.tags.contains("translate") ?? false;
@@ -747,7 +747,7 @@ extension _$Chat on _Chat {
           await P.rwkv._releaseAllModels();
         }
         break;
-      case PageKey.talk:
+      case .talk:
         if (!isTTS) {
           P.rwkv.currentGroupInfo.q = null;
           await P.rwkv._releaseAllModels();
@@ -775,7 +775,7 @@ extension _$Chat on _Chat {
 
   void _fullyReceived({String? callingFunction}) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.translator || pageKey == PageKey.ocr || pageKey == PageKey.benchmark || pageKey == PageKey.completion) return;
+    if (pageKey == .translator || pageKey == .ocr || pageKey == .benchmark || pageKey == .completion) return;
     qqq("callingFunction: $callingFunction");
 
     final id = receiveId.q;
@@ -865,7 +865,7 @@ extension _$Chat on _Chat {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.translator) return;
+    if (pageKey == .translator) return;
 
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
@@ -902,7 +902,7 @@ extension _$Chat on _Chat {
 
   void _onStreamDone() async {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.translator) return;
+    if (pageKey == .translator) return;
     qq;
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
@@ -911,7 +911,7 @@ extension _$Chat on _Chat {
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.translator) return;
+    if (pageKey == .translator) return;
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;

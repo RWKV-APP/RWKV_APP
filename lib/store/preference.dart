@@ -216,7 +216,7 @@ extension $Preference on _Preference {
   }
 
   void goToFontSettings() {
-    push(PageKey.fontSettings);
+    push(.fontSettings);
   }
 
   Future<void> showLocaleDialog() async {

@@ -12,7 +12,6 @@ import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
@@ -205,7 +204,7 @@ class Settings extends ConsumerWidget {
               FormItem(
                 icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
                 title: S.current.advance_settings,
-                onTap: () => push(PageKey.advancedSettings),
+                onTap: () => push(.advancedSettings),
               ),
             FormItem(
               isSectionEnd: false,
@@ -219,7 +218,7 @@ class Settings extends ConsumerWidget {
               icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
               title: s.weights_mangement,
               infoText: totalUsage,
-              onTap: () => push(PageKey.weightManager),
+              onTap: () => push(.weightManager),
             ),
             12.h,
             Row(

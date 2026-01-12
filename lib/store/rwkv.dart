@@ -1134,7 +1134,7 @@ extension _$RWKV on _RWKV {
     final newModelSize = newModel.modelSize;
     if (oldModelSize == null || newModelSize == null) return;
     if (oldModelSize >= newModelSize) return;
-    if (P.app.pageKey.q != PageKey.chat) return;
+    if (P.app.pageKey.q != .chat) return;
     if (P.msg.list.q.isEmpty) return;
     await Future.delayed(2000.ms);
     Alert.info(S.current.model_size_increased_please_open_a_new_conversation);
@@ -1151,10 +1151,10 @@ extension _$RWKV on _RWKV {
   Future<void> _onPageKeyChanged() async {
     final pageKey = P.app.pageKey.q;
     switch (pageKey) {
-      case PageKey.othello:
+      case .othello:
         await loadOthello();
         break;
-      case PageKey.chat:
+      case .chat:
         qq;
         final modelID = findModelIDByWeightType(weightType: .chat);
         if (modelID != null) send(to_rwkv.GetSupportedBatchSizes(modelID: modelID));

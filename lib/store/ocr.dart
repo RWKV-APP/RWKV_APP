@@ -132,7 +132,7 @@ extension _$Ocr on _Ocr {
 
   void _handleIsGenerating(from_rwkv.IsGenerating res) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey != PageKey.ocr) return;
+    if (pageKey != .ocr) return;
     final generatingStateFromEvent = res.isGenerating;
     final generatingStateInFrontend = isGenerating.q;
 
@@ -189,7 +189,7 @@ extension _$Ocr on _Ocr {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
-    if (P.app.pageKey.q != PageKey.ocr) return;
+    if (P.app.pageKey.q != .ocr) return;
 
     switch (event) {
       case from_rwkv.ResponseBatchBufferContent res:
@@ -206,11 +206,11 @@ extension _$Ocr on _Ocr {
   void _handleResponseBufferContent(from_rwkv.ResponseBufferContent res) {}
 
   void _onStreamDone() async {
-    if (P.app.pageKey.q != PageKey.ocr) return;
+    if (P.app.pageKey.q != .ocr) return;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
-    if (P.app.pageKey.q != PageKey.ocr) return;
+    if (P.app.pageKey.q != .ocr) return;
   }
 
   void _sendTasks(List<String> tasks) {

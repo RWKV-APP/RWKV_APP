@@ -15,7 +15,7 @@ othello:
   assets_config_2: assets/img/othello
   assets_config_3: assets/lib/othello
   args: __othello__
-  fp: static final firstPage = PageKey.othello.name;
+  fp: static final firstPage = .othello.name;
 
 chat:
   app_icon: assets/design/light/icon/chat.png
@@ -34,7 +34,7 @@ chat:
   assets_config_2: assets/img/chat
   assets_config_3: assets/lib/chat
   args: __chat__
-  fp: static final firstPage = PageKey.chat.name;
+  fp: static final firstPage = .chat.name;
 
 sudoku:
   app_icon: assets/design/light/icon/sudoku.png
@@ -53,7 +53,7 @@ sudoku:
   assets_config_2: assets/img/sudoku
   assets_config_3: assets/lib/sudoku
   args: __sudoku__
-  fp: static final firstPage = PageKey.sudoku.name;
+  fp: static final firstPage = .sudoku.name;
 
 app_icon:
   [
@@ -145,7 +145,7 @@ args:
   [__othello__, __chat__, __sudoku__]
 fp:
   [
-    static final firstPage = PageKey.chat.name;,
-    static final firstPage = PageKey.othello.name;,
-    static final firstPage = PageKey.sudoku.name;,
+    static final firstPage = .chat.name;,
+    static final firstPage = .othello.name;,
+    static final firstPage = .sudoku.name;,
   ]

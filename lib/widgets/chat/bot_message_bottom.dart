@@ -14,7 +14,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/thinking_mode.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
 
@@ -119,7 +118,7 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     final thinkingMode = ThinkingMode.fromString(msg.runningMode);
-    final inSee = ref.watch(P.app.pageKey) == PageKey.see;
+    final inSee = ref.watch(P.app.pageKey) == .see;
 
     final modeWidget = switch (thinkingMode) {
       None() =>

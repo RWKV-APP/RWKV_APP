@@ -12,7 +12,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/wenyan_mode.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
@@ -230,7 +229,7 @@ class _MessageButton extends ConsumerWidget {
     final receiving = ref.watch(P.chat.receivingTokens);
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
-    final inSee = ref.watch(P.app.pageKey) == PageKey.see;
+    final inSee = ref.watch(P.app.pageKey) == .see;
     final imagePath = ref.watch(P.see.imagePath);
     final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
     final inputHasContent = ref.watch(P.chat.inputHasContent);

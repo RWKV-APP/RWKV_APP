@@ -13,7 +13,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
@@ -90,7 +89,7 @@ class _MainAppBar extends ConsumerWidget {
 
   void _onTitlePressed() async {
     await ModelSelector.show(
-      showNeko: P.app.pageKey.q == PageKey.neko,
+      showNeko: P.app.pageKey.q == .neko,
       preferredDemoType: preferredDemoType,
     );
   }
@@ -236,7 +235,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
       onSelected: (v) {
         switch (v) {
           case 1:
-            push(PageKey.advancedSettings);
+            push(.advancedSettings);
             break;
           case 2:
             _onSettingsPressed();

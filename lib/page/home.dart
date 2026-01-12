@@ -10,7 +10,6 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/model_selector.dart';
@@ -167,7 +166,7 @@ class _ChatButton extends ConsumerWidget {
       child: InkWell(
         onTap: () {
           P.chat.startNewChat();
-          push(PageKey.chat);
+          push(.chat);
         },
         child: Padding(
           padding: const .all(16),
@@ -213,7 +212,7 @@ class _TTSButton extends ConsumerWidget {
       child: InkWell(
         onTap: () {
           P.chat.startNewChat();
-          push(PageKey.talk);
+          push(.talk);
         },
         child: Padding(
           padding: const .all(16),
@@ -264,7 +263,7 @@ class _VisualButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
-          push(PageKey.see);
+          push(.see);
         },
         child: Padding(
           padding: const .all(16),
@@ -326,7 +325,7 @@ class _NekoButton extends ConsumerWidget {
             }
           }
           P.chat.startNewChat();
-          push(PageKey.neko);
+          push(.neko);
         },
         child: Padding(
           padding: const .all(16),
@@ -371,7 +370,7 @@ class _CompletionButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
-          push(PageKey.completion);
+          push(.completion);
         },
         child: Padding(
           padding: const .all(16),
@@ -468,7 +467,7 @@ class _BenchmarkButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
-          push(PageKey.benchmark);
+          push(.benchmark);
         },
         child: Padding(
           padding: const .all(16),
@@ -567,7 +566,7 @@ class _RolePlayButton extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       child: InkWell(
         onTap: () {
-          push(PageKey.rolePlaying);
+          push(.rolePlaying);
         },
         child: Padding(
           padding: const .all(16),

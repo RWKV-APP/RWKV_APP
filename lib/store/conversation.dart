@@ -99,7 +99,7 @@ extension $Conversation on _Conversation {
     P.msg.msgNode.q = msgNode;
     P.msg.ids.q = ids;
     P.msg._loadMessages(msgNode.allMsgIdsFromRoot);
-    push(PageKey.chat);
+    push(.chat);
   }
 
   Future<void> onDeleteClicked(BuildContext context, ConversationData conversation) async {

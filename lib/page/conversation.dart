@@ -10,7 +10,6 @@ import 'package:halo_state/halo_state.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/conversation_item.dart';
@@ -161,7 +160,7 @@ class _ConversationAppBar extends ConsumerWidget {
 
   Future<void> _handleNewChat() async {
     await P.chat.startNewChat();
-    push(PageKey.chat);
+    push(.chat);
   }
 
   Future<void> _openDatabaseFolder() async {
@@ -308,7 +307,7 @@ class _NewChatButton extends StatelessWidget {
 
   Future<void> _handleNewChat() async {
     await P.chat.startNewChat();
-    push(PageKey.chat);
+    push(.chat);
   }
 }
 

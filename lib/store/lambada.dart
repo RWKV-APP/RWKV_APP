@@ -38,7 +38,7 @@ extension _$Lambada on _Lambada {
     final isSee = model?.worldType != null;
     final isTranslate = model?.tags.contains("translate") ?? false;
     switch (pageKey) {
-      case PageKey.benchmark:
+      case .benchmark:
         if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
         P.app.demoType.q = .chat;
         break;

@@ -216,8 +216,8 @@ extension _$Translator on _Translator {
 
   Future<void> _onPageKeyChanged(PageKey pageKey) async {
     switch (pageKey) {
-      case PageKey.translator:
-      case PageKey.ocr:
+      case .translator:
+      case .ocr:
         P.app.demoType.q = .chat;
         final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
@@ -265,7 +265,7 @@ extension _$Translator on _Translator {
 
   void _handleIsGenerating(from_rwkv.IsGenerating res) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.see || pageKey == PageKey.talk || pageKey == PageKey.chat) return;
+    if (pageKey == .see || pageKey == .talk || pageKey == .chat) return;
     final generatingStateFromEvent = res.isGenerating;
     final generatingStateInFrontend = isGenerating.q;
 
@@ -401,7 +401,7 @@ extension _$Translator on _Translator {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == PageKey.chat || pageKey == PageKey.talk || pageKey == PageKey.benchmark || pageKey == PageKey.ocr) return;
+    if (pageKey == .chat || pageKey == .talk || pageKey == .benchmark || pageKey == .ocr) return;
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         // 只有在非批量模式下才处理单行响应

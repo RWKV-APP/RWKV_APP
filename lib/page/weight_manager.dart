@@ -16,7 +16,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 
 class PageWeightManager extends ConsumerWidget {
@@ -1192,7 +1191,7 @@ class _EmptyStateGuide extends ConsumerWidget {
             const SizedBox(height: 32),
             FilledButton.icon(
               onPressed: () {
-                go(PageKey.home);
+                go(.home);
               },
               icon: const Icon(Icons.home),
               label: Text(s.go_to_home_page),

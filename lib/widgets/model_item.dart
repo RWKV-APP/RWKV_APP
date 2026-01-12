@@ -17,7 +17,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
-import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
@@ -94,7 +93,7 @@ class ModelItem extends ConsumerWidget {
 
     final modelSize = fileInfo.modelSize ?? 0.1;
     final pageKey = P.app.pageKey.q;
-    if (modelSize < 1.5 && pageKey == PageKey.chat && !fileInfo.tags.contains("DeepEmbedding")) {
+    if (modelSize < 1.5 && pageKey == .chat && !fileInfo.tags.contains("DeepEmbedding")) {
       final result = await showOkCancelAlertDialog(
         context: getContext()!,
         title: S.current.size_recommendation,
