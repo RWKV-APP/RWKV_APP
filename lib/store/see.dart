@@ -302,6 +302,7 @@ extension _$See on _See {
       if (isWorldModelLoaded) {
         // OK
       } else {
+        P.rwkv.currentGroupInfo.q = null;
         P.rwkv.currentWorldType.q = null;
         await P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .see);
         _tryLoadLastWorldModel();

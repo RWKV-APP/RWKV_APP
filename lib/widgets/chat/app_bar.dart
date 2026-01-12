@@ -39,11 +39,9 @@ class ChatAppBar extends ConsumerWidget {
     final selectMessageMode = ref.watch(P.chat.isSharing);
 
     String displayName = s.click_to_select_model;
-    if (currentGroupInfo != null) {
-      displayName = currentGroupInfo.displayName;
-    } else if (currentModel != null) {
-      displayName = currentModel.name;
-    }
+
+    if (currentGroupInfo != null) displayName = currentGroupInfo.displayName;
+    if (currentModel != null) displayName = currentModel.name;
 
     final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
