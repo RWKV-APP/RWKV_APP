@@ -31,14 +31,20 @@ class LocalFile extends Equatable {
     TaskState? state,
     String? targetPath,
     bool? hasFile,
-  }) => LocalFile(
-    progress: progress ?? this.progress,
-    networkSpeed: networkSpeed ?? this.networkSpeed,
-    timeRemaining: timeRemaining ?? this.timeRemaining,
-    state: state ?? this.state,
-    targetPath: targetPath ?? this.targetPath,
-    hasFile: hasFile ?? this.hasFile,
-  );
+  }) {
+    if (progress != null && progress.isNaN) {
+      progress = 0.0;
+    }
+
+    return LocalFile(
+      progress: progress ?? this.progress,
+      networkSpeed: networkSpeed ?? this.networkSpeed,
+      timeRemaining: timeRemaining ?? this.timeRemaining,
+      state: state ?? this.state,
+      targetPath: targetPath ?? this.targetPath,
+      hasFile: hasFile ?? this.hasFile,
+    );
+  }
 
   @override
   List<Object?> get props => [
