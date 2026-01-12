@@ -161,6 +161,8 @@ extension $See on _See {
     this.imagePath.q = imagePath;
 
     // TODO: Prefill the chat with the image
+
+    await prefillImage(imagePath);
   }
 
   Future<void> _tryLoadLastWorldModel() async {
@@ -235,6 +237,17 @@ extension $See on _See {
         ModelSelector.show(preferredDemoType: DemoType.see);
       }
     }
+  }
+
+  Future<void> prefillImage(String imagePath) async {
+    if (imagePath.isEmpty) {
+      qqe("imagePath is empty");
+      return;
+    }
+    final messages = [
+      "<image>$imagePath</image>",
+    ];
+    await P.rwkv.sendMessages(messages, maxLength: 0);
   }
 }
 

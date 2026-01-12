@@ -432,6 +432,7 @@ class _FileItem extends ConsumerWidget {
               if (fileInfo.backend == Backend.webRwkv && tag == "gpu") {
                 tag = "WebRWKV";
               }
+              if (tag != "WebRWKV") tag = tag.toUpperCase();
               return Container(
                 padding: const .symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -441,7 +442,7 @@ class _FileItem extends ConsumerWidget {
                   borderRadius: .circular(8),
                 ),
                 child: T(
-                  tag.toUpperCase(),
+                  tag,
                   s: TS(
                     c: isHighlight ? (tag.toLowerCase() == "gpu" ? Colors.green : Colors.blue) : secondaryTextColor,
                     w: .w500,

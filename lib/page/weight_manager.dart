@@ -10,9 +10,11 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:path/path.dart' as path;
+import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
@@ -559,6 +561,7 @@ class _WeightList extends ConsumerWidget {
     return Column(
       children: [
         _TotalUsageTile(allWeights: allWeights),
+        _DownloadingSection(allWeights: allWeights),
         _WeightSection(title: S.current.rwkv_chat, weights: chatWeights),
         _WeightSection(title: S.current.role_play, weights: roleplayWeights),
         _WeightSection(title: S.current.visual_understanding_and_ocr, weights: seeWeights),
@@ -566,6 +569,53 @@ class _WeightList extends ConsumerWidget {
         _WeightSection(title: "Sudoku", weights: sudokuWeights),
         _WeightSection(title: S.current.rwkv_othello, weights: othelloWeights),
         _OtherFilesSection(key: otherFilesSectionKey, allWeights: allWeights),
+      ],
+    );
+  }
+}
+
+class _DownloadingSection extends ConsumerWidget {
+  final List<FileInfo> allWeights;
+
+  const _DownloadingSection({required this.allWeights});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final downloadingEntries = <(FileInfo, LocalFile)>[];
+
+    for (final fileInfo in allWeights) {
+      final local = ref.watch(P.fileManager.locals(fileInfo));
+      if (local.downloading) {
+        downloadingEntries.add((fileInfo, local));
+      }
+    }
+
+    if (downloadingEntries.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final theme = Theme.of(context);
+    final s = S.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            s.downloading,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        for (final entry in downloadingEntries)
+          _DownloadingItem(
+            fileInfo: entry.$1,
+            localFile: entry.$2,
+          ),
+        const Divider(height: 1),
       ],
     );
   }
@@ -657,11 +707,115 @@ class _TotalUsageTile extends ConsumerWidget {
     }
 
     final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights, ref);
+    final s = S.of(context);
 
     return ListTile(
-      title: const Text("Total Disk Usage"),
+      title: Text(s.total_disk_usage),
 
       trailing: Text(WeightManagerUtils.formatBytes(totalBytes), style: Theme.of(context).textTheme.bodyLarge),
+    );
+  }
+}
+
+class _DownloadingItem extends StatelessWidget {
+  final FileInfo fileInfo;
+  final LocalFile localFile;
+
+  const _DownloadingItem({
+    required this.fileInfo,
+    required this.localFile,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final theme = Theme.of(context);
+
+    final progress = localFile.progress / 100;
+    double networkSpeed = localFile.networkSpeed.clamp(0, 99999999).toDouble();
+    Duration timeRemaining = localFile.timeRemaining;
+    if (timeRemaining.isNegative) timeRemaining = Duration.zero;
+
+    final remainText = timeRemaining.inMinutes == 0
+        ? '${timeRemaining.inSeconds}s'
+        : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
+
+    final weightType = fileInfo.weightType;
+    final targetLabel = switch (weightType) {
+      WeightType.chat => s.rwkv_chat,
+      WeightType.see => s.visual_understanding_and_ocr,
+      WeightType.tts => s.tts,
+      WeightType.sudoku => 'Sudoku',
+      WeightType.othello => s.rwkv_othello,
+      WeightType.roleplay => s.role_play,
+      null => s.unknown,
+    };
+
+    return ListTile(
+      title: Text(fileInfo.name),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.q(.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Text(WeightManagerUtils.formatBytes(fileInfo.fileSize)),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondary.q(.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Text(targetLabel),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          LinearProgressIndicator(
+            value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            sprintf(
+              s.str_downloading_info,
+              [
+                (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0.0 : progress * 100.0,
+                networkSpeed,
+                remainText,
+              ],
+            ),
+            style: const TextStyle(
+              fontFamily: 'monospace',
+              fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
+            ),
+          ),
+        ],
+      ),
+      trailing: IconButton(
+        icon: const Icon(Icons.cancel),
+        tooltip: s.cancel_download,
+        onPressed: () async {
+          final result = await showOkCancelAlertDialog(
+            context: context,
+            title: s.cancel_download,
+            message: "${s.cancel_download} (${fileInfo.name})",
+            okLabel: s.cancel_download,
+            isDestructiveAction: true,
+          );
+          if (result == OkCancelResult.ok) {
+            await P.fileManager.cancelDownload(fileInfo: fileInfo);
+          }
+        },
+      ),
     );
   }
 }
@@ -804,6 +958,25 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
     // This ensures we correctly identify files even if they're not available on current platform
     final allWeightFileNames = P.fileManager.getAllConfigFileNames();
 
+    // Build a set of temporary file paths that belong to active download tasks.
+    // These are typically files with `.tmp` suffix that are still being written,
+    // and should NOT be shown in the "other files" section.
+    final downloadingTmpPaths = <String>{};
+    final downloadingCandidates = [
+      P.fileManager.chatWeights.q,
+      P.fileManager.roleplayWeights.q,
+      P.fileManager.ttsWeights.q,
+      P.fileManager.seeWeights.q,
+      P.fileManager.sudokuWeights.q,
+      P.fileManager.othelloWeights.q,
+    ].expand((e) => e).where((e) => e.available).toList();
+
+    for (final fileInfo in downloadingCandidates) {
+      final local = P.fileManager.locals(fileInfo).q;
+      if (!local.downloading) continue;
+      downloadingTmpPaths.add("${local.targetPath}.tmp");
+    }
+
     final unrecognizedFiles = <_UnrecognizedFile>[];
 
     try {
@@ -811,7 +984,14 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
       for (final entity in entities) {
         if (entity is! File) continue;
 
-        final fileName = path.basename(entity.path);
+        final filePath = entity.path;
+
+        // Skip files that are temporary files of active download tasks
+        if (downloadingTmpPaths.contains(filePath)) {
+          continue;
+        }
+
+        final fileName = path.basename(filePath);
         if (allWeightFileNames.contains(fileName)) continue;
 
         final fileSize = await entity.length();
@@ -819,7 +999,7 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
         unrecognizedFiles.add(
           _UnrecognizedFile(
             fileName: fileName,
-            filePath: entity.path,
+            filePath: filePath,
             fileSize: fileSize,
           ),
         );
