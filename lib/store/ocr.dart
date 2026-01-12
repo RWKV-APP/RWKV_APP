@@ -36,6 +36,8 @@ class _Ocr {
   late final translations = qs<Map<String, String>>({});
 
   late final runningTaskKey = qs<String?>(null);
+
+  @Deprecated("Use P.rwkv.generating instead")
   late final isGenerating = qs(false);
 
   /// 当前批量任务的原始行列表（用于多行翻译）

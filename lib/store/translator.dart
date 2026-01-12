@@ -35,7 +35,10 @@ class _Translator {
   late final runningTaskKey = qs<String?>(null);
   late final runningTaskTabId = qs<int?>(null);
   late final runningTaskUrl = qs<String?>(null);
+
+  @Deprecated("Use P.rwkv.generating instead")
   late final isGenerating = qs(false);
+
   late final serveMode = qs(ServeMode.hoverLoop);
 
   /// 每个 tab 中, 等待翻译的翻译任务, 以需要被翻译的原始字符串为 key, 以 _URLCompleter 为 value

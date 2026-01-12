@@ -51,6 +51,7 @@ class _Talk {
   late final spkShown = qs(false);
   late final textInInput = qs(_Talk._defaultTextInInput);
 
+  @Deprecated("Use P.rwkv.generating instead")
   late final generating = qs(false);
   late final latestBufferLength = qs(0);
 

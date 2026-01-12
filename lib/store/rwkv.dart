@@ -594,7 +594,7 @@ extension $RWKV on _RWKV {
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
-    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
+    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
       final getResponseCalling = isBatchInference
           ? to_rwkv.GetBatchResponseBufferContent(messages: messages, modelID: modelID) //
           : to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
