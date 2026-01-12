@@ -549,10 +549,11 @@ extension $RWKV on _RWKV {
 
     final modelID = findModelIDByWeightType(weightType: weightType);
     if (modelID == null) {
+      qqe("modelID is null");
       return;
     }
 
-    final isBatch = batchSize > 1;
+    final isBatchInference = batchSize > 1;
 
     final thinkingMode = _thinkingMode.q;
 
@@ -573,7 +574,7 @@ extension $RWKV on _RWKV {
     }
 
     final forceReasoning = thinkingMode.forceReasoning;
-    final request = isBatch
+    final request = isBatchInference
         ? to_rwkv.ChatBatchAsync(
             batchMessages,
             enableReasoning: reasoning,
@@ -594,7 +595,7 @@ extension $RWKV on _RWKV {
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
-      final getResponseCalling = isBatch
+      final getResponseCalling = isBatchInference
           ? to_rwkv.GetBatchResponseBufferContent(messages: messages, modelID: modelID) //
           : to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
       send(getResponseCalling);

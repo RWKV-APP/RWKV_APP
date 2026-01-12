@@ -821,7 +821,7 @@ extension _$Chat on _Chat {
     }
     final msg = P.msg.pool.q[id];
     if (msg == null) {
-      qqe("message not found");
+      qqe("message not found: id: $id");
       Sentry.captureException(Exception("message not found, callingFunction: $callingFunction"), stackTrace: StackTrace.current);
       return;
     }

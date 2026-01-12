@@ -247,6 +247,7 @@ extension $See on _See {
     final messages = [
       "<image>$imagePath</image>",
     ];
+    P.chat.receiveId.q = -1;
     await P.rwkv.sendMessages(messages, maxLength: 0);
   }
 }

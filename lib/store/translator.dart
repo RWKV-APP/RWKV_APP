@@ -401,7 +401,7 @@ extension _$Translator on _Translator {
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
-    if (pageKey == .chat || pageKey == .talk || pageKey == .benchmark || pageKey == .ocr) return;
+    if (pageKey == .chat || pageKey == .talk || pageKey == .benchmark || pageKey == .ocr || pageKey == .see) return;
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         // 只有在非批量模式下才处理单行响应
