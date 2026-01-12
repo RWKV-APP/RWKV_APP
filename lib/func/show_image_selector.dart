@@ -3,21 +3,18 @@ import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/router.dart';
-import 'package:zone/store/p.dart';
 
-Future<void> showImageSelector() async {
-  qq;
-  if (P.chat.focusNode.hasFocus) {
-    P.chat.focusNode.unfocus();
-    return;
-  }
-  final result = await showModalActionSheet(
+enum _Actions {
+  takePhoto,
+  selectFromLibrary,
+  selectFromFile,
+}
+
+Future<String?> showImageSelector() async {
+  final result = await showModalActionSheet<_Actions>(
     context: getContext()!,
     title: S.current.select_image,
     message: S.current.please_select_an_image_from_the_following_options,
@@ -27,42 +24,39 @@ Future<void> showImageSelector() async {
         SheetAction(
           label: S.current.take_photo,
           icon: Icons.camera,
-          key: "take_photo",
+          key: _Actions.takePhoto,
         ),
       SheetAction(
         label: S.current.select_from_library,
         icon: Icons.photo,
-        key: "select_from_library",
+        key: _Actions.selectFromLibrary,
       ),
       SheetAction(
         label: S.current.select_from_file,
         icon: Icons.file_open,
-        key: "select_from_file",
+        key: _Actions.selectFromFile,
       ),
     ],
   );
-  qqq("result: $result");
-  if (result == null) return;
+  if (result == null) return null;
   final ImagePicker picker = ImagePicker();
   late final String? imagePath;
-  if (result == "take_photo") {
-    final image = await picker.pickImage(source: ImageSource.camera);
-    if (image == null) return;
-    imagePath = image.path;
-  } else if (result == "select_from_library") {
-    final image = await picker.pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    imagePath = image.path;
-  } else if (result == "select_from_file") {
-    final result = await FilePicker.platform.pickFiles(type: .image);
-    if (result == null) return;
-    imagePath = result.files.first.path;
-  } else {
-    throw Exception("Invalid result: $result");
+  switch (result) {
+    case _Actions.takePhoto:
+      final image = await picker.pickImage(source: ImageSource.camera);
+      if (image == null) return null;
+      imagePath = image.path;
+      break;
+    case _Actions.selectFromLibrary:
+      final image = await picker.pickImage(source: ImageSource.gallery);
+      if (image == null) return null;
+      imagePath = image.path;
+      break;
+    case _Actions.selectFromFile:
+      final result = await FilePicker.platform.pickFiles(type: .image);
+      if (result == null) return null;
+      imagePath = result.files.first.path;
+      break;
   }
-  if (imagePath == null) {
-    Alert.warning("No image selected");
-    return;
-  }
-  P.see.imagePath.q = imagePath;
+  return imagePath;
 }

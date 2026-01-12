@@ -120,7 +120,15 @@ extension $Chat on _Chat {
       final imagePath = P.see.imagePath.q;
       if (!hasAtLeastOneImage && imagePath == null) {
         Alert.info(S.current.please_select_an_image_first);
-        await showImageSelector();
+
+        if (focusNode.hasFocus) {
+          focusNode.unfocus();
+          return;
+        }
+
+        final imagePath = await showImageSelector();
+        if (imagePath == null) return;
+        P.see.imagePath.q = imagePath;
         return;
       }
     }
@@ -206,7 +214,7 @@ extension $Chat on _Chat {
   Future<void> onKeyboardSubmitted(String aString) async {
     qqq(aString);
 
-    final receivingTokens = P.chat.receivingTokens.q;
+    final receivingTokens = this.receivingTokens.q;
 
     if (receivingTokens) {
       Alert.info("Please wait for the previous message to be generated");
@@ -227,7 +235,7 @@ extension $Chat on _Chat {
 
   Future<void> onTapMessageList() async {
     qq;
-    P.chat.focusNode.unfocus();
+    focusNode.unfocus();
     P.talk.dismissAllShown();
     final _editingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (_editingIndex == null) return;
@@ -298,7 +306,7 @@ extension $Chat on _Chat {
   }
 
   void toggleCompletionMode() {
-    final receiving = P.chat.receivingTokens.q;
+    final receiving = receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -480,9 +488,9 @@ extension $Chat on _Chat {
 
   Future<void> onBatchInferenceSwitchChanged(bool value) async {
     P.app.hapticLight();
-    P.chat.batchEnabled.q = value;
+    batchEnabled.q = value;
     if (wenYanWen.q == WenyanMode.mixed && !value) {
-      P.chat.wenYanWen.q = WenyanMode.off;
+      wenYanWen.q = WenyanMode.off;
     }
 
     if (!value) return;
