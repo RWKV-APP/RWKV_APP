@@ -53,7 +53,7 @@ class ModelSelector extends ConsumerWidget {
     })();
 
     if (P.app.pageKey.q == PageKey.talk) {
-      _preferredDemoType = DemoType.tts;
+      _preferredDemoType = .tts;
     }
 
     if (preferredDemoType != null) {
@@ -144,12 +144,13 @@ class _Hints extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        if (demoType == DemoType.see) ...[
-          T(s.please_select_a_world_type, s: const TS(s: 16, w: .w500)),
-          4.h,
-        ],
+        if (demoType == .see)
+          Text(
+            "你可以在下方的模型文件列表中下载一组模型文件, 点击开始聊天, RWKV Chat 即可在您的设备上理解视觉信息",
+            style: TS(c: qb.q(.7), s: 12),
+          ),
         const _DownloadSource(),
-        if (demoType == DemoType.chat)
+        if (demoType == .chat)
           T(
             "👉${s.str_model_selection_dialog_hint}👈",
             s: TS(c: qb.q(.7), s: 12, w: .w500),
@@ -171,12 +172,12 @@ class _ModelList extends ConsumerWidget {
     final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
 
     Set<FileInfo> availableModels = switch (preferredDemoType) {
-      DemoType.see => ref.watch(P.fileManager.seeWeights),
-      DemoType.tts => ref.watch(P.fileManager.ttsWeights),
-      DemoType.chat => ref.watch(P.fileManager.chatWeights),
-      DemoType.sudoku => ref.watch(P.fileManager.sudokuWeights),
-      DemoType.othello => ref.watch(P.fileManager.othelloWeights),
-      DemoType.fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
+      .see => ref.watch(P.fileManager.seeWeights),
+      .tts => ref.watch(P.fileManager.ttsWeights),
+      .chat => ref.watch(P.fileManager.chatWeights),
+      .sudoku => ref.watch(P.fileManager.sudokuWeights),
+      .othello => ref.watch(P.fileManager.othelloWeights),
+      .fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
     };
 
     final ttsCores = ref.watch(P.fileManager.ttsCores);
@@ -212,7 +213,7 @@ class _ModelList extends ConsumerWidget {
         Platform.isAndroid && !inTranslator && !inBenchmark && !rolePlayOnly && !hasNpuModel && availableModels.isNotEmpty;
 
     List<Widget> items = switch (preferredDemoType) {
-      DemoType.see =>
+      .see =>
         WorldType.values
             .where((e) => e.available)
             .expand(
@@ -222,8 +223,8 @@ class _ModelList extends ConsumerWidget {
                   .map((pair) => WorldGroupItem(e, socPair: pair)),
             )
             .toList(),
-      DemoType.tts => ttsCores.map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
-      DemoType.chat || DemoType.sudoku =>
+      .tts => ttsCores.map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
+      .chat || .sudoku =>
         availableModels
             .where((e) => showNeko == e.isNeko)
             .sorted((a, b) {
@@ -249,7 +250,7 @@ class _ModelList extends ConsumerWidget {
               ),
             )
             .toList(),
-      DemoType.fifthteenPuzzle || DemoType.othello => [],
+      .fifthteenPuzzle || .othello => [],
     };
 
     return Column(

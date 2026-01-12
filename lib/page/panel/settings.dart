@@ -79,7 +79,7 @@ class Settings extends ConsumerWidget {
   const Settings({
     super.key,
     this.scrollController,
-    this.isInDrawerMenu = false,
+    this.isInDrawerMenu = true,
   });
 
   @override
@@ -88,7 +88,7 @@ class Settings extends ConsumerWidget {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final paddingTop = ref.watch(P.app.paddingTop);
     final demoType = ref.watch(P.app.demoType);
-    final iconPath = "assets/img/${demoType.name}/icon.png";
+    final iconPath = "assets/img/chat/icon.png";
     final version = ref.watch(P.app.version);
     final buildNumber = ref.watch(P.app.buildNumber);
     final preferredTextScaleFactor = ref.watch(P.preference.preferredTextScaleFactor);

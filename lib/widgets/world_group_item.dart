@@ -305,8 +305,10 @@ class _ActionButton extends StatelessWidget {
         child: TextButton(
           onPressed: onPressed,
           style: TextButton.styleFrom(
+            minimumSize: .zero,
             foregroundColor: Colors.white,
-            padding: const .symmetric(horizontal: 16, vertical: 8),
+            visualDensity: .compact,
+            splashFactory: NoSplash.splashFactory,
             shape: RoundedRectangleBorder(
               borderRadius: .circular(8),
             ),
@@ -325,8 +327,10 @@ class _ActionButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        foregroundColor: color,
-        padding: const .symmetric(horizontal: 16, vertical: 8),
+        minimumSize: .zero,
+        foregroundColor: Colors.white,
+        visualDensity: .compact,
+        splashFactory: NoSplash.splashFactory,
         shape: RoundedRectangleBorder(
           borderRadius: .circular(8),
         ),
