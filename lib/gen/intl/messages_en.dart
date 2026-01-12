@@ -736,9 +736,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Test speed and accuracy",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("Perplexity"),
-    "pick_from_gallery": MessageLookupByLibrary.simpleMessage(
-      "Pick from Gallery",
-    ),
     "players": MessageLookupByLibrary.simpleMessage("Players"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "Playing partially generated audio",
@@ -877,6 +874,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select a See Type",
     ),
     "select_all": MessageLookupByLibrary.simpleMessage("Select All"),
+    "select_from_file": MessageLookupByLibrary.simpleMessage(
+      "Select Image File",
+    ),
     "select_from_library": MessageLookupByLibrary.simpleMessage(
       "Select from Library",
     ),

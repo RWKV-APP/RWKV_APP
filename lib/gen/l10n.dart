@@ -1978,6 +1978,11 @@ class S {
     );
   }
 
+  /// `选择图片文件`
+  String get select_from_file {
+    return Intl.message('选择图片文件', name: 'select_from_file', desc: '', args: []);
+  }
+
   /// `拍照`
   String get take_photo {
     return Intl.message('拍照', name: 'take_photo', desc: '', args: []);
@@ -3589,11 +3594,6 @@ class S {
   /// `中->英`
   String get zh_to_en {
     return Intl.message('中->英', name: 'zh_to_en', desc: '', args: []);
-  }
-
-  /// `从相册选择`
-  String get pick_from_gallery {
-    return Intl.message('从相册选择', name: 'pick_from_gallery', desc: '', args: []);
   }
 
   /// `相机`

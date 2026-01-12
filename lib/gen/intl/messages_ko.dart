@@ -616,7 +616,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "속도와 정확도 테스트",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("혼란도"),
-    "pick_from_gallery": MessageLookupByLibrary.simpleMessage("갤러리에서 선택"),
     "players": MessageLookupByLibrary.simpleMessage("플레이어"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "부분 생성된 오디오 재생 중",
@@ -726,6 +725,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_a_model": MessageLookupByLibrary.simpleMessage("모델 선택"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("작업 유형 선택"),
     "select_all": MessageLookupByLibrary.simpleMessage("모두 선택"),
+    "select_from_file": MessageLookupByLibrary.simpleMessage("이미지 파일 선택"),
     "select_from_library": MessageLookupByLibrary.simpleMessage("갤러리에서 선택"),
     "select_image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
     "select_model": MessageLookupByLibrary.simpleMessage("모델 선택"),

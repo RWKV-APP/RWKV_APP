@@ -618,7 +618,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "速度と精度をテスト",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("困惑度"),
-    "pick_from_gallery": MessageLookupByLibrary.simpleMessage("ギャラリーから選択"),
     "players": MessageLookupByLibrary.simpleMessage("プレイヤー"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "部分的に生成された音声を再生中",
@@ -728,6 +727,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_a_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("タスクの種類を選択"),
     "select_all": MessageLookupByLibrary.simpleMessage("すべて選択"),
+    "select_from_file": MessageLookupByLibrary.simpleMessage("画像ファイルを選択"),
     "select_from_library": MessageLookupByLibrary.simpleMessage("ライブラリから選択"),
     "select_image": MessageLookupByLibrary.simpleMessage("画像を選択"),
     "select_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),

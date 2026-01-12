@@ -760,9 +760,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Тест скорости и точности",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("Перплексия"),
-    "pick_from_gallery": MessageLookupByLibrary.simpleMessage(
-      "Выбрать из галереи",
-    ),
     "players": MessageLookupByLibrary.simpleMessage("Игроки"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "Воспроизведение частично сгенерированного аудио",
@@ -902,6 +899,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выберите тип задачи",
     ),
     "select_all": MessageLookupByLibrary.simpleMessage("Выбрать все"),
+    "select_from_file": MessageLookupByLibrary.simpleMessage(
+      "Выбрать файл изображения",
+    ),
     "select_from_library": MessageLookupByLibrary.simpleMessage(
       "Выбрать из галереи",
     ),

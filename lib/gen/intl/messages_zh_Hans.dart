@@ -566,7 +566,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "测试速度和准确率",
     ),
     "perplexity": MessageLookupByLibrary.simpleMessage("困惑度"),
-    "pick_from_gallery": MessageLookupByLibrary.simpleMessage("从相册选择"),
     "players": MessageLookupByLibrary.simpleMessage("玩家"),
     "playing_partial_generated_audio": MessageLookupByLibrary.simpleMessage(
       "正在播放部分已生成的语音",
@@ -669,6 +668,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_a_model": MessageLookupByLibrary.simpleMessage("选择模型"),
     "select_a_world_type": MessageLookupByLibrary.simpleMessage("选择任务类型"),
     "select_all": MessageLookupByLibrary.simpleMessage("全选"),
+    "select_from_file": MessageLookupByLibrary.simpleMessage("选择图片文件"),
     "select_from_library": MessageLookupByLibrary.simpleMessage("从相册选择"),
     "select_image": MessageLookupByLibrary.simpleMessage("选择图片"),
     "select_model": MessageLookupByLibrary.simpleMessage("选择模型"),

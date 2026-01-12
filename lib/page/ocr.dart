@@ -45,7 +45,7 @@ class PageOcr extends ConsumerWidget {
             // Retake / Gallery
             IconButton(
               icon: const Icon(Icons.add_photo_alternate),
-              tooltip: s.pick_from_gallery,
+              tooltip: s.select_from_library,
               onPressed: () {
                 P.ocr.pickFromGallery();
               },
