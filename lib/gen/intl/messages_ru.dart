@@ -737,7 +737,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Отелло"),
     "other_files": MessageLookupByLibrary.simpleMessage(
-      "Другие файлы (Эти файлы могут быть устаревшими или больше не поддерживаемыми весами. Вы можете безопасно удалить их)",
+      "Другие файлы (Эти файлы могут быть устаревшими или больше не поддерживаемыми весами, которые больше не используются RWKV Chat)",
     ),
     "output": MessageLookupByLibrary.simpleMessage("Вывод"),
     "overseas": MessageLookupByLibrary.simpleMessage("(за рубежом)"),

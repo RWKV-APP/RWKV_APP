@@ -558,7 +558,7 @@
     }
   },
   "adapting_more_inference_chips": "We are continuously adapting more inference chips, please stay tuned.",
-  "other_files": "Other Files (These files may be outdated or no longer supported weights. You can safely delete them)",
+  "other_files": "Other Files (These may be outdated or unsupported weights that RWKV Chat no longer needs)",
   "import_weight_file": "Import Weight File",
   "import_success": "Import successful",
   "import_failed": "Import failed",

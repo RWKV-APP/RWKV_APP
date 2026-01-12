@@ -1,0 +1,15 @@
+---
+alwaysApply: true
+---
+
+## i18n
+
+- 目前我们的项目中有 6 个 .arb 文件, 分别是
+  - intl_en.arb
+  - intl_ja.arb
+  - intl_ko.arb
+  - intl_ru.arb
+  - intl_zh_Hans.arb
+  - intl_zh_Hant.arb
+- 一旦你修改了某个 .arb 文件, 一定要保证其他几个 arb 文件对应的 key 值也被同时修改了
+- 最后, 在你修改完了 .arb 文件后, 运行 `dart pub global run intl_utils:generate` 以便生成文件

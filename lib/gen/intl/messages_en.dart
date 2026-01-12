@@ -713,7 +713,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
     "other_files": MessageLookupByLibrary.simpleMessage(
-      "Other Files (These files may be outdated or no longer supported weights. You can safely delete them)",
+      "Other Files (These may be outdated or unsupported weights that RWKV Chat no longer needs)",
     ),
     "output": MessageLookupByLibrary.simpleMessage("Output"),
     "overseas": MessageLookupByLibrary.simpleMessage("(Overseas)"),

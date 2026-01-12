@@ -597,7 +597,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 오셀로"),
     "other_files": MessageLookupByLibrary.simpleMessage(
-      "기타 파일 (이러한 파일은 만료되었거나 더 이상 지원되지 않는 가중치일 수 있습니다. 안전하게 삭제할 수 있습니다)",
+      "기타 파일 (이러한 파일은 만료되었거나 더 이상 지원되지 않는 가중치로, RWKV Chat 에서 더 이상 사용할 필요가 없을 수 있습니다)",
     ),
     "output": MessageLookupByLibrary.simpleMessage("출력"),
     "overseas": MessageLookupByLibrary.simpleMessage("(해외)"),

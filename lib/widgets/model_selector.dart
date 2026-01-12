@@ -143,11 +143,6 @@ class _Hints extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        if (demoType == .see)
-          Text(
-            "你可以在下方的模型文件列表中下载一组模型文件, 点击开始聊天, RWKV Chat 即可在您的设备上理解视觉信息",
-            style: TS(c: qb.q(.7), s: 12),
-          ),
         const _DownloadSource(),
         if (demoType == .chat)
           T(

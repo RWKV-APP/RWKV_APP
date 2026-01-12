@@ -599,7 +599,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV オセロ"),
     "other_files": MessageLookupByLibrary.simpleMessage(
-      "その他のファイル (これらのファイルは期限切れまたはサポートされなくなった重みファイルである可能性があります。安全に削除できます)",
+      "その他のファイル (これらのファイルは期限切れまたはサポートされなくなった重みファイルであり、RWKV Chat ではもう使用されていない可能性があります)",
     ),
     "output": MessageLookupByLibrary.simpleMessage("出力"),
     "overseas": MessageLookupByLibrary.simpleMessage("(海外)"),

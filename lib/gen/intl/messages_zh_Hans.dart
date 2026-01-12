@@ -547,7 +547,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "othello_title": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
     "other_files": MessageLookupByLibrary.simpleMessage(
-      "其他文件 (这些文件可以是已经过期或不再支持的权重, 您可以放心地删除他们)",
+      "其他文件 (这些文件可能是已经过期或不再支持的权重 RWKV Chat 无需再使用它们)",
     ),
     "output": MessageLookupByLibrary.simpleMessage("输出"),
     "overseas": MessageLookupByLibrary.simpleMessage("(境外)"),

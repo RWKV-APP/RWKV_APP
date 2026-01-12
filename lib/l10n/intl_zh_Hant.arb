@@ -551,7 +551,7 @@
     }
   },
   "adapting_more_inference_chips": "我們正在持續適配更多的推理芯片，敬請期待。",
-  "other_files": "其他檔案 (這些檔案可以是已經過期或不再支援的權重, 您可以放心地刪除他們)",
+  "other_files": "其他檔案 (這些檔案可能是已經過期或不再支援的權重 RWKV Chat 無需再使用它們)",
   "import_weight_file": "匯入權重檔案",
   "import_success": "匯入成功",
   "import_failed": "匯入失敗",
