@@ -26,8 +26,9 @@ class MarkdownRender extends ConsumerWidget {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
     const scale = Config.msgFontScale;
+    final qb = ref.watch(P.app.qb);
     final gptMarkdownStyle = TextStyle(
-      color: color,
+      color: qb,
       fontSize: Config.markdownBodyFontSize * scale,
     );
 
