@@ -178,9 +178,9 @@ class _WenYanWenButton extends ConsumerWidget {
         offset: const Offset(-30, -80),
         itemBuilder: (c) {
           return [
-            PopupMenuItem(value: WenyanMode.off, child: Text('文言: 关')),
-            PopupMenuItem(value: WenyanMode.classic, child: Text('文言: 开')),
-            PopupMenuItem(value: WenyanMode.mixed, child: Text('古今')),
+            const PopupMenuItem(value: WenyanMode.off, child: Text('文言: 关')),
+            const PopupMenuItem(value: WenyanMode.classic, child: Text('文言: 开')),
+            const PopupMenuItem(value: WenyanMode.mixed, child: Text('古今')),
           ];
         },
         onSelected: (m) {
