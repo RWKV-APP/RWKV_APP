@@ -134,10 +134,10 @@ class S {
     );
   }
 
-  /// `更换选定图片`
+  /// `更换图片`
   String get change_selected_image {
     return Intl.message(
-      '更换选定图片',
+      '更换图片',
       name: 'change_selected_image',
       desc: '',
       args: [],
@@ -2013,9 +2013,9 @@ class S {
     );
   }
 
-  /// `选择新图像`
+  /// `选择图片`
   String get select_new_image {
-    return Intl.message('选择新图像', name: 'select_new_image', desc: '', args: []);
+    return Intl.message('选择图片', name: 'select_new_image', desc: '', args: []);
   }
 
   /// `存储权限未授予`

@@ -252,7 +252,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_update": MessageLookupByLibrary.simpleMessage("Не сейчас"),
     "change": MessageLookupByLibrary.simpleMessage("Изменить"),
     "change_selected_image": MessageLookupByLibrary.simpleMessage(
-      "Изменить выбранное изображение",
+      "Изменить изображение",
     ),
     "chat": MessageLookupByLibrary.simpleMessage("Чат"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
@@ -908,7 +908,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_image": MessageLookupByLibrary.simpleMessage("Выбрать изображение"),
     "select_model": MessageLookupByLibrary.simpleMessage("Выбрать модель"),
     "select_new_image": MessageLookupByLibrary.simpleMessage(
-      "Выбрать новое изображение",
+      "Выбрать изображение",
     ),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage(

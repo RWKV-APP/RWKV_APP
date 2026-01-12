@@ -245,7 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_update": MessageLookupByLibrary.simpleMessage("Not now"),
     "change": MessageLookupByLibrary.simpleMessage("Change"),
     "change_selected_image": MessageLookupByLibrary.simpleMessage(
-      "Change Selected Image",
+      "Change Image",
     ),
     "chat": MessageLookupByLibrary.simpleMessage("Chat"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
@@ -882,9 +882,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "select_image": MessageLookupByLibrary.simpleMessage("Select Image"),
     "select_model": MessageLookupByLibrary.simpleMessage("Select Model"),
-    "select_new_image": MessageLookupByLibrary.simpleMessage(
-      "Select New Image",
-    ),
+    "select_new_image": MessageLookupByLibrary.simpleMessage("Select Image"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage(
           "Please select a preset from below, or tap \'Custom\' to configure manually",

@@ -205,7 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("取消下載"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("暫不更新"),
     "change": MessageLookupByLibrary.simpleMessage("變更"),
-    "change_selected_image": MessageLookupByLibrary.simpleMessage("更換選定圖片"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage("更換圖片"),
     "chat": MessageLookupByLibrary.simpleMessage("開始對話"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已複製到剪貼簿"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("請輸入訊息內容"),
@@ -666,7 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("從相簿選擇"),
     "select_image": MessageLookupByLibrary.simpleMessage("選擇圖片"),
     "select_model": MessageLookupByLibrary.simpleMessage("選擇模型"),
-    "select_new_image": MessageLookupByLibrary.simpleMessage("選擇新圖像"),
+    "select_new_image": MessageLookupByLibrary.simpleMessage("選擇圖片"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage("請從下方選擇預設參數，或點擊「自定義」進行手動配置"),
     "selected_count": m25,

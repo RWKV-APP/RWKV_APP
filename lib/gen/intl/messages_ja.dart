@@ -210,7 +210,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("ダウンロードをキャンセル"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("今すぐ更新しない"),
     "change": MessageLookupByLibrary.simpleMessage("変更"),
-    "change_selected_image": MessageLookupByLibrary.simpleMessage("選択した画像を変更"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage("画像を変更"),
     "chat": MessageLookupByLibrary.simpleMessage("チャット"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "クリップボードにコピーされました",
@@ -731,7 +731,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("ライブラリから選択"),
     "select_image": MessageLookupByLibrary.simpleMessage("画像を選択"),
     "select_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
-    "select_new_image": MessageLookupByLibrary.simpleMessage("新しい画像を選択"),
+    "select_new_image": MessageLookupByLibrary.simpleMessage("画像を選択"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage(
           "以下からプリセットを選択するか、「カスタム」をタップして手動で設定してください",

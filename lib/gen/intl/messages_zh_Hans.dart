@@ -207,7 +207,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("取消下载"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("暂不更新"),
     "change": MessageLookupByLibrary.simpleMessage("更改"),
-    "change_selected_image": MessageLookupByLibrary.simpleMessage("更换选定图片"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage("更换图片"),
     "chat": MessageLookupByLibrary.simpleMessage("开始对话"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage("已复制到剪贴板"),
     "chat_empty_message": MessageLookupByLibrary.simpleMessage("请输入消息内容"),
@@ -672,7 +672,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("从相册选择"),
     "select_image": MessageLookupByLibrary.simpleMessage("选择图片"),
     "select_model": MessageLookupByLibrary.simpleMessage("选择模型"),
-    "select_new_image": MessageLookupByLibrary.simpleMessage("选择新图像"),
+    "select_new_image": MessageLookupByLibrary.simpleMessage("选择图片"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage("请从下方选择预设参数，或点击“自定义”进行手动配置"),
     "selected_count": m25,

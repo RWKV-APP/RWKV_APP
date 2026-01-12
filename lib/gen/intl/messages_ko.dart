@@ -212,7 +212,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_download": MessageLookupByLibrary.simpleMessage("다운로드 취소"),
     "cancel_update": MessageLookupByLibrary.simpleMessage("지금은 업데이트 안 함"),
     "change": MessageLookupByLibrary.simpleMessage("변경"),
-    "change_selected_image": MessageLookupByLibrary.simpleMessage("선택한 이미지 변경"),
+    "change_selected_image": MessageLookupByLibrary.simpleMessage("이미지 변경"),
     "chat": MessageLookupByLibrary.simpleMessage("채팅"),
     "chat_copied_to_clipboard": MessageLookupByLibrary.simpleMessage(
       "클립보드에 복사되었습니다",
@@ -729,7 +729,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_from_library": MessageLookupByLibrary.simpleMessage("갤러리에서 선택"),
     "select_image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
     "select_model": MessageLookupByLibrary.simpleMessage("모델 선택"),
-    "select_new_image": MessageLookupByLibrary.simpleMessage("새 이미지 선택"),
+    "select_new_image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage(
           "아래에서 사전 설정을 선택하거나 \'사용자 지정\'을 탭하여 수동으로 구성하세요",
