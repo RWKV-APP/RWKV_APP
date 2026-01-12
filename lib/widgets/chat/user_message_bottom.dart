@@ -25,7 +25,6 @@ class UserMessageBottom extends ConsumerWidget {
 
     switch (msg.type) {
       case model.MessageType.userImage:
-      case model.MessageType.userAudio:
       case model.MessageType.userTTS:
         return const SizedBox.shrink();
       case model.MessageType.text:
@@ -49,7 +48,6 @@ class UserMessageBottom extends ConsumerWidget {
         switch (msg.type) {
           case model.MessageType.text:
           case model.MessageType.userImage:
-          case model.MessageType.userAudio:
             showUserEditButton = true;
             showUserCopyButton = true;
           case model.MessageType.userTTS:

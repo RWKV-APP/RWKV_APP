@@ -85,7 +85,6 @@ extension _$Dump on _Dump {
             content += (imageUrl.split("/").last) + "\n";
           }
           break;
-        case MessageType.userAudio:
         case MessageType.userTTS:
         case MessageType.ttsGeneration:
           break;

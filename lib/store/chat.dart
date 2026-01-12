@@ -255,16 +255,6 @@ extension $Chat on _Chat {
     P.msg.editingOrRegeneratingIndex.q = index;
     textInInput.q = "";
     focusNode.unfocus();
-    if (userMessage.type == MessageType.userAudio) {
-      await send(
-        "",
-        type: MessageType.userAudio,
-        audioUrl: userMessage.audioUrl,
-        withHistory: false,
-        audioLength: userMessage.audioLength,
-      );
-      return;
-    }
     final content = userMessage.contentAndTails.first;
     await send(content, isRegenerate: true);
   }
@@ -704,20 +694,6 @@ extension _$Chat on _Chat {
 
   Future<void> _onNewFileReceived((File, int) event) async {
     final demoType = P.app.demoType.q;
-    if (demoType == DemoType.see) {
-      final (file, length) = event;
-      final path = file.path;
-
-      qqq("new file received: $path, length: $length");
-
-      final t0 = HF.milliseconds;
-      P.rwkv.setAudioPrompt(path: path);
-      final t1 = HF.milliseconds;
-      qqq("setAudioPrompt done in ${t1 - t0}ms");
-      send("", type: MessageType.userAudio, audioUrl: path, withHistory: false, audioLength: length);
-      final t2 = HF.milliseconds;
-      qqq("send done in ${t2 - t1}ms");
-    }
 
     if (demoType == DemoType.tts || demoType == DemoType.chat) {
       final (file, length) = event;

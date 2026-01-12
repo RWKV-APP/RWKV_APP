@@ -59,18 +59,6 @@ class Message extends ConsumerWidget {
 
     P.msg.latestClicked.q = msg;
 
-    if (msg.type == .userAudio) {
-      final audioUrl = msg.audioUrl;
-      qqq("audioUrl: $audioUrl");
-      if (audioUrl == null) return;
-      if (P.see.playing.q) {
-        P.see.stopPlaying();
-      } else {
-        P.see.play(path: audioUrl);
-      }
-      return;
-    }
-
     if (msg.type == .ttsGeneration) {
       final start = DateTime.now().millisecondsSinceEpoch;
       final end = DateTime.now().millisecondsSinceEpoch;
@@ -212,7 +200,7 @@ class Message extends ConsumerWidget {
     final showingCotContent = cotContentHeight != 0;
 
     final isUserImage = msg.type == .userImage;
-    final isUserAudio = msg.type == .userAudio;
+    final isUserAudio = false;
 
     String worldDemoMessageHeader = "";
 
@@ -226,7 +214,6 @@ class Message extends ConsumerWidget {
         radius = 16;
       case .userImage:
       case .text:
-      case .userAudio:
     }
 
     BorderRadius? borderRadius = .only(
@@ -252,7 +239,6 @@ class Message extends ConsumerWidget {
         if (!msg.isMine) border = null;
         if (!msg.isMine) padding = const .only(left: 6, top: 12, right: 6);
       case .ttsGeneration:
-      case .userAudio:
     }
 
     final screenWidth = ref.watch(P.app.screenWidth);
@@ -304,7 +290,7 @@ class Message extends ConsumerWidget {
                 ),
               if (isMine) ...[
                 // 🔥 User message
-                if (!isUserImage && !isUserAudio && finalContent.isNotEmpty) T(finalContent, s: userMessageStyle),
+                if (!isUserImage && finalContent.isNotEmpty) T(finalContent, s: userMessageStyle),
                 // 🔥 User message image
                 if (isUserImage)
                   ConstrainedBox(
@@ -319,7 +305,6 @@ class Message extends ConsumerWidget {
                     ),
                   ),
                 // 🔥 User message audio
-                if (isUserAudio) AudioBubble(msg),
                 if (preferredDemoType == DemoType.tts) UserTTSContent(msg, index),
                 UserMessageBottom(msg, index),
               ],
