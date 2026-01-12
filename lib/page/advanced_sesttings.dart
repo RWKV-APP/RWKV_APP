@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:zone/widgets/settings/chat_template_dialog.dart';
-
 import 'package:zone/gen/l10n.dart' show S;
+import 'package:zone/store/p.dart';
+import 'package:zone/widgets/settings/chat_template_dialog.dart';
 
 class PageAdvancedSettings extends StatefulWidget {
   const PageAdvancedSettings({super.key});
@@ -34,18 +34,19 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
                 ChatTemplateDialog.show(context, systemPrompt: true);
               },
             ),
-            item(
-              title: S.current.web_search_template,
-              child: const SizedBox(
-                height: 56,
-                width: 18,
-                child: Icon(Icons.arrow_forward_ios, size: 18),
+            if (P.preference.featureRollout.webSearch)
+              item(
+                title: S.current.web_search_template,
+                child: const SizedBox(
+                  height: 56,
+                  width: 18,
+                  child: Icon(Icons.arrow_forward_ios, size: 18),
+                ),
+                onTap: () {
+                  ChatTemplateDialog.show(context, webSearch: true);
+                },
               ),
-              onTap: () {
-                ChatTemplateDialog.show(context, webSearch: true);
-              },
-            ),
-            const SizedBox(height: 8),
+            if (P.preference.featureRollout.webSearch) const SizedBox(height: 8),
             item(
               title: S.current.thinking_mode_template,
               child: const SizedBox(
