@@ -783,6 +783,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "thought_result": MessageLookupByLibrary.simpleMessage("思考結果"),
     "top_p_with_value": m36,
     "total_count": MessageLookupByLibrary.simpleMessage("總數"),
+    "total_disk_usage": MessageLookupByLibrary.simpleMessage("總磁碟使用量"),
     "total_test_items": m37,
     "translate": MessageLookupByLibrary.simpleMessage("翻譯"),
     "translating": MessageLookupByLibrary.simpleMessage("翻譯中..."),

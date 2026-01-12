@@ -29,6 +29,7 @@
   "select_all": "全选",
   "cancel_all_selection": "取消全选",
   "weights_mangement": "权重文件管理",
+  "total_disk_usage": "总磁盘使用量",
   "thinking_mode_alert_footer": "模式",
   "think_mode_selector_title": "请选择推理模式",
   "think_mode_selector_message": "推理模式会影响模型在推理时的表现",

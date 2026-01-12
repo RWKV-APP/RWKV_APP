@@ -707,9 +707,10 @@ class _TotalUsageTile extends ConsumerWidget {
     }
 
     final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights, ref);
+    final s = S.of(context);
 
     return ListTile(
-      title: const Text("Total Disk Usage"),
+      title: Text(s.total_disk_usage),
 
       trailing: Text(WeightManagerUtils.formatBytes(totalBytes), style: Theme.of(context).textTheme.bodyLarge),
     );

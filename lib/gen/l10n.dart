@@ -274,6 +274,11 @@ class S {
     );
   }
 
+  /// `总磁盘使用量`
+  String get total_disk_usage {
+    return Intl.message('总磁盘使用量', name: 'total_disk_usage', desc: '', args: []);
+  }
+
   /// `模式`
   String get thinking_mode_alert_footer {
     return Intl.message(

@@ -1064,6 +1064,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "top_p_with_value": m36,
     "total_count": MessageLookupByLibrary.simpleMessage("Общее количество"),
+    "total_disk_usage": MessageLookupByLibrary.simpleMessage(
+      "Общее использование диска",
+    ),
     "total_test_items": m37,
     "translate": MessageLookupByLibrary.simpleMessage("Перевод"),
     "translating": MessageLookupByLibrary.simpleMessage("Перевод..."),
