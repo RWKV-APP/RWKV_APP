@@ -133,7 +133,7 @@ class _RWKV {
   late final latestModel = qp((ref) {
     final loadedModels = ref.watch(P.rwkv.loadedModels);
     final m = loadedModels.keys.lastOrNull;
-    if (m?.weightType == WeightType.roleplay) {
+    if (m?.weightType == .roleplay) {
       return null;
     }
     return m;
@@ -537,12 +537,12 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    final weightType = switch (P.app.demoType.q) {
-      .chat => WeightType.chat,
-      .see => WeightType.see,
-      .tts => WeightType.tts,
-      .sudoku => WeightType.sudoku,
-      .othello => WeightType.othello,
+    final WeightType weightType = switch (P.app.demoType.q) {
+      .chat => .chat,
+      .see => .see,
+      .tts => .tts,
+      .sudoku => .sudoku,
+      .othello => .othello,
       // TODO: Handle this case.
       .fifthteenPuzzle => throw UnimplementedError(),
     };
@@ -1092,18 +1092,18 @@ extension _$RWKV on _RWKV {
     }
 
     switch (weightType) {
-      case WeightType.chat:
+      case .chat:
         break;
-      case WeightType.see:
+      case .see:
         break;
-      case WeightType.tts:
+      case .tts:
         send(to_rwkv.ReleaseTTSModels());
         break;
-      case WeightType.sudoku:
+      case .sudoku:
         break;
-      case WeightType.othello:
+      case .othello:
         break;
-      case WeightType.roleplay:
+      case .roleplay:
         break;
     }
 

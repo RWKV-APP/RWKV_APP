@@ -741,12 +741,12 @@ class _DownloadingItem extends StatelessWidget {
 
     final weightType = fileInfo.weightType;
     final targetLabel = switch (weightType) {
-      WeightType.chat => s.rwkv_chat,
-      WeightType.see => s.visual_understanding_and_ocr,
-      WeightType.tts => s.tts,
-      WeightType.sudoku => 'Sudoku',
-      WeightType.othello => s.rwkv_othello,
-      WeightType.roleplay => s.role_play,
+      .chat => s.rwkv_chat,
+      .see => s.visual_understanding_and_ocr,
+      .tts => s.tts,
+      .sudoku => 'Sudoku',
+      .othello => s.rwkv_othello,
+      .roleplay => s.role_play,
       null => s.unknown,
     };
 
