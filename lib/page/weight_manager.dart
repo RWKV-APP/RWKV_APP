@@ -79,7 +79,7 @@ class PageWeightManager extends ConsumerWidget {
               sourceFile: null,
               fileBytes: null,
               existingFileInfo: null,
-              error: "${S.current.file_not_found}",
+              error: S.current.file_not_found,
             ));
             continue;
           }
