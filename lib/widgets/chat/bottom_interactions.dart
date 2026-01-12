@@ -1,20 +1,24 @@
 // ignore: unused_import
 
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/web_search_mode.dart';
+import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/select_image_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
+import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/performance_info.dart';
 
 class BottomInteractions extends ConsumerWidget {
@@ -41,6 +45,7 @@ class BottomInteractions extends ConsumerWidget {
 
 class _Interactions extends ConsumerWidget {
   final DemoType preferredDemoType;
+
   const _Interactions({this.preferredDemoType = DemoType.chat});
 
   @override
@@ -145,36 +150,66 @@ class _WebSearchModeButton extends ConsumerWidget {
 class _WenYanWenButton extends ConsumerWidget {
   const _WenYanWenButton();
 
-  void _onTap() {
-    P.chat.onSwitchWenYanWen(!P.chat.wenYanWen.q);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final wenYanWen = ref.watch(P.chat.wenYanWen);
+    final mode = ref.watch(P.chat.wenYanWen);
+    final model = ref.watch(P.rwkv.latestModel);
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
 
+    final bgColor = mode == WenyanMode.off ? theme.colorScheme.surfaceContainer : theme.colorScheme.primary;
+    final textColor = mode == WenyanMode.off ? Colors.black.q(.667) : theme.colorScheme.onPrimary;
+    String label = '';
+    if (mode == WenyanMode.off) {
+      label = '文言';
+    } else if (mode == WenyanMode.classic) {
+      label = '文言';
+    } else if (mode == WenyanMode.mixed) {
+      label = '古今';
+    }
+
     return IntrinsicWidth(
-      child: GestureDetector(
-        onTap: _onTap,
-        child: AnimatedContainer(
+      child: PopupMenuButton(
+        offset: const Offset(-30, -80),
+        itemBuilder: (c) {
+          return [
+            PopupMenuItem(value: WenyanMode.off, child: Text('文言: 关')),
+            PopupMenuItem(value: WenyanMode.classic, child: Text('文言: 开')),
+            PopupMenuItem(value: WenyanMode.mixed, child: Text('古今')),
+          ];
+        },
+        onSelected: (m) {
+          if (model == null) {
+            ModelSelector.show();
+            return;
+          }
+          if (!model.tags.contains('batch') && m == WenyanMode.mixed) {
+            Alert.warning(S.current.this_model_does_not_support_batch_inference);
+            return;
+          }
+          P.chat.onSwitchWenYanWen(m);
+        },
+        initialValue: mode,
+        popUpAnimationStyle: AnimationStyle(
+          curve: Curves.linear,
+          duration: 250.ms,
+          reverseCurve: Curves.linear,
+          reverseDuration: 250.ms,
+        ),
+        child: Container(
           height: height,
-          padding: const .symmetric(horizontal: 12),
-          duration: 150.ms,
-          curve: Curves.easeOutCubic,
-          decoration: BoxDecoration(color: wenYanWen ? theme.colorScheme.primary : theme.colorScheme.surfaceContainer, borderRadius: 60.r),
-          child: Center(
-            child: Text(
-              "文言",
-              style: TextStyle(
-                fontSize: 14,
-                height: 1,
-                color: wenYanWen ? theme.colorScheme.onPrimary : Colors.grey,
-              ),
-            ),
+          padding: const .symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: 60.r,
+            border: Border.all(color: theme.colorScheme.primary.q(.1), width: 1),
+          ),
+          alignment: .center,
+          child: T(
+            label,
+            s: TS(c: textColor, s: 14, height: 1, w: .w500),
           ),
         ),
       ),

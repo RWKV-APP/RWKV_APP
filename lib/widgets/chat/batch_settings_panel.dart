@@ -8,6 +8,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/sampler_and_penalty_param.dart';
+import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
@@ -64,6 +65,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     switch (argument) {
       case Argument.batchCount:
         P.chat.batchCount.q = rawNewValue;
+        P.chat.wenYanWen.q = WenyanMode.off;
       case Argument.batchVW:
         P.chat.batchVW.q = rawNewValue;
       default:

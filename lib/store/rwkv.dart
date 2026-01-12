@@ -560,6 +560,17 @@ extension $RWKV on _RWKV {
     for (var i = 0; i < batchSize; i++) {
       batchMessages.add(messages);
     }
+
+    /// ‘古今’ 模式
+    List<String> his = batchMessages[0];
+    if (his.length % 2 == 1 && batchSize == 2) {
+      if (P.chat.wenYanWen.q == WenyanMode.mixed) {
+        his = [...his];
+        his[his.length - 1] = his[his.length - 1] + " 请用文言文回答。";
+        batchMessages[0] = his;
+      }
+    }
+
     final forceReasoning = thinkingMode.forceReasoning;
     final request = isBatch
         ? to_rwkv.ChatBatchAsync(

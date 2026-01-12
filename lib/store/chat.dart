@@ -52,7 +52,7 @@ class _Chat {
   late final webSearchMode = qs(WebSearchMode.off);
 
   // 使用文言文
-  late final wenYanWen = qs(false);
+  late final wenYanWen = qs(WenyanMode.off);
 
   late final batchEnabled = qs(Args.enableBatchInference);
   late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
@@ -81,20 +81,31 @@ extension $Chat on _Chat {
       return;
     }
     if (mode != WebSearchMode.off) {
-      wenYanWen.q = false;
+      wenYanWen.q = WenyanMode.off;
     }
     webSearchMode.q = mode;
   }
 
-  void onSwitchWenYanWen(bool enabled) async {
+  void onSwitchWenYanWen(WenyanMode mode) async {
     final receiving = receivingTokens.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    if (enabled) webSearchMode.q = WebSearchMode.off;
+    if (mode != WenyanMode.off) {
+      webSearchMode.q = WebSearchMode.off;
+      if (mode == WenyanMode.mixed && P.rwkv.supportedBatchSizes.q.isNotEmpty) {
+        onBatchInferenceSwitchChanged(true);
+        batchCount.q = 2;
+      }
+    } else {
+      if (wenYanWen.q == WenyanMode.mixed && batchCount.q == 2) {
+        batchCount.q = 1;
+        onBatchInferenceSwitchChanged(false);
+      }
+    }
 
-    wenYanWen.q = enabled;
+    wenYanWen.q = mode;
   }
 
   Future<void> onSendButtonPressed({
@@ -470,6 +481,9 @@ extension $Chat on _Chat {
   Future<void> onBatchInferenceSwitchChanged(bool value) async {
     P.app.hapticLight();
     P.chat.batchEnabled.q = value;
+    if (wenYanWen.q == WenyanMode.mixed && !value) {
+      P.chat.wenYanWen.q = WenyanMode.off;
+    }
 
     if (!value) return;
 
@@ -590,6 +604,9 @@ extension _$Chat on _Chat {
     if (supportedBatchSizes.isEmpty) {
       batchEnabled.q = false;
       batchCount.q = Argument.batchCount.defaults.toInt();
+      if (wenYanWen.q == WenyanMode.mixed) {
+        wenYanWen.q = WenyanMode.off;
+      }
       return;
     }
     final max = supportedBatchSizes.max;
@@ -651,7 +668,7 @@ extension _$Chat on _Chat {
 
       // 处理用户消息
       String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
-      if (wenYanWen.q) {
+      if (wenYanWen.q == WenyanMode.classic) {
         userContent = '$userContent 请用文言文回答。';
       }
       result.add(userContent);
