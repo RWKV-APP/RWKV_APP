@@ -32,8 +32,16 @@ class LocalFile extends Equatable {
     String? targetPath,
     bool? hasFile,
   }) {
-    if (progress != null && progress.isNaN) {
-      progress = 0.0;
+    if (progress != null) {
+      if (progress.isNaN) {
+        progress = 0.0;
+      } else if (progress.isInfinite) {
+        progress = 1.0;
+      } else if (progress < 0) {
+        progress = 0.0;
+      } else if (progress > 1) {
+        progress = 1.0;
+      }
     }
 
     return LocalFile(

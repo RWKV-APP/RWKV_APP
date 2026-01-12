@@ -277,6 +277,7 @@ extension _$See on _See {
       imagePath.q = null;
       imageHeight.q = null;
       visualFloatHeight.q = null;
+      P.app.demoType.q = .chat;
       P.rwkv.clearStates();
       P.chat.clearMessages();
       // P.rwkv.currentWorldType.q = null;
