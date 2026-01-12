@@ -45,7 +45,7 @@ class ConversationListItemData {
       conv: cov,
       sortKey: cov.updatedAtUS ?? cov.createdAtUS,
       id: cov.createdAtUS,
-      title: cov.title,
+      title: _processTitle(cov.title),
       subtitle: cov.subtitle ?? '-',
       displayTime: getDisplayTime(cov.updatedAtUS ?? cov.createdAtUS),
     );
@@ -66,11 +66,19 @@ class ConversationListItemData {
       sortKey: cm.timestamp.microsecondsSinceEpoch,
       id: cm.timestamp.microsecondsSinceEpoch,
       avatar: avatar,
-      title: cm.roleName,
+      title: _processTitle(cm.roleName),
       subtitle: cm.content,
       roleName: cm.roleName,
       displayTime: getDisplayTime(cm.timestamp.microsecondsSinceEpoch),
     );
+  }
+
+  static String _processTitle(String title) {
+    String processed = title.replaceAll(Config.userMsgModifierSep, '').trim();
+    processed = processed.replaceAll(
+        Config.userMsgModifierSep.substring(0, Config.userMsgModifierSep.length - 1),
+        '');
+    return processed;
   }
 
   static String getDisplayTime(int microsecondsSinceEpoch) {
@@ -194,9 +202,6 @@ class ConversationItem extends ConsumerWidget {
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
 
-    String title = conversation.title.replaceAll(Config.userMsgModifierSep, '').trim();
-    title = title.replaceAll(Config.userMsgModifierSep.substring(0, Config.userMsgModifierSep.length - 1), '');
-
     return GestureDetector(
       onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
       onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
@@ -234,7 +239,7 @@ class ConversationItem extends ConsumerWidget {
                 crossAxisAlignment: .stretch,
                 children: [
                   T(
-                    title,
+                    conversation.title,
                     s: TS(s: 16, w: .w500, c: qb),
                     overflow: .ellipsis,
                   ),
