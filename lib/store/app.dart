@@ -42,7 +42,7 @@ class _App extends RawApp {
   // StateProvider
   // ===========================================================================
 
-  final _pageKey = qs(PageKey.first);
+  final _pageKey = qs<PageKey>(.first);
 
   /// 当前正在运行的任务
   late final demoType = qs(DemoType.chat);
@@ -186,7 +186,7 @@ extension $App on _App {
 
   void onTabSelected(int index) {
     tabIndex.q = index;
-    replace(PageKey.tabs[index]);
+    replace(.tabs[index]);
   }
 }
 
@@ -292,7 +292,7 @@ extension _$App on _App {
 
     if (Args.autoShowTranslator) {
       Future.delayed(const Duration(milliseconds: 1500)).then((_) {
-        push(PageKey.translator);
+        push(.translator);
       });
     }
 
