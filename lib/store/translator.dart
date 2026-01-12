@@ -218,7 +218,7 @@ extension _$Translator on _Translator {
     switch (pageKey) {
       case PageKey.translator:
       case PageKey.ocr:
-        P.app.demoType.q = DemoType.chat;
+        P.app.demoType.q = .chat;
         final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
           Future.delayed(const Duration(milliseconds: 500)).then((_) {

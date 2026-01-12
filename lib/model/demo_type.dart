@@ -22,9 +22,9 @@ enum DemoType {
   ;
 
   Color get _seedColor => switch (this) {
-    DemoType.fifthteenPuzzle => Colors.blue,
-    DemoType.othello => Colors.green,
-    DemoType.sudoku => Colors.teal,
+    .fifthteenPuzzle => Colors.blue,
+    .othello => Colors.green,
+    .sudoku => Colors.teal,
     _ => const Color(0xFF365FD9),
   };
 

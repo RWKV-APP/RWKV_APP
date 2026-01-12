@@ -143,13 +143,13 @@ extension $Othello on _Othello {
 extension _$Othello on _Othello {
   Future<void> _init() async {
     switch (P.app.demoType.q) {
-      case DemoType.fifthteenPuzzle:
-      case DemoType.sudoku:
-      case DemoType.chat:
-      case DemoType.tts:
-      case DemoType.see:
+      case .fifthteenPuzzle:
+      case .sudoku:
+      case .chat:
+      case .tts:
+      case .see:
         return;
-      case DemoType.othello:
+      case .othello:
     }
     qq;
 

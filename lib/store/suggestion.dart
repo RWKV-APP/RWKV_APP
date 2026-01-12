@@ -97,8 +97,8 @@ class _Suggestion {
     final _ = ref.watch(P.msg.length);
 
     final hideCases = [
-      demoType == DemoType.chat && messages.isNotEmpty,
-      demoType == DemoType.see && (imagePath == null || imagePath.isEmpty || messages.length != 1),
+      demoType == .chat && messages.isNotEmpty,
+      demoType == .see && (imagePath == null || imagePath.isEmpty || messages.length != 1),
     ];
     if (hideCases.any((e) => e)) {
       return [];
@@ -107,13 +107,13 @@ class _Suggestion {
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
 
     switch (demoType) {
-      case DemoType.chat:
+      case .chat:
         final s = config.chat.map((e) => e.items).flattened.shuffled().toList();
         if (s.length < 5) {
           return s;
         }
         return s.take(5).toList();
-      case DemoType.see:
+      case .see:
         switch (currentWorldType) {
           case WorldType.reasoningQA:
             return config.seeReasoningQa;
@@ -130,7 +130,7 @@ class _Suggestion {
             break;
         }
         break;
-      case DemoType.tts:
+      case .tts:
         return config.tts.toList().shuffled.take(5).toList();
       default:
         return [];

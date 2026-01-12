@@ -60,7 +60,7 @@ class AudioInput extends ConsumerWidget {
 
     bool shouldShow = false;
 
-    if (demoType == DemoType.see) {
+    if (demoType == .see) {
       switch (currentWorldType) {
         case null:
         case WorldType.reasoningQA:
@@ -74,7 +74,7 @@ class AudioInput extends ConsumerWidget {
     String bottomMessage = "";
     double bottomMessageSize = 12;
 
-    if (demoType == DemoType.see) {
+    if (demoType == .see) {
       switch (currentWorldType) {
         case null:
         case WorldType.reasoningQA:
@@ -95,7 +95,7 @@ class AudioInput extends ConsumerWidget {
 
     Curve curve = shouldShow ? Curves.easeOutBack : Curves.easeInBack;
 
-    if (demoType == DemoType.tts) {
+    if (demoType == .tts) {
       shouldShow = audioInteractorShown;
       bottomMessage = s.hold_to_record_release_to_send;
       bottomAdjust = audioInteractorShown ? 24.0 : 0;

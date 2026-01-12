@@ -427,13 +427,13 @@ extension $Sudoku on _Sudoku {
 extension _$Sudoku on _Sudoku {
   Future<void> _init() async {
     switch (P.app.demoType.q) {
-      case DemoType.sudoku:
+      case .sudoku:
         break;
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.chat:
-      case DemoType.tts:
-      case DemoType.see:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .chat:
+      case .tts:
+      case .see:
         return;
     }
 

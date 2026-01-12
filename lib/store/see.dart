@@ -154,7 +154,7 @@ extension $See on _See {
       return;
     }
 
-    if (!checkModelSelection(preferredDemoType: DemoType.see)) return;
+    if (!checkModelSelection(preferredDemoType: .see)) return;
 
     final imagePath = await showImageSelector();
     if (imagePath == null) return;
@@ -196,7 +196,7 @@ extension $See on _See {
 
       if (!encoderLocalFile.hasFile || !modelLocalFile.hasFile || (adapterLocalFile != null && !adapterLocalFile.hasFile)) {
         if (P.app.pageKey.q == PageKey.see) {
-          ModelSelector.show(preferredDemoType: DemoType.see);
+          ModelSelector.show(preferredDemoType: .see);
         }
         return;
       }
@@ -234,7 +234,7 @@ extension $See on _See {
     } catch (e) {
       qqe("Failed to auto load world model: $e");
       if (P.app.pageKey.q == PageKey.see) {
-        ModelSelector.show(preferredDemoType: DemoType.see);
+        ModelSelector.show(preferredDemoType: .see);
       }
     }
   }
@@ -255,13 +255,13 @@ extension $See on _See {
 extension _$See on _See {
   Future<void> _init() async {
     switch (P.app.demoType.q) {
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
         return;
-      case DemoType.chat:
-      case DemoType.tts:
-      case DemoType.see:
+      case .chat:
+      case .tts:
+      case .see:
     }
     qq;
     P.rwkv.currentWorldType.lv(_onWorldTypeChanged);
@@ -290,7 +290,7 @@ extension _$See on _See {
       visualFloatHeight.q = null;
       P.rwkv.clearStates();
       P.chat.clearMessages();
-      P.app.demoType.q = DemoType.see;
+      P.app.demoType.q = .see;
       bool isWorldModelLoaded = false;
       final currentModel = P.rwkv.latestModel.q;
       if (currentModel != null) {
@@ -408,7 +408,7 @@ extension _$See on _See {
     qq;
 
     final demoType = P.app.demoType.q;
-    final isWorldDemo = demoType == DemoType.see;
+    final isWorldDemo = demoType == .see;
 
     P.chat.clearMessages();
     imagePath.q = null;

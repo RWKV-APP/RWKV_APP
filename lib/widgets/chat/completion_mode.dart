@@ -10,7 +10,6 @@ import 'package:halo_state/halo_state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:zone/func/check_model_selection.dart' show checkModelSelection;
 import 'package:zone/gen/l10n.dart' show S;
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
@@ -143,7 +142,7 @@ class _CompletionState extends ConsumerState<Completion> {
   }
 
   void onBatchTap() async {
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
     final unavailable = P.rwkv.latestModel.q?.tags.contains('batch') == false;
     if (unavailable) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference);
@@ -164,7 +163,7 @@ class _CompletionState extends ConsumerState<Completion> {
   }
 
   void onSubmitTap({bool regenerate = false}) async {
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final prompt = controllerPrompt.text.trim();
     qqq('submit->$prompt');

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_roleplay/flutter_roleplay.dart' show RoleplayManageModelType;
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:go_router/go_router.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/page/advanced_sesttings.dart' show PageAdvancedSettings;
 import 'package:zone/page/font_settings.dart' show PageFontSettings;
 import 'package:zone/page/benchmark.dart' show PageBenchmark;
@@ -73,7 +72,7 @@ enum PageKey {
         if (type == RoleplayManageModelType.chat) {
           ModelSelector.show(rolePlayOnly: true);
         } else {
-          ModelSelector.show(preferredDemoType: DemoType.tts);
+          ModelSelector.show(preferredDemoType: .tts);
         }
       },
       changeModelCallback: (modelInfo) {
@@ -82,7 +81,7 @@ enum PageKey {
           ModelSelector.show(rolePlayOnly: true);
         } else {
           rolePlayTTSModel = modelInfo;
-          ModelSelector.show(preferredDemoType: DemoType.tts);
+          ModelSelector.show(preferredDemoType: .tts);
         }
       },
     ),

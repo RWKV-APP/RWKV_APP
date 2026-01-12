@@ -55,13 +55,13 @@ extension $Guard on _Guard {
 extension _$Guard on _Guard {
   Future<void> _init() async {
     switch (P.app.demoType.q) {
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
         return;
-      case DemoType.chat:
-      case DemoType.tts:
-      case DemoType.see:
+      case .chat:
+      case .tts:
+      case .see:
     }
     qq;
     try {

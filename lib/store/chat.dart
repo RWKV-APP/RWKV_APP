@@ -221,7 +221,7 @@ extension $Chat on _Chat {
       return;
     }
 
-    if (P.app.demoType.q == DemoType.tts) {
+    if (P.app.demoType.q == .tts) {
       await P.talk.gen();
       return;
     }
@@ -251,7 +251,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> onTapEditInUserMessageBubble({required int index}) async {
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
     final content = P.msg.list.q[index].contentAndTails[0];
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
@@ -259,7 +259,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> onTapEditInBotMessageBubble({required int index}) async {
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
     final content = P.msg.list.q[index].content;
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
@@ -334,7 +334,7 @@ extension $Chat on _Chat {
     raw = raw.trim();
     String message = raw;
 
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final currentModel = P.rwkv.latestModel.q!;
 
@@ -537,13 +537,13 @@ extension $Chat on _Chat {
 extension _$Chat on _Chat {
   Future<void> _init() async {
     switch (P.app.demoType.q) {
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
         return;
-      case DemoType.chat:
-      case DemoType.tts:
-      case DemoType.see:
+      case .chat:
+      case .tts:
+      case .see:
     }
     qq;
 
@@ -720,7 +720,7 @@ extension _$Chat on _Chat {
   Future<void> _onNewFileReceived((File, int) event) async {
     final demoType = P.app.demoType.q;
 
-    if (demoType == DemoType.tts || demoType == DemoType.chat) {
+    if (demoType == .tts || demoType == .chat) {
       final (file, length) = event;
       final path = file.path;
       qqq("new file received: $path, length: $length");
@@ -740,7 +740,7 @@ extension _$Chat on _Chat {
         break;
       case PageKey.chat:
         P.rwkv.updateSystemPrompt();
-        P.app.demoType.q = DemoType.chat;
+        P.app.demoType.q = .chat;
         final isTranslate = model?.tags.contains("translate") ?? false;
         if (isTTS || isTranslate || isSee) {
           P.rwkv.currentWorldType.q = null;
@@ -905,7 +905,7 @@ extension _$Chat on _Chat {
     if (pageKey == PageKey.translator) return;
     qq;
     final demoType = P.app.demoType.q;
-    if (demoType != DemoType.chat && demoType != DemoType.see) return;
+    if (demoType != .chat && demoType != .see) return;
     receivingTokens.q = false;
   }
 
@@ -915,7 +915,7 @@ extension _$Chat on _Chat {
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
-    if (demoType != DemoType.chat && demoType != DemoType.see) return;
+    if (demoType != .chat && demoType != .see) return;
     receivingTokens.q = false;
   }
 

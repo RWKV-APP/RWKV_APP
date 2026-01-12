@@ -73,7 +73,7 @@ class TTSBottomInteractions extends ConsumerWidget {
             if (spkShown) const _SpkPanel(),
             if (intonationShown) const _IntonationPanel(),
             if (!audioInteractorShown && !intonationShown && !spkShown && selectedSpkName == null)
-              const _Instruction(preferredDemoType: DemoType.tts),
+              const _Instruction(preferredDemoType: .tts),
           ],
         ),
       ),
@@ -231,8 +231,8 @@ class _AudioButton extends ConsumerWidget {
     final s = S.of(context);
     final qw = ref.watch(P.app.qw);
     final primary = Theme.of(context).colorScheme.primary;
-    const demoType = DemoType.tts;
-    final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
+    const DemoType demoType = .tts;
+    final borderRadius = demoType != .tts ? 12.r : 6.r;
     final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
     return GestureDetector(
       onTap: P.talk.onAudioInteractorButtonPressed,
@@ -262,8 +262,8 @@ class _SpkButton extends ConsumerWidget {
     final s = S.of(context);
     final qw = ref.watch(P.app.qw);
     final primary = Theme.of(context).colorScheme.primary;
-    const demoType = DemoType.tts;
-    final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
+    const DemoType demoType = .tts;
+    final borderRadius = demoType != .tts ? 12.r : 6.r;
     ref.watch(P.talk.intonationShown);
     ref.watch(P.talk.audioInteractorShown);
     final spkShown = ref.watch(P.talk.spkShown);
@@ -295,8 +295,8 @@ class _IntonationButton extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final s = S.of(context);
     final primary = Theme.of(context).colorScheme.primary;
-    const demoType = DemoType.tts;
-    final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
+    const DemoType demoType = .tts;
+    final borderRadius = demoType != .tts ? 12.r : 6.r;
     final intonationShown = ref.watch(P.talk.intonationShown);
     return GestureDetector(
       onTap: P.talk.onIntonationButtonPressed,
@@ -764,19 +764,19 @@ class _TextField extends ConsumerWidget {
 
     late final String hintText;
     switch (demoType) {
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
-      case DemoType.see:
+      case .chat:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
+      case .see:
         hintText = "";
-      case DemoType.tts:
+      case .tts:
         hintText = "Enter your instruction here";
     }
 
     bool textFieldEnabled = loaded && !loading;
 
-    final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
+    final borderRadius = demoType != .tts ? 12.r : 6.r;
 
     final textInInput = ref.watch(P.talk.textInInput);
 

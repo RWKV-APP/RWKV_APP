@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:zone/args.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +31,7 @@ class Debugger extends ConsumerWidget {
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final inputHeight = ref.watch(P.chat.inputHeight);
     final hasFocus = ref.watch(P.chat.hasFocus);
-    final isOthello = demoType == DemoType.othello;
+    final isOthello = demoType == .othello;
     final paddingTop = ref.watch(P.app.paddingTop);
     final page = ref.watch(Pager.page);
     final atMainPage = ref.watch(Pager.atMainPage);

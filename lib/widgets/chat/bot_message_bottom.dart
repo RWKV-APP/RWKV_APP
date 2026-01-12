@@ -48,7 +48,7 @@ class BotMessageBottom extends ConsumerWidget {
   }
 
   void _onRegeneratePressed() async {
-    await P.chat.onRegeneratePressed(index: index, preferredDemoType: preferredDemoType ?? DemoType.chat);
+    await P.chat.onRegeneratePressed(index: index, preferredDemoType: preferredDemoType ?? .chat);
   }
 
   void _onCopyPressed() {
@@ -67,7 +67,7 @@ class BotMessageBottom extends ConsumerWidget {
     final s = S.of(context);
     if (msg.isMine) return const SizedBox.shrink();
     final demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    if (demoType == DemoType.tts) return const SizedBox.shrink();
+    if (demoType == .tts) return const SizedBox.shrink();
 
     final receiveId = ref.watch(P.chat.receiveId);
     final selectMessageMode = ref.watch(P.chat.isSharing);
@@ -95,13 +95,13 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     switch (demoType) {
-      case DemoType.tts:
+      case .tts:
         showEditButton = false;
         showCopyButton = false;
         showBotRegenerateButton = false;
         showResumeButton = false;
         break;
-      case DemoType.chat:
+      case .chat:
         showShareButton = true;
         break;
       default:

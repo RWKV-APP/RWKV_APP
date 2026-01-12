@@ -33,8 +33,8 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     super.initState();
 
     if (widget.msg.isMine) return;
-    const demoType = DemoType.tts;
-    if (demoType != DemoType.tts) return;
+    const DemoType demoType = .tts;
+    if (demoType != .tts) return;
 
     ref.listenManual(P.msg.latestClicked, (previous, next) {
       if (next?.id == widget.msg.id) {

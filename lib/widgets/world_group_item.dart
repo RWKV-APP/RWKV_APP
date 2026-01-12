@@ -284,7 +284,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                 });
               },
               child: Container(
-                decoration: BD(color: kC),
+                decoration: const BD(color: kC),
                 child: Row(
                   children: [
                     Expanded(
@@ -632,7 +632,7 @@ class _ExpandedFileItem extends ConsumerWidget {
                       children: [
                         T(
                           fileInfo.name,
-                          s: TS(
+                          s: const TS(
                             w: .w600,
                             s: 14,
                           ),

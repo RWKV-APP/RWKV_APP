@@ -10,7 +10,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/user_type.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
@@ -99,7 +98,7 @@ class Settings extends ConsumerWidget {
     final customTheme = ref.watch(P.app.customTheme);
     final isLightMode = customTheme.light;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
-    final isChat = demoType == DemoType.chat;
+    final isChat = demoType == .chat;
 
     final totalUsage = _getTotalUsage(ref);
 
@@ -120,7 +119,7 @@ class Settings extends ConsumerWidget {
               topRight: .circular(16),
             ),
       child: Scaffold(
-        backgroundColor: demoType == DemoType.chat ? Colors.transparent : customTheme.setting,
+        backgroundColor: demoType == .chat ? Colors.transparent : customTheme.setting,
         appBar: isInDrawerMenu
             ? null
             : AppBar(

@@ -45,7 +45,7 @@ class _App extends RawApp {
   final _pageKey = qs<PageKey>(.first);
 
   /// 当前正在运行的任务
-  late final demoType = qs(DemoType.chat);
+  late final demoType = qs<DemoType>(.chat);
 
   late final _latestBuild = qs(-1);
   late final _latestBuildIos = qs(-1);
@@ -228,7 +228,7 @@ extension _$App on _App {
     } else {
       name = "__chat__".replaceAll("__", "");
     }
-    demoType.q = DemoType.values.byName(name);
+    demoType.q = .values.byName(name);
 
     kRouter.routerDelegate.addListener(_routerListener);
 
@@ -254,18 +254,18 @@ extension _$App on _App {
 
     // 目前下面四种 demo 需要选择模型
     switch (demoType.q) {
-      case DemoType.sudoku:
-      case DemoType.tts:
-      case DemoType.see:
+      case .sudoku:
+      case .tts:
+      case .see:
         Future.delayed(latency.ms).then((_) {
           final loaded = P.rwkv.loaded.q;
           if (loaded) return;
           if (!Args.disableAutoShowOfWeightsPanel) ModelSelector.show();
         });
-      case DemoType.fifthteenPuzzle:
+      case .fifthteenPuzzle:
       // Other demos don't need to select model, weights are already built in
-      case DemoType.chat:
-      case DemoType.othello:
+      case .chat:
+      case .othello:
         break;
     }
 

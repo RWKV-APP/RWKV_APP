@@ -61,7 +61,7 @@ class _Talk {
 /// Private methods
 extension _$Talk on _Talk {
   Future<void> _init() async {
-    if (P.app.demoType.q == DemoType.sudoku) return;
+    if (P.app.demoType.q == .sudoku) return;
     qq;
     P.chat.focusNode.addListener(_onChatFocusNodeChanged);
 
@@ -99,7 +99,7 @@ extension _$Talk on _Talk {
       _queryTimer = null;
     } else if (previous != PageKey.talk && next == PageKey.talk) {
       P.msg._clear(syncNode: false);
-      P.app.demoType.q = DemoType.tts;
+      P.app.demoType.q = .tts;
       bool isTTSModelLoaded = false;
       final currentModel = P.rwkv.latestModel.q;
       if (currentModel != null) {
@@ -121,7 +121,7 @@ extension _$Talk on _Talk {
     await Future.delayed(500.ms);
 
     if (P.app.pageKey.q == PageKey.talk) {
-      ModelSelector.show(preferredDemoType: DemoType.tts);
+      ModelSelector.show(preferredDemoType: .tts);
     }
   }
 
@@ -443,7 +443,7 @@ extension $Talk on _Talk {
 
   Future<void> gen() async {
     qq;
-    if (!checkModelSelection(preferredDemoType: DemoType.tts)) return;
+    if (!checkModelSelection(preferredDemoType: .tts)) return;
 
     if (!P.chat.inputHasContent.q) return;
 

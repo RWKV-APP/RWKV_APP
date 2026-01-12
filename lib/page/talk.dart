@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
@@ -36,7 +35,7 @@ class PageTalk extends ConsumerWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: ChatAppBar(preferredDemoType: DemoType.tts),
+            child: ChatAppBar(preferredDemoType: .tts),
           ),
           Positioned(
             bottom: 0,
@@ -47,11 +46,11 @@ class PageTalk extends ConsumerWidget {
               mainAxisSize: .min,
               children: [
                 Suggestions(),
-                BottomBar(preferredDemoType: DemoType.tts),
+                BottomBar(preferredDemoType: .tts),
               ],
             ),
           ),
-          AudioInput(demoType: DemoType.tts),
+          AudioInput(demoType: .tts),
         ],
       ),
     );
@@ -96,7 +95,7 @@ class _List extends ConsumerWidget {
             itemBuilder: (context, index) {
               final finalIndex = messages.length - 1 - index;
               final msg = messages[finalIndex];
-              return Message(msg, finalIndex, preferredDemoType: DemoType.tts);
+              return Message(msg, finalIndex, preferredDemoType: .tts);
             },
             separatorBuilder: (context, index) {
               return const SizedBox(height: 15);
@@ -157,7 +156,7 @@ class _Empty extends ConsumerWidget {
             12.h,
             if (!loaded)
               TextButton(
-                onPressed: () => ModelSelector.show(preferredDemoType: DemoType.tts),
+                onPressed: () => ModelSelector.show(preferredDemoType: .tts),
                 child: T(s.select_a_model, s: const TS(s: 16, w: .w600)),
               ),
           ],

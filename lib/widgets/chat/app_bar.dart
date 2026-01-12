@@ -80,7 +80,7 @@ class _MainAppBar extends ConsumerWidget {
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     final demoType = P.app.demoType.q;
-    if (demoType == DemoType.tts) {
+    if (demoType == .tts) {
       return;
     }
 
@@ -101,9 +101,9 @@ class _MainAppBar extends ConsumerWidget {
     final completionMode = ref.watch(P.chat.completionMode);
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
-    final isChat = preferredDemoType == DemoType.chat;
-    final isTTS = preferredDemoType == DemoType.tts;
-    final isWorld = preferredDemoType == DemoType.see;
+    final isChat = preferredDemoType == .chat;
+    final isTTS = preferredDemoType == .tts;
+    final isWorld = preferredDemoType == .see;
 
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);
@@ -190,11 +190,10 @@ class _MainAppBar extends ConsumerWidget {
         ),
       ),
       actions: [
-        if ((preferredDemoType == DemoType.chat || preferredDemoType == DemoType.see) && !completionMode)
+        if ((preferredDemoType == .chat || preferredDemoType == .see) && !completionMode)
           _NewConversationButton(preferredDemoType: preferredDemoType),
-        if (preferredDemoType == DemoType.chat && userType.isGreaterThan(UserType.user))
-          _MorePopupMenuButton(preferredDemoType: preferredDemoType),
-        if (preferredDemoType != DemoType.chat && preferredDemoType != DemoType.sudoku && userType.isGreaterThan(UserType.user))
+        if (preferredDemoType == .chat && userType.isGreaterThan(UserType.user)) _MorePopupMenuButton(preferredDemoType: preferredDemoType),
+        if (preferredDemoType != .chat && preferredDemoType != .sudoku && userType.isGreaterThan(UserType.user))
           IconButton(
             onPressed: _onSettingsPressed,
             icon: const Icon(Icons.tune),
@@ -212,7 +211,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     final demoType = P.app.demoType.q;
-    if (demoType == DemoType.tts) {
+    if (demoType == .tts) {
       return;
     }
 

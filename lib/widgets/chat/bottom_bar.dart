@@ -15,12 +15,12 @@ import 'package:zone/widgets/chat/tts/bottom_interactions.dart';
 class BottomBar extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  const BottomBar({super.key, this.preferredDemoType = DemoType.chat});
+  const BottomBar({super.key, this.preferredDemoType = .chat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final isChat = preferredDemoType == DemoType.chat;
+    final isChat = preferredDemoType == .chat;
 
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
@@ -50,8 +50,8 @@ class BottomBar extends ConsumerWidget {
               children: [
                 _ImagePreview(preferredDemoType: preferredDemoType),
                 InputTextField(preferredDemoType: preferredDemoType),
-                if (preferredDemoType != DemoType.tts) BottomInteractions(preferredDemoType: preferredDemoType),
-                if (preferredDemoType == DemoType.tts) const TTSBottomInteractions(),
+                if (preferredDemoType != .tts) BottomInteractions(preferredDemoType: preferredDemoType),
+                if (preferredDemoType == .tts) const TTSBottomInteractions(),
               ],
             ),
           ),
@@ -70,7 +70,7 @@ class _ImagePreview extends ConsumerWidget {
     final selectedImagePath = ref.watch(P.see.imagePath);
     final screenWidth = ref.watch(P.app.screenWidth);
     if (selectedImagePath == null) return const SizedBox.shrink();
-    if (preferredDemoType != DemoType.see) return const SizedBox.shrink();
+    if (preferredDemoType != .see) return const SizedBox.shrink();
     return Row(
       children: [
         Padding(

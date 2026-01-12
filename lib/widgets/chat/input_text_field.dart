@@ -20,17 +20,17 @@ class InputTextField extends ConsumerWidget {
     final loaded = ref.watch(P.rwkv.loaded);
     final loading = ref.watch(P.rwkv.loading);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final isChat = demoType == DemoType.chat;
+    final isChat = demoType == .chat;
 
     String hintText;
     switch (demoType) {
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
-      case DemoType.see:
+      case .chat:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
+      case .see:
         hintText = s.send_message_to_rwkv;
-      case DemoType.tts:
+      case .tts:
         hintText = s.i_want_rwkv_to_say;
     }
     if (isChat) {
@@ -39,7 +39,7 @@ class InputTextField extends ConsumerWidget {
 
     bool textFieldEnabled = loaded && !loading;
 
-    final borderRadius = demoType != DemoType.tts ? 12.r : 6.r;
+    final borderRadius = demoType != .tts ? 12.r : 6.r;
 
     final textInInput = ref.watch(P.chat.textInInput);
     final intonationShown = ref.watch(P.talk.intonationShown);
@@ -118,7 +118,7 @@ class InputTextField extends ConsumerWidget {
           if (HardwareKeyboard.instance.isShiftPressed) {
             return KeyEventResult.ignored;
           } else {
-            P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType ?? DemoType.chat);
+            P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType ?? .chat);
             return KeyEventResult.handled;
           }
         }
@@ -142,6 +142,6 @@ class InputTextField extends ConsumerWidget {
 
   void _onTapTextFieldWhenItsDisabled() {
     qq;
-    if (!checkModelSelection(preferredDemoType: preferredDemoType ?? DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: preferredDemoType ?? .chat)) return;
   }
 }

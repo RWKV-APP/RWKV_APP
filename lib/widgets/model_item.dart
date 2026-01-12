@@ -14,7 +14,6 @@ import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
@@ -51,13 +50,13 @@ class ModelItem extends ConsumerWidget {
     qq;
 
     switch (P.app.demoType.q) {
-      case DemoType.sudoku:
+      case .sudoku:
         await _onStartTapInSudoku();
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.tts:
-      case DemoType.see:
+      case .chat:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .tts:
+      case .see:
         await _onStartTapInChat();
     }
   }
@@ -203,13 +202,13 @@ class ModelItem extends ConsumerWidget {
     final isTranslate = fileInfo.tags.contains("translate");
 
     switch (demoType) {
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
         startTitle = s.start_a_new_game;
-      case DemoType.chat:
-      case DemoType.tts:
-      case DemoType.see:
+      case .chat:
+      case .tts:
+      case .see:
         startTitle = isTranslate ? s.use_it_now : s.start_to_chat;
     }
 

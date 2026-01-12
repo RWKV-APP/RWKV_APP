@@ -10,7 +10,6 @@ import 'package:path/path.dart';
 import 'package:rwkv_mobile_flutter/from_rwkv.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/thinking_mode.dart';
 import 'package:zone/store/p.dart';
@@ -97,7 +96,7 @@ class Albatross {
         data: {'model_path': local.targetPath},
       );
       if (r.statusCode == 200) {
-        P.app.demoType.q = DemoType.chat;
+        P.app.demoType.q = .chat;
         P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
         P.rwkv.loadedModels.q = {...P.rwkv.loadedModels.q, fileInfo: -1};
         P.rwkv.setModelConfig(thinkingMode: const Free());

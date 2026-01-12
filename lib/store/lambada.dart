@@ -40,7 +40,7 @@ extension _$Lambada on _Lambada {
     switch (pageKey) {
       case PageKey.benchmark:
         if (isTTS || isTranslate || isSee) await P.rwkv._releaseAllModels();
-        P.app.demoType.q = DemoType.chat;
+        P.app.demoType.q = .chat;
         break;
       default:
         break;
@@ -115,7 +115,7 @@ extension $Lambada on _Lambada {
 
   Future<void> startTest() async {
     // 检查是否有模型被加载
-    if (!checkModelSelection(showAlert: true, showModelSelector: true, preferredDemoType: DemoType.chat)) {
+    if (!checkModelSelection(showAlert: true, showModelSelector: true, preferredDemoType: .chat)) {
       return;
     }
 

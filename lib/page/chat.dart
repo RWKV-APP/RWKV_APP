@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
@@ -32,7 +31,7 @@ class _PageChatState extends State<PageChat> {
     super.initState();
 
     // 自动展示模型选择器
-    if (P.app.demoType.q == DemoType.chat) {
+    if (P.app.demoType.q == .chat) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         final loaded = P.rwkv.latestModel.q != null;
         if (!loaded) {

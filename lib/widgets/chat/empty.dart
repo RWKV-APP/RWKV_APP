@@ -8,7 +8,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/all_suggestion_dialog.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
@@ -29,7 +28,7 @@ class Empty extends ConsumerWidget {
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     String logoPath = "assets/img/${demoType.name}/logo.square.png";
 
-    final hasSpecificEmpty = demoType == DemoType.see && currentWorldType != null;
+    final hasSpecificEmpty = demoType == .see && currentWorldType != null;
 
     final primary = Theme.of(context).colorScheme.primary;
 
@@ -54,7 +53,7 @@ class Empty extends ConsumerWidget {
           },
           child: Stack(
             children: [
-              if (demoType == DemoType.chat)
+              if (demoType == .chat)
                 Positioned.fill(
                   child: Column(
                     mainAxisAlignment: .center,
@@ -74,7 +73,7 @@ class Empty extends ConsumerWidget {
                     ],
                   ),
                 ),
-              if (demoType != DemoType.chat)
+              if (demoType != .chat)
                 Positioned.fill(
                   left: 32,
                   right: 32,
@@ -116,7 +115,7 @@ class Empty extends ConsumerWidget {
                             ModelSelector.show();
                           },
                           child: T(
-                            demoType == DemoType.see ? s.select_a_world_type : s.select_a_model,
+                            demoType == .see ? s.select_a_world_type : s.select_a_model,
                             s: const TS(s: 16, w: .w600),
                           ),
                         ),
@@ -136,7 +135,7 @@ class Empty extends ConsumerWidget {
                           ),
                         ),
                       const Spacer(),
-                      if (demoType == DemoType.tts) (inputHeight / 1.5).h,
+                      if (demoType == .tts) (inputHeight / 1.5).h,
                     ],
                   ),
                 ),
@@ -156,7 +155,7 @@ class _EmptyV2 extends ConsumerWidget {
   }
 
   void onTap(dynamic suggestion) {
-    if (!checkModelSelection(preferredDemoType: DemoType.chat)) return;
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
     final s = (suggestion as Suggestion);
     P.chat.send(s.prompt.isEmpty ? s.display : s.prompt);
   }

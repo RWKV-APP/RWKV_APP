@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/app_bar.dart';
@@ -30,7 +29,7 @@ class PageSee extends ConsumerWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: ChatAppBar(preferredDemoType: DemoType.see),
+            child: ChatAppBar(preferredDemoType: .see),
           ),
           Positioned(
             bottom: 0,
@@ -41,7 +40,7 @@ class PageSee extends ConsumerWidget {
               mainAxisSize: .min,
               children: [
                 Suggestions(),
-                BottomBar(preferredDemoType: DemoType.see),
+                BottomBar(preferredDemoType: .see),
               ],
             ),
           ),
@@ -89,7 +88,7 @@ class _List extends ConsumerWidget {
             itemBuilder: (context, index) {
               final finalIndex = messages.length - 1 - index;
               final msg = messages[finalIndex];
-              return Message(msg, finalIndex, preferredDemoType: DemoType.see);
+              return Message(msg, finalIndex, preferredDemoType: .see);
             },
             separatorBuilder: (context, index) {
               return const SizedBox(height: 15);
@@ -150,7 +149,7 @@ class _Empty extends ConsumerWidget {
             12.h,
             if (!loaded)
               TextButton(
-                onPressed: () => ModelSelector.show(preferredDemoType: DemoType.see),
+                onPressed: () => ModelSelector.show(preferredDemoType: .see),
                 child: T(s.select_a_model, s: const TS(s: 16, w: .w600)),
               ),
           ],

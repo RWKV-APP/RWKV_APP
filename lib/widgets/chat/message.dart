@@ -93,7 +93,7 @@ class Message extends ConsumerWidget {
 
     final inSee = ref.watch(P.app.pageKey) == PageKey.see;
     final isMine = msg.isMine;
-    final isChat = demoType == DemoType.chat;
+    final isChat = demoType == .chat;
     final Alignment alignment = isMine ? .centerRight : .centerLeft;
     const marginHorizontal = 12.0;
     const marginVertical = .0;
@@ -117,13 +117,13 @@ class Message extends ConsumerWidget {
     if (isMine) finalContent = finalContent.split(Config.userMsgModifierSep)[0];
 
     switch (demoType) {
-      case DemoType.tts:
+      case .tts:
         finalContent = "";
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
-      case DemoType.see:
+      case .chat:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
+      case .see:
         break;
     }
 
@@ -304,7 +304,7 @@ class Message extends ConsumerWidget {
                     ),
                   ),
                 // 🔥 User message audio
-                if (preferredDemoType == DemoType.tts) UserTTSContent(msg, index),
+                if (preferredDemoType == .tts) UserTTSContent(msg, index),
                 UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
@@ -371,7 +371,7 @@ class Message extends ConsumerWidget {
                 if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRender(raw: cotResult),
                 if (isBatch) BatchMessageContent(msg, index, finalContent),
                 if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
-                if (preferredDemoType == DemoType.tts) BotTtsContent(msg, index),
+                if (preferredDemoType == .tts) BotTtsContent(msg, index),
               ],
             ],
           ),
@@ -391,7 +391,7 @@ class Message extends ConsumerWidget {
               padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
               child: Column(
                 children: [
-                  if (demoType == DemoType.chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
+                  if (demoType == .chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
                   GestureDetector(onTap: _onTap, child: bubbleContent),
                 ],
               ),

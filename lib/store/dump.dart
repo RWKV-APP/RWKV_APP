@@ -18,13 +18,13 @@ class _Dump {
 extension _$Dump on _Dump {
   Future<void> _init() async {
     switch (P.app.demoType.q) {
-      case DemoType.chat:
-      case DemoType.fifthteenPuzzle:
-      case DemoType.othello:
-      case DemoType.sudoku:
-      case DemoType.tts:
+      case .chat:
+      case .fifthteenPuzzle:
+      case .othello:
+      case .sudoku:
+      case .tts:
         return;
-      case DemoType.see:
+      case .see:
     }
     qq;
     P.msg.list.lv(_onMessagesChanged);
