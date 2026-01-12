@@ -505,6 +505,8 @@ class _Tags extends ConsumerWidget {
             tag = "WebRWKV";
           }
 
+          if (tag != "WebRWKV") tag = tag.toUpperCase();
+
           if (isMLX) {
             color = Colors.transparent;
             textColor = qb;
@@ -526,7 +528,7 @@ class _Tags extends ConsumerWidget {
               child: Row(
                 children: [
                   Text(
-                    tag.toUpperCase(),
+                    tag,
                     style: TS(
                       c: textColor,
                       w: showHighlight ? .w500 : .w400,
