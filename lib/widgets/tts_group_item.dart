@@ -319,6 +319,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                         networkSpeed: networkSpeed,
                         remainText: remainText,
                         isSpark: widget.fileInfo.tags.contains("spark"),
+                        isNpu: widget.fileInfo.tags.contains("npu"),
                       ),
                     ),
                     8.w,
@@ -424,6 +425,7 @@ class _CollapsedContent extends ConsumerWidget {
   final double networkSpeed;
   final String remainText;
   final bool isSpark;
+  final bool isNpu;
 
   const _CollapsedContent({
     required this.modelName,
@@ -433,6 +435,7 @@ class _CollapsedContent extends ConsumerWidget {
     required this.networkSpeed,
     required this.remainText,
     required this.isSpark,
+    required this.isNpu,
   });
 
   @override
@@ -458,7 +461,7 @@ class _CollapsedContent extends ConsumerWidget {
           ],
         ),
         4.h,
-        _TTSTags(isSpark: isSpark),
+        _TTSTags(isSpark: isSpark, isNpu: isNpu),
         if (downloading) ...[
           8.h,
           Padding(
@@ -492,8 +495,9 @@ class _CollapsedContent extends ConsumerWidget {
 
 class _TTSTags extends StatelessWidget {
   final bool isSpark;
+  final bool isNpu;
 
-  const _TTSTags({required this.isSpark});
+  const _TTSTags({required this.isSpark, required this.isNpu});
 
   @override
   Widget build(BuildContext context) {
@@ -526,6 +530,25 @@ class _TTSTags extends StatelessWidget {
             ],
           ),
         ),
+        if (isNpu)
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: 4.r,
+              color: kCG,
+              border: Border.all(color: kCG, width: .5),
+            ),
+            padding: const .symmetric(horizontal: 4),
+            child: const Row(
+              mainAxisSize: .min,
+              children: [
+                Text(
+                  "NPU",
+                  style: TS(c: kW, w: .w500),
+                ),
+                T("⚡"),
+              ],
+            ),
+          ),
         4.w,
         Row(
           children: [
