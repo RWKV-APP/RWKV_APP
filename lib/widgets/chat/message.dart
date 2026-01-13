@@ -336,24 +336,29 @@ class Message extends ConsumerWidget {
                 if (!reasoning && !isBatch) MarkdownRender(raw: finalContent),
                 // 🔥 Bot message cot header
                 if (reasoning && !isQuickThinking && !isBatch)
-                  GestureDetector(
-                    onTap: () {
-                      if (showingCotContent) {
-                        P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
-                      } else {
-                        P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
-                      }
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.transparent),
-                      child: Row(
-                        children: [
-                          T(
-                            thisMessageIsReceiving ? s.thinking : s.thought_result,
-                            s: TS(c: qb.q(.5), w: .w600),
-                          ),
-                          showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
-                        ],
+                  Semantics(
+                    button: true,
+                    label: s.thought_result,
+                    expanded: showingCotContent,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (showingCotContent) {
+                          P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
+                        } else {
+                          P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
+                        }
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(color: Colors.transparent),
+                        child: Row(
+                          children: [
+                            T(
+                              thisMessageIsReceiving ? s.thinking : s.thought_result,
+                              s: TS(c: qb.q(.5), w: .w600),
+                            ),
+                            showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
+                          ],
+                        ),
                       ),
                     ),
                   ),

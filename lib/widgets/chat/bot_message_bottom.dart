@@ -142,69 +142,84 @@ class BotMessageBottom extends ConsumerWidget {
       children: [
         if (isBatch) 12.w,
         if (changing)
-          Padding(
-            padding: const .only(top: 12, right: 4, bottom: 12),
-            child: TweenAnimationBuilder(
-              tween: Tween(begin: .0, end: 1.0),
-              duration: const Duration(milliseconds: 1000000000),
-              builder: (context, value, child) => Transform.rotate(
-                angle: value * 2 * math.pi * 1000000,
-                child: child,
-              ),
-              child: Icon(
-                Icons.hourglass_top,
-                color: primaryColor,
-                size: 20,
+          Tooltip(
+            message: s.generating,
+            child: Padding(
+              padding: const .only(top: 12, right: 4, bottom: 12),
+              child: TweenAnimationBuilder(
+                tween: Tween(begin: .0, end: 1.0),
+                duration: const Duration(milliseconds: 1000000000),
+                builder: (context, value, child) => Transform.rotate(
+                  angle: value * 2 * math.pi * 1000000,
+                  child: child,
+                ),
+                child: Icon(
+                  Icons.hourglass_top,
+                  color: primaryColor,
+                  size: 20,
+                ),
               ),
             ),
           ),
         if (showCopyButton)
-          GestureDetector(
-            onTap: _onCopyPressed,
-            child: Padding(
-              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-              child: Icon(
-                Icons.copy,
-                color: primaryColor.q(.8),
-                size: 20,
+          Tooltip(
+            message: s.copy_text,
+            child: GestureDetector(
+              onTap: _onCopyPressed,
+              child: Padding(
+                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
+                child: Icon(
+                  Icons.copy,
+                  color: primaryColor.q(.8),
+                  size: 20,
+                ),
               ),
             ),
           ),
         if (showBotRegenerateButton)
-          GestureDetector(
-            onTap: _onRegeneratePressed,
-            child: Padding(
-              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-              child: Icon(
-                Icons.refresh,
-                color: primaryColor.q(.8),
-                size: 20,
+          Tooltip(
+            message: s.regenerate,
+            child: GestureDetector(
+              onTap: _onRegeneratePressed,
+              child: Padding(
+                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
+                child: Icon(
+                  Icons.refresh,
+                  color: primaryColor.q(.8),
+                  size: 20,
+                ),
               ),
             ),
           ),
         if (showEditButton)
-          GestureDetector(
-            onTap: _onBotEditPressed,
-            child: Padding(
-              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-              child: Icon(
-                Icons.edit,
-                color: primaryColor.q(.8),
-                size: 20,
+          Tooltip(
+            message: s.change,
+            child: GestureDetector(
+              onTap: _onBotEditPressed,
+              child: Padding(
+                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
+                child: Icon(
+                  Icons.edit,
+                  color: primaryColor.q(.8),
+                  size: 20,
+                ),
               ),
             ),
           ),
         if (showShareButton)
-          GestureDetector(
-            onTap: _onSharePressed,
-            child: Padding(
-              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.transparent),
-                child: Icon(
-                  Icons.share_rounded,
-                  color: primaryColor.q(.8),
-                  size: 20,
+          Tooltip(
+            message: s.share,
+            child: GestureDetector(
+              onTap: _onSharePressed,
+              child: Padding(
+                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.transparent),
+                  child: Icon(
+                    Icons.share_rounded,
+                    color: primaryColor.q(.8),
+                    size: 20,
+                  ),
                 ),
               ),
             ),
