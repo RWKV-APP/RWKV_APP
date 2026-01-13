@@ -1,3 +1,5 @@
+import 'package:zone/gen/l10n.dart' show S;
+
 /// LLM 解码参数类型枚举
 ///
 /// 定义了不同的文本生成参数预设，用于控制大语言模型的输出行为。
@@ -6,7 +8,7 @@ enum DecodeParamType {
   /// 未知/自定义类型
   ///
   /// 所有参数值为 -1，表示用户自定义配置，不属于任何预设类型。
-  unknown(
+  custom(
     temperature: -1,
     topP: -1,
     presencePenalty: -1,
@@ -131,6 +133,23 @@ enum DecodeParamType {
   /// - 典型范围：0.99 - 0.999
   final double penaltyDecay;
 
+  String get displayName {
+    switch (this) {
+      case DecodeParamType.defaults:
+        return S.current.decode_param_default_;
+      case DecodeParamType.creative:
+        return S.current.decode_param_creative;
+      case DecodeParamType.conservative:
+        return S.current.decode_param_conservative_short;
+      case DecodeParamType.fixed:
+        return S.current.decode_param_fixed;
+      case DecodeParamType.comprehensive:
+        return S.current.decode_param_comprehensive;
+      case DecodeParamType.custom:
+        return S.current.decode_param_custom;
+    }
+  }
+
   /// 创建解码参数类型实例
   const DecodeParamType({
     required this.temperature,
@@ -142,7 +161,7 @@ enum DecodeParamType {
 
   /// 根据参数值查找对应的解码参数类型
   ///
-  /// 如果找到完全匹配的预设类型，返回该类型；否则返回 [unknown]。
+  /// 如果找到完全匹配的预设类型，返回该类型；否则返回 [custom]。
   ///
   /// 参数：
   /// - [temperature]: 温度参数值
@@ -151,7 +170,7 @@ enum DecodeParamType {
   /// - [frequencyPenalty]: 频率惩罚值
   /// - [penaltyDecay]: 惩罚衰减值
   ///
-  /// 返回：匹配的 [DecodeParamType]，如果未找到则返回 [unknown]
+  /// 返回：匹配的 [DecodeParamType]，如果未找到则返回 [custom]
   static DecodeParamType fromValue({
     required double temperature,
     required double topP,
@@ -168,6 +187,6 @@ enum DecodeParamType {
         return type;
       }
     }
-    return unknown;
+    return custom;
   }
 }

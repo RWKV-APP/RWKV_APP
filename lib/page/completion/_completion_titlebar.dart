@@ -22,14 +22,14 @@ class CompletionTitleBar extends ConsumerWidget {
 
     final currentName =
         {
-          DecodeParamType.defaults: s.default_,
-          DecodeParamType.creative: s.creative,
-          DecodeParamType.conservative: s.conservative.split('(')[0].trim(),
-          DecodeParamType.fixed: s.fixed,
-          DecodeParamType.comprehensive: s.comprehensive,
-          DecodeParamType.unknown: s.custom,
+          DecodeParamType.defaults: s.decode_param_default_,
+          DecodeParamType.creative: s.decode_param_creative,
+          DecodeParamType.conservative: s.decode_param_conservative.split('(')[0].trim(),
+          DecodeParamType.fixed: s.decode_param_fixed,
+          DecodeParamType.comprehensive: s.decode_param_comprehensive,
+          DecodeParamType.custom: s.decode_param_custom,
         }[decodeParamType] ??
-        s.custom;
+        s.decode_param_custom;
 
     final buttonStyle = OutlinedButton.styleFrom(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -141,16 +141,16 @@ class CompletionTitleBar extends ConsumerWidget {
       items: [
         PopupMenuItem<DecodeParamType?>(
           height: 32,
-          value: DecodeParamType.unknown,
+          value: DecodeParamType.custom,
           enabled: false,
           child: Text(s.decode_param, style: const TextStyle(fontSize: 12)),
         ),
         _buildMenuItem(s.creative_recommended, DecodeParamType.creative, decodeParamType),
-        _buildMenuItem(s.comprehensive, DecodeParamType.comprehensive, decodeParamType),
-        _buildMenuItem(s.default_, DecodeParamType.defaults, decodeParamType),
-        _buildMenuItem(s.conservative, DecodeParamType.conservative, decodeParamType),
-        _buildMenuItem(s.fixed, DecodeParamType.fixed, decodeParamType),
-        _buildMenuItem(s.custom, DecodeParamType.unknown, decodeParamType),
+        _buildMenuItem(s.decode_param_comprehensive, DecodeParamType.comprehensive, decodeParamType),
+        _buildMenuItem(s.decode_param_default_, DecodeParamType.defaults, decodeParamType),
+        _buildMenuItem(s.decode_param_conservative, DecodeParamType.conservative, decodeParamType),
+        _buildMenuItem(s.decode_param_fixed, DecodeParamType.fixed, decodeParamType),
+        _buildMenuItem(s.decode_param_custom, DecodeParamType.custom, decodeParamType),
       ],
     );
     return v;

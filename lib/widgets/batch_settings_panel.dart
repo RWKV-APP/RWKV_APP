@@ -310,15 +310,15 @@ class _DecodeParam extends ConsumerWidget {
           DecodeParamType.creative,
           DecodeParamType.fixed,
           DecodeParamType.conservative,
-          DecodeParamType.unknown,
+          DecodeParamType.custom,
         ].map(
           (e) {
-            if (e == DecodeParamType.unknown) {
-              String label = s.custom;
+            if (e == DecodeParamType.custom) {
+              String label = s.decode_param_custom;
               if (param?.isCustom ?? false) label = "✅ $label";
               return SheetAction(
                 label: label,
-                key: DecodeParamType.unknown,
+                key: DecodeParamType.custom,
               );
             }
 
@@ -334,7 +334,7 @@ class _DecodeParam extends ConsumerWidget {
 
     late final SamplerAndPenaltyParam newParam;
 
-    if (result == DecodeParamType.unknown) {
+    if (result == DecodeParamType.custom) {
       final res = await ArgumentsPanel.show(
         getContext()!,
         isEditingBatchParams: true,

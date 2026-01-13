@@ -14,6 +14,7 @@ import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
+import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/see/select_image_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
@@ -68,6 +69,7 @@ class _Interactions extends ConsumerWidget {
         if (preferredDemoType == .chat) const ThinkingModeButton(),
         if (!isAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
           const SecondaryOptionsButton(),
+        if (!isAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
         if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
         if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
@@ -147,18 +149,6 @@ class _WebSearchModeButton extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class _DecodeParamButton extends ConsumerWidget {
-  const _DecodeParamButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-    final height = BottomInteractions.calculateButtonHeight(context);
-    return const SizedBox.shrink();
   }
 }
 

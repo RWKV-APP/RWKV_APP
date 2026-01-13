@@ -321,11 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion": MessageLookupByLibrary.simpleMessage("Режим дополнения"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("Режим дополнения"),
-    "comprehensive": MessageLookupByLibrary.simpleMessage("Всесторонний"),
     "confirm": MessageLookupByLibrary.simpleMessage("Подтвердить"),
-    "conservative": MessageLookupByLibrary.simpleMessage(
-      "Консервативный (подходит для математики и кода)",
-    ),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Продолжить загрузку",
     ),
@@ -350,7 +346,6 @@ class MessageLookup extends MessageLookupByLibrary {
           "Нажмите кнопку выше, чтобы создать новую сессию",
         ),
     "created_at": MessageLookupByLibrary.simpleMessage("Создано"),
-    "creative": MessageLookupByLibrary.simpleMessage("Творческий"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
@@ -364,7 +359,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("Текущий ход"),
-    "custom": MessageLookupByLibrary.simpleMessage("Пользовательский"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
       "Пользовательская сложность",
     ),
@@ -374,6 +368,29 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "decode": MessageLookupByLibrary.simpleMessage("вывод"),
     "decode_param": MessageLookupByLibrary.simpleMessage("Параметры модели"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "Всесторонний",
+    ),
+    "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
+      "Консервативный (подходит для математики и кода)",
+    ),
+    "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
+      "Консервативный",
+    ),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage("Творческий"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage(
+      "Пользовательский",
+    ),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage(
+      "По умолчанию",
+    ),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("Фиксированный"),
+    "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
+      "Мы можем контролировать стиль вывода RWKV через параметры декодирования",
+    ),
+    "decode_param_select_title": MessageLookupByLibrary.simpleMessage(
+      "Пожалуйста, выберите параметры декодирования",
+    ),
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "Параметры декодирования для каждого сообщения",
     ),
@@ -381,7 +398,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
     ),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("Глубокий поиск"),
-    "default_": MessageLookupByLibrary.simpleMessage("По умолчанию"),
     "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Удалить все"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
@@ -493,7 +509,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "finish_recording": MessageLookupByLibrary.simpleMessage(
       "Запись завершена",
     ),
-    "fixed": MessageLookupByLibrary.simpleMessage("Фиксированный"),
     "follow_system": MessageLookupByLibrary.simpleMessage("Как в системе"),
     "follow_us_on_twitter": MessageLookupByLibrary.simpleMessage(
       "Следите за нами в Twitter",
@@ -999,6 +1014,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
       "Выберите режим приложения в зависимости от вашего уровня знакомства с ИИ и LLM.",
     ),
+    "style": MessageLookupByLibrary.simpleMessage("Стиль"),
     "submit": MessageLookupByLibrary.simpleMessage("Отправить"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Легкий"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Сложный"),

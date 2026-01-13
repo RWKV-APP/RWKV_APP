@@ -28,16 +28,16 @@ class DecodeParamTypeButton extends StatelessWidget {
         return [
           PopupMenuItem<DecodeParamType?>(
             height: 32,
-            value: DecodeParamType.unknown,
+            value: DecodeParamType.custom,
             enabled: false,
             child: Text(s.decode_param, style: const TextStyle(fontSize: 12)),
           ),
-          _buildMenuItem(s.creative, DecodeParamType.creative, decodeParamType),
-          _buildMenuItem(s.comprehensive, DecodeParamType.comprehensive, decodeParamType),
-          _buildMenuItem(s.default_, DecodeParamType.defaults, decodeParamType),
-          _buildMenuItem(s.conservative, DecodeParamType.conservative, decodeParamType),
-          _buildMenuItem(s.fixed, DecodeParamType.fixed, decodeParamType),
-          _buildMenuItem(s.custom, DecodeParamType.unknown, decodeParamType),
+          _buildMenuItem(s.decode_param_creative, DecodeParamType.creative, decodeParamType),
+          _buildMenuItem(s.decode_param_comprehensive, DecodeParamType.comprehensive, decodeParamType),
+          _buildMenuItem(s.decode_param_default_, DecodeParamType.defaults, decodeParamType),
+          _buildMenuItem(s.decode_param_conservative, DecodeParamType.conservative, decodeParamType),
+          _buildMenuItem(s.decode_param_fixed, DecodeParamType.fixed, decodeParamType),
+          _buildMenuItem(s.decode_param_custom, DecodeParamType.custom, decodeParamType),
         ];
       },
       onSelected: (i) {

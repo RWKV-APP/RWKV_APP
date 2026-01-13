@@ -10,10 +10,6 @@ import 'package:zone/store/p.dart';
 class ThinkingModeButton extends ConsumerWidget {
   const ThinkingModeButton({super.key});
 
-  void _onTap() {
-    P.rwkv.onThinkModeTapped();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
@@ -80,7 +76,7 @@ class ThinkingModeButton extends ConsumerWidget {
           opacity: loading ? .33 : 1,
           duration: 250.ms,
           child: GestureDetector(
-            onTap: _onTap,
+            onTap: P.rwkv.onThinkModeTapped,
             child: SizedBox(
               height: height,
               child: Container(

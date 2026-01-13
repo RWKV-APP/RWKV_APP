@@ -272,9 +272,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion": MessageLookupByLibrary.simpleMessage("완성"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("완성 모드"),
-    "comprehensive": MessageLookupByLibrary.simpleMessage("종합"),
     "confirm": MessageLookupByLibrary.simpleMessage("확인"),
-    "conservative": MessageLookupByLibrary.simpleMessage("보수적 (수학 및 코드에 적합)"),
     "continue_download": MessageLookupByLibrary.simpleMessage("다운로드 계속"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "더 작은 모델 계속 사용",
@@ -291,7 +289,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("위 버튼을 클릭하여 새로 생성"),
     "created_at": MessageLookupByLibrary.simpleMessage("생성 시간"),
-    "creative": MessageLookupByLibrary.simpleMessage("창의적"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("현재 작업 탭 ID"),
@@ -301,12 +298,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage("현재 작업 URL"),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("현재 차례"),
-    "custom": MessageLookupByLibrary.simpleMessage("사용자 지정"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("맞춤 난이도"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("다크 모드"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("다크 모드 테마"),
     "decode": MessageLookupByLibrary.simpleMessage("디코딩"),
     "decode_param": MessageLookupByLibrary.simpleMessage("디코딩 매개변수"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("종합"),
+    "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
+      "보수적 (수학 및 코드에 적합)",
+    ),
+    "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
+      "보수적",
+    ),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage("창의적"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("사용자 지정"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage("기본값"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("고정"),
+    "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
+      "디코딩 매개변수를 통해 RWKV의 출력 스타일을 제어할 수 있습니다",
+    ),
+    "decode_param_select_title": MessageLookupByLibrary.simpleMessage(
+      "디코딩 매개변수를 선택하세요",
+    ),
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "각 메시지의 디코딩 매개변수",
     ),
@@ -315,7 +328,6 @@ class MessageLookup extends MessageLookupByLibrary {
           "배치 추론에서 각 메시지의 디코딩 매개변수입니다. 클릭하여 편집할 수 있습니다.",
         ),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("심층 네트워크 검색"),
-    "default_": MessageLookupByLibrary.simpleMessage("기본값"),
     "delete": MessageLookupByLibrary.simpleMessage("삭제"),
     "delete_all": MessageLookupByLibrary.simpleMessage("모두 삭제"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage("대화 삭제"),
@@ -407,7 +419,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "안녕하세요, 이 질문에는 아직 답변할 수 없습니다. 다른 주제로 이야기해 볼까요?",
     ),
     "finish_recording": MessageLookupByLibrary.simpleMessage("녹음 완료"),
-    "fixed": MessageLookupByLibrary.simpleMessage("고정"),
     "follow_system": MessageLookupByLibrary.simpleMessage("시스템 설정 따르기"),
     "follow_us_on_twitter": MessageLookupByLibrary.simpleMessage(
       "Twitter에서 저희를 팔로우하세요",
@@ -805,6 +816,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
       "AI 및 LLM에 대한 숙련도에 따라 앱 모드를 선택하세요.",
     ),
+    "style": MessageLookupByLibrary.simpleMessage("스타일"),
     "submit": MessageLookupByLibrary.simpleMessage("제출"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("초급"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("전문가"),

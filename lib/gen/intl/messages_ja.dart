@@ -270,9 +270,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion": MessageLookupByLibrary.simpleMessage("補完"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("補完モード"),
-    "comprehensive": MessageLookupByLibrary.simpleMessage("包括的"),
     "confirm": MessageLookupByLibrary.simpleMessage("確認"),
-    "conservative": MessageLookupByLibrary.simpleMessage("保守的（数学やコードに適しています）"),
     "continue_download": MessageLookupByLibrary.simpleMessage("ダウンロードを続行"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "より小さいモデルの使用を続行",
@@ -289,7 +287,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("上のボタンをクリックして新しいセッションを作成"),
     "created_at": MessageLookupByLibrary.simpleMessage("作成日時"),
-    "creative": MessageLookupByLibrary.simpleMessage("クリエイティブ"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("現在のタスクのタブID"),
@@ -299,12 +296,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage("現在のタスクのURL"),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("現在のターン"),
-    "custom": MessageLookupByLibrary.simpleMessage("カスタム"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("カスタム難易度"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("ダークモード"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("ダークモードテーマ"),
     "decode": MessageLookupByLibrary.simpleMessage("デコード"),
     "decode_param": MessageLookupByLibrary.simpleMessage("デコードパラメータ"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("包括的"),
+    "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
+      "保守的（数学やコードに適しています）",
+    ),
+    "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
+      "保守的",
+    ),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage("クリエイティブ"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("カスタム"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage("デフォルト"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定"),
+    "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
+      "デコードパラメータを通じて RWKV の出力スタイルを制御できます",
+    ),
+    "decode_param_select_title": MessageLookupByLibrary.simpleMessage(
+      "デコードパラメータを選択してください",
+    ),
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "各メッセージのデコードパラメータ",
     ),
@@ -313,7 +326,6 @@ class MessageLookup extends MessageLookupByLibrary {
           "バッチ推論における各メッセージのデコードパラメータ。クリックして編集できます。",
         ),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("ディープネットワーク検索"),
-    "default_": MessageLookupByLibrary.simpleMessage("デフォルト"),
     "delete": MessageLookupByLibrary.simpleMessage("削除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("すべて削除"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage("会話を削除"),
@@ -407,7 +419,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "こんにちは、この質問にはまだお答えできません。別の話題について話しましょう。",
     ),
     "finish_recording": MessageLookupByLibrary.simpleMessage("録音完了"),
-    "fixed": MessageLookupByLibrary.simpleMessage("固定"),
     "follow_system": MessageLookupByLibrary.simpleMessage("システムに従う"),
     "follow_us_on_twitter": MessageLookupByLibrary.simpleMessage(
       "Twitterでフォロー",
@@ -805,6 +816,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
       "AIとLLMの習熟度に応じてアプリモードを選択してください。",
     ),
+    "style": MessageLookupByLibrary.simpleMessage("スタイル"),
     "submit": MessageLookupByLibrary.simpleMessage("送信"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入門"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("エキスパート"),

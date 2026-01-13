@@ -314,11 +314,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion": MessageLookupByLibrary.simpleMessage("Completion"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("Completion Mode"),
-    "comprehensive": MessageLookupByLibrary.simpleMessage("Comprehensive"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
-    "conservative": MessageLookupByLibrary.simpleMessage(
-      "Conservative (math & code)",
-    ),
     "continue2": MessageLookupByLibrary.simpleMessage("Continue"),
     "continue_download": MessageLookupByLibrary.simpleMessage(
       "Continue Download",
@@ -342,7 +338,6 @@ class MessageLookup extends MessageLookupByLibrary {
           "Create a new one by clicking the button above",
         ),
     "created_at": MessageLookupByLibrary.simpleMessage("Created at"),
-    "creative": MessageLookupByLibrary.simpleMessage("Creative"),
     "creative_recommended": MessageLookupByLibrary.simpleMessage(
       "Creative (recommended)",
     ),
@@ -359,7 +354,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("Current Turn"),
-    "custom": MessageLookupByLibrary.simpleMessage("Custom"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
       "Custom Difficulty",
     ),
@@ -367,6 +361,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("Dark Mode Theme"),
     "decode": MessageLookupByLibrary.simpleMessage("Decode"),
     "decode_param": MessageLookupByLibrary.simpleMessage("Decode Param"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "Comprehensive",
+    ),
+    "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
+      "Conservative (math & code)",
+    ),
+    "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
+      "Conservative",
+    ),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage("Creative"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("Custom"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage("Default"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("Fixed"),
+    "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
+      "We can control RWKV\'s output style through decode parameters",
+    ),
+    "decode_param_select_title": MessageLookupByLibrary.simpleMessage(
+      "Please select decode parameters",
+    ),
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "Decode Params for Each Message",
     ),
@@ -376,7 +389,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "deep_web_search": MessageLookupByLibrary.simpleMessage(
       "Deep Network Search",
     ),
-    "default_": MessageLookupByLibrary.simpleMessage("Default"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
@@ -483,7 +495,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "finish_recording": MessageLookupByLibrary.simpleMessage(
       "Recording finished",
     ),
-    "fixed": MessageLookupByLibrary.simpleMessage("Fixed"),
     "follow_system": MessageLookupByLibrary.simpleMessage("System"),
     "follow_us_on_twitter": MessageLookupByLibrary.simpleMessage(
       "Follow us on Twitter",
@@ -970,6 +981,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
       "Choose an app mode according to your familiarity with AI and LLMs.",
     ),
+    "style": MessageLookupByLibrary.simpleMessage("Style"),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("Easy"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("Hard"),

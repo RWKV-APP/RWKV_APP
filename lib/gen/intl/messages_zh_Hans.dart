@@ -257,9 +257,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion": MessageLookupByLibrary.simpleMessage("续写模式"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("续写模式"),
-    "comprehensive": MessageLookupByLibrary.simpleMessage("综合"),
     "confirm": MessageLookupByLibrary.simpleMessage("确认"),
-    "conservative": MessageLookupByLibrary.simpleMessage("保守 (适合数学和代码)"),
     "continue2": MessageLookupByLibrary.simpleMessage("续写"),
     "continue_download": MessageLookupByLibrary.simpleMessage("继续下载"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
@@ -277,7 +275,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("点击上方按钮创建新会话"),
     "created_at": MessageLookupByLibrary.simpleMessage("创建时间"),
-    "creative": MessageLookupByLibrary.simpleMessage("创意"),
     "creative_recommended": MessageLookupByLibrary.simpleMessage("创意 (推荐)"),
     "current_model": m7,
     "current_progress": m8,
@@ -288,19 +285,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage("当前任务 URL"),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("当前回合"),
-    "custom": MessageLookupByLibrary.simpleMessage("自定义"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("自定义难度"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("深色模式"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("深色模式主题"),
     "decode": MessageLookupByLibrary.simpleMessage("解码"),
     "decode_param": MessageLookupByLibrary.simpleMessage("解码参数"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("综合"),
+    "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
+      "保守 (适合数学和代码)",
+    ),
+    "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
+      "保守",
+    ),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage("创意"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("自定义"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage("默认"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定"),
+    "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
+      "我们可以通过解码参数控制 RWKV 的输出风格",
+    ),
+    "decode_param_select_title": MessageLookupByLibrary.simpleMessage(
+      "请选择解码参数",
+    ),
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "每条消息的解码参数",
     ),
     "decode_params_for_each_message_detail":
         MessageLookupByLibrary.simpleMessage("批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。"),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("深度联网"),
-    "default_": MessageLookupByLibrary.simpleMessage("默认"),
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("全部删除"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage("删除会话"),
@@ -379,7 +391,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "你好，这个问题我暂时无法回答，让我们换个话题再聊聊吧。",
     ),
     "finish_recording": MessageLookupByLibrary.simpleMessage("录音完成"),
-    "fixed": MessageLookupByLibrary.simpleMessage("固定"),
     "follow_system": MessageLookupByLibrary.simpleMessage("跟随系统"),
     "follow_us_on_twitter": MessageLookupByLibrary.simpleMessage(
       "在 Twitter 上关注我们",
@@ -740,6 +751,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
       "请根据你对 AI 和 LLM 的了解程度选择应用模式.",
     ),
+    "style": MessageLookupByLibrary.simpleMessage("风格"),
     "submit": MessageLookupByLibrary.simpleMessage("提交"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入门"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("专家"),

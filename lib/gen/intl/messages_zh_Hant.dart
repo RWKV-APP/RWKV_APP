@@ -255,9 +255,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "completion": MessageLookupByLibrary.simpleMessage("續寫模式"),
     "completion_mode": MessageLookupByLibrary.simpleMessage("續寫模式"),
-    "comprehensive": MessageLookupByLibrary.simpleMessage("綜合"),
     "confirm": MessageLookupByLibrary.simpleMessage("確認"),
-    "conservative": MessageLookupByLibrary.simpleMessage("保守（適合數學和程式碼）"),
     "continue_download": MessageLookupByLibrary.simpleMessage("繼續下載"),
     "continue_using_smaller_model": MessageLookupByLibrary.simpleMessage(
       "繼續使用較小模型",
@@ -274,7 +272,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("點擊上方按鈕建立新會話"),
     "created_at": MessageLookupByLibrary.simpleMessage("建立時間"),
-    "creative": MessageLookupByLibrary.simpleMessage("創意"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("目前任務分頁 ID"),
@@ -284,19 +281,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage("目前任務 URL"),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("目前回合"),
-    "custom": MessageLookupByLibrary.simpleMessage("自訂"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("自定義難度"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("深色模式"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("深色模式主題"),
     "decode": MessageLookupByLibrary.simpleMessage("解碼"),
     "decode_param": MessageLookupByLibrary.simpleMessage("解碼參數"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("綜合"),
+    "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
+      "保守（適合數學和程式碼）",
+    ),
+    "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
+      "保守",
+    ),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage("創意"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("自訂"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage("預設"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定"),
+    "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
+      "我們可以透過解碼參數控制 RWKV 的輸出風格",
+    ),
+    "decode_param_select_title": MessageLookupByLibrary.simpleMessage(
+      "請選擇解碼參數",
+    ),
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "每條訊息的解碼參數",
     ),
     "decode_params_for_each_message_detail":
         MessageLookupByLibrary.simpleMessage("批量推理中每條訊息的解碼參數。點擊編輯每條訊息的解碼參數。"),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("深度網路搜尋"),
-    "default_": MessageLookupByLibrary.simpleMessage("預設"),
     "delete": MessageLookupByLibrary.simpleMessage("刪除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("全部刪除"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage("刪除對話"),
@@ -376,7 +388,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "你好，這個問題我暫時無法回答，讓我們換個話題再聊聊吧。",
     ),
     "finish_recording": MessageLookupByLibrary.simpleMessage("錄音完成"),
-    "fixed": MessageLookupByLibrary.simpleMessage("固定"),
     "follow_system": MessageLookupByLibrary.simpleMessage("跟隨系統"),
     "follow_us_on_twitter": MessageLookupByLibrary.simpleMessage(
       "在 Twitter 上追蹤我們",
@@ -734,6 +745,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "str_please_select_app_mode_": MessageLookupByLibrary.simpleMessage(
       "請根據您對 AI 和 LLM 的了解程度選擇應用程式模式。",
     ),
+    "style": MessageLookupByLibrary.simpleMessage("風格"),
     "submit": MessageLookupByLibrary.simpleMessage("提交"),
     "sudoku_easy": MessageLookupByLibrary.simpleMessage("入門"),
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("專家"),

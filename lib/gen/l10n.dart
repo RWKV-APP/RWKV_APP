@@ -54,6 +54,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `风格`
+  String get style {
+    return Intl.message('风格', name: 'style', desc: '', args: []);
+  }
+
   /// `管理`
   String get conversation_management {
     return Intl.message(
@@ -3059,13 +3064,28 @@ class S {
   }
 
   /// `固定`
-  String get fixed {
-    return Intl.message('固定', name: 'fixed', desc: '', args: []);
+  String get decode_param_fixed {
+    return Intl.message('固定', name: 'decode_param_fixed', desc: '', args: []);
+  }
+
+  /// `保守`
+  String get decode_param_conservative_short {
+    return Intl.message(
+      '保守',
+      name: 'decode_param_conservative_short',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `创意`
-  String get creative {
-    return Intl.message('创意', name: 'creative', desc: '', args: []);
+  String get decode_param_creative {
+    return Intl.message(
+      '创意',
+      name: 'decode_param_creative',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `创意 (推荐)`
@@ -3079,18 +3099,23 @@ class S {
   }
 
   /// `保守 (适合数学和代码)`
-  String get conservative {
+  String get decode_param_conservative {
     return Intl.message(
       '保守 (适合数学和代码)',
-      name: 'conservative',
+      name: 'decode_param_conservative',
       desc: '',
       args: [],
     );
   }
 
   /// `默认`
-  String get default_ {
-    return Intl.message('默认', name: 'default_', desc: '', args: []);
+  String get decode_param_default_ {
+    return Intl.message(
+      '默认',
+      name: 'decode_param_default_',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `均衡`
@@ -3099,8 +3124,8 @@ class S {
   }
 
   /// `自定义`
-  String get custom {
-    return Intl.message('自定义', name: 'custom', desc: '', args: []);
+  String get decode_param_custom {
+    return Intl.message('自定义', name: 'decode_param_custom', desc: '', args: []);
   }
 
   /// `模式`
@@ -3114,8 +3139,33 @@ class S {
   }
 
   /// `综合`
-  String get comprehensive {
-    return Intl.message('综合', name: 'comprehensive', desc: '', args: []);
+  String get decode_param_comprehensive {
+    return Intl.message(
+      '综合',
+      name: 'decode_param_comprehensive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请选择解码参数`
+  String get decode_param_select_title {
+    return Intl.message(
+      '请选择解码参数',
+      name: 'decode_param_select_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `我们可以通过解码参数控制 RWKV 的输出风格`
+  String get decode_param_select_message {
+    return Intl.message(
+      '我们可以通过解码参数控制 RWKV 的输出风格',
+      name: 'decode_param_select_message',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `下载%.1f% 速度%.1fMB/s 剩余%s`

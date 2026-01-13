@@ -209,7 +209,7 @@ class CompletionController {
   }
 
   void onDecodeParamChanged(BuildContext ctx, DecodeParamType type) {
-    if (type == DecodeParamType.unknown) {
+    if (type == DecodeParamType.custom) {
       ArgumentsPanel.show(ctx);
     } else {
       P.rwkv.syncSamplerParamsFromDefault(type);

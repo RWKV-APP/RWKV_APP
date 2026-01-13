@@ -98,21 +98,21 @@ class SamplerAndPenaltyParam extends Equatable {
   String get displayName {
     switch (decodeParamType) {
       case DecodeParamType.defaults:
-        return S.current.default_;
+        return S.current.decode_param_default_;
       case DecodeParamType.creative:
-        return S.current.creative;
+        return S.current.decode_param_creative;
       case DecodeParamType.conservative:
-        return S.current.conservative;
+        return S.current.decode_param_conservative;
       case DecodeParamType.fixed:
-        return S.current.fixed;
+        return S.current.decode_param_fixed;
       case DecodeParamType.comprehensive:
-        return S.current.comprehensive;
-      case DecodeParamType.unknown:
-        return S.current.custom;
+        return S.current.decode_param_comprehensive;
+      case DecodeParamType.custom:
+        return S.current.decode_param_custom;
     }
   }
 
-  bool get isCustom => decodeParamType == DecodeParamType.unknown;
+  bool get isCustom => decodeParamType == DecodeParamType.custom;
 
   SamplerAndPenaltyParam copyWith({
     double? temperature,
