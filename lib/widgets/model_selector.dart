@@ -239,7 +239,7 @@ class _ModelList extends ConsumerWidget {
             .map(
               (fileInfo) => ModelItem(
                 fileInfo,
-                userType.isGreaterThan(UserType.user),
+                userType.isGreaterThan(.user),
                 loadButtonTextShowLoad: pageKey == .benchmark,
               ),
             )

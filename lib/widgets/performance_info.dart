@@ -12,7 +12,7 @@ class PerformanceInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userType = ref.watch(P.preference.userType);
-    if (!userType.isGreaterThan(UserType.user)) {
+    if (!userType.isGreaterThan(.user)) {
       return const SizedBox.shrink();
     }
 

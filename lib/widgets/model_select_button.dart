@@ -19,7 +19,7 @@ class ModelSelectButton extends ConsumerWidget {
     final modelDisplay = currentModel?.name ?? s.click_to_select_model;
     final theme = Theme.of(context);
 
-    final currentName =
+    final decodeParamName =
         {
           DecodeParamType.defaults: s.default_,
           DecodeParamType.creative: s.creative,
@@ -68,7 +68,7 @@ class ModelSelectButton extends ConsumerWidget {
                 decodeParamType: decodeParamType,
                 child: Padding(
                   padding: const .symmetric(horizontal: 12, vertical: 4),
-                  child: Text(currentName, style: const TextStyle(fontSize: 10, height: 1)),
+                  child: Text(decodeParamName, style: const TextStyle(fontSize: 10, height: 1)),
                 ),
                 onSelected: (v) {
                   if (v == DecodeParamType.unknown) {

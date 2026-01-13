@@ -52,7 +52,7 @@ class _Preference {
   /// 非空表示使用指定的 locale
   late final preferredLanguage = qs<Language>(Language.none);
 
-  late final userType = qs<UserType>(UserType.powerUser);
+  late final userType = qs<UserType>(.powerUser);
 
   /// 空表示根据系统当前的 textScaleFactor 来设置应用的 textScaleFactor
   ///
@@ -120,7 +120,7 @@ extension _$Preference on _Preference {
 
     final userType = sp.getInt("halo_state.user_type");
     if (userType != null) {
-      this.userType.q = UserType.values.firstWhereOrNull((e) => e.index == userType) ?? UserType.user;
+      this.userType.q = .values.firstWhereOrNull((e) => e.index == userType) ?? .user;
     }
 
     final latestRuntimeAddress = sp.getInt("halo_state.latestRuntimeAddress");
@@ -204,9 +204,9 @@ extension $Preference on _Preference {
       message: S.current.str_please_select_app_mode_,
       initialSelectedActionKey: currentQ,
       actions: [
-        AlertDialogAction<UserType>(label: S.current.beginner, key: UserType.user),
-        AlertDialogAction<UserType>(label: S.current.power_user, key: UserType.powerUser),
-        AlertDialogAction<UserType>(label: S.current.expert, key: UserType.expert),
+        AlertDialogAction<UserType>(label: S.current.beginner, key: .user),
+        AlertDialogAction<UserType>(label: S.current.power_user, key: .powerUser),
+        AlertDialogAction<UserType>(label: S.current.expert, key: .expert),
       ],
     );
     if (res == null) return;

@@ -10,7 +10,7 @@ import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
-import 'package:zone/widgets/chat/app_bar.dart';
+import 'package:zone/widgets/chat/chat_app_bar.dart';
 import 'package:zone/widgets/chat/bottom_bar.dart';
 import 'package:zone/widgets/chat/empty.dart';
 import 'package:zone/widgets/chat/message.dart';

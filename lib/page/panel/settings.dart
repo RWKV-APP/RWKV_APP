@@ -200,7 +200,7 @@ class Settings extends ConsumerWidget {
               infoText: preferredLanguage.display ?? s.follow_system,
               onTap: P.preference.showLocaleDialog,
             ),
-            if (isChat && userType.isGreaterThan(UserType.user))
+            if (isChat && userType.isGreaterThan(.user))
               FormItem(
                 icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
                 title: S.current.advance_settings,

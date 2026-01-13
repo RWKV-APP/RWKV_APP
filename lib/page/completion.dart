@@ -8,6 +8,7 @@ import 'package:zone/widgets/model_select_button.dart';
 
 import 'package:zone/gen/l10n.dart' show S;
 
+@Deprecated("")
 class CompletionPage extends ConsumerWidget {
   static final _showTips = qs(true);
 

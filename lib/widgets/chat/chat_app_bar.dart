@@ -22,7 +22,6 @@ import 'package:zone/widgets/model_selector.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/widgets/state_panel.dart';
 
-// TODO: rename the file name to chat_app_bar.dart
 class ChatAppBar extends ConsumerWidget {
   final DemoType? preferredDemoType;
 
@@ -55,8 +54,8 @@ class ChatAppBar extends ConsumerWidget {
             ),
           ),
           child: selectMessageMode
-              ? _SelectMessageAppBar() //
-              : _MainAppBar(
+              ? _SelectMessageChatAppBar() //
+              : _ChatAppBar(
                   displayName: displayName,
                   preferredDemoType: demoType,
                 ),
@@ -66,11 +65,11 @@ class ChatAppBar extends ConsumerWidget {
   }
 }
 
-class _MainAppBar extends ConsumerWidget {
+class _ChatAppBar extends ConsumerWidget {
   final String displayName;
   final DemoType preferredDemoType;
 
-  const _MainAppBar({
+  const _ChatAppBar({
     required this.displayName,
     required this.preferredDemoType,
   });
@@ -107,12 +106,17 @@ class _MainAppBar extends ConsumerWidget {
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);
     final light = ref.watch(P.app.light);
-    final transparentColor = light ? const Color.fromRGBO(239, 243, 251, 0.5) : kB.q(.5);
+    Color backgroundColor = light ? const Color.fromRGBO(239, 243, 251, 0.5) : kB.q(.5);
+    if (isChat || isTTS || isWorld) {
+      backgroundColor = backgroundColor;
+    } else {
+      backgroundColor = scaffold.q(.7);
+    }
 
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: (isChat || isTTS || isWorld) ? transparentColor : scaffold.q(.7),
+      backgroundColor: backgroundColor,
       systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GestureDetector(
         onTap: _onTitlePressed,
@@ -191,8 +195,8 @@ class _MainAppBar extends ConsumerWidget {
       actions: [
         if ((preferredDemoType == .chat || preferredDemoType == .see) && !completionMode)
           _NewConversationButton(preferredDemoType: preferredDemoType),
-        if (preferredDemoType == .chat && userType.isGreaterThan(UserType.user)) _MorePopupMenuButton(preferredDemoType: preferredDemoType),
-        if (preferredDemoType != .chat && preferredDemoType != .sudoku && userType.isGreaterThan(UserType.user))
+        if (preferredDemoType == .chat && userType.isGreaterThan(.user)) _MorePopupMenuButton(preferredDemoType: preferredDemoType),
+        if (preferredDemoType != .chat && preferredDemoType != .sudoku && userType.isGreaterThan(.user))
           IconButton(
             onPressed: _onSettingsPressed,
             icon: const Icon(Icons.tune),
@@ -349,7 +353,7 @@ class _TrianglePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class _SelectMessageAppBar extends ConsumerWidget {
+class _SelectMessageChatAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
