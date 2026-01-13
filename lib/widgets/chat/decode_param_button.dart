@@ -95,7 +95,7 @@ class DecodeParamButton extends ConsumerWidget {
               crossAxisAlignment: .center,
               children: [
                 T(
-                  s.style + s.colon + decodeParamType.displayName,
+                  s.style + s.colon + decodeParamType.displayNameShort,
                   s: TS(c: textColor, s: 14, height: 1, w: .w500),
                 ),
               ],

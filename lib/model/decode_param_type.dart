@@ -133,22 +133,14 @@ enum DecodeParamType {
   /// - 典型范围：0.99 - 0.999
   final double penaltyDecay;
 
-  String get displayName {
-    switch (this) {
-      case DecodeParamType.defaults:
-        return S.current.decode_param_default_;
-      case DecodeParamType.creative:
-        return S.current.decode_param_creative;
-      case DecodeParamType.conservative:
-        return S.current.decode_param_conservative_short;
-      case DecodeParamType.fixed:
-        return S.current.decode_param_fixed;
-      case DecodeParamType.comprehensive:
-        return S.current.decode_param_comprehensive;
-      case DecodeParamType.custom:
-        return S.current.decode_param_custom;
-    }
-  }
+  String get displayNameShort => switch (this) {
+    defaults => S.current.decode_param_default_,
+    creative => S.current.decode_param_creative,
+    conservative => S.current.decode_param_conservative_short,
+    fixed => S.current.decode_param_fixed,
+    comprehensive => S.current.decode_param_comprehensive,
+    custom => S.current.decode_param_custom,
+  };
 
   /// 创建解码参数类型实例
   const DecodeParamType({

@@ -48,23 +48,23 @@ enum PageKey {
   bool get hasTransition => {chat, completion, advancedSettings, fontSettings, rolePlaying}.contains(this);
 
   Widget scaffold(Map<String, String> param) => switch (this) {
-    .chat => const PageChat(),
-    .neko => const PageChat(),
-    .talk => const PageTalk(),
-    .othello => const PageOthello(),
-    .completion => const CompletionPage(),
-    .sudoku => const PageSudoku(),
-    .home => const PageHome(),
-    .conversation => const PageConversation(),
-    .settings => const PageSettings(),
-    .weightManager => const PageWeightManager(),
-    .translator => const PageTranslator(),
-    .benchmark => const PageBenchmark(),
-    .lambada => const PageBenchmark(),
-    .advancedSettings => const PageAdvancedSettings(),
-    .fontSettings => const PageFontSettings(),
-    .see => const PageSee(),
-    .rolePlaying => RoleplayManage.goRolePlay(
+    chat => const PageChat(),
+    neko => const PageChat(),
+    talk => const PageTalk(),
+    othello => const PageOthello(),
+    completion => const CompletionPage(),
+    sudoku => const PageSudoku(),
+    home => const PageHome(),
+    conversation => const PageConversation(),
+    settings => const PageSettings(),
+    weightManager => const PageWeightManager(),
+    translator => const PageTranslator(),
+    benchmark => const PageBenchmark(),
+    lambada => const PageBenchmark(),
+    advancedSettings => const PageAdvancedSettings(),
+    fontSettings => const PageFontSettings(),
+    see => const PageSee(),
+    rolePlaying => RoleplayManage.goRolePlay(
       param['roleName'] ?? '',
       getContext()!,
       onUpdateRolePlaySessionRequired: () => updateRolePlayConversations(),
@@ -85,7 +85,7 @@ enum PageKey {
         }
       },
     ),
-    .ocr => const PageOcr(),
+    ocr => const PageOcr(),
   };
 
   GoRoute get route {

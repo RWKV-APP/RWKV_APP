@@ -118,14 +118,14 @@ enum Argument {
   };
 
   bool get enableGaimon => switch (this) {
-    Argument.temperature => true,
-    Argument.topK => true,
-    Argument.topP => true,
-    Argument.presencePenalty => true,
-    Argument.frequencyPenalty => true,
-    Argument.penaltyDecay => true,
-    Argument.maxLength => false,
-    Argument.batchCount => true,
-    Argument.batchVW => true,
+    temperature => true,
+    topK => true,
+    topP => true,
+    presencePenalty => true,
+    frequencyPenalty => true,
+    penaltyDecay => true,
+    maxLength => false,
+    batchCount => true,
+    batchVW => true,
   };
 }
