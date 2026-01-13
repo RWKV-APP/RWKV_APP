@@ -7,11 +7,12 @@ import 'package:halo/halo.dart';
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/app_scaffold.dart';
-import 'package:zone/widgets/chat/chat_app_bar.dart';
+import 'package:zone/widgets/chat_app_bar.dart';
 import 'package:zone/widgets/talk/audio_input.dart';
 import 'package:zone/widgets/input_bar.dart';
-import 'package:zone/widgets/chat/message.dart';
+import 'package:zone/widgets/message.dart';
 import 'package:zone/widgets/talk/suggestions.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -28,7 +29,7 @@ class PageTalk extends ConsumerWidget {
       // ),
       body: Stack(
         children: [
-          AppGradientBackground(child: SizedBox()),
+          GradientBackground(child: SizedBox()),
           _List(),
           _Empty(),
           Positioned(

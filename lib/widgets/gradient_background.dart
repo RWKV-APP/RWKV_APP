@@ -1,31 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/model/custom_theme.dart';
 import 'package:zone/store/p.dart';
 
-class AppScaffold extends StatelessWidget {
-  final Widget body;
-  final PreferredSizeWidget? appBar;
-
-  const AppScaffold({super.key, required this.body, this.appBar});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar,
-      body: AppGradientBackground(child: body),
-    );
-  }
-}
-
-class AppGradientBackground extends StatelessWidget {
+class GradientBackground extends StatelessWidget {
   final Widget child;
 
-  const AppGradientBackground({super.key, required this.child});
+  const GradientBackground({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isBlack = isDark && P.app.customTheme.q.toString() == "LightsOut";
+    final isBlack = isDark && P.app.customTheme.q is LightsOut;
 
     return Container(
       height: double.infinity,

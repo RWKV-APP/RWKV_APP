@@ -5,6 +5,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/config.dart';
@@ -53,7 +54,7 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
         centerTitle: true,
         title: Text(s.font_setting),
       ),
-      body: AppGradientBackground(
+      body: GradientBackground(
         child: Column(
           children: [
             Expanded(

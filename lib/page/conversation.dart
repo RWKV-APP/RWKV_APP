@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/conversation_item.dart';
 
@@ -59,13 +60,15 @@ class _PageConversationState extends ConsumerState<PageConversation> {
     final isEmpty = conversations.isEmpty;
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
 
-    return AppScaffold(
-      body: Column(
-        children: [
-          const _ConversationAppBar(),
-          isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
-          if (isBatchMode) const _BatchActionBar(),
-        ],
+    return Scaffold(
+      body: GradientBackground(
+        child: Column(
+          children: [
+            const _ConversationAppBar(),
+            isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
+            if (isBatchMode) const _BatchActionBar(),
+          ],
+        ),
       ),
     );
   }

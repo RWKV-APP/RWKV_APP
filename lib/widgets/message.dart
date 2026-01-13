@@ -21,11 +21,11 @@ import 'package:zone/model/world_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_message_content.dart';
-import 'package:zone/widgets/chat/bot_message_bottom.dart';
+import 'package:zone/widgets/bot_message_bottom.dart';
 import 'package:zone/widgets/chat/search_reference_dialog.dart';
 import 'package:zone/widgets/talk/bot_tts_content.dart';
 import 'package:zone/widgets/see/photo_viewer_overlay.dart';
-import 'package:zone/widgets/chat/user_message_bottom.dart';
+import 'package:zone/widgets/user_message_bottom.dart';
 import 'package:zone/widgets/talk/user_tts_content.dart';
 import 'package:zone/widgets/markdown_render.dart';
 

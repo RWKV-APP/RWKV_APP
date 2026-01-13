@@ -9,11 +9,12 @@ import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/app_scaffold.dart';
-import 'package:zone/widgets/chat/chat_app_bar.dart';
+import 'package:zone/widgets/chat_app_bar.dart';
 import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/chat/empty.dart';
-import 'package:zone/widgets/chat/message.dart';
+import 'package:zone/widgets/message.dart';
 import 'package:zone/widgets/chat/share_chat_sheet.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -66,7 +67,7 @@ class _Page extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          const AppGradientBackground(child: SizedBox()),
+          const GradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
           const Positioned(

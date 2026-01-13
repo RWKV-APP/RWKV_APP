@@ -9,7 +9,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/bottom_interactions.dart';
-import 'package:zone/widgets/chat/input_text_field.dart';
+import 'package:zone/widgets/input_text_field.dart';
 import 'package:zone/widgets/talk/bottom_interactions.dart';
 
 class InputBar extends ConsumerWidget {

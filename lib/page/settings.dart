@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zone/page/panel/settings.dart';
+import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 
 class PageSettings extends ConsumerWidget {
@@ -8,6 +9,6 @@ class PageSettings extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const AppGradientBackground(child: Settings(isInDrawerMenu: true));
+    return const GradientBackground(child: Settings(isInDrawerMenu: true));
   }
 }
