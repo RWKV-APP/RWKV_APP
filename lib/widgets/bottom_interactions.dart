@@ -23,6 +23,11 @@ import 'package:zone/widgets/performance_info.dart';
 class BottomInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;
 
+  static double calculateButtonHeight(BuildContext context) {
+    final textScaleFactor = MediaQuery.textScalerOf(context);
+    return textScaleFactor.scale(14) + 20;
+  }
+
   const BottomInteractions({
     super.key,
     required this.preferredDemoType,
@@ -35,7 +40,7 @@ class BottomInteractions extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
-          _MessageButton(preferredDemoType: preferredDemoType),
+          _Send(preferredDemoType: preferredDemoType),
         ],
       ),
     );
@@ -52,17 +57,18 @@ class _Interactions extends ConsumerWidget {
     final features = ref.watch(P.app.featureRollout);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);
-    final albatross = ref.watch(P.rwkv.isAlbatrossLoaded);
+    final isAlbatrossLoaded = ref.watch(P.rwkv.isAlbatrossLoaded);
     return Wrap(
       spacing: 4,
       runSpacing: 4,
-      crossAxisAlignment: WrapCrossAlignment.center,
+      crossAxisAlignment: .center,
       children: [
         if (preferredDemoType == .see) const IntrinsicWidth(child: SelectImageButton()),
         if (features.webSearch && preferredDemoType == .chat) const _WebSearchModeButton(),
         if (preferredDemoType == .chat) const ThinkingModeButton(),
-        if (!albatross && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922) const SecondaryOptionsButton(),
-        if (!albatross && preferredDemoType == .chat) const BatchButton(),
+        if (!isAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
+          const SecondaryOptionsButton(),
+        if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
         if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
         const IntrinsicWidth(child: PerformanceInfo()),
       ],
@@ -88,8 +94,7 @@ class _WebSearchModeButton extends ConsumerWidget {
     final color = enabled ? primary : theme.colorScheme.surfaceContainer;
     final textColor = enabled ? theme.colorScheme.onPrimary : Colors.grey;
 
-    final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
+    final height = BottomInteractions.calculateButtonHeight(context);
     const EdgeInsets padding = .only(left: 8);
     return IntrinsicWidth(
       child: GestureDetector(
@@ -145,6 +150,18 @@ class _WebSearchModeButton extends ConsumerWidget {
   }
 }
 
+class _DecodeParamButton extends ConsumerWidget {
+  const _DecodeParamButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final height = BottomInteractions.calculateButtonHeight(context);
+    return const SizedBox.shrink();
+  }
+}
+
 class _WenYanWenButton extends ConsumerWidget {
   const _WenYanWenButton();
 
@@ -154,8 +171,7 @@ class _WenYanWenButton extends ConsumerWidget {
     final mode = ref.watch(P.chat.wenYanWen);
     final model = ref.watch(P.rwkv.latestModel);
 
-    final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
+    final height = BottomInteractions.calculateButtonHeight(context);
 
     final bgColor = mode == WenyanMode.off ? theme.colorScheme.surfaceContainer : theme.colorScheme.primary;
 
@@ -219,10 +235,10 @@ class _WenYanWenButton extends ConsumerWidget {
   }
 }
 
-class _MessageButton extends ConsumerWidget {
+class _Send extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  const _MessageButton({required this.preferredDemoType});
+  const _Send({required this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

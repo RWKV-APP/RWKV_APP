@@ -1108,7 +1108,7 @@ class _OtherFileItem extends ConsumerWidget {
       subtitle: Wrap(
         spacing: 4,
         runSpacing: 4,
-        crossAxisAlignment: WrapCrossAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

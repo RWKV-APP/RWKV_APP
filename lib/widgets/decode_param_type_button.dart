@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 
+@Deprecated('This interaction has been moved to the bottom interactions')
 class DecodeParamTypeButton extends StatelessWidget {
   final DecodeParamType decodeParamType;
   final Widget child;

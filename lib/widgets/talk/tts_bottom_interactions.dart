@@ -338,7 +338,7 @@ class _Actions extends ConsumerWidget {
       children: [
         Expanded(
           child: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
+            crossAxisAlignment: .center,
             children: [
               const _AudioButton(),
               const _SpkButton(),

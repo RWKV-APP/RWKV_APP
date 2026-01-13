@@ -322,7 +322,7 @@ class _Players extends ConsumerWidget {
       ),
       padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           T(
             s.black + ":",
@@ -371,7 +371,7 @@ class _Players extends ConsumerWidget {
       ),
       padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           T(
             s.white + ":",

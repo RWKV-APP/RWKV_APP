@@ -85,7 +85,7 @@ class Empty extends ConsumerWidget {
                       12.h,
                       Wrap(
                         spacing: 4,
-                        crossAxisAlignment: WrapCrossAlignment.end,
+                        crossAxisAlignment: .end,
                         children: [
                           Opacity(
                             opacity: 0.0,

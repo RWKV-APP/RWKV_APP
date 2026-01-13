@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/bottom_interactions.dart';
 
 class BatchButton extends ConsumerWidget {
   const BatchButton({super.key});
@@ -12,8 +13,7 @@ class BatchButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
+    final height = BottomInteractions.calculateButtonHeight(context);
     final surfaceContainer = theme.colorScheme.surfaceContainer;
     final batchEnabled = ref.watch(P.chat.batchEnabled);
     final qb = ref.watch(P.app.qb);
