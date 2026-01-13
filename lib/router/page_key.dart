@@ -12,7 +12,7 @@ import 'package:zone/page/home.dart';
 import 'package:zone/page/ocr.dart';
 import 'package:zone/page/othello.dart';
 import 'package:zone/page/see.dart';
-import 'package:zone/widgets/settings.dart';
+import 'package:zone/page/settings.dart';
 import 'package:zone/page/sudoku.dart';
 import 'package:zone/page/talk.dart';
 import 'package:zone/page/translator.dart';

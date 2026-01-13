@@ -94,7 +94,7 @@ import 'package:zone/model/user_type.dart';
 import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/model/world_type.dart';
-import 'package:zone/page/panel/theme_selector.dart';
+import 'package:zone/widgets/theme_selector.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/router/router.dart';
