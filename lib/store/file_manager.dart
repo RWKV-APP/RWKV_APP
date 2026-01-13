@@ -291,6 +291,11 @@ extension $FileManager on _FileManager {
 
     try {
       await task.start();
+    } on HttpException catch (e) {
+      qqe(e.message);
+      qqe(e);
+      Alert.error(S.current.network_error + ": ${e.message}");
+      state.q = state.q.copyWith(state: TaskState.stopped);
     } catch (e) {
       if (e.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
         Alert.error('SSL Certificate Verify Failed');
