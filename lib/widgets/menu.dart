@@ -12,6 +12,6 @@ class Menu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Settings(isInDrawerMenu: true);
+    return const Settings(noBorderRadiusAndAppBar: true);
   }
 }

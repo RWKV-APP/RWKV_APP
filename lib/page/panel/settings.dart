@@ -61,7 +61,7 @@ class Settings extends ConsumerWidget {
           expand: false,
           snap: false,
           builder: (context, scrollController) {
-            return Settings(scrollController: scrollController);
+            return Settings(scrollController: scrollController, noBorderRadiusAndAppBar: false);
           },
         );
       },
@@ -71,12 +71,12 @@ class Settings extends ConsumerWidget {
 
   final ScrollController? scrollController;
 
-  final bool isInDrawerMenu;
+  final bool noBorderRadiusAndAppBar;
 
   const Settings({
     super.key,
     this.scrollController,
-    this.isInDrawerMenu = true,
+    required this.noBorderRadiusAndAppBar,
   });
 
   @override
@@ -110,7 +110,7 @@ class Settings extends ConsumerWidget {
     );
 
     return ClipRRect(
-      borderRadius: isInDrawerMenu
+      borderRadius: noBorderRadiusAndAppBar
           ? .zero
           : const .only(
               topLeft: .circular(16),
@@ -118,7 +118,7 @@ class Settings extends ConsumerWidget {
             ),
       child: Scaffold(
         backgroundColor: demoType == .chat ? Colors.transparent : customTheme.setting,
-        appBar: isInDrawerMenu
+        appBar: noBorderRadiusAndAppBar
             ? null
             : AppBar(
                 automaticallyImplyLeading: false,
@@ -367,30 +367,6 @@ class Settings extends ConsumerWidget {
         child: iconWidget,
       ),
       useRootNavigator: true,
-    );
-  }
-}
-
-class _DumpSwitch extends ConsumerWidget {
-  const _DumpSwitch();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dumpping = ref.watch(P.preference.dumpping);
-    return SizedBox(
-      height: 24,
-      child: Switch.adaptive(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: .zero,
-        value: dumpping,
-        onChanged: (value) async {
-          if (value) {
-            await P.dump.startDump();
-          } else {
-            await P.dump.stopDump();
-          }
-        },
-      ),
     );
   }
 }

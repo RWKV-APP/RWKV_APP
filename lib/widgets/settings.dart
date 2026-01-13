@@ -8,6 +8,6 @@ class PageSettings extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const GradientBackground(child: Settings(isInDrawerMenu: true));
+    return const GradientBackground(child: Settings(noBorderRadiusAndAppBar: true));
   }
 }
