@@ -480,8 +480,8 @@ class _Stack extends ConsumerWidget {
     }
     final widgetPosition = ref.watch(P.sudoku.widgetPosition);
     final uiOffset = ref.watch(P.sudoku.uiOffset);
-    final padding = MediaQuery.of(context).padding;
-    final _ = MediaQuery.of(context).orientation == Orientation.portrait;
+    final padding = MediaQuery.paddingOf(context);
+    final _ = MediaQuery.orientationOf(context) == Orientation.portrait;
     final currentStack = ref.watch(P.sudoku.currentStack);
     ref.watch(P.app.screenHeight);
     ref.watch(P.app.screenWidth);
@@ -550,7 +550,7 @@ class _TokensInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tokenCount = ref.watch(P.sudoku.tokensCount);
     final tokensPerSecond = ref.watch(P.rwkv.decodeSpeed);
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
     final ratio = screenWidth / screenHeight;
@@ -680,8 +680,8 @@ class _Terminal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final logs = ref.watch(P.sudoku.logs);
-    final padding = MediaQuery.of(context).padding;
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final padding = MediaQuery.paddingOf(context);
+    final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
     final isDesktop = ref.watch(P.app.isDesktop);
     return SelectionArea(
       child: Container(

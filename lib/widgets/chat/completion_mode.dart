@@ -298,7 +298,7 @@ class _CompletionState extends ConsumerState<Completion> {
         setState(() {});
       }
     });
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
     return Container(
       padding: .only(left: 8, right: 8, bottom: bottomPadding > 0 ? bottomPadding : 8),
       height: double.infinity,

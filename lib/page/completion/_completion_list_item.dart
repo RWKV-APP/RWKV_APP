@@ -66,7 +66,7 @@ class CompletionListItem extends StatelessWidget {
       content = MeasureSize(
         onChange: (s) {
           if (s.isEmpty || !CompletionState.autoScrolling) return;
-          final excepted = MediaQuery.of(context).size.height - 100;
+          final excepted = MediaQuery.sizeOf(context).height - 100;
           final offset = s.bottom - excepted;
           if (offset > 0) {
             if (!CompletionState.generating.q) {
