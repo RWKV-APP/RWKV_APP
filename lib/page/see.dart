@@ -8,7 +8,6 @@ import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/gradient_background.dart';
-import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
 import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/message.dart';

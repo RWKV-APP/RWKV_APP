@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/gradient_background.dart';
-import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/config.dart';
 

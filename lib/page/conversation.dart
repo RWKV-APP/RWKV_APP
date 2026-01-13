@@ -12,7 +12,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/gradient_background.dart';
-import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/conversation_item.dart';
 
 final _roleplayConvList = qs<List<ConversationListItemData>>([]);
