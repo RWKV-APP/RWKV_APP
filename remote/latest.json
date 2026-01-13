@@ -640,14 +640,14 @@
       {
         "name": "RWKV7-G1c 1.5B (8+ Gen 1)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-260104/rwkv7-g1c-1.5b-20260110-ctx8192-a16w8-8plusgen1-batch.rmpack",
-        "fileSize": 1721573376,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.39-260104/rwkv7-g1c-1.5b-20260110-ctx8192-a16w8-8plusgen1-nobatch.rmpack",
+        "fileSize": 1689239552,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["reason", "npu", "batch"],
+        "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1768209267
+        "date": 1768213461
       },
       {
         "name": "RWKV7-G1c 2.9B (8 Elite)",
