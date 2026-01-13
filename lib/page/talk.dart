@@ -9,10 +9,10 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/chat_app_bar.dart';
-import 'package:zone/widgets/chat/audio_input.dart';
-import 'package:zone/widgets/chat/bottom_bar.dart';
+import 'package:zone/widgets/talk/audio_input.dart';
+import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/chat/message.dart';
-import 'package:zone/widgets/chat/tts/suggestions.dart';
+import 'package:zone/widgets/talk/suggestions.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageTalk extends ConsumerWidget {
@@ -46,7 +46,7 @@ class PageTalk extends ConsumerWidget {
               mainAxisSize: .min,
               children: [
                 Suggestions(),
-                BottomBar(preferredDemoType: .tts),
+                InputBar(preferredDemoType: .tts),
               ],
             ),
           ),

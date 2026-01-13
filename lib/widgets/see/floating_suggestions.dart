@@ -9,10 +9,10 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/is_chinese.dart';
 import 'package:zone/store/p.dart';
 
-class Suggestions extends ConsumerWidget {
+class FloatingSuggestions extends ConsumerWidget {
   static const defaultHeight = 46.0;
 
-  const Suggestions({super.key});
+  const FloatingSuggestions({super.key});
 
   void _onSuggestionTap(String suggestion) {
     P.suggestion.ttsTicker.q += 1;

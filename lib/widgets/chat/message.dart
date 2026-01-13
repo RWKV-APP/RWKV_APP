@@ -23,10 +23,10 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_message_content.dart';
 import 'package:zone/widgets/chat/bot_message_bottom.dart';
 import 'package:zone/widgets/chat/search_reference_dialog.dart';
-import 'package:zone/widgets/chat/tts/bot_tts_content.dart';
-import 'package:zone/widgets/chat/photo_viewer_overlay.dart';
+import 'package:zone/widgets/talk/bot_tts_content.dart';
+import 'package:zone/widgets/see/photo_viewer_overlay.dart';
 import 'package:zone/widgets/chat/user_message_bottom.dart';
-import 'package:zone/widgets/chat/tts/user_tts_content.dart';
+import 'package:zone/widgets/talk/user_tts_content.dart';
 import 'package:zone/widgets/markdown_render.dart';
 
 class Message extends ConsumerWidget {

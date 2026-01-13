@@ -15,7 +15,7 @@ import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
-import 'package:zone/widgets/chat/select_image_button.dart';
+import 'package:zone/widgets/see/select_image_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/performance_info.dart';

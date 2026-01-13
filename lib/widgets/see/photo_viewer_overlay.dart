@@ -11,7 +11,6 @@ class PhotoViewerOverlay extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
     final paddingTop = ref.watch(P.app.paddingTop);
     final paddingRight = ref.watch(P.app.paddingRight);
     return Row(

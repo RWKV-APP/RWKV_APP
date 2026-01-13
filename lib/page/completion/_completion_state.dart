@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
+import 'package:zone/widgets/completion/batch_completion_settings_panel.dart';
 
 class CompletionState {
   static final tipsDisabled = qs(false);

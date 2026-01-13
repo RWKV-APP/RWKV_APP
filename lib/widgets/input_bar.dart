@@ -8,14 +8,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/chat/bottom_interactions.dart';
+import 'package:zone/widgets/bottom_interactions.dart';
 import 'package:zone/widgets/chat/input_text_field.dart';
-import 'package:zone/widgets/chat/tts/bottom_interactions.dart';
+import 'package:zone/widgets/talk/bottom_interactions.dart';
 
-class BottomBar extends ConsumerWidget {
+class InputBar extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  const BottomBar({super.key, this.preferredDemoType = .chat});
+  const InputBar({super.key, this.preferredDemoType = .chat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

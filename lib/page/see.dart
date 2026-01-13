@@ -9,9 +9,9 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/app_scaffold.dart';
 import 'package:zone/widgets/chat/chat_app_bar.dart';
-import 'package:zone/widgets/chat/bottom_bar.dart';
+import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/chat/message.dart';
-import 'package:zone/widgets/chat/world/suggestions.dart';
+import 'package:zone/widgets/see/floating_suggestions.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageSee extends ConsumerWidget {
@@ -39,8 +39,8 @@ class PageSee extends ConsumerWidget {
               crossAxisAlignment: .stretch,
               mainAxisSize: .min,
               children: [
-                Suggestions(),
-                BottomBar(preferredDemoType: .see),
+                FloatingSuggestions(),
+                InputBar(preferredDemoType: .see),
               ],
             ),
           ),
@@ -65,8 +65,8 @@ class _List extends ConsumerWidget {
     double bottom = inputHeight + 12;
     double scrollBarBottom = inputHeight + 4;
 
-    bottom += Suggestions.defaultHeight;
-    scrollBarBottom += Suggestions.defaultHeight;
+    bottom += FloatingSuggestions.defaultHeight;
+    scrollBarBottom += FloatingSuggestions.defaultHeight;
     final qb = ref.watch(P.app.qb);
 
     return Positioned.fill(

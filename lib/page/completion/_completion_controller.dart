@@ -12,7 +12,7 @@ import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/page/completion/_suggestions_dialog.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
-import 'package:zone/widgets/chat/batch_completion_settings_panel.dart';
+import 'package:zone/widgets/completion/batch_completion_settings_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 import '_completion_state.dart';

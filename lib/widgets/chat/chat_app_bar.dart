@@ -11,7 +11,6 @@ import 'package:zone/config.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/model/user_type.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
@@ -21,6 +20,7 @@ import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/widgets/state_panel.dart';
+import 'package:zone/widgets/triangle_painter.dart';
 
 class ChatAppBar extends ConsumerWidget {
   final DemoType? preferredDemoType;
@@ -97,6 +97,7 @@ class _ChatAppBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final primary = Theme.of(context).colorScheme.primary;
     final completionMode = ref.watch(P.chat.completionMode);
+    final qb = ref.watch(P.app.qb);
     final customTheme = ref.watch(P.app.customTheme);
     final scaffold = customTheme.scaffold;
     final isChat = preferredDemoType == .chat;
@@ -181,7 +182,7 @@ class _ChatAppBar extends ConsumerWidget {
                           width: 10,
                           height: 5,
                           child: CustomPaint(
-                            painter: _TrianglePainter(),
+                            painter: TrianglePainter(color: qb.q(.667)),
                           ),
                         ),
                       ),
@@ -330,27 +331,6 @@ class _NewConversationButton extends ConsumerWidget {
       icon: icon,
     );
   }
-}
-
-class _TrianglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final qb = P.app.qb.q;
-    final paint = Paint()
-      ..color = qb.q(.667)
-      ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width / 2, size.height)
-      ..close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 class _SelectMessageChatAppBar extends ConsumerWidget {
