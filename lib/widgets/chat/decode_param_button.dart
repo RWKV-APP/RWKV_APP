@@ -61,8 +61,10 @@ class DecodeParamButton extends ConsumerWidget {
 
     if (res == .custom) {
       await ArgumentsPanel.show(getContext()!);
+      P.preference.saveCustomDecodeParams();
     } else {
       await P.rwkv.syncSamplerParamsFromDefault(res);
+      P.preference.saveDecodeParamType(res);
     }
   }
 

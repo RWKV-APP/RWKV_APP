@@ -175,6 +175,27 @@ extension _$Preference on _Preference {
 
     final weightsMigrationCompleted = sp.getBool("halo_state.weightsMigrationCompletedv640");
     if (weightsMigrationCompleted != null) this.weightsMigrationCompleted.q = weightsMigrationCompleted;
+
+    final decodeParamTypeIndex = sp.getInt("halo_state.decodeParamType");
+    if (decodeParamTypeIndex != null) {
+      final type = DecodeParamType.values[decodeParamTypeIndex];
+      if (type == DecodeParamType.custom) {
+        final temperature = sp.getDouble("halo_state.custom.temperature");
+        final topP = sp.getDouble("halo_state.custom.topP");
+        final presencePenalty = sp.getDouble("halo_state.custom.presencePenalty");
+        final frequencyPenalty = sp.getDouble("halo_state.custom.frequencyPenalty");
+        final penaltyDecay = sp.getDouble("halo_state.custom.penaltyDecay");
+        await P.rwkv.syncSamplerParams(
+          temperature: temperature,
+          topP: topP,
+          presencePenalty: presencePenalty,
+          frequencyPenalty: frequencyPenalty,
+          penaltyDecay: penaltyDecay,
+        );
+      } else {
+        await P.rwkv.syncSamplerParamsFromDefault(type);
+      }
+    }
   }
 
   Future<void> _saveDumpping(bool dumpping) async {
@@ -310,5 +331,20 @@ extension $Preference on _Preference {
     weightsMigrationCompleted.q = completed;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool("halo_state.weightsMigrationCompletedv640", completed);
+  }
+
+  void saveDecodeParamType(DecodeParamType type) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt("halo_state.decodeParamType", type.index);
+  }
+
+  void saveCustomDecodeParams() async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt("halo_state.decodeParamType", DecodeParamType.custom.index);
+    await sp.setDouble("halo_state.custom.temperature", P.rwkv.arguments(Argument.temperature).q);
+    await sp.setDouble("halo_state.custom.topP", P.rwkv.arguments(Argument.topP).q);
+    await sp.setDouble("halo_state.custom.presencePenalty", P.rwkv.arguments(Argument.presencePenalty).q);
+    await sp.setDouble("halo_state.custom.frequencyPenalty", P.rwkv.arguments(Argument.frequencyPenalty).q);
+    await sp.setDouble("halo_state.custom.penaltyDecay", P.rwkv.arguments(Argument.penaltyDecay).q);
   }
 }
