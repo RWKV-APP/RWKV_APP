@@ -49,6 +49,9 @@ class _FileManager {
   late final ttsWeights = qs<Set<FileInfo>>({});
   late final ttsCores = qs<Set<FileInfo>>({});
 
+  /// Set of group IDs (core file names) that the user has explicitly requested to download
+  late final activeDownloadGroupIds = qs<Set<String>>({});
+
   /// 获取所有支持的NPU芯片列表（从所有模型的socLimitations中提取）
   List<String> getSupportedNpuChips() {
     final config = P.app._config.q;

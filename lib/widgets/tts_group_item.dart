@@ -7,6 +7,7 @@ import 'package:flutter_roleplay/flutter_roleplay.dart';
 import 'package:flutter_roleplay/models/model_info.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
+import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,6 +48,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   }
 
   void _onDownloadAllTap() async {
+    P.fileManager.activeDownloadGroupIds.q = {...P.fileManager.activeDownloadGroupIds.q, widget.fileInfo.fileName};
     final missingFileInfos = _fileInfos.where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
     for (var e in missingFileInfos) {
       P.fileManager.getFile(fileInfo: e);
@@ -54,6 +56,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   }
 
   void _onDeleteAllTap() async {
+    P.fileManager.activeDownloadGroupIds.q = P.fileManager.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
     for (var e in _fileInfos) {
       P.fileManager.deleteFile(fileInfo: e);
     }
@@ -85,6 +88,12 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   }
 
   bool _isDownloading() {
+    final coreLocal = P.fileManager.locals(widget.fileInfo).q;
+    final isExplicitlyActive = P.fileManager.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName);
+    final isCoreActive = coreLocal.downloading;
+
+    if (!isExplicitlyActive && !isCoreActive) return false;
+
     for (var fileInfo in _fileInfos) {
       final localFile = P.fileManager.locals(fileInfo).q;
       if (localFile.downloading) {
@@ -124,6 +133,14 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     final allDownloaded = files.every((e) => e.hasFile);
     if (allDownloaded) return TaskState.completed;
 
+    final coreLocal = P.fileManager.locals(widget.fileInfo).q;
+    final isExplicitlyActive = P.fileManager.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName);
+    final isCoreActive = coreLocal.downloading || coreLocal.state == TaskState.running;
+
+    if (!isExplicitlyActive && !isCoreActive) {
+      return TaskState.idle;
+    }
+
     final anyRunning = files.any((e) => e.state == TaskState.running);
     if (anyRunning) return TaskState.running;
 
@@ -147,15 +164,77 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       cancelLabel: S.current.continue_download,
     );
     if (result == OkCancelResult.ok) {
-      for (var fileInfo in _fileInfos) {
-        await P.fileManager.cancelDownload(fileInfo: fileInfo);
+      P.fileManager.activeDownloadGroupIds.q = P.fileManager.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
+
+      // 1. Cancel the core file (always unique to this group)
+      await P.fileManager.cancelDownload(fileInfo: widget.fileInfo);
+
+      // 2. Check if we should cancel dependencies
+      bool shouldCancelDependencies = true;
+
+      final activeGroups = P.fileManager.activeDownloadGroupIds.q;
+      final myId = widget.fileInfo.fileName;
+      final isMySpark = widget.fileInfo.tags.contains("spark");
+
+      // Look for other active groups
+      for (final groupId in activeGroups) {
+        if (groupId == myId) continue;
+
+        // Find the FileInfo for this groupId
+        final otherCore = P.fileManager.ttsCores.q.firstWhereOrNull((e) => e.fileName == groupId);
+        if (otherCore != null) {
+          final isOtherSpark = otherCore.tags.contains("spark");
+          if (isMySpark == isOtherSpark) {
+            // Found another active group of the same type (sharing dependencies)
+            shouldCancelDependencies = false;
+            break;
+          }
+        }
+      }
+
+      if (shouldCancelDependencies) {
+        for (var fileInfo in _fileInfos) {
+          if (fileInfo.fileName != widget.fileInfo.fileName) {
+            await P.fileManager.cancelDownload(fileInfo: fileInfo);
+          }
+        }
       }
     }
   }
 
   void _onPauseTap() {
-    for (var fileInfo in _fileInfos) {
-      P.fileManager.pauseDownload(fileInfo: fileInfo);
+    // 1. Pause the core file (always unique to this group)
+    P.fileManager.pauseDownload(fileInfo: widget.fileInfo);
+
+    // 2. Check if we should pause dependencies
+    bool shouldPauseDependencies = true;
+
+    final activeGroups = P.fileManager.activeDownloadGroupIds.q;
+    final myId = widget.fileInfo.fileName;
+    final isMySpark = widget.fileInfo.tags.contains("spark");
+
+    // Look for other active groups
+    for (final groupId in activeGroups) {
+      if (groupId == myId) continue;
+
+      // Find the FileInfo for this groupId
+      final otherCore = P.fileManager.ttsCores.q.firstWhereOrNull((e) => e.fileName == groupId);
+      if (otherCore != null) {
+        final isOtherSpark = otherCore.tags.contains("spark");
+        if (isMySpark == isOtherSpark) {
+          // Found another active group of the same type (sharing dependencies)
+          shouldPauseDependencies = false;
+          break;
+        }
+      }
+    }
+
+    if (shouldPauseDependencies) {
+      for (var fileInfo in _fileInfos) {
+        if (fileInfo.fileName != widget.fileInfo.fileName) {
+          P.fileManager.pauseDownload(fileInfo: fileInfo);
+        }
+      }
     }
   }
 
@@ -262,6 +341,13 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     });
 
     final allDownloaded = files.every((e) => e.hasFile);
+
+    if (allDownloaded && P.fileManager.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        P.fileManager.activeDownloadGroupIds.q = P.fileManager.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
+      });
+    }
+
     final downloading = _isDownloading();
     final overallState = _getOverallState();
     final overallProgress = _getOverallProgress();
@@ -320,6 +406,8 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                         remainText: remainText,
                         isSpark: widget.fileInfo.tags.contains("spark"),
                         isNpu: widget.fileInfo.tags.contains("npu"),
+                        quantization: widget.fileInfo.quantization,
+                        backend: widget.fileInfo.backend,
                       ),
                     ),
                     8.w,
@@ -426,6 +514,8 @@ class _CollapsedContent extends ConsumerWidget {
   final String remainText;
   final bool isSpark;
   final bool isNpu;
+  final String? quantization;
+  final Backend? backend;
 
   const _CollapsedContent({
     required this.modelName,
@@ -436,6 +526,8 @@ class _CollapsedContent extends ConsumerWidget {
     required this.remainText,
     required this.isSpark,
     required this.isNpu,
+    this.quantization,
+    this.backend,
   });
 
   @override
@@ -461,7 +553,7 @@ class _CollapsedContent extends ConsumerWidget {
           ],
         ),
         4.h,
-        _TTSTags(isSpark: isSpark, isNpu: isNpu),
+        _TTSTags(isSpark: isSpark, isNpu: isNpu, quantization: quantization, backend: backend),
         if (downloading) ...[
           8.h,
           Padding(
@@ -496,12 +588,15 @@ class _CollapsedContent extends ConsumerWidget {
 class _TTSTags extends StatelessWidget {
   final bool isSpark;
   final bool isNpu;
+  final String? quantization;
+  final Backend? backend;
 
-  const _TTSTags({required this.isSpark, required this.isNpu});
+  const _TTSTags({required this.isSpark, required this.isNpu, this.quantization, this.backend});
 
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
+    final qw = P.app.qw.q;
 
     return Wrap(
       spacing: 4,
@@ -549,16 +644,29 @@ class _TTSTags extends StatelessWidget {
               ],
             ),
           ),
-        4.w,
-        Row(
-          children: [
-            const T("🇨🇳", s: TS(s: 14)),
-            4.w,
-            const T("🇺🇸", s: TS(s: 14)),
-            4.w,
-            const T("🇯🇵", s: TS(s: 14)),
-          ],
-        ),
+        if (backend == Backend.webRwkv)
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: 4.r,
+              color: kCG,
+              border: Border.all(color: kCG, width: .5),
+            ),
+            padding: const .symmetric(horizontal: 4),
+            child: T(
+              "WebRWKV",
+              s: TS(c: qw, w: .w500),
+            ),
+          ),
+        if (quantization != null && quantization!.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+              color: kG.q(.2),
+              borderRadius: 4.r,
+              border: Border.all(width: .5, color: kG.q(.2)),
+            ),
+            padding: const .symmetric(horizontal: 4),
+            child: T(quantization!.toUpperCase()),
+          ),
       ],
     );
   }

@@ -418,6 +418,7 @@ class _DownloadSource extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
+    final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     return Column(
       crossAxisAlignment: .stretch,
       children: [
@@ -430,27 +431,36 @@ class _DownloadSource extends ConsumerWidget {
         Wrap(
           runSpacing: 4,
           spacing: 4,
-          children: FileDownloadSource.values.where((e) => (kDebugMode || !e.isDebug) && !e.hidden).map((e) {
-            return GestureDetector(
-              onTap: () {
-                P.fileManager.downloadSource.q = e;
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: e == currentSource ? primary : Colors.transparent,
-                  borderRadius: 4.r,
-                  border: Border.all(
-                    color: primary,
+          children: FileDownloadSource.values
+              .where((e) {
+                return (kDebugMode || !e.isDebug) && !e.hidden;
+              })
+              .map((e) {
+                String downloadSourceName = e.name;
+                if (currentLangIsZh) {
+                  downloadSourceName += (e == FileDownloadSource.huggingface ? S.current.overseas : "");
+                }
+                return GestureDetector(
+                  onTap: () {
+                    P.fileManager.downloadSource.q = e;
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: e == currentSource ? primary : Colors.transparent,
+                      borderRadius: 4.r,
+                      border: Border.all(
+                        color: primary,
+                      ),
+                    ),
+                    padding: const .symmetric(horizontal: 6, vertical: 2),
+                    child: T(
+                      downloadSourceName,
+                      s: TS(c: e == currentSource ? qw : qb.q(.7), s: 14),
+                    ),
                   ),
-                ),
-                padding: const .symmetric(horizontal: 6, vertical: 2),
-                child: T(
-                  e.name + (e == FileDownloadSource.huggingface ? S.current.overseas : ""),
-                  s: TS(c: e == currentSource ? qw : qb.q(.7), s: 14),
-                ),
-              ),
-            );
-          }).toList(),
+                );
+              })
+              .toList(),
         ),
         8.h,
       ],

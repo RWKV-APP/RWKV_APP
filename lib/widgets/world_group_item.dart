@@ -39,6 +39,10 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   void _onDownloadAllTap() async {
+    P.fileManager.activeDownloadGroupIds.q = {
+      ...P.fileManager.activeDownloadGroupIds.q,
+      widget.socPair.$2
+    };
     final missingFileInfos = _fileInfos.where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
     for (var e in missingFileInfos) {
       P.fileManager.getFile(fileInfo: e);
@@ -46,6 +50,8 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   void _onDeleteAllTap() async {
+    P.fileManager.activeDownloadGroupIds.q =
+        P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
     for (var e in _fileInfos) {
       P.fileManager.deleteFile(fileInfo: e);
     }
@@ -83,6 +89,13 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   bool _isDownloading() {
+    final myModelFile = _fileInfos.firstWhere((e) => e.fileName == widget.socPair.$2);
+    final myModelLocal = P.fileManager.locals(myModelFile).q;
+    final isExplicitlyActive = P.fileManager.activeDownloadGroupIds.q.contains(widget.socPair.$2);
+    final isCoreActive = myModelLocal.downloading;
+
+    if (!isExplicitlyActive && !isCoreActive) return false;
+
     for (var fileInfo in _fileInfos) {
       final localFile = P.fileManager.locals(fileInfo).q;
       if (localFile.downloading) {
@@ -121,6 +134,13 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final files = _fileInfos.map((e) => P.fileManager.locals(e).q).toList();
     final allDownloaded = files.every((e) => e.hasFile);
     if (allDownloaded) return TaskState.completed;
+
+    final myModelFile = _fileInfos.firstWhere((e) => e.fileName == widget.socPair.$2);
+    final myModelLocal = P.fileManager.locals(myModelFile).q;
+    final isExplicitlyActive = P.fileManager.activeDownloadGroupIds.q.contains(widget.socPair.$2);
+    final isCoreActive = myModelLocal.downloading || myModelLocal.state == TaskState.running;
+
+    if (!isExplicitlyActive && !isCoreActive) return TaskState.idle;
 
     final anyRunning = files.any((e) => e.state == TaskState.running);
     if (anyRunning) return TaskState.running;
@@ -206,15 +226,62 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       cancelLabel: S.current.continue_download,
     );
     if (result == OkCancelResult.ok) {
-      for (var fileInfo in _fileInfos) {
-        await P.fileManager.cancelDownload(fileInfo: fileInfo);
+      P.fileManager.activeDownloadGroupIds.q =
+          P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
+
+      // 1. Cancel the core file
+      final modelFileKey = _fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+      await P.fileManager.cancelDownload(fileInfo: modelFileKey);
+
+      // 2. Check if we should cancel dependencies
+      bool shouldCancelDependencies = true;
+      final activeGroups = P.fileManager.activeDownloadGroupIds.q;
+      final myId = widget.socPair.$2;
+
+      for (final groupId in activeGroups) {
+        if (groupId == myId) continue;
+        final otherModel = P.fileManager.seeWeights.q.firstWhereOrNull((e) => e.fileName == groupId);
+        if (otherModel != null && otherModel.worldType == widget.worldType) {
+          shouldCancelDependencies = false;
+          break;
+        }
+      }
+
+      if (shouldCancelDependencies) {
+        for (var fileInfo in _fileInfos) {
+          if (fileInfo.fileName != widget.socPair.$2) {
+            await P.fileManager.cancelDownload(fileInfo: fileInfo);
+          }
+        }
       }
     }
   }
 
   void _onPauseTap() {
-    for (var fileInfo in _fileInfos) {
-      P.fileManager.pauseDownload(fileInfo: fileInfo);
+    // 1. Pause the core file
+    final modelFileKey = _fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    P.fileManager.pauseDownload(fileInfo: modelFileKey);
+
+    // 2. Check if we should pause dependencies
+    bool shouldPauseDependencies = true;
+    final activeGroups = P.fileManager.activeDownloadGroupIds.q;
+    final myId = widget.socPair.$2;
+
+    for (final groupId in activeGroups) {
+      if (groupId == myId) continue;
+      final otherModel = P.fileManager.seeWeights.q.firstWhereOrNull((e) => e.fileName == groupId);
+      if (otherModel != null && otherModel.worldType == widget.worldType) {
+        shouldPauseDependencies = false;
+        break;
+      }
+    }
+
+    if (shouldPauseDependencies) {
+      for (var fileInfo in _fileInfos) {
+        if (fileInfo.fileName != widget.socPair.$2) {
+          P.fileManager.pauseDownload(fileInfo: fileInfo);
+        }
+      }
     }
   }
 
@@ -235,6 +302,14 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     });
 
     final allDownloaded = files.every((e) => e.hasFile);
+
+    if (allDownloaded && P.fileManager.activeDownloadGroupIds.q.contains(widget.socPair.$2)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        P.fileManager.activeDownloadGroupIds.q =
+            P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
+      });
+    }
+
     final downloading = _isDownloading();
     final overallState = _getOverallState();
     final overallProgress = _getOverallProgress();
@@ -296,6 +371,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                         networkSpeed: networkSpeed,
                         remainText: remainText,
                         socPair: widget.socPair,
+                        quantization: modelFileKey.quantization,
                       ),
                     ),
                     8.w,
@@ -401,6 +477,8 @@ class _CollapsedContent extends ConsumerWidget {
   final double networkSpeed;
   final String remainText;
   final (String, String) socPair;
+  final String? quantization;
+  final Backend? backend;
 
   const _CollapsedContent({
     required this.modelName,
@@ -410,6 +488,8 @@ class _CollapsedContent extends ConsumerWidget {
     required this.networkSpeed,
     required this.remainText,
     required this.socPair,
+    this.quantization,
+    this.backend,
   });
 
   @override
@@ -435,7 +515,7 @@ class _CollapsedContent extends ConsumerWidget {
           ],
         ),
         4.h,
-        _WorldTags(socPair: socPair),
+        _WorldTags(socPair: socPair, quantization: quantization, backend: backend),
         if (downloading) ...[
           8.h,
           Padding(
@@ -469,8 +549,10 @@ class _CollapsedContent extends ConsumerWidget {
 
 class _WorldTags extends ConsumerWidget {
   final (String, String) socPair;
+  final String? quantization;
+  final Backend? backend;
 
-  const _WorldTags({required this.socPair});
+  const _WorldTags({required this.socPair, this.quantization, this.backend});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -506,6 +588,29 @@ class _WorldTags extends ConsumerWidget {
             ],
           ),
         ),
+        if (backend == Backend.webRwkv)
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: 4.r,
+              color: kCG,
+              border: Border.all(color: kCG, width: .5),
+            ),
+            padding: const .symmetric(horizontal: 4),
+            child: T(
+              "WebRWKV",
+              s: TS(c: qw, w: .w500),
+            ),
+          ),
+        if (quantization != null && quantization!.isNotEmpty)
+          Container(
+            decoration: BoxDecoration(
+              color: kG.q(.2),
+              borderRadius: 4.r,
+              border: Border.all(width: .5, color: kG.q(.2)),
+            ),
+            padding: const .symmetric(horizontal: 4),
+            child: T(quantization!.toUpperCase()),
+          ),
       ],
     );
   }
