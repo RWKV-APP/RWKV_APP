@@ -489,7 +489,6 @@ class _CollapsedContent extends ConsumerWidget {
     required this.remainText,
     required this.socPair,
     this.quantization,
-    this.backend,
   });
 
   @override

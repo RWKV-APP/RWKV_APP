@@ -1,6 +1,5 @@
 // ignore: unused_import
 
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class TrianglePainter extends CustomPainter {
