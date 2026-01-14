@@ -39,10 +39,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   void _onDownloadAllTap() async {
-    P.fileManager.activeDownloadGroupIds.q = {
-      ...P.fileManager.activeDownloadGroupIds.q,
-      widget.socPair.$2
-    };
+    P.fileManager.activeDownloadGroupIds.q = {...P.fileManager.activeDownloadGroupIds.q, widget.socPair.$2};
     final missingFileInfos = _fileInfos.where((e) => P.fileManager.locals(e).q.hasFile == false).toList();
     for (var e in missingFileInfos) {
       P.fileManager.getFile(fileInfo: e);
@@ -50,8 +47,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   void _onDeleteAllTap() async {
-    P.fileManager.activeDownloadGroupIds.q =
-        P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
+    P.fileManager.activeDownloadGroupIds.q = P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
     for (var e in _fileInfos) {
       P.fileManager.deleteFile(fileInfo: e);
     }
@@ -226,8 +222,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       cancelLabel: S.current.continue_download,
     );
     if (result == OkCancelResult.ok) {
-      P.fileManager.activeDownloadGroupIds.q =
-          P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
+      P.fileManager.activeDownloadGroupIds.q = P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
 
       // 1. Cancel the core file
       final modelFileKey = _fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
@@ -305,8 +300,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
 
     if (allDownloaded && P.fileManager.activeDownloadGroupIds.q.contains(widget.socPair.$2)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        P.fileManager.activeDownloadGroupIds.q =
-            P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
+        P.fileManager.activeDownloadGroupIds.q = P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
       });
     }
 
@@ -489,6 +483,8 @@ class _CollapsedContent extends ConsumerWidget {
     required this.remainText,
     required this.socPair,
     this.quantization,
+    // ignore: unused_element_parameter
+    this.backend,
   });
 
   @override
