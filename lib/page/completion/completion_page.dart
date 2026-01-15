@@ -47,7 +47,7 @@ class _CompletionPageState extends State<CompletionPage> {
     Color dividerColor = isDark ? const Color(0x99FFFFFF) : const Color(0x26000000);
     if (isDark && P.preference.preferredDarkCustomTheme.q is LightsOut) {
       backgroundColor = Colors.black;
-      dividerColor = Color(0x44ffffff);
+      dividerColor = const Color(0x44ffffff);
     }
     final themeV2 = ThemeData(
       cardColor: Colors.white,
