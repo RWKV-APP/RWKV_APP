@@ -241,6 +241,9 @@ class _ModelList extends ConsumerWidget {
     );
   }
 
+  /// 根据专有加速进行排序
+  ///
+  /// 只要没用 CPU 就排前面
   int _compare(FileInfo a, FileInfo b) {
     final aHasMLX = a.tags.contains("mlx");
     final bHasMLX = b.tags.contains("mlx");
