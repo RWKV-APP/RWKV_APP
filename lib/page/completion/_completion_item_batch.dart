@@ -8,15 +8,16 @@ class CompletionItemBatch extends StatefulWidget {
   final CompletionItemNode item;
   final Widget? footer;
   final bool isLast;
+  final TextStyle textStyle;
 
-  const CompletionItemBatch({super.key, required this.item, this.footer, required this.isLast});
+  const CompletionItemBatch({super.key, required this.item, this.footer, required this.isLast, required this.textStyle});
 
   @override
   State<CompletionItemBatch> createState() => _CompletionItemBatchState();
 }
 
 class _CompletionItemBatchState extends State<CompletionItemBatch> {
-  final style = const TextStyle(fontSize: 14, height: 2, letterSpacing: 1, overflow: TextOverflow.ellipsis);
+  TextStyle get style => widget.textStyle;
   late final double lineHeight = _measureHeight('A');
   late final maxWidth = MediaQuery.sizeOf(context).width - 100;
   final node2lines = <int, int>{};

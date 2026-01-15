@@ -44,8 +44,9 @@ class CompletionListItem extends StatelessWidget {
   final CompletionItemNode item;
   final Widget? footer;
   final bool isLast;
+  final TextStyle textStyle;
 
-  const CompletionListItem({super.key, required this.item, this.footer, required this.isLast});
+  const CompletionListItem({super.key, required this.item, this.footer, required this.isLast, required this.textStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +58,8 @@ class CompletionListItem extends StatelessWidget {
               child: SizedBox(height: 14, width: 14, child: CircularProgressIndicator(strokeWidth: 2)),
             )
           : SelectableText(
-              item.content, //
-              style: const TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
+              item.content,
+              style: textStyle,
             ),
     );
     if (footer == null) return Padding(padding: const EdgeInsets.only(bottom: 20), child: content);

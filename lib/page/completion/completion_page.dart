@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo_state/halo_state.dart';
+import 'package:zone/model/custom_theme.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_item_batch.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/page/completion/_completion_titlebar.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 
 import '../../gen/l10n.dart' show S;
@@ -40,7 +43,12 @@ class _CompletionPageState extends State<CompletionPage> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final primaryColor = isDark ? const Color(0xFF9E7C59) : const Color(0xFF80B0CC);
-    final backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
+    Color backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
+    Color dividerColor = isDark ? const Color(0x99FFFFFF) : const Color(0x26000000);
+    if (isDark && P.preference.preferredDarkCustomTheme.q is LightsOut) {
+      backgroundColor = Colors.black;
+      dividerColor = Color(0x44ffffff);
+    }
     final themeV2 = ThemeData(
       cardColor: Colors.white,
       bottomSheetTheme: theme.bottomSheetTheme,
@@ -48,7 +56,7 @@ class _CompletionPageState extends State<CompletionPage> {
       dividerTheme: DividerThemeData(
         space: 0,
         thickness: 1,
-        color: isDark ? const Color(0x99FFFFFF) : const Color(0x26000000),
+        color: dividerColor,
       ),
       fontFamily: theme.textTheme.bodyMedium?.fontFamily,
       fontFamilyFallback: theme.textTheme.bodyMedium?.fontFamilyFallback,
@@ -205,7 +213,7 @@ class _FloatButton extends ConsumerWidget {
               child: CircularProgressIndicator(strokeWidth: 3, color: Theme.of(context).colorScheme.onPrimary),
             ),
       onPressed: onTap,
-      label: Text(generating ? S.current.stop : S.current.continue2),
+      label: Text(generating ? S.current.stop : S.current.completion),
     );
   }
 }
@@ -216,6 +224,15 @@ class _ContentList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(CompletionState.items);
+    final isEng = !ref.watch(P.preference.currentLangIsZh);
+
+    final textStyle = TextStyle(
+      fontSize: 14,
+      height: isEng ? 1.2 : 2,
+      letterSpacing: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+
     return ListView.builder(
       itemCount: items.length + 1,
       padding: const EdgeInsets.only(left: 32, right: 32, top: 16, bottom: 100),
@@ -224,7 +241,7 @@ class _ContentList extends ConsumerWidget {
         final input = index == items.length;
 
         if (input) {
-          return const _UserInputArea();
+          return _UserInputArea(textStyle);
         }
         final item = items[index];
         // root item, do not show
@@ -239,6 +256,7 @@ class _ContentList extends ConsumerWidget {
           return CompletionItemBatch(
             item: item,
             isLast: last,
+            textStyle: textStyle,
             footer: Row(
               children: [
                 if (last) CompletionRegenerationButton(item: item),
@@ -251,6 +269,7 @@ class _ContentList extends ConsumerWidget {
         return CompletionListItem(
           item: item,
           isLast: last,
+          textStyle: textStyle,
           footer: item.isUser ? null : CompletionListItemFooter(item: item, isLast: last),
         );
       },
@@ -259,7 +278,9 @@ class _ContentList extends ConsumerWidget {
 }
 
 class _UserInputArea extends ConsumerWidget {
-  const _UserInputArea();
+  final TextStyle testStyle;
+
+  const _UserInputArea(this.testStyle);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -285,7 +306,7 @@ class _UserInputArea extends ConsumerWidget {
               hintText: S.current.enter_text_to_expand,
               border: InputBorder.none,
             ),
-            style: const TextStyle(fontSize: 14, height: 2, letterSpacing: 1),
+            style: testStyle,
             scrollPadding: const EdgeInsets.only(bottom: 100),
             minLines: 1,
             maxLines: null,

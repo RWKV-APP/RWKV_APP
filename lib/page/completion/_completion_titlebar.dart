@@ -52,7 +52,7 @@ class CompletionTitleBar extends ConsumerWidget {
             ),
             Expanded(
               child: Text(
-                'RWKV·${s.continue2}',
+                'RWKV·${s.completion}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400, height: 1),
               ),
