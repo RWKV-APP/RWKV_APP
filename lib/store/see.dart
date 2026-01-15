@@ -250,6 +250,37 @@ extension $See on _See {
     P.chat.receiveId.q = -1;
     await P.rwkv.sendMessages(messages, maxLength: 0);
   }
+
+  Future<void> autoTest() async {
+    await Future.delayed(const Duration(seconds: 2));
+    push(.see);
+    await Future.delayed(const Duration(seconds: 2));
+    onSuggestionTap("What is this image?");
+    await Future.delayed(100.ms);
+    await selectImage();
+    // await Future.delayed(1000.ms);
+    // P.chat.onSendButtonPressed(preferredDemoType: .see);
+  }
+
+  void onSuggestionTap(String suggestion) {
+    P.suggestion.ttsTicker.q += 1;
+    final current = P.chat.textEditingController.text;
+    if (current.isEmpty) {
+      P.chat.textEditingController.text = suggestion;
+      return;
+    }
+
+    final last = current.characters.last;
+    final lastIsChinese = containsChineseCharacters(last);
+    final lastIsEnglish = isEnglish(last);
+    if (lastIsChinese) {
+      P.chat.textEditingController.text = "$current。$suggestion";
+    } else if (lastIsEnglish) {
+      P.chat.textEditingController.text = "$current. $suggestion";
+    } else {
+      P.chat.textEditingController.text = "$current$suggestion";
+    }
+  }
 }
 
 /// Private methods

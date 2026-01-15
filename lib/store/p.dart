@@ -61,6 +61,7 @@ import 'package:zone/db/db.dart' as db;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
+import 'package:zone/func/is_chinese.dart';
 import 'package:zone/func/save_asset_to_file.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;

@@ -108,6 +108,7 @@ extension $Chat on _Chat {
     wenYanWen.q = mode;
   }
 
+  // TODO: 适时去掉 preferredDemoType
   Future<void> onSendButtonPressed({
     required DemoType preferredDemoType,
   }) async {
