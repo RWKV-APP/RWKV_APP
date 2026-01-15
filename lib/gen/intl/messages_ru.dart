@@ -346,6 +346,12 @@ class MessageLookup extends MessageLookupByLibrary {
           "Нажмите кнопку выше, чтобы создать новую сессию",
         ),
     "created_at": MessageLookupByLibrary.simpleMessage("Создано"),
+    "creative_recommended": MessageLookupByLibrary.simpleMessage(
+      "Творческий (Рекомендуется)",
+    ),
+    "creative_recommended_short": MessageLookupByLibrary.simpleMessage(
+      "Творческий",
+    ),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
@@ -369,22 +375,41 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode": MessageLookupByLibrary.simpleMessage("вывод"),
     "decode_param": MessageLookupByLibrary.simpleMessage("Параметры модели"),
     "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "Всесторонний (Стоит попробовать)",
+    ),
+    "decode_param_comprehensive_short": MessageLookupByLibrary.simpleMessage(
       "Всесторонний",
     ),
     "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
-      "Консервативный (подходит для математики и кода)",
+      "Консервативный (Для математики и кода)",
     ),
     "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
       "Консервативный",
     ),
-    "decode_param_creative": MessageLookupByLibrary.simpleMessage("Творческий"),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage(
+      "Творческий (Для письма, меньше повторов)",
+    ),
+    "decode_param_creative_short": MessageLookupByLibrary.simpleMessage(
+      "Творческий",
+    ),
     "decode_param_custom": MessageLookupByLibrary.simpleMessage(
+      "Пользовательский (Ручная настройка)",
+    ),
+    "decode_param_custom_short": MessageLookupByLibrary.simpleMessage(
       "Пользовательский",
     ),
     "decode_param_default_": MessageLookupByLibrary.simpleMessage(
+      "По умолчанию (Стандартные параметры)",
+    ),
+    "decode_param_default_short": MessageLookupByLibrary.simpleMessage(
       "По умолчанию",
     ),
-    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("Фиксированный"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage(
+      "Фиксированный (Самый консервативный)",
+    ),
+    "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage(
+      "Фиксированный",
+    ),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "Мы можем контролировать стиль вывода RWKV через параметры декодирования",
     ),

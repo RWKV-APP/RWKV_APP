@@ -216,25 +216,11 @@ class _ModelList extends ConsumerWidget {
                   .map((pair) => WorldGroupItem(e, socPair: pair)),
             )
             .toList(),
-      .tts => ttsCores.map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
+      .tts => ttsCores.sorted(_compare).map((fileInfo) => TTSGroupItem(fileInfo)).toList(),
       .chat || .sudoku =>
         availableModels
             .where((e) => showNeko == e.isNeko)
-            .sorted((a, b) {
-              final aHasMLX = a.tags.contains("mlx");
-              final bHasMLX = b.tags.contains("mlx");
-              if (aHasMLX != bHasMLX) return aHasMLX ? -1 : 1;
-
-              final aHasNpu = a.tags.contains("npu");
-              final bHasNpu = b.tags.contains("npu");
-              if (aHasNpu != bHasNpu) return aHasNpu ? -1 : 1;
-
-              final aHasGpu = a.tags.contains("gpu");
-              final bHasGpu = b.tags.contains("gpu");
-              if (aHasGpu != bHasGpu) return aHasGpu ? -1 : 1;
-
-              return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
-            })
+            .sorted(_compare)
             .map(
               (fileInfo) => ModelItem(
                 fileInfo,
@@ -253,6 +239,26 @@ class _ModelList extends ConsumerWidget {
         ...items,
       ],
     );
+  }
+
+  int _compare(FileInfo a, FileInfo b) {
+    final aHasMLX = a.tags.contains("mlx");
+    final bHasMLX = b.tags.contains("mlx");
+    if (aHasMLX != bHasMLX) return aHasMLX ? -1 : 1;
+
+    final aHasNpu = a.tags.contains("npu");
+    final bHasNpu = b.tags.contains("npu");
+    if (aHasNpu != bHasNpu) return aHasNpu ? -1 : 1;
+
+    final aHasGpu = a.tags.contains("gpu");
+    final bHasGpu = b.tags.contains("gpu");
+    if (aHasGpu != bHasGpu) return aHasGpu ? -1 : 1;
+
+    final aHasWebRWKV = a.tags.contains("webRwkv");
+    final bHasWebRWKV = b.tags.contains("webRwkv");
+    if (aHasWebRWKV != bHasWebRWKV) return aHasWebRWKV ? -1 : 1;
+
+    return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);
   }
 }
 

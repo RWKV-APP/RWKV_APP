@@ -289,6 +289,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("위 버튼을 클릭하여 새로 생성"),
     "created_at": MessageLookupByLibrary.simpleMessage("생성 시간"),
+    "creative_recommended": MessageLookupByLibrary.simpleMessage("창의적 (추천)"),
+    "creative_recommended_short": MessageLookupByLibrary.simpleMessage("창의적"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("현재 작업 탭 ID"),
@@ -303,17 +305,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("다크 모드 테마"),
     "decode": MessageLookupByLibrary.simpleMessage("디코딩"),
     "decode_param": MessageLookupByLibrary.simpleMessage("디코딩 매개변수"),
-    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("종합"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "종합 (시도해 볼 만함)",
+    ),
+    "decode_param_comprehensive_short": MessageLookupByLibrary.simpleMessage(
+      "종합",
+    ),
     "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
       "보수적 (수학 및 코드에 적합)",
     ),
     "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
       "보수적",
     ),
-    "decode_param_creative": MessageLookupByLibrary.simpleMessage("창의적"),
-    "decode_param_custom": MessageLookupByLibrary.simpleMessage("사용자 지정"),
-    "decode_param_default_": MessageLookupByLibrary.simpleMessage("기본값"),
-    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("고정"),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage(
+      "창의적 (글쓰기에 적합, 반복 감소)",
+    ),
+    "decode_param_creative_short": MessageLookupByLibrary.simpleMessage("창의적"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage(
+      "사용자 지정 (수동 설정)",
+    ),
+    "decode_param_custom_short": MessageLookupByLibrary.simpleMessage("사용자 지정"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage(
+      "기본값 (기본 설정)",
+    ),
+    "decode_param_default_short": MessageLookupByLibrary.simpleMessage("기본값"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("고정 (가장 보수적)"),
+    "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("고정"),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "디코딩 매개변수를 통해 RWKV의 출력 스타일을 제어할 수 있습니다",
     ),

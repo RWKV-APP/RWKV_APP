@@ -276,6 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("点击上方按钮创建新会话"),
     "created_at": MessageLookupByLibrary.simpleMessage("创建时间"),
     "creative_recommended": MessageLookupByLibrary.simpleMessage("创意 (推荐)"),
+    "creative_recommended_short": MessageLookupByLibrary.simpleMessage("创意"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("当前任务标签页 ID"),
@@ -290,17 +291,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("深色模式主题"),
     "decode": MessageLookupByLibrary.simpleMessage("解码"),
     "decode_param": MessageLookupByLibrary.simpleMessage("解码参数"),
-    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("综合"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "综合（也值得试试）",
+    ),
+    "decode_param_comprehensive_short": MessageLookupByLibrary.simpleMessage(
+      "综合",
+    ),
     "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
-      "保守 (适合数学和代码)",
+      "保守（适合数学和代码）",
     ),
     "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
       "保守",
     ),
-    "decode_param_creative": MessageLookupByLibrary.simpleMessage("创意"),
-    "decode_param_custom": MessageLookupByLibrary.simpleMessage("自定义"),
-    "decode_param_default_": MessageLookupByLibrary.simpleMessage("默认"),
-    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定"),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage(
+      "创意（适合写作，减少重复）",
+    ),
+    "decode_param_creative_short": MessageLookupByLibrary.simpleMessage("创意"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("自定义（自己设定）"),
+    "decode_param_custom_short": MessageLookupByLibrary.simpleMessage("自定义"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage("默认（默认参数）"),
+    "decode_param_default_short": MessageLookupByLibrary.simpleMessage("默认"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定（最保守）"),
+    "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("固定"),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "我们可以通过解码参数控制 RWKV 的输出风格",
     ),

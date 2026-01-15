@@ -339,7 +339,10 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "created_at": MessageLookupByLibrary.simpleMessage("Created at"),
     "creative_recommended": MessageLookupByLibrary.simpleMessage(
-      "Creative (recommended)",
+      "Creative (Recommended)",
+    ),
+    "creative_recommended_short": MessageLookupByLibrary.simpleMessage(
+      "Creative",
     ),
     "current_model": m7,
     "current_progress": m8,
@@ -362,18 +365,37 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode": MessageLookupByLibrary.simpleMessage("Decode"),
     "decode_param": MessageLookupByLibrary.simpleMessage("Decode Param"),
     "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "Comprehensive (Worth a try)",
+    ),
+    "decode_param_comprehensive_short": MessageLookupByLibrary.simpleMessage(
       "Comprehensive",
     ),
     "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
-      "Conservative (math & code)",
+      "Conservative (Math & Code)",
     ),
     "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
       "Conservative",
     ),
-    "decode_param_creative": MessageLookupByLibrary.simpleMessage("Creative"),
-    "decode_param_custom": MessageLookupByLibrary.simpleMessage("Custom"),
-    "decode_param_default_": MessageLookupByLibrary.simpleMessage("Default"),
-    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("Fixed"),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage(
+      "Creative (Writing, Less Repetitive)",
+    ),
+    "decode_param_creative_short": MessageLookupByLibrary.simpleMessage(
+      "Creative",
+    ),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage(
+      "Custom (Manual Setup)",
+    ),
+    "decode_param_custom_short": MessageLookupByLibrary.simpleMessage("Custom"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage(
+      "Default (Default Params)",
+    ),
+    "decode_param_default_short": MessageLookupByLibrary.simpleMessage(
+      "Default",
+    ),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage(
+      "Fixed (Most Conservative)",
+    ),
+    "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("Fixed"),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "We can control RWKV\'s output style through decode parameters",
     ),

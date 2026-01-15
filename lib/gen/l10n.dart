@@ -3063,26 +3063,41 @@ class S {
     return Intl.message('解码参数', name: 'decode_param', desc: '', args: []);
   }
 
-  /// `固定`
+  /// `固定（最保守）`
   String get decode_param_fixed {
-    return Intl.message('固定', name: 'decode_param_fixed', desc: '', args: []);
+    return Intl.message(
+      '固定（最保守）',
+      name: 'decode_param_fixed',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `保守`
-  String get decode_param_conservative_short {
+  /// `固定`
+  String get decode_param_fixed_short {
     return Intl.message(
-      '保守',
-      name: 'decode_param_conservative_short',
+      '固定',
+      name: 'decode_param_fixed_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创意（适合写作，减少重复）`
+  String get decode_param_creative {
+    return Intl.message(
+      '创意（适合写作，减少重复）',
+      name: 'decode_param_creative',
       desc: '',
       args: [],
     );
   }
 
   /// `创意`
-  String get decode_param_creative {
+  String get decode_param_creative_short {
     return Intl.message(
       '创意',
-      name: 'decode_param_creative',
+      name: 'decode_param_creative_short',
       desc: '',
       args: [],
     );
@@ -3098,21 +3113,51 @@ class S {
     );
   }
 
-  /// `保守 (适合数学和代码)`
+  /// `创意`
+  String get creative_recommended_short {
+    return Intl.message(
+      '创意',
+      name: 'creative_recommended_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `保守（适合数学和代码）`
   String get decode_param_conservative {
     return Intl.message(
-      '保守 (适合数学和代码)',
+      '保守（适合数学和代码）',
       name: 'decode_param_conservative',
       desc: '',
       args: [],
     );
   }
 
-  /// `默认`
+  /// `保守`
+  String get decode_param_conservative_short {
+    return Intl.message(
+      '保守',
+      name: 'decode_param_conservative_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `默认（默认参数）`
   String get decode_param_default_ {
     return Intl.message(
-      '默认',
+      '默认（默认参数）',
       name: 'decode_param_default_',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `默认`
+  String get decode_param_default_short {
+    return Intl.message(
+      '默认',
+      name: 'decode_param_default_short',
       desc: '',
       args: [],
     );
@@ -3123,9 +3168,24 @@ class S {
     return Intl.message('均衡', name: 'balanced', desc: '', args: []);
   }
 
-  /// `自定义`
+  /// `自定义（自己设定）`
   String get decode_param_custom {
-    return Intl.message('自定义', name: 'decode_param_custom', desc: '', args: []);
+    return Intl.message(
+      '自定义（自己设定）',
+      name: 'decode_param_custom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自定义`
+  String get decode_param_custom_short {
+    return Intl.message(
+      '自定义',
+      name: 'decode_param_custom_short',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `模式`
@@ -3138,11 +3198,21 @@ class S {
     return Intl.message('推荐', name: 'suggest', desc: '', args: []);
   }
 
-  /// `综合`
+  /// `综合（也值得试试）`
   String get decode_param_comprehensive {
     return Intl.message(
-      '综合',
+      '综合（也值得试试）',
       name: 'decode_param_comprehensive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `综合`
+  String get decode_param_comprehensive_short {
+    return Intl.message(
+      '综合',
+      name: 'decode_param_comprehensive_short',
       desc: '',
       args: [],
     );

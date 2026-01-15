@@ -134,12 +134,12 @@ enum DecodeParamType {
   final double penaltyDecay;
 
   String get displayNameShort => switch (this) {
-    defaults => S.current.decode_param_default_,
-    creative => S.current.decode_param_creative,
+    defaults => S.current.decode_param_default_short,
+    creative => S.current.decode_param_creative_short,
     conservative => S.current.decode_param_conservative_short,
-    fixed => S.current.decode_param_fixed,
-    comprehensive => S.current.decode_param_comprehensive,
-    custom => S.current.decode_param_custom,
+    fixed => S.current.decode_param_fixed_short,
+    comprehensive => S.current.decode_param_comprehensive_short,
+    custom => S.current.decode_param_custom_short,
   };
 
   /// 创建解码参数类型实例

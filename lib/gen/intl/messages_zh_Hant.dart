@@ -272,6 +272,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("點擊上方按鈕建立新會話"),
     "created_at": MessageLookupByLibrary.simpleMessage("建立時間"),
+    "creative_recommended": MessageLookupByLibrary.simpleMessage("創意 (推薦)"),
+    "creative_recommended_short": MessageLookupByLibrary.simpleMessage("創意"),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("目前任務分頁 ID"),
@@ -286,17 +288,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("深色模式主題"),
     "decode": MessageLookupByLibrary.simpleMessage("解碼"),
     "decode_param": MessageLookupByLibrary.simpleMessage("解碼參數"),
-    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("綜合"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "綜合（也值得試試）",
+    ),
+    "decode_param_comprehensive_short": MessageLookupByLibrary.simpleMessage(
+      "綜合",
+    ),
     "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
       "保守（適合數學和程式碼）",
     ),
     "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
       "保守",
     ),
-    "decode_param_creative": MessageLookupByLibrary.simpleMessage("創意"),
-    "decode_param_custom": MessageLookupByLibrary.simpleMessage("自訂"),
-    "decode_param_default_": MessageLookupByLibrary.simpleMessage("預設"),
-    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定"),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage(
+      "創意（適合寫作，減少重複）",
+    ),
+    "decode_param_creative_short": MessageLookupByLibrary.simpleMessage("創意"),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("自訂（自己設定）"),
+    "decode_param_custom_short": MessageLookupByLibrary.simpleMessage("自訂"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage("預設（預設參數）"),
+    "decode_param_default_short": MessageLookupByLibrary.simpleMessage("預設"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定（最保守）"),
+    "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("固定"),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "我們可以透過解碼參數控制 RWKV 的輸出風格",
     ),

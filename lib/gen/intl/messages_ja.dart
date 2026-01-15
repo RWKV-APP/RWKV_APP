@@ -287,6 +287,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "create_a_new_one_by_clicking_the_button_above":
         MessageLookupByLibrary.simpleMessage("上のボタンをクリックして新しいセッションを作成"),
     "created_at": MessageLookupByLibrary.simpleMessage("作成日時"),
+    "creative_recommended": MessageLookupByLibrary.simpleMessage("クリエイティブ（推奨）"),
+    "creative_recommended_short": MessageLookupByLibrary.simpleMessage(
+      "クリエイティブ",
+    ),
     "current_model": m7,
     "current_progress": m8,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("現在のタスクのタブID"),
@@ -301,17 +305,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("ダークモードテーマ"),
     "decode": MessageLookupByLibrary.simpleMessage("デコード"),
     "decode_param": MessageLookupByLibrary.simpleMessage("デコードパラメータ"),
-    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage("包括的"),
+    "decode_param_comprehensive": MessageLookupByLibrary.simpleMessage(
+      "包括的（試す価値あり）",
+    ),
+    "decode_param_comprehensive_short": MessageLookupByLibrary.simpleMessage(
+      "包括的",
+    ),
     "decode_param_conservative": MessageLookupByLibrary.simpleMessage(
-      "保守的（数学やコードに適しています）",
+      "保守的（数学やコードに最適）",
     ),
     "decode_param_conservative_short": MessageLookupByLibrary.simpleMessage(
       "保守的",
     ),
-    "decode_param_creative": MessageLookupByLibrary.simpleMessage("クリエイティブ"),
-    "decode_param_custom": MessageLookupByLibrary.simpleMessage("カスタム"),
-    "decode_param_default_": MessageLookupByLibrary.simpleMessage("デフォルト"),
-    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定"),
+    "decode_param_creative": MessageLookupByLibrary.simpleMessage(
+      "クリエイティブ（執筆向き、繰り返し少）",
+    ),
+    "decode_param_creative_short": MessageLookupByLibrary.simpleMessage(
+      "クリエイティブ",
+    ),
+    "decode_param_custom": MessageLookupByLibrary.simpleMessage("カスタム（手動設定）"),
+    "decode_param_custom_short": MessageLookupByLibrary.simpleMessage("カスタム"),
+    "decode_param_default_": MessageLookupByLibrary.simpleMessage(
+      "デフォルト（デフォルト設定）",
+    ),
+    "decode_param_default_short": MessageLookupByLibrary.simpleMessage("デフォルト"),
+    "decode_param_fixed": MessageLookupByLibrary.simpleMessage("固定（最も保守的）"),
+    "decode_param_fixed_short": MessageLookupByLibrary.simpleMessage("固定"),
     "decode_param_select_message": MessageLookupByLibrary.simpleMessage(
       "デコードパラメータを通じて RWKV の出力スタイルを制御できます",
     ),
