@@ -63,6 +63,9 @@ class _RWKV {
   /// 当前正在预填充或者生成的请求 ID
   late final generatingId = qs<int?>(null);
 
+  /// 是否隐藏预填充, 用于在 see 模式下, 隐藏预填充的进度条, 如果 max length 为 0, 则隐藏预填充的进度条
+  late final hiddenPrefilling = qs(false);
+
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
@@ -595,6 +598,7 @@ extension $RWKV on _RWKV {
     send(request);
 
     generatingId.q = request.requestId;
+    hiddenPrefilling.q = maxLength == 0;
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 

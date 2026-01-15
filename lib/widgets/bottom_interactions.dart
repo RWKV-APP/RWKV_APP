@@ -232,17 +232,20 @@ class _Send extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiving = ref.watch(P.chat.receivingTokens);
+    final generating = ref.watch(P.rwkv.generating);
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
     final inSee = ref.watch(P.app.pageKey) == .see;
     final imagePath = ref.watch(P.see.imagePath);
     final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
     final inputHasContent = ref.watch(P.chat.inputHasContent);
+    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
+
     double opacity = 1;
+
     if (inSee) opacity = ((imagePath != null || hasAtLeastOneImage) && inputHasContent) ? 1 : .333;
 
-    if (!receiving) {
+    if (!generating || hiddenPrefilling) {
       return AnimatedOpacity(
         opacity: opacity,
         duration: 250.ms,
