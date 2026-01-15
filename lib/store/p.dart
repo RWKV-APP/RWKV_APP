@@ -213,9 +213,11 @@ abstract class P {
       isCompleted = true;
     } on TimeoutException {
       qqe('Error: $name initialization timed out after ${timeout}ms');
+      Sentry.captureException(TimeoutException('Initialization timed out after ${timeout}ms'), stackTrace: StackTrace.current);
     } catch (e) {
       isCompleted = true;
       qqe('Error initializing $name: $e');
+      Sentry.captureException(e, stackTrace: StackTrace.current);
     }
   }
 }
