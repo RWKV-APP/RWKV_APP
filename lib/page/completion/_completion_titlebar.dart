@@ -20,16 +20,18 @@ class CompletionTitleBar extends ConsumerWidget {
 
     final s = S.current;
 
-    final currentName =
+    String currentName =
         {
           DecodeParamType.defaults: s.decode_param_default_,
           DecodeParamType.creative: s.decode_param_creative,
-          DecodeParamType.conservative: s.decode_param_conservative.split('(')[0].trim(),
+          DecodeParamType.conservative: s.decode_param_conservative,
           DecodeParamType.fixed: s.decode_param_fixed,
           DecodeParamType.comprehensive: s.decode_param_comprehensive,
           DecodeParamType.custom: s.decode_param_custom,
         }[decodeParamType] ??
         s.decode_param_custom;
+
+    currentName = currentName.split('(')[0].trim().split('（')[0].trim();
 
     final buttonStyle = OutlinedButton.styleFrom(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -145,7 +147,7 @@ class CompletionTitleBar extends ConsumerWidget {
           enabled: false,
           child: Text(s.decode_param, style: const TextStyle(fontSize: 12)),
         ),
-        _buildMenuItem(s.creative_recommended, DecodeParamType.creative, decodeParamType),
+        _buildMenuItem(s.decode_param_creative, DecodeParamType.creative, decodeParamType),
         _buildMenuItem(s.decode_param_comprehensive, DecodeParamType.comprehensive, decodeParamType),
         _buildMenuItem(s.decode_param_default_, DecodeParamType.defaults, decodeParamType),
         _buildMenuItem(s.decode_param_conservative, DecodeParamType.conservative, decodeParamType),
@@ -171,7 +173,7 @@ class CompletionTitleBar extends ConsumerWidget {
           if (!checked) const SizedBox(width: 16),
           const SizedBox(width: 8),
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 200),
+            constraints: const BoxConstraints(maxWidth: 500),
             child: Text(text, style: const TextStyle(height: 1), overflow: .ellipsis),
           ),
         ],
