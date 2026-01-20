@@ -83,9 +83,9 @@ enum DecodeParamType {
   /// - 轻微频率惩罚，减少明显重复
   defaults(
     temperature: 1,
-    topP: 0.3,
-    presencePenalty: 1,
-    frequencyPenalty: 0.1,
+    topP: 0.5,
+    presencePenalty: 2,
+    frequencyPenalty: 0.2,
     penaltyDecay: 0.99,
   )
   ;
