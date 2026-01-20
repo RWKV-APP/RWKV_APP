@@ -13,6 +13,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/services/font_service.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/widgets/debugger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -108,19 +109,28 @@ class _App extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
+    final preferredUIFont = ref.watch(P.preference.preferredUIFont);
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
     final brightness = customTheme.light ? Brightness.light : Brightness.dark;
     final demoTypeColorScheme = customTheme.light ? P.app.demoType.q.colorScheme : P.app.demoType.q.colorSchemeDark;
     final modalBarrierColor = customTheme.pagerDim.q(.25);
     final bottomSheetTheme = BottomSheetThemeData(backgroundColor: customTheme.setting, modalBarrierColor: modalBarrierColor);
     final appBarTheme = AppBarTheme(scrolledUnderElevation: 0, backgroundColor: customTheme.scaffold);
 
-    final themeData = ThemeData(
+    final baseThemeData = ThemeData(
       fontFamilyFallback: isDesktop ? Config.fontFamilyFallback : null,
       brightness: brightness,
       colorScheme: demoTypeColorScheme,
       appBarTheme: appBarTheme,
       scaffoldBackgroundColor: customTheme.scaffold,
       bottomSheetTheme: bottomSheetTheme,
+    );
+
+    // Apply user-selected fonts to theme
+    final themeData = FontService.applyFontToTheme(
+      baseThemeData,
+      preferredUIFont,
+      preferredMonospaceFont,
     );
 
     return MaterialApp.router(

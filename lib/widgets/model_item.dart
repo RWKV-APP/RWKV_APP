@@ -18,6 +18,7 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
+import 'package:zone/services/font_service.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
 
@@ -409,6 +410,9 @@ class FileKeyItem extends ConsumerWidget {
         ? '${timeRemaining.inSeconds}s'
         : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
 
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+
     return Column(
       crossAxisAlignment: .start,
       mainAxisAlignment: .center,
@@ -454,8 +458,8 @@ class FileKeyItem extends ConsumerWidget {
                   networkSpeed,
                   remainText,
                 ]),
-                s: const TextStyle(
-                  fontFamily: 'monospace',
+                s: TextStyle(
+                  fontFamily: effectiveMonospaceFont,
                   fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),
               ),

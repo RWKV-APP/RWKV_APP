@@ -411,6 +411,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deep_web_search": MessageLookupByLibrary.simpleMessage(
       "Deep Network Search",
     ),
+    "default_font": MessageLookupByLibrary.simpleMessage("Default"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
@@ -528,6 +529,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "font_setting": MessageLookupByLibrary.simpleMessage("Font Settings"),
     "font_size": MessageLookupByLibrary.simpleMessage("Font Size"),
     "font_size_default": MessageLookupByLibrary.simpleMessage("Default (100%)"),
+    "font_size_follow_system": MessageLookupByLibrary.simpleMessage(
+      "Follow System Font Size",
+    ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("Force Dark Mode"),
     "frequency_penalty_with_value": m12,
@@ -652,6 +656,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Model size increased, please open a new conversation, to improve the conversation quality",
         ),
+    "monospace_font_setting": MessageLookupByLibrary.simpleMessage(
+      "Monospace Font Setting",
+    ),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "more_questions": MessageLookupByLibrary.simpleMessage("More Questions"),
     "multi_thread": MessageLookupByLibrary.simpleMessage("Multi-threaded"),
@@ -881,6 +888,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "reselect_model": MessageLookupByLibrary.simpleMessage("Reselect model"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+    "restore_default": MessageLookupByLibrary.simpleMessage("Restore Default"),
     "result": MessageLookupByLibrary.simpleMessage("Result"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "role_play": MessageLookupByLibrary.simpleMessage("Role Play"),
@@ -1086,6 +1094,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tts_detail": MessageLookupByLibrary.simpleMessage("Let RWKV output voice"),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Turn transfer"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
+    "ui_font_setting": MessageLookupByLibrary.simpleMessage("UI Font Setting"),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Ultra Large (140%)"),
     "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
     "unzipping": MessageLookupByLibrary.simpleMessage("Unzipping"),

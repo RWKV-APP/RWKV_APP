@@ -7,6 +7,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/markdown_render.dart';
+import 'package:zone/widgets/font_picker_bottom_sheet.dart';
 import 'package:zone/config.dart';
 
 class PageFontSettings extends ConsumerStatefulWidget {
@@ -267,7 +268,7 @@ class _SettingsControls extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      s.follow_system,
+                      s.font_size_follow_system,
                       style: TextStyle(
                         fontSize: 16,
                         color: onSurface,
@@ -340,10 +341,89 @@ class _SettingsControls extends StatelessWidget {
                         ),
                       ),
               ),
+              const Divider(),
+              // Font selection buttons
+              _FontSelectionButtons(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _FontSelectionButtons extends ConsumerWidget {
+  const _FontSelectionButtons();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
+    final preferredUIFont = ref.watch(P.preference.preferredUIFont);
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+
+    return Column(
+      children: [
+        // UI Font Setting
+        ListTile(
+          title: T(s.ui_font_setting),
+          subtitle: preferredUIFont != null
+              ? T(
+                  preferredUIFont,
+                  s: TextStyle(
+                    fontFamily: preferredUIFont,
+                    color: onSurface.q(.7),
+                  ),
+                )
+              : T(
+                  s.default_font,
+                  s: TextStyle(
+                    color: onSurface.q(.7),
+                  ),
+                ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () async {
+            await FontPickerBottomSheet.show(
+              context: context,
+              currentFont: preferredUIFont,
+              isMonospace: false,
+              onFontSelected: (font) async {
+                await P.preference.setPreferredUIFont(font);
+              },
+            );
+          },
+        ),
+        // Monospace Font Setting
+        ListTile(
+          title: T(s.monospace_font_setting),
+          subtitle: preferredMonospaceFont != null
+              ? T(
+                  preferredMonospaceFont,
+                  s: TextStyle(
+                    fontFamily: preferredMonospaceFont,
+                    color: onSurface.q(.7),
+                  ),
+                )
+              : T(
+                  s.default_font,
+                  s: TextStyle(
+                    color: onSurface.q(.7),
+                  ),
+                ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () async {
+            await FontPickerBottomSheet.show(
+              context: context,
+              currentFont: preferredMonospaceFont,
+              isMonospace: true,
+              onFontSelected: (font) async {
+                await P.preference.setPreferredMonospaceFont(font);
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }

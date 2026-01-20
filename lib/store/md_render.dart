@@ -19,7 +19,6 @@ class _MDRender {
     "yaml",
   ];
 
-  late final codeFontFamily = 'monospace';
   late final codeFontFamilyFallback = [
     'Menlo', // iOS, macOS
     'Roboto Mono', // Android

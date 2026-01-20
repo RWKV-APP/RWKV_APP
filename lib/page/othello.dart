@@ -7,6 +7,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/cell_type.dart';
+import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/menu.dart';
 import 'package:zone/widgets/pager.dart';
@@ -242,10 +243,12 @@ class _ModelSettings extends ConsumerWidget {
       ],
     );
     final qb = ref.watch(P.app.qb);
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return Material(
       color: qb.q(.0),
-      textStyle: const TS(ff: "monospace", s: 10),
+      textStyle: TS(ff: effectiveMonospaceFont, s: 10),
       child: Container(
         padding: const .all(4),
         margin: const .all(4),
@@ -411,10 +414,12 @@ class _Players extends ConsumerWidget {
         ],
       ),
     );
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return Material(
       color: qb.q(.0),
-      textStyle: const TS(ff: "monospace", s: 10),
+      textStyle: TS(ff: effectiveMonospaceFont, s: 10),
       child: Container(
         margin: const .all(4),
         padding: const .all(4),

@@ -1276,6 +1276,16 @@ class S {
     return Intl.message('跟随系统', name: 'follow_system', desc: '', args: []);
   }
 
+  /// `字体大小跟随系统`
+  String get font_size_follow_system {
+    return Intl.message(
+      '字体大小跟随系统',
+      name: 'font_size_follow_system',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `应用语言`
   String get application_language {
     return Intl.message(
@@ -1314,6 +1324,31 @@ class S {
   /// `字体设置`
   String get font_setting {
     return Intl.message('字体设置', name: 'font_setting', desc: '', args: []);
+  }
+
+  /// `UI 字体设置`
+  String get ui_font_setting {
+    return Intl.message('UI 字体设置', name: 'ui_font_setting', desc: '', args: []);
+  }
+
+  /// `等宽字体设置`
+  String get monospace_font_setting {
+    return Intl.message(
+      '等宽字体设置',
+      name: 'monospace_font_setting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `默认`
+  String get default_font {
+    return Intl.message('默认', name: 'default_font', desc: '', args: []);
+  }
+
+  /// `恢复默认`
+  String get restore_default {
+    return Intl.message('恢复默认', name: 'restore_default', desc: '', args: []);
   }
 
   /// `非常小 (80%)`
