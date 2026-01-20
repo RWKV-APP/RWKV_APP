@@ -54,6 +54,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `{count} 条消息正在队列中`
+  String message_in_queue(Object count) {
+    return Intl.message(
+      '$count 条消息正在队列中',
+      name: 'message_in_queue',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `风格`
   String get style {
     return Intl.message('风格', name: 'style', desc: '', args: []);

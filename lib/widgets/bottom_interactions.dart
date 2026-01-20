@@ -234,8 +234,10 @@ class _SendingInteraction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final generating = ref.watch(P.rwkv.generating);
     final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
+    // final waitingImagePath = ref.watch(P.see.waitingImagePath);
+    final waitingText = ref.watch(P.see.waitingText);
 
-    if (!generating || hiddenPrefilling) return _Send(preferredDemoType: preferredDemoType);
+    if (!generating || (hiddenPrefilling && waitingText == null)) return _Send(preferredDemoType: preferredDemoType);
 
     return const _Stop();
   }

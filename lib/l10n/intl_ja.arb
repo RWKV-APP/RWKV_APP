@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "message_in_queue": "キューに {count} 件のメッセージがあります",
   "style": "スタイル",
   "conversation_management": "管理",
   "weights_saving_directory": "重みファイル保存ディレクトリ",

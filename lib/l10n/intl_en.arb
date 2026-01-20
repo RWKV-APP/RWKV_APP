@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "message_in_queue": "{count} messages are in queue",
   "style": "Style",
   "conversation_management": "Management",
   "weights_saving_directory": "Weights Saving Directory",

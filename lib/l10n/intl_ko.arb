@@ -1,5 +1,6 @@
 {
   "@@locale": "ko",
+  "message_in_queue": "대기열에 {count}개의 메시지가 있습니다",
   "style": "스타일",
   "conversation_management": "관리",
   "weights_saving_directory": "가중치 파일 저장 디렉토리",
