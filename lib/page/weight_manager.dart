@@ -16,6 +16,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
+import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 
 class PageWeightManager extends ConsumerWidget {
@@ -716,7 +717,7 @@ class _TotalUsageTile extends ConsumerWidget {
   }
 }
 
-class _DownloadingItem extends StatelessWidget {
+class _DownloadingItem extends ConsumerWidget {
   final FileInfo fileInfo;
   final LocalFile localFile;
 
@@ -726,7 +727,7 @@ class _DownloadingItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final theme = Theme.of(context);
 
@@ -749,6 +750,9 @@ class _DownloadingItem extends StatelessWidget {
       .roleplay => s.role_play,
       null => s.unknown,
     };
+
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return ListTile(
       title: Text(fileInfo.name),
@@ -792,8 +796,8 @@ class _DownloadingItem extends StatelessWidget {
                 remainText,
               ],
             ),
-            style: const TextStyle(
-              fontFamily: 'monospace',
+            style: TextStyle(
+              fontFamily: effectiveMonospaceFont,
               fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
             ),
           ),

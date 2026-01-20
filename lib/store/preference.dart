@@ -78,6 +78,12 @@ class _Preference {
   /// Whether the weights migration to weights folder has been completed
   late final weightsMigrationCompleted = qs<bool>(false);
 
+  /// 偏好的 UI 字体（null 表示使用系统默认）
+  late final preferredUIFont = qs<String?>(null);
+
+  /// 偏好的等宽字体（null 表示使用系统默认）
+  late final preferredMonospaceFont = qs<String?>(null);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -195,6 +201,20 @@ extension _$Preference on _Preference {
       } else {
         await P.rwkv.syncSamplerParamsFromDefault(type);
       }
+    }
+
+    final uiFont = sp.getString("halo_state.preferredUIFont");
+    if (uiFont != null && uiFont.isNotEmpty && uiFont != 'System') {
+      preferredUIFont.q = uiFont;
+    } else {
+      preferredUIFont.q = null;
+    }
+
+    final monospaceFont = sp.getString("halo_state.preferredMonospaceFont");
+    if (monospaceFont != null && monospaceFont.isNotEmpty && monospaceFont != 'System') {
+      preferredMonospaceFont.q = monospaceFont;
+    } else {
+      preferredMonospaceFont.q = null;
     }
   }
 
@@ -346,5 +366,25 @@ extension $Preference on _Preference {
     await sp.setDouble("halo_state.custom.presencePenalty", P.rwkv.arguments(Argument.presencePenalty).q);
     await sp.setDouble("halo_state.custom.frequencyPenalty", P.rwkv.arguments(Argument.frequencyPenalty).q);
     await sp.setDouble("halo_state.custom.penaltyDecay", P.rwkv.arguments(Argument.penaltyDecay).q);
+  }
+
+  Future<void> setPreferredUIFont(String? fontFamily) async {
+    preferredUIFont.q = fontFamily;
+    final sp = await SharedPreferences.getInstance();
+    if (fontFamily == null || fontFamily.isEmpty || fontFamily == 'System') {
+      await sp.remove("halo_state.preferredUIFont");
+    } else {
+      await sp.setString("halo_state.preferredUIFont", fontFamily);
+    }
+  }
+
+  Future<void> setPreferredMonospaceFont(String? fontFamily) async {
+    preferredMonospaceFont.q = fontFamily;
+    final sp = await SharedPreferences.getInstance();
+    if (fontFamily == null || fontFamily.isEmpty || fontFamily == 'System') {
+      await sp.remove("halo_state.preferredMonospaceFont");
+    } else {
+      await sp.setString("halo_state.preferredMonospaceFont", fontFamily);
+    }
   }
 }

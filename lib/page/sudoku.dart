@@ -12,6 +12,7 @@ import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'dart:math' as math;
 
+import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/menu.dart';
 import 'package:zone/widgets/model_selector.dart';
@@ -683,6 +684,8 @@ class _Terminal extends ConsumerWidget {
     final padding = MediaQuery.paddingOf(context);
     final isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
     final isDesktop = ref.watch(P.app.isDesktop);
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
     return SelectionArea(
       child: Container(
         decoration: const BoxDecoration(color: _kGridBGColor),
@@ -699,7 +702,7 @@ class _Terminal extends ConsumerWidget {
             return T(
               logs[index],
               s: TS(
-                ff: "monospace",
+                ff: effectiveMonospaceFont,
                 s: isDesktop ? 16 : 10,
                 letterSpacing: 0,
                 height: 1.2,

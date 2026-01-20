@@ -15,6 +15,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/group_info.dart';
 import 'package:zone/router/router.dart';
+import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
@@ -533,6 +534,8 @@ class _CollapsedContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return Column(
       crossAxisAlignment: .start,
@@ -572,8 +575,8 @@ class _CollapsedContent extends ConsumerWidget {
                   networkSpeed,
                   remainText,
                 ]),
-                s: const TextStyle(
-                  fontFamily: 'monospace',
+                s: TextStyle(
+                  fontFamily: effectiveMonospaceFont,
                   fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),
               ),
@@ -779,6 +782,9 @@ class _ExpandedFileItem extends ConsumerWidget {
     final showPause = state == TaskState.running;
     final showCancel = showPause || showResume;
 
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+
     return Row(
       children: [
         Expanded(
@@ -833,8 +839,8 @@ class _ExpandedFileItem extends ConsumerWidget {
                         networkSpeed,
                         remainText,
                       ]),
-                      s: const TextStyle(
-                        fontFamily: 'monospace',
+                      s: TextStyle(
+                        fontFamily: effectiveMonospaceFont,
                         fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                       ),
                     ),

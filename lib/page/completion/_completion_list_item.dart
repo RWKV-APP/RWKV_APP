@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/page/completion/_completion_state.dart';
+import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 
 import '_completion_controller.dart';
@@ -103,11 +104,13 @@ class CompletionSpeed extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prefillSpeed = item?.prefillSpeed ?? ref.watch(P.rwkv.prefillSpeed) ?? 0;
     final decodeSpeed = item?.decodeSpeed ?? ref.watch(P.rwkv.decodeSpeed) ?? 0;
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Text(
         "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
-        style: const TextStyle(fontSize: 8, fontFamily: 'monospace'),
+        style: TextStyle(fontSize: 8, fontFamily: effectiveMonospaceFont),
         textAlign: TextAlign.end,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

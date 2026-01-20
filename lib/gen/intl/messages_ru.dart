@@ -423,6 +423,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Параметры декодирования для каждого сообщения в пакете. Нажмите, чтобы изменить параметры для каждого сообщения при пакетном выводе.",
     ),
     "deep_web_search": MessageLookupByLibrary.simpleMessage("Глубокий поиск"),
+    "default_font": MessageLookupByLibrary.simpleMessage("По умолчанию"),
     "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Удалить все"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
@@ -546,6 +547,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "font_size": MessageLookupByLibrary.simpleMessage("Размер шрифта"),
     "font_size_default": MessageLookupByLibrary.simpleMessage(
       "По умолчанию (100%)",
+    ),
+    "font_size_follow_system": MessageLookupByLibrary.simpleMessage(
+      "Размер шрифта как в системе",
     ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage(
@@ -687,6 +691,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Размер модели увеличен, откройте новый диалог, чтобы улучшить качество диалога",
         ),
+    "monospace_font_setting": MessageLookupByLibrary.simpleMessage(
+      "Настройка моноширинного шрифта",
+    ),
     "more": MessageLookupByLibrary.simpleMessage("Ещё"),
     "more_questions": MessageLookupByLibrary.simpleMessage("Больше вопросов"),
     "multi_thread": MessageLookupByLibrary.simpleMessage("Многопоточный"),
@@ -913,6 +920,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выбрать модель заново",
     ),
     "reset": MessageLookupByLibrary.simpleMessage("Сброс"),
+    "restore_default": MessageLookupByLibrary.simpleMessage(
+      "Восстановить по умолчанию",
+    ),
     "result": MessageLookupByLibrary.simpleMessage("Результат"),
     "resume": MessageLookupByLibrary.simpleMessage("Возобновить"),
     "role_play": MessageLookupByLibrary.simpleMessage("Ролевая игра"),
@@ -1121,6 +1131,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Переход хода"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
+    "ui_font_setting": MessageLookupByLibrary.simpleMessage(
+      "Настройка шрифта интерфейса",
+    ),
     "ultra_large": MessageLookupByLibrary.simpleMessage("Огромный (140%)"),
     "unknown": MessageLookupByLibrary.simpleMessage("Неизвестно"),
     "unzipping": MessageLookupByLibrary.simpleMessage("Распаковка"),
