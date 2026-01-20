@@ -64,7 +64,8 @@ class FontService {
         lowerName.contains('consolas') ||
         lowerName.contains('source code') ||
         lowerName.contains('fira code') ||
-        lowerName.contains('jetbrains mono');
+        lowerName.contains('jetbrains mono') ||
+        lowerName.contains('sarasa');
   }
 
   // 获取默认字体列表（用于桌面平台或平台通道失败时）

@@ -380,27 +380,30 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
     return Container(
       width: 28,
       margin: const .symmetric(vertical: 8, horizontal: 4),
-      child: Column(
-        mainAxisAlignment: .center,
-        children: letters.map((letter) {
-          final hasFonts = sortedKeys.contains(letter);
-          return InkWell(
-            onTap: hasFonts ? () => _scrollToSection(letter) : null,
-            child: Container(
-              width: double.infinity,
-              padding: const .symmetric(vertical: 2),
-              alignment: .center,
-              child: T(
-                letter,
-                s: TS(
-                  s: 11,
-                  c: hasFonts ? Theme.of(context).colorScheme.primary : qb.q(.4),
-                  w: .w600,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
+          children: letters.map((letter) {
+            final hasFonts = sortedKeys.contains(letter);
+            return InkWell(
+              onTap: hasFonts ? () => _scrollToSection(letter) : null,
+              child: Container(
+                width: double.infinity,
+                padding: const .symmetric(vertical: 2),
+                alignment: .center,
+                child: T(
+                  letter,
+                  s: TS(
+                    s: 11,
+                    c: hasFonts ? Theme.of(context).colorScheme.primary : qb.q(.4),
+                    w: .w600,
+                  ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
