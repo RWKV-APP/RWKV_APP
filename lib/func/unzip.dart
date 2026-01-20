@@ -16,8 +16,12 @@ Future<String> _unzipInPlaceIsolate(String modelPath) async {
   final modelDir = modelPath.substring(0, modelPath.lastIndexOf('/'));
   final modelPathWithoutZip = modelPath.substring(0, modelPath.lastIndexOf('.zip'));
   final exists = await File(modelPathWithoutZip).exists();
+  final folderExists = await Directory(modelPathWithoutZip).exists();
 
-  if (exists) await File(modelPathWithoutZip).delete();
+  if (exists || folderExists) {
+    qqq("file or folder already exists: $modelPathWithoutZip");
+    return modelPathWithoutZip;
+  }
 
   final inputStream = InputFileStream(modelPath);
 
