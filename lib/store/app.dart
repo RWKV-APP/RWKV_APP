@@ -239,6 +239,8 @@ extension _$App on _App {
           FocusScope.of(context).unfocus();
         }
       });
+
+      if (Args.testingSeeQueue) P.see.autoTest();
     }
 
     WidgetsBinding.instance.addObserver(this);

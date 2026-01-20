@@ -1,5 +1,6 @@
 {
   "@@locale": "ru",
+  "message_in_queue": "В очереди {count} сообщений",
   "style": "Стиль",
   "conversation_management": "Управление",
   "weights_saving_directory": "Директория сохранения файлов весов",

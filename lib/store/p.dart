@@ -61,6 +61,7 @@ import 'package:zone/db/db.dart' as db;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
+import 'package:zone/func/is_chinese.dart';
 import 'package:zone/func/save_asset_to_file.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;
@@ -212,9 +213,11 @@ abstract class P {
       isCompleted = true;
     } on TimeoutException {
       qqe('Error: $name initialization timed out after ${timeout}ms');
+      Sentry.captureException(TimeoutException('Initialization timed out after ${timeout}ms'), stackTrace: StackTrace.current);
     } catch (e) {
       isCompleted = true;
       qqe('Error initializing $name: $e');
+      Sentry.captureException(e, stackTrace: StackTrace.current);
     }
   }
 }

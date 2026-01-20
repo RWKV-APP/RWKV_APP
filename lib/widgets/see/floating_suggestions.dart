@@ -6,33 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/func/is_chinese.dart';
 import 'package:zone/store/p.dart';
 
 class FloatingSuggestions extends ConsumerWidget {
   static const defaultHeight = 46.0;
 
   const FloatingSuggestions({super.key});
-
-  void _onSuggestionTap(String suggestion) {
-    P.suggestion.ttsTicker.q += 1;
-    final current = P.chat.textEditingController.text;
-    if (current.isEmpty) {
-      P.chat.textEditingController.text = suggestion;
-      return;
-    }
-
-    final last = current.characters.last;
-    final lastIsChinese = containsChineseCharacters(last);
-    final lastIsEnglish = isEnglish(last);
-    if (lastIsChinese) {
-      P.chat.textEditingController.text = "$current。$suggestion";
-    } else if (lastIsEnglish) {
-      P.chat.textEditingController.text = "$current. $suggestion";
-    } else {
-      P.chat.textEditingController.text = "$current$suggestion";
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -55,7 +34,7 @@ class FloatingSuggestions extends ConsumerWidget {
             Padding(
               padding: const .only(right: 4),
               child: OutlinedButton(
-                onPressed: () => _onSuggestionTap(item),
+                onPressed: () => P.see.onSuggestionTap(item),
                 style: TextButton.styleFrom(
                   foregroundColor: primary,
                   backgroundColor: Platform.isIOS ? qw.q(.9) : qw,

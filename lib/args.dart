@@ -13,4 +13,5 @@ abstract class Args {
   static const nativeSplashPreserveDurationInMS = int.fromEnvironment("nativeSplashPreserveDurationInMS", defaultValue: 50);
   static const othelloTestCase = int.fromEnvironment("othello_test_case", defaultValue: -1);
   static const showHaloDebugger = bool.fromEnvironment("showHaloDebugger", defaultValue: false);
+  static const testingSeeQueue = bool.fromEnvironment("testingSeeQueue", defaultValue: false);
 }

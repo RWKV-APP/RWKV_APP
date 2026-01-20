@@ -108,14 +108,15 @@ extension $Chat on _Chat {
     wenYanWen.q = mode;
   }
 
+  // TODO: 适时去掉 preferredDemoType
   Future<void> onSendButtonPressed({
     required DemoType preferredDemoType,
   }) async {
     qq;
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
-    final inSee = P.app.pageKey.q == .see;
-    if (inSee) {
+    final inRWKVSee = P.app.pageKey.q == .see;
+    if (inRWKVSee) {
       final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
       final imagePath = P.see.imagePath.q;
       if (!hasAtLeastOneImage && imagePath == null) {
@@ -184,9 +185,21 @@ extension $Chat on _Chat {
       return;
     }
 
-    if (inSee) {
+    if (inRWKVSee) {
       final imagePath = P.see.imagePath.q;
       final isPureText = imagePath == null;
+
+      if (P.rwkv.generating.q) {
+        // qqw("TODO:");
+        // 1. 添加 message 至 queue
+        // 2. 在 ui 上渲染 queue
+        // 3. 等待 prefill 完成后, 马上发送消息
+        P.see.waitingText.q = textToSend;
+        P.see.waitingImagePath.q = imagePath;
+        P.see.imagePath.q = null;
+        return;
+      }
+
       if (isPureText) {
         await send(textToSend);
       } else {
@@ -819,6 +832,12 @@ extension _$Chat on _Chat {
     if (completionMode.q) {
       return;
     }
+
+    if (id == Config.seePrefillId) {
+      qqw("see prefill id: $id");
+      return;
+    }
+
     final msg = P.msg.pool.q[id];
     if (msg == null) {
       qqe("message not found: id: $id");

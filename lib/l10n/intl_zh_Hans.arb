@@ -1,5 +1,6 @@
 {
   "@@locale": "zh_Hans",
+  "message_in_queue": "{count} 条消息正在队列中",
   "style": "风格",
   "conversation_management": "管理",
   "weights_saving_directory": "权重文件保存目录",

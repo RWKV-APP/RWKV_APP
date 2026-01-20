@@ -23,6 +23,9 @@ class _See {
   late final imageHeight = qs<double?>(null);
   late final visualFloatHeight = qs<double?>(null);
 
+  late final waitingText = qs<String?>(null);
+  late final waitingImagePath = qs<String?>(null);
+
   // 🔥 Audio
 
   /// in milliseconds
@@ -247,8 +250,39 @@ extension $See on _See {
     final messages = [
       "<image>$imagePath</image>",
     ];
-    P.chat.receiveId.q = -1;
+    P.chat.receiveId.q = Config.seePrefillId;
     await P.rwkv.sendMessages(messages, maxLength: 0);
+  }
+
+  Future<void> autoTest() async {
+    await Future.delayed(const Duration(seconds: 2));
+    push(.see);
+    await Future.delayed(const Duration(seconds: 2));
+    onSuggestionTap("What is this image?");
+    await Future.delayed(100.ms);
+    await selectImage();
+    // await Future.delayed(1000.ms);
+    // P.chat.onSendButtonPressed(preferredDemoType: .see);
+  }
+
+  void onSuggestionTap(String suggestion) {
+    P.suggestion.ttsTicker.q += 1;
+    final current = P.chat.textEditingController.text;
+    if (current.isEmpty) {
+      P.chat.textEditingController.text = suggestion;
+      return;
+    }
+
+    final last = current.characters.last;
+    final lastIsChinese = containsChineseCharacters(last);
+    final lastIsEnglish = isEnglish(last);
+    if (lastIsChinese) {
+      P.chat.textEditingController.text = "$current。$suggestion";
+    } else if (lastIsEnglish) {
+      P.chat.textEditingController.text = "$current. $suggestion";
+    } else {
+      P.chat.textEditingController.text = "$current$suggestion";
+    }
   }
 }
 
@@ -271,6 +305,41 @@ extension _$See on _See {
     _audioPlayer.eventStream.listen(_onPlayerChanged);
     _audioPlayer.onPlayerStateChanged.listen(_onPlayerStateChanged);
     P.app.pageKey.lb(_onPageKeyChanged);
+    P.rwkv.generating.lb(_onGeneratingChanged);
+  }
+
+  void _onGeneratingChanged(bool? previous, bool next) async {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != .see) return;
+    final fromTrueToFalse = previous == true && next == false;
+    if (!fromTrueToFalse) return;
+
+    // 如果, 没有正在等待的消息
+    final waitingText = P.see.waitingText.q;
+    if (waitingText == null) return;
+
+    final waitingImagePath = P.see.waitingImagePath.q;
+
+    final isPureText = waitingImagePath == null;
+    final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
+
+    P.see.waitingText.q = null;
+    P.see.waitingImagePath.q = null;
+
+    if (isPureText) {
+      await P.chat.send(waitingText);
+    } else {
+      if (hasAtLeastOneImage) {
+        P.msg._clear();
+        await Future.delayed(10.ms);
+        P.rwkv.clearStates();
+        await Future.delayed(10.ms);
+      }
+      await P.chat.send("", type: MessageType.userImage, imageUrl: waitingImagePath);
+      await Future.delayed(50.ms);
+      final finalTextToSend = "<image>$waitingImagePath</image>" + waitingText.trim();
+      await P.chat.send(finalTextToSend);
+    }
   }
 
   void _onPageKeyChanged(PageKey? previous, PageKey next) async {

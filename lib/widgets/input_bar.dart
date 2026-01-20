@@ -6,6 +6,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/bottom_interactions.dart';
@@ -21,9 +22,12 @@ class InputBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final isChat = preferredDemoType == .chat;
+    final inRWKVSee = P.app.pageKey.q == .see;
 
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
+
+    final imagePath = ref.watch(P.see.imagePath);
 
     return MeasureSize(
       onChange: (size) {
@@ -48,7 +52,8 @@ class InputBar extends ConsumerWidget {
             duration: 250.ms,
             child: Column(
               children: [
-                _ImagePreview(preferredDemoType: preferredDemoType),
+                if (inRWKVSee) _WaitingMsg(),
+                if (inRWKVSee) _ImagePreview(imagePath: imagePath ?? ""),
                 InputTextField(preferredDemoType: preferredDemoType),
                 if (preferredDemoType != .tts) BottomInteractions(preferredDemoType: preferredDemoType),
                 if (preferredDemoType == .tts) const TTSBottomInteractions(),
@@ -61,48 +66,89 @@ class InputBar extends ConsumerWidget {
   }
 }
 
-class _ImagePreview extends ConsumerWidget {
-  final DemoType preferredDemoType;
-  const _ImagePreview({required this.preferredDemoType});
+class _WaitingMsg extends ConsumerWidget {
+  const _WaitingMsg();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedImagePath = ref.watch(P.see.imagePath);
+    final s = S.of(context);
+    final waitingText = ref.watch(P.see.waitingText);
+    if (waitingText == null) return const SizedBox.shrink();
+    final waitingImagePath = ref.watch(P.see.waitingImagePath);
+    final count = 1;
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        T(
+          s.message_in_queue(count),
+          s: TS(s: 12),
+        ),
+        Container(
+          decoration: BD(color: kC.q(.1), borderRadius: 12.r),
+          margin: .only(bottom: 4, top: 4),
+          child: Row(
+            crossAxisAlignment: .center,
+            children: [
+              if (waitingImagePath != null) _ImagePreview(small: true, imagePath: waitingImagePath),
+              if (waitingImagePath != null) 4.w,
+              T(
+                waitingText,
+                s: TS(s: 12),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ImagePreview extends ConsumerWidget {
+  final bool small;
+  final String imagePath;
+
+  const _ImagePreview({this.small = false, required this.imagePath});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = ref.watch(P.app.screenWidth);
-    if (selectedImagePath == null) return const SizedBox.shrink();
-    if (preferredDemoType != .see) return const SizedBox.shrink();
+    if (imagePath.isEmpty) return const SizedBox.shrink();
+
+    final maxWidth = small ? 20.0 : screenWidth * 0.2;
+
     return Row(
       children: [
         Padding(
-          padding: const .only(bottom: 8),
+          padding: .only(bottom: small ? 0 : 8),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: screenWidth * 0.2,
-              maxHeight: screenWidth * 0.2,
+              maxWidth: maxWidth,
+              maxHeight: maxWidth,
             ),
             child: ClipRRect(
-              borderRadius: 12.r,
+              borderRadius: (small ? 2 : 12).r,
               child: Stack(
                 children: [
                   Image.file(
-                    File(selectedImagePath),
+                    File(imagePath),
                   ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      onPressed: () {
-                        P.see.imagePath.q = null;
-                      },
-                      icon: Container(
-                        decoration: BD(color: kB.q(.5), borderRadius: 1000.r),
-                        child: Icon(
-                          Icons.close,
-                          color: kW.q(1),
+                  if (!small)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        onPressed: () {
+                          P.see.imagePath.q = null;
+                        },
+                        icon: Container(
+                          decoration: BD(color: kB.q(.5), borderRadius: 1000.r),
+                          child: Icon(
+                            Icons.close,
+                            color: kW.q(1),
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),

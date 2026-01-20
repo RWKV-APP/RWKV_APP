@@ -69,6 +69,10 @@ class Debugger extends ConsumerWidget {
 
     final latestModel = ref.watch(P.rwkv.latestModel);
 
+    final generating = ref.watch(P.rwkv.generating);
+    final generatingId = ref.watch(P.rwkv.generatingId);
+    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -128,6 +132,12 @@ class Debugger extends ConsumerWidget {
                       T(currentGroupInfo?.displayName ?? "null"),
                       T("latestModel".codeToName),
                       T(latestModel?.name ?? "null"),
+                      T("generatingId".codeToName),
+                      T(generatingId?.toString() ?? "null"),
+                      T("generating".codeToName),
+                      T(generating.toString()),
+                      T("hiddenPrefilling".codeToName),
+                      T(hiddenPrefilling.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

@@ -57,7 +57,17 @@ class _RWKV {
   // StateProvider
   // ===========================================================================
 
-  final generating = qs(false);
+  /// 正在预填充或者正在生成
+  late final generating = qs(false);
+
+  /// 当前正在预填充或者生成的请求 ID
+  late final generatingId = qs<int?>(null);
+
+  /// 是否隐藏预填充, 用于在 see 模式下, 隐藏预填充的进度条, 如果 max length 为 0, 则隐藏预填充的进度条
+  ///
+  /// 如果隐藏预填充状态, 则, 我们会渲染可交互的发送按钮
+  late final hiddenPrefilling = qs(false);
+
   late final prefillSpeed = qs<double>(.0);
   late final decodeSpeed = qs<double>(.0);
   late final prefillProgress = qs<double>(.0);
@@ -93,9 +103,6 @@ class _RWKV {
   late final socBrand = qs(SocBrand.unknown);
 
   late final _qnnLibsCopied = qs(false);
-
-  // TODO: Use it @WangCe
-  late final receiving = qs(false);
 
   late final supportedBatchSizes = qs<List<int>>([]);
   late final batchParams = qs<List<DecodeParamType>>([]);
@@ -592,6 +599,9 @@ extension $RWKV on _RWKV {
           );
     send(request);
 
+    generatingId.q = request.requestId;
+    hiddenPrefilling.q = maxLength == 0;
+
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
     _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
@@ -1018,6 +1028,12 @@ extension _$RWKV on _RWKV {
     socBrand.q = r.$2;
     latestModel.lb(_onCurrentModelChanged);
     Albatross.instance.init();
+    P.rwkv.generating.l(_onGeneratingChanged);
+  }
+
+  void _onGeneratingChanged(bool generating) async {
+    if (P.rwkv.generatingId.q == null) return;
+    if (!generating) P.rwkv.generatingId.q = null;
   }
 
   Future<void> _createRWKVIsolateIfNeeded() async {
@@ -1182,7 +1198,7 @@ extension _$RWKV on _RWKV {
       _createRWKVIsolateCompleter = null;
       return;
     }
-    // debugPrint('_onMessage==$message');
+
     if (RoleplayManage.isRolePlayMessage) {
       RoleplayManage.operationMessage(message);
     }
@@ -1354,10 +1370,7 @@ extension _$RWKV on _RWKV {
         P.lambada._onResultsReceived(res);
 
       case from_rwkv.IsGenerating res:
-        if (res.isGenerating != generating.q) {
-          generating.q = res.isGenerating;
-          qqq('generating=${res.isGenerating}');
-        }
+        generating.q = res.isGenerating;
 
       case from_rwkv.StateInfo response:
         final stateInfo = response.stateInfo.trim();

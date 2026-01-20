@@ -1,5 +1,6 @@
 {
   "@@locale": "zh_Hant",
+  "message_in_queue": "{count} 則訊息正在佇列中",
   "style": "風格",
   "conversation_management": "管理",
   "weights_saving_directory": "權重文件保存目錄",
