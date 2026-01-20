@@ -64,6 +64,8 @@ class _RWKV {
   late final generatingId = qs<int?>(null);
 
   /// 是否隐藏预填充, 用于在 see 模式下, 隐藏预填充的进度条, 如果 max length 为 0, 则隐藏预填充的进度条
+  ///
+  /// 如果隐藏预填充状态, 则, 我们会渲染可交互的发送按钮
   late final hiddenPrefilling = qs(false);
 
   late final prefillSpeed = qs<double>(.0);

@@ -41,7 +41,7 @@ class BottomInteractions extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
-          _Send(preferredDemoType: preferredDemoType),
+          _SendingInteraction(preferredDemoType: preferredDemoType),
         ],
       ),
     );
@@ -225,49 +225,69 @@ class _WenYanWenButton extends ConsumerWidget {
   }
 }
 
-class _Send extends ConsumerWidget {
+class _SendingInteraction extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  const _Send({required this.preferredDemoType});
+  const _SendingInteraction({required this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final generating = ref.watch(P.rwkv.generating);
-    final editingBotMessage = ref.watch(P.msg.editingBotMessage);
+    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
+
+    if (!generating || hiddenPrefilling) return _Send(preferredDemoType: preferredDemoType);
+
+    return const _Stop();
+  }
+}
+
+class _Send extends ConsumerWidget {
+  final DemoType preferredDemoType;
+  const _Send({required this.preferredDemoType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).colorScheme.primary;
+
+    final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final inSee = ref.watch(P.app.pageKey) == .see;
     final imagePath = ref.watch(P.see.imagePath);
     final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
     final inputHasContent = ref.watch(P.chat.inputHasContent);
-    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
 
-    double opacity = 1;
+    double opacity = 1.0;
 
     if (inSee) opacity = ((imagePath != null || hasAtLeastOneImage) && inputHasContent) ? 1 : .333;
 
-    if (!generating || hiddenPrefilling) {
-      return AnimatedOpacity(
-        opacity: opacity,
-        duration: 250.ms,
-        child: GestureDetector(
-          onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
-          child: Container(
-            padding: const .symmetric(horizontal: 10, vertical: 5),
-            child: Icon(
-              (Platform.isIOS || Platform.isMacOS)
-                  ? editingBotMessage
-                        ? CupertinoIcons.pencil_circle_fill
-                        : CupertinoIcons.arrow_up_circle_fill
-                  : editingBotMessage
-                  ? Icons.edit
-                  : Icons.send_rounded,
-              color: color,
-            ),
+    return AnimatedOpacity(
+      opacity: opacity,
+      duration: 250.ms,
+      child: GestureDetector(
+        onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
+        child: Container(
+          padding: const .symmetric(horizontal: 10, vertical: 5),
+          child: Icon(
+            (Platform.isIOS || Platform.isMacOS)
+                ? editingBotMessage
+                      ? CupertinoIcons.pencil_circle_fill
+                      : CupertinoIcons.arrow_up_circle_fill
+                : editingBotMessage
+                ? Icons.edit
+                : Icons.send_rounded,
+            color: color,
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
+}
 
+class _Stop extends StatelessWidget {
+  const _Stop();
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: P.chat.onStopButtonPressed,
       child: Container(
