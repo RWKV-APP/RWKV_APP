@@ -55,7 +55,9 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   String _getModelName() {
-    return _fileInfos.firstWhere((e) => e.fileName == widget.socPair.$2).name;
+    final modelFile = _fileInfos.firstWhereOrNull((e) => e.fileName == widget.socPair.$2);
+    if (modelFile == null) return '';
+    return modelFile.name;
   }
 
   int _getTotalSize() {
@@ -86,7 +88,8 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
   }
 
   bool _isDownloading() {
-    final myModelFile = _fileInfos.firstWhere((e) => e.fileName == widget.socPair.$2);
+    final myModelFile = _fileInfos.firstWhereOrNull((e) => e.fileName == widget.socPair.$2);
+    if (myModelFile == null) return false;
     final myModelLocal = P.fileManager.locals(myModelFile).q;
     final isExplicitlyActive = P.fileManager.activeDownloadGroupIds.q.contains(widget.socPair.$2);
     final isCoreActive = myModelLocal.downloading;
@@ -132,7 +135,8 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final allDownloaded = files.every((e) => e.hasFile);
     if (allDownloaded) return TaskState.completed;
 
-    final myModelFile = _fileInfos.firstWhere((e) => e.fileName == widget.socPair.$2);
+    final myModelFile = _fileInfos.firstWhereOrNull((e) => e.fileName == widget.socPair.$2);
+    if (myModelFile == null) return TaskState.idle;
     final myModelLocal = P.fileManager.locals(myModelFile).q;
     final isExplicitlyActive = P.fileManager.activeDownloadGroupIds.q.contains(widget.socPair.$2);
     final isCoreActive = myModelLocal.downloading || myModelLocal.state == TaskState.running;
@@ -155,9 +159,14 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     }
     final availableModels = P.fileManager.seeWeights.q;
     final fileInfos = availableModels.where((e) => e.worldType == widget.worldType).toList();
-    final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
-    final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    final encoderFileKey = fileInfos.firstWhereOrNull((e) => e.isEncoder);
+    final modelFileKey = fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
     final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
+
+    if (encoderFileKey == null || modelFileKey == null) {
+      Alert.error("Required model files not found");
+      return;
+    }
     final encoderLocalFile = P.fileManager.locals(encoderFileKey).q;
     final modelLocalFile = P.fileManager.locals(modelFileKey).q;
     final adapterLocalFile = adapterFileKey != null ? P.fileManager.locals(adapterFileKey).q : null;
@@ -226,8 +235,10 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       P.fileManager.activeDownloadGroupIds.q = P.fileManager.activeDownloadGroupIds.q.difference({widget.socPair.$2});
 
       // 1. Cancel the core file
-      final modelFileKey = _fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
-      await P.fileManager.cancelDownload(fileInfo: modelFileKey);
+      final modelFileKey = _fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+      if (modelFileKey != null) {
+        await P.fileManager.cancelDownload(fileInfo: modelFileKey);
+      }
 
       // 2. Check if we should cancel dependencies
       bool shouldCancelDependencies = true;
@@ -255,7 +266,8 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
 
   void _onPauseTap() {
     // 1. Pause the core file
-    final modelFileKey = _fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    final modelFileKey = _fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    if (modelFileKey == null) return;
     P.fileManager.pauseDownload(fileInfo: modelFileKey);
 
     // 2. Check if we should pause dependencies
@@ -318,7 +330,10 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final loading = ref.watch(P.rwkv.loading);
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
 
-    final modelFileKey = _fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    final modelFileKey = _fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    if (modelFileKey == null) {
+      return const SizedBox.shrink();
+    }
     final modelLoading =
         loadingStatus[modelFileKey] == .loading ||
         loadingStatus[modelFileKey] == .loadModelWithExtra ||
