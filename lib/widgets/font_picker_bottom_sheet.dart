@@ -9,12 +9,14 @@ class FontPickerBottomSheet extends ConsumerStatefulWidget {
   final String? currentFont;
   final bool isMonospace;
   final Function(String?) onFontSelected;
+  final ScrollController scrollController;
 
   const FontPickerBottomSheet({
     super.key,
     required this.currentFont,
     required this.isMonospace,
     required this.onFontSelected,
+    required this.scrollController,
   });
 
   static Future<void> show({
@@ -33,6 +35,7 @@ class FontPickerBottomSheet extends ConsumerStatefulWidget {
         expand: false,
         snap: false,
         builder: (context, scrollController) => FontPickerBottomSheet(
+          scrollController: scrollController,
           currentFont: currentFont,
           isMonospace: isMonospace,
           onFontSelected: onFontSelected,
@@ -59,7 +62,6 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
   List<String> _keys = [];
 
   // 滚动控制器和section keys
-  final ScrollController _scrollController = ScrollController();
   final Map<String, GlobalKey> _sectionKeys = {};
 
   @override
@@ -72,7 +74,6 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -156,9 +157,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
   }
 
   bool _isLetter(String char) {
-    return char.length == 1 &&
-        char.codeUnitAt(0) >= 65 &&
-        char.codeUnitAt(0) <= 90;
+    return char.length == 1 && char.codeUnitAt(0) >= 65 && char.codeUnitAt(0) <= 90;
   }
 
   void _scrollToSection(String letter) {
@@ -224,7 +223,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
                     // 字体列表
                     Expanded(
                       child: ListView.builder(
-                        controller: _scrollController,
+                        controller: widget.scrollController,
                         padding: .only(bottom: paddingBottom),
                         itemCount: _getTotalItemCount(_grouped, _keys),
                         itemBuilder: (context, index) {
@@ -358,9 +357,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
               ),
             )
           : null,
-      trailing: isSelected
-          ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
-          : null,
+      trailing: isSelected ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) : null,
       selected: isSelected,
       onTap: () {
         setState(() {
