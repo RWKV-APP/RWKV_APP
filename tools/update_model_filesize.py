@@ -186,18 +186,18 @@ def update_filesizes(config_file: str, max_workers: int = 5):
                     safe_print(f"    文件大小: {old_size:,} -> {new_size:,} 字节 ({new_size / 1024 / 1024:.2f} MB)")
                     changed = True
 
-                if new_timestamp > 0:
+                if changed and new_timestamp > 0:
                     model["date"] = new_timestamp
                     # 这里不打印日期更新日志，以免太啰嗦，除非需要
 
                 if changed:
                     updated_count += 1
                 else:
-                    safe_print(f"  跳过: {model_name}（文件大小未变化）")
+                    safe_print(f"  跳过: {model['url']}（文件大小未变化）")
             else:
-                safe_print(f"\033[91m  跳过: {model_name}（无法获取文件大小）\033[0m")
+                safe_print(f"\033[91m  跳过: {model['url']}（无法获取文件大小）\033[0m")
         else:
-            safe_print(f"  跳过: {model_name}（没有URL）")
+            safe_print(f"  跳过: {model['url']}（没有URL）")
 
     # 保存更新后的配置文件，保持原有格式
     with open(config_file, "w", encoding="utf-8") as f:
