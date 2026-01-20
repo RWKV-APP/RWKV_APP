@@ -859,69 +859,69 @@
   "roleplay": {
     "model_config": [
       {
-        "name": "RWKV7-G1a3 1.5B (8 Elite)",
+        "name": "RWKV7-G1c-Roleplay 1.5B (8 Elite)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-251107-a16w8-8elite.rmpack",
-        "fileSize": 1697808384,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-a16w8-8elite.rmpack",
+        "fileSize": 1698222080,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite"],
-        "date": 1768874742
+        "date": 1768913774
       },
       {
-        "name": "RWKV7-G1a3 1.5B (8 Elite Gen5)",
+        "name": "RWKV7-G1c-Roleplay 1.5B (8 Elite Gen5)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-251107-a16w8-8elitegen5.rmpack",
-        "fileSize": 1703194624,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-a16w8-8elitegen5.rmpack",
+        "fileSize": 1703571456,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1768874741
+        "date": 1768913774
       },
       {
-        "name": "RWKV7-G1a3 1.5B (8 Gen 2)",
+        "name": "RWKV7-G1c-Roleplay 1.5B (8 Gen 2)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-251107-a16w8-8gen2.rmpack",
-        "fileSize": 1700003840,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-a16w8-8gen2.rmpack",
+        "fileSize": 1700376576,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1768874741
+        "date": 1768913774
       },
       {
-        "name": "RWKV7-G1a3 1.5B (8 Gen 3)",
+        "name": "RWKV7-G1c-Roleplay 1.5B (8 Gen 3)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-251107-a16w8-8gen3.rmpack",
-        "fileSize": 1700036608,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-a16w8-8gen3.rmpack",
+        "fileSize": 1700425728,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1768874742
+        "date": 1768913774
       },
       {
-        "name": "RWKV7-G1a3 1.5B (8s Gen 3)",
+        "name": "RWKV7-G1c-Roleplay 1.5B (8s Gen 3 & 7+ Gen 3)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-251107-a16w8-8sgen3.rmpack",
-        "fileSize": 1700040704,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-a16w8-8sgen3.rmpack",
+        "fileSize": 1700425728,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["8s Gen 3"],
-        "date": 1768874742
+        "socLimitations": ["8s Gen 3", "7+ Gen 3"],
+        "date": 1768913775
       },
       {
-        "name": "RWKV7-G1a3 1.5B",
+        "name": "RWKV7-G1c-Roleplay 1.5B",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-251107-q4_k_m.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-q4_k_m.gguf",
         "fileSize": 990052512,
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
@@ -930,9 +930,9 @@
         "date": 1766481322
       },
       {
-        "name": "RWKV7-G1a3 1.5B",
+        "name": "RWKV7-G1c-Roleplay 1.5B",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a3-1.5B-disha-roleplay-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-nf4.prefab",
         "fileSize": 1355373863,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
@@ -940,6 +940,89 @@
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
         "date": 1766481324
+      },
+      {
+        "name": "RWKV7-G1c-Roleplay 2.9B (8 Elite)",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-a16w4-8elite.rmpack",
+        "fileSize": 2028412928,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Elite"],
+        "date": 1768914361
+      },
+      {
+        "name": "RWKV7-G1c-Roleplay 2.9B (8 Elite Gen5)",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-a16w4-8elitegen5.rmpack",
+        "fileSize": 2025586688,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Elite Gen5"],
+        "date": 1768914361
+      },
+      {
+        "name": "RWKV7-G1c-Roleplay 2.9B (8 Gen 2)",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-a16w4-8gen2.rmpack",
+        "fileSize": 2026184704,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Gen 2"],
+        "date": 1768914361
+      },
+      {
+        "name": "RWKV7-G1c-Roleplay 2.9B (8 Gen 3)",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-a16w4-8gen3.rmpack",
+        "fileSize": 2026328064,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8 Gen 3"],
+        "date": 1768914362
+      },
+      {
+        "name": "RWKV7-G1c-Roleplay 2.9B (8s Gen 3 & 7+ Gen 3)",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-a16w4-8sgen3.rmpack",
+        "fileSize": 2027405312,
+        "quantization": "w4a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["8s Gen 3", "7+ Gen 3"],
+        "date": 1768914362
+      },
+      {
+        "name": "RWKV7-G1c-Roleplay 2.9B",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-q4_k_m.gguf",
+        "fileSize": 1875793856,
+        "quantization": "Q6_K",
+        "platforms": ["macos", "linux", "android"],
+        "backends": ["llamacpp"],
+        "tags": ["reason", "cpu"],
+        "date": 1768915149
+      },
+      {
+        "name": "RWKV7-G1c-Roleplay 2.9B",
+        "modelSize": 2.9,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-nf4.prefab",
+        "fileSize": 2315788799,
+        "quantization": "NF4",
+        "platforms": ["macos", "web", "windows", "ios"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["reason", "gpu", "batch"],
+        "date": 1768915087
       }
     ]
   },
@@ -1127,19 +1210,6 @@
         "tags": ["npu", "core", "spark"],
         "socLimitations": ["8 Gen 3"],
         "date": 1768874748
-      },
-      {
-        "name": "RWKV7 SparkTTS 0.4B (8s Gen 3) 🇨🇳🇺🇸🇯🇵",
-        "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.42-260118/rwkv7-0.4B-g1-respark-voice-tunable_ipa-a16w8-8sgen3.rmpack",
-        "fileSize": 504664064,
-        "quantization": "w8a16",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["npu", "core", "spark"],
-        "socLimitations": ["8s Gen 3"],
-        "date": 1768874748,
-        "isDebug": true
       },
       {
         "name": "RWKV7 SparkTTS 0.4B (8s Gen 3 & 7+ Gen 3) 🇨🇳🇺🇸🇯🇵",
