@@ -50,10 +50,10 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
   String? _selectedFont;
 
   // 字体列表
-  List<String> _fonts = [];
+  final List<String> _fonts = [];
 
   // 分组后的字体
-  Map<String, List<String>> _grouped = {};
+  final Map<String, List<String>> _grouped = {};
 
   // 排序后的字母键
   List<String> _keys = [];

@@ -52,7 +52,7 @@ class InputBar extends ConsumerWidget {
             duration: 250.ms,
             child: Column(
               children: [
-                if (inRWKVSee) _WaitingMsg(),
+                if (inRWKVSee) const _WaitingMsg(),
                 if (inRWKVSee) _ImagePreview(imagePath: imagePath ?? ""),
                 InputTextField(preferredDemoType: preferredDemoType),
                 if (preferredDemoType != .tts) BottomInteractions(preferredDemoType: preferredDemoType),
@@ -81,11 +81,11 @@ class _WaitingMsg extends ConsumerWidget {
       children: [
         T(
           s.message_in_queue(count),
-          s: TS(s: 12),
+          s: const TS(s: 12),
         ),
         Container(
           decoration: BD(color: kC.q(.1), borderRadius: 12.r),
-          margin: .only(bottom: 4, top: 4),
+          margin: const .only(bottom: 4, top: 4),
           child: Row(
             crossAxisAlignment: .center,
             children: [
@@ -93,7 +93,7 @@ class _WaitingMsg extends ConsumerWidget {
               if (waitingImagePath != null) 4.w,
               T(
                 waitingText,
-                s: TS(s: 12),
+                s: const TS(s: 12),
               ),
             ],
           ),

@@ -343,7 +343,7 @@ class _SettingsControls extends StatelessWidget {
               ),
               const Divider(),
               // Font selection buttons
-              _FontSelectionButtons(),
+              const _FontSelectionButtons(),
             ],
           ),
         ),

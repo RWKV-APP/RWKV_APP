@@ -549,7 +549,7 @@ class _CollapsedContent extends ConsumerWidget {
                 ]),
                 s: TextStyle(
                   fontFamily: effectiveMonospaceFont,
-                  fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
+                  fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),
               ),
             ],
@@ -795,7 +795,7 @@ class _ExpandedFileItem extends ConsumerWidget {
                       ]),
                       s: TextStyle(
                         fontFamily: effectiveMonospaceFont,
-                        fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
+                        fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                       ),
                     ),
                   ],

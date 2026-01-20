@@ -798,7 +798,7 @@ class _DownloadingItem extends ConsumerWidget {
             ),
             style: TextStyle(
               fontFamily: effectiveMonospaceFont,
-              fontFamilyFallback: ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
+              fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
             ),
           ),
         ],
