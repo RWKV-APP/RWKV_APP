@@ -1,6 +1,6 @@
 {
   "chat": {
-    "latest_build": 636,
+    "latest_build": 647,
     "latest_build_ios": 602,
     "note_zh": [
       "[新增] 优化了图像问答的速度表现",
@@ -526,7 +526,7 @@
     ]
   },
   "world": {
-    "latest_build": 636,
+    "latest_build": 647,
     "latest_build_ios": 602,
     "note_zh": [
       "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
@@ -779,7 +779,7 @@
     ]
   },
   "tts": {
-    "latest_build": 636,
+    "latest_build": 647,
     "latest_build_ios": 602,
     "note_zh": [
       "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
