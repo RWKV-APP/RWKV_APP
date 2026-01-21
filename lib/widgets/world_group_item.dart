@@ -576,9 +576,9 @@ class _WorldTags extends ConsumerWidget {
       spacing: 4,
       runSpacing: 8,
       children: [
-        ModelTag(tag: "Vision"),
+        const ModelTag(tag: "Vision"),
         ModelTag(tag: isNPU ? "NPU" : "CPU"),
-        if (backend == Backend.webRwkv) ModelTag(tag: "WebRWKV"),
+        if (backend == Backend.webRwkv) const ModelTag(tag: "WebRWKV"),
         if (quantization != null && quantization!.isNotEmpty) ModelTag(tag: quantization!, forceUppercase: true),
       ],
     );

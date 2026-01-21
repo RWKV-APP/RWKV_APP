@@ -606,9 +606,9 @@ class _TTSTags extends StatelessWidget {
       spacing: 4,
       runSpacing: 8,
       children: [
-        ModelTag(tag: "TTS"),
-        if (isNpu) ModelTag(tag: "NPU"),
-        if (backend == Backend.webRwkv) ModelTag(tag: "WebRWKV"),
+        const ModelTag(tag: "TTS"),
+        if (isNpu) const ModelTag(tag: "NPU"),
+        if (backend == Backend.webRwkv) const ModelTag(tag: "WebRWKV"),
         if (quantization != null && quantization!.isNotEmpty) ModelTag(tag: quantization!, forceUppercase: true),
       ],
     );
