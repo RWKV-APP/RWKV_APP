@@ -1,4 +1,4 @@
-#ifndef RUNNER_FONT_SERVICE_H_
+﻿#ifndef RUNNER_FONT_SERVICE_H_
 #define RUNNER_FONT_SERVICE_H_
 
 #include <flutter/flutter_engine.h>
