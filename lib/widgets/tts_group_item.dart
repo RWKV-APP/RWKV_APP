@@ -20,6 +20,7 @@ import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/widgets/model_tag.dart';
 
 ModelInfo? rolePlayTTSModel;
 
@@ -605,71 +606,10 @@ class _TTSTags extends StatelessWidget {
       spacing: 4,
       runSpacing: 8,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: 4.r,
-            color: primary.q(.2),
-            border: Border.all(
-              color: primary,
-              width: .5,
-            ),
-          ),
-          padding: const .symmetric(horizontal: 4),
-          child: Row(
-            mainAxisSize: .min,
-            children: [
-              Text(
-                "TTS",
-                style: TS(
-                  c: primary,
-                  w: .w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (isNpu)
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: 4.r,
-              color: kCG,
-              border: Border.all(color: kCG, width: .5),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: const Row(
-              mainAxisSize: .min,
-              children: [
-                Text(
-                  "NPU",
-                  style: TS(c: kW, w: .w500),
-                ),
-                T("⚡"),
-              ],
-            ),
-          ),
-        if (backend == Backend.webRwkv)
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: 4.r,
-              color: kCG,
-              border: Border.all(color: kCG, width: .5),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: T(
-              "WebRWKV",
-              s: TS(c: qw, w: .w500),
-            ),
-          ),
-        if (quantization != null && quantization!.isNotEmpty)
-          Container(
-            decoration: BoxDecoration(
-              color: kG.q(.2),
-              borderRadius: 4.r,
-              border: Border.all(width: .5, color: kG.q(.2)),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: T(quantization!.toUpperCase()),
-          ),
+        ModelTag(tag: "TTS"),
+        if (isNpu) ModelTag(tag: "NPU"),
+        if (backend == Backend.webRwkv) ModelTag(tag: "WebRWKV"),
+        if (quantization != null && quantization!.isNotEmpty) ModelTag(tag: quantization!, forceUppercase: true),
       ],
     );
   }

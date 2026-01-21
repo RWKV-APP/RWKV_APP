@@ -198,7 +198,6 @@ class Message extends ConsumerWidget {
     final showingCotContent = cotContentHeight != 0;
 
     final isUserImage = msg.type == .userImage;
-    final isUserAudio = false;
 
     String worldDemoMessageHeader = "";
 
@@ -368,7 +367,7 @@ class Message extends ConsumerWidget {
                   AnimatedContainer(
                     duration: 250.ms,
                     height: cotContentHeight,
-                    child: MarkdownRender(raw: cotContent, color: qb.q(.6)),
+                    child: MarkdownRender(raw: cotContent, color: qb.q(.7)),
                   ),
                 // 🔥 Bot message cot result
                 if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) 12.h,

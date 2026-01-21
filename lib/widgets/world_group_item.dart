@@ -18,6 +18,7 @@ import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/widgets/model_tag.dart';
 
 class WorldGroupItem extends ConsumerStatefulWidget {
   final WorldType worldType;
@@ -569,61 +570,16 @@ class _WorldTags extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qw = ref.watch(P.app.qw);
-    final qb = ref.watch(P.app.qb);
     final isNPU = socPair.$1.isNotEmpty;
 
     return Wrap(
       spacing: 4,
       runSpacing: 8,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: 4.r,
-            color: isNPU ? kCG : kG.q(.2),
-            border: Border.all(
-              color: isNPU ? kCG : kG.q(.2),
-              width: .5,
-            ),
-          ),
-          padding: const .symmetric(horizontal: 4),
-          child: Row(
-            mainAxisSize: .min,
-            children: [
-              Text(
-                isNPU ? "NPU" : "CPU",
-                style: TS(
-                  c: isNPU ? qw : qb,
-                  w: isNPU ? .w500 : .w400,
-                ),
-              ),
-              if (isNPU) const T("⚡"),
-            ],
-          ),
-        ),
-        if (backend == Backend.webRwkv)
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: 4.r,
-              color: kCG,
-              border: Border.all(color: kCG, width: .5),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: T(
-              "WebRWKV",
-              s: TS(c: qw, w: .w500),
-            ),
-          ),
-        if (quantization != null && quantization!.isNotEmpty)
-          Container(
-            decoration: BoxDecoration(
-              color: kG.q(.2),
-              borderRadius: 4.r,
-              border: Border.all(width: .5, color: kG.q(.2)),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: T(quantization!.toUpperCase()),
-          ),
+        ModelTag(tag: "Vision"),
+        ModelTag(tag: isNPU ? "NPU" : "CPU"),
+        if (backend == Backend.webRwkv) ModelTag(tag: "WebRWKV"),
+        if (quantization != null && quantization!.isNotEmpty) ModelTag(tag: quantization!, forceUppercase: true),
       ],
     );
   }

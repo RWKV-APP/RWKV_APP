@@ -21,6 +21,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/services/font_service.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/model_tag.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
@@ -475,15 +476,12 @@ class _Tags extends ConsumerWidget {
 
   final FileInfo fileInfo;
 
-  static const _blockedTags = ["encoder", "reason", "ENCODER", "REASON"];
-  static final _highlightTags = ["mlx", "npu", "gpu", "DeepEmbedding", "batch", "webrwkv"].map((e) => e.toLowerCase()).toList();
+  static const _blockedTags = ["encoder", "reason"];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final quantization = fileInfo.quantization?.toUpperCase();
-    final tags = fileInfo.tags.where((e) => !_blockedTags.contains(e));
-    final qw = ref.watch(P.app.qw);
-    final qb = ref.watch(P.app.qb);
+    final tags = fileInfo.tags.where((e) => !_blockedTags.contains(e.toLowerCase()));
     final date = fileInfo.dateDisplayString;
     List<String> hiddenTags = [];
 
@@ -493,90 +491,10 @@ class _Tags extends ConsumerWidget {
       spacing: 4,
       runSpacing: 8,
       children: [
-        ...tags.where((tag) => !hiddenTags.contains(tag)).map((tag) {
-          final lowercaseTag = tag.toLowerCase();
-          final showHighlight = _highlightTags.contains(lowercaseTag);
-          if (tag == "DeepEmbedding") tag = "DE";
-          final isMLX = tag == "mlx";
-          late final Color color;
-          late final Color textColor;
-          late final Color borderColor;
-          final isNPU = tag == "npu";
-
-          if (fileInfo.backend == Backend.webRwkv && tag == "gpu") {
-            tag = "WebRWKV";
-          }
-
-          if (tag != "WebRWKV") tag = tag.toUpperCase();
-
-          if (isMLX) {
-            color = Colors.transparent;
-            textColor = qb;
-            borderColor = qb;
-          } else {
-            color = showHighlight ? kCG : kG.q(.2);
-            textColor = showHighlight ? qw : qb;
-            borderColor = showHighlight ? kCG : kG.q(.2);
-          }
-
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: 4.r,
-              color: color,
-              border: Border.all(color: borderColor, width: .5),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: IntrinsicWidth(
-              child: Row(
-                children: [
-                  Text(
-                    tag,
-                    style: TS(
-                      c: textColor,
-                      w: showHighlight ? .w500 : .w400,
-                    ),
-                  ),
-                  if (isMLX)
-                    Padding(
-                      padding: const .only(bottom: 2),
-                      child: Icon(Icons.apple, size: 13, color: qb),
-                    ),
-                  if (isNPU) const T("⚡"),
-                ],
-              ),
-            ),
-          );
-        }),
-        if (kDebugMode && fileInfo.isDebug)
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: 4.r,
-              border: Border.all(width: .5, color: Colors.red),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: T("DEBUG", s: TS(c: qw)),
-          ),
-        if (quantization != null && quantization.isNotEmpty)
-          Container(
-            decoration: BoxDecoration(
-              color: kG.q(.2),
-              borderRadius: 4.r,
-              border: Border.all(width: .5, color: kG.q(.2)),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: T(quantization),
-          ),
-        if (date != null)
-          Container(
-            decoration: BoxDecoration(
-              color: kG.q(.2),
-              borderRadius: 4.r,
-              border: Border.all(width: .5, color: kG.q(.2)),
-            ),
-            padding: const .symmetric(horizontal: 4),
-            child: T(date),
-          ),
+        ...tags.where((tag) => !hiddenTags.contains(tag)).map((tag) => ModelTag(tag: tag)),
+        if (kDebugMode && fileInfo.isDebug) ModelTag(tag: "DEBUG", forceBgColor: Colors.red, forceTextColor: kW),
+        if (quantization != null && quantization.isNotEmpty) ModelTag(tag: quantization, forceUppercase: true),
+        if (date != null) ModelTag(tag: date),
       ],
     );
   }
