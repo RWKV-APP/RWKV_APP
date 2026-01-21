@@ -92,22 +92,32 @@ When you first open the app, a model selection panel will appear. Please choose 
 
 ## 💻 Development
 
+**Ensure you have the [Flutter](https://flutter.dev/) development environment set up.**
+
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/MollySophia/rwkv_mobile_flutter.git
+# MUST switch to the 'dev' branch
+git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
 # Make sure the rwkv_mobile_flutter and RWKV_APP are in the same directory
-git clone https://github.com/RWKV-APP/RWKV_APP.git
+git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
 ```
 
-2. **Install dependencies:**
+2. **Create necessary configuration files:**
+
+```bash
+touch assets/filter.txt
+touch .env
+```
+
+3. **Install dependencies:**
 
 ```bash
 flutter pub get
 ```
 
-3. **Run the application:**
+4. **Run the application:**
 
 ```bash
 flutter run

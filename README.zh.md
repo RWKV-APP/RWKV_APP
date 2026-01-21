@@ -86,22 +86,32 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 
 ## 💻 开发
 
+**请确保您已搭建好 [Flutter](https://flutter.dev/) 开发环境。**
+
 1. **克隆仓库：**
 
 ```bash
-git clone https://github.com/MollySophia/rwkv_mobile_flutter.git
+# 必须切换到 'dev' 分支
+git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
 # 确保 rwkv_mobile_flutter 和 RWKV_APP 在同一目录下
-git clone https://github.com/RWKV-APP/RWKV_APP.git
+git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
 ```
 
-2. **安装依赖：**
+2. **创建必要的配置文件：**
+
+```bash
+touch assets/filter.txt
+touch .env
+```
+
+3. **安装依赖：**
 
 ```bash
 flutter pub get
 ```
 
-3. **运行应用：**
+4. **运行应用：**
 
 ```bash
 flutter run

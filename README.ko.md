@@ -92,22 +92,32 @@ RWKV App은 멀티턴 대화, 텍스트 음성 변환(TTS), 시각적 이해 및
 
 ## 💻 개발
 
+**[Flutter](https://flutter.dev/) 개발 환경이 설정되어 있는지 확인하십시오.**
+
 1. **리포지토리 복제:**
 
 ```bash
-git clone https://github.com/MollySophia/rwkv_mobile_flutter.git
+# 반드시 'dev' 브랜치로 전환해야 합니다
+git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
 # rwkv_mobile_flutter와 RWKV_APP가 같은 디렉토리에 있는지 확인하세요
-git clone https://github.com/RWKV-APP/RWKV_APP.git
+git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
 ```
 
-2. **종속성 설치:**
+2. **필요한 구성 파일 생성:**
+
+```bash
+touch assets/filter.txt
+touch .env
+```
+
+3. **종속성 설치:**
 
 ```bash
 flutter pub get
 ```
 
-3. **애플리케이션 실행:**
+4. **애플리케이션 실행:**
 
 ```bash
 flutter run
