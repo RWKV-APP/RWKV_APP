@@ -157,6 +157,7 @@ flutter:
 
   assets:
     - assets/lib/chat/
+    - assets/lib/font_preview/
     - assets/model/chat/
     - assets/config/chat/
     - assets/img/chat/

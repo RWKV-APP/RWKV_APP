@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,6 +127,45 @@ class _PreviewCard extends StatelessWidget {
 
   String _formatSize(double size) => size.toStringAsFixed(1);
 
+  String _applyFontPreviewPlaceholders(
+    String template,
+    double scale,
+    List<double> sizes,
+    double bodySize,
+  ) {
+    final h1Base = sizes[0];
+    final h2Base = sizes[1];
+    final h3Base = sizes[2];
+    final h4Base = sizes[3];
+    final h5Base = sizes[4];
+    final h6Base = sizes[5];
+
+    final h1 = h1Base * scale;
+    final h2 = h2Base * scale;
+    final h3 = h3Base * scale;
+    final h4 = h4Base * scale;
+    final h5 = h5Base * scale;
+    final h6 = h6Base * scale;
+    final body = bodySize * scale;
+
+    return template
+        .replaceAll('{scale}', _formatSize(scale))
+        .replaceAll('{h1BaseSize}', _formatSize(h1Base))
+        .replaceAll('{h2BaseSize}', _formatSize(h2Base))
+        .replaceAll('{h3BaseSize}', _formatSize(h3Base))
+        .replaceAll('{h4BaseSize}', _formatSize(h4Base))
+        .replaceAll('{h5BaseSize}', _formatSize(h5Base))
+        .replaceAll('{h6BaseSize}', _formatSize(h6Base))
+        .replaceAll('{bodyBaseSize}', _formatSize(bodySize))
+        .replaceAll('{h1Size}', _formatSize(h1))
+        .replaceAll('{h2Size}', _formatSize(h2))
+        .replaceAll('{h3Size}', _formatSize(h3))
+        .replaceAll('{h4Size}', _formatSize(h4))
+        .replaceAll('{h5Size}', _formatSize(h5))
+        .replaceAll('{h6Size}', _formatSize(h6))
+        .replaceAll('{bodySize}', _formatSize(body));
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -135,23 +175,7 @@ class _PreviewCard extends StatelessWidget {
     const bodySize = Config.markdownBodyFontSize;
     final scale = effectiveScale * fontScale;
     final userMessage = s.font_preview_user_message;
-    final botMessage = s.font_preview_bot_message(
-      _formatSize(scale),
-      _formatSize(sizes[0]), // h1 base
-      _formatSize(sizes[1]), // h2 base
-      _formatSize(sizes[2]), // h3 base
-      _formatSize(sizes[3]), // h4 base
-      _formatSize(sizes[4]), // h5 base
-      _formatSize(sizes[5]), // h6 base
-      _formatSize(bodySize), // body base
-      _formatSize(sizes[0] * scale), // h1
-      _formatSize(sizes[1] * scale), // h2
-      _formatSize(sizes[2] * scale), // h3
-      _formatSize(sizes[3] * scale), // h4
-      _formatSize(sizes[4] * scale), // h5
-      _formatSize(sizes[5] * scale), // h6
-      _formatSize(bodySize * scale), // body
-    );
+    final assetPath = s.font_preview_markdown_asset;
 
     return Column(
       crossAxisAlignment: .stretch,
@@ -202,7 +226,20 @@ class _PreviewCard extends StatelessWidget {
               data: MediaQuery.of(context).copyWith(
                 textScaler: .linear(effectiveScale),
               ),
-              child: MarkdownRender(raw: botMessage),
+              child: FutureBuilder<String>(
+                future: rootBundle.loadString(assetPath),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox.shrink();
+                  }
+                  if (!snapshot.hasData) {
+                    return const SizedBox.shrink();
+                  }
+                  final template = snapshot.data!;
+                  final botMessage = _applyFontPreviewPlaceholders(template, scale, sizes, bodySize);
+                  return MarkdownRender(raw: botMessage);
+                },
+              ),
             ),
           ),
         ),
