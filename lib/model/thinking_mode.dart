@@ -30,10 +30,10 @@ sealed class ThinkingMode {
 class Lighting extends ThinkingMode {
   @override
   final String header = '<think>\n</think>';
-  
+
   @override
   final bool forceReasoning = false;
-  
+
   const Lighting();
 }
 
@@ -81,7 +81,7 @@ class En extends ThinkingMode {
   String get header => "<think";
 
   @override
-  String get userMsgFooter => " think";
+  String get userMsgFooter => " (think)";
 
   @override
   final bool forceReasoning = true;
@@ -94,7 +94,7 @@ class EnShort extends ThinkingMode {
   String get header => "<think";
 
   @override
-  String get userMsgFooter => " think a bit";
+  String get userMsgFooter => " (think a bit)";
 
   @override
   final bool forceReasoning = true;
@@ -107,7 +107,7 @@ class EnLong extends ThinkingMode {
   String get header => "<think";
 
   @override
-  String get userMsgFooter => " think a lot";
+  String get userMsgFooter => " (think a lot)";
 
   @override
   final bool forceReasoning = true;
