@@ -45,11 +45,11 @@ dependencies:
 
   gpt_markdown:
     # Local development, fix some bugs
-    # path: ../gpt_markdown
+    path: ../gpt_markdown
     # Git development, for your company's project
-    git:
-      url: https://github.com/HaloWang/gpt_markdown
-      ref: main
+    # git:
+    #   url: https://github.com/HaloWang/gpt_markdown
+    #   ref: main
     # Original repository
     # git:
     #   url: https://github.com/Infinitix-LLC/gpt_markdown

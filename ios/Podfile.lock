@@ -117,9 +117,6 @@ PODS:
   - nanopb/encode (3.30910.0)
   - package_info_plus (0.4.5):
     - Flutter
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
@@ -131,7 +128,7 @@ PODS:
     - SDWebImage/Core (= 5.21.5)
   - SDWebImage/Core (5.21.5)
   - Sentry/HybridSDK (8.56.2)
-  - sentry_flutter (9.9.2):
+  - sentry_flutter (9.10.0):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.56.2)
@@ -187,7 +184,6 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - mp_audio_stream (from `.symlinks/plugins/mp_audio_stream/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - record_ios (from `.symlinks/plugins/record_ios/ios`)
   - rwkv_mobile_flutter (from `.symlinks/plugins/rwkv_mobile_flutter/ios`)
@@ -247,8 +243,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/mp_audio_stream/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
-  path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   record_ios:
@@ -296,14 +290,13 @@ SPEC CHECKSUMS:
   mp_audio_stream: 3aeeb992433b114917bffc30accf51ce8114aea2
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   record_ios: f75fa1d57f840012775c0e93a38a7f3ceea1a374
   rwkv_mobile_flutter: 1ac221dbc3469b5cb1aab8248b34e1804e68aa98
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
-  sentry_flutter: 5738b8324c46ffa43e5b68da4bbbf68803c2718d
+  sentry_flutter: da39d10e3f2f3e060eebc9d7ecea027d34443d66
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
