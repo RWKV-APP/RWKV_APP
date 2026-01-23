@@ -36,9 +36,9 @@ class MarkdownRender extends ConsumerWidget {
     final headerFontSizes = Config.markdownHeaderFontSizes.map((e) => e * scale).toList();
 
     final gptThemeData = GptMarkdownTheme.of(context).copyWith(
-      h1: TextStyle(fontSize: headerFontSizes[0], fontWeight: FontWeight.w500),
-      h2: TextStyle(fontSize: headerFontSizes[1], fontWeight: FontWeight.w500),
-      h3: TextStyle(fontSize: headerFontSizes[2], fontWeight: FontWeight.w500),
+      h1: TextStyle(fontSize: headerFontSizes[0], fontWeight: .w500),
+      h2: TextStyle(fontSize: headerFontSizes[1], fontWeight: .w500),
+      h3: TextStyle(fontSize: headerFontSizes[2], fontWeight: .w500),
       h4: TextStyle(fontSize: headerFontSizes[3]),
       h5: TextStyle(fontSize: headerFontSizes[4]),
       h6: TextStyle(fontSize: headerFontSizes[5]),
