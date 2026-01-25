@@ -77,7 +77,9 @@ class VersionInfoPanel extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: T(s.latest_version + s.colon + (latestVersionInfo?.version ?? "") + "(" + (latestVersionInfo?.build.toString() ?? "") + ")"),
+              child: T(
+                s.latest_version + s.colon + (latestVersionInfo?.version ?? "") + "(" + (latestVersionInfo?.build.toString() ?? "") + ")",
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

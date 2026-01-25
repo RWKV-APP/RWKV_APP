@@ -175,12 +175,18 @@ extension $App on _App {
     this.latestVersionInfo.q = latestVersionInfo;
 
     final latestBuild = latestVersionInfo.build;
-    if (latestBuild <= int.parse(buildNumber.q)) {
-      if (manually) Alert.info(S.current.app_is_already_up_to_date);
-      return;
+
+    if (!Args.forceShowNewVersionPanel) {
+      if (latestBuild <= int.parse(buildNumber.q)) {
+        if (manually) Alert.info(S.current.app_is_already_up_to_date);
+        return;
+      }
     }
 
     Alert.success(S.current.new_version_available);
+
+    getReleaseNotes(build: latestBuild, version: latestVersionInfo.version);
+
     await VersionInfoPanel.show();
   }
 
@@ -221,15 +227,29 @@ extension $App on _App {
     }
   }
 
-  Future<void> getReleaseNotes({
-    required int build,
-    String? version,
-  }) async {
-    qqr(build);
-    qqr(version);
+  /// Convert Language enum to locale string for API
+  String _languageToLocaleString(Language language) {
+    final resolved = language.resolved;
+    final locale = resolved.locale;
+
+    // Convert to API locale format
+    if (resolved == Language.zh_Hans) {
+      return 'zh-CN';
+    } else if (resolved == Language.zh_Hant) {
+      return 'zh-TW';
+    } else {
+      // For other languages, use languageCode directly
+      return locale.languageCode;
+    }
+  }
+
+  Future<void> getReleaseNotes({required int build, String? version}) async {
+    // Get current language preference and convert to locale string
+    final currentLanguage = P.preference.preferredLanguage.q;
+    final locale = _languageToLocaleString(currentLanguage);
 
     final baseUrl = "${Config.apiv2}/distributions/release-notes";
-    var fullUrl = "$baseUrl?build=$build";
+    var fullUrl = "$baseUrl?build=$build&locale=${Uri.encodeComponent(locale)}";
     if (version != null && version.isNotEmpty) {
       fullUrl = "$fullUrl&version=${Uri.encodeComponent(version)}";
     }
@@ -562,6 +582,8 @@ extension _$App on _App {
   /// 获取最新的版本信息, 返回 false 代表无需更新
   Future<VersionInfo?> _getLatestVersionInfo() async {
     qr;
+
+    await Future.delayed(const Duration(milliseconds: 500));
 
     // 根据运行环境获取对应的 keys
     final keys = await _getDistributionKeysForPlatform();
