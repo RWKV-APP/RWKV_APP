@@ -12,8 +12,8 @@ abstract class Config {
   static const modelsDirName = "rwkv_chat_models";
 
   static const domain = "https://api-model.rwkvos.com";
-  static const apiv2 = "http://localhost:3462";
-  // static const apiv2 = "http://api.rwkv.halowang.cloud";
+  // static const apiv2 = "http://localhost:3462";
+  static const apiv2 = "http://api.rwkv.halowang.cloud";
 
   static const timeout = Duration(seconds: 60);
 
