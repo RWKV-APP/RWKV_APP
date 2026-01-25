@@ -8,6 +8,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/markdown_render.dart';
 
 class VersionInfoPanel extends ConsumerWidget {
   static final _shown = qs(false);
@@ -48,8 +49,11 @@ class VersionInfoPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final latestVersionInfo = ref.watch(P.app.latestVersionInfo);
     double paddingBottom = ref.watch(P.app.paddingBottom);
     paddingBottom = max(paddingBottom, 16);
+
     return ClipRRect(
       borderRadius: const .only(
         topLeft: .circular(16),
@@ -71,17 +75,16 @@ class VersionInfoPanel extends ConsumerWidget {
         body: Column(
           crossAxisAlignment: .stretch,
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: T(s.latest_version + s.colon + (latestVersionInfo?.version ?? "") + "(" + (latestVersionInfo?.build.toString() ?? "") + ")"),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: T(s.current_version + s.colon + (P.app.version.q) + "(" + (P.app.buildNumber.q) + ")"),
+            ),
             Expanded(
-              child: ListView.builder(
-                controller: scrollController,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 100,
-                    color: Colors.red,
-                  );
-                },
-              ),
+              child: _ReleaseNotesContent(scrollController: scrollController),
             ),
             8.h,
             Row(
@@ -93,13 +96,16 @@ class VersionInfoPanel extends ConsumerWidget {
                       height: 44,
                       padding: const .symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: const Color(0xFF14b8a6),
                         borderRadius: 100.r,
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.download),
-                          Text("Download Now"),
+                          const Icon(Icons.download, color: Colors.white),
+                          Text(
+                            s.download_now,
+                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                          ),
                         ],
                       ),
                     ),
@@ -116,13 +122,16 @@ class VersionInfoPanel extends ConsumerWidget {
                       height: 44,
                       padding: const .symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: const Color(0xFF0d9488),
                         borderRadius: 100.r,
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.skip_next),
-                          Text("Skip this version"),
+                          const Icon(Icons.skip_next, color: Colors.white),
+                          Text(
+                            s.skip_this_version,
+                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                          ),
                         ],
                       ),
                     ),
@@ -135,13 +144,16 @@ class VersionInfoPanel extends ConsumerWidget {
                       height: 44,
                       padding: const .symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: const Color(0xFF0d9488),
                         borderRadius: 100.r,
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.cancel),
-                          Text(s.cancel),
+                          const Icon(Icons.cancel, color: Colors.white),
+                          Text(
+                            s.cancel,
+                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                          ),
                         ],
                       ),
                     ),
@@ -153,6 +165,68 @@ class VersionInfoPanel extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ReleaseNotesContent extends ConsumerWidget {
+  final ScrollController? scrollController;
+
+  const _ReleaseNotesContent({required this.scrollController});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final latestVersionInfo = ref.watch(P.app.latestVersionInfo);
+    final releaseNotesData = ref.watch(P.app.releaseNotesContent);
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    if (latestVersionInfo == null) {
+      return Center(
+        child: Text(
+          S.of(context).no_latest_version_info,
+          style: theme.textTheme.bodyMedium?.copyWith(color: qb.q(.5)),
+        ),
+      );
+    }
+
+    // Trigger fetch if not already loaded
+    if (releaseNotesData == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        P.app.getReleaseNotes(
+          build: latestVersionInfo.build,
+          version: latestVersionInfo.version,
+        );
+      });
+      return Center(
+        child: CircularProgressIndicator(
+          color: theme.colorScheme.primary,
+        ),
+      );
+    }
+
+    // Type check and extract content
+    final content = (releaseNotesData as ({String? content, String? version})?)?.content;
+
+    if (content == null || content.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const .all(16),
+          child: Text(
+            S.of(context).no_latest_version_info,
+            style: theme.textTheme.bodyMedium?.copyWith(color: qb.q(.5)),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    return ListView(
+      controller: scrollController,
+      padding: const .all(16),
+      children: [
+        MarkdownRender(raw: content),
+      ],
     );
   }
 }

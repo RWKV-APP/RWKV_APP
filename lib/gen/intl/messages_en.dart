@@ -340,6 +340,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("Current Turn"),
+    "current_version": MessageLookupByLibrary.simpleMessage("Current Version"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
       "Custom Difficulty",
     ),
@@ -426,6 +427,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Download Missing Files",
     ),
     "download_model": MessageLookupByLibrary.simpleMessage("Download model"),
+    "download_now": MessageLookupByLibrary.simpleMessage("Download Now"),
     "download_server_": MessageLookupByLibrary.simpleMessage(
       "Download Server (Please try which one is faster)",
     ),
@@ -622,6 +624,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA Test"),
     "lan_server": MessageLookupByLibrary.simpleMessage("LAN Server"),
     "large": MessageLookupByLibrary.simpleMessage("Large (120%)"),
+    "latest_version": MessageLookupByLibrary.simpleMessage("Latest Version"),
     "lazy": MessageLookupByLibrary.simpleMessage("Lazy"),
     "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Lazy Thinking Mode Template",
@@ -960,6 +963,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "single_thread": MessageLookupByLibrary.simpleMessage("Single-threaded"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "It is recommended to choose at least a 1.5B model for better results",
+    ),
+    "skip_this_version": MessageLookupByLibrary.simpleMessage(
+      "Skip This Version",
     ),
     "small": MessageLookupByLibrary.simpleMessage("Small (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Source Code"),

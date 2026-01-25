@@ -302,7 +302,7 @@ class Settings extends ConsumerWidget {
                 ],
               ),
               icon: Icon(Icons.update, color: qb.q(.667), size: 16),
-              onTap: P.app.checkUpdates,
+              onTap: () => P.app.checkUpdates(manually: true),
             ),
             FormItem(
               title: s.github_repository,

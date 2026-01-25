@@ -269,6 +269,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage("当前任务 URL"),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("当前回合"),
+    "current_version": MessageLookupByLibrary.simpleMessage("当前版本"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("自定义难度"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("深色模式"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("深色模式主题"),
@@ -332,6 +333,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_from_browser": MessageLookupByLibrary.simpleMessage("从浏览器下载"),
     "download_missing": MessageLookupByLibrary.simpleMessage("下载缺失文件"),
     "download_model": MessageLookupByLibrary.simpleMessage("下载模型"),
+    "download_now": MessageLookupByLibrary.simpleMessage("立即下载"),
     "download_server_": MessageLookupByLibrary.simpleMessage("下载服务器(请试试哪个快)"),
     "download_source": MessageLookupByLibrary.simpleMessage("下载源"),
     "downloading": MessageLookupByLibrary.simpleMessage("下载中"),
@@ -480,6 +482,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA 测试"),
     "lan_server": MessageLookupByLibrary.simpleMessage("局域网服务器"),
     "large": MessageLookupByLibrary.simpleMessage("大 (120%)"),
+    "latest_version": MessageLookupByLibrary.simpleMessage("最新版本"),
     "lazy": MessageLookupByLibrary.simpleMessage("懒"),
     "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "懒思考模板",
@@ -719,6 +722,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "推荐至少选择 1.5B 模型，效果更好",
     ),
+    "skip_this_version": MessageLookupByLibrary.simpleMessage("跳过此版本"),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("源代码"),
     "source_text": m26,

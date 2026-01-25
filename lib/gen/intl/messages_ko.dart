@@ -283,6 +283,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage("현재 작업 URL"),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("현재 차례"),
+    "current_version": MessageLookupByLibrary.simpleMessage("현재 버전"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("맞춤 난이도"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("다크 모드"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("다크 모드 테마"),
@@ -356,6 +357,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "download_missing": MessageLookupByLibrary.simpleMessage("누락된 파일 다운로드"),
     "download_model": MessageLookupByLibrary.simpleMessage("모델 다운로드"),
+    "download_now": MessageLookupByLibrary.simpleMessage("지금 다운로드"),
     "download_server_": MessageLookupByLibrary.simpleMessage(
       "다운로드 서버 (어떤 것이 빠른지 시도해보세요)",
     ),
@@ -525,6 +527,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA 테스트"),
     "lan_server": MessageLookupByLibrary.simpleMessage("LAN 서버"),
     "large": MessageLookupByLibrary.simpleMessage("크게 (120%)"),
+    "latest_version": MessageLookupByLibrary.simpleMessage("최신 버전"),
     "lazy": MessageLookupByLibrary.simpleMessage("게으른"),
     "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "게으른 사고 모드 템플릿",
@@ -793,6 +796,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "최소 1.5B 모델을 선택하는 것이 좋으며, 더 큰 2.9B 모델이 더 좋습니다.",
     ),
+    "skip_this_version": MessageLookupByLibrary.simpleMessage("이 버전 건너뛰기"),
     "small": MessageLookupByLibrary.simpleMessage("작게 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("소스 코드"),
     "source_text": m26,

@@ -12,7 +12,6 @@ class _App extends RawApp {
   // ===========================================================================
 
   SystemUiOverlayStyle get systemOverlayStyleLight {
-    final scaffold = customTheme.q.scaffold;
     return const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.dark,
@@ -93,6 +92,7 @@ class _App extends RawApp {
 
   late final checkingLatestVersion = qs(false);
   late final latestVersionInfo = qs<VersionInfo?>(null);
+  late final releaseNotesContent = qs<({String? content, String? version})?>(null);
 }
 
 /// Public methods
@@ -152,7 +152,7 @@ extension $App on _App {
     }
   }
 
-  void checkUpdates() async {
+  void checkUpdates({bool manually = false}) async {
     qr;
     checkingLatestVersion.q = true;
     VersionInfo? latestVersionInfo;
@@ -160,7 +160,7 @@ extension $App on _App {
       latestVersionInfo = await _getLatestVersionInfo();
     } catch (e) {
       qqe(e);
-      Alert.error(S.current.failed_to_check_for_updates);
+      if (manually) Alert.error(S.current.failed_to_check_for_updates);
       Sentry.captureException(e, stackTrace: StackTrace.current);
     } finally {
       checkingLatestVersion.q = false;
@@ -168,18 +168,16 @@ extension $App on _App {
 
     qqr("latest version info: $latestVersionInfo");
     if (latestVersionInfo == null) {
-      Alert.info(S.current.app_is_already_up_to_date);
+      if (manually) Alert.info(S.current.app_is_already_up_to_date);
       return;
     }
 
     this.latestVersionInfo.q = latestVersionInfo;
 
-    if (!kDebugMode) {
-      final latestBuild = latestVersionInfo.build;
-      if (latestBuild <= int.parse(buildNumber.q)) {
-        Alert.info(S.current.app_is_already_up_to_date);
-        return;
-      }
+    final latestBuild = latestVersionInfo.build;
+    if (latestBuild <= int.parse(buildNumber.q)) {
+      if (manually) Alert.info(S.current.app_is_already_up_to_date);
+      return;
     }
 
     Alert.success(S.current.new_version_available);
@@ -220,6 +218,40 @@ extension $App on _App {
       qqe(e);
       // Alert.error(S.current.failed_to_open_url);
       // Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+  }
+
+  Future<void> getReleaseNotes({
+    required int build,
+    String? version,
+  }) async {
+    qqr(build);
+    qqr(version);
+
+    final baseUrl = "${Config.apiv2}/distributions/release-notes";
+    var fullUrl = "$baseUrl?build=$build";
+    if (version != null && version.isNotEmpty) {
+      fullUrl = "$fullUrl&version=${Uri.encodeComponent(version)}";
+    }
+    try {
+      final res = await _get(fullUrl, timeout: 2000.ms);
+      if (res is! Map) {
+        releaseNotesContent.q = null;
+        return;
+      }
+      final content = res['content'];
+      final versionFromResponse = res['version'];
+      if (content is String) {
+        releaseNotesContent.q = (
+          content: content.isEmpty ? null : content,
+          version: versionFromResponse is String ? versionFromResponse : null,
+        );
+      } else {
+        releaseNotesContent.q = null;
+      }
+    } catch (e) {
+      qqe("Error fetching release notes: $e");
+      releaseNotesContent.q = null;
     }
   }
 }
@@ -337,7 +369,7 @@ extension _$App on _App {
       );
     });
 
-    Future.delayed(const Duration(milliseconds: 5000)).then((_) {
+    Future.delayed(const Duration(milliseconds: 2500)).then((_) {
       checkUpdates();
     });
   }
@@ -591,16 +623,6 @@ extension _$App on _App {
     if (highestBuild == null) return null;
 
     return .fromJson(highestBuildRecord);
-  }
-
-  Future<List<String>> _getReleaseNotes() async {
-    final baseUrl = "${Config.apiv2}/distributions/release-notes";
-    final build = int.parse(buildNumber.q);
-    final fullUrl = "$baseUrl?build=$build";
-    final res = await _get(fullUrl, timeout: 2000.ms);
-    if (res is! List) return [];
-    return (res).m((e) => e.toString());
-    return [];
   }
 
   /// 从本地沙盒中加载配置, 如果本地沙盒中没有, 则从应用包中加载, 并存储到本地沙盒中

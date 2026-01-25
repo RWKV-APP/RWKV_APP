@@ -283,6 +283,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage("現在のタスクのURL"),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("現在のターン"),
+    "current_version": MessageLookupByLibrary.simpleMessage("現在のバージョン"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage("カスタム難易度"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("ダークモード"),
     "dark_mode_theme": MessageLookupByLibrary.simpleMessage("ダークモードテーマ"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "不足しているファイルをダウンロード",
     ),
     "download_model": MessageLookupByLibrary.simpleMessage("モデルをダウンロード"),
+    "download_now": MessageLookupByLibrary.simpleMessage("今すぐダウンロード"),
     "download_server_": MessageLookupByLibrary.simpleMessage(
       "ダウンロードサーバー（どれが速いか試してください）",
     ),
@@ -529,6 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA テスト"),
     "lan_server": MessageLookupByLibrary.simpleMessage("LANサーバー"),
     "large": MessageLookupByLibrary.simpleMessage("大 (120%)"),
+    "latest_version": MessageLookupByLibrary.simpleMessage("最新バージョン"),
     "lazy": MessageLookupByLibrary.simpleMessage("怠惰"),
     "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "怠惰な思考モードテンプレート",
@@ -797,6 +800,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "少なくとも1.5Bモデルを選択することをお勧めします。より大きい2.9Bモデルの方が優れています。",
     ),
+    "skip_this_version": MessageLookupByLibrary.simpleMessage("このバージョンをスキップ"),
     "small": MessageLookupByLibrary.simpleMessage("小さい (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("ソースコード"),
     "source_text": m26,

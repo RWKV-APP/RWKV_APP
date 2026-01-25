@@ -348,6 +348,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "current_test_item": m9,
     "current_turn": MessageLookupByLibrary.simpleMessage("Текущий ход"),
+    "current_version": MessageLookupByLibrary.simpleMessage("Текущая версия"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
       "Пользовательская сложность",
     ),
@@ -440,6 +441,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Скачать недостающие файлы",
     ),
     "download_model": MessageLookupByLibrary.simpleMessage("Скачать модель"),
+    "download_now": MessageLookupByLibrary.simpleMessage("Скачать сейчас"),
     "download_server_": MessageLookupByLibrary.simpleMessage(
       "Сервер загрузки (выберите тот, что быстрее)",
     ),
@@ -653,6 +655,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA тест"),
     "lan_server": MessageLookupByLibrary.simpleMessage("LAN-сервер"),
     "large": MessageLookupByLibrary.simpleMessage("Большой (120%)"),
+    "latest_version": MessageLookupByLibrary.simpleMessage("Последняя версия"),
     "lazy": MessageLookupByLibrary.simpleMessage("Ленивый"),
     "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон ленивого режима мышления",
@@ -998,6 +1001,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "single_thread": MessageLookupByLibrary.simpleMessage("Однопоточный"),
     "size_recommendation": MessageLookupByLibrary.simpleMessage(
       "Рекомендуется выбрать модель не менее 1.5B для лучших результатов",
+    ),
+    "skip_this_version": MessageLookupByLibrary.simpleMessage(
+      "Пропустить эту версию",
     ),
     "small": MessageLookupByLibrary.simpleMessage("Маленький (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Исходный код"),

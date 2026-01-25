@@ -1271,6 +1271,26 @@ class S {
     return Intl.message('立即更新', name: 'update_now', desc: '', args: []);
   }
 
+  /// `立即下载`
+  String get download_now {
+    return Intl.message('立即下载', name: 'download_now', desc: '', args: []);
+  }
+
+  /// `跳过此版本`
+  String get skip_this_version {
+    return Intl.message('跳过此版本', name: 'skip_this_version', desc: '', args: []);
+  }
+
+  /// `最新版本`
+  String get latest_version {
+    return Intl.message('最新版本', name: 'latest_version', desc: '', args: []);
+  }
+
+  /// `当前版本`
+  String get current_version {
+    return Intl.message('当前版本', name: 'current_version', desc: '', args: []);
+  }
+
   /// `返回聊天`
   String get back_to_chat {
     return Intl.message('返回聊天', name: 'back_to_chat', desc: '', args: []);
