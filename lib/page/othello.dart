@@ -486,7 +486,7 @@ class _Score extends ConsumerWidget {
     final blackScore = ref.watch(P.othello.blackScore);
     final whiteScore = ref.watch(P.othello.whiteScore);
     final blackTurn = ref.watch(P.othello.blackTurn);
-    final thinking = ref.watch(P.othello.receivingTokens);
+    final generating = ref.watch(P.rwkv.generating);
     final usePortrait = ref.watch(P.othello.usePortrait);
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
@@ -496,11 +496,11 @@ class _Score extends ConsumerWidget {
       mainAxisSize: .min,
       children: [
         AnimatedOpacity(
-          opacity: thinking ? 1.0 : .5,
+          opacity: generating ? 1.0 : .5,
           duration: const Duration(milliseconds: 150),
           child: T(
             s.thinking,
-            s: TS(s: 10, w: thinking ? .w400 : .w400),
+            s: TS(s: 10, w: generating ? .w400 : .w400),
           ),
         ),
         T(
@@ -515,7 +515,7 @@ class _Score extends ConsumerWidget {
     );
 
     final newGameButton = TextButton(
-      onPressed: thinking
+      onPressed: generating
           ? null
           : () {
               P.othello.start();

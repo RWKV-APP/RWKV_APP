@@ -83,7 +83,7 @@ class ModelItem extends ConsumerWidget {
 
   Future<void> _onStartTapInChat() async {
     qq;
-    if (P.chat.receivingTokens.q) {
+    if (P.rwkv.generating.q) {
       Alert.warning(S.current.please_wait_for_the_model_to_generate);
       return;
     }

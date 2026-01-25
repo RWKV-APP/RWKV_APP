@@ -24,6 +24,7 @@ class PageOcr extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(s.ocr_title),
+        centerTitle: true,
         actions: [
           if (image != null) ...[
             // Toggle Visibility

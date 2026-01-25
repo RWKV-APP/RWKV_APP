@@ -22,12 +22,6 @@ class _Chat {
 
   late final textInInput = qs("");
 
-  /// Disable sender
-  ///
-  /// TODO: Should be moved to state/rwkv.dart
-  @Deprecated("Use P.rwkv.receiving instead")
-  late final receivingTokens = qs(false);
-
   late final prefillPercentage = qs(0.0);
 
   /// TODO: Should be moved to state/rwkv.dart
@@ -75,7 +69,7 @@ extension $Chat on _Chat {
   }
 
   void onSwitchWebSearchMode(WebSearchMode mode) async {
-    final receiving = receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -87,7 +81,7 @@ extension $Chat on _Chat {
   }
 
   void onSwitchWenYanWen(WenyanMode mode) async {
-    final receiving = receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -227,9 +221,9 @@ extension $Chat on _Chat {
   Future<void> onKeyboardSubmitted(String aString) async {
     qqq(aString);
 
-    final receivingTokens = this.receivingTokens.q;
+    final generating = P.rwkv.generating.q;
 
-    if (receivingTokens) {
+    if (generating) {
       Alert.info("Please wait for the previous message to be generated");
       return;
     }
@@ -310,7 +304,7 @@ extension $Chat on _Chat {
   }
 
   Future<void> startNewChat() async {
-    if (receivingTokens.q) await onStopButtonPressed();
+    if (P.rwkv.generating.q) await onStopButtonPressed();
     await Future.delayed(100.ms);
     // Alert.success(S.current.new_chat_started);
     P.msg._clear();
@@ -319,7 +313,7 @@ extension $Chat on _Chat {
   }
 
   void toggleCompletionMode() {
-    final receiving = receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -445,7 +439,7 @@ extension $Chat on _Chat {
     P.msg.editingOrRegeneratingIndex.q = null;
 
     receivedTokens.q = "";
-    receivingTokens.q = true;
+    P.rwkv.generating.q = true;
 
     final receiveMsg = Message(
       id: receiveId,
@@ -481,7 +475,7 @@ extension $Chat on _Chat {
       qqw("message id is null");
       return;
     }
-    if (!receivingTokens.q) {
+    if (!P.rwkv.generating.q) {
       return;
     }
     _pauseMessageById(id: id);
@@ -584,8 +578,6 @@ extension _$Chat on _Chat {
     hasFocus.q = focusNode.hasFocus;
     P.suggestion.loadSuggestions();
 
-    receivingTokens.l(_onReceivingTokensChanged);
-
     P.app.lifecycleState.lb(_onLifecycleStateChanged);
 
     P.preference.preferredLanguage.lv(P.suggestion.loadSuggestions);
@@ -653,7 +645,7 @@ extension _$Chat on _Chat {
     if (P.app.isDesktop.q) return;
     final isToBackground = next == AppLifecycleState.paused || next == AppLifecycleState.hidden;
     if (isToBackground) {
-      if (receiveId.q != null && _autoPauseId.q == null && receivingTokens.q == true) {
+      if (receiveId.q != null && _autoPauseId.q == null && P.rwkv.generating.q == true) {
         _autoPauseId.q = receiveId.q!;
         _pauseMessageById(id: receiveId.q!);
       }
@@ -703,8 +695,6 @@ extension _$Chat on _Chat {
 
     return result;
   }
-
-  void _onReceivingTokensChanged(bool next) async {}
 
   Future<void> _pauseMessageById({required int id, bool isSensitive = false}) async {
     qq;
@@ -868,13 +858,13 @@ extension _$Chat on _Chat {
     switch (event.type) {
       case _RWKVMessageType.isGenerating:
         final isGenerating = event.content == "true";
-        receivingTokens.q = isGenerating;
+        P.rwkv.generating.q = isGenerating;
         if (!isGenerating && !completionMode.q) _fullyReceived(callingFunction: "_onStreamEvent:isGenerating");
         break;
 
       case _RWKVMessageType.streamResponse:
         receivedTokens.q = event.content;
-        receivingTokens.q = true;
+        P.rwkv.generating.q = true;
         break;
 
       default:
@@ -906,12 +896,12 @@ extension _$Chat on _Chat {
 
       case from_rwkv.GenerateStop _:
         receivedTokens.q = "";
-        receivingTokens.q = false;
+        P.rwkv.generating.q = false;
         break;
 
       case from_rwkv.GenerateStart _:
         receivedTokens.q = "";
-        receivingTokens.q = true;
+        P.rwkv.generating.q = true;
         break;
 
       default:
@@ -925,7 +915,7 @@ extension _$Chat on _Chat {
     qq;
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
-    receivingTokens.q = false;
+    P.rwkv.generating.q = false;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
@@ -935,7 +925,7 @@ extension _$Chat on _Chat {
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
-    receivingTokens.q = false;
+    P.rwkv.generating.q = false;
   }
 
   Future<List<String>> _historyWithWebSearch(int receiveId, List<String> allMessage) async {

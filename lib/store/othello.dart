@@ -29,9 +29,6 @@ class _Othello {
   /// row, col
   late final eatCountMatrixForWhite = qs<List<List<int>>>(List.generate(8, (_) => List.filled(8, 0)));
 
-  @Deprecated("Use P.rwkv.receiving instead")
-  late final receivingTokens = qs(false);
-
   late final blackTurn = qs(_blackFirst);
 
   late final received = qs("");
@@ -78,7 +75,7 @@ extension $Othello on _Othello {
   }
 
   Future<void> onCellTap({required int row, required int col}) async {
-    final thinking = receivingTokens.q;
+    final thinking = P.rwkv.generating.q;
     if (thinking) return;
     final eatCountMatrixForBlack = this.eatCountMatrixForBlack.q;
     final eatCountMatrixForWhite = this.eatCountMatrixForWhite.q;
@@ -129,12 +126,12 @@ extension $Othello on _Othello {
     if (blackAuto || whiteAuto) {
       qqr("Auto placing!");
 
-      receivingTokens.q = true;
+      P.rwkv.generating.q = true;
 
       final prompt = _generatePrompt();
 
       P.rwkv.generate(prompt);
-      receivingTokens.q = false;
+      P.rwkv.generating.q = false;
     }
   }
 }
@@ -198,11 +195,11 @@ extension _$Othello on _Othello {
 
     for (var i = 0; i < 1000; i++) {
       await Future.delayed(const Duration(milliseconds: 10));
-      final thinking = receivingTokens.q;
+      final thinking = P.rwkv.generating.q;
       if (!thinking) break;
     }
 
-    qqq("Placing event received: $event, thinking: ${receivingTokens.q}");
+    qqq("Placing event received: $event, thinking: ${P.rwkv.generating.q}");
     await onCellTap(row: event.$1, col: event.$2);
   }
 
@@ -251,7 +248,7 @@ extension _$Othello on _Othello {
 
     blackIsAI.q = false;
     whiteIsAI.q = true;
-    receivingTokens.q = false;
+    P.rwkv.generating.q = false;
     received.q = "";
     searchDepth.q = 1;
     searchBreadth.q = 1;
@@ -272,7 +269,7 @@ extension _$Othello on _Othello {
         break;
       case _RWKVMessageType.isGenerating:
         final isGenerating = event.content == "true";
-        receivingTokens.q = isGenerating;
+        P.rwkv.generating.q = isGenerating;
         break;
       case _RWKVMessageType.sudokuOthelloResponse:
         received.q = event.content;
@@ -349,12 +346,12 @@ extension _$Othello on _Othello {
         break;
 
       case from_rwkv.GenerateStart _:
-        receivingTokens.q = true;
+        P.rwkv.generating.q = true;
         received.q = "";
         break;
 
       case from_rwkv.GenerateStop _:
-        receivingTokens.q = false;
+        P.rwkv.generating.q = false;
         break;
 
       default:
@@ -366,7 +363,7 @@ extension _$Othello on _Othello {
     final pageKey = P.app.pageKey.q;
     if (pageKey != .othello) return;
     qqq("_onStreamDone");
-    receivingTokens.q = false;
+    P.rwkv.generating.q = false;
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
@@ -375,7 +372,7 @@ extension _$Othello on _Othello {
     qqq("_onStreamError");
     qqe("error: $error");
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
-    receivingTokens.q = false;
+    P.rwkv.generating.q = false;
   }
 
   void _onBlackTurnChanged() {

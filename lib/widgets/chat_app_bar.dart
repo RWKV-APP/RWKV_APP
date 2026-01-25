@@ -122,7 +122,7 @@ class _ChatAppBar extends ConsumerWidget {
       title: GestureDetector(
         onTap: _onTitlePressed,
         child: Container(
-          decoration: const BoxDecoration(color: Colors.transparent),
+          decoration: BoxDecoration(color: Colors.transparent),
           child: Column(
             crossAxisAlignment: .center,
             children: [
@@ -193,6 +193,7 @@ class _ChatAppBar extends ConsumerWidget {
           ),
         ),
       ),
+      // leading: IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
       actions: [
         if ((preferredDemoType == .chat || preferredDemoType == .see) && !completionMode)
           _NewConversationButton(preferredDemoType: preferredDemoType),

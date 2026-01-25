@@ -67,6 +67,12 @@ Content before horizontal rule
 
 ---
 
+ ---
+
+ --- 
+
+--- ---
+
 Content after horizontal rule
 
 ## 6. Code Blocks

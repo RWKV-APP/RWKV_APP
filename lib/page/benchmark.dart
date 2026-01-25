@@ -42,7 +42,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
 
   void _stopAllTests() {
     // 停止性能测试
-    if (P.chat.receivingTokens.q) {
+    if (P.rwkv.generating.q) {
       P.chat.stopCompletion();
     }
     // 停止 LAMBADA 测试
@@ -197,7 +197,7 @@ class _TestState extends ConsumerState<_Test> {
       prefillSpeed = max(r, prefillSpeed);
       setState(() {});
     });
-    ref.listen(P.chat.receivingTokens, (p, r) {
+    ref.listen(P.rwkv.generating, (p, r) {
       if (r != generating) {
         setState(() {
           generating = r;

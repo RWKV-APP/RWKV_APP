@@ -328,11 +328,6 @@ class _Actions extends ConsumerWidget {
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final color = Theme.of(context).colorScheme.primary;
     final loaded = ref.watch(P.rwkv.loaded);
-    final interactingInstruction = ref.watch(P.talk.interactingInstruction);
-
-    final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
-    final intonationShown = ref.watch(P.talk.intonationShown);
-    final spkShown = ref.watch(P.talk.spkShown);
 
     return Row(
       children: [
@@ -343,8 +338,6 @@ class _Actions extends ConsumerWidget {
               const _AudioButton(),
               const _SpkButton(),
               const _IntonationButton(),
-              if (!audioInteractorShown && !intonationShown && !spkShown && interactingInstruction == TTSInstruction.none)
-                const PerformanceInfo(),
             ],
           ),
         ),

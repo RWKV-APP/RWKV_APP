@@ -7,7 +7,8 @@ import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 
 class PerformanceInfo extends ConsumerWidget {
-  const PerformanceInfo({super.key});
+  final bool short;
+  const PerformanceInfo({super.key, this.short = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +30,7 @@ class PerformanceInfo extends ConsumerWidget {
           style: TS(c: qb.q(.6), s: 10),
           TextSpan(
             children: [
-              const TextSpan(text: "Prefill: "),
+              TextSpan(text: short ? "P: " : "Prefill: "),
               TextSpan(
                 text: prefillSpeed.toStringAsFixed(1),
                 style: TS(ff: effectiveMonospaceFont),
@@ -42,7 +43,7 @@ class PerformanceInfo extends ConsumerWidget {
           style: TS(c: qb.q(.6), s: 10),
           TextSpan(
             children: [
-              const TextSpan(text: "Decode: "),
+              TextSpan(text: short ? "D: " : "Decode: "),
               TextSpan(
                 text: decodeSpeed.toStringAsFixed(1),
                 style: TS(ff: effectiveMonospaceFont),

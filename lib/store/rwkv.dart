@@ -851,7 +851,7 @@ extension $RWKV on _RWKV {
   }
 
   Future<void> onThinkModeTapped() async {
-    final receiving = P.chat.receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -942,7 +942,7 @@ extension $RWKV on _RWKV {
   }
 
   void onBatchInferenceTapped() async {
-    final receiving = P.chat.receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
@@ -965,7 +965,7 @@ extension $RWKV on _RWKV {
   }
 
   void onSecondaryOptionsTapped() async {
-    final receiving = P.chat.receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;

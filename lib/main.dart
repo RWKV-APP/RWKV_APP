@@ -17,6 +17,7 @@ import 'package:zone/services/font_service.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/widgets/debugger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:zone/widgets/floating_performace_info.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -161,6 +162,7 @@ class _App extends ConsumerWidget {
             if (child != null) child,
             const Alert(),
             if (kDebugMode) const Debugger(),
+            FloatingPerformaceInfo(),
           ],
         ),
       ),

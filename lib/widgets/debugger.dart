@@ -58,7 +58,7 @@ class Debugger extends ConsumerWidget {
     final pool = ref.watch(P.msg.pool);
     final conversations = ref.watch(P.conversation.conversations);
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
-    final receivingTokens = ref.watch(P.chat.receivingTokens);
+    final receivingTokens = ref.watch(P.rwkv.generating);
 
     final loadedModels = ref.watch(P.rwkv.loadedModels);
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);

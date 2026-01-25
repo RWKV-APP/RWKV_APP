@@ -780,7 +780,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "248122b0517c6ce46cf5e5f08e45ba91a0b132cd"
+      resolved-ref: e7cc191d08192b6c7682f3bf0caad79646d4368c
       url: "https://github.com/HaloWang/gpt_markdown"
     source: git
     version: "1.1.5"

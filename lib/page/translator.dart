@@ -24,6 +24,7 @@ class PageTranslator extends ConsumerWidget {
       onTap: isDesktop ? null : () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(title),
           actions: [
             if (isDesktop)
@@ -310,10 +311,6 @@ class _InferenceInfo extends ConsumerWidget {
               trailing: isGenerating
                   ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.check_circle, color: Colors.green),
-            ),
-            const Padding(
-              padding: .symmetric(horizontal: 8.0),
-              child: PerformanceInfo(),
             ),
           ],
         ),

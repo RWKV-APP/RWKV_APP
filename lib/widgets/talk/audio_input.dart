@@ -23,7 +23,7 @@ class AudioInput extends ConsumerWidget {
 
   Future<void> _onPanStart(DragStartDetails details) async {
     qr;
-    final receiving = P.chat.receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) return;
     P.app.hapticLight();
     Alert.info(S.current.recording_your_voice);
@@ -32,7 +32,7 @@ class AudioInput extends ConsumerWidget {
 
   Future<void> _onPanEnd(DragEndDetails details) async {
     qr;
-    final receiving = P.chat.receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) return;
     P.app.hapticMedium();
     final success = await P.see.stopRecord();
@@ -42,7 +42,7 @@ class AudioInput extends ConsumerWidget {
 
   Future<void> _onPanCancel() async {
     qr;
-    final receiving = P.chat.receivingTokens.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) return;
     P.app.hapticLight();
     await P.see.stopRecord(isCancel: true);
@@ -55,7 +55,7 @@ class AudioInput extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final screenWidth = ref.watch(P.app.screenWidth);
-    final receiving = ref.watch(P.chat.receivingTokens);
+    final receiving = ref.watch(P.rwkv.generating);
     final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
 
     bool shouldShow = false;

@@ -88,7 +88,7 @@ class Message extends ConsumerWidget {
     final editingIndex = ref.watch(P.msg.editingOrRegeneratingIndex);
 
     final receiveId = ref.watch(P.chat.receiveId);
-    final receiving = ref.watch(P.chat.receivingTokens);
+    final receiving = ref.watch(P.rwkv.generating);
 
     final inSee = ref.watch(P.app.pageKey) == .see;
     final isMine = msg.isMine;

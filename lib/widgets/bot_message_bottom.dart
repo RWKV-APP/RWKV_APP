@@ -26,7 +26,7 @@ class BotMessageBottom extends ConsumerWidget {
   const BotMessageBottom(this.msg, this.index, {super.key, this.preferredDemoType, this.finalContent});
 
   void _onSharePressed() {
-    if (P.chat.receivingTokens.q) {
+    if (P.rwkv.generating.q) {
       P.chat.onStopButtonPressed();
     }
 

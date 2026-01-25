@@ -72,7 +72,6 @@ class _Interactions extends ConsumerWidget {
         if (!isAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
         if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
         if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
-        const IntrinsicWidth(child: PerformanceInfo()),
       ],
     );
   }
