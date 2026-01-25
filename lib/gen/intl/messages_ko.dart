@@ -80,19 +80,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m28(value) => "Temperature: ${value}";
 
-  static String m29(footer) => "추론${footer}: 영어";
+  static String m29(footer) => "추론${footer}-영어";
 
-  static String m30(footer) => "추론${footer}: 영어 길게";
+  static String m30(footer) => "추론${footer}-영어 길게";
 
-  static String m31(footer) => "추론${footer}: 영어 짧게";
+  static String m31(footer) => "추론${footer}-영어 짧게";
 
-  static String m32(footer) => "추론${footer}: 빠름";
+  static String m32(footer) => "추론${footer}-빠름";
 
-  static String m33(footer) => "추론${footer}: 자동";
+  static String m33(footer) => "추론${footer}-자동";
 
-  static String m34(footer) => "추론${footer}: 높음";
+  static String m34(footer) => "추론${footer}-높음";
 
-  static String m35(footer) => "추론${footer}: 끔";
+  static String m35(footer) => "추론${footer}-끔";
 
   static String m36(value) => "Top P: ${value}";
 
@@ -406,6 +406,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("대화 제목:"),
     "export_weight_file": MessageLookupByLibrary.simpleMessage("가중치 파일 내보내기"),
     "extra_large": MessageLookupByLibrary.simpleMessage("매우 크게 (130%)"),
+    "failed_to_check_for_updates": MessageLookupByLibrary.simpleMessage(
+      "업데이트 확인 실패",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("문제 보고"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("파일이 이미 존재합니다"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("파일을 찾을 수 없습니다"),
@@ -438,6 +441,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("강제 다크 모드"),
+    "found_new_version_available": MessageLookupByLibrary.simpleMessage(
+      "새 버전 사용 가능함을 발견했습니다",
+    ),
     "frequency_penalty_with_value": m11,
     "from_model": MessageLookupByLibrary.simpleMessage("모델에서: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("갤러리"),
@@ -470,6 +476,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home": MessageLookupByLibrary.simpleMessage("홈"),
     "http_service_port": m12,
     "human": MessageLookupByLibrary.simpleMessage("인간"),
+    "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKV가 말하게 하고 싶어요...",
     ),
@@ -560,6 +567,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "new_conversation": MessageLookupByLibrary.simpleMessage("새 대화"),
     "new_game": MessageLookupByLibrary.simpleMessage("새 게임"),
+    "new_version_available": MessageLookupByLibrary.simpleMessage("새 버전 사용 가능"),
     "new_version_found": MessageLookupByLibrary.simpleMessage("새 버전 발견"),
     "no_audio_file": MessageLookupByLibrary.simpleMessage("오디오 파일 없음"),
     "no_browser_windows_connected": MessageLookupByLibrary.simpleMessage(
@@ -571,6 +579,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_data": MessageLookupByLibrary.simpleMessage("데이터 없음"),
     "no_files_in_zip": MessageLookupByLibrary.simpleMessage(
       "ZIP 파일에서 유효한 가중치 파일을 찾을 수 없습니다",
+    ),
+    "no_latest_version_info": MessageLookupByLibrary.simpleMessage(
+      "최신 버전 정보가 없습니다",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("내보낼 메시지 없음"),
     "no_model_selected": MessageLookupByLibrary.simpleMessage("선택된 모델 없음"),

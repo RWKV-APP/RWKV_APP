@@ -367,7 +367,7 @@ class Message extends ConsumerWidget {
                   AnimatedContainer(
                     duration: 250.ms,
                     height: cotContentHeight,
-                    child: MarkdownRender(raw: cotContent, color: qb.q(.7)),
+                    child: MarkdownRender(raw: cotContent, color: qb.q(.55)),
                   ),
                 // 🔥 Bot message cot result
                 if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) 12.h,

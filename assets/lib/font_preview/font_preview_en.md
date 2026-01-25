@@ -63,7 +63,11 @@ Body text (font size: {bodyBaseSize} * {scale} = {bodySize})
 
 ## 5. Horizontal Rules (Thematic Breaks)
 
+Content before horizontal rule
+
 ---
+
+Content after horizontal rule
 
 ## 6. Code Blocks
 

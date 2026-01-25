@@ -63,7 +63,11 @@
 
 ## 5. 수평선 (Horizontal Rules)
 
+수평선 이전의 내용
+
 ---
+
+수평선 이후의 내용
 
 ## 6. 코드 블록 (Code Blocks)
 

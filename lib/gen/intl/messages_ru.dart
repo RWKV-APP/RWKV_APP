@@ -87,19 +87,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m28(value) => "Temperature: ${value}";
 
-  static String m29(footer) => "Мышление${footer}: Англ";
+  static String m29(footer) => "Мышление${footer}-Англ";
 
-  static String m30(footer) => "Мышление${footer}: Англ Длинно";
+  static String m30(footer) => "Мышление${footer}-Англ Длинно";
 
-  static String m31(footer) => "Мышление${footer}: Англ Коротко";
+  static String m31(footer) => "Мышление${footer}-Англ Коротко";
 
-  static String m32(footer) => "Мышление${footer}: Быстро";
+  static String m32(footer) => "Мышление${footer}-Быстро";
 
-  static String m33(footer) => "Мышление${footer}: Авто";
+  static String m33(footer) => "Мышление${footer}-Авто";
 
-  static String m34(footer) => "Мышление${footer}: Вкл";
+  static String m34(footer) => "Мышление${footer}-Вкл";
 
-  static String m35(footer) => "Мышление${footer}: Выкл";
+  static String m35(footer) => "Мышление${footer}-Выкл";
 
   static String m36(value) => "Top P: ${value}";
 
@@ -500,6 +500,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Экспортировать файл весов",
     ),
     "extra_large": MessageLookupByLibrary.simpleMessage("Очень большой (130%)"),
+    "failed_to_check_for_updates": MessageLookupByLibrary.simpleMessage(
+      "Не удалось проверить обновления",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("Обратная связь"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "Файл уже существует",
@@ -539,6 +542,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage(
       "Принудительный тёмный режим",
+    ),
+    "found_new_version_available": MessageLookupByLibrary.simpleMessage(
+      "Обнаружена доступная новая версия",
     ),
     "frequency_penalty_with_value": m11,
     "from_model": MessageLookupByLibrary.simpleMessage("От модели: %s"),
@@ -584,6 +590,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home": MessageLookupByLibrary.simpleMessage("Главная"),
     "http_service_port": m12,
     "human": MessageLookupByLibrary.simpleMessage("Человек"),
+    "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "Я хочу, чтобы RWKV сказал...",
     ),
@@ -696,6 +703,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "new_conversation": MessageLookupByLibrary.simpleMessage("Новый диалог"),
     "new_game": MessageLookupByLibrary.simpleMessage("Новая игра"),
+    "new_version_available": MessageLookupByLibrary.simpleMessage(
+      "Доступна новая версия",
+    ),
     "new_version_found": MessageLookupByLibrary.simpleMessage(
       "Найдена новая версия",
     ),
@@ -715,6 +725,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_data": MessageLookupByLibrary.simpleMessage("Нет данных"),
     "no_files_in_zip": MessageLookupByLibrary.simpleMessage(
       "В ZIP-файле не найдено действительных файлов весов",
+    ),
+    "no_latest_version_info": MessageLookupByLibrary.simpleMessage(
+      "Нет информации о последней версии",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "Нет сообщений для экспорта",

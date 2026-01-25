@@ -206,6 +206,8 @@ class _MarkdownBody extends ConsumerWidget {
 
     final s = S.of(context);
 
+    final displayText = s.decode_param + s.hyphen + decodeParam!.displayName;
+
     final Widget? decodeParamWidget = decodeParam != null
         ? Align(
             alignment: .topLeft,
@@ -217,7 +219,7 @@ class _MarkdownBody extends ConsumerWidget {
                   borderRadius: .circular(4),
                 ),
                 padding: const .symmetric(horizontal: 6, vertical: 2),
-                child: T(s.decode_param + s.colon + decodeParam!.displayName),
+                child: T(displayText),
               ),
             ),
           )
@@ -237,7 +239,7 @@ class _MarkdownBody extends ConsumerWidget {
       crossAxisAlignment: .stretch,
       children: [
         ?decodeParamWidget,
-        if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.6)),
+        if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.55)),
         if (output.isNotEmpty) 4.h,
         if (output.isNotEmpty) MarkdownRender(raw: output),
       ],

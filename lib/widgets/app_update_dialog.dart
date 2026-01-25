@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 
+@Deprecated('Use VersionInfoPanel instead')
 class AppUpdateDialog extends StatefulWidget {
   final String url;
 

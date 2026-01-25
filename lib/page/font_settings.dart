@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
@@ -248,7 +250,7 @@ class _PreviewCard extends StatelessWidget {
   }
 }
 
-class _SettingsControls extends StatelessWidget {
+class _SettingsControls extends ConsumerWidget {
   final bool useSystemSize;
   final double currentScale;
   final Color primary;
@@ -277,10 +279,13 @@ class _SettingsControls extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final scalePairs = P.preference.textScalePairs;
     final scaleValues = scalePairs.keys.where((k) => k > 0).toList()..sort();
+    double paddingBottom = ref.watch(P.app.paddingBottom);
+    final qb = ref.watch(P.app.qb);
+    paddingBottom = max(paddingBottom, 8);
 
     return Container(
       decoration: BoxDecoration(
@@ -293,97 +298,102 @@ class _SettingsControls extends StatelessWidget {
           ),
         ],
       ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const .all(8),
-          child: Column(
-            mainAxisSize: .min,
+      child: Column(
+        mainAxisSize: .min,
+        children: [
+          // Use system font size toggle
+          C(
+            decoration: BD(color: qb.q(.1)),
+            height: 1,
+          ),
+          8.h,
+          Row(
             children: [
-              // Use system font size toggle
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      s.font_size_follow_system,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: onSurface,
-                      ),
-                    ),
+              12.w,
+              Expanded(
+                child: Text(
+                  s.font_size_follow_system,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: onSurface,
                   ),
-                  Switch(
-                    value: useSystemSize,
-                    onChanged: onUseSystemSizeChanged,
-                  ),
-                ],
+                ),
               ),
-              // Slider - only show when not using system size
-              AnimatedSize(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-                child: useSystemSize
-                    ? const SizedBox.shrink()
-                    : Padding(
-                        padding: const .only(top: 8),
-                        child: Column(
+              Switch(
+                value: useSystemSize,
+                onChanged: onUseSystemSizeChanged,
+              ),
+              12.w,
+            ],
+          ),
+          // Slider - only show when not using system size
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            child: useSystemSize
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: const .only(top: 8),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: .spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: .spaceBetween,
-                              children: [
-                                Text(
-                                  'A',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: onSurface.q(.6),
-                                  ),
-                                ),
-                                Text(
-                                  _getScaleLabel(currentScale),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: .w500,
-                                    color: primary,
-                                  ),
-                                ),
-                                Text(
-                                  'A',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: onSurface.q(.6),
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              'A',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: onSurface.q(.6),
+                              ),
                             ),
-                            Slider(
-                              value: currentScale,
-                              min: scaleValues.first,
-                              max: scaleValues.last,
-                              divisions: scaleValues.length - 1,
-                              onChanged: (value) {
-                                // Snap to nearest defined value
-                                double closest = scaleValues.first;
-                                double minDiff = (value - closest).abs();
-                                for (final sv in scaleValues) {
-                                  final diff = (value - sv).abs();
-                                  if (diff < minDiff) {
-                                    minDiff = diff;
-                                    closest = sv;
-                                  }
-                                }
-                                onScaleChanged(closest);
-                              },
+                            Text(
+                              _getScaleLabel(currentScale),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: .w500,
+                                color: primary,
+                              ),
+                            ),
+                            Text(
+                              'A',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: onSurface.q(.6),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-              ),
-              const Divider(),
-              // Font selection buttons
-              const _FontSelectionButtons(),
-            ],
+                        Slider(
+                          value: currentScale,
+                          min: scaleValues.first,
+                          max: scaleValues.last,
+                          divisions: scaleValues.length - 1,
+                          onChanged: (value) {
+                            // Snap to nearest defined value
+                            double closest = scaleValues.first;
+                            double minDiff = (value - closest).abs();
+                            for (final sv in scaleValues) {
+                              final diff = (value - sv).abs();
+                              if (diff < minDiff) {
+                                minDiff = diff;
+                                closest = sv;
+                              }
+                            }
+                            onScaleChanged(closest);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
           ),
-        ),
+          C(
+            decoration: BD(color: qb.q(.1)),
+            margin: const .only(top: 8),
+            height: 1,
+          ),
+          const _FontSelectionButtons(),
+          paddingBottom.h,
+        ],
       ),
     );
   }

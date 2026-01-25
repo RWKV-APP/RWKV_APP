@@ -84,6 +84,15 @@ class _Preference {
   /// 偏好的等宽字体（null 表示使用系统默认）
   late final preferredMonospaceFont = qs<String?>(null);
 
+  /// 如果检测到最新版本为 100, 且, latestSkippedBuildNumber = 50, 那么显示版本更新信息, 认为用户没有点击过 "跳过这个版本"
+  ///
+  /// 如果检测到最新版本为 100, 且, latestSkippedBuildNumber = 100, 那么不显示版本更新信息, 认为用户点击过 "跳过这个版本"
+  ///
+  /// 如果检测到最新版本为 100, 且, latestSkippedBuildNumber = 101, 那么不显示版本更新信息, 认为用户点击过 "跳过这个版本"
+  ///
+  /// 跳过版本仅用于自动检查更新, 如果用户手动点击检查更新, 我们依然会显示新版本的弹窗
+  late final latestSkippedBuildNumber = qs<int>(0);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -201,6 +210,13 @@ extension _$Preference on _Preference {
       } else {
         await P.rwkv.syncSamplerParamsFromDefault(type);
       }
+
+      final latestSkippedBuildNumber = sp.getInt("halo_state.latestSkippedBuildNumber");
+      if (latestSkippedBuildNumber != null) {
+        this.latestSkippedBuildNumber.q = latestSkippedBuildNumber;
+      } else {
+        this.latestSkippedBuildNumber.q = 0;
+      }
     }
 
     final uiFont = sp.getString("halo_state.preferredUIFont");
@@ -223,13 +239,6 @@ extension _$Preference on _Preference {
     this.dumpping.q = dumpping;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool("halo_state.dumpping", dumpping);
-  }
-
-  Future<void> _saveLatestRuntimeAddress(int latestRuntimeAddress) async {
-    qqr("saveLatestRuntimeAddress: $latestRuntimeAddress");
-    this.latestRuntimeAddress.q = latestRuntimeAddress;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setInt("halo_state.latestRuntimeAddress", latestRuntimeAddress);
   }
 }
 
@@ -366,6 +375,12 @@ extension $Preference on _Preference {
     await sp.setDouble("halo_state.custom.presencePenalty", P.rwkv.arguments(Argument.presencePenalty).q);
     await sp.setDouble("halo_state.custom.frequencyPenalty", P.rwkv.arguments(Argument.frequencyPenalty).q);
     await sp.setDouble("halo_state.custom.penaltyDecay", P.rwkv.arguments(Argument.penaltyDecay).q);
+  }
+
+  void saveLatestSkippedBuildNumber(int buildNumber) async {
+    latestSkippedBuildNumber.q = buildNumber;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt("halo_state.latestSkippedBuildNumber", buildNumber);
   }
 
   Future<void> setPreferredUIFont(String? fontFamily) async {

@@ -7,8 +7,6 @@ class _App extends RawApp {
 
   late final db.AppDatabase _db;
 
-  DownloadTask? _appUpdateTask;
-
   // ===========================================================================
   // Getters
   // ===========================================================================
@@ -47,20 +45,11 @@ class _App extends RawApp {
   /// 当前正在运行的任务
   late final demoType = qs<DemoType>(.chat);
 
-  late final _latestBuild = qs(-1);
-  late final _latestBuildIos = qs(-1);
-  late final _noteZh = qs<List<String>>([]);
-  late final _noteEn = qs<List<String>>([]);
-  late final _androidUrl = qs<String?>(null);
-  late final _androidApkUrl = qs<String?>(null);
-  late final _iosUrl = qs<String?>(null);
   late final shareChatQrCodeZh = qs<String?>(null);
   late final shareChatQrCodeEn = qs<String?>(null);
 
   /// 全部的配置信息, 包含所有功能种类的权重
   late final _config = qs<Map<String, dynamic>?>(null);
-
-  late final _newVersionDialogShown = qs(false);
 
   final _isDesktop = qs(false);
   final _isMobile = qs(true);
@@ -72,8 +61,6 @@ class _App extends RawApp {
 
   late final tabIndex = qs(0);
 
-  late final apkDownloadState = qs<TaskUpdate?>(null);
-
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -82,8 +69,6 @@ class _App extends RawApp {
 
   late final isDesktop = qp((ref) => ref.watch(_isDesktop));
   late final isMobile = qp((ref) => ref.watch(_isMobile));
-
-  late final highlighter = qs<Highlighter?>(null);
 
   /// Windows-specific documents directory using AppData (for sandbox-like behavior)
   late final _windowsDocumentsDir = qs<Directory?>(null);
@@ -105,6 +90,9 @@ class _App extends RawApp {
     }
     return ref.watch(documentsDir);
   });
+
+  late final checkingLatestVersion = qs(false);
+  late final latestVersionInfo = qs<VersionInfo?>(null);
 }
 
 /// Public methods
@@ -165,28 +153,74 @@ extension $App on _App {
   }
 
   void checkUpdates() async {
-    final allConfig = await _getRemoteConfig();
-    final config = allConfig?[demoType.q.name];
-    if (config == null) {
-      qqe("config is null, demoType: ${demoType.q.name}");
-      return;
+    qr;
+    checkingLatestVersion.q = true;
+    VersionInfo? latestVersionInfo;
+    try {
+      latestVersionInfo = await _getLatestVersionInfo();
+    } catch (e) {
+      qqe(e);
+      Alert.error(S.current.failed_to_check_for_updates);
+      Sentry.captureException(e, stackTrace: StackTrace.current);
+    } finally {
+      checkingLatestVersion.q = false;
     }
-    _latestBuild.q = config["latest_build"] as int;
-    _latestBuildIos.q = config["latest_build_ios"] as int;
-    if (Platform.isIOS && _latestBuildIos.q <= int.parse(buildNumber.q)) {
+
+    qqr("latest version info: $latestVersionInfo");
+    if (latestVersionInfo == null) {
       Alert.info(S.current.app_is_already_up_to_date);
       return;
     }
-    if (_latestBuild.q <= int.parse(buildNumber.q)) {
-      Alert.info(S.current.app_is_already_up_to_date);
-      return;
+
+    this.latestVersionInfo.q = latestVersionInfo;
+
+    if (!kDebugMode) {
+      final latestBuild = latestVersionInfo.build;
+      if (latestBuild <= int.parse(buildNumber.q)) {
+        Alert.info(S.current.app_is_already_up_to_date);
+        return;
+      }
     }
-    await _showNewVersionDialogIfNeeded();
+
+    Alert.success(S.current.new_version_available);
+    await VersionInfoPanel.show();
   }
 
   void onTabSelected(int index) {
     tabIndex.q = index;
     replace(.tabs[index]);
+  }
+
+  void skipThisVersion() {
+    final latestVersionInfo = this.latestVersionInfo.q;
+    if (latestVersionInfo == null) {
+      qqe("latestVersionInfo is null");
+      return;
+    }
+    final build = latestVersionInfo.build;
+    P.preference.saveLatestSkippedBuildNumber(build);
+    pop();
+  }
+
+  Future<void> onDownloadNowClicked() async {
+    final latestVersionInfo = this.latestVersionInfo.q;
+
+    if (latestVersionInfo == null) {
+      qqe("latestVersionInfo is null");
+      Alert.error(S.current.no_latest_version_info);
+      return;
+    }
+
+    try {
+      await launchUrl(
+        Uri.parse("https://rwkv.halowang.cloud/"),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      qqe(e);
+      // Alert.error(S.current.failed_to_open_url);
+      // Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
   }
 }
 
@@ -199,6 +233,8 @@ extension _$App on _App {
 
     _isDesktop.q = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
     _isMobile.q = Platform.isAndroid || Platform.isIOS;
+
+    await init();
 
     // On Windows, use AppData instead of Documents for sandbox-like behavior
     if (Platform.isWindows) {
@@ -219,8 +255,6 @@ extension _$App on _App {
         qqw("Windows: AppData directory initialization failed, effectiveDocumentsDir will return null");
       }
     }
-
-    await init();
 
     late final String name;
     if (kDebugMode) {
@@ -244,11 +278,6 @@ extension _$App on _App {
     }
 
     WidgetsBinding.instance.addObserver(this);
-
-    syncConfig().then((_) async {
-      await Future.delayed(const Duration(milliseconds: 1000));
-      _showNewVersionDialogIfNeeded();
-    });
 
     lifecycleState.lv(_onLifecycleStateChanged);
 
@@ -301,11 +330,15 @@ extension _$App on _App {
     await Highlighter.initialize(['dart', 'yaml', 'sql', 'python', "javascript"]);
     Future.delayed(const Duration(milliseconds: 1000)).then((_) async {
       qqr("load light theme");
-      var theme = await HighlighterTheme.loadDarkTheme();
-      highlighter.q = Highlighter(
+      final theme = await HighlighterTheme.loadDarkTheme();
+      Highlighter(
         language: 'javascript',
         theme: theme,
       );
+    });
+
+    Future.delayed(const Duration(milliseconds: 5000)).then((_) {
+      checkUpdates();
     });
   }
 
@@ -348,73 +381,6 @@ extension _$App on _App {
 
   Future<void> _onLifecycleStateChanged() async {}
 
-  Future<void> _showNewVersionDialogIfNeeded() async {
-    if (!Platform.isIOS && !Platform.isAndroid) return;
-    if (Platform.isAndroid && _latestBuild.q <= int.parse(buildNumber.q)) return;
-    if (Platform.isIOS && _latestBuildIos.q <= int.parse(buildNumber.q)) return;
-
-    qq;
-
-    final androidUrl = _androidUrl.q ?? '';
-    final androidApkUrl = _androidApkUrl.q ?? '';
-    final iosUrl = _iosUrl.q;
-
-    if (Platform.isAndroid && (androidUrl.isEmpty)) return;
-
-    if (Platform.isIOS && (iosUrl == null || iosUrl.isEmpty)) return;
-
-    await Future.delayed(const Duration(milliseconds: 1));
-
-    final noteZh = _noteZh.q;
-    final noteEn = _noteEn.q;
-
-    final currentLocale = Intl.getCurrentLocale();
-    final useEn = currentLocale.startsWith("en");
-
-    final message = useEn ? noteEn.join("\n") : noteZh.join("\n");
-
-    final showInAppUpdate = Platform.isAndroid && androidApkUrl.isNotEmpty;
-
-    qqq('app update: \n$androidUrl\n$androidApkUrl\n$iosUrl\n$message');
-
-    _newVersionDialogShown.q = true;
-    final res = await showAlertDialog(
-      context: getContext()!,
-      title: S.current.new_version_found,
-      message: message,
-      // okLabel: S.current.update_now,
-      actions: [
-        AlertDialogAction(key: 1, label: S.current.cancel_update),
-        if (showInAppUpdate)
-          AlertDialogAction(
-            key: 2,
-            label: S.current.download_from_browser,
-          ),
-        AlertDialogAction(key: 3, label: S.current.update_now),
-      ],
-      // cancelLabel: S.current.cancel_update,
-    );
-    _newVersionDialogShown.q = false;
-
-    if (res == 1 || res == null) return;
-
-    if (Platform.isAndroid) {
-      if (res == 3 && showInAppUpdate) {
-        _startInAppUpdate(androidApkUrl);
-      } else {
-        launchUrl(Uri.parse(androidUrl), mode: LaunchMode.externalApplication);
-      }
-    }
-
-    if (Platform.isIOS) {
-      if (iosUrl == null) {
-        qqe("iosUrl is null");
-        return;
-      }
-      launchUrl(Uri.parse(iosUrl), mode: LaunchMode.externalApplication);
-    }
-  }
-
   /// 解析配置, 只解析 demo 相关的数据, 不解析所有数据
   Future<void> _parseConfigForDemoSpecificData(Map<String, dynamic>? json) async {
     if (json == null) {
@@ -437,15 +403,8 @@ extension _$App on _App {
       return;
     }
 
-    _latestBuild.q = build.toInt();
-    _latestBuildIos.q = buildIos.toInt();
-    _noteZh.q = (json["note_zh"] as List<dynamic>).m((e) => e.toString());
-    _noteEn.q = (json["note_en"] as List<dynamic>).m((e) => e.toString());
-    _androidUrl.q = json["android_url"];
-    _androidApkUrl.q = json["android_apk_url"];
     shareChatQrCodeEn.q = json["share_chat_qrcode_en"];
     shareChatQrCodeZh.q = json["share_chat_qrcode_zh"];
-    _iosUrl.q = json["ios_url"].toString();
     featureRollout.q =
         FeatureRollout.fromMap(json["controlled_rollout"]) // merge with dev options
             .merge(P.preference.featureRollout);
@@ -479,6 +438,169 @@ extension _$App on _App {
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
     return null;
+  }
+
+  /// 根据运行环境获取对应的 distribution keys
+  Future<List<String>> _getDistributionKeysForPlatform() async {
+    if (Platform.isMacOS) {
+      return [
+        'macosGR',
+        'macosHF',
+        'macosAF',
+        'macosHFM',
+      ];
+    } else if (Platform.isWindows) {
+      try {
+        // 检测 Windows 架构
+        // 在 Windows 上，可以通过环境变量 PROCESSOR_ARCHITECTURE 来判断
+        final processorArch = Platform.environment['PROCESSOR_ARCHITECTURE']?.toUpperCase() ?? '';
+        final processorArchW6432 = Platform.environment['PROCESSOR_ARCHITEW6432']?.toUpperCase() ?? '';
+
+        // ARM64 架构会显示为 ARM64
+        final isArm64 = processorArch == 'ARM64' || processorArchW6432 == 'ARM64';
+
+        if (isArm64) {
+          return [
+            'winArm64GR',
+            'winArm64ZipGR',
+            'winArm64HF',
+            'winArm64AF',
+            'winArm64HFM',
+            'winArm64ZipHF',
+            'winArm64ZipAF',
+            'winArm64ZipHFM',
+          ];
+        } else {
+          // 默认使用 x64 keys
+          return [
+            'winZipGR',
+            'winHF',
+            'winAF',
+            'winGR',
+            'winHFM',
+            'winZipHF',
+            'winZipAF',
+            'winZipHFM',
+          ];
+        }
+      } catch (e) {
+        qqe("Failed to detect Windows architecture: $e");
+        // 默认返回 x64 keys
+        return [
+          'winGR',
+          'winZipGR',
+          'winHF',
+          'winAF',
+          'winHFM',
+          'winZipHF',
+          'winZipAF',
+          'winZipHFM',
+        ];
+      }
+    } else if (Platform.isLinux) {
+      return [
+        'linuxGR',
+        'linuxHF',
+        'linuxAF',
+        'linuxHFM',
+      ];
+    } else if (Platform.isAndroid) {
+      // Android 平台：请求所有可用的分发渠道
+      return [
+        'androidGR',
+        'androidHF',
+        'androidAF',
+        'androidHFM',
+        'androidPgyerAPK',
+        'androidPgyer',
+        'androidGooglePlay',
+      ];
+    } else if (Platform.isIOS) {
+      // iOS 平台：请求 TestFlight 和 App Store
+      return [
+        'iOSTF',
+        'iOSAS',
+      ];
+    } else {
+      // 其他未知平台
+      return [];
+    }
+  }
+
+  /// 获取最新的版本信息, 返回 false 代表无需更新
+  Future<VersionInfo?> _getLatestVersionInfo() async {
+    qr;
+
+    // 根据运行环境获取对应的 keys
+    final keys = await _getDistributionKeysForPlatform();
+
+    if (keys.isEmpty) return null;
+
+    // 构建查询参数，使用 List 来支持多个相同的 key
+    // NestJS 的 @Query('key') 可以接受数组，格式为 ?key=value1&key=value2
+    final queryParts = keys.map((key) => 'key=${Uri.encodeComponent(key)}').toList();
+    final queryString = queryParts.join('&');
+
+    // 构建完整的 URL，包含查询参数
+    final baseUrl = "${Config.apiv2}/distributions/latest";
+    final fullUrl = "$baseUrl?$queryString";
+
+    final res = await _get(fullUrl, timeout: 2000.ms);
+
+    if (res is! Map) {
+      qqe("res is not a Map, res: $res");
+      return null;
+    }
+
+    // 从返回的数据中找到 build 号最高的那个
+    int? highestBuild;
+    Map<String, dynamic>? highestBuildRecord;
+    String? highestBuildKey;
+
+    for (final entry in res.entries) {
+      final key = entry.key;
+      final value = entry.value;
+
+      if (value == null) continue;
+
+      if (value is Map) {
+        final build = value['build'];
+        if (build is int) {
+          if (highestBuild == null || build > highestBuild) {
+            highestBuild = build;
+            highestBuildRecord = Map<String, dynamic>.from(value);
+            highestBuildKey = key;
+          }
+
+          if (build == highestBuild && key.endsWith('GR')) {
+            highestBuild = build;
+            highestBuildRecord = Map<String, dynamic>.from(value);
+            highestBuildKey = key;
+          }
+        }
+      }
+    }
+
+    if (highestBuildRecord == null || highestBuildKey == null) {
+      // 这里可以将结果存储到状态中或执行其他操作
+      // 例如：_latestBuild.q = highestBuild;
+      // 例如：_latestDownloadUrl.q = highestBuildRecord['url'];
+      return null;
+    }
+
+    if (highestBuild == null) return null;
+
+    return .fromJson(highestBuildRecord);
+  }
+
+  Future<List<String>> _getReleaseNotes() async {
+    final baseUrl = "${Config.apiv2}/distributions/release-notes";
+    final build = int.parse(buildNumber.q);
+    final fullUrl = "$baseUrl?build=$build";
+    final res = await _get(fullUrl, timeout: 2000.ms);
+    if (res is! List) return [];
+    return (res).m((e) => e.toString());
+    return [];
   }
 
   /// 从本地沙盒中加载配置, 如果本地沙盒中没有, 则从应用包中加载, 并存储到本地沙盒中
@@ -519,64 +641,64 @@ extension _$App on _App {
     return (json, sp);
   }
 
-  void _startInAppUpdate(String url) async {
-    final cacheDir = await getApplicationCacheDirectory();
-    final apkPath = '${cacheDir.path}/rwkv_chat_${_latestBuild.q}.apk';
-    if (await File(apkPath).exists()) {
-      _installApk(apkPath);
-      return;
-    }
-    _appUpdateTask = await DownloadTask.create(url: url, path: apkPath);
-    _appUpdateTask!
-        .events() //
-        .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
-        .listen(
-          (event) async {
-            qqq(
-              'download update: ${event.progress.toStringAsFixed(1)}% '
-              'speed:${event.speedInMB.toStringAsFixed(2)}MB/s',
-            );
-            if (event.state == TaskState.stopped) {
-              _appUpdateTask = null;
-            }
-            if (event.state == TaskState.completed) {
-              _appUpdateTask = null;
-              _installApk(apkPath);
-            }
-            switch (event.state) {
-              case TaskState.running:
-                apkDownloadState.q = event;
-                break;
-              default:
-                apkDownloadState.q = null;
-            }
-          },
-          onDone: () async {
-            _appUpdateTask = null;
-            apkDownloadState.q = null;
-          },
-          onError: (e) {
-            qqe(e);
-            _appUpdateTask = null;
-            apkDownloadState.q = null;
-          },
-        );
-    try {
-      await _appUpdateTask!.start();
-      Alert.success(S.current.start_download_updates_);
-    } catch (e) {
-      qqe(e);
-      Alert.error(S.current.download_failed);
-      Sentry.captureException(e, stackTrace: StackTrace.current);
-    }
-  }
+  // void _startInAppUpdate(String url) async {
+  //   final cacheDir = await getApplicationCacheDirectory();
+  //   final apkPath = '${cacheDir.path}/rwkv_chat_${_latestBuild.q}.apk';
+  //   if (await File(apkPath).exists()) {
+  //     _installApk(apkPath);
+  //     return;
+  //   }
+  //   _appUpdateTask = await DownloadTask.create(url: url, path: apkPath);
+  //   _appUpdateTask!
+  //       .events() //
+  //       .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
+  //       .listen(
+  //         (event) async {
+  //           qqq(
+  //             'download update: ${event.progress.toStringAsFixed(1)}% '
+  //             'speed:${event.speedInMB.toStringAsFixed(2)}MB/s',
+  //           );
+  //           if (event.state == TaskState.stopped) {
+  //             _appUpdateTask = null;
+  //           }
+  //           if (event.state == TaskState.completed) {
+  //             _appUpdateTask = null;
+  //             _installApk(apkPath);
+  //           }
+  //           switch (event.state) {
+  //             case TaskState.running:
+  //               apkDownloadState.q = event;
+  //               break;
+  //             default:
+  //               apkDownloadState.q = null;
+  //           }
+  //         },
+  //         onDone: () async {
+  //           _appUpdateTask = null;
+  //           apkDownloadState.q = null;
+  //         },
+  //         onError: (e) {
+  //           qqe(e);
+  //           _appUpdateTask = null;
+  //           apkDownloadState.q = null;
+  //         },
+  //       );
+  //   try {
+  //     await _appUpdateTask!.start();
+  //     Alert.success(S.current.start_download_updates_);
+  //   } catch (e) {
+  //     qqe(e);
+  //     Alert.error(S.current.download_failed);
+  //     Sentry.captureException(e, stackTrace: StackTrace.current);
+  //   }
+  // }
 
-  void _installApk(String apkPath) async {
-    try {
-      final utils = const MethodChannel("utils");
-      await utils.invokeMethod('installApk', {"path": apkPath});
-    } catch (e) {
-      qqe(e);
-    }
-  }
+  // void _installApk(String apkPath) async {
+  //   try {
+  //     final utils = const MethodChannel("utils");
+  //     await utils.invokeMethod('installApk', {"path": apkPath});
+  //   } catch (e) {
+  //     qqe(e);
+  //   }
+  // }
 }

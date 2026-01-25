@@ -1,6 +1,5 @@
 part of 'p.dart';
 
-
 /// Error actions
 enum _EA {
   alert,
@@ -49,6 +48,7 @@ Future<Object?> _post(
   ContentType contentType = ContentType.json,
   List<_EA>? ea = const [_EA.signOut, _EA.console],
   Duration timeout = Config.timeout,
+  String? domain,
   bool requireSigned = false,
   String token = "",
 }) async {
@@ -66,7 +66,7 @@ Future<Object?> _post(
     while (url.startsWith("/")) {
       url = url.substring(1);
     }
-    final r = Config.domain.split("://");
+    final r = (domain ?? Config.domain).split("://");
     uri = Uri(
       scheme: r[0],
       host: r[1],
@@ -110,6 +110,7 @@ Stream<String> _postStreaming(
   ContentType contentType = ContentType.json,
   List<_EA>? ea = const [_EA.signOut, _EA.console],
   Duration timeout = Config.timeout,
+  String? domain,
   Map<String, String> headers = const {},
 }) async* {
   ea = ea ?? [];
@@ -117,7 +118,7 @@ Stream<String> _postStreaming(
   while (url.startsWith("/")) {
     url = url.substring(1);
   }
-  final r = Config.domain.split("://");
+  final r = (domain ?? Config.domain).split("://");
   final uri = Uri(
     scheme: r[0],
     host: r[1],
@@ -165,9 +166,10 @@ Future<Object?> _postMultipart(
   List<File> files = const [],
   List<_EA>? ea = const [_EA.signOut, _EA.console],
   Duration timeout = Config.timeout,
+  String? domain,
 }) async {
   ea = ea ?? [];
-  final r = Config.domain.split("://");
+  final r = (domain ?? Config.domain).split("://");
   final uri = Uri(
     scheme: r[0],
     host: r[1],
@@ -209,10 +211,11 @@ Future<Object?> _put(
   ContentType contentType = ContentType.json,
   List<_EA>? ea = const [_EA.signOut, _EA.console],
   Duration timeout = Config.timeout,
+  String? domain,
 }) async {
   ea = ea ?? [];
   try {
-    final uri = Uri.parse(Config.domain + url);
+    final uri = Uri.parse((domain ?? Config.domain) + url);
     final headers = _buildHeaders();
     late final Object? findlBody;
     switch (contentType) {
@@ -252,13 +255,14 @@ Future<Object?> _get(
   ContentType contentType = ContentType.json,
   List<_EA>? ea = const [_EA.signOut, _EA.console],
   Duration timeout = Config.timeout,
+  String? domain,
 }) async {
   ea = ea ?? [];
   try {
     while (url.startsWith("/")) {
       url = url.substring(1);
     }
-    final r = Config.domain.split("://");
+    final r = (domain ?? Config.domain).split("://");
     Uri uri = Uri(
       scheme: r[0],
       host: r[1],
@@ -308,9 +312,10 @@ Future<Object?> _delete(
   ContentType contentType = ContentType.json,
   List<_EA>? ea = const [_EA.signOut, _EA.console],
   Duration timeout = Config.timeout,
+  String? domain,
 }) async {
   ea = ea ?? [];
-  final r = Config.domain.split("://");
+  final r = (domain ?? Config.domain).split("://");
   final uri = Uri(
     scheme: r[0],
     host: r[1],

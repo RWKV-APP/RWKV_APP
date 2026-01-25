@@ -79,19 +79,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m28(value) => "Temperature: ${value}";
 
-  static String m29(footer) => "推理${footer}: 英";
+  static String m29(footer) => "推理${footer}-英";
 
-  static String m30(footer) => "推理${footer}: 英长";
+  static String m30(footer) => "推理${footer}-英长";
 
-  static String m31(footer) => "推理${footer}: 英短";
+  static String m31(footer) => "推理${footer}-英短";
 
-  static String m32(footer) => "推理${footer}: 快";
+  static String m32(footer) => "推理${footer}-快";
 
-  static String m33(footer) => "推理${footer}: 中";
+  static String m33(footer) => "推理${footer}-中";
 
-  static String m34(footer) => "推理${footer}: 高";
+  static String m34(footer) => "推理${footer}-高";
 
-  static String m35(footer) => "推理${footer}: 关";
+  static String m35(footer) => "推理${footer}-关";
 
   static String m36(value) => "Top P: ${value}";
 
@@ -375,6 +375,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("会话标题:"),
     "export_weight_file": MessageLookupByLibrary.simpleMessage("导出权重文件"),
     "extra_large": MessageLookupByLibrary.simpleMessage("特大 (130%)"),
+    "failed_to_check_for_updates": MessageLookupByLibrary.simpleMessage(
+      "检查更新失败",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("反馈问题"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("文件已存在"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("文件未找到"),
@@ -403,6 +406,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "font_size_follow_system": MessageLookupByLibrary.simpleMessage("字体大小跟随系统"),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("强制使用深色模式"),
+    "found_new_version_available": MessageLookupByLibrary.simpleMessage(
+      "发现新版本可用",
+    ),
     "frequency_penalty_with_value": m11,
     "from_model": MessageLookupByLibrary.simpleMessage("来自模型: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("相册"),
@@ -435,6 +441,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home": MessageLookupByLibrary.simpleMessage("主页"),
     "http_service_port": m12,
     "human": MessageLookupByLibrary.simpleMessage("人类"),
+    "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想让 RWKV 说..."),
     "idle": MessageLookupByLibrary.simpleMessage("空闲"),
     "imitate": m13,
@@ -511,6 +518,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "new_conversation": MessageLookupByLibrary.simpleMessage("开始新对话"),
     "new_game": MessageLookupByLibrary.simpleMessage("新游戏"),
+    "new_version_available": MessageLookupByLibrary.simpleMessage("新版本可用"),
     "new_version_found": MessageLookupByLibrary.simpleMessage("发现新版本"),
     "no_audio_file": MessageLookupByLibrary.simpleMessage("没有音频文件"),
     "no_browser_windows_connected": MessageLookupByLibrary.simpleMessage(
@@ -523,6 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_files_in_zip": MessageLookupByLibrary.simpleMessage(
       "ZIP 文件中未找到有效的权重文件",
     ),
+    "no_latest_version_info": MessageLookupByLibrary.simpleMessage("没有最新版本信息"),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage("没有消息可导出"),
     "no_model_selected": MessageLookupByLibrary.simpleMessage("未选择模型"),
     "no_puzzle": MessageLookupByLibrary.simpleMessage("没有数独"),

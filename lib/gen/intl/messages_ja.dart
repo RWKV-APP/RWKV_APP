@@ -80,19 +80,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m28(value) => "Temperature: ${value}";
 
-  static String m29(footer) => "推論${footer}: 英語";
+  static String m29(footer) => "推論${footer}-英語";
 
-  static String m30(footer) => "推論${footer}: 英語 長";
+  static String m30(footer) => "推論${footer}-英語 長";
 
-  static String m31(footer) => "推論${footer}: 英語 短";
+  static String m31(footer) => "推論${footer}-英語 短";
 
-  static String m32(footer) => "推論${footer}: 速い";
+  static String m32(footer) => "推論${footer}-速い";
 
-  static String m33(footer) => "推論${footer}: 自動";
+  static String m33(footer) => "推論${footer}-自動";
 
-  static String m34(footer) => "推論${footer}: 高";
+  static String m34(footer) => "推論${footer}-高";
 
-  static String m35(footer) => "推論${footer}: オフ";
+  static String m35(footer) => "推論${footer}-オフ";
 
   static String m36(value) => "Top P: ${value}";
 
@@ -408,6 +408,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_title": MessageLookupByLibrary.simpleMessage("会話のタイトル："),
     "export_weight_file": MessageLookupByLibrary.simpleMessage("重みファイルをエクスポート"),
     "extra_large": MessageLookupByLibrary.simpleMessage("特大 (130%)"),
+    "failed_to_check_for_updates": MessageLookupByLibrary.simpleMessage(
+      "更新の確認に失敗しました",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("フィードバック"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("ファイルは既に存在します"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("ファイルが見つかりません"),
@@ -440,6 +443,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("強制ダークモード"),
+    "found_new_version_available": MessageLookupByLibrary.simpleMessage(
+      "新しいバージョンが見つかりました",
+    ),
     "frequency_penalty_with_value": m11,
     "from_model": MessageLookupByLibrary.simpleMessage("モデルから: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("ギャラリー"),
@@ -472,6 +478,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home": MessageLookupByLibrary.simpleMessage("ホーム"),
     "http_service_port": m12,
     "human": MessageLookupByLibrary.simpleMessage("人間"),
+    "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "RWKVに言わせたいのは...",
     ),
@@ -562,6 +569,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "new_conversation": MessageLookupByLibrary.simpleMessage("新しい会話"),
     "new_game": MessageLookupByLibrary.simpleMessage("新しいゲーム"),
+    "new_version_available": MessageLookupByLibrary.simpleMessage(
+      "新しいバージョンが利用可能です",
+    ),
     "new_version_found": MessageLookupByLibrary.simpleMessage("新バージョンが見つかりました"),
     "no_audio_file": MessageLookupByLibrary.simpleMessage("音声ファイルがありません"),
     "no_browser_windows_connected": MessageLookupByLibrary.simpleMessage(
@@ -573,6 +583,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_data": MessageLookupByLibrary.simpleMessage("データなし"),
     "no_files_in_zip": MessageLookupByLibrary.simpleMessage(
       "ZIPファイル内に有効な重みファイルが見つかりませんでした",
+    ),
+    "no_latest_version_info": MessageLookupByLibrary.simpleMessage(
+      "最新バージョン情報がありません",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "エクスポートするメッセージがありません",

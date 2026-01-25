@@ -97,6 +97,7 @@ class Settings extends ConsumerWidget {
     final isLightMode = customTheme.light;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == .chat;
+    final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
 
     final totalUsage = _getTotalUsage(ref);
 
@@ -277,27 +278,32 @@ class Settings extends ConsumerWidget {
             ),
             FormItem(
               title: S.current.check_for_updates,
+              trailing: Row(
+                children: [
+                  T("$version($buildNumber)"),
+                  AnimatedSize(
+                    duration: 200.ms,
+                    curve: Curves.easeOutCubic,
+                    child: Row(
+                      mainAxisSize: .min,
+                      children: [
+                        if (checkingLatestVersion) 8.w,
+                        if (checkingLatestVersion)
+                          const SB(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator.adaptive(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               icon: Icon(Icons.update, color: qb.q(.667), size: 16),
-              onTap: () {
-                P.app.checkUpdates();
-              },
+              onTap: P.app.checkUpdates,
             ),
-            // if (Platform.isAndroid)
-            //   FormItem(
-            //     isSectionStart: false,
-            //     title: S.current.dump_see_files,
-            //     subtitle: S.current.dump_see_files_subtitle,
-            //     icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
-            //     trailing: const _DumpSwitch(),
-            //     onTap: () {
-            //       if (P.preference.dumpping.q == true) {
-            //         P.dump.stopDump();
-            //       } else {
-            //         P.dump.startDump();
-            //       }
-            //     },
-            //     showArrow: false,
-            //   ),
             FormItem(
               title: s.github_repository,
               icon: Icon(Icons.code, color: qb.q(.667), size: 16),

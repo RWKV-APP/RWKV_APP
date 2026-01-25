@@ -86,19 +86,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m28(value) => "Temperature: ${value}";
 
-  static String m29(footer) => "Reasoning${footer}: EN";
+  static String m29(footer) => "Reasoning${footer}-EN";
 
-  static String m30(footer) => "Reasoning${footer}: EN Long";
+  static String m30(footer) => "Reasoning${footer}-EN Long";
 
-  static String m31(footer) => "Reasoning${footer}: EN Short";
+  static String m31(footer) => "Reasoning${footer}-EN Short";
 
-  static String m32(footer) => "Reasoning${footer}: Fast";
+  static String m32(footer) => "Reasoning${footer}-Fast";
 
-  static String m33(footer) => "Reasoning${footer}: Auto";
+  static String m33(footer) => "Reasoning${footer}-Auto";
 
-  static String m34(footer) => "Reasoning${footer}: High";
+  static String m34(footer) => "Reasoning${footer}-High";
 
-  static String m35(footer) => "Reasoning${footer}: Off";
+  static String m35(footer) => "Reasoning${footer}-Off";
 
   static String m36(value) => "Top P: ${value}";
 
@@ -483,6 +483,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Export Weight File",
     ),
     "extra_large": MessageLookupByLibrary.simpleMessage("Extra Large (130%)"),
+    "failed_to_check_for_updates": MessageLookupByLibrary.simpleMessage(
+      "Failed to check for updates",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "File already exists",
@@ -519,6 +522,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "foo_bar": MessageLookupByLibrary.simpleMessage("foo bar"),
     "force_dark_mode": MessageLookupByLibrary.simpleMessage("Force Dark Mode"),
+    "found_new_version_available": MessageLookupByLibrary.simpleMessage(
+      "Found New Version Available",
+    ),
     "frequency_penalty_with_value": m11,
     "from_model": MessageLookupByLibrary.simpleMessage("From Model: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
@@ -557,6 +563,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "http_service_port": m12,
     "human": MessageLookupByLibrary.simpleMessage("Human"),
+    "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to say...",
     ),
@@ -665,6 +672,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "New Conversation",
     ),
     "new_game": MessageLookupByLibrary.simpleMessage("New Game"),
+    "new_version_available": MessageLookupByLibrary.simpleMessage(
+      "New version available",
+    ),
     "new_version_found": MessageLookupByLibrary.simpleMessage(
       "New version found",
     ),
@@ -684,6 +694,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_data": MessageLookupByLibrary.simpleMessage("No Data"),
     "no_files_in_zip": MessageLookupByLibrary.simpleMessage(
       "No valid weight files found in the ZIP file",
+    ),
+    "no_latest_version_info": MessageLookupByLibrary.simpleMessage(
+      "No latest version information",
     ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "No message to export",

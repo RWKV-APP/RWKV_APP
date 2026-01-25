@@ -64,6 +64,11 @@ class S {
     );
   }
 
+  /// `-`
+  String get hyphen {
+    return Intl.message('-', name: 'hyphen', desc: '', args: []);
+  }
+
   /// `风格`
   String get style {
     return Intl.message('风格', name: 'style', desc: '', args: []);
@@ -324,40 +329,40 @@ class S {
     );
   }
 
-  /// `推理{footer}: 快`
+  /// `推理{footer}-快`
   String think_button_mode_fast(Object footer) {
     return Intl.message(
-      '推理$footer: 快',
+      '推理$footer-快',
       name: 'think_button_mode_fast',
       desc: '',
       args: [footer],
     );
   }
 
-  /// `推理{footer}: 英`
+  /// `推理{footer}-英`
   String think_button_mode_en(Object footer) {
     return Intl.message(
-      '推理$footer: 英',
+      '推理$footer-英',
       name: 'think_button_mode_en',
       desc: '',
       args: [footer],
     );
   }
 
-  /// `推理{footer}: 英短`
+  /// `推理{footer}-英短`
   String think_button_mode_en_short(Object footer) {
     return Intl.message(
-      '推理$footer: 英短',
+      '推理$footer-英短',
       name: 'think_button_mode_en_short',
       desc: '',
       args: [footer],
     );
   }
 
-  /// `推理{footer}: 英长`
+  /// `推理{footer}-英长`
   String think_button_mode_en_long(Object footer) {
     return Intl.message(
-      '推理$footer: 英长',
+      '推理$footer-英长',
       name: 'think_button_mode_en_long',
       desc: '',
       args: [footer],
@@ -554,30 +559,30 @@ class S {
     );
   }
 
-  /// `推理{footer}: 关`
+  /// `推理{footer}-关`
   String thinking_mode_off(Object footer) {
     return Intl.message(
-      '推理$footer: 关',
+      '推理$footer-关',
       name: 'thinking_mode_off',
       desc: '',
       args: [footer],
     );
   }
 
-  /// `推理{footer}: 中`
+  /// `推理{footer}-中`
   String thinking_mode_auto(Object footer) {
     return Intl.message(
-      '推理$footer: 中',
+      '推理$footer-中',
       name: 'thinking_mode_auto',
       desc: '',
       args: [footer],
     );
   }
 
-  /// `推理{footer}: 高`
+  /// `推理{footer}-高`
   String thinking_mode_high(Object footer) {
     return Intl.message(
-      '推理$footer: 高',
+      '推理$footer-高',
       name: 'thinking_mode_high',
       desc: '',
       args: [footer],
@@ -1224,6 +1229,36 @@ class S {
   /// `发现新版本`
   String get new_version_found {
     return Intl.message('发现新版本', name: 'new_version_found', desc: '', args: []);
+  }
+
+  /// `新版本可用`
+  String get new_version_available {
+    return Intl.message(
+      '新版本可用',
+      name: 'new_version_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发现新版本可用`
+  String get found_new_version_available {
+    return Intl.message(
+      '发现新版本可用',
+      name: 'found_new_version_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有最新版本信息`
+  String get no_latest_version_info {
+    return Intl.message(
+      '没有最新版本信息',
+      name: 'no_latest_version_info',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `暂不更新`
@@ -2763,6 +2798,16 @@ class S {
     return Intl.message(
       '已经是最新版本',
       name: 'app_is_already_up_to_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `检查更新失败`
+  String get failed_to_check_for_updates {
+    return Intl.message(
+      '检查更新失败',
+      name: 'failed_to_check_for_updates',
       desc: '',
       args: [],
     );

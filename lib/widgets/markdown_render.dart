@@ -42,6 +42,7 @@ class MarkdownRender extends ConsumerWidget {
       h4: TextStyle(fontSize: headerFontSizes[3]),
       h5: TextStyle(fontSize: headerFontSizes[4]),
       h6: TextStyle(fontSize: headerFontSizes[5]),
+      hrHeight: 6,
     );
 
     final GptMarkdown gptMarkdown = GptMarkdown(
