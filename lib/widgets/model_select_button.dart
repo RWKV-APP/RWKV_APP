@@ -13,10 +13,17 @@ class ModelSelectButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentModel = ref.watch(P.rwkv.latestModel);
     final s = S.of(context);
-    final modelDisplay = currentModel?.name ?? s.click_to_select_model;
     final theme = Theme.of(context);
 
     final batchEnabled = ref.watch(P.chat.batchEnabled);
+
+    final screenWidth = ref.watch(P.app.screenWidth);
+
+    String modelDisplay = currentModel?.name ?? s.click_to_select_model;
+
+    if (screenWidth < 400) {
+      modelDisplay = modelDisplay.replaceAll(RegExp(r"\([^)]*\)"), "");
+    }
 
     return Ink(
       decoration: BoxDecoration(
