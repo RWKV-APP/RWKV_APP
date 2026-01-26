@@ -236,7 +236,7 @@ extension $RWKVLoad on _RWKV {
     decodeSpeed.q = 0;
     _thinkingMode.q = enableReasoning ? const thinking_mode.Free() : const thinking_mode.None();
 
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/rwkv_vocab_v20230424.txt");
 
     await _ensureQNNCopied();
     await _createRWKVIsolateIfNeeded();
@@ -348,7 +348,7 @@ extension $RWKVLoad on _RWKV {
     qq;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/b_rwkv_vocab_v20230424.txt");
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/rwkv_vocab_v20230424.txt");
 
     final localFile = P.fileManager.locals(fileInfo).q;
     String modelPath = localFile.targetPath;

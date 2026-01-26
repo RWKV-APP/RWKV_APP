@@ -55,8 +55,8 @@ class $AssetsModelGen {
 class $AssetsConfigChatGen {
   const $AssetsConfigChatGen();
 
-  /// File path: assets/config/chat/b_rwkv_vocab_v20230424.txt
-  String get bRwkvVocabV20230424 => 'assets/config/chat/b_rwkv_vocab_v20230424.txt';
+  /// File path: assets/config/chat/rwkv_vocab_v20230424.txt
+  String get rwkvVocabV20230424 => 'assets/config/chat/rwkv_vocab_v20230424.txt';
 
   /// File path: assets/config/chat/date-zh.fst
   String get dateZh => 'assets/config/chat/date-zh.fst';
@@ -84,7 +84,7 @@ class $AssetsConfigChatGen {
 
   /// List of all assets
   List<String> get values => [
-    bRwkvVocabV20230424,
+    rwkvVocabV20230424,
     dateZh,
     numberZh,
     phoneZh,
