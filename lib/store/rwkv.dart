@@ -1396,7 +1396,7 @@ extension _$RWKV on _RWKV {
       case from_rwkv.Speed response:
         prefillSpeed.q = response.prefillSpeed;
         decodeSpeed.q = response.decodeSpeed;
-        prefillProgress.q = response.prefillProgress;
+        prefillProgress.q = response.prefillProgress.clamp(0, 1).toDouble();
 
       case from_rwkv.StreamResponse response:
         final decodeSpeed = response.decodeSpeed;
