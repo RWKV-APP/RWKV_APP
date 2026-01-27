@@ -52,13 +52,14 @@ enum WorldType {
       ("8 Gen 3", "modrwkv-v2-1B5-step4-a16w8-8gen3_combined_embedding.bin"),
     ],
     modrwkvV3 => [
-      ("", "modrwkv-v3-0.4b-251113-q8_0.gguf"),
-      ("8 Elite", "modrwkv-v3-0.4b-251113-a16w8-8elite.rmpack"),
-      ("8 Gen 3", "modrwkv-v3-0.4b-251113-a16w8-8gen3.rmpack"),
-      ("8s Gen 3", "modrwkv-v3-0.4b-251113-a16w8-8sgen3.rmpack"),
-      ("8 Gen 2", "modrwkv-v3-0.4b-251113-a16w8-8gen2.rmpack"),
-      ("8 Elite Gen5", "modrwkv-v3-0.4b-251113-a16w8-8elitegen5.rmpack"),
-      ("Dimensity 9300", "modrwkv-v3-0.4b-251113-MT6989.rmpack"),
+      ("", "rwkv-vl-0.4b-251222-q8_0.gguf"),
+      ("8 Elite", "rwkv-vl-0.4b-251222-a16w8-8elite.rmpack"),
+      ("8 Gen 3", "rwkv-vl-0.4b-251222-a16w8-8gen3.rmpack"),
+      ("8s Gen 3", "rwkv-vl-0.4b-251222-a16w8-8sgen3.rmpack"),
+      ("8 Gen 2", "rwkv-vl-0.4b-251222-a16w8-8gen2.rmpack"),
+      ("8+ Gen 1", "rwkv-vl-0.4b-251222-a16w8-8plusgen1.rmpack"),
+      ("8 Elite Gen5", "rwkv-vl-0.4b-251222-a16w8-8elitegen5.rmpack"),
+      ("Dimensity 9300", "rwkv-vl-0.4b-251222-MT6989.rmpack"),
     ],
   };
 }

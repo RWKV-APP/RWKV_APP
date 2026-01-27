@@ -72,13 +72,13 @@
       {
         "name": "RWKV7-G1c 1.5B",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-1.5b-20260110-ctx8192-imatrix-q6_k.gguf",
-        "fileSize": 1336082592,
-        "quantization": "Q6_K",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-1.5b-20260110-ctx8192-imatrix-q4_k_m.gguf",
+        "fileSize": 990052512,
+        "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1769517626
+        "date": 1768060184
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
@@ -97,7 +97,7 @@
         "modelSize": 2.9,
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-2.9b-20251231-ctx8192-imatrix-q4_k_m.gguf",
         "fileSize": 1875794080,
-        "quantization": "Q4_K_M",
+        "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
@@ -1059,107 +1059,97 @@
         "date": 1767159809
       },
       {
-        "name": "RWKV-VL 0.4B Vision Encoder",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/rwkv-vl-0.4b-siglip-encoder-int8.mnn",
-        "fileSize": 88690308,
-        "quantization": "w8a16",
-        "platforms": ["macos", "linux", "android", "ios", "windows"],
-        "backends": ["mnn"],
-        "tags": ["encoder"],
-        "date": 1769514468
-      },
-      {
-        "name": "RWKV-VL 0.4B Vision Adapter",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/rwkv-vl-0.4b-adapter-int8.mnn",
-        "fileSize": 10964028,
+        "name": "ModRWKV V3 Vision Adapter",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/modrwkv-v3-0.4b-251113-vision-adapter.mnn",
+        "fileSize": 7422864,
         "quantization": "w8a16",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["mnn"],
         "tags": ["adapter"],
-        "date": 1769514469
+        "date": 1767159809
       },
       {
-        "name": "RWKV-VL 0.4B",
+        "name": "ModRWKV V3 0.4B",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/rwkv-vl-0.4b-251222-q8_0.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/modrwkv-v3-0.4b-251113-q8_0.gguf",
         "fileSize": 501497984,
         "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1769511211
+        "date": 1766114960
       },
       {
-        "name": "RWKV-VL 0.4B (8 Elite)",
+        "name": "ModRWKV V3 0.4B (8 Elite)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/2.42-260118/rwkv-vl-0.4b-251222-a16w8-8elite.rmpack",
-        "fileSize": 546152448,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/2.42-260118/modrwkv-v3-0.4b-251113-a16w8-8elite.rmpack",
+        "fileSize": 546541568,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
         "socLimitations": ["8 Elite"],
-        "date": 1769514469
+        "date": 1768885239
       },
       {
-        "name": "RWKV-VL 0.4B (8 Elite Gen5)",
+        "name": "ModRWKV V3 0.4B (8 Elite Gen5)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/2.42-260118/rwkv-vl-0.4b-251222-a16w8-8elitegen5.rmpack",
-        "fileSize": 547041280,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/2.42-260118/modrwkv-v3-0.4b-251113-a16w8-8elitegen5.rmpack",
+        "fileSize": 547463168,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1769514469
+        "date": 1768885239
       },
       {
-        "name": "RWKV-VL 0.4B (8 Gen 2)",
+        "name": "ModRWKV V3 0.4B (8 Gen 2)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/2.42-260118/rwkv-vl-0.4b-251222-a16w8-8gen2.rmpack",
-        "fileSize": 548769792,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/2.42-260118/modrwkv-v3-0.4b-251113-a16w8-8gen2.rmpack",
+        "fileSize": 549175296,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1769514469
+        "date": 1768885240
       },
       {
-        "name": "RWKV-VL 0.4B (8 Gen 3)",
+        "name": "ModRWKV V3 0.4B (8 Gen 3)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/2.42-260118/rwkv-vl-0.4b-251222-a16w8-8gen3.rmpack",
-        "fileSize": 548749312,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/2.42-260118/modrwkv-v3-0.4b-251113-a16w8-8gen3.rmpack",
+        "fileSize": 549175296,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1769514469
+        "date": 1768885240
       },
       {
-        "name": "RWKV-VL 0.4B (8s Gen 3)",
+        "name": "ModRWKV V3 0.4B (8s Gen 3)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/2.42-260118/rwkv-vl-0.4b-251222-a16w8-8sgen3.rmpack",
-        "fileSize": 549122048,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/modrwkv-v3/2.42-260118/modrwkv-v3-0.4b-251113-a16w8-8sgen3.rmpack",
+        "fileSize": 549511168,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1769514470
+        "date": 1768885240
       },
       {
-        "name": "RWKV-VL 0.4B (Dimensity 9300)",
+        "name": "ModRWKV V3 0.4B (Dimensity 9300)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/rwkv-vl-0.4b-251222-MT6989.rmpack",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/modrwkv-v3-0.4b-251113-MT6989.rmpack",
         "fileSize": 530038784,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["mtk_np7"],
         "tags": ["npu", "core"],
         "socLimitations": ["Dimensity 9300"],
-        "date": 1769516694
+        "date": 1766483163
       }
     ]
   },
