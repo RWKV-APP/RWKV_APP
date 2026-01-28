@@ -163,25 +163,17 @@ extension $Font on _Font {
     // 应用 UI 字体
     if (uiFontFamily != null && uiFontFamily.isNotEmpty && uiFontFamily != 'System') {
       result = result.copyWith(
-        textTheme: result.textTheme.apply(
-          fontFamily: uiFontFamily,
-        ),
-        primaryTextTheme: result.primaryTextTheme.apply(
-          fontFamily: uiFontFamily,
-        ),
+        textTheme: result.textTheme.apply(fontFamily: uiFontFamily),
+        primaryTextTheme: result.primaryTextTheme.apply(fontFamily: uiFontFamily),
         // Typography 不支持直接 apply 字体
         typography: Typography.material2018(),
       );
     }
 
-    // 应用等宽字体（主要用于代码块等）
     if (monospaceFontFamily != null && monospaceFontFamily.isNotEmpty && monospaceFontFamily != 'System') {
-      // 为代码相关的文本样式应用等宽字体
       result = result.copyWith(
         textTheme: result.textTheme.copyWith(
-          bodySmall: result.textTheme.bodySmall?.copyWith(
-            fontFamily: monospaceFontFamily,
-          ),
+          bodySmall: result.textTheme.bodySmall?.copyWith(fontFamily: monospaceFontFamily),
         ),
       );
     }

@@ -124,6 +124,9 @@ class _App extends ConsumerWidget {
       bottomSheetTheme: bottomSheetTheme,
     );
 
+    ref.watch(P.preference.preferredUIFont);
+    ref.watch(P.preference.preferredMonospaceFont);
+
     // Apply user-selected fonts to theme
     final themeData = P.font.applyFontToTheme(baseThemeData);
 
