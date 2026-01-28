@@ -60,15 +60,6 @@ class _App extends RawApp {
 
   late final tabIndex = qs(0);
 
-  // ===========================================================================
-  // Provider
-  // ===========================================================================
-
-  late final pageKey = qp((ref) => ref.watch(_pageKey));
-
-  late final isDesktop = qp((ref) => ref.watch(_isDesktop));
-  late final isMobile = qp((ref) => ref.watch(_isMobile));
-
   /// Windows-specific documents directory using AppData (for sandbox-like behavior)
   late final _windowsDocumentsDir = qs<Directory?>(null);
 
@@ -93,6 +84,15 @@ class _App extends RawApp {
   late final checkingLatestVersion = qs(false);
   late final latestVersionInfo = qs<VersionInfo?>(null);
   late final releaseNotesContent = qs<({String? content, String? version})?>(null);
+
+  // ===========================================================================
+  // Provider
+  // ===========================================================================
+
+  late final pageKey = qp((ref) => ref.watch(_pageKey));
+
+  late final isDesktop = qp((ref) => ref.watch(_isDesktop));
+  late final isMobile = qp((ref) => ref.watch(_isMobile));
 }
 
 /// Public methods

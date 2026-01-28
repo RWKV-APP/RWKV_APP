@@ -220,7 +220,7 @@ class _RWKV {
     if (model == null) return false;
     final isTTS = model.isTTS;
     final isTranslate = model.tags.contains("translate");
-    final isWorld = model.fileName.contains("modrwkv");
+    final isWorld = model.fileName.contains("modrwkv") || model.fileName.contains("rwkv-vl");
     return isTTS || isTranslate || isWorld;
   });
 }
