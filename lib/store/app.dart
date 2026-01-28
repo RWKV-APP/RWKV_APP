@@ -440,21 +440,6 @@ extension _$App on _App {
       return;
     }
 
-    final build = json["latest_build"];
-    final buildIos = json["latest_build_ios"];
-
-    if (build is! num) {
-      qqe("build is not an num, build: $build");
-      Sentry.captureException(Exception("build is not an num, build: $build"), stackTrace: StackTrace.current);
-      return;
-    }
-
-    if (buildIos is! num) {
-      qqe("buildIos is not an num, buildIos: $buildIos");
-      Sentry.captureException(Exception("buildIos is not an num, buildIos: $buildIos"), stackTrace: StackTrace.current);
-      return;
-    }
-
     shareChatQrCodeEn.q = json["share_chat_qrcode_en"];
     shareChatQrCodeZh.q = json["share_chat_qrcode_zh"];
     featureRollout.q =

@@ -1,36 +1,7 @@
 {
   "chat": {
-    "latest_build": 647,
-    "latest_build_ios": 602,
-    "note_zh": [
-      "[新增] 优化了图像问答的速度表现",
-      "[新增] 新增古今回答模式",
-      "[新增] 添加了全新的 1.5B 翻译模型",
-      "[新增] 现在我们可以设置应用程序的字体了",
-      "[新增] 续写模式适配黑暗模式",
-      "[新增] 高通 NPU 加速新增 Snapdragon 8 + Gen 1 支持",
-      "[优化] 提升了应用程序在高通骁龙芯片上的表现（模型需要重新下载）",
-      "[优化] 调整了内部分用户界面的展示效果",
-      "[优化] 进行了若干性能优化",
-      "[修复] 修复可一个导致 batch 推理时 logits 互相污染的 bug"
-    ],
-    "note_en": [
-      "[New] Optimized the speed of image question answering",
-      "[New] Added Ancient & Modern answer mode",
-      "[New] Added a brand-new 1.5B translation model",
-      "[New] You can now customize the app font",
-      "[New] Continuation mode is now adapted to dark mode",
-      "[New] Qualcomm NPU acceleration now supports Snapdragon 8+ Gen 1",
-      "[Improve] Improved performance on Qualcomm Snapdragon chips (models need to be re-downloaded)",
-      "[Improve] Adjusted some internal UI layouts",
-      "[Improve] Performed several performance optimizations",
-      "[Fix] Fixed a bug that could cause logits to contaminate each other in batch inference"
-    ],
-    "android_url": "https://www.pgyer.com/rwkvchat",
-    "android_apk_url": "",
     "share_chat_qrcode_zh": "https://rwkvos.com/",
     "share_chat_qrcode_en": "https://github.com/RWKV-APP/RWKV_APP",
-    "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "controlled_rollout": {
       "web_search": false
     },
@@ -1027,26 +998,6 @@
     ]
   },
   "world": {
-    "latest_build": 647,
-    "latest_build_ios": 602,
-    "note_zh": [
-      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
-      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
-      "[优化] Lambada 测试现在可以渲染模型输出结果了",
-      "[优化] 优化了 Android 对 NPU 支持的描述",
-      "[优化] 优化了推理引擎的表现",
-      "[修复] 修复了多处 bug"
-    ],
-    "note_en": [
-      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
-      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
-      "[Improve] Lambada benchmark can now render model outputs in the UI",
-      "[Improve] Clarified the Android NPU support description",
-      "[Improve] Improved the performance of the inference engine",
-      "[Fix] Fixed multiple bugs"
-    ],
-    "android_url": "https://www.pgyer.com/rwkv-see",
-    "ios_url": "https://testflight.apple.com/join/vAjawMJc",
     "model_config": [
       {
         "name": "SigLIP2 Encoder",
@@ -1174,16 +1125,6 @@
       "[优化] 优化了推理引擎的表现",
       "[修复] 修复了多处 bug"
     ],
-    "note_en": [
-      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
-      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
-      "[Improve] Lambada benchmark can now render model outputs in the UI",
-      "[Improve] Clarified the Android NPU support description",
-      "[Improve] Improved the performance of the inference engine",
-      "[Fix] Fixed multiple bugs"
-    ],
-    "android_url": "https://www.pgyer.com/rwkvchat",
-    "ios_url": "https://testflight.apple.com/join/DaMqCNKh",
     "model_config": [
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Elite Gen5) 🇨🇳🇺🇸🇯🇵",
@@ -1361,49 +1302,9 @@
     ]
   },
   "othello": {
-    "latest_build": 408,
-    "latest_build_ios": 408,
-    "note_zh": [
-      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
-      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
-      "[优化] Lambada 测试现在可以渲染模型输出结果了",
-      "[优化] 优化了 Android 对 NPU 支持的描述",
-      "[优化] 优化了推理引擎的表现",
-      "[修复] 修复了多处 bug"
-    ],
-    "note_en": [
-      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
-      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
-      "[Improve] Lambada benchmark can now render model outputs in the UI",
-      "[Improve] Clarified the Android NPU support description",
-      "[Improve] Improved the performance of the inference engine",
-      "[Fix] Fixed multiple bugs"
-    ],
-    "android_url": "https://www.pgyer.com/rwkv-othello",
-    "ios_url": "https://testflight.apple.com/join/f5SVf76c",
     "model_config": []
   },
   "sudoku": {
-    "latest_build": 415,
-    "latest_build_ios": 1,
-    "note_zh": [
-      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
-      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
-      "[优化] Lambada 测试现在可以渲染模型输出结果了",
-      "[优化] 优化了 Android 对 NPU 支持的描述",
-      "[优化] 优化了推理引擎的表现",
-      "[修复] 修复了多处 bug"
-    ],
-    "note_en": [
-      "[New] Added a file management feature in Settings so you can manage all downloaded weights in one place",
-      "[Improve] Merged performance benchmark and Lambada benchmark into the home page",
-      "[Improve] Lambada benchmark can now render model outputs in the UI",
-      "[Improve] Clarified the Android NPU support description",
-      "[Improve] Improved the performance of the inference engine",
-      "[Fix] Fixed multiple bugs"
-    ],
-    "android_url": "https://www.pgyer.com/rwkv-sudoku",
-    "ios_url": "https://testflight.apple.com/join/CCc7rY5k",
     "model_config": [
       {
         "name": "RWKV7 Sudoku (8 Elite Gen5)",
