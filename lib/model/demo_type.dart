@@ -22,10 +22,10 @@ enum DemoType {
   ;
 
   Color get _seedColor => switch (this) {
-    .fifthteenPuzzle => Colors.blue,
-    .othello => Colors.green,
-    .sudoku => Colors.teal,
-    _ => const Color(0xFF365FD9),
+    .fifthteenPuzzle => const Color(0xFF007AFF), // Apple iOS Blue
+    .othello => const Color(0xFF34C759), // Apple iOS Green
+    .sudoku => const Color(0xFF5AC8FA), // Apple iOS Cyan
+    _ => const Color(0xFF007AFF), // Apple iOS Blue
   };
 
   ColorScheme get colorScheme => switch (this) {

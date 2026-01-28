@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'dart:math' as math;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
@@ -53,6 +54,7 @@ class Settings extends ConsumerWidget {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return DraggableScrollableSheet(
           initialChildSize: .75,
@@ -92,20 +94,22 @@ class Settings extends ConsumerWidget {
     final userType = ref.watch(P.preference.userType);
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
     final paddingLeft = ref.watch(P.app.paddingLeft);
-    final qb = ref.watch(P.app.qb);
-    final customTheme = ref.watch(P.app.customTheme);
-    final isLightMode = customTheme.light;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == .chat;
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final totalUsage = _getTotalUsage(ref);
 
+    // Minimalist colors
+    final backgroundColor = isDark ? const Color(0xFF000000) : const Color(0xFFF2F2F7);
+    final sectionHeaderColor = isDark ? const Color(0xFF8E8E93) : const Color(0xFF6D6D72);
+
     final iconWidget = SizedBox(
-      width: 64,
-      height: 64,
+      width: 72,
+      height: 72,
       child: ClipRRect(
-        borderRadius: 12.r,
+        borderRadius: 16.r,
         child: WithDevOption(child: Image.asset(iconPath)),
       ),
     );
@@ -114,18 +118,20 @@ class Settings extends ConsumerWidget {
       borderRadius: noBorderRadiusAndAppBar
           ? .zero
           : const .only(
-              topLeft: .circular(16),
-              topRight: .circular(16),
+              topLeft: .circular(12),
+              topRight: .circular(12),
             ),
       child: Scaffold(
-        backgroundColor: demoType == .chat ? Colors.transparent : customTheme.setting,
+        backgroundColor: backgroundColor,
         appBar: noBorderRadiusAndAppBar
             ? null
             : AppBar(
                 automaticallyImplyLeading: false,
-                title: T(s.settings),
-                centerTitle: false,
-                backgroundColor: customTheme.setting,
+                title: T(s.settings, s: const TS(s: 17, w: .w600)),
+                centerTitle: true,
+                elevation: 0,
+                backgroundColor: backgroundColor,
+                surfaceTintColor: Colors.transparent,
                 actions: [
                   Padding(
                     padding: const .only(right: 8),
@@ -133,196 +139,175 @@ class Settings extends ConsumerWidget {
                       onPressed: () {
                         pop();
                       },
-                      icon: const Icon(Icons.close),
+                      icon: Icon(
+                        CupertinoIcons.xmark_circle_fill,
+                        color: isDark ? const Color(0xFF636366) : const Color(0xFFC7C7CC),
+                        size: 28,
+                      ),
                     ),
                   ),
                 ],
               ),
         body: ListView(
-          padding: .only(left: 12 + paddingLeft, top: paddingTop, right: 12, bottom: math.max(paddingBottom, 12)),
+          padding: .only(left: 16 + paddingLeft, top: noBorderRadiusAndAppBar ? paddingTop + 20 : 8, right: 16, bottom: math.max(paddingBottom + 80, 100)),
           controller: scrollController,
           children: [
-            if (isChat) const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: .center,
-              children: [iconWidget],
-            ),
+            // App icon and version header
+            24.h,
+            Center(child: iconWidget),
             16.h,
-            const Row(
-              mainAxisAlignment: .center,
-              children: [
-                Expanded(
-                  child: T(
-                    Config.appTitle,
-                    s: TS(s: 24),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
+            Center(
+              child: T(
+                Config.appTitle,
+                s: TS(s: 20, w: .w600, c: isDark ? Colors.white : Colors.black),
+              ),
             ),
             4.h,
-            Row(
-              mainAxisAlignment: .center,
-              children: [
-                T(version, s: const TS(s: 12)),
-                T(" ($buildNumber)", s: const TS(s: 12)),
-              ],
+            Center(
+              child: T(
+                "$version ($buildNumber)",
+                s: TS(s: 12, w: .w400, c: sectionHeaderColor),
+              ),
             ),
-            16.h,
-            Row(
-              mainAxisAlignment: .start,
-              children: [
-                Expanded(
-                  child: T(
-                    s.application_settings,
-                    s: TS(w: .w500, c: qb.q(.8), s: 12),
-                  ),
-                ),
-              ],
-            ),
+            32.h,
+
+            // Application Settings Section
+            _SectionHeader(title: s.application_settings.toUpperCase(), color: sectionHeaderColor),
             8.h,
             FormItem(
               isSectionStart: true,
-              icon: Icon(Icons.manage_accounts, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.person_fill, const Color(0xFF007AFF)),
               title: s.application_mode,
               infoText: userType.displayName(),
               onTap: P.preference.showUserTypeDialog,
             ),
             FormItem(
-              icon: Icon(Icons.format_size_outlined, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.textformat_size, const Color(0xFFFF9500)),
               title: s.font_setting,
               infoText: "${P.preference.textScalePairs[preferredTextScaleFactor]}",
               onTap: P.preference.goToFontSettings,
             ),
             FormItem(
-              icon: Icon(Icons.language_outlined, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.globe, const Color(0xFF5856D6)),
               title: s.application_language,
               infoText: preferredLanguage.display ?? s.follow_system,
               onTap: P.preference.showLocaleDialog,
             ),
             if (isChat && userType.isGreaterThan(.user))
               FormItem(
-                icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
+                icon: _buildIcon(CupertinoIcons.slider_horizontal_3, const Color(0xFF8E8E93)),
                 title: S.current.advance_settings,
                 onTap: () => push(.advancedSettings),
               ),
             FormItem(
-              isSectionEnd: false,
-              icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.q(.667), size: 16),
+              icon: _buildIcon(isDark ? CupertinoIcons.moon_fill : CupertinoIcons.sun_max_fill, const Color(0xFFFFCC00)),
               title: s.appearance,
               infoText: preferredThemeMode.displayName,
               onTap: P.preference.showThemeSettings,
             ),
             FormItem(
               isSectionEnd: true,
-              icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.square_stack_3d_up_fill, const Color(0xFF34C759)),
               title: s.weights_mangement,
               infoText: totalUsage,
               onTap: () => push(.weightManager),
             ),
-            12.h,
-            Row(
-              mainAxisAlignment: .start,
-              children: [
-                Expanded(
-                  child: T(
-                    s.join_the_community,
-                    s: TS(w: .w500, c: qb.q(.8), s: 12),
-                  ),
-                ),
-              ],
-            ),
+            24.h,
+
+            // Community Section
+            _SectionHeader(title: s.join_the_community.toUpperCase(), color: sectionHeaderColor),
             8.h,
             FormItem(
-              icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
               isSectionStart: true,
+              icon: _buildIcon(CupertinoIcons.chat_bubble_2_fill, const Color(0xFF007AFF)),
               title: s.qq_group_1,
               subtitle: "${s.application_internal_test_group}: 332381861",
               onTap: _openQQGroup1,
             ),
             FormItem(
-              icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.chat_bubble_2_fill, const Color(0xFF5856D6)),
               title: s.qq_group_2,
               subtitle: "${s.technical_research_group}: 325154699",
               onTap: _openQQGroup2,
             ),
             FormItem(
-              icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.bubble_left_bubble_right_fill, const Color(0xFF5865F2)),
               title: s.discord,
               subtitle: s.join_our_discord_server,
               onTap: _openDiscord,
             ),
             FormItem(
               isSectionEnd: true,
-              icon: Icon(Icons.tag, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.at, const Color(0xFF1DA1F2)),
               title: s.twitter,
               subtitle: "@BlinkDL_AI",
               onTap: _openTwitter,
             ),
-            12.h,
-            Row(
-              mainAxisAlignment: .start,
-              children: [
-                T(
-                  s.about,
-                  s: TS(w: .w500, c: qb.q(.8), s: 12),
-                ),
-              ],
-            ),
+            24.h,
+
+            // About Section
+            _SectionHeader(title: s.about.toUpperCase(), color: sectionHeaderColor),
             8.h,
             FormItem(
               isSectionStart: true,
               title: s.feedback,
-              icon: Icon(Icons.feedback_outlined, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.envelope_fill, const Color(0xFFFF3B30)),
               onTap: _openFeedback,
             ),
             FormItem(
               title: S.current.check_for_updates,
               trailing: Row(
+                mainAxisSize: .min,
                 children: [
-                  T("$version($buildNumber)"),
-                  AnimatedSize(
-                    duration: 200.ms,
-                    curve: Curves.easeOutCubic,
-                    child: Row(
-                      mainAxisSize: .min,
-                      children: [
-                        if (checkingLatestVersion) 8.w,
-                        if (checkingLatestVersion)
-                          const SB(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator.adaptive(
-                              strokeWidth: 2,
-                            ),
-                          ),
-                      ],
+                  T("$version", s: TS(s: 14, c: isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93))),
+                  if (checkingLatestVersion) 8.w,
+                  if (checkingLatestVersion)
+                    const SB(
+                      width: 16,
+                      height: 16,
+                      child: CupertinoActivityIndicator(),
                     ),
-                  ),
                 ],
               ),
-              icon: Icon(Icons.update, color: qb.q(.667), size: 16),
+              showArrow: !checkingLatestVersion,
+              icon: _buildIcon(CupertinoIcons.arrow_down_circle_fill, const Color(0xFF34C759)),
               onTap: () => P.app.checkUpdates(manually: true),
             ),
             FormItem(
               title: s.github_repository,
-              icon: Icon(Icons.code, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.chevron_left_slash_chevron_right, const Color(0xFF8E8E93)),
               onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP", mode: LaunchMode.externalApplication),
             ),
             FormItem(
               title: s.report_an_issue_on_github,
-              icon: Icon(Icons.bug_report, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.exclamationmark_bubble_fill, const Color(0xFFFF9500)),
               onTap: () => launchUrlString("https://github.com/RWKV-APP/RWKV_APP/issues/new", mode: LaunchMode.externalApplication),
             ),
             FormItem(
               isSectionEnd: true,
               title: s.license,
-              icon: Icon(Icons.contact_page_outlined, color: qb.q(.667), size: 16),
+              icon: _buildIcon(CupertinoIcons.doc_text_fill, const Color(0xFF5856D6)),
               onTap: () => _showLicensePage(context, version, buildNumber, iconWidget),
             ),
             paddingBottom.h,
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildIcon(IconData icon, Color color) {
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: 6.r,
+      ),
+      child: Icon(
+        icon,
+        color: Colors.white,
+        size: 17,
       ),
     );
   }
@@ -373,6 +358,24 @@ class Settings extends ConsumerWidget {
         child: iconWidget,
       ),
       useRootNavigator: true,
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final Color color;
+
+  const _SectionHeader({required this.title, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const .only(left: 16, bottom: 4),
+      child: T(
+        title,
+        s: TS(s: 12, w: .w500, c: color, letterSpacing: -0.08),
+      ),
     );
   }
 }

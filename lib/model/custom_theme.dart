@@ -40,13 +40,13 @@ final class Light extends CustomTheme {
   final bool light = true;
 
   @override
-  final Color scaffold = const Color(0xFFFFFFFF);
+  final Color scaffold = const Color(0xFFFFFFFF); // Apple System Background
 
   @override
-  final Color setting = const Color(0xFFF5F5F5);
+  final Color setting = const Color(0xFFF2F2F7); // Apple Secondary System Background
 
   @override
-  final Color settingItem = const Color(0xFFFFFFFF);
+  final Color settingItem = const Color(0xFFFFFFFF); // Apple Grouped Background
 
   @override
   final Color pagerDim = const Color(0xFF000000);
@@ -60,13 +60,13 @@ final class Dim extends CustomTheme {
   final bool light = false;
 
   @override
-  final Color scaffold = const Color(0xFF151515);
+  final Color scaffold = const Color(0xFF1C1C1E); // Apple System Background (Dark)
 
   @override
-  final Color setting = const Color(0xFF252525);
+  final Color setting = const Color(0xFF2C2C2E); // Apple Secondary System Background (Dark)
 
   @override
-  final Color settingItem = const Color(0xFF353535);
+  final Color settingItem = const Color(0xFF3A3A3C); // Apple Tertiary System Background (Dark)
 
   @override
   final Color pagerDim = const Color(0xFFFFFFFF);
@@ -80,13 +80,13 @@ final class LightsOut extends CustomTheme {
   final bool light = false;
 
   @override
-  final Color scaffold = const Color(0xFF000000);
+  final Color scaffold = const Color(0xFF000000); // Pure black for OLED
 
   @override
-  final Color setting = const Color(0xFF000000);
+  final Color setting = const Color(0xFF000000); // Pure black
 
   @override
-  final Color settingItem = const Color(0xFF121212);
+  final Color settingItem = const Color(0xFF1C1C1E); // Apple Dark elevated surface
 
   @override
   final Color pagerDim = const Color(0xFFFFFFFF);

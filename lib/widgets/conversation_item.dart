@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/models/chat_message_model.dart' show ChatMessage;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:remix_icons_flutter/remixicon_ids.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/config.dart';
 import 'package:zone/db/db.dart';
@@ -119,13 +119,14 @@ class ConversationItem extends ConsumerWidget {
     P.app.hapticLight();
 
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // 使用showMenu在特定位置显示菜单
     final res = await showMenu<String>(
       shape: RoundedRectangleBorder(
-        borderRadius: .circular(16),
+        borderRadius: .circular(12), // iOS corner radius
       ),
-      color: Theme.of(context).colorScheme.surface,
+      color: isDark ? const Color(0xFF2C2C2E) : Colors.white,
       context: context,
       position: RelativeRect.fromLTRB(
         details.globalPosition.dx, // 菜单的左侧位置
@@ -137,44 +138,41 @@ class ConversationItem extends ConsumerWidget {
       items: <PopupMenuEntry<String>>[
         PopupMenuItem(
           value: 'rename',
+          height: 44,
           child: Row(
             children: [
-              const Icon(Icons.edit_outlined),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(s.rename),
+              Icon(Icons.edit_outlined, size: 20, color: isDark ? Colors.white : Colors.black),
+              const SizedBox(width: 12),
+              Text(s.rename, style: const TextStyle(fontSize: 17)),
             ],
           ),
         ),
-        const PopupMenuDivider(indent: 8, endIndent: 8),
+        PopupMenuDivider(height: 1, color: isDark ? const Color(0xFF38383A) : const Color(0xFFC6C6C8)),
         PopupMenuItem(
           value: 'export',
+          height: 44,
           child: Row(
             children: [
-              const Icon(Icons.download_outlined),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(s.export_data),
+              Icon(Icons.download_outlined, size: 20, color: isDark ? Colors.white : Colors.black),
+              const SizedBox(width: 12),
+              Text(s.export_data, style: const TextStyle(fontSize: 17)),
             ],
           ),
         ),
-        const PopupMenuDivider(indent: 8, endIndent: 8),
+        PopupMenuDivider(height: 1, color: isDark ? const Color(0xFF38383A) : const Color(0xFFC6C6C8)),
         PopupMenuItem(
           value: 'delete',
+          height: 44,
           child: Row(
             children: [
-              const Icon(Icons.delete_outline),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(s.delete_conversation),
+              const Icon(Icons.delete_outline, size: 20, color: Color(0xFFFF3B30)), // Apple Red
+              const SizedBox(width: 12),
+              Text(s.delete_conversation, style: const TextStyle(fontSize: 17, color: Color(0xFFFF3B30))),
             ],
           ),
         ),
       ],
-      elevation: 8.0,
+      elevation: 4.0,
     );
 
     if (!context.mounted) {
@@ -197,7 +195,7 @@ class ConversationItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final color = P.conversation.getConversationColor(conversation.id);
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
@@ -206,69 +204,101 @@ class ConversationItem extends ConsumerWidget {
       onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
       onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
       child: Container(
-        color: Theme.of(context).colorScheme.surface,
+        color: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFFFFFFF),
         padding: const .symmetric(horizontal: 16, vertical: 12),
         child: Row(
           crossAxisAlignment: .center,
           children: [
-            if (isBatchMode) ...[
-              Center(
-                child: Checkbox(
-                  value: isSelected,
-                  onChanged: (_) => _handleBatchSelection(),
-                ),
-              ),
-              const SizedBox(width: 12),
-            ],
-            Center(
-              child: Container(
-                height: 40,
-                width: 40,
-                clipBehavior: Clip.antiAlias,
-                alignment: .center,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: .circular(4),
-                ),
-                child: _buildAvatar(),
-              ),
-            ),
+            isBatchMode ? _buildSelectionCircle(isSelected) : _buildAvatar(color),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
-                crossAxisAlignment: .stretch,
+                crossAxisAlignment: .start,
                 children: [
-                  T(
-                    conversation.title,
-                    s: TS(s: 16, w: .w500, c: qb),
-                    overflow: .ellipsis,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          conversation.title,
+                          style: TextStyle(
+                            fontSize: 17, // iOS Body
+                            fontWeight: .w600, // Semibold for title
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                          overflow: .ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        conversation.displayTime,
+                        style: TextStyle(
+                          fontSize: 13, // Smaller time
+                          fontWeight: .w400,
+                          color: isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93), // Apple Gray
+                        ),
+                      ),
+                      if (!isBatchMode) ...[
+                        const SizedBox(width: 4),
+                        Icon(
+                          Icons.chevron_right,
+                          size: 20,
+                          color: isDark ? const Color(0xFF48484A) : const Color(0xFFC7C7CC), // Apple Gray 3
+                        ),
+                      ],
+                    ],
                   ),
-                  4.h,
-                  T(
+                  const SizedBox(height: 4),
+                  Text(
                     conversation.subtitle,
-                    s: const TS(s: 12, c: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 15, // iOS Subhead
+                      fontWeight: .w400,
+                      color: isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93), // Apple Gray
+                    ),
                     overflow: .ellipsis,
-                    maxLines: 2,
+                    maxLines: 1,
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
-            Text(conversation.displayTime, style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAvatar() {
+  Widget _buildSelectionCircle(bool isSelected) {
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isSelected ? const Color(0xFF007AFF) : Colors.transparent,
+        border: Border.all(
+          color: isSelected ? const Color(0xFF007AFF) : const Color(0xFFC7C7CC),
+          width: isSelected ? 0 : 1.5,
+        ),
+      ),
+      child: isSelected
+          ? const Icon(Icons.check, size: 18, color: Colors.white)
+          : null,
+    );
+  }
+
+  Widget _buildAvatar(Color color) {
     if (conversation.avatar == null) {
-      return const FaIcon(FontAwesomeIcons.message, size: 16, color: Colors.white);
+      return Icon(RemixIcon.message3Line, size: 28, color: color);
     }
     if (!conversation.avatar!.startsWith('http')) {
-      return Image.asset(conversation.avatar!, height: 40, width: 40);
+      return ClipRRect(
+        borderRadius: .circular(8),
+        child: Image.asset(conversation.avatar!, height: 44, width: 44, fit: BoxFit.cover),
+      );
     }
-    return CachedNetworkImage(imageUrl: conversation.avatar!, fit: BoxFit.cover, height: 40, width: 40);
+    return ClipRRect(
+      borderRadius: .circular(8),
+      child: CachedNetworkImage(imageUrl: conversation.avatar!, fit: BoxFit.cover, height: 44, width: 44),
+    );
   }
 
   void _handleBatchSelection() {

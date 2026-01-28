@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:remix_icons_flutter/remixicon_ids.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
@@ -31,9 +32,11 @@ class UserMessageBottom extends ConsumerWidget {
       case model.MessageType.ttsGeneration:
     }
 
-    final primary = Theme.of(context).colorScheme.primary;
     final worldType = ref.watch(P.rwkv.currentWorldType);
     final selectMessageMode = ref.watch(P.chat.isSharing);
+
+    // Dark gray color for action buttons (matching bot message bottom)
+    const actionIconColor = Color(0xFF636366);
 
     if (selectMessageMode) {
       return const SizedBox(height: 12);
@@ -83,9 +86,9 @@ class UserMessageBottom extends ConsumerWidget {
               child: Padding(
                 padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
                 child: Icon(
-                  Icons.edit,
-                  color: primary.q(.8),
-                  size: 20,
+                  RemixIcon.editLine,
+                  color: actionIconColor,
+                  size: 18,
                 ),
               ),
             ),
@@ -97,7 +100,7 @@ class UserMessageBottom extends ConsumerWidget {
               onTap: _onTTSPlayPressed,
               child: Padding(
                 padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-                child: Icon(Icons.play_arrow, color: primary.q(.8), size: 20),
+                child: Icon(RemixIcon.playLine, color: actionIconColor, size: 18),
               ),
             ),
           ),
@@ -108,7 +111,7 @@ class UserMessageBottom extends ConsumerWidget {
               onTap: _onTTSPausePressed,
               child: Padding(
                 padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-                child: Icon(Icons.pause, color: primary.q(.8), size: 20),
+                child: Icon(RemixIcon.pauseLine, color: actionIconColor, size: 18),
               ),
             ),
           ),
@@ -120,9 +123,9 @@ class UserMessageBottom extends ConsumerWidget {
               child: Padding(
                 padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
                 child: Icon(
-                  Icons.copy,
-                  color: primary.q(.8),
-                  size: 20,
+                  RemixIcon.fileCopyLine,
+                  color: actionIconColor,
+                  size: 18,
                 ),
               ),
             ),

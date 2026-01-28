@@ -13,37 +13,35 @@ class ThinkingModeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
     final loading = ref.watch(P.rwkv.loading);
-    final qw = ref.watch(P.app.qw);
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final color = switch (thinkingMode) {
-      thinking_mode.Lighting() => theme.colorScheme.surfaceContainer,
-      thinking_mode.Fast() => theme.colorScheme.surfaceContainer,
-      thinking_mode.None() => theme.colorScheme.surfaceContainer,
-      thinking_mode.Free() => primary,
-      thinking_mode.PreferChinese() => primary,
-      thinking_mode.En() => primary,
-      thinking_mode.EnShort() => theme.colorScheme.surfaceContainer,
-      thinking_mode.EnLong() => primary,
+    // Design colors: light gray fill unselected, light yellow fill selected
+    final lightGrayFill = isDark ? const Color(0xFF3A3A3C) : const Color(0xFFF2F2F7);
+    const darkGrayText = Color(0xFF636366);
+    const yellowColor = Color(0xFFFFCC00); // Yellow for selected state
+    // Light yellow for selected background (solid color, not transparency)
+    final lightYellowFill = isDark ? const Color(0xFF3D3A2E) : const Color(0xFFFFF8E1);
+
+    // Active modes use yellow, others use gray
+    final isActive = switch (thinkingMode) {
+      thinking_mode.Free() => true,
+      thinking_mode.PreferChinese() => true,
+      thinking_mode.En() => true,
+      thinking_mode.EnLong() => true,
+      thinking_mode.Lighting() => true,
+      thinking_mode.Fast() => true,
+      thinking_mode.EnShort() => true,
+      _ => false,
     };
 
-    final textColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => primary,
-      thinking_mode.Fast() => primary,
-      thinking_mode.None() => Colors.grey,
-      thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
-      thinking_mode.Free() => theme.colorScheme.onPrimary,
-      thinking_mode.En() => theme.colorScheme.onPrimary,
-      thinking_mode.EnShort() => primary,
-      thinking_mode.EnLong() => theme.colorScheme.onPrimary,
-    };
+    final color = isActive ? lightYellowFill : lightGrayFill;
+    final textColor = isActive ? (isDark ? yellowColor : const Color(0xFFB8860B)) : darkGrayText;
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
-    const EdgeInsets padding = .symmetric(horizontal: 8);
+    final height = textScaleFactor.scale(12) + 16;
+    const EdgeInsets padding = .symmetric(horizontal: 6);
 
     final text = switch (thinkingMode) {
       thinking_mode.Lighting() => s.thinking_mode_auto(""),
@@ -56,16 +54,7 @@ class ThinkingModeButton extends ConsumerWidget {
       thinking_mode.EnLong() => s.think_button_mode_en_long(""),
     };
 
-    final border = switch (thinkingMode) {
-      thinking_mode.Lighting() => Border.all(color: textColor),
-      thinking_mode.None() => null,
-      thinking_mode.Free() => Border.all(color: textColor),
-      thinking_mode.PreferChinese() => Border.all(color: textColor),
-      thinking_mode.Fast() => Border.all(color: textColor),
-      thinking_mode.En() => Border.all(color: textColor),
-      thinking_mode.EnShort() => Border.all(color: textColor),
-      thinking_mode.EnLong() => Border.all(color: textColor),
-    };
+    final border = isActive ? Border.all(color: yellowColor.withOpacity(0.5)) : null;
 
     return AnimatedSize(
       key: const Key("_ThinkingModeButton"),
@@ -88,11 +77,11 @@ class ThinkingModeButton extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.lightbulb_outline, color: textColor, size: 18),
+                    Icon(Icons.lightbulb_outline, color: textColor, size: 14),
                     2.w,
                     T(
                       text,
-                      s: TS(c: textColor, s: 14, height: 1, w: .w500),
+                      s: TS(c: textColor, s: 12, height: 1, w: .w500),
                     ),
                     4.w,
                   ],

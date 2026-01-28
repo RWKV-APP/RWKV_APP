@@ -12,20 +12,22 @@ class BatchButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final height = BottomInteractions.calculateButtonHeight(context);
-    final surfaceContainer = theme.colorScheme.surfaceContainer;
     final batchEnabled = ref.watch(P.chat.batchEnabled);
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-
-    final primary = theme.colorScheme.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final s = S.of(context);
 
-    final bgColor = batchEnabled ? primary : surfaceContainer;
-    final textColor = batchEnabled ? qw.q(1) : qb.q(.667);
+    // Design colors: light gray fill unselected, light green fill selected
+    final lightGrayFill = isDark ? const Color(0xFF3A3A3C) : const Color(0xFFF2F2F7);
+    const darkGrayText = Color(0xFF636366);
+    const greenColor = Color(0xFF34C759); // Green for selected state
+    // Light green for selected background (solid color, not transparency)
+    final lightGreenFill = isDark ? const Color(0xFF2E3D32) : const Color(0xFFE8F5E9);
+
+    final bgColor = batchEnabled ? lightGreenFill : lightGrayFill;
+    final textColor = batchEnabled ? (isDark ? greenColor : const Color(0xFF2E7D32)) : darkGrayText;
+    final border = batchEnabled ? Border.all(color: greenColor.withOpacity(0.5)) : null;
     final batchCount = ref.watch(P.chat.batchCount);
-    final borderColor = batchEnabled ? primary : primary.q(.1);
 
     return IntrinsicWidth(
       child: GestureDetector(
@@ -35,15 +37,15 @@ class BatchButton extends ConsumerWidget {
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: 60.r,
-            border: Border.all(color: borderColor),
+            border: border,
           ),
-          padding: const .only(left: 8, right: 8),
+          padding: const .symmetric(horizontal: 10),
           child: Row(
             mainAxisAlignment: .center,
             crossAxisAlignment: .center,
             children: [
-              if (batchEnabled) T(s.batch_inference_button(batchCount), s: TS(c: textColor)),
-              if (!batchEnabled) T(s.batch_inference_short, s: TS(c: textColor)),
+              if (batchEnabled) T(s.batch_inference_button(batchCount), s: TS(c: textColor, s: 12, height: 1, w: .w500)),
+              if (!batchEnabled) T(s.batch_inference_short, s: TS(c: textColor, s: 12, height: 1, w: .w500)),
             ],
           ),
         ),

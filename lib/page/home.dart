@@ -11,7 +11,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageHome extends ConsumerStatefulWidget {
@@ -76,8 +75,10 @@ class _PageHomeState extends ConsumerState<PageHome> {
     if (maxWidth < 0) maxWidth = double.infinity;
 
     return Scaffold(
-      body: GradientBackground(
-        child: Stack(
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF1C1C1E) // Apple System Background (Dark)
+          : const Color(0xFFFFFFFF), // Pure white
+      body: Stack(
           children: [
             const _Welcome(),
             Positioned.fill(
@@ -87,7 +88,7 @@ class _PageHomeState extends ConsumerState<PageHome> {
                   top: containerPaddingTop,
                   left: containerPaddingHorizontal,
                   right: containerPaddingHorizontal,
-                  bottom: 48,
+                  bottom: 100,
                 ),
                 physics: const BouncingScrollPhysics(),
                 child: MasonryGridView.count(
@@ -119,7 +120,6 @@ class _PageHomeState extends ConsumerState<PageHome> {
             const _NoMore(),
           ],
         ),
-      ),
     );
   }
 }
@@ -161,10 +161,12 @@ class _ChatButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () {
           P.chat.startNewChat();
@@ -173,26 +175,23 @@ class _ChatButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.blueAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
-                ),
+              const SizedBox(height: 8),
+              FaIcon(
+                FontAwesomeIcons.comments,
+                color: const Color(0xFF007AFF), // Apple Blue
+                size: 28,
               ),
               const SizedBox(height: 12),
-              Text(s.chat, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(s.chat, style: const TextStyle(fontSize: 17, fontWeight: .w600)),
+              const SizedBox(height: 4),
+              Text(
+                s.chat_with_rwkv_model,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
+              ),
               const SizedBox(height: 8),
-              Text(s.chat_with_rwkv_model, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 6),
             ],
           ),
         ),
@@ -207,10 +206,12 @@ class _TTSButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: .antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () {
           P.chat.startNewChat();
@@ -219,32 +220,23 @@ class _TTSButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              SizedBox(
-                height: 48,
-                child: Align(
-                  alignment: .centerLeft,
-                  child: Container(
-                    height: 48,
-                    width: 48,
-                    alignment: .center,
-                    decoration: const BoxDecoration(
-                      color: Colors.orange,
-                      shape: .circle,
-                    ),
-                    child: const Icon(
-                      Icons.record_voice_over,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 8),
+              Icon(
+                Icons.record_voice_over,
+                color: const Color(0xFFFF9500), // Apple Orange
+                size: 28,
               ),
               const SizedBox(height: 12),
-              Text(s.tts, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(s.tts, style: const TextStyle(fontSize: 17, fontWeight: .w600)),
+              const SizedBox(height: 4),
+              Text(
+                s.tts_detail,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
+              ),
               const SizedBox(height: 8),
-              Text(s.tts_detail, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 6),
             ],
           ),
         ),
@@ -259,10 +251,12 @@ class _VisualButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () {
           push(.see);
@@ -270,26 +264,23 @@ class _VisualButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurpleAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const Icon(Icons.visibility, color: Colors.white),
-                ),
+              const SizedBox(height: 8),
+              Icon(
+                Icons.visibility,
+                color: const Color(0xFFAF52DE), // Apple Purple
+                size: 28,
               ),
               const SizedBox(height: 12),
-              Text(s.see, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(s.see, style: const TextStyle(fontSize: 17, fontWeight: .w600)),
+              const SizedBox(height: 4),
+              Text(
+                s.visual_understanding_and_ocr,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
+              ),
               const SizedBox(height: 8),
-              Text(s.visual_understanding_and_ocr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 6),
             ],
           ),
         ),
@@ -304,10 +295,12 @@ class _NekoButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () async {
           final current = P.rwkv.latestModel.q;
@@ -332,26 +325,23 @@ class _NekoButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.pinkAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
-                ),
+              const SizedBox(height: 8),
+              FaIcon(
+                FontAwesomeIcons.cat,
+                color: const Color(0xFFFF2D55), // Apple Pink
+                size: 28,
               ),
               const SizedBox(height: 12),
-              Text(s.neko, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(s.neko, style: const TextStyle(fontSize: 17, fontWeight: .w600)),
+              const SizedBox(height: 4),
+              Text(
+                s.nyan_nyan,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
+              ),
               const SizedBox(height: 8),
-              Text(s.nyan_nyan, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 6),
             ],
           ),
         ),
@@ -366,10 +356,12 @@ class _CompletionButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () {
           push(.completion);
@@ -377,26 +369,23 @@ class _CompletionButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.lightGreen,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.feather, color: Colors.white),
-                ),
+              const SizedBox(height: 8),
+              FaIcon(
+                FontAwesomeIcons.feather,
+                color: const Color(0xFF34C759), // Apple Green
+                size: 28,
               ),
               const SizedBox(height: 12),
-              Text(s.completion_mode, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(s.completion_mode, style: const TextStyle(fontSize: 17, fontWeight: .w600)),
+              const SizedBox(height: 4),
+              Text(
+                s.text_completion_mode,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
+              ),
               const SizedBox(height: 8),
-              Text(s.text_completion_mode, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 6),
             ],
           ),
         ),
@@ -412,10 +401,12 @@ class _TranslatorButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () {
           if (isDesktop) push(.translator);
@@ -424,32 +415,27 @@ class _TranslatorButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const Icon(Icons.translate, color: Colors.white),
-                ),
+              const SizedBox(height: 8),
+              Icon(
+                Icons.translate,
+                color: const Color(0xFF5AC8FA), // Apple Cyan
+                size: 28,
               ),
               const SizedBox(height: 12),
               Text(
                 s.offline_translator,
-                style: const TextStyle(fontSize: 16, fontWeight: .bold),
+                style: const TextStyle(fontSize: 17, fontWeight: .w600),
+                textAlign: .center,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 s.offline_translator_detail,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -464,9 +450,12 @@ class _BenchmarkButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () {
           push(.benchmark);
@@ -474,26 +463,27 @@ class _BenchmarkButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.purple,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.gauge, color: Colors.white),
-                ),
+              const SizedBox(height: 8),
+              FaIcon(
+                FontAwesomeIcons.gauge,
+                color: const Color(0xFF5856D6), // Apple Indigo
+                size: 28,
               ),
               const SizedBox(height: 12),
-              Text(s.performance_test, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(
+                s.performance_test,
+                style: const TextStyle(fontSize: 17, fontWeight: .w600),
+                textAlign: .center,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                s.performance_test_description,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
+              ),
               const SizedBox(height: 8),
-              Text(s.performance_test_description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 6),
             ],
           ),
         ),
@@ -562,10 +552,12 @@ class _RolePlayButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7), // Apple Secondary Background
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
       child: InkWell(
         onTap: () {
           push(.rolePlaying);
@@ -573,26 +565,27 @@ class _RolePlayButton extends ConsumerWidget {
         child: Padding(
           padding: const .all(16),
           child: Column(
-            crossAxisAlignment: .stretch,
+            crossAxisAlignment: .center,
             children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.yellow,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
-                ),
+              const SizedBox(height: 8),
+              Icon(
+                Icons.emoji_emotions_outlined,
+                color: const Color(0xFFFFCC00), // Apple Yellow
+                size: 28,
               ),
               const SizedBox(height: 12),
-              Text(s.role_play, style: const TextStyle(fontSize: 16, fontWeight: .bold)),
+              Text(
+                s.role_play,
+                style: const TextStyle(fontSize: 17, fontWeight: .w600),
+                textAlign: .center,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                s.role_play_intro,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                textAlign: .center,
+              ),
               const SizedBox(height: 8),
-              Text(s.role_play_intro, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 6),
             ],
           ),
         ),

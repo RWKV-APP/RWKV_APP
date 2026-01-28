@@ -245,13 +245,17 @@ class Message extends ConsumerWidget {
     // 如果是快速考 <think>\n<think>, 则不展示思考过程
     final isQuickThinking = cotContent.trim().isEmpty;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (isChat) {
       border = null;
       padding = const .only(left: 12, top: 12, right: 12, bottom: 4);
       borderRadius = .circular(16);
     }
 
-    final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
+    // Apple-style message colors
+    final userMessageBackgroundColor = isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7);
+    final botMessageBackgroundColor = Colors.transparent;
 
     late final bool isBatch;
     late final int batchCount;
@@ -273,7 +277,7 @@ class Message extends ConsumerWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: isMine ? primaryContainer : botMessageBackgroundColor,
+            color: isMine ? userMessageBackgroundColor : botMessageBackgroundColor,
             border: border,
             borderRadius: borderRadius,
           ),
@@ -303,7 +307,6 @@ class Message extends ConsumerWidget {
                   ),
                 // 🔥 User message audio
                 if (preferredDemoType == .tts) UserTTSContent(msg, index),
-                UserMessageBottom(msg, index),
               ],
               if (!isMine) ...[
                 if (isBatch)
@@ -393,9 +396,12 @@ class Message extends ConsumerWidget {
             child: Padding(
               padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
               child: Column(
+                crossAxisAlignment: isMine ? .end : .start,
                 children: [
                   if (demoType == .chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
                   GestureDetector(onTap: _onTap, child: bubbleContent),
+                  // User message buttons moved outside the bubble
+                  if (isMine && !selectMode) UserMessageBottom(msg, index),
                 ],
               ),
             ),

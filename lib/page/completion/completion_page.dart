@@ -42,12 +42,12 @@ class _CompletionPageState extends State<CompletionPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFF9E7C59) : const Color(0xFF80B0CC);
-    Color backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
-    Color dividerColor = isDark ? const Color(0x99FFFFFF) : const Color(0x26000000);
+    final primaryColor = isDark ? const Color(0xFF0A84FF) : const Color(0xFF007AFF); // Apple iOS Blue
+    Color backgroundColor = isDark ? const Color(0xFF1C1C1E) : const Color(0xFFFFFFFF); // Apple System Background
+    Color dividerColor = isDark ? const Color(0x4DFFFFFF) : const Color(0x1F000000); // Apple Separator colors
     if (isDark && P.preference.preferredDarkCustomTheme.q is LightsOut) {
       backgroundColor = Colors.black;
-      dividerColor = const Color(0x44ffffff);
+      dividerColor = const Color(0x3DFFFFFF);
     }
     final themeV2 = ThemeData(
       cardColor: Colors.white,
@@ -75,9 +75,9 @@ class _CompletionPageState extends State<CompletionPage> {
         brightness: theme.brightness,
       ),
       popupMenuTheme: PopupMenuThemeData(
-        shape: RoundedRectangleBorder(borderRadius: .circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: .circular(12)), // Apple's standard corner radius
         menuPadding: .zero,
-        color: isDark ? const Color(0xFF2E2E2E) : Colors.white,
+        color: isDark ? const Color(0xFF2C2C2E) : Colors.white, // Apple Secondary Background
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(

@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,41 +27,127 @@ class InputBar extends ConsumerWidget {
 
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final imagePath = ref.watch(P.see.imagePath);
 
-    return MeasureSize(
-      onChange: (size) {
-        P.chat.inputHeight.q = size.height;
-      },
-      child: ClipRRect(
-        borderRadius: !isChat ? .zero : const .vertical(top: .circular(16)),
+    // For chat mode, use transparent background (floating style)
+    // For other modes, keep the original style
+    if (isChat) {
+      return MeasureSize(
+        onChange: (size) {
+          P.chat.inputHeight.q = size.height;
+        },
         child: Container(
-          decoration: BoxDecoration(
-            color: theme.cardColor,
-            border: isChat
-                ? null
-                : Border(
-                    top: BorderSide(
-                      color: primary.q(.33),
-                      width: .5,
-                    ),
-                  ),
-          ),
-          padding: .only(left: 8, top: 8, right: 8, bottom: paddingBottom + 8),
+          padding: .only(left: 12, top: 8, right: 12, bottom: paddingBottom + 12),
           child: AnimatedSize(
             duration: 250.ms,
             child: Column(
+              crossAxisAlignment: .stretch,
               children: [
                 if (inRWKVSee) const _WaitingMsg(),
                 if (inRWKVSee) _ImagePreview(imagePath: imagePath ?? ""),
-                InputTextField(preferredDemoType: preferredDemoType),
-                if (preferredDemoType != .tts) BottomInteractions(preferredDemoType: preferredDemoType),
-                if (preferredDemoType == .tts) const TTSBottomInteractions(),
+                // Option buttons above the input bar
+                Padding(
+                  padding: const .only(bottom: 8, left: 4),
+                  child: OptionButtons(preferredDemoType: preferredDemoType),
+                ),
+                // Floating capsule input bar
+                _FloatingCapsuleInputBar(preferredDemoType: preferredDemoType),
               ],
             ),
           ),
         ),
+      );
+    }
+
+    // Non-chat mode (original style)
+    return MeasureSize(
+      onChange: (size) {
+        P.chat.inputHeight.q = size.height;
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFFFFFFF),
+          border: Border(
+            top: BorderSide(
+              color: primary.q(.33),
+              width: .5,
+            ),
+          ),
+        ),
+        padding: .only(left: 8, top: 8, right: 8, bottom: paddingBottom + 8),
+        child: AnimatedSize(
+          duration: 250.ms,
+          child: Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              if (inRWKVSee) const _WaitingMsg(),
+              if (inRWKVSee) _ImagePreview(imagePath: imagePath ?? ""),
+              InputTextField(preferredDemoType: preferredDemoType),
+              if (preferredDemoType != .tts) BottomInteractions(preferredDemoType: preferredDemoType),
+              if (preferredDemoType == .tts) const TTSBottomInteractions(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Floating capsule-shaped input bar for chat mode (iOS style)
+class _FloatingCapsuleInputBar extends ConsumerWidget {
+  final DemoType preferredDemoType;
+
+  const _FloatingCapsuleInputBar({required this.preferredDemoType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Capsule background colors with subtle transparency
+    final capsuleColor = isDark
+        ? const Color(0xFF2C2C2E)
+        : Colors.white;
+
+    // Shadow for floating effect
+    final boxShadow = [
+      BoxShadow(
+        color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
+        blurRadius: 20,
+        offset: const Offset(0, 4),
+        spreadRadius: 0,
+      ),
+      if (!isDark)
+        BoxShadow(
+          color: Colors.black.withOpacity(0.04),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+          spreadRadius: 0,
+        ),
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: capsuleColor,
+        borderRadius: 100.r, // Large enough to create stadium/pill shape
+        boxShadow: boxShadow,
+        border: Border.all(
+          color: isDark ? const Color(0xFF3A3A3C) : const Color(0xFFE5E5EA),
+          width: 0.5,
+        ),
+      ),
+      // Input field with send button - equidistant padding
+      padding: const .only(left: 8, top: 4, right: 6, bottom: 4),
+      child: Row(
+        crossAxisAlignment: .center,
+        children: [
+          Expanded(
+            child: InputTextField(preferredDemoType: preferredDemoType, showBackground: false),
+          ),
+          4.w,
+          SendButton(preferredDemoType: preferredDemoType),
+        ],
       ),
     );
   }

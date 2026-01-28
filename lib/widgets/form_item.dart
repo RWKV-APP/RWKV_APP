@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
@@ -41,76 +42,80 @@ class FormItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customTheme = ref.watch(P.app.customTheme);
-    final qb = ref.watch(P.app.qb);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Minimalist colors
+    final itemBgColor = isDark ? const Color(0xFF2C2C2E) : Colors.white;
+    final separatorColor = isDark ? const Color(0xFF3A3A3C) : const Color(0xFFE5E5EA);
+    final titleTextColor = titleColor ?? (isDark ? Colors.white : Colors.black);
+    final subtitleColor = isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93);
+    final infoTextColor = isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93);
+    final arrowColor = isDark ? const Color(0xFF48484A) : const Color(0xFFC7C7CC);
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: customTheme.settingItem,
+          color: itemBgColor,
           borderRadius: .only(
-            topLeft: isSectionStart ? 12.rr : .zero,
-            topRight: isSectionStart ? 12.rr : .zero,
-            bottomLeft: isSectionEnd ? 12.rr : .zero,
-            bottomRight: isSectionEnd ? 12.rr : .zero,
-          ),
-          border: Border(
-            bottom: (autoShowBottomBorder && !isSectionEnd)
-                ? BorderSide(
-                    color: qb.q(.1),
-                    width: .5,
-                  )
-                : BorderSide.none,
+            topLeft: isSectionStart ? 10.rr : .zero,
+            topRight: isSectionStart ? 10.rr : .zero,
+            bottomLeft: isSectionEnd ? 10.rr : .zero,
+            bottomRight: isSectionEnd ? 10.rr : .zero,
           ),
         ),
-        padding: const .only(left: 8, top: 12, right: 8, bottom: 12),
         child: Column(
           children: [
-            Row(
-              children: [
-                if (icon != null) icon!,
-                if (icon != null) 8.w,
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      T(
-                        title,
-                        textAlign: titleTextAlign,
-                        s: TS(w: .w500, s: 16, c: titleColor),
-                      ),
-                      if (subtitle != null)
-                        Opacity(
-                          opacity: 0.5,
-                          child: T(
-                            subtitle!,
-                            s: const TS(w: .w500, s: 12),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                if (infoText != null)
+            Padding(
+              padding: const .symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  if (icon != null) icon!,
+                  if (icon != null) 12.w,
                   Expanded(
-                    flex: 2,
-                    child: T(
-                      infoText,
-                      s: const TS(w: .w500, s: 12),
-                      textAlign: TextAlign.right,
+                    child: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        T(
+                          title,
+                          textAlign: titleTextAlign,
+                          s: TS(w: .w500, s: 15, c: titleTextColor, height: 1.2),
+                        ),
+                        if (subtitle != null) 2.h,
+                        if (subtitle != null)
+                          T(
+                            subtitle!,
+                            s: TS(w: .w400, s: 12, c: subtitleColor, height: 1.2),
+                          ),
+                      ],
                     ),
                   ),
-                if (infoWidget != null) infoWidget!,
-                if (!showArrow && infoText != null) 4.w,
-                ?trailing,
-                if (showArrow) 8.w,
-                if (showArrow)
-                  const Icon(
-                    Icons.chevron_right,
-                  ),
-              ],
+                  if (infoText != null)
+                    T(
+                      infoText,
+                      s: TS(w: .w400, s: 14, c: infoTextColor),
+                    ),
+                  if (infoWidget != null) infoWidget!,
+                  ?trailing,
+                  if (showArrow) 6.w,
+                  if (showArrow)
+                    Icon(
+                      CupertinoIcons.chevron_right,
+                      size: 14,
+                      color: arrowColor,
+                    ),
+                ],
+              ),
             ),
+            // Separator line (inset style like iOS)
+            if (autoShowBottomBorder && !isSectionEnd)
+              Padding(
+                padding: EdgeInsets.only(left: icon != null ? 44 : 16),
+                child: Container(
+                  height: 0.5,
+                  color: separatorColor,
+                ),
+              ),
             if (bottom != null) bottom!,
           ],
         ),

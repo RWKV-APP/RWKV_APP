@@ -25,12 +25,12 @@ class GradientBackground extends StatelessWidget {
                 end: .bottomCenter,
                 colors: isDark
                     ? [
-                        const Color(0xFF152D57),
-                        const Color(0xFF0B1528),
+                        const Color(0xFF1C1C1E), // Apple System Background (Dark)
+                        const Color(0xFF2C2C2E), // Apple Secondary Background (Dark)
                       ]
                     : [
-                        const Color(0xFFF0F4FC),
-                        const Color(0xFFD6E3F8),
+                        const Color(0xFFFFFFFF), // Pure white
+                        const Color(0xFFF2F2F7), // Apple Secondary System Background
                       ],
               ),
       ),

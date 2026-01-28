@@ -26,7 +26,7 @@ class BottomInteractions extends ConsumerWidget {
 
   static double calculateButtonHeight(BuildContext context) {
     final textScaleFactor = MediaQuery.textScalerOf(context);
-    return textScaleFactor.scale(14) + 20;
+    return textScaleFactor.scale(12) + 16;
   }
 
   const BottomInteractions({
@@ -40,18 +40,19 @@ class BottomInteractions extends ConsumerWidget {
       padding: const .only(top: 8),
       child: Row(
         children: [
-          Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
-          _SendingInteraction(preferredDemoType: preferredDemoType),
+          Expanded(child: OptionButtons(preferredDemoType: preferredDemoType)),
+          SendButton(preferredDemoType: preferredDemoType),
         ],
       ),
     );
   }
 }
 
-class _Interactions extends ConsumerWidget {
+/// Option buttons (web search, thinking mode, etc.) - can be used separately
+class OptionButtons extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  const _Interactions({this.preferredDemoType = .chat});
+  const OptionButtons({super.key, this.preferredDemoType = .chat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,8 +61,9 @@ class _Interactions extends ConsumerWidget {
     final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);
     final isAlbatrossLoaded = ref.watch(P.rwkv.isAlbatrossLoaded);
     return Wrap(
-      spacing: 4,
-      runSpacing: 4,
+      spacing: 6,
+      runSpacing: 6,
+      alignment: .start, // Left-aligned
       crossAxisAlignment: .center,
       children: [
         if (preferredDemoType == .see) const IntrinsicWidth(child: SelectImageButton()),
@@ -87,13 +89,20 @@ class _WebSearchModeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final webSearchMode = ref.watch(P.chat.webSearchMode);
 
     final enabled = webSearchMode != WebSearchMode.off;
-    final color = enabled ? primary : theme.colorScheme.surfaceContainer;
-    final textColor = enabled ? theme.colorScheme.onPrimary : Colors.grey;
+    // Design colors: light gray fill unselected, light blue fill selected
+    final lightGrayFill = isDark ? const Color(0xFF3A3A3C) : const Color(0xFFF2F2F7);
+    const darkGrayText = Color(0xFF636366);
+    const blueColor = Color(0xFF007AFF); // Blue for selected state
+    // Light blue for selected background (solid color, not transparency)
+    final lightBlueFill = isDark ? const Color(0xFF1C3A4D) : const Color(0xFFE3F2FD);
+
+    final color = enabled ? lightBlueFill : lightGrayFill;
+    final textColor = enabled ? (isDark ? blueColor : const Color(0xFF1565C0)) : darkGrayText;
+    final border = enabled ? Border.all(color: blueColor.withOpacity(0.5)) : null;
 
     final height = BottomInteractions.calculateButtonHeight(context);
     const EdgeInsets padding = .only(left: 8);
@@ -106,17 +115,18 @@ class _WebSearchModeButton extends ConsumerWidget {
           decoration: BoxDecoration(
             color: color,
             borderRadius: 60.r,
+            border: border,
           ),
           child: Row(
             children: [
-              Icon(Icons.travel_explore, color: textColor, size: 16),
+              Icon(Icons.travel_explore, color: textColor, size: 14),
               2.w,
               T(
                 webSearchMode == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
-                s: TS(c: textColor, s: 14, height: 1, w: .w500),
+                s: TS(c: textColor, s: 12, height: 1, w: .w500),
               ),
               4.w,
-              VerticalDivider(width: 2, indent: 8, endIndent: 8, color: textColor),
+              VerticalDivider(width: 2, indent: 6, endIndent: 6, color: textColor.withOpacity(0.5)),
               PopupMenuButton(
                 offset: const Offset(-30, -80),
                 itemBuilder: (c) {
@@ -140,7 +150,7 @@ class _WebSearchModeButton extends ConsumerWidget {
                   height: height,
                   padding: const .symmetric(horizontal: 4),
                   alignment: .center,
-                  child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
+                  child: Icon(Icons.expand_more_outlined, color: textColor, size: 14),
                 ),
               ),
             ],
@@ -156,17 +166,23 @@ class _WenYanWenButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final mode = ref.watch(P.chat.wenYanWen);
     final model = ref.watch(P.rwkv.latestModel);
 
     final height = BottomInteractions.calculateButtonHeight(context);
 
-    final bgColor = mode == WenyanMode.off ? theme.colorScheme.surfaceContainer : theme.colorScheme.primary;
+    // Design colors: light gray fill unselected, light purple fill selected
+    final enabled = mode != WenyanMode.off;
+    final lightGrayFill = isDark ? const Color(0xFF3A3A3C) : const Color(0xFFF2F2F7);
+    const darkGrayText = Color(0xFF636366);
+    const purpleColor = Color(0xFFAF52DE); // Purple for wenyanwen
+    // Light purple for selected background (solid color, not transparency)
+    final lightPurpleFill = isDark ? const Color(0xFF3D2E4D) : const Color(0xFFF3E5F5);
 
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-    final textColor = mode != WenyanMode.off ? qw.q(1) : qb.q(.667);
+    final bgColor = enabled ? lightPurpleFill : lightGrayFill;
+    final textColor = enabled ? (isDark ? purpleColor : const Color(0xFF7B1FA2)) : darkGrayText;
+    final border = enabled ? Border.all(color: purpleColor.withOpacity(0.5)) : null;
 
     String label = '';
     if (mode == WenyanMode.off) {
@@ -207,16 +223,16 @@ class _WenYanWenButton extends ConsumerWidget {
         ),
         child: Container(
           height: height,
-          padding: const .symmetric(horizontal: 8),
+          padding: const .symmetric(horizontal: 10),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: 60.r,
-            border: Border.all(color: theme.colorScheme.primary.q(.1), width: 1),
+            border: border,
           ),
           alignment: .center,
           child: T(
             label,
-            s: TS(c: textColor, s: 14, height: 1, w: .w500),
+            s: TS(c: textColor, s: 12, height: 1, w: .w500),
           ),
         ),
       ),
@@ -224,10 +240,11 @@ class _WenYanWenButton extends ConsumerWidget {
   }
 }
 
-class _SendingInteraction extends ConsumerWidget {
+/// Send/Stop button - can be used separately
+class SendButton extends ConsumerWidget {
   final DemoType preferredDemoType;
 
-  const _SendingInteraction({required this.preferredDemoType});
+  const SendButton({super.key, required this.preferredDemoType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -248,7 +265,9 @@ class _Send extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = Theme.of(context).colorScheme.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isDark ? Colors.white : Colors.black;
+    final iconColor = isDark ? Colors.black : Colors.white;
 
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final inSee = ref.watch(P.app.pageKey) == .see;
@@ -266,16 +285,22 @@ class _Send extends ConsumerWidget {
       child: GestureDetector(
         onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
         child: Container(
-          padding: const .symmetric(horizontal: 10, vertical: 5),
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
           child: Icon(
             (Platform.isIOS || Platform.isMacOS)
                 ? editingBotMessage
-                      ? CupertinoIcons.pencil_circle_fill
-                      : CupertinoIcons.arrow_up_circle_fill
+                      ? CupertinoIcons.pencil
+                      : CupertinoIcons.arrow_up
                 : editingBotMessage
                 ? Icons.edit
-                : Icons.send_rounded,
-            color: color,
+                : Icons.arrow_upward,
+            color: iconColor,
+            size: 18,
           ),
         ),
       ),
@@ -288,40 +313,27 @@ class _Stop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isDark ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: P.chat.onStopButtonPressed,
       child: Container(
-        decoration: const BoxDecoration(color: Colors.transparent),
-        child: Stack(
-          children: [
-            SizedBox(
-              width: 46,
-              height: 34,
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(color: color, borderRadius: 2.r),
-                  width: 12,
-                  height: 12,
-                ),
-              ),
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          shape: BoxShape.circle,
+          border: Border.all(color: color, width: 2),
+        ),
+        child: Center(
+          child: Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: 2.r,
             ),
-            SizedBox(
-              width: 46,
-              height: 34,
-              child: Center(
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    color: color.q(.5),
-                    strokeWidth: 3,
-                    strokeCap: StrokeCap.round,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

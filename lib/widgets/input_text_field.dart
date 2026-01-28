@@ -11,7 +11,9 @@ import 'package:zone/store/p.dart';
 
 class InputTextField extends ConsumerWidget {
   final DemoType? preferredDemoType;
-  const InputTextField({super.key, this.preferredDemoType});
+  final bool showBackground;
+
+  const InputTextField({super.key, this.preferredDemoType, this.showBackground = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,6 +23,7 @@ class InputTextField extends ConsumerWidget {
     final loading = ref.watch(P.rwkv.loading);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final isChat = demoType == .chat;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     String hintText;
     switch (demoType) {
@@ -49,63 +52,80 @@ class InputTextField extends ConsumerWidget {
 
     final isDesktop = ref.watch(P.app.isDesktop);
 
+    // Apple-style input field colors
+    final inputBackgroundColor = isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7);
+    final hintColor = const Color(0xFF8E8E93); // Apple Gray
+
+    final textField = TextField(
+      focusNode: P.chat.focusNode,
+      enabled: textFieldEnabled,
+      controller: P.chat.textEditingController,
+      onSubmitted: P.chat.onKeyboardSubmitted,
+      onChanged: _onChanged,
+      onEditingComplete: P.chat.onEditingComplete,
+      onAppPrivateCommand: _onAppPrivateCommand,
+      onTap: _onTap,
+      onTapOutside: _onTapOutside,
+      keyboardType: keyboardType,
+      enableSuggestions: true,
+      textInputAction: TextInputAction.newline,
+      maxLines: 10,
+      minLines: 1,
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: isChat
+            ? const .symmetric(horizontal: 10, vertical: 8)
+            : const .only(left: 12, top: 4, right: 12, bottom: 4),
+        fillColor: qw,
+        focusColor: qw,
+        hoverColor: qw,
+        iconColor: qw,
+        border: isChat
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius: borderRadius,
+                borderSide: BorderSide(color: primary.q(.33)),
+              ),
+        enabledBorder: isChat
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius: borderRadius,
+                borderSide: BorderSide(color: primary.q(.33)),
+              ),
+        focusedBorder: isChat
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius: borderRadius,
+                borderSide: BorderSide(color: primary.q(.33)),
+              ),
+        focusedErrorBorder: isChat
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius: borderRadius,
+                borderSide: BorderSide(color: primary.q(.33)),
+              ),
+        hintText: hintText,
+        hintStyle: TextStyle(color: hintColor, fontSize: 15),
+        suffixIcon: textInInput.isEmpty || isChat
+            ? null
+            : GestureDetector(
+                onTap: P.chat.onTapClearInput,
+                child: const Icon(Icons.clear),
+              ),
+      ),
+    );
+
     final textFieldWidget = GestureDetector(
       onTap: textFieldEnabled ? null : _onTapTextFieldWhenItsDisabled,
-      child: TextField(
-        focusNode: P.chat.focusNode,
-        enabled: textFieldEnabled,
-        controller: P.chat.textEditingController,
-        onSubmitted: P.chat.onKeyboardSubmitted,
-        onChanged: _onChanged,
-        onEditingComplete: P.chat.onEditingComplete,
-        onAppPrivateCommand: _onAppPrivateCommand,
-        onTap: _onTap,
-        onTapOutside: _onTapOutside,
-        keyboardType: keyboardType,
-        enableSuggestions: true,
-        textInputAction: TextInputAction.newline,
-        maxLines: 10,
-        minLines: 1,
-        decoration: InputDecoration(
-          contentPadding: const .only(left: 12, top: 4, right: 12, bottom: 4),
-          fillColor: qw,
-          focusColor: qw,
-          hoverColor: qw,
-          iconColor: qw,
-          border: isChat
-              ? InputBorder.none
-              : OutlineInputBorder(
-                  borderRadius: borderRadius,
-                  borderSide: BorderSide(color: primary.q(.33)),
-                ),
-          enabledBorder: isChat
-              ? InputBorder.none
-              : OutlineInputBorder(
-                  borderRadius: borderRadius,
-                  borderSide: BorderSide(color: primary.q(.33)),
-                ),
-          focusedBorder: isChat
-              ? InputBorder.none
-              : OutlineInputBorder(
-                  borderRadius: borderRadius,
-                  borderSide: BorderSide(color: primary.q(.33)),
-                ),
-          focusedErrorBorder: isChat
-              ? InputBorder.none
-              : OutlineInputBorder(
-                  borderRadius: borderRadius,
-                  borderSide: BorderSide(color: primary.q(.33)),
-                ),
-          hintText: hintText,
-          hintStyle: !isChat ? null : const TextStyle(color: Colors.grey),
-          suffixIcon: textInInput.isEmpty || isChat
-              ? null
-              : GestureDetector(
-                  onTap: P.chat.onTapClearInput,
-                  child: const Icon(Icons.clear),
-                ),
-        ),
-      ),
+      child: (isChat && showBackground)
+          ? Container(
+              decoration: BoxDecoration(
+                color: inputBackgroundColor,
+                borderRadius: 20.r,
+              ),
+              child: textField,
+            )
+          : textField,
     );
 
     if (!isDesktop) {

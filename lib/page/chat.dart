@@ -62,11 +62,12 @@ class _Page extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectMessageMode = ref.watch(P.chat.isSharing);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFFFFFFF),
       body: Stack(
         children: [
-          const GradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
           const Positioned(

@@ -70,15 +70,14 @@ class DecodeParamButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
     final height = BottomInteractions.calculateButtonHeight(context);
     final decodeParamType = ref.watch(P.rwkv.decodeParamType);
-    final surfaceContainer = Theme.of(context).colorScheme.surfaceContainer;
-    final primary = Theme.of(context).colorScheme.primary;
-    final bgColor = surfaceContainer;
-    final textColor = qb.q(.667);
-    final borderColor = primary.q(.1);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final s = S.of(context);
+
+    // Design colors: light gray fill, dark gray text (always unselected style)
+    final bgColor = isDark ? const Color(0xFF3A3A3C) : const Color(0xFFF2F2F7);
+    const textColor = Color(0xFF636366);
     return Tooltip(
       message: s.decode_param,
       child: IntrinsicWidth(
@@ -86,11 +85,10 @@ class DecodeParamButton extends ConsumerWidget {
           onTap: _onTap,
           child: Container(
             height: height,
-            padding: const .symmetric(horizontal: 8),
+            padding: const .symmetric(horizontal: 6),
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: 60.r,
-              border: Border.all(color: borderColor),
             ),
             child: Row(
               mainAxisAlignment: .center,
@@ -98,7 +96,7 @@ class DecodeParamButton extends ConsumerWidget {
               children: [
                 T(
                   s.style + s.hyphen + decodeParamType.displayNameShort,
-                  s: TS(c: textColor, s: 14, height: 1, w: .w500),
+                  s: TS(c: textColor, s: 12, height: 1, w: .w500),
                 ),
               ],
             ),

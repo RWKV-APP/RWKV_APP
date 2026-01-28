@@ -98,7 +98,7 @@ class VersionInfoPanel extends ConsumerWidget {
                       height: 44,
                       padding: const .symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF14b8a6),
+                        color: const Color(0xFF007AFF), // Apple iOS Blue
                         borderRadius: 100.r,
                       ),
                       child: Row(
@@ -124,7 +124,7 @@ class VersionInfoPanel extends ConsumerWidget {
                       height: 44,
                       padding: const .symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0d9488),
+                        color: const Color(0xFF48484A), // Apple Gray 3 (Dark)
                         borderRadius: 100.r,
                       ),
                       child: Row(
@@ -146,7 +146,7 @@ class VersionInfoPanel extends ConsumerWidget {
                       height: 44,
                       padding: const .symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0d9488),
+                        color: const Color(0xFF48484A), // Apple Gray 3 (Dark)
                         borderRadius: 100.r,
                       ),
                       child: Row(
