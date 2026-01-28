@@ -75,6 +75,9 @@ class Debugger extends ConsumerWidget {
     final generatingId = ref.watch(P.rwkv.generatingId);
     final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
 
+    final preferredUIFont = ref.watch(P.preference.preferredUIFont);
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -148,6 +151,10 @@ class Debugger extends ConsumerWidget {
                       T(frontendSocName),
                       T("frontendSocBrand".codeToName),
                       T(frontendSocBrand.toString()),
+                      T("preferredUIFont".codeToName),
+                      T(preferredUIFont ?? "null"),
+                      T("preferredMonospaceFont".codeToName),
+                      T(preferredMonospaceFont ?? "null"),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),
