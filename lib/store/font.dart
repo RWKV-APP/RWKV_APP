@@ -156,7 +156,6 @@ extension $Font on _Font {
 
   ThemeData applyFontToTheme(ThemeData baseTheme) {
     final uiFontFamily = P.preference.preferredUIFont.q;
-    final monospaceFontFamily = P.preference.preferredMonospaceFont.q;
 
     ThemeData result = baseTheme;
 
@@ -167,14 +166,6 @@ extension $Font on _Font {
         primaryTextTheme: result.primaryTextTheme.apply(fontFamily: uiFontFamily),
         // Typography 不支持直接 apply 字体
         typography: Typography.material2018(),
-      );
-    }
-
-    if (monospaceFontFamily != null && monospaceFontFamily.isNotEmpty && monospaceFontFamily != 'System') {
-      result = result.copyWith(
-        textTheme: result.textTheme.copyWith(
-          bodySmall: result.textTheme.bodySmall?.copyWith(fontFamily: monospaceFontFamily),
-        ),
       );
     }
 
