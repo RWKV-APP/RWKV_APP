@@ -19,7 +19,6 @@ import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/see/select_image_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/widgets/performance_info.dart';
 
 class BottomInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;

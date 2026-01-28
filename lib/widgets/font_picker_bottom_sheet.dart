@@ -160,7 +160,6 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
     return char.length == 1 && char.codeUnitAt(0) >= 65 && char.codeUnitAt(0) <= 90;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -328,7 +327,6 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
       },
     );
   }
-
 }
 
 class _FontPreviewItem extends StatefulWidget {

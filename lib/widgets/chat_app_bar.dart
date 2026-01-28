@@ -122,7 +122,7 @@ class _ChatAppBar extends ConsumerWidget {
       title: GestureDetector(
         onTap: _onTitlePressed,
         child: Container(
-          decoration: BoxDecoration(color: Colors.transparent),
+          decoration: const BoxDecoration(color: Colors.transparent),
           child: Column(
             crossAxisAlignment: .center,
             children: [

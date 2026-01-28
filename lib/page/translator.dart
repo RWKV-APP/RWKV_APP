@@ -9,7 +9,6 @@ import 'package:zone/model/browser_tab.dart';
 import 'package:zone/model/browser_window.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
-import 'package:zone/widgets/performance_info.dart';
 
 class PageTranslator extends ConsumerWidget {
   const PageTranslator({super.key});

@@ -18,7 +18,6 @@ import 'package:zone/model/language.dart';
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/store/p.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:zone/widgets/performance_info.dart';
 
 class TTSBottomInteractions extends ConsumerWidget {
   const TTSBottomInteractions({super.key});
@@ -331,13 +330,13 @@ class _Actions extends ConsumerWidget {
 
     return Row(
       children: [
-        Expanded(
+        const Expanded(
           child: Wrap(
             crossAxisAlignment: .center,
             children: [
-              const _AudioButton(),
-              const _SpkButton(),
-              const _IntonationButton(),
+              _AudioButton(),
+              _SpkButton(),
+              _IntonationButton(),
             ],
           ),
         ),

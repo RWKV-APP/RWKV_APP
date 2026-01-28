@@ -130,45 +130,42 @@ extension $Font on _Font {
 
   List<String> getDefaultFonts() {
     return [
-      'System',
+      'vivo Sans',
+      'vivoSans',
+      'Noto Sans CJK SC',
+      'OPPO Sans',
+      'Source Han Sans SC',
       'Roboto',
+      'mipro',
+      'miui',
+      'OPPOSans',
+
+      '.AppleSystemUIFont',
+      'Arial Black',
       'Arial',
-      'Helvetica',
-      'Times New Roman',
-      'Courier New',
-      'Verdana',
-      'Georgia',
-      'Palatino',
-      'Garamond',
       'Bookman',
       'Comic Sans MS',
-      'Trebuchet MS',
-      'Arial Black',
+      'Courier New',
+      'Courier',
+      'Garamond',
+      'Georgia',
+      'HarmonyOS Sans SC',
+      'Helvetica',
       'Impact',
       'Lucida Console',
+      'Microsoft YaHei',
+      'Palatino',
+      'PingFang SC',
+      'SF Pro Text',
+      'System',
       'Tahoma',
-      'Courier',
+      'Times New Roman',
+      'Trebuchet MS',
+      'Verdana',
+      'sans-serif',
       'sans-serif',
       'serif',
-      'monospace',
+      '微软雅黑',
     ];
-  }
-
-  ThemeData applyFontToTheme(ThemeData baseTheme) {
-    final uiFontFamily = P.preference.preferredUIFont.q;
-
-    ThemeData result = baseTheme;
-
-    // 应用 UI 字体
-    if (uiFontFamily != null && uiFontFamily.isNotEmpty && uiFontFamily != 'System') {
-      result = result.copyWith(
-        textTheme: result.textTheme.apply(fontFamily: uiFontFamily),
-        primaryTextTheme: result.primaryTextTheme.apply(fontFamily: uiFontFamily),
-        // Typography 不支持直接 apply 字体
-        typography: Typography.material2018(),
-      );
-    }
-
-    return result;
   }
 }

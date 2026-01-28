@@ -21,13 +21,31 @@ abstract class Config {
 
   static const appTitle = "RWKV Chat";
 
+  /// 全局字体 fallback, 主要用于桌面端:
+  /// - 优先一些常见的中文 UI 字体
+  /// - 兼容 Windows / macOS / 小米 / OPPO / vivo 等 ROM
   static const fontFamilyFallback = [
+    // Windows / 通用中文无衬线
     'Microsoft YaHei',
-    "Sarasa Mono SC",
-    "PingFang SC",
-    ".AppleSystemUIFont",
+    '微软雅黑',
+    // macOS / iOS 系统 UI 字体
+    '.AppleSystemUIFont',
+    'PingFang SC',
+
+    'SF Pro Text',
+    // 一些常见的中文无衬线字体
+    'Noto Sans CJK SC',
+    'Source Han Sans SC',
+    'HarmonyOS Sans SC',
+    // 交叉覆盖部分国产 ROM（小米 / OPPO / vivo 等）
     'miui',
     'mipro',
+    'OPPO Sans',
+    'OPPOSans',
+    'vivo Sans',
+    'vivoSans',
+    // 最后退回到通用 sans-serif
+    'sans-serif',
   ];
 
   static const maxTitleLength = 60;

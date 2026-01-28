@@ -106,7 +106,6 @@ class _App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDesktop = ref.watch(P.app.isDesktop);
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
     final brightness = customTheme.light ? Brightness.light : Brightness.dark;
@@ -114,21 +113,19 @@ class _App extends ConsumerWidget {
     final modalBarrierColor = customTheme.pagerDim.q(.25);
     final bottomSheetTheme = BottomSheetThemeData(backgroundColor: customTheme.setting, modalBarrierColor: modalBarrierColor);
     final appBarTheme = AppBarTheme(scrolledUnderElevation: 0, backgroundColor: customTheme.scaffold);
+    final preferredUIFont = ref.watch(P.preference.preferredUIFont);
+    final _ = ref.watch(P.preference.preferredMonospaceFont);
 
-    final baseThemeData = ThemeData(
-      fontFamilyFallback: isDesktop ? Config.fontFamilyFallback : null,
+    final themeData = ThemeData(
+      fontFamily: preferredUIFont,
+      fontFamilyFallback: Config.fontFamilyFallback,
       brightness: brightness,
       colorScheme: demoTypeColorScheme,
       appBarTheme: appBarTheme,
       scaffoldBackgroundColor: customTheme.scaffold,
       bottomSheetTheme: bottomSheetTheme,
+      typography: Typography.material2018(),
     );
-
-    ref.watch(P.preference.preferredUIFont);
-    ref.watch(P.preference.preferredMonospaceFont);
-
-    // Apply user-selected fonts to theme
-    final themeData = P.font.applyFontToTheme(baseThemeData);
 
     return MaterialApp.router(
       color: customTheme.scaffold,
@@ -156,7 +153,7 @@ class _App extends ConsumerWidget {
           children: [
             Positioned(left: 0, right: 0, top: 0, bottom: 0, child: Container(color: customTheme.scaffold)),
             if (child != null) child,
-            FloatingPerformaceInfo(),
+            const FloatingPerformaceInfo(),
             const Alert(),
             if (kDebugMode) const Debugger(),
           ],
