@@ -3,19 +3,30 @@ package com.rwkvzone.chat
 import android.content.Intent
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.graphics.fonts.SystemFonts
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
+import java.util.concurrent.Executors
 
 class MainActivity : FlutterActivity() {
     private val channelName = "utils"
     private val fontChannelName = "com.rwkvzone.chat/fonts"
+    
+    // 使用单线程池来处理后台任务，避免阻塞主线程
+    private val executor = Executors.newSingleThreadExecutor()
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        // 1. Utils Channel (安装 APK)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger, channelName
         ).setMethodCallHandler { call, result ->
@@ -29,22 +40,30 @@ class MainActivity : FlutterActivity() {
                         result.error("INVALID_PATH", "Path cannot be null", null)
                     }
                 }
-
                 else -> {
                     result.notImplemented()
                 }
             }
         }
 
+        // 2. Fonts Channel (获取字体)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger, fontChannelName
         ).setMethodCallHandler { call, result ->
             if (call.method == "getSystemFonts") {
-                try {
-                    val fonts = getSystemFonts()
-                    result.success(fonts)
-                } catch (e: Exception) {
-                    result.error("ERROR", "Failed to get system fonts: ${e.message}", null)
+                // 在后台线程执行耗时扫描
+                executor.execute {
+                    try {
+                        val fonts = getRealSystemFonts()
+                        // 切回主线程返回结果
+                        mainHandler.post {
+                            result.success(fonts)
+                        }
+                    } catch (e: Exception) {
+                        mainHandler.post {
+                            result.error("ERROR", "Failed to get system fonts: ${e.message}", null)
+                        }
+                    }
                 }
             } else {
                 result.notImplemented()
@@ -59,122 +78,125 @@ class MainActivity : FlutterActivity() {
             return
         }
 
-        val uri = FileProvider.getUriForFile(
-            this, "${applicationContext.packageName}.fileprovider", file
-        )
+        try {
+            val uri = FileProvider.getUriForFile(
+                this, "${applicationContext.packageName}.fileprovider", file
+            )
 
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(uri, "application/vnd.android.package-archive")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/vnd.android.package-archive")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.e("APK_INSTALL", "Error installing APK", e)
         }
-
-        startActivity(intent)
     }
 
-    private fun getSystemFonts(): List<Map<String, Any>> {
+    /**
+     * 获取真实存在的系统字体列表
+     * 混合策略：Android 10+ 使用 SystemFonts API，旧版本扫描 /system/fonts
+     */
+    private fun getRealSystemFonts(): List<Map<String, Any>> {
         val fontInfoList = mutableListOf<Map<String, Any>>()
-        val processedFonts = mutableSetOf<String>()
-        
-        // Get default system fonts
-        val defaultFonts = listOf(
-            "Roboto", "sans-serif", "serif", "monospace"
-        )
-        
-        // Common fonts that are typically available
-        val commonFonts = listOf(
-            "Arial", "Helvetica", "Times New Roman", "Courier New",
-            "Verdana", "Georgia", "Palatino", "Garamond",
-            "Bookman", "Comic Sans MS", "Trebuchet MS", "Arial Black",
-            "Impact", "Lucida Console", "Tahoma", "Courier"
-        )
-        
-        // Android system font families
-        val systemFonts = listOf(
-            "sans-serif", "sans-serif-light", "sans-serif-thin",
-            "sans-serif-condensed", "sans-serif-medium", "sans-serif-black",
-            "serif", "serif-monospace", "monospace", "casual", "cursive", "fantasy"
-        )
-        
-        val allFonts = (defaultFonts + commonFonts + systemFonts).distinct()
-        
-        for (fontName in allFonts) {
-            if (processedFonts.contains(fontName)) {
-                continue
-            }
-            processedFonts.add(fontName)
-            
-            // Try to create Typeface and check if it's monospace
-            val isMonospace = try {
-                val typeface = Typeface.create(fontName, Typeface.NORMAL)
-                if (typeface != null) {
-                    isFontMonospace(typeface, fontName)
-                } else {
-                    inferMonospaceFromName(fontName)
+        val processedPaths = mutableSetOf<String>()
+
+        // 策略 A: Android 10 (API 29) 及以上使用官方 API
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+                val fonts = SystemFonts.getAvailableFonts()
+                for (font in fonts) {
+                    val file = font.file ?: continue
+                    val path = file.absolutePath
+                    
+                    if (processedPaths.contains(path)) continue
+                    processedPaths.add(path)
+
+                    // 尝试加载字体进行测量
+                    try {
+                        // 注意：这里我们使用文件创建 Typeface，确保字体真实有效
+                        val typeface = Typeface.createFromFile(file)
+                        fontInfoList.add(mapOf(
+                            "name" to file.name, // 使用文件名作为标识，例如 Roboto-Regular.ttf
+                            "path" to path,
+                            "isMonospace" to isFontMonospace(typeface)
+                        ))
+                    } catch (e: Exception) {
+                        // 忽略损坏的字体文件
+                        continue
+                    }
                 }
             } catch (e: Exception) {
-                inferMonospaceFromName(fontName)
+                Log.e("FONTS", "Error using SystemFonts API", e)
             }
-            
-            fontInfoList.add(mapOf(
-                "name" to fontName,
-                "isMonospace" to isMonospace
-            ))
         }
-        
-        // Sort by name
-        fontInfoList.sortBy { it["name"] as String }
-        
-        return fontInfoList
-    }
-    
-    // 检测字体是否为等宽字体（通过测量字符宽度）
-    private fun isFontMonospace(typeface: Typeface, fontName: String): Boolean {
-        // 对于已知的等宽字体，直接返回
-        if (fontName.contains("mono", ignoreCase = true) ||
-            fontName.contains("courier", ignoreCase = true) ||
-            fontName == "monospace") {
-            return true
-        }
-        
-        // 通过测量字符宽度来判断
-        val paint = Paint().apply {
-            this.typeface = typeface
-            textSize = 12f
-        }
-        
-        val testChars = arrayOf("i", "m", "W", "0")
-        val widths = mutableListOf<Float>()
-        
-        for (char in testChars) {
-            val width = paint.measureText(char)
-            widths.add(width)
-        }
-        
-        // 如果所有字符宽度相同（允许很小的误差），则为等宽字体
-        if (widths.isNotEmpty()) {
-            val firstWidth = widths[0]
-            for (width in widths) {
-                if (kotlin.math.abs(width - firstWidth) > 0.1f) {
-                    return false
+
+        // 策略 B: 扫描 /system/fonts 目录 (作为补充或主力)
+        // 即使在 Android 10+，有时扫描目录能发现 API 没暴露的字体，或者作为 fallback
+        val systemFontDir = File("/system/fonts")
+        if (systemFontDir.exists() && systemFontDir.isDirectory) {
+            val files = systemFontDir.listFiles()
+            if (files != null) {
+                for (file in files) {
+                    val path = file.absolutePath
+                    
+                    // 过滤非字体文件
+                    if (!file.name.endsWith(".ttf", true) && !file.name.endsWith(".otf", true)) {
+                        continue
+                    }
+                    
+                    // 如果已经在 策略 A 中处理过，跳过
+                    if (processedPaths.contains(path)) continue
+                    processedPaths.add(path)
+
+                    try {
+                        val typeface = Typeface.createFromFile(file)
+                        fontInfoList.add(mapOf(
+                            "name" to file.name,
+                            "path" to path,
+                            "isMonospace" to isFontMonospace(typeface)
+                        ))
+                    } catch (e: Exception) {
+                        continue
+                    }
                 }
             }
-            return true
+        }
+
+        // 按名称排序
+        fontInfoList.sortBy { it["name"] as String }
+
+        return fontInfoList
+    }
+
+    /**
+     * 通过测量字符宽度来精确判断是否为等宽字体
+     */
+    private fun isFontMonospace(typeface: Typeface): Boolean {
+        val paint = Paint().apply {
+            this.typeface = typeface
+            textSize = 24f // 设置足够大的字号以减少测量误差
+        }
+
+        // 测试字符集：包含通常较窄的 'i', 'l' 和较宽的 'M', 'W' 以及标点
+        val testChars = charArrayOf('i', 'M', '.', 'W', 'l', '1')
+        
+        if (testChars.isEmpty()) return false
+
+        // 获取第一个字符的宽度作为基准
+        val firstWidth = paint.measureText(testChars, 0, 1)
+
+        // 遍历剩余字符，如果有任何一个宽度不同，则不是等宽字体
+        for (i in 1 until testChars.size) {
+            val currentWidth = paint.measureText(testChars, i, 1)
+            // 允许极小的浮点数误差 (0.05f)
+            if (kotlin.math.abs(currentWidth - firstWidth) > 0.05f) {
+                return false
+            }
         }
         
-        return false
-    }
-    
-    // 从字体名称推断是否为等宽字体（作为后备方案）
-    private fun inferMonospaceFromName(fontName: String): Boolean {
-        val lowerName = fontName.lowercase()
-        return lowerName.contains("mono") ||
-               lowerName.contains("courier") ||
-               lowerName == "monospace" ||
-               lowerName.contains("console") ||
-               lowerName.contains("terminal") ||
-               lowerName.contains("code") ||
-               lowerName.contains("menlo") ||
-               lowerName.contains("consolas")
+        return true
     }
 }
