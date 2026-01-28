@@ -410,8 +410,7 @@ class FileKeyItem extends ConsumerWidget {
         ? '${timeRemaining.inSeconds}s'
         : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
 
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Column(
       crossAxisAlignment: .start,
@@ -459,7 +458,7 @@ class FileKeyItem extends ConsumerWidget {
                   remainText,
                 ]),
                 s: TextStyle(
-                  fontFamily: effectiveMonospaceFont,
+                  fontFamily: monospaceFF,
                   fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),
               ),

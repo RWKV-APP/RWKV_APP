@@ -11,7 +11,6 @@ import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 
-
 class MarkdownRender extends ConsumerWidget {
   final String raw;
   final Color? color;
@@ -96,8 +95,8 @@ class _Highlight extends ConsumerWidget {
     final dark = ref.watch(P.app.dark);
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
     return C(
       decoration: BoxDecoration(
         color: dark ? qw.q(.5) : qb.q(.04),
@@ -110,7 +109,7 @@ class _Highlight extends ConsumerWidget {
           text: text,
           style: style.copyWith(
             fontSize: (style.fontSize ?? 14) - 2,
-            fontFamily: effectiveMonospaceFont,
+            fontFamily: monospaceFF,
             fontFamilyFallback: P.mdRender.codeFontFamilyFallback,
           ),
         ),
@@ -258,8 +257,8 @@ class _CodeState extends ConsumerState<_Code> {
 
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return C(
       decoration: BoxDecoration(
@@ -315,7 +314,7 @@ class _CodeState extends ConsumerState<_Code> {
               child: Text.rich(
                 highlightedCode,
                 style: TextStyle(
-                  fontFamily: effectiveMonospaceFont,
+                  fontFamily: monospaceFF,
                   fontFamilyFallback: P.mdRender.codeFontFamilyFallback,
                 ),
               ),

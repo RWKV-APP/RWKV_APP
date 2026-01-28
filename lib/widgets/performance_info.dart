@@ -19,8 +19,7 @@ class PerformanceInfo extends ConsumerWidget {
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final qb = ref.watch(P.app.qb);
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
     return Column(
       crossAxisAlignment: .start,
       mainAxisAlignment: .center,
@@ -32,7 +31,7 @@ class PerformanceInfo extends ConsumerWidget {
               TextSpan(text: short ? "P: " : "Prefill: "),
               TextSpan(
                 text: prefillSpeed.toStringAsFixed(1),
-                style: TS(ff: effectiveMonospaceFont),
+                style: TS(ff: monospaceFF),
               ),
               const TextSpan(text: "t/s"),
             ],
@@ -45,7 +44,7 @@ class PerformanceInfo extends ConsumerWidget {
               TextSpan(text: short ? "D: " : "Decode: "),
               TextSpan(
                 text: decodeSpeed.toStringAsFixed(1),
-                style: TS(ff: effectiveMonospaceFont),
+                style: TS(ff: monospaceFF),
               ),
               const TextSpan(text: "t/s"),
             ],

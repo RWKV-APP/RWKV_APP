@@ -103,13 +103,13 @@ class CompletionSpeed extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prefillSpeed = item?.prefillSpeed ?? ref.watch(P.rwkv.prefillSpeed) ?? 0;
     final decodeSpeed = item?.decodeSpeed ?? ref.watch(P.rwkv.decodeSpeed) ?? 0;
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Text(
         "Prefill：${prefillSpeed.toStringAsFixed(1)}t/s Decode:${decodeSpeed.toStringAsFixed(1)}t/s",
-        style: TextStyle(fontSize: 8, fontFamily: effectiveMonospaceFont),
+        style: TextStyle(fontSize: 8, fontFamily: monospaceFF),
         textAlign: TextAlign.end,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

@@ -109,8 +109,6 @@ class _App extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
-    final preferredUIFont = ref.watch(P.preference.preferredUIFont);
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
     final brightness = customTheme.light ? Brightness.light : Brightness.dark;
     final demoTypeColorScheme = customTheme.light ? P.app.demoType.q.colorScheme : P.app.demoType.q.colorSchemeDark;
     final modalBarrierColor = customTheme.pagerDim.q(.25);
@@ -127,11 +125,7 @@ class _App extends ConsumerWidget {
     );
 
     // Apply user-selected fonts to theme
-    final themeData = P.font.applyFontToTheme(
-      baseThemeData,
-      preferredUIFont,
-      preferredMonospaceFont,
-    );
+    final themeData = P.font.applyFontToTheme(baseThemeData);
 
     return MaterialApp.router(
       color: customTheme.scaffold,

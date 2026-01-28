@@ -18,7 +18,6 @@ import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 
-
 class PageWeightManager extends ConsumerWidget {
   const PageWeightManager({super.key});
 
@@ -751,8 +750,7 @@ class _DownloadingItem extends ConsumerWidget {
       null => s.unknown,
     };
 
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return ListTile(
       title: Text(fileInfo.name),
@@ -797,7 +795,7 @@ class _DownloadingItem extends ConsumerWidget {
               ],
             ),
             style: TextStyle(
-              fontFamily: effectiveMonospaceFont,
+              fontFamily: monospaceFF,
               fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
             ),
           ),

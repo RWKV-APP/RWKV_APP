@@ -9,26 +9,32 @@ class _Font {
   late final loadedFonts = qs<Set<String>>({});
 
   /// 系统字体列表缓存
-  late final systemFonts = qs<List<FontInfo>>([]);
+  late final systemFontCache = qs<List<FontInfo>>([]);
+
+  late final finalMonospaceFontFamily = qp((ref) {
+    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+    if (preferredMonospaceFont != null && preferredMonospaceFont.isNotEmpty && preferredMonospaceFont != 'System') {
+      return preferredMonospaceFont;
+    }
+    return 'monospace';
+  });
 }
 
 extension _$Font on _Font {
-  Future<void> _init() async {
-    // 可以在这里做一些初始化工作，目前看起来不需要立刻加载字体列表
-  }
+  Future<void> _init() async {}
 }
 
 extension $Font on _Font {
   Future<List<FontInfo>> getSystemFontsWithInfo({bool forceRefresh = false}) async {
-    if (systemFonts.q.isNotEmpty && !forceRefresh) {
-      return systemFonts.q;
+    if (systemFontCache.q.isNotEmpty && !forceRefresh) {
+      return systemFontCache.q;
     }
 
     try {
       final List<dynamic>? fontsData = await P.adapter.call<List<dynamic>>(ToNative.getSystemFonts);
       if (fontsData == null) throw Exception("Failed to get fonts data from native");
       final allFonts = fontsData.map((font) => FontInfo.fromMap(font as Map<dynamic, dynamic>)).toList();
-      
+
       // 过滤掉名称相同的字体，保留第一个出现的
       final seenNames = <String>{};
       final result = <FontInfo>[];
@@ -38,8 +44,8 @@ extension $Font on _Font {
           result.add(font);
         }
       }
-      
-      systemFonts.q = result;
+
+      systemFontCache.q = result;
       return result;
     } catch (e) {
       // 如果平台通道失败，返回默认字体列表（使用名称推断）
@@ -51,17 +57,8 @@ extension $Font on _Font {
             ),
           )
           .toList();
-      systemFonts.q = defaultList;
+      systemFontCache.q = defaultList;
       return defaultList;
-    }
-  }
-
-  Future<List<String>> getSystemFonts() async {
-    try {
-      final fonts = await getSystemFontsWithInfo();
-      return fonts.map((f) => f.name).toList();
-    } catch (e) {
-      return getDefaultFonts();
     }
   }
 
@@ -79,7 +76,7 @@ extension $Font on _Font {
       final fontLoader = FontLoader(familyName);
       fontLoader.addFont(Future.value(ByteData.view(bytes.buffer)));
       await fontLoader.load();
-      
+
       // Update state
       final newSet = Set<String>.from(loadedFonts.q);
       newSet.add(familyName);
@@ -97,11 +94,11 @@ extension $Font on _Font {
 
     try {
       // 使用缓存的字体列表，如果为空则尝试获取
-      var fonts = systemFonts.q;
+      var fonts = systemFontCache.q;
       if (fonts.isEmpty) {
         fonts = await getSystemFontsWithInfo();
       }
-      
+
       final font = fonts.firstWhere(
         (f) => f.name == familyName,
         orElse: () => FontInfo(name: '', isMonospace: false),
@@ -157,7 +154,10 @@ extension $Font on _Font {
     ];
   }
 
-  ThemeData applyFontToTheme(ThemeData baseTheme, String? uiFontFamily, String? monospaceFontFamily) {
+  ThemeData applyFontToTheme(ThemeData baseTheme) {
+    final uiFontFamily = P.preference.preferredUIFont.q;
+    final monospaceFontFamily = P.preference.preferredMonospaceFont.q;
+
     ThemeData result = baseTheme;
 
     // 应用 UI 字体
@@ -187,21 +187,5 @@ extension $Font on _Font {
     }
 
     return result;
-  }
-
-  String getEffectiveMonospaceFont(String? userSelectedFont) {
-    if (userSelectedFont != null && userSelectedFont.isNotEmpty && userSelectedFont != 'System') {
-      return userSelectedFont;
-    }
-    return 'monospace';
-  }
-
-  String getSystemFontName() {
-    if (kIsWeb) return 'Sans-serif';
-    if (Platform.isAndroid) return 'System Default';
-    if (Platform.isIOS || Platform.isMacOS) return 'San Francisco';
-    if (Platform.isWindows) return 'Segoe UI';
-    if (Platform.isLinux) return 'System Default';
-    return 'System';
   }
 }

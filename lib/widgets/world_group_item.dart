@@ -506,8 +506,8 @@ class _CollapsedContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Column(
       crossAxisAlignment: .start,
@@ -548,7 +548,7 @@ class _CollapsedContent extends ConsumerWidget {
                   remainText,
                 ]),
                 s: TextStyle(
-                  fontFamily: effectiveMonospaceFont,
+                  fontFamily: monospaceFF,
                   fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),
               ),
@@ -691,8 +691,7 @@ class _ExpandedFileItem extends ConsumerWidget {
     final showPause = state == TaskState.running;
     final showCancel = showPause || showResume;
 
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Row(
       children: [
@@ -749,7 +748,7 @@ class _ExpandedFileItem extends ConsumerWidget {
                         remainText,
                       ]),
                       s: TextStyle(
-                        fontFamily: effectiveMonospaceFont,
+                        fontFamily: monospaceFF,
                         fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                       ),
                     ),

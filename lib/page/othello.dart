@@ -242,12 +242,12 @@ class _ModelSettings extends ConsumerWidget {
       ],
     );
     final qb = ref.watch(P.app.qb);
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Material(
       color: qb.q(.0),
-      textStyle: TS(ff: effectiveMonospaceFont, s: 10),
+      textStyle: TS(ff: monospaceFF, s: 10),
       child: Container(
         padding: const .all(4),
         margin: const .all(4),
@@ -413,12 +413,12 @@ class _Players extends ConsumerWidget {
         ],
       ),
     );
-    final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
+
+    final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Material(
       color: qb.q(.0),
-      textStyle: TS(ff: effectiveMonospaceFont, s: 10),
+      textStyle: TS(ff: monospaceFF, s: 10),
       child: Container(
         margin: const .all(4),
         padding: const .all(4),
