@@ -1115,16 +1115,6 @@
     ]
   },
   "tts": {
-    "latest_build": 647,
-    "latest_build_ios": 602,
-    "note_zh": [
-      "[新增] 在设置页面新增了文件管理功能, 我们现在可以统一管理已经下载的权重文件",
-      "[优化] 在首页整合了性能测试与 Lambada 测试功能",
-      "[优化] Lambada 测试现在可以渲染模型输出结果了",
-      "[优化] 优化了 Android 对 NPU 支持的描述",
-      "[优化] 优化了推理引擎的表现",
-      "[修复] 修复了多处 bug"
-    ],
     "model_config": [
       {
         "name": "RWKV7 SparkTTS 0.4B (8 Elite Gen5) 🇨🇳🇺🇸🇯🇵",
