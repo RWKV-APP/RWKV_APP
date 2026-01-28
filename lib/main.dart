@@ -13,7 +13,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/services/font_service.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/widgets/debugger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -128,7 +127,7 @@ class _App extends ConsumerWidget {
     );
 
     // Apply user-selected fonts to theme
-    final themeData = FontService.applyFontToTheme(
+    final themeData = P.font.applyFontToTheme(
       baseThemeData,
       preferredUIFont,
       preferredMonospaceFont,
@@ -160,9 +159,9 @@ class _App extends ConsumerWidget {
           children: [
             Positioned(left: 0, right: 0, top: 0, bottom: 0, child: Container(color: customTheme.scaffold)),
             if (child != null) child,
+            FloatingPerformaceInfo(),
             const Alert(),
             if (kDebugMode) const Debugger(),
-            FloatingPerformaceInfo(),
           ],
         ),
       ),

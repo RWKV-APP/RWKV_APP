@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/services/font_service.dart';
+import 'package:zone/model/font_info.dart';
 import 'package:zone/store/p.dart';
 
 class FontPickerBottomSheet extends ConsumerStatefulWidget {
@@ -29,8 +29,8 @@ class FontPickerBottomSheet extends ConsumerStatefulWidget {
       isScrollControlled: true,
       context: context,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: .75,
-        maxChildSize: .85,
+        initialChildSize: .85,
+        maxChildSize: .9,
         minChildSize: .5,
         expand: false,
         snap: false,
@@ -79,19 +79,19 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
 
   Future<void> _loadFonts() async {
     try {
-      final fontInfos = await FontService.getSystemFontsWithInfo();
+      final fontInfos = await P.font.getSystemFontsWithInfo();
       setState(() {
         _separateFontsByType(fontInfos);
         _isLoading = false;
       });
     } catch (e) {
       // 如果失败，使用默认字体列表（通过名称推断）
-      final defaultFonts = FontService.getDefaultFonts();
+      final defaultFonts = P.font.getDefaultFonts();
       final fontInfos = defaultFonts
           .map(
             (name) => FontInfo(
               name: name,
-              isMonospace: FontService.inferMonospaceFromName(name),
+              isMonospace: P.font.inferMonospaceFromName(name),
             ),
           )
           .toList();
@@ -160,16 +160,6 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
     return char.length == 1 && char.codeUnitAt(0) >= 65 && char.codeUnitAt(0) <= 90;
   }
 
-  void _scrollToSection(String letter) {
-    final key = _sectionKeys[letter];
-    if (key?.currentContext != null) {
-      Scrollable.ensureVisible(
-        key!.currentContext!,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -218,32 +208,23 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
               )
             else
               Expanded(
-                child: Row(
-                  children: [
-                    // 字体列表
-                    Expanded(
-                      child: ListView.builder(
-                        controller: widget.scrollController,
-                        padding: .only(bottom: paddingBottom),
-                        itemCount: _getTotalItemCount(_grouped, _keys),
-                        itemBuilder: (context, index) {
-                          final item = _getItemAtIndex(_grouped, _keys, index);
-                          if (item is _SectionHeader) {
-                            return _buildSectionHeader(
-                              item.letter,
-                              _sectionKeys[item.letter]!,
-                              qb,
-                            );
-                          } else if (item is _FontItem) {
-                            return _buildFontItem(item.font, qb);
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ),
-                    // 字母索引
-                    _buildAlphabetIndex(_keys, qb),
-                  ],
+                child: ListView.builder(
+                  controller: widget.scrollController,
+                  padding: .only(bottom: paddingBottom),
+                  itemCount: _getTotalItemCount(_grouped, _keys),
+                  itemBuilder: (context, index) {
+                    final item = _getItemAtIndex(_grouped, _keys, index);
+                    if (item is _SectionHeader) {
+                      return _buildSectionHeader(
+                        item.letter,
+                        _sectionKeys[item.letter]!,
+                        qb,
+                      );
+                    } else if (item is _FontItem) {
+                      return _buildFontItem(item.font, qb);
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
               ),
             // 确认和恢复默认按钮
@@ -336,29 +317,10 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
 
   Widget _buildFontItem(String font, Color qb) {
     final isSelected = _selectedFont == font;
-    final displayName = font == 'System' ? S.of(context).default_font : font;
-
-    return ListTile(
-      title: T(
-        displayName,
-        s: TextStyle(
-          fontFamily: font == 'System' ? null : font,
-          fontSize: 16,
-          fontWeight: isSelected ? .w600 : .normal,
-        ),
-      ),
-      subtitle: font != 'System'
-          ? T(
-              '示例文本 The quick brown fox',
-              s: TextStyle(
-                fontFamily: font,
-                fontSize: 12,
-                color: qb.q(.6),
-              ),
-            )
-          : null,
-      trailing: isSelected ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) : null,
-      selected: isSelected,
+    return _FontPreviewItem(
+      font: font,
+      isSelected: isSelected,
+      qb: qb,
       onTap: () {
         setState(() {
           _selectedFont = font;
@@ -367,41 +329,91 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
     );
   }
 
-  Widget _buildAlphabetIndex(List<String> sortedKeys, Color qb) {
-    // 生成 A-Z 的字母列表
-    final letters = List.generate(
-      26,
-      (index) => String.fromCharCode(65 + index),
-    );
+}
 
-    return Container(
-      width: 28,
-      margin: const .symmetric(vertical: 8, horizontal: 4),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: .center,
-          mainAxisSize: .min,
-          children: letters.map((letter) {
-            final hasFonts = sortedKeys.contains(letter);
-            return InkWell(
-              onTap: hasFonts ? () => _scrollToSection(letter) : null,
-              child: Container(
-                width: double.infinity,
-                padding: const .symmetric(vertical: 2),
-                alignment: .center,
-                child: T(
-                  letter,
-                  s: TS(
-                    s: 11,
-                    c: hasFonts ? Theme.of(context).colorScheme.primary : qb.q(.4),
-                    w: .w600,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
+class _FontPreviewItem extends StatefulWidget {
+  final String font;
+  final bool isSelected;
+  final Color qb;
+  final VoidCallback onTap;
+
+  const _FontPreviewItem({
+    required this.font,
+    required this.isSelected,
+    required this.qb,
+    required this.onTap,
+  });
+
+  @override
+  State<_FontPreviewItem> createState() => _FontPreviewItemState();
+}
+
+class _FontPreviewItemState extends State<_FontPreviewItem> {
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFont();
+  }
+
+  Future<void> _loadFont() async {
+    if (widget.font == 'System') {
+      if (mounted) {
+        setState(() {
+          _isLoaded = true;
+        });
+      }
+      return;
+    }
+
+    try {
+      await P.font.loadFontByName(widget.font);
+      if (mounted) {
+        setState(() {
+          _isLoaded = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to load font preview for ${widget.font}: $e');
+      // If loading fails, we still show the item but maybe without the custom font style
+      if (mounted) {
+        setState(() {
+          _isLoaded = true;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 当选择"默认字体"（System）时，只显示"默认"，不显示系统字体名称
+    // 因为"默认字体"指的是 Flutter 的默认字体（Roboto），而不是系统的默认字体
+    final displayName = widget.font == 'System' ? S.of(context).default_font : widget.font;
+
+    // 当选择"默认字体"（System）时，不设置 fontFamily，让 Flutter 使用其自带的默认字体（Roboto）
+    final fontFamily = (widget.font == 'System' || !_isLoaded) ? null : widget.font;
+
+    return ListTile(
+      title: T(
+        displayName,
+        s: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 16,
+          fontWeight: widget.isSelected ? .w600 : .normal,
         ),
       ),
+      subtitle: T(
+        '示例文本 The quick brown fox',
+        s: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 12,
+          color: widget.qb.q(.6),
+        ),
+      ),
+      trailing: widget.isSelected ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) : null,
+      selected: widget.isSelected,
+      onTap: widget.onTap,
     );
   }
 }

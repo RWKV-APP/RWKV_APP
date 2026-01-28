@@ -22,6 +22,36 @@ extension $Adapter on _Adapter {
     }
   }
 
+  /// Android SoC 检测
+  ///
+  /// - 仅在 Android 上生效，其它平台直接返回 null
+  /// - Native 侧返回形如:
+  ///   { "socName": "sm8550", "socBrand": "snapdragon" }
+  Future<(String, SocBrand)?> detectSocInfo() async {
+    if (!Platform.isAndroid) return null;
+    try {
+      final result = await _channel.invokeMethod<dynamic>(ToNative.detectSocInfo.name);
+      if (result is! Map) return null;
+
+      final rawName = result["socName"]?.toString() ?? "";
+      final rawBrand = result["socBrand"]?.toString() ?? "";
+
+      final name = rawName.trim();
+      final brandString = rawBrand.trim();
+
+      if (name.isEmpty && brandString.isEmpty) return null;
+
+      final brand = SocBrand.fromString(brandString.isEmpty ? "unknown" : brandString);
+      return (name, brand);
+    } catch (e, st) {
+      qqe("$e");
+      if (!kDebugMode) {
+        Sentry.captureException(e, stackTrace: st);
+      }
+      return null;
+    }
+  }
+
   Future<void> _onCall(MethodCall call) async {
     final method = FromNative.values.byName(call.method);
     if (kDebugMode && !_registry.containsKey(method)) {

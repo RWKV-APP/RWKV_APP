@@ -16,8 +16,8 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
+
 
 class PageWeightManager extends ConsumerWidget {
   const PageWeightManager({super.key});
@@ -752,7 +752,7 @@ class _DownloadingItem extends ConsumerWidget {
     };
 
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return ListTile(
       title: Text(fileInfo.name),

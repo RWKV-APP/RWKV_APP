@@ -18,7 +18,6 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
-import 'package:zone/services/font_service.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_tag.dart';
@@ -412,7 +411,7 @@ class FileKeyItem extends ConsumerWidget {
         : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
 
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return Column(
       crossAxisAlignment: .start,

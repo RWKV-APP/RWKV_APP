@@ -6,4 +6,6 @@ enum ToNative {
   checkMemory,
   startAccessingSecurityScopedResource,
   stopAccessingSecurityScopedResource,
+  detectSocInfo,
+  getSystemFonts,
 }

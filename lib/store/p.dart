@@ -95,6 +95,7 @@ import 'package:zone/model/version_info.dart';
 import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/model/world_type.dart';
+import 'package:zone/model/font_info.dart';
 import 'package:zone/widgets/theme_selector.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
@@ -127,6 +128,7 @@ part "talk.dart";
 part "translator.dart";
 part "ocr.dart";
 part "md_render.dart";
+part "font.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -150,6 +152,7 @@ abstract class P {
   static final see = _See();
   static final ocr = _Ocr();
   static final mdRender = _MDRender();
+  static final font = _Font();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -190,6 +193,7 @@ abstract class P {
       _safeInit(() => lambada._init(), mark: "lambada"),
       _safeInit(() => ocr._init(), mark: "ocr"),
       _safeInit(() => mdRender._init(), mark: "mdRender"),
+      _safeInit(() => font._init(), mark: "font"),
     ]);
   }
 

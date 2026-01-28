@@ -2,6 +2,30 @@
 alwaysApply: true
 ---
 
+# 所有方法必须使用 early return
+
+Bad 😡
+
+```dart
+void foo() {
+  if (condition) {
+    // do something
+  }
+}
+```
+
+Good ✅
+
+```dart
+void foo() {
+  if (!condition) {
+    return;
+  }
+  // do something
+}
+```
+
+
 # 使用 for 循环, 禁止使用 forEach 函数
 
 ```dart

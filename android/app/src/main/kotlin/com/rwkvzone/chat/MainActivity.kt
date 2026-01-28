@@ -17,8 +17,8 @@ import java.util.concurrent.Executors
 
 class MainActivity : FlutterActivity() {
     private val channelName = "utils"
-    private val fontChannelName = "com.rwkvzone.chat/fonts"
-    
+    private val adapterChannelName = "channel"
+
     // 使用单线程池来处理后台任务，避免阻塞主线程
     private val executor = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -40,33 +40,58 @@ class MainActivity : FlutterActivity() {
                         result.error("INVALID_PATH", "Path cannot be null", null)
                     }
                 }
+
                 else -> {
                     result.notImplemented()
                 }
             }
         }
 
-        // 2. Fonts Channel (获取字体)
+        // 2. Adapter Channel (SoC 检测, 字体获取等)
         MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger, fontChannelName
+            flutterEngine.dartExecutor.binaryMessenger, adapterChannelName
         ).setMethodCallHandler { call, result ->
-            if (call.method == "getSystemFonts") {
-                // 在后台线程执行耗时扫描
-                executor.execute {
+            when (call.method) {
+                "detectSocInfo" -> {
                     try {
-                        val fonts = getRealSystemFonts()
-                        // 切回主线程返回结果
-                        mainHandler.post {
-                            result.success(fonts)
-                        }
+                        val info = detectSocInfo()
+                        result.success(
+                            mapOf(
+                                "socName" to info.first, "socBrand" to info.second
+                            )
+                        )
                     } catch (e: Exception) {
-                        mainHandler.post {
-                            result.error("ERROR", "Failed to get system fonts: ${e.message}", null)
+                        Log.e("SOC_DETECT", "Failed to detect SoC info", e)
+                        result.success(
+                            mapOf(
+                                "socName" to "", "socBrand" to "unknown"
+                            )
+                        )
+                    }
+                }
+
+                "getSystemFonts" -> {
+                    // 在后台线程执行耗时扫描
+                    executor.execute {
+                        try {
+                            val fonts = getRealSystemFonts()
+                            // 切回主线程返回结果
+                            mainHandler.post {
+                                result.success(fonts)
+                            }
+                        } catch (e: Exception) {
+                            mainHandler.post {
+                                result.error(
+                                    "ERROR", "Failed to get system fonts: ${e.message}", null
+                                )
+                            }
                         }
                     }
                 }
-            } else {
-                result.notImplemented()
+
+                else -> {
+                    result.notImplemented()
+                }
             }
         }
     }
@@ -95,6 +120,111 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    private fun detectSocInfo(): Pair<String, String> {
+        val candidates = mutableListOf<String>()
+
+        // Build / 基本信息
+        candidates.add(Build.HARDWARE ?: "")
+        candidates.add(Build.BOARD ?: "")
+        candidates.add(Build.DEVICE ?: "")
+        candidates.add(Build.PRODUCT ?: "")
+        candidates.add(Build.MANUFACTURER ?: "")
+        candidates.add(Build.BRAND ?: "")
+
+        // Build.SOC_MODEL (Android 12+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                val socModelField = Build::class.java.getField("SOC_MODEL")
+                val socModelValue = socModelField.get(null) as? String
+                if (!socModelValue.isNullOrBlank()) {
+                    candidates.add(socModelValue)
+                }
+            } catch (_: Exception) {
+            }
+        }
+
+        // 常见系统属性
+        val propKeys = listOf(
+            "ro.soc.model",
+            "ro.soc.manufacturer",
+            "ro.chipname",
+            "ro.board.platform",
+            "ro.product.board"
+        )
+        for (key in propKeys) {
+            val v = getSystemProperty(key)
+            if (!v.isNullOrBlank()) {
+                candidates.add(v)
+            }
+        }
+
+        // /proc/cpuinfo
+        try {
+            val cpuInfoFile = File("/proc/cpuinfo")
+            if (cpuInfoFile.exists()) {
+                val text = cpuInfoFile.readText()
+                candidates.add(text)
+            }
+        } catch (_: Exception) {
+        }
+
+        val all = candidates.joinToString(" ").lowercase()
+
+        // 粗略识别品牌
+        val brand = when {
+            all.contains("snapdragon") || all.contains("qualcomm") || all.contains("qcom") || all.contains(
+                "sm"
+            ) || all.contains(
+                "sdm"
+            ) || all.contains("msm") -> "snapdragon"
+
+            all.contains("mediatek") || all.contains("mt") -> "mediatek"
+            all.contains("exynos") -> "exynos"
+            all.contains("kirin") || all.contains("hisilicon") -> "kirin"
+            all.contains("tensor") || all.contains("gs10") || (all.contains("google") && all.contains(
+                "tensor"
+            )) -> "tensor"
+
+            else -> "unknown"
+        }
+
+        // 提取 SoC 型号
+        val patterns = listOf(
+            Regex("sm\\d{3,4}"),
+            Regex("sdm\\d{3,4}"),
+            Regex("msm\\d{3,4}"),
+            Regex("mt\\d{3,4}"),
+            Regex("exynos\\s?\\d{3,4}"),
+            Regex("kirin\\s?\\d{3,4}")
+        )
+
+        var socName = "unknown"
+        for (pattern in patterns) {
+            val m = pattern.find(all)
+            if (m != null) {
+                socName = m.value
+                break
+            }
+        }
+
+        if (socName == "unknown" && brand != "unknown") {
+            socName = "${brand}_soc"
+        }
+
+        return Pair(socName, brand)
+    }
+
+    private fun getSystemProperty(key: String): String? {
+        return try {
+            val clazz = Class.forName("android.os.SystemProperties")
+            val method = clazz.getMethod("get", String::class.java)
+            val value = method.invoke(null, key) as? String
+            if (value.isNullOrBlank()) null else value
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     /**
      * 获取真实存在的系统字体列表
      * 混合策略：Android 10+ 使用 SystemFonts API，旧版本扫描 /system/fonts
@@ -110,7 +240,7 @@ class MainActivity : FlutterActivity() {
                 for (font in fonts) {
                     val file = font.file ?: continue
                     val path = file.absolutePath
-                    
+
                     if (processedPaths.contains(path)) continue
                     processedPaths.add(path)
 
@@ -118,11 +248,12 @@ class MainActivity : FlutterActivity() {
                     try {
                         // 注意：这里我们使用文件创建 Typeface，确保字体真实有效
                         val typeface = Typeface.createFromFile(file)
-                        fontInfoList.add(mapOf(
-                            "name" to file.name, // 使用文件名作为标识，例如 Roboto-Regular.ttf
-                            "path" to path,
-                            "isMonospace" to isFontMonospace(typeface)
-                        ))
+                        fontInfoList.add(
+                            mapOf(
+                                "name" to file.name, // 使用文件名作为标识，例如 Roboto-Regular.ttf
+                                "path" to path, "isMonospace" to isFontMonospace(typeface)
+                            )
+                        )
                     } catch (e: Exception) {
                         // 忽略损坏的字体文件
                         continue
@@ -141,23 +272,25 @@ class MainActivity : FlutterActivity() {
             if (files != null) {
                 for (file in files) {
                     val path = file.absolutePath
-                    
+
                     // 过滤非字体文件
                     if (!file.name.endsWith(".ttf", true) && !file.name.endsWith(".otf", true)) {
                         continue
                     }
-                    
+
                     // 如果已经在 策略 A 中处理过，跳过
                     if (processedPaths.contains(path)) continue
                     processedPaths.add(path)
 
                     try {
                         val typeface = Typeface.createFromFile(file)
-                        fontInfoList.add(mapOf(
-                            "name" to file.name,
-                            "path" to path,
-                            "isMonospace" to isFontMonospace(typeface)
-                        ))
+                        fontInfoList.add(
+                            mapOf(
+                                "name" to file.name,
+                                "path" to path,
+                                "isMonospace" to isFontMonospace(typeface)
+                            )
+                        )
                     } catch (e: Exception) {
                         continue
                     }
@@ -182,7 +315,7 @@ class MainActivity : FlutterActivity() {
 
         // 测试字符集：包含通常较窄的 'i', 'l' 和较宽的 'M', 'W' 以及标点
         val testChars = charArrayOf('i', 'M', '.', 'W', 'l', '1')
-        
+
         if (testChars.isEmpty()) return false
 
         // 获取第一个字符的宽度作为基准
@@ -196,7 +329,7 @@ class MainActivity : FlutterActivity() {
                 return false
             }
         }
-        
+
         return true
     }
 }

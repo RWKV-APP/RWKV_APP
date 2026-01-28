@@ -47,6 +47,8 @@ class Debugger extends ConsumerWidget {
     final ids = ref.watch(P.msg.ids);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
+    final frontendSocName = ref.watch(P.rwkv.frontendSocName);
+    final frontendSocBrand = ref.watch(P.rwkv.frontendSocBrand);
     final availableModels = ref.watch(P.fileManager.chatWeights);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
@@ -138,6 +140,14 @@ class Debugger extends ConsumerWidget {
                       T(generating.toString()),
                       T("hiddenPrefilling".codeToName),
                       T(hiddenPrefilling.toString()),
+                      T("socName".codeToName),
+                      T(socName),
+                      T("socBrand".codeToName),
+                      T(socBrand.toString()),
+                      T("frontendSocName".codeToName),
+                      T(frontendSocName),
+                      T("frontendSocBrand".codeToName),
+                      T(frontendSocBrand.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

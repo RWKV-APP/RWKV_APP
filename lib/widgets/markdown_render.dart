@@ -9,8 +9,8 @@ import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
+
 
 class MarkdownRender extends ConsumerWidget {
   final String raw;
@@ -97,7 +97,7 @@ class _Highlight extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
     return C(
       decoration: BoxDecoration(
         color: dark ? qw.q(.5) : qb.q(.04),
@@ -259,7 +259,7 @@ class _CodeState extends ConsumerState<_Code> {
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return C(
       decoration: BoxDecoration(

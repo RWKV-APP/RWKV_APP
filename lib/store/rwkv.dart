@@ -102,6 +102,9 @@ class _RWKV {
   late final socName = qs("");
   late final socBrand = qs(SocBrand.unknown);
 
+  late final frontendSocName = qs<String?>(null);
+  late final frontendSocBrand = qs<SocBrand?>(null);
+
   late final _qnnLibsCopied = qs(false);
 
   late final supportedBatchSizes = qs<List<int>>([]);
@@ -1026,6 +1029,21 @@ extension _$RWKV on _RWKV {
     }, []);
     socName.q = r.$1;
     socBrand.q = r.$2;
+
+    if (Platform.isAndroid) {
+      final detected = await P.adapter.detectSocInfo();
+      if (detected != null) {
+        final detectedName = detected.$1;
+        final detectedBrand = detected.$2;
+        if (detectedName.isNotEmpty) {
+          frontendSocName.q = detectedName;
+        }
+        if (detectedBrand != SocBrand.unknown) {
+          frontendSocBrand.q = detectedBrand;
+        }
+      }
+    }
+
     latestModel.lb(_onCurrentModelChanged);
     Albatross.instance.init();
     P.rwkv.generating.l(_onGeneratingChanged);

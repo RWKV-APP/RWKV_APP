@@ -3,7 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 
 class PerformanceInfo extends ConsumerWidget {
@@ -21,7 +20,7 @@ class PerformanceInfo extends ConsumerWidget {
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final qb = ref.watch(P.app.qb);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
     return Column(
       crossAxisAlignment: .start,
       mainAxisAlignment: .center,

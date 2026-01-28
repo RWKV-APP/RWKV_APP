@@ -222,6 +222,7 @@ extension _$Preference on _Preference {
     final uiFont = sp.getString("halo_state.preferredUIFont");
     if (uiFont != null && uiFont.isNotEmpty && uiFont != 'System') {
       preferredUIFont.q = uiFont;
+      P.font.loadFontByName(uiFont);
     } else {
       preferredUIFont.q = null;
     }
@@ -229,6 +230,7 @@ extension _$Preference on _Preference {
     final monospaceFont = sp.getString("halo_state.preferredMonospaceFont");
     if (monospaceFont != null && monospaceFont.isNotEmpty && monospaceFont != 'System') {
       preferredMonospaceFont.q = monospaceFont;
+      P.font.loadFontByName(monospaceFont);
     } else {
       preferredMonospaceFont.q = null;
     }
@@ -389,7 +391,8 @@ extension $Preference on _Preference {
     if (fontFamily == null || fontFamily.isEmpty || fontFamily == 'System') {
       await sp.remove("halo_state.preferredUIFont");
     } else {
-      await sp.setString("halo_state.preferredUIFont", fontFamily);
+      // Try to load the font
+      await P.font.loadFontByName(fontFamily);
     }
   }
 
@@ -400,6 +403,8 @@ extension $Preference on _Preference {
       await sp.remove("halo_state.preferredMonospaceFont");
     } else {
       await sp.setString("halo_state.preferredMonospaceFont", fontFamily);
+      // Try to load the font
+      await P.font.loadFontByName(fontFamily);
     }
   }
 }

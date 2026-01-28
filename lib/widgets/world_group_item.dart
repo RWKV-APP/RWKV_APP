@@ -13,7 +13,6 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/router.dart';
-import 'package:zone/services/font_service.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
@@ -508,7 +507,7 @@ class _CollapsedContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return Column(
       crossAxisAlignment: .start,
@@ -693,7 +692,7 @@ class _ExpandedFileItem extends ConsumerWidget {
     final showCancel = showPause || showResume;
 
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveMonospaceFont = FontService.getEffectiveMonospaceFont(preferredMonospaceFont);
+    final effectiveMonospaceFont = P.font.getEffectiveMonospaceFont(preferredMonospaceFont);
 
     return Row(
       children: [

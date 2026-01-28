@@ -5,6 +5,7 @@ enum FromFlutter: String {
   case checkMemory
   case startAccessingSecurityScopedResource
   case stopAccessingSecurityScopedResource
+  case getSystemFonts
 }
 
 @main
@@ -21,20 +22,6 @@ enum FromFlutter: String {
     channel.setMethodCallHandler {
       (call: FlutterMethodCall, result: @escaping FlutterResult) in
       self.handleFlutterCall(call, result, channel)
-    }
-
-    let fontChannel = FlutterMethodChannel(
-      name: "com.rwkvzone.chat/fonts",
-      binaryMessenger: controller.binaryMessenger
-    )
-    fontChannel.setMethodCallHandler {
-      (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
-      if call.method == "getSystemFonts" {
-        let fonts = self.getSystemFonts()
-        result(fonts)
-      } else {
-        result(FlutterMethodNotImplemented)
-      }
     }
 
     GeneratedPluginRegistrant.register(with: self)
@@ -73,6 +60,9 @@ enum FromFlutter: String {
       } else {
         result(FlutterError(code: "INVALID_ARGUMENT", message: "Path is required", details: nil))
       }
+    case .getSystemFonts:
+      let fonts = self.getSystemFonts()
+      result(fonts)
     default: result(FlutterMethodNotImplemented)
     }
   }
