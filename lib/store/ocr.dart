@@ -63,6 +63,7 @@ extension _$Ocr on _Ocr {
       onError: _onStreamError,
     );
     P.app.pageKey.l(_onPageKeyChanged);
+    return;
   }
 
   void _updateTextRecognizer() {
