@@ -1211,6 +1211,18 @@
         "date": 1768874749
       },
       {
+        "name": "RWKV7 SparkTTS 0.1B (8 Elite) 🇨🇳🇺🇸🇯🇵",
+        "modelSize": 0.1,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.42-260118/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8elite.rmpack",
+        "fileSize": 223969280,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["npu", "core", "spark"],
+        "socLimitations": ["8 Elite"],
+        "date": 1769674851
+      },
+      {
         "name": "RWKV7 SparkTTS 0.1B (8 Gen 3) 🇨🇳🇺🇸🇯🇵",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/2.42-260118/rwkv7-0.1B-g1-respark-voice-tunable_ipa-a16w8-8gen3.rmpack",
