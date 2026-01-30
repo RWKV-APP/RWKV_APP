@@ -1,3 +1,4 @@
+import 'dart:developer' hide log;
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -16,6 +17,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 
 class PageWeightManager extends ConsumerWidget {
@@ -980,6 +982,8 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
 
     final unrecognizedFiles = <_UnrecognizedFile>[];
 
+    debugger();
+
     try {
       final entities = directory.listSync();
       for (final entity in entities) {
@@ -993,6 +997,7 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
         }
 
         final fileName = path.basename(filePath);
+        qqr(fileName);
         if (allWeightFileNames.contains(fileName)) continue;
 
         final fileSize = await entity.length();
@@ -1193,7 +1198,8 @@ class _EmptyStateGuide extends ConsumerWidget {
             const SizedBox(height: 32),
             FilledButton.icon(
               onPressed: () {
-                go(.home);
+                pop();
+                P.app.onTabSelected(PageKey.tabs.indexOf(PageKey.home));
               },
               icon: const Icon(Icons.home),
               label: Text(s.go_to_home_page),
