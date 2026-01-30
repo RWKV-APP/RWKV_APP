@@ -22,6 +22,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/func/gb_display.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
@@ -596,14 +597,12 @@ String _truncatePath(String pathStr, [int maxLen = 56]) {
 Future<void> _openContainingFolder(String filePath) async {
   try {
     final dirPath = path.dirname(filePath);
-    if (Platform.isMacOS) {
-      await Process.run('open', [dirPath]);
-    } else if (Platform.isWindows) {
-      await Process.run('explorer', [dirPath]);
-    } else if (Platform.isLinux) {
-      await Process.run('xdg-open', [dirPath]);
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await launchUrl(Uri.directory(dirPath));
     }
-  } catch (_) {}
+  } catch (e) {
+    Alert.error(e.toString());
+  }
 }
 
 String? _ctxFromFileName(FileInfo fileInfo) {
