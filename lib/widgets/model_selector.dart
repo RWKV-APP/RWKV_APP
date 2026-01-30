@@ -20,6 +20,7 @@ import 'package:zone/store/p.dart';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
+import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/role_play_item.dart';
@@ -723,10 +724,17 @@ class _LocalOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final loadedModels = ref.watch(P.rwkv.loadedModels);
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
     final fileInfos = loadedModels.keys.where((e) => e.fromPthFile).toList();
     final usingPth = ref.watch(P.rwkv.usingPth);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
+
+    final localPthLoading = loadingStatus.entries.any((e) {
+      if (!e.key.fromPthFile) return false;
+      final status = e.value;
+      return status == LoadingStatus.loading || status == LoadingStatus.loadModelWithExtra || status == LoadingStatus.setQnnLibraryPath;
+    });
 
     return Column(
       crossAxisAlignment: .start,
@@ -784,14 +792,42 @@ class _LocalOptions extends ConsumerWidget {
           ],
         ),
         4.h,
-        if (fileInfos.isNotEmpty) ...[
+        if (localPthLoading) ...[
+          Container(
+            padding: const .all(12),
+            decoration: BoxDecoration(
+              color: qb.q(.1),
+              borderRadius: 8.r,
+              border: Border.all(color: qb.q(.2), width: 1),
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: qb.q(.8),
+                  ),
+                ),
+                12.w,
+                Text(
+                  s.model_loading,
+                  style: TS(c: qb.q(.8), s: 12),
+                ),
+              ],
+            ),
+          ),
+          8.h,
+        ],
+        if (!localPthLoading && fileInfos.isNotEmpty) ...[
           for (var i = 0; i < fileInfos.length; i++) ...[
             if (i > 0) 8.h,
             _LocalPthFileItem(fileInfos[i]),
           ],
           8.h,
         ],
-        if (fileInfos.isEmpty) ...[
+        if (!localPthLoading && fileInfos.isEmpty) ...[
           Text(
             s.no_local_pth_loaded_yet,
             style: TS(c: qb.q(.6), s: 12),
@@ -802,8 +838,9 @@ class _LocalOptions extends ConsumerWidget {
           onPressed: () async {
             final fileInfo = await P.fileManager.pickLocalPthFile();
             if (fileInfo == null) return;
-            pop();
             Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+            await Future.delayed(1000.ms);
+            pop();
           },
           child: Text(
             s.select_local_pth_file_button,
