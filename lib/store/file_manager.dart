@@ -949,9 +949,17 @@ extension $FileManager on _FileManager {
   }
 
   Future<FileInfo?> pickLocalPthFile() async {
+    String? initialDirectory;
+    try {
+      final downloadsDir = await getDownloadsDirectory();
+      if (downloadsDir != null) {
+        initialDirectory = downloadsDir.path;
+      }
+    } catch (_) {}
     final result = await file_picker.FilePicker.platform.pickFiles(
       type: file_picker.FileType.custom,
       allowedExtensions: ['pth'],
+      initialDirectory: initialDirectory,
     );
     if (result == null) {
       return null;

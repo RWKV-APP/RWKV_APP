@@ -4088,6 +4088,126 @@ class S {
       args: [],
     );
   }
+
+  /// `当前加载的是 latest.json 中的配置，不是本地 .pth 文件`
+  String get current_model_from_latest_json_not_pth {
+    return Intl.message(
+      '当前加载的是 latest.json 中的配置，不是本地 .pth 文件',
+      name: 'current_model_from_latest_json_not_pth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无已加载的本地 .pth 文件`
+  String get no_local_pth_loaded_yet {
+    return Intl.message(
+      '暂无已加载的本地 .pth 文件',
+      name: 'no_local_pth_loaded_yet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ctx {length}`
+  String ctx_length_label(Object length) {
+    return Intl.message(
+      'ctx $length',
+      name: 'ctx_length_label',
+      desc: '',
+      args: [length],
+    );
+  }
+
+  /// `配置文件中的权重`
+  String get local_pth_option_files_in_config {
+    return Intl.message(
+      '配置文件中的权重',
+      name: 'local_pth_option_files_in_config',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本地 .pth 文件`
+  String get local_pth_option_local_pth_files {
+    return Intl.message(
+      '本地 .pth 文件',
+      name: 'local_pth_option_local_pth_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择配置文件中的权重或者本地 .pth 文件`
+  String get select_weights_or_local_pth_hint {
+    return Intl.message(
+      '选择配置文件中的权重或者本地 .pth 文件',
+      name: 'select_weights_or_local_pth_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本地 .pth 文件`
+  String get local_pth_files_section_title {
+    return Intl.message(
+      '本地 .pth 文件',
+      name: 'local_pth_files_section_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `你可以选择本地的 .pth 文件进行加载`
+  String get local_pth_you_can_select {
+    return Intl.message(
+      '你可以选择本地的 .pth 文件进行加载',
+      name: 'local_pth_you_can_select',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `什么是 .pth 文件？`
+  String get what_is_pth_file_title {
+    return Intl.message(
+      '什么是 .pth 文件？',
+      name: 'what_is_pth_file_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `.pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\n通常通过 Pytorch 训练的模型会保存为 .pth 文件。\n\nRWKV Chat 支持加载 .pth 文件。`
+  String get what_is_pth_file_message {
+    return Intl.message(
+      '.pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\n通常通过 Pytorch 训练的模型会保存为 .pth 文件。\n\nRWKV Chat 支持加载 .pth 文件。',
+      name: 'what_is_pth_file_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择本地 .pth 文件`
+  String get select_local_pth_file_button {
+    return Intl.message(
+      '选择本地 .pth 文件',
+      name: 'select_local_pth_file_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开所在文件夹`
+  String get open_containing_folder {
+    return Intl.message(
+      '打开所在文件夹',
+      name: 'open_containing_folder',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

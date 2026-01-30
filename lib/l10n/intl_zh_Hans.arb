@@ -595,5 +595,22 @@
     }
   },
   "invalid_zip_file": "无效的 ZIP 文件或文件格式无法识别",
-  "no_files_in_zip": "ZIP 文件中未找到有效的权重文件"
+  "no_files_in_zip": "ZIP 文件中未找到有效的权重文件",
+  "current_model_from_latest_json_not_pth": "当前加载的是 latest.json 中的配置，不是本地 .pth 文件",
+  "no_local_pth_loaded_yet": "暂无已加载的本地 .pth 文件",
+  "ctx_length_label": "ctx {length}",
+  "@ctx_length_label": {
+    "placeholders": {
+      "length": {}
+    }
+  },
+  "local_pth_option_files_in_config": "配置文件中的权重",
+  "local_pth_option_local_pth_files": "本地 .pth 文件",
+  "select_weights_or_local_pth_hint": "选择配置文件中的权重或者本地 .pth 文件",
+  "local_pth_files_section_title": "本地 .pth 文件",
+  "local_pth_you_can_select": "你可以选择本地的 .pth 文件进行加载",
+  "what_is_pth_file_title": "什么是 .pth 文件？",
+  "what_is_pth_file_message": ".pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\n通常通过 Pytorch 训练的模型会保存为 .pth 文件。\n\nRWKV Chat 支持加载 .pth 文件。",
+  "select_local_pth_file_button": "选择本地 .pth 文件",
+  "open_containing_folder": "打开所在文件夹"
 }

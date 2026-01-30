@@ -589,5 +589,22 @@
     }
   },
   "invalid_zip_file": "無効なZIPファイルまたはファイル形式が認識されません",
-  "no_files_in_zip": "ZIPファイル内に有効な重みファイルが見つかりませんでした"
+  "no_files_in_zip": "ZIPファイル内に有効な重みファイルが見つかりませんでした",
+  "current_model_from_latest_json_not_pth": "現在読み込んでいるのは latest.json の設定であり、ローカル .pth ファイルではありません",
+  "no_local_pth_loaded_yet": "読み込み済みのローカル .pth ファイルはありません",
+  "ctx_length_label": "ctx {length}",
+  "@ctx_length_label": {
+    "placeholders": {
+      "length": {}
+    }
+  },
+  "local_pth_option_files_in_config": "設定ファイルの重み",
+  "local_pth_option_local_pth_files": "ローカル .pth ファイル",
+  "select_weights_or_local_pth_hint": "設定ファイルの重みまたはローカル .pth ファイルを選択",
+  "local_pth_files_section_title": "ローカル .pth ファイル",
+  "local_pth_you_can_select": "ローカルの .pth ファイルを選択して読み込めます",
+  "what_is_pth_file_title": ".pth ファイルとは？",
+  "what_is_pth_file_message": ".pth ファイルはダウンロードサーバーを経由せず、ローカルファイルシステムから直接読み込む重みファイルです。\n\nPyTorch で訓練したモデルは通常 .pth ファイルとして保存されます。\n\nRWKV Chat は .pth ファイルの読み込みに対応しています。",
+  "select_local_pth_file_button": "ローカル .pth ファイルを選択",
+  "open_containing_folder": "保存先フォルダを開く"
 }

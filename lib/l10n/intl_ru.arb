@@ -589,5 +589,22 @@
     }
   },
   "invalid_zip_file": "Неверный ZIP-файл или формат файла не распознан",
-  "no_files_in_zip": "В ZIP-файле не найдено действительных файлов весов"
+  "no_files_in_zip": "В ZIP-файле не найдено действительных файлов весов",
+  "current_model_from_latest_json_not_pth": "Текущая модель загружена из конфигурации latest.json, а не из локального .pth файла",
+  "no_local_pth_loaded_yet": "Локальные .pth файлы ещё не загружены",
+  "ctx_length_label": "ctx {length}",
+  "@ctx_length_label": {
+    "placeholders": {
+      "length": {}
+    }
+  },
+  "local_pth_option_files_in_config": "Веса из конфигурации",
+  "local_pth_option_local_pth_files": "Локальный .pth файл",
+  "select_weights_or_local_pth_hint": "Выберите веса из конфигурации или локальный .pth файл",
+  "local_pth_files_section_title": "Локальный .pth файл",
+  "local_pth_you_can_select": "Вы можете выбрать и загрузить локальный .pth файл",
+  "what_is_pth_file_title": "Что такое .pth файл?",
+  "what_is_pth_file_message": ".pth файлы — это файлы весов, загружаемые напрямую из локальной файловой системы, без загрузки с сервера.\n\nМодели, обученные в PyTorch, часто сохраняются как .pth файлы.\n\nRWKV Chat поддерживает загрузку .pth файлов.",
+  "select_local_pth_file_button": "Выбрать локальный .pth файл",
+  "open_containing_folder": "Открыть папку с файлом"
 }

@@ -36,81 +36,84 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(maxLength) =>
       "Conversation name cannot be longer than ${maxLength} characters";
 
-  static String m7(modelName) => "Current Model: ${modelName}";
+  static String m7(length) => "ctx ${length}";
 
-  static String m8(current, total) => "Current Progress: ${current}/${total}";
+  static String m8(modelName) => "Current Model: ${modelName}";
 
-  static String m9(current, total) => "Current Test Item (${current}/${total})";
+  static String m9(current, total) => "Current Progress: ${current}/${total}";
 
-  static String m10(path) =>
+  static String m10(current, total) =>
+      "Current Test Item (${current}/${total})";
+
+  static String m11(path) =>
       "Message records will be stored in the following folder\n ${path}";
 
-  static String m11(value) => "Frequency Penalty: ${value}";
+  static String m12(value) => "Frequency Penalty: ${value}";
 
-  static String m12(port) => "HTTP Service (Port: ${port})";
+  static String m13(port) => "HTTP Service (Port: ${port})";
 
-  static String m13(flag, nameCN, nameEN) =>
+  static String m14(flag, nameCN, nameEN) =>
       "Imitate ${flag} ${nameCN}(${nameEN})\'s voice";
 
-  static String m14(fileName) => "Imitate ${fileName}";
+  static String m15(fileName) => "Imitate ${fileName}";
 
-  static String m15(count) => "Import successful: ${count} files imported";
+  static String m16(count) => "Import successful: ${count} files imported";
 
-  static String m16(memUsed, memFree) =>
+  static String m17(memUsed, memFree) =>
       "Memory Used: ${memUsed}, Memory Free: ${memFree}";
 
-  static String m17(count) => "${count} messages are in queue";
+  static String m18(count) => "${count} messages are in queue";
 
-  static String m18(text) => "Model output: ${text}";
+  static String m19(text) => "Model output: ${text}";
 
-  static String m19(socName) =>
+  static String m20(socName) =>
       "NPU support for your chip ${socName} not yet available";
 
-  static String m20(takePhoto) =>
+  static String m21(takePhoto) =>
       "Click ${takePhoto}. RWKV will translate the text in the image.";
 
-  static String m21(value) => "Penalty Decay: ${value}";
+  static String m22(value) => "Penalty Decay: ${value}";
 
-  static String m22(index) =>
+  static String m23(index) =>
       "Please select the sampler and penalty parameters to set for message ${index}";
 
-  static String m23(value) => "Presence Penalty: ${value}";
+  static String m24(value) => "Presence Penalty: ${value}";
 
-  static String m24(count) => "Queued: ${count}";
+  static String m25(count) => "Queued: ${count}";
 
-  static String m25(count) => "Selected ${count}";
+  static String m26(count) => "Selected ${count}";
 
-  static String m26(text) => "Source Text: ${text}";
+  static String m27(text) => "Source Text: ${text}";
 
-  static String m27(text) => "Target Text: ${text}";
+  static String m28(text) => "Target Text: ${text}";
 
-  static String m28(value) => "Temperature: ${value}";
+  static String m29(value) => "Temperature: ${value}";
 
-  static String m29(footer) => "Reasoning${footer}-EN";
+  static String m30(footer) => "Reasoning${footer}-EN";
 
-  static String m30(footer) => "Reasoning${footer}-EN Long";
+  static String m31(footer) => "Reasoning${footer}-EN Long";
 
-  static String m31(footer) => "Reasoning${footer}-EN Short";
+  static String m32(footer) => "Reasoning${footer}-EN Short";
 
-  static String m32(footer) => "Reasoning${footer}-Fast";
+  static String m33(footer) => "Reasoning${footer}-Fast";
 
-  static String m33(footer) => "Reasoning${footer}-Auto";
+  static String m34(footer) => "Reasoning${footer}-Auto";
 
-  static String m34(footer) => "Reasoning${footer}-High";
+  static String m35(footer) => "Reasoning${footer}-High";
 
-  static String m35(footer) => "Reasoning${footer}-Off";
+  static String m36(footer) => "Reasoning${footer}-Off";
 
-  static String m36(value) => "Top P: ${value}";
+  static String m37(value) => "Top P: ${value}";
 
-  static String m37(count) => "Total Test Items: ${count}";
+  static String m38(count) => "Total Test Items: ${count}";
 
-  static String m38(port) => "WebSocket Service (Port: ${port})";
+  static String m39(port) => "WebSocket Service (Port: ${port})";
 
-  static String m39(id) => "Window ${id}";
+  static String m40(id) => "Window ${id}";
 
-  static String m40(count) => "${count} tabs";
+  static String m41(count) => "${count} tabs";
 
-  static String m41(modelName) => "You are now using ${modelName}";
+  static String m42(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -327,8 +330,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "creative_recommended_short": MessageLookupByLibrary.simpleMessage(
       "Creative",
     ),
-    "current_model": m7,
-    "current_progress": m8,
+    "ctx_length_label": m7,
+    "current_model": m8,
+    "current_model_from_latest_json_not_pth":
+        MessageLookupByLibrary.simpleMessage(
+          "The current model is from latest.json config, not a local .pth file",
+        ),
+    "current_progress": m9,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage(
       "Current task Tab ID",
     ),
@@ -338,7 +346,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_task_url": MessageLookupByLibrary.simpleMessage(
       "Current task URL",
     ),
-    "current_test_item": m9,
+    "current_test_item": m10,
     "current_turn": MessageLookupByLibrary.simpleMessage("Current Turn"),
     "current_version": MessageLookupByLibrary.simpleMessage("Current Version"),
     "custom_difficulty": MessageLookupByLibrary.simpleMessage(
@@ -437,7 +445,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_see_files": MessageLookupByLibrary.simpleMessage(
       "Dump Message Records",
     ),
-    "dump_see_files_alert_message": m10,
+    "dump_see_files_alert_message": m11,
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage(
       "Help us improve the algorithm",
     ),
@@ -527,7 +535,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "found_new_version_available": MessageLookupByLibrary.simpleMessage(
       "Found New Version Available",
     ),
-    "frequency_penalty_with_value": m11,
+    "frequency_penalty_with_value": m12,
     "from_model": MessageLookupByLibrary.simpleMessage("From Model: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
     "game_over": MessageLookupByLibrary.simpleMessage("Game Over!"),
@@ -563,15 +571,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hold to record, release to send",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "http_service_port": m12,
+    "http_service_port": m13,
     "human": MessageLookupByLibrary.simpleMessage("Human"),
     "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to say...",
     ),
     "idle": MessageLookupByLibrary.simpleMessage("Idle"),
-    "imitate": m13,
-    "imitate_fle": m14,
+    "imitate": m14,
+    "imitate_fle": m15,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Use"),
     "import_all_weight_files": MessageLookupByLibrary.simpleMessage(
       "Import All Weight Files",
@@ -579,7 +587,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "import_all_weight_files_description": MessageLookupByLibrary.simpleMessage(
       "Select a ZIP file exported from this app. All weight files in the ZIP will be imported. Existing files will be overwritten if they have the same name.",
     ),
-    "import_all_weight_files_success": m15,
+    "import_all_weight_files_success": m16,
     "import_failed": MessageLookupByLibrary.simpleMessage("Import failed"),
     "import_success": MessageLookupByLibrary.simpleMessage("Import successful"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage(
@@ -639,14 +647,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "load_data": MessageLookupByLibrary.simpleMessage("Load Data"),
     "loaded": MessageLookupByLibrary.simpleMessage("Loaded"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+    "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
+      "Local .pth file",
+    ),
+    "local_pth_option_files_in_config": MessageLookupByLibrary.simpleMessage(
+      "Weights in config",
+    ),
+    "local_pth_option_local_pth_files": MessageLookupByLibrary.simpleMessage(
+      "Local .pth file",
+    ),
+    "local_pth_you_can_select": MessageLookupByLibrary.simpleMessage(
+      "You can select and load a local .pth file",
+    ),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
-    "memory_used": m16,
+    "memory_used": m17,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
-    "message_in_queue": m17,
+    "message_in_queue": m18,
     "mode": MessageLookupByLibrary.simpleMessage("Mode"),
     "model": MessageLookupByLibrary.simpleMessage("Model"),
     "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
-    "model_output": m18,
+    "model_output": m19,
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage(
@@ -701,6 +721,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_latest_version_info": MessageLookupByLibrary.simpleMessage(
       "No latest version information",
     ),
+    "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
+      "No local .pth file loaded yet",
+    ),
     "no_message_to_export": MessageLookupByLibrary.simpleMessage(
       "No message to export",
     ),
@@ -721,10 +744,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Not all the same",
     ),
     "not_syncing": MessageLookupByLibrary.simpleMessage("Not syncing"),
-    "npu_not_supported_title": m19,
+    "npu_not_supported_title": m20,
     "number": MessageLookupByLibrary.simpleMessage("Number"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
-    "ocr_guide_text": m20,
+    "ocr_guide_text": m21,
     "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("Off"),
     "offline_translator": MessageLookupByLibrary.simpleMessage(
@@ -737,6 +760,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Offline Translator Server",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "open_containing_folder": MessageLookupByLibrary.simpleMessage(
+      "Open containing folder",
+    ),
     "open_database_folder": MessageLookupByLibrary.simpleMessage(
       "Open Database Folder",
     ),
@@ -770,7 +796,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Temperature: Controls randomness. Higher values (e.g., 0.8) make output more creative/random; lower values (e.g., 0.2) make it more focused/deterministic.\n\nTop P: Controls diversity. The model considers only tokens with cumulative probability summing to Top P. Lower values (e.g., 0.5) ignore low-probability words, making output more relevant.\n\nPresence Penalty: Penalizes tokens based on whether they have appeared in the text. Positive values increase the likelihood of talking about new topics.\n\nFrequency Penalty: Penalizes tokens based on their frequency in the text. Positive values decrease the likelihood of repeating lines verbatim.\n\nPenalty Decay: Controls how the penalty decays over distance.",
     ),
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
-    "penalty_decay_with_value": m21,
+    "penalty_decay_with_value": m22,
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Performance Test",
     ),
@@ -831,7 +857,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please select the difficulty",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m22,
+        m23,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage(
           "Please select the sampler and penalty parameters to set for all messages",
@@ -858,12 +884,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Prefer Chinese Inference",
     ),
     "prefill": MessageLookupByLibrary.simpleMessage("Prefill"),
-    "presence_penalty_with_value": m23,
+    "presence_penalty_with_value": m24,
     "prompt": MessageLookupByLibrary.simpleMessage("Prompt"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ Group 2"),
-    "queued_x": m24,
+    "queued_x": m25,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Quick Reasoning Enabled",
@@ -924,13 +950,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select from Library",
     ),
     "select_image": MessageLookupByLibrary.simpleMessage("Select Image"),
+    "select_local_pth_file_button": MessageLookupByLibrary.simpleMessage(
+      "Select local .pth file",
+    ),
     "select_model": MessageLookupByLibrary.simpleMessage("Select Model"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("Select Image"),
     "select_the_decode_parameters_to_set_all_to_for_index":
         MessageLookupByLibrary.simpleMessage(
           "Please select a preset from below, or tap \'Custom\' to configure manually",
         ),
-    "selected_count": m25,
+    "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
+      "Select weights from config or local .pth file",
+    ),
+    "selected_count": m26,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "Message RWKV",
     ),
@@ -969,7 +1001,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("Small (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Source Code"),
-    "source_text": m26,
+    "source_text": m27,
     "speed": MessageLookupByLibrary.simpleMessage("Download Speed:"),
     "start": MessageLookupByLibrary.simpleMessage("Start"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage(
@@ -1033,11 +1065,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_day_of_week": MessageLookupByLibrary.simpleMessage("Day of Week"),
     "tag_time": MessageLookupByLibrary.simpleMessage("Time"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Take Photo"),
-    "target_text": m27,
+    "target_text": m28,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "Technical Research Group",
     ),
-    "temperature_with_value": m28,
+    "temperature_with_value": m29,
     "test_data": MessageLookupByLibrary.simpleMessage("Test Data"),
     "test_result": MessageLookupByLibrary.simpleMessage("Test Result"),
     "test_results": MessageLookupByLibrary.simpleMessage("Test Results"),
@@ -1056,10 +1088,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Then you can start to chat with RWKV",
         ),
-    "think_button_mode_en": m29,
-    "think_button_mode_en_long": m30,
-    "think_button_mode_en_short": m31,
-    "think_button_mode_fast": m32,
+    "think_button_mode_en": m30,
+    "think_button_mode_en_long": m31,
+    "think_button_mode_en_short": m32,
+    "think_button_mode_fast": m33,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "The reasoning mode affects the model\'s performance during reasoning",
     ),
@@ -1068,9 +1100,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage(" Mode"),
-    "thinking_mode_auto": m33,
-    "thinking_mode_high": m34,
-    "thinking_mode_off": m35,
+    "thinking_mode_auto": m34,
+    "thinking_mode_high": m35,
+    "thinking_mode_off": m36,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Thinking Mode Template",
     ),
@@ -1083,12 +1115,12 @@ class MessageLookup extends MessageLookupByLibrary {
           "This model does not support batch inference, please select a model with the \"batch\" tag",
         ),
     "thought_result": MessageLookupByLibrary.simpleMessage("Thought Result"),
-    "top_p_with_value": m36,
+    "top_p_with_value": m37,
     "total_count": MessageLookupByLibrary.simpleMessage("Total Count"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage(
       "Total Disk Usage",
     ),
-    "total_test_items": m37,
+    "total_test_items": m38,
     "translate": MessageLookupByLibrary.simpleMessage("Translate"),
     "translating": MessageLookupByLibrary.simpleMessage("Translating..."),
     "translation": MessageLookupByLibrary.simpleMessage("Translation"),
@@ -1119,7 +1151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m38,
+    "websocket_service_port": m39,
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Weight File Management",
     ),
@@ -1132,15 +1164,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome_to_use_rwkv": MessageLookupByLibrary.simpleMessage(
       "Welcome to RWKV",
     ),
+    "what_is_pth_file_message": MessageLookupByLibrary.simpleMessage(
+      ".pth files are weight files loaded directly from the local file system, without downloading from a server.\n\nModels trained with PyTorch are often saved as .pth files.\n\nRWKV Chat supports loading .pth files.",
+    ),
+    "what_is_pth_file_title": MessageLookupByLibrary.simpleMessage(
+      "What is a .pth file?",
+    ),
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m39,
+    "window_id": m40,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m40,
-    "you_are_now_using": m41,
+    "x_tabs": m41,
+    "you_are_now_using": m42,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

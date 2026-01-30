@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -20,6 +19,8 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'dart:io';
 
+import 'package:path/path.dart' as path;
+import 'package:zone/func/gb_display.dart';
 import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
@@ -499,10 +500,9 @@ enum LocalPthFileOption {
   localPthFiles
   ;
 
-  String get displayName => switch (this) {
-    // TODO: 文案
-    filesInConfig => "???",
-    localPthFiles => "???",
+  String displayName(S s) => switch (this) {
+    filesInConfig => s.local_pth_option_files_in_config,
+    localPthFiles => s.local_pth_option_local_pth_files,
   };
 }
 
@@ -511,6 +511,7 @@ class _LocalSwitcher extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final localPthFileOption = ref.watch(P.fileManager.localPthFileOption);
     final primary = Theme.of(context).colorScheme.primary;
     final options = LocalPthFileOption.values;
@@ -522,8 +523,7 @@ class _LocalSwitcher extends ConsumerWidget {
       crossAxisAlignment: .start,
       children: [
         T(
-          // TODO: 文案
-          "选择配置文件中的权重或者本地 .pth 文件",
+          s.select_weights_or_local_pth_hint,
           s: TS(c: qb.q(.7), s: 12, w: .w500),
         ),
         4.h,
@@ -562,7 +562,7 @@ class _LocalSwitcher extends ConsumerWidget {
                   mainAxisSize: .min,
                   children: [
                     Text(
-                      e.displayName,
+                      e.displayName(s),
                       style: TS(c: textColor, s: 12, w: .w500),
                     ),
                     if (inUse) ...[
@@ -585,29 +585,184 @@ class _LocalSwitcher extends ConsumerWidget {
   }
 }
 
+String _truncatePath(String pathStr, [int maxLen = 56]) {
+  if (pathStr.length <= maxLen) return pathStr;
+  const head = 26;
+  final tail = maxLen - head - 3;
+  return '${pathStr.substring(0, head)}...${pathStr.substring(pathStr.length - tail)}';
+}
+
+Future<void> _openContainingFolder(String filePath) async {
+  try {
+    final dirPath = path.dirname(filePath);
+    if (Platform.isMacOS) {
+      await Process.run('open', [dirPath]);
+    } else if (Platform.isWindows) {
+      await Process.run('explorer', [dirPath]);
+    } else if (Platform.isLinux) {
+      await Process.run('xdg-open', [dirPath]);
+    }
+  } catch (_) {}
+}
+
+String? _ctxFromFileName(FileInfo fileInfo) {
+  final m = RegExp(r'ctx(\d+)', caseSensitive: false).firstMatch(fileInfo.name);
+  if (m != null) return m.group(1);
+  return null;
+}
+
+class _LocalPthFileItem extends ConsumerWidget {
+  final FileInfo fileInfo;
+
+  const _LocalPthFileItem(this.fileInfo);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final currentModel = ref.watch(P.rwkv.latestModel);
+    final isCurrent = currentModel == fileInfo;
+    final customTheme = ref.watch(P.app.customTheme);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final date = fileInfo.dateDisplayString;
+    final ctxLength = _ctxFromFileName(fileInfo);
+
+    return ClipRRect(
+      borderRadius: 8.r,
+      child: Container(
+        decoration: BoxDecoration(
+          color: customTheme.settingItem,
+          borderRadius: 8.r,
+          border: Border.all(color: qw.q(.1), width: .5),
+        ),
+        margin: const .only(top: 8),
+        padding: const .all(8),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    children: [
+                      Text(
+                        fileInfo.name,
+                        style: const TS(w: .w600),
+                      ),
+                      Text(
+                        gbDisplay(fileInfo.fileSize),
+                        style: TS(c: qb.q(.7), w: .w500),
+                      ),
+                      if (isCurrent) ...[
+                        4.w,
+                        Icon(Icons.check, size: 16, color: qb.q(.8)),
+                        4.w,
+                        Text(s.loaded, style: TS(c: qb.q(.8), s: 12)),
+                      ],
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => _openContainingFolder(fileInfo.raw),
+                  icon: const Icon(Icons.folder_open),
+                  tooltip: s.open_containing_folder,
+                  style: ButtonStyle(
+                    minimumSize: .all(const Size(32, 32)),
+                    padding: .all(.zero),
+                  ),
+                ),
+              ],
+            ),
+            4.h,
+            Text(
+              _truncatePath(fileInfo.raw),
+              style: TS(c: qb.q(.6), s: 11),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (date != null || ctxLength != null) ...[
+              4.h,
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  if (date != null)
+                    Container(
+                      padding: const .symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: qb.q(.15),
+                        borderRadius: 4.r,
+                      ),
+                      child: Text(date, style: TS(c: qb.q(.8), s: 11)),
+                    ),
+                  if (ctxLength != null)
+                    Container(
+                      padding: const .symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: qb.q(.15),
+                        borderRadius: 4.r,
+                      ),
+                      child: Text(s.ctx_length_label(ctxLength), style: TS(c: qb.q(.8), s: 11)),
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _LocalOptions extends ConsumerWidget {
   const _LocalOptions();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final loadedModels = ref.watch(P.rwkv.loadedModels);
     final fileInfos = loadedModels.keys.where((e) => e.fromPthFile).toList();
+    final usingPth = ref.watch(P.rwkv.usingPth);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
+
     return Column(
       crossAxisAlignment: .start,
       children: [
         T(
-          // TODO: 文案
-          "本地 .pth 文件",
+          s.local_pth_files_section_title,
           s: TS(c: qb.q(.7), s: 12, w: .w500),
         ),
         4.h,
+        if (usingPth != true && loadedModels.isNotEmpty) ...[
+          Container(
+            padding: const .all(8),
+            decoration: BoxDecoration(
+              color: qb.q(.1),
+              borderRadius: 8.r,
+              border: Border.all(color: qb.q(.2), width: 1),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, size: 16, color: qb.q(.8)),
+                6.w,
+                Expanded(
+                  child: Text(
+                    s.current_model_from_latest_json_not_pth,
+                    style: TS(c: qb.q(.9), s: 12),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          8.h,
+        ],
         Row(
           children: [
             T(
-              // TODO: 文案
-              "你可以选择本地的 .pth 文件进行加载",
+              s.local_pth_you_can_select,
               s: TS(c: qb.q(.7), s: 12),
             ),
             4.w,
@@ -615,15 +770,8 @@ class _LocalOptions extends ConsumerWidget {
               onPressed: () async {
                 await showOkAlertDialog(
                   context: context,
-                  // TODO: 文案
-                  title: "什么是 .pth 文件？",
-                  message: '''
-.pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。
-
-通常通过 Pytorch 训练的模型会保存为 .pth 文件。
-
-RWKV Chat 支持加载 .pth 文件。
-                      ''',
+                  title: s.what_is_pth_file_title,
+                  message: s.what_is_pth_file_message,
                 );
               },
               icon: Icon(Icons.info_outline),
@@ -636,6 +784,20 @@ RWKV Chat 支持加载 .pth 文件。
           ],
         ),
         4.h,
+        if (fileInfos.isNotEmpty) ...[
+          for (var i = 0; i < fileInfos.length; i++) ...[
+            if (i > 0) 8.h,
+            _LocalPthFileItem(fileInfos[i]),
+          ],
+          8.h,
+        ],
+        if (fileInfos.isEmpty) ...[
+          Text(
+            s.no_local_pth_loaded_yet,
+            style: TS(c: qb.q(.6), s: 12),
+          ),
+          4.h,
+        ],
         FilledButton(
           onPressed: () async {
             final fileInfo = await P.fileManager.pickLocalPthFile();
@@ -644,8 +806,7 @@ RWKV Chat 支持加载 .pth 文件。
             Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
           },
           child: Text(
-            // TODO: 文案
-            "选择本地 .pth 文件",
+            s.select_local_pth_file_button,
             style: TS(c: qw, s: 12, w: .w500),
           ),
         ),

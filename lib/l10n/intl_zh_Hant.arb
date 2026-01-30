@@ -589,5 +589,22 @@
     }
   },
   "invalid_zip_file": "無效的 ZIP 檔案或檔案格式無法識別",
-  "no_files_in_zip": "ZIP 檔案中未找到有效的權重檔案"
+  "no_files_in_zip": "ZIP 檔案中未找到有效的權重檔案",
+  "current_model_from_latest_json_not_pth": "目前載入的是 latest.json 中的配置，不是本機 .pth 檔案",
+  "no_local_pth_loaded_yet": "暫無已載入的本機 .pth 檔案",
+  "ctx_length_label": "ctx {length}",
+  "@ctx_length_label": {
+    "placeholders": {
+      "length": {}
+    }
+  },
+  "local_pth_option_files_in_config": "設定檔中的權重",
+  "local_pth_option_local_pth_files": "本機 .pth 檔案",
+  "select_weights_or_local_pth_hint": "選擇設定檔中的權重或本機 .pth 檔案",
+  "local_pth_files_section_title": "本機 .pth 檔案",
+  "local_pth_you_can_select": "你可以選擇本機的 .pth 檔案進行載入",
+  "what_is_pth_file_title": "什麼是 .pth 檔案？",
+  "what_is_pth_file_message": ".pth 檔案是直接從本機檔案系統載入的權重檔案，不需透過下載伺服器下載。\n\n通常透過 Pytorch 訓練的模型會儲存為 .pth 檔案。\n\nRWKV Chat 支援載入 .pth 檔案。",
+  "select_local_pth_file_button": "選擇本機 .pth 檔案",
+  "open_containing_folder": "開啟所在資料夾"
 }

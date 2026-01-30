@@ -595,5 +595,22 @@
     }
   },
   "invalid_zip_file": "Invalid ZIP file or file format not recognized",
-  "no_files_in_zip": "No valid weight files found in the ZIP file"
+  "no_files_in_zip": "No valid weight files found in the ZIP file",
+  "current_model_from_latest_json_not_pth": "The current model is from latest.json config, not a local .pth file",
+  "no_local_pth_loaded_yet": "No local .pth file loaded yet",
+  "ctx_length_label": "ctx {length}",
+  "@ctx_length_label": {
+    "placeholders": {
+      "length": {}
+    }
+  },
+  "local_pth_option_files_in_config": "Weights in config",
+  "local_pth_option_local_pth_files": "Local .pth file",
+  "select_weights_or_local_pth_hint": "Select weights from config or local .pth file",
+  "local_pth_files_section_title": "Local .pth file",
+  "local_pth_you_can_select": "You can select and load a local .pth file",
+  "what_is_pth_file_title": "What is a .pth file?",
+  "what_is_pth_file_message": ".pth files are weight files loaded directly from the local file system, without downloading from a server.\n\nModels trained with PyTorch are often saved as .pth files.\n\nRWKV Chat supports loading .pth files.",
+  "select_local_pth_file_button": "Select local .pth file",
+  "open_containing_folder": "Open containing folder"
 }
