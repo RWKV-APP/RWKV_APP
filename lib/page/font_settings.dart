@@ -414,18 +414,18 @@ class _FontSelectionButtons extends ConsumerWidget {
       children: [
         // UI Font Setting
         ListTile(
-          title: T(s.ui_font_setting),
+          title: Text(s.ui_font_setting),
           subtitle: preferredUIFont != null
-              ? T(
+              ? Text(
                   preferredUIFont,
-                  s: TextStyle(
+                  style: TextStyle(
                     fontFamily: preferredUIFont,
                     color: onSurface.q(.7),
                   ),
                 )
-              : T(
+              : Text(
                   s.default_font,
-                  s: TextStyle(
+                  style: TextStyle(
                     color: onSurface.q(.7),
                   ),
                 ),
@@ -443,18 +443,18 @@ class _FontSelectionButtons extends ConsumerWidget {
         ),
         // Monospace Font Setting
         ListTile(
-          title: T(s.monospace_font_setting),
+          title: Text(s.monospace_font_setting),
           subtitle: preferredMonospaceFont != null
-              ? T(
+              ? Text(
                   preferredMonospaceFont,
-                  s: TextStyle(
+                  style: TextStyle(
                     fontFamily: preferredMonospaceFont,
                     color: onSurface.q(.7),
                   ),
                 )
-              : T(
+              : Text(
                   s.default_font,
-                  s: TextStyle(
+                  style: TextStyle(
                     color: onSurface.q(.7),
                   ),
                 ),

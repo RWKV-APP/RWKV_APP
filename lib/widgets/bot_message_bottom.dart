@@ -228,9 +228,9 @@ class BotMessageBottom extends ConsumerWidget {
         if (msg.modelName != null) 4.w,
         if (msg.modelName != null)
           Expanded(
-            child: T(
+            child: Text(
               msg.modelName!,
-              s: TS(c: primaryColor.q(.8), s: 10),
+              style: TS(c: primaryColor.q(.8), s: 10),
               maxLines: 1,
               overflow: .ellipsis,
             ),
@@ -248,9 +248,9 @@ class BotMessageBottom extends ConsumerWidget {
                   border: Border.all(color: primaryColor.q(.67)),
                   borderRadius: 4.r,
                 ),
-                child: T(
+                child: Text(
                   s.chat_resume,
-                  s: TS(c: primaryColor, w: .w600, s: 16),
+                  style: TS(c: primaryColor, w: .w600, s: 16),
                 ),
               ),
             ),

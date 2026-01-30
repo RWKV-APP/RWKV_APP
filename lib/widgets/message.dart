@@ -283,11 +283,11 @@ class Message extends ConsumerWidget {
               if (kDebugMode && Args.debugMsgId)
                 Container(
                   decoration: BoxDecoration(color: Colors.red.q(1)),
-                  child: T("Debug: ${msg.id}", s: const TS(c: kW)),
+                  child: Text("Debug: ${msg.id}", style: const TS(c: kW)),
                 ),
               if (isMine) ...[
                 // 🔥 User message
-                if (!isUserImage && finalContent.isNotEmpty) T(finalContent, s: userMessageStyle),
+                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
                 // 🔥 User message image
                 if (isUserImage)
                   ConstrainedBox(
@@ -326,9 +326,9 @@ class Message extends ConsumerWidget {
                   ),
                 // 🔥 Bot message audio recognition result
                 if (worldDemoMessageHeader.isNotEmpty)
-                  T(
+                  Text(
                     worldDemoMessageHeader,
-                    s: TS(c: qb.q(.5), w: .w700, s: 10),
+                    style: TS(c: qb.q(.5), w: .w700, s: 10),
                   ),
                 if (worldDemoMessageHeader.isNotEmpty) 4.h,
                 // 🔥 Bot message
@@ -351,9 +351,9 @@ class Message extends ConsumerWidget {
                         decoration: const BoxDecoration(color: Colors.transparent),
                         child: Row(
                           children: [
-                            T(
+                            Text(
                               thisMessageIsReceiving ? s.thinking : s.thought_result,
-                              s: TS(c: qb.q(.5), w: .w600),
+                              style: TS(c: qb.q(.5), w: .w600),
                             ),
                             showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
                           ],

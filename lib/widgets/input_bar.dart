@@ -79,9 +79,9 @@ class _WaitingMsg extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        T(
+        Text(
           s.message_in_queue(count),
-          s: const TS(s: 12),
+          style: const TS(s: 12),
         ),
         Container(
           decoration: BD(color: kC.q(.1), borderRadius: 12.r),
@@ -91,9 +91,9 @@ class _WaitingMsg extends ConsumerWidget {
             children: [
               if (waitingImagePath != null) _ImagePreview(small: true, imagePath: waitingImagePath),
               if (waitingImagePath != null) 4.w,
-              T(
+              Text(
                 waitingText,
-                s: const TS(s: 12),
+                style: const TS(s: 12),
               ),
             ],
           ),

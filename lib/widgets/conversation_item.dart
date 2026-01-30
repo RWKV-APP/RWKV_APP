@@ -75,9 +75,7 @@ class ConversationListItemData {
 
   static String _processTitle(String title) {
     String processed = title.replaceAll(Config.userMsgModifierSep, '').trim();
-    processed = processed.replaceAll(
-        Config.userMsgModifierSep.substring(0, Config.userMsgModifierSep.length - 1),
-        '');
+    processed = processed.replaceAll(Config.userMsgModifierSep.substring(0, Config.userMsgModifierSep.length - 1), '');
     return processed;
   }
 
@@ -238,15 +236,15 @@ class ConversationItem extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: .stretch,
                 children: [
-                  T(
+                  Text(
                     conversation.title,
-                    s: TS(s: 16, w: .w500, c: qb),
+                    style: TS(s: 16, w: .w500, c: qb),
                     overflow: .ellipsis,
                   ),
                   4.h,
-                  T(
+                  Text(
                     conversation.subtitle,
-                    s: const TS(s: 12, c: Colors.grey),
+                    style: const TS(s: 12, c: Colors.grey),
                     overflow: .ellipsis,
                     maxLines: 2,
                   ),

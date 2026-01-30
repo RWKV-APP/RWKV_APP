@@ -62,7 +62,7 @@ class ModelTag extends ConsumerWidget {
         );
       case "npu":
         return _RenderingOptions(
-          footer: const T("⚡"),
+          footer: const Text("⚡"),
           bgColor: kCG,
           textColor: qw,
           borderColor: kCG,

@@ -12,6 +12,7 @@ import 'package:archive/archive.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:collection/collection.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -132,13 +132,13 @@ class _ChatAppBar extends ConsumerWidget {
                   mainAxisSize: .min,
                   crossAxisAlignment: .end,
                   children: [
-                    const T(
+                    const Text(
                       Config.appTitle,
-                      s: TextStyle(fontSize: 16, fontWeight: .w600),
+                      style: TextStyle(fontSize: 16, fontWeight: .w600),
                     ),
                     Padding(
                       padding: const .only(bottom: 2, left: 1),
-                      child: T(' $version', s: const TS(s: 8, w: .bold)),
+                      child: Text(' $version', style: const TS(s: 8, w: .bold)),
                     ),
                   ],
                 ),
@@ -171,9 +171,9 @@ class _ChatAppBar extends ConsumerWidget {
                     crossAxisAlignment: .center,
                     mainAxisAlignment: .center,
                     children: [
-                      T(
+                      Text(
                         displayName,
-                        s: TS(s: 10, c: primary),
+                        style: TS(s: 10, c: primary),
                       ),
                       4.w,
                       Transform.rotate(
@@ -262,7 +262,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             value: -1,
             enabled: false,
             height: 20,
-            child: T(Config.appTitle + " " + version, s: const TS(s: 10)),
+            child: Text(Config.appTitle + " " + version, style: const TS(s: 10)),
           ),
           PopupMenuItem(
             value: 1,
@@ -346,7 +346,7 @@ class _SelectMessageChatAppBar extends ConsumerWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      title: T(sprintf(s.x_message_selected, [selected.length]), s: const TS(s: 18)),
+      title: Text(sprintf(s.x_message_selected, [selected.length]), style: const TS(s: 18)),
       leading: _SelectAllRow(
         all: all,
         onAllTap: () {
@@ -378,7 +378,7 @@ class _SelectAllRow extends ConsumerWidget {
         ),
         GestureDetector(
           onTap: onAllTap,
-          child: T(s.all),
+          child: Text(s.all),
         ),
       ],
     );

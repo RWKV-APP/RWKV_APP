@@ -83,6 +83,18 @@ class _RWKV {
   /// 已经加载到内存中的模型，key 为 FuncType，value 为模型 ID
   late final loadedModels = qs<Map<FileInfo, int>>({});
 
+  late final usingPth = qp<bool?>((ref) {
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+
+    if (loadedModels.isEmpty) return null;
+
+    if (loadedModels.keys.any((e) => e.fromPthFile)) {
+      return true;
+    }
+
+    return false;
+  });
+
   /// 模型加载状态, 曾经被加载过的模型, 也会显示在这里
   late final loadingStatus = qs<Map<FileInfo, LoadingStatus>>({});
 
@@ -353,10 +365,21 @@ extension $RWKVLoad on _RWKV {
     decodeSpeed.q = 0;
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/rwkv_vocab_v20230424.txt");
 
-    final localFile = P.fileManager.locals(fileInfo).q;
-    String modelPath = localFile.targetPath;
+    String modelPath;
+
+    if (fileInfo.fromPthFile) {
+      modelPath = fileInfo.raw;
+    } else {
+      final localFile = P.fileManager.locals(fileInfo).q;
+      modelPath = localFile.targetPath;
+    }
 
     final backend = fileInfo.backend;
+
+    if (backend == null) {
+      throw Exception("Backend is null");
+    }
+
     final enableReasoning = fileInfo.isReasoning;
 
     if (backend == Backend.mlx || backend == Backend.coreml) {

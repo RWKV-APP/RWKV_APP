@@ -102,7 +102,7 @@ extension _$Dump on _Dump {
     }
 
     if (externalDir == null) {
-      ScaffoldMessenger.of(getContext()!).showSnackBar(const SnackBar(content: T("Could not get external directory")));
+      ScaffoldMessenger.of(getContext()!).showSnackBar(const SnackBar(content: Text("Could not get external directory")));
       return;
     }
 

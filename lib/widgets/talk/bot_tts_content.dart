@@ -126,9 +126,9 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       Icon(Icons.audio_file, color: primaryColor),
                       2.h,
                       if (e < 1)
-                        T(
+                        Text(
                           (e * 100).toStringAsFixed(0) + "%",
-                          s: TS(c: qb.q(.8), w: .w600, s: 10),
+                          style: TS(c: qb.q(.8), w: .w600, s: 10),
                         ),
                       if (e >= 1) Icon(Icons.check, color: primaryColor, size: 12),
                     ],
@@ -156,9 +156,9 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                     ),
                   ),
                   8.w,
-                  T(
+                  Text(
                     s.generating + "",
-                    s: TS(c: qb.q(.8), w: .w500),
+                    style: TS(c: qb.q(.8), w: .w500),
                   ),
                 ],
               ),
@@ -185,9 +185,9 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       color: primaryColor,
                     ),
                   8.w,
-                  T(
+                  Text(
                     (length / 1000).toStringAsFixed(0) + "s",
-                    s: TS(c: qb.q(.8), w: .w600),
+                    style: TS(c: qb.q(.8), w: .w600),
                   ),
                   if (allDone)
                     GestureDetector(

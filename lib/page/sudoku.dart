@@ -116,7 +116,7 @@ class _ButtonGenerate extends ConsumerWidget {
             textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
-          child: T(s.generate),
+          child: Text(s.generate),
         ),
       ),
     );
@@ -171,7 +171,7 @@ class _ButtonGenerateHardest extends ConsumerWidget {
             textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
-          child: T(
+          child: Text(
             s.generate_hardest_sudoku_in_the_world,
             textAlign: TextAlign.center,
           ),
@@ -226,12 +226,12 @@ class _ButtonInference extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8, height: 8),
-                    T(s.thinking),
+                    Text(s.thinking),
                   ],
                 )
               : hasPuzzle
-              ? T(s.start_to_inference, textAlign: TextAlign.center)
-              : T(s.no_puzzle, textAlign: TextAlign.center),
+              ? Text(s.start_to_inference, textAlign: TextAlign.center)
+              : Text(s.no_puzzle, textAlign: TextAlign.center),
         ),
       ),
     );
@@ -262,7 +262,7 @@ class _ButtonClear extends ConsumerWidget {
             textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
-          child: T(s.clear),
+          child: Text(s.clear),
         ),
       ),
     );
@@ -295,7 +295,7 @@ class _ButtonShowStack extends ConsumerWidget {
             textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: !enable ? null : () => _onPressed(context, ref),
-          child: showStack ? T(s.hide_stack) : T(s.show_stack),
+          child: showStack ? Text(s.hide_stack) : Text(s.show_stack),
         ),
       ),
     );
@@ -329,10 +329,10 @@ class _UI extends ConsumerWidget {
 
     final List<Widget> buttons = [
       const SizedBox(width: 12, height: 12),
-      T(
+      Text(
         Config.appTitle,
         textAlign: TextAlign.center,
-        s: TS(s: 14 * magnification, w: .w500),
+        style: TS(s: 14 * magnification, w: .w500),
       ),
       Container(
         height: 1,
@@ -561,38 +561,38 @@ class _TokensInfo extends ConsumerWidget {
         ? Row(
             mainAxisAlignment: .center,
             children: [
-              T(
+              Text(
                 "$tokenCount ${tokenCount > 1 ? "tokens" : "token"}",
                 textAlign: TextAlign.center,
-                s: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TS(s: 10, c: Color(0xFF888888)),
               ),
               const SizedBox(width: 4, height: 4),
-              T(
+              Text(
                 "${tokensPerSecond.toStringAsFixed(2)} tokens/s",
                 textAlign: TextAlign.center,
-                s: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TS(s: 10, c: Color(0xFF888888)),
               ),
               if (difficulty != null) ...[
                 const SizedBox(width: 4, height: 4),
-                T(
+                Text(
                   "Unknown grid count: $difficulty",
                   textAlign: TextAlign.center,
-                  s: const TS(s: 10, c: Color(0xFF888888)),
+                  style: const TS(s: 10, c: Color(0xFF888888)),
                 ),
               ],
             ],
           )
         : Column(
             children: [
-              T(
+              Text(
                 "$tokenCount ${tokenCount > 1 ? "tokens" : "token"}",
                 textAlign: TextAlign.center,
-                s: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TS(s: 10, c: Color(0xFF888888)),
               ),
-              T(
+              Text(
                 "${tokensPerSecond.toStringAsFixed(2)} tokens/s",
                 textAlign: TextAlign.center,
-                s: const TS(s: 10, c: Color(0xFF888888)),
+                style: const TS(s: 10, c: Color(0xFF888888)),
               ),
             ],
           );
@@ -658,9 +658,9 @@ class _Grid extends ConsumerWidget {
             final maxWidth = constraints.maxWidth;
             double textSize = maxWidth / 2;
             return Center(
-              child: T(
+              child: Text(
                 value != 0 ? value.toString() : "",
-                s: TS(
+                style: TS(
                   c: kB,
                   s: textSize,
                   w: isDesktop ? .w600 : null,
@@ -698,9 +698,9 @@ class _Terminal extends ConsumerWidget {
           ),
           itemCount: logs.length,
           itemBuilder: (context, index) {
-            return T(
+            return Text(
               logs[index],
-              s: TS(
+              style: TS(
                 ff: monospaceFF,
                 s: isDesktop ? 16 : 10,
                 letterSpacing: 0,

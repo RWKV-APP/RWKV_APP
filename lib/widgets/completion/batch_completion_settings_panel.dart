@@ -89,7 +89,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
       child: Scaffold(
         backgroundColor: customTheme.setting,
         appBar: AppBar(
-          title: T(s.batch_completion_settings),
+          title: Text(s.batch_completion_settings),
           automaticallyImplyLeading: false,
           backgroundColor: customTheme.setting,
           actions: [

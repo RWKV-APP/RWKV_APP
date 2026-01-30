@@ -82,7 +82,7 @@ class LogPanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onRefreshPressed,
-                  child: T(S.current.refresh),
+                  child: Text(S.current.refresh),
                 ),
                 Expanded(
                   child: Row(
@@ -91,9 +91,9 @@ class LogPanel extends ConsumerWidget {
                     children: [
                       const Icon(Icons.tune),
                       12.w,
-                      T(
+                      Text(
                         S.current.runtime_log_panel,
-                        s: const TS(s: 16, w: .w500),
+                        style: const TS(s: 16, w: .w500),
                       ),
                     ],
                   ),
@@ -101,7 +101,7 @@ class LogPanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onClosePressed,
-                  child: T(S.current.close),
+                  child: Text(S.current.close),
                 ),
                 8.w,
               ],
@@ -112,7 +112,7 @@ class LogPanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onShowEscapeCharactersPressed,
-                  child: T(
+                  child: Text(
                     S.current.show_escape_characters +
                         ": " +
                         (showEscapeCharacters ? S.current.line_break_rendered : S.current.escape_characters_rendered),
@@ -121,7 +121,7 @@ class LogPanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onShowPrefillLogOnlyPressed,
-                  child: T(
+                  child: Text(
                     S.current.show_prefill_log_only + ": " + (showPrefillLogOnly ? S.current.enabled : S.current.disabled),
                   ),
                 ),
@@ -149,7 +149,7 @@ class LogPanel extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            T(log.tag, s: const TS(w: .w700)),
+                            Text(log.tag, style: const TS(w: .w700)),
                             if (log.isPrefill) ...[
                               4.w,
                               Container(
@@ -158,7 +158,7 @@ class LogPanel extends ConsumerWidget {
                                   borderRadius: .circular(4),
                                 ),
                                 padding: const .symmetric(horizontal: 2),
-                                child: const T("Prefill", s: TS(w: .w700)),
+                                child: const Text("Prefill", style: TS(w: .w700)),
                               ),
                             ],
                             const Spacer(),
@@ -169,11 +169,11 @@ class LogPanel extends ConsumerWidget {
                                   borderRadius: .circular(4),
                                 ),
                                 padding: const .symmetric(horizontal: 2),
-                                child: T(log.dateTimeString, s: const TS(w: .w600)),
+                                child: Text(log.dateTimeString, style: const TS(w: .w600)),
                               ),
                           ],
                         ),
-                        T(content),
+                        Text(content),
                       ],
                     ),
                   );

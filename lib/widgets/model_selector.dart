@@ -1,11 +1,14 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
@@ -62,6 +65,10 @@ class ModelSelector extends ConsumerWidget {
       return;
     }
 
+    final usingPth = P.rwkv.usingPth.q;
+    if (usingPth == true) P.fileManager.localPthFileOption.q = LocalPthFileOption.localPthFiles;
+    if (usingPth != true) P.fileManager.localPthFileOption.q = LocalPthFileOption.filesInConfig;
+
     await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -89,6 +96,8 @@ class ModelSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final isDesktop = ref.watch(P.app.isDesktop);
+    final localPthFileOption = ref.watch(P.fileManager.localPthFileOption);
+    final pageKey = ref.watch(P.app.pageKey);
 
     return ClipRRect(
       borderRadius: 16.r,
@@ -98,9 +107,11 @@ class ModelSelector extends ConsumerWidget {
           padding: .only(left: isDesktop ? 12 : 8, right: isDesktop ? 12 : 8),
           controller: scrollController,
           children: [
-            const _Header(),
-            const _Hints(),
-            _ModelList(showNeko: showNeko, rolePlayOnly: rolePlayOnly),
+            const _Title(),
+            if (isDesktop && pageKey == .chat) const _LocalSwitcher(),
+            if (localPthFileOption == LocalPthFileOption.filesInConfig) const _Options(),
+            if (localPthFileOption == LocalPthFileOption.filesInConfig) _ModelList(showNeko: showNeko, rolePlayOnly: rolePlayOnly),
+            if (localPthFileOption == LocalPthFileOption.localPthFiles) const _LocalOptions(),
             16.h,
             paddingBottom.h,
           ],
@@ -110,8 +121,8 @@ class ModelSelector extends ConsumerWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header();
+class _Title extends StatelessWidget {
+  const _Title();
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +130,7 @@ class _Header extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: T(s.chat_please_select_a_model, s: const TS(s: 18, w: .w600)),
+          child: Text(s.chat_please_select_a_model, style: const TS(s: 18, w: .w600)),
         ),
         const IconButton(
           onPressed: pop,
@@ -130,8 +141,8 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Hints extends ConsumerWidget {
-  const _Hints();
+class _Options extends ConsumerWidget {
+  const _Options();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -144,9 +155,9 @@ class _Hints extends ConsumerWidget {
       children: [
         const _DownloadSource(),
         if (demoType == .chat)
-          T(
+          Text(
             "👉${s.str_model_selection_dialog_hint}👈",
-            s: TS(c: qb.q(.7), s: 12, w: .w500),
+            style: TS(c: qb.q(.7), s: 12, w: .w500),
           ),
       ],
     );
@@ -312,9 +323,9 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 Icon(Icons.info_outline, size: 18, color: qb.q(.8)),
                 4.w,
                 Expanded(
-                  child: T(
+                  child: Text(
                     hasValidSoc ? s.npu_not_supported_title(currentSocName) : s.npu_not_supported_title(frontendSocName ?? "Unknown"),
-                    s: TS(c: qb.q(.9), s: 14, w: .w600),
+                    style: TS(c: qb.q(.9), s: 14, w: .w600),
                   ),
                 ),
               ],
@@ -324,9 +335,9 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
               if (hasValidSoc) ...[
                 Row(
                   children: [
-                    T(
+                    Text(
                       "您的设备：",
-                      s: TS(c: qb.q(.7), s: 12),
+                      style: TS(c: qb.q(.7), s: 12),
                     ),
                     6.w,
                     Container(
@@ -348,9 +359,9 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                             color: qb.q(.8),
                           ),
                           4.w,
-                          T(
+                          Text(
                             currentSocName,
-                            s: TS(
+                            style: TS(
                               c: qb.q(.9),
                               s: 11,
                               w: .w600,
@@ -363,9 +374,9 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 ),
                 8.h,
               ],
-              T(
+              Text(
                 "我们目前支持以下SoC芯片中的NPU：",
-                s: TS(c: qb.q(.7), s: 12),
+                style: TS(c: qb.q(.7), s: 12),
               ),
               8.h,
               Wrap(
@@ -393,9 +404,9 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                             color: primary,
                           ),
                         ),
-                        T(
+                        Text(
                           chip,
-                          s: TS(
+                          style: TS(
                             c: primary,
                             s: 11,
                             w: .w500,
@@ -407,9 +418,9 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 }).toList(),
               ),
               8.h,
-              T(
+              Text(
                 s.adapting_more_inference_chips,
-                s: TS(c: qb.q(.7), s: 12),
+                style: TS(c: qb.q(.7), s: 12),
               ),
             ],
           ],
@@ -433,9 +444,9 @@ class _DownloadSource extends ConsumerWidget {
       crossAxisAlignment: .stretch,
       children: [
         4.h,
-        T(
+        Text(
           S.current.download_server_,
-          s: TS(c: qb.q(.7), s: 12, w: .w600),
+          style: TS(c: qb.q(.7), s: 12, w: .w600),
         ),
         4.h,
         Wrap(
@@ -462,10 +473,15 @@ class _DownloadSource extends ConsumerWidget {
                         color: primary,
                       ),
                     ),
+                    constraints: BoxConstraints(minHeight: 30),
                     padding: const .symmetric(horizontal: 6, vertical: 2),
-                    child: T(
-                      downloadSourceName,
-                      s: TS(c: e == currentSource ? qw : qb.q(.7), s: 14),
+                    child: IntrinsicWidth(
+                      child: Center(
+                        child: Text(
+                          downloadSourceName,
+                          style: TS(c: e == currentSource ? qw : qb.q(.7), s: 14),
+                        ),
+                      ),
                     ),
                   ),
                 );
@@ -473,6 +489,166 @@ class _DownloadSource extends ConsumerWidget {
               .toList(),
         ),
         8.h,
+      ],
+    );
+  }
+}
+
+enum LocalPthFileOption {
+  filesInConfig,
+  localPthFiles
+  ;
+
+  String get displayName => switch (this) {
+    // TODO: 文案
+    filesInConfig => "???",
+    localPthFiles => "???",
+  };
+}
+
+class _LocalSwitcher extends ConsumerWidget {
+  const _LocalSwitcher();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localPthFileOption = ref.watch(P.fileManager.localPthFileOption);
+    final primary = Theme.of(context).colorScheme.primary;
+    final options = LocalPthFileOption.values;
+    final qw = ref.watch(P.app.qw);
+    final qb = ref.watch(P.app.qb);
+    final usingPth = ref.watch(P.rwkv.usingPth);
+
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        T(
+          // TODO: 文案
+          "选择配置文件中的权重或者本地 .pth 文件",
+          s: TS(c: qb.q(.7), s: 12, w: .w500),
+        ),
+        4.h,
+        Wrap(
+          runSpacing: 4,
+          spacing: 4,
+          children: options.map((e) {
+            final isSelected = e == localPthFileOption;
+            final inUse = usingPth == true ? e == LocalPthFileOption.localPthFiles : e == LocalPthFileOption.filesInConfig;
+
+            late final Color textColor;
+            late final Color iconColor;
+
+            if (isSelected) {
+              textColor = qw;
+            } else {
+              textColor = qb.q(.7);
+            }
+
+            iconColor = textColor;
+
+            return GD(
+              onTap: () {
+                P.fileManager.localPthFileOption.q = e;
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: e == localPthFileOption ? primary : Colors.transparent,
+                  borderRadius: 4.r,
+                  border: Border.all(
+                    color: primary,
+                  ),
+                ),
+                padding: .all(4),
+                child: Row(
+                  mainAxisSize: .min,
+                  children: [
+                    Text(
+                      e.displayName,
+                      style: TS(c: textColor, s: 12, w: .w500),
+                    ),
+                    if (inUse) ...[
+                      4.w,
+                      Icon(
+                        Icons.check,
+                        color: iconColor,
+                        size: 14,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        4.h,
+      ],
+    );
+  }
+}
+
+class _LocalOptions extends ConsumerWidget {
+  const _LocalOptions();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final loadedModels = ref.watch(P.rwkv.loadedModels);
+    final fileInfos = loadedModels.keys.where((e) => e.fromPthFile).toList();
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        T(
+          // TODO: 文案
+          "本地 .pth 文件",
+          s: TS(c: qb.q(.7), s: 12, w: .w500),
+        ),
+        4.h,
+        Row(
+          children: [
+            T(
+              // TODO: 文案
+              "你可以选择本地的 .pth 文件进行加载",
+              s: TS(c: qb.q(.7), s: 12),
+            ),
+            4.w,
+            IconButton(
+              onPressed: () async {
+                await showOkAlertDialog(
+                  context: context,
+                  // TODO: 文案
+                  title: "什么是 .pth 文件？",
+                  message: '''
+.pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。
+
+通常通过 Pytorch 训练的模型会保存为 .pth 文件。
+
+RWKV Chat 支持加载 .pth 文件。
+                      ''',
+                );
+              },
+              icon: Icon(Icons.info_outline),
+              iconSize: 14,
+              style: ButtonStyle(
+                minimumSize: WidgetStateProperty.all(const Size(16, 16)),
+                padding: WidgetStateProperty.all(.zero),
+              ),
+            ),
+          ],
+        ),
+        4.h,
+        FilledButton(
+          onPressed: () async {
+            final fileInfo = await P.fileManager.pickLocalPthFile();
+            if (fileInfo == null) return;
+            pop();
+            Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+          },
+          child: Text(
+            // TODO: 文案
+            "选择本地 .pth 文件",
+            style: TS(c: qw, s: 12, w: .w500),
+          ),
+        ),
       ],
     );
   }

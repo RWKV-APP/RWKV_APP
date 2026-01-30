@@ -129,28 +129,28 @@ class _Empty extends ConsumerWidget {
           mainAxisAlignment: .center,
           children: [
             logoSquare.image(width: 140),
-            T(s.chat_welcome_to_use("RWKV Chat"), s: const TS(s: 18, w: .w600)),
+            Text(s.chat_welcome_to_use("RWKV Chat"), style: const TS(s: 18, w: .w600)),
             4.h,
-            T("v$version"),
+            Text("v$version"),
             12.h,
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
-              child: T(
+              child: Text(
                 s.intro,
-                s: TS(c: qb, w: .w500),
+                style: TS(c: qb, w: .w500),
               ),
             ),
             12.h,
             if (!loaded)
-              T(
+              Text(
                 s.start_a_new_chat_by_clicking_the_button_below,
-                s: TS(c: qb, s: 12),
+                style: TS(c: qb, s: 12),
               ),
             12.h,
             if (!loaded)
               TextButton(
                 onPressed: () => ModelSelector.show(preferredDemoType: .see),
-                child: T(s.select_a_model, s: const TS(s: 16, w: .w600)),
+                child: Text(s.select_a_model, style: const TS(s: 16, w: .w600)),
               ),
           ],
         ),

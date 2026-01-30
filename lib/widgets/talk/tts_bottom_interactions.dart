@@ -54,17 +54,17 @@ class TTSBottomInteractions extends ConsumerWidget {
             if (selectedSpkName != null)
               Container(
                 padding: const .symmetric(vertical: 4),
-                child: T(
+                child: Text(
                   target,
-                  s: TS(c: primary, w: .w600),
+                  style: TS(c: primary, w: .w600),
                 ),
               ),
             if (selectSourceAudioPath != null)
               Container(
                 padding: const .symmetric(vertical: 4),
-                child: T(
+                child: Text(
                   s.imitate_target + ": " + (sourceWavName ?? ""),
-                  s: TS(c: primary, w: .w600),
+                  style: TS(c: primary, w: .w600),
                 ),
               ),
             const _Actions(),
@@ -212,7 +212,7 @@ class _IntonationPanel extends ConsumerWidget {
                   borderRadius: 4.r,
                 ),
                 padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
-                child: T(emoji + e),
+                child: Text(emoji + e),
               ),
             );
           }),
@@ -243,9 +243,9 @@ class _AudioButton extends ConsumerWidget {
             color: primary.q(audioInteractorShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
-          child: T(
+          child: Text(
             s.voice_cloning + (audioInteractorShown ? " ×" : ""),
-            s: TS(c: audioInteractorShown ? qw : primary),
+            style: TS(c: audioInteractorShown ? qw : primary),
           ),
         ),
       ),
@@ -276,9 +276,9 @@ class _SpkButton extends ConsumerWidget {
             color: primary.q(spkShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
-          child: T(
+          child: Text(
             s.prebuilt_voices + (spkShown ? " ×" : ""),
-            s: TS(c: spkShown ? qw : primary),
+            style: TS(c: spkShown ? qw : primary),
           ),
         ),
       ),
@@ -307,9 +307,9 @@ class _IntonationButton extends ConsumerWidget {
             color: primary.q(intonationShown ? 1 : .1),
             borderRadius: borderRadius,
           ),
-          child: T(
+          child: Text(
             s.intonations + (intonationShown ? " ×" : ""),
-            s: TS(c: intonationShown ? qw : primary),
+            style: TS(c: intonationShown ? qw : primary),
           ),
         ),
       ),
@@ -466,7 +466,7 @@ class _SpkPanel extends ConsumerWidget {
                     ),
                     child: Row(
                       children: [
-                        T((flag ?? "") + " " + (localizedName ?? "")),
+                        Text((flag ?? "") + " " + (localizedName ?? "")),
                         if (selected) 4.w,
                         if (selected) Icon(Icons.circle, color: primary, size: 8),
                       ],
@@ -513,9 +513,9 @@ class _SpkPanel extends ConsumerWidget {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: T(
+                                  child: Text(
                                     display,
-                                    s: TS(c: selected ? primary : primary.q(.8), w: selected ? .w600 : .w400),
+                                    style: TS(c: selected ? primary : primary.q(.8), w: selected ? .w600 : .w400),
                                   ),
                                 ),
                                 if (selected)
@@ -665,7 +665,7 @@ class _InstructTabs extends ConsumerWidget {
                             size: 8,
                           ),
                         if (hasValue) 4.w,
-                        T(displayText),
+                        Text(displayText),
                       ],
                     ),
                   ),
@@ -732,7 +732,7 @@ class _InstructOptions extends ConsumerWidget {
                   border: Border.all(color: qb.q(.5), width: .5),
                   borderRadius: 4.r,
                 ),
-                child: T(e + (selected ? " ×" : "")),
+                child: Text(e + (selected ? " ×" : "")),
               ),
             );
           }),

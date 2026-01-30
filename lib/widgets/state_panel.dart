@@ -74,7 +74,7 @@ class StatePanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onRefreshPressed,
-                  child: T(S.current.refresh),
+                  child: Text(S.current.refresh),
                 ),
                 Expanded(
                   child: Row(
@@ -83,9 +83,9 @@ class StatePanel extends ConsumerWidget {
                     children: [
                       const Icon(Icons.tune),
                       4.w,
-                      T(
+                      Text(
                         S.current.state_panel,
-                        s: const TS(s: 16, w: .w500),
+                        style: const TS(s: 16, w: .w500),
                       ),
                     ],
                   ),
@@ -93,7 +93,7 @@ class StatePanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onClosePressed,
-                  child: T(S.current.close),
+                  child: Text(S.current.close),
                 ),
                 8.w,
               ],
@@ -104,7 +104,7 @@ class StatePanel extends ConsumerWidget {
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onNReplacedPressed,
-                  child: T(
+                  child: Text(
                     S.current.show_escape_characters +
                         ": " +
                         (showEscapeCharacters ? S.current.line_break_rendered : S.current.escape_characters_rendered),

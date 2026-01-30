@@ -181,9 +181,9 @@ class AudioInput extends ConsumerWidget {
                       ),
                     ),
                     12.h,
-                    T(
+                    Text(
                       bottomMessage,
-                      s: TS(
+                      style: TS(
                         s: bottomMessageSize,
                         c: primary.q(.5),
                       ),

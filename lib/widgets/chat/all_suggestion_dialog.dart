@@ -78,7 +78,7 @@ class _AllSuggestionDialogState extends State<AllSuggestionDialog> implements Ti
         crossAxisAlignment: .center,
         children: [
           16.h,
-          T(s.all_prompt, s: const TS(s: 16, w: .w600)),
+          Text(s.all_prompt, style: const TS(s: 16, w: .w600)),
           16.h,
           SizedBox(
             height: 50,
@@ -138,7 +138,7 @@ class _SuggestionList extends StatelessWidget {
     if (suggestions.isEmpty) {
       return Container(
         alignment: .center,
-        child: T(s.no_data, s: const TS(s: 16)),
+        child: Text(s.no_data, style: const TS(s: 16)),
       );
     }
     return ListView.builder(
@@ -150,7 +150,7 @@ class _SuggestionList extends StatelessWidget {
         return InkWell(
           child: Container(
             padding: const .symmetric(horizontal: 12, vertical: 8),
-            child: T(s.display, s: const TS(s: 14, w: .w500)),
+            child: Text(s.display, style: const TS(s: 14, w: .w500)),
           ),
           onTap: () {
             Navigator.pop(context, s);

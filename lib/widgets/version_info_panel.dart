@@ -61,7 +61,7 @@ class VersionInfoPanel extends ConsumerWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: T(s.found_new_version_available),
+          title: Text(s.found_new_version_available),
           automaticallyImplyLeading: false,
           actions: [
             IconButton(
@@ -77,13 +77,13 @@ class VersionInfoPanel extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: T(
+              child: Text(
                 s.latest_version + s.colon + (latestVersionInfo?.version ?? "") + "(" + (latestVersionInfo?.build.toString() ?? "") + ")",
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: T(s.current_version + s.colon + (P.app.version.q) + "(" + (P.app.buildNumber.q) + ")"),
+              child: Text(s.current_version + s.colon + (P.app.version.q) + "(" + (P.app.buildNumber.q) + ")"),
             ),
             Expanded(
               child: _ReleaseNotesContent(scrollController: scrollController),

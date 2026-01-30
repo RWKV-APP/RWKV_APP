@@ -42,8 +42,8 @@ class BatchButton extends ConsumerWidget {
             mainAxisAlignment: .center,
             crossAxisAlignment: .center,
             children: [
-              if (batchEnabled) T(s.batch_inference_button(batchCount), s: TS(c: textColor)),
-              if (!batchEnabled) T(s.batch_inference_short, s: TS(c: textColor)),
+              if (batchEnabled) Text(s.batch_inference_button(batchCount), style: TS(c: textColor)),
+              if (!batchEnabled) Text(s.batch_inference_short, style: TS(c: textColor)),
             ],
           ),
         ),

@@ -123,7 +123,7 @@ class Settings extends ConsumerWidget {
             ? null
             : AppBar(
                 automaticallyImplyLeading: false,
-                title: T(s.settings),
+                title: Text(s.settings),
                 centerTitle: false,
                 backgroundColor: customTheme.setting,
                 actions: [
@@ -152,9 +152,9 @@ class Settings extends ConsumerWidget {
               mainAxisAlignment: .center,
               children: [
                 Expanded(
-                  child: T(
+                  child: Text(
                     Config.appTitle,
-                    s: TS(s: 24),
+                    style: TS(s: 24),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -164,8 +164,8 @@ class Settings extends ConsumerWidget {
             Row(
               mainAxisAlignment: .center,
               children: [
-                T(version, s: const TS(s: 12)),
-                T(" ($buildNumber)", s: const TS(s: 12)),
+                Text(version, style: const TS(s: 12)),
+                Text(" ($buildNumber)", style: const TS(s: 12)),
               ],
             ),
             16.h,
@@ -173,9 +173,9 @@ class Settings extends ConsumerWidget {
               mainAxisAlignment: .start,
               children: [
                 Expanded(
-                  child: T(
+                  child: Text(
                     s.application_settings,
-                    s: TS(w: .w500, c: qb.q(.8), s: 12),
+                    style: TS(w: .w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -225,9 +225,9 @@ class Settings extends ConsumerWidget {
               mainAxisAlignment: .start,
               children: [
                 Expanded(
-                  child: T(
+                  child: Text(
                     s.join_the_community,
-                    s: TS(w: .w500, c: qb.q(.8), s: 12),
+                    style: TS(w: .w500, c: qb.q(.8), s: 12),
                   ),
                 ),
               ],
@@ -263,9 +263,9 @@ class Settings extends ConsumerWidget {
             Row(
               mainAxisAlignment: .start,
               children: [
-                T(
+                Text(
                   s.about,
-                  s: TS(w: .w500, c: qb.q(.8), s: 12),
+                  style: TS(w: .w500, c: qb.q(.8), s: 12),
                 ),
               ],
             ),
@@ -280,7 +280,7 @@ class Settings extends ConsumerWidget {
               title: S.current.check_for_updates,
               trailing: Row(
                 children: [
-                  T("$version($buildNumber)"),
+                  Text("$version($buildNumber)"),
                   AnimatedSize(
                     duration: 200.ms,
                     curve: Curves.easeOutCubic,

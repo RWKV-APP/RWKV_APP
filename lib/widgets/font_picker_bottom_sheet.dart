@@ -183,9 +183,9 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
               children: [
                 Padding(
                   padding: const .only(left: 16, top: 16),
-                  child: T(
+                  child: Text(
                     widget.isMonospace ? s.monospace_font_setting : s.ui_font_setting,
-                    s: const TS(s: 20, w: .w600),
+                    style: const TS(s: 20, w: .w600),
                   ),
                 ),
                 IconButton(
@@ -238,7 +238,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
                         widget.onFontSelected(null);
                         Navigator.of(context).pop();
                       },
-                      child: T(s.restore_default),
+                      child: Text(s.restore_default),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -250,7 +250,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
                         widget.onFontSelected(fontToSave);
                         Navigator.of(context).pop();
                       },
-                      child: T(s.confirm),
+                      child: Text(s.confirm),
                     ),
                   ),
                 ],
@@ -303,9 +303,9 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
       key: key,
       padding: const .symmetric(horizontal: 16, vertical: 8),
       color: qb.q(.1),
-      child: T(
+      child: Text(
         letter,
-        s: TS(
+        style: TS(
           s: 14,
           w: .w600,
           c: qb.q(.8),
@@ -393,17 +393,17 @@ class _FontPreviewItemState extends State<_FontPreviewItem> {
     final fontFamily = (widget.font == 'System' || !_isLoaded) ? null : widget.font;
 
     return ListTile(
-      title: T(
+      title: Text(
         displayName,
-        s: TextStyle(
+        style: TextStyle(
           fontFamily: fontFamily,
           fontSize: 16,
           fontWeight: widget.isSelected ? .w600 : .normal,
         ),
       ),
-      subtitle: T(
+      subtitle: Text(
         '示例文本 The quick brown fox',
-        s: TextStyle(
+        style: TextStyle(
           fontFamily: fontFamily,
           fontSize: 12,
           color: widget.qb.q(.6),

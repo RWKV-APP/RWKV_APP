@@ -58,9 +58,9 @@ class SecondaryOptionsButton extends ConsumerWidget {
         crossAxisAlignment: .start,
         mainAxisAlignment: .center,
         children: [
-          T(s.prefer, s: TS(c: textColor, s: 10, height: 1)),
+          Text(s.prefer, style: TS(c: textColor, s: 10, height: 1)),
           2.h,
-          T(s.chinese, s: TS(c: textColor, s: 10, height: 1)),
+          Text(s.chinese, style: TS(c: textColor, s: 10, height: 1)),
         ],
       ),
     };

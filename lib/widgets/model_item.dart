@@ -250,9 +250,9 @@ class ModelItem extends ConsumerWidget {
                       borderRadius: 8.r,
                     ),
                     padding: const .all(8),
-                    child: T(
+                    child: Text(
                       loading ? s.loading : startTitle,
-                      s: TS(c: qw),
+                      style: TS(c: qw),
                     ),
                   ),
                 ),
@@ -265,7 +265,7 @@ class ModelItem extends ConsumerWidget {
                       borderRadius: 8.r,
                     ),
                     padding: const .all(8),
-                    child: T(loadButtonTextShowLoad ? S.current.loaded : s.chatting, s: TS(c: qw)),
+                    child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),
                   ),
                 ),
               if (!isCurrentModel && showDelete) 8.w,
@@ -420,13 +420,13 @@ class FileKeyItem extends ConsumerWidget {
           spacing: 8,
           runSpacing: 0,
           children: [
-            T(
+            Text(
               fileInfo.name,
-              s: const TS(w: .w600),
+              style: const TS(w: .w600),
             ),
-            T(
+            Text(
               gbDisplay(fileSize),
-              s: TS(c: qb.q(.7), w: .w500),
+              style: TS(c: qb.q(.7), w: .w500),
             ),
             if (showDownloaded && localFile.hasFile)
               Icon(
@@ -451,13 +451,13 @@ class FileKeyItem extends ConsumerWidget {
         if (downloading)
           Wrap(
             children: [
-              T(
+              Text(
                 sprintf(s.str_downloading_info, [
                   (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0.0 : progress * 100.0,
                   networkSpeed,
                   remainText,
                 ]),
-                s: TextStyle(
+                style: TextStyle(
                   fontFamily: monospaceFF,
                   fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),

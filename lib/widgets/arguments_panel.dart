@@ -126,48 +126,49 @@ class ArgumentsPanel extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            if(showTitleBar) Row(
-              children: [
-                8.w,
-                TextButton(
-                  style: TextButton.styleFrom(iconSize: 16),
-                  onPressed: () {
-                    pop();
-                  },
-                  child: T(s.cancel),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          const WidgetSpan(
-                            child: Icon(
-                              Icons.tune,
-                              size: 18,
+            if (showTitleBar)
+              Row(
+                children: [
+                  8.w,
+                  TextButton(
+                    style: TextButton.styleFrom(iconSize: 16),
+                    onPressed: () {
+                      pop();
+                    },
+                    child: Text(s.cancel),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            const WidgetSpan(
+                              child: Icon(
+                                Icons.tune,
+                                size: 18,
+                              ),
                             ),
-                          ),
-                          WidgetSpan(child: 8.w),
-                          TextSpan(
-                            text: title ?? s.model_settings,
-                            style: const TS(s: 16, w: .w500),
-                          ),
-                        ],
+                            WidgetSpan(child: 8.w),
+                            TextSpan(
+                              text: title ?? s.model_settings,
+                              style: const TS(s: 16, w: .w500),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(iconSize: 16),
-                  onPressed: () {
-                    pop();
-                  },
-                  child: T(s.apply),
-                ),
-                8.w,
-              ],
-            ),
-            if(showTitleBar)  12.h,
+                  TextButton(
+                    style: TextButton.styleFrom(iconSize: 16),
+                    onPressed: () {
+                      pop();
+                    },
+                    child: Text(s.apply),
+                  ),
+                  8.w,
+                ],
+              ),
+            if (showTitleBar) 12.h,
             Expanded(
               child: ListView(
                 controller: scrollController,
@@ -206,7 +207,7 @@ class _SamplerOptions extends ConsumerWidget {
       child: Row(
         children: [
           12.w,
-          Expanded(child: T("Sampler Options" + (reasoning ? " (Reason)" : ""))),
+          Expanded(child: Text("Sampler Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(
               padding: .zero,
@@ -215,7 +216,7 @@ class _SamplerOptions extends ConsumerWidget {
             onPressed: () {
               P.rwkv.resetSamplerParams(enableReasoning: reasoning);
             },
-            child: T(s.reset),
+            child: Text(s.reset),
           ),
         ],
       ),
@@ -237,7 +238,7 @@ class _CompletionOptions extends ConsumerWidget {
       child: Row(
         children: [
           12.w,
-          Expanded(child: T("Completion Options" + (reasoning ? " (Reason)" : ""))),
+          Expanded(child: Text("Completion Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(
               padding: .zero,
@@ -246,7 +247,7 @@ class _CompletionOptions extends ConsumerWidget {
             onPressed: () {
               P.rwkv.resetMaxLength(enableReasoning: reasoning);
             },
-            child: T(s.reset),
+            child: Text(s.reset),
           ),
         ],
       ),

@@ -274,9 +274,9 @@ class _CodeState extends ConsumerState<_Code> {
             mainAxisAlignment: .spaceBetween,
             children: [
               8.w,
-              T(
+              Text(
                 widget.name,
-                s: TS(s: 14, w: .w500, c: qb.q(.5)),
+                style: TS(s: 14, w: .w500, c: qb.q(.5)),
               ),
               const Spacer(),
               IconButton(

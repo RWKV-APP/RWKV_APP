@@ -76,17 +76,17 @@ class FormItem extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
-                      T(
+                      Text(
                         title,
                         textAlign: titleTextAlign,
-                        s: TS(w: .w500, s: 16, c: titleColor),
+                        style: TS(w: .w500, s: 16, c: titleColor),
                       ),
                       if (subtitle != null)
                         Opacity(
                           opacity: 0.5,
-                          child: T(
+                          child: Text(
                             subtitle!,
-                            s: const TS(w: .w500, s: 12),
+                            style: const TS(w: .w500, s: 12),
                           ),
                         ),
                     ],
@@ -95,9 +95,9 @@ class FormItem extends ConsumerWidget {
                 if (infoText != null)
                   Expanded(
                     flex: 2,
-                    child: T(
-                      infoText,
-                      s: const TS(w: .w500, s: 12),
+                    child: Text(
+                      infoText ?? "null",
+                      style: const TS(w: .w500, s: 12),
                       textAlign: TextAlign.right,
                     ),
                   ),

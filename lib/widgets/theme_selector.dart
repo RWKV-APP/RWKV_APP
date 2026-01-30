@@ -90,9 +90,9 @@ class ThemeSelector extends ConsumerWidget {
         children: [
           4.w,
           Expanded(
-            child: T(
+            child: Text(
               s.dark_mode_theme,
-              s: TS(w: .w500, c: qb.q(.8), s: 12),
+              style: TS(w: .w500, c: qb.q(.8), s: 12),
             ),
           ),
         ],
@@ -135,7 +135,7 @@ class ThemeSelector extends ConsumerWidget {
       child: Scaffold(
         backgroundColor: customTheme.setting,
         appBar: AppBar(
-          title: T(s.appearance),
+          title: Text(s.appearance),
           automaticallyImplyLeading: false,
           backgroundColor: customTheme.setting,
           actions: [

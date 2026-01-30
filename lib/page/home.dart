@@ -147,7 +147,7 @@ class _NoMore extends ConsumerWidget {
         child: Center(
           child: Opacity(
             opacity: opacity,
-            child: T("- " + s.reached_bottom + " -"),
+            child: Text("- " + s.reached_bottom + " -"),
           ),
         ),
       ),

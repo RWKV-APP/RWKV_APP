@@ -98,7 +98,7 @@ class BatchSettingsPanel extends ConsumerWidget {
       child: Scaffold(
         backgroundColor: customTheme.setting,
         appBar: AppBar(
-          title: T(s.batch_inference_settings),
+          title: Text(s.batch_inference_settings),
           automaticallyImplyLeading: false,
           backgroundColor: customTheme.setting,
           actions: [

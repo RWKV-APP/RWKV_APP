@@ -219,7 +219,7 @@ class _MarkdownBody extends ConsumerWidget {
                   borderRadius: .circular(4),
                 ),
                 padding: const .symmetric(horizontal: 6, vertical: 2),
-                child: T(displayText),
+                child: Text(displayText),
               ),
             ),
           )

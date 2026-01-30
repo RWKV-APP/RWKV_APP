@@ -110,9 +110,9 @@ class _WebSearchModeButton extends ConsumerWidget {
             children: [
               Icon(Icons.travel_explore, color: textColor, size: 16),
               2.w,
-              T(
+              Text(
                 webSearchMode == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
-                s: TS(c: textColor, s: 14, height: 1, w: .w500),
+                style: TS(c: textColor, s: 14, height: 1, w: .w500),
               ),
               4.w,
               VerticalDivider(width: 2, indent: 8, endIndent: 8, color: textColor),
@@ -213,9 +213,9 @@ class _WenYanWenButton extends ConsumerWidget {
             border: Border.all(color: theme.colorScheme.primary.q(.1), width: 1),
           ),
           alignment: .center,
-          child: T(
+          child: Text(
             label,
-            s: TS(c: textColor, s: 14, height: 1, w: .w500),
+            style: TS(c: textColor, s: 14, height: 1, w: .w500),
           ),
         ),
       ),

@@ -15,7 +15,10 @@ class _FileManager {
   // ===========================================================================
 
   late final downloadSource = qs<FileDownloadSource>(P.preference.currentLangIsZh.q ? .aifasthub : .huggingface);
+
+  /// 是否使用本地文件
   late final modelSelectorShown = qs(false);
+  late final localPthFileOption = qs<LocalPthFileOption>(LocalPthFileOption.filesInConfig);
 
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
     return LocalFile(targetPath: ref.watch(_paths(key)));
@@ -346,13 +349,21 @@ extension $FileManager on _FileManager {
   }
 
   Future<void> openModelDirectory() async {
-    final customDir = P.preference.customModelsDir.q;
-    final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : null;
-    final path = customDir ?? defaultDir;
-    if (path == null) return;
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await launchUrl(Uri.directory(path));
+    try {
+      final customDir = P.preference.customModelsDir.q;
+      final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+      final separator = Platform.pathSeparator;
+      final defaultDir = documentsDir != null ? "$documentsDir$separator${Config.modelsDirName}" : null;
+      final path = customDir ?? defaultDir;
+      if (path == null) return;
+      qqr(path);
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        await launchUrl(Uri.directory(path));
+      }
+    } catch (e) {
+      qqe(e);
+      Alert.error(e.toString());
+      if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
   }
 
@@ -935,6 +946,39 @@ extension $FileManager on _FileManager {
         }
       }
     }
+  }
+
+  Future<FileInfo?> pickLocalPthFile() async {
+    final result = await file_picker.FilePicker.platform.pickFiles(
+      type: file_picker.FileType.custom,
+      allowedExtensions: ['pth'],
+    );
+    if (result == null) {
+      return null;
+    }
+    final file = File(result.files.single.path!);
+    final fileName = path.basename(file.path);
+    final fileInfo = FileInfo(
+      name: fileName,
+      fileName: file.path,
+      fileType: FileType.weights,
+      fileSize: file.lengthSync(),
+      raw: file.path,
+      isDebug: false,
+      availableIn: [],
+      supportedPlatforms: [],
+      backend: Backend.webRwkv,
+      sha256: null,
+      modelSize: null,
+      quantization: null,
+      updatedAt: null,
+      timestamp: null,
+      date: null,
+      fromPthFile: true,
+    );
+
+    await P.rwkv.loadChat(fileInfo: fileInfo);
+    return fileInfo;
   }
 }
 

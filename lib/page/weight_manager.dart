@@ -25,9 +25,10 @@ class PageWeightManager extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.current.weights_mangement),
+        title: Text(s.weights_mangement),
       ),
       body: const _Body(),
       bottomNavigationBar: BottomAppBar(
@@ -38,14 +39,14 @@ class PageWeightManager extends ConsumerWidget {
               child: TextButton.icon(
                 onPressed: () => _exportAllWeightFiles(context, ref),
                 icon: const Icon(Icons.share),
-                label: Text(S.current.export_all_weight_files),
+                label: Text(s.export_all_weight_files),
               ),
             ),
             Expanded(
               child: TextButton.icon(
                 onPressed: () => _importWeightFile(context, ref),
                 icon: const Icon(Icons.add),
-                label: Text(S.current.import_weight_file),
+                label: Text(s.import_weight_file),
               ),
             ),
           ],
@@ -982,8 +983,6 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
 
     final unrecognizedFiles = <_UnrecognizedFile>[];
 
-    debugger();
-
     try {
       final entities = directory.listSync();
       for (final entity in entities) {
@@ -997,7 +996,6 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
         }
 
         final fileName = path.basename(filePath);
-        qqr(fileName);
         if (allWeightFileNames.contains(fileName)) continue;
 
         final fileSize = await entity.length();
@@ -1024,9 +1022,8 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
   }
 
   void _loadFiles() {
-    setState(() {
-      _filesFuture = _getUnrecognizedFiles();
-    });
+    _filesFuture = _getUnrecognizedFiles();
+    setState(() {});
   }
 
   @override
@@ -1052,12 +1049,17 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
     // Reload files when weight lists change
     if (_lastWatchedWeights != currentWeights) {
       _lastWatchedWeights = currentWeights;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(const Duration(milliseconds: 1000));
         if (mounted) {
           _loadFiles();
         }
       });
     }
+
+    // debugger();
+
+    qr;
 
     return FutureBuilder<List<_UnrecognizedFile>>(
       future: _filesFuture,

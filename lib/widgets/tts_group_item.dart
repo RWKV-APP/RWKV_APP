@@ -430,9 +430,9 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                               borderRadius: 8.r,
                             ),
                             padding: const .all(8),
-                            child: T(
+                            child: Text(
                               startTitle,
-                              s: TS(c: qw),
+                              style: TS(c: qw),
                             ),
                           ),
                         ),
@@ -445,7 +445,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                               borderRadius: 8.r,
                             ),
                             padding: const .all(8),
-                            child: T(s.chatting, s: TS(c: qw)),
+                            child: Text(s.chatting, style: TS(c: qw)),
                           ),
                         ),
                       if (!alreadyStarted) 8.w,
@@ -545,13 +545,13 @@ class _CollapsedContent extends ConsumerWidget {
           spacing: 8,
           runSpacing: 0,
           children: [
-            T(
+            Text(
               modelName,
-              s: const TS(w: .w600),
+              style: const TS(w: .w600),
             ),
-            T(
+            Text(
               gbDisplay(totalSize),
-              s: TS(c: qb.q(.7), w: .w500),
+              style: TS(c: qb.q(.7), w: .w500),
             ),
           ],
         ),
@@ -569,13 +569,13 @@ class _CollapsedContent extends ConsumerWidget {
           4.h,
           Wrap(
             children: [
-              T(
+              Text(
                 sprintf(S.current.str_downloading_info, [
                   (overallProgress.isNaN || overallProgress <= 0 || overallProgress.isInfinite) ? 0.0 : overallProgress * 100.0,
                   networkSpeed,
                   remainText,
                 ]),
-                s: TextStyle(
+                style: TextStyle(
                   fontFamily: monospaceFF,
                   fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                 ),
@@ -735,17 +735,17 @@ class _ExpandedFileItem extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: .start,
                       children: [
-                        T(
+                        Text(
                           fileInfo.name,
-                          s: const TS(
+                          style: const TS(
                             w: .w600,
                             s: 14,
                           ),
                         ),
                         4.h,
-                        T(
+                        Text(
                           gbDisplay(fileSize),
-                          s: TS(
+                          style: TS(
                             c: qb.q(.7),
                             w: .w500,
                             s: 12,
@@ -771,13 +771,13 @@ class _ExpandedFileItem extends ConsumerWidget {
                 4.h,
                 Wrap(
                   children: [
-                    T(
+                    Text(
                       sprintf(s.str_downloading_info, [
                         (progress.isNaN || progress <= 0 || progress.isInfinite) ? 0.0 : progress * 100.0,
                         networkSpeed,
                         remainText,
                       ]),
-                      s: TextStyle(
+                      style: TextStyle(
                         fontFamily: monospaceFF,
                         fontFamilyFallback: const ['Roboto Mono', 'Roboto', 'CourierNew', 'Menlo', 'PingFang SC'],
                       ),

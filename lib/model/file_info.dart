@@ -85,6 +85,8 @@ class FileInfo extends Equatable {
 
   final List<ModelStateFile> state;
 
+  final bool fromPthFile;
+
   const FileInfo({
     required this.name,
     required this.fileName,
@@ -92,8 +94,8 @@ class FileInfo extends Equatable {
     required this.fileSize,
     required this.raw,
     required this.isDebug,
-    required this.availableIn,
-    required this.supportedPlatforms,
+    this.availableIn = const [],
+    this.supportedPlatforms = const [],
     required this.backend,
     required this.sha256,
     required this.modelSize,
@@ -101,10 +103,11 @@ class FileInfo extends Equatable {
     required this.updatedAt,
     required this.timestamp,
     required this.date,
-    required this.tags,
-    required this.socLimitations,
-    required this.unsupportedSocBrand,
-    required this.state,
+    this.tags = const [],
+    this.socLimitations = const [],
+    this.unsupportedSocBrand = const {},
+    this.state = const [],
+    this.fromPthFile = false,
   });
 
   factory FileInfo.fromJSON(Map<String, dynamic> json) {
@@ -243,7 +246,7 @@ class FileInfo extends Equatable {
       if (P.fileManager.othelloWeights.q.contains(this)) return WeightType.othello;
       if (P.fileManager.roleplayWeights.q.contains(this)) return WeightType.roleplay;
       qqw('unknown weight type: $this');
-      return null;
+      return WeightType.chat;
     }(),
     FileType.encoder => null,
     FileType.runtime => null,

@@ -37,9 +37,9 @@ class BranchSwitcher extends ConsumerWidget {
           child: Container(
             constraints: const BoxConstraints(minWidth: 16),
             child: Center(
-              child: T(
+              child: Text(
                 "${index + 1} / $siblingCount",
-                s: TS(c: primary, s: 12, w: .w600),
+                style: TS(c: primary, s: 12, w: .w600),
               ),
             ),
           ),

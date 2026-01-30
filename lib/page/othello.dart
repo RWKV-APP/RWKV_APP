@@ -126,15 +126,15 @@ class _Title extends ConsumerWidget {
       mainAxisAlignment: .center,
       children: [
         12.w,
-        T("$version($buildNumber)", s: TS(c: qb.q(.0), s: 10)),
+        Text("$version($buildNumber)", style: TS(c: qb.q(.0), s: 10)),
         if (usePortrait) const Spacer(),
-        T(
+        Text(
           s.rwkv_othello,
-          s: const TS(s: 20, w: .w700),
+          style: const TS(s: 20, w: .w700),
         ),
         if (usePortrait) const Spacer(),
         if (!usePortrait) 32.w,
-        T("$version($buildNumber)", s: TS(c: qb.q(.5), s: 10)),
+        Text("$version($buildNumber)", style: TS(c: qb.q(.5), s: 10)),
         if (!usePortrait) 32.w,
         12.w,
       ],
@@ -179,7 +179,7 @@ class _ModelSettings extends ConsumerWidget {
             ),
           ),
         ),
-        T(searchDepth.toString()),
+        Text(searchDepth.toString()),
         SizedBox(
           width: 32,
           height: 32,
@@ -221,7 +221,7 @@ class _ModelSettings extends ConsumerWidget {
             ),
           ),
         ),
-        T(searchBreadth.toString()),
+        Text(searchBreadth.toString()),
         SizedBox(
           width: 32,
           height: 32,
@@ -260,21 +260,21 @@ class _ModelSettings extends ConsumerWidget {
           crossAxisAlignment: .start,
           mainAxisAlignment: .center,
           children: [
-            T(
+            Text(
               s.model_settings,
-              s: const TS(w: .w700),
+              style: const TS(w: .w700),
             ),
             8.h,
-            T(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, s: TS(c: qb.q(.5), s: 10)),
+            Text(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, style: TS(c: qb.q(.5), s: 10)),
             8.h,
             usePortrait
                 ? Column(
                     crossAxisAlignment: .stretch,
                     children: [
-                      T(s.search_depth, textAlign: TextAlign.center),
+                      Text(s.search_depth, textAlign: TextAlign.center),
                       searchDepthControls,
                       4.h,
-                      T(s.search_breadth, textAlign: TextAlign.center),
+                      Text(s.search_breadth, textAlign: TextAlign.center),
                       searchBreadthControls,
                     ],
                   )
@@ -282,13 +282,13 @@ class _ModelSettings extends ConsumerWidget {
                     children: [
                       Row(
                         children: [
-                          T(s.search_depth, textAlign: TextAlign.center),
+                          Text(s.search_depth, textAlign: TextAlign.center),
                           searchDepthControls,
                         ],
                       ),
                       Row(
                         children: [
-                          T(s.search_breadth, textAlign: TextAlign.center),
+                          Text(s.search_breadth, textAlign: TextAlign.center),
                           searchBreadthControls,
                         ],
                       ),
@@ -326,10 +326,10 @@ class _Players extends ConsumerWidget {
       child: Wrap(
         crossAxisAlignment: .center,
         children: [
-          T(
+          Text(
             s.black + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: .w700),
+            style: const TS(w: .w700),
           ),
           Wrap(
             children: [
@@ -343,7 +343,7 @@ class _Players extends ConsumerWidget {
                       P.othello.blackIsAI.q = false;
                     },
                   ),
-                  T(s.human),
+                  Text(s.human),
                 ],
               ),
               Row(
@@ -356,7 +356,7 @@ class _Players extends ConsumerWidget {
                       P.othello.blackIsAI.q = true;
                     },
                   ),
-                  T(s.rwkv),
+                  Text(s.rwkv),
                 ],
               ),
             ],
@@ -375,10 +375,10 @@ class _Players extends ConsumerWidget {
       child: Wrap(
         crossAxisAlignment: .center,
         children: [
-          T(
+          Text(
             s.white + ":",
             textAlign: TextAlign.center,
-            s: const TS(w: .w700),
+            style: const TS(w: .w700),
           ),
           Wrap(
             children: [
@@ -392,7 +392,7 @@ class _Players extends ConsumerWidget {
                       P.othello.whiteIsAI.q = false;
                     },
                   ),
-                  T(s.human),
+                  Text(s.human),
                 ],
               ),
               Row(
@@ -405,7 +405,7 @@ class _Players extends ConsumerWidget {
                       P.othello.whiteIsAI.q = true;
                     },
                   ),
-                  T(s.rwkv),
+                  Text(s.rwkv),
                 ],
               ),
             ],
@@ -430,9 +430,9 @@ class _Players extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            T(
+            Text(
               s.players,
-              s: const TS(w: .w700),
+              style: const TS(w: .w700),
             ),
             12.h,
             if (usePortrait && !playerShouldAtSameColumnWithSettings && !settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
@@ -497,18 +497,18 @@ class _Score extends ConsumerWidget {
         AnimatedOpacity(
           opacity: generating ? 1.0 : .5,
           duration: const Duration(milliseconds: 150),
-          child: T(
+          child: Text(
             s.thinking,
-            s: TS(s: 10, w: generating ? .w400 : .w400),
+            style: TS(s: 10, w: generating ? .w400 : .w400),
           ),
         ),
-        T(
+        Text(
           "${s.prefill}: ${prefillSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: .w400),
+          style: const TS(s: 10, w: .w400),
         ),
-        T(
+        Text(
           "${s.decode}: ${decodeSpeed.toStringAsFixed(1)} t/s",
-          s: const TS(s: 10, w: .w400),
+          style: const TS(s: 10, w: .w400),
         ),
       ],
     );
@@ -519,9 +519,9 @@ class _Score extends ConsumerWidget {
           : () {
               P.othello.start();
             },
-      child: T(
+      child: Text(
         s.new_game,
-        s: const TS(s: 10, w: .w500),
+        style: const TS(s: 10, w: .w500),
       ),
     );
 
@@ -531,7 +531,7 @@ class _Score extends ConsumerWidget {
         if (usePortrait) Expanded(child: thinkingWidget),
         if (!usePortrait) thinkingWidget,
         if (!usePortrait) 16.w,
-        T(
+        Text(
           "${s.black}\n$blackScore",
           textAlign: TextAlign.center,
         ),
@@ -545,7 +545,7 @@ class _Score extends ConsumerWidget {
           ),
           child: Column(
             children: [
-              T(s.current_turn),
+              Text(s.current_turn),
               4.h,
               if (blackTurn) const _Black(minSize: 5, maxSize: 25),
               if (!blackTurn) const _White(minSize: 5, maxSize: 25),
@@ -553,7 +553,7 @@ class _Score extends ConsumerWidget {
           ),
         ),
         16.w,
-        T(
+        Text(
           "${s.white}\n$whiteScore",
           textAlign: TextAlign.center,
         ),
@@ -654,9 +654,9 @@ class _Grid extends ConsumerWidget {
             width: sizeForCell,
             height: labelSize,
             child: Center(
-              child: T(
+              child: Text(
                 e,
-                s: const TS(s: 10, w: .w700),
+                style: const TS(s: 10, w: .w700),
               ),
             ),
           );
@@ -670,9 +670,9 @@ class _Grid extends ConsumerWidget {
             height: sizeForCell,
             width: labelSize,
             child: Center(
-              child: T(
+              child: Text(
                 e,
-                s: const TS(s: 10, w: .w700),
+                style: const TS(s: 10, w: .w700),
               ),
             ),
           );
@@ -880,7 +880,7 @@ class _Console extends ConsumerWidget {
 
           // qqq("girds: $girds");
 
-          // return T(received[index]);
+          // return Text(received[index]);
 
           return Text.rich(
             TextSpan(

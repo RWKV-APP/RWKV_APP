@@ -89,14 +89,14 @@ class Empty extends ConsumerWidget {
                         children: [
                           Opacity(
                             opacity: 0.0,
-                            child: T(version, s: const TS(s: 10)),
+                            child: Text(version, style: const TS(s: 10)),
                           ),
-                          T(s.chat_welcome_to_use(Config.appTitle), s: const TS(s: 18, w: .w600)),
+                          Text(s.chat_welcome_to_use(Config.appTitle), style: const TS(s: 18, w: .w600)),
                           Opacity(
                             opacity: 0.5,
                             child: Padding(
                               padding: const .only(bottom: 4),
-                              child: T(version, s: const TS(s: 10)),
+                              child: Text(version, style: const TS(s: 10)),
                             ),
                           ),
                         ],
@@ -104,23 +104,23 @@ class Empty extends ConsumerWidget {
                       12.h,
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 500),
-                        child: T(s.intro),
+                        child: Text(s.intro),
                       ),
                       12.h,
-                      if (!loaded) T(s.start_a_new_chat_by_clicking_the_button_below),
+                      if (!loaded) Text(s.start_a_new_chat_by_clicking_the_button_below),
                       if (!loaded) 12.h,
                       if (!loaded)
                         TextButton(
                           onPressed: () async {
                             ModelSelector.show();
                           },
-                          child: T(
+                          child: Text(
                             demoType == .see ? s.select_a_world_type : s.select_a_model,
-                            s: const TS(s: 16, w: .w600),
+                            style: const TS(s: 16, w: .w600),
                           ),
                         ),
                       if (!loaded) 12.h,
-                      if (loaded) T(s.you_are_now_using("")),
+                      if (loaded) Text(s.you_are_now_using("")),
                       4.h,
                       if (loaded)
                         Container(
@@ -129,9 +129,9 @@ class Empty extends ConsumerWidget {
                             border: Border.all(color: primary),
                             borderRadius: 4.r,
                           ),
-                          child: T(
+                          child: Text(
                             currentModel?.name ?? "",
-                            s: TS(s: 16, w: .w600, c: primary),
+                            style: TS(s: 16, w: .w600, c: primary),
                           ),
                         ),
                       const Spacer(),

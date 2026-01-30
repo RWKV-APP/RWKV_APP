@@ -164,9 +164,9 @@ class UserTTSContent extends ConsumerWidget {
             ],
           ),
           4.h,
-          T(
-            msg.ttsTarget,
-            s: const TS(s: 16),
+          Text(
+            msg.ttsTarget ?? "null",
+            style: const TS(s: 16),
           ),
         ],
       ),
