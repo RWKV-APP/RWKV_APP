@@ -49,7 +49,7 @@ class Debugger extends ConsumerWidget {
     final socBrand = ref.watch(P.rwkv.socBrand);
     final frontendSocName = ref.watch(P.rwkv.frontendSocName);
     final frontendSocBrand = ref.watch(P.rwkv.frontendSocBrand);
-    final availableModels = ref.watch(P.fileManager.chatWeights);
+    final availableModels = ref.watch(P.remote.chatWeights);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
@@ -77,6 +77,9 @@ class Debugger extends ConsumerWidget {
 
     final preferredUIFont = ref.watch(P.preference.preferredUIFont);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
+
+    final pthFolderEntries = ref.watch(P.preference.pthFolderEntries);
+    final pthFolders = ref.watch(P.pth.folders);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -157,6 +160,10 @@ class Debugger extends ConsumerWidget {
                       Text(preferredUIFont ?? "null"),
                       Text("preferredMonospaceFont".codeToName),
                       Text(preferredMonospaceFont ?? "null"),
+                      Text("pthFolderEntries".codeToName),
+                      Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
+                      Text("pthFolders".codeToName),
+                      Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),
@@ -187,7 +194,7 @@ class _SudokuDebugger extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
 
-    final modelSelectorShown = ref.watch(P.fileManager.modelSelectorShown);
+    final modelSelectorShown = ref.watch(P.remote.modelSelectorShown);
 
     return Positioned(
       left: 0,

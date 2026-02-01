@@ -782,20 +782,6 @@
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
         "date": 1768874741
-      },
-      {
-        "name": "test: github-releases",
-        "fileSize": 19532901,
-        "url": "https://github.com/HaloWang/RWKV-Demos/releases/download/1.0.0_weights/test",
-        "platforms": ["macos", "windows", "linux", "android", "ios", "web"],
-        "isDebug": true
-      },
-      {
-        "name": "test: 5MB",
-        "fileSize": 6207471,
-        "url": "https://storage.googleapis.com/approachcharts/test/5MB-test.ZIP",
-        "platforms": ["macos", "windows", "linux", "android", "ios", "web"],
-        "isDebug": true
       }
     ]
   },

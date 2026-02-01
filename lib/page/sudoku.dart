@@ -109,11 +109,11 @@ class _ButtonGenerate extends ConsumerWidget {
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
-            maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
-            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 0.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
+            maximumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            minimumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            shape: .all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: .all(const .symmetric(horizontal: 8.0, vertical: 0.0)),
+            textStyle: .all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
           child: Text(s.generate),
@@ -164,11 +164,11 @@ class _ButtonGenerateHardest extends ConsumerWidget {
         height: 48,
         child: FilledButton(
           style: ButtonStyle(
-            maximumSize: WidgetStateProperty.all(const Size(double.infinity, 48)),
-            minimumSize: WidgetStateProperty.all(const Size(double.infinity, 48)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
-            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 0.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
+            maximumSize: .all(const Size(double.infinity, 48)),
+            minimumSize: .all(const Size(double.infinity, 48)),
+            shape: .all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: .all(const .symmetric(horizontal: 8.0, vertical: 0.0)),
+            textStyle: .all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
           child: Text(
@@ -206,11 +206,11 @@ class _ButtonInference extends ConsumerWidget {
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
-            maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
-            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
+            maximumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            minimumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            shape: .all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: .all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
+            textStyle: .all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: !hasPuzzle || running ? null : () => _onPressed(context, ref),
           child: running
@@ -255,11 +255,11 @@ class _ButtonClear extends ConsumerWidget {
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
-            maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
-            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
+            maximumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            minimumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            shape: .all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: .all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
+            textStyle: .all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: running ? null : () => _onPressed(context, ref),
           child: Text(s.clear),
@@ -288,11 +288,11 @@ class _ButtonShowStack extends ConsumerWidget {
         height: _kButtonHeight,
         child: FilledButton(
           style: ButtonStyle(
-            maximumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            minimumSize: WidgetStateProperty.all(const Size(double.infinity, _kButtomSizeHeight)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
-            padding: WidgetStateProperty.all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 10, fontWeight: .w600)),
+            maximumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            minimumSize: .all(const Size(double.infinity, _kButtomSizeHeight)),
+            shape: .all(RoundedRectangleBorder(borderRadius: .circular(8.0))),
+            padding: .all(const .symmetric(horizontal: 8.0, vertical: 4.0)),
+            textStyle: .all(const TextStyle(fontSize: 10, fontWeight: .w600)),
           ),
           onPressed: !enable ? null : () => _onPressed(context, ref),
           child: showStack ? Text(s.hide_stack) : Text(s.show_stack),

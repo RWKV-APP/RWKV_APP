@@ -98,6 +98,7 @@ dependencies:
   drift_flutter:
   equatable:
   file_picker:
+  macos_secure_bookmarks: ^0.2.1
   flutter_dotenv:
   flutter_native_splash:
   flutter_riverpod: 2.6.1

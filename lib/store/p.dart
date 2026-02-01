@@ -13,6 +13,7 @@ import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:collection/collection.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
+import 'package:macos_secure_bookmarks/macos_secure_bookmarks.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' show basename, dirname, join, basenameWithoutExtension;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart' as ar;
@@ -76,6 +77,7 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/feature_rollout.dart';
 import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/model/folder.dart';
 import 'package:zone/model/group_info.dart';
 import 'package:zone/model/lambada_test_item.dart';
 import 'package:zone/model/language.dart';
@@ -115,7 +117,7 @@ part "chat.dart";
 part "conversation.dart";
 part "device.dart";
 part "dump.dart";
-part "file_manager.dart";
+part "remote.dart";
 part "guard.dart";
 part "lambada.dart";
 part "msg.dart";
@@ -131,6 +133,8 @@ part "translator.dart";
 part "ocr.dart";
 part "md_render.dart";
 part "font.dart";
+part "ui.dart";
+part "pth.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -140,7 +144,8 @@ abstract class P {
   static final conversation = _Conversation();
   static final device = _Device();
   static final dump = _Dump();
-  static final fileManager = _FileManager();
+  static final remote = _Remote();
+  static final pth = _Pth();
   static final guard = _Guard();
   static final lambada = _Lambada();
   static final msg = _Msg();
@@ -155,6 +160,7 @@ abstract class P {
   static final ocr = _Ocr();
   static final mdRender = _MDRender();
   static final font = _Font();
+  static final ui = _UI();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -179,7 +185,7 @@ abstract class P {
       _safeInit(() => rwkv._init(), mark: "rwkv"),
       _safeInit(() => chat._init(), mark: "chat"),
       _safeInit(() => othello._init(), mark: "othello"),
-      _safeInit(() => fileManager._init(), mark: "fileManager"),
+      _safeInit(() => remote._init(), mark: "fileManager"),
       _safeInit(() => device._init(), mark: "device"),
       _safeInit(() => adapter._init(), mark: "adapter"),
       _safeInit(() => see._init(), mark: "see"),
@@ -196,6 +202,8 @@ abstract class P {
       _safeInit(() => ocr._init(), mark: "ocr"),
       _safeInit(() => mdRender._init(), mark: "mdRender"),
       _safeInit(() => font._init(), mark: "font"),
+      _safeInit(() => ui._init(), mark: "ui"),
+      _safeInit(() => pth._init(), mark: "pth"),
     ]);
   }
 

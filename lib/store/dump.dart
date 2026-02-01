@@ -82,7 +82,7 @@ extension _$Dump on _Dump {
           if (imageUrl != null && imageUrl.isNotEmpty) {
             imagePaths.add(imageUrl);
             content += "Image:\n";
-            content += (path.basename(imageUrl.contains('://') ? Uri.parse(imageUrl).path : imageUrl)) + "\n";
+            content += (basename(imageUrl.contains('://') ? Uri.parse(imageUrl).path : imageUrl)) + "\n";
           }
           break;
         case MessageType.userTTS:
@@ -120,7 +120,7 @@ extension _$Dump on _Dump {
       final imagePath = imagePaths[i];
       final originalFile = File(imagePath);
       if (await originalFile.exists()) {
-        final fileName = path.basename(imagePath);
+        final fileName = basename(imagePath);
         final newImagePath = '${newDir.path}/$fileName';
         await originalFile.copy(newImagePath);
       }

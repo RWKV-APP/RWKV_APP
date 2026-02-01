@@ -107,8 +107,8 @@ extension $App on _App {
     final (config, sp) = await _loadConfigFromLocal();
     _config.q = config;
     await _parseConfigForDemoSpecificData(config[demoType.q.name]);
-    await P.fileManager.syncAvailableModels();
-    await P.fileManager.checkLocal();
+    await P.remote.syncAvailableModels();
+    await P.remote.checkLocal();
 
     if (Args.disableRemoteConfig) {
       qqw("Remote config is disabled");
@@ -125,10 +125,20 @@ extension $App on _App {
 
     _config.q = allConfig;
     await sp.setString(_configForAllDemosKey, jsonEncode(allConfig));
+    deleteOutdatedConfigInPreference();
     await _parseConfigForDemoSpecificData(allConfig[demoType.q.name]);
-    await P.fileManager.syncAvailableModels();
-    await P.fileManager.checkLocal();
-    await P.fileManager.removeFilesNotInConfig();
+    await P.remote.syncAvailableModels();
+    await P.remote.checkLocal();
+    await P.remote.removeFilesNotInConfig();
+  }
+
+  void deleteOutdatedConfigInPreference() async {
+    final sp = await SharedPreferences.getInstance();
+    sp.getKeys().forEach((key) {
+      if (key.startsWith("configForAllDemosKey_") && key != _configForAllDemosKey) {
+        sp.remove(key);
+      }
+    });
   }
 
   void hapticLight() {
@@ -396,6 +406,8 @@ extension _$App on _App {
     2500.msLater.then((_) {
       checkUpdates();
     });
+
+    deleteOutdatedConfigInPreference();
   }
 
   void _initDB() async {

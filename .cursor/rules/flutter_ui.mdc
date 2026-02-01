@@ -4,6 +4,23 @@ globs: "lib/**/*.dart"
 alwaysApply: false
 ---
 
+## 禁止在 UI 层实现任何多于三行的逻辑代码
+
+严禁在 /page, /widget, 目录下实现任何多于三行的逻辑代码, 尤其像是设置 state provider 属性, 加载权重
+
+所有的这些较重的逻辑方法都要放到 /store 目录下对应的文件中去实现
+
+/page, /widget 的职责是构建 UI, 把 state provider 和 provider 绑定到 widget, 不应该实现任何 onclick 之类的方法
+
+### 严禁你实现的方法带有类似的东西
+
+```dart
+void Function()? onSuccess,
+void Function(Object)? onError,
+```
+
+直接在实现里使用 `Alert.success` 和 `Alert.error` / `Alert.warning` 来显示成功和错误信息
+
 ## 不要在 UI 层的 class 中声明任何 `Widget _build` helper 方法
 
 Flutter 官方视频说: [使用 `Widget _build` 形式的 helper 方法会降低程序的渲染性能](https://youtu.be/IOyq-eTRhvo?si=aBXuUVXIkirPqQVR&t=99)

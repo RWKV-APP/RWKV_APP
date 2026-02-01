@@ -4208,6 +4208,306 @@ class S {
       args: [],
     );
   }
+
+  /// `该文件夹已添加`
+  String get folder_already_added {
+    return Intl.message(
+      '该文件夹已添加',
+      name: 'folder_already_added',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确定要忘记该位置吗？`
+  String get confirm_forget_location_title {
+    return Intl.message(
+      '确定要忘记该位置吗？',
+      name: 'confirm_forget_location_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `忘记该位置后，该文件夹将不再显示在本地文件夹列表中`
+  String get confirm_forget_location_message {
+    return Intl.message(
+      '忘记该位置后，该文件夹将不再显示在本地文件夹列表中',
+      name: 'confirm_forget_location_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `忘记该位置成功`
+  String get forget_location_success {
+    return Intl.message(
+      '忘记该位置成功',
+      name: 'forget_location_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `刷新完成`
+  String get refresh_complete {
+    return Intl.message('刷新完成', name: 'refresh_complete', desc: '', args: []);
+  }
+
+  /// `确定要删除该文件吗？`
+  String get confirm_delete_file_title {
+    return Intl.message(
+      '确定要删除该文件吗？',
+      name: 'confirm_delete_file_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `该文件将在您的本地硬盘中被永久删除`
+  String get confirm_delete_file_message {
+    return Intl.message(
+      '该文件将在您的本地硬盘中被永久删除',
+      name: 'confirm_delete_file_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `您的设备：`
+  String get your_device {
+    return Intl.message('您的设备：', name: 'your_device', desc: '', args: []);
+  }
+
+  /// `我们目前支持以下 SoC 芯片中的 NPU：`
+  String get we_support_npu_socs {
+    return Intl.message(
+      '我们目前支持以下 SoC 芯片中的 NPU：',
+      name: 'we_support_npu_socs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `以下是 RWKV Chat 预先量化好的模型`
+  String get prebuilt_models_intro {
+    return Intl.message(
+      '以下是 RWKV Chat 预先量化好的模型',
+      name: 'prebuilt_models_intro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `下面是您本地的文件夹`
+  String get below_are_your_local_folders {
+    return Intl.message(
+      '下面是您本地的文件夹',
+      name: 'below_are_your_local_folders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点击 + 号添加更多本地文件夹`
+  String get click_plus_to_add_more_folders {
+    return Intl.message(
+      '点击 + 号添加更多本地文件夹',
+      name: 'click_plus_to_add_more_folders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加本地文件夹`
+  String get add_local_folder {
+    return Intl.message(
+      '添加本地文件夹',
+      name: 'add_local_folder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `你还没有添加包含有 .pth 文件的本地文件夹`
+  String get no_local_folders {
+    return Intl.message(
+      '你还没有添加包含有 .pth 文件的本地文件夹',
+      name: 'no_local_folders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点击 + 添加本地文件夹, RWKV Chat 会扫描该文件夹下的 .pth 文件, 并将其作为可加载的权重`
+  String get click_plus_add_local_folder {
+    return Intl.message(
+      '点击 + 添加本地文件夹, RWKV Chat 会扫描该文件夹下的 .pth 文件, 并将其作为可加载的权重',
+      name: 'click_plus_add_local_folder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开文件夹`
+  String get open_folder {
+    return Intl.message('打开文件夹', name: 'open_folder', desc: '', args: []);
+  }
+
+  /// `忘记该位置`
+  String get forget_this_location {
+    return Intl.message(
+      '忘记该位置',
+      name: 'forget_this_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在扫描该文件夹中的 .pth 文件`
+  String get scanning_folder_for_pth {
+    return Intl.message(
+      '正在扫描该文件夹中的 .pth 文件',
+      name: 'scanning_folder_for_pth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前文件夹没有本地模型`
+  String get current_folder_has_no_local_models {
+    return Intl.message(
+      '当前文件夹没有本地模型',
+      name: 'current_folder_has_no_local_models',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未在您的电脑上发现该文件夹`
+  String get folder_not_found_on_device {
+    return Intl.message(
+      '未在您的电脑上发现该文件夹',
+      name: 'folder_not_found_on_device',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `该文件夹无法访问，请检查文件夹权限`
+  String get folder_not_accessible_check_permission {
+    return Intl.message(
+      '该文件夹无法访问，请检查文件夹权限',
+      name: 'folder_not_accessible_check_permission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `路径：{path}`
+  String path_label(Object path) {
+    return Intl.message('路径：$path', name: 'path_label', desc: '', args: [path]);
+  }
+
+  /// `本地文件夹：{folderName}`
+  String local_folder_name(Object folderName) {
+    return Intl.message(
+      '本地文件夹：$folderName',
+      name: 'local_folder_name',
+      desc: '',
+      args: [folderName],
+    );
+  }
+
+  /// `自定义目录已设置`
+  String get custom_directory_set {
+    return Intl.message(
+      '自定义目录已设置',
+      name: 'custom_directory_set',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已恢复默认目录`
+  String get reset_to_default_directory {
+    return Intl.message(
+      '已恢复默认目录',
+      name: 'reset_to_default_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创建目录失败`
+  String get failed_to_create_directory {
+    return Intl.message(
+      '创建目录失败',
+      name: 'failed_to_create_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设置自定义目录`
+  String get set_custom_directory {
+    return Intl.message(
+      '设置自定义目录',
+      name: 'set_custom_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `恢复默认`
+  String get reset_to_default {
+    return Intl.message('恢复默认', name: 'reset_to_default', desc: '', args: []);
+  }
+
+  /// `使用自定义目录`
+  String get using_custom_directory {
+    return Intl.message(
+      '使用自定义目录',
+      name: 'using_custom_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用默认目录`
+  String get using_default_directory {
+    return Intl.message(
+      '使用默认目录',
+      name: 'using_default_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在移动文件...`
+  String get moving_files {
+    return Intl.message('正在移动文件...', name: 'moving_files', desc: '', args: []);
+  }
+
+  /// `已在使用此目录`
+  String get already_using_this_directory {
+    return Intl.message(
+      '已在使用此目录',
+      name: 'already_using_this_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{successCount} 个文件已移动，{failCount} 个失败`
+  String files_moved_with_failures(Object successCount, Object failCount) {
+    return Intl.message(
+      '$successCount 个文件已移动，$failCount 个失败',
+      name: 'files_moved_with_failures',
+      desc: '',
+      args: [successCount, failCount],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

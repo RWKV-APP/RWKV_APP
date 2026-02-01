@@ -16,6 +16,8 @@ PODS:
   - gal (1.0.0):
     - Flutter
     - FlutterMacOS
+  - macos_secure_bookmarks (0.0.3):
+    - FlutterMacOS
   - macos_ui (0.1.0):
     - FlutterMacOS
   - macos_window_utils (1.0.0):
@@ -24,7 +26,7 @@ PODS:
     - FlutterMacOS
   - package_info_plus (0.0.1):
     - FlutterMacOS
-  - record_macos (1.1.0):
+  - record_macos (1.2.0):
     - FlutterMacOS
   - rwkv_mobile_flutter (0.0.1):
     - FlutterMacOS
@@ -78,6 +80,7 @@ DEPENDENCIES:
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - gal (from `Flutter/ephemeral/.symlinks/plugins/gal/darwin`)
+  - macos_secure_bookmarks (from `Flutter/ephemeral/.symlinks/plugins/macos_secure_bookmarks/macos`)
   - macos_ui (from `Flutter/ephemeral/.symlinks/plugins/macos_ui/macos`)
   - macos_window_utils (from `Flutter/ephemeral/.symlinks/plugins/macos_window_utils/macos`)
   - mp_audio_stream (from `Flutter/ephemeral/.symlinks/plugins/mp_audio_stream/macos`)
@@ -113,6 +116,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
   gal:
     :path: Flutter/ephemeral/.symlinks/plugins/gal/darwin
+  macos_secure_bookmarks:
+    :path: Flutter/ephemeral/.symlinks/plugins/macos_secure_bookmarks/macos
   macos_ui:
     :path: Flutter/ephemeral/.symlinks/plugins/macos_ui/macos
   macos_window_utils:
@@ -147,11 +152,12 @@ SPEC CHECKSUMS:
   file_selector_macos: 9e9e068e90ebee155097d00e89ae91edb2374db7
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   gal: baecd024ebfd13c441269ca7404792a7152fde89
+  macos_secure_bookmarks: e096d8ec49de2d25ea47e1061b85e5f2f1520fef
   macos_ui: ff29104a215c2e1b76f37aacdcbba648abb25faa
   macos_window_utils: 23f54331a0fd51eea9e0ed347253bf48fd379d1d
   mp_audio_stream: c140c6f5d79ea84f801878e5b89f05ab5f738bde
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
-  record_macos: 43194b6c06ca6f8fa132e2acea72b202b92a0f5b
+  record_macos: 7f227161b93c49e7e34fe681c5891c8622c8cc8b
   rwkv_mobile_flutter: 8ca6e2136af1082006740e7a3072448fd0f210e7
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: da39d10e3f2f3e060eebc9d7ecea027d34443d66

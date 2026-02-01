@@ -15,30 +15,20 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
 import 'package:zone/widgets/form_item.dart';
-import 'package:zone/page/weight_manager.dart';
 
 class Settings extends ConsumerWidget {
   static final _shown = qs(false);
 
   static String _getTotalUsage(WidgetRef ref) {
-    final chatWeights = P.fileManager.chatWeights.q;
-    final ttsWeights = P.fileManager.ttsWeights.q;
-    final roleplayWeights = P.fileManager.roleplayWeights.q;
-    final seeWeights = P.fileManager.seeWeights.q;
-    final sudokuWeights = P.fileManager.sudokuWeights.q;
-    final othelloWeights = P.fileManager.othelloWeights.q;
+    final totalBytes = P.remote.calculateTotalDiskUsage();
+    return _formatBytes(totalBytes);
+  }
 
-    final allWeights = [
-      ...chatWeights,
-      ...ttsWeights,
-      ...roleplayWeights,
-      ...seeWeights,
-      ...sudokuWeights,
-      ...othelloWeights,
-    ];
-
-    final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights, ref);
-    return WeightManagerUtils.formatBytes(totalBytes);
+  static String _formatBytes(int bytes) {
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB"];
+    var i = (math.log(bytes) / math.log(1024)).floor();
+    return ((bytes / math.pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
   }
 
   static Future<void> show() async {

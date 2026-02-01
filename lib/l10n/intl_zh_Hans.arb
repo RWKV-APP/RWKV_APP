@@ -612,5 +612,54 @@
   "what_is_pth_file_title": "什么是 .pth 文件？",
   "what_is_pth_file_message": ".pth 文件是直接从本地文件系统中加载的权重文件，不需要通过下载服务器下载。\n\n通常通过 Pytorch 训练的模型会保存为 .pth 文件。\n\nRWKV Chat 支持加载 .pth 文件。",
   "select_local_pth_file_button": "选择本地 .pth 文件",
-  "open_containing_folder": "打开所在文件夹"
+  "open_containing_folder": "打开所在文件夹",
+  "folder_already_added": "该文件夹已添加",
+  "confirm_forget_location_title": "确定要忘记该位置吗？",
+  "confirm_forget_location_message": "忘记该位置后，该文件夹将不再显示在本地文件夹列表中",
+  "forget_location_success": "忘记该位置成功",
+  "refresh_complete": "刷新完成",
+  "confirm_delete_file_title": "确定要删除该文件吗？",
+  "confirm_delete_file_message": "该文件将在您的本地硬盘中被永久删除",
+  "your_device": "您的设备：",
+  "we_support_npu_socs": "我们目前支持以下 SoC 芯片中的 NPU：",
+  "prebuilt_models_intro": "以下是 RWKV Chat 预先量化好的模型",
+  "below_are_your_local_folders": "下面是您本地的文件夹",
+  "click_plus_to_add_more_folders": "点击 + 号添加更多本地文件夹",
+  "add_local_folder": "添加本地文件夹",
+  "no_local_folders": "你还没有添加包含有 .pth 文件的本地文件夹",
+  "click_plus_add_local_folder": "点击 + 添加本地文件夹, RWKV Chat 会扫描该文件夹下的 .pth 文件, 并将其作为可加载的权重",
+  "open_folder": "打开文件夹",
+  "forget_this_location": "忘记该位置",
+  "scanning_folder_for_pth": "正在扫描该文件夹中的 .pth 文件",
+  "current_folder_has_no_local_models": "当前文件夹没有本地模型",
+  "folder_not_found_on_device": "未在您的电脑上发现该文件夹",
+  "folder_not_accessible_check_permission": "该文件夹无法访问，请检查文件夹权限",
+  "path_label": "路径：{path}",
+  "@path_label": {
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "local_folder_name": "本地文件夹：{folderName}",
+  "@local_folder_name": {
+    "placeholders": {
+      "folderName": {}
+    }
+  },
+  "custom_directory_set": "自定义目录已设置",
+  "reset_to_default_directory": "已恢复默认目录",
+  "failed_to_create_directory": "创建目录失败",
+  "set_custom_directory": "设置自定义目录",
+  "reset_to_default": "恢复默认",
+  "using_custom_directory": "使用自定义目录",
+  "using_default_directory": "使用默认目录",
+  "moving_files": "正在移动文件...",
+  "already_using_this_directory": "已在使用此目录",
+  "files_moved_with_failures": "{successCount} 个文件已移动，{failCount} 个失败",
+  "@files_moved_with_failures": {
+    "placeholders": {
+      "successCount": {},
+      "failCount": {}
+    }
+  }
 }

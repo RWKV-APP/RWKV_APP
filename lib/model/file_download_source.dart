@@ -31,7 +31,8 @@ enum FileDownloadSource {
   };
 
   bool get hidden => switch (this) {
+    github => true,
+    googleapis => true,
     _ => false,
   };
 }
-

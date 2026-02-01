@@ -75,6 +75,9 @@ class _Preference {
   /// Custom directory for storing models (Desktop only)
   late final customModelsDir = qs<String?>(null);
 
+  /// macOS security-scoped bookmark for custom models directory
+  late final customModelsDirBookmark = qs<String?>(null);
+
   /// Whether the weights migration to weights folder has been completed
   late final weightsMigrationCompleted = qs<bool>(false);
 
@@ -92,6 +95,9 @@ class _Preference {
   ///
   /// 跳过版本仅用于自动检查更新, 如果用户手动点击检查更新, 我们依然会显示新版本的弹窗
   late final latestSkippedBuildNumber = qs<int>(0);
+
+  /// Pth 文件夹列表；macOS 上可含 security-scoped bookmark 以持久化访问权限
+  late final pthFolderEntries = qs<List<PthFolderEntry>>([]);
 
   // ===========================================================================
   // Provider
@@ -188,6 +194,9 @@ extension _$Preference on _Preference {
     final customModelsDir = sp.getString("halo_state.customModelsDir");
     if (customModelsDir != null) this.customModelsDir.q = customModelsDir;
 
+    final customModelsDirBookmark = sp.getString("halo_state.customModelsDirBookmark");
+    if (customModelsDirBookmark != null) this.customModelsDirBookmark.q = customModelsDirBookmark;
+
     final weightsMigrationCompleted = sp.getBool("halo_state.weightsMigrationCompletedv640");
     if (weightsMigrationCompleted != null) this.weightsMigrationCompleted.q = weightsMigrationCompleted;
 
@@ -233,6 +242,21 @@ extension _$Preference on _Preference {
       P.font.loadFontByName(monospaceFont);
     } else {
       preferredMonospaceFont.q = null;
+    }
+
+    final entriesJson = sp.getString("halo_state.pthFolderEntries");
+    if (entriesJson != null) {
+      final list = jsonDecode(entriesJson) as List<dynamic>?;
+      if (list != null) {
+        pthFolderEntries.q = list.map((e) => PthFolderEntry.fromJson(e as Map<String, dynamic>)).toList();
+      }
+    } else {
+      final legacyPaths = sp.getStringList("halo_state.pthFolderPaths");
+      if (legacyPaths != null && legacyPaths.isNotEmpty) {
+        pthFolderEntries.q = legacyPaths.map((p) => PthFolderEntry(path: p, bookmark: null)).toList();
+        final sp2 = await SharedPreferences.getInstance();
+        await sp2.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
+      }
     }
   }
 
@@ -347,15 +371,22 @@ extension $Preference on _Preference {
     sp.setString("halo_state.lastWorldModel", jsonEncode(data));
   }
 
-  void setCustomModelsDir(String? path) async {
+  void setCustomModelsDir(String? path, {String? bookmark}) async {
     customModelsDir.q = path;
+    customModelsDirBookmark.q = bookmark;
     final sp = await SharedPreferences.getInstance();
     if (path == null) {
       await sp.remove("halo_state.customModelsDir");
+      await sp.remove("halo_state.customModelsDirBookmark");
     } else {
       await sp.setString("halo_state.customModelsDir", path);
+      if (bookmark != null) {
+        await sp.setString("halo_state.customModelsDirBookmark", bookmark);
+      } else {
+        await sp.remove("halo_state.customModelsDirBookmark");
+      }
     }
-    P.fileManager.checkLocal();
+    P.remote.checkLocal();
   }
 
   void setWeightsMigrationCompleted(bool completed) async {
@@ -406,5 +437,41 @@ extension $Preference on _Preference {
       // Try to load the font
       await P.font.loadFontByName(fontFamily);
     }
+  }
+
+  Future<void> addPthFolderEntry(PthFolderEntry entry) async {
+    if (pthFolderEntries.q.any((e) => e.path == entry.path)) return;
+    pthFolderEntries.q = [...pthFolderEntries.q, entry];
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
+  }
+
+  Future<void> removePthFolderEntry(String path) async {
+    qq;
+    pthFolderEntries.q = pthFolderEntries.q.where((e) => e.path != path).toList();
+    qqr("pthFolderEntries: ${pthFolderEntries.q.length}");
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
+  }
+
+  /// 加载已保存的 pth 文件夹条目；若仅有旧版 path 列表则迁移为 entries 并持久化
+  Future<List<PthFolderEntry>> getPthFolderEntries() async {
+    final sp = await SharedPreferences.getInstance();
+    final entriesJson = sp.getString("halo_state.pthFolderEntries");
+    if (entriesJson != null) {
+      final list = jsonDecode(entriesJson) as List<dynamic>?;
+      if (list != null) {
+        pthFolderEntries.q = list.map((e) => PthFolderEntry.fromJson(e as Map<String, dynamic>)).toList();
+        return pthFolderEntries.q;
+      }
+    }
+    final legacyPaths = sp.getStringList("halo_state.pthFolderPaths");
+    if (legacyPaths != null && legacyPaths.isNotEmpty) {
+      pthFolderEntries.q = legacyPaths.map((p) => PthFolderEntry(path: p, bookmark: null)).toList();
+      await sp.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
+      return pthFolderEntries.q;
+    }
+    pthFolderEntries.q = [];
+    return pthFolderEntries.q;
   }
 }

@@ -88,7 +88,7 @@ class Albatross {
     if (!P.rwkv.enableAlbatross.q) {
       return;
     }
-    final local = P.fileManager.locals(fileInfo).q;
+    final local = P.remote.locals(fileInfo).q;
     try {
       P.rwkv.loadingStatus.q = {...P.rwkv.loadingStatus.q, fileInfo: LoadingStatus.loading};
       final r = await _dio.post(

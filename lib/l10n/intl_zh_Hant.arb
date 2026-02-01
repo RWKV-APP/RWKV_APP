@@ -606,5 +606,54 @@
   "what_is_pth_file_title": "什麼是 .pth 檔案？",
   "what_is_pth_file_message": ".pth 檔案是直接從本機檔案系統載入的權重檔案，不需透過下載伺服器下載。\n\n通常透過 Pytorch 訓練的模型會儲存為 .pth 檔案。\n\nRWKV Chat 支援載入 .pth 檔案。",
   "select_local_pth_file_button": "選擇本機 .pth 檔案",
-  "open_containing_folder": "開啟所在資料夾"
+  "open_containing_folder": "開啟所在資料夾",
+  "folder_already_added": "該資料夾已新增",
+  "confirm_forget_location_title": "確定要忘記該位置嗎？",
+  "confirm_forget_location_message": "忘記該位置後，該資料夾將不再顯示在本機資料夾列表中",
+  "forget_location_success": "已忘記該位置",
+  "refresh_complete": "重新整理完成",
+  "confirm_delete_file_title": "確定要刪除該檔案嗎？",
+  "confirm_delete_file_message": "該檔案將在您的本機硬碟中被永久刪除",
+  "your_device": "您的裝置：",
+  "we_support_npu_socs": "我們目前支援以下 SoC 晶片中的 NPU：",
+  "prebuilt_models_intro": "以下是 RWKV Chat 預先量化好的模型",
+  "below_are_your_local_folders": "以下是您本機的資料夾",
+  "click_plus_to_add_more_folders": "點擊 + 號新增更多本機資料夾",
+  "add_local_folder": "新增本機資料夾",
+  "no_local_folders": "你還沒有新增包含 .pth 檔案的本機資料夾",
+  "click_plus_add_local_folder": "點擊 + 新增本機資料夾, RWKV Chat 會掃描該資料夾下的 .pth 檔案, 並將其作為可載入的權重",
+  "open_folder": "開啟資料夾",
+  "forget_this_location": "忘記該位置",
+  "scanning_folder_for_pth": "正在掃描該資料夾中的 .pth 檔案",
+  "current_folder_has_no_local_models": "目前資料夾沒有本機模型",
+  "folder_not_found_on_device": "未在您的電腦上發現該資料夾",
+  "folder_not_accessible_check_permission": "該資料夾無法存取，請檢查資料夾權限",
+  "path_label": "路徑：{path}",
+  "@path_label": {
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "local_folder_name": "本機資料夾：{folderName}",
+  "@local_folder_name": {
+    "placeholders": {
+      "folderName": {}
+    }
+  },
+  "custom_directory_set": "自訂目錄已設定",
+  "reset_to_default_directory": "已恢復預設目錄",
+  "failed_to_create_directory": "建立目錄失敗",
+  "set_custom_directory": "設定自訂目錄",
+  "reset_to_default": "恢復預設",
+  "using_custom_directory": "使用自訂目錄",
+  "using_default_directory": "使用預設目錄",
+  "moving_files": "正在移動檔案...",
+  "already_using_this_directory": "已在使用此目錄",
+  "files_moved_with_failures": "{successCount} 個檔案已移動，{failCount} 個失敗",
+  "@files_moved_with_failures": {
+    "placeholders": {
+      "successCount": {},
+      "failCount": {}
+    }
+  }
 }

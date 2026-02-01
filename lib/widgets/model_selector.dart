@@ -1,18 +1,17 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/model/folder.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
@@ -21,160 +20,235 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
-import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/gb_display.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/widgets/model_item.dart';
+import 'package:zone/widgets/model_tag.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
 
+/// 模型选择器
+///
+/// 初始化方法为私有, 目前通过 `show` 方法来显示模型选择器
 class ModelSelector extends ConsumerWidget {
-  final bool rolePlayOnly;
-  final bool showNeko;
-  final ScrollController scrollController;
+  static const String panelKey = 'ModelSelector';
   static DemoType? _preferredDemoType;
+
+  final bool _rolePlayOnly;
+  final bool _showNeko;
+  final ScrollController _scrollController;
+
+  static double get _listPadding => P.app.isMobile.q ? 8 : 12;
 
   static Future<void> show({
     bool rolePlayOnly = false,
     bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
-    if (showNeko) preferredDemoType = .chat;
+    final beforeShow = () async {
+      if (showNeko) preferredDemoType = .chat;
 
-    if (P.fileManager.modelSelectorShown.q) return;
-    P.fileManager.modelSelectorShown.q = true;
+      if (P.remote.modelSelectorShown.q) return;
+      P.remote.modelSelectorShown.q = true;
 
-    final context = getContext();
-    if (context == null) {
-      P.fileManager.modelSelectorShown.q = false;
-      return;
-    }
+      final context = getContext();
+      if (context == null) {
+        P.remote.modelSelectorShown.q = false;
+        return;
+      }
 
-    // Fire and forget model updates
-    (() async {
-      P.fileManager.checkLocal();
-      await P.app.syncConfig();
-      await P.fileManager.syncAvailableModels();
-      P.fileManager.checkLocal();
-    })();
+      // Fire and forget model updates
+      (() async {
+        P.remote.checkLocal();
+        await P.app.syncConfig();
+        await P.remote.syncAvailableModels();
+        P.remote.checkLocal();
+      })();
 
-    if (P.app.pageKey.q == .talk) {
-      _preferredDemoType = .tts;
-    }
+      if (P.app.pageKey.q == .talk) _preferredDemoType = .tts;
 
-    if (preferredDemoType != null) {
-      _preferredDemoType = preferredDemoType;
-    }
+      if (preferredDemoType != null) _preferredDemoType = preferredDemoType;
 
-    if (rolePlayOnly && P.app.pageKey.q != .rolePlaying) {
-      return;
-    }
+      if (rolePlayOnly && P.app.pageKey.q != .rolePlaying) {
+        return;
+      }
+    };
 
-    final usingPth = P.rwkv.usingPth.q;
-    if (usingPth == true) P.fileManager.localPthFileOption.q = LocalPthFileOption.localPthFiles;
-    if (usingPth != true) P.fileManager.localPthFileOption.q = LocalPthFileOption.filesInConfig;
+    final afterHide = (_) {
+      _preferredDemoType = null;
+      P.remote.modelSelectorShown.q = false;
+    };
 
-    await showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: .8,
-        maxChildSize: .9,
-        expand: false,
-        snap: false,
-        builder: (context, scrollController) => ModelSelector(
-          scrollController: scrollController,
-          showNeko: showNeko,
-          rolePlayOnly: rolePlayOnly,
-        ),
+    await P.ui.showPanel(
+      key: panelKey,
+      beforeShow: beforeShow,
+      afterHide: afterHide,
+      builder: (scrollController) => ModelSelector._(
+        scrollController: scrollController,
+        showNeko: showNeko,
+        rolePlayOnly: rolePlayOnly,
       ),
     );
-
-    _preferredDemoType = null;
-
-    P.fileManager.modelSelectorShown.q = false;
   }
 
-  const ModelSelector({super.key, required this.scrollController, required this.showNeko, required this.rolePlayOnly});
+  const ModelSelector._({
+    required ScrollController scrollController,
+    required bool showNeko,
+    required bool rolePlayOnly,
+  }) : _showNeko = showNeko,
+       _rolePlayOnly = rolePlayOnly,
+       _scrollController = scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final isDesktop = ref.watch(P.app.isDesktop);
-    final localPthFileOption = ref.watch(P.fileManager.localPthFileOption);
-    final pageKey = ref.watch(P.app.pageKey);
+    final isMobile = ref.watch(P.app.isMobile);
+    final folders = ref.watch(P.pth.folders);
+    final canUsePth = ref.watch(P.app.pageKey) == .chat || ref.watch(P.app.pageKey) == .completion;
+
+    final items = [
+      const _SelectionHint(),
+      if (!isMobile && canUsePth)
+        ...[
+          const _LocalPthFolderHeader(),
+          if (folders.isEmpty) const _LocalPthEmpty(),
+          if (folders.isNotEmpty) ...folders.map((e) => _LocalPthFolder(e)),
+        ].widgetJoin((index) => 8.h),
+      if (!isMobile && canUsePth) ...[
+        4.h,
+        const _ModelsInConfigHeader(),
+      ],
+      ...[
+        const _ModelsInConfigDownloadSource(),
+        _ModelsInConfigFile(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
+      ],
+      (16 + paddingBottom).h,
+    ];
 
     return ClipRRect(
-      borderRadius: 16.r,
-      child: Container(
-        margin: const .only(top: 12),
-        child: ListView(
-          padding: .only(left: isDesktop ? 12 : 8, right: isDesktop ? 12 : 8),
-          controller: scrollController,
-          children: [
-            const _Title(),
-            if (isDesktop && pageKey == .chat) const _LocalSwitcher(),
-            if (localPthFileOption == LocalPthFileOption.filesInConfig) const _Options(),
-            if (localPthFileOption == LocalPthFileOption.filesInConfig) _ModelList(showNeko: showNeko, rolePlayOnly: rolePlayOnly),
-            if (localPthFileOption == LocalPthFileOption.localPthFiles) const _LocalOptions(),
-            16.h,
-            paddingBottom.h,
-          ],
-        ),
+      borderRadius: const .only(
+        topLeft: .circular(16),
+        topRight: .circular(16),
+      ),
+      child: Column(
+        children: [
+          _PanelBar(scrollController: _scrollController),
+          Expanded(
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: .only(
+                left: _listPadding,
+                right: _listPadding,
+                bottom: _listPadding,
+              ),
+              controller: _scrollController,
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return items[index];
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _Title extends StatelessWidget {
-  const _Title();
+class _PanelBar extends ConsumerStatefulWidget {
+  final ScrollController scrollController;
+  const _PanelBar({required this.scrollController});
+
+  @override
+  ConsumerState<_PanelBar> createState() => _PanelBarState();
+}
+
+class _PanelBarState extends ConsumerState<_PanelBar> {
+  double _opacity = 0.0;
+
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final position = widget.scrollController.position;
+    double opacity = position.pixels / 100.0;
+    if (opacity < 0) opacity = 0;
+    if (opacity > 1) opacity = 1;
+    if (opacity != _opacity) {
+      _opacity = opacity;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final qb = ref.watch(P.app.qb);
     final s = S.of(context);
-    return Row(
-      children: [
-        Expanded(
-          child: Text(s.chat_please_select_a_model, style: const TS(s: 18, w: .w600)),
+    final customTheme = ref.watch(P.app.customTheme);
+
+    return Container(
+      constraints: BoxConstraints(
+        minHeight: kToolbarHeight - 4,
+      ),
+      padding: .only(top: 4),
+      decoration: BoxDecoration(
+        color: customTheme.settingItem.q(_opacity * _opacity),
+        border: Border(
+          bottom: BorderSide(color: qb.q(.2 * _opacity * _opacity), width: 0.5),
         ),
-        const IconButton(
-          onPressed: pop,
-          icon: Icon(Icons.close),
-        ),
-      ],
+      ),
+      child: Row(
+        crossAxisAlignment: .center,
+        children: [
+          (ModelSelector._listPadding + (8 * _opacity)).w,
+          Expanded(
+            child: Text(
+              s.chat_please_select_a_model,
+              style: const TS(s: 18, w: .w600),
+            ),
+          ),
+          const IconButton(
+            onPressed: pop,
+            icon: Icon(Icons.close),
+          ),
+          4.w,
+        ],
+      ),
     );
   }
 }
 
-class _Options extends ConsumerWidget {
-  const _Options();
+class _SelectionHint extends ConsumerWidget {
+  const _SelectionHint();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final demoType = ModelSelector._preferredDemoType ?? ref.watch(P.app.demoType);
     final qb = ref.watch(P.app.qb);
-
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        const _DownloadSource(),
-        if (demoType == .chat)
-          Text(
-            "👉${s.str_model_selection_dialog_hint}👈",
-            style: TS(c: qb.q(.7), s: 12, w: .w500),
-          ),
-      ],
+    if (demoType != .chat) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      "👉${s.str_model_selection_dialog_hint}👈",
+      style: TS(c: qb.q(.7), s: 12, w: .w500),
     );
   }
 }
 
-class _ModelList extends ConsumerWidget {
+class _ModelsInConfigFile extends ConsumerWidget {
   final bool showNeko;
   final bool rolePlayOnly;
 
-  const _ModelList({required this.showNeko, required this.rolePlayOnly});
+  const _ModelsInConfigFile({required this.showNeko, required this.rolePlayOnly});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -182,21 +256,21 @@ class _ModelList extends ConsumerWidget {
     final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
 
     Set<FileInfo> availableModels = switch (preferredDemoType) {
-      .see => ref.watch(P.fileManager.seeWeights),
-      .tts => ref.watch(P.fileManager.ttsWeights),
-      .chat => ref.watch(P.fileManager.chatWeights),
-      .sudoku => ref.watch(P.fileManager.sudokuWeights),
-      .othello => ref.watch(P.fileManager.othelloWeights),
-      .fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
+      .see => ref.watch(P.remote.seeWeights),
+      .tts => ref.watch(P.remote.ttsWeights),
+      .chat => ref.watch(P.remote.chatWeights),
+      .sudoku => ref.watch(P.remote.sudokuWeights),
+      .othello => ref.watch(P.remote.othelloWeights),
+      .fifthteenPuzzle => ref.watch(P.remote.sudokuWeights),
     };
 
-    final ttsCores = ref.watch(P.fileManager.ttsCores);
+    final ttsCores = ref.watch(P.remote.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
 
     if (rolePlayOnly && pageKey == .rolePlaying) {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
-      availableModels.addAll(P.fileManager.roleplayWeights.q);
+      availableModels.addAll(P.remote.roleplayWeights.q);
       return Column(
         crossAxisAlignment: .stretch,
         children: availableModels.map((e) => RolePlayItem(file: e)).toList(),
@@ -297,13 +371,11 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
-    final supportedNpus = P.fileManager.getSupportedNpuChips();
+    final supportedNpus = P.remote.getSupportedNpuChips;
     final currentSocName = ref.watch(P.rwkv.socName);
     final frontendSocName = ref.watch(P.rwkv.frontendSocName);
 
-    if (supportedNpus.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (supportedNpus.isEmpty) return const SizedBox.shrink();
 
     final hasValidSoc = currentSocName.isNotEmpty && currentSocName != "Unknown";
 
@@ -342,7 +414,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 Row(
                   children: [
                     Text(
-                      "您的设备：",
+                      S.current.your_device,
                       style: TS(c: qb.q(.7), s: 12),
                     ),
                     6.w,
@@ -381,7 +453,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 8.h,
               ],
               Text(
-                "我们目前支持以下SoC芯片中的NPU：",
+                S.current.we_support_npu_socs,
                 style: TS(c: qb.q(.7), s: 12),
               ),
               8.h,
@@ -436,12 +508,12 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
   }
 }
 
-class _DownloadSource extends ConsumerWidget {
-  const _DownloadSource();
+class _ModelsInConfigDownloadSource extends ConsumerWidget {
+  const _ModelsInConfigDownloadSource();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentSource = ref.watch(P.fileManager.downloadSource);
+    final currentSource = ref.watch(P.remote.downloadSource);
     final primary = Theme.of(context).colorScheme.primary;
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
@@ -469,7 +541,7 @@ class _DownloadSource extends ConsumerWidget {
                 }
                 return GestureDetector(
                   onTap: () {
-                    P.fileManager.downloadSource.q = e;
+                    P.remote.downloadSource.q = e;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -494,102 +566,6 @@ class _DownloadSource extends ConsumerWidget {
               })
               .toList(),
         ),
-        8.h,
-      ],
-    );
-  }
-}
-
-enum LocalPthFileOption {
-  filesInConfig,
-  localPthFiles
-  ;
-
-  String displayName(S s) => switch (this) {
-    filesInConfig => s.local_pth_option_files_in_config,
-    localPthFiles => s.local_pth_option_local_pth_files,
-  };
-}
-
-class _LocalSwitcher extends ConsumerWidget {
-  const _LocalSwitcher();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final localPthFileOption = ref.watch(P.fileManager.localPthFileOption);
-    final primary = Theme.of(context).colorScheme.primary;
-    final options = LocalPthFileOption.values;
-    final qw = ref.watch(P.app.qw);
-    final qb = ref.watch(P.app.qb);
-    final usingPth = ref.watch(P.rwkv.usingPth);
-
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        T(
-          s.select_weights_or_local_pth_hint,
-          s: TS(c: qb.q(.7), s: 12, w: .w500),
-        ),
-        4.h,
-        Wrap(
-          runSpacing: 4,
-          spacing: 4,
-          children: options.map((e) {
-            final isSelected = e == localPthFileOption;
-
-            final inUse = switch (usingPth) {
-              true => e == LocalPthFileOption.localPthFiles,
-              false => e == LocalPthFileOption.filesInConfig,
-              null => false,
-            };
-
-            late final Color textColor;
-            late final Color iconColor;
-
-            if (isSelected) {
-              textColor = qw;
-            } else {
-              textColor = qb.q(.7);
-            }
-
-            iconColor = textColor;
-
-            return GD(
-              onTap: () {
-                P.fileManager.localPthFileOption.q = e;
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: e == localPthFileOption ? primary : Colors.transparent,
-                  borderRadius: 4.r,
-                  border: Border.all(
-                    color: primary,
-                  ),
-                ),
-                padding: const .all(4),
-                child: Row(
-                  mainAxisSize: .min,
-                  children: [
-                    Text(
-                      e.displayName(s),
-                      style: TS(c: textColor, s: 12, w: .w500),
-                    ),
-                    if (inUse) ...[
-                      4.w,
-                      Icon(
-                        Icons.check,
-                        color: iconColor,
-                        size: 28,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-        4.h,
       ],
     );
   }
@@ -602,259 +578,277 @@ String _truncatePath(String pathStr, [int maxLen = 56]) {
   return '${pathStr.substring(0, head)}...${pathStr.substring(pathStr.length - tail)}';
 }
 
-Future<void> _openContainingFolder(String filePath) async {
-  try {
-    final dirPath = path.dirname(filePath);
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await launchUrl(Uri.directory(dirPath));
-    }
-  } catch (e) {
-    Alert.error(e.toString());
-  }
-}
-
-String? _ctxFromFileName(FileInfo fileInfo) {
-  final m = RegExp(r'ctx(\d+)', caseSensitive: false).firstMatch(fileInfo.name);
-  if (m != null) return m.group(1);
-  return null;
-}
-
 class _LocalPthFileItem extends ConsumerWidget {
   final FileInfo fileInfo;
+  final VoidCallback? onStartToChat;
 
-  const _LocalPthFileItem(this.fileInfo);
+  const _LocalPthFileItem(this.fileInfo, {this.onStartToChat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final currentModel = ref.watch(P.rwkv.latestModel);
     final isCurrent = currentModel == fileInfo;
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    final loading =
+        loadingStatus[fileInfo] == LoadingStatus.loading ||
+        loadingStatus[fileInfo] == LoadingStatus.loadModelWithExtra ||
+        loadingStatus[fileInfo] == LoadingStatus.setQnnLibraryPath;
     final customTheme = ref.watch(P.app.customTheme);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final date = fileInfo.dateDisplayString;
-    final ctxLength = _ctxFromFileName(fileInfo);
 
-    return ClipRRect(
-      borderRadius: 8.r,
-      child: Container(
-        decoration: BoxDecoration(
-          color: customTheme.settingItem,
-          borderRadius: 8.r,
-          border: Border.all(color: qw.q(.1), width: .5),
-        ),
-        margin: const .only(top: 8),
-        padding: const .all(8),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: [
-                      Text(
-                        fileInfo.name,
-                        style: const TS(w: .w600),
-                      ),
-                      Text(
-                        gbDisplay(fileInfo.fileSize),
-                        style: TS(c: qb.q(.7), w: .w500),
-                      ),
-                      if (isCurrent) ...[
-                        4.w,
-                        Icon(Icons.check, size: 16, color: qb.q(.8)),
-                        4.w,
-                        Text(s.loaded, style: TS(c: qb.q(.8), s: 12)),
-                      ],
-                    ],
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: .start,
+            mainAxisAlignment: .center,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 0,
+                children: [
+                  Text(fileInfo.name, style: const TS(w: .w600)),
+                  Text(
+                    gbDisplay(fileInfo.fileSize),
+                    style: TS(c: qb.q(.7), w: .w500),
                   ),
-                ),
-                IconButton(
-                  onPressed: () => _openContainingFolder(fileInfo.raw),
-                  icon: const Icon(Icons.folder_open),
-                  tooltip: s.open_containing_folder,
-                  style: ButtonStyle(
-                    minimumSize: .all(const Size(32, 32)),
-                    padding: .all(.zero),
-                  ),
-                ),
-              ],
-            ),
-            4.h,
-            Text(
-              _truncatePath(fileInfo.raw),
-              style: TS(c: qb.q(.6), s: 11),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (date != null || ctxLength != null) ...[
+                ],
+              ),
               4.h,
               Wrap(
-                spacing: 6,
-                runSpacing: 4,
+                spacing: 4,
+                runSpacing: 8,
                 children: [
-                  if (date != null)
-                    Container(
-                      padding: const .symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: qb.q(.15),
-                        borderRadius: 4.r,
-                      ),
-                      child: Text(date, style: TS(c: qb.q(.8), s: 11)),
-                    ),
-                  if (ctxLength != null)
-                    Container(
-                      padding: const .symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: qb.q(.15),
-                        borderRadius: 4.r,
-                      ),
-                      child: Text(s.ctx_length_label(ctxLength), style: TS(c: qb.q(.8), s: 11)),
-                    ),
+                  if (date != null) ModelTag(tag: date),
+                  if (fileInfo.ctxLength != null) ModelTag(tag: s.ctx_length_label(fileInfo.ctxLength ?? "")),
                 ],
               ),
             ],
-          ],
+          ),
         ),
+        8.w,
+        if (onStartToChat != null && !isCurrent)
+          GestureDetector(
+            onTap: loading ? null : () => onStartToChat!(),
+            child: Container(
+              decoration: BoxDecoration(
+                color: (loading) ? kCG.q(.5) : kCG,
+                borderRadius: 8.r,
+              ),
+              padding: const .all(8),
+              child: Text(loading ? s.loading : s.start_to_chat, style: TS(c: qw)),
+            ),
+          ),
+        if (isCurrent)
+          GestureDetector(
+            onTap: null,
+            child: Container(
+              decoration: BoxDecoration(color: kG.q(.5), borderRadius: 8.r),
+              padding: const .all(8),
+              child: Text(s.chatting, style: TS(c: qw)),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _ModelsInConfigHeader extends ConsumerWidget {
+  const _ModelsInConfigHeader();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return T(S.current.prebuilt_models_intro);
+  }
+}
+
+class _LocalPthFolderHeader extends ConsumerWidget {
+  const _LocalPthFolderHeader();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final folders = ref.watch(P.pth.folders);
+    return Row(
+      children: [
+        Expanded(child: T(S.current.below_are_your_local_folders)),
+        if (folders.isNotEmpty) T(S.current.click_plus_to_add_more_folders),
+        if (folders.isNotEmpty)
+          IconButton(onPressed: P.pth.onAddFolderClicked, icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
+      ],
+    );
+  }
+}
+
+class _LocalPthEmpty extends ConsumerWidget {
+  const _LocalPthEmpty();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+
+    return Container(
+      decoration: BD(
+        color: kC,
+        borderRadius: 8.r,
+        border: Border.all(color: qb.q(.5), width: 1),
+      ),
+      padding: const .all(12),
+      child: Column(
+        crossAxisAlignment: .center,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: T(
+                  S.current.no_local_folders,
+                  textAlign: .center,
+                ),
+              ),
+            ],
+          ),
+          4.h,
+          IconButton(onPressed: () => P.pth.onAddFolderClicked(), icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
+          4.h,
+          Row(
+            children: [
+              Expanded(
+                child: T(
+                  S.current.click_plus_add_local_folder,
+                  textAlign: .center,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-class _LocalOptions extends ConsumerWidget {
-  const _LocalOptions();
+class _LocalPthFolder extends ConsumerWidget {
+  final Folder folder;
+
+  const _LocalPthFolder(this.folder);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final loadedModels = ref.watch(P.rwkv.loadedModels);
-    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
-    final fileInfos = loadedModels.keys.where((e) => e.fromPthFile).toList();
-    final usingPth = ref.watch(P.rwkv.usingPth);
     final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-
-    final localPthLoading = loadingStatus.entries.any((e) {
-      if (!e.key.fromPthFile) return false;
-      final status = e.value;
-      return status == LoadingStatus.loading || status == LoadingStatus.loadModelWithExtra || status == LoadingStatus.setQnnLibraryPath;
-    });
-
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        T(
-          s.local_pth_files_section_title,
-          s: TS(c: qb.q(.7), s: 12, w: .w500),
-        ),
-        4.h,
-        if (usingPth != true && loadedModels.isNotEmpty) ...[
-          Container(
-            padding: const .all(8),
-            decoration: BoxDecoration(
-              color: qb.q(.1),
-              borderRadius: 8.r,
-              border: Border.all(color: qb.q(.2), width: 1),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.info_outline, size: 16, color: qb.q(.8)),
-                6.w,
-                Expanded(
-                  child: Text(
-                    s.current_model_from_latest_json_not_pth,
-                    style: TS(c: qb.q(.9), s: 12),
-                  ),
+    final customTheme = ref.watch(P.app.customTheme);
+    final folderName = path.basename(folder.path);
+    final state = folder.state;
+    final folderPath = folder.path;
+    final folderPathDisplay = _truncatePath(folderPath);
+    final files = folder.files;
+    return C(
+      decoration: BD(
+        color: customTheme.settingItem,
+        borderRadius: 8.r,
+      ),
+      padding: const .all(8),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    T(
+                      S.current.local_folder_name(folderName),
+                      s: TS(c: qb.q(.8), w: .w500),
+                    ),
+                    2.h,
+                    Text(
+                      S.current.path_label(folderPathDisplay),
+                      style: TS(c: qb.q(.8), s: 12),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              IconButton(
+                onPressed: () => P.pth.onRefreshFolderClicked(folder),
+                icon: const Icon(Icons.refresh),
+                tooltip: S.current.refresh,
+              ),
+              IconButton(
+                onPressed: () => P.pth.onOpenFolderClicked(folder),
+                icon: const Icon(Icons.folder_open),
+                tooltip: S.current.open_folder,
+              ),
+              IconButton(
+                onPressed: () => P.pth.onRemoveFolderClicked(folder),
+                icon: const Icon(Icons.close),
+                tooltip: S.current.forget_this_location,
+              ),
+            ],
           ),
           8.h,
-        ],
-        Row(
-          children: [
-            T(
-              s.local_pth_you_can_select,
-              s: TS(c: qb.q(.7), s: 12),
-            ),
-            4.w,
-            IconButton(
-              onPressed: () async {
-                await showOkAlertDialog(
-                  context: context,
-                  title: s.what_is_pth_file_title,
-                  message: s.what_is_pth_file_message,
-                );
-              },
-              icon: const Icon(Icons.info_outline),
-              iconSize: 14,
-              style: ButtonStyle(
-                minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-                padding: WidgetStateProperty.all(.zero),
-              ),
-            ),
-          ],
-        ),
-        4.h,
-        if (localPthLoading) ...[
-          Container(
-            padding: const .all(12),
-            decoration: BoxDecoration(
-              color: qb.q(.1),
-              borderRadius: 8.r,
-              border: Border.all(color: qb.q(.2), width: 1),
-            ),
-            child: Row(
+          if (state == FolderState.loading) ...[
+            Row(
               children: [
+                T(S.current.scanning_folder_for_pth, s: TS(c: kCG)),
+                8.w,
                 SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: qb.q(.8),
+                    color: kCG,
                   ),
-                ),
-                12.w,
-                Text(
-                  s.model_loading,
-                  style: TS(c: qb.q(.8), s: 12),
                 ),
               ],
             ),
-          ),
-          8.h,
-        ],
-        if (!localPthLoading && fileInfos.isNotEmpty) ...[
-          for (var i = 0; i < fileInfos.length; i++) ...[
-            if (i > 0) 8.h,
-            _LocalPthFileItem(fileInfos[i]),
+            8.h,
           ],
-          8.h,
-        ],
-        if (!localPthLoading && fileInfos.isEmpty) ...[
-          Text(
-            s.no_local_pth_loaded_yet,
-            style: TS(c: qb.q(.6), s: 12),
-          ),
+          if (files.isEmpty && state == FolderState.loaded) ...[
+            T(S.current.current_folder_has_no_local_models),
+            8.h,
+          ],
+          if (state == FolderState.notfound) ...[
+            T(S.current.folder_not_found_on_device),
+            8.h,
+          ],
+          if (state == FolderState.restricted) ...[
+            T(S.current.folder_not_accessible_check_permission),
+            8.h,
+          ],
+          if (files.isNotEmpty)
+            ...files
+                .map(
+                  (e) => Container(
+                    decoration: BoxDecoration(
+                      color: customTheme.settingItem,
+                      borderRadius: 8.r,
+                      border: Border.all(color: qb.q(.1), width: .5),
+                    ),
+                    padding: const .all(4),
+                    child: Row(
+                      crossAxisAlignment: .center,
+                      children: [
+                        Expanded(
+                          child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartPthFileForChat(e)),
+                        ),
+                        IconButton(
+                          onPressed: () => P.pth.onDeleteFileClicked(folder, e),
+                          icon: Icon(
+                            Icons.delete_forever_outlined,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                          tooltip: S.current.delete,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList()
+                .widgetJoin((index) => 8.h),
           4.h,
         ],
-        FilledButton(
-          onPressed: () async {
-            final fileInfo = await P.fileManager.pickLocalPthFile();
-            if (fileInfo == null) return;
-            Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
-            await 1000.msLater;
-            pop();
-          },
-          child: Text(
-            s.select_local_pth_file_button,
-            style: TS(c: qw, s: 12, w: .w500),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

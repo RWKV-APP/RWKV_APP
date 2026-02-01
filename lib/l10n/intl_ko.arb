@@ -606,5 +606,54 @@
   "what_is_pth_file_title": ".pth 파일이란?",
   "what_is_pth_file_message": ".pth 파일은 다운로드 서버 없이 로컬 파일 시스템에서 직접 로드하는 가중치 파일입니다.\n\nPyTorch로 학습한 모델은 일반적으로 .pth 파일로 저장됩니다.\n\nRWKV Chat은 .pth 파일 로드를 지원합니다.",
   "select_local_pth_file_button": "로컬 .pth 파일 선택",
-  "open_containing_folder": "포함 폴더 열기"
+  "open_containing_folder": "포함 폴더 열기",
+  "folder_already_added": "이 폴더가 이미 추가되었습니다",
+  "confirm_forget_location_title": "이 위치를 잊으시겠습니까?",
+  "confirm_forget_location_message": "잊으면 이 폴더는 로컬 폴더 목록에 더 이상 표시되지 않습니다",
+  "forget_location_success": "위치를 잊었습니다",
+  "refresh_complete": "새로고침 완료",
+  "confirm_delete_file_title": "이 파일을 삭제하시겠습니까?",
+  "confirm_delete_file_message": "이 파일은 로컬 디스크에서 영구적으로 삭제됩니다",
+  "your_device": "기기: ",
+  "we_support_npu_socs": "현재 다음 SoC 칩의 NPU를 지원합니다",
+  "prebuilt_models_intro": "아래는 RWKV Chat이 미리 양자화한 모델입니다",
+  "below_are_your_local_folders": "아래는 로컬 폴더입니다",
+  "click_plus_to_add_more_folders": "+ 를 클릭하여 로컬 폴더 추가",
+  "add_local_folder": "로컬 폴더 추가",
+  "no_local_folders": ".pth 파일이 포함된 로컬 폴더를 아직 추가하지 않았습니다",
+  "click_plus_add_local_folder": "+ 를 클릭하여 로컬 폴더를 추가하세요. RWKV Chat 이 해당 폴더의 .pth 파일을 스캔하여 로드 가능한 가중치로 표시합니다",
+  "open_folder": "폴더 열기",
+  "forget_this_location": "이 위치 잊기",
+  "scanning_folder_for_pth": "이 폴더에서 .pth 파일 스캔 중",
+  "current_folder_has_no_local_models": "이 폴더에 로컬 모델이 없습니다",
+  "folder_not_found_on_device": "기기에서 이 폴더를 찾을 수 없습니다",
+  "folder_not_accessible_check_permission": "이 폴더에 액세스할 수 없습니다. 폴더 권한을 확인하세요",
+  "path_label": "경로: {path}",
+  "@path_label": {
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "local_folder_name": "로컬 폴더: {folderName}",
+  "@local_folder_name": {
+    "placeholders": {
+      "folderName": {}
+    }
+  },
+  "custom_directory_set": "사용자 지정 디렉토리가 설정되었습니다",
+  "reset_to_default_directory": "기본 디렉토리로 재설정되었습니다",
+  "failed_to_create_directory": "디렉토리 생성에 실패했습니다",
+  "set_custom_directory": "사용자 지정 디렉토리 설정",
+  "reset_to_default": "기본값으로 재설정",
+  "using_custom_directory": "사용자 지정 디렉토리 사용 중",
+  "using_default_directory": "기본 디렉토리 사용 중",
+  "moving_files": "파일 이동 중...",
+  "already_using_this_directory": "이미 이 디렉토리를 사용 중입니다",
+  "files_moved_with_failures": "{successCount}개 파일 이동됨, {failCount}개 실패",
+  "@files_moved_with_failures": {
+    "placeholders": {
+      "successCount": {},
+      "failCount": {}
+    }
+  }
 }
