@@ -633,5 +633,11 @@
     "placeholders": {
       "path": {}
     }
+  },
+  "local_folder_name": "ローカルフォルダ：{folderName}",
+  "@local_folder_name": {
+    "placeholders": {
+      "folderName": {}
+    }
   }
 }

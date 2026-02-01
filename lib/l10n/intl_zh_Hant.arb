@@ -633,5 +633,11 @@
     "placeholders": {
       "path": {}
     }
+  },
+  "local_folder_name": "本機資料夾：{folderName}",
+  "@local_folder_name": {
+    "placeholders": {
+      "folderName": {}
+    }
   }
 }

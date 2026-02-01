@@ -639,5 +639,11 @@
     "placeholders": {
       "path": {}
     }
+  },
+  "local_folder_name": "Local folder: {folderName}",
+  "@local_folder_name": {
+    "placeholders": {
+      "folderName": {}
+    }
   }
 }

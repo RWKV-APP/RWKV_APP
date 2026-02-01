@@ -639,5 +639,11 @@
     "placeholders": {
       "path": {}
     }
+  },
+  "local_folder_name": "本地文件夹：{folderName}",
+  "@local_folder_name": {
+    "placeholders": {
+      "folderName": {}
+    }
   }
 }

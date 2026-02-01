@@ -19,9 +19,6 @@ class _Remote {
   /// 是否使用本地文件
   late final modelSelectorShown = qs(false);
 
-  @Deprecated("根据需求已经不需要了")
-  late final localPthFileOption = qs<LocalPthFileOption>(LocalPthFileOption.filesInConfig);
-
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
     return LocalFile(targetPath: ref.watch(_paths(key)));
   });

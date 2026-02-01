@@ -85,6 +85,11 @@ extension $Pth on _Pth {
     await launchUrl(Uri.directory(folder.path));
   }
 
+  /// 加载指定 pth 文件并开始聊天；成功/失败与 pop 由 P.rwkv.startPthForChat 内部用 Alert 处理。
+  Future<void> onStartPthFileForChat(FileInfo fileInfo) async {
+    await P.rwkv.startPthForChat(fileInfo);
+  }
+
   Future<void> addFolder(PthFolderEntry entry) async {
     final folder = Folder(path: entry.path, state: FolderState.loading, files: []);
     folders.q = [...folders.q, folder];
@@ -145,7 +150,7 @@ extension $Pth on _Pth {
           );
           files.add(fileInfo);
         }
-        return (files.sorted((a, b) => a.fileSize.compareTo(b.fileSize)), false);
+        return (files.sorted((a, b) => b.fileSize.compareTo(a.fileSize)), false);
       },
       folder.path,
       debugLabel: 'refreshFolder',
@@ -173,6 +178,9 @@ extension $Pth on _Pth {
       message: S.current.confirm_delete_file_message,
     );
     if (res != OkCancelResult.ok) return;
+    if (P.rwkv.loadedModels.q.keys.contains(file)) {
+      await P.rwkv._releaseModelByWeightTypeIfNeeded(weightType: .chat);
+    }
     await removeFile(folder, file);
   }
 

@@ -28,9 +28,7 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1567,12 +1565,10 @@ class S {
   }
 
   /// `当搜索深度和宽度都大于 2 时，将激活上下文搜索`
-  String
-  get in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2 {
+  String get in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2 {
     return Intl.message(
       '当搜索深度和宽度都大于 2 时，将激活上下文搜索',
-      name:
-          'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
+      name: 'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
       desc: '',
       args: [],
     );
@@ -3654,26 +3650,22 @@ class S {
   }
 
   /// `请选择要为第 {index} 条消息设置的采样和惩罚参数`
-  String
-  please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(
+  String please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(
     Object index,
   ) {
     return Intl.message(
       '请选择要为第 $index 条消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
       desc: '',
       args: [index],
     );
   }
 
   /// `请选择要为所有消息设置的采样和惩罚参数`
-  String
-  get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
+  String get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
     return Intl.message(
       '请选择要为所有消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
       desc: '',
       args: [],
     );
@@ -4407,6 +4399,16 @@ class S {
   /// `路径：{path}`
   String path_label(Object path) {
     return Intl.message('路径：$path', name: 'path_label', desc: '', args: [path]);
+  }
+
+  /// `本地文件夹：{folderName}`
+  String local_folder_name(Object folderName) {
+    return Intl.message(
+      '本地文件夹：$folderName',
+      name: 'local_folder_name',
+      desc: '',
+      args: [folderName],
+    );
   }
 }
 

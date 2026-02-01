@@ -1025,6 +1025,63 @@ extension $RWKV on _RWKV {
     if (modelID != null) send(to_rwkv.DumpStateInfo(modelID: modelID));
   }
 
+  /// 加载指定 pth 权重并完成聊天用配置（角色、batch、thinkingMode、GetSupportedBatchSizes）。
+  /// 供 UI 在「Start to Chat」时调用；成功/失败在内部用 Alert.success / Alert.error 与 pop 处理。
+  Future<void> startPthForChat(FileInfo fileInfo) async {
+    qq;
+    if (fileInfo.backend == null) {
+      Alert.error("Backend is null");
+      return;
+    }
+    try {
+      clearStates();
+      await loadChat(fileInfo: fileInfo);
+    } catch (e) {
+      Alert.error(e.toString());
+      return;
+    }
+    final batchAllowed = fileInfo.tags.contains("batch");
+    if (!batchAllowed) P.chat.batchEnabled.q = false;
+
+    final modelID = findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      Alert.error("findModelIDByWeightType(chat) returned null");
+      return;
+    }
+
+    final isTranslate = fileInfo.tags.contains("translate");
+    if (isTranslate) {
+      if (P.translator.enToZh.q) {
+        send(to_rwkv.SetUserRole("English", modelID: modelID));
+        send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
+      } else {
+        send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+        send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
+      }
+      await setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "<EOD>", setPrompt: true);
+      P.backend.start();
+    } else {
+      send(to_rwkv.SetUserRole("User", modelID: modelID));
+      send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
+    }
+
+    if (!isTranslate) {
+      if (currentModelIsBefore20250922.q) {
+        setModelConfig(thinkingMode: const thinking_mode.Lighting());
+      } else {
+        setModelConfig(thinkingMode: const thinking_mode.Fast());
+      }
+    }
+
+    for (var i = 0; i < 3; i++) {
+      (500 * i).msLater.then((_) {
+        send(to_rwkv.GetSupportedBatchSizes(modelID: modelID));
+      });
+    }
+    Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
+    pop();
+  }
+
   int? findModelIDByWeightType({required WeightType weightType}) {
     final loaded = loadedModels.q.entries.firstWhereOrNull((e) => e.key.weightType == weightType);
 
