@@ -20,6 +20,7 @@ import 'package:zone/router/page_key.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
 
+/// 权重管理页面, 管理通过 latest.json 配置的文件
 class PageWeightManager extends ConsumerWidget {
   const PageWeightManager({super.key});
 

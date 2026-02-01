@@ -2,6 +2,7 @@
 
 part of 'p.dart';
 
+/// 1. 管理通过 latest.json 配置的文件
 class _Remote {
   // ===========================================================================
   // Instance
@@ -16,7 +17,6 @@ class _Remote {
 
   late final downloadSource = qs<FileDownloadSource>(P.preference.currentLangIsZh.q ? .aifasthub : .huggingface);
 
-  /// 是否使用本地文件
   late final modelSelectorShown = qs(false);
 
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {

@@ -74,18 +74,20 @@ class ModelSelector extends ConsumerWidget {
       }
     };
 
+    final afterHide = (_) {
+      _preferredDemoType = null;
+      P.remote.modelSelectorShown.q = false;
+    };
+
     await P.ui.showPanel(
       key: panelKey,
       beforeShow: beforeShow,
+      afterHide: afterHide,
       builder: (scrollController) => ModelSelector._(
         scrollController: scrollController,
         showNeko: showNeko,
         rolePlayOnly: rolePlayOnly,
       ),
-      afterHide: (res) {
-        _preferredDemoType = null;
-        P.remote.modelSelectorShown.q = false;
-      },
     );
   }
 
