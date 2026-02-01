@@ -131,6 +131,7 @@ part "translator.dart";
 part "ocr.dart";
 part "md_render.dart";
 part "font.dart";
+part "ui.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -155,6 +156,7 @@ abstract class P {
   static final ocr = _Ocr();
   static final mdRender = _MDRender();
   static final font = _Font();
+  static final ui = _UI();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -196,6 +198,7 @@ abstract class P {
       _safeInit(() => ocr._init(), mark: "ocr"),
       _safeInit(() => mdRender._init(), mark: "mdRender"),
       _safeInit(() => font._init(), mark: "font"),
+      _safeInit(() => ui._init(), mark: "ui"),
     ]);
   }
 
