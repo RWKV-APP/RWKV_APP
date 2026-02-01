@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-blue.svg)](./README.md)
-[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh.md)
-[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-TW.md)
+[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-hant.md)
 [![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
 [![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
@@ -117,7 +117,17 @@ touch .env
 flutter pub get
 ```
 
-4. **運行應用：**
+4. **（可選）為 `tools` 目錄安裝依賴：**
+
+*執行此步驟可避免在 VS Code 或 Cursor 中運行應用時出現「您的專案中存在錯誤」的提示。*
+
+```bash
+cd tools
+flutter pub get
+cd ..
+```
+
+5. **運行應用：**
 
 ```bash
 flutter run

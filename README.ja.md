@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-blue.svg)](./README.md)
-[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh.md)
-[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-TW.md)
+[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-hant.md)
 [![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
 [![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
@@ -117,7 +117,17 @@ touch .env
 flutter pub get
 ```
 
-4. **アプリケーションを実行:**
+4. **（任意）`tools` ディレクトリの依存関係をインストール:**
+
+*この手順を実行すると、VS Code や Cursor でアプリを実行した際に「プロジェクトにエラーが存在します」という警告を避けられます。*
+
+```bash
+cd tools
+flutter pub get
+cd ..
+```
+
+5. **アプリケーションを実行:**
 
 ```bash
 flutter run

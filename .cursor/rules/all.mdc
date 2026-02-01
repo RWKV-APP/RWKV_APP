@@ -1,4 +1,5 @@
 ---
+description: Project overview, architecture, state/routing/file conventions
 alwaysApply: true
 ---
 
@@ -21,6 +22,10 @@ StateProvider<V> qs<V>(V v) => StateProvider<V>((_) => v);
 
 /// Generates a [Provider] using the provided createFn.
 Provider<V> qp<V>(V Function(Ref<V> ref) createFn) => Provider<V>(createFn);
+
+StateProviderFamily<V, K> qsf<K, V>(V v) => StateProvider.family<V, K>((_, __) => v);
+
+StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn) => StateProvider.family<V, K>(createFn);
 
 extension HaloProviderListenable<V> on ProviderListenable<V> {
   /// Reads the current value using shorthand `q`.

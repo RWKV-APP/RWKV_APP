@@ -1,5 +1,7 @@
 ---
-alwaysApply: true
+description: i18n — ARB files, key sync, generate command
+globs: "**/*.arb", "lib/**/*.dart"
+alwaysApply: false
 ---
 
 ## i18n
@@ -12,4 +14,4 @@ alwaysApply: true
   - intl_zh_Hans.arb
   - intl_zh_Hant.arb
 - 一旦你修改了某个 .arb 文件, 一定要保证其他几个 arb 文件对应的 key 值也被同时修改了
-- 最后, 在你修改完了 .arb 文件后, 运行 `dart pub global run intl_utils:generate` 以便生成文件
+- 修改完 .arb 后必须运行: `dart pub global run intl_utils:generate` 以便生成文件

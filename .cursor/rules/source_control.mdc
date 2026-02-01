@@ -1,4 +1,5 @@
 ---
+description: Git behavior — no auto commit, no unsolicited git advice
 alwaysApply: true
 ---
 

@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-blue.svg)](./README.md)
-[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh.md)
-[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-TW.md)
+[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-hant.md)
 [![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
 [![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
@@ -117,7 +117,17 @@ touch .env
 flutter pub get
 ```
 
-4. **애플리케이션 실행:**
+4. **（선택 사항）`tools` 디렉토리 종속성 설치:**
+
+*이 단계를 수행하면 VS Code 또는 Cursor에서 앱을 실행할 때 "프로젝트에 오류가 있습니다" 경고를 피할 수 있습니다.*
+
+```bash
+cd tools
+flutter pub get
+cd ..
+```
+
+5. **애플리케이션 실행:**
 
 ```bash
 flutter run

@@ -1,4 +1,5 @@
 ---
+description: Tech stack (Flutter, Dart, Riverpod, go_router, RWKV)
 alwaysApply: true
 ---
 
@@ -12,7 +13,9 @@ Dart 3.10+ (Heavily utilizing new features like Dot Shorthands).
 
 # State Management
 
-Riverpod (Customized Wrapper with `qs`/`qp`).
+Riverpod (Customized Wrapper with `qs`, `qp`, `qsf`, `qsff`).
+
+### P.foo.bar.q = newValue
 
 # Routing
 

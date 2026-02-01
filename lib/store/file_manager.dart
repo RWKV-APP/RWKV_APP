@@ -45,7 +45,6 @@ class _FileManager {
   late final sudokuWeights = qs<Set<FileInfo>>({});
   late final othelloWeights = qs<Set<FileInfo>>({});
 
-  ///
   late final roleplayWeights = qs<Set<FileInfo>>({});
 
   /// 当前平台可用的 tts 权重, 包含 core 和 non-core 两种
