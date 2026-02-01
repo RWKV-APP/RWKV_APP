@@ -41,45 +41,49 @@ class ModelSelector extends ConsumerWidget {
   final bool _showNeko;
   final ScrollController _scrollController;
 
+  static double get _listPadding => P.app.isMobile.q ? 8 : 12;
+
   static Future<void> show({
     bool rolePlayOnly = false,
     bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
+    final beforeShow = () async {
+      if (showNeko) preferredDemoType = .chat;
+
+      if (P.weights.modelSelectorShown.q) return;
+      P.weights.modelSelectorShown.q = true;
+
+      final context = getContext();
+      if (context == null) {
+        P.weights.modelSelectorShown.q = false;
+        return;
+      }
+
+      // Fire and forget model updates
+      (() async {
+        P.weights.checkLocal();
+        await P.app.syncConfig();
+        await P.weights.syncAvailableModels();
+        P.weights.checkLocal();
+      })();
+
+      if (P.app.pageKey.q == .talk) _preferredDemoType = .tts;
+
+      if (preferredDemoType != null) _preferredDemoType = preferredDemoType;
+
+      if (rolePlayOnly && P.app.pageKey.q != .rolePlaying) {
+        return;
+      }
+
+      final usingPth = P.rwkv.usingPth.q;
+      if (usingPth == true) P.weights.localPthFileOption.q = LocalPthFileOption.localPthFiles;
+      if (usingPth != true) P.weights.localPthFileOption.q = LocalPthFileOption.filesInConfig;
+    };
+
     await P.ui.showPanel(
       key: panelKey,
-      beforeShow: () async {
-        if (showNeko) preferredDemoType = .chat;
-
-        if (P.weights.modelSelectorShown.q) return;
-        P.weights.modelSelectorShown.q = true;
-
-        final context = getContext();
-        if (context == null) {
-          P.weights.modelSelectorShown.q = false;
-          return;
-        }
-
-        // Fire and forget model updates
-        (() async {
-          P.weights.checkLocal();
-          await P.app.syncConfig();
-          await P.weights.syncAvailableModels();
-          P.weights.checkLocal();
-        })();
-
-        if (P.app.pageKey.q == .talk) _preferredDemoType = .tts;
-
-        if (preferredDemoType != null) _preferredDemoType = preferredDemoType;
-
-        if (rolePlayOnly && P.app.pageKey.q != .rolePlaying) {
-          return;
-        }
-
-        final usingPth = P.rwkv.usingPth.q;
-        if (usingPth == true) P.weights.localPthFileOption.q = LocalPthFileOption.localPthFiles;
-        if (usingPth != true) P.weights.localPthFileOption.q = LocalPthFileOption.filesInConfig;
-      },
+      beforeShow: beforeShow,
       builder: (scrollController) => ModelSelector._(
         scrollController: scrollController,
         showNeko: showNeko,
@@ -106,127 +110,110 @@ class ModelSelector extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
     final localPthFileOption = ref.watch(P.weights.localPthFileOption);
     final pageKey = ref.watch(P.app.pageKey);
-    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
-    final qw = ref.watch(P.app.qw);
-    final qb = ref.watch(P.app.qb);
-    final paddingTop = ref.watch(P.app.paddingTop);
-
-    final shape = RoundedSuperellipseBorder(borderRadius: BorderRadius.vertical(top: 16.rr));
+    final isMobile = ref.watch(P.app.isMobile);
 
     return ClipRRect(
       borderRadius: const .only(
         topLeft: .circular(16),
         topRight: .circular(16),
       ),
-      child: Stack(
+      child: Column(
         children: [
-          ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(
-              scrollbars: false,
-            ),
-            child: RawScrollbar(
-              controller: _scrollController,
+          _PanelBar(scrollController: _scrollController),
+          Expanded(
+            child: ListView(
               padding: .only(
-                top: kToolbarHeight + 2,
-                right: 2,
-                bottom: paddingBottom + 2,
+                left: _listPadding,
+                right: _listPadding,
+                bottom: _listPadding,
               ),
-              radius: 100.rr,
-              child: ListView(
-                padding: .only(
-                  top: kToolbarHeight,
-                  left: isDesktop ? 12 : 8,
-                  right: isDesktop ? 12 : 8,
-                ),
-                controller: _scrollController,
-                children: [
-                  if (isDesktop && pageKey == .chat) const _LocalSwitcher(),
-                  if (localPthFileOption == .filesInConfig) const _Options(),
-                  if (localPthFileOption == .filesInConfig) _ModelList(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
-                  if (localPthFileOption == .localPthFiles) const _LocalOptions(),
-                  16.h,
-                  paddingBottom.h,
-                ],
-              ),
+              controller: _scrollController,
+              children: [
+                if (isDesktop && pageKey == .chat) const _LocalSwitcher(),
+                if (localPthFileOption == .filesInConfig) const _Options(),
+                if (localPthFileOption == .filesInConfig) _ModelList(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
+                if (localPthFileOption == .localPthFiles) const _LocalOptions(),
+                16.h,
+                paddingBottom.h,
+              ],
             ),
           ),
-          const _PanelBar(),
         ],
       ),
     );
   }
 }
 
-class _PanelBar extends ConsumerWidget {
-  const _PanelBar();
+class _PanelBar extends ConsumerStatefulWidget {
+  final ScrollController scrollController;
+  const _PanelBar({required this.scrollController});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_PanelBar> createState() => _PanelBarState();
+}
+
+class _PanelBarState extends ConsumerState<_PanelBar> {
+  double _opacity = 0.0;
+
+  static const double _opacityThreshold = 100.0;
+
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final position = widget.scrollController.position;
+    double opacity = position.pixels / 100.0;
+    if (opacity < 0) opacity = 0;
+    if (opacity > 1) opacity = 1;
+    if (opacity != _opacity) {
+      _opacity = opacity;
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
     final qb = ref.watch(P.app.qb);
     final shape = RoundedSuperellipseBorder(borderRadius: BorderRadius.vertical(top: 16.rr));
     final s = S.of(context);
-    return Positioned(
-      left: 0,
-      right: 0,
-      top: 0,
+    final bottomSheetColor = Theme.of(context).bottomSheetTheme.backgroundColor;
+    final customTheme = ref.watch(P.app.customTheme);
+
+    return Container(
       height: kToolbarHeight,
-      child: Container(
-        decoration: BoxDecoration(
-          color: scaffoldBackgroundColor.q(1),
-          border: Border(
-            bottom: BorderSide(color: qb.q(.2), width: 0.5),
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: .center,
-          children: [
-            16.w,
-            Expanded(
-              child: Text(
-                s.chat_please_select_a_model,
-                style: const TS(s: 18, w: .w600),
-              ),
-            ),
-            const IconButton(
-              onPressed: pop,
-              icon: Icon(Icons.close),
-            ),
-          ],
+      decoration: BoxDecoration(
+        color: customTheme.settingItem.q(_opacity * _opacity),
+        border: Border(
+          bottom: BorderSide(color: qb.q(.2 * _opacity * _opacity), width: 0.5),
         ),
       ),
-    );
-  }
-}
-
-/// 用 [ShapeBorder] 的路径做裁剪，支持 [RoundedSuperellipseBorder] 等连续曲率。
-class _ShapeBorderClipper extends CustomClipper<Path> {
-  const _ShapeBorderClipper(this.shape);
-  final ShapeBorder shape;
-
-  @override
-  Path getClip(Size size) => shape.getOuterPath(Rect.fromLTWH(0, 0, size.width, size.height));
-
-  @override
-  bool shouldReclip(covariant _ShapeBorderClipper old) => shape != old.shape;
-}
-
-class _Title extends StatelessWidget {
-  const _Title();
-
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-    return Row(
-      children: [
-        Expanded(
-          child: Text(s.chat_please_select_a_model, style: const TS(s: 18, w: .w600)),
-        ),
-        const IconButton(
-          onPressed: pop,
-          icon: Icon(Icons.close),
-        ),
-      ],
+      child: Row(
+        crossAxisAlignment: .center,
+        children: [
+          (ModelSelector._listPadding + (8 * _opacity)).w,
+          Expanded(
+            child: Text(
+              s.chat_please_select_a_model,
+              style: const TS(s: 18, w: .w600),
+            ),
+          ),
+          const IconButton(
+            onPressed: pop,
+            icon: Icon(Icons.close),
+          ),
+          4.w,
+        ],
+      ),
     );
   }
 }

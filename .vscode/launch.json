@@ -42,7 +42,8 @@
       "args": [
         //
         "--dart-define=logLevel=3",
-        "--dart-define=showHaloDebugger=true"
+        "--dart-define=showHaloDebugger=true",
+        "--dart-define=disableRemoteConfig=true"
       ],
       "deviceId": "90313e34"
     },
@@ -68,7 +69,8 @@
       "args": [
         //
         "--dart-define=logLevel=3",
-        "--dart-define=showHaloDebugger=true"
+        "--dart-define=showHaloDebugger=true",
+        "--dart-define=disableRemoteConfig=true"
       ],
       "deviceId": "macos"
     },
@@ -104,8 +106,8 @@
       "configurations": [
         // 同时启动, 方便同时 debug 多个平台
         "debug (Halo) - macOS",
-        "debug (Halo) - Android",
-        "debug (Halo) - iOS"
+        "debug (Halo) - Android"
+        // "debug (Halo) - iOS"
       ]
     }
   ]

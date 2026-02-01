@@ -18,7 +18,7 @@ extension $UI on _UI {
     FutureOr<void> Function(Res? res)? afterHide,
     bool isScrollControlled = true,
     double initialChildSize = .8,
-    double maxChildSize = .9,
+    double maxChildSize = .905,
     bool expand = false,
     bool snap = false,
   }) async {
@@ -41,6 +41,7 @@ extension $UI on _UI {
       // ignore: use_build_context_synchronously
       context: context,
       isScrollControlled: isScrollControlled,
+      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.vertical(top: 16.rr)),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: initialChildSize,
         maxChildSize: maxChildSize,
