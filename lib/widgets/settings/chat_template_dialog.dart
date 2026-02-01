@@ -189,7 +189,8 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
     return [
       TextField(
         controller: _controllerSystemPrompt,
-        maxLines: 4,
+        minLines: 1,
+        maxLines: 16,
         decoration: InputDecoration(
           labelText: S.current.system_prompt,
           labelStyle: const TextStyle(fontSize: 16),
