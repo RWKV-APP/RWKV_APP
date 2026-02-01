@@ -396,7 +396,7 @@ extension $RWKVLoad on _RWKV {
     final modelID = await _loadModel(
       modelPath: modelPath,
       tokenizerPath: tokenizerPath,
-      backend: backend!,
+      backend: backend,
       fileInfo: fileInfo,
     );
     if (modelID == null) {

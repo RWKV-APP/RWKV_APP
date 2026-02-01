@@ -478,7 +478,7 @@ class _DownloadSource extends ConsumerWidget {
                         color: primary,
                       ),
                     ),
-                    constraints: BoxConstraints(minHeight: 30),
+                    constraints: const BoxConstraints(minHeight: 30),
                     padding: const .symmetric(horizontal: 6, vertical: 2),
                     child: IntrinsicWidth(
                       child: Center(
@@ -566,7 +566,7 @@ class _LocalSwitcher extends ConsumerWidget {
                     color: primary,
                   ),
                 ),
-                padding: .all(4),
+                padding: const .all(4),
                 child: Row(
                   mainAxisSize: .min,
                   children: [
@@ -788,7 +788,7 @@ class _LocalOptions extends ConsumerWidget {
                   message: s.what_is_pth_file_message,
                 );
               },
-              icon: Icon(Icons.info_outline),
+              icon: const Icon(Icons.info_outline),
               iconSize: 14,
               style: ButtonStyle(
                 minimumSize: WidgetStateProperty.all(const Size(16, 16)),
