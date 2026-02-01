@@ -24,7 +24,7 @@ PODS:
     - FlutterMacOS
   - package_info_plus (0.0.1):
     - FlutterMacOS
-  - record_macos (1.1.0):
+  - record_macos (1.2.0):
     - FlutterMacOS
   - rwkv_mobile_flutter (0.0.1):
     - FlutterMacOS
@@ -151,7 +151,7 @@ SPEC CHECKSUMS:
   macos_window_utils: 23f54331a0fd51eea9e0ed347253bf48fd379d1d
   mp_audio_stream: c140c6f5d79ea84f801878e5b89f05ab5f738bde
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
-  record_macos: 43194b6c06ca6f8fa132e2acea72b202b92a0f5b
+  record_macos: 7f227161b93c49e7e34fe681c5891c8622c8cc8b
   rwkv_mobile_flutter: 8ca6e2136af1082006740e7a3072448fd0f210e7
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: da39d10e3f2f3e060eebc9d7ecea027d34443d66
