@@ -606,5 +606,32 @@
   "what_is_pth_file_title": "Что такое .pth файл?",
   "what_is_pth_file_message": ".pth файлы — это файлы весов, загружаемые напрямую из локальной файловой системы, без загрузки с сервера.\n\nМодели, обученные в PyTorch, часто сохраняются как .pth файлы.\n\nRWKV Chat поддерживает загрузку .pth файлов.",
   "select_local_pth_file_button": "Выбрать локальный .pth файл",
-  "open_containing_folder": "Открыть папку с файлом"
+  "open_containing_folder": "Открыть папку с файлом",
+  "folder_already_added": "Эта папка уже добавлена",
+  "confirm_forget_location_title": "Забыть это расположение?",
+  "confirm_forget_location_message": "После забытия эта папка больше не будет отображаться в списке локальных папок",
+  "forget_location_success": "Расположение забыто",
+  "refresh_complete": "Обновление завершено",
+  "confirm_delete_file_title": "Удалить этот файл?",
+  "confirm_delete_file_message": "После удаления этот файл больше не будет отображаться в списке локальных папок",
+  "your_device": "Ваше устройство: ",
+  "we_support_npu_socs": "В настоящее время поддерживается NPU следующих чипов SoC:",
+  "prebuilt_models_intro": "Ниже представлены предварительно квантизированные модели RWKV Chat",
+  "below_are_your_local_folders": "Ниже представлены ваши локальные папки",
+  "click_plus_to_add_more_folders": "Нажмите +, чтобы добавить локальные папки",
+  "add_local_folder": "Добавить локальную папку",
+  "no_local_folders": "Нет локальных папок",
+  "click_plus_add_local_folder": "Нажмите +, чтобы добавить локальную папку",
+  "open_folder": "Открыть папку",
+  "forget_this_location": "Забыть это расположение",
+  "scanning_folder_for_pth": "Сканирование папки на наличие .pth файлов",
+  "current_folder_has_no_local_models": "В этой папке нет локальных моделей",
+  "folder_not_found_on_device": "Эта папка не найдена на вашем устройстве",
+  "folder_not_accessible_check_permission": "К этой папке нет доступа. Проверьте права доступа",
+  "path_label": "Путь: {path}",
+  "@path_label": {
+    "placeholders": {
+      "path": {}
+    }
+  }
 }

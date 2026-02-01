@@ -78,6 +78,9 @@ class Debugger extends ConsumerWidget {
     final preferredUIFont = ref.watch(P.preference.preferredUIFont);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
 
+    final pthFolderPaths = ref.watch(P.preference.pthFolderPaths);
+    final pthFolders = ref.watch(P.pth.folders);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -157,6 +160,10 @@ class Debugger extends ConsumerWidget {
                       Text(preferredUIFont ?? "null"),
                       Text("preferredMonospaceFont".codeToName),
                       Text(preferredMonospaceFont ?? "null"),
+                      Text("pthFolderPaths".codeToName),
+                      Text(pthFolderPaths.join("\n")),
+                      Text("pthFolders".codeToName),
+                      Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

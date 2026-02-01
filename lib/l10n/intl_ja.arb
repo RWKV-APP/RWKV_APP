@@ -606,5 +606,32 @@
   "what_is_pth_file_title": ".pth ファイルとは？",
   "what_is_pth_file_message": ".pth ファイルはダウンロードサーバーを経由せず、ローカルファイルシステムから直接読み込む重みファイルです。\n\nPyTorch で訓練したモデルは通常 .pth ファイルとして保存されます。\n\nRWKV Chat は .pth ファイルの読み込みに対応しています。",
   "select_local_pth_file_button": "ローカル .pth ファイルを選択",
-  "open_containing_folder": "保存先フォルダを開く"
+  "open_containing_folder": "保存先フォルダを開く",
+  "folder_already_added": "このフォルダは既に追加されています",
+  "confirm_forget_location_title": "この場所を忘れますか？",
+  "confirm_forget_location_message": "忘れると、このフォルダはローカルフォルダ一覧に表示されなくなります",
+  "forget_location_success": "場所を忘れました",
+  "refresh_complete": "更新完了",
+  "confirm_delete_file_title": "このファイルを削除しますか？",
+  "confirm_delete_file_message": "削除すると、このファイルはローカルフォルダ一覧に表示されなくなります",
+  "your_device": "お使いのデバイス：",
+  "we_support_npu_socs": "現在、以下の SoC チップの NPU に対応しています",
+  "prebuilt_models_intro": "以下は RWKV Chat が事前に量子化したモデルです",
+  "below_are_your_local_folders": "以下はローカルフォルダです",
+  "click_plus_to_add_more_folders": "+ をクリックしてローカルフォルダを追加",
+  "add_local_folder": "ローカルフォルダを追加",
+  "no_local_folders": "ローカルフォルダがありません",
+  "click_plus_add_local_folder": "+ をクリックしてローカルフォルダを追加",
+  "open_folder": "フォルダを開く",
+  "forget_this_location": "この場所を忘れる",
+  "scanning_folder_for_pth": "このフォルダ内の .pth ファイルをスキャン中",
+  "current_folder_has_no_local_models": "このフォルダにローカルモデルはありません",
+  "folder_not_found_on_device": "お使いのデバイスでこのフォルダが見つかりませんでした",
+  "folder_not_accessible_check_permission": "このフォルダにアクセスできません。フォルダの権限を確認してください",
+  "path_label": "パス：{path}",
+  "@path_label": {
+    "placeholders": {
+      "path": {}
+    }
+  }
 }

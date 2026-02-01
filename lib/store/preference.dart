@@ -414,17 +414,22 @@ extension $Preference on _Preference {
   }
 
   Future<void> addPthFolderPath(String path) async {
+    pthFolderPaths.q = {...pthFolderPaths.q, path}.toList();
     final sp = await SharedPreferences.getInstance();
-    await sp.setStringList("halo_state.pthFolderPaths", [...pthFolderPaths.q, path]);
+    await sp.setStringList("halo_state.pthFolderPaths", pthFolderPaths.q);
   }
 
   Future<void> removePthFolderPath(String path) async {
+    qq;
+    pthFolderPaths.q = pthFolderPaths.q.where((e) => e != path).toList();
+    qqr("pthFolderPaths: ${pthFolderPaths.q}");
     final sp = await SharedPreferences.getInstance();
-    await sp.setStringList("halo_state.pthFolderPaths", pthFolderPaths.q.where((e) => e != path).toList());
+    await sp.setStringList("halo_state.pthFolderPaths", pthFolderPaths.q);
   }
 
   Future<List<String>> getPthFolderPaths() async {
     final sp = await SharedPreferences.getInstance();
-    return sp.getStringList("halo_state.pthFolderPaths") ?? [];
+    pthFolderPaths.q = sp.getStringList("halo_state.pthFolderPaths") ?? [];
+    return pthFolderPaths.q;
   }
 }

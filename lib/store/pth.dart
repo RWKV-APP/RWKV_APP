@@ -22,7 +22,7 @@ extension $Pth on _Pth {
     final path = await file_picker.FilePicker.platform.getDirectoryPath();
     if (path == null) return;
     if (folders.q.any((e) => e.path == path)) {
-      Alert.warning("该文件夹已添加");
+      Alert.warning(S.current.folder_already_added);
       return;
     }
     await addFolder(path);
@@ -32,19 +32,19 @@ extension $Pth on _Pth {
     if (folder.files.isNotEmpty) {
       final res = await showOkCancelAlertDialog(
         context: getContext()!,
-        title: "确定要忘记该位置吗？",
-        message: "忘记该位置后，该文件夹将不再显示在本地文件夹列表中",
+        title: S.current.confirm_forget_location_title,
+        message: S.current.confirm_forget_location_message,
       );
       if (res != OkCancelResult.ok) return;
     }
     await removeFolder(folder);
-    Alert.success("忘记该位置成功");
+    Alert.success(S.current.forget_location_success);
   }
 
   Future<void> onRefreshFolderClicked(Folder folder) async {
     qq;
     await refreshFolder(folder);
-    Alert.success("刷新完成");
+    Alert.success(S.current.refresh_complete);
   }
 
   Future<void> onRefreshAllFoldersClicked() async {
@@ -75,14 +75,18 @@ extension $Pth on _Pth {
       return;
     }
 
-    final computeFuture = compute<String, List<FileInfo>>(
+    final computeFuture = compute<String, (List<FileInfo>, bool hasError)>(
       (String path) {
         final files = <FileInfo>[];
-        for (final file in directory.listSync()) {
-          final isTargetFile = file.path.endsWith('.pth');
-          if (!isTargetFile) {
-            continue;
-          }
+        late final List<File> pthFiles;
+        try {
+          pthFiles = directory.listSync().where((e) => e is File && e.path.endsWith('.pth')).cast<File>().toList();
+        } catch (e) {
+          qqe("Error listing files: $e");
+          pthFiles = [];
+          return (files, true);
+        }
+        for (final file in pthFiles) {
           final fileInfo = FileInfo(
             fileName: basename(file.path),
             name: basename(file.path),
@@ -101,7 +105,7 @@ extension $Pth on _Pth {
           );
           files.add(fileInfo);
         }
-        return files.sorted((a, b) => a.fileSize.compareTo(b.fileSize));
+        return (files.sorted((a, b) => a.fileSize.compareTo(b.fileSize)), false);
       },
       folder.path,
       debugLabel: 'refreshFolder',
@@ -112,11 +116,29 @@ extension $Pth on _Pth {
       Future.delayed(const Duration(seconds: 1)),
     ]);
 
-    final newFolder = folder.copyWith(files: waiting.first, state: FolderState.loaded);
+    final (files, hasError) = waiting.first;
+
+    final newFolder = folder.copyWith(files: files, state: hasError ? FolderState.restricted : FolderState.loaded);
     folders.q = folders.q.map((e) => e.path == newFolder.path ? newFolder : e).toList();
   }
 
   Future<void> refreshAllFolders() async {
     await Future.wait(folders.q.map((e) => refreshFolder(e)));
+  }
+
+  Future<void> onDeleteFileClicked(Folder folder, FileInfo file) async {
+    final res = await showOkCancelAlertDialog(
+      context: getContext()!,
+      title: S.current.confirm_delete_file_title,
+      message: S.current.confirm_delete_file_message,
+    );
+    if (res != OkCancelResult.ok) return;
+    await removeFile(folder, file);
+  }
+
+  Future<void> removeFile(Folder folder, FileInfo file) async {
+    final newFiles = folder.files.where((e) => e.fileName != file.fileName).toList();
+    final newFolder = folder.copyWith(files: newFiles);
+    folders.q = folders.q.map((e) => e.path == newFolder.path ? newFolder : e).toList();
   }
 }

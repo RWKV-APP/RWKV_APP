@@ -24,7 +24,6 @@ import 'package:path/path.dart' as path;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/gb_display.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
@@ -415,7 +414,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 Row(
                   children: [
                     Text(
-                      "您的设备：",
+                      S.current.your_device,
                       style: TS(c: qb.q(.7), s: 12),
                     ),
                     6.w,
@@ -454,7 +453,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                 8.h,
               ],
               Text(
-                "我们目前支持以下SoC芯片中的NPU：",
+                S.current.we_support_npu_socs,
                 style: TS(c: qb.q(.7), s: 12),
               ),
               8.h,
@@ -912,7 +911,7 @@ class _ModelsInConfigHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return T("以下是 RWKV Chat 预先量化好的模型");
+    return T(S.current.prebuilt_models_intro);
   }
 }
 
@@ -924,9 +923,9 @@ class _LocalPthFolderHeader extends ConsumerWidget {
     final folders = ref.watch(P.pth.folders);
     return Row(
       children: [
-        Expanded(child: T("下面是您本地的文件夹")),
-        if (folders.isNotEmpty) T("点击 + 号添加更多本地文件夹"),
-        if (folders.isNotEmpty) IconButton(onPressed: P.pth.onAddFolderClicked, icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
+        Expanded(child: T(S.current.below_are_your_local_folders)),
+        if (folders.isNotEmpty) T(S.current.click_plus_to_add_more_folders),
+        if (folders.isNotEmpty) IconButton(onPressed: P.pth.onAddFolderClicked, icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
       ],
     );
   }
@@ -954,20 +953,20 @@ class _LocalPthEmpty extends ConsumerWidget {
             children: [
               Expanded(
                 child: T(
-                  "没有本地文件夹",
+                  S.current.no_local_folders,
                   textAlign: .center,
                 ),
               ),
             ],
           ),
           4.h,
-          IconButton(onPressed: () => P.pth.onAddFolderClicked(), icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
+          IconButton(onPressed: () => P.pth.onAddFolderClicked(), icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
           4.h,
           Row(
             children: [
               Expanded(
                 child: T(
-                  "点击 + 添加本地文件夹",
+                  S.current.click_plus_add_local_folder,
                   textAlign: .center,
                 ),
               ),
@@ -1010,16 +1009,16 @@ class _LocalPthFolder extends ConsumerWidget {
                   s: TS(c: qb.q(.8), w: .w500),
                 ),
               ),
-              IconButton(onPressed: () => P.pth.onRefreshFolderClicked(folder), icon: const Icon(Icons.refresh), tooltip: "刷新"),
-              IconButton(onPressed: () => P.pth.onOpenFolderClicked(folder), icon: const Icon(Icons.folder_open), tooltip: "打开文件夹"),
-              IconButton(onPressed: () => P.pth.onRemoveFolderClicked(folder), icon: const Icon(Icons.close), tooltip: "忘记该位置"),
+              IconButton(onPressed: () => P.pth.onRefreshFolderClicked(folder), icon: const Icon(Icons.refresh), tooltip: S.current.refresh),
+              IconButton(onPressed: () => P.pth.onOpenFolderClicked(folder), icon: const Icon(Icons.folder_open), tooltip: S.current.open_folder),
+              IconButton(onPressed: () => P.pth.onRemoveFolderClicked(folder), icon: const Icon(Icons.close), tooltip: S.current.forget_this_location),
             ],
           ),
           8.h,
           if (state == FolderState.loading) ...[
             Row(
               children: [
-                T("正在扫描该文件夹中的 .pth 文件"),
+                T(S.current.scanning_folder_for_pth),
                 8.w,
                 SizedBox(
                   width: 20,
@@ -1033,12 +1032,16 @@ class _LocalPthFolder extends ConsumerWidget {
             ),
             8.h,
           ],
-          if (files.isEmpty && state != FolderState.loading) ...[
-            T("当前文件夹没有本地模型"),
+          if (files.isEmpty && state == FolderState.loaded) ...[
+            T(S.current.current_folder_has_no_local_models),
             8.h,
           ],
           if (state == FolderState.notfound) ...[
-            T("未在您的电脑上发现该文件夹"),
+            T(S.current.folder_not_found_on_device),
+            8.h,
+          ],
+          if (state == FolderState.restricted) ...[
+            T(S.current.folder_not_accessible_check_permission),
             8.h,
           ],
           if (files.isNotEmpty)
@@ -1058,7 +1061,7 @@ class _LocalPthFolder extends ConsumerWidget {
                             Expanded(
                               child: Text(e.fileName, style: TS(c: qb.q(.8), s: 12)),
                             ),
-                            IconButton(onPressed: () {}, icon: const Icon(Icons.delete), tooltip: "删除"),
+                            IconButton(onPressed: () {}, icon: const Icon(Icons.delete), tooltip: S.current.delete),
                           ],
                         ),
                         4.h,
@@ -1069,7 +1072,7 @@ class _LocalPthFolder extends ConsumerWidget {
                 .toList()
                 .widgetJoin((index) => 8.h),
           4.h,
-          Text("路径: $folderPathDisplay", style: TS(c: qb.q(.8), s: 12)),
+          Text(S.current.path_label(folderPathDisplay), style: TS(c: qb.q(.8), s: 12)),
         ],
       ),
     );
