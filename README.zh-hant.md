@@ -107,8 +107,7 @@ cd RWKV_APP
 2. **創建必要的配置文件：**
 
 ```bash
-touch assets/filter.txt
-touch .env
+touch assets/filter.txt;touch .env;
 ```
 
 3. **安裝依賴：**
@@ -122,9 +121,7 @@ flutter pub get
 *執行此步驟可避免在 VS Code 或 Cursor 中運行應用時出現「您的專案中存在錯誤」的提示。*
 
 ```bash
-cd tools
-flutter pub get
-cd ..
+cd tools; flutter pub get; cd ..;
 ```
 
 5. **運行應用：**

@@ -107,8 +107,7 @@ cd RWKV_APP
 2. **Создайте необходимые файлы конфигурации:**
 
 ```bash
-touch assets/filter.txt
-touch .env
+touch assets/filter.txt;touch .env;
 ```
 
 3. **Установка зависимостей:**
@@ -122,9 +121,7 @@ flutter pub get
 *Это избавляет от предупреждения «В проекте есть ошибки» в VS Code и Cursor при запуске приложения.*
 
 ```bash
-cd tools
-flutter pub get
-cd ..
+cd tools; flutter pub get; cd ..;
 ```
 
 5. **Запуск приложения:**

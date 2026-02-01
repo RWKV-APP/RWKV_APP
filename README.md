@@ -107,8 +107,7 @@ cd RWKV_APP
 2. **Create necessary configuration files:**
 
 ```bash
-touch assets/filter.txt
-touch .env
+touch assets/filter.txt;touch .env;
 ```
 
 3. **Install dependencies:**
@@ -122,9 +121,7 @@ flutter pub get
 *Doing this avoids the “Errors exist in your project” warning in VS Code and Cursor when you run the app.*
 
 ```bash
-cd tools
-flutter pub get
-cd ..
+cd tools; flutter pub get; cd ..;
 ```
 
 5. **Run the application:**

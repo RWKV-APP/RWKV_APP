@@ -107,8 +107,7 @@ cd RWKV_APP
 2. **필요한 구성 파일 생성:**
 
 ```bash
-touch assets/filter.txt
-touch .env
+touch assets/filter.txt;touch .env;
 ```
 
 3. **종속성 설치:**
@@ -122,9 +121,7 @@ flutter pub get
 *이 단계를 수행하면 VS Code 또는 Cursor에서 앱을 실행할 때 "프로젝트에 오류가 있습니다" 경고를 피할 수 있습니다.*
 
 ```bash
-cd tools
-flutter pub get
-cd ..
+cd tools; flutter pub get; cd ..;
 ```
 
 5. **애플리케이션 실행:**
