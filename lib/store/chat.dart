@@ -200,12 +200,12 @@ extension $Chat on _Chat {
         P.see.imagePath.q = null;
         if (P.msg.hasAtLeastOneImage.q) {
           P.msg._clear();
-          await Future.delayed(10.ms);
+          await 10.msLater;
           P.rwkv.clearStates();
-          await Future.delayed(10.ms);
+          await 10.msLater;
         }
         await send("", type: MessageType.userImage, imageUrl: imagePath);
-        await Future.delayed(50.ms);
+        await 50.msLater;
         final finalTextToSend = "<image>$imagePath</image>" + textToSend.trim();
         await send(finalTextToSend);
       }
@@ -305,7 +305,7 @@ extension $Chat on _Chat {
 
   Future<void> startNewChat() async {
     if (P.rwkv.generating.q) await onStopButtonPressed();
-    await Future.delayed(100.ms);
+    await 100.msLater;
     // Alert.success(S.current.new_chat_started);
     P.msg._clear();
     P.rwkv.clearStates();
@@ -422,7 +422,7 @@ extension $Chat on _Chat {
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
 
-    Future.delayed(34.ms).then((_) {
+    34.msLater.then((_) {
       scrollToBottom();
     });
 
@@ -469,7 +469,7 @@ extension $Chat on _Chat {
   Future<void> onStopButtonPressed({bool wantHaptic = true}) async {
     qqq("receiveId: ${receiveId.q}");
     if (wantHaptic) P.app.hapticLight();
-    await Future.delayed(1.ms);
+    await 1.msLater;
     final id = receiveId.q;
     if (id == null) {
       qqw("message id is null");
@@ -636,7 +636,7 @@ extension _$Chat on _Chat {
       return;
     }
 
-    await Future.delayed(1.ms);
+    await 1.msLater;
 
     _pauseMessageById(id: id, isSensitive: true);
   }
@@ -962,7 +962,7 @@ extension _$Chat on _Chat {
         qqe(e);
       }
     }
-    Future.delayed(50.ms, () {
+    50.msLater.then((_) {
       _updateMessageById(id: receiveId, reference: ref);
     });
 

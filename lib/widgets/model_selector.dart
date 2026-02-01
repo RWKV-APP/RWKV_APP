@@ -21,6 +21,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/widgets/model_item.dart';
@@ -845,7 +846,7 @@ class _LocalOptions extends ConsumerWidget {
             final fileInfo = await P.fileManager.pickLocalPthFile();
             if (fileInfo == null) return;
             Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
-            await Future.delayed(1000.ms);
+            await 1000.msLater;
             pop();
           },
           child: Text(

@@ -60,6 +60,7 @@ import 'package:zone/config.dart';
 import 'package:zone/db/db.dart' as db;
 import 'package:zone/db/db.dart';
 import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/from_assets_to_temp.dart';
 import 'package:zone/func/is_chinese.dart';
 import 'package:zone/func/save_asset_to_file.dart';
@@ -207,7 +208,7 @@ abstract class P {
     const timeout = 4000;
 
     // 启动超时检测
-    Future.delayed(const Duration(milliseconds: check), () {
+    check.msLater.then((_) {
       if (!isCompleted && !hasWarned) {
         hasWarned = true;
         qqe('Warning: $name initialization is taking longer than ${check}ms');

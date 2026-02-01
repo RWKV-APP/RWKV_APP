@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
 
 class Pager extends ConsumerStatefulWidget {
@@ -22,7 +23,7 @@ class Pager extends ConsumerStatefulWidget {
     final targetPage = currentPage == 0 ? 1 : 0;
     qqq("currentPage: $currentPage, targetPage: $targetPage");
     _CustomPageScrollPhysics.disableGaimon = true;
-    Future.delayed(const Duration(milliseconds: 20)).then((_) {
+    20.msLater.then((_) {
       if (Platform.isAndroid) P.app.hapticLight();
       if (Platform.isIOS) P.app.hapticSoft();
     });
@@ -31,7 +32,7 @@ class Pager extends ConsumerStatefulWidget {
       duration: 300.ms,
       curve: Curves.easeOutCubic,
     );
-    await Future.delayed(50.ms);
+    await 50.msLater;
     _CustomPageScrollPhysics.disableGaimon = false;
   }
 
@@ -69,13 +70,13 @@ class _PagerState extends ConsumerState<Pager> {
 
     final viewportFraction = wantedWidth / screenWidth;
 
-    await Future.delayed(0.ms);
+    await 0.msLater;
     Pager._newController.q.dispose();
     Pager._newController.q = PageController(
       viewportFraction: viewportFraction,
       initialPage: 1,
       onAttach: (position) async {
-        await Future.delayed(100.ms);
+        await 100.msLater;
         if (!mounted) return;
         if (Pager._newController.q.page == 1) return;
         await Pager._newController.q.animateToPage(1, duration: 200.ms, curve: Curves.easeOutCubic);
@@ -93,7 +94,7 @@ class _PagerState extends ConsumerState<Pager> {
     double v = double.tryParse(rawString) ?? .0;
     if (v > 1) v = 1;
     if (v < 0) v = 0;
-    await Future.delayed(0.ms);
+    await 0.msLater;
     Pager.page.q = v;
     Pager.atMainPage.q = v == 1;
     Pager.childOpacity.q = v;

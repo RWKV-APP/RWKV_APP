@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:flutter/material.dart';
@@ -854,7 +855,7 @@ class _TextField extends ConsumerWidget {
 
   void _onTap() async {
     qq;
-    await Future.delayed(const Duration(milliseconds: 300));
+    await 300.msLater;
     await P.chat.scrollToBottom();
   }
 

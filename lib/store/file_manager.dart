@@ -151,7 +151,7 @@ extension $FileManager on _FileManager {
 
   Future<void> checkLocal() async {
     qq;
-    await Future.delayed(const Duration(milliseconds: 17));
+    await 17.msLater;
     final fileInfos = [
       chatWeights.q,
       roleplayWeights.q,
@@ -1167,7 +1167,7 @@ extension _$FileManager on _FileManager {
   }
 
   Future<void> _initModelDownloadTaskState() async {
-    await Future.delayed(const Duration(milliseconds: 17));
+    await 17.msLater;
     final availableFiles = [...chatWeights.q, ...roleplayWeights.q];
     final urlFmt = "${downloadSource.q.prefix}%s${downloadSource.q.suffix}";
 

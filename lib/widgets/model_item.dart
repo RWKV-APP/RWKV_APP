@@ -12,6 +12,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
@@ -174,7 +175,7 @@ class ModelItem extends ConsumerWidget {
     pop();
 
     for (var i = 0; i < 3; i++) {
-      Future.delayed(Duration(milliseconds: 500 * i)).then((_) {
+      (500 * i).msLater.then((_) {
         P.rwkv.send(GetSupportedBatchSizes(modelID: modelID));
       });
     }

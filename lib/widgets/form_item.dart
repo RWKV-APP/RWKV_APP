@@ -69,7 +69,7 @@ class FormItem extends ConsumerWidget {
           children: [
             Row(
               children: [
-                if (icon != null) icon!,
+                ?icon,
                 if (icon != null) 8.w,
                 Expanded(
                   flex: 5,
@@ -101,7 +101,7 @@ class FormItem extends ConsumerWidget {
                       textAlign: TextAlign.right,
                     ),
                   ),
-                if (infoWidget != null) infoWidget!,
+                ?infoWidget,
                 if (!showArrow && infoText != null) 4.w,
                 ?trailing,
                 if (showArrow) 8.w,
@@ -111,7 +111,7 @@ class FormItem extends ConsumerWidget {
                   ),
               ],
             ),
-            if (bottom != null) bottom!,
+            ?bottom,
           ],
         ),
       ),

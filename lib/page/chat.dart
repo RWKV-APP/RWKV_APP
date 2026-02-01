@@ -8,6 +8,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
@@ -34,7 +35,7 @@ class _PageChatState extends State<PageChat> {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         final loaded = P.rwkv.latestModel.q != null;
         if (!loaded) {
-          await Future.delayed(const Duration(milliseconds: 200));
+          await 200.msLater;
           ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
         }
       });

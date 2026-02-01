@@ -22,7 +22,7 @@ extension $Device on _Device {
       this.memUsed.q = memUsed;
       this.memFree.q = memFree;
     } else {
-      await Future.delayed(const Duration(milliseconds: 200));
+      await 200.msLater;
       final result = await compute((message) async {
         final free = Platform.isAndroid || Platform.isLinux ? _getLinuxAvailableMemory() : SysInfo.getFreePhysicalMemory();
         final total = SysInfo.getTotalPhysicalMemory();

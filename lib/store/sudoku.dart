@@ -490,7 +490,7 @@ extension _$Sudoku on _Sudoku {
 
       running.q = false;
 
-      Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+      1000.msLater.then((_) {
         logs.q = [...logs.q, "✅ stop token got\n\n\n"];
         final c = scrollController;
         c.animateTo(

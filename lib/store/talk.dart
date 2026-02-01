@@ -119,7 +119,7 @@ extension _$Talk on _Talk {
   Future<void> _showModelSelector() async {
     if (P.app.pageKey.q != .talk) return;
 
-    await Future.delayed(500.ms);
+    await 500.msLater;
 
     if (P.app.pageKey.q == .talk) {
       ModelSelector.show(preferredDemoType: .tts);
@@ -393,7 +393,7 @@ extension $Talk on _Talk {
 
     if (intonationShown.q) {
       P.chat.focusNode.unfocus();
-      await Future.delayed(300.ms);
+      await 300.msLater;
       P.chat.focusNode.requestFocus();
     } else {
       if (P.chat.focusNode.hasFocus) P.chat.focusNode.unfocus();
@@ -508,7 +508,7 @@ extension $Talk on _Talk {
     P.msg._syncMsg(id, msg);
     P.msg.msgNode.q.rootAdd(MsgNode(id));
 
-    Future.delayed(34.ms).then((_) {
+    34.msLater.then((_) {
       P.chat.scrollToBottom();
     });
 
@@ -644,7 +644,7 @@ outputWavPath: $outputWavPath""");
       // await Future.delayed(Duration(milliseconds: 500));
       for (int pos = 0; pos < wave.length; pos += step) {
         audioStream.push(wave.sublist(pos, math.min(wave.length, pos + step)));
-        await Future.delayed(noteDuration ~/ pushFreq);
+        await (noteDuration.inMilliseconds ~/ pushFreq).msLater;
       }
     }
   }

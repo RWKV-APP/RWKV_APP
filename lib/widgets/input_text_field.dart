@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
@@ -132,7 +133,7 @@ class InputTextField extends ConsumerWidget {
 
   void _onTap() async {
     qq;
-    await Future.delayed(const Duration(milliseconds: 300));
+    await 300.msLater;
     await P.chat.scrollToBottom();
   }
 

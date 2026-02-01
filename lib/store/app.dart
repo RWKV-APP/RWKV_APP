@@ -115,7 +115,7 @@ extension $App on _App {
       return;
     }
 
-    await Future.delayed(const Duration(milliseconds: 17));
+    await 17.msLater;
 
     final allConfig = await _getRemoteConfig();
     if (allConfig == null) {
@@ -144,7 +144,7 @@ extension $App on _App {
   }
 
   Future<void> customThemeChanged() async {
-    await Future.delayed(const Duration(milliseconds: 100));
+    await 100.msLater;
     if (customTheme.q.light) {
       _statusBarToLightMode();
     } else {
@@ -320,7 +320,7 @@ extension _$App on _App {
 
     if (kDebugMode) {
       final context = getContext();
-      Future.delayed(const Duration(seconds: 1), () {
+      1000.msLater.then((_) {
         if (context != null && context.mounted) {
           FocusScope.of(context).unfocus();
         }
@@ -340,7 +340,7 @@ extension _$App on _App {
       case .sudoku:
       case .tts:
       case .see:
-        Future.delayed(latency.ms).then((_) {
+        latency.msLater.then((_) {
           final loaded = P.rwkv.loaded.q;
           if (loaded) return;
           if (!Args.disableAutoShowOfWeightsPanel) ModelSelector.show();
@@ -374,17 +374,17 @@ extension _$App on _App {
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
 
     if (Args.autoShowTranslator) {
-      Future.delayed(const Duration(milliseconds: 1500)).then((_) {
+      1500.msLater.then((_) {
         push(.translator);
       });
     }
 
-    Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+    1000.msLater.then((_) {
       syncConfig();
     });
 
     await Highlighter.initialize(['dart', 'yaml', 'sql', 'python', "javascript"]);
-    Future.delayed(const Duration(milliseconds: 1000)).then((_) async {
+    1000.msLater.then((_) async {
       qqr("load light theme");
       final theme = await HighlighterTheme.loadDarkTheme();
       Highlighter(
@@ -393,7 +393,7 @@ extension _$App on _App {
       );
     });
 
-    Future.delayed(const Duration(milliseconds: 2500)).then((_) {
+    2500.msLater.then((_) {
       checkUpdates();
     });
   }
@@ -456,7 +456,7 @@ extension _$App on _App {
     final matchedLocation = currentConfiguration.last.matchedLocation;
     final pageKey = PageKey.values.byName(matchedLocation.replaceAll("/", ""));
     qqr("navigate to page: ${pageKey.toString().split(".").last}");
-    Future.delayed(const Duration(milliseconds: 0)).then((_) {
+    0.msLater.then((_) {
       _pageKey.q = pageKey;
     });
   }
@@ -572,7 +572,7 @@ extension _$App on _App {
   Future<VersionInfo?> _getLatestVersionInfo() async {
     qr;
 
-    await Future.delayed(const Duration(milliseconds: 500));
+    await 500.msLater;
 
     // 根据运行环境获取对应的 keys
     final keys = await _getDistributionKeysForPlatform();

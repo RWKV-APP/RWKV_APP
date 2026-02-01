@@ -171,7 +171,7 @@ extension $See on _See {
   Future<void> _tryLoadLastWorldModel() async {
     if (P.app.pageKey.q != .see) return;
 
-    await Future.delayed(500.ms);
+    await 500.msLater;
 
     final last = P.preference.lastWorldModel.q;
     if (last == null) {
@@ -255,11 +255,11 @@ extension $See on _See {
   }
 
   Future<void> autoTest() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await 2000.msLater;
     push(.see);
-    await Future.delayed(const Duration(seconds: 2));
+    await 2000.msLater;
     onSuggestionTap("What is this image?");
-    await Future.delayed(100.ms);
+    await 100.msLater;
     await selectImage();
     // await Future.delayed(1000.ms);
     // P.chat.onSendButtonPressed(preferredDemoType: .see);
@@ -331,12 +331,12 @@ extension _$See on _See {
     } else {
       if (hasAtLeastOneImage) {
         P.msg._clear();
-        await Future.delayed(10.ms);
+        await 10.msLater;
         P.rwkv.clearStates();
-        await Future.delayed(10.ms);
+        await 10.msLater;
       }
       await P.chat.send("", type: MessageType.userImage, imageUrl: waitingImagePath);
-      await Future.delayed(50.ms);
+      await 50.msLater;
       final finalTextToSend = "<image>$waitingImagePath</image>" + waitingText.trim();
       await P.chat.send(finalTextToSend);
     }

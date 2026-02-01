@@ -557,11 +557,11 @@ extension $RWKV on _RWKV {
         }
 
         /// NOTE: downstream requires this delay
-        Future.delayed(500.ms).then((_) {
+        500.msLater.then((_) {
           _messagesController.add(from_rwkv.GenerateStop());
         });
       } catch (e) {
-        Future.delayed(500.ms).then((_) {
+        500.msLater.then((_) {
           _messagesController.add(from_rwkv.GenerateStop(error: e.toString()));
         });
       } finally {
@@ -710,7 +710,7 @@ extension $RWKV on _RWKV {
       send(to_rwkv.GetResponseBufferIds(modelID: modelID));
       send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
       send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
-      await Future.delayed(const Duration(milliseconds: 1000));
+      await 1000.msLater;
       send(to_rwkv.GetIsGenerating(modelID: modelID));
     });
   }
@@ -982,7 +982,7 @@ extension $RWKV on _RWKV {
 
     if (!batchAllowed) {
       Alert.info(S.current.this_model_does_not_support_batch_inference);
-      await Future.delayed(const Duration(milliseconds: 500));
+      await 500.msLater;
       ModelSelector.show();
       return;
     }
@@ -1179,7 +1179,7 @@ extension _$RWKV on _RWKV {
 
   void _syncMaxBatchCount() {
     for (final delay in [500.ms, 1000.ms, 2000.ms]) {
-      Future.delayed(delay).then((_) {
+      delay.inMilliseconds.msLater.then((_) {
         final modelID = findModelIDByWeightType(weightType: .chat);
         if (modelID != null) send(to_rwkv.GetSupportedBatchSizes(modelID: modelID));
       });
@@ -1194,7 +1194,7 @@ extension _$RWKV on _RWKV {
     if (oldModelSize >= newModelSize) return;
     if (P.app.pageKey.q != .chat) return;
     if (P.msg.list.q.isEmpty) return;
-    await Future.delayed(2000.ms);
+    await 2000.msLater;
     Alert.info(S.current.model_size_increased_please_open_a_new_conversation);
   }
 

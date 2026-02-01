@@ -111,7 +111,7 @@ extension _$Translator on _Translator {
 
     final isGenerating = this.isGenerating.q;
     if (isGenerating) return;
-    await Future.delayed(const Duration(milliseconds: 100));
+    await 100.msLater;
     final isGenerating2 = this.isGenerating.q;
     if (isGenerating2) return;
     final key = _selectNextTaskKey();
@@ -224,14 +224,14 @@ extension _$Translator on _Translator {
         P.app.demoType.q = .chat;
         final currentModel = P.rwkv.latestModel.q;
         if (currentModel == null) {
-          Future.delayed(const Duration(milliseconds: 500)).then((_) {
+          500.msLater.then((_) {
             ModelSelector.show();
           });
         } else {
           if (!currentModel.tags.contains("translate")) {
             await P.rwkv._releaseAllModels();
             Alert.info(S.current.please_load_model_first);
-            Future.delayed(const Duration(milliseconds: 500)).then((_) {
+            500.msLater.then((_) {
               ModelSelector.show();
             });
             return;
@@ -349,7 +349,7 @@ extension _$Translator on _Translator {
 
     final nextKey = _selectNextTaskKey();
     if (nextKey == null) return;
-    Future.delayed(const Duration(milliseconds: 0)).then((_) => _startNewTask(nextKey));
+    0.msLater.then((_) => _startNewTask(nextKey));
   }
 
   String? _selectNextTaskKey() {

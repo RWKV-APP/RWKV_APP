@@ -12,6 +12,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/router/router.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/widgets/debugger.dart';
@@ -30,7 +31,7 @@ void main() async {
     await _sentryAppRunner();
   }
   // runApp(const _TestApp());
-  await Future.delayed(Args.nativeSplashPreserveDurationInMS.ms);
+  await Args.nativeSplashPreserveDurationInMS.msLater;
   FlutterNativeSplash.remove();
 }
 
@@ -152,7 +153,7 @@ class _App extends ConsumerWidget {
         child: Stack(
           children: [
             Positioned(left: 0, right: 0, top: 0, bottom: 0, child: Container(color: customTheme.scaffold)),
-            if (child != null) child,
+            ?child,
             const FloatingPerformaceInfo(),
             const Alert(),
             if (kDebugMode) const Debugger(),

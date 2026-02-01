@@ -17,6 +17,7 @@ import 'package:zone/model/file_info.dart';
 import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
 
 class PageWeightManager extends ConsumerWidget {
@@ -435,7 +436,7 @@ class _BodyState extends ConsumerState<_Body> {
 
   Future<void> _onRefresh() async {
     await Future.wait([
-      Future.delayed(500.ms),
+      500.msLater,
       P.fileManager.checkLocal(),
     ]);
 
@@ -1049,7 +1050,7 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
     if (_lastWatchedWeights != currentWeights) {
       _lastWatchedWeights = currentWeights;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(const Duration(milliseconds: 1000));
+        await 1000.msLater;
         if (mounted) {
           _loadFiles();
         }

@@ -172,7 +172,7 @@ extension _$Othello on _Othello {
     P.app.paddingRight.lv(_syncLayout, fireImmediately: true);
 
     if (Config.firstPage == PageKey.othello.name) {
-      Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+      1000.msLater.then((_) {
         P.rwkv.loadOthello();
       });
     }
@@ -194,7 +194,7 @@ extension _$Othello on _Othello {
     }
 
     for (var i = 0; i < 1000; i++) {
-      await Future.delayed(const Duration(milliseconds: 10));
+      await 10.msLater;
       final thinking = P.rwkv.generating.q;
       if (!thinking) break;
     }
@@ -281,7 +281,7 @@ extension _$Othello on _Othello {
         break;
     }
 
-    Future.delayed(const Duration(milliseconds: 200)).then((_) {
+    200.msLater.then((_) {
       receivedScrollController.jumpTo(receivedScrollController.position.maxScrollExtent);
     });
   }
