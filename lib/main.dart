@@ -19,20 +19,6 @@ import 'package:zone/widgets/debugger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:zone/widgets/floating_performace_info.dart';
 
-/// 当用户选择「系统字体」时，使用同时支持拉丁与 CJK 的字体作为主字体，
-/// 避免拉丁用主字体、中文用 fallback 导致同一字号下行高不一致。
-String? _defaultFontWhenSystem() {
-  switch (defaultTargetPlatform) {
-    case TargetPlatform.iOS:
-    case TargetPlatform.macOS:
-      return 'PingFang SC';
-    case TargetPlatform.windows:
-      return 'Microsoft YaHei';
-    default:
-      return null; // Android / Linux 保持平台默认，CJK 仍走 fallback
-  }
-}
-
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -130,9 +116,7 @@ class _App extends ConsumerWidget {
     final appBarTheme = AppBarTheme(scrolledUnderElevation: 0, backgroundColor: customTheme.scaffold);
     final preferredUIFont = ref.watch(P.preference.preferredUIFont);
     final _ = ref.watch(P.preference.preferredMonospaceFont);
-    final effectiveFont = (preferredUIFont == null || preferredUIFont.isEmpty || preferredUIFont == 'System')
-        ? _defaultFontWhenSystem()
-        : preferredUIFont;
+    final effectiveFont = (preferredUIFont == null || preferredUIFont.isEmpty || preferredUIFont == 'System') ? null : preferredUIFont;
 
     final themeData = ThemeData(
       fontFamily: effectiveFont,
