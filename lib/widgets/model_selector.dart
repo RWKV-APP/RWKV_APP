@@ -534,7 +534,12 @@ class _LocalSwitcher extends ConsumerWidget {
           spacing: 4,
           children: options.map((e) {
             final isSelected = e == localPthFileOption;
-            final inUse = usingPth == true ? e == LocalPthFileOption.localPthFiles : e == LocalPthFileOption.filesInConfig;
+
+            final inUse = switch (usingPth) {
+              true => e == LocalPthFileOption.localPthFiles,
+              false => e == LocalPthFileOption.filesInConfig,
+              null => false,
+            };
 
             late final Color textColor;
             late final Color iconColor;
@@ -572,7 +577,7 @@ class _LocalSwitcher extends ConsumerWidget {
                       Icon(
                         Icons.check,
                         color: iconColor,
-                        size: 14,
+                        size: 28,
                       ),
                     ],
                   ],
