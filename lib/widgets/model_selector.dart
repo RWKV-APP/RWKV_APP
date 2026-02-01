@@ -685,7 +685,6 @@ class _LocalPthEmpty extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
 
     return Container(
@@ -833,7 +832,10 @@ class _LocalPthFolder extends ConsumerWidget {
                         ),
                         IconButton(
                           onPressed: () => P.pth.onDeleteFileClicked(folder, e),
-                          icon: const Icon(Icons.delete_forever_outlined),
+                          icon: Icon(
+                            Icons.delete_forever_outlined,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                           tooltip: S.current.delete,
                         ),
                       ],

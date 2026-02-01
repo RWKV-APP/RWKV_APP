@@ -447,7 +447,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                             padding: const .all(5),
                             child: Icon(
                               Icons.delete_forever_outlined,
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.error,
                             ),
                           ),
                         ),
@@ -801,7 +801,10 @@ class _ExpandedFileItem extends ConsumerWidget {
                   }
                 },
                 visualDensity: .compact,
-                icon: const Icon(Icons.delete_forever_outlined),
+                icon: Icon(
+                  Icons.delete_forever_outlined,
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
           ],
         ),

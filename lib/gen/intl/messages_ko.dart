@@ -250,7 +250,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "여기를 클릭하여 새 채팅 시작",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "+ 를 클릭하여 로컬 폴더 추가",
+      "+ 를 클릭하여 로컬 폴더를 추가하세요. RWKV Chat 이 해당 폴더의 .pth 파일을 스캔하여 로드 가능한 가중치로 표시합니다",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "+ 를 클릭하여 로컬 폴더 추가",
@@ -647,7 +647,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_latest_version_info": MessageLookupByLibrary.simpleMessage(
       "최신 버전 정보가 없습니다",
     ),
-    "no_local_folders": MessageLookupByLibrary.simpleMessage("로컬 폴더 없음"),
+    "no_local_folders": MessageLookupByLibrary.simpleMessage(
+      ".pth 파일이 포함된 로컬 폴더를 아직 추가하지 않았습니다",
+    ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
       "로드된 로컬 .pth 파일이 없습니다",
     ),

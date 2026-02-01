@@ -301,7 +301,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нажмите здесь, чтобы начать новый чат",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "Нажмите +, чтобы добавить локальную папку",
+      "Нажмите +, чтобы добавить локальную папку. RWKV Chat просканирует папку на наличие .pth файлов и покажет их как загружаемые веса",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "Нажмите +, чтобы добавить локальные папки",
@@ -799,7 +799,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нет информации о последней версии",
     ),
     "no_local_folders": MessageLookupByLibrary.simpleMessage(
-      "Нет локальных папок",
+      "Вы ещё не добавили локальную папку с файлами .pth",
     ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
       "Локальные .pth файлы ещё не загружены",

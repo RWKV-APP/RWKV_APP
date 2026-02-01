@@ -239,7 +239,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "点击此处开始新聊天",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "点击 + 添加本地文件夹",
+      "点击 + 添加本地文件夹, RWKV Chat 会扫描该文件夹下的 .pth 文件, 并将其作为可加载的权重",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "点击 + 号添加更多本地文件夹",
@@ -592,7 +592,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "ZIP 文件中未找到有效的权重文件",
     ),
     "no_latest_version_info": MessageLookupByLibrary.simpleMessage("没有最新版本信息"),
-    "no_local_folders": MessageLookupByLibrary.simpleMessage("没有本地文件夹"),
+    "no_local_folders": MessageLookupByLibrary.simpleMessage(
+      "你还没有添加包含有 .pth 文件的本地文件夹",
+    ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
       "暂无已加载的本地 .pth 文件",
     ),

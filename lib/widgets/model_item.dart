@@ -366,7 +366,6 @@ class _Delete extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final primary = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: _onTap,
       child: Container(
@@ -380,7 +379,7 @@ class _Delete extends ConsumerWidget {
         padding: const .all(5),
         child: Icon(
           Icons.delete_forever_outlined,
-          color: primary,
+          color: Theme.of(context).colorScheme.error,
         ),
       ),
     );

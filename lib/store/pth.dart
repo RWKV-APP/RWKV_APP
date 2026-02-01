@@ -176,6 +176,7 @@ extension $Pth on _Pth {
       context: getContext()!,
       title: S.current.confirm_delete_file_title,
       message: S.current.confirm_delete_file_message,
+      isDestructiveAction: true,
     );
     if (res != OkCancelResult.ok) return;
     if (P.rwkv.loadedModels.q.keys.contains(file)) {

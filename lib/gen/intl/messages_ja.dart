@@ -250,7 +250,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ここをクリックして新しいチャットを開始",
     ),
     "click_plus_add_local_folder": MessageLookupByLibrary.simpleMessage(
-      "+ をクリックしてローカルフォルダを追加",
+      "+ をクリックしてローカルフォルダを追加。RWKV Chat がフォルダ内の .pth ファイルをスキャンし、読み込み可能な重みとして表示します",
     ),
     "click_plus_to_add_more_folders": MessageLookupByLibrary.simpleMessage(
       "+ をクリックしてローカルフォルダを追加",
@@ -651,7 +651,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_latest_version_info": MessageLookupByLibrary.simpleMessage(
       "最新バージョン情報がありません",
     ),
-    "no_local_folders": MessageLookupByLibrary.simpleMessage("ローカルフォルダがありません"),
+    "no_local_folders": MessageLookupByLibrary.simpleMessage(
+      ".pth ファイルを含むローカルフォルダをまだ追加していません",
+    ),
     "no_local_pth_loaded_yet": MessageLookupByLibrary.simpleMessage(
       "読み込み済みのローカル .pth ファイルはありません",
     ),
