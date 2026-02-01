@@ -55,7 +55,7 @@ class _Weights {
   late final activeDownloadGroupIds = qs<Set<String>>({});
 
   /// 获取所有支持的NPU芯片列表（从所有模型的socLimitations中提取）
-  List<String> getSupportedNpuChips() {
+  List<String> get getSupportedNpuChips {
     final config = P.app._config.q;
     if (config == null) return [];
 

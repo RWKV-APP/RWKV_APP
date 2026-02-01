@@ -304,13 +304,11 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
-    final supportedNpus = P.weights.getSupportedNpuChips();
+    final supportedNpus = P.weights.getSupportedNpuChips;
     final currentSocName = ref.watch(P.rwkv.socName);
     final frontendSocName = ref.watch(P.rwkv.frontendSocName);
 
-    if (supportedNpus.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (supportedNpus.isEmpty) return const SizedBox.shrink();
 
     final hasValidSoc = currentSocName.isNotEmpty && currentSocName != "Unknown";
 
