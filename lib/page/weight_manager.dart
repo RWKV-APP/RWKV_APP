@@ -470,7 +470,7 @@ class _CustomDirectoryTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final customDir = ref.watch(P.preference.customModelsDir);
     final documentsDir = ref.watch(P.app.effectiveDocumentsDir)?.path;
-    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : "";
+    final defaultDir = documentsDir != null ? documentsDir + Platform.pathSeparator + Config.modelsDirName : "";
     final s = S.of(context);
 
     final finalDirString = customDir ?? defaultDir;
