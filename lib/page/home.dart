@@ -75,6 +75,17 @@ class _PageHomeState extends ConsumerState<PageHome> {
 
     if (maxWidth < 0) maxWidth = double.infinity;
 
+    final widgets = [
+      const _ChatButton(),
+      const _CompletionButton(),
+      const _VisualButton(),
+      const _TTSButton(),
+      const _RolePlayButton(),
+      const _TranslatorButton(),
+      const _NekoButton(),
+      const _BenchmarkButton(),
+    ];
+
     return Scaffold(
       body: GradientBackground(
         child: Stack(
@@ -89,7 +100,7 @@ class _PageHomeState extends ConsumerState<PageHome> {
                   right: containerPaddingHorizontal,
                   bottom: 48,
                 ),
-                physics: const BouncingScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: MasonryGridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -97,16 +108,6 @@ class _PageHomeState extends ConsumerState<PageHome> {
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
                   itemBuilder: (context, index) {
-                    final widgets = [
-                      const _ChatButton(),
-                      const _CompletionButton(),
-                      const _VisualButton(),
-                      const _TTSButton(),
-                      const _RolePlayButton(),
-                      const _TranslatorButton(),
-                      const _NekoButton(),
-                      const _BenchmarkButton(),
-                    ];
                     return ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: maxWidth),
                       child: widgets[index],
