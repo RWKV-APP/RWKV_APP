@@ -355,7 +355,7 @@ extension $Preference on _Preference {
     } else {
       await sp.setString("halo_state.customModelsDir", path);
     }
-    P.fileManager.checkLocal();
+    P.weights.checkLocal();
   }
 
   void setWeightsMigrationCompleted(bool completed) async {

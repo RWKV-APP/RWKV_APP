@@ -186,16 +186,16 @@ extension $See on _See {
       final modelFileName = last["modelFileName"];
       final worldType = WorldType.values.byName(worldTypeString);
 
-      final availableModels = P.fileManager.seeWeights.q;
+      final availableModels = P.weights.seeWeights.q;
       final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
 
       final encoderFileKey = fileInfos.firstWhere((e) => e.isEncoder);
       final modelFileKey = fileInfos.firstWhere((e) => !e.isEncoder && e.fileName == modelFileName);
       final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
 
-      final encoderLocalFile = P.fileManager.locals(encoderFileKey).q;
-      final modelLocalFile = P.fileManager.locals(modelFileKey).q;
-      final adapterLocalFile = adapterFileKey != null ? P.fileManager.locals(adapterFileKey).q : null;
+      final encoderLocalFile = P.weights.locals(encoderFileKey).q;
+      final modelLocalFile = P.weights.locals(modelFileKey).q;
+      final adapterLocalFile = adapterFileKey != null ? P.weights.locals(adapterFileKey).q : null;
 
       if (!encoderLocalFile.hasFile || !modelLocalFile.hasFile || (adapterLocalFile != null && !adapterLocalFile.hasFile)) {
         if (P.app.pageKey.q == .see) {

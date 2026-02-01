@@ -21,12 +21,12 @@ class Settings extends ConsumerWidget {
   static final _shown = qs(false);
 
   static String _getTotalUsage(WidgetRef ref) {
-    final chatWeights = P.fileManager.chatWeights.q;
-    final ttsWeights = P.fileManager.ttsWeights.q;
-    final roleplayWeights = P.fileManager.roleplayWeights.q;
-    final seeWeights = P.fileManager.seeWeights.q;
-    final sudokuWeights = P.fileManager.sudokuWeights.q;
-    final othelloWeights = P.fileManager.othelloWeights.q;
+    final chatWeights = P.weights.chatWeights.q;
+    final ttsWeights = P.weights.ttsWeights.q;
+    final roleplayWeights = P.weights.roleplayWeights.q;
+    final seeWeights = P.weights.seeWeights.q;
+    final sudokuWeights = P.weights.sudokuWeights.q;
+    final othelloWeights = P.weights.othelloWeights.q;
 
     final allWeights = [
       ...chatWeights,

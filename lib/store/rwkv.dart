@@ -370,7 +370,7 @@ extension $RWKVLoad on _RWKV {
     if (fileInfo.fromPthFile) {
       modelPath = fileInfo.raw;
     } else {
-      final localFile = P.fileManager.locals(fileInfo).q;
+      final localFile = P.weights.locals(fileInfo).q;
       modelPath = localFile.targetPath;
     }
 

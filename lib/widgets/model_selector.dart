@@ -30,9 +30,10 @@ import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
 
 class ModelSelector extends ConsumerWidget {
-  final bool rolePlayOnly;
-  final bool showNeko;
-  final ScrollController scrollController;
+  final bool _rolePlayOnly;
+  final bool _showNeko;
+  final ScrollController _scrollController;
+
   static DemoType? _preferredDemoType;
 
   static Future<void> show({
@@ -42,21 +43,21 @@ class ModelSelector extends ConsumerWidget {
   }) async {
     if (showNeko) preferredDemoType = .chat;
 
-    if (P.fileManager.modelSelectorShown.q) return;
-    P.fileManager.modelSelectorShown.q = true;
+    if (P.weights.modelSelectorShown.q) return;
+    P.weights.modelSelectorShown.q = true;
 
     final context = getContext();
     if (context == null) {
-      P.fileManager.modelSelectorShown.q = false;
+      P.weights.modelSelectorShown.q = false;
       return;
     }
 
     // Fire and forget model updates
     (() async {
-      P.fileManager.checkLocal();
+      P.weights.checkLocal();
       await P.app.syncConfig();
-      await P.fileManager.syncAvailableModels();
-      P.fileManager.checkLocal();
+      await P.weights.syncAvailableModels();
+      P.weights.checkLocal();
     })();
 
     if (P.app.pageKey.q == .talk) {
@@ -72,8 +73,8 @@ class ModelSelector extends ConsumerWidget {
     }
 
     final usingPth = P.rwkv.usingPth.q;
-    if (usingPth == true) P.fileManager.localPthFileOption.q = LocalPthFileOption.localPthFiles;
-    if (usingPth != true) P.fileManager.localPthFileOption.q = LocalPthFileOption.filesInConfig;
+    if (usingPth == true) P.weights.localPthFileOption.q = LocalPthFileOption.localPthFiles;
+    if (usingPth != true) P.weights.localPthFileOption.q = LocalPthFileOption.filesInConfig;
 
     await showModalBottomSheet(
       isScrollControlled: true,
@@ -83,7 +84,7 @@ class ModelSelector extends ConsumerWidget {
         maxChildSize: .9,
         expand: false,
         snap: false,
-        builder: (context, scrollController) => ModelSelector(
+        builder: (context, scrollController) => ModelSelector._(
           scrollController: scrollController,
           showNeko: showNeko,
           rolePlayOnly: rolePlayOnly,
@@ -93,16 +94,22 @@ class ModelSelector extends ConsumerWidget {
 
     _preferredDemoType = null;
 
-    P.fileManager.modelSelectorShown.q = false;
+    P.weights.modelSelectorShown.q = false;
   }
 
-  const ModelSelector({super.key, required this.scrollController, required this.showNeko, required this.rolePlayOnly});
+  const ModelSelector._({
+    required ScrollController scrollController,
+    required bool showNeko,
+    required bool rolePlayOnly,
+  }) : _showNeko = showNeko,
+       _rolePlayOnly = rolePlayOnly,
+       _scrollController = scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final isDesktop = ref.watch(P.app.isDesktop);
-    final localPthFileOption = ref.watch(P.fileManager.localPthFileOption);
+    final localPthFileOption = ref.watch(P.weights.localPthFileOption);
     final pageKey = ref.watch(P.app.pageKey);
 
     return ClipRRect(
@@ -111,13 +118,13 @@ class ModelSelector extends ConsumerWidget {
         margin: const .only(top: 12),
         child: ListView(
           padding: .only(left: isDesktop ? 12 : 8, right: isDesktop ? 12 : 8),
-          controller: scrollController,
+          controller: _scrollController,
           children: [
             const _Title(),
             if (isDesktop && pageKey == .chat) const _LocalSwitcher(),
-            if (localPthFileOption == LocalPthFileOption.filesInConfig) const _Options(),
-            if (localPthFileOption == LocalPthFileOption.filesInConfig) _ModelList(showNeko: showNeko, rolePlayOnly: rolePlayOnly),
-            if (localPthFileOption == LocalPthFileOption.localPthFiles) const _LocalOptions(),
+            if (localPthFileOption == .filesInConfig) const _Options(),
+            if (localPthFileOption == .filesInConfig) _ModelList(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
+            if (localPthFileOption == .localPthFiles) const _LocalOptions(),
             16.h,
             paddingBottom.h,
           ],
@@ -182,21 +189,21 @@ class _ModelList extends ConsumerWidget {
     final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
 
     Set<FileInfo> availableModels = switch (preferredDemoType) {
-      .see => ref.watch(P.fileManager.seeWeights),
-      .tts => ref.watch(P.fileManager.ttsWeights),
-      .chat => ref.watch(P.fileManager.chatWeights),
-      .sudoku => ref.watch(P.fileManager.sudokuWeights),
-      .othello => ref.watch(P.fileManager.othelloWeights),
-      .fifthteenPuzzle => ref.watch(P.fileManager.sudokuWeights),
+      .see => ref.watch(P.weights.seeWeights),
+      .tts => ref.watch(P.weights.ttsWeights),
+      .chat => ref.watch(P.weights.chatWeights),
+      .sudoku => ref.watch(P.weights.sudokuWeights),
+      .othello => ref.watch(P.weights.othelloWeights),
+      .fifthteenPuzzle => ref.watch(P.weights.sudokuWeights),
     };
 
-    final ttsCores = ref.watch(P.fileManager.ttsCores);
+    final ttsCores = ref.watch(P.weights.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
 
     if (rolePlayOnly && pageKey == .rolePlaying) {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
-      availableModels.addAll(P.fileManager.roleplayWeights.q);
+      availableModels.addAll(P.weights.roleplayWeights.q);
       return Column(
         crossAxisAlignment: .stretch,
         children: availableModels.map((e) => RolePlayItem(file: e)).toList(),
@@ -297,7 +304,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
-    final supportedNpus = P.fileManager.getSupportedNpuChips();
+    final supportedNpus = P.weights.getSupportedNpuChips();
     final currentSocName = ref.watch(P.rwkv.socName);
     final frontendSocName = ref.watch(P.rwkv.frontendSocName);
 
@@ -441,7 +448,7 @@ class _DownloadSource extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentSource = ref.watch(P.fileManager.downloadSource);
+    final currentSource = ref.watch(P.weights.downloadSource);
     final primary = Theme.of(context).colorScheme.primary;
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
@@ -469,7 +476,7 @@ class _DownloadSource extends ConsumerWidget {
                 }
                 return GestureDetector(
                   onTap: () {
-                    P.fileManager.downloadSource.q = e;
+                    P.weights.downloadSource.q = e;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -517,7 +524,7 @@ class _LocalSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final localPthFileOption = ref.watch(P.fileManager.localPthFileOption);
+    final localPthFileOption = ref.watch(P.weights.localPthFileOption);
     final primary = Theme.of(context).colorScheme.primary;
     final options = LocalPthFileOption.values;
     final qw = ref.watch(P.app.qw);
@@ -557,7 +564,7 @@ class _LocalSwitcher extends ConsumerWidget {
 
             return GD(
               onTap: () {
-                P.fileManager.localPthFileOption.q = e;
+                P.weights.localPthFileOption.q = e;
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -792,8 +799,8 @@ class _LocalOptions extends ConsumerWidget {
               icon: const Icon(Icons.info_outline),
               iconSize: 14,
               style: ButtonStyle(
-                minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-                padding: WidgetStateProperty.all(.zero),
+                minimumSize: .all(const Size(16, 16)),
+                padding: .all(.zero),
               ),
             ),
           ],
@@ -843,7 +850,7 @@ class _LocalOptions extends ConsumerWidget {
         ],
         FilledButton(
           onPressed: () async {
-            final fileInfo = await P.fileManager.pickLocalPthFile();
+            final fileInfo = await P.weights.pickLocalPthFile();
             if (fileInfo == null) return;
             Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
             await 1000.msLater;

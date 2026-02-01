@@ -240,12 +240,12 @@ class FileInfo extends Equatable {
 
   WeightType? get weightType => switch (fileType) {
     FileType.weights => () {
-      if (P.fileManager.chatWeights.q.contains(this)) return WeightType.chat;
-      if (P.fileManager.seeWeights.q.contains(this)) return WeightType.see;
-      if (P.fileManager.ttsWeights.q.contains(this)) return WeightType.tts;
-      if (P.fileManager.sudokuWeights.q.contains(this)) return WeightType.sudoku;
-      if (P.fileManager.othelloWeights.q.contains(this)) return WeightType.othello;
-      if (P.fileManager.roleplayWeights.q.contains(this)) return WeightType.roleplay;
+      if (P.weights.chatWeights.q.contains(this)) return WeightType.chat;
+      if (P.weights.seeWeights.q.contains(this)) return WeightType.see;
+      if (P.weights.ttsWeights.q.contains(this)) return WeightType.tts;
+      if (P.weights.sudokuWeights.q.contains(this)) return WeightType.sudoku;
+      if (P.weights.othelloWeights.q.contains(this)) return WeightType.othello;
+      if (P.weights.roleplayWeights.q.contains(this)) return WeightType.roleplay;
       qqw('unknown weight type: $this');
       return WeightType.chat;
     }(),

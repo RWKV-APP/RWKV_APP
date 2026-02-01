@@ -2,7 +2,7 @@
 
 part of 'p.dart';
 
-class _FileManager {
+class _Weights {
   // ===========================================================================
   // Instance
   // ===========================================================================
@@ -115,7 +115,7 @@ class _FileManager {
 }
 
 /// Public methods
-extension $FileManager on _FileManager {
+extension $Weights on _Weights {
   Future<void> syncAvailableModels() async {
     qq;
     final config = P.app._config.q;
@@ -989,7 +989,7 @@ extension $FileManager on _FileManager {
 }
 
 /// Private methods
-extension _$FileManager on _FileManager {
+extension _$Weights on _Weights {
   Future<void> _init() async {
     try {
       await syncAvailableModels();

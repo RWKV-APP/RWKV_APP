@@ -196,10 +196,10 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         data: OutlinedButtonThemeData(
           style: ButtonStyle(
             visualDensity: .compact,
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 12)),
-            padding: WidgetStateProperty.all(const .symmetric(horizontal: 12, vertical: 8)),
-            minimumSize: WidgetStateProperty.all(const Size(0, 36)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(12))),
+            textStyle: .all(const TextStyle(fontSize: 12)),
+            padding: .all(const .symmetric(horizontal: 12, vertical: 8)),
+            minimumSize: .all(const Size(0, 36)),
+            shape: .all(RoundedRectangleBorder(borderRadius: .circular(12))),
           ),
         ),
         child: Row(
@@ -257,10 +257,10 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
         data: OutlinedButtonThemeData(
           style: ButtonStyle(
             visualDensity: .compact,
-            textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 12)),
-            padding: WidgetStateProperty.all(const .symmetric(horizontal: 12, vertical: 8)),
-            minimumSize: WidgetStateProperty.all(const Size(0, 36)),
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: .circular(12))),
+            textStyle: .all(const TextStyle(fontSize: 12)),
+            padding: .all(const .symmetric(horizontal: 12, vertical: 8)),
+            minimumSize: .all(const Size(0, 36)),
+            shape: .all(RoundedRectangleBorder(borderRadius: .circular(12))),
           ),
         ),
         child: Row(

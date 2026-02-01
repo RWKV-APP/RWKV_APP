@@ -115,7 +115,7 @@ part "chat.dart";
 part "conversation.dart";
 part "device.dart";
 part "dump.dart";
-part "file_manager.dart";
+part "weights.dart";
 part "guard.dart";
 part "lambada.dart";
 part "msg.dart";
@@ -140,7 +140,7 @@ abstract class P {
   static final conversation = _Conversation();
   static final device = _Device();
   static final dump = _Dump();
-  static final fileManager = _FileManager();
+  static final weights = _Weights();
   static final guard = _Guard();
   static final lambada = _Lambada();
   static final msg = _Msg();
@@ -179,7 +179,7 @@ abstract class P {
       _safeInit(() => rwkv._init(), mark: "rwkv"),
       _safeInit(() => chat._init(), mark: "chat"),
       _safeInit(() => othello._init(), mark: "othello"),
-      _safeInit(() => fileManager._init(), mark: "fileManager"),
+      _safeInit(() => weights._init(), mark: "fileManager"),
       _safeInit(() => device._init(), mark: "device"),
       _safeInit(() => adapter._init(), mark: "adapter"),
       _safeInit(() => see._init(), mark: "see"),

@@ -174,8 +174,8 @@ class _ModelSettings extends ConsumerWidget {
             icon: const Icon(Icons.remove),
             iconSize: 14,
             style: ButtonStyle(
-              minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(.zero),
+              minimumSize: .all(const Size(16, 16)),
+              padding: .all(.zero),
             ),
           ),
         ),
@@ -192,8 +192,8 @@ class _ModelSettings extends ConsumerWidget {
             icon: const Icon(Icons.add),
             iconSize: 14,
             style: ButtonStyle(
-              minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(.zero),
+              minimumSize: .all(const Size(16, 16)),
+              padding: .all(.zero),
             ),
           ),
         ),
@@ -216,8 +216,8 @@ class _ModelSettings extends ConsumerWidget {
             icon: const Icon(Icons.remove),
             iconSize: 14,
             style: ButtonStyle(
-              minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(.zero),
+              minimumSize: .all(const Size(16, 16)),
+              padding: .all(.zero),
             ),
           ),
         ),
@@ -234,8 +234,8 @@ class _ModelSettings extends ConsumerWidget {
             icon: const Icon(Icons.add),
             iconSize: 14,
             style: ButtonStyle(
-              minimumSize: WidgetStateProperty.all(const Size(16, 16)),
-              padding: WidgetStateProperty.all(.zero),
+              minimumSize: .all(const Size(16, 16)),
+              padding: .all(.zero),
             ),
           ),
         ),
