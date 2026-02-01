@@ -1,4 +1,3 @@
-import 'dart:developer' hide log;
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -470,7 +469,7 @@ class _CustomDirectoryTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final customDir = ref.watch(P.preference.customModelsDir);
     final documentsDir = ref.watch(P.app.effectiveDocumentsDir)?.path;
-    final defaultDir = documentsDir != null ? documentsDir + Platform.pathSeparator + Config.modelsDirName : "";
+    final defaultDir = documentsDir != null ? path.join(documentsDir, Config.modelsDirName) : "";
     final s = S.of(context);
 
     final finalDirString = customDir ?? defaultDir;
@@ -895,7 +894,7 @@ class _WeightItem extends ConsumerWidget {
             padding: const .symmetric(horizontal: 4, vertical: 2),
             child: Text(_formatBytes(fileInfo.fileSize)),
           ),
-          Text(local.targetPath.split("/").last),
+          Text(path.basename(local.targetPath)),
         ],
       ),
       trailing: Row(
@@ -1127,7 +1126,7 @@ class _OtherFileItem extends ConsumerWidget {
             ),
             child: Text(_formatBytes(file.fileSize)),
           ),
-          Text(file.filePath.split("/").last),
+          Text(path.basename(file.filePath)),
         ],
       ),
       trailing: IconButton(

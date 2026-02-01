@@ -237,7 +237,7 @@ extension $FileManager on _FileManager {
         qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
         qqw("fileNameExistsInConfig: $fileNameExistsInConfig");
         if (!fileNameExistsInConfig) {
-          qqw("fileName: ${entity.path.split('/').last}");
+          qqw("fileName: ${path.basename(entity.path)}");
           qqw("All config file names: ${getAllConfigFileNames().join("\n")}");
         }
         qqw("needToCheckBecauseTheFileIsBigEnough: $needToCheckBecauseTheFileIsBigEnough");
@@ -351,13 +351,12 @@ extension $FileManager on _FileManager {
     try {
       final customDir = P.preference.customModelsDir.q;
       final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-      final separator = Platform.pathSeparator;
-      final defaultDir = documentsDir != null ? "$documentsDir$separator${Config.modelsDirName}" : null;
-      final path = customDir ?? defaultDir;
-      if (path == null) return;
-      qqr(path);
+      final defaultDir = documentsDir != null ? path.join(documentsDir, Config.modelsDirName) : null;
+      final dirPath = customDir ?? defaultDir;
+      if (dirPath == null) return;
+      qqr(dirPath);
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-        await launchUrl(Uri.directory(path));
+        await launchUrl(Uri.directory(dirPath));
       }
     } catch (e) {
       qqe(e);
@@ -1052,7 +1051,7 @@ extension _$FileManager on _FileManager {
             // Also extract from url if fileName is not available
             if (modelConfig['url'] is String) {
               final url = modelConfig['url'] as String;
-              final fileName = url.split('/').last;
+              final fileName = path.basename(Uri.parse(url).path);
               if (fileName.isNotEmpty && !fileName.contains('/')) {
                 knownFileNames.add(fileName);
               }

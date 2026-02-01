@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
+import 'package:path/path.dart' as path;
 import 'package:zone/store/p.dart';
 
 class BotTtsContent extends ConsumerStatefulWidget {
@@ -230,7 +231,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final file = File(audioUrl);
     if (!await file.exists()) return;
     // final userMessage = ref.watch(P.msg.userMessage);
-    String text = file.path.split("/").last;
+    String text = path.basename(file.path);
     if (text.isEmpty) text = "RWKV TTS";
     await SharePlus.instance.share(
       ShareParams(

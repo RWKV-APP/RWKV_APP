@@ -8,6 +8,7 @@ import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:zone/config.dart';
 import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/world_type.dart';
+import 'package:path/path.dart' as p;
 import 'package:zone/store/p.dart';
 
 @immutable
@@ -118,7 +119,7 @@ class FileInfo extends Equatable {
     final socLimitations = HF.list(json['socLimitations'] ?? []).map((e) => e.toString()).toList();
     final unsupportedSocBrand = HF.list(json['unsupportedSocBrand'] ?? []).map((e) => SocBrand.values.byName(e.toString())).toSet();
     final url = json['url'] as String;
-    final fileName = url.split('/').last;
+    final fileName = p.basename(Uri.parse(url).path);
     return FileInfo(
       name: json['name'],
       fileName: fileName,

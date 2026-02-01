@@ -1,4 +1,4 @@
-import 'dart:io' show File, Platform;
+import 'dart:io' show File;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:gal/gal.dart' show Gal;
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart' show getApplicationCacheDirectory;
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:share_plus/share_plus.dart';
@@ -231,7 +232,7 @@ class _PreviewState extends ConsumerState<_Preview> {
     final bytes = byteData!.buffer.asUint8List();
     final dir = await getApplicationCacheDirectory();
     final milliseconds = HF.milliseconds;
-    final file = File("${dir.path}${Platform.pathSeparator}tmp_$milliseconds.png");
+    final file = File(p.join(dir.path, "tmp_$milliseconds.png"));
     await file.writeAsBytes(bytes);
     return file;
   }

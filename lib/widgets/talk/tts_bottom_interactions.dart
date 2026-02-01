@@ -16,6 +16,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/model/tts_instruction.dart';
+import 'package:path/path.dart' as path;
 import 'package:zone/store/p.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -32,7 +33,7 @@ class TTSBottomInteractions extends ConsumerWidget {
     final selectedLanguage = ref.watch(P.talk.selectedLanguage);
     final primary = Theme.of(context).colorScheme.primary;
     final selectSourceAudioPath = ref.watch(P.talk.selectSourceAudioPath);
-    final sourceWavName = selectSourceAudioPath?.split("/").last;
+    final sourceWavName = selectSourceAudioPath != null ? path.basename(selectSourceAudioPath) : null;
     final pairs = ref.watch(P.talk.spkPairs);
 
     String target = "";

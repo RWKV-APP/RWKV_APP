@@ -9,6 +9,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
+import 'package:path/path.dart' as path;
 import 'package:zone/store/p.dart';
 
 class UserTTSContent extends ConsumerWidget {
@@ -52,7 +53,7 @@ class UserTTSContent extends ConsumerWidget {
     final file = File(audioUrl);
     if (!await file.exists()) return;
     // final userMessage = ref.watch(P.msg.userMessage);
-    String text = file.path.split("/").last;
+    String text = path.basename(file.path);
     if (text.isEmpty) text = "RWKV TTS";
     await SharePlus.instance.share(
       ShareParams(
@@ -113,7 +114,7 @@ class UserTTSContent extends ConsumerWidget {
                         if (msg.ttsSpeakerName == null && msg.ttsSourceAudioPath != null) ...[
                           TextSpan(
                             text: s.imitate_fle(
-                              msg.ttsSourceAudioPath!.split("/").last,
+                              path.basename(msg.ttsSourceAudioPath!),
                             ),
                           ),
                         ],

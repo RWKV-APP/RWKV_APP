@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo/halo.dart';
+import 'package:path/path.dart' as p;
 
 /// 在 zip 文件所在的位置解压缩
 Future<String> unzipInPlace(String modelPath) async {
@@ -13,8 +14,8 @@ Future<String> unzipInPlace(String modelPath) async {
 Future<String> _unzipInPlaceIsolate(String modelPath) async {
   final start = HF.milliseconds;
   qqq("start");
-  final modelDir = modelPath.substring(0, modelPath.lastIndexOf('/'));
-  final modelPathWithoutZip = modelPath.substring(0, modelPath.lastIndexOf('.zip'));
+  final modelDir = p.dirname(modelPath);
+  final modelPathWithoutZip = p.withoutExtension(modelPath);
   final exists = await File(modelPathWithoutZip).exists();
   final folderExists = await Directory(modelPathWithoutZip).exists();
 
@@ -34,18 +35,18 @@ Future<String> _unzipInPlaceIsolate(String modelPath) async {
       continue;
     }
     if (file.isFile) {
-      final outputStream = OutputFileStream(modelDir + '/' + file.name);
+      final outputStream = OutputFileStream(p.join(modelDir, file.name));
 
       file.writeContent(outputStream);
 
       await outputStream.close();
     } else {
-      await Directory(modelDir + '/' + file.name).create(recursive: true);
+      await Directory(p.join(modelDir, file.name)).create(recursive: true);
     }
   }
 
   for (final entity in symbolicLinks) {
-    final link = Link(modelDir + '/' + entity.fullPathName);
+    final link = Link(p.join(modelDir, entity.fullPathName));
     await link.create(entity.symbolicLink!, recursive: true);
   }
 

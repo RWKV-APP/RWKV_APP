@@ -198,7 +198,7 @@ class _Suggestion {
 
   void _persistConfig(dynamic json) async {
     final dir = await getApplicationDocumentsDirectory();
-    final cache = File("${dir.path}${Platform.pathSeparator}suggestion.json");
+    final cache = File(path.join(dir.path, "suggestion.json"));
     if (cache.existsSync()) {
       await cache.delete();
     }
@@ -210,7 +210,7 @@ class _Suggestion {
   Future<dynamic> _restoreConfig() async {
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final cache = File("${dir.path}${Platform.pathSeparator}suggestion.json");
+      final cache = File(path.join(dir.path, "suggestion.json"));
       if (!cache.existsSync()) {
         return null;
       }
