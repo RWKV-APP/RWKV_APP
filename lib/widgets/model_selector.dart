@@ -195,10 +195,10 @@ class _PanelBarState extends ConsumerState<_PanelBar> {
     final customTheme = ref.watch(P.app.customTheme);
 
     return Container(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         minHeight: kToolbarHeight - 4,
       ),
-      padding: .only(top: 4),
+      padding: const .only(top: 4),
       decoration: BoxDecoration(
         color: customTheme.settingItem.q(_opacity * _opacity),
         border: Border(
@@ -790,9 +790,9 @@ class _LocalPthFolder extends ConsumerWidget {
           if (state == FolderState.loading) ...[
             Row(
               children: [
-                T(S.current.scanning_folder_for_pth, s: TS(c: kCG)),
+                T(S.current.scanning_folder_for_pth, s: const TS(c: kCG)),
                 8.w,
-                SizedBox(
+                const SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(

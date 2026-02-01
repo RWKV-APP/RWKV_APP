@@ -26,7 +26,7 @@ extension _$Pth on _Pth {
           qqw("Pth bookmark resolve failed for ${entry.path}: $e");
         }
       }
-      final folder = Folder(path: path, state: FolderState.loading, files: []);
+      final folder = Folder(path: path, state: FolderState.loading, files: const []);
       folders.q = [...folders.q, folder];
       refreshFolder(folder);
     }
@@ -91,7 +91,7 @@ extension $Pth on _Pth {
   }
 
   Future<void> addFolder(PthFolderEntry entry) async {
-    final folder = Folder(path: entry.path, state: FolderState.loading, files: []);
+    final folder = Folder(path: entry.path, state: FolderState.loading, files: const []);
     folders.q = [...folders.q, folder];
     refreshFolder(folder);
     await P.preference.addPthFolderEntry(entry);
