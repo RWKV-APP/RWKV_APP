@@ -100,7 +100,7 @@ class _PageHomeState extends ConsumerState<PageHome> {
                   right: containerPaddingHorizontal,
                   bottom: 48,
                 ),
-                physics: const AlwaysScrollableScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: MasonryGridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

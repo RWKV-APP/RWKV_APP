@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
@@ -107,10 +106,26 @@ class ModelSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final isDesktop = ref.watch(P.app.isDesktop);
-    final localPthFileOption = ref.watch(P.weights.localPthFileOption);
-    final pageKey = ref.watch(P.app.pageKey);
     final isMobile = ref.watch(P.app.isMobile);
+
+    final items = [
+      const _SelectionHint(),
+      if (!isMobile)
+        ...[
+          const _LocalPthFolderHeader(),
+          const _LocalPthEmpty(),
+          const _LocalPthFolder(),
+          const _LocalPthFolder(),
+          const _LocalPthFolder(),
+          const _LocalPthFolder(),
+        ].widgetJoin((index) => 8.h),
+      ...[
+        const _ModelsInConfigHeader(),
+        const _ModelsInConfigDownloadSource(),
+        _ModelsInConfigFile(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
+      ],
+      (16 + paddingBottom).h,
+    ];
 
     return ClipRRect(
       borderRadius: const .only(
@@ -121,21 +136,18 @@ class ModelSelector extends ConsumerWidget {
         children: [
           _PanelBar(scrollController: _scrollController),
           Expanded(
-            child: ListView(
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
               padding: .only(
                 left: _listPadding,
                 right: _listPadding,
                 bottom: _listPadding,
               ),
               controller: _scrollController,
-              children: [
-                if (isDesktop && pageKey == .chat) const _LocalSwitcher(),
-                if (localPthFileOption == .filesInConfig) const _Options(),
-                if (localPthFileOption == .filesInConfig) _ModelList(showNeko: _showNeko, rolePlayOnly: _rolePlayOnly),
-                if (localPthFileOption == .localPthFiles) const _LocalOptions(),
-                16.h,
-                paddingBottom.h,
-              ],
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return items[index];
+              },
             ),
           ),
         ],
@@ -154,8 +166,6 @@ class _PanelBar extends ConsumerStatefulWidget {
 
 class _PanelBarState extends ConsumerState<_PanelBar> {
   double _opacity = 0.0;
-
-  static const double _opacityThreshold = 100.0;
 
   @override
   void dispose() {
@@ -182,15 +192,15 @@ class _PanelBarState extends ConsumerState<_PanelBar> {
 
   @override
   Widget build(BuildContext context) {
-    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
     final qb = ref.watch(P.app.qb);
-    final shape = RoundedSuperellipseBorder(borderRadius: BorderRadius.vertical(top: 16.rr));
     final s = S.of(context);
-    final bottomSheetColor = Theme.of(context).bottomSheetTheme.backgroundColor;
     final customTheme = ref.watch(P.app.customTheme);
 
     return Container(
-      height: kToolbarHeight,
+      constraints: BoxConstraints(
+        minHeight: kToolbarHeight - 4,
+      ),
+      padding: .only(top: 4),
       decoration: BoxDecoration(
         color: customTheme.settingItem.q(_opacity * _opacity),
         border: Border(
@@ -218,34 +228,29 @@ class _PanelBarState extends ConsumerState<_PanelBar> {
   }
 }
 
-class _Options extends ConsumerWidget {
-  const _Options();
+class _SelectionHint extends ConsumerWidget {
+  const _SelectionHint();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final demoType = ModelSelector._preferredDemoType ?? ref.watch(P.app.demoType);
     final qb = ref.watch(P.app.qb);
-
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        const _DownloadSource(),
-        if (demoType == .chat)
-          Text(
-            "👉${s.str_model_selection_dialog_hint}👈",
-            style: TS(c: qb.q(.7), s: 12, w: .w500),
-          ),
-      ],
+    if (demoType != .chat) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      "👉${s.str_model_selection_dialog_hint}👈",
+      style: TS(c: qb.q(.7), s: 12, w: .w500),
     );
   }
 }
 
-class _ModelList extends ConsumerWidget {
+class _ModelsInConfigFile extends ConsumerWidget {
   final bool showNeko;
   final bool rolePlayOnly;
 
-  const _ModelList({required this.showNeko, required this.rolePlayOnly});
+  const _ModelsInConfigFile({required this.showNeko, required this.rolePlayOnly});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -505,8 +510,8 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
   }
 }
 
-class _DownloadSource extends ConsumerWidget {
-  const _DownloadSource();
+class _ModelsInConfigDownloadSource extends ConsumerWidget {
+  const _ModelsInConfigDownloadSource();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -794,6 +799,7 @@ class _LocalPthFileItem extends ConsumerWidget {
   }
 }
 
+@Deprecated("根据需求已经不需要了, 但是其渲染逻辑仍然需要")
 class _LocalOptions extends ConsumerWidget {
   const _LocalOptions();
 
@@ -925,6 +931,133 @@ class _LocalOptions extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ModelsInConfigHeader extends ConsumerWidget {
+  const _ModelsInConfigHeader();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return T("以下是 RWKV Chat 预先量化好的模型");
+  }
+}
+
+class _LocalPthFolderHeader extends ConsumerWidget {
+  const _LocalPthFolderHeader();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      children: [
+        Expanded(child: T("下面是您本地的文件夹")),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
+      ],
+    );
+  }
+}
+
+class _LocalPthEmpty extends ConsumerWidget {
+  const _LocalPthEmpty();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      decoration: BD(
+        color: kCR.q(.5),
+        borderRadius: 8.r,
+      ),
+      padding: const .all(12),
+      child: Column(
+        crossAxisAlignment: .center,
+        children: [
+          Row(
+            children: [
+              Expanded(child: T("没有本地文件夹")),
+            ],
+          ),
+          4.h,
+          IconButton(onPressed: () {}, icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
+          4.h,
+          Row(
+            children: [
+              Expanded(child: T("点击 + 添加本地文件夹")),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LocalPthFolder extends ConsumerWidget {
+  const _LocalPthFolder();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+    final customTheme = ref.watch(P.app.customTheme);
+    return C(
+      decoration: BD(
+        color: customTheme.settingItem,
+        borderRadius: 8.r,
+      ),
+      padding: const .all(8),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: T(
+                  "本地文件夹名称",
+                  s: TS(c: qb.q(.8), w: .w500),
+                ),
+              ),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.refresh), tooltip: "刷新"),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.folder_open), tooltip: "打开文件夹"),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.close), tooltip: "忘记该位置"),
+            ],
+          ),
+          8.h,
+          ...[
+            T("当前文件夹没有本地模型"),
+            8.h,
+          ],
+          ...[
+            T("未在您的电脑上发现该文件夹"),
+            8.h,
+          ],
+          ...["本地文件夹 1", "本地文件夹 2", "本地文件夹 3"]
+              .map((e) {
+                return Container(
+                  padding: const .all(8),
+                  decoration: BD(
+                    color: kC.q(.5),
+                    borderRadius: 8.r,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(e, style: TS(c: qb.q(.8), s: 12)),
+                          ),
+                          IconButton(onPressed: () {}, icon: const Icon(Icons.delete), tooltip: "删除"),
+                        ],
+                      ),
+                      4.h,
+                      Text("路径: /path/to/folder", style: TS(c: qb.q(.8), s: 12)),
+                    ],
+                  ),
+                );
+              })
+              .toList()
+              .widgetJoin((index) => 8.h),
+        ],
+      ),
     );
   }
 }
