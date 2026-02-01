@@ -2,13 +2,30 @@ part of 'p.dart';
 
 class _Pth {
   late final folders = qs<List<Folder>>([]);
+
+  /// macOS：已通过 security-scoped bookmark 取得访问权限的目录，移除文件夹时需 stopAccessing
+  final _macosScopedResources = <String, FileSystemEntity>{};
 }
 
 /// Private methods
 extension _$Pth on _Pth {
   FV _init() async {
-    final paths = await P.preference.getPthFolderPaths();
-    for (final path in paths) {
+    final entries = await P.preference.getPthFolderEntries();
+    for (final entry in entries) {
+      String path = entry.path;
+      if (Platform.isMacOS && entry.bookmark != null && entry.bookmark!.isNotEmpty) {
+        try {
+          final sb = SecureBookmarks();
+          final entity = await sb.resolveBookmark(entry.bookmark!, isDirectory: true);
+          final ok = await sb.startAccessingSecurityScopedResource(entity);
+          if (ok) {
+            _macosScopedResources[entity.path] = entity;
+            path = entity.path;
+          }
+        } catch (e) {
+          qqw("Pth bookmark resolve failed for ${entry.path}: $e");
+        }
+      }
       final folder = Folder(path: path, state: FolderState.loading, files: []);
       folders.q = [...folders.q, folder];
       refreshFolder(folder);
@@ -25,7 +42,20 @@ extension $Pth on _Pth {
       Alert.warning(S.current.folder_already_added);
       return;
     }
-    await addFolder(path);
+    PthFolderEntry entry;
+    if (Platform.isMacOS) {
+      try {
+        final sb = SecureBookmarks();
+        final bookmark = await sb.bookmark(Directory(path));
+        entry = PthFolderEntry(path: path, bookmark: bookmark);
+      } catch (e) {
+        qqw("Pth bookmark create failed for $path: $e");
+        entry = PthFolderEntry(path: path, bookmark: null);
+      }
+    } else {
+      entry = PthFolderEntry(path: path, bookmark: null);
+    }
+    await addFolder(entry);
   }
 
   Future<void> onRemoveFolderClicked(Folder folder) async {
@@ -55,16 +85,26 @@ extension $Pth on _Pth {
     await launchUrl(Uri.directory(folder.path));
   }
 
-  Future<void> addFolder(String path) async {
-    final folder = Folder(path: path, state: FolderState.loading, files: []);
+  Future<void> addFolder(PthFolderEntry entry) async {
+    final folder = Folder(path: entry.path, state: FolderState.loading, files: []);
     folders.q = [...folders.q, folder];
     refreshFolder(folder);
-    await P.preference.addPthFolderPath(path);
+    await P.preference.addPthFolderEntry(entry);
   }
 
   Future<void> removeFolder(Folder foler) async {
+    if (Platform.isMacOS) {
+      final entity = _macosScopedResources.remove(foler.path);
+      if (entity != null) {
+        try {
+          await SecureBookmarks().stopAccessingSecurityScopedResource(entity);
+        } catch (e) {
+          qqw("Pth stopAccessing failed for ${foler.path}: $e");
+        }
+      }
+    }
     folders.q = folders.q.where((e) => e.path != foler.path).toList();
-    await P.preference.removePthFolderPath(foler.path);
+    await P.preference.removePthFolderEntry(foler.path);
   }
 
   Future<void> refreshFolder(Folder folder) async {

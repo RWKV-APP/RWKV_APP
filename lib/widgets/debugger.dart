@@ -78,7 +78,7 @@ class Debugger extends ConsumerWidget {
     final preferredUIFont = ref.watch(P.preference.preferredUIFont);
     final preferredMonospaceFont = ref.watch(P.preference.preferredMonospaceFont);
 
-    final pthFolderPaths = ref.watch(P.preference.pthFolderPaths);
+    final pthFolderEntries = ref.watch(P.preference.pthFolderEntries);
     final pthFolders = ref.watch(P.pth.folders);
 
     const showDrawerWidth = false;
@@ -160,8 +160,8 @@ class Debugger extends ConsumerWidget {
                       Text(preferredUIFont ?? "null"),
                       Text("preferredMonospaceFont".codeToName),
                       Text(preferredMonospaceFont ?? "null"),
-                      Text("pthFolderPaths".codeToName),
-                      Text(pthFolderPaths.join("\n")),
+                      Text("pthFolderEntries".codeToName),
+                      Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
                       Text("pthFolders".codeToName),
                       Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
                     ].indexMap((index, e) {

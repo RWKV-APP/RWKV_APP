@@ -93,7 +93,8 @@ class _Preference {
   /// 跳过版本仅用于自动检查更新, 如果用户手动点击检查更新, 我们依然会显示新版本的弹窗
   late final latestSkippedBuildNumber = qs<int>(0);
 
-  late final pthFolderPaths = qs<List<String>>([]);
+  /// Pth 文件夹列表；macOS 上可含 security-scoped bookmark 以持久化访问权限
+  late final pthFolderEntries = qs<List<PthFolderEntry>>([]);
 
   // ===========================================================================
   // Provider
@@ -237,8 +238,20 @@ extension _$Preference on _Preference {
       preferredMonospaceFont.q = null;
     }
 
-    final pthFolderPaths = sp.getStringList("halo_state.pthFolderPaths");
-    if (pthFolderPaths != null) this.pthFolderPaths.q = pthFolderPaths;
+    final entriesJson = sp.getString("halo_state.pthFolderEntries");
+    if (entriesJson != null) {
+      final list = jsonDecode(entriesJson) as List<dynamic>?;
+      if (list != null) {
+        pthFolderEntries.q = list.map((e) => PthFolderEntry.fromJson(e as Map<String, dynamic>)).toList();
+      }
+    } else {
+      final legacyPaths = sp.getStringList("halo_state.pthFolderPaths");
+      if (legacyPaths != null && legacyPaths.isNotEmpty) {
+        pthFolderEntries.q = legacyPaths.map((p) => PthFolderEntry(path: p, bookmark: null)).toList();
+        final sp2 = await SharedPreferences.getInstance();
+        await sp2.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
+      }
+    }
   }
 
   Future<void> _saveDumpping(bool dumpping) async {
@@ -413,23 +426,39 @@ extension $Preference on _Preference {
     }
   }
 
-  Future<void> addPthFolderPath(String path) async {
-    pthFolderPaths.q = {...pthFolderPaths.q, path}.toList();
+  Future<void> addPthFolderEntry(PthFolderEntry entry) async {
+    if (pthFolderEntries.q.any((e) => e.path == entry.path)) return;
+    pthFolderEntries.q = [...pthFolderEntries.q, entry];
     final sp = await SharedPreferences.getInstance();
-    await sp.setStringList("halo_state.pthFolderPaths", pthFolderPaths.q);
+    await sp.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
   }
 
-  Future<void> removePthFolderPath(String path) async {
+  Future<void> removePthFolderEntry(String path) async {
     qq;
-    pthFolderPaths.q = pthFolderPaths.q.where((e) => e != path).toList();
-    qqr("pthFolderPaths: ${pthFolderPaths.q}");
+    pthFolderEntries.q = pthFolderEntries.q.where((e) => e.path != path).toList();
+    qqr("pthFolderEntries: ${pthFolderEntries.q.length}");
     final sp = await SharedPreferences.getInstance();
-    await sp.setStringList("halo_state.pthFolderPaths", pthFolderPaths.q);
+    await sp.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
   }
 
-  Future<List<String>> getPthFolderPaths() async {
+  /// 加载已保存的 pth 文件夹条目；若仅有旧版 path 列表则迁移为 entries 并持久化
+  Future<List<PthFolderEntry>> getPthFolderEntries() async {
     final sp = await SharedPreferences.getInstance();
-    pthFolderPaths.q = sp.getStringList("halo_state.pthFolderPaths") ?? [];
-    return pthFolderPaths.q;
+    final entriesJson = sp.getString("halo_state.pthFolderEntries");
+    if (entriesJson != null) {
+      final list = jsonDecode(entriesJson) as List<dynamic>?;
+      if (list != null) {
+        pthFolderEntries.q = list.map((e) => PthFolderEntry.fromJson(e as Map<String, dynamic>)).toList();
+        return pthFolderEntries.q;
+      }
+    }
+    final legacyPaths = sp.getStringList("halo_state.pthFolderPaths");
+    if (legacyPaths != null && legacyPaths.isNotEmpty) {
+      pthFolderEntries.q = legacyPaths.map((p) => PthFolderEntry(path: p, bookmark: null)).toList();
+      await sp.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
+      return pthFolderEntries.q;
+    }
+    pthFolderEntries.q = [];
+    return pthFolderEntries.q;
   }
 }
