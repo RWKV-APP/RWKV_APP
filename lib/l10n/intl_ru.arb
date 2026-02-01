@@ -639,5 +639,21 @@
     "placeholders": {
       "folderName": {}
     }
+  },
+  "custom_directory_set": "Пользовательский каталог установлен",
+  "reset_to_default_directory": "Сброс к каталогу по умолчанию",
+  "failed_to_create_directory": "Не удалось создать каталог",
+  "set_custom_directory": "Установить пользовательский каталог",
+  "reset_to_default": "Сбросить по умолчанию",
+  "using_custom_directory": "Используется пользовательский каталог",
+  "using_default_directory": "Используется каталог по умолчанию",
+  "moving_files": "Перемещение файлов...",
+  "already_using_this_directory": "Уже используется этот каталог",
+  "files_moved_with_failures": "{successCount} файлов перемещено, {failCount} не удалось",
+  "@files_moved_with_failures": {
+    "placeholders": {
+      "successCount": {},
+      "failCount": {}
+    }
   }
 }

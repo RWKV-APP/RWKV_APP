@@ -2,6 +2,36 @@
 
 part of 'p.dart';
 
+/// Represents an unrecognized file in the models directory
+class UnrecognizedFile {
+  final String fileName;
+  final String filePath;
+  final int fileSize;
+
+  const UnrecognizedFile({
+    required this.fileName,
+    required this.filePath,
+    required this.fileSize,
+  });
+}
+
+/// Internal class for tracking file import information
+class _FileImportInfo {
+  final file_picker.PlatformFile pickedFile;
+  final File? sourceFile;
+  final Uint8List? fileBytes;
+  final FileInfo? existingFileInfo;
+  final String? error;
+
+  const _FileImportInfo({
+    required this.pickedFile,
+    required this.sourceFile,
+    required this.fileBytes,
+    required this.existingFileInfo,
+    required this.error,
+  });
+}
+
 /// 1. 管理通过 latest.json 配置的文件
 class _Remote {
   // ===========================================================================
@@ -10,6 +40,9 @@ class _Remote {
 
   /// model-name to download-task map
   late final _downloadTasks = <String, DownloadTask>{};
+
+  /// macOS: security-scoped resource for custom models directory
+  FileSystemEntity? _macosCustomDirScopedResource;
 
   // ===========================================================================
   // StateProvider
@@ -361,6 +394,330 @@ extension $Remote on _Remote {
       qqe(e);
       Alert.error(e.toString());
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+  }
+
+  /// Get the default models directory path based on platform
+  /// - Windows: exe folder / rwkv_chat_models
+  /// - macOS/Linux: Documents / models
+  String? getDefaultModelsDir() {
+    if (Platform.isWindows) {
+      // On Windows, use the exe directory
+      final exePath = Platform.resolvedExecutable;
+      final exeDir = dirname(exePath);
+      return join(exeDir, Config.modelsDirName);
+    } else {
+      // On macOS/Linux, use Documents directory
+      final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+      return documentsDir != null ? join(documentsDir, Config.modelsDirName) : null;
+    }
+  }
+
+  /// Get the current effective models directory path
+  String? getEffectiveModelsDir() {
+    final customDir = P.preference.customModelsDir.q;
+    return customDir ?? getDefaultModelsDir();
+  }
+
+  /// Check if using custom models directory
+  bool isUsingCustomModelsDir() {
+    return P.preference.customModelsDir.q != null;
+  }
+
+  /// Pick and set a custom models directory
+  /// Returns true if directory was set successfully
+  /// [context] is required to show progress dialog during file migration
+  Future<bool> pickAndSetCustomModelsDir({required BuildContext context}) async {
+    qq;
+    try {
+      final selectedDir = await file_picker.FilePicker.platform.getDirectoryPath();
+      if (selectedDir == null) {
+        return false; // User cancelled
+      }
+
+      // Get current effective directory before changing
+      final currentDir = getEffectiveModelsDir();
+
+      // Check if target is same as current
+      if (currentDir == selectedDir) {
+        // TODO: Use S.current.already_using_this_directory after l10n regeneration
+        Alert.warning("Already using this directory");
+        return false;
+      }
+
+      // Ensure directory exists
+      final dir = Directory(selectedDir);
+      if (!await dir.exists()) {
+        try {
+          await dir.create(recursive: true);
+        } catch (e) {
+          qqe("Failed to create directory: $e");
+          Alert.error(S.current.failed_to_create_directory);
+          return false;
+        }
+      }
+
+      // Check if we need to migrate files
+      if (currentDir != null) {
+        final filesToMigrate = await _getFilesToMigrate(currentDir);
+        if (filesToMigrate.isNotEmpty) {
+          // Show progress dialog and migrate files
+          final success = await _migrateFilesToNewDirectory(
+            context: context,
+            sourceDir: currentDir,
+            targetDir: selectedDir,
+            files: filesToMigrate,
+          );
+          if (!success) {
+            return false;
+          }
+        }
+      }
+
+      // On macOS, create security-scoped bookmark for persistent access
+      String? bookmark;
+      if (Platform.isMacOS) {
+        try {
+          // Stop accessing previous scoped resource if any
+          await _stopAccessingCustomDirScopedResource();
+
+          final sb = SecureBookmarks();
+          bookmark = await sb.bookmark(dir);
+          qqq("Created macOS bookmark for custom models dir: $selectedDir");
+        } catch (e) {
+          qqw("Failed to create macOS bookmark for $selectedDir: $e");
+          // Continue without bookmark - access may not persist across app restarts
+        }
+      }
+
+      P.preference.setCustomModelsDir(selectedDir, bookmark: bookmark);
+      Alert.success(S.current.custom_directory_set);
+      return true;
+    } catch (e) {
+      qqe(e);
+      Alert.error(e.toString());
+      if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
+      return false;
+    }
+  }
+
+  /// Get list of weight files to migrate from source directory
+  Future<List<File>> _getFilesToMigrate(String sourceDir) async {
+    final directory = Directory(sourceDir);
+    if (!await directory.exists()) return [];
+
+    final files = <File>[];
+    final allWeightFileNames = getAllConfigFileNames();
+
+    try {
+      final entities = directory.listSync();
+      for (final entity in entities) {
+        if (entity is! File) continue;
+        final fileName = basename(entity.path);
+        // Only migrate recognized weight files
+        if (allWeightFileNames.contains(fileName)) {
+          files.add(entity);
+        }
+      }
+    } catch (e) {
+      qqe("Error listing files for migration: $e");
+    }
+
+    return files;
+  }
+
+  /// Migrate files from source to target directory with progress dialog
+  Future<bool> _migrateFilesToNewDirectory({
+    required BuildContext context,
+    required String sourceDir,
+    required String targetDir,
+    required List<File> files,
+  }) async {
+    if (files.isEmpty) return true;
+
+    final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, files.length));
+    bool dialogShown = false;
+
+    // Show progress dialog
+    if (context.mounted) {
+      dialogShown = true;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: Text(S.current.moving_files),
+          content: ValueListenableBuilder<(String, int, int)>(
+            valueListenable: progressNotifier,
+            builder: (context, value, _) {
+              final (currentFile, completed, total) = value;
+              final progress = total > 0 ? completed / total : 0.0;
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LinearProgressIndicator(
+                    value: progress,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  const SizedBox(height: 16),
+                  if (currentFile.isNotEmpty)
+                    Text(
+                      currentFile,
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  Text(
+                    "$completed / $total",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      );
+    }
+
+    int successCount = 0;
+    int failCount = 0;
+
+    try {
+      for (var i = 0; i < files.length; i++) {
+        final file = files[i];
+        final fileName = basename(file.path);
+        progressNotifier.value = (fileName, i, files.length);
+
+        final targetPath = join(targetDir, fileName);
+        final targetFile = File(targetPath);
+
+        try {
+          // Check if target file already exists
+          if (await targetFile.exists()) {
+            // Skip if target already exists (don't overwrite)
+            qqq("File already exists at target, skipping: $fileName");
+            successCount++;
+            continue;
+          }
+
+          // Try to move (rename) first - faster if on same filesystem
+          try {
+            await file.rename(targetPath);
+            qqq("Moved file (rename): $fileName");
+            successCount++;
+          } catch (e) {
+            // If rename fails (cross-device), copy and delete
+            await file.copy(targetPath);
+            await file.delete();
+            qqq("Moved file (copy+delete): $fileName");
+            successCount++;
+          }
+        } catch (e) {
+          qqe("Failed to migrate file $fileName: $e");
+          failCount++;
+        }
+      }
+
+      progressNotifier.value = ("", files.length, files.length);
+    } finally {
+      // Close progress dialog
+      if (dialogShown && context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+
+    if (failCount > 0) {
+      // TODO: Use S.current.files_moved_with_failures(successCount, failCount) after l10n regeneration
+      Alert.warning("$successCount ${S.current.files} moved, $failCount ${S.current.import_failed}");
+    }
+
+    return true; // Continue even if some files failed
+  }
+
+  /// Reset to default models directory
+  /// [context] is required to show progress dialog during file migration
+  Future<void> resetToDefaultModelsDir({required BuildContext context}) async {
+    qq;
+
+    // Get current custom directory before resetting
+    final customDir = P.preference.customModelsDir.q;
+    final defaultDir = getDefaultModelsDir();
+
+    // Migrate files from custom directory to default directory
+    if (customDir != null && defaultDir != null && customDir != defaultDir) {
+      // Ensure default directory exists
+      final defaultDirObj = Directory(defaultDir);
+      if (!await defaultDirObj.exists()) {
+        try {
+          await defaultDirObj.create(recursive: true);
+          qqq("Created default models directory: $defaultDir");
+        } catch (e) {
+          qqe("Failed to create default directory: $e");
+          Alert.error(S.current.failed_to_create_directory);
+          return;
+        }
+      }
+
+      final filesToMigrate = await _getFilesToMigrate(customDir);
+      if (filesToMigrate.isNotEmpty) {
+        // Show progress dialog and migrate files
+        await _migrateFilesToNewDirectory(
+          context: context,
+          sourceDir: customDir,
+          targetDir: defaultDir,
+          files: filesToMigrate,
+        );
+      }
+    }
+
+    // On macOS, stop accessing the scoped resource
+    if (Platform.isMacOS) {
+      await _stopAccessingCustomDirScopedResource();
+    }
+    P.preference.setCustomModelsDir(null);
+    Alert.success(S.current.reset_to_default_directory);
+  }
+
+  /// Stop accessing macOS security-scoped resource for custom models directory
+  Future<void> _stopAccessingCustomDirScopedResource() async {
+    if (_macosCustomDirScopedResource != null) {
+      try {
+        await SecureBookmarks().stopAccessingSecurityScopedResource(_macosCustomDirScopedResource!);
+        qqq("Stopped accessing macOS scoped resource: ${_macosCustomDirScopedResource!.path}");
+      } catch (e) {
+        qqw("Failed to stop accessing macOS scoped resource: $e");
+      }
+      _macosCustomDirScopedResource = null;
+    }
+  }
+
+  /// Restore macOS security-scoped bookmark access for custom models directory
+  /// Called during app initialization
+  Future<void> restoreCustomModelsDirAccess() async {
+    if (!Platform.isMacOS) return;
+
+    final bookmark = P.preference.customModelsDirBookmark.q;
+    final customDir = P.preference.customModelsDir.q;
+    if (bookmark == null || bookmark.isEmpty || customDir == null) return;
+
+    try {
+      final sb = SecureBookmarks();
+      final entity = await sb.resolveBookmark(bookmark, isDirectory: true);
+      final ok = await sb.startAccessingSecurityScopedResource(entity);
+      if (ok) {
+        _macosCustomDirScopedResource = entity;
+        // Update the path in case it changed (e.g., volume name change)
+        if (entity.path != customDir) {
+          qqq("Custom models dir path updated from bookmark: $customDir -> ${entity.path}");
+          P.preference.setCustomModelsDir(entity.path, bookmark: bookmark);
+        }
+        qqq("Restored macOS scoped resource access for: ${entity.path}");
+      } else {
+        qqw("Failed to start accessing macOS scoped resource for: $customDir");
+      }
+    } catch (e) {
+      qqw("Failed to restore macOS bookmark for custom models dir: $e");
+      // Clear invalid bookmark
+      P.preference.setCustomModelsDir(null);
     }
   }
 
@@ -945,6 +1302,419 @@ extension $Remote on _Remote {
     }
   }
 
+  /// Pick and import multiple weight files from device storage
+  /// Returns (successCount, failCount, failedFiles)
+  /// This handles the full import flow including file picker, validation, and copying
+  Future<(int, int, List<String>)> pickAndImportWeightFiles({
+    required BuildContext context,
+  }) async {
+    qq;
+
+    // Pick files
+    final result = await file_picker.FilePicker.platform.pickFiles(
+      type: file_picker.FileType.custom,
+      allowMultiple: true,
+      allowedExtensions: ['st', 'gguf', 'prefab', 'bin', 'rmpack', 'mnn', 'zip'],
+    );
+
+    if (result == null || result.files.isEmpty) {
+      return (0, 0, <String>[]);
+    }
+
+    final pickedFiles = result.files;
+    final totalFiles = pickedFiles.length;
+
+    // First, validate all files and check for existing files
+    final List<_FileImportInfo> fileInfos = [];
+    bool hasExistingFiles = false;
+
+    for (final pickedFile in pickedFiles) {
+      final sourcePath = pickedFile.path;
+      final fileName = pickedFile.name;
+
+      File? sourceFile;
+      Uint8List? fileBytes;
+
+      if (sourcePath != null) {
+        sourceFile = File(sourcePath);
+        if (!await sourceFile.exists()) {
+          fileInfos.add(
+            _FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: null,
+              fileBytes: null,
+              existingFileInfo: null,
+              error: S.current.file_not_found,
+            ),
+          );
+          continue;
+        }
+      } else {
+        if (pickedFile.bytes == null) {
+          fileInfos.add(
+            _FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: null,
+              fileBytes: null,
+              existingFileInfo: null,
+              error: S.current.file_path_not_found,
+            ),
+          );
+          continue;
+        }
+        fileBytes = pickedFile.bytes;
+      }
+
+      FileInfo? existingFileInfo;
+      try {
+        final fileNameToCheck = fileName.isNotEmpty ? fileName : (sourceFile != null ? basename(sourceFile.path) : "unknown");
+        existingFileInfo = await checkFileExistsInConfig(fileNameToCheck);
+        if (existingFileInfo != null) {
+          hasExistingFiles = true;
+        }
+      } catch (e) {
+        final errorMessage = e.toString();
+        if (errorMessage.contains("not found in configuration")) {
+          fileInfos.add(
+            _FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: sourceFile,
+              fileBytes: fileBytes,
+              existingFileInfo: null,
+              error: S.current.file_not_supported,
+            ),
+          );
+          continue;
+        } else {
+          fileInfos.add(
+            _FileImportInfo(
+              pickedFile: pickedFile,
+              sourceFile: sourceFile,
+              fileBytes: fileBytes,
+              existingFileInfo: null,
+              error: e.toString(),
+            ),
+          );
+          continue;
+        }
+      }
+
+      fileInfos.add(
+        _FileImportInfo(
+          pickedFile: pickedFile,
+          sourceFile: sourceFile,
+          fileBytes: fileBytes,
+          existingFileInfo: existingFileInfo,
+          error: null,
+        ),
+      );
+    }
+
+    // If there are existing files, ask user for confirmation
+    bool shouldOverwrite = false;
+    if (hasExistingFiles) {
+      final s = S.current;
+      final existingCount = fileInfos.where((info) => info.existingFileInfo != null && info.error == null).length;
+      final message = existingCount == 1
+          ? s.overwrite_file_confirmation
+          : "${s.overwrite_file_confirmation}\n\n($existingCount ${S.current.files})";
+
+      final confirmResult = await showOkCancelAlertDialog(
+        context: context,
+        title: s.file_already_exists,
+        message: message,
+        okLabel: s.overwrite,
+        cancelLabel: s.cancel,
+        isDestructiveAction: true,
+      );
+
+      if (confirmResult != OkCancelResult.ok) {
+        return (0, 0, <String>[]); // User cancelled
+      }
+      shouldOverwrite = true;
+    }
+
+    int successCount = 0;
+    int failCount = 0;
+    final List<String> failedFiles = [];
+
+    // Process each file
+    for (var i = 0; i < fileInfos.length; i++) {
+      final fileInfo = fileInfos[i];
+      final pickedFile = fileInfo.pickedFile;
+      final fileName = pickedFile.name;
+
+      // Skip files with errors
+      if (fileInfo.error != null) {
+        failCount++;
+        failedFiles.add("$fileName: ${fileInfo.error}");
+        continue;
+      }
+
+      // Import the file
+      try {
+        final fileNameToUse = pickedFile.name.isNotEmpty
+            ? pickedFile.name
+            : (fileInfo.sourceFile != null ? basename(fileInfo.sourceFile!.path) : "unknown");
+
+        final success = await importWeightFile(
+          sourceFile: fileInfo.sourceFile,
+          fileBytes: fileInfo.fileBytes,
+          fileName: fileNameToUse,
+          overwrite: shouldOverwrite && fileInfo.existingFileInfo != null,
+        );
+
+        if (success) {
+          successCount++;
+        } else {
+          failCount++;
+          failedFiles.add("$fileName: ${S.current.import_failed}");
+        }
+      } catch (e) {
+        failCount++;
+        failedFiles.add("$fileName: ${e.toString()}");
+      }
+    }
+
+    // Show result summary
+    if (successCount > 0 && failCount == 0) {
+      Alert.success(totalFiles == 1 ? S.current.import_success : "$successCount ${S.current.import_success}");
+    } else if (successCount > 0 && failCount > 0) {
+      final message = "$successCount ${S.current.import_success}\n$failCount ${S.current.import_failed}\n\n${failedFiles.join('\n')}";
+      Alert.warning(message);
+    } else if (failCount > 0) {
+      final message = "${S.current.import_failed}:\n${failedFiles.join('\n')}";
+      Alert.error(message);
+    }
+
+    return (successCount, failCount, failedFiles);
+  }
+
+  /// Pick directory and export all weight files
+  /// Returns true if export was successful
+  Future<bool> pickAndExportAllWeightFiles({
+    required BuildContext context,
+    void Function(String currentFile, int completed, int total)? onProgress,
+  }) async {
+    qq;
+
+    // Check if there are any files to export
+    final allWeights = [
+      ...chatWeights.q,
+      ...roleplayWeights.q,
+      ...ttsWeights.q,
+      ...seeWeights.q,
+      ...sudokuWeights.q,
+      ...othelloWeights.q,
+    ];
+
+    final filesToExport = allWeights.where((fileInfo) {
+      final local = locals(fileInfo).q;
+      return local.hasFile;
+    }).toList();
+
+    if (filesToExport.isEmpty) {
+      Alert.warning(S.current.no_weight_files_to_export);
+      return false;
+    }
+
+    // Show confirmation dialog
+    final s = S.current;
+    final confirmResult = await showOkCancelAlertDialog(
+      context: context,
+      title: s.export_all_weight_files,
+      message: s.export_all_weight_files_description,
+      okLabel: s.export_all_weight_files,
+      cancelLabel: s.cancel,
+    );
+
+    if (confirmResult != OkCancelResult.ok) {
+      return false; // User cancelled
+    }
+
+    // Select target directory
+    final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+    if (targetDirectory == null) {
+      return false; // User cancelled
+    }
+
+    // Export all files
+    try {
+      final exportDirectory = await exportAllWeightFiles(
+        targetDirectory: targetDirectory,
+        onProgress: onProgress,
+      );
+
+      Alert.success("${S.current.export_success}\n\nDirectory: $exportDirectory");
+      return true;
+    } catch (e) {
+      Alert.error("${S.current.export_failed}: $e");
+      return false;
+    }
+  }
+
+  /// Pick directory and export a single weight file
+  /// Returns true if export was successful
+  Future<bool> pickAndExportWeightFile({
+    required FileInfo fileInfo,
+  }) async {
+    qq;
+
+    // Select target directory
+    final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+    if (targetDirectory == null) {
+      return false; // User cancelled
+    }
+
+    // Export the file
+    try {
+      await exportWeightFile(
+        fileInfo: fileInfo,
+        targetDirectory: targetDirectory,
+      );
+
+      Alert.success(S.current.export_success);
+      return true;
+    } catch (e) {
+      final errorMessage = e.toString();
+      if (errorMessage.contains("already exists")) {
+        Alert.error(S.current.file_already_exists);
+      } else {
+        Alert.error("${S.current.export_failed}: $e");
+      }
+      return false;
+    }
+  }
+
+  /// Get all downloaded weight files for display
+  List<FileInfo> getDownloadedWeights() {
+    final allWeights = [
+      ...chatWeights.q,
+      ...roleplayWeights.q,
+      ...ttsWeights.q,
+      ...seeWeights.q,
+      ...sudokuWeights.q,
+      ...othelloWeights.q,
+    ];
+
+    return allWeights.where((fileInfo) {
+      final local = locals(fileInfo).q;
+      return local.hasFile;
+    }).toList();
+  }
+
+  /// Check if there are any downloaded weight files
+  bool hasDownloadedWeights() {
+    return getDownloadedWeights().isNotEmpty;
+  }
+
+  /// Calculate total disk usage for all downloaded weights
+  int calculateTotalDiskUsage() {
+    int totalBytes = 0;
+
+    final allWeights = [
+      ...chatWeights.q,
+      ...roleplayWeights.q,
+      ...ttsWeights.q,
+      ...seeWeights.q,
+      ...sudokuWeights.q,
+      ...othelloWeights.q,
+    ];
+
+    for (final weight in allWeights) {
+      final local = locals(weight).q;
+      if (local.hasFile) {
+        totalBytes += weight.fileSize;
+      }
+    }
+
+    return totalBytes;
+  }
+
+  /// Format bytes to human readable string
+  static String formatBytes(int bytes) {
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB"];
+    var i = (math.log(bytes) / math.log(1024)).floor();
+    return ((bytes / math.pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
+  }
+
+  /// Get unrecognized files in the models directory
+  Future<List<UnrecognizedFile>> getUnrecognizedFiles() async {
+    final customDir = P.preference.customModelsDir.q;
+    final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : null;
+    final targetDir = customDir ?? defaultDir;
+
+    if (targetDir == null) return [];
+
+    final directory = Directory(targetDir);
+    if (!await directory.exists()) return [];
+
+    // Get all file names from config (not just available ones)
+    final allWeightFileNames = getAllConfigFileNames();
+
+    // Build a set of temporary file paths that belong to active download tasks
+    final downloadingTmpPaths = <String>{};
+    final downloadingCandidates = [
+      chatWeights.q,
+      roleplayWeights.q,
+      ttsWeights.q,
+      seeWeights.q,
+      sudokuWeights.q,
+      othelloWeights.q,
+    ].expand((e) => e).where((e) => e.available).toList();
+
+    for (final fileInfo in downloadingCandidates) {
+      final local = locals(fileInfo).q;
+      if (!local.downloading) continue;
+      downloadingTmpPaths.add("${local.targetPath}.tmp");
+    }
+
+    final unrecognizedFiles = <UnrecognizedFile>[];
+
+    try {
+      final entities = directory.listSync();
+      for (final entity in entities) {
+        if (entity is! File) continue;
+
+        final filePath = entity.path;
+
+        // Skip files that are temporary files of active download tasks
+        if (downloadingTmpPaths.contains(filePath)) {
+          continue;
+        }
+
+        final fileName = basename(filePath);
+        if (allWeightFileNames.contains(fileName)) continue;
+
+        final fileSize = await entity.length();
+
+        unrecognizedFiles.add(
+          UnrecognizedFile(
+            fileName: fileName,
+            filePath: filePath,
+            fileSize: fileSize,
+          ),
+        );
+      }
+    } catch (e) {
+      // Ignore errors when listing directory
+    }
+
+    return unrecognizedFiles;
+  }
+
+  /// Delete an unrecognized file
+  Future<void> deleteUnrecognizedFile(UnrecognizedFile file) async {
+    try {
+      await File(file.filePath).delete();
+    } catch (e) {
+      qqe("Failed to delete file: $e");
+      rethrow;
+    }
+  }
+
   Future<FileInfo?> pickLocalPthFile() async {
     String? initialDirectory;
     try {
@@ -991,6 +1761,9 @@ extension $Remote on _Remote {
 extension _$Remote on _Remote {
   Future<void> _init() async {
     try {
+      // Restore macOS security-scoped bookmark access for custom models directory
+      await restoreCustomModelsDirAccess();
+
       await syncAvailableModels();
       // Check and perform migration if needed
       // Only migrate for users with build number < 637

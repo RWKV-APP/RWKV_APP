@@ -645,5 +645,21 @@
     "placeholders": {
       "folderName": {}
     }
+  },
+  "custom_directory_set": "Custom directory set",
+  "reset_to_default_directory": "Reset to default directory",
+  "failed_to_create_directory": "Failed to create directory",
+  "set_custom_directory": "Set custom directory",
+  "reset_to_default": "Reset to default",
+  "using_custom_directory": "Using custom directory",
+  "using_default_directory": "Using default directory",
+  "moving_files": "Moving files...",
+  "already_using_this_directory": "Already using this directory",
+  "files_moved_with_failures": "{successCount} files moved, {failCount} failed",
+  "@files_moved_with_failures": {
+    "placeholders": {
+      "successCount": {},
+      "failCount": {}
+    }
   }
 }

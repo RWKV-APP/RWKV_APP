@@ -639,5 +639,21 @@
     "placeholders": {
       "folderName": {}
     }
+  },
+  "custom_directory_set": "사용자 지정 디렉토리가 설정되었습니다",
+  "reset_to_default_directory": "기본 디렉토리로 재설정되었습니다",
+  "failed_to_create_directory": "디렉토리 생성에 실패했습니다",
+  "set_custom_directory": "사용자 지정 디렉토리 설정",
+  "reset_to_default": "기본값으로 재설정",
+  "using_custom_directory": "사용자 지정 디렉토리 사용 중",
+  "using_default_directory": "기본 디렉토리 사용 중",
+  "moving_files": "파일 이동 중...",
+  "already_using_this_directory": "이미 이 디렉토리를 사용 중입니다",
+  "files_moved_with_failures": "{successCount}개 파일 이동됨, {failCount}개 실패",
+  "@files_moved_with_failures": {
+    "placeholders": {
+      "successCount": {},
+      "failCount": {}
+    }
   }
 }

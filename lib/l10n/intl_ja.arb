@@ -639,5 +639,21 @@
     "placeholders": {
       "folderName": {}
     }
+  },
+  "custom_directory_set": "カスタムディレクトリを設定しました",
+  "reset_to_default_directory": "デフォルトディレクトリに戻しました",
+  "failed_to_create_directory": "ディレクトリの作成に失敗しました",
+  "set_custom_directory": "カスタムディレクトリを設定",
+  "reset_to_default": "デフォルトに戻す",
+  "using_custom_directory": "カスタムディレクトリを使用中",
+  "using_default_directory": "デフォルトディレクトリを使用中",
+  "moving_files": "ファイルを移動中...",
+  "already_using_this_directory": "既にこのディレクトリを使用しています",
+  "files_moved_with_failures": "{successCount}個のファイルを移動、{failCount}個が失敗",
+  "@files_moved_with_failures": {
+    "placeholders": {
+      "successCount": {},
+      "failCount": {}
+    }
   }
 }

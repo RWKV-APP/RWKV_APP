@@ -75,6 +75,9 @@ class _Preference {
   /// Custom directory for storing models (Desktop only)
   late final customModelsDir = qs<String?>(null);
 
+  /// macOS security-scoped bookmark for custom models directory
+  late final customModelsDirBookmark = qs<String?>(null);
+
   /// Whether the weights migration to weights folder has been completed
   late final weightsMigrationCompleted = qs<bool>(false);
 
@@ -190,6 +193,9 @@ extension _$Preference on _Preference {
 
     final customModelsDir = sp.getString("halo_state.customModelsDir");
     if (customModelsDir != null) this.customModelsDir.q = customModelsDir;
+
+    final customModelsDirBookmark = sp.getString("halo_state.customModelsDirBookmark");
+    if (customModelsDirBookmark != null) this.customModelsDirBookmark.q = customModelsDirBookmark;
 
     final weightsMigrationCompleted = sp.getBool("halo_state.weightsMigrationCompletedv640");
     if (weightsMigrationCompleted != null) this.weightsMigrationCompleted.q = weightsMigrationCompleted;
@@ -365,13 +371,20 @@ extension $Preference on _Preference {
     sp.setString("halo_state.lastWorldModel", jsonEncode(data));
   }
 
-  void setCustomModelsDir(String? path) async {
+  void setCustomModelsDir(String? path, {String? bookmark}) async {
     customModelsDir.q = path;
+    customModelsDirBookmark.q = bookmark;
     final sp = await SharedPreferences.getInstance();
     if (path == null) {
       await sp.remove("halo_state.customModelsDir");
+      await sp.remove("halo_state.customModelsDirBookmark");
     } else {
       await sp.setString("halo_state.customModelsDir", path);
+      if (bookmark != null) {
+        await sp.setString("halo_state.customModelsDirBookmark", bookmark);
+      } else {
+        await sp.remove("halo_state.customModelsDirBookmark");
+      }
     }
     P.remote.checkLocal();
   }

@@ -4264,10 +4264,10 @@ class S {
     );
   }
 
-  /// `删除该文件后，该文件将不再显示在本地文件夹列表中`
+  /// `该文件将在您的本地硬盘中被永久删除`
   String get confirm_delete_file_message {
     return Intl.message(
-      '删除该文件后，该文件将不再显示在本地文件夹列表中',
+      '该文件将在您的本地硬盘中被永久删除',
       name: 'confirm_delete_file_message',
       desc: '',
       args: [],
@@ -4416,6 +4416,96 @@ class S {
       name: 'local_folder_name',
       desc: '',
       args: [folderName],
+    );
+  }
+
+  /// `自定义目录已设置`
+  String get custom_directory_set {
+    return Intl.message(
+      '自定义目录已设置',
+      name: 'custom_directory_set',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已恢复默认目录`
+  String get reset_to_default_directory {
+    return Intl.message(
+      '已恢复默认目录',
+      name: 'reset_to_default_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创建目录失败`
+  String get failed_to_create_directory {
+    return Intl.message(
+      '创建目录失败',
+      name: 'failed_to_create_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设置自定义目录`
+  String get set_custom_directory {
+    return Intl.message(
+      '设置自定义目录',
+      name: 'set_custom_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `恢复默认`
+  String get reset_to_default {
+    return Intl.message('恢复默认', name: 'reset_to_default', desc: '', args: []);
+  }
+
+  /// `使用自定义目录`
+  String get using_custom_directory {
+    return Intl.message(
+      '使用自定义目录',
+      name: 'using_custom_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用默认目录`
+  String get using_default_directory {
+    return Intl.message(
+      '使用默认目录',
+      name: 'using_default_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在移动文件...`
+  String get moving_files {
+    return Intl.message('正在移动文件...', name: 'moving_files', desc: '', args: []);
+  }
+
+  /// `已在使用此目录`
+  String get already_using_this_directory {
+    return Intl.message(
+      '已在使用此目录',
+      name: 'already_using_this_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{successCount} 个文件已移动，{failCount} 个失败`
+  String files_moved_with_failures(Object successCount, Object failCount) {
+    return Intl.message(
+      '$successCount 个文件已移动，$failCount 个失败',
+      name: 'files_moved_with_failures',
+      desc: '',
+      args: [successCount, failCount],
     );
   }
 }
