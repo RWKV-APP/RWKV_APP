@@ -39,6 +39,8 @@ class ModelSelector extends ConsumerWidget {
     bool showNeko = false,
     DemoType? preferredDemoType,
   }) async {
+    if (showNeko) preferredDemoType = .chat;
+
     if (P.fileManager.modelSelectorShown.q) return;
     P.fileManager.modelSelectorShown.q = true;
 
