@@ -93,6 +93,8 @@ class _Preference {
   /// 跳过版本仅用于自动检查更新, 如果用户手动点击检查更新, 我们依然会显示新版本的弹窗
   late final latestSkippedBuildNumber = qs<int>(0);
 
+  late final pthFolderPaths = qs<List<String>>([]);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -234,6 +236,9 @@ extension _$Preference on _Preference {
     } else {
       preferredMonospaceFont.q = null;
     }
+
+    final pthFolderPaths = sp.getStringList("halo_state.pthFolderPaths");
+    if (pthFolderPaths != null) this.pthFolderPaths.q = pthFolderPaths;
   }
 
   Future<void> _saveDumpping(bool dumpping) async {
@@ -355,7 +360,7 @@ extension $Preference on _Preference {
     } else {
       await sp.setString("halo_state.customModelsDir", path);
     }
-    P.weights.checkLocal();
+    P.remote.checkLocal();
   }
 
   void setWeightsMigrationCompleted(bool completed) async {
@@ -406,5 +411,20 @@ extension $Preference on _Preference {
       // Try to load the font
       await P.font.loadFontByName(fontFamily);
     }
+  }
+
+  Future<void> addPthFolderPath(String path) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setStringList("halo_state.pthFolderPaths", [...pthFolderPaths.q, path]);
+  }
+
+  Future<void> removePthFolderPath(String path) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setStringList("halo_state.pthFolderPaths", pthFolderPaths.q.where((e) => e != path).toList());
+  }
+
+  Future<List<String>> getPthFolderPaths() async {
+    final sp = await SharedPreferences.getInstance();
+    return sp.getStringList("halo_state.pthFolderPaths") ?? [];
   }
 }

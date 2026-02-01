@@ -475,7 +475,7 @@ extension $Talk on _Talk {
 
     if (instructionText.isEmpty) instructionText = selectedLanguage.q._ttsSpkInstruct;
 
-    final outputWavPath = path.join(P.app.cacheDir.q!.path, "$receiveId.output.wav");
+    final outputWavPath = join(P.app.cacheDir.q!.path, "$receiveId.output.wav");
     // final outputWavPath = "/sdcard/Download/$receiveId.output.wav";
 
     if (ttsText.isEmpty) {

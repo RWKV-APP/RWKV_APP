@@ -13,6 +13,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/file_download_source.dart';
 import 'package:zone/model/file_info.dart';
+import 'package:zone/model/folder.dart';
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
@@ -50,21 +51,21 @@ class ModelSelector extends ConsumerWidget {
     final beforeShow = () async {
       if (showNeko) preferredDemoType = .chat;
 
-      if (P.weights.modelSelectorShown.q) return;
-      P.weights.modelSelectorShown.q = true;
+      if (P.remote.modelSelectorShown.q) return;
+      P.remote.modelSelectorShown.q = true;
 
       final context = getContext();
       if (context == null) {
-        P.weights.modelSelectorShown.q = false;
+        P.remote.modelSelectorShown.q = false;
         return;
       }
 
       // Fire and forget model updates
       (() async {
-        P.weights.checkLocal();
+        P.remote.checkLocal();
         await P.app.syncConfig();
-        await P.weights.syncAvailableModels();
-        P.weights.checkLocal();
+        await P.remote.syncAvailableModels();
+        P.remote.checkLocal();
       })();
 
       if (P.app.pageKey.q == .talk) _preferredDemoType = .tts;
@@ -76,8 +77,8 @@ class ModelSelector extends ConsumerWidget {
       }
 
       final usingPth = P.rwkv.usingPth.q;
-      if (usingPth == true) P.weights.localPthFileOption.q = LocalPthFileOption.localPthFiles;
-      if (usingPth != true) P.weights.localPthFileOption.q = LocalPthFileOption.filesInConfig;
+      if (usingPth == true) P.remote.localPthFileOption.q = LocalPthFileOption.localPthFiles;
+      if (usingPth != true) P.remote.localPthFileOption.q = LocalPthFileOption.filesInConfig;
     };
 
     await P.ui.showPanel(
@@ -90,7 +91,7 @@ class ModelSelector extends ConsumerWidget {
       ),
       afterHide: (res) {
         _preferredDemoType = null;
-        P.weights.modelSelectorShown.q = false;
+        P.remote.modelSelectorShown.q = false;
       },
     );
   }
@@ -107,17 +108,15 @@ class ModelSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final isMobile = ref.watch(P.app.isMobile);
+    final folders = ref.watch(P.pth.folders);
 
     final items = [
       const _SelectionHint(),
       if (!isMobile)
         ...[
           const _LocalPthFolderHeader(),
-          const _LocalPthEmpty(),
-          const _LocalPthFolder(),
-          const _LocalPthFolder(),
-          const _LocalPthFolder(),
-          const _LocalPthFolder(),
+          if (folders.isEmpty) const _LocalPthEmpty(),
+          if (folders.isNotEmpty) ...folders.map((e) => _LocalPthFolder(e)),
         ].widgetJoin((index) => 8.h),
       ...[
         const _ModelsInConfigHeader(),
@@ -258,21 +257,21 @@ class _ModelsInConfigFile extends ConsumerWidget {
     final preferredDemoType = ModelSelector._preferredDemoType ?? demoType;
 
     Set<FileInfo> availableModels = switch (preferredDemoType) {
-      .see => ref.watch(P.weights.seeWeights),
-      .tts => ref.watch(P.weights.ttsWeights),
-      .chat => ref.watch(P.weights.chatWeights),
-      .sudoku => ref.watch(P.weights.sudokuWeights),
-      .othello => ref.watch(P.weights.othelloWeights),
-      .fifthteenPuzzle => ref.watch(P.weights.sudokuWeights),
+      .see => ref.watch(P.remote.seeWeights),
+      .tts => ref.watch(P.remote.ttsWeights),
+      .chat => ref.watch(P.remote.chatWeights),
+      .sudoku => ref.watch(P.remote.sudokuWeights),
+      .othello => ref.watch(P.remote.othelloWeights),
+      .fifthteenPuzzle => ref.watch(P.remote.sudokuWeights),
     };
 
-    final ttsCores = ref.watch(P.weights.ttsCores);
+    final ttsCores = ref.watch(P.remote.ttsCores);
     final userType = ref.watch(P.preference.userType);
     final pageKey = ref.watch(P.app.pageKey);
 
     if (rolePlayOnly && pageKey == .rolePlaying) {
       availableModels = availableModels.where((e) => e.state.isNotEmpty).toSet();
-      availableModels.addAll(P.weights.roleplayWeights.q);
+      availableModels.addAll(P.remote.roleplayWeights.q);
       return Column(
         crossAxisAlignment: .stretch,
         children: availableModels.map((e) => RolePlayItem(file: e)).toList(),
@@ -373,7 +372,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
-    final supportedNpus = P.weights.getSupportedNpuChips;
+    final supportedNpus = P.remote.getSupportedNpuChips;
     final currentSocName = ref.watch(P.rwkv.socName);
     final frontendSocName = ref.watch(P.rwkv.frontendSocName);
 
@@ -515,7 +514,7 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentSource = ref.watch(P.weights.downloadSource);
+    final currentSource = ref.watch(P.remote.downloadSource);
     final primary = Theme.of(context).colorScheme.primary;
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
@@ -543,7 +542,7 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
                 }
                 return GestureDetector(
                   onTap: () {
-                    P.weights.downloadSource.q = e;
+                    P.remote.downloadSource.q = e;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -592,7 +591,7 @@ class _LocalSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final localPthFileOption = ref.watch(P.weights.localPthFileOption);
+    final localPthFileOption = ref.watch(P.remote.localPthFileOption);
     final primary = Theme.of(context).colorScheme.primary;
     final options = LocalPthFileOption.values;
     final qw = ref.watch(P.app.qw);
@@ -632,7 +631,7 @@ class _LocalSwitcher extends ConsumerWidget {
 
             return GD(
               onTap: () {
-                P.weights.localPthFileOption.q = e;
+                P.remote.localPthFileOption.q = e;
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -677,23 +676,6 @@ String _truncatePath(String pathStr, [int maxLen = 56]) {
   return '${pathStr.substring(0, head)}...${pathStr.substring(pathStr.length - tail)}';
 }
 
-Future<void> _openContainingFolder(String filePath) async {
-  try {
-    final dirPath = path.dirname(filePath);
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await launchUrl(Uri.directory(dirPath));
-    }
-  } catch (e) {
-    Alert.error(e.toString());
-  }
-}
-
-String? _ctxFromFileName(FileInfo fileInfo) {
-  final m = RegExp(r'ctx(\d+)', caseSensitive: false).firstMatch(fileInfo.name);
-  if (m != null) return m.group(1);
-  return null;
-}
-
 class _LocalPthFileItem extends ConsumerWidget {
   final FileInfo fileInfo;
 
@@ -708,7 +690,6 @@ class _LocalPthFileItem extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final date = fileInfo.dateDisplayString;
-    final ctxLength = _ctxFromFileName(fileInfo);
 
     return ClipRRect(
       borderRadius: 8.r,
@@ -747,15 +728,6 @@ class _LocalPthFileItem extends ConsumerWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () => _openContainingFolder(fileInfo.raw),
-                  icon: const Icon(Icons.folder_open),
-                  tooltip: s.open_containing_folder,
-                  style: ButtonStyle(
-                    minimumSize: .all(const Size(32, 32)),
-                    padding: .all(.zero),
-                  ),
-                ),
               ],
             ),
             4.h,
@@ -765,7 +737,7 @@ class _LocalPthFileItem extends ConsumerWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            if (date != null || ctxLength != null) ...[
+            if (date != null || fileInfo.ctxLength != null) ...[
               4.h,
               Wrap(
                 spacing: 6,
@@ -780,14 +752,14 @@ class _LocalPthFileItem extends ConsumerWidget {
                       ),
                       child: Text(date, style: TS(c: qb.q(.8), s: 11)),
                     ),
-                  if (ctxLength != null)
+                  if (fileInfo.ctxLength != null)
                     Container(
                       padding: const .symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: qb.q(.15),
                         borderRadius: 4.r,
                       ),
-                      child: Text(s.ctx_length_label(ctxLength), style: TS(c: qb.q(.8), s: 11)),
+                      child: Text(s.ctx_length_label(fileInfo.ctxLength ?? ""), style: TS(c: qb.q(.8), s: 11)),
                     ),
                 ],
               ),
@@ -919,7 +891,7 @@ class _LocalOptions extends ConsumerWidget {
         ],
         FilledButton(
           onPressed: () async {
-            final fileInfo = await P.weights.pickLocalPthFile();
+            final fileInfo = await P.remote.pickLocalPthFile();
             if (fileInfo == null) return;
             Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
             await 1000.msLater;
@@ -949,10 +921,12 @@ class _LocalPthFolderHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final folders = ref.watch(P.pth.folders);
     return Row(
       children: [
         Expanded(child: T("下面是您本地的文件夹")),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
+        if (folders.isNotEmpty) T("点击 + 号添加更多本地文件夹"),
+        if (folders.isNotEmpty) IconButton(onPressed: P.pth.onAddFolderClicked, icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
       ],
     );
   }
@@ -963,10 +937,14 @@ class _LocalPthEmpty extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final qw = ref.watch(P.app.qw);
+    final qb = ref.watch(P.app.qb);
+
     return Container(
       decoration: BD(
-        color: kCR.q(.5),
+        color: kC,
         borderRadius: 8.r,
+        border: Border.all(color: qb.q(.5), width: 1),
       ),
       padding: const .all(12),
       child: Column(
@@ -974,15 +952,25 @@ class _LocalPthEmpty extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Expanded(child: T("没有本地文件夹")),
+              Expanded(
+                child: T(
+                  "没有本地文件夹",
+                  textAlign: .center,
+                ),
+              ),
             ],
           ),
           4.h,
-          IconButton(onPressed: () {}, icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
+          IconButton(onPressed: () => P.pth.onAddFolderClicked(), icon: const Icon(Icons.add), tooltip: "添加本地文件夹"),
           4.h,
           Row(
             children: [
-              Expanded(child: T("点击 + 添加本地文件夹")),
+              Expanded(
+                child: T(
+                  "点击 + 添加本地文件夹",
+                  textAlign: .center,
+                ),
+              ),
             ],
           ),
         ],
@@ -992,12 +980,19 @@ class _LocalPthEmpty extends ConsumerWidget {
 }
 
 class _LocalPthFolder extends ConsumerWidget {
-  const _LocalPthFolder();
+  final Folder folder;
+
+  const _LocalPthFolder(this.folder);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
     final customTheme = ref.watch(P.app.customTheme);
+    final folderName = path.basename(folder.path);
+    final state = folder.state;
+    final folderPath = folder.path;
+    final folderPathDisplay = _truncatePath(folderPath);
+    final files = folder.files;
     return C(
       decoration: BD(
         color: customTheme.settingItem,
@@ -1011,51 +1006,70 @@ class _LocalPthFolder extends ConsumerWidget {
             children: [
               Expanded(
                 child: T(
-                  "本地文件夹名称",
+                  folderName,
                   s: TS(c: qb.q(.8), w: .w500),
                 ),
               ),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.refresh), tooltip: "刷新"),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.folder_open), tooltip: "打开文件夹"),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.close), tooltip: "忘记该位置"),
+              IconButton(onPressed: () => P.pth.onRefreshFolderClicked(folder), icon: const Icon(Icons.refresh), tooltip: "刷新"),
+              IconButton(onPressed: () => P.pth.onOpenFolderClicked(folder), icon: const Icon(Icons.folder_open), tooltip: "打开文件夹"),
+              IconButton(onPressed: () => P.pth.onRemoveFolderClicked(folder), icon: const Icon(Icons.close), tooltip: "忘记该位置"),
             ],
           ),
           8.h,
-          ...[
+          if (state == FolderState.loading) ...[
+            Row(
+              children: [
+                T("正在扫描该文件夹中的 .pth 文件"),
+                8.w,
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: qb,
+                  ),
+                ),
+              ],
+            ),
+            8.h,
+          ],
+          if (files.isEmpty && state != FolderState.loading) ...[
             T("当前文件夹没有本地模型"),
             8.h,
           ],
-          ...[
+          if (state == FolderState.notfound) ...[
             T("未在您的电脑上发现该文件夹"),
             8.h,
           ],
-          ...["本地文件夹 1", "本地文件夹 2", "本地文件夹 3"]
-              .map((e) {
-                return Container(
-                  padding: const .all(8),
-                  decoration: BD(
-                    color: kC.q(.5),
-                    borderRadius: 8.r,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: .stretch,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(e, style: TS(c: qb.q(.8), s: 12)),
-                          ),
-                          IconButton(onPressed: () {}, icon: const Icon(Icons.delete), tooltip: "删除"),
-                        ],
-                      ),
-                      4.h,
-                      Text("路径: /path/to/folder", style: TS(c: qb.q(.8), s: 12)),
-                    ],
-                  ),
-                );
-              })
-              .toList()
-              .widgetJoin((index) => 8.h),
+          if (files.isNotEmpty)
+            ...files
+                .map((e) {
+                  return Container(
+                    padding: const .all(8),
+                    decoration: BD(
+                      color: kC.q(.5),
+                      borderRadius: 8.r,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: .stretch,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(e.fileName, style: TS(c: qb.q(.8), s: 12)),
+                            ),
+                            IconButton(onPressed: () {}, icon: const Icon(Icons.delete), tooltip: "删除"),
+                          ],
+                        ),
+                        4.h,
+                      ],
+                    ),
+                  );
+                })
+                .toList()
+                .widgetJoin((index) => 8.h),
+          4.h,
+          Text("路径: $folderPathDisplay", style: TS(c: qb.q(.8), s: 12)),
         ],
       ),
     );

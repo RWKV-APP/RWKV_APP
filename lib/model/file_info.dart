@@ -238,14 +238,20 @@ class FileInfo extends Equatable {
     return null;
   }
 
+  String? get ctxLength {
+    final m = RegExp(r'ctx(\d+)', caseSensitive: false).firstMatch(name);
+    if (m != null) return m.group(1);
+    return null;
+  }
+
   WeightType? get weightType => switch (fileType) {
     FileType.weights => () {
-      if (P.weights.chatWeights.q.contains(this)) return WeightType.chat;
-      if (P.weights.seeWeights.q.contains(this)) return WeightType.see;
-      if (P.weights.ttsWeights.q.contains(this)) return WeightType.tts;
-      if (P.weights.sudokuWeights.q.contains(this)) return WeightType.sudoku;
-      if (P.weights.othelloWeights.q.contains(this)) return WeightType.othello;
-      if (P.weights.roleplayWeights.q.contains(this)) return WeightType.roleplay;
+      if (P.remote.chatWeights.q.contains(this)) return WeightType.chat;
+      if (P.remote.seeWeights.q.contains(this)) return WeightType.see;
+      if (P.remote.ttsWeights.q.contains(this)) return WeightType.tts;
+      if (P.remote.sudokuWeights.q.contains(this)) return WeightType.sudoku;
+      if (P.remote.othelloWeights.q.contains(this)) return WeightType.othello;
+      if (P.remote.roleplayWeights.q.contains(this)) return WeightType.roleplay;
       qqw('unknown weight type: $this');
       return WeightType.chat;
     }(),

@@ -64,7 +64,7 @@ class ModelItem extends ConsumerWidget {
 
   Future<void> _onStartTapInSudoku() async {
     qq;
-    final localFile = P.weights.locals(fileInfo).q;
+    final localFile = P.remote.locals(fileInfo).q;
     final modelPath = localFile.targetPath;
     final backend = fileInfo.backend;
 
@@ -184,7 +184,7 @@ class ModelItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final localFile = ref.watch(P.weights.locals(fileInfo));
+    final localFile = ref.watch(P.remote.locals(fileInfo));
     final hasFile = localFile.hasFile;
     final currentModel = ref.watch(P.rwkv.latestModel);
     final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
@@ -294,13 +294,13 @@ class DownloadActions extends ConsumerWidget {
       cancelLabel: S.current.continue_download,
     );
     if (result == OkCancelResult.ok) {
-      await P.weights.cancelDownload(fileInfo: file);
+      await P.remote.cancelDownload(fileInfo: file);
     }
   }
 
   void onDownloadTap(BuildContext context) async {
     await P.preference.tryShowBatteryOptimizationDialog(context);
-    await P.weights.getFile(fileInfo: file);
+    await P.remote.getFile(fileInfo: file);
   }
 
   @override
@@ -309,7 +309,7 @@ class DownloadActions extends ConsumerWidget {
     final showResume = state == TaskState.stopped;
     final showPause = state == TaskState.running;
     final showCancel = showPause || showResume;
-    final localFile = ref.watch(P.weights.locals(file));
+    final localFile = ref.watch(P.remote.locals(file));
     final hasFile = localFile.hasFile;
     return Row(
       mainAxisSize: .min,
@@ -329,7 +329,7 @@ class DownloadActions extends ConsumerWidget {
         if (showPause)
           IconButton(
             onPressed: () {
-              P.weights.pauseDownload(fileInfo: file);
+              P.remote.pauseDownload(fileInfo: file);
             },
             visualDensity: .compact,
             icon: const Icon(Icons.pause),
@@ -360,7 +360,7 @@ class _Delete extends ConsumerWidget {
       cancelLabel: S.current.cancel,
     );
     if (result == OkCancelResult.ok) {
-      await P.weights.deleteFile(fileInfo: fileInfo);
+      await P.remote.deleteFile(fileInfo: fileInfo);
     }
   }
 
@@ -397,7 +397,7 @@ class FileKeyItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final localFile = ref.watch(P.weights.locals(fileInfo));
+    final localFile = ref.watch(P.remote.locals(fileInfo));
     final fileSize = fileInfo.fileSize;
     final progress = localFile.progress / 100;
     final downloading = localFile.downloading;

@@ -107,8 +107,8 @@ extension $App on _App {
     final (config, sp) = await _loadConfigFromLocal();
     _config.q = config;
     await _parseConfigForDemoSpecificData(config[demoType.q.name]);
-    await P.weights.syncAvailableModels();
-    await P.weights.checkLocal();
+    await P.remote.syncAvailableModels();
+    await P.remote.checkLocal();
 
     if (Args.disableRemoteConfig) {
       qqw("Remote config is disabled");
@@ -126,9 +126,9 @@ extension $App on _App {
     _config.q = allConfig;
     await sp.setString(_configForAllDemosKey, jsonEncode(allConfig));
     await _parseConfigForDemoSpecificData(allConfig[demoType.q.name]);
-    await P.weights.syncAvailableModels();
-    await P.weights.checkLocal();
-    await P.weights.removeFilesNotInConfig();
+    await P.remote.syncAvailableModels();
+    await P.remote.checkLocal();
+    await P.remote.removeFilesNotInConfig();
   }
 
   void hapticLight() {

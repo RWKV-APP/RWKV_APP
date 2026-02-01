@@ -39,7 +39,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   bool _expanded = false;
 
   List<FileInfo> get _fileInfos {
-    final availableModels = P.weights.ttsWeights.q;
+    final availableModels = P.remote.ttsWeights.q;
     final isSpark = widget.fileInfo.tags.contains("spark");
     final fileInfos = availableModels.toList().where((e) {
       return !e.tags.contains("core") && (isSpark ? e.tags.contains("spark") : !e.tags.contains("spark"));
@@ -49,17 +49,17 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   }
 
   void _onDownloadAllTap() async {
-    P.weights.activeDownloadGroupIds.q = {...P.weights.activeDownloadGroupIds.q, widget.fileInfo.fileName};
-    final missingFileInfos = _fileInfos.where((e) => P.weights.locals(e).q.hasFile == false).toList();
+    P.remote.activeDownloadGroupIds.q = {...P.remote.activeDownloadGroupIds.q, widget.fileInfo.fileName};
+    final missingFileInfos = _fileInfos.where((e) => P.remote.locals(e).q.hasFile == false).toList();
     for (var e in missingFileInfos) {
-      P.weights.getFile(fileInfo: e);
+      P.remote.getFile(fileInfo: e);
     }
   }
 
   void _onDeleteAllTap() async {
-    P.weights.activeDownloadGroupIds.q = P.weights.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
+    P.remote.activeDownloadGroupIds.q = P.remote.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
     for (var e in _fileInfos) {
-      P.weights.deleteFile(fileInfo: e);
+      P.remote.deleteFile(fileInfo: e);
     }
   }
 
@@ -70,7 +70,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   int _getDownloadedSize() {
     int downloaded = 0;
     for (var fileInfo in _fileInfos) {
-      final localFile = P.weights.locals(fileInfo).q;
+      final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading) {
         final progress = localFile.progress.clamp(0.0, 100.0) / 100.0;
         downloaded += (fileInfo.fileSize * progress).round();
@@ -89,14 +89,14 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   }
 
   bool _isDownloading() {
-    final coreLocal = P.weights.locals(widget.fileInfo).q;
-    final isExplicitlyActive = P.weights.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName);
+    final coreLocal = P.remote.locals(widget.fileInfo).q;
+    final isExplicitlyActive = P.remote.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName);
     final isCoreActive = coreLocal.downloading;
 
     if (!isExplicitlyActive && !isCoreActive) return false;
 
     for (var fileInfo in _fileInfos) {
-      final localFile = P.weights.locals(fileInfo).q;
+      final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading) {
         return true;
       }
@@ -107,7 +107,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   double _getTotalSpeed() {
     double totalSpeed = 0.0;
     for (var fileInfo in _fileInfos) {
-      final localFile = P.weights.locals(fileInfo).q;
+      final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading && localFile.networkSpeed > 0) {
         totalSpeed += localFile.networkSpeed;
       }
@@ -119,7 +119,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     Duration totalRemaining = Duration.zero;
     int downloadingCount = 0;
     for (var fileInfo in _fileInfos) {
-      final localFile = P.weights.locals(fileInfo).q;
+      final localFile = P.remote.locals(fileInfo).q;
       if (localFile.downloading && !localFile.timeRemaining.isNegative) {
         totalRemaining += localFile.timeRemaining;
         downloadingCount++;
@@ -130,12 +130,12 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
   }
 
   TaskState _getOverallState() {
-    final files = _fileInfos.map((e) => P.weights.locals(e).q).toList();
+    final files = _fileInfos.map((e) => P.remote.locals(e).q).toList();
     final allDownloaded = files.every((e) => e.hasFile);
     if (allDownloaded) return TaskState.completed;
 
-    final coreLocal = P.weights.locals(widget.fileInfo).q;
-    final isExplicitlyActive = P.weights.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName);
+    final coreLocal = P.remote.locals(widget.fileInfo).q;
+    final isExplicitlyActive = P.remote.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName);
     final isCoreActive = coreLocal.downloading || coreLocal.state == TaskState.running;
 
     if (!isExplicitlyActive && !isCoreActive) {
@@ -165,15 +165,15 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       cancelLabel: S.current.continue_download,
     );
     if (result == OkCancelResult.ok) {
-      P.weights.activeDownloadGroupIds.q = P.weights.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
+      P.remote.activeDownloadGroupIds.q = P.remote.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
 
       // 1. Cancel the core file (always unique to this group)
-      await P.weights.cancelDownload(fileInfo: widget.fileInfo);
+      await P.remote.cancelDownload(fileInfo: widget.fileInfo);
 
       // 2. Check if we should cancel dependencies
       bool shouldCancelDependencies = true;
 
-      final activeGroups = P.weights.activeDownloadGroupIds.q;
+      final activeGroups = P.remote.activeDownloadGroupIds.q;
       final myId = widget.fileInfo.fileName;
       final isMySpark = widget.fileInfo.tags.contains("spark");
 
@@ -182,7 +182,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
         if (groupId == myId) continue;
 
         // Find the FileInfo for this groupId
-        final otherCore = P.weights.ttsCores.q.firstWhereOrNull((e) => e.fileName == groupId);
+        final otherCore = P.remote.ttsCores.q.firstWhereOrNull((e) => e.fileName == groupId);
         if (otherCore != null) {
           final isOtherSpark = otherCore.tags.contains("spark");
           if (isMySpark == isOtherSpark) {
@@ -196,7 +196,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       if (shouldCancelDependencies) {
         for (var fileInfo in _fileInfos) {
           if (fileInfo.fileName != widget.fileInfo.fileName) {
-            await P.weights.cancelDownload(fileInfo: fileInfo);
+            await P.remote.cancelDownload(fileInfo: fileInfo);
           }
         }
       }
@@ -205,12 +205,12 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
 
   void _onPauseTap() {
     // 1. Pause the core file (always unique to this group)
-    P.weights.pauseDownload(fileInfo: widget.fileInfo);
+    P.remote.pauseDownload(fileInfo: widget.fileInfo);
 
     // 2. Check if we should pause dependencies
     bool shouldPauseDependencies = true;
 
-    final activeGroups = P.weights.activeDownloadGroupIds.q;
+    final activeGroups = P.remote.activeDownloadGroupIds.q;
     final myId = widget.fileInfo.fileName;
     final isMySpark = widget.fileInfo.tags.contains("spark");
 
@@ -219,7 +219,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       if (groupId == myId) continue;
 
       // Find the FileInfo for this groupId
-      final otherCore = P.weights.ttsCores.q.firstWhereOrNull((e) => e.fileName == groupId);
+      final otherCore = P.remote.ttsCores.q.firstWhereOrNull((e) => e.fileName == groupId);
       if (otherCore != null) {
         final isOtherSpark = otherCore.tags.contains("spark");
         if (isMySpark == isOtherSpark) {
@@ -233,7 +233,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     if (shouldPauseDependencies) {
       for (var fileInfo in _fileInfos) {
         if (fileInfo.fileName != widget.fileInfo.fileName) {
-          P.weights.pauseDownload(fileInfo: fileInfo);
+          P.remote.pauseDownload(fileInfo: fileInfo);
         }
       }
     }
@@ -244,7 +244,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       Alert.warning(S.current.please_wait_for_the_model_to_load);
       return;
     }
-    final availableModels = P.weights.ttsWeights.q;
+    final availableModels = P.remote.ttsWeights.q;
     final fileInfos = availableModels.toList();
     final sparkFileKeys = fileInfos.where((e) => e.tags.contains("spark")).toList();
     if (sparkFileKeys.isEmpty) {
@@ -275,10 +275,10 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       return;
     }
 
-    final modelLocalFile = P.weights.locals(widget.fileInfo).q;
-    final localWav2vec2File = P.weights.locals(wav2vec2FileKey).q;
-    final localDetokenizeFile = P.weights.locals(detokenizeFileKey).q;
-    final localTokenizeFile = P.weights.locals(bicodecTokenizeFileKey).q;
+    final modelLocalFile = P.remote.locals(widget.fileInfo).q;
+    final localWav2vec2File = P.remote.locals(wav2vec2FileKey).q;
+    final localDetokenizeFile = P.remote.locals(detokenizeFileKey).q;
+    final localTokenizeFile = P.remote.locals(bicodecTokenizeFileKey).q;
 
     if (P.app.pageKey.q == .rolePlaying) {
       final info = ModelInfo(
@@ -338,14 +338,14 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     final qb = ref.watch(P.app.qb);
 
     final files = _fileInfos.m((e) {
-      return ref.watch(P.weights.locals(e));
+      return ref.watch(P.remote.locals(e));
     });
 
     final allDownloaded = files.every((e) => e.hasFile);
 
-    if (allDownloaded && P.weights.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName)) {
+    if (allDownloaded && P.remote.activeDownloadGroupIds.q.contains(widget.fileInfo.fileName)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        P.weights.activeDownloadGroupIds.q = P.weights.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
+        P.remote.activeDownloadGroupIds.q = P.remote.activeDownloadGroupIds.q.difference({widget.fileInfo.fileName});
       });
     }
 
@@ -677,7 +677,7 @@ class _ExpandedFileItem extends ConsumerWidget {
 
   void _onDownloadTap(BuildContext context) async {
     await P.preference.tryShowBatteryOptimizationDialog(context);
-    await P.weights.getFile(fileInfo: fileInfo);
+    await P.remote.getFile(fileInfo: fileInfo);
   }
 
   void _onCancelTap() async {
@@ -689,18 +689,18 @@ class _ExpandedFileItem extends ConsumerWidget {
       cancelLabel: S.current.continue_download,
     );
     if (result == OkCancelResult.ok) {
-      await P.weights.cancelDownload(fileInfo: fileInfo);
+      await P.remote.cancelDownload(fileInfo: fileInfo);
     }
   }
 
   void _onPauseTap() {
-    P.weights.pauseDownload(fileInfo: fileInfo);
+    P.remote.pauseDownload(fileInfo: fileInfo);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final localFile = ref.watch(P.weights.locals(fileInfo));
+    final localFile = ref.watch(P.remote.locals(fileInfo));
     final hasFile = localFile.hasFile;
     final downloading = localFile.downloading;
     final progress = localFile.progress / 100;
@@ -827,7 +827,7 @@ class _ExpandedFileItem extends ConsumerWidget {
                     cancelLabel: S.current.cancel,
                   );
                   if (result == OkCancelResult.ok) {
-                    await P.weights.deleteFile(fileInfo: fileInfo);
+                    await P.remote.deleteFile(fileInfo: fileInfo);
                   }
                 },
                 visualDensity: .compact,

@@ -7,7 +7,7 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart';
 import 'package:zone/model/file_info.dart';
-import 'package:zone/store/p.dart' show $RWKVLoad, $Weights, P;
+import 'package:zone/store/p.dart' show $RWKVLoad, $Remote, P;
 import 'package:zone/widgets/model_item.dart';
 
 import 'package:zone/gen/l10n.dart' show S;
@@ -44,8 +44,8 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     });
     final info = ModelInfo(
       id: widget.file.fileName,
-      modelPath: P.weights.locals(widget.file).q.targetPath,
-      statePath: state == null ? '' : P.weights.locals(state).q.targetPath,
+      modelPath: P.remote.locals(widget.file).q.targetPath,
+      statePath: state == null ? '' : P.remote.locals(state).q.targetPath,
       backend: widget.file.backend!,
       topP: state?.decodeParam['topP'],
       temperature: state?.decodeParam['temperature']?.toDouble(),
@@ -62,7 +62,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final local = ref.watch(P.weights.locals(widget.file));
+    final local = ref.watch(P.remote.locals(widget.file));
     final customTheme = ref.watch(P.app.customTheme);
 
     final noState = widget.file.state.isEmpty;
@@ -140,7 +140,7 @@ class _ModelStateItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final localFile = ref.watch(P.weights.locals(state));
+    final localFile = ref.watch(P.remote.locals(state));
     final downloading = localFile.state == TaskState.running;
     final progress = localFile.progress.isNaN || localFile.progress.isInfinite ? null : localFile.progress / 100;
     return Row(
@@ -179,7 +179,7 @@ class _ModelStateItem extends ConsumerWidget {
         if (onSelectTap != null && localFile.hasFile)
           IconButton(
             onPressed: () {
-              P.weights.deleteFile(fileInfo: state);
+              P.remote.deleteFile(fileInfo: state);
             },
             visualDensity: .compact,
             icon: const Icon(Icons.delete_outline),

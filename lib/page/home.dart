@@ -313,8 +313,8 @@ class _NekoButton extends ConsumerWidget {
         onTap: () async {
           final current = P.rwkv.latestModel.q;
           if (current == null || !current.isNeko) {
-            final nekoList = P.weights.getNekoModel();
-            final downloaded = nekoList.where((e) => P.weights.locals(e).q.hasFile).toList();
+            final nekoList = P.remote.getNekoModel();
+            final downloaded = nekoList.where((e) => P.remote.locals(e).q.hasFile).toList();
             if (downloaded.isNotEmpty) {
               final loaded = await _ModelLoadingDialog.show(context, downloaded.first);
               if (!loaded) return;

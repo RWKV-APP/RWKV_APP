@@ -112,7 +112,7 @@ class PageWeightManager extends ConsumerWidget {
         FileInfo? existingFileInfo;
         try {
           final fileNameToCheck = fileName.isNotEmpty ? fileName : (sourceFile != null ? path.basename(sourceFile.path) : "unknown");
-          existingFileInfo = await P.weights.checkFileExistsInConfig(fileNameToCheck);
+          existingFileInfo = await P.remote.checkFileExistsInConfig(fileNameToCheck);
           if (existingFileInfo != null) {
             hasExistingFiles = true;
           }
@@ -214,7 +214,7 @@ class PageWeightManager extends ConsumerWidget {
               ? pickedFile.name
               : (fileInfo.sourceFile != null ? path.basename(fileInfo.sourceFile!.path) : "unknown");
 
-          final success = await P.weights.importWeightFile(
+          final success = await P.remote.importWeightFile(
             sourceFile: fileInfo.sourceFile,
             fileBytes: fileInfo.fileBytes,
             fileName: fileNameToUse,
@@ -267,16 +267,16 @@ class PageWeightManager extends ConsumerWidget {
 
       // Check if there are any files to export
       final allWeights = [
-        ...ref.read(P.weights.chatWeights),
-        ...ref.read(P.weights.roleplayWeights),
-        ...ref.read(P.weights.ttsWeights),
-        ...ref.read(P.weights.seeWeights),
-        ...ref.read(P.weights.sudokuWeights),
-        ...ref.read(P.weights.othelloWeights),
+        ...ref.read(P.remote.chatWeights),
+        ...ref.read(P.remote.roleplayWeights),
+        ...ref.read(P.remote.ttsWeights),
+        ...ref.read(P.remote.seeWeights),
+        ...ref.read(P.remote.sudokuWeights),
+        ...ref.read(P.remote.othelloWeights),
       ];
 
       final filesToExport = allWeights.where((fileInfo) {
-        final local = ref.read(P.weights.locals(fileInfo));
+        final local = ref.read(P.remote.locals(fileInfo));
         return local.hasFile;
       }).toList();
 
@@ -316,7 +316,7 @@ class PageWeightManager extends ConsumerWidget {
 
       // Export all files
       try {
-        final exportDirectory = await P.weights.exportAllWeightFiles(
+        final exportDirectory = await P.remote.exportAllWeightFiles(
           targetDirectory: targetDirectory,
           onProgress: (currentFile, completed, total) {
             progressNotifier.value = (currentFile, completed, total);
@@ -437,7 +437,7 @@ class _BodyState extends ConsumerState<_Body> {
   Future<void> _onRefresh() async {
     await Future.wait([
       500.msLater,
-      P.weights.checkLocal(),
+      P.remote.checkLocal(),
     ]);
 
     _otherFilesSectionKey.currentState?._loadFiles();
@@ -484,7 +484,7 @@ class _CustomDirectoryTile extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.folder_open),
             onPressed: () {
-              P.weights.openModelDirectory();
+              P.remote.openModelDirectory();
             },
           ),
         ],
@@ -528,17 +528,17 @@ class _WeightList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chatWeights = ref.watch(P.weights.chatWeights);
+    final chatWeights = ref.watch(P.remote.chatWeights);
 
-    final ttsWeights = ref.watch(P.weights.ttsWeights);
+    final ttsWeights = ref.watch(P.remote.ttsWeights);
 
-    final roleplayWeights = ref.watch(P.weights.roleplayWeights);
+    final roleplayWeights = ref.watch(P.remote.roleplayWeights);
 
-    final seeWeights = ref.watch(P.weights.seeWeights);
+    final seeWeights = ref.watch(P.remote.seeWeights);
 
-    final sudokuWeights = ref.watch(P.weights.sudokuWeights);
+    final sudokuWeights = ref.watch(P.remote.sudokuWeights);
 
-    final othelloWeights = ref.watch(P.weights.othelloWeights);
+    final othelloWeights = ref.watch(P.remote.othelloWeights);
 
     final allWeights = [
       ...chatWeights,
@@ -551,7 +551,7 @@ class _WeightList extends ConsumerWidget {
 
     // Check if there are any downloaded files
     final hasDownloadedFiles = allWeights.any((fileInfo) {
-      final local = ref.watch(P.weights.locals(fileInfo));
+      final local = ref.watch(P.remote.locals(fileInfo));
       return local.hasFile;
     });
 
@@ -586,7 +586,7 @@ class _DownloadingSection extends ConsumerWidget {
     final downloadingEntries = <(FileInfo, LocalFile)>[];
 
     for (final fileInfo in allWeights) {
-      final local = ref.watch(P.weights.locals(fileInfo));
+      final local = ref.watch(P.remote.locals(fileInfo));
       if (local.downloading) {
         downloadingEntries.add((fileInfo, local));
       }
@@ -635,7 +635,7 @@ class _WeightSection extends ConsumerWidget {
     // Filter for downloaded weights
 
     final downloadedWeights = weights.where((w) {
-      final local = ref.watch(P.weights.locals(w));
+      final local = ref.watch(P.remote.locals(w));
 
       return local.hasFile;
     }).toList()..sort((a, b) => b.fileSize.compareTo(a.fileSize));
@@ -675,7 +675,7 @@ class WeightManagerUtils {
 
     for (final weight in allWeights) {
       // Use ref.watch to ensure this widget rebuilds when locals state changes
-      final local = ref.watch(P.weights.locals(weight));
+      final local = ref.watch(P.remote.locals(weight));
 
       if (local.hasFile) {
         totalBytes += weight.fileSize;
@@ -705,7 +705,7 @@ class _TotalUsageTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Watch all locals to ensure this widget rebuilds when any file state changes
     for (final weight in allWeights) {
-      ref.watch(P.weights.locals(weight));
+      ref.watch(P.remote.locals(weight));
     }
 
     final totalBytes = WeightManagerUtils.calculateTotalUsage(allWeights, ref);
@@ -816,7 +816,7 @@ class _DownloadingItem extends ConsumerWidget {
             isDestructiveAction: true,
           );
           if (result == OkCancelResult.ok) {
-            await P.weights.cancelDownload(fileInfo: fileInfo);
+            await P.remote.cancelDownload(fileInfo: fileInfo);
           }
         },
       ),
@@ -847,7 +847,7 @@ class _WeightItem extends ConsumerWidget {
 
       // Export the file
       try {
-        await P.weights.exportWeightFile(
+        await P.remote.exportWeightFile(
           fileInfo: fileInfo,
           targetDirectory: targetDirectory,
         );
@@ -876,7 +876,7 @@ class _WeightItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final local = ref.watch(P.weights.locals(fileInfo));
+    final local = ref.watch(P.remote.locals(fileInfo));
     if (!local.hasFile) {
       return const SizedBox.shrink();
     }
@@ -917,7 +917,7 @@ class _WeightItem extends ConsumerWidget {
                 isDestructiveAction: true,
               );
               if (result == OkCancelResult.ok) {
-                await P.weights.deleteFile(fileInfo: fileInfo);
+                await P.remote.deleteFile(fileInfo: fileInfo);
               }
             },
           ),
@@ -960,23 +960,23 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
 
     // Get all file names from config (not just available ones)
     // This ensures we correctly identify files even if they're not available on current platform
-    final allWeightFileNames = P.weights.getAllConfigFileNames();
+    final allWeightFileNames = P.remote.getAllConfigFileNames();
 
     // Build a set of temporary file paths that belong to active download tasks.
     // These are typically files with `.tmp` suffix that are still being written,
     // and should NOT be shown in the "other files" section.
     final downloadingTmpPaths = <String>{};
     final downloadingCandidates = [
-      P.weights.chatWeights.q,
-      P.weights.roleplayWeights.q,
-      P.weights.ttsWeights.q,
-      P.weights.seeWeights.q,
-      P.weights.sudokuWeights.q,
-      P.weights.othelloWeights.q,
+      P.remote.chatWeights.q,
+      P.remote.roleplayWeights.q,
+      P.remote.ttsWeights.q,
+      P.remote.seeWeights.q,
+      P.remote.sudokuWeights.q,
+      P.remote.othelloWeights.q,
     ].expand((e) => e).where((e) => e.available).toList();
 
     for (final fileInfo in downloadingCandidates) {
-      final local = P.weights.locals(fileInfo).q;
+      final local = P.remote.locals(fileInfo).q;
       if (!local.downloading) continue;
       downloadingTmpPaths.add("${local.targetPath}.tmp");
     }
@@ -1029,12 +1029,12 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
   @override
   Widget build(BuildContext context) {
     // Watch weight lists to trigger refresh when they change (e.g., after import)
-    final chatWeights = ref.watch(P.weights.chatWeights);
-    final roleplayWeights = ref.watch(P.weights.roleplayWeights);
-    final ttsWeights = ref.watch(P.weights.ttsWeights);
-    final seeWeights = ref.watch(P.weights.seeWeights);
-    final sudokuWeights = ref.watch(P.weights.sudokuWeights);
-    final othelloWeights = ref.watch(P.weights.othelloWeights);
+    final chatWeights = ref.watch(P.remote.chatWeights);
+    final roleplayWeights = ref.watch(P.remote.roleplayWeights);
+    final ttsWeights = ref.watch(P.remote.ttsWeights);
+    final seeWeights = ref.watch(P.remote.seeWeights);
+    final sudokuWeights = ref.watch(P.remote.sudokuWeights);
+    final othelloWeights = ref.watch(P.remote.othelloWeights);
 
     // Check if weight lists have changed
     final currentWeights = {

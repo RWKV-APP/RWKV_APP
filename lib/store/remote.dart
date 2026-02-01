@@ -2,7 +2,7 @@
 
 part of 'p.dart';
 
-class _Weights {
+class _Remote {
   // ===========================================================================
   // Instance
   // ===========================================================================
@@ -117,7 +117,7 @@ class _Weights {
 }
 
 /// Public methods
-extension $Weights on _Weights {
+extension $Remote on _Remote {
   Future<void> syncAvailableModels() async {
     qq;
     final config = P.app._config.q;
@@ -239,7 +239,7 @@ extension $Weights on _Weights {
         qqw("delete file (size: ${fileSize} bytes): ${entity.path}");
         qqw("fileNameExistsInConfig: $fileNameExistsInConfig");
         if (!fileNameExistsInConfig) {
-          qqw("fileName: ${path.basename(entity.path)}");
+          qqw("fileName: ${basename(entity.path)}");
           qqw("All config file names: ${getAllConfigFileNames().join("\n")}");
         }
         qqw("needToCheckBecauseTheFileIsBigEnough: $needToCheckBecauseTheFileIsBigEnough");
@@ -353,7 +353,7 @@ extension $Weights on _Weights {
     try {
       final customDir = P.preference.customModelsDir.q;
       final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-      final defaultDir = documentsDir != null ? path.join(documentsDir, Config.modelsDirName) : null;
+      final defaultDir = documentsDir != null ? join(documentsDir, Config.modelsDirName) : null;
       final dirPath = customDir ?? defaultDir;
       if (dirPath == null) return;
       qqr(dirPath);
@@ -456,7 +456,7 @@ extension $Weights on _Weights {
     qq;
 
     // Get the file name
-    final actualFileName = fileName ?? (sourceFile != null ? path.basename(sourceFile.path) : throw Exception("File name is required"));
+    final actualFileName = fileName ?? (sourceFile != null ? basename(sourceFile.path) : throw Exception("File name is required"));
 
     // Validate that we have either sourceFile or fileBytes
     if (sourceFile == null && fileBytes == null) {
@@ -520,7 +520,7 @@ extension $Weights on _Weights {
     }
 
     // Ensure target directory exists
-    final targetDir = Directory(path.dirname(targetPath));
+    final targetDir = Directory(dirname(targetPath));
     if (!await targetDir.exists()) {
       await targetDir.create(recursive: true);
     }
@@ -616,7 +616,7 @@ extension $Weights on _Weights {
     final filesToImport = <ArchiveFile>[];
     for (final file in archive) {
       if (!file.isFile) continue;
-      final fileName = path.basename(file.name);
+      final fileName = basename(file.name);
       final matchingFileInfo = allFileInfos.where((info) => info.fileName == fileName).firstOrNull;
       if (matchingFileInfo != null) {
         filesToImport.add(file);
@@ -633,7 +633,7 @@ extension $Weights on _Weights {
 
     // Import each file
     for (final archiveFile in filesToImport) {
-      final fileName = path.basename(archiveFile.name);
+      final fileName = basename(archiveFile.name);
       if (onProgress != null) {
         onProgress(fileName, completed, total);
       }
@@ -659,7 +659,7 @@ extension $Weights on _Weights {
         }
 
         // Ensure target directory exists
-        final targetDir = Directory(path.dirname(targetPath));
+        final targetDir = Directory(dirname(targetPath));
         if (!await targetDir.exists()) {
           await targetDir.create(recursive: true);
         }
@@ -965,7 +965,7 @@ extension $Weights on _Weights {
       return null;
     }
     final file = File(result.files.single.path!);
-    final fileName = path.basename(file.path);
+    final fileName = basename(file.path);
     final fileInfo = FileInfo(
       name: fileName,
       fileName: file.path,
@@ -991,7 +991,7 @@ extension $Weights on _Weights {
 }
 
 /// Private methods
-extension _$Weights on _Weights {
+extension _$Remote on _Remote {
   Future<void> _init() async {
     try {
       await syncAvailableModels();
@@ -1053,7 +1053,7 @@ extension _$Weights on _Weights {
             // Also extract from url if fileName is not available
             if (modelConfig['url'] is String) {
               final url = modelConfig['url'] as String;
-              final fileName = path.basename(Uri.parse(url).path);
+              final fileName = basename(Uri.parse(url).path);
               if (fileName.isNotEmpty && !fileName.contains('/')) {
                 knownFileNames.add(fileName);
               }
@@ -1075,7 +1075,7 @@ extension _$Weights on _Weights {
       for (final entity in entities) {
         if (entity is! File) continue;
 
-        final fileName = path.basename(entity.path);
+        final fileName = basename(entity.path);
 
         // Skip database files (.sqlite, .sqlite3, .db) - they should be in AppData, not Documents
         if (fileName.toLowerCase().endsWith('.sqlite') ||
@@ -1106,7 +1106,7 @@ extension _$Weights on _Weights {
     int migratedCount = 0;
     int skippedCount = 0;
     for (final file in filesToMigrate) {
-      final fileName = path.basename(file.path);
+      final fileName = basename(file.path);
       final targetFile = File("${modelsDir.path}/$fileName");
 
       // Skip if target file already exists
@@ -1139,13 +1139,13 @@ extension _$Weights on _Weights {
       for (final entity in entities) {
         if (entity is! Directory) continue;
 
-        final dirName = path.basename(entity.path);
+        final dirName = basename(entity.path);
         // Skip the models directory itself
         if (dirName == Config.modelsDirName) continue;
 
         // Check if this directory corresponds to a migrated file
         final correspondingFile = filesToMigrate.firstWhereOrNull(
-          (f) => path.basenameWithoutExtension(f.path) == dirName,
+          (f) => basenameWithoutExtension(f.path) == dirName,
         );
 
         if (correspondingFile != null) {
