@@ -4518,6 +4518,56 @@ class S {
       args: [],
     );
   }
+
+  /// `当前操作系统({os})不支持打开文件夹的操作。`
+  String open_folder_unsupported_on_platform(Object os) {
+    return Intl.message(
+      '当前操作系统($os)不支持打开文件夹的操作。',
+      name: 'open_folder_unsupported_on_platform',
+      desc: '',
+      args: [os],
+    );
+  }
+
+  /// `文件夹路径为空。`
+  String get open_folder_path_is_null {
+    return Intl.message(
+      '文件夹路径为空。',
+      name: 'open_folder_path_is_null',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件夹不存在，正在创建空文件夹。`
+  String get open_folder_creating_empty {
+    return Intl.message(
+      '文件夹不存在，正在创建空文件夹。',
+      name: 'open_folder_creating_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `空文件夹创建成功。`
+  String get open_folder_created_success {
+    return Intl.message(
+      '空文件夹创建成功。',
+      name: 'open_folder_created_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `空文件夹创建失败：{error}`
+  String open_folder_create_failed(Object error) {
+    return Intl.message(
+      '空文件夹创建失败：$error',
+      name: 'open_folder_create_failed',
+      desc: '',
+      args: [error],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

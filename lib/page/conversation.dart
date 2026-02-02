@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:zone/func/open_folder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -169,14 +168,7 @@ class _ConversationAppBar extends ConsumerWidget {
     try {
       final appSupportDir = await getApplicationSupportDirectory();
       final dbPath = appSupportDir.path;
-
-      if (Platform.isMacOS) {
-        await Process.run('open', [dbPath]);
-      } else if (Platform.isWindows) {
-        await Process.run('explorer', [dbPath]);
-      } else if (Platform.isLinux) {
-        await Process.run('xdg-open', [dbPath]);
-      }
+      await openFolder(dbPath);
     } catch (e) {
       qqe(e);
     }

@@ -35,7 +35,12 @@ Future<String> _unzipInPlaceIsolate(String modelPath) async {
       continue;
     }
     if (file.isFile) {
-      final outputStream = OutputFileStream(p.join(modelDir, file.name));
+      final filePath = p.join(modelDir, file.name);
+      final parentDir = Directory(p.dirname(filePath));
+      if (!await parentDir.exists()) {
+        await parentDir.create(recursive: true);
+      }
+      final outputStream = OutputFileStream(filePath);
 
       file.writeContent(outputStream);
 

@@ -662,5 +662,20 @@
       "failCount": {}
     }
   },
-  "please_manually_migrate_files": "路径已更新，如需迁移文件请手动选择并移动。"
+  "please_manually_migrate_files": "路径已更新，如需迁移文件请手动选择并移动。",
+  "open_folder_unsupported_on_platform": "当前操作系统({os})不支持打开文件夹的操作。",
+  "@open_folder_unsupported_on_platform": {
+    "placeholders": {
+      "os": {}
+    }
+  },
+  "open_folder_path_is_null": "文件夹路径为空。",
+  "open_folder_creating_empty": "文件夹不存在，正在创建空文件夹。",
+  "open_folder_created_success": "空文件夹创建成功。",
+  "open_folder_create_failed": "空文件夹创建失败：{error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  }
 }

@@ -82,7 +82,7 @@ extension $Pth on _Pth {
   }
 
   Future<void> onOpenFolderClicked(Folder folder) async {
-    await launchUrl(Uri.directory(folder.path));
+    await openFolder(folder.path);
   }
 
   /// 加载指定 pth 文件并开始聊天；成功/失败与 pop 由 P.rwkv.startPthForChat 内部用 Alert 处理。

@@ -656,5 +656,20 @@
       "failCount": {}
     }
   },
-  "please_manually_migrate_files": "Путь обновлён. При необходимости перенесите файлы вручную."
+  "please_manually_migrate_files": "Путь обновлён. При необходимости перенесите файлы вручную.",
+  "open_folder_unsupported_on_platform": "Открытие папки не поддерживается в текущей ОС ({os}).",
+  "@open_folder_unsupported_on_platform": {
+    "placeholders": {
+      "os": {}
+    }
+  },
+  "open_folder_path_is_null": "Путь к папке пуст.",
+  "open_folder_creating_empty": "Папка не существует, создаём пустую папку.",
+  "open_folder_created_success": "Пустая папка успешно создана.",
+  "open_folder_create_failed": "Не удалось создать пустую папку: {error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  }
 }

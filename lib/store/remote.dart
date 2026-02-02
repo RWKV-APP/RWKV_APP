@@ -380,26 +380,21 @@ extension $Remote on _Remote {
   }
 
   Future<void> openModelDirectory() async {
+    final isDesktop = P.app.isDesktop.q;
+
+    if (!isDesktop) {
+      Alert.info(S.current.open_folder_unsupported_on_platform(Platform.operatingSystem));
+      return;
+    }
+
     try {
       final customDir = P.preference.customModelsDir.q;
       final documentsDir = P.app.effectiveDocumentsDir.q?.path;
       final defaultDir = documentsDir != null ? join(documentsDir, Config.modelsDirName) : null;
       final dirPath = customDir ?? defaultDir;
       if (dirPath == null) return;
-      final dir = Directory(dirPath);
-      if (!await dir.exists()) {
-        try {
-          await dir.create(recursive: true);
-        } catch (e) {
-          qqe("Failed to create directory: $e");
-          Alert.error(S.current.failed_to_create_directory);
-          return;
-        }
-      }
       qqr(dirPath);
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-        await launchUrl(Uri.directory(dirPath));
-      }
+      await openFolder(dirPath);
     } catch (e) {
       qqe(e);
       Alert.error(e.toString());
