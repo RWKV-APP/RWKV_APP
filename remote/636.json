@@ -36,21 +36,21 @@
     },
     "model_config": [
       {
-        "name": "RWKV7-G1a 0.1B",
+        "name": "RWKV7-G1d 0.1B",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a-0.1b-20250728-ctx4096.st",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1d-0.1b-20260129-ctx8192.st",
         "fileSize": 382205264,
         "quantization": "fp16",
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1753660800
+        "date": 1770013839
       },
       {
-        "name": "RWKV7-G1a 0.1B",
+        "name": "RWKV7-G1d 0.1B",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1a-0.1b-20250728-ctx4096-Q8_0.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-0.1b-20260129-ctx8192-q8_0.gguf",
         "fileSize": 212372928,
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android"],
@@ -93,22 +93,22 @@
         "date": 1757205064
       },
       {
-        "name": "RWKV7-G1c 2.9B",
+        "name": "RWKV7-G1d 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-2.9b-20251231-ctx8192-imatrix-q4_k_m.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-2.9b-20260131-ctx8192-imatrix-q4_k_m.gguf",
         "fileSize": 1875794080,
-        "quantization": "Q6_K",
+        "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1767139200
       },
       {
-        "name": "RWKV7-G1c 7.2B",
+        "name": "RWKV7-G1d 7.2B",
         "type": "gguf",
         "modelSize": 7.2,
         "fileName": "rwkv7-g1c-7.2b-20251231-ctx8192-imatrix-q4_k_m.gguf",
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-7.2b-20251231-ctx8192-imatrix-q4_k_m.gguf",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-7.2b-20260131-ctx8192-imatrix-q4_k_m.gguf",
         "fileSize": 4510365856,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android"],
@@ -117,16 +117,16 @@
         "date": 1767139200
       },
       {
-        "name": "RWKV7-G1a 0.1B",
+        "name": "RWKV7-G1d 0.1B",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1a-0.1b-20250728-ctx4096.st",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1d-0.1b-20260129-ctx8192.st",
         "fileSize": 382205264,
         "quantization": "fp16",
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1753660800
+        "date": 1770013839
       },
       {
         "name": "RWKV7-G1a 0.4B",
@@ -153,27 +153,27 @@
         "date": 1768209088
       },
       {
-        "name": "RWKV7-G1c 2.9B",
+        "name": "RWKV7-G1d 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1c-2.9b-20251231-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1d-2.9b-20260131-ctx8192-nf4.prefab",
         "fileSize": 2315788799,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1767139200
+        "date": 1770013840
       },
       {
-        "name": "RWKV7-G1a 0.1B (MLX INT6)",
+        "name": "RWKV7-G1d 0.1B (MLX INT6)",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.1B-g1a-20250728-ctx4096-mlx-6bit.zip",
-        "fileSize": 160618980,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.1B-g1d-20260129-ctx8192-mlx-6bit.zip",
+        "fileSize": 160608624,
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1753660800
+        "date": 1770014736
       },
       {
         "name": "RWKV7-G1a 0.4B (MLX INT6)",
@@ -198,15 +198,15 @@
         "date": 1768209089
       },
       {
-        "name": "RWKV7-G1c 2.9B (MLX INT6)",
+        "name": "RWKV7-G1d 2.9B (MLX INT6)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1c-20251231-ctx8192-mlx-6bit.zip",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1d-20260131-ctx8192-mlx-6bit.zip",
         "fileSize": 2134527658,
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1767139200
+        "date": 1770013841
       },
       {
         "name": "RWKV7-G1a 0.4B (CoreML INT8)",
@@ -233,16 +233,16 @@
         "date": 1768536194
       },
       {
-        "name": "RWKV7-G1c 7.2B",
+        "name": "RWKV7-G1d 7.2B",
         "modelSize": 7.2,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1c-7.2b-20251231-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1d-7.2b-20260131-ctx8192-nf4.prefab",
         "fileSize": 5233791487,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1767139200
+        "date": 1770013840
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
