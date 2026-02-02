@@ -41,6 +41,7 @@ import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/db/db.dart';
+import 'package:zone/func/extensions/string.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/backend_status.dart';
 import 'package:zone/model/bbox.dart';

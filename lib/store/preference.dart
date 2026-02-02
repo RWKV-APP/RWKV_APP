@@ -99,6 +99,8 @@ class _Preference {
   /// Pth 文件夹列表；macOS 上可含 security-scoped bookmark 以持久化访问权限
   late final pthFolderEntries = qs<List<PthFolderEntry>>([]);
 
+  bool hasUnlinkDefaultModelsDirOnce = false;
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -254,10 +256,12 @@ extension _$Preference on _Preference {
       final legacyPaths = sp.getStringList("halo_state.pthFolderPaths");
       if (legacyPaths != null && legacyPaths.isNotEmpty) {
         pthFolderEntries.q = legacyPaths.map((p) => PthFolderEntry(path: p, bookmark: null)).toList();
-        final sp2 = await SharedPreferences.getInstance();
-        await sp2.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
+        await sp.setString("halo_state.pthFolderEntries", jsonEncode(pthFolderEntries.q.map((e) => e.toJson()).toList()));
       }
     }
+
+    final hasUnlinkDefaultModelsDirOnce = sp.getBool("halo_state.hasUnlinkDefaultModelsDirOnce");
+    this.hasUnlinkDefaultModelsDirOnce = hasUnlinkDefaultModelsDirOnce == true;
   }
 
   Future<void> _saveDumpping(bool dumpping) async {
@@ -473,5 +477,11 @@ extension $Preference on _Preference {
     }
     pthFolderEntries.q = [];
     return pthFolderEntries.q;
+  }
+
+  Future<void> setHasUnlinkDefaultModelsDirOnce(bool value) async {
+    hasUnlinkDefaultModelsDirOnce = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool("halo_state.hasUnlinkDefaultModelsDirOnce", value);
   }
 }

@@ -78,7 +78,8 @@ class _App extends RawApp {
       // This will cause callers to handle the null case appropriately.
       return null;
     }
-    return ref.watch(documentsDir);
+    final documentsDir = ref.watch(this.documentsDir);
+    return documentsDir;
   });
 
   late final checkingLatestVersion = qs(false);

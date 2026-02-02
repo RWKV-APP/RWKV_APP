@@ -10,6 +10,16 @@ class _Pth {
 /// Private methods
 extension _$Pth on _Pth {
   FV _init() async {
+    if (!P.preference.hasUnlinkDefaultModelsDirOnce) {
+      qqr("add default models dir to pth folder entries");
+      final defaultModelsDir = P.remote.getDefaultModelsDir();
+      if (defaultModelsDir != null) {
+        await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
+      } else {
+        qqe("default models dir is null");
+      }
+    }
+
     await _atuoCreateModelsDir();
     final entries = await P.preference.getPthFolderEntries();
     for (final entry in entries) {
@@ -79,6 +89,11 @@ extension $Pth on _Pth {
       if (res != OkCancelResult.ok) return;
     }
     await removeFolder(folder);
+
+    if (folder.path == P.remote.getDefaultModelsDir()) {
+      await P.preference.setHasUnlinkDefaultModelsDirOnce(true);
+    }
+
     Alert.success(S.current.forget_location_success);
   }
 
