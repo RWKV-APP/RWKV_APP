@@ -180,10 +180,17 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
   }
 
   List<Widget> buildSystemPromptWidget() {
+    void insertTextAtCursor(String text) {
+      final sel = _controllerSystemPrompt.selection;
+      _controllerSystemPrompt.text = _controllerSystemPrompt.text.replaceRange(sel.start, sel.end, text);
+      _controllerSystemPrompt.selection = TextSelection.fromPosition(TextPosition(offset: sel.start + text.length));
+    }
+
     return [
       TextField(
         controller: _controllerSystemPrompt,
-        maxLines: 4,
+        minLines: 1,
+        maxLines: 16,
         decoration: InputDecoration(
           labelText: S.current.system_prompt,
           labelStyle: const TextStyle(fontSize: 16),
@@ -206,21 +213,21 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
           children: [
             OutlinedButton(
               onPressed: () {
-                _controllerSystemPrompt.text = _controllerSystemPrompt.text + '{{date}}';
+                insertTextAtCursor('{{date}}');
               },
               child: Text(S.current.tag_date),
             ),
             const SizedBox(width: 6),
             OutlinedButton(
               onPressed: () {
-                _controllerSystemPrompt.text = _controllerSystemPrompt.text + '{{time}}';
+                insertTextAtCursor('{{time}}');
               },
               child: Text(S.current.tag_time),
             ),
             const SizedBox(width: 6),
             OutlinedButton(
               onPressed: () {
-                _controllerSystemPrompt.text = _controllerSystemPrompt.text + '{{day_of_week}}';
+                insertTextAtCursor('{{day_of_week}}');
               },
               child: Text(S.current.tag_day_of_week),
             ),
