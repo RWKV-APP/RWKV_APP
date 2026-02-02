@@ -96,6 +96,10 @@ jobs:
           }
           echo "::endgroup::"
 
+      - name: 📁 Create models directory
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force -Path "build\windows\x64\runner\Release\models" | Out-Null
+
       - name: 📦 Create Installer (Inno Setup)
         id: create-installer
         shell: pwsh
