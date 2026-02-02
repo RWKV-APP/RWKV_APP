@@ -248,7 +248,7 @@ class ModelItem extends ConsumerWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: (loading || unzipping) ? kCG.q(.5) : kCG,
-                      borderRadius: 8.r,
+                      borderRadius: 4.r,
                     ),
                     padding: const .all(8),
                     child: Text(
@@ -263,7 +263,7 @@ class ModelItem extends ConsumerWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: kG.q(.5),
-                      borderRadius: 8.r,
+                      borderRadius: 4.r,
                     ),
                     padding: const .all(8),
                     child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),

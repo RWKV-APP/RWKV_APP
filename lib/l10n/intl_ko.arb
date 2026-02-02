@@ -655,5 +655,6 @@
       "successCount": {},
       "failCount": {}
     }
-  }
+  },
+  "please_manually_migrate_files": "경로가 업데이트되었습니다. 파일 이동이 필요하면 수동으로 선택하여 이동하세요."
 }

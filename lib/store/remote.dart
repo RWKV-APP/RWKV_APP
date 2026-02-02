@@ -386,6 +386,16 @@ extension $Remote on _Remote {
       final defaultDir = documentsDir != null ? join(documentsDir, Config.modelsDirName) : null;
       final dirPath = customDir ?? defaultDir;
       if (dirPath == null) return;
+      final dir = Directory(dirPath);
+      if (!await dir.exists()) {
+        try {
+          await dir.create(recursive: true);
+        } catch (e) {
+          qqe("Failed to create directory: $e");
+          Alert.error(S.current.failed_to_create_directory);
+          return;
+        }
+      }
       qqr(dirPath);
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         await launchUrl(Uri.directory(dirPath));
@@ -425,8 +435,7 @@ extension $Remote on _Remote {
   }
 
   /// Pick and set a custom models directory
-  /// Returns true if directory was set successfully
-  /// [context] is required to show progress dialog during file migration
+  /// Only updates preference path; does not migrate files. Use [Alert.info] to prompt manual migration.
   Future<bool> pickAndSetCustomModelsDir({required BuildContext context}) async {
     qq;
     try {
@@ -435,17 +444,12 @@ extension $Remote on _Remote {
         return false; // User cancelled
       }
 
-      // Get current effective directory before changing
       final currentDir = getEffectiveModelsDir();
-
-      // Check if target is same as current
       if (currentDir == selectedDir) {
-        // TODO: Use S.current.already_using_this_directory after l10n regeneration
-        Alert.warning("Already using this directory");
+        Alert.warning(S.current.already_using_this_directory);
         return false;
       }
 
-      // Ensure directory exists
       final dir = Directory(selectedDir);
       if (!await dir.exists()) {
         try {
@@ -457,41 +461,20 @@ extension $Remote on _Remote {
         }
       }
 
-      // Check if we need to migrate files
-      if (currentDir != null) {
-        final filesToMigrate = await _getFilesToMigrate(currentDir);
-        if (filesToMigrate.isNotEmpty) {
-          // Show progress dialog and migrate files
-          final success = await _migrateFilesToNewDirectory(
-            context: context,
-            sourceDir: currentDir,
-            targetDir: selectedDir,
-            files: filesToMigrate,
-          );
-          if (!success) {
-            return false;
-          }
-        }
-      }
-
-      // On macOS, create security-scoped bookmark for persistent access
       String? bookmark;
       if (Platform.isMacOS) {
         try {
-          // Stop accessing previous scoped resource if any
           await _stopAccessingCustomDirScopedResource();
-
           final sb = SecureBookmarks();
           bookmark = await sb.bookmark(dir);
           qqq("Created macOS bookmark for custom models dir: $selectedDir");
         } catch (e) {
           qqw("Failed to create macOS bookmark for $selectedDir: $e");
-          // Continue without bookmark - access may not persist across app restarts
         }
       }
 
       P.preference.setCustomModelsDir(selectedDir, bookmark: bookmark);
-      Alert.success(S.current.custom_directory_set);
+      Alert.info(S.current.please_manually_migrate_files);
       return true;
     } catch (e) {
       qqe(e);
@@ -501,180 +484,16 @@ extension $Remote on _Remote {
     }
   }
 
-  /// Get list of weight files to migrate from source directory
-  Future<List<File>> _getFilesToMigrate(String sourceDir) async {
-    final directory = Directory(sourceDir);
-    if (!await directory.exists()) return [];
-
-    final files = <File>[];
-    final allWeightFileNames = getAllConfigFileNames();
-
-    try {
-      final entities = directory.listSync();
-      for (final entity in entities) {
-        if (entity is! File) continue;
-        final fileName = basename(entity.path);
-        // Only migrate recognized weight files
-        if (allWeightFileNames.contains(fileName)) {
-          files.add(entity);
-        }
-      }
-    } catch (e) {
-      qqe("Error listing files for migration: $e");
-    }
-
-    return files;
-  }
-
-  /// Migrate files from source to target directory with progress dialog
-  Future<bool> _migrateFilesToNewDirectory({
-    required BuildContext context,
-    required String sourceDir,
-    required String targetDir,
-    required List<File> files,
-  }) async {
-    if (files.isEmpty) return true;
-
-    final progressNotifier = ValueNotifier<(String, int, int)>(("", 0, files.length));
-    bool dialogShown = false;
-
-    // Show progress dialog
-    if (context.mounted) {
-      dialogShown = true;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          title: Text(S.current.moving_files),
-          content: ValueListenableBuilder<(String, int, int)>(
-            valueListenable: progressNotifier,
-            builder: (context, value, _) {
-              final (currentFile, completed, total) = value;
-              final progress = total > 0 ? completed / total : 0.0;
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  LinearProgressIndicator(
-                    value: progress,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  const SizedBox(height: 16),
-                  if (currentFile.isNotEmpty)
-                    Text(
-                      currentFile,
-                      style: Theme.of(context).textTheme.bodySmall,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  Text(
-                    "$completed / $total",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      );
-    }
-
-    int successCount = 0;
-    int failCount = 0;
-
-    try {
-      for (var i = 0; i < files.length; i++) {
-        final file = files[i];
-        final fileName = basename(file.path);
-        progressNotifier.value = (fileName, i, files.length);
-
-        final targetPath = join(targetDir, fileName);
-        final targetFile = File(targetPath);
-
-        try {
-          // Check if target file already exists
-          if (await targetFile.exists()) {
-            // Skip if target already exists (don't overwrite)
-            qqq("File already exists at target, skipping: $fileName");
-            successCount++;
-            continue;
-          }
-
-          // Try to move (rename) first - faster if on same filesystem
-          try {
-            await file.rename(targetPath);
-            qqq("Moved file (rename): $fileName");
-            successCount++;
-          } catch (e) {
-            // If rename fails (cross-device), copy and delete
-            await file.copy(targetPath);
-            await file.delete();
-            qqq("Moved file (copy+delete): $fileName");
-            successCount++;
-          }
-        } catch (e) {
-          qqe("Failed to migrate file $fileName: $e");
-          failCount++;
-        }
-      }
-
-      progressNotifier.value = ("", files.length, files.length);
-    } finally {
-      // Close progress dialog
-      if (dialogShown && context.mounted) {
-        Navigator.of(context).pop();
-      }
-    }
-
-    if (failCount > 0) {
-      // TODO: Use S.current.files_moved_with_failures(successCount, failCount) after l10n regeneration
-      Alert.warning("$successCount ${S.current.files} moved, $failCount ${S.current.import_failed}");
-    }
-
-    return true; // Continue even if some files failed
-  }
-
   /// Reset to default models directory
-  /// [context] is required to show progress dialog during file migration
+  /// Only clears custom path in preference; does not migrate files. Use [Alert.info] to prompt manual migration.
   Future<void> resetToDefaultModelsDir({required BuildContext context}) async {
     qq;
 
-    // Get current custom directory before resetting
-    final customDir = P.preference.customModelsDir.q;
-    final defaultDir = getDefaultModelsDir();
-
-    // Migrate files from custom directory to default directory
-    if (customDir != null && defaultDir != null && customDir != defaultDir) {
-      // Ensure default directory exists
-      final defaultDirObj = Directory(defaultDir);
-      if (!await defaultDirObj.exists()) {
-        try {
-          await defaultDirObj.create(recursive: true);
-          qqq("Created default models directory: $defaultDir");
-        } catch (e) {
-          qqe("Failed to create default directory: $e");
-          Alert.error(S.current.failed_to_create_directory);
-          return;
-        }
-      }
-
-      final filesToMigrate = await _getFilesToMigrate(customDir);
-      if (filesToMigrate.isNotEmpty) {
-        // Show progress dialog and migrate files
-        await _migrateFilesToNewDirectory(
-          context: context,
-          sourceDir: customDir,
-          targetDir: defaultDir,
-          files: filesToMigrate,
-        );
-      }
-    }
-
-    // On macOS, stop accessing the scoped resource
     if (Platform.isMacOS) {
       await _stopAccessingCustomDirScopedResource();
     }
     P.preference.setCustomModelsDir(null);
-    Alert.success(S.current.reset_to_default_directory);
+    Alert.info(S.current.please_manually_migrate_files);
   }
 
   /// Stop accessing macOS security-scoped resource for custom models directory

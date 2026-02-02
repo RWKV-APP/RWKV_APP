@@ -400,7 +400,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: (loading || modelLoading) ? kCG.q(.5) : kCG,
-                              borderRadius: 8.r,
+                              borderRadius: 4.r,
                             ),
                             padding: const .all(8),
                             child: Text(

@@ -636,7 +636,7 @@ class _LocalPthFileItem extends ConsumerWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: (loading) ? kCG.q(.5) : kCG,
-                borderRadius: 8.r,
+                borderRadius: 4.r,
               ),
               padding: const .all(8),
               child: Text(loading ? s.loading : s.start_to_chat, style: TS(c: qw)),
@@ -826,22 +826,7 @@ class _LocalPthFolder extends ConsumerWidget {
                       border: Border.all(color: qb.q(.1), width: .5),
                     ),
                     padding: const .all(4),
-                    child: Row(
-                      crossAxisAlignment: .center,
-                      children: [
-                        Expanded(
-                          child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartPthFileForChat(e)),
-                        ),
-                        IconButton(
-                          onPressed: () => P.pth.onDeleteFileClicked(folder, e),
-                          icon: Icon(
-                            Icons.delete_forever_outlined,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                          tooltip: S.current.delete,
-                        ),
-                      ],
-                    ),
+                    child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartPthFileForChat(e)),
                   ),
                 )
                 .toList()

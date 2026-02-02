@@ -4508,6 +4508,16 @@ class S {
       args: [successCount, failCount],
     );
   }
+
+  /// `路径已更新，如需迁移文件请手动选择并移动。`
+  String get please_manually_migrate_files {
+    return Intl.message(
+      '路径已更新，如需迁移文件请手动选择并移动。',
+      name: 'please_manually_migrate_files',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

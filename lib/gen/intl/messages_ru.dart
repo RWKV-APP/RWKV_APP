@@ -925,6 +925,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_load_model_first": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, сначала загрузите модель",
     ),
+    "please_manually_migrate_files": MessageLookupByLibrary.simpleMessage(
+      "Путь обновлён. При необходимости перенесите файлы вручную.",
+    ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage(
           "Пожалуйста, выберите ветвь для продолжения диалога",

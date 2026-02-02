@@ -688,6 +688,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_grant_permission_to_use_microphone":
         MessageLookupByLibrary.simpleMessage("请授予使用麦克风的权限"),
     "please_load_model_first": MessageLookupByLibrary.simpleMessage("请先加载模型"),
+    "please_manually_migrate_files": MessageLookupByLibrary.simpleMessage(
+      "路径已更新，如需迁移文件请手动选择并移动。",
+    ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage("请选择你喜欢的分支以进行接下来的对话"),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(

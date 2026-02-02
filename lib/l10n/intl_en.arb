@@ -661,5 +661,6 @@
       "successCount": {},
       "failCount": {}
     }
-  }
+  },
+  "please_manually_migrate_files": "Path updated. Please manually move or copy files if needed."
 }

@@ -655,5 +655,6 @@
       "successCount": {},
       "failCount": {}
     }
-  }
+  },
+  "please_manually_migrate_files": "路徑已更新，如需遷移檔案請手動選擇並移動。"
 }

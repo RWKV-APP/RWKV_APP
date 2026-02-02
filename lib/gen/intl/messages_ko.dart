@@ -754,6 +754,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_load_model_first": MessageLookupByLibrary.simpleMessage(
       "먼저 모델을 로드해주세요",
     ),
+    "please_manually_migrate_files": MessageLookupByLibrary.simpleMessage(
+      "경로가 업데이트되었습니다. 파일 이동이 필요하면 수동으로 선택하여 이동하세요.",
+    ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage("대화를 계속하려면 분기를 선택해주세요"),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(

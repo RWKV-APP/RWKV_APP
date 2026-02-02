@@ -762,6 +762,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_load_model_first": MessageLookupByLibrary.simpleMessage(
       "まずモデルをロードしてください",
     ),
+    "please_manually_migrate_files": MessageLookupByLibrary.simpleMessage(
+      "パスを更新しました。ファイルの移動が必要な場合は手動で行ってください。",
+    ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage("会話を続けるにはブランチを選択してください"),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(

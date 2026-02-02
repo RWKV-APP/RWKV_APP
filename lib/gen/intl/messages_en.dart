@@ -897,6 +897,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_load_model_first": MessageLookupByLibrary.simpleMessage(
       "Please load the model first",
     ),
+    "please_manually_migrate_files": MessageLookupByLibrary.simpleMessage(
+      "Path updated. Please manually move or copy files if needed.",
+    ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage(
           "Please select a branch to continue the conversation",

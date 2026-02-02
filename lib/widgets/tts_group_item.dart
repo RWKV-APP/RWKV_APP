@@ -427,7 +427,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: loading ? kCG.q(.5) : kCG,
-                              borderRadius: 8.r,
+                              borderRadius: 4.r,
                             ),
                             padding: const .all(8),
                             child: Text(
