@@ -10,6 +10,7 @@ class _Pth {
 /// Private methods
 extension _$Pth on _Pth {
   FV _init() async {
+    await _atuoCreateModelsDir();
     final entries = await P.preference.getPthFolderEntries();
     for (final entry in entries) {
       String path = entry.path;
@@ -29,6 +30,16 @@ extension _$Pth on _Pth {
       final folder = Folder(path: path, state: FolderState.loading, files: const []);
       folders.q = [...folders.q, folder];
       refreshFolder(folder);
+    }
+  }
+
+  Future<void> _atuoCreateModelsDir() async {
+    if (!Platform.isWindows) return;
+    qqr("Create models dir in exe dir");
+    final exeDir = File(Platform.resolvedExecutable).parent;
+    final modelsDir = Directory(join(exeDir.path, 'models'));
+    if (!await modelsDir.exists()) {
+      await modelsDir.create(recursive: true);
     }
   }
 }
