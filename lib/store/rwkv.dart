@@ -545,6 +545,7 @@ extension $RWKV on _RWKV {
     double getResponseBufferContentRate = .5,
     int batchSize = 1,
     int? maxLength,
+    bool forceChinese = false,
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -615,6 +616,7 @@ extension $RWKV on _RWKV {
             batchSize: batchSize,
             modelID: modelID,
             maxLength: maxLength,
+            forceLang: forceChinese ? 1 : null,
           ) //
         : to_rwkv.ChatAsync(
             messages,
@@ -622,6 +624,7 @@ extension $RWKV on _RWKV {
             forceReasoning: forceReasoning,
             modelID: modelID,
             maxLength: maxLength,
+            forceLang: forceChinese ? 1 : null,
           );
     send(request);
 

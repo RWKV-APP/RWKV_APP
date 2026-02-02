@@ -655,5 +655,21 @@
       "successCount": {},
       "failCount": {}
     }
+  },
+  "please_manually_migrate_files": "경로가 업데이트되었습니다. 파일 이동이 필요하면 수동으로 선택하여 이동하세요.",
+  "open_folder_unsupported_on_platform": "현재 OS({os})에서는 폴더 열기 작업을 지원하지 않습니다.",
+  "@open_folder_unsupported_on_platform": {
+    "placeholders": {
+      "os": {}
+    }
+  },
+  "open_folder_path_is_null": "폴더 경로가 비어 있습니다.",
+  "open_folder_creating_empty": "폴더가 존재하지 않아 빈 폴더를 생성 중입니다.",
+  "open_folder_created_success": "빈 폴더가 성공적으로 생성되었습니다.",
+  "open_folder_create_failed": "빈 폴더 생성 실패: {error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
   }
 }

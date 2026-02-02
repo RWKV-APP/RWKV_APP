@@ -655,5 +655,21 @@
       "successCount": {},
       "failCount": {}
     }
+  },
+  "please_manually_migrate_files": "路徑已更新，如需遷移檔案請手動選擇並移動。",
+  "open_folder_unsupported_on_platform": "目前作業系統({os})不支援開啟資料夾的操作。",
+  "@open_folder_unsupported_on_platform": {
+    "placeholders": {
+      "os": {}
+    }
+  },
+  "open_folder_path_is_null": "資料夾路徑為空。",
+  "open_folder_creating_empty": "資料夾不存在，正在建立空資料夾。",
+  "open_folder_created_success": "空資料夾建立成功。",
+  "open_folder_create_failed": "空資料夾建立失敗：{error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
   }
 }

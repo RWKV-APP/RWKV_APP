@@ -10,6 +10,17 @@ class _Pth {
 /// Private methods
 extension _$Pth on _Pth {
   FV _init() async {
+    if (!P.preference.hasUnlinkDefaultModelsDirOnce) {
+      qqr("add default models dir to pth folder entries");
+      final defaultModelsDir = P.remote.getDefaultModelsDir();
+      if (defaultModelsDir != null) {
+        await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
+      } else {
+        qqe("default models dir is null");
+      }
+    }
+
+    await _atuoCreateModelsDir();
     final entries = await P.preference.getPthFolderEntries();
     for (final entry in entries) {
       String path = entry.path;
@@ -29,6 +40,16 @@ extension _$Pth on _Pth {
       final folder = Folder(path: path, state: FolderState.loading, files: const []);
       folders.q = [...folders.q, folder];
       refreshFolder(folder);
+    }
+  }
+
+  Future<void> _atuoCreateModelsDir() async {
+    if (!Platform.isWindows) return;
+    qqr("Create models dir in exe dir");
+    final exeDir = File(Platform.resolvedExecutable).parent;
+    final modelsDir = Directory(join(exeDir.path, 'models'));
+    if (!await modelsDir.exists()) {
+      await modelsDir.create(recursive: true);
     }
   }
 }
@@ -68,6 +89,11 @@ extension $Pth on _Pth {
       if (res != OkCancelResult.ok) return;
     }
     await removeFolder(folder);
+
+    if (folder.path == P.remote.getDefaultModelsDir()) {
+      await P.preference.setHasUnlinkDefaultModelsDirOnce(true);
+    }
+
     Alert.success(S.current.forget_location_success);
   }
 
@@ -82,7 +108,7 @@ extension $Pth on _Pth {
   }
 
   Future<void> onOpenFolderClicked(Folder folder) async {
-    await launchUrl(Uri.directory(folder.path));
+    await openFolder(folder.path);
   }
 
   /// 加载指定 pth 文件并开始聊天；成功/失败与 pop 由 P.rwkv.startPthForChat 内部用 Alert 处理。

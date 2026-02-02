@@ -109,8 +109,8 @@ extension $Chat on _Chat {
     qq;
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
-    final inRWKVSee = P.app.pageKey.q == .see;
-    if (inRWKVSee) {
+    final inSee = P.app.pageKey.q == .see;
+    if (inSee) {
       final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
       final imagePath = P.see.imagePath.q;
       if (!hasAtLeastOneImage && imagePath == null) {
@@ -179,7 +179,7 @@ extension $Chat on _Chat {
       return;
     }
 
-    if (inRWKVSee) {
+    if (inSee) {
       final imagePath = P.see.imagePath.q;
       final isPureText = imagePath == null;
 
@@ -327,6 +327,7 @@ extension $Chat on _Chat {
     P.rwkv.stop();
   }
 
+  /// 拼装消息, 调用 rwkv 的 sendMessages 方法
   Future<void> send(
     String raw, {
     MessageType type = MessageType.text,
@@ -461,7 +462,9 @@ extension $Chat on _Chat {
     final inSee = P.app.pageKey.q == .see;
     final batchSize = inSee ? 1 : (batchEnabled.q ? batchCount.q : 1);
 
-    P.rwkv.sendMessages(history, batchSize: batchSize);
+    final forceChinese = inSee && message.containsChinese;
+
+    P.rwkv.sendMessages(history, batchSize: batchSize, forceChinese: forceChinese);
 
     _checkSensitive(raw);
   }
