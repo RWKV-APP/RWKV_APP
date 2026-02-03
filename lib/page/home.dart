@@ -625,10 +625,10 @@ class _Welcome extends ConsumerWidget {
             SizedBox(height: 100 + (1 - opacity) * 25),
             Center(
               child: ClipRRect(
-                borderRadius: .circular(50),
+                borderRadius: .circular(80 / 4),
                 clipBehavior: Clip.antiAlias,
                 child: Image.asset(
-                  'assets/img/chat/rwkv.png',
+                  'assets/img/chat/icon.png',
                   height: 80,
                   width: 80,
                 ),
