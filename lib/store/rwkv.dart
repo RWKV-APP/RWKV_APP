@@ -1518,8 +1518,6 @@ extension _$RWKV on _RWKV {
 
   Future<void> _ensureQNNCopied() async {
     if (Platform.isAndroid && !_qnnLibsCopied.q) {
-      // TODO: @Molly better solution here
-      // TODO: @wangce Ask Molly why there are "better" solution here
       final qnnLibList = {
         "libQnnHtp.so",
         "libQnnHtpNetRunExtensions.so",
@@ -1546,6 +1544,24 @@ extension _$RWKV on _RWKV {
       };
       for (final lib in qnnLibList) {
         await fromAssetsToTemp("assets/lib/qnn/$lib", targetPath: "assets/lib/$lib");
+      }
+      _qnnLibsCopied.q = true;
+    } else if (Platform.isWindows && !_qnnLibsCopied.q) {
+      final qnnLibList = {
+        "QnnHtp.dll",
+        "QnnHtpNetRunExtensions.dll",
+        "QnnHtpPrepare.dll",
+        "QnnSystem.dll",
+        "QnnHtpV68Stub.dll",
+        "QnnHtpV73Stub.dll",
+        "QnnHtpV81Stub.dll",
+        "libQnnHtpV73Skel.so",
+        "libQnnHtpV81Skel.so",
+        "libqnnhtpv73.cat",
+        "libqnnhtpv81.cat",
+      };
+      for (final lib in qnnLibList) {
+        await fromAssetsToTemp("assets/lib/qnn-windows/$lib", targetPath: "assets/lib/$lib");
       }
       _qnnLibsCopied.q = true;
     }
