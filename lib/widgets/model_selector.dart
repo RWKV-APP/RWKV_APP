@@ -661,7 +661,27 @@ class _ModelsInConfigHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return T(S.current.prebuilt_models_intro);
+    final effectiveDir = P.remote.getEffectiveModelsDir();
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              T(S.current.prebuilt_models_intro),
+              T((effectiveDir ?? "").trim()),
+            ],
+          ),
+        ),
+        Tooltip(
+          message: S.current.open_folder,
+          child: IconButton(
+            onPressed: P.remote.openModelDirectory,
+            icon: const Icon(Icons.folder_open),
+          ),
+        ),
+      ],
+    );
   }
 }
 

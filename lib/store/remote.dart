@@ -57,14 +57,14 @@ class _Remote {
   });
 
   late final _paths = qsff<FileInfo, String>((ref, key) {
-    final customDir = ref.watch(P.preference.customModelsDir);
+    final customDir = P.remote.getEffectiveModelsDir();
     if (customDir != null && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-      return "$customDir/${key.fileName}";
+      return join(customDir, key.fileName);
     }
     final dir = ref.watch(P.app.effectiveDocumentsDir);
     final fileName = key.fileName;
     final dirPath = dir!.path;
-    return "$dirPath/${Config.modelsDirName}/$fileName";
+    return join(dirPath, Config.modelsDirName, fileName);
   });
 
   /// 全部 chat 权重
@@ -388,13 +388,9 @@ extension $Remote on _Remote {
     }
 
     try {
-      final customDir = P.preference.customModelsDir.q;
-      final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-      final defaultDir = documentsDir != null ? join(documentsDir, Config.modelsDirName) : null;
-      final dirPath = customDir ?? defaultDir;
-      if (dirPath == null) return;
-      qqr(dirPath);
-      await openFolder(dirPath);
+      final effectiveDir = getEffectiveModelsDir() ?? "";
+      qqr(effectiveDir);
+      await openFolder(effectiveDir);
     } catch (e) {
       qqe(e);
       Alert.error(e.toString());
