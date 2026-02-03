@@ -90,7 +90,10 @@ jobs:
 
       - name: 📁 Create models directory
         shell: pwsh
-        run: New-Item -ItemType Directory -Force -Path "build\windows\arm64\runner\Release\models" | Out-Null
+        run: |
+          $modelsDir = "build\windows\arm64\runner\Release\models"
+          New-Item -ItemType Directory -Force -Path $modelsDir | Out-Null
+          New-Item -ItemType File -Force -Path "$modelsDir\.gitkeep" | Out-Null
 
       - name: Create zip archive
         id: create-zip
