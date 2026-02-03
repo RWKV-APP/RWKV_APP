@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +7,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart' as path;
 import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/func/format_bytes.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';
@@ -73,8 +72,6 @@ class _Body extends ConsumerStatefulWidget {
 }
 
 class _BodyState extends ConsumerState<_Body> {
-  final GlobalKey<_OtherFilesSectionState> _otherFilesSectionKey = GlobalKey<_OtherFilesSectionState>();
-
   @override
   void initState() {
     super.initState();
@@ -84,12 +81,13 @@ class _BodyState extends ConsumerState<_Body> {
   }
 
   Future<void> _onRefresh() async {
+    qr;
     await Future.wait([
       500.msLater,
       P.remote.checkLocal(),
+      P.remote.refreshUnrecognizedFiles(),
     ]);
-
-    _otherFilesSectionKey.currentState?._loadFiles();
+    qr;
   }
 
   @override
@@ -106,7 +104,7 @@ class _BodyState extends ConsumerState<_Body> {
             onRefresh: _onRefresh,
             child: ListView(
               children: [
-                _WeightList(otherFilesSectionKey: _otherFilesSectionKey),
+                _WeightList(),
               ],
             ),
           ),
@@ -121,8 +119,8 @@ class _CustomDirectoryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUsingCustomDir = ref.watch(P.preference.customModelsDir) != null;
-    final effectiveDir = P.remote.getEffectiveModelsDir() ?? "";
+    final isUsingCustomDir = ref.watch(P.remote.usingCustomModelsDir);
+    final effectiveDir = ref.watch(P.remote.effectiveModelsDir) ?? "";
     final s = S.of(context);
 
     return ListTile(
@@ -174,9 +172,7 @@ class _CustomDirectoryTile extends ConsumerWidget {
 }
 
 class _WeightList extends ConsumerWidget {
-  final GlobalKey<_OtherFilesSectionState>? otherFilesSectionKey;
-
-  const _WeightList({this.otherFilesSectionKey});
+  const _WeightList();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -217,7 +213,7 @@ class _WeightList extends ConsumerWidget {
         _WeightSection(title: S.current.tts, weights: ttsWeights),
         _WeightSection(title: "Sudoku", weights: sudokuWeights),
         _WeightSection(title: S.current.rwkv_othello, weights: othelloWeights),
-        _OtherFilesSection(key: otherFilesSectionKey, allWeights: allWeights),
+        _OtherFilesSection(),
       ],
     );
   }
@@ -326,17 +322,10 @@ class _TotalUsageTile extends ConsumerWidget {
     return ListTile(
       title: Text(s.total_disk_usage),
       trailing: Text(
-        _formatBytes(totalBytes),
+        formatBytes(totalBytes),
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
-  }
-
-  String _formatBytes(int bytes) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
-    var i = (log(bytes) / log(1024)).floor();
-    return ((bytes / pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
   }
 }
 
@@ -391,7 +380,7 @@ class _DownloadingItem extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Text(_formatBytes(fileInfo.fileSize)),
+                child: Text(formatBytes(fileInfo.fileSize)),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -443,13 +432,6 @@ class _DownloadingItem extends ConsumerWidget {
       ),
     );
   }
-
-  String _formatBytes(int bytes) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
-    var i = (log(bytes) / log(1024)).floor();
-    return ((bytes / pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
-  }
 }
 
 class _WeightItem extends ConsumerWidget {
@@ -475,7 +457,7 @@ class _WeightItem extends ConsumerWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            child: Text(_formatBytes(fileInfo.fileSize)),
+            child: Text(formatBytes(fileInfo.fileSize)),
           ),
           Text(path.basename(local.targetPath)),
         ],
@@ -507,41 +489,11 @@ class _WeightItem extends ConsumerWidget {
       ),
     );
   }
-
-  String _formatBytes(int bytes) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
-    var i = (log(bytes) / log(1024)).floor();
-    return ((bytes / pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
-  }
 }
 
-class _OtherFilesSection extends ConsumerStatefulWidget {
-  final List<FileInfo> allWeights;
-
-  const _OtherFilesSection({super.key, required this.allWeights});
-
+class _OtherFilesSection extends ConsumerWidget {
   @override
-  ConsumerState<_OtherFilesSection> createState() => _OtherFilesSectionState();
-}
-
-class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
-  Future<List<UnrecognizedFile>>? _filesFuture;
-  Set<FileInfo>? _lastWatchedWeights;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadFiles();
-  }
-
-  void _loadFiles() {
-    _filesFuture = P.remote.getUnrecognizedFiles();
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Watch weight lists to trigger refresh when they change (e.g., after import)
     final chatWeights = ref.watch(P.remote.chatWeights);
     final roleplayWeights = ref.watch(P.remote.roleplayWeights);
@@ -560,51 +512,33 @@ class _OtherFilesSectionState extends ConsumerState<_OtherFilesSection> {
       ...othelloWeights,
     };
 
-    // Reload files when weight lists change
-    if (_lastWatchedWeights != currentWeights) {
-      _lastWatchedWeights = currentWeights;
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await 1000.msLater;
-        if (mounted) {
-          _loadFiles();
-        }
-      });
+    final files = ref.watch(P.remote.unrecognizedFiles)..sort((a, b) => b.fileSize.compareTo(a.fileSize));
+    if (files.isEmpty) {
+      return const SizedBox.shrink();
     }
 
-    return FutureBuilder<List<UnrecognizedFile>>(
-      future: _filesFuture,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox.shrink();
-        }
-
-        final files = snapshot.data!..sort((a, b) => b.fileSize.compareTo(a.fileSize));
-        if (files.isEmpty) {
-          return const SizedBox.shrink();
-        }
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text(
-                S.current.other_files,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            S.current.other_files,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
             ),
-            for (final file in files)
-              _OtherFileItem(
-                file: file,
-                onDeleted: _loadFiles,
-              ),
-            const Divider(height: 1),
-          ],
-        );
-      },
+          ),
+        ),
+        for (final file in files)
+          _OtherFileItem(
+            file: file,
+            onDeleted: () {
+              P.remote.refreshUnrecognizedFiles();
+            },
+          ),
+        const Divider(height: 1),
+      ],
     );
   }
 }
@@ -633,7 +567,7 @@ class _OtherFileItem extends ConsumerWidget {
               color: Theme.of(context).colorScheme.primary.q(.1),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(_formatBytes(file.fileSize)),
+            child: Text(formatBytes(file.fileSize)),
           ),
           Text(path.basename(file.filePath)),
         ],
@@ -666,13 +600,6 @@ class _OtherFileItem extends ConsumerWidget {
         },
       ),
     );
-  }
-
-  String _formatBytes(int bytes) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
-    var i = (log(bytes) / log(1024)).floor();
-    return ((bytes / pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
   }
 }
 

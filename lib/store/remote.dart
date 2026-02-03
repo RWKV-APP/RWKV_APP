@@ -57,14 +57,15 @@ class _Remote {
   });
 
   late final _paths = qsff<FileInfo, String>((ref, key) {
-    final customDir = P.remote.getEffectiveModelsDir();
+    final customDir = ref.watch(P.remote.effectiveModelsDir);
+    qqr("customDir: $customDir");
     if (customDir != null && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       return join(customDir, key.fileName);
     }
     final dir = ref.watch(P.app.effectiveDocumentsDir);
     final fileName = key.fileName;
     final dirPath = dir!.path;
-    return join(dirPath, Config.modelsDirName, fileName);
+    return join(dirPath, Config.mobileModelsDirName, fileName);
   });
 
   /// 全部 chat 权重
@@ -85,6 +86,46 @@ class _Remote {
 
   /// Set of group IDs (core file names) that the user has explicitly requested to download
   late final activeDownloadGroupIds = qs<Set<String>>({});
+
+  /// Unrecognized files found in the models directory
+  late final unrecognizedFiles = qs<List<UnrecognizedFile>>([]);
+
+  /// Check if using custom models directory
+  late final usingCustomModelsDir = qp<bool>((ref) {
+    final customDir = ref.watch(P.preference._customModelsDir);
+    final defaultDir = defaultModelsDir.q;
+    return customDir != null && customDir.isNotEmpty && customDir != defaultDir;
+  });
+
+  late final effectiveModelsDir = qp<String>((ref) {
+    final customDir = ref.watch(P.preference._customModelsDir);
+    final defaultDir = ref.watch(defaultModelsDir);
+    return customDir ?? defaultDir;
+  });
+
+  late final defaultModelsDir = qp<String>((ref) {
+    if (Platform.isWindows) {
+      final exePath = Platform.resolvedExecutable;
+      final exeDir = dirname(exePath);
+      final res = join(exeDir, Config.desktopModelsDirName);
+      return res;
+    }
+
+    final documentsDir = ref.watch(P.app.documentsDir);
+
+    if (documentsDir == null) {
+      Sentry.captureException(Exception("documentsDir is null, WTF?"));
+      return "";
+    }
+
+    if (Platform.isMacOS || Platform.isLinux) {
+      final res = join(documentsDir.path, Config.desktopModelsDirName);
+      return res;
+    }
+
+    final res = join(documentsDir.path, Config.mobileModelsDirName);
+    return res;
+  });
 
   /// 获取所有支持的NPU芯片列表（从所有模型的socLimitations中提取）
   List<String> get getSupportedNpuChips {
@@ -200,6 +241,7 @@ extension $Remote on _Remote {
     for (final fileInfo in fileInfos) {
       final path = _paths(fileInfo).q;
       final pathExists = await File(path).exists();
+      qqr("path: $path");
       bool fileSizeVerified = false;
       if (pathExists) {
         final expectFileSize = fileInfo.fileSize;
@@ -243,7 +285,7 @@ extension $Remote on _Remote {
 
     // Scan both Documents root and models subfolder
     final directoriesToScan = <Directory>[documentsDir];
-    final modelsDir = Directory("${documentsDir.path}/${Config.modelsDirName}");
+    final modelsDir = Directory("${documentsDir.path}/${Config.desktopModelsDirName}");
     if (await modelsDir.exists()) {
       directoriesToScan.add(modelsDir);
     }
@@ -392,7 +434,7 @@ extension $Remote on _Remote {
     }
 
     try {
-      final effectiveDir = getEffectiveModelsDir() ?? "";
+      final effectiveDir = P.remote.effectiveModelsDir.q ?? "";
       qqr(effectiveDir);
       await openFolder(effectiveDir);
     } catch (e) {
@@ -400,33 +442,6 @@ extension $Remote on _Remote {
       Alert.error(e.toString());
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
-  }
-
-  /// Get the default models directory path based on platform
-  /// - Windows: exe folder / rwkv_chat_models
-  /// - macOS/Linux: Documents / models
-  String? getDefaultModelsDir() {
-    if (Platform.isWindows) {
-      // On Windows, use the exe directory
-      final exePath = Platform.resolvedExecutable;
-      final exeDir = dirname(exePath);
-      return join(exeDir, Config.modelsDirName);
-    } else {
-      // On macOS/Linux, use Documents directory
-      final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-      return documentsDir != null ? join(documentsDir, Config.modelsDirName) : null;
-    }
-  }
-
-  /// Get the current effective models directory path
-  String? getEffectiveModelsDir() {
-    final customDir = P.preference.customModelsDir.q;
-    return customDir ?? getDefaultModelsDir();
-  }
-
-  /// Check if using custom models directory
-  bool isUsingCustomModelsDir() {
-    return P.preference.customModelsDir.q != null;
   }
 
   /// Pick and set a custom models directory
@@ -439,7 +454,7 @@ extension $Remote on _Remote {
         return false; // User cancelled
       }
 
-      final currentDir = getEffectiveModelsDir();
+      final currentDir = P.remote.effectiveModelsDir.q;
       if (currentDir == selectedDir) {
         Alert.warning(S.current.already_using_this_directory);
         return false;
@@ -512,7 +527,7 @@ extension $Remote on _Remote {
     if (!Platform.isMacOS) return;
 
     final bookmark = P.preference.customModelsDirBookmark.q;
-    final customDir = P.preference.customModelsDir.q;
+    final customDir = P.preference._customModelsDir.q;
     if (bookmark == null || bookmark.isEmpty || customDir == null) return;
 
     try {
@@ -1447,25 +1462,22 @@ extension $Remote on _Remote {
     return totalBytes;
   }
 
-  /// Format bytes to human readable string
-  static String formatBytes(int bytes) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
-    var i = (math.log(bytes) / math.log(1024)).floor();
-    return ((bytes / math.pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
-  }
-
   /// Get unrecognized files in the models directory
   Future<List<UnrecognizedFile>> getUnrecognizedFiles() async {
-    final customDir = P.preference.customModelsDir.q;
+    final customDir = P.preference._customModelsDir.q;
     final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-    final defaultDir = documentsDir != null ? "$documentsDir/${Config.modelsDirName}" : null;
+    final isDesktop = P.app.isDesktop.q;
+    final defaultDir = documentsDir != null
+        ? join(documentsDir, isDesktop ? Config.desktopModelsDirName : Config.mobileModelsDirName)
+        : null;
     final targetDir = customDir ?? defaultDir;
 
     if (targetDir == null) return [];
 
     final directory = Directory(targetDir);
-    if (!await directory.exists()) return [];
+    if (!await directory.exists()) {
+      return [];
+    }
 
     // Get all file names from config (not just available ones)
     final allWeightFileNames = getAllConfigFileNames();
@@ -1519,6 +1531,12 @@ extension $Remote on _Remote {
     }
 
     return unrecognizedFiles;
+  }
+
+  /// Refresh unrecognized files and store into state
+  Future<void> refreshUnrecognizedFiles() async {
+    final files = await getUnrecognizedFiles();
+    unrecognizedFiles.q = files;
   }
 
   /// Delete an unrecognized file
@@ -1602,7 +1620,7 @@ extension _$Remote on _Remote {
     qq;
 
     // Skip migration if custom directory is set
-    if (P.preference.customModelsDir.q != null) {
+    if (P.preference._customModelsDir.q != null) {
       P.preference.setWeightsMigrationCompleted(true);
       return;
     }
@@ -1615,7 +1633,7 @@ extension _$Remote on _Remote {
     }
 
     final documentsPath = documentsDir.path;
-    final modelsDir = Directory("$documentsPath/${Config.modelsDirName}");
+    final modelsDir = Directory("$documentsPath/${Config.desktopModelsDirName}");
 
     // Create models directory if it doesn't exist
     if (!await modelsDir.exists()) {
@@ -1727,7 +1745,7 @@ extension _$Remote on _Remote {
 
         final dirName = basename(entity.path);
         // Skip the models directory itself
-        if (dirName == Config.modelsDirName) continue;
+        if (dirName == Config.desktopModelsDirName) continue;
 
         // Check if this directory corresponds to a migrated file
         final correspondingFile = filesToMigrate.firstWhereOrNull(

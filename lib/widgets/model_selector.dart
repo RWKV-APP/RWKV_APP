@@ -661,7 +661,7 @@ class _ModelsInConfigHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final effectiveDir = P.remote.getEffectiveModelsDir();
+    final effectiveDir = ref.watch(P.remote.effectiveModelsDir);
     return Row(
       children: [
         Expanded(

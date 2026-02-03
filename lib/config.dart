@@ -10,7 +10,8 @@ abstract class Config {
   static const reasonTag = "reason";
 
   /// 模型文件夹名称
-  static const modelsDirName = "models";
+  static const desktopModelsDirName = "models";
+  static const mobileModelsDirName = "rwkv_chat_models";
 
   static const domain = "https://api-model.rwkvos.com";
   // static const apiv2 = "http://localhost:3462";

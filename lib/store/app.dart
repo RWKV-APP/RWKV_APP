@@ -65,6 +65,7 @@ class _App extends RawApp {
 
   /// Get the effective documents directory for the current platform
   /// On Windows, returns AppData directory; on other platforms, returns the standard documentsDir
+  // TODO: 这里的 AI 简直在写狗屎代码，要重构 @wangce
   late final effectiveDocumentsDir = qp<Directory?>((ref) {
     if (Platform.isWindows) {
       final windowsDir = ref.watch(_windowsDocumentsDir);

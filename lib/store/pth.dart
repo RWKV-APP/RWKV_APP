@@ -12,12 +12,8 @@ extension _$Pth on _Pth {
   FV _init() async {
     if (!P.preference.hasUnlinkDefaultModelsDirOnce) {
       qqr("add default models dir to pth folder entries");
-      final defaultModelsDir = P.remote.getDefaultModelsDir();
-      if (defaultModelsDir != null) {
-        await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
-      } else {
-        qqe("default models dir is null");
-      }
+      final defaultModelsDir = P.remote.defaultModelsDir.q;
+      await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
     }
 
     await _atuoCreateModelsDir();
@@ -90,7 +86,7 @@ extension $Pth on _Pth {
     }
     await removeFolder(folder);
 
-    if (folder.path == P.remote.getDefaultModelsDir()) {
+    if (folder.path == P.remote.defaultModelsDir.q) {
       await P.preference.setHasUnlinkDefaultModelsDirOnce(true);
     }
 

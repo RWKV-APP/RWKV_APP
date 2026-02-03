@@ -21,6 +21,14 @@ void Function(Object)? onError,
 
 直接在实现里使用 `Alert.success` 和 `Alert.error` / `Alert.warning` 来显示成功和错误信息
 
+## 声明 Theme
+
+必须要在 `Widget build(BuildContext context, WidgetRef ref) {` 方法的顶部就声明 `final theme = Theme.of(context);`. 严禁在后继的代码中使用 `Theme.of(context)` 来获取主题
+
+## 禁止使用任何 `FutureBuilder` 方法
+
+严格禁止在 build 方法中使用 future builder
+
 ## 不要在 UI 层的 class 中声明任何 `Widget _build` helper 方法
 
 Flutter 官方视频说: [使用 `Widget _build` 形式的 helper 方法会降低程序的渲染性能](https://youtu.be/IOyq-eTRhvo?si=aBXuUVXIkirPqQVR&t=99)

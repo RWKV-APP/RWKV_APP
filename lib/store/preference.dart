@@ -73,7 +73,7 @@ class _Preference {
   late final dumpping = qs(false);
 
   /// Custom directory for storing models (Desktop only)
-  late final customModelsDir = qs<String?>(null);
+  late final _customModelsDir = qs<String?>(null);
 
   /// macOS security-scoped bookmark for custom models directory
   late final customModelsDirBookmark = qs<String?>(null);
@@ -194,7 +194,7 @@ extension _$Preference on _Preference {
     }
 
     final customModelsDir = sp.getString("halo_state.customModelsDir");
-    if (customModelsDir != null) this.customModelsDir.q = customModelsDir;
+    if (customModelsDir != null) this._customModelsDir.q = customModelsDir;
 
     final customModelsDirBookmark = sp.getString("halo_state.customModelsDirBookmark");
     if (customModelsDirBookmark != null) this.customModelsDirBookmark.q = customModelsDirBookmark;
@@ -376,7 +376,7 @@ extension $Preference on _Preference {
   }
 
   void setCustomModelsDir(String? path, {String? bookmark}) async {
-    customModelsDir.q = path;
+    _customModelsDir.q = path;
     customModelsDirBookmark.q = bookmark;
     final sp = await SharedPreferences.getInstance();
     if (path == null) {
