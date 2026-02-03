@@ -237,7 +237,7 @@ lane :macos_build_and_upload do |params|
     )
 
     # 关键步骤：使用 Fastlane 原生 action 解锁并将其加入搜索列表 (add_to_search_list)
-    # 这一步是后续 security 命令能“看到”该钥匙串的前提
+    # 这一步是后续 security 命令能"看到"该钥匙串的前提
     unlock_keychain(
       path: keychain_name,
       password: keychain_pwd,
