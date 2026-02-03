@@ -414,22 +414,6 @@ class _DownloadingItem extends ConsumerWidget {
           ),
         ],
       ),
-      trailing: IconButton(
-        icon: const Icon(Icons.cancel),
-        tooltip: s.cancel_download,
-        onPressed: () async {
-          final result = await showOkCancelAlertDialog(
-            context: context,
-            title: s.cancel_download,
-            message: "${s.cancel_download} (${fileInfo.name})",
-            okLabel: s.cancel_download,
-            isDestructiveAction: true,
-          );
-          if (result == OkCancelResult.ok) {
-            await P.remote.cancelDownload(fileInfo: fileInfo);
-          }
-        },
-      ),
     );
   }
 }

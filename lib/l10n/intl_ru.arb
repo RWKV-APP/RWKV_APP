@@ -32,7 +32,7 @@
   "select_all": "Выбрать все",
   "cancel_all_selection": "Отменить выбор всех",
   "weights_mangement": "Управление файлами весов",
-  "total_disk_usage": "Общее использование диска",
+  "total_disk_usage": "Использование места хранения",
   "thinking_mode_alert_footer": "Режим",
   "think_mode_selector_title": "Выберите режим мышления",
   "think_mode_selector_message": "Режим мышления влияет на производительность модели при рассуждениях",

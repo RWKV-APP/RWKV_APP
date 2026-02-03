@@ -294,9 +294,14 @@ class S {
     );
   }
 
-  /// `总磁盘使用量`
+  /// `存储空间占用量`
   String get total_disk_usage {
-    return Intl.message('总磁盘使用量', name: 'total_disk_usage', desc: '', args: []);
+    return Intl.message(
+      '存储空间占用量',
+      name: 'total_disk_usage',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `模式`

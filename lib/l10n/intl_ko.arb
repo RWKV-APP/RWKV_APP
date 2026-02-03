@@ -32,7 +32,7 @@
   "select_all": "모두 선택",
   "cancel_all_selection": "모두 선택 취소",
   "weights_mangement": "가중치 파일 관리",
-  "total_disk_usage": "총 디스크 사용량",
+  "total_disk_usage": "저장 공간 사용량",
   "thinking_mode_alert_footer": "모드",
   "think_mode_selector_title": "추론 모드를 선택해주세요",
   "think_mode_selector_message": "추론 모드는 모델의 추론 성능에 영향을 미칩니다",
