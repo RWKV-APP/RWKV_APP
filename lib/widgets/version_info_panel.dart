@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
@@ -12,8 +13,11 @@ import 'package:zone/widgets/markdown_render.dart';
 
 class VersionInfoPanel extends ConsumerWidget {
   static final _shown = qs(false);
+  static final _isLatest = qs(false);
 
-  static Future<void> show() async {
+  static Future<void> show({
+    bool isLatest = false,
+  }) async {
     qq;
     if (_shown.q) return;
     _shown.q = true;
@@ -23,6 +27,7 @@ class VersionInfoPanel extends ConsumerWidget {
       return;
     }
     final isMobile = P.app.isMobile.q;
+    _isLatest.q = isLatest;
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -39,6 +44,10 @@ class VersionInfoPanel extends ConsumerWidget {
         );
       },
     );
+
+    await 250.msLater;
+
+    _isLatest.q = false;
     _shown.q = false;
   }
 
@@ -54,6 +63,8 @@ class VersionInfoPanel extends ConsumerWidget {
     double paddingBottom = ref.watch(P.app.paddingBottom);
     paddingBottom = max(paddingBottom, 16);
 
+    final isLatest = ref.watch(_isLatest);
+
     return ClipRRect(
       borderRadius: const .only(
         topLeft: .circular(16),
@@ -61,26 +72,30 @@ class VersionInfoPanel extends ConsumerWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(s.found_new_version_available),
+          title: Text(isLatest ? s.app_is_already_up_to_date : s.found_new_version_available),
           automaticallyImplyLeading: false,
           actions: [
-            IconButton(
-              onPressed: () {
-                pop();
-              },
-              icon: const Icon(Icons.close),
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                onPressed: () {
+                  pop();
+                },
+                icon: const Icon(Icons.close),
+              ),
             ),
           ],
         ),
         body: Column(
           crossAxisAlignment: .stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                s.latest_version + s.colon + (latestVersionInfo?.version ?? "") + "(" + (latestVersionInfo?.build.toString() ?? "") + ")",
+            if (!isLatest)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  s.latest_version + s.colon + (latestVersionInfo?.version ?? "") + "(" + (latestVersionInfo?.build.toString() ?? "") + ")",
+                ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(s.current_version + s.colon + (P.app.version.q) + "(" + (P.app.buildNumber.q) + ")"),
@@ -89,80 +104,82 @@ class VersionInfoPanel extends ConsumerWidget {
               child: _ReleaseNotesContent(scrollController: scrollController),
             ),
             8.h,
-            Row(
-              children: [
-                Expanded(
-                  child: IconButton(
-                    onPressed: P.app.onDownloadNowClicked,
-                    icon: Container(
-                      height: 44,
-                      padding: const .symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF14b8a6),
-                        borderRadius: 100.r,
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.download, color: Colors.white),
-                          Text(
-                            s.download_now,
-                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: IconButton(
-                    onPressed: P.app.skipThisVersion,
-                    icon: Container(
-                      height: 44,
-                      padding: const .symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0d9488),
-                        borderRadius: 100.r,
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.skip_next, color: Colors.white),
-                          Text(
-                            s.skip_this_version,
-                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
-                          ),
-                        ],
+            if (!isLatest)
+              Row(
+                children: [
+                  Expanded(
+                    child: IconButton(
+                      onPressed: P.app.onDownloadNowClicked,
+                      icon: Container(
+                        height: 44,
+                        padding: const .symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF14b8a6),
+                          borderRadius: 100.r,
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.download, color: Colors.white),
+                            Text(
+                              s.download_now,
+                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: IconButton(
-                    onPressed: pop,
-                    icon: Container(
-                      height: 44,
-                      padding: const .symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0d9488),
-                        borderRadius: 100.r,
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.cancel, color: Colors.white),
-                          Text(
-                            s.cancel,
-                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
-                          ),
-                        ],
+                ],
+              ),
+            if (!isLatest)
+              Row(
+                children: [
+                  Expanded(
+                    child: IconButton(
+                      onPressed: P.app.skipThisVersion,
+                      icon: Container(
+                        height: 44,
+                        padding: const .symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0d9488),
+                          borderRadius: 100.r,
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.skip_next, color: Colors.white),
+                            Text(
+                              s.skip_this_version,
+                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                  Expanded(
+                    child: IconButton(
+                      onPressed: pop,
+                      icon: Container(
+                        height: 44,
+                        padding: const .symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0d9488),
+                          borderRadius: 100.r,
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.cancel, color: Colors.white),
+                            Text(
+                              s.cancel,
+                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             paddingBottom.h,
           ],
         ),

@@ -181,6 +181,7 @@ extension $App on _App {
     qqr("latest version info: $latestVersionInfo");
     if (latestVersionInfo == null) {
       if (manually) Alert.info(S.current.app_is_already_up_to_date);
+      await VersionInfoPanel.show(isLatest: true);
       return;
     }
 
@@ -191,6 +192,7 @@ extension $App on _App {
     if (!Args.forceShowNewVersionPanel) {
       if (latestBuild <= int.parse(buildNumber.q)) {
         if (manually) Alert.info(S.current.app_is_already_up_to_date);
+        await VersionInfoPanel.show(isLatest: true);
         return;
       }
     }
