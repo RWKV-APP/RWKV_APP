@@ -642,7 +642,7 @@ class _Welcome extends ConsumerWidget {
             ),
             SizedBox(height: 12 * opacity),
             Text(
-              "v$version",
+              version,
               style: TextStyle(fontSize: 14 * pow(opacity, 0.1).toDouble(), color: Colors.grey),
               textAlign: .center,
             ),
