@@ -181,6 +181,10 @@ extension $Remote on _Remote {
     }
   }
 
+  void cleanDownloadTasks() {
+    _downloadTasks.clear();
+  }
+
   Future<void> checkLocal() async {
     qq;
     await 17.msLater;
@@ -466,6 +470,7 @@ extension $Remote on _Remote {
 
       P.preference.setCustomModelsDir(selectedDir, bookmark: bookmark);
       Alert.info(S.current.please_manually_migrate_files);
+      cleanDownloadTasks();
       return true;
     } catch (e) {
       qqe(e);
@@ -485,6 +490,7 @@ extension $Remote on _Remote {
     }
     P.preference.setCustomModelsDir(null);
     Alert.info(S.current.please_manually_migrate_files);
+    cleanDownloadTasks();
   }
 
   /// Stop accessing macOS security-scoped resource for custom models directory
