@@ -59,7 +59,7 @@ class _Remote {
   late final _paths = qsff<FileInfo, String>((ref, key) {
     final customDir = ref.watch(P.remote.effectiveModelsDir);
     qqr("customDir: $customDir");
-    if (customDir != null && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       return join(customDir, key.fileName);
     }
     final dir = ref.watch(P.app.effectiveDocumentsDir);

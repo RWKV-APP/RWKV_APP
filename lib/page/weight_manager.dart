@@ -103,7 +103,7 @@ class _BodyState extends ConsumerState<_Body> {
           child: RefreshIndicator(
             onRefresh: _onRefresh,
             child: ListView(
-              children: [
+              children: const [
                 _WeightList(),
               ],
             ),

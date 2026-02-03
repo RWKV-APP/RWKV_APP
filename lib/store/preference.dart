@@ -194,7 +194,7 @@ extension _$Preference on _Preference {
     }
 
     final customModelsDir = sp.getString("halo_state.customModelsDir");
-    if (customModelsDir != null) this._customModelsDir.q = customModelsDir;
+    if (customModelsDir != null) _customModelsDir.q = customModelsDir;
 
     final customModelsDirBookmark = sp.getString("halo_state.customModelsDirBookmark");
     if (customModelsDirBookmark != null) this.customModelsDirBookmark.q = customModelsDirBookmark;
