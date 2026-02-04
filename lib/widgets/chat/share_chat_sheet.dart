@@ -449,7 +449,7 @@ class _PreviewState extends ConsumerState<_Preview> {
                     fontWeight: .w500,
                   ),
                 ),
-                4.w,
+                const SizedBox(width: 4),
                 Padding(
                   padding: const .only(bottom: 3),
                   child: Text(P.app.version.q, style: const TextStyle(fontSize: 10)),

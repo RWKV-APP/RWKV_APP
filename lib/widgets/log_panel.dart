@@ -70,7 +70,7 @@ class LogPanel extends ConsumerWidget {
     final rawRuntimeLog = ref.watch(P.rwkv.runtimeLog);
     final runtimeLog = rawRuntimeLog.where((log) => showPrefillLogOnly ? log.isPrefill : true).toList();
     return ClipRRect(
-      borderRadius: 16.r,
+      borderRadius: .circular(16),
       child: Container(
         margin: const .only(top: 8),
         child: Column(
@@ -78,7 +78,7 @@ class LogPanel extends ConsumerWidget {
           children: [
             Row(
               children: [
-                8.w,
+                const SizedBox(width: 8),
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onRefreshPressed,
@@ -90,7 +90,7 @@ class LogPanel extends ConsumerWidget {
                     mainAxisAlignment: .center,
                     children: [
                       const Icon(Icons.tune),
-                      12.w,
+                      const SizedBox(width: 12),
                       Text(
                         S.current.runtime_log_panel,
                         style: const TS(s: 16, w: .w500),
@@ -103,12 +103,12 @@ class LogPanel extends ConsumerWidget {
                   onPressed: _onClosePressed,
                   child: Text(S.current.close),
                 ),
-                8.w,
+                const SizedBox(width: 8),
               ],
             ),
             Row(
               children: [
-                8.w,
+                const SizedBox(width: 8),
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onShowEscapeCharactersPressed,
@@ -125,7 +125,7 @@ class LogPanel extends ConsumerWidget {
                     S.current.show_prefill_log_only + ": " + (showPrefillLogOnly ? S.current.enabled : S.current.disabled),
                   ),
                 ),
-                8.w,
+                const SizedBox(width: 8),
               ],
             ),
             Expanded(
@@ -140,7 +140,7 @@ class LogPanel extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: .circular(4),
-                      border: Border.all(color: qb),
+                      border: .all(color: qb),
                     ),
                     padding: const .symmetric(horizontal: 4, vertical: 4),
                     margin: const .only(bottom: 4),
@@ -151,7 +151,7 @@ class LogPanel extends ConsumerWidget {
                           children: [
                             Text(log.tag, style: const TS(w: .w700)),
                             if (log.isPrefill) ...[
-                              4.w,
+                              const SizedBox(width: 4),
                               Container(
                                 decoration: BoxDecoration(
                                   color: kCG.q(.3),

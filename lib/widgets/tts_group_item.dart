@@ -374,12 +374,12 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
         : '${timeRemaining.inMinutes}m${timeRemaining.inSeconds % 60}s';
 
     return ClipRRect(
-      borderRadius: 8.r,
+      borderRadius: .circular(8),
       child: Container(
         decoration: BoxDecoration(
           color: customTheme.settingItem,
-          borderRadius: 8.r,
-          border: Border.all(color: qw.q(.1), width: .5),
+          borderRadius: .circular(8),
+          border: .all(color: qw.q(.1), width: .5),
         ),
         margin: const .only(top: 8),
         padding: const .all(8),
@@ -394,7 +394,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                 });
               },
               child: Container(
-                decoration: const BD(color: kC),
+                decoration: const BoxDecoration(color: kC),
                 child: Row(
                   children: [
                     Expanded(
@@ -411,7 +411,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                         backend: widget.fileInfo.backend,
                       ),
                     ),
-                    8.w,
+                    const SizedBox(width: 8),
                     _DownloadActionsWidget(
                       state: overallState,
                       hasFile: allDownloaded,
@@ -427,7 +427,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: loading ? kCG.q(.5) : kCG,
-                              borderRadius: 4.r,
+                              borderRadius: .circular(4),
                             ),
                             padding: const .all(8),
                             child: Text(
@@ -442,13 +442,13 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: kG.q(.5),
-                              borderRadius: 8.r,
+                              borderRadius: .circular(8),
                             ),
                             padding: const .all(8),
                             child: Text(s.chatting, style: TS(c: qw)),
                           ),
                         ),
-                      if (!alreadyStarted) 8.w,
+                      if (!alreadyStarted) const SizedBox(width: 8),
                       if (!alreadyStarted)
                         GestureDetector(
                           onTap: () async {
@@ -466,8 +466,8 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.transparent,
-                              borderRadius: 8.r,
-                              border: Border.all(
+                              borderRadius: .circular(8),
+                              border: .all(
                                 color: Colors.transparent,
                               ),
                             ),
@@ -485,15 +485,15 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
             ),
             // 展开状态的文件列表
             if (_expanded) ...[
-              8.h,
+              const SizedBox(height: 8),
               ..._fileInfos.map(
                 (e) => Container(
                   margin: const .only(top: 8),
                   padding: const .all(8),
                   decoration: BoxDecoration(
                     color: qb.q(.05),
-                    borderRadius: 8.r,
-                    border: Border.all(color: qb.q(.1), width: 1),
+                    borderRadius: .circular(8),
+                    border: .all(color: qb.q(.1), width: 1),
                   ),
                   child: _ExpandedFileItem(fileInfo: e),
                 ),
@@ -555,18 +555,18 @@ class _CollapsedContent extends ConsumerWidget {
             ),
           ],
         ),
-        4.h,
+        const SizedBox(height: 4),
         _TTSTags(isSpark: isSpark, isNpu: isNpu, quantization: quantization, backend: backend),
         if (downloading) ...[
-          8.h,
+          const SizedBox(height: 8),
           Padding(
-            padding: const EdgeInsetsGeometry.only(right: 40),
+            padding: const .only(right: 40),
             child: LinearProgressIndicator(
               value: (overallProgress.isNaN || overallProgress <= 0 || overallProgress.isInfinite) ? null : overallProgress,
-              borderRadius: 8.r,
+              borderRadius: .circular(8),
             ),
           ),
-          4.h,
+          const SizedBox(height: 4),
           Wrap(
             children: [
               Text(
@@ -742,7 +742,7 @@ class _ExpandedFileItem extends ConsumerWidget {
                             s: 14,
                           ),
                         ),
-                        4.h,
+                        const SizedBox(height: 4),
                         Text(
                           gbDisplay(fileSize),
                           style: TS(
@@ -763,12 +763,12 @@ class _ExpandedFileItem extends ConsumerWidget {
                 ],
               ),
               if (downloading) ...[
-                8.h,
+                const SizedBox(height: 8),
                 LinearProgressIndicator(
                   value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
-                  borderRadius: 8.r,
+                  borderRadius: .circular(8),
                 ),
-                4.h,
+                const SizedBox(height: 4),
                 Wrap(
                   children: [
                     Text(
@@ -788,7 +788,7 @@ class _ExpandedFileItem extends ConsumerWidget {
             ],
           ),
         ),
-        8.w,
+        const SizedBox(width: 8),
         Row(
           mainAxisSize: .min,
           children: [

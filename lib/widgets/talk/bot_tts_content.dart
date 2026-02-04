@@ -125,7 +125,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                   return Column(
                     children: [
                       Icon(Icons.audio_file, color: primaryColor),
-                      2.h,
+                      const SizedBox(height: 2),
                       if (e < 1)
                         Text(
                           (e * 100).toStringAsFixed(0) + "%",
@@ -156,7 +156,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       size: 20,
                     ),
                   ),
-                  8.w,
+                  const SizedBox(width: 8),
                   Text(
                     s.generating + "",
                     style: TS(c: qb.q(.8), w: .w500),
@@ -185,7 +185,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                       Icons.volume_mute,
                       color: primaryColor,
                     ),
-                  8.w,
+                  const SizedBox(width: 8),
                   Text(
                     (length / 1000).toStringAsFixed(0) + "s",
                     style: TS(c: qb.q(.8), w: .w600),
@@ -202,7 +202,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                 ],
               ),
             ),
-          if (allDone) 12.h,
+          if (allDone) const SizedBox(height: 12),
           if (!changing && !allDone)
             Row(
               mainAxisAlignment: .start,

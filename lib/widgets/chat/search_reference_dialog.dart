@@ -32,7 +32,7 @@ class SearchReferenceDialog extends StatelessWidget {
     final s = S.of(context);
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 16),
+      padding: const .symmetric(horizontal: 12, vertical: 16),
       width: double.infinity,
       child: Column(
         mainAxisSize: .min,

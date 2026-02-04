@@ -315,7 +315,7 @@ class Message extends ConsumerWidget {
                           s.batch_inference_running(batchCount),
                           style: const TS(c: kCG),
                         ),
-                        if (batchSelection != null) 16.w,
+                        if (batchSelection != null) const SizedBox(width: 16),
                         if (batchSelection != null)
                           Text(
                             s.batch_inference_selected(batchSelection + 1),
@@ -330,7 +330,7 @@ class Message extends ConsumerWidget {
                     worldDemoMessageHeader,
                     style: TS(c: qb.q(.5), w: .w700, s: 10),
                   ),
-                if (worldDemoMessageHeader.isNotEmpty) 4.h,
+                if (worldDemoMessageHeader.isNotEmpty) const SizedBox(height: 4),
                 // 🔥 Bot message
                 if (!reasoning && !isBatch) MarkdownRender(raw: finalContent),
                 // 🔥 Bot message cot header
@@ -362,7 +362,7 @@ class Message extends ConsumerWidget {
                     ),
                   ),
                 // 🔥 Bot message cot content
-                if (reasoning && !isQuickThinking && !isBatch) 4.h,
+                if (reasoning && !isQuickThinking && !isBatch) const SizedBox(height: 4),
                 if (reasoning && !isQuickThinking && !isBatch)
                   AnimatedContainer(
                     duration: 250.ms,
@@ -370,7 +370,7 @@ class Message extends ConsumerWidget {
                     child: MarkdownRender(raw: cotContent, color: qb.q(.55)),
                   ),
                 // 🔥 Bot message cot result
-                if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) 12.h,
+                if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) const SizedBox(height: 12),
                 if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRender(raw: cotResult),
                 if (isBatch) BatchMessageContent(msg, index, finalContent),
                 if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),

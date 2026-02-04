@@ -682,7 +682,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: Colors.orange.q(0.2),
                       borderRadius: .circular(12),
-                      border: Border.all(color: Colors.orange.q(0.5)),
+                      border: .all(color: Colors.orange.q(0.5)),
                     ),
                     child: Row(
                       mainAxisSize: .min,
@@ -932,7 +932,7 @@ class _LambadaResultCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.q(0.1),
         borderRadius: .circular(8),
-        border: Border.all(color: color.q(0.3)),
+        border: .all(color: color.q(0.3)),
       ),
       child: Column(
         children: [

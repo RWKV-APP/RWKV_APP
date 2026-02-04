@@ -164,7 +164,7 @@ class _ChatAppBar extends ConsumerWidget {
                   padding: const .only(left: 4, top: 1, right: 4, bottom: 1),
                   decoration: BoxDecoration(
                     color: kB.q(.1),
-                    borderRadius: 10.r,
+                    borderRadius: .circular(10),
                   ),
                   child: Row(
                     mainAxisSize: .min,
@@ -175,7 +175,7 @@ class _ChatAppBar extends ConsumerWidget {
                         displayName,
                         style: TS(s: 10, c: primary),
                       ),
-                      4.w,
+                      const SizedBox(width: 4),
                       Transform.rotate(
                         angle: 0, // 90度
                         child: SizedBox(
@@ -269,7 +269,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             child: Row(
               children: [
                 const FaIcon(FontAwesomeIcons.screwdriverWrench, size: 14),
-                8.w,
+                const SizedBox(width: 8),
                 Text(s.advance_settings),
               ],
             ),
@@ -279,7 +279,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             child: Row(
               children: [
                 const FaIcon(FontAwesomeIcons.sliders, size: 14),
-                8.w,
+                const SizedBox(width: 8),
                 Text(s.session_configuration),
               ],
             ),
@@ -289,7 +289,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             child: Row(
               children: [
                 const FaIcon(FontAwesomeIcons.book, size: 14),
-                8.w,
+                const SizedBox(width: 8),
                 Text(s.open_debug_log_panel),
               ],
             ),
@@ -299,7 +299,7 @@ class _MorePopupMenuButton extends ConsumerWidget {
             child: Row(
               children: [
                 const FaIcon(FontAwesomeIcons.satellite, size: 14),
-                8.w,
+                const SizedBox(width: 8),
                 Text(s.open_state_panel),
               ],
             ),

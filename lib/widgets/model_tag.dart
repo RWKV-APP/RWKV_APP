@@ -145,8 +145,8 @@ class ModelTag extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: forceBgColor ?? opt.bgColor,
-        border: Border.all(color: opt.borderColor, width: .5),
-        borderRadius: 4.r,
+        border: .all(color: opt.borderColor, width: .5),
+        borderRadius: .circular(4),
       ),
       padding: const .symmetric(horizontal: 4),
       child: IntrinsicWidth(

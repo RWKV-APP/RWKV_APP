@@ -302,14 +302,14 @@ class _SettingsControls extends ConsumerWidget {
         mainAxisSize: .min,
         children: [
           // Use system font size toggle
-          C(
-            decoration: BD(color: qb.q(.1)),
+          Container(
+            decoration: BoxDecoration(color: qb.q(.1)),
             height: 1,
           ),
-          8.h,
+          const SizedBox(height: 8),
           Row(
             children: [
-              12.w,
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   s.font_size_follow_system,
@@ -323,7 +323,7 @@ class _SettingsControls extends ConsumerWidget {
                 value: useSystemSize,
                 onChanged: onUseSystemSizeChanged,
               ),
-              12.w,
+              const SizedBox(width: 12),
             ],
           ),
           // Slider - only show when not using system size
@@ -386,8 +386,8 @@ class _SettingsControls extends ConsumerWidget {
                     ),
                   ),
           ),
-          C(
-            decoration: BD(color: qb.q(.1)),
+          Container(
+            decoration: BoxDecoration(color: qb.q(.1)),
             margin: const .only(top: 8),
             height: 1,
           ),

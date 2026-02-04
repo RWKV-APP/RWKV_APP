@@ -171,7 +171,7 @@ class _CompletionPageState extends State<CompletionPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: const EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 12),
+                  padding: const .symmetric(horizontal: 12, vertical: 12),
                   child: Text(
                     S.current.decode_param,
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),

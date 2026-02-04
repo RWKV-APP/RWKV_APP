@@ -341,27 +341,27 @@ class _UI extends ConsumerWidget {
         margin: const .symmetric(horizontal: 4, vertical: 4),
       ),
       const _TokensInfo(),
-      4.h,
+      const SizedBox(height: 4),
       if (shouldUseVerticalLayout)
-        Column(
+        const Column(
           children: [
             Row(
               children: [
-                8.w,
-                const Expanded(child: _ButtonGenerate()),
-                8.w,
-                const Expanded(child: _ButtonInference()),
-                8.w,
+                SizedBox(width: 8),
+                Expanded(child: _ButtonGenerate()),
+                SizedBox(width: 8),
+                Expanded(child: _ButtonInference()),
+                SizedBox(width: 8),
               ],
             ),
-            4.h,
+            SizedBox(height: 4),
             Row(
               children: [
-                8.w,
-                const Expanded(child: _ButtonClear()),
-                4.w,
-                const Expanded(child: _ButtonShowStack()),
-                8.w,
+                SizedBox(width: 8),
+                Expanded(child: _ButtonClear()),
+                SizedBox(width: 4),
+                Expanded(child: _ButtonShowStack()),
+                SizedBox(width: 8),
               ],
             ),
           ],
@@ -504,7 +504,7 @@ class _Stack extends ConsumerWidget {
                     width: _kStackPointSize,
                     decoration: BoxDecoration(
                       color: _kStackColor,
-                      borderRadius: 100.r,
+                      borderRadius: .circular(100),
                     ),
                   ),
                 );

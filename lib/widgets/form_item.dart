@@ -70,7 +70,7 @@ class FormItem extends ConsumerWidget {
             Row(
               children: [
                 ?icon,
-                if (icon != null) 8.w,
+                if (icon != null) const SizedBox(width: 8),
                 Expanded(
                   flex: 5,
                   child: Column(
@@ -102,9 +102,9 @@ class FormItem extends ConsumerWidget {
                     ),
                   ),
                 ?infoWidget,
-                if (!showArrow && infoText != null) 4.w,
+                if (!showArrow && infoText != null) const SizedBox(width: 4),
                 ?trailing,
-                if (showArrow) 8.w,
+                if (showArrow) const SizedBox(width: 8),
                 if (showArrow)
                   const Icon(
                     Icons.chevron_right,

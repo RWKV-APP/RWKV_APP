@@ -603,7 +603,7 @@ class _TranslationDirectionButton extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer.q(0.3),
                   borderRadius: .circular(20),
-                  border: Border.all(
+                  border: .all(
                     color: theme.colorScheme.primary.q(0.5),
                     width: 1,
                   ),

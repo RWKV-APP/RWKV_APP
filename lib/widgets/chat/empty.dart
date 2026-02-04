@@ -82,7 +82,7 @@ class Empty extends ConsumerWidget {
                     children: [
                       const Spacer(),
                       WithDevOption(child: Image.asset(logoPath, width: 140)),
-                      12.h,
+                      const SizedBox(height: 12),
                       Wrap(
                         spacing: 4,
                         crossAxisAlignment: .end,
@@ -101,14 +101,14 @@ class Empty extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      12.h,
+                      const SizedBox(height: 12),
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 500),
                         child: Text(s.intro),
                       ),
-                      12.h,
+                      const SizedBox(height: 12),
                       if (!loaded) Text(s.start_a_new_chat_by_clicking_the_button_below),
-                      if (!loaded) 12.h,
+                      if (!loaded) const SizedBox(height: 12),
                       if (!loaded)
                         TextButton(
                           onPressed: () async {
@@ -119,15 +119,15 @@ class Empty extends ConsumerWidget {
                             style: const TS(s: 16, w: .w600),
                           ),
                         ),
-                      if (!loaded) 12.h,
+                      if (!loaded) const SizedBox(height: 12),
                       if (loaded) Text(s.you_are_now_using("")),
-                      4.h,
+                      const SizedBox(height: 4),
                       if (loaded)
                         Container(
                           padding: const .symmetric(horizontal: 4, vertical: 2),
                           decoration: BoxDecoration(
-                            border: Border.all(color: primary),
-                            borderRadius: 4.r,
+                            border: .all(color: primary),
+                            borderRadius: .circular(4),
                           ),
                           child: Text(
                             currentModel?.name ?? "",
@@ -169,26 +169,26 @@ class _EmptyV2 extends ConsumerWidget {
       mainAxisAlignment: .center,
       crossAxisAlignment: .center,
       children: [
-        16.h,
+        const SizedBox(height: 16),
         Text(
           s.hello_ask_me_anything,
           style: const TextStyle(fontSize: 32, fontWeight: .bold),
           textAlign: TextAlign.center,
         ),
-        36.h,
+        const SizedBox(height: 36),
         for (final item in suggestions) ...[
-          12.h,
+          const SizedBox(height: 12),
           Padding(
             padding: const .symmetric(horizontal: 24),
             child: buildSuggestion(item),
           ),
         ],
-        if (suggestions.isNotEmpty) 12.h,
+        if (suggestions.isNotEmpty) const SizedBox(height: 12),
         if (suggestions.isNotEmpty)
           Material(
-            borderRadius: 60.r,
+            borderRadius: .circular(60),
             child: InkWell(
-              borderRadius: 60.r,
+              borderRadius: .circular(60),
               onTap: () async {
                 final suggestion = await AllSuggestionDialog.show(context);
                 if (suggestion != null) onTap(suggestion);
@@ -203,16 +203,16 @@ class _EmptyV2 extends ConsumerWidget {
               ),
             ),
           ),
-        16.h,
+        const SizedBox(height: 16),
       ],
     );
   }
 
   Widget buildSuggestion(dynamic item) {
     return Material(
-      borderRadius: 60.r,
+      borderRadius: .circular(60),
       child: InkWell(
-        borderRadius: 60.r,
+        borderRadius: .circular(60),
         onTap: () => onTap(item),
         child: Padding(
           padding: const .symmetric(horizontal: 22, vertical: 12),
@@ -224,7 +224,7 @@ class _EmptyV2 extends ConsumerWidget {
                 width: 10,
                 decoration: BoxDecoration(
                   color: _rndColor(),
-                  borderRadius: 60.r,
+                  borderRadius: .circular(60),
                 ),
               ),
               const SizedBox(width: 12),

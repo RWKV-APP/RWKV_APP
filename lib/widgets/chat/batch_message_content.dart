@@ -92,7 +92,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
             mainAxisAlignment: .start,
             crossAxisAlignment: .start,
             children: [
-              4.w,
+              const SizedBox(width: 4),
               for (var i = 0; i < batchCount; i++)
                 GD(
                   onTap: () {
@@ -106,7 +106,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                     padding: const .all(8),
                     decoration: BoxDecoration(
                       color: qw,
-                      border: Border.all(color: batchSelection == i ? kCG : qb.q(.1)),
+                      border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
                       borderRadius: .circular(8),
                     ),
                     child: _MarkdownBody(
@@ -115,8 +115,8 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                     ),
                   ),
                 ),
-              4.w,
-            ].widgetJoin((index) => 8.w),
+              const SizedBox(width: 4),
+            ].widgetJoin((index) => const SizedBox(width: 8)),
           ),
         ),
         AnimatedPositioned(
@@ -135,7 +135,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: qw,
-                    border: Border.all(color: qb.q(.1)),
+                    border: .all(color: qb.q(.1)),
                     borderRadius: .circular(20),
                   ),
                   padding: const .all(6),
@@ -161,7 +161,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: qw,
-                    border: Border.all(color: qb.q(.1)),
+                    border: .all(color: qb.q(.1)),
                     borderRadius: .circular(20),
                   ),
                   padding: const .all(6),
@@ -214,8 +214,8 @@ class _MarkdownBody extends ConsumerWidget {
             child: GD(
               onTap: _onTapDecodeParam,
               child: Container(
-                decoration: BD(
-                  border: Border.all(color: kCG.q(.5)),
+                decoration: BoxDecoration(
+                  border: .all(color: kCG.q(.5)),
                   borderRadius: .circular(4),
                 ),
                 padding: const .symmetric(horizontal: 6, vertical: 2),
@@ -240,7 +240,7 @@ class _MarkdownBody extends ConsumerWidget {
       children: [
         ?decodeParamWidget,
         if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.55)),
-        if (output.isNotEmpty) 4.h,
+        if (output.isNotEmpty) const SizedBox(height: 4),
         if (output.isNotEmpty) MarkdownRender(raw: output),
       ],
     );

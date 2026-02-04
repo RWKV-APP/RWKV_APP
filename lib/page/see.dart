@@ -130,9 +130,9 @@ class _Empty extends ConsumerWidget {
           children: [
             logoSquare.image(width: 140),
             Text(s.chat_welcome_to_use("RWKV Chat"), style: const TS(s: 18, w: .w600)),
-            4.h,
+            const SizedBox(height: 4),
             Text("v$version"),
-            12.h,
+            const SizedBox(height: 12),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
               child: Text(
@@ -140,13 +140,13 @@ class _Empty extends ConsumerWidget {
                 style: TS(c: qb, w: .w500),
               ),
             ),
-            12.h,
+            const SizedBox(height: 12),
             if (!loaded)
               Text(
                 s.start_a_new_chat_by_clicking_the_button_below,
                 style: TS(c: qb, s: 12),
               ),
-            12.h,
+            const SizedBox(height: 12),
             if (!loaded)
               TextButton(
                 onPressed: () => ModelSelector.show(preferredDemoType: .see),

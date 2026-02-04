@@ -89,8 +89,8 @@ class DecodeParamButton extends ConsumerWidget {
             padding: const .symmetric(horizontal: 8),
             decoration: BoxDecoration(
               color: bgColor,
-              borderRadius: 60.r,
-              border: Border.all(color: borderColor),
+              borderRadius: .circular(60),
+              border: .all(color: borderColor),
             ),
             child: Row(
               mainAxisAlignment: .center,

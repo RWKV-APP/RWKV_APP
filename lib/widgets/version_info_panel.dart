@@ -103,7 +103,7 @@ class VersionInfoPanel extends ConsumerWidget {
             Expanded(
               child: _ReleaseNotesContent(scrollController: scrollController),
             ),
-            8.h,
+            const SizedBox(height: 8),
             if (!isLatest)
               Row(
                 children: [
@@ -115,7 +115,7 @@ class VersionInfoPanel extends ConsumerWidget {
                         padding: const .symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           color: const Color(0xFF14b8a6),
-                          borderRadius: 100.r,
+                          borderRadius: .circular(100),
                         ),
                         child: Row(
                           children: [
@@ -142,7 +142,7 @@ class VersionInfoPanel extends ConsumerWidget {
                         padding: const .symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           color: const Color(0xFF0d9488),
-                          borderRadius: 100.r,
+                          borderRadius: .circular(100),
                         ),
                         child: Row(
                           children: [
@@ -164,7 +164,7 @@ class VersionInfoPanel extends ConsumerWidget {
                         padding: const .symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           color: const Color(0xFF0d9488),
-                          borderRadius: 100.r,
+                          borderRadius: .circular(100),
                         ),
                         child: Row(
                           children: [

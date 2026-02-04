@@ -140,7 +140,7 @@ class BotMessageBottom extends ConsumerWidget {
     return Row(
       mainAxisAlignment: .start,
       children: [
-        if (isBatch) 12.w,
+        if (isBatch) const SizedBox(width: 12),
         if (changing)
           Tooltip(
             message: s.generating,
@@ -225,7 +225,7 @@ class BotMessageBottom extends ConsumerWidget {
             ),
           ),
         BranchSwitcher(msg, index),
-        if (msg.modelName != null) 4.w,
+        if (msg.modelName != null) const SizedBox(width: 4),
         if (msg.modelName != null)
           Expanded(
             child: Text(
@@ -245,8 +245,8 @@ class BotMessageBottom extends ConsumerWidget {
                 padding: const .symmetric(horizontal: 8, vertical: 1),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
-                  border: Border.all(color: primaryColor.q(.67)),
-                  borderRadius: 4.r,
+                  border: .all(color: primaryColor.q(.67)),
+                  borderRadius: .circular(4),
                 ),
                 child: Text(
                   s.chat_resume,

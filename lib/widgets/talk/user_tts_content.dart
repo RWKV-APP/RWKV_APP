@@ -94,8 +94,8 @@ class UserTTSContent extends ConsumerWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: qw.q(.5),
-                    borderRadius: 8.r,
-                    border: Border.all(color: primary, width: .5),
+                    borderRadius: .circular(8),
+                    border: .all(color: primary, width: .5),
                   ),
                   margin: const .only(top: 4),
                   padding: const .only(left: 4, top: 4, right: 4, bottom: 4),
@@ -164,7 +164,7 @@ class UserTTSContent extends ConsumerWidget {
               ),
             ],
           ),
-          4.h,
+          const SizedBox(height: 4),
           Text(
             msg.ttsTarget ?? "null",
             style: const TS(s: 16),

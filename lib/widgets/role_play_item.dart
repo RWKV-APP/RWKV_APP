@@ -83,7 +83,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       padding: const .symmetric(horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: .circular(12),
-        border: Border.all(color: theme.primaryColor),
+        border: .all(color: theme.primaryColor),
         color: theme.colorScheme.surfaceContainerLow,
       ),
       clipBehavior: Clip.antiAlias,

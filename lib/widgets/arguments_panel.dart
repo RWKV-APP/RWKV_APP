@@ -120,7 +120,7 @@ class ArgumentsPanel extends ConsumerWidget {
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     return ClipRRect(
-      borderRadius: 16.r,
+      borderRadius: .circular(16),
       child: Container(
         margin: const .only(top: 8),
         child: Column(
@@ -129,7 +129,7 @@ class ArgumentsPanel extends ConsumerWidget {
             if (showTitleBar)
               Row(
                 children: [
-                  8.w,
+                  const SizedBox(width: 8),
                   TextButton(
                     style: TextButton.styleFrom(iconSize: 16),
                     onPressed: () {
@@ -148,7 +148,7 @@ class ArgumentsPanel extends ConsumerWidget {
                                 size: 18,
                               ),
                             ),
-                            WidgetSpan(child: 8.w),
+                            const WidgetSpan(child: SizedBox(width: 8)),
                             TextSpan(
                               text: title ?? s.model_settings,
                               style: const TS(s: 16, w: .w500),
@@ -165,10 +165,10 @@ class ArgumentsPanel extends ConsumerWidget {
                     },
                     child: Text(s.apply),
                   ),
-                  8.w,
+                  const SizedBox(width: 8),
                 ],
               ),
-            if (showTitleBar) 12.h,
+            if (showTitleBar) const SizedBox(height: 12),
             Expanded(
               child: ListView(
                 controller: scrollController,
@@ -206,7 +206,7 @@ class _SamplerOptions extends ConsumerWidget {
       decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
-          12.w,
+          const SizedBox(width: 12),
           Expanded(child: Text("Sampler Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(
@@ -237,7 +237,7 @@ class _CompletionOptions extends ConsumerWidget {
       decoration: BoxDecoration(color: qb.q(.1), borderRadius: 8.r),
       child: Row(
         children: [
-          12.w,
+          const SizedBox(width: 12),
           Expanded(child: Text("Completion Options" + (reasoning ? " (Reason)" : ""))),
           TextButton(
             style: TextButton.styleFrom(

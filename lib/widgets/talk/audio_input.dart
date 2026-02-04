@@ -151,7 +151,7 @@ class AudioInput extends ConsumerWidget {
                       onPanEnd: _onPanEnd,
                       onPanCancel: _onPanCancel,
                       child: ClipRRect(
-                        borderRadius: 1000.r,
+                        borderRadius: .circular(1000),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
                           child: Container(
@@ -159,8 +159,8 @@ class AudioInput extends ConsumerWidget {
                             width: _kButtonSize,
                             decoration: BoxDecoration(
                               color: primary.q(.2),
-                              border: Border.all(color: primary.q(.5)),
-                              borderRadius: 1000.r,
+                              border: .all(color: primary.q(.5)),
+                              borderRadius: .circular(1000),
                             ),
                             child: Center(
                               child: receiving
@@ -180,7 +180,7 @@ class AudioInput extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    12.h,
+                    const SizedBox(height: 12),
                     Text(
                       bottomMessage,
                       style: TS(

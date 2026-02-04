@@ -127,7 +127,7 @@ class _ChatTemplateDialogState extends State<ChatTemplateDialog> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsetsGeometry.symmetric(horizontal: 12),
+              padding: const .symmetric(horizontal: 12),
               child: Column(
                 children: [
                   const SizedBox(height: 12),

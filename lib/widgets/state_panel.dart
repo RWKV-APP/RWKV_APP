@@ -62,7 +62,7 @@ class StatePanel extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final showEscapeCharacters = ref.watch(P.rwkv.showEscapeCharacters);
     return ClipRRect(
-      borderRadius: 16.r,
+      borderRadius: .circular(16),
       child: Container(
         margin: const .only(top: 8),
         child: Column(
@@ -70,7 +70,7 @@ class StatePanel extends ConsumerWidget {
           children: [
             Row(
               children: [
-                8.w,
+                const SizedBox(width: 8),
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onRefreshPressed,
@@ -82,7 +82,7 @@ class StatePanel extends ConsumerWidget {
                     mainAxisAlignment: .center,
                     children: [
                       const Icon(Icons.tune),
-                      4.w,
+                      const SizedBox(width: 4),
                       Text(
                         S.current.state_panel,
                         style: const TS(s: 16, w: .w500),
@@ -95,12 +95,12 @@ class StatePanel extends ConsumerWidget {
                   onPressed: _onClosePressed,
                   child: Text(S.current.close),
                 ),
-                8.w,
+                const SizedBox(width: 8),
               ],
             ),
             Row(
               children: [
-                8.w,
+                const SizedBox(width: 8),
                 TextButton(
                   style: TextButton.styleFrom(iconSize: 16),
                   onPressed: _onNReplacedPressed,
@@ -110,7 +110,7 @@ class StatePanel extends ConsumerWidget {
                         (showEscapeCharacters ? S.current.line_break_rendered : S.current.escape_characters_rendered),
                   ),
                 ),
-                8.w,
+                const SizedBox(width: 8),
               ],
             ),
             Expanded(
@@ -122,9 +122,9 @@ class StatePanel extends ConsumerWidget {
                   final log = stateLogList[index];
                   final text = showEscapeCharacters ? log.text.replaceAll("\\n", "\n") : log.text;
                   return Container(
-                    decoration: BD(
-                      border: Border.all(color: qb.q(.5)),
-                      borderRadius: 8.r,
+                    decoration: BoxDecoration(
+                      border: .all(color: qb.q(.5)),
+                      borderRadius: .circular(8),
                     ),
                     padding: const .all(4),
                     margin: const .only(left: 8, top: 4, right: 8, bottom: 4),
@@ -133,7 +133,7 @@ class StatePanel extends ConsumerWidget {
                       children: [
                         const Text("Text: ", style: TS(w: .w700)),
                         Text(text),
-                        4.h,
+                        const SizedBox(height: 4),
                         const Text("Life Span: ", style: TS(w: .w700)),
                         Text(log.lifeSpan.toString()),
                       ],

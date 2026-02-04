@@ -225,12 +225,12 @@ class ModelItem extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
 
     return ClipRRect(
-      borderRadius: 8.r,
+      borderRadius: .circular(8),
       child: Container(
         decoration: BoxDecoration(
           color: customTheme.settingItem,
-          borderRadius: 8.r,
-          border: Border.all(color: qw.q(.1), width: .5),
+          borderRadius: .circular(8),
+          border: .all(color: qw.q(.1), width: .5),
         ),
         margin: const .only(top: 8),
         padding: const .all(8),
@@ -239,7 +239,7 @@ class ModelItem extends ConsumerWidget {
             Expanded(
               child: FileKeyItem(fileInfo, showTags: showTags),
             ),
-            8.w,
+            const SizedBox(width: 8),
             DownloadActions(file: fileInfo, state: localFile.state),
             if (hasFile) ...[
               if (!isCurrentModel && showLoadModel)
@@ -248,7 +248,7 @@ class ModelItem extends ConsumerWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: (loading || unzipping) ? kCG.q(.5) : kCG,
-                      borderRadius: 4.r,
+                      borderRadius: .circular(4),
                     ),
                     padding: const .all(8),
                     child: Text(
@@ -263,13 +263,13 @@ class ModelItem extends ConsumerWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: kG.q(.5),
-                      borderRadius: 4.r,
+                      borderRadius: .circular(4),
                     ),
                     padding: const .all(8),
                     child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),
                   ),
                 ),
-              if (!isCurrentModel && showDelete) 8.w,
+              if (!isCurrentModel && showDelete) const SizedBox(width: 8),
               if (!isCurrentModel && showDelete) _Delete(fileInfo),
             ],
           ],
@@ -371,8 +371,8 @@ class _Delete extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.transparent,
-          borderRadius: 8.r,
-          border: Border.all(
+          borderRadius: .circular(8),
+          border: .all(
             color: Colors.transparent,
           ),
         ),
@@ -436,18 +436,18 @@ class FileKeyItem extends ConsumerWidget {
               ),
           ],
         ),
-        if (showTags) 4.h,
+        if (showTags) const SizedBox(height: 4),
         if (showTags) _Tags(fileInfo: fileInfo),
-        if (downloading) 8.h,
+        if (downloading) const SizedBox(height: 8),
         if (downloading)
           Padding(
-            padding: const EdgeInsetsGeometry.only(right: 40),
+            padding: const .only(right: 40),
             child: LinearProgressIndicator(
               value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
-              borderRadius: 8.r,
+              borderRadius: .circular(8),
             ),
           ),
-        if (downloading) 4.h,
+        if (downloading) const SizedBox(height: 4),
         if (downloading)
           Wrap(
             children: [

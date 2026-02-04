@@ -113,9 +113,9 @@ class ModelSelector extends ConsumerWidget {
           const _LocalPthFolderHeader(),
           if (folders.isEmpty) const _LocalPthEmpty(),
           if (folders.isNotEmpty) ...folders.map((e) => _LocalPthFolder(e)),
-        ].widgetJoin((index) => 8.h),
+        ].widgetJoin((index) => const SizedBox(height: 8)),
       if (!isMobile && canUsePth) ...[
-        4.h,
+        const SizedBox(height: 4),
         const _ModelsInConfigHeader(),
       ],
       ...[
@@ -219,7 +219,7 @@ class _PanelBarState extends ConsumerState<_PanelBar> {
             onPressed: pop,
             icon: Icon(Icons.close),
           ),
-          4.w,
+          const SizedBox(width: 4),
         ],
       ),
     );
@@ -390,8 +390,8 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
         padding: const .all(8),
         decoration: BoxDecoration(
           color: qb.q(.1),
-          borderRadius: 8.r,
-          border: Border.all(color: qb.q(.2), width: 1),
+          borderRadius: .circular(8),
+          border: .all(color: qb.q(.2), width: 1),
         ),
         child: Column(
           crossAxisAlignment: .start,
@@ -399,7 +399,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
             Row(
               children: [
                 Icon(Icons.info_outline, size: 18, color: qb.q(.8)),
-                4.w,
+                const SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     hasValidSoc ? s.npu_not_supported_title(currentSocName) : s.npu_not_supported_title(frontendSocName ?? "Unknown"),
@@ -409,7 +409,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
               ],
             ),
             if (_expanded) ...[
-              8.h,
+              const SizedBox(height: 8),
               if (hasValidSoc) ...[
                 Row(
                   children: [
@@ -417,13 +417,13 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                       S.current.your_device,
                       style: TS(c: qb.q(.7), s: 12),
                     ),
-                    6.w,
+                    const SizedBox(width: 6),
                     Container(
                       padding: const .symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: qb.q(.2),
-                        borderRadius: 6.r,
-                        border: Border.all(
+                        borderRadius: .circular(6),
+                        border: .all(
                           color: qb.q(.4),
                           width: 1,
                         ),
@@ -436,7 +436,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                             size: 14,
                             color: qb.q(.8),
                           ),
-                          4.w,
+                          const SizedBox(width: 4),
                           Text(
                             currentSocName,
                             style: TS(
@@ -450,13 +450,13 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                     ),
                   ],
                 ),
-                8.h,
+                const SizedBox(height: 8),
               ],
               Text(
                 S.current.we_support_npu_socs,
                 style: TS(c: qb.q(.7), s: 12),
               ),
-              8.h,
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 4,
                 runSpacing: 4,
@@ -465,8 +465,8 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                     padding: const .symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: primary.q(.2),
-                      borderRadius: 4.r,
-                      border: Border.all(
+                      borderRadius: .circular(4),
+                      border: .all(
                         color: primary.q(.9),
                         width: 0.5,
                       ),
@@ -495,7 +495,7 @@ class _NpuNotSupportedHintState extends ConsumerState<_NpuNotSupportedHint> {
                   );
                 }).toList(),
               ),
-              8.h,
+              const SizedBox(height: 8),
               Text(
                 s.adapting_more_inference_chips,
                 style: TS(c: qb.q(.7), s: 12),
@@ -521,12 +521,12 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        4.h,
+        const SizedBox(height: 4),
         Text(
           S.current.download_server_,
           style: TS(c: qb.q(.7), s: 12, w: .w600),
         ),
-        4.h,
+        const SizedBox(height: 4),
         Wrap(
           runSpacing: 4,
           spacing: 4,
@@ -546,8 +546,8 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: e == currentSource ? primary : Colors.transparent,
-                      borderRadius: 4.r,
-                      border: Border.all(
+                      borderRadius: .circular(4),
+                      border: .all(
                         color: primary,
                       ),
                     ),
@@ -617,7 +617,7 @@ class _LocalPthFileItem extends ConsumerWidget {
                   ),
                 ],
               ),
-              4.h,
+              const SizedBox(height: 4),
               Wrap(
                 spacing: 4,
                 runSpacing: 8,
@@ -629,14 +629,14 @@ class _LocalPthFileItem extends ConsumerWidget {
             ],
           ),
         ),
-        8.w,
+        const SizedBox(width: 8),
         if (onStartToChat != null && !isCurrent)
           GestureDetector(
             onTap: loading ? null : () => onStartToChat!(),
             child: Container(
               decoration: BoxDecoration(
                 color: (loading) ? kCG.q(.5) : kCG,
-                borderRadius: 4.r,
+                borderRadius: .circular(4),
               ),
               padding: const .all(8),
               child: Text(loading ? s.loading : s.start_to_chat, style: TS(c: qw)),
@@ -710,10 +710,10 @@ class _LocalPthEmpty extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     return Container(
-      decoration: BD(
+      decoration: BoxDecoration(
         color: kC,
-        borderRadius: 8.r,
-        border: Border.all(color: qb.q(.5), width: 1),
+        borderRadius: .circular(8),
+        border: .all(color: qb.q(.5), width: 1),
       ),
       padding: const .all(12),
       child: Column(
@@ -729,9 +729,9 @@ class _LocalPthEmpty extends ConsumerWidget {
               ),
             ],
           ),
-          4.h,
+          const SizedBox(height: 4),
           IconButton(onPressed: () => P.pth.onAddFolderClicked(), icon: const Icon(Icons.add), tooltip: S.current.add_local_folder),
-          4.h,
+          const SizedBox(height: 4),
           Row(
             children: [
               Expanded(
@@ -762,10 +762,10 @@ class _LocalPthFolder extends ConsumerWidget {
     final folderPath = folder.path;
     final folderPathDisplay = _truncatePath(folderPath);
     final files = folder.files;
-    return C(
-      decoration: BD(
+    return Container(
+      decoration: BoxDecoration(
         color: customTheme.settingItem,
-        borderRadius: 8.r,
+        borderRadius: .circular(8),
       ),
       padding: const .all(8),
       child: Column(
@@ -781,7 +781,7 @@ class _LocalPthFolder extends ConsumerWidget {
                       S.current.local_folder_name(folderName),
                       s: TS(c: qb.q(.8), w: .w500),
                     ),
-                    2.h,
+                    const SizedBox(height: 2),
                     Text(
                       S.current.path_label(folderPathDisplay),
                       style: TS(c: qb.q(.8), s: 12),
@@ -806,12 +806,12 @@ class _LocalPthFolder extends ConsumerWidget {
               ),
             ],
           ),
-          8.h,
+          const SizedBox(height: 8),
           if (state == FolderState.loading) ...[
             Row(
               children: [
                 T(S.current.scanning_folder_for_pth, s: const TS(c: kCG)),
-                8.w,
+                const SizedBox(width: 8),
                 const SizedBox(
                   width: 20,
                   height: 20,
@@ -822,19 +822,19 @@ class _LocalPthFolder extends ConsumerWidget {
                 ),
               ],
             ),
-            8.h,
+            const SizedBox(height: 8),
           ],
           if (files.isEmpty && state == FolderState.loaded) ...[
             T(S.current.current_folder_has_no_local_models),
-            8.h,
+            const SizedBox(height: 8),
           ],
           if (state == FolderState.notfound) ...[
             T(S.current.folder_not_found_on_device),
-            8.h,
+            const SizedBox(height: 8),
           ],
           if (state == FolderState.restricted) ...[
             T(S.current.folder_not_accessible_check_permission),
-            8.h,
+            const SizedBox(height: 8),
           ],
           if (files.isNotEmpty)
             ...files
@@ -842,16 +842,16 @@ class _LocalPthFolder extends ConsumerWidget {
                   (e) => Container(
                     decoration: BoxDecoration(
                       color: customTheme.settingItem,
-                      borderRadius: 8.r,
-                      border: Border.all(color: qb.q(.1), width: .5),
+                      borderRadius: .circular(8),
+                      border: .all(color: qb.q(.1), width: .5),
                     ),
                     padding: const .all(4),
                     child: _LocalPthFileItem(e, onStartToChat: () => P.pth.onStartPthFileForChat(e)),
                   ),
                 )
                 .toList()
-                .widgetJoin((index) => 8.h),
-          4.h,
+                .widgetJoin((index) => const SizedBox(height: 8)),
+          const SizedBox(height: 4),
         ],
       ),
     );

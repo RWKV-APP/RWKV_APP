@@ -97,11 +97,11 @@ class _Highlight extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
-    return C(
+    return Container(
       decoration: BoxDecoration(
         color: dark ? qw.q(.5) : qb.q(.04),
         borderRadius: .circular(6),
-        border: Border.all(color: dark ? qb.q(.2) : qb.q(.2)),
+        border: .all(color: dark ? qb.q(.2) : qb.q(.2)),
       ),
       padding: const .only(left: 4, right: 4, top: 0, bottom: 0),
       child: Text.rich(
@@ -260,7 +260,7 @@ class _CodeState extends ConsumerState<_Code> {
 
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
-    return C(
+    return Container(
       decoration: BoxDecoration(
         color: dark ? qw.q(.5) : qb.q(.04),
         borderRadius: .circular(8),
@@ -273,7 +273,7 @@ class _CodeState extends ConsumerState<_Code> {
           Row(
             mainAxisAlignment: .spaceBetween,
             children: [
-              8.w,
+              const SizedBox(width: 8),
               Text(
                 widget.name,
                 style: TS(s: 14, w: .w500, c: qb.q(.5)),
@@ -293,10 +293,10 @@ class _CodeState extends ConsumerState<_Code> {
                 ),
                 tooltip: S.current.copy_code,
               ),
-              4.w,
+              const SizedBox(width: 4),
             ],
           ),
-          4.h,
+          const SizedBox(height: 4),
           Divider(
             color: qb.q(.1),
             thickness: 1,
@@ -304,7 +304,7 @@ class _CodeState extends ConsumerState<_Code> {
             indent: 0,
             endIndent: 0,
           ),
-          4.h,
+          const SizedBox(height: 4),
           NotificationListener<ScrollNotification>(
             onNotification: _onScrollNotification,
             child: SingleChildScrollView(

@@ -120,10 +120,10 @@ class _AudioInteractor extends ConsumerWidget {
       height: 250,
       child: Column(
         children: [
-          24.h,
+          const SizedBox(height: 24),
           Row(
             children: [
-              24.w,
+              const SizedBox(width: 24),
               Expanded(
                 child: Text.rich(
                   TextSpan(
@@ -160,7 +160,7 @@ class _AudioInteractor extends ConsumerWidget {
                   ),
                 ),
               ),
-              24.w,
+              const SizedBox(width: 24),
             ],
           ),
         ],
@@ -210,8 +210,8 @@ class _IntonationPanel extends ConsumerWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.transparent,
-                  border: Border.all(color: qb.q(.5), width: .5),
-                  borderRadius: 4.r,
+                  border: .all(color: qb.q(.5), width: .5),
+                  borderRadius: .circular(4),
                 ),
                 padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                 child: Text(emoji + e),
@@ -463,13 +463,13 @@ class _SpkPanel extends ConsumerWidget {
                     margin: const .only(right: 4),
                     decoration: BoxDecoration(
                       color: filtered ? primary.q(.1) : Colors.transparent,
-                      borderRadius: 4.r,
-                      border: Border.all(color: qb.q(.5), width: .5),
+                      borderRadius: .circular(4),
+                      border: .all(color: qb.q(.5), width: .5),
                     ),
                     child: Row(
                       children: [
                         Text((flag ?? "") + " " + (localizedName ?? "")),
-                        if (selected) 4.w,
+                        if (selected) const SizedBox(width: 4),
                         if (selected) Icon(Icons.circle, color: primary, size: 8),
                       ],
                     ),
@@ -510,7 +510,7 @@ class _SpkPanel extends ConsumerWidget {
                             padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                             decoration: BoxDecoration(
                               color: selected ? primary.q(.1) : Colors.transparent,
-                              borderRadius: 6.r,
+                              borderRadius: .circular(6),
                             ),
                             child: Row(
                               children: [
@@ -653,8 +653,8 @@ class _InstructTabs extends ConsumerWidget {
                     padding: const .only(left: 8, top: 4, right: 8, bottom: 4),
                     decoration: BoxDecoration(
                       color: isSelected ? primary.q(.2) : Colors.transparent,
-                      border: Border.all(color: qb.q(.5), width: .5),
-                      borderRadius: 4.r,
+                      border: .all(color: qb.q(.5), width: .5),
+                      borderRadius: .circular(4),
                     ),
                     child: Row(
                       crossAxisAlignment: .center,
@@ -666,7 +666,7 @@ class _InstructTabs extends ConsumerWidget {
                             color: primary,
                             size: 8,
                           ),
-                        if (hasValue) 4.w,
+                        if (hasValue) const SizedBox(width: 4),
                         Text(displayText),
                       ],
                     ),
@@ -731,8 +731,8 @@ class _InstructOptions extends ConsumerWidget {
                 margin: const .only(top: 4),
                 decoration: BoxDecoration(
                   color: selected ? primary.q(.2) : Colors.transparent,
-                  border: Border.all(color: qb.q(.5), width: .5),
-                  borderRadius: 4.r,
+                  border: .all(color: qb.q(.5), width: .5),
+                  borderRadius: .circular(4),
                 ),
                 child: Text(e + (selected ? " ×" : "")),
               ),

@@ -123,7 +123,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
             AnimatedSize(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
-              child: batchInference ? const SizedBox.shrink() : 8.h,
+              child: batchInference ? const SizedBox.shrink() : const SizedBox(height: 8),
             ),
             IgnorePointer(
               ignoring: !batchInference,

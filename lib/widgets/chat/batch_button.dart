@@ -34,8 +34,8 @@ class BatchButton extends ConsumerWidget {
           height: height,
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: 60.r,
-            border: Border.all(color: borderColor),
+            borderRadius: .circular(60),
+            border: .all(color: borderColor),
           ),
           padding: const .only(left: 8, right: 8),
           child: Row(

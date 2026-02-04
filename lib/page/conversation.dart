@@ -276,7 +276,7 @@ class _EmptyState extends ConsumerWidget {
           s.no_conversations_yet,
           style: const TextStyle(fontSize: 16),
         ),
-        16.h,
+        const SizedBox(height: 16),
         _NewChatButton(),
       ],
     );

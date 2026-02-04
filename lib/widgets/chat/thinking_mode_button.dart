@@ -83,18 +83,18 @@ class ThinkingModeButton extends ConsumerWidget {
                 padding: padding,
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: 60.r,
+                  borderRadius: .circular(60),
                   border: border,
                 ),
                 child: Row(
                   children: [
                     Icon(Icons.lightbulb_outline, color: textColor, size: 18),
-                    2.w,
+                    const SizedBox(width: 2),
                     Text(
                       text,
                       style: TS(c: textColor, s: 14, height: 1, w: .w500),
                     ),
-                    4.w,
+                    const SizedBox(width: 4),
                   ],
                 ),
               ),

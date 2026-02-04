@@ -348,13 +348,13 @@ class _Guide extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final qw = ref.watch(P.app.qw);
     return Container(
-      // decoration: BD(color: Colors.red.q(.2)),
+      // decoration: BoxDecoration(color: Colors.red.q(.2)),
       child: Column(
         crossAxisAlignment: .center,
         mainAxisAlignment: .center,
         children: [
           Container(
-            // decoration: BD(color: Colors.red.q(.2)),
+            // decoration: BoxDecoration(color: Colors.red.q(.2)),
             padding: const .all(32),
             width: screenWidth,
             height: screenWidth,
@@ -363,7 +363,7 @@ class _Guide extends ConsumerWidget {
               mainAxisAlignment: .center,
               children: [
                 FaIcon(FontAwesomeIcons.camera, size: 48, color: qb.q(.6667)),
-                16.h,
+                const SizedBox(height: 16),
                 Text.rich(
                   textAlign: .center,
                   TextSpan(
@@ -381,10 +381,10 @@ class _Guide extends ConsumerWidget {
             children: [
               GD(
                 onTap: P.ocr.takePhoto,
-                child: C(
-                  decoration: BD(
-                    // border: Border.all(color: Colors.blue, width: 1),
-                    borderRadius: 48.r,
+                child: Container(
+                  decoration: BoxDecoration(
+                    // border: .all(color: Colors.blue, width: 1),
+                    borderRadius: .circular(48),
                     color: primary.q(1),
                     boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
                   ),
@@ -401,10 +401,10 @@ class _Guide extends ConsumerWidget {
               ),
               GD(
                 onTap: P.ocr.pickFromGallery,
-                child: C(
-                  decoration: BD(
-                    // border: Border.all(color: Colors.blue, width: 1),
-                    borderRadius: 48.r,
+                child: Container(
+                  decoration: BoxDecoration(
+                    // border: .all(color: Colors.blue, width: 1),
+                    borderRadius: .circular(48),
                     color: primary.q(1),
                     boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
                   ),

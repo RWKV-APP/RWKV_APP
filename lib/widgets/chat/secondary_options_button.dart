@@ -59,7 +59,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
         mainAxisAlignment: .center,
         children: [
           Text(s.prefer, style: TS(c: textColor, s: 10, height: 1)),
-          2.h,
+          const SizedBox(height: 2),
           Text(s.chinese, style: TS(c: textColor, s: 10, height: 1)),
         ],
       ),
@@ -96,12 +96,12 @@ class SecondaryOptionsButton extends ConsumerWidget {
               padding: padding,
               decoration: BoxDecoration(
                 color: color,
-                borderRadius: 60.r,
+                borderRadius: .circular(60),
               ),
               child: Row(
                 children: [
                   ?iconWidget,
-                  if (textWidget != null) 4.w,
+                  if (textWidget != null) const SizedBox(width: 4),
                   ?textWidget,
                 ],
               ),

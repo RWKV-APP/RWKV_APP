@@ -152,8 +152,8 @@ class _Body extends ConsumerWidget {
         const _TotalSizeSection(),
         if (isDesktop) ...[
           const _CustomDirectoryTile(),
-          C(
-            decoration: BD(color: qb.q(.3)),
+          Container(
+            decoration: BoxDecoration(color: qb.q(.3)),
             height: .5,
           ),
         ],
@@ -167,8 +167,8 @@ class _Body extends ConsumerWidget {
               itemBuilder: (context, index) => children[index],
               separatorBuilder: (context, index) => Padding(
                 padding: const .symmetric(horizontal: 8),
-                child: C(
-                  decoration: BD(color: qb.q(.3)),
+                child: Container(
+                  decoration: BoxDecoration(color: qb.q(.3)),
                   height: .5,
                 ),
               ),
@@ -196,19 +196,19 @@ class _TotalSizeSection extends ConsumerWidget {
       children: [
         Row(
           children: [
-            16.w,
+            const SizedBox(width: 16),
             const Icon(Icons.storage_outlined),
-            8.w,
+            const SizedBox(width: 8),
             Text(
               s.total_disk_usage + ": " + formatBytes(totalSize),
               style: theme.textTheme.titleMedium,
             ),
           ],
         ),
-        if (!isDesktop) 8.h,
+        if (!isDesktop) const SizedBox(height: 8),
         if (!isDesktop)
-          C(
-            decoration: BD(color: qb.q(.3)),
+          Container(
+            decoration: BoxDecoration(color: qb.q(.3)),
             height: .5,
           ),
       ],

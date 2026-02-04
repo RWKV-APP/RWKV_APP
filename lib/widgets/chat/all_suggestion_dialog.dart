@@ -77,9 +77,9 @@ class _AllSuggestionDialogState extends State<AllSuggestionDialog> implements Ti
       child: Column(
         crossAxisAlignment: .center,
         children: [
-          16.h,
+          const SizedBox(height: 16),
           Text(s.all_prompt, style: const TS(s: 16, w: .w600)),
-          16.h,
+          const SizedBox(height: 16),
           SizedBox(
             height: 50,
             child: TabBar(

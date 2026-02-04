@@ -22,10 +22,10 @@ class SelectImageButton extends ConsumerWidget {
         curve: Curves.easeOutCubic,
         decoration: BoxDecoration(
           color: primaryContainer,
-          border: Border.all(
+          border: .all(
             color: color.q(.5),
           ),
-          borderRadius: 12.r,
+          borderRadius: .circular(12),
         ),
         padding: const .only(left: 8, top: 8, right: 8, bottom: 8),
         child: Text(

@@ -127,7 +127,7 @@ class UserMessageBottom extends ConsumerWidget {
               ),
             ),
           ),
-        if (!showUserEditButton && !showUserCopyButton) 8.h,
+        if (!showUserEditButton && !showUserCopyButton) const SizedBox(height: 8),
       ],
     );
   }

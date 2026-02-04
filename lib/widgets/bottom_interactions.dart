@@ -104,17 +104,17 @@ class _WebSearchModeButton extends ConsumerWidget {
           padding: padding,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: 60.r,
+            borderRadius: .circular(60),
           ),
           child: Row(
             children: [
               Icon(Icons.travel_explore, color: textColor, size: 16),
-              2.w,
+              const SizedBox(width: 2),
               Text(
                 webSearchMode == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
                 style: TS(c: textColor, s: 14, height: 1, w: .w500),
               ),
-              4.w,
+              const SizedBox(width: 4),
               VerticalDivider(width: 2, indent: 8, endIndent: 8, color: textColor),
               PopupMenuButton(
                 offset: const Offset(-30, -80),
@@ -209,8 +209,8 @@ class _WenYanWenButton extends ConsumerWidget {
           padding: const .symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: 60.r,
-            border: Border.all(color: theme.colorScheme.primary.q(.1), width: 1),
+            borderRadius: .circular(60),
+            border: .all(color: theme.colorScheme.primary.q(.1), width: 1),
           ),
           alignment: .center,
           child: Text(

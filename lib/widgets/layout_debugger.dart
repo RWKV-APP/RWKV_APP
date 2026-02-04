@@ -50,7 +50,7 @@ class LayoutDebugger extends ConsumerWidget {
           child: IgnorePointer(
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: frameColor, width: frameWidth),
+                border: .all(color: frameColor, width: frameWidth),
               ),
             ),
           ),

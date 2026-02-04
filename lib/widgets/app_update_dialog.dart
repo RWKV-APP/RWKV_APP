@@ -128,16 +128,16 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
             crossAxisAlignment: .stretch,
             mainAxisSize: .min,
             children: [
-              4.h,
+              const SizedBox(height: 4),
               Text(
                 s.downloading,
                 style: theme.textTheme.titleMedium,
               ),
-              12.h,
+              const SizedBox(height: 12),
               LinearProgressIndicator(
                 value: progress <= 0 ? null : progress,
               ),
-              8.h,
+              const SizedBox(height: 8),
               if (progress != -1)
                 Text(
                   '${(fileSizeMB * progress).round()}MB / ${fileSizeMB.round()}MB',
@@ -148,7 +148,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
                   'Download failed',
                   style: theme.textTheme.bodyMedium?.copyWith(color: Colors.redAccent),
                 ),
-              8.h,
+              const SizedBox(height: 8),
               Row(
                 children: [
                   const Spacer(),

@@ -44,11 +44,11 @@ class _Page extends ConsumerWidget {
           ? Column(
               children: [
                 paddingTop.h,
-                12.h,
+                const SizedBox(height: 12),
                 const _Title(),
-                12.h,
+                const SizedBox(height: 12),
                 const _Score(),
-                4.h,
+                const SizedBox(height: 4),
                 Row(
                   crossAxisAlignment: .center,
                   children: [
@@ -61,7 +61,7 @@ class _Page extends ConsumerWidget {
                       ),
                     ),
                     const _Othello(),
-                    8.w,
+                    const SizedBox(width: 8),
                   ],
                 ),
                 if (!playerShouldAtSameColumnWithSettings) const _Players(),
@@ -75,9 +75,9 @@ class _Page extends ConsumerWidget {
                   crossAxisAlignment: .center,
                   children: [
                     const _Title(),
-                    4.h,
+                    const SizedBox(height: 4),
                     const _Score(),
-                    4.h,
+                    const SizedBox(height: 4),
                     Row(
                       children: [
                         Column(
@@ -125,7 +125,7 @@ class _Title extends ConsumerWidget {
     return Row(
       mainAxisAlignment: .center,
       children: [
-        12.w,
+        const SizedBox(width: 12),
         Text("$version($buildNumber)", style: TS(c: qb.q(.0), s: 10)),
         if (usePortrait) const Spacer(),
         Text(
@@ -133,10 +133,10 @@ class _Title extends ConsumerWidget {
           style: const TS(s: 20, w: .w700),
         ),
         if (usePortrait) const Spacer(),
-        if (!usePortrait) 32.w,
+        if (!usePortrait) const SizedBox(width: 32),
         Text("$version($buildNumber)", style: TS(c: qb.q(.5), s: 10)),
-        if (!usePortrait) 32.w,
-        12.w,
+        if (!usePortrait) const SizedBox(width: 32),
+        const SizedBox(width: 12),
       ],
     );
   }
@@ -253,8 +253,8 @@ class _ModelSettings extends ConsumerWidget {
         margin: const .all(4),
         decoration: BoxDecoration(
           color: qb.q(.0),
-          borderRadius: 4.r,
-          border: Border.all(color: qb.q(.5), width: .5),
+          borderRadius: .circular(4),
+          border: .all(color: qb.q(.5), width: .5),
         ),
         child: Column(
           crossAxisAlignment: .start,
@@ -264,16 +264,16 @@ class _ModelSettings extends ConsumerWidget {
               s.model_settings,
               style: const TS(w: .w700),
             ),
-            8.h,
+            const SizedBox(height: 8),
             Text(s.in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2, style: TS(c: qb.q(.5), s: 10)),
-            8.h,
+            const SizedBox(height: 8),
             usePortrait
                 ? Column(
                     crossAxisAlignment: .stretch,
                     children: [
                       Text(s.search_depth, textAlign: TextAlign.center),
                       searchDepthControls,
-                      4.h,
+                      const SizedBox(height: 4),
                       Text(s.search_breadth, textAlign: TextAlign.center),
                       searchBreadthControls,
                     ],
@@ -319,8 +319,8 @@ class _Players extends ConsumerWidget {
     final blackOptions = Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
-        borderRadius: 4.r,
-        border: Border.all(color: qb.q(.5), width: .5),
+        borderRadius: .circular(4),
+        border: .all(color: qb.q(.5), width: .5),
       ),
       padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
@@ -368,8 +368,8 @@ class _Players extends ConsumerWidget {
     final whiteOptions = Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
-        borderRadius: 4.r,
-        border: Border.all(color: qb.q(.5), width: .5),
+        borderRadius: .circular(4),
+        border: .all(color: qb.q(.5), width: .5),
       ),
       padding: const .only(left: 8, top: 8, right: 8),
       child: Wrap(
@@ -424,8 +424,8 @@ class _Players extends ConsumerWidget {
         padding: const .all(4),
         decoration: BoxDecoration(
           color: qb.q(.0),
-          borderRadius: 4.r,
-          border: Border.all(color: qb.q(.5), width: .5),
+          borderRadius: .circular(4),
+          border: .all(color: qb.q(.5), width: .5),
         ),
         child: Column(
           crossAxisAlignment: .start,
@@ -434,7 +434,7 @@ class _Players extends ConsumerWidget {
               s.players,
               style: const TS(w: .w700),
             ),
-            12.h,
+            const SizedBox(height: 12),
             if (usePortrait && !playerShouldAtSameColumnWithSettings && !settingsAndPlayersShouldAtDifferentColumnIsHorizontal)
               Row(
                 mainAxisAlignment: .center,
@@ -442,7 +442,7 @@ class _Players extends ConsumerWidget {
                   Expanded(
                     child: blackOptions,
                   ),
-                  16.w,
+                  const SizedBox(width: 16),
                   Expanded(
                     child: whiteOptions,
                   ),
@@ -455,7 +455,7 @@ class _Players extends ConsumerWidget {
                   Expanded(
                     child: blackOptions,
                   ),
-                  16.w,
+                  const SizedBox(width: 16),
                   Expanded(
                     child: whiteOptions,
                   ),
@@ -465,7 +465,7 @@ class _Players extends ConsumerWidget {
               Column(
                 children: [
                   blackOptions,
-                  4.h,
+                  const SizedBox(height: 4),
                   whiteOptions,
                 ],
               ),
@@ -530,35 +530,35 @@ class _Score extends ConsumerWidget {
       children: [
         if (usePortrait) Expanded(child: thinkingWidget),
         if (!usePortrait) thinkingWidget,
-        if (!usePortrait) 16.w,
+        if (!usePortrait) const SizedBox(width: 16),
         Text(
           "${s.black}\n$blackScore",
           textAlign: TextAlign.center,
         ),
-        16.w,
+        const SizedBox(width: 16),
         Container(
           padding: const .only(left: 8, right: 8, bottom: 8),
           decoration: BoxDecoration(
             color: Colors.transparent,
-            borderRadius: 8.r,
-            border: Border.all(color: qb.q(.5), width: .5),
+            borderRadius: .circular(8),
+            border: .all(color: qb.q(.5), width: .5),
           ),
           child: Column(
             children: [
               Text(s.current_turn),
-              4.h,
+              const SizedBox(height: 4),
               if (blackTurn) const _Black(minSize: 5, maxSize: 25),
               if (!blackTurn) const _White(minSize: 5, maxSize: 25),
             ],
           ),
         ),
-        16.w,
+        const SizedBox(width: 16),
         Text(
           "${s.white}\n$whiteScore",
           textAlign: TextAlign.center,
         ),
         if (usePortrait) Expanded(child: newGameButton),
-        if (!usePortrait) 16.w,
+        if (!usePortrait) const SizedBox(width: 16),
         if (!usePortrait) newGameButton,
       ],
     );
@@ -788,7 +788,7 @@ class _White extends StatelessWidget {
             Colors.grey[300]!,
           ],
         ),
-        borderRadius: 100.r,
+        borderRadius: .circular(100),
       ),
     );
   }
@@ -827,7 +827,7 @@ class _Black extends StatelessWidget {
             Colors.black,
           ],
         ),
-        borderRadius: 100.r,
+        borderRadius: .circular(100),
       ),
     );
   }

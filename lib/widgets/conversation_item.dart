@@ -241,7 +241,7 @@ class ConversationItem extends ConsumerWidget {
                     style: TS(s: 16, w: .w500, c: qb),
                     overflow: .ellipsis,
                   ),
-                  4.h,
+                  const SizedBox(height: 4),
                   Text(
                     conversation.subtitle,
                     style: const TS(s: 12, c: Colors.grey),

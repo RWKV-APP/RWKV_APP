@@ -83,7 +83,7 @@ class Settings extends ConsumerWidget {
       width: 64,
       height: 64,
       child: ClipRRect(
-        borderRadius: 12.r,
+        borderRadius: .circular(12),
         child: WithDevOption(child: Image.asset(iconPath)),
       ),
     );
@@ -125,7 +125,7 @@ class Settings extends ConsumerWidget {
               mainAxisAlignment: .center,
               children: [iconWidget],
             ),
-            16.h,
+            const SizedBox(height: 16),
             const Row(
               mainAxisAlignment: .center,
               children: [
@@ -138,7 +138,7 @@ class Settings extends ConsumerWidget {
                 ),
               ],
             ),
-            4.h,
+            const SizedBox(height: 4),
             Row(
               mainAxisAlignment: .center,
               children: [
@@ -146,7 +146,7 @@ class Settings extends ConsumerWidget {
                 Text(" ($buildNumber)", style: const TS(s: 12)),
               ],
             ),
-            16.h,
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: .start,
               children: [
@@ -158,7 +158,7 @@ class Settings extends ConsumerWidget {
                 ),
               ],
             ),
-            8.h,
+            const SizedBox(height: 8),
             FormItem(
               isSectionStart: true,
               icon: Icon(Icons.manage_accounts, color: qb.q(.667), size: 16),
@@ -198,7 +198,7 @@ class Settings extends ConsumerWidget {
               infoText: totalUsage,
               onTap: () => push(.weightManager),
             ),
-            12.h,
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: .start,
               children: [
@@ -210,7 +210,7 @@ class Settings extends ConsumerWidget {
                 ),
               ],
             ),
-            8.h,
+            const SizedBox(height: 8),
             FormItem(
               icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
               isSectionStart: true,
@@ -237,7 +237,7 @@ class Settings extends ConsumerWidget {
               subtitle: "@BlinkDL_AI",
               onTap: _openTwitter,
             ),
-            12.h,
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: .start,
               children: [
@@ -247,7 +247,7 @@ class Settings extends ConsumerWidget {
                 ),
               ],
             ),
-            8.h,
+            const SizedBox(height: 8),
             FormItem(
               isSectionStart: true,
               title: s.feedback,
@@ -265,7 +265,7 @@ class Settings extends ConsumerWidget {
                     child: Row(
                       mainAxisSize: .min,
                       children: [
-                        if (checkingLatestVersion) 8.w,
+                        if (checkingLatestVersion) const SizedBox(width: 8),
                         if (checkingLatestVersion)
                           const SB(
                             width: 16,

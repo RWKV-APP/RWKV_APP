@@ -84,13 +84,13 @@ class _WaitingMsg extends ConsumerWidget {
           style: const TS(s: 12),
         ),
         Container(
-          decoration: BD(color: kC.q(.1), borderRadius: 12.r),
+          decoration: BoxDecoration(color: kC.q(.1), borderRadius: 12.r),
           margin: const .only(bottom: 4, top: 4),
           child: Row(
             crossAxisAlignment: .center,
             children: [
               if (waitingImagePath != null) _ImagePreview(small: true, imagePath: waitingImagePath),
-              if (waitingImagePath != null) 4.w,
+              if (waitingImagePath != null) const SizedBox(width: 4),
               Text(
                 waitingText,
                 style: const TS(s: 12),
@@ -141,7 +141,7 @@ class _ImagePreview extends ConsumerWidget {
                           P.see.imagePath.q = null;
                         },
                         icon: Container(
-                          decoration: BD(color: kB.q(.5), borderRadius: 1000.r),
+                          decoration: BoxDecoration(color: kB.q(.5), borderRadius: 1000.r),
                           child: Icon(
                             Icons.close,
                             color: kW.q(1),

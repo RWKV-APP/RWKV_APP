@@ -28,7 +28,7 @@ class ModelSelectButton extends ConsumerWidget {
     return Ink(
       decoration: BoxDecoration(
         borderRadius: .circular(16),
-        border: Border.all(color: theme.colorScheme.surfaceContainerHighest),
+        border: .all(color: theme.colorScheme.surfaceContainerHighest),
         color: theme.colorScheme.surfaceContainerLow,
       ),
       child: IntrinsicHeight(

@@ -84,11 +84,11 @@ class ThemeSelector extends ConsumerWidget {
           onChanged: _onAutoModeSwitchChanged,
         ),
       ),
-      12.h,
+      const SizedBox(height: 12),
       Row(
         mainAxisAlignment: .start,
         children: [
-          4.w,
+          const SizedBox(width: 4),
           Expanded(
             child: Text(
               s.dark_mode_theme,
@@ -97,7 +97,7 @@ class ThemeSelector extends ConsumerWidget {
           ),
         ],
       ),
-      12.h,
+      const SizedBox(height: 12),
       FormItem(
         title: s.theme_dim,
         showArrow: false,

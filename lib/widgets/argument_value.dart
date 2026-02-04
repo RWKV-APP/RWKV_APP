@@ -82,7 +82,7 @@ class ArgumentValue extends ConsumerWidget {
             padding.right.w,
           ],
         ),
-        4.h,
+        const SizedBox(height: 4),
         Row(
           children: [
             padding.left.w,
@@ -90,7 +90,7 @@ class ArgumentValue extends ConsumerWidget {
               argument.min.toStringAsFixed(argument.fixedDecimals),
               style: TS(s: 12, c: qb.q(.5)),
             ),
-            14.w,
+            const SizedBox(width: 14),
             Expanded(
               child: Slider(
                 activeColor: enabled ? null : Colors.grey.q(1),
@@ -101,7 +101,7 @@ class ArgumentValue extends ConsumerWidget {
                 onChanged: argument.configureable ? (value) => onChanged(argument, value) : null,
               ),
             ),
-            14.w,
+            const SizedBox(width: 14),
             Text(
               argument.max.toStringAsFixed(argument.fixedDecimals),
               style: TS(s: 12, c: qb.q(.5)),

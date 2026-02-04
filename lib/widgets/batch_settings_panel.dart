@@ -132,7 +132,7 @@ class BatchSettingsPanel extends ConsumerWidget {
             AnimatedSize(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
-              child: batchInference ? const SizedBox.shrink() : 8.h,
+              child: batchInference ? const SizedBox.shrink() : const SizedBox(height: 8),
             ),
             DimmedWhenInactive(
               ignoring: !batchInference,
@@ -167,7 +167,7 @@ class BatchSettingsPanel extends ConsumerWidget {
                   icon: Row(
                     children: [
                       Text(s.decode_param),
-                      4.w,
+                      const SizedBox(width: 4),
                       const Icon(Icons.info_outline),
                     ],
                   ),
@@ -249,7 +249,7 @@ class _DecodeParams extends ConsumerWidget {
               crossAxisAlignment: .start,
               children: [
                 for (int j = 0; j < crossAxisCount; j++) ...[
-                  if (j > 0) 8.w,
+                  if (j > 0) const SizedBox(width: 8),
                   Expanded(
                     child: j < chunk.length ? _DecodeParam(index: i + j, param: chunk[j]) : const SizedBox(),
                   ),
@@ -258,14 +258,14 @@ class _DecodeParams extends ConsumerWidget {
             ),
           );
           if (i + crossAxisCount < paramsToShow.length) {
-            rows.add(8.h);
+            rows.add(const SizedBox(height: 8));
           }
         }
 
         return Column(
           crossAxisAlignment: .stretch,
           children: [
-            4.h,
+            const SizedBox(height: 4),
             ...rows,
             Divider(color: qb.q(.2)),
             const Align(
@@ -391,9 +391,9 @@ class _DecodeParam extends ConsumerWidget {
       onTap: _onTap,
       child: Container(
         width: forAll ? double.infinity : null,
-        decoration: BD(
+        decoration: BoxDecoration(
           color: qb.q(.08),
-          border: Border.all(color: qb.q(.15)),
+          border: .all(color: qb.q(.15)),
           borderRadius: BorderRadius.circular(12),
         ),
         padding: const .all(12),
@@ -416,7 +416,7 @@ class _DecodeParam extends ConsumerWidget {
                         ),
                         child: Text("#${index + 1}", style: const TS(w: .bold, s: 12)),
                       ),
-                      8.w,
+                      const SizedBox(width: 8),
                       Flexible(
                         child: Text(
                           param?.displayName ?? "",
@@ -426,12 +426,12 @@ class _DecodeParam extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  8.h,
+                  const SizedBox(height: 8),
                   if (param != null) ...[
                     _infoRow("Temp", _fmt(param!.temperature), "Top_P", _fmt(param!.topP), qb),
-                    2.h,
+                    const SizedBox(height: 2),
                     _infoRow("PP", _fmt(param!.presencePenalty), "FP", _fmt(param!.frequencyPenalty), qb),
-                    2.h,
+                    const SizedBox(height: 2),
                     Text("Decay: ${_fmt(param!.penaltyDecay)}", style: TS(s: 11, c: qb.q(.7))),
                   ],
                 ],
@@ -446,7 +446,7 @@ class _DecodeParam extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text("$k1: $v1", style: style),
-        8.w,
+        const SizedBox(width: 8),
         Text("$k2: $v2", style: style),
       ],
     );
