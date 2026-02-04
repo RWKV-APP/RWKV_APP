@@ -6,6 +6,7 @@ import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart' as path;
 import 'package:sprintf/sprintf.dart' show sprintf;
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/model/file_info.dart';
@@ -60,27 +61,32 @@ class _BottomBar extends ConsumerWidget {
     final paddingBottom = ref.watch(P.app.paddingBottom);
     final theme = Theme.of(context);
     final customTheme = ref.watch(P.app.customTheme);
+
     return Container(
       padding: .only(bottom: paddingBottom),
       constraints: BoxConstraints(minHeight: kToolbarHeight),
       decoration: BoxDecoration(
-        color: customTheme.setting,
+        color: customTheme.scaffold,
         border: Border(top: BorderSide(color: theme.dividerColor, width: .5)),
       ),
       child: Row(
         children: [
           Expanded(
             child: TextButton.icon(
-              onPressed: () => P.remote.pickAndExportAllWeightFiles(
-                context: context,
-              ),
+              onPressed: () {
+                P.remote.pickAndExportAllWeightFiles(context: context);
+                500.msLater.then((_) => P.remote.sync());
+              },
               icon: const Icon(Icons.share),
               label: Text(s.export_all_weight_files),
             ),
           ),
           Expanded(
             child: TextButton.icon(
-              onPressed: () => P.remote.pickAndImportWeightFiles(context: context),
+              onPressed: () {
+                P.remote.pickAndImportWeightFiles(context: context);
+                500.msLater.then((_) => P.remote.sync());
+              },
               icon: const Icon(Icons.add),
               label: Text(s.import_weight_file),
             ),
@@ -123,7 +129,6 @@ class _Body extends ConsumerWidget {
     });
 
     // Show empty state if no downloaded files
-    if (!hasDownloadedFiles) return const _EmptyStateGuide();
 
     final s = S.of(context);
 
@@ -131,6 +136,7 @@ class _Body extends ConsumerWidget {
 
     final children = [
       if (allWeights.any((e) => locals(e).q.downloading)) _DownloadingSection(allWeights: allWeights),
+      if (!hasDownloadedFiles) const _EmptyStateGuide(),
       if (chatWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.rwkv_chat, weights: chatWeights),
       if (roleplayWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.role_play, weights: roleplayWeights),
       if (seeWeights.where((e) => locals(e).q.hasFile).isNotEmpty)
@@ -140,8 +146,6 @@ class _Body extends ConsumerWidget {
       if (othelloWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.rwkv_othello, weights: othelloWeights),
       if (unrecognizedFiles.isNotEmpty) _OtherFilesSection(),
     ];
-
-    qqr(children);
 
     return Column(
       children: [
@@ -693,7 +697,7 @@ class _EmptyStateGuide extends ConsumerWidget {
     final s = S.of(context);
     return Center(
       child: Padding(
-        padding: const .all(32.0),
+        padding: const .all(64.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -425,20 +425,20 @@ extension $Remote on _Remote {
     }
 
     try {
-      final effectiveDir = P.remote.effectiveModelsDir.q ?? "";
-      qqr(effectiveDir);
+      final effectiveDir = P.remote.effectiveModelsDir.q;
       await openFolder(effectiveDir);
     } catch (e) {
       qqe(e);
       Alert.error(e.toString());
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
     }
+
+    await sync();
   }
 
   /// Pick and set a custom models directory
   /// Only updates preference path; does not migrate files. Use [Alert.info] to prompt manual migration.
   Future<bool> pickAndSetCustomModelsDir({required BuildContext context}) async {
-    qq;
     try {
       final selectedDir = await file_picker.FilePicker.platform.getDirectoryPath();
       if (selectedDir == null) {
@@ -483,20 +483,21 @@ extension $Remote on _Remote {
       Alert.error(e.toString());
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
       return false;
+    } finally {
+      await sync();
     }
   }
 
   /// Reset to default models directory
   /// Only clears custom path in preference; does not migrate files. Use [Alert.info] to prompt manual migration.
   Future<void> resetToDefaultModelsDir({required BuildContext context}) async {
-    qq;
-
     if (Platform.isMacOS) {
       await _stopAccessingCustomDirScopedResource();
     }
     P.preference.setCustomModelsDir(null);
     Alert.info(S.current.please_manually_migrate_files);
     cleanDownloadTasks();
+    await sync();
   }
 
   /// Stop accessing macOS security-scoped resource for custom models directory
