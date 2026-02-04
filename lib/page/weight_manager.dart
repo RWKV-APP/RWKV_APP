@@ -34,7 +34,7 @@ class PageWeightManager extends ConsumerWidget {
                 IconButton(
                   tooltip: syncingLocalFiles ? s.syncing : s.refresh,
                   icon: syncingLocalFiles
-                      ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator.adaptive(strokeWidth: 2))
+                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator.adaptive(strokeWidth: 2))
                       : const Icon(Icons.refresh),
                   onPressed: syncingLocalFiles
                       ? null
@@ -64,7 +64,7 @@ class _BottomBar extends ConsumerWidget {
 
     return Container(
       padding: .only(bottom: paddingBottom),
-      constraints: BoxConstraints(minHeight: kToolbarHeight),
+      constraints: const BoxConstraints(minHeight: kToolbarHeight),
       decoration: BoxDecoration(
         color: customTheme.scaffold,
         border: Border(top: BorderSide(color: theme.dividerColor, width: .5)),
@@ -149,7 +149,7 @@ class _Body extends ConsumerWidget {
 
     return Column(
       children: [
-        _TotalSizeSection(),
+        const _TotalSizeSection(),
         if (isDesktop) ...[
           const _CustomDirectoryTile(),
           C(
@@ -258,7 +258,7 @@ class _CustomDirectoryTile extends ConsumerWidget {
             children: [
               IconButton(
                 icon: syncingLocalFiles
-                    ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator.adaptive(strokeWidth: 2))
+                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator.adaptive(strokeWidth: 2))
                     : const Icon(Icons.refresh),
                 tooltip: s.refresh,
                 onPressed: syncingLocalFiles
