@@ -58,6 +58,7 @@ class _App extends RawApp {
   /// 当前应用的主题
   late final customTheme = qs<custom_theme.CustomTheme>(custom_theme.Light());
 
+  /// 当前在第几个 tab
   late final tabIndex = qs(0);
 
   /// Windows-specific documents directory using AppData (for sandbox-like behavior)

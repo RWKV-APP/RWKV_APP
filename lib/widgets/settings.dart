@@ -19,18 +19,6 @@ import 'package:zone/widgets/form_item.dart';
 class Settings extends ConsumerWidget {
   static final _shown = qs(false);
 
-  static String _getTotalUsage(WidgetRef ref) {
-    final totalBytes = P.remote.calculateTotalDiskUsage();
-    return _formatBytes(totalBytes);
-  }
-
-  static String _formatBytes(int bytes) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
-    var i = (math.log(bytes) / math.log(1024)).floor();
-    return ((bytes / math.pow(1024, i)).toStringAsFixed(1)) + ' ' + suffixes[i];
-  }
-
   static Future<void> show() async {
     qq;
     if (_shown.q) return;
@@ -89,7 +77,7 @@ class Settings extends ConsumerWidget {
     final isChat = demoType == .chat;
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
 
-    final totalUsage = _getTotalUsage(ref);
+    final totalUsage = ref.watch(P.remote.totalSizeInModelsDirDisplay);
 
     final iconWidget = SizedBox(
       width: 64,

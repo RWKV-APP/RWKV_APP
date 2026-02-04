@@ -663,6 +663,7 @@
       "os": {}
     }
   },
+  "delete_finished": "Удаление завершено",
   "open_folder_path_is_null": "Путь к папке пуст.",
   "open_folder_creating_empty": "Папка не существует, создаём пустую папку.",
   "open_folder_created_success": "Пустая папка успешно создана.",

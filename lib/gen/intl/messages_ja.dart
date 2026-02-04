@@ -385,6 +385,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "会話を削除してもよろしいですか？",
     ),
+    "delete_finished": MessageLookupByLibrary.simpleMessage("削除が完了しました"),
     "difficulty": MessageLookupByLibrary.simpleMessage("難易度"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "難易度は0より大きくなければなりません",

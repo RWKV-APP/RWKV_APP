@@ -363,6 +363,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "确定要删除会话吗？",
     ),
+    "delete_finished": MessageLookupByLibrary.simpleMessage("删除完成"),
     "difficulty": MessageLookupByLibrary.simpleMessage("难度"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "难度必须大于 0",
@@ -951,8 +952,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "updated_at": MessageLookupByLibrary.simpleMessage("更新时间"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("立即使用"),
     "user": MessageLookupByLibrary.simpleMessage("用户:"),
-    "using_custom_directory": MessageLookupByLibrary.simpleMessage("使用自定义目录"),
-    "using_default_directory": MessageLookupByLibrary.simpleMessage("使用默认目录"),
+    "using_custom_directory": MessageLookupByLibrary.simpleMessage("正在使用自定义目录"),
+    "using_default_directory": MessageLookupByLibrary.simpleMessage("正在使用默认目录"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(
       "值必须在 0 和 9 之间",
     ),

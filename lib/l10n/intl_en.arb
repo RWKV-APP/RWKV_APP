@@ -669,6 +669,7 @@
       "os": {}
     }
   },
+  "delete_finished": "Delete completed",
   "open_folder_path_is_null": "Folder path is null.",
   "open_folder_creating_empty": "Folder does not exist, creating empty folder.",
   "open_folder_created_success": "Empty folder created successfully.",

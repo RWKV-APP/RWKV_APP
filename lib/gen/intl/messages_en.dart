@@ -457,6 +457,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to delete this conversation?",
     ),
+    "delete_finished": MessageLookupByLibrary.simpleMessage("Delete completed"),
     "difficulty": MessageLookupByLibrary.simpleMessage("Difficulty"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "Difficulty must be greater than 0",

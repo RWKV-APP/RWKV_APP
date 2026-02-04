@@ -2,36 +2,6 @@
 
 part of 'p.dart';
 
-/// Represents an unrecognized file in the models directory
-class UnrecognizedFile {
-  final String fileName;
-  final String filePath;
-  final int fileSize;
-
-  const UnrecognizedFile({
-    required this.fileName,
-    required this.filePath,
-    required this.fileSize,
-  });
-}
-
-/// Internal class for tracking file import information
-class _FileImportInfo {
-  final file_picker.PlatformFile pickedFile;
-  final File? sourceFile;
-  final Uint8List? fileBytes;
-  final FileInfo? existingFileInfo;
-  final String? error;
-
-  const _FileImportInfo({
-    required this.pickedFile,
-    required this.sourceFile,
-    required this.fileBytes,
-    required this.existingFileInfo,
-    required this.error,
-  });
-}
-
 /// 1. 管理通过 latest.json 配置的文件
 class _Remote {
   // ===========================================================================
@@ -52,10 +22,22 @@ class _Remote {
 
   late final modelSelectorShown = qs(false);
 
+  late final syncingLocalFiles = qs(false);
+
+  /// 模型目录下所有文件的总大小
+  late final totalSizeInModelsDir = qs(0);
+
+  late final totalSizeInModelsDirDisplay = qp<String>((ref) {
+    final totalSize = ref.watch(P.remote.totalSizeInModelsDir);
+    return formatBytes(totalSize);
+  });
+
+  /// 本地文件状态
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
     return LocalFile(targetPath: ref.watch(_paths(key)));
   });
 
+  /// 本地文件路径
   late final _paths = qsff<FileInfo, String>((ref, key) {
     final effectiveModelsDir = ref.watch(P.remote.effectiveModelsDir);
     final effectiveDocumentsDir = ref.watch(P.app.effectiveDocumentsDir);
@@ -97,12 +79,14 @@ class _Remote {
     return customDir != null && customDir.isNotEmpty && customDir != defaultDir;
   });
 
+  /// 量化好的权重被保存的文件夹位置
   late final effectiveModelsDir = qp<String>((ref) {
     final customDir = ref.watch(P.preference.customModelsDir);
     final defaultDir = ref.watch(defaultModelsDir);
     return customDir ?? defaultDir;
   });
 
+  /// 默认的存放已量化权重的文件夹路径
   late final defaultModelsDir = qp<String>((ref) {
     if (Platform.isWindows) {
       final exePath = Platform.resolvedExecutable;
@@ -226,8 +210,12 @@ extension $Remote on _Remote {
     _downloadTasks.clear();
   }
 
+  /// 检查本地是否存在量化好的权重文件
+  ///
+  /// 更新本地文件状态
+  ///
+  /// 如果尺寸对不上, 自动删除
   Future<void> checkLocal() async {
-    qq;
     await 17.msLater;
     final fileInfos = [
       chatWeights.q,
@@ -241,7 +229,6 @@ extension $Remote on _Remote {
     for (final fileInfo in fileInfos) {
       final path = _paths(fileInfo).q;
       final pathExists = await File(path).exists();
-      qqr("path: $path");
       bool fileSizeVerified = false;
       if (pathExists) {
         final expectFileSize = fileInfo.fileSize;
@@ -261,10 +248,12 @@ extension $Remote on _Remote {
 
         if (shouldDelete) File(path).delete();
       }
-      final state = locals(fileInfo);
-      state.q = state.q.copyWith(hasFile: fileSizeVerified);
+      final local = locals(fileInfo);
+      local.q = local.q.copyWith(hasFile: fileSizeVerified);
     }
     await _initModelDownloadTaskState();
+    final totalSize = await calculateTotalSizeOfDir(effectiveModelsDir.q);
+    totalSizeInModelsDir.q = totalSize;
   }
 
   Future<void> removeFilesNotInConfig() async {
@@ -423,6 +412,8 @@ extension $Remote on _Remote {
     final path = _paths(fileInfo).q;
     await File(path).delete();
     state.q = value.copyWith(hasFile: false, state: TaskState.idle, progress: 0);
+
+    await sync();
   }
 
   Future<void> openModelDirectory() async {
@@ -1439,56 +1430,34 @@ extension $Remote on _Remote {
     return getDownloadedWeights().isNotEmpty;
   }
 
-  /// Calculate total disk usage for all downloaded weights
-  int calculateTotalDiskUsage() {
-    int totalBytes = 0;
-
-    final allWeights = [
-      ...chatWeights.q,
-      ...roleplayWeights.q,
-      ...ttsWeights.q,
-      ...seeWeights.q,
-      ...sudokuWeights.q,
-      ...othelloWeights.q,
-    ];
-
-    for (final weight in allWeights) {
-      final local = locals(weight).q;
-      if (local.hasFile) {
-        totalBytes += weight.fileSize;
-      }
-    }
-
-    return totalBytes;
-  }
-
-  /// Get unrecognized files in the models directory
+  /// 获取 /models 目录下未, 未记录至 latest.json 的文件
   Future<List<UnrecognizedFile>> getUnrecognizedFiles() async {
-    // final customDir = P.preference.customModelsDir.q;
-    // final effectiveModelsDir = P.remote.effectiveModelsDir.q;
-    // final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-    // final isDesktop = P.app.isDesktop.q;
-    // final defaultDir = documentsDir != null
-    //     ? join(documentsDir, isDesktop ? Config.desktopModelsDirName : Config.mobileModelsDirName)
-    //     : null;
-    // final targetDir = customDir ?? defaultDir;
-
-    // if (targetDir == null) return [];
-
-    final effectiveModelsDir = P.remote.effectiveModelsDir.q;
-    final effectiveDocumentsDir = P.app.effectiveDocumentsDir.q;
     final isDesktop = P.app.isDesktop.q;
 
-    late final String targetDir;
+    late final String targetDirPath;
     if (isDesktop) {
-      targetDir = effectiveModelsDir;
+      targetDirPath = P.remote.effectiveModelsDir.q;
     } else {
-      targetDir = effectiveDocumentsDir!.path;
+      final documentsDir = P.app.documentsDir.q?.path;
+      if (documentsDir == null) {
+        Sentry.captureException(Exception("documentsDir is null, WTF?"), stackTrace: StackTrace.current);
+        return [];
+      }
+
+      final oldModelsDirPathInMobile = join(documentsDir, Config.desktopModelsDirName);
+      final oldModelsDirPathInMobileExists = await Directory(oldModelsDirPathInMobile).exists();
+      if (oldModelsDirPathInMobileExists) {
+        qqw("Old models directory exists in mobile: $oldModelsDirPathInMobile");
+        qqw("Transferring files from old models directory to new models directory...");
+      }
+      targetDirPath = join(documentsDir, Config.mobileModelsDirName);
+      await transferAllFilesInDir(oldModelsDirPathInMobile, targetDirPath);
     }
 
-    final directory = Directory(targetDir);
-    qqr("targetDir: $targetDir");
+    final directory = Directory(targetDirPath);
+    qqr("targetDir: $targetDirPath");
     if (!await directory.exists()) {
+      Sentry.captureException(Exception("directory not found: $targetDirPath"), stackTrace: StackTrace.current);
       return [];
     }
 
@@ -1602,6 +1571,19 @@ extension $Remote on _Remote {
     await P.rwkv.loadChat(fileInfo: fileInfo);
     return fileInfo;
   }
+
+  Future<void> sync() async {
+    qr;
+
+    syncingLocalFiles.q = true;
+    await Future.wait([
+      400.msLater,
+      checkLocal(),
+      refreshUnrecognizedFiles(),
+    ]);
+    await calculateTotalSizeOfDir(effectiveModelsDir.q);
+    syncingLocalFiles.q = false;
+  }
 }
 
 /// Private methods
@@ -1625,6 +1607,19 @@ extension _$Remote on _Remote {
       }
     } catch (e) {
       Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+
+    P.app.pageKey.lb(_onPageKeyChanged);
+  }
+
+  void _onPageKeyChanged(PageKey? previous, PageKey next) async {
+    switch (next) {
+      case .settings:
+      case .weightManager:
+        await sync();
+        break;
+      default:
+        break;
     }
   }
 
@@ -1822,4 +1817,34 @@ extension _$Remote on _Remote {
       }
     }
   }
+}
+
+/// Represents an unrecognized file in the models directory
+class UnrecognizedFile {
+  final String fileName;
+  final String filePath;
+  final int fileSize;
+
+  const UnrecognizedFile({
+    required this.fileName,
+    required this.filePath,
+    required this.fileSize,
+  });
+}
+
+/// Internal class for tracking file import information
+class _FileImportInfo {
+  final file_picker.PlatformFile pickedFile;
+  final File? sourceFile;
+  final Uint8List? fileBytes;
+  final FileInfo? existingFileInfo;
+  final String? error;
+
+  const _FileImportInfo({
+    required this.pickedFile,
+    required this.sourceFile,
+    required this.fileBytes,
+    required this.existingFileInfo,
+    required this.error,
+  });
 }

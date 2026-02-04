@@ -360,6 +360,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "確定要刪除對話嗎？",
     ),
+    "delete_finished": MessageLookupByLibrary.simpleMessage("刪除完成"),
     "difficulty": MessageLookupByLibrary.simpleMessage("難度"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "難度必須大於 0",
@@ -943,8 +944,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "updated_at": MessageLookupByLibrary.simpleMessage("更新時間"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("立即使用"),
     "user": MessageLookupByLibrary.simpleMessage("使用者:"),
-    "using_custom_directory": MessageLookupByLibrary.simpleMessage("使用自訂目錄"),
-    "using_default_directory": MessageLookupByLibrary.simpleMessage("使用預設目錄"),
+    "using_custom_directory": MessageLookupByLibrary.simpleMessage("正在使用自訂目錄"),
+    "using_default_directory": MessageLookupByLibrary.simpleMessage("正在使用預設目錄"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(
       "值必須在 0 和 9 之間",
     ),

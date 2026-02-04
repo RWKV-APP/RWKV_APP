@@ -651,8 +651,8 @@
   "failed_to_create_directory": "创建目录失败",
   "set_custom_directory": "设置自定义目录",
   "reset_to_default": "恢复默认",
-  "using_custom_directory": "使用自定义目录",
-  "using_default_directory": "使用默认目录",
+  "using_custom_directory": "正在使用自定义目录",
+  "using_default_directory": "正在使用默认目录",
   "moving_files": "正在移动文件...",
   "already_using_this_directory": "已在使用此目录",
   "files_moved_with_failures": "{successCount} 个文件已移动，{failCount} 个失败",
@@ -669,6 +669,7 @@
       "os": {}
     }
   },
+  "delete_finished": "删除完成",
   "open_folder_path_is_null": "文件夹路径为空。",
   "open_folder_creating_empty": "文件夹不存在，正在创建空文件夹。",
   "open_folder_created_success": "空文件夹创建成功。",

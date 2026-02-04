@@ -4469,20 +4469,20 @@ class S {
     return Intl.message('恢复默认', name: 'reset_to_default', desc: '', args: []);
   }
 
-  /// `使用自定义目录`
+  /// `正在使用自定义目录`
   String get using_custom_directory {
     return Intl.message(
-      '使用自定义目录',
+      '正在使用自定义目录',
       name: 'using_custom_directory',
       desc: '',
       args: [],
     );
   }
 
-  /// `使用默认目录`
+  /// `正在使用默认目录`
   String get using_default_directory {
     return Intl.message(
-      '使用默认目录',
+      '正在使用默认目录',
       name: 'using_default_directory',
       desc: '',
       args: [],
@@ -4532,6 +4532,11 @@ class S {
       desc: '',
       args: [os],
     );
+  }
+
+  /// `删除完成`
+  String get delete_finished {
+    return Intl.message('删除完成', name: 'delete_finished', desc: '', args: []);
   }
 
   /// `文件夹路径为空。`

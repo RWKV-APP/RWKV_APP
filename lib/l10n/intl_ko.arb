@@ -663,6 +663,7 @@
       "os": {}
     }
   },
+  "delete_finished": "삭제가 완료되었습니다",
   "open_folder_path_is_null": "폴더 경로가 비어 있습니다.",
   "open_folder_creating_empty": "폴더가 존재하지 않아 빈 폴더를 생성 중입니다.",
   "open_folder_created_success": "빈 폴더가 성공적으로 생성되었습니다.",
