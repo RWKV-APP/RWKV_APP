@@ -4,6 +4,8 @@ globs: "lib/**/*.dart"
 alwaysApply: false
 ---
 
+## 禁止使用 ListTile 组件, 必须使用原始的 Column + Row 来实现 List 条目
+
 ## 禁止在 UI 层实现任何多于三行的逻辑代码
 
 严禁在 /page, /widget, 目录下实现任何多于三行的逻辑代码, 尤其像是设置 state provider 属性, 加载权重
