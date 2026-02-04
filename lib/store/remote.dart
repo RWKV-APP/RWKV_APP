@@ -1611,6 +1611,9 @@ extension _$Remote on _Remote {
     }
 
     P.app.pageKey.lb(_onPageKeyChanged);
+
+    await _transferAllFilesFromOldModelsDirToNewModelsDirIfNeeded();
+    sync();
   }
 
   void _onPageKeyChanged(PageKey? previous, PageKey next) async {
@@ -1817,6 +1820,18 @@ extension _$Remote on _Remote {
         fileState.q = fileState.q.copyWith(state: TaskState.idle, hasFile: false);
       }
     }
+  }
+
+  Future<void> _transferAllFilesFromOldModelsDirToNewModelsDirIfNeeded() async {
+    if (P.app.isDesktop.q) return;
+    final documentsDir = P.app.documentsDir.q?.path;
+    if (documentsDir == null) {
+      Sentry.captureException(Exception("documentsDir is null, WTF?"), stackTrace: StackTrace.current);
+      return;
+    }
+    final oldModelsDirPathInMobile = join(documentsDir, Config.desktopModelsDirName);
+    final targetDirPath = join(documentsDir, Config.mobileModelsDirName);
+    await transferAllFilesInDir(oldModelsDirPathInMobile, targetDirPath);
   }
 }
 

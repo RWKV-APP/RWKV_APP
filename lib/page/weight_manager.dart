@@ -430,7 +430,7 @@ class _DownloadingItem extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: qb.q(.2),
+                  color: qb.q(_tagBgOpacity),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 padding: const .symmetric(horizontal: 4, vertical: 2),
@@ -441,7 +441,7 @@ class _DownloadingItem extends ConsumerWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: qb.q(.2),
+                  color: qb.q(_tagBgOpacity),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 padding: const .symmetric(horizontal: 4, vertical: 2),
@@ -479,6 +479,7 @@ class _DownloadingItem extends ConsumerWidget {
 }
 
 const _tagTextSize = 12.0;
+const _tagBgOpacity = .1;
 const _tagTextColorOpacity = .7;
 
 class _WeightItem extends ConsumerWidget {
@@ -516,7 +517,7 @@ class _WeightItem extends ConsumerWidget {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: qb.q(.2),
+                        color: qb.q(_tagBgOpacity),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       padding: const .symmetric(horizontal: 4, vertical: 2),
@@ -637,7 +638,7 @@ class _OtherFileItem extends ConsumerWidget {
                     Container(
                       padding: const .symmetric(horizontal: 4, vertical: 2),
                       decoration: BoxDecoration(
-                        color: qb.q(.2),
+                        color: qb.q(_tagBgOpacity),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
@@ -674,7 +675,7 @@ class _OtherFileItem extends ConsumerWidget {
                     await showOkAlertDialog(
                       context: context,
                       title: S.current.delete,
-                      message: "Failed to delete file: $e",
+                      message: S.current.failed_to_delete_file("$e"),
                       okLabel: S.current.got_it,
                     );
                   }
