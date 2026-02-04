@@ -27,6 +27,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mp_audio_stream/mp_audio_stream.dart' as mp_audio_stream;
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' show basename, dirname, join, basenameWithoutExtension;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -173,6 +174,7 @@ abstract class P {
       qqe('Error initializing preference: $e');
     }
 
+    // TODO: 这里的顺序务必调整一下 app 的值 preference 需要用到
     try {
       await app._init();
     } catch (e) {

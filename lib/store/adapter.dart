@@ -16,7 +16,6 @@ extension $Adapter on _Adapter {
     try {
       return await _channel.invokeMethod<T>(toNative.name, arguments);
     } catch (e) {
-      qqe("$e");
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
       return null;
     }

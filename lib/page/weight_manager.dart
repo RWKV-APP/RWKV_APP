@@ -81,13 +81,11 @@ class _BodyState extends ConsumerState<_Body> {
   }
 
   Future<void> _onRefresh() async {
-    qr;
     await Future.wait([
       500.msLater,
       P.remote.checkLocal(),
       P.remote.refreshUnrecognizedFiles(),
     ]);
-    qr;
   }
 
   @override
@@ -145,7 +143,11 @@ class _CustomDirectoryTile extends ConsumerWidget {
             icon: const Icon(Icons.refresh),
             tooltip: s.refresh,
             onPressed: () async {
-              await P.remote.checkLocal();
+              await Future.wait([
+                500.msLater,
+                P.remote.checkLocal(),
+                P.remote.refreshUnrecognizedFiles(),
+              ]);
               Alert.success(s.refresh_complete);
             },
           ),

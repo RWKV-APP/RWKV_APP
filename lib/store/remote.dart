@@ -57,14 +57,14 @@ class _Remote {
   });
 
   late final _paths = qsff<FileInfo, String>((ref, key) {
-    final customDir = ref.watch(P.remote.effectiveModelsDir);
-    qqr("customDir: $customDir");
-    if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-      return join(customDir, key.fileName);
-    }
-    final dir = ref.watch(P.app.effectiveDocumentsDir);
+    final effectiveModelsDir = ref.watch(P.remote.effectiveModelsDir);
+    final effectiveDocumentsDir = ref.watch(P.app.effectiveDocumentsDir);
+    final isDesktop = ref.watch(P.app.isDesktop);
+
+    if (isDesktop) return join(effectiveModelsDir, key.fileName);
+
     final fileName = key.fileName;
-    final dirPath = dir!.path;
+    final dirPath = effectiveDocumentsDir!.path;
     return join(dirPath, Config.mobileModelsDirName, fileName);
   });
 
@@ -92,13 +92,13 @@ class _Remote {
 
   /// Check if using custom models directory
   late final usingCustomModelsDir = qp<bool>((ref) {
-    final customDir = ref.watch(P.preference._customModelsDir);
+    final customDir = ref.watch(P.preference.customModelsDir);
     final defaultDir = defaultModelsDir.q;
     return customDir != null && customDir.isNotEmpty && customDir != defaultDir;
   });
 
   late final effectiveModelsDir = qp<String>((ref) {
-    final customDir = ref.watch(P.preference._customModelsDir);
+    final customDir = ref.watch(P.preference.customModelsDir);
     final defaultDir = ref.watch(defaultModelsDir);
     return customDir ?? defaultDir;
   });
@@ -527,7 +527,7 @@ extension $Remote on _Remote {
     if (!Platform.isMacOS) return;
 
     final bookmark = P.preference.customModelsDirBookmark.q;
-    final customDir = P.preference._customModelsDir.q;
+    final customDir = P.preference.customModelsDir.q;
     if (bookmark == null || bookmark.isEmpty || customDir == null) return;
 
     try {
@@ -1464,17 +1464,30 @@ extension $Remote on _Remote {
 
   /// Get unrecognized files in the models directory
   Future<List<UnrecognizedFile>> getUnrecognizedFiles() async {
-    final customDir = P.preference._customModelsDir.q;
-    final documentsDir = P.app.effectiveDocumentsDir.q?.path;
-    final isDesktop = P.app.isDesktop.q;
-    final defaultDir = documentsDir != null
-        ? join(documentsDir, isDesktop ? Config.desktopModelsDirName : Config.mobileModelsDirName)
-        : null;
-    final targetDir = customDir ?? defaultDir;
+    // final customDir = P.preference.customModelsDir.q;
+    // final effectiveModelsDir = P.remote.effectiveModelsDir.q;
+    // final documentsDir = P.app.effectiveDocumentsDir.q?.path;
+    // final isDesktop = P.app.isDesktop.q;
+    // final defaultDir = documentsDir != null
+    //     ? join(documentsDir, isDesktop ? Config.desktopModelsDirName : Config.mobileModelsDirName)
+    //     : null;
+    // final targetDir = customDir ?? defaultDir;
 
-    if (targetDir == null) return [];
+    // if (targetDir == null) return [];
+
+    final effectiveModelsDir = P.remote.effectiveModelsDir.q;
+    final effectiveDocumentsDir = P.app.effectiveDocumentsDir.q;
+    final isDesktop = P.app.isDesktop.q;
+
+    late final String targetDir;
+    if (isDesktop) {
+      targetDir = effectiveModelsDir!;
+    } else {
+      targetDir = effectiveDocumentsDir!.path;
+    }
 
     final directory = Directory(targetDir);
+    qqr("targetDir: $targetDir");
     if (!await directory.exists()) {
       return [];
     }
@@ -1620,7 +1633,7 @@ extension _$Remote on _Remote {
     qq;
 
     // Skip migration if custom directory is set
-    if (P.preference._customModelsDir.q != null) {
+    if (P.preference.customModelsDir.q != null) {
       P.preference.setWeightsMigrationCompleted(true);
       return;
     }

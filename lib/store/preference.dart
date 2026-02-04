@@ -73,7 +73,7 @@ class _Preference {
   late final dumpping = qs(false);
 
   /// Custom directory for storing models (Desktop only)
-  late final _customModelsDir = qs<String?>(null);
+  late final customModelsDir = qs<String?>(null);
 
   /// macOS security-scoped bookmark for custom models directory
   late final customModelsDirBookmark = qs<String?>(null);
@@ -194,7 +194,7 @@ extension _$Preference on _Preference {
     }
 
     final customModelsDir = sp.getString("halo_state.customModelsDir");
-    if (customModelsDir != null) _customModelsDir.q = customModelsDir;
+    if (customModelsDir != null) this.customModelsDir.q = customModelsDir;
 
     final customModelsDirBookmark = sp.getString("halo_state.customModelsDirBookmark");
     if (customModelsDirBookmark != null) this.customModelsDirBookmark.q = customModelsDirBookmark;
@@ -260,7 +260,12 @@ extension _$Preference on _Preference {
       }
     }
 
-    final hasUnlinkDefaultModelsDirOnce = sp.getBool("halo_state.hasUnlinkDefaultModelsDirOnce");
+    // TODO: remove getter after refactor P.init logic is done @wangce
+    final packageInfo = await PackageInfo.fromPlatform();
+    final version = packageInfo.version;
+    final buildNumber = packageInfo.buildNumber;
+
+    final hasUnlinkDefaultModelsDirOnce = sp.getBool("halo_state.hasUnlinkDefaultModelsDirOnce.$version.$buildNumber");
     this.hasUnlinkDefaultModelsDirOnce = hasUnlinkDefaultModelsDirOnce == true;
   }
 
@@ -376,7 +381,7 @@ extension $Preference on _Preference {
   }
 
   void setCustomModelsDir(String? path, {String? bookmark}) async {
-    _customModelsDir.q = path;
+    customModelsDir.q = path;
     customModelsDirBookmark.q = bookmark;
     final sp = await SharedPreferences.getInstance();
     if (path == null) {
@@ -480,8 +485,12 @@ extension $Preference on _Preference {
   }
 
   Future<void> setHasUnlinkDefaultModelsDirOnce(bool value) async {
+    // TODO: remove getter after refactor P.init logic is done @wangce
+    final packageInfo = await PackageInfo.fromPlatform();
+    final version = packageInfo.version;
+    final buildNumber = packageInfo.buildNumber;
     hasUnlinkDefaultModelsDirOnce = value;
     final sp = await SharedPreferences.getInstance();
-    await sp.setBool("halo_state.hasUnlinkDefaultModelsDirOnce", value);
+    await sp.setBool("halo_state.hasUnlinkDefaultModelsDirOnce.$version.$buildNumber", value);
   }
 }

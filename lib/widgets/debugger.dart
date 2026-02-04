@@ -80,6 +80,10 @@ class Debugger extends ConsumerWidget {
 
     final pthFolderEntries = ref.watch(P.preference.pthFolderEntries);
     final pthFolders = ref.watch(P.pth.folders);
+    final effectiveModelsDir = ref.watch(P.remote.effectiveModelsDir);
+    final defaultModelsDir = ref.watch(P.remote.defaultModelsDir);
+    final usingCustomModelsDir = ref.watch(P.remote.usingCustomModelsDir);
+    final customModelsDir = ref.watch(P.preference.customModelsDir);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -164,6 +168,14 @@ class Debugger extends ConsumerWidget {
                       Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
                       Text("pthFolders".codeToName),
                       Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
+                      Text("effectiveModelsDir".codeToName),
+                      Text(effectiveModelsDir),
+                      Text("defaultModelsDir".codeToName),
+                      Text(defaultModelsDir),
+                      Text("usingCustomModelsDir".codeToName),
+                      Text(usingCustomModelsDir.toString()),
+                      Text("customModelsDir".codeToName),
+                      Text(customModelsDir ?? "null"),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

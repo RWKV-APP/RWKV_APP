@@ -109,6 +109,7 @@ dependencies:
   gal:
   go_router:
   google_mlkit_text_recognition:
+  package_info_plus:
   halo: ^1.0.0
   halo_alert: ^1.0.0
   halo_state: ^1.0.0
