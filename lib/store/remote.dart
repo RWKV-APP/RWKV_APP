@@ -1481,7 +1481,7 @@ extension $Remote on _Remote {
 
     late final String targetDir;
     if (isDesktop) {
-      targetDir = effectiveModelsDir!;
+      targetDir = effectiveModelsDir;
     } else {
       targetDir = effectiveDocumentsDir!.path;
     }
