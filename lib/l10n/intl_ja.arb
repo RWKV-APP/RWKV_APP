@@ -661,16 +661,22 @@
   "@open_folder_unsupported_on_platform": {
     "placeholders": {
       "os": {}
+      }
+    },
+    "delete_finished": "削除が完了しました",
+    "failed_to_delete_file": "ファイルの削除に失敗しました: {error}",
+    "@failed_to_delete_file": {
+      "placeholders": {
+        "error": {}
+      }
+    },
+    "open_folder_path_is_null": "フォルダパスが空です。",
+    "open_folder_creating_empty": "フォルダが存在しないため、空のフォルダを作成しています。",
+    "open_folder_created_success": "空のフォルダの作成に成功しました。",
+    "open_folder_create_failed": "空のフォルダの作成に失敗しました：{error}",
+    "@open_folder_create_failed": {
+      "placeholders": {
+        "error": {}
+      }
     }
-  },
-  "delete_finished": "削除が完了しました",
-  "open_folder_path_is_null": "フォルダパスが空です。",
-  "open_folder_creating_empty": "フォルダが存在しないため、空のフォルダを作成しています。",
-  "open_folder_created_success": "空のフォルダの作成に成功しました。",
-  "open_folder_create_failed": "空のフォルダの作成に失敗しました：{error}",
-  "@open_folder_create_failed": {
-    "placeholders": {
-      "error": {}
-    }
-  }
 }

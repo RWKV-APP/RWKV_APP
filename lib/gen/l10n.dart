@@ -4539,6 +4539,16 @@ class S {
     return Intl.message('删除完成', name: 'delete_finished', desc: '', args: []);
   }
 
+  /// `删除文件失败：{error}`
+  String failed_to_delete_file(Object error) {
+    return Intl.message(
+      '删除文件失败：$error',
+      name: 'failed_to_delete_file',
+      desc: '',
+      args: [error],
+    );
+  }
+
   /// `文件夹路径为空。`
   String get open_folder_path_is_null {
     return Intl.message(
