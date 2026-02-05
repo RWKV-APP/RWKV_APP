@@ -74,7 +74,18 @@ class ConversationListItemData {
   }
 
   static String _processTitle(String title) {
-    String processed = title.replaceAll(Config.userMsgModifierSep, '').trim();
+    final List<String> allStrings = [];
+
+    for (var i = Config.userMsgModifierSep.length - 1; i > 0; i--) {
+      allStrings.add(Config.userMsgModifierSep.substring(0, i));
+    }
+
+    String processed = title;
+
+    for (var string in allStrings) {
+      processed = processed.replaceAll(string, '');
+    }
+
     processed = processed.replaceAll(Config.userMsgModifierSep.substring(0, Config.userMsgModifierSep.length - 1), '');
     return processed;
   }
@@ -236,10 +247,17 @@ class ConversationItem extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: .stretch,
                 children: [
-                  Text(
-                    conversation.title,
-                    style: TS(s: 16, w: .w500, c: qb),
-                    overflow: .ellipsis,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          ConversationListItemData._processTitle(conversation.title),
+                          style: TS(s: 16, w: .w500, c: qb),
+                          overflow: .ellipsis,
+                        ),
+                      ),
+                      Text(conversation.displayTime, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -252,7 +270,6 @@ class ConversationItem extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Text(conversation.displayTime, style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
       ),

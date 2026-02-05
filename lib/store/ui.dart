@@ -1,12 +1,31 @@
 part of 'p.dart';
 
 class _UI {
-  final showing = qs<Map<String, bool>>({});
+  late final showingPanels = qs<Map<String, bool>>({});
+
+  late final homeController = ScrollController(initialScrollOffset: 1);
+  late final homePixels = qs(0.0);
+  late final homePixelsFromBottom = qs(1.0);
 }
 
 /// Private methods
 extension _$UI on _UI {
-  FV _init() async {}
+  FV _init() async {
+    P.app.screenWidth.l(_onScreenWidthChanged, fireImmediately: true);
+    homeController.addListener(_onHomeScroll);
+  }
+
+  void _onHomeScroll() async {
+    final position = homeController.position;
+    final pixels = position.pixels;
+    final pixelsFromBottom = position.maxScrollExtent - pixels;
+    if ((homePixels.q - pixels).abs() > 1) homePixels.q = pixels;
+    if ((homePixelsFromBottom.q - pixelsFromBottom).abs() > 1) homePixelsFromBottom.q = pixelsFromBottom;
+  }
+
+  void _onScreenWidthChanged(double screenWidth) async {
+    // TODO: @wangce adjust layout based on screen width
+  }
 }
 
 /// Public methods
@@ -22,7 +41,7 @@ extension $UI on _UI {
     bool expand = false,
     bool snap = false,
   }) async {
-    if (showing.q[key] == true) {
+    if (showingPanels.q[key] == true) {
       qqw("$key is already showing, skipping");
       return null;
     }
@@ -33,7 +52,7 @@ extension $UI on _UI {
       return null;
     }
 
-    showing.q[key] = true;
+    showingPanels.q[key] = true;
 
     await beforeShow?.call();
 
@@ -52,7 +71,7 @@ extension $UI on _UI {
     );
 
     await afterHide?.call(res);
-    showing.q[key] = false;
+    showingPanels.q[key] = false;
 
     return res;
   }

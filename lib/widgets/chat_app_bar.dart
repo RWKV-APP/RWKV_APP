@@ -118,7 +118,7 @@ class _ChatAppBar extends ConsumerWidget {
       elevation: 0,
       centerTitle: true,
       backgroundColor: backgroundColor,
-      systemOverlayStyle: customTheme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
+      systemOverlayStyle: customTheme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       title: GestureDetector(
         onTap: _onTitlePressed,
         child: Container(

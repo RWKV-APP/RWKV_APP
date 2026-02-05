@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/model/custom_theme.dart';
 import 'package:zone/store/p.dart';
 
 class GradientBackground extends StatelessWidget {
@@ -11,7 +10,7 @@ class GradientBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isBlack = isDark && P.app.customTheme.q is LightsOut;
+    final isBlack = isDark && P.app.customTheme.q == .lightsOut;
 
     return Container(
       height: double.infinity,

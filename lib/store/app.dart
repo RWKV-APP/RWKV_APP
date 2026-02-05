@@ -56,7 +56,7 @@ class _App extends RawApp {
   late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
 
   /// 当前应用的主题
-  late final customTheme = qs<custom_theme.CustomTheme>(custom_theme.Light());
+  late final customTheme = qs<custom_theme.CustomTheme>(.light);
 
   /// 当前在第几个 tab
   late final tabIndex = qs(0);
@@ -158,7 +158,7 @@ extension $App on _App {
 
   Future<void> customThemeChanged() async {
     await 100.msLater;
-    if (customTheme.q.light) {
+    if (customTheme.q.isLight) {
       _statusBarToLightMode();
     } else {
       _statusBarToDarkMode();
@@ -371,13 +371,13 @@ extension _$App on _App {
       Timer.periodic(const Duration(seconds: 1), (timer) {
         final theme = customTheme.q;
         switch (theme) {
-          case custom_theme.Light():
+          case .light:
             customTheme.q = P.preference.preferredDarkCustomTheme.q;
-          case custom_theme.Dim():
-          case custom_theme.LightsOut():
-            customTheme.q = custom_theme.Light();
+          case .dim:
+          case .lightsOut:
+            customTheme.q = .light;
         }
-        preferredThemeMode.q = customTheme.q.light ? ThemeMode.light : ThemeMode.dark;
+        preferredThemeMode.q = customTheme.q.isLight ? ThemeMode.light : ThemeMode.dark;
       });
     }
 
@@ -430,13 +430,13 @@ extension _$App on _App {
     final preferredDarkCustomTheme = P.preference.preferredDarkCustomTheme.q;
     switch (preferredThemeMode) {
       case ThemeMode.light:
-        customTheme.q = custom_theme.Light();
+        customTheme.q = .light;
       case ThemeMode.dark:
         customTheme.q = preferredDarkCustomTheme;
       case ThemeMode.system:
         switch (light) {
           case true:
-            customTheme.q = custom_theme.Light();
+            customTheme.q = .light;
           case false:
             customTheme.q = preferredDarkCustomTheme;
         }
@@ -690,65 +690,4 @@ extension _$App on _App {
 
     return (json, sp);
   }
-
-  // void _startInAppUpdate(String url) async {
-  //   final cacheDir = await getApplicationCacheDirectory();
-  //   final apkPath = '${cacheDir.path}/rwkv_chat_${_latestBuild.q}.apk';
-  //   if (await File(apkPath).exists()) {
-  //     _installApk(apkPath);
-  //     return;
-  //   }
-  //   _appUpdateTask = await DownloadTask.create(url: url, path: apkPath);
-  //   _appUpdateTask!
-  //       .events() //
-  //       .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
-  //       .listen(
-  //         (event) async {
-  //           qqq(
-  //             'download update: ${event.progress.toStringAsFixed(1)}% '
-  //             'speed:${event.speedInMB.toStringAsFixed(2)}MB/s',
-  //           );
-  //           if (event.state == TaskState.stopped) {
-  //             _appUpdateTask = null;
-  //           }
-  //           if (event.state == TaskState.completed) {
-  //             _appUpdateTask = null;
-  //             _installApk(apkPath);
-  //           }
-  //           switch (event.state) {
-  //             case TaskState.running:
-  //               apkDownloadState.q = event;
-  //               break;
-  //             default:
-  //               apkDownloadState.q = null;
-  //           }
-  //         },
-  //         onDone: () async {
-  //           _appUpdateTask = null;
-  //           apkDownloadState.q = null;
-  //         },
-  //         onError: (e) {
-  //           qqe(e);
-  //           _appUpdateTask = null;
-  //           apkDownloadState.q = null;
-  //         },
-  //       );
-  //   try {
-  //     await _appUpdateTask!.start();
-  //     Alert.success(S.current.start_download_updates_);
-  //   } catch (e) {
-  //     qqe(e);
-  //     Alert.error(S.current.download_failed);
-  //     Sentry.captureException(e, stackTrace: StackTrace.current);
-  //   }
-  // }
-
-  // void _installApk(String apkPath) async {
-  //   try {
-  //     final utils = const MethodChannel("utils");
-  //     await utils.invokeMethod('installApk', {"path": apkPath});
-  //   } catch (e) {
-  //     qqe(e);
-  //   }
-  // }
 }

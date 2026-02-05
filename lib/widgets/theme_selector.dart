@@ -12,7 +12,6 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/form_item.dart';
-import 'package:zone/model/custom_theme.dart' as custom_theme;
 
 class ThemeSelector extends ConsumerWidget {
   static final _shown = qs(false);
@@ -105,8 +104,8 @@ class ThemeSelector extends ConsumerWidget {
         onTap: _onDimPressed,
         trailing: IconButton(
           icon: Icon(
-            preferredDarkCustomTheme is custom_theme.Dim ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-            color: preferredDarkCustomTheme is custom_theme.Dim ? primary : qb.q(.33),
+            preferredDarkCustomTheme == .dim ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
+            color: preferredDarkCustomTheme == .dim ? primary : qb.q(.33),
           ),
           onPressed: _onDimPressed,
         ),
@@ -119,8 +118,8 @@ class ThemeSelector extends ConsumerWidget {
         onTap: _onLightsOutPressed,
         trailing: IconButton(
           icon: Icon(
-            preferredDarkCustomTheme is custom_theme.LightsOut ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-            color: preferredDarkCustomTheme is custom_theme.LightsOut ? primary : qb.q(.33),
+            preferredDarkCustomTheme == .lightsOut ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
+            color: preferredDarkCustomTheme == .lightsOut ? primary : qb.q(.33),
           ),
           onPressed: _onLightsOutPressed,
         ),
@@ -163,13 +162,13 @@ class ThemeSelector extends ConsumerWidget {
   }
 
   void _onLightsOutPressed() async {
-    P.preference.preferredDarkCustomTheme.q = custom_theme.LightsOut();
+    P.preference.preferredDarkCustomTheme.q = .lightsOut;
     final sp = await SharedPreferences.getInstance();
     await sp.setString("halo_state.preferredDarkCustomTheme", P.app.customTheme.q.toString());
   }
 
   void _onDimPressed() async {
-    P.preference.preferredDarkCustomTheme.q = custom_theme.Dim();
+    P.preference.preferredDarkCustomTheme.q = .dim;
     final sp = await SharedPreferences.getInstance();
     await sp.setString("halo_state.preferredDarkCustomTheme", P.app.customTheme.q.toString());
   }

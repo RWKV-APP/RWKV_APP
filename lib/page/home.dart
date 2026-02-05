@@ -14,44 +14,11 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/model_selector.dart';
 
-class PageHome extends ConsumerStatefulWidget {
+class PageHome extends ConsumerWidget {
   const PageHome({super.key});
 
   @override
-  ConsumerState<PageHome> createState() => _PageHomeState();
-}
-
-class _PageHomeState extends ConsumerState<PageHome> {
-  static ScrollController? controller;
-  static final _pixels = qs(0.0);
-  static final _pixelsFromBottom = qs(1.0);
-
-  @override
-  void initState() {
-    super.initState();
-    controller = ScrollController(initialScrollOffset: _pixels.q);
-    controller?.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    controller?.removeListener(_onScroll);
-    controller?.dispose();
-    controller = null;
-    super.dispose();
-  }
-
-  void _onScroll() async {
-    final position = controller?.position;
-    if (position == null) return;
-    final pixels = position.pixels;
-    final pixelsFromBottom = position.maxScrollExtent - pixels;
-    if ((_pixels.q - pixels).abs() > 1) _pixels.q = pixels;
-    if ((_pixelsFromBottom.q - pixelsFromBottom).abs() > 1) _pixelsFromBottom.q = pixelsFromBottom;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final width = ref.watch(P.app.screenWidth);
     final height = ref.watch(P.app.screenHeight);
     final paddingTop = ref.watch(P.app.paddingTop);
@@ -71,19 +38,18 @@ class _PageHomeState extends ConsumerState<PageHome> {
     double maxWidth = width / crossAxisCount - (isLandscape ? 60 : 24);
     final containerPaddingTop = 300 - paddingTop;
     final containerPaddingHorizontal = crossAxisCount == 3 ? 24.0 : 12.0;
-    if (maxWidth < 0) maxWidth = double.infinity;
 
-    if (maxWidth < 0) maxWidth = double.infinity;
+    if (maxWidth < 0) maxWidth = .infinity;
 
-    final widgets = [
-      const _ChatButton(),
-      const _CompletionButton(),
-      const _VisualButton(),
-      const _TTSButton(),
-      const _RolePlayButton(),
-      const _TranslatorButton(),
-      const _NekoButton(),
-      const _BenchmarkButton(),
+    final widgets = const [
+      _ChatButton(),
+      _CompletionButton(),
+      _VisualButton(),
+      _TTSButton(),
+      _RolePlayButton(),
+      _TranslatorButton(),
+      _NekoButton(),
+      _BenchmarkButton(),
     ];
 
     return Scaffold(
@@ -93,7 +59,7 @@ class _PageHomeState extends ConsumerState<PageHome> {
             const _Welcome(),
             Positioned.fill(
               child: SingleChildScrollView(
-                controller: controller,
+                controller: P.ui.homeController,
                 padding: .only(
                   top: containerPaddingTop,
                   left: containerPaddingHorizontal,
@@ -131,7 +97,7 @@ class _NoMore extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final pixelsFromBottom = ref.watch(_PageHomeState._pixelsFromBottom);
+    final pixelsFromBottom = ref.watch(P.ui.homePixelsFromBottom);
 
     double opacity = (-10 - pixelsFromBottom) / 40;
     if (opacity < 0) opacity = 0;
@@ -609,7 +575,7 @@ class _Welcome extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final version = ref.watch(P.app.version);
     final s = S.of(context);
-    final pixels = ref.watch(_PageHomeState._pixels);
+    final pixels = ref.watch(P.ui.homePixels);
     double opacity = 1 - pixels / 150 + 0.5;
 
     if (opacity < 0) opacity = 0;

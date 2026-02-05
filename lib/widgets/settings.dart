@@ -72,7 +72,7 @@ class Settings extends ConsumerWidget {
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final qb = ref.watch(P.app.qb);
     final customTheme = ref.watch(P.app.customTheme);
-    final isLightMode = customTheme.light;
+    final isLightMode = customTheme.isLight;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == .chat;
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);

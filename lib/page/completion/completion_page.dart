@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/model/custom_theme.dart';
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_item_batch.dart';
 import 'package:zone/page/completion/_completion_state.dart';
@@ -45,7 +44,7 @@ class _CompletionPageState extends State<CompletionPage> {
     final primaryColor = isDark ? const Color(0xFF9E7C59) : const Color(0xFF80B0CC);
     Color backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
     Color dividerColor = isDark ? const Color(0x99FFFFFF) : const Color(0x26000000);
-    if (isDark && P.preference.preferredDarkCustomTheme.q is LightsOut) {
+    if (isDark && P.preference.preferredDarkCustomTheme.q == .lightsOut) {
       backgroundColor = Colors.black;
       dividerColor = const Color(0x44ffffff);
     }

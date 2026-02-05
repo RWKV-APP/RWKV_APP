@@ -122,7 +122,7 @@ class _ConversationAppBar extends ConsumerWidget {
     return AppBar(
       title: isBatchMode ? Text(s.selected_count(selectedCount)) : Text(s.conversations),
       backgroundColor: Colors.transparent,
-      systemOverlayStyle: theme.light ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
+      systemOverlayStyle: theme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       primary: true,
       actions: [
         if (isDesktop && !isBatchMode)
