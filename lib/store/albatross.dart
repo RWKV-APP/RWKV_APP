@@ -11,7 +11,7 @@ import 'package:rwkv_mobile_flutter/from_rwkv.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/file_info.dart';
-import 'package:zone/model/thinking_mode.dart';
+import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/store/p.dart';
 
 class Albatross {
@@ -99,7 +99,7 @@ class Albatross {
         P.app.demoType.q = .chat;
         P.rwkv.supportedBatchSizes.q = [2, 4, 6, 8, 10];
         P.rwkv.loadedModels.q = {...P.rwkv.loadedModels.q, fileInfo: -1};
-        P.rwkv.setModelConfig(thinkingMode: const Free());
+        P.rwkv.setModelConfig(thinkingMode: .free);
       } else {
         final body = r.data['error'];
         Alert.error("${r.statusCode}: $body");
@@ -123,7 +123,7 @@ class Albatross {
 
   Stream<FromRWKV> chat(List<String> messages, {int batchSize = 1}) async* {
     await _updateDecodeParam();
-    final enableThink = P.rwkv.thinkingMode.q is! None;
+    final enableThink = P.rwkv.thinkingMode.q != .none;
     final data = {
       "messages": [
         for (var i = 0; i < messages.length; i++) //

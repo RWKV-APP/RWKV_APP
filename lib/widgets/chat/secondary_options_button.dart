@@ -24,36 +24,36 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
 
     final color = switch (thinkingMode) {
-      thinking_mode.Lighting() => Colors.transparent,
-      thinking_mode.Fast() => Colors.transparent,
-      thinking_mode.Free() => theme.colorScheme.surfaceContainer,
-      thinking_mode.None() => Colors.transparent,
-      thinking_mode.PreferChinese() => primary,
-      thinking_mode.En() => primary,
-      thinking_mode.EnShort() => primary,
-      thinking_mode.EnLong() => primary,
+      .lighting => Colors.transparent,
+      .fast => Colors.transparent,
+      .free => theme.colorScheme.surfaceContainer,
+      .none => Colors.transparent,
+      .preferChinese => primary,
+      .en => primary,
+      .enShort => primary,
+      .enLong => primary,
     };
 
     final textColor = switch (thinkingMode) {
-      thinking_mode.Lighting() => Colors.grey,
-      thinking_mode.Fast() => Colors.grey,
-      thinking_mode.None() => theme.colorScheme.onPrimary,
-      thinking_mode.Free() => Colors.grey,
-      thinking_mode.PreferChinese() => theme.colorScheme.onPrimary,
-      thinking_mode.En() => theme.colorScheme.onPrimary,
-      thinking_mode.EnShort() => theme.colorScheme.onPrimary,
-      thinking_mode.EnLong() => theme.colorScheme.onPrimary,
+      .lighting => Colors.grey,
+      .fast => Colors.grey,
+      .none => theme.colorScheme.onPrimary,
+      .free => Colors.grey,
+      .preferChinese => theme.colorScheme.onPrimary,
+      .en => theme.colorScheme.onPrimary,
+      .enShort => theme.colorScheme.onPrimary,
+      .enLong => theme.colorScheme.onPrimary,
     };
 
     final iconWidget = switch (thinkingMode) {
-      thinking_mode.Free() => Icon(Icons.translate, color: textColor, size: 18),
-      thinking_mode.PreferChinese() => Icon(Icons.translate, color: textColor, size: 18),
+      .free => Icon(Icons.translate, color: textColor, size: 18),
+      .preferChinese => Icon(Icons.translate, color: textColor, size: 18),
       _ => null,
     };
 
     final textWidget = switch (thinkingMode) {
-      thinking_mode.Lighting() => null,
-      thinking_mode.None() => null,
+      .lighting => null,
+      .none => null,
       _ => Column(
         crossAxisAlignment: .start,
         mainAxisAlignment: .center,
@@ -69,14 +69,14 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final height = textScaleFactor.scale(14) + 20;
 
     final EdgeInsets padding = switch (thinkingMode) {
-      thinking_mode.Lighting() => const .all(0),
-      thinking_mode.Fast() => const .all(0),
-      thinking_mode.None() => const .all(0),
-      thinking_mode.Free() => const .symmetric(horizontal: 12),
-      thinking_mode.PreferChinese() => const .symmetric(horizontal: 12),
-      thinking_mode.En() => const .symmetric(horizontal: 12),
-      thinking_mode.EnShort() => const .symmetric(horizontal: 12),
-      thinking_mode.EnLong() => const .symmetric(horizontal: 12),
+      .lighting => const .all(0),
+      .fast => const .all(0),
+      .none => const .all(0),
+      .free => const .symmetric(horizontal: 12),
+      .preferChinese => const .symmetric(horizontal: 12),
+      .en => const .symmetric(horizontal: 12),
+      .enShort => const .symmetric(horizontal: 12),
+      .enLong => const .symmetric(horizontal: 12),
     };
 
     return AnimatedSize(

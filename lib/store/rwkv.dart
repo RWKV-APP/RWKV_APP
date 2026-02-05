@@ -78,7 +78,7 @@ class _RWKV {
   late final showEscapeCharacters = qs(false);
   late final showPrefillLogOnly = qs(true);
 
-  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(const thinking_mode.Fast());
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
 
   /// 已经加载到内存中的模型，key 为 FuncType，value 为模型 ID
   late final loadedModels = qs<Map<FileInfo, int>>({});
@@ -249,7 +249,7 @@ extension $RWKVLoad on _RWKV {
     qq;
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
-    _thinkingMode.q = enableReasoning ? const thinking_mode.Free() : const thinking_mode.None();
+    _thinkingMode.q = enableReasoning ? .free : .none;
 
     final tokenizerPath = await fromAssetsToTemp("assets/config/chat/rwkv_vocab_v20230424.txt");
 
@@ -787,7 +787,7 @@ extension $RWKV on _RWKV {
     String? prompt,
   }) async {
     qqr(thinkingMode);
-    _thinkingMode.q = thinkingMode ?? const thinking_mode.Fast();
+    _thinkingMode.q = thinkingMode ?? .fast;
 
     if (setPrompt) {
       updateSystemPrompt(prompt: prompt);
@@ -894,10 +894,10 @@ extension $RWKV on _RWKV {
 
     if (isAlbatrossLoaded.q) {
       final current = thinkingMode.q;
-      if (current is! thinking_mode.None) {
-        setModelConfig(thinkingMode: const thinking_mode.None());
+      if (current != .none) {
+        setModelConfig(thinkingMode: .none);
       } else {
-        setModelConfig(thinkingMode: const thinking_mode.Free());
+        setModelConfig(thinkingMode: .free);
       }
       return;
     }
@@ -906,17 +906,17 @@ extension $RWKV on _RWKV {
     if (currentModelIsBefore20250922) {
       final current = thinkingMode.q;
       switch (current) {
-        case thinking_mode.Lighting():
-          setModelConfig(thinkingMode: const thinking_mode.Free());
+        case .lighting:
+          setModelConfig(thinkingMode: .free);
           Alert.success(s.thinking_mode_high(s.thinking_mode_alert_footer));
-        case thinking_mode.Free():
-          setModelConfig(thinkingMode: const thinking_mode.None());
+        case .free:
+          setModelConfig(thinkingMode: .none);
           Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
-        case thinking_mode.PreferChinese():
-          setModelConfig(thinkingMode: const thinking_mode.None());
+        case .preferChinese:
+          setModelConfig(thinkingMode: .none);
           Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
-        case thinking_mode.None():
-          setModelConfig(thinkingMode: const thinking_mode.Lighting());
+        case .none:
+          setModelConfig(thinkingMode: .lighting);
           Alert.success(s.thinking_mode_auto(s.thinking_mode_alert_footer));
         default:
           break;
@@ -926,13 +926,13 @@ extension $RWKV on _RWKV {
 
     final current = thinkingMode.q;
 
-    final actionPairs = [
-      (label: s.thinking_mode_off(""), key: const thinking_mode.None()),
-      (label: s.think_button_mode_fast(""), key: const thinking_mode.Fast()),
-      (label: s.thinking_mode_high(""), key: const thinking_mode.Free()),
-      (label: s.think_button_mode_en(""), key: const thinking_mode.En()),
-      (label: s.think_button_mode_en_short(""), key: const thinking_mode.EnShort()),
-      (label: s.think_button_mode_en_long(""), key: const thinking_mode.EnLong()),
+    final List<({thinking_mode.ThinkingMode key, String label})> actionPairs = [
+      (label: s.thinking_mode_off(""), key: .none),
+      (label: s.think_button_mode_fast(""), key: .fast),
+      (label: s.thinking_mode_high(""), key: .free),
+      (label: s.think_button_mode_en(""), key: .en),
+      (label: s.think_button_mode_en_short(""), key: .enShort),
+      (label: s.think_button_mode_en_long(""), key: .enLong),
     ];
 
     final actions = actionPairs.map((e) {
@@ -953,17 +953,17 @@ extension $RWKV on _RWKV {
 
     setModelConfig(thinkingMode: res);
     switch (res) {
-      case thinking_mode.None():
+      case .none:
         Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
-      case thinking_mode.Fast():
+      case .fast:
         Alert.success(s.think_button_mode_fast(s.thinking_mode_alert_footer));
-      case thinking_mode.Free():
+      case .free:
         Alert.success(s.thinking_mode_high(s.thinking_mode_alert_footer));
-      case thinking_mode.En():
+      case .en:
         Alert.success(s.think_button_mode_en(s.thinking_mode_alert_footer));
-      case thinking_mode.EnShort():
+      case .enShort:
         Alert.success(s.think_button_mode_en_short(s.thinking_mode_alert_footer));
-      case thinking_mode.EnLong():
+      case .enLong:
         Alert.success(s.think_button_mode_en_long(s.thinking_mode_alert_footer));
       default:
         break;
@@ -1005,14 +1005,14 @@ extension $RWKV on _RWKV {
     final current = thinkingMode.q;
     P.app.hapticLight();
     switch (current) {
-      case thinking_mode.Lighting():
-      case thinking_mode.None():
+      case .lighting:
+      case .none:
         break;
-      case thinking_mode.Free():
-        setModelConfig(thinkingMode: const thinking_mode.PreferChinese());
+      case .free:
+        setModelConfig(thinkingMode: .preferChinese);
         Alert.success(S.current.prefer_chinese);
-      case thinking_mode.PreferChinese():
-        setModelConfig(thinkingMode: const thinking_mode.Free());
+      case .preferChinese:
+        setModelConfig(thinkingMode: .free);
         Alert.success(S.current.thinking_mode_high(S.current.thinking_mode_alert_footer));
       default:
         break;
@@ -1061,7 +1061,7 @@ extension $RWKV on _RWKV {
         send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
         send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
       }
-      await setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "<EOD>", setPrompt: true);
+      await setModelConfig(thinkingMode: .none, prompt: "<EOD>", setPrompt: true);
       P.backend.start();
     } else {
       send(to_rwkv.SetUserRole("User", modelID: modelID));
@@ -1070,9 +1070,9 @@ extension $RWKV on _RWKV {
 
     if (!isTranslate) {
       if (currentModelIsBefore20250922.q) {
-        setModelConfig(thinkingMode: const thinking_mode.Lighting());
+        setModelConfig(thinkingMode: .lighting);
       } else {
-        setModelConfig(thinkingMode: const thinking_mode.Fast());
+        setModelConfig(thinkingMode: .fast);
       }
     }
 
