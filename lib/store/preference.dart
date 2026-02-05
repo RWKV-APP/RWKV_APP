@@ -63,7 +63,7 @@ class _Preference {
   late final themeMode = qs<ThemeMode>(ThemeMode.system);
 
   /// 偏好的深色模式主题
-  late final preferredDarkCustomTheme = qs<custom_theme.CustomTheme>(custom_theme.LightsOut());
+  late final preferredDarkCustomTheme = qs<custom_theme.CustomTheme>(.lightsOut);
 
   late final lastWorldModel = qs<Map<String, dynamic>?>(null);
 
@@ -166,9 +166,9 @@ extension _$Preference on _Preference {
 
     final preferredDarkCustomTheme = sp.getString("halo_state.preferredDarkCustomTheme");
     if (preferredDarkCustomTheme != null) {
-      this.preferredDarkCustomTheme.q = custom_theme.CustomTheme.fromString(preferredDarkCustomTheme) ?? custom_theme.LightsOut();
-      if (this.preferredDarkCustomTheme.q is custom_theme.Light) {
-        this.preferredDarkCustomTheme.q = custom_theme.LightsOut();
+      this.preferredDarkCustomTheme.q = .fromString(preferredDarkCustomTheme) ?? .lightsOut;
+      if (this.preferredDarkCustomTheme.q == .light) {
+        this.preferredDarkCustomTheme.q = .lightsOut;
       }
     }
 

@@ -1,116 +1,100 @@
-sealed class ThinkingMode {
-  abstract final String header;
-  abstract final bool forceReasoning;
-  final String userMsgFooter = "";
+enum ThinkingMode {
+  /// 不加思考标签，普通回答
+  none(
+    header: '',
+    userMsgFooter: '',
+    forceReasoning: false,
+  ),
 
-  bool get hasThinkTag => header.startsWith("<think");
+  /// 旧模式：加思考标签但不强制推理（已废弃，改用 fast）
+  @Deprecated('Use .fast instead')
+  lighting(
+    header: '<think>\n</think>',
+    userMsgFooter: '',
+    forceReasoning: false,
+  ),
 
-  const ThinkingMode();
+  /// 推荐模式：短暂思考标签，不强制推理
+  fast(
+    header: '<think>\n</think',
+    userMsgFooter: '',
+    forceReasoning: false,
+  ),
 
-  @override
-  String toString() {
-    return "ThinkingMode." + runtimeType.toString();
-  }
+  /// 完全自由推理：`<think` 开头，强制推理
+  free(
+    header: '<think',
+    userMsgFooter: '',
+    forceReasoning: true,
+  ),
 
+  /// 中文偏好推理
+  preferChinese(
+    header: '<think>嗯',
+    userMsgFooter: '',
+    forceReasoning: true,
+  ),
+
+  /// 英文推理（后缀提示）
+  en(
+    header: '<think',
+    userMsgFooter: ' (think)',
+    forceReasoning: true,
+  ),
+
+  /// 英文短思考
+  enShort(
+    header: '<think',
+    userMsgFooter: ' (think a bit)',
+    forceReasoning: true,
+  ),
+
+  /// 英文长思考
+  enLong(
+    header: '<think',
+    userMsgFooter: ' (think a lot)',
+    forceReasoning: true,
+  )
+  ;
+
+  const ThinkingMode({
+    required this.header,
+    required this.userMsgFooter,
+    required this.forceReasoning,
+  });
+
+  final String header;
+  final String userMsgFooter;
+  final bool forceReasoning;
+
+  bool get hasThinkTag => header.startsWith('<think');
+
+  /// 兼容旧字符串存储格式，例如 ".Fast"
   static ThinkingMode fromString(String? runningMode) {
-    if (runningMode == "ThinkingMode.None") return const None();
-    if (runningMode == "ThinkingMode.Lighting") return const Lighting();
-    if (runningMode == "ThinkingMode.Free") return const Free();
-    if (runningMode == "ThinkingMode.PreferChinese") return const PreferChinese();
-    if (runningMode == "ThinkingMode.Fast") return const Fast();
-    if (runningMode == "ThinkingMode.None") return const None();
-    if (runningMode == "ThinkingMode.En") return const En();
-    if (runningMode == "ThinkingMode.EnShort") return const EnShort();
-    if (runningMode == "ThinkingMode.EnLong") return const EnLong();
-    return const None();
+    return switch (runningMode) {
+      ".None" => .none,
+      ".Lighting" => .fast,
+      ".Free" => .free,
+      ".PreferChinese" => .preferChinese,
+      ".Fast" => .fast,
+      ".En" => .en,
+      ".EnShort" => .enShort,
+      ".EnLong" => .enLong,
+      _ => .none,
+    };
   }
-}
 
-@Deprecated("Use Fast instead")
-class Lighting extends ThinkingMode {
+  /// 保持与旧实现一致的 toString，继续返回 ".Xxx"
   @override
-  final String header = '<think>\n</think>';
-
-  @override
-  final bool forceReasoning = false;
-
-  const Lighting();
-}
-
-class Fast extends ThinkingMode {
-  @override
-  final String header = '<think>\n</think';
-
-  @override
-  final bool forceReasoning = false;
-
-  const Fast();
-}
-
-class Free extends ThinkingMode {
-  @override
-  final String header = '<think';
-
-  @override
-  final bool forceReasoning = true;
-
-  const Free();
-}
-
-class PreferChinese extends ThinkingMode {
-  @override
-  final String header = '<think>嗯';
-  @override
-  final bool forceReasoning = true;
-
-  const PreferChinese();
-}
-
-class None extends ThinkingMode {
-  @override
-  String get header => "";
-
-  @override
-  final bool forceReasoning = false;
-
-  const None();
-}
-
-class En extends ThinkingMode {
-  @override
-  String get header => "<think";
-
-  @override
-  String get userMsgFooter => " (think)";
-
-  @override
-  final bool forceReasoning = true;
-
-  const En();
-}
-
-class EnShort extends ThinkingMode {
-  @override
-  String get header => "<think";
-
-  @override
-  String get userMsgFooter => " (think a bit)";
-
-  @override
-  final bool forceReasoning = true;
-
-  const EnShort();
-}
-
-class EnLong extends ThinkingMode {
-  @override
-  String get header => "<think";
-
-  @override
-  String get userMsgFooter => " (think a lot)";
-
-  @override
-  final bool forceReasoning = true;
-
-  const EnLong();
+  String toString() =>
+      '.${switch (this) {
+        .none => 'None',
+        .lighting => 'Lighting',
+        .fast => 'Fast',
+        .free => 'Free',
+        .preferChinese => 'PreferChinese',
+        .en => 'En',
+        .enShort => 'EnShort',
+        .enLong => 'EnLong',
+      }}';
 }

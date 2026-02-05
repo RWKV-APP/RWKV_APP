@@ -151,7 +151,7 @@ class ModelItem extends ConsumerWidget {
         P.rwkv.send(SetUserRole("Chinese", modelID: modelID));
         P.rwkv.send(SetResponseRole(responseRole: "English", modelID: modelID));
       }
-      await P.rwkv.setModelConfig(thinkingMode: const thinking_mode.None(), prompt: "<EOD>", setPrompt: true);
+      await P.rwkv.setModelConfig(thinkingMode: .none, prompt: "<EOD>", setPrompt: true);
       P.backend.start();
     } else {
       P.rwkv.send(SetUserRole("User", modelID: modelID));
@@ -166,9 +166,9 @@ class ModelItem extends ConsumerWidget {
 
     if (!isTranslate) {
       if (currentModelIsBefore20250922) {
-        P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Lighting());
+        P.rwkv.setModelConfig(thinkingMode: .lighting);
       } else {
-        P.rwkv.setModelConfig(thinkingMode: const thinking_mode.Fast());
+        P.rwkv.setModelConfig(thinkingMode: .fast);
       }
     }
 

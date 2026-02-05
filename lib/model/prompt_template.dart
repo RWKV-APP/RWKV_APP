@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:halo_state/halo_state.dart';
-import 'package:zone/model/thinking_mode.dart';
+import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/store/p.dart';
 
 class PromptTemplate {
@@ -99,30 +99,27 @@ class PromptTemplate {
     return p;
   }
 
-  String apply(ThinkingMode mode) {
+  String apply(thinking_mode.ThinkingMode mode) {
     switch (mode) {
-      case Lighting():
-        return thinkingLighting.isNotEmpty ? thinkingLighting : const Lighting().header;
-      case Fast():
-        return thinkingFast.isNotEmpty ? thinkingFast : const Fast().header;
-      case Free():
-        return thinkingFree.isNotEmpty ? thinkingFree : const Free().header;
-      case PreferChinese():
+      case .lighting:
+        return thinkingLighting.isNotEmpty ? thinkingLighting : thinking_mode.ThinkingMode.lighting.header;
+      case .fast:
+        return thinkingFast.isNotEmpty ? thinkingFast : thinking_mode.ThinkingMode.fast.header;
+      case .free:
+        return thinkingFree.isNotEmpty ? thinkingFree : thinking_mode.ThinkingMode.free.header;
+      case .preferChinese:
         final fileInfo = P.rwkv.latestModel.q;
         final date = fileInfo?.date;
         if (date != null && date.isAfter(DateTime(2025, 9, 21))) {
           final result = thinkingWithChinese.isNotEmpty ? thinkingWithChinese : "<think>好的";
           return result;
         }
-        return thinkingWithChinese.isNotEmpty ? thinkingWithChinese : const PreferChinese().header;
-      case None():
-        return const None().header;
-      case En():
-        return const En().header;
-      case EnShort():
-        return const EnShort().header;
-      case EnLong():
-        return const EnLong().header;
+        return thinkingWithChinese.isNotEmpty ? thinkingWithChinese : thinking_mode.ThinkingMode.preferChinese.header;
+      case .none:
+      case .en:
+      case .enShort:
+      case .enLong:
+        return mode.header;
     }
   }
 

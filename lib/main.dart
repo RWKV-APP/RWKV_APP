@@ -109,8 +109,8 @@ class _App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final customTheme = ref.watch(P.app.customTheme);
-    final brightness = customTheme.light ? Brightness.light : Brightness.dark;
-    final demoTypeColorScheme = customTheme.light ? P.app.demoType.q.colorScheme : P.app.demoType.q.colorSchemeDark;
+    final brightness = customTheme.isLight ? Brightness.light : Brightness.dark;
+    final demoTypeColorScheme = customTheme.isLight ? P.app.demoType.q.colorScheme : P.app.demoType.q.colorSchemeDark;
     final modalBarrierColor = customTheme.pagerDim.q(.25);
     final bottomSheetTheme = BottomSheetThemeData(backgroundColor: customTheme.setting, modalBarrierColor: modalBarrierColor);
     final appBarTheme = AppBarTheme(scrolledUnderElevation: 0, backgroundColor: customTheme.scaffold);
