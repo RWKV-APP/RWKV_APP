@@ -488,7 +488,7 @@ class _WeightItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    Theme.of(context);
     final local = ref.watch(P.remote.locals(fileInfo));
     if (!local.hasFile) {
       return const SizedBox.shrink();
@@ -611,8 +611,8 @@ class _OtherFileItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
-    final theme = Theme.of(context);
+    S.of(context);
+    Theme.of(context);
 
     final basename = path.basename(file.filePath);
     final needToShowBasename = basename != file.fileName;

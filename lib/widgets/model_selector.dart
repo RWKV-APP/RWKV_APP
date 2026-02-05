@@ -594,7 +594,7 @@ class _LocalPthFileItem extends ConsumerWidget {
         loadingStatus[fileInfo] == LoadingStatus.loading ||
         loadingStatus[fileInfo] == LoadingStatus.loadModelWithExtra ||
         loadingStatus[fileInfo] == LoadingStatus.setQnnLibraryPath;
-    final customTheme = ref.watch(P.app.customTheme);
+    ref.watch(P.app.customTheme);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final date = fileInfo.dateDisplayString;
@@ -669,7 +669,7 @@ class _ModelsInConfigHeader extends ConsumerWidget {
             crossAxisAlignment: .start,
             children: [
               T(S.current.prebuilt_models_intro),
-              T((effectiveDir ?? "").trim()),
+              T((effectiveDir).trim()),
             ],
           ),
         ),

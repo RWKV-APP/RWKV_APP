@@ -98,7 +98,6 @@ Future<img.Image> _createImage(String text, {required bool isLight}) async {
 /// 复制文件到目标位置
 Future<void> _copyToTarget(File sourceFile, String targetPath) async {
   try {
-    final targetFile = File(targetPath);
 
     // 确保目标目录存在
     final targetDir = Directory(path.dirname(targetPath));

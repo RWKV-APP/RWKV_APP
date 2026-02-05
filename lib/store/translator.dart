@@ -647,11 +647,8 @@ extension $Translator on _Translator {
   }
 
   void debugCheck() {
-    final runningTaskKey = this.runningTaskKey.q;
-    final translations = this.translations.q;
     final browserTabs = this.browserTabs.q;
-    final activeBrowserTab = activedTab.q;
-    final pools = browserTabs.map((tab) => pool(tab).q).where((pool) => pool.isNotEmpty).toList();
+    browserTabs.map((tab) => pool(tab).q).where((pool) => pool.isNotEmpty).toList();
   }
 
   void onDirectionButtonPressed() async {

@@ -65,7 +65,7 @@ class LogPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showEscapeCharacters = ref.watch(P.rwkv.showEscapeCharacters);
     final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
+    ref.watch(P.app.qw);
     final showPrefillLogOnly = ref.watch(P.rwkv.showPrefillLogOnly);
     final rawRuntimeLog = ref.watch(P.rwkv.runtimeLog);
     final runtimeLog = rawRuntimeLog.where((log) => showPrefillLogOnly ? log.isPrefill : true).toList();

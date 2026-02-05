@@ -80,7 +80,6 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
     final settings = ref.watch(BatchCompletionSettingsPanel.settings);
     final batchCount = settings.batchCount;
     final batchInference = settings.enabled;
-    final batchVW = settings.width;
     return ClipRRect(
       borderRadius: const .only(
         topLeft: .circular(16),

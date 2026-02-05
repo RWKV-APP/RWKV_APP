@@ -267,16 +267,6 @@ extension _$Ocr on _Ocr {
     });
   }
 
-  Future<void> _stop() async {
-    P.rwkv.stop();
-    _getResponseTimer?.cancel();
-    _getResponseTimer = null;
-    runningTasks.q = [];
-    runningTaskKey.q = null;
-    isGenerating.q = false;
-    image.q = null;
-    // 注意：不在这里关闭 _textRecognizer，因为可能还会继续使用
-  }
 
   void _sendRequest() {
     // 生成中则跳过

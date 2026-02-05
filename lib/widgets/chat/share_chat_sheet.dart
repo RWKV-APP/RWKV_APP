@@ -151,7 +151,6 @@ class _Preview extends ConsumerStatefulWidget {
 final kSharingRepaintBoundary = GlobalKey();
 
 class _PreviewState extends ConsumerState<_Preview> {
-  static const topCropForFixBadImage = 300.0;
 
   late QrImage qrImage;
   late final ScrollController controller = ScrollController();
@@ -237,21 +236,6 @@ class _PreviewState extends ConsumerState<_Preview> {
     return file;
   }
 
-  Future<ui.Image> _cropImage(ui.Image img, Rect crop) async {
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    canvas.drawImageRect(
-      img,
-      crop,
-      Rect.fromLTRB(0, 0, crop.width, crop.height),
-      Paint()..filterQuality = FilterQuality.high,
-    );
-    final picture = recorder.endRecording();
-    return await picture.toImage(
-      crop.width.toInt(),
-      crop.height.toInt(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -391,46 +390,8 @@ class _KeyValuePairs extends StatelessWidget {
 }
 
 class _Utils {
-  static final int _operates = 10_000_000;
 
-  static Future<double> testFlops(int numberOfCores) async {
-    int cores = numberOfCores;
-    if (cores <= 0) {
-      final out0 = _exec('ls', ['/sys/devices/system/cpu/']);
-      final cpus = out0?.split('\n').map((e) => e.trim()).where((e) => e.startsWith('cpu') && e.length == 4) ?? [];
-      cores = cpus.length;
-    }
-    qqq('start test flops, cores=$cores');
 
-    final port = ReceivePort();
-    for (var i = 0; i < cores; i++) {
-      Isolate.spawn((sp) async {
-        try {
-          final count = 10;
-          final r = [for (var i = 0; i < count; i++) await _testFlops()].reduce((a, b) => a + b) / count;
-          sp.send(r);
-        } catch (e) {
-          qqe(e);
-          sp.send(-1);
-        }
-      }, port.sendPort);
-    }
-    final r = await port.take(cores).toList();
-    port.close();
-    final avgMs = (r.reduce((a, b) => a + b) as double) / cores;
-    qqq("${r.join('\n')}\navg:${avgMs}ms");
-    return (_operates / avgMs * 1000) * cores;
-  }
-
-  static Future<double> _testFlops() async {
-    final stopwatch = Stopwatch()..start();
-    double result = 2.2;
-    for (int i = 1; i < _operates; i++) {
-      result = result * i;
-    }
-    stopwatch.stop();
-    return stopwatch.elapsedMilliseconds.toDouble();
-  }
 
   static Map<String, String> getMemInfo() {
     final out = _exec('cat', ['/proc/meminfo']);

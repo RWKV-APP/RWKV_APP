@@ -598,8 +598,6 @@ class _TTSTags extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    final qw = P.app.qw.q;
 
     return Wrap(
       spacing: 4,
