@@ -11,7 +11,6 @@ import 'package:rwkv_mobile_flutter/from_rwkv.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/file_info.dart';
-import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/store/p.dart';
 
 class Albatross {
