@@ -643,7 +643,7 @@ extension $RWKV on _RWKV {
     });
   }
 
-  Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1}) {
+  Stream<from_rwkv.ResponseBatchBufferContent> completion(String prompt, {int batchSize = 1, int? maxLength, int? stopToken}) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
 
@@ -662,7 +662,7 @@ extension $RWKV on _RWKV {
       return const Stream.empty();
     }
 
-    final request = to_rwkv.GenerateAsync(prompt, batch: batchSize, modelID: modelID);
+    final request = to_rwkv.GenerateAsync(prompt, batch: batchSize, modelID: modelID, maxLength: maxLength, stopToken: stopToken);
     send(request);
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
