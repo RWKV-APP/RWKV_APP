@@ -336,22 +336,29 @@ class Settings extends ConsumerWidget {
     launchUrlString("https://community.rwkv.cn/", mode: LaunchMode.externalApplication);
   }
 
-  void _showLicensePage(
+  Future<void> _showLicensePage(
     BuildContext context,
     String version,
     String buildNumber,
     Widget iconWidget,
-  ) {
-    showLicensePage(
-      context: context,
-      applicationName: Config.appTitle,
-      applicationVersion: "$version ($buildNumber)",
-      applicationIcon: Container(
-        margin: const .only(top: 12, bottom: 12),
-        child: iconWidget,
+  ) async {
+    final locale = P.preference.preferredLanguage.q.resolved.locale;
+    await Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          return LicensePage(
+            applicationName: Config.appTitle,
+            applicationVersion: "$version ($buildNumber)",
+            applicationIcon: Container(
+              margin: const .only(top: 12, bottom: 12),
+              child: iconWidget,
+            ),
+          );
+        },
       ),
-      useRootNavigator: true,
     );
+    if (!context.mounted) return;
+    await S.load(locale);
   }
 }
 
