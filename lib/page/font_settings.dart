@@ -8,7 +8,6 @@ import 'package:halo_state/halo_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/widgets/font_picker_bottom_sheet.dart';
 import 'package:zone/config.dart';
@@ -57,58 +56,56 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
         centerTitle: true,
         title: Text(s.font_setting),
       ),
-      body: GradientBackground(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const .all(8),
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    // Preview section
-                    _PreviewCard(
-                      effectiveScale: effectiveScale,
-                      primaryContainer: primaryContainer,
-                      surface: surface,
-                      onSurface: onSurface,
-                    ),
-                  ],
-                ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const .all(8),
+              child: Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  // Preview section
+                  _PreviewCard(
+                    effectiveScale: effectiveScale,
+                    primaryContainer: primaryContainer,
+                    surface: surface,
+                    onSurface: onSurface,
+                  ),
+                ],
               ),
             ),
-            // Settings controls
-            _SettingsControls(
-              useSystemSize: _useSystemSize,
-              currentScale: _currentScale,
-              primary: primary,
-              surface: surface,
-              onSurface: onSurface,
-              onUseSystemSizeChanged: (value) async {
-                setState(() {
-                  _useSystemSize = value;
-                  if (!value) {
-                    // Reset to default 100% when switching from system to manual
-                    _currentScale = 1.0;
-                  }
-                });
-                if (value) {
-                  await _saveScale(P.preference.textScaleFactorSystem);
-                } else {
-                  await _saveScale(_currentScale);
+          ),
+          // Settings controls
+          _SettingsControls(
+            useSystemSize: _useSystemSize,
+            currentScale: _currentScale,
+            primary: primary,
+            surface: surface,
+            onSurface: onSurface,
+            onUseSystemSizeChanged: (value) async {
+              setState(() {
+                _useSystemSize = value;
+                if (!value) {
+                  // Reset to default 100% when switching from system to manual
+                  _currentScale = 1.0;
                 }
-              },
-              onScaleChanged: (value) async {
-                setState(() {
-                  _currentScale = value;
-                });
-                if (!_useSystemSize) {
-                  await _saveScale(value);
-                }
-              },
-            ),
-          ],
-        ),
+              });
+              if (value) {
+                await _saveScale(P.preference.textScaleFactorSystem);
+              } else {
+                await _saveScale(_currentScale);
+              }
+            },
+            onScaleChanged: (value) async {
+              setState(() {
+                _currentScale = value;
+              });
+              if (!_useSystemSize) {
+                await _saveScale(value);
+              }
+            },
+          ),
+        ],
       ),
     );
   }

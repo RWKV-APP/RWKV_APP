@@ -11,7 +11,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageHome extends ConsumerWidget {
@@ -53,39 +52,37 @@ class PageHome extends ConsumerWidget {
     ];
 
     return Scaffold(
-      body: GradientBackground(
-        child: Stack(
-          children: [
-            const _Welcome(),
-            Positioned.fill(
-              child: SingleChildScrollView(
-                controller: P.ui.homeController,
-                padding: .only(
-                  top: containerPaddingTop,
-                  left: containerPaddingHorizontal,
-                  right: containerPaddingHorizontal,
-                  bottom: 48,
-                ),
-                physics: const BouncingScrollPhysics(),
-                child: MasonryGridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: crossAxisCount,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  itemBuilder: (context, index) {
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: maxWidth),
-                      child: widgets[index],
-                    );
-                  },
-                  itemCount: 8,
-                ),
+      body: Stack(
+        children: [
+          const _Welcome(),
+          Positioned.fill(
+            child: SingleChildScrollView(
+              controller: P.ui.homeController,
+              padding: .only(
+                top: containerPaddingTop,
+                left: containerPaddingHorizontal,
+                right: containerPaddingHorizontal,
+                bottom: 48,
+              ),
+              physics: const BouncingScrollPhysics(),
+              child: MasonryGridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                itemBuilder: (context, index) {
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: widgets[index],
+                  );
+                },
+                itemCount: 8,
               ),
             ),
-            const _NoMore(),
-          ],
-        ),
+          ),
+          const _NoMore(),
+        ],
       ),
     );
   }
