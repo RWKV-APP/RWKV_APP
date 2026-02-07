@@ -9,6 +9,7 @@
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **RWKV App を使って、エッジデバイス上で大規模言語モデル（LLM）をオフラインで探索・体験しましょう。**
+**プライバシー重視で、日常のデバイス向けに完全オンデバイスで動く LLM 体験。**
 
 RWKV App は、Android/iOS デバイスに大規模言語モデル（LLM）を直接導入する実験的なアプリケーションです。さまざまなモデルを試したり、チャットを楽しんだり、音声を生成したり、視覚理解を行ったりすることができます！すべての計算はローカルで行われ、モデルのロード後はインターネット接続は必要ありません。
 
@@ -163,4 +164,3 @@ flutter run
 - [**利用可能なモデル**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 - [**独自のモデルをトレーニングしたいですか？**](https://github.com/RWKV-Vibe/RWKV-LM-V7)
 - [**RWKV とは？**](https://rwkv.cn/)
-

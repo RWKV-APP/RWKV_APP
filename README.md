@@ -9,6 +9,7 @@
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **Explore and experience running Large Language Models offline on your edge devices with the RWKV App.**
+**A privacy-first, fully on-device LLM experience built for everyday devices.**
 
 RWKV App is an experimental application that brings Large Language Models (LLMs) directly to your Android/iOS devices. You can experiment with different models, engage in chats, generate speech, perform visual understanding, and more! All computations are performed locally, and no internet connection is required after loading the model.
 
