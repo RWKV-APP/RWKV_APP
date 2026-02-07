@@ -9,6 +9,7 @@
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **透過 RWKV App，探索、體驗在端側設備上離線運行大語言模型**
+**面向日常設備的隱私優先、完全端側的 LLM 體驗。**
 
 RWKV App 是一款實驗性的應用程式，它將大語言模型（LLM）直接帶到您的 Android / iOS 設備上。您可以盡情試驗不同的模型、進行聊天、生成語音、視覺理解等等！所有計算都在本地進行，加載模型後無需網絡連接。
 
@@ -163,4 +164,3 @@ flutter run
 - [**可用模型下載**](https://huggingface.co/mollysama/rwkv-mobile-models/tree/main)
 - [**訓練您自己的模型？**](https://github.com/RWKV-Vibe/RWKV-LM-V7)
 - [**什麼是 RWKV？**](https://rwkv.cn/)
-

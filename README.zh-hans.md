@@ -9,6 +9,7 @@
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **通过 RWKV App，探索、体验在端侧设备上离线运行大语言模型**
+**面向日常设备的隐私优先、完全端侧的 LLM 体验。**
 
 RWKV Apps 是一款实验性的应用程序，它将大语言模型（LLM）直接带到您的 Android / iOS 设备上。您可以尽情试验不同的模型、进行聊天、生成语音、视觉理解等等！所有计算都在本地进行，加载模型后无需网络连接。
 
