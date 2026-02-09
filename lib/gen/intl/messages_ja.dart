@@ -632,6 +632,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "message_in_queue": m21,
     "mode": MessageLookupByLibrary.simpleMessage("モード"),
     "model": MessageLookupByLibrary.simpleMessage("モデル"),
+    "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
+      "iOS 18以降にアップグレードすると、このウェイトが使え、より速く省電力になります",
+    ),
     "model_loading": MessageLookupByLibrary.simpleMessage("モデルを読み込み中..."),
     "model_output": m22,
     "model_settings": MessageLookupByLibrary.simpleMessage("モデル設定"),

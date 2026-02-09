@@ -661,22 +661,23 @@
   "@open_folder_unsupported_on_platform": {
     "placeholders": {
       "os": {}
-      }
-    },
-    "delete_finished": "Удаление завершено",
-    "failed_to_delete_file": "Не удалось удалить файл: {error}",
-    "@failed_to_delete_file": {
-      "placeholders": {
-        "error": {}
-      }
-    },
-    "open_folder_path_is_null": "Путь к папке пуст.",
-    "open_folder_creating_empty": "Папка не существует, создаём пустую папку.",
-    "open_folder_created_success": "Пустая папка успешно создана.",
-    "open_folder_create_failed": "Не удалось создать пустую папку: {error}",
-    "@open_folder_create_failed": {
-      "placeholders": {
-        "error": {}
-      }
     }
+  },
+  "delete_finished": "Удаление завершено",
+  "failed_to_delete_file": "Не удалось удалить файл: {error}",
+  "@failed_to_delete_file": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "open_folder_path_is_null": "Путь к папке пуст.",
+  "open_folder_creating_empty": "Папка не существует, создаём пустую папку.",
+  "open_folder_created_success": "Пустая папка успешно создана.",
+  "open_folder_create_failed": "Не удалось создать пустую папку: {error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "model_item_ios18_weight_hint": "Обновитесь до iOS 18+, чтобы использовать этот вес — быстрее и экономичнее"
 }

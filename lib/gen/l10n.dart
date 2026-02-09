@@ -4588,6 +4588,16 @@ class S {
       args: [error],
     );
   }
+
+  /// `升级 iOS 18+ 可使用这款权重，更快更省电`
+  String get model_item_ios18_weight_hint {
+    return Intl.message(
+      '升级 iOS 18+ 可使用这款权重，更快更省电',
+      name: 'model_item_ios18_weight_hint',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

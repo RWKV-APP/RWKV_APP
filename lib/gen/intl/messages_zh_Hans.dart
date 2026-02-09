@@ -577,6 +577,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "message_in_queue": m21,
     "mode": MessageLookupByLibrary.simpleMessage("模式"),
     "model": MessageLookupByLibrary.simpleMessage("模型"),
+    "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
+      "升级 iOS 18+ 可使用这款权重，更快更省电",
+    ),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
     "model_output": m22,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),

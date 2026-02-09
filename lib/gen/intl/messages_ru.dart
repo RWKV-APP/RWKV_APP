@@ -770,6 +770,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "message_in_queue": m21,
     "mode": MessageLookupByLibrary.simpleMessage("Режим"),
     "model": MessageLookupByLibrary.simpleMessage("Модель"),
+    "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(
+      "Обновитесь до iOS 18+, чтобы использовать этот вес — быстрее и экономичнее",
+    ),
     "model_loading": MessageLookupByLibrary.simpleMessage("Загрузка модели..."),
     "model_output": m22,
     "model_settings": MessageLookupByLibrary.simpleMessage("Настройки модели"),

@@ -203,6 +203,10 @@ class ModelItem extends ConsumerWidget {
 
     final isTranslate = fileInfo.tags.contains("translate");
 
+    final osVersionNumbers = ref.watch(P.app.osVersionNumbers);
+    final isIOS17OrEarlier = osVersionNumbers.isNotEmpty && osVersionNumbers.first <= 17 && Platform.isIOS;
+    final isCoreML = fileInfo.tags.contains("coreml");
+
     switch (demoType) {
       case .fifthteenPuzzle:
       case .othello:
@@ -227,54 +231,76 @@ class ModelItem extends ConsumerWidget {
 
     return ClipRRect(
       borderRadius: .circular(8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: appTheme.settingItem,
-          borderRadius: .circular(8),
-          border: .all(color: qw.q(.1), width: .5),
-        ),
-        margin: const .only(top: 8),
-        padding: const .all(8),
-        child: Row(
-          children: [
-            Expanded(
-              child: FileKeyItem(fileInfo, showTags: showTags),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: appTheme.settingItem,
+              borderRadius: .circular(8),
+              border: .all(color: qw.q(.1), width: .5),
             ),
-            const SizedBox(width: 8),
-            DownloadActions(file: fileInfo, state: localFile.state),
-            if (hasFile) ...[
-              if (!isCurrentModel && showLoadModel)
-                GestureDetector(
-                  onTap: _onStartTap,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: (loading || unzipping) ? kCG.q(.5) : kCG,
-                      borderRadius: .circular(4),
-                    ),
-                    padding: const .all(8),
-                    child: Text(
-                      loading ? s.loading : startTitle,
-                      style: TS(c: qw),
-                    ),
-                  ),
+            margin: const .only(top: 8),
+            padding: const .all(8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _FileKeyItem(fileInfo, showTags: showTags),
                 ),
-              if (isCurrentModel)
-                GestureDetector(
-                  onTap: null,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: kG.q(.5),
-                      borderRadius: .circular(4),
+                const SizedBox(width: 8),
+                DownloadActions(file: fileInfo, state: localFile.state),
+                if (hasFile) ...[
+                  if (!isCurrentModel && showLoadModel)
+                    GestureDetector(
+                      onTap: _onStartTap,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: (loading || unzipping) ? kCG.q(.5) : kCG,
+                          borderRadius: .circular(4),
+                        ),
+                        padding: const .all(8),
+                        child: Text(
+                          loading ? s.loading : startTitle,
+                          style: TS(c: qw),
+                        ),
+                      ),
                     ),
-                    padding: const .all(8),
-                    child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),
-                  ),
+                  if (isCurrentModel)
+                    GestureDetector(
+                      onTap: null,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: kG.q(.5),
+                          borderRadius: .circular(4),
+                        ),
+                        padding: const .all(8),
+                        child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),
+                      ),
+                    ),
+                  if (!isCurrentModel && showDelete) const SizedBox(width: 8),
+                  if (!isCurrentModel && showDelete) _Delete(fileInfo),
+                ],
+              ],
+            ),
+          ),
+          if (isIOS17OrEarlier && isCoreML)
+            Positioned.fill(
+              child: Container(
+                margin: const .only(top: 8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: .58),
+                  borderRadius: .circular(8),
+                  border: .all(color: kCY.q(1), width: 1),
                 ),
-              if (!isCurrentModel && showDelete) const SizedBox(width: 8),
-              if (!isCurrentModel && showDelete) _Delete(fileInfo),
-            ],
-          ],
-        ),
+                alignment: .center,
+                padding: const .symmetric(horizontal: 16),
+                child: Text(
+                  S.current.model_item_ios18_weight_hint,
+                  textAlign: TextAlign.center,
+                  style: TS(c: kCY, s: 13, w: .w600, height: 1.3),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -387,12 +413,11 @@ class _Delete extends ConsumerWidget {
   }
 }
 
-class FileKeyItem extends ConsumerWidget {
+class _FileKeyItem extends ConsumerWidget {
   final FileInfo fileInfo;
-  final bool showDownloaded;
   final bool showTags;
 
-  const FileKeyItem(this.fileInfo, {super.key, this.showDownloaded = false, this.showTags = true});
+  const _FileKeyItem(this.fileInfo, {this.showTags = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -429,7 +454,7 @@ class FileKeyItem extends ConsumerWidget {
               gbDisplay(fileSize),
               style: TS(c: qb.q(.7), w: .w500),
             ),
-            if (showDownloaded && localFile.hasFile)
+            if (localFile.hasFile)
               Icon(
                 Icons.download_done,
                 color: primary,

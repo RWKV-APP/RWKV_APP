@@ -661,22 +661,23 @@
   "@open_folder_unsupported_on_platform": {
     "placeholders": {
       "os": {}
-      }
-    },
-    "delete_finished": "刪除完成",
-    "failed_to_delete_file": "刪除檔案失敗：{error}",
-    "@failed_to_delete_file": {
-      "placeholders": {
-        "error": {}
-      }
-    },
-    "open_folder_path_is_null": "資料夾路徑為空。",
-    "open_folder_creating_empty": "資料夾不存在，正在建立空資料夾。",
-    "open_folder_created_success": "空資料夾建立成功。",
-    "open_folder_create_failed": "空資料夾建立失敗：{error}",
-    "@open_folder_create_failed": {
-      "placeholders": {
-        "error": {}
-      }
     }
+  },
+  "delete_finished": "刪除完成",
+  "failed_to_delete_file": "刪除檔案失敗：{error}",
+  "@failed_to_delete_file": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "open_folder_path_is_null": "資料夾路徑為空。",
+  "open_folder_creating_empty": "資料夾不存在，正在建立空資料夾。",
+  "open_folder_created_success": "空資料夾建立成功。",
+  "open_folder_create_failed": "空資料夾建立失敗：{error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "model_item_ios18_weight_hint": "升級 iOS 18+ 可使用這款權重，更快更省電"
 }

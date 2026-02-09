@@ -667,22 +667,23 @@
   "@open_folder_unsupported_on_platform": {
     "placeholders": {
       "os": {}
-      }
-    },
-    "delete_finished": "删除完成",
-    "failed_to_delete_file": "删除文件失败：{error}",
-    "@failed_to_delete_file": {
-      "placeholders": {
-        "error": {}
-      }
-    },
-    "open_folder_path_is_null": "文件夹路径为空。",
-    "open_folder_creating_empty": "文件夹不存在，正在创建空文件夹。",
-    "open_folder_created_success": "空文件夹创建成功。",
-    "open_folder_create_failed": "空文件夹创建失败：{error}",
-    "@open_folder_create_failed": {
-      "placeholders": {
-        "error": {}
-      }
     }
+  },
+  "delete_finished": "删除完成",
+  "failed_to_delete_file": "删除文件失败：{error}",
+  "@failed_to_delete_file": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "open_folder_path_is_null": "文件夹路径为空。",
+  "open_folder_creating_empty": "文件夹不存在，正在创建空文件夹。",
+  "open_folder_created_success": "空文件夹创建成功。",
+  "open_folder_create_failed": "空文件夹创建失败：{error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "model_item_ios18_weight_hint": "升级 iOS 18+ 可使用这款权重，更快更省电"
 }

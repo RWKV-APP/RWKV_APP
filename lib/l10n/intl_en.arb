@@ -667,22 +667,23 @@
   "@open_folder_unsupported_on_platform": {
     "placeholders": {
       "os": {}
-      }
-    },
-    "delete_finished": "Delete completed",
-    "failed_to_delete_file": "Failed to delete file: {error}",
-    "@failed_to_delete_file": {
-      "placeholders": {
-        "error": {}
-      }
-    },
-    "open_folder_path_is_null": "Folder path is null.",
-    "open_folder_creating_empty": "Folder does not exist, creating empty folder.",
-    "open_folder_created_success": "Empty folder created successfully.",
-    "open_folder_create_failed": "Failed to create empty folder: {error}",
-    "@open_folder_create_failed": {
-      "placeholders": {
-        "error": {}
-      }
     }
+  },
+  "delete_finished": "Delete completed",
+  "failed_to_delete_file": "Failed to delete file: {error}",
+  "@failed_to_delete_file": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "open_folder_path_is_null": "Folder path is null.",
+  "open_folder_creating_empty": "Folder does not exist, creating empty folder.",
+  "open_folder_created_success": "Empty folder created successfully.",
+  "open_folder_create_failed": "Failed to create empty folder: {error}",
+  "@open_folder_create_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "model_item_ios18_weight_hint": "Upgrade to iOS 18+ to use this weight, faster and more power-efficient"
 }

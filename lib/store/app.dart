@@ -53,6 +53,8 @@ class _App extends RawApp {
   final _isDesktop = qs(false);
   final _isMobile = qs(true);
 
+  late final osVersion = qs(Platform.operatingSystemVersion);
+
   late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
 
   /// 当前应用的主题
@@ -96,6 +98,11 @@ class _App extends RawApp {
 
   late final isDesktop = qp((ref) => ref.watch(_isDesktop));
   late final isMobile = qp((ref) => ref.watch(_isMobile));
+
+  late final osVersionNumbers = qp<List<int>>((ref) {
+    final osVersion = ref.watch(this.osVersion);
+    return _extractOsVersionNumbers(osVersion);
+  });
 }
 
 /// Public methods
@@ -300,6 +307,19 @@ extension _$App on _App {
 
     _isDesktop.q = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
     _isMobile.q = Platform.isAndroid || Platform.isIOS;
+    if (Platform.isIOS) {
+      try {
+        final info = await DeviceInfoPlugin().iosInfo;
+        final systemVersion = info.systemVersion.trim();
+        if (systemVersion.isNotEmpty) {
+          osVersion.q = systemVersion;
+        }
+      } catch (e) {
+        qqe("Failed to get iOS system version: $e");
+      }
+    } else {
+      osVersion.q = Platform.operatingSystemVersion;
+    }
 
     await init();
 
@@ -689,4 +709,25 @@ extension _$App on _App {
 
     return (json, sp);
   }
+}
+
+List<int> _extractOsVersionNumbers(String raw) {
+  final trimmed = raw.trim();
+  if (trimmed.isEmpty) return const [];
+
+  // Prefer semantic-like version segments, e.g. "26.2.1" in
+  // "Version 26.2.1 (Build 23C71)".
+  final versionMatch = RegExp(r'\d+(?:\.\d+)+').firstMatch(trimmed)?.group(0);
+  if (versionMatch != null) {
+    return versionMatch.split('.').map(int.tryParse).whereType<int>().toList();
+  }
+
+  // Fallback to first integer when dotted version is unavailable.
+  final majorMatch = RegExp(r'\d+').firstMatch(trimmed)?.group(0);
+  if (majorMatch != null) {
+    final major = int.tryParse(majorMatch);
+    if (major != null) return [major];
+  }
+
+  return const [];
 }

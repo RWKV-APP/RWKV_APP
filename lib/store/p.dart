@@ -11,6 +11,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:archive/archive.dart';
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:collection/collection.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:macos_secure_bookmarks/macos_secure_bookmarks.dart';
