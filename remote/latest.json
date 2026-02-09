@@ -180,7 +180,7 @@
         "date": 1770013841
       },
       {
-        "name": "RWKV7-G1d 0.1B (CoreML INT6)",
+        "name": "RWKV7-G1d 0.1B (CoreML INT8)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.1b-20260129-ctx8192-coreml-lut8.zip",
         "fileSize": 179127401,
