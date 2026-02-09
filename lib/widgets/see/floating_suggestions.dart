@@ -1,11 +1,9 @@
 // ignore: unused_import
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:zone/store/p.dart';
 
 class FloatingSuggestions extends ConsumerWidget {
@@ -21,34 +19,36 @@ class FloatingSuggestions extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final primary = Theme.of(context).colorScheme.primary;
-    final qb = P.app.qb.q;
-    final qw = P.app.qw.q;
+    final colorScheme = Theme.of(context).colorScheme;
+    final chipBg = Platform.isIOS ? colorScheme.surface.q(.95) : colorScheme.surface;
+    final chipBorder = colorScheme.outline.q(.22);
+    final chipText = colorScheme.onSurface.q(.88);
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const .symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        children: [
-          for (var item in suggestions)
-            Padding(
-              padding: const .only(right: 4),
-              child: OutlinedButton(
-                onPressed: () => P.see.onSuggestionTap(item),
-                style: TextButton.styleFrom(
-                  foregroundColor: primary,
-                  backgroundColor: Platform.isIOS ? qw.q(.9) : qw,
-                  padding: const .symmetric(horizontal: 10, vertical: 0),
-                  visualDensity: .compact,
-                  shape: RoundedRectangleBorder(borderRadius: .circular(6)),
-                ),
-                child: Text(
-                  item,
-                  style: TextStyle(fontSize: 14, color: qb, fontWeight: .w400),
-                ),
-              ),
+    return SizedBox(
+      height: defaultHeight,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const .only(left: 12, right: 12, top: 8, bottom: 0),
+        itemBuilder: (context, index) {
+          final item = suggestions[index];
+          return OutlinedButton(
+            onPressed: () => P.see.onSuggestionTap(item),
+            style: TextButton.styleFrom(
+              foregroundColor: chipText,
+              backgroundColor: chipBg,
+              padding: const .symmetric(horizontal: 12, vertical: 0),
+              visualDensity: .compact,
+              side: BorderSide(color: chipBorder),
+              shape: RoundedRectangleBorder(borderRadius: .circular(10)),
             ),
-        ],
+            child: Text(
+              item,
+              style: TextStyle(fontSize: 14, color: chipText, fontWeight: .w400),
+            ),
+          );
+        },
+        separatorBuilder: (context, index) => const SizedBox(width: 6),
+        itemCount: suggestions.length,
       ),
     );
   }

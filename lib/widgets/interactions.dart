@@ -13,7 +13,6 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
-import 'package:zone/widgets/see/select_image_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 
@@ -52,7 +51,6 @@ class _Interactions extends ConsumerWidget {
     final isAlbatrossLoaded = ref.watch(P.rwkv.isAlbatrossLoaded);
 
     final children = [
-      if (preferredDemoType == .see) const IntrinsicWidth(child: SelectImageButton()),
       if (features.webSearch && preferredDemoType == .chat) const _WebSearchModeButton(),
       if (preferredDemoType == .chat) const ThinkingModeButton(),
       if (!isAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
@@ -64,6 +62,8 @@ class _Interactions extends ConsumerWidget {
 
     final appTheme = ref.watch(P.app.theme);
     final inputBarHorizontalPadding = appTheme.inputBarHorizontalPadding;
+
+    if (children.isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
       height: InputInteractions.calculateButtonHeight(context),

@@ -18,7 +18,9 @@ class PageSee extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(
+    final inputHeight = ref.watch(P.chat.inputHeight);
+    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
+    return Scaffold(
       body: Stack(
         children: [
           _List(),
@@ -30,18 +32,12 @@ class PageSee extends ConsumerWidget {
             child: ChatAppBar(preferredDemoType: .see),
           ),
           Positioned(
-            bottom: 0,
+            bottom: inputHeight,
             right: 0,
             left: 0,
-            child: Column(
-              crossAxisAlignment: .stretch,
-              mainAxisSize: .min,
-              children: [
-                FloatingSuggestions(),
-                InputBar(preferredDemoType: .see),
-              ],
-            ),
+            child: FloatingSuggestions(),
           ),
+          InputBar(preferredDemoType: .see),
         ],
       ),
     );
@@ -54,6 +50,8 @@ class _List extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messages = ref.watch(P.msg.list);
+    final suggestions = ref.watch(P.suggestion.worldSuggestion);
+    final hasSuggestions = suggestions.isNotEmpty;
     final paddingTop = ref.watch(P.app.paddingTop);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final paddingRight = ref.watch(P.app.paddingRight);
@@ -63,8 +61,10 @@ class _List extends ConsumerWidget {
     double bottom = inputHeight + 12;
     double scrollBarBottom = inputHeight + 4;
 
-    bottom += FloatingSuggestions.defaultHeight;
-    scrollBarBottom += FloatingSuggestions.defaultHeight;
+    if (hasSuggestions) {
+      bottom += FloatingSuggestions.defaultHeight;
+      scrollBarBottom += FloatingSuggestions.defaultHeight;
+    }
     final qb = ref.watch(P.app.qb);
 
     return Positioned.fill(

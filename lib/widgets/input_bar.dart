@@ -27,8 +27,6 @@ class InputBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final inRWKVSee = P.app.pageKey.q == .see;
 
-    final imagePath = ref.watch(P.see.imagePath);
-
     final selectMessageMode = ref.watch(P.chat.isSharing);
     if (selectMessageMode) return const SizedBox.shrink();
 
@@ -57,9 +55,8 @@ class InputBar extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: .start,
               children: [
-                if (preferredDemoType != .tts) const SizedBox(height: 12),
+                if (preferredDemoType == .chat) const SizedBox(height: 12),
                 if (inRWKVSee) const _WaitingMsg(),
-                if (inRWKVSee) _ImagePreview(imagePath: imagePath ?? ""),
                 if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
                 InputTextField(preferredDemoType: preferredDemoType),
                 if (preferredDemoType == .tts) const TTSInteractions(),

@@ -44,15 +44,15 @@ class _Send extends ConsumerWidget {
     final sendingButtonDisabledOpacity = appTheme.sendingButtonDisabledOpacity;
     final hasText = ref.watch(P.chat.inputHasContent);
 
-    // TODO: 这里你是不是忘了什么? @王策
-    double opacity = 1.0;
-
-    if (inSee) opacity = ((imagePath != null || hasAtLeastOneImage) && inputHasContent) ? 1 : .333;
+    final readyForSee = (imagePath != null || hasAtLeastOneImage) && inputHasContent;
+    final opacity = inSee
+        ? (!hasText ? sendingButtonDisabledOpacity : (readyForSee ? 1.0 : .38))
+        : (hasText ? 1.0 : sendingButtonDisabledOpacity);
 
     final icon = editingBotMessage ? Icons.edit : CupertinoIcons.arrow_up_circle_fill;
 
     return AnimatedOpacity(
-      opacity: hasText ? 1 : sendingButtonDisabledOpacity,
+      opacity: opacity,
       duration: 250.ms,
       child: GestureDetector(
         onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),

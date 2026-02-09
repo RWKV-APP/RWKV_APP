@@ -357,7 +357,7 @@ class Message extends ConsumerWidget {
     switch (msg.type) {
       case .userImage:
         padding = .zero;
-        border = Border.all(width: 0);
+        border = Border.all(width: 0, color: Colors.transparent);
 
       case .userTTS:
         padding = .zero;
@@ -421,6 +421,7 @@ class Message extends ConsumerWidget {
               // 🔥 User message image
               if (isUserImage)
                 ClipRRect(
+                  clipBehavior: Clip.antiAlias,
                   borderRadius: borderRadius,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
