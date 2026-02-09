@@ -185,7 +185,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.1b-20260129-ctx8192-coreml-lut8.zip",
         "fileSize": 179127401,
         "quantization": "INT8",
-        "platforms": ["ios", "macos"],
+        "platforms": ["ios"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml", "npu"],
         "date": 1770636632,
