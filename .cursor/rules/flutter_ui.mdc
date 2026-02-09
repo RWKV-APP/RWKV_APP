@@ -4,6 +4,10 @@ globs: "lib/**/*.dart"
 alwaysApply: false
 ---
 
+## 禁止使用 Divider 组件, 必须使用 Container 组件来实现
+
+所有你想要使用 `Divider` 组件的时候, 必须使用 `Container` 组件来实现, 并且设置 `height` 为 0.5, 选择合理的颜色(首选 `final qb = ref.watch(P.app.qb);`)
+
 ## 禁止使用 ListTile 组件, 必须使用原始的 Column + Row 来实现 List 条目
 
 ## 禁止在 UI 层实现任何多于三行的逻辑代码
