@@ -52,7 +52,7 @@ class Debugger extends ConsumerWidget {
     final availableModels = ref.watch(P.remote.chatWeights);
     final disableRemoteConfig = Args.disableRemoteConfig;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
-    final customTheme = ref.watch(P.app.customTheme);
+    final appTheme = ref.watch(P.app.theme);
     final themeMode = ref.watch(P.preference.themeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
     final checkingLatency = ref.watch(P.guard.checkingLatency);

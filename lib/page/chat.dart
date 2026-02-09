@@ -10,7 +10,6 @@ import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
 import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/chat/empty.dart';
@@ -67,7 +66,6 @@ class _Page extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          const GradientBackground(child: SizedBox()),
           const _List(),
           const Empty(),
           const Positioned(
@@ -77,13 +75,7 @@ class _Page extends ConsumerWidget {
             child: ChatAppBar(),
           ),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
-          if (!selectMessageMode)
-            const Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: InputBar(),
-            ),
+          const InputBar(),
         ],
       ),
     );
@@ -102,7 +94,7 @@ class _List extends ConsumerWidget {
     final inputHeight = ref.watch(P.chat.inputHeight);
 
     double top = paddingTop + kToolbarHeight + 4;
-    double bottom = inputHeight + 12;
+    double bottom = inputHeight;
     double scrollBarBottom = inputHeight + 4;
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);

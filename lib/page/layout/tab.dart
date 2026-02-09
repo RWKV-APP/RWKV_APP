@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/store/p.dart';
 
@@ -16,24 +19,67 @@ class PageTab extends ConsumerWidget {
     final useBottomNavigationBar = screenWidth <= 600;
     final tabIndex = ref.watch(P.app.tabIndex);
     final s = S.of(context);
+    final appTheme = ref.watch(P.app.theme);
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+    final qb = ref.watch(P.app.qb);
 
-    final verticalLayout = Column(
+    final verticalLayout = Stack(
       children: <Widget>[
-        Expanded(child: child),
-        SafeArea(
-          top: false,
-          child: Row(
-            children: [
-              Expanded(
-                child: _buildItem(ref, context, s.home, FontAwesomeIcons.house, 0),
+        child,
+        Positioned(
+          bottom: paddingBottom + 12,
+          left: appTheme.tabBarLeftPadding,
+          right: appTheme.tabBarRightPadding,
+          height: appTheme.tabBarHeight,
+          child: ClipRRect(
+            borderRadius: .circular(100),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              child: Container(
+                color: appTheme.scaffoldBg.q(.5),
               ),
-              Expanded(
-                child: _buildItem(ref, context, s.conversations, FontAwesomeIcons.solidMessage, 1),
-              ),
-              Expanded(
-                child: _buildItem(ref, context, s.settings, FontAwesomeIcons.gear, 2),
-              ),
-            ],
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: paddingBottom + 12,
+          left: appTheme.tabBarLeftPadding,
+          right: appTheme.tabBarRightPadding,
+          height: appTheme.tabBarHeight,
+          child: Container(
+            decoration: BoxDecoration(
+              color: appTheme.scaffoldBg.q(.4),
+              borderRadius: .circular(100),
+              border: Border.all(color: qb.q(.2), width: .5),
+            ),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: _TabItem(
+                    labelKey: _TabLabelKey.home,
+                    icon: FontAwesomeIcons.house,
+                    selectedIcon: FontAwesomeIcons.solidHouse,
+                    index: 0,
+                  ),
+                ),
+                const Expanded(
+                  child: _TabItem(
+                    labelKey: _TabLabelKey.conversations,
+                    icon: FontAwesomeIcons.message,
+                    selectedIcon: FontAwesomeIcons.solidMessage,
+                    index: 1,
+                  ),
+                ),
+                const Expanded(
+                  child: _TabItem(
+                    labelKey: _TabLabelKey.settings,
+                    icon: FontAwesomeIcons.gear,
+                    selectedIcon: FontAwesomeIcons.cog,
+                    index: 2,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -70,7 +116,7 @@ class PageTab extends ConsumerWidget {
       ],
     );
 
-    final theme = ref.watch(P.app.customTheme);
+    final theme = ref.watch(P.app.theme);
     final systemOverlayStyle = theme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -78,31 +124,65 @@ class PageTab extends ConsumerWidget {
       child: Scaffold(body: useBottomNavigationBar ? verticalLayout : horizontalLayout),
     );
   }
+}
 
-  Widget _buildItem(
-    WidgetRef ref,
-    BuildContext context,
-    String label,
-    IconData icon,
-    int index,
-  ) {
+enum _TabLabelKey {
+  home,
+  conversations,
+  settings,
+}
+
+class _TabItem extends ConsumerWidget {
+  final _TabLabelKey labelKey;
+  final IconData icon;
+  final int index;
+  final IconData selectedIcon;
+
+  const _TabItem({
+    required this.labelKey,
+    required this.icon,
+    required this.index,
+    required this.selectedIcon,
+  });
+
+  String _resolveLabel(BuildContext context) {
+    final s = S.of(context);
+    switch (labelKey) {
+      case _TabLabelKey.home:
+        return s.home;
+      case _TabLabelKey.conversations:
+        return s.conversations;
+      case _TabLabelKey.settings:
+        return s.settings;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(P.app.tabIndex);
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final color = selectedIndex == index
-        ? (isDark ? Colors.grey.shade400 : theme.primaryColor) //
-        : (isDark ? Colors.grey.shade800 : Colors.grey);
-    return InkWell(
+    final qb = ref.watch(P.app.qb);
+    final color = qb.q(selectedIndex == index ? 1 : .4);
+
+    return GD(
       onTap: () => P.app.onTabSelected(index),
-      borderRadius: .circular(100),
-      child: Column(
-        children: [
-          const SizedBox(height: 12),
-          FaIcon(icon, size: 20, color: color),
-          const SizedBox(height: 2),
-          Text(label, style: TextStyle(fontSize: 12, color: color)),
-          const SizedBox(height: 8),
-        ],
+      child: C(
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: .circular(100),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 12),
+            FaIcon(selectedIndex == index ? selectedIcon : icon, size: 20, color: color),
+            const SizedBox(height: 2),
+            Text(
+              _resolveLabel(context),
+              style: TextStyle(fontSize: 12, color: color),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

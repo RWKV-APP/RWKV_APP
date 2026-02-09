@@ -87,7 +87,7 @@ class BatchSettingsPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final batchCount = ref.watch(P.chat.batchCount);
-    final customTheme = ref.watch(P.app.customTheme);
+    final appTheme = ref.watch(P.app.theme);
     final batchInference = ref.watch(P.chat.batchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     return ClipRRect(
@@ -96,11 +96,11 @@ class BatchSettingsPanel extends ConsumerWidget {
         topRight: .circular(16),
       ),
       child: Scaffold(
-        backgroundColor: customTheme.setting,
+        backgroundColor: appTheme.settingBg,
         appBar: AppBar(
           title: Text(s.batch_inference_settings),
           automaticallyImplyLeading: false,
-          backgroundColor: customTheme.setting,
+          backgroundColor: appTheme.settingBg,
           actions: [
             Padding(
               padding: const .only(right: 8),

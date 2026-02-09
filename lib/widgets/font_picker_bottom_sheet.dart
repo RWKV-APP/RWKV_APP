@@ -163,7 +163,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final customTheme = ref.watch(P.app.customTheme);
+    final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
 
@@ -173,7 +173,7 @@ class _FontPickerBottomSheetState extends ConsumerState<FontPickerBottomSheet> {
         topRight: .circular(16),
       ),
       child: Container(
-        color: customTheme.setting,
+        color: appTheme.settingBg,
         child: Column(
           crossAxisAlignment: .start,
           children: [

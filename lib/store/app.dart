@@ -21,7 +21,7 @@ class _App extends RawApp {
   }
 
   SystemUiOverlayStyle get systemOverlayStyleDark {
-    final scaffold = customTheme.q.scaffold;
+    final scaffold = theme.q.scaffoldBg;
     return SystemUiOverlayStyle(
       systemNavigationBarColor: scaffold,
       systemNavigationBarIconBrightness: Brightness.light,
@@ -56,7 +56,7 @@ class _App extends RawApp {
   late final featureRollout = qs<FeatureRollout>(const FeatureRollout());
 
   /// 当前应用的主题
-  late final customTheme = qs<custom_theme.CustomTheme>(.light);
+  late final theme = qs<app_theme.AppTheme>(.light);
 
   /// 当前在第几个 tab
   late final tabIndex = qs(0);
@@ -158,7 +158,7 @@ extension $App on _App {
 
   Future<void> customThemeChanged() async {
     await 100.msLater;
-    if (customTheme.q.isLight) {
+    if (theme.q.isLight) {
       _statusBarToLightMode();
     } else {
       _statusBarToDarkMode();
@@ -369,21 +369,21 @@ extension _$App on _App {
 
     if (Args.debuggingThemes) {
       Timer.periodic(const Duration(seconds: 1), (timer) {
-        final theme = customTheme.q;
+        final theme = this.theme.q;
         switch (theme) {
           case .light:
-            customTheme.q = P.preference.preferredDarkCustomTheme.q;
+            this.theme.q = P.preference.preferredDarkCustomTheme.q;
           case .dim:
           case .lightsOut:
-            customTheme.q = .light;
+            this.theme.q = .light;
         }
-        preferredThemeMode.q = customTheme.q.isLight ? ThemeMode.light : ThemeMode.dark;
+        preferredThemeMode.q = this.theme.q.isLight ? ThemeMode.light : ThemeMode.dark;
       });
     }
 
     preferredThemeMode.q = P.preference.themeMode.q;
-    customTheme.q = P.preference.preferredDarkCustomTheme.q;
-    customTheme.lv(customThemeChanged, fireImmediately: true);
+    theme.q = P.preference.preferredDarkCustomTheme.q;
+    theme.lv(customThemeChanged, fireImmediately: true);
     preferredThemeMode.lv(_syncTheme, fireImmediately: true);
     light.lv(_syncTheme, fireImmediately: true);
     P.preference.preferredDarkCustomTheme.lv(_syncTheme, fireImmediately: true);
@@ -430,15 +430,15 @@ extension _$App on _App {
     final preferredDarkCustomTheme = P.preference.preferredDarkCustomTheme.q;
     switch (preferredThemeMode) {
       case ThemeMode.light:
-        customTheme.q = .light;
+        theme.q = .light;
       case ThemeMode.dark:
-        customTheme.q = preferredDarkCustomTheme;
+        theme.q = preferredDarkCustomTheme;
       case ThemeMode.system:
         switch (light) {
           case true:
-            customTheme.q = .light;
+            theme.q = .light;
           case false:
-            customTheme.q = preferredDarkCustomTheme;
+            theme.q = preferredDarkCustomTheme;
         }
     }
   }
@@ -448,7 +448,6 @@ extension _$App on _App {
   }
 
   Future<void> _statusBarToDarkMode() async {
-    qq;
     SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleDark);
   }
 

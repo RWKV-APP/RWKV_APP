@@ -195,7 +195,7 @@ class ModelItem extends ConsumerWidget {
         loadingStatus[fileInfo] == .setQnnLibraryPath;
 
     final demoType = ref.watch(P.app.demoType);
-    final customTheme = ref.watch(P.app.customTheme);
+    final appTheme = ref.watch(P.app.theme);
 
     String startTitle;
 
@@ -227,7 +227,7 @@ class ModelItem extends ConsumerWidget {
       borderRadius: .circular(8),
       child: Container(
         decoration: BoxDecoration(
-          color: customTheme.settingItem,
+          color: appTheme.settingItem,
           borderRadius: .circular(8),
           border: .all(color: qw.q(.1), width: .5),
         ),

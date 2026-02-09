@@ -9,7 +9,7 @@ import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/bottom_interactions.dart';
+import 'package:zone/widgets/interactions.dart';
 import 'package:zone/widgets/input_text_field.dart';
 import 'package:zone/widgets/talk/tts_bottom_interactions.dart';
 
@@ -18,45 +18,50 @@ class InputBar extends ConsumerWidget {
 
   const InputBar({super.key, this.preferredDemoType = .chat});
 
+  void _onChangeSize(Size size) {
+    P.chat.inputHeight.q = size.height;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final isChat = preferredDemoType == .chat;
     final inRWKVSee = P.app.pageKey.q == .see;
-
-    final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
 
     final imagePath = ref.watch(P.see.imagePath);
 
-    return MeasureSize(
-      onChange: (size) {
-        P.chat.inputHeight.q = size.height;
-      },
-      child: ClipRRect(
-        borderRadius: !isChat ? .zero : const .vertical(top: .circular(16)),
+    final selectMessageMode = ref.watch(P.chat.isSharing);
+    if (selectMessageMode) return const SizedBox.shrink();
+
+    final appTheme = ref.watch(P.app.theme);
+
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      left: 0,
+      child: MeasureSize(
+        onChange: _onChangeSize,
         child: Container(
           decoration: BoxDecoration(
-            color: theme.cardColor,
-            border: isChat
-                ? null
-                : Border(
-                    top: BorderSide(
-                      color: primary.q(.33),
-                      width: .5,
-                    ),
-                  ),
+            // color: kCR,
+            gradient: LinearGradient(
+              colors: [
+                appTheme.scaffoldBg.q(0),
+                appTheme.scaffoldBg.q(1),
+              ],
+              begin: .topCenter,
+              end: const Alignment(0, -0.6),
+            ),
           ),
-          padding: .only(left: 8, top: 8, right: 8, bottom: paddingBottom + 8),
           child: AnimatedSize(
             duration: 250.ms,
             child: Column(
+              crossAxisAlignment: .start,
               children: [
+                const SizedBox(height: 12),
                 if (inRWKVSee) const _WaitingMsg(),
                 if (inRWKVSee) _ImagePreview(imagePath: imagePath ?? ""),
+                if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
+                if (preferredDemoType == .tts) const TTSInteractions(),
                 InputTextField(preferredDemoType: preferredDemoType),
-                if (preferredDemoType != .tts) BottomInteractions(preferredDemoType: preferredDemoType),
-                if (preferredDemoType == .tts) const TTSBottomInteractions(),
               ],
             ),
           ),

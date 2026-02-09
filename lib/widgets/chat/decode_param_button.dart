@@ -12,7 +12,7 @@ import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
-import 'package:zone/widgets/bottom_interactions.dart';
+import 'package:zone/widgets/interactions.dart';
 
 class DecodeParamButton extends ConsumerWidget {
   const DecodeParamButton({super.key});
@@ -71,7 +71,7 @@ class DecodeParamButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
-    final height = BottomInteractions.calculateButtonHeight(context);
+    final height = InputInteractions.calculateButtonHeight(context);
     final decodeParamType = ref.watch(P.rwkv.decodeParamType);
     final surfaceContainer = Theme.of(context).colorScheme.surfaceContainer;
     final primary = Theme.of(context).colorScheme.primary;

@@ -301,7 +301,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       return const SizedBox.shrink();
     }
 
-    final customTheme = ref.watch(P.app.customTheme);
+    final appTheme = ref.watch(P.app.theme);
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
 
@@ -352,7 +352,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       borderRadius: .circular(8),
       child: Container(
         decoration: BoxDecoration(
-          color: customTheme.settingItem,
+          color: appTheme.settingItem,
           borderRadius: .circular(8),
           border: .all(color: qw.q(.1), width: .5),
         ),

@@ -71,11 +71,12 @@ class Settings extends ConsumerWidget {
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final qb = ref.watch(P.app.qb);
-    final customTheme = ref.watch(P.app.customTheme);
-    final isLightMode = customTheme.isLight;
+    final appTheme = ref.watch(P.app.theme);
+    final isLightMode = appTheme.isLight;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == .chat;
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
+    final tabBarHeight = appTheme.tabBarHeight;
 
     final totalUsage = ref.watch(P.remote.totalSizeInModelsDirDisplay);
 
@@ -96,14 +97,14 @@ class Settings extends ConsumerWidget {
               topRight: .circular(16),
             ),
       child: Scaffold(
-        backgroundColor: demoType == .chat ? Colors.transparent : customTheme.setting,
+        backgroundColor: appTheme.settingBg,
         appBar: noBorderRadiusAndAppBar
             ? null
             : AppBar(
                 automaticallyImplyLeading: false,
                 title: Text(s.settings),
                 centerTitle: false,
-                backgroundColor: customTheme.setting,
+                backgroundColor: appTheme.settingBg,
                 actions: [
                   Padding(
                     padding: const .only(right: 8),
@@ -117,7 +118,12 @@ class Settings extends ConsumerWidget {
                 ],
               ),
         body: ListView(
-          padding: .only(left: 12 + paddingLeft, top: paddingTop, right: 12, bottom: math.max(paddingBottom, 12)),
+          padding: .only(
+            left: 12 + paddingLeft,
+            top: paddingTop,
+            right: 12,
+            bottom: math.max(paddingBottom, 12) + tabBarHeight + 12,
+          ),
           controller: scrollController,
           children: [
             if (isChat) const SizedBox(height: 40),
@@ -132,24 +138,28 @@ class Settings extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     Config.appTitle,
-                    style: TS(s: 24),
+                    style: TS(s: 24, w: .w500),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: .center,
-              children: [
-                Text(version, style: const TS(s: 12)),
-                Text(" ($buildNumber)", style: const TS(s: 12)),
-              ],
+            Opacity(
+              opacity: appTheme.settingVersionOpacity,
+              child: Row(
+                mainAxisAlignment: .center,
+                children: [
+                  Text(version, style: const TS(s: 12)),
+                  Text(" ($buildNumber)", style: const TS(s: 12)),
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
+            appTheme.settingsSectionTitleBottomSpace.h,
             Row(
               mainAxisAlignment: .start,
               children: [
+                appTheme.settingsSectionTitleLeftSpace.w,
                 Expanded(
                   child: Text(
                     s.application_settings,
@@ -158,7 +168,7 @@ class Settings extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            appTheme.settingsSectionTitleTopSpace.h,
             FormItem(
               isSectionStart: true,
               icon: Icon(Icons.manage_accounts, color: qb.q(.667), size: 16),
@@ -198,10 +208,11 @@ class Settings extends ConsumerWidget {
               infoText: totalUsage,
               onTap: () => push(.weightManager),
             ),
-            const SizedBox(height: 12),
+            appTheme.settingsSectionTitleBottomSpace.h,
             Row(
               mainAxisAlignment: .start,
               children: [
+                appTheme.settingsSectionTitleLeftSpace.w,
                 Expanded(
                   child: Text(
                     s.join_the_community,
@@ -210,7 +221,7 @@ class Settings extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            appTheme.settingsSectionTitleTopSpace.h,
             FormItem(
               icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
               isSectionStart: true,
@@ -237,17 +248,20 @@ class Settings extends ConsumerWidget {
               subtitle: "@BlinkDL_AI",
               onTap: _openTwitter,
             ),
-            const SizedBox(height: 12),
+            appTheme.settingsSectionTitleBottomSpace.h,
             Row(
               mainAxisAlignment: .start,
               children: [
-                Text(
-                  s.about,
-                  style: TS(w: .w500, c: qb.q(.8), s: 12),
+                appTheme.settingsSectionTitleLeftSpace.w,
+                Expanded(
+                  child: Text(
+                    s.about,
+                    style: TS(w: .w500, c: qb.q(.8), s: 12),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            appTheme.settingsSectionTitleTopSpace.h,
             FormItem(
               isSectionStart: true,
               title: s.feedback,

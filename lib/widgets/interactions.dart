@@ -1,8 +1,5 @@
 // ignore: unused_import
 
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
@@ -20,7 +17,7 @@ import 'package:zone/widgets/see/select_image_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 
-class BottomInteractions extends ConsumerWidget {
+class InputInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;
 
   static double calculateButtonHeight(BuildContext context) {
@@ -28,21 +25,16 @@ class BottomInteractions extends ConsumerWidget {
     return textScaleFactor.scale(14) + 20;
   }
 
-  const BottomInteractions({
+  const InputInteractions({
     super.key,
     required this.preferredDemoType,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const .only(top: 8),
-      child: Row(
-        children: [
-          Expanded(child: _Interactions(preferredDemoType: preferredDemoType)),
-          _SendingInteraction(preferredDemoType: preferredDemoType),
-        ],
-      ),
+    return Container(
+      decoration: const BoxDecoration(color: kC),
+      child: _Interactions(preferredDemoType: preferredDemoType),
     );
   }
 }
@@ -58,21 +50,44 @@ class _Interactions extends ConsumerWidget {
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
     final currentModelIsBefore20250922 = ref.watch(P.rwkv.currentModelIsBefore20250922);
     final isAlbatrossLoaded = ref.watch(P.rwkv.isAlbatrossLoaded);
-    return Wrap(
-      spacing: 4,
-      runSpacing: 4,
-      crossAxisAlignment: .center,
-      children: [
-        if (preferredDemoType == .see) const IntrinsicWidth(child: SelectImageButton()),
-        if (features.webSearch && preferredDemoType == .chat) const _WebSearchModeButton(),
-        if (preferredDemoType == .chat) const ThinkingModeButton(),
-        if (!isAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
-          const SecondaryOptionsButton(),
-        if (!isAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
-        if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
-        if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
-      ],
+
+    final children = [
+      if (preferredDemoType == .see) const IntrinsicWidth(child: SelectImageButton()),
+      if (features.webSearch && preferredDemoType == .chat) const _WebSearchModeButton(),
+      if (preferredDemoType == .chat) const ThinkingModeButton(),
+      if (!isAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
+        const SecondaryOptionsButton(),
+      if (!isAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
+      if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
+      if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
+    ];
+
+    final appTheme = ref.watch(P.app.theme);
+    final inputBarHorizontalPadding = appTheme.inputBarHorizontalPadding;
+
+    return SizedBox(
+      height: InputInteractions.calculateButtonHeight(context),
+      child: ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: .symmetric(horizontal: inputBarHorizontalPadding),
+        scrollDirection: .horizontal,
+        itemBuilder: (context, index) {
+          return children[index];
+        },
+        itemCount: children.length,
+        separatorBuilder: (context, index) {
+          return const SizedBox(width: 4);
+        },
+      ),
     );
+
+    // return Wrap(
+    //   spacing: 4,
+    //   runSpacing: 4,
+    //   crossAxisAlignment: .center,
+    //   alignment: .start,
+    //   children: children,
+    // );
   }
 }
 
@@ -94,7 +109,7 @@ class _WebSearchModeButton extends ConsumerWidget {
     final color = enabled ? primary : theme.colorScheme.surfaceContainer;
     final textColor = enabled ? theme.colorScheme.onPrimary : Colors.grey;
 
-    final height = BottomInteractions.calculateButtonHeight(context);
+    final height = InputInteractions.calculateButtonHeight(context);
     const EdgeInsets padding = .only(left: 8);
     return IntrinsicWidth(
       child: GestureDetector(
@@ -159,7 +174,7 @@ class _WenYanWenButton extends ConsumerWidget {
     final mode = ref.watch(P.chat.wenYanWen);
     final model = ref.watch(P.rwkv.latestModel);
 
-    final height = BottomInteractions.calculateButtonHeight(context);
+    final height = InputInteractions.calculateButtonHeight(context);
 
     final bgColor = mode == WenyanMode.off ? theme.colorScheme.surfaceContainer : theme.colorScheme.primary;
 
@@ -217,110 +232,6 @@ class _WenYanWenButton extends ConsumerWidget {
             label,
             style: TS(c: textColor, s: 14, height: 1, w: .w500),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SendingInteraction extends ConsumerWidget {
-  final DemoType preferredDemoType;
-
-  const _SendingInteraction({required this.preferredDemoType});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final generating = ref.watch(P.rwkv.generating);
-    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
-    // final waitingImagePath = ref.watch(P.see.waitingImagePath);
-    final waitingText = ref.watch(P.see.waitingText);
-
-    if (!generating || (hiddenPrefilling && waitingText == null)) return _Send(preferredDemoType: preferredDemoType);
-
-    return const _Stop();
-  }
-}
-
-class _Send extends ConsumerWidget {
-  final DemoType preferredDemoType;
-  const _Send({required this.preferredDemoType});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final color = Theme.of(context).colorScheme.primary;
-
-    final editingBotMessage = ref.watch(P.msg.editingBotMessage);
-    final inSee = ref.watch(P.app.pageKey) == .see;
-    final imagePath = ref.watch(P.see.imagePath);
-    final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
-    final inputHasContent = ref.watch(P.chat.inputHasContent);
-
-    double opacity = 1.0;
-
-    if (inSee) opacity = ((imagePath != null || hasAtLeastOneImage) && inputHasContent) ? 1 : .333;
-
-    return AnimatedOpacity(
-      opacity: opacity,
-      duration: 250.ms,
-      child: GestureDetector(
-        onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
-        child: Container(
-          padding: const .symmetric(horizontal: 10, vertical: 5),
-          child: Icon(
-            (Platform.isIOS || Platform.isMacOS)
-                ? editingBotMessage
-                      ? CupertinoIcons.pencil_circle_fill
-                      : CupertinoIcons.arrow_up_circle_fill
-                : editingBotMessage
-                ? Icons.edit
-                : Icons.send_rounded,
-            color: color,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Stop extends StatelessWidget {
-  const _Stop();
-
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
-    return GestureDetector(
-      onTap: P.chat.onStopButtonPressed,
-      child: Container(
-        decoration: const BoxDecoration(color: Colors.transparent),
-        child: Stack(
-          children: [
-            SizedBox(
-              width: 46,
-              height: 34,
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(color: color, borderRadius: 2.r),
-                  width: 12,
-                  height: 12,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 46,
-              height: 34,
-              child: Center(
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    color: color.q(.5),
-                    strokeWidth: 3,
-                    strokeCap: StrokeCap.round,
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

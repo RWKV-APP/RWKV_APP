@@ -41,79 +41,88 @@ class FormItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customTheme = ref.watch(P.app.customTheme);
+    final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: customTheme.settingItem,
-          borderRadius: .only(
-            topLeft: isSectionStart ? 12.rr : .zero,
-            topRight: isSectionStart ? 12.rr : .zero,
-            bottomLeft: isSectionEnd ? 12.rr : .zero,
-            bottomRight: isSectionEnd ? 12.rr : .zero,
-          ),
-          border: Border(
-            bottom: (autoShowBottomBorder && !isSectionEnd)
-                ? BorderSide(
-                    color: qb.q(.1),
-                    width: .5,
-                  )
-                : BorderSide.none,
-          ),
-        ),
-        padding: const .only(left: 8, top: 12, right: 8, bottom: 12),
-        child: Column(
-          children: [
-            Row(
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: appTheme.settingItem,
+              borderRadius: .only(
+                topLeft: isSectionStart ? 12.rr : .zero,
+                topRight: isSectionStart ? 12.rr : .zero,
+                bottomLeft: isSectionEnd ? 12.rr : .zero,
+                bottomRight: isSectionEnd ? 12.rr : .zero,
+              ),
+            ),
+            padding: const .only(left: 8, top: 12, right: 8, bottom: 12),
+            child: Column(
               children: [
-                ?icon,
-                if (icon != null) const SizedBox(width: 8),
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        title,
-                        textAlign: titleTextAlign,
-                        style: TS(w: .w500, s: 16, c: titleColor),
-                      ),
-                      if (subtitle != null)
-                        Opacity(
-                          opacity: 0.5,
-                          child: Text(
-                            subtitle!,
-                            style: const TS(w: .w500, s: 12),
+                Row(
+                  children: [
+                    ?icon,
+                    if (icon != null) const SizedBox(width: 8),
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          Text(
+                            title,
+                            textAlign: titleTextAlign,
+                            style: TS(w: .w500, s: 16, c: titleColor),
                           ),
-                        ),
-                    ],
-                  ),
-                ),
-                if (infoText != null)
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      infoText ?? "null",
-                      style: const TS(w: .w500, s: 12),
-                      textAlign: TextAlign.right,
+                          if (subtitle != null)
+                            Opacity(
+                              opacity: 0.5,
+                              child: Text(
+                                subtitle!,
+                                style: const TS(w: .w500, s: 12),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                ?infoWidget,
-                if (!showArrow && infoText != null) const SizedBox(width: 4),
-                ?trailing,
-                if (showArrow) const SizedBox(width: 8),
-                if (showArrow)
-                  const Icon(
-                    Icons.chevron_right,
-                  ),
+                    if (infoText != null)
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          infoText ?? "null",
+                          style: TS(w: .w500, s: 12, c: qb.q(.5)),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ?infoWidget,
+                    if (!showArrow && infoText != null) const SizedBox(width: 4),
+                    ?trailing,
+                    if (showArrow) const SizedBox(width: 8),
+                    if (showArrow)
+                      Icon(
+                        Icons.chevron_right,
+                        color: qb.q(.5),
+                      ),
+                  ],
+                ),
+                ?bottom,
               ],
             ),
-            ?bottom,
-          ],
-        ),
+          ),
+
+          if (autoShowBottomBorder && !isSectionEnd)
+            Positioned(
+              bottom: 0,
+              left: 44,
+              right: 0,
+              height: .5,
+              child: Container(
+                height: .5,
+                color: qb.q(.1),
+              ),
+            ),
+        ],
       ),
     );
   }

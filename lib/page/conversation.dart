@@ -10,7 +10,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/conversation_item.dart';
 
 final _roleplayConvList = qs<List<ConversationListItemData>>([]);
@@ -59,14 +58,12 @@ class _PageConversationState extends ConsumerState<PageConversation> {
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
 
     return Scaffold(
-      body: GradientBackground(
-        child: Column(
-          children: [
-            const _ConversationAppBar(),
-            isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
-            if (isBatchMode) const _BatchActionBar(),
-          ],
-        ),
+      body: Column(
+        children: [
+          const _ConversationAppBar(),
+          isEmpty ? const Expanded(child: _EmptyState()) : const Expanded(child: _ConversationList()),
+          if (isBatchMode) const _BatchActionBar(),
+        ],
       ),
     );
   }
@@ -110,12 +107,11 @@ class _ConversationAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(P.app.customTheme);
+    final theme = ref.watch(P.app.theme);
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final selectedConversations = ref.watch(P.conversation.selectedConversations);
     final selectedCount = selectedConversations.length;
     final conversations = ref.watch(P.conversation.conversations);
-    final isEmpty = conversations.isEmpty;
     final isDesktop = ref.watch(P.app.isDesktop);
     final s = S.of(context);
 
@@ -124,6 +120,17 @@ class _ConversationAppBar extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       systemOverlayStyle: theme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
       primary: true,
+      automaticallyImplyLeading: false,
+      centerTitle: true,
+      leading: isBatchMode
+          ? TextButton(
+              onPressed: () => P.conversation.toggleBatchMode(),
+              child: Text(s.cancel),
+            )
+          : TextButton(
+              onPressed: () => P.conversation.toggleBatchMode(),
+              child: Text(s.conversation_management),
+            ),
       actions: [
         if (isDesktop && !isBatchMode)
           IconButton(
@@ -136,11 +143,6 @@ class _ConversationAppBar extends ConsumerWidget {
             onPressed: _handleNewChat,
             icon: const FaIcon(FontAwesomeIcons.squarePlus),
           ),
-        if (!isEmpty && !isBatchMode)
-          TextButton(
-            onPressed: () => P.conversation.toggleBatchMode(),
-            child: Text(s.conversation_management),
-          ),
         if (isBatchMode)
           TextButton(
             onPressed: selectedCount == conversations.length
@@ -149,11 +151,6 @@ class _ConversationAppBar extends ConsumerWidget {
             child: Text(
               selectedCount == conversations.length ? s.cancel_all_selection : s.select_all,
             ),
-          ),
-        if (isBatchMode)
-          TextButton(
-            onPressed: () => P.conversation.toggleBatchMode(),
-            child: Text(s.cancel),
           ),
       ],
     );
@@ -181,8 +178,10 @@ class _ConversationList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final conversations = ref.watch(_compositedConversations);
+    final appTheme = ref.watch(P.app.theme);
+    final paddingBottom = ref.watch(P.app.paddingBottom);
     return ListView.separated(
-      padding: const .only(bottom: 60),
+      padding: .only(bottom: paddingBottom + appTheme.tabBarHeight + 12),
       itemCount: conversations.length,
       cacheExtent: 200,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -200,7 +199,7 @@ class _ConversationSeparator extends StatelessWidget {
     return Divider(
       height: 0,
       indent: 68,
-      endIndent: 12,
+      endIndent: 0,
       color: Theme.of(context).dividerColor.q(.2),
     );
   }

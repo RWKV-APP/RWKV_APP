@@ -11,7 +11,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/gradient_background.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageHome extends ConsumerWidget {
@@ -22,6 +21,9 @@ class PageHome extends ConsumerWidget {
     final width = ref.watch(P.app.screenWidth);
     final height = ref.watch(P.app.screenHeight);
     final paddingTop = ref.watch(P.app.paddingTop);
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+    final appTheme = ref.watch(P.app.theme);
+    final tabBarHeight = appTheme.tabBarHeight;
     final ratio = width / height;
 
     late final int crossAxisCount;
@@ -53,39 +55,38 @@ class PageHome extends ConsumerWidget {
     ];
 
     return Scaffold(
-      body: GradientBackground(
-        child: Stack(
-          children: [
-            const _Welcome(),
-            Positioned.fill(
-              child: SingleChildScrollView(
-                controller: P.ui.homeController,
-                padding: .only(
-                  top: containerPaddingTop,
-                  left: containerPaddingHorizontal,
-                  right: containerPaddingHorizontal,
-                  bottom: 48,
-                ),
-                physics: const BouncingScrollPhysics(),
-                child: MasonryGridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: crossAxisCount,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  itemBuilder: (context, index) {
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: maxWidth),
-                      child: widgets[index],
-                    );
-                  },
-                  itemCount: 8,
-                ),
+      backgroundColor: appTheme.settingBg,
+      body: Stack(
+        children: [
+          const _Welcome(),
+          Positioned.fill(
+            child: SingleChildScrollView(
+              controller: P.ui.homeController,
+              padding: .only(
+                top: containerPaddingTop,
+                left: containerPaddingHorizontal,
+                right: containerPaddingHorizontal,
+                bottom: paddingBottom + tabBarHeight + 12,
+              ),
+              physics: const BouncingScrollPhysics(),
+              child: MasonryGridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                itemBuilder: (context, index) {
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: widgets[index],
+                  );
+                },
+                itemCount: 8,
               ),
             ),
-            const _NoMore(),
-          ],
-        ),
+          ),
+          const _NoMore(),
+        ],
       ),
     );
   }
@@ -99,6 +100,9 @@ class _NoMore extends ConsumerWidget {
     final s = S.of(context);
     final pixelsFromBottom = ref.watch(P.ui.homePixelsFromBottom);
 
+    final paddingBottom = ref.watch(P.app.paddingBottom);
+    final tabBarHeight = ref.watch(P.app.theme).tabBarHeight;
+
     double opacity = (-10 - pixelsFromBottom) / 40;
     if (opacity < 0) opacity = 0;
     if (opacity > 1) opacity = 1;
@@ -107,7 +111,7 @@ class _NoMore extends ConsumerWidget {
     final bottomOffset = -25 + (-10 - pixelsFromBottom) / 40 * 15;
 
     return Positioned(
-      bottom: bottomOffset,
+      bottom: bottomOffset + paddingBottom + tabBarHeight,
       left: 0,
       right: 0,
       child: IgnorePointer(
@@ -122,6 +126,72 @@ class _NoMore extends ConsumerWidget {
   }
 }
 
+const _homeCardTitleTextStyle = TextStyle(
+  fontSize: 16,
+  fontWeight: .bold,
+  height: 1.375,
+);
+
+const _homeCardDescriptionTextStyle = TextStyle(
+  fontSize: 12,
+  color: Colors.grey,
+  height: 1.375,
+);
+
+class _HomeCard extends ConsumerWidget {
+  final VoidCallback onTap;
+  final Color color;
+  final Widget icon;
+  final String title;
+  final String description;
+
+  const _HomeCard({
+    required this.onTap,
+    required this.color,
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appTheme = ref.watch(P.app.theme);
+    return GD(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: appTheme.settingItem,
+          borderRadius: .circular(12),
+        ),
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .center,
+          children: [
+            Align(
+              alignment: .center,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: .circle,
+                ),
+                alignment: .center,
+                child: icon,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(title, style: _homeCardTitleTextStyle),
+            const SizedBox(height: 8),
+            Text(description, style: _homeCardDescriptionTextStyle),
+            const SizedBox(height: 6),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _ChatButton extends ConsumerWidget {
   const _ChatButton();
 
@@ -129,41 +199,15 @@ class _ChatButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          P.chat.startNewChat();
-          push(.chat);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.blueAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(s.chat, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.chat_with_rwkv_model, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
-      ),
+    return _HomeCard(
+      onTap: () {
+        P.chat.startNewChat();
+        push(.chat);
+      },
+      color: Colors.blueAccent,
+      icon: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
+      title: s.chat,
+      description: s.chat_with_rwkv_model,
     );
   }
 }
@@ -175,47 +219,18 @@ class _TTSButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: .antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          P.chat.startNewChat();
-          push(.talk);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              SizedBox(
-                height: 48,
-                child: Align(
-                  alignment: .centerLeft,
-                  child: Container(
-                    height: 48,
-                    width: 48,
-                    alignment: .center,
-                    decoration: const BoxDecoration(
-                      color: Colors.orange,
-                      shape: .circle,
-                    ),
-                    child: const Icon(
-                      Icons.record_voice_over,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(s.tts, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.tts_detail, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
+    return _HomeCard(
+      onTap: () {
+        P.chat.startNewChat();
+        push(.talk);
+      },
+      color: Colors.orange,
+      icon: const Icon(
+        Icons.record_voice_over,
+        color: Colors.white,
       ),
+      title: s.tts,
+      description: s.tts_detail,
     );
   }
 }
@@ -227,40 +242,14 @@ class _VisualButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.see);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurpleAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const Icon(Icons.visibility, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(s.see, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.visual_understanding_and_ocr, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
-      ),
+    return _HomeCard(
+      onTap: () {
+        push(.see);
+      },
+      color: Colors.deepPurpleAccent,
+      icon: const Icon(Icons.visibility, color: Colors.white),
+      title: s.see,
+      description: s.visual_understanding_and_ocr,
     );
   }
 }
@@ -272,58 +261,34 @@ class _NekoButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () async {
-          final current = P.rwkv.latestModel.q;
-          if (current == null || !current.isNeko) {
-            final nekoList = P.remote.getNekoModel();
-            final downloaded = nekoList.where((e) => P.remote.locals(e).q.hasFile).toList();
-            if (downloaded.isNotEmpty) {
-              final loaded = await _ModelLoadingDialog.show(context, downloaded.first);
-              if (!loaded) return;
-            } else if (nekoList.isNotEmpty) {
-              Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
-              ModelSelector.show(showNeko: true);
-              return;
-            } else {
-              Alert.error('Neko is not available');
-              return;
-            }
-          }
-          P.chat.startNewChat();
-          push(.neko);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.pinkAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(s.neko, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.nyan_nyan, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
-      ),
+    return _HomeCard(
+      onTap: () => _onTap(context),
+      color: Colors.pinkAccent,
+      icon: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
+      title: s.neko,
+      description: s.nyan_nyan,
     );
+  }
+
+  Future<void> _onTap(BuildContext context) async {
+    final current = P.rwkv.latestModel.q;
+    if (current == null || !current.isNeko) {
+      final nekoList = P.remote.getNekoModel();
+      final downloaded = nekoList.where((e) => P.remote.locals(e).q.hasFile).toList();
+      if (downloaded.isNotEmpty) {
+        final loaded = await _ModelLoadingDialog.show(context, downloaded.first);
+        if (!loaded) return;
+      } else if (nekoList.isNotEmpty) {
+        Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
+        ModelSelector.show(showNeko: true);
+        return;
+      } else {
+        Alert.error('Neko is not available');
+        return;
+      }
+    }
+    P.chat.startNewChat();
+    push(.neko);
   }
 }
 
@@ -334,40 +299,14 @@ class _CompletionButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.completion);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.lightGreen,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.feather, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(s.completion_mode, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.text_completion_mode, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
-      ),
+    return _HomeCard(
+      onTap: () {
+        push(.completion);
+      },
+      color: Colors.lightGreen,
+      icon: const FaIcon(FontAwesomeIcons.feather, color: Colors.white),
+      title: s.completion_mode,
+      description: s.text_completion_mode,
     );
   }
 }
@@ -380,47 +319,15 @@ class _TranslatorButton extends ConsumerWidget {
     final s = S.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          if (isDesktop) push(.translator);
-          if (!isDesktop) push(.ocr);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const Icon(Icons.translate, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                s.offline_translator,
-                style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                s.offline_translator_detail,
-                style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375),
-              ),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
-      ),
+    return _HomeCard(
+      onTap: () {
+        if (isDesktop) push(.translator);
+        if (!isDesktop) push(.ocr);
+      },
+      color: Colors.blue,
+      icon: const Icon(Icons.translate, color: Colors.white),
+      title: s.offline_translator,
+      description: s.offline_translator_detail,
     );
   }
 }
@@ -431,40 +338,14 @@ class _BenchmarkButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.benchmark);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.purple,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.gauge, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(s.performance_test, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.performance_test_description, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
-      ),
+    return _HomeCard(
+      onTap: () {
+        push(.benchmark);
+      },
+      color: Colors.purple,
+      icon: const FaIcon(FontAwesomeIcons.gauge, color: Colors.white),
+      title: s.performance_test,
+      description: s.performance_test_description,
     );
   }
 }
@@ -530,40 +411,14 @@ class _RolePlayButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.rolePlaying);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.yellow,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(s.role_play, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.role_play_intro, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
-        ),
-      ),
+    return _HomeCard(
+      onTap: () {
+        push(.rolePlaying);
+      },
+      color: Colors.yellow,
+      icon: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
+      title: s.role_play,
+      description: s.role_play_intro,
     );
   }
 }
