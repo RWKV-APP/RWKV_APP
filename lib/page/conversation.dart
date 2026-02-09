@@ -197,7 +197,7 @@ class _ConversationSeparator extends StatelessWidget {
     return Divider(
       height: 0,
       indent: 68,
-      endIndent: 12,
+      endIndent: 0,
       color: Theme.of(context).dividerColor.q(.2),
     );
   }

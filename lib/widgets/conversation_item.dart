@@ -210,13 +210,14 @@ class ConversationItem extends ConsumerWidget {
     final color = P.conversation.getConversationColor(conversation.id);
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final isSelected = ref.watch(P.conversation.selectedConversations).contains(conversation.id);
+    final appTheme = ref.watch(P.app.theme);
 
     return GestureDetector(
       onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
       onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
       child: Container(
-        color: Theme.of(context).colorScheme.surface,
-        padding: const .symmetric(horizontal: 16, vertical: 12),
+        color: appTheme.scaffoldBg,
+        padding: const .symmetric(horizontal: 12, vertical: 12),
         child: Row(
           crossAxisAlignment: .center,
           children: [
