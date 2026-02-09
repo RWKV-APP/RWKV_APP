@@ -75,13 +75,7 @@ class _Page extends ConsumerWidget {
             child: ChatAppBar(),
           ),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
-          if (!selectMessageMode)
-            const Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: InputBar(),
-            ),
+          const InputBar(),
         ],
       ),
     );
@@ -100,7 +94,7 @@ class _List extends ConsumerWidget {
     final inputHeight = ref.watch(P.chat.inputHeight);
 
     double top = paddingTop + kToolbarHeight + 4;
-    double bottom = inputHeight + 12;
+    double bottom = inputHeight;
     double scrollBarBottom = inputHeight + 4;
 
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);

@@ -87,7 +87,7 @@ class BatchSettingsPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final batchCount = ref.watch(P.chat.batchCount);
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
     final batchInference = ref.watch(P.chat.batchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     return ClipRRect(

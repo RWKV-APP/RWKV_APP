@@ -107,7 +107,7 @@ class _ConversationAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(P.app.customTheme);
+    final theme = ref.watch(P.app.theme);
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
     final selectedConversations = ref.watch(P.conversation.selectedConversations);
     final selectedCount = selectedConversations.length;

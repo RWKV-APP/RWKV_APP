@@ -7,6 +7,6 @@ class PageSettings extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Settings(noBorderRadiusAndAppBar: true);
+    return const Settings(noBorderRadiusAndAppBar: true);
   }
 }

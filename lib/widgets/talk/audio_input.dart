@@ -104,7 +104,7 @@ class AudioInput extends ConsumerWidget {
       bottomMessageSize = 16;
     }
 
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
 
     return AnimatedPositioned(
       duration: 250.ms,

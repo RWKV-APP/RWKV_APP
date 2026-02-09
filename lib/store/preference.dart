@@ -63,7 +63,7 @@ class _Preference {
   late final themeMode = qs<ThemeMode>(ThemeMode.system);
 
   /// 偏好的深色模式主题
-  late final preferredDarkCustomTheme = qs<custom_theme.CustomTheme>(.lightsOut);
+  late final preferredDarkCustomTheme = qs<app_theme.AppTheme>(.lightsOut);
 
   late final lastWorldModel = qs<Map<String, dynamic>?>(null);
 

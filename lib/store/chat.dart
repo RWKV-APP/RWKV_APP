@@ -8,6 +8,8 @@ class _Chat {
   /// The scroll controller of the chat page message list
   late final scrollController = ScrollController();
 
+  late final listAtTop = qs(true);
+
   /// The text editing controller of the chat page input
   late final textEditingController = TextEditingController(text: "");
 
@@ -588,6 +590,19 @@ extension _$Chat on _Chat {
     P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
 
     batchCount.l(_onBatchCountChanged);
+
+    scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() async {
+    if (scrollController.hasClients == false) return;
+    final position = scrollController.position;
+    final extentAfter = position.extentAfter;
+    if (extentAfter > 0) {
+      listAtTop.q = false;
+    } else {
+      listAtTop.q = true;
+    }
   }
 
   void _onBatchCountChanged(int value) async {

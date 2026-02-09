@@ -21,8 +21,8 @@ import 'package:path/path.dart' as path;
 import 'package:zone/store/p.dart';
 import 'package:file_picker/file_picker.dart';
 
-class TTSBottomInteractions extends ConsumerWidget {
-  const TTSBottomInteractions({super.key});
+class TTSInteractions extends ConsumerWidget {
+  const TTSInteractions({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -63,7 +63,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final local = ref.watch(P.remote.locals(widget.file));
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
 
     final noState = widget.file.state.isEmpty;
 

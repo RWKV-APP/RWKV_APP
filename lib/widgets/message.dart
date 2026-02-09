@@ -76,7 +76,11 @@ class Message extends ConsumerWidget {
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
-    final primaryContainer = Theme.of(context).colorScheme.primaryContainer;
+
+    final customTheme = ref.watch(P.app.theme);
+    final botMsgBg = customTheme.botMsgBg;
+    final userMsgBg = customTheme.userMsgBg;
+    final msgDefaultPadding = customTheme.msgDefaultPadding;
 
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final worldType = ref.watch(P.rwkv.currentWorldType);
@@ -94,8 +98,6 @@ class Message extends ConsumerWidget {
     final isMine = msg.isMine;
     final isChat = demoType == .chat;
     final Alignment alignment = isMine ? .centerRight : .centerLeft;
-    const marginHorizontal = 12.0;
-    const marginVertical = .0;
     const kBubbleMinHeight = 44.0;
     const kBubbleMaxWidthAdjust = .0;
 
@@ -201,7 +203,7 @@ class Message extends ConsumerWidget {
 
     String worldDemoMessageHeader = "";
 
-    EdgeInsets padding = const .only(left: 12, top: 12, right: 12);
+    EdgeInsets padding = msgDefaultPadding;
     Border? border = .all(color: primary.q(.2));
     double radius = 20;
 
@@ -247,11 +249,9 @@ class Message extends ConsumerWidget {
 
     if (isChat) {
       border = null;
-      padding = const .only(left: 12, top: 12, right: 12, bottom: 4);
+      padding = isMine ? customTheme.chatUserMsgBubblePadding : customTheme.chatBotMsgBubblePadding;
       borderRadius = .circular(16);
     }
-
-    final botMessageBackgroundColor = Theme.of(context).colorScheme.surface;
 
     late final bool isBatch;
     late final int batchCount;
@@ -267,117 +267,117 @@ class Message extends ConsumerWidget {
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
 
     final bubbleContent = ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: width - kBubbleMaxWidthAdjust, minHeight: kBubbleMinHeight),
-      child: ClipRRect(
-        borderRadius: clipBorderRadius,
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: isMine ? primaryContainer : botMessageBackgroundColor,
-            border: border,
-            borderRadius: borderRadius,
-          ),
-          child: Column(
-            crossAxisAlignment: isMine ? .end : .start,
-            children: [
-              if (kDebugMode && Args.debugMsgId)
-                Container(
-                  decoration: BoxDecoration(color: Colors.red.q(1)),
-                  child: Text("Debug: ${msg.id}", style: const TS(c: kW)),
-                ),
-              if (isMine) ...[
-                // 🔥 User message
-                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
-                // 🔥 User message image
-                if (isUserImage)
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
-                    child: PhotoViewerImage(
-                      borderRadius: 24,
-                      imageUrl: msg.imageUrl!,
-                      showDefaultCloseButton: false,
-                      overlayBuilder: (context) {
-                        return const PhotoViewerOverlay();
-                      },
-                    ),
+      constraints: BoxConstraints(
+        maxWidth: width - kBubbleMaxWidthAdjust,
+        minHeight: kBubbleMinHeight,
+      ),
+      child: Container(
+        padding: padding,
+        decoration: BoxDecoration(
+          color: isMine ? userMsgBg : botMsgBg,
+          border: border,
+          borderRadius: borderRadius,
+        ),
+        child: Column(
+          crossAxisAlignment: isMine ? .end : .start,
+          children: [
+            if (kDebugMode && Args.debugMsgId)
+              Container(
+                decoration: BoxDecoration(color: Colors.red.q(1)),
+                child: Text("Debug: ${msg.id}", style: const TS(c: kW)),
+              ),
+            if (isMine) ...[
+              // 🔥 User message
+              if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
+              // 🔥 User message image
+              if (isUserImage)
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
+                  child: PhotoViewerImage(
+                    borderRadius: 24,
+                    imageUrl: msg.imageUrl!,
+                    showDefaultCloseButton: false,
+                    overlayBuilder: (context) {
+                      return const PhotoViewerOverlay();
+                    },
                   ),
-                // 🔥 User message audio
-                if (preferredDemoType == .tts) UserTTSContent(msg, index),
-                UserMessageBottom(msg, index),
-              ],
-              if (!isMine) ...[
-                if (isBatch)
-                  Padding(
-                    padding: const .only(left: 14, right: 14, bottom: 4),
-                    child: Wrap(
-                      children: [
+                ),
+              // 🔥 User message audio
+              if (preferredDemoType == .tts) UserTTSContent(msg, index),
+              UserMessageBottom(msg, index),
+            ],
+            if (!isMine) ...[
+              if (isBatch)
+                Padding(
+                  padding: const .only(left: 14, right: 14, bottom: 4),
+                  child: Wrap(
+                    children: [
+                      Text(
+                        s.batch_inference_running(batchCount),
+                        style: const TS(c: kCG),
+                      ),
+                      if (batchSelection != null) const SizedBox(width: 16),
+                      if (batchSelection != null)
                         Text(
-                          s.batch_inference_running(batchCount),
+                          s.batch_inference_selected(batchSelection + 1),
                           style: const TS(c: kCG),
                         ),
-                        if (batchSelection != null) const SizedBox(width: 16),
-                        if (batchSelection != null)
+                    ],
+                  ),
+                ),
+              // 🔥 Bot message audio recognition result
+              if (worldDemoMessageHeader.isNotEmpty)
+                Text(
+                  worldDemoMessageHeader,
+                  style: TS(c: qb.q(.5), w: .w700, s: 10),
+                ),
+              if (worldDemoMessageHeader.isNotEmpty) const SizedBox(height: 4),
+              // 🔥 Bot message
+              if (!reasoning && !isBatch) MarkdownRender(raw: finalContent),
+              // 🔥 Bot message cot header
+              if (reasoning && !isQuickThinking && !isBatch)
+                Semantics(
+                  button: true,
+                  label: s.thought_result,
+                  expanded: showingCotContent,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (showingCotContent) {
+                        P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
+                      } else {
+                        P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
+                      }
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.transparent),
+                      child: Row(
+                        children: [
                           Text(
-                            s.batch_inference_selected(batchSelection + 1),
-                            style: const TS(c: kCG),
+                            thisMessageIsReceiving ? s.thinking : s.thought_result,
+                            style: TS(c: qb.q(.5), w: .w600),
                           ),
-                      ],
-                    ),
-                  ),
-                // 🔥 Bot message audio recognition result
-                if (worldDemoMessageHeader.isNotEmpty)
-                  Text(
-                    worldDemoMessageHeader,
-                    style: TS(c: qb.q(.5), w: .w700, s: 10),
-                  ),
-                if (worldDemoMessageHeader.isNotEmpty) const SizedBox(height: 4),
-                // 🔥 Bot message
-                if (!reasoning && !isBatch) MarkdownRender(raw: finalContent),
-                // 🔥 Bot message cot header
-                if (reasoning && !isQuickThinking && !isBatch)
-                  Semantics(
-                    button: true,
-                    label: s.thought_result,
-                    expanded: showingCotContent,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (showingCotContent) {
-                          P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
-                        } else {
-                          P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
-                        }
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(color: Colors.transparent),
-                        child: Row(
-                          children: [
-                            Text(
-                              thisMessageIsReceiving ? s.thinking : s.thought_result,
-                              style: TS(c: qb.q(.5), w: .w600),
-                            ),
-                            showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
-                          ],
-                        ),
+                          showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
+                        ],
                       ),
                     ),
                   ),
-                // 🔥 Bot message cot content
-                if (reasoning && !isQuickThinking && !isBatch) const SizedBox(height: 4),
-                if (reasoning && !isQuickThinking && !isBatch)
-                  AnimatedContainer(
-                    duration: 250.ms,
-                    height: cotContentHeight,
-                    child: MarkdownRender(raw: cotContent, color: qb.q(.55)),
-                  ),
-                // 🔥 Bot message cot result
-                if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) const SizedBox(height: 12),
-                if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRender(raw: cotResult),
-                if (isBatch) BatchMessageContent(msg, index, finalContent),
-                if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
-                if (preferredDemoType == .tts) BotTtsContent(msg, index),
-              ],
+                ),
+              // 🔥 Bot message cot content
+              if (reasoning && !isQuickThinking && !isBatch) const SizedBox(height: 4),
+              if (reasoning && !isQuickThinking && !isBatch)
+                AnimatedContainer(
+                  duration: 250.ms,
+                  height: cotContentHeight,
+                  child: MarkdownRender(raw: cotContent, color: qb.q(.55)),
+                ),
+              // 🔥 Bot message cot result
+              if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) const SizedBox(height: 12),
+              if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRender(raw: cotResult),
+              if (isBatch) BatchMessageContent(msg, index, finalContent),
+              if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
+              if (preferredDemoType == .tts) BotTtsContent(msg, index),
             ],
-          ),
+          ],
         ),
       ),
     );
@@ -391,7 +391,12 @@ class Message extends ConsumerWidget {
             opacity: opacity,
             duration: 250.ms,
             child: Padding(
-              padding: const .symmetric(horizontal: marginHorizontal, vertical: marginVertical),
+              padding: .only(
+                left: customTheme.msgListMarginLeft,
+                right: customTheme.msgListMarginRight,
+                top: customTheme.msgListMarginTop,
+                bottom: customTheme.msgListMarginBottom,
+              ),
               child: Column(
                 children: [
                   if (demoType == .chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),

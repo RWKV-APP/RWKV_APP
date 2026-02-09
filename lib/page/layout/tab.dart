@@ -70,7 +70,7 @@ class PageTab extends ConsumerWidget {
       ],
     );
 
-    final theme = ref.watch(P.app.customTheme);
+    final theme = ref.watch(P.app.theme);
     final systemOverlayStyle = theme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(

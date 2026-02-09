@@ -108,7 +108,7 @@ class _App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
     final brightness = customTheme.isLight ? Brightness.light : Brightness.dark;
     final demoTypeColorScheme = customTheme.isLight ? P.app.demoType.q.colorScheme : P.app.demoType.q.colorSchemeDark;
     final modalBarrierColor = customTheme.pagerDim.q(.25);
@@ -148,7 +148,7 @@ class _App extends ConsumerWidget {
   }
 
   Widget _builder(BuildContext context, Widget? child) {
-    final customTheme = P.app.customTheme.q;
+    final customTheme = P.app.theme.q;
     return _LocaleWrapper(
       child: _TextScaleWrapper(
         child: Stack(

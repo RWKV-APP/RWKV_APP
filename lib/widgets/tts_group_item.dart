@@ -333,7 +333,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       return const SizedBox.shrink();
     }
 
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
 
@@ -598,7 +598,6 @@ class _TTSTags extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Wrap(
       spacing: 4,
       runSpacing: 8,

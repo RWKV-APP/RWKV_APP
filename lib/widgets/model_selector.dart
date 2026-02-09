@@ -192,7 +192,7 @@ class _PanelBarState extends ConsumerState<_PanelBar> {
   Widget build(BuildContext context) {
     final qb = ref.watch(P.app.qb);
     final s = S.of(context);
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
 
     return Container(
       constraints: const BoxConstraints(
@@ -594,7 +594,7 @@ class _LocalPthFileItem extends ConsumerWidget {
         loadingStatus[fileInfo] == LoadingStatus.loading ||
         loadingStatus[fileInfo] == LoadingStatus.loadModelWithExtra ||
         loadingStatus[fileInfo] == LoadingStatus.setQnnLibraryPath;
-    ref.watch(P.app.customTheme);
+    ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final date = fileInfo.dateDisplayString;
@@ -756,7 +756,7 @@ class _LocalPthFolder extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qb = ref.watch(P.app.qb);
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
     final folderName = path.basename(folder.path);
     final state = folder.state;
     final folderPath = folder.path;

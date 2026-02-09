@@ -51,7 +51,10 @@ class PageHome extends ConsumerWidget {
       _BenchmarkButton(),
     ];
 
+    final appTheme = ref.watch(P.app.theme);
+
     return Scaffold(
+      backgroundColor: appTheme.setting,
       body: Stack(
         children: [
           const _Welcome(),
@@ -126,39 +129,35 @@ class _ChatButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          P.chat.startNewChat();
-          push(.chat);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.blueAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
+    return InkWell(
+      onTap: () {
+        P.chat.startNewChat();
+        push(.chat);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Align(
+              alignment: .topLeft,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: const BoxDecoration(
+                  color: Colors.blueAccent,
+                  shape: .circle,
                 ),
+                alignment: .center,
+                child: const FaIcon(FontAwesomeIcons.comments, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(s.chat, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.chat_with_rwkv_model, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(s.chat, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
+            const SizedBox(height: 8),
+            Text(s.chat_with_rwkv_model, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );
@@ -172,45 +171,41 @@ class _TTSButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: .antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          P.chat.startNewChat();
-          push(.talk);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              SizedBox(
-                height: 48,
-                child: Align(
-                  alignment: .centerLeft,
-                  child: Container(
-                    height: 48,
-                    width: 48,
-                    alignment: .center,
-                    decoration: const BoxDecoration(
-                      color: Colors.orange,
-                      shape: .circle,
-                    ),
-                    child: const Icon(
-                      Icons.record_voice_over,
-                      color: Colors.white,
-                    ),
+    return InkWell(
+      onTap: () {
+        P.chat.startNewChat();
+        push(.talk);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            SizedBox(
+              height: 48,
+              child: Align(
+                alignment: .centerLeft,
+                child: Container(
+                  height: 48,
+                  width: 48,
+                  alignment: .center,
+                  decoration: const BoxDecoration(
+                    color: Colors.orange,
+                    shape: .circle,
+                  ),
+                  child: const Icon(
+                    Icons.record_voice_over,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              Text(s.tts, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.tts_detail, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(s.tts, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
+            const SizedBox(height: 8),
+            Text(s.tts_detail, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );
@@ -224,38 +219,34 @@ class _VisualButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.see);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.deepPurpleAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const Icon(Icons.visibility, color: Colors.white),
+    return InkWell(
+      onTap: () {
+        push(.see);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Align(
+              alignment: .topLeft,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: const BoxDecoration(
+                  color: Colors.deepPurpleAccent,
+                  shape: .circle,
                 ),
+                alignment: .center,
+                child: const Icon(Icons.visibility, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(s.see, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.visual_understanding_and_ocr, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(s.see, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
+            const SizedBox(height: 8),
+            Text(s.visual_understanding_and_ocr, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );
@@ -269,55 +260,51 @@ class _NekoButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () async {
-          final current = P.rwkv.latestModel.q;
-          if (current == null || !current.isNeko) {
-            final nekoList = P.remote.getNekoModel();
-            final downloaded = nekoList.where((e) => P.remote.locals(e).q.hasFile).toList();
-            if (downloaded.isNotEmpty) {
-              final loaded = await _ModelLoadingDialog.show(context, downloaded.first);
-              if (!loaded) return;
-            } else if (nekoList.isNotEmpty) {
-              Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
-              ModelSelector.show(showNeko: true);
-              return;
-            } else {
-              Alert.error('Neko is not available');
-              return;
-            }
+    return InkWell(
+      onTap: () async {
+        final current = P.rwkv.latestModel.q;
+        if (current == null || !current.isNeko) {
+          final nekoList = P.remote.getNekoModel();
+          final downloaded = nekoList.where((e) => P.remote.locals(e).q.hasFile).toList();
+          if (downloaded.isNotEmpty) {
+            final loaded = await _ModelLoadingDialog.show(context, downloaded.first);
+            if (!loaded) return;
+          } else if (nekoList.isNotEmpty) {
+            Alert.warning(S.current.chat_you_need_download_model_if_you_want_to_use_it);
+            ModelSelector.show(showNeko: true);
+            return;
+          } else {
+            Alert.error('Neko is not available');
+            return;
           }
-          P.chat.startNewChat();
-          push(.neko);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.pinkAccent,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
+        }
+        P.chat.startNewChat();
+        push(.neko);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Align(
+              alignment: .topLeft,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: const BoxDecoration(
+                  color: Colors.pinkAccent,
+                  shape: .circle,
                 ),
+                alignment: .center,
+                child: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(s.neko, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.nyan_nyan, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(s.neko, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
+            const SizedBox(height: 8),
+            Text(s.nyan_nyan, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );
@@ -331,38 +318,34 @@ class _CompletionButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.completion);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.lightGreen,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.feather, color: Colors.white),
+    return InkWell(
+      onTap: () {
+        push(.completion);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Align(
+              alignment: .topLeft,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: const BoxDecoration(
+                  color: Colors.lightGreen,
+                  shape: .circle,
                 ),
+                alignment: .center,
+                child: const FaIcon(FontAwesomeIcons.feather, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(s.completion_mode, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.text_completion_mode, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(s.completion_mode, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
+            const SizedBox(height: 8),
+            Text(s.text_completion_mode, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );
@@ -377,45 +360,41 @@ class _TranslatorButton extends ConsumerWidget {
     final s = S.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          if (isDesktop) push(.translator);
-          if (!isDesktop) push(.ocr);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const Icon(Icons.translate, color: Colors.white),
+    return InkWell(
+      onTap: () {
+        if (isDesktop) push(.translator);
+        if (!isDesktop) push(.ocr);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Align(
+              alignment: .topLeft,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  shape: .circle,
                 ),
+                alignment: .center,
+                child: const Icon(Icons.translate, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(
-                s.offline_translator,
-                style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                s.offline_translator_detail,
-                style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375),
-              ),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              s.offline_translator,
+              style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              s.offline_translator_detail,
+              style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375),
+            ),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );
@@ -428,38 +407,34 @@ class _BenchmarkButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.benchmark);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.purple,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(FontAwesomeIcons.gauge, color: Colors.white),
+    return InkWell(
+      onTap: () {
+        push(.benchmark);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Align(
+              alignment: .topLeft,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: const BoxDecoration(
+                  color: Colors.purple,
+                  shape: .circle,
                 ),
+                alignment: .center,
+                child: const FaIcon(FontAwesomeIcons.gauge, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(s.performance_test, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.performance_test_description, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(s.performance_test, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
+            const SizedBox(height: 8),
+            Text(s.performance_test_description, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );
@@ -527,38 +502,34 @@ class _RolePlayButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(10)),
-      child: InkWell(
-        onTap: () {
-          push(.rolePlaying);
-        },
-        child: Padding(
-          padding: const .all(16),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Align(
-                alignment: .topLeft,
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  decoration: const BoxDecoration(
-                    color: Colors.yellow,
-                    shape: .circle,
-                  ),
-                  alignment: .center,
-                  child: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
+    return InkWell(
+      onTap: () {
+        push(.rolePlaying);
+      },
+      child: Padding(
+        padding: const .all(16),
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Align(
+              alignment: .topLeft,
+              child: Container(
+                height: 48,
+                width: 48,
+                decoration: const BoxDecoration(
+                  color: Colors.yellow,
+                  shape: .circle,
                 ),
+                alignment: .center,
+                child: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(s.role_play, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
-              const SizedBox(height: 8),
-              Text(s.role_play_intro, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
-              const SizedBox(height: 6),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            Text(s.role_play, style: const TextStyle(fontSize: 16, fontWeight: .bold, height: 1.375)),
+            const SizedBox(height: 8),
+            Text(s.role_play_intro, style: const TextStyle(fontSize: 12, color: Colors.grey, height: 1.375)),
+            const SizedBox(height: 6),
+          ],
         ),
       ),
     );

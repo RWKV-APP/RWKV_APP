@@ -301,7 +301,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       return const SizedBox.shrink();
     }
 
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
 

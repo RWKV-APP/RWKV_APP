@@ -195,7 +195,7 @@ class ModelItem extends ConsumerWidget {
         loadingStatus[fileInfo] == .setQnnLibraryPath;
 
     final demoType = ref.watch(P.app.demoType);
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
 
     String startTitle;
 

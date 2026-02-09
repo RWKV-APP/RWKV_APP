@@ -24,7 +24,7 @@
         // "--dart-define=batchCount=3",
         // "--dart-define=batchVW=50",
         // "--dart-define=debugMsgId=true",
-        // "--dart-define=debuggingThemes=true",
+        // "--dart-define=debuggingThemes=truefalse,
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
         // "--dart-define=maxTokens=200",
         "--dart-define=disableRemoteConfig=true",
@@ -44,7 +44,8 @@
         //
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true",
-        "--dart-define=debuggingLatestUI"
+        "--dart-define=debuggingLatestUI",
+        "--dart-define=debuggingThemes=false"
         // "--dart-define=disableRemoteConfig=true"
       ],
       "deviceId": "90313e34"
@@ -72,7 +73,8 @@
         //
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true",
-        "--dart-define=debuggingLatestUI"
+        "--dart-define=debuggingLatestUI",
+        "--dart-define=debuggingThemes=false"
         // "--dart-define=disableRemoteConfig=true"
       ],
       "deviceId": "macos"

@@ -51,7 +51,7 @@ class ThemeSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
@@ -164,13 +164,13 @@ class ThemeSelector extends ConsumerWidget {
   void _onLightsOutPressed() async {
     P.preference.preferredDarkCustomTheme.q = .lightsOut;
     final sp = await SharedPreferences.getInstance();
-    await sp.setString("halo_state.preferredDarkCustomTheme", P.app.customTheme.q.toString());
+    await sp.setString("halo_state.preferredDarkCustomTheme", P.app.theme.q.toString());
   }
 
   void _onDimPressed() async {
     P.preference.preferredDarkCustomTheme.q = .dim;
     final sp = await SharedPreferences.getInstance();
-    await sp.setString("halo_state.preferredDarkCustomTheme", P.app.customTheme.q.toString());
+    await sp.setString("halo_state.preferredDarkCustomTheme", P.app.theme.q.toString());
   }
 
   void _onAutoModeSwitchChanged(bool value) async {

@@ -60,7 +60,7 @@ class _BottomBar extends ConsumerWidget {
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.paddingBottom);
     final theme = Theme.of(context);
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
 
     return Container(
       padding: .only(bottom: paddingBottom),

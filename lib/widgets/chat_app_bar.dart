@@ -42,7 +42,7 @@ class ChatAppBar extends ConsumerWidget {
     if (currentModel != null) displayName = currentModel.name;
 
     final theme = Theme.of(context);
-    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
+    final customTheme = ref.watch(P.app.theme);
 
     return ClipRRect(
       child: BackdropFilter(
@@ -50,7 +50,7 @@ class ChatAppBar extends ConsumerWidget {
         child: Theme(
           data: theme.copyWith(
             appBarTheme: theme.appBarTheme.copyWith(
-              backgroundColor: scaffoldBackgroundColor,
+              backgroundColor: customTheme.scaffold,
             ),
           ),
           child: selectMessageMode
@@ -98,112 +98,130 @@ class _ChatAppBar extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final completionMode = ref.watch(P.chat.completionMode);
     final qb = ref.watch(P.app.qb);
-    final customTheme = ref.watch(P.app.customTheme);
-    final scaffold = customTheme.scaffold;
+    final qt = ref.watch(P.app.theme);
+    final scaffold = qt.scaffold;
     final isChat = preferredDemoType == .chat;
     final isTTS = preferredDemoType == .tts;
     final isWorld = preferredDemoType == .see;
 
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);
-    final light = ref.watch(P.app.light);
-    Color backgroundColor = light ? const Color.fromRGBO(239, 243, 251, 0.5) : kB.q(.5);
-    if (isChat || isTTS || isWorld) {
-      backgroundColor = backgroundColor;
-    } else {
-      backgroundColor = scaffold.q(.7);
-    }
 
-    return AppBar(
-      elevation: 0,
-      centerTitle: true,
-      backgroundColor: backgroundColor,
-      systemOverlayStyle: customTheme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
-      title: GestureDetector(
-        onTap: _onTitlePressed,
-        child: Container(
-          decoration: const BoxDecoration(color: Colors.transparent),
-          child: Column(
-            crossAxisAlignment: .center,
-            children: [
-              if (isChat)
-                Row(
-                  mainAxisAlignment: .center,
-                  mainAxisSize: .min,
-                  crossAxisAlignment: .end,
-                  children: [
-                    const Text(
-                      Config.appTitle,
-                      style: TextStyle(fontSize: 16, fontWeight: .w600),
-                    ),
-                    Padding(
-                      padding: const .only(bottom: 2, left: 1),
-                      child: Text(' $version', style: const TS(s: 8, w: .bold)),
-                    ),
-                  ],
-                ),
-              if (!isChat)
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: version,
-                        style: const TS(s: 10, c: Colors.transparent),
-                      ),
-                      const TextSpan(text: Config.appTitle, style: TS(s: 18)),
-                      TextSpan(
-                        text: ' $version',
-                        style: const TS(s: 8),
-                      ),
-                    ],
-                  ),
-                ),
-              if (isChat) const ModelSelectButton(),
-              if (!isChat)
-                Container(
-                  padding: const .only(left: 4, top: 1, right: 4, bottom: 1),
-                  decoration: BoxDecoration(
-                    color: kB.q(.1),
-                    borderRadius: .circular(10),
-                  ),
-                  child: Row(
-                    mainAxisSize: .min,
-                    crossAxisAlignment: .center,
-                    mainAxisAlignment: .center,
-                    children: [
-                      Text(
-                        displayName,
-                        style: TS(s: 10, c: primary),
-                      ),
-                      const SizedBox(width: 4),
-                      Transform.rotate(
-                        angle: 0, // 90度
-                        child: SizedBox(
-                          width: 10,
-                          height: 5,
-                          child: CustomPaint(
-                            painter: TrianglePainter(color: qb.q(.667)),
-                          ),
+    final listAtTop = ref.watch(P.chat.listAtTop);
+
+    final backgroundColor = qt.appBarBgC;
+
+    return Column(
+      children: [
+        AppBar(
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: backgroundColor.q(listAtTop ? 1 : 0.5),
+          systemOverlayStyle: qt.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
+          title: GestureDetector(
+            onTap: _onTitlePressed,
+            child: Container(
+              decoration: const BoxDecoration(color: Colors.transparent),
+              child: Column(
+                crossAxisAlignment: .center,
+                children: [
+                  if (isChat)
+                    Row(
+                      mainAxisAlignment: .center,
+                      mainAxisSize: .min,
+                      crossAxisAlignment: .end,
+                      children: [
+                        const Text(
+                          Config.appTitle,
+                          style: TextStyle(fontSize: 16, fontWeight: .w600),
                         ),
+                        Padding(
+                          padding: const .only(bottom: 2, left: 1),
+                          child: Text(' $version', style: const TS(s: 8, w: .bold)),
+                        ),
+                      ],
+                    ),
+                  if (!isChat)
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: version,
+                            style: const TS(s: 10, c: Colors.transparent),
+                          ),
+                          const TextSpan(text: Config.appTitle, style: TS(s: 18)),
+                          TextSpan(
+                            text: ' $version',
+                            style: const TS(s: 8),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-            ],
+                    ),
+                  if (isChat) const ModelSelectButton(),
+                  if (!isChat)
+                    Container(
+                      padding: const .only(left: 4, top: 1, right: 4, bottom: 1),
+                      decoration: BoxDecoration(
+                        color: kB.q(.1),
+                        borderRadius: .circular(10),
+                      ),
+                      child: Row(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .center,
+                        mainAxisAlignment: .center,
+                        children: [
+                          Text(
+                            displayName,
+                            style: TS(s: 10, c: primary),
+                          ),
+                          const SizedBox(width: 4),
+                          Transform.rotate(
+                            angle: 0, // 90度
+                            child: SizedBox(
+                              width: 10,
+                              height: 5,
+                              child: CustomPaint(
+                                painter: TrianglePainter(color: qb.q(.667)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
+          // leading: IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+          actions: [
+            if ((preferredDemoType == .chat || preferredDemoType == .see) && !completionMode)
+              _NewConversationButton(preferredDemoType: preferredDemoType),
+            if (preferredDemoType == .chat && userType.isGreaterThan(.user)) _MorePopupMenuButton(preferredDemoType: preferredDemoType),
+            if (preferredDemoType != .chat && preferredDemoType != .sudoku && userType.isGreaterThan(.user))
+              IconButton(
+                onPressed: _onSettingsPressed,
+                icon: const Icon(Icons.tune),
+              ),
+          ],
         ),
-      ),
-      // leading: IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
-      actions: [
-        if ((preferredDemoType == .chat || preferredDemoType == .see) && !completionMode)
-          _NewConversationButton(preferredDemoType: preferredDemoType),
-        if (preferredDemoType == .chat && userType.isGreaterThan(.user)) _MorePopupMenuButton(preferredDemoType: preferredDemoType),
-        if (preferredDemoType != .chat && preferredDemoType != .sudoku && userType.isGreaterThan(.user))
-          IconButton(
-            onPressed: _onSettingsPressed,
-            icon: const Icon(Icons.tune),
-          ),
+        const _AppBarBottomLine(),
       ],
+    );
+  }
+}
+
+class _AppBarBottomLine extends ConsumerWidget {
+  const _AppBarBottomLine();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qt = ref.watch(P.app.theme);
+    final qb = ref.watch(P.app.qb);
+    final listAtTop = ref.watch(P.chat.listAtTop);
+
+    return Container(
+      height: qt.appBarBottomLineHeight,
+      color: listAtTop ? Colors.transparent : qb.q(.2),
     );
   }
 }

@@ -1,0 +1,120 @@
+// ignore: unused_import
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
+import 'package:zone/model/demo_type.dart';
+import 'package:zone/store/p.dart';
+
+class SendingInteraction extends ConsumerWidget {
+  final DemoType preferredDemoType;
+
+  const SendingInteraction({super.key, required this.preferredDemoType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final generating = ref.watch(P.rwkv.generating);
+    final hiddenPrefilling = ref.watch(P.rwkv.hiddenPrefilling);
+    // final waitingImagePath = ref.watch(P.see.waitingImagePath);
+    final waitingText = ref.watch(P.see.waitingText);
+
+    if (!generating || (hiddenPrefilling && waitingText == null)) return _Send(preferredDemoType: preferredDemoType);
+
+    return const _Stop();
+  }
+}
+
+class _Send extends ConsumerWidget {
+  final DemoType preferredDemoType;
+  const _Send({required this.preferredDemoType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final customTheme = ref.watch(P.app.theme);
+    final sendingButtonColor = customTheme.sendingButtonC;
+
+    final editingBotMessage = ref.watch(P.msg.editingBotMessage);
+    final inSee = ref.watch(P.app.pageKey) == .see;
+    final imagePath = ref.watch(P.see.imagePath);
+    final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
+    final inputHasContent = ref.watch(P.chat.inputHasContent);
+    final sendingButtonTouchMinSize = customTheme.sendingButtonTouchMinSize;
+    final sendingButtonVisualSize = customTheme.sendingButtonVisualSize;
+    final sendingButtonDisabledOpacity = customTheme.sendingButtonDisabledOpacity;
+    final hasText = ref.watch(P.chat.inputHasContent);
+
+    // TODO: 这里你是不是忘了什么? @王策
+    double opacity = 1.0;
+
+    if (inSee) opacity = ((imagePath != null || hasAtLeastOneImage) && inputHasContent) ? 1 : .333;
+
+    final icon = editingBotMessage ? Icons.edit : CupertinoIcons.arrow_up_circle_fill;
+
+    return AnimatedOpacity(
+      opacity: hasText ? 1 : sendingButtonDisabledOpacity,
+      duration: 250.ms,
+      child: GestureDetector(
+        onTap: () => P.chat.onSendButtonPressed(preferredDemoType: preferredDemoType),
+        child: Container(
+          constraints: BoxConstraints(
+            minWidth: sendingButtonTouchMinSize.width,
+            minHeight: sendingButtonTouchMinSize.height,
+          ),
+          child: Icon(
+            icon,
+            color: sendingButtonColor,
+            size: sendingButtonVisualSize.width,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Stop extends ConsumerWidget {
+  const _Stop();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final customTheme = ref.watch(P.app.theme);
+    final sendingButtonColor = customTheme.sendingButtonC;
+
+    return GestureDetector(
+      onTap: P.chat.onStopButtonPressed,
+      child: Container(
+        decoration: const BoxDecoration(color: Colors.transparent),
+        child: Stack(
+          children: [
+            SizedBox(
+              width: 46,
+              height: 34,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(color: sendingButtonColor, borderRadius: 2.r),
+                  width: 12,
+                  height: 12,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 46,
+              height: 34,
+              child: Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: sendingButtonColor.q(.5),
+                    strokeWidth: 3,
+                    strokeCap: StrokeCap.round,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

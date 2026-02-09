@@ -151,7 +151,6 @@ class _Preview extends ConsumerStatefulWidget {
 final kSharingRepaintBoundary = GlobalKey();
 
 class _PreviewState extends ConsumerState<_Preview> {
-
   late QrImage qrImage;
   late final ScrollController controller = ScrollController();
   File? imagePreview;
@@ -235,7 +234,6 @@ class _PreviewState extends ConsumerState<_Preview> {
     await file.writeAsBytes(bytes);
     return file;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -326,7 +324,7 @@ class _PreviewState extends ConsumerState<_Preview> {
   }
 
   Widget _shot(ThemeData theme, bool dark) {
-    final customTheme = ref.watch(P.app.customTheme);
+    final customTheme = ref.watch(P.app.theme);
     return SingleChildScrollView(
       child: RepaintBoundary(
         key: kSharingRepaintBoundary,
