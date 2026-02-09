@@ -26,9 +26,9 @@ class PageTalk extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          _List(),
-          _Empty(),
-          Positioned(
+          const _List(),
+          const _Empty(),
+          const Positioned(
             top: 0,
             left: 0,
             right: 0,
@@ -38,10 +38,10 @@ class PageTalk extends ConsumerWidget {
             bottom: inputHeight,
             right: 0,
             left: 0,
-            child: Suggestions(),
+            child: const Suggestions(),
           ),
-          InputBar(preferredDemoType: .tts),
-          AudioInput(demoType: .tts),
+          const InputBar(preferredDemoType: .tts),
+          const AudioInput(demoType: .tts),
         ],
       ),
     );

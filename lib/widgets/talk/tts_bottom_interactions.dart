@@ -1,9 +1,7 @@
 // ignore: unused_import
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/check_model_selection.dart';
@@ -330,9 +328,9 @@ class _Actions extends ConsumerWidget {
     final color = Theme.of(context).colorScheme.primary;
     final loaded = ref.watch(P.rwkv.loaded);
 
-    return Row(
+    return const Row(
       children: [
-        const Expanded(
+        Expanded(
           child: Wrap(
             crossAxisAlignment: .center,
             children: [

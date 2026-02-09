@@ -59,9 +59,9 @@ class PageTab extends ConsumerWidget {
               borderRadius: .circular(100),
               border: Border.all(color: qb.q(.2), width: .5),
             ),
-            child: Row(
+            child: const Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: _TabItem(
                     labelKey: _TabLabelKey.home,
                     icon: FontAwesomeIcons.house,
@@ -69,7 +69,7 @@ class PageTab extends ConsumerWidget {
                     index: 0,
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   child: _TabItem(
                     labelKey: _TabLabelKey.conversations,
                     icon: FontAwesomeIcons.message,
@@ -77,7 +77,7 @@ class PageTab extends ConsumerWidget {
                     index: 1,
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   child: _TabItem(
                     labelKey: _TabLabelKey.settings,
                     icon: FontAwesomeIcons.gear,
