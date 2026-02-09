@@ -41,7 +41,7 @@ class FormItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
 
     return GestureDetector(
@@ -50,7 +50,7 @@ class FormItem extends ConsumerWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: customTheme.settingItem,
+              color: appTheme.settingItem,
               borderRadius: .only(
                 topLeft: isSectionStart ? 12.rr : .zero,
                 topRight: isSectionStart ? 12.rr : .zero,

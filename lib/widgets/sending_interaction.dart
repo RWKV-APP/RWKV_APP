@@ -31,17 +31,17 @@ class _Send extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customTheme = ref.watch(P.app.theme);
-    final sendingButtonColor = customTheme.sendingButtonC;
+    final appTheme = ref.watch(P.app.theme);
+    final sendingButtonColor = appTheme.sendingButtonC;
 
     final editingBotMessage = ref.watch(P.msg.editingBotMessage);
     final inSee = ref.watch(P.app.pageKey) == .see;
     final imagePath = ref.watch(P.see.imagePath);
     final hasAtLeastOneImage = ref.watch(P.msg.hasAtLeastOneImage);
     final inputHasContent = ref.watch(P.chat.inputHasContent);
-    final sendingButtonTouchMinSize = customTheme.sendingButtonTouchMinSize;
-    final sendingButtonVisualSize = customTheme.sendingButtonVisualSize;
-    final sendingButtonDisabledOpacity = customTheme.sendingButtonDisabledOpacity;
+    final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
+    final sendingButtonVisualSize = appTheme.sendingButtonVisualSize;
+    final sendingButtonDisabledOpacity = appTheme.sendingButtonDisabledOpacity;
     final hasText = ref.watch(P.chat.inputHasContent);
 
     // TODO: 这里你是不是忘了什么? @王策
@@ -77,8 +77,8 @@ class _Stop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customTheme = ref.watch(P.app.theme);
-    final sendingButtonColor = customTheme.sendingButtonC;
+    final appTheme = ref.watch(P.app.theme);
+    final sendingButtonColor = appTheme.sendingButtonC;
 
     return GestureDetector(
       onTap: P.chat.onStopButtonPressed,

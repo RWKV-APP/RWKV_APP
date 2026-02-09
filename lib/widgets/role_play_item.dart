@@ -63,7 +63,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final local = ref.watch(P.remote.locals(widget.file));
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
 
     final noState = widget.file.state.isEmpty;
 
@@ -104,7 +104,7 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
               margin: const .only(top: 8),
               decoration: BoxDecoration(
                 borderRadius: .circular(8),
-                color: customTheme.settingItem,
+                color: appTheme.settingItem,
               ),
               child: Column(
                 children: [

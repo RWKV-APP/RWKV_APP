@@ -21,7 +21,7 @@ class _App extends RawApp {
   }
 
   SystemUiOverlayStyle get systemOverlayStyleDark {
-    final scaffold = theme.q.scaffold;
+    final scaffold = theme.q.scaffoldBg;
     return SystemUiOverlayStyle(
       systemNavigationBarColor: scaffold,
       systemNavigationBarIconBrightness: Brightness.light,

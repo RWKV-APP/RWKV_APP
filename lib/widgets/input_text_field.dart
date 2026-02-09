@@ -1,6 +1,5 @@
 // ignore: unused_import
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,21 +52,21 @@ class InputTextField extends ConsumerWidget {
 
     final isDesktop = ref.watch(P.app.isDesktop);
 
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
 
-    final inputBarHorizontalPadding = customTheme.inputBarHorizontalPadding;
-    final paddingBottom = ref.watch(P.app.paddingBottom) + customTheme.inputBarMinPaddingBottom;
+    final inputBarHorizontalPadding = appTheme.inputBarHorizontalPadding;
+    final paddingBottom = ref.watch(P.app.paddingBottom) + appTheme.inputBarMinPaddingBottom;
 
-    final inputBarShadowColor = customTheme.textInputShadowC;
-    final inputBarBorderColor = customTheme.textInputBorderC;
-    final inputBarBorderRadius = customTheme.inputBarBorderRadius;
-    final inputBarBgColor = customTheme.textInputBgC;
-    final inputBarShadowRadius = customTheme.inputBarShadowRadius;
-    final inputBarShadowOffset = customTheme.inputBarShadowOffset;
+    final inputBarShadowColor = appTheme.textInputShadowC;
+    final inputBarBorderColor = appTheme.textInputBorderC;
+    final inputBarBorderRadius = appTheme.inputBarBorderRadius;
+    final inputBarBgColor = appTheme.textInputBgC;
+    final inputBarShadowRadius = appTheme.inputBarShadowRadius;
+    final inputBarShadowOffset = appTheme.inputBarShadowOffset;
 
     final textFieldWidget = Container(
       padding: .only(
-        top: customTheme.inputBarTopDistance,
+        top: appTheme.inputBarTopDistance,
         left: inputBarHorizontalPadding,
         right: inputBarHorizontalPadding,
         bottom: paddingBottom,
@@ -111,38 +110,12 @@ class InputTextField extends ConsumerWidget {
                     focusColor: qw,
                     hoverColor: qw,
                     iconColor: qw,
-                    border: isChat
-                        ? InputBorder.none
-                        : OutlineInputBorder(
-                            borderRadius: borderRadius,
-                            borderSide: BorderSide(color: primary.q(.33)),
-                          ),
-                    enabledBorder: isChat
-                        ? InputBorder.none
-                        : OutlineInputBorder(
-                            borderRadius: borderRadius,
-                            borderSide: BorderSide(color: primary.q(.33)),
-                          ),
-                    focusedBorder: isChat
-                        ? InputBorder.none
-                        : OutlineInputBorder(
-                            borderRadius: borderRadius,
-                            borderSide: BorderSide(color: primary.q(.33)),
-                          ),
-                    focusedErrorBorder: isChat
-                        ? InputBorder.none
-                        : OutlineInputBorder(
-                            borderRadius: borderRadius,
-                            borderSide: BorderSide(color: primary.q(.33)),
-                          ),
+                    border: .none,
+                    enabledBorder: .none,
+                    focusedBorder: .none,
+                    focusedErrorBorder: .none,
                     hintText: hintText,
                     hintStyle: !isChat ? null : const TextStyle(color: Colors.grey),
-                    suffixIcon: textInInput.isEmpty || isChat
-                        ? null
-                        : GestureDetector(
-                            onTap: P.chat.onTapClearInput,
-                            child: const Icon(Icons.clear),
-                          ),
                   ),
                 ),
               ),

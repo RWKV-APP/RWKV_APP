@@ -60,13 +60,13 @@ class _BottomBar extends ConsumerWidget {
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.paddingBottom);
     final theme = Theme.of(context);
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
 
     return Container(
       padding: .only(bottom: paddingBottom),
       constraints: const BoxConstraints(minHeight: kToolbarHeight),
       decoration: BoxDecoration(
-        color: customTheme.scaffold,
+        color: appTheme.scaffoldBg,
         border: Border(top: BorderSide(color: theme.dividerColor, width: .5)),
       ),
       child: Row(

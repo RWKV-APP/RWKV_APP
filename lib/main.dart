@@ -108,12 +108,21 @@ class _App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
-    final customTheme = ref.watch(P.app.theme);
-    final brightness = customTheme.isLight ? Brightness.light : Brightness.dark;
-    final demoTypeColorScheme = customTheme.isLight ? P.app.demoType.q.colorScheme : P.app.demoType.q.colorSchemeDark;
-    final modalBarrierColor = customTheme.pagerDim.q(.25);
-    final bottomSheetTheme = BottomSheetThemeData(backgroundColor: customTheme.setting, modalBarrierColor: modalBarrierColor);
-    final appBarTheme = AppBarTheme(scrolledUnderElevation: 0, backgroundColor: customTheme.scaffold);
+    final appTheme = ref.watch(P.app.theme);
+    final brightness = appTheme.isLight ? Brightness.light : Brightness.dark;
+    final demoTypeColorScheme = appTheme.isLight ? P.app.demoType.q.colorScheme : P.app.demoType.q.colorSchemeDark;
+    final modalBarrierColor = appTheme.pagerDim.q(.25);
+
+    final bottomSheetTheme = BottomSheetThemeData(
+      backgroundColor: appTheme.settingBg,
+      modalBarrierColor: modalBarrierColor,
+    );
+
+    final appBarTheme = AppBarTheme(
+      scrolledUnderElevation: 0,
+      backgroundColor: appTheme.scaffoldBg,
+    );
+
     final preferredUIFont = ref.watch(P.preference.preferredUIFont);
     final _ = ref.watch(P.preference.preferredMonospaceFont);
     final effectiveFont = (preferredUIFont == null || preferredUIFont.isEmpty || preferredUIFont == 'System') ? null : preferredUIFont;
@@ -124,13 +133,13 @@ class _App extends ConsumerWidget {
       brightness: brightness,
       colorScheme: demoTypeColorScheme,
       appBarTheme: appBarTheme,
-      scaffoldBackgroundColor: customTheme.scaffold,
+      scaffoldBackgroundColor: appTheme.scaffoldBg,
       bottomSheetTheme: bottomSheetTheme,
       typography: Typography.material2018(),
     );
 
     return MaterialApp.router(
-      color: customTheme.scaffold,
+      color: appTheme.scaffoldBg,
       supportedLocales: _supportedLocales,
       localizationsDelegates: const [
         S.delegate,
@@ -148,12 +157,12 @@ class _App extends ConsumerWidget {
   }
 
   Widget _builder(BuildContext context, Widget? child) {
-    final customTheme = P.app.theme.q;
+    final appTheme = P.app.theme.q;
     return _LocaleWrapper(
       child: _TextScaleWrapper(
         child: Stack(
           children: [
-            Positioned(left: 0, right: 0, top: 0, bottom: 0, child: Container(color: customTheme.scaffold)),
+            Positioned(left: 0, right: 0, top: 0, bottom: 0, child: Container(color: appTheme.scaffoldBg)),
             ?child,
             const FloatingPerformaceInfo(),
             const Alert(),

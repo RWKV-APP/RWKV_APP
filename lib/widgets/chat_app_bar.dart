@@ -42,7 +42,7 @@ class ChatAppBar extends ConsumerWidget {
     if (currentModel != null) displayName = currentModel.name;
 
     final theme = Theme.of(context);
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
 
     return ClipRRect(
       child: BackdropFilter(
@@ -50,7 +50,7 @@ class ChatAppBar extends ConsumerWidget {
         child: Theme(
           data: theme.copyWith(
             appBarTheme: theme.appBarTheme.copyWith(
-              backgroundColor: customTheme.scaffold,
+              backgroundColor: appTheme.scaffoldBg,
             ),
           ),
           child: selectMessageMode
@@ -99,7 +99,7 @@ class _ChatAppBar extends ConsumerWidget {
     final completionMode = ref.watch(P.chat.completionMode);
     final qb = ref.watch(P.app.qb);
     final qt = ref.watch(P.app.theme);
-    final scaffold = qt.scaffold;
+    final scaffold = qt.scaffoldBg;
     final isChat = preferredDemoType == .chat;
     final isTTS = preferredDemoType == .tts;
     final isWorld = preferredDemoType == .see;

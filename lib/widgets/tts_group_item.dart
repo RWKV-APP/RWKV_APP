@@ -333,7 +333,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       return const SizedBox.shrink();
     }
 
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
 
@@ -377,7 +377,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       borderRadius: .circular(8),
       child: Container(
         decoration: BoxDecoration(
-          color: customTheme.settingItem,
+          color: appTheme.settingItem,
           borderRadius: .circular(8),
           border: .all(color: qw.q(.1), width: .5),
         ),

@@ -104,7 +104,7 @@ class AudioInput extends ConsumerWidget {
       bottomMessageSize = 16;
     }
 
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
 
     return AnimatedPositioned(
       duration: 250.ms,
@@ -130,9 +130,9 @@ class AudioInput extends ConsumerWidget {
                     gradient: showGradient
                         ? LinearGradient(
                             colors: [
-                              customTheme.scaffold.q(0),
-                              customTheme.scaffold,
-                              customTheme.scaffold,
+                              appTheme.scaffoldBg.q(0),
+                              appTheme.scaffoldBg,
+                              appTheme.scaffoldBg,
                             ],
                             begin: .topCenter,
                             end: .bottomCenter,

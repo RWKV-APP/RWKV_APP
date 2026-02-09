@@ -76,7 +76,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
     final settings = ref.watch(BatchCompletionSettingsPanel.settings);
     final batchCount = settings.batchCount;
     final batchInference = settings.enabled;
@@ -86,11 +86,11 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
         topRight: .circular(16),
       ),
       child: Scaffold(
-        backgroundColor: customTheme.setting,
+        backgroundColor: appTheme.settingBg,
         appBar: AppBar(
           title: Text(s.batch_completion_settings),
           automaticallyImplyLeading: false,
-          backgroundColor: customTheme.setting,
+          backgroundColor: appTheme.settingBg,
           actions: [
             Padding(
               padding: const .only(right: 8),

@@ -62,8 +62,8 @@ class _Interactions extends ConsumerWidget {
       if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
     ];
 
-    final customTheme = ref.watch(P.app.theme);
-    final inputBarHorizontalPadding = customTheme.inputBarHorizontalPadding;
+    final appTheme = ref.watch(P.app.theme);
+    final inputBarHorizontalPadding = appTheme.inputBarHorizontalPadding;
 
     return SizedBox(
       height: InputInteractions.calculateButtonHeight(context),

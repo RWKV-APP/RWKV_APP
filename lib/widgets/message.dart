@@ -77,10 +77,10 @@ class Message extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
 
-    final customTheme = ref.watch(P.app.theme);
-    final botMsgBg = customTheme.botMsgBg;
-    final userMsgBg = customTheme.userMsgBg;
-    final msgDefaultPadding = customTheme.msgDefaultPadding;
+    final appTheme = ref.watch(P.app.theme);
+    final botMsgBg = appTheme.botMsgBg;
+    final userMsgBg = appTheme.userMsgBg;
+    final msgDefaultPadding = appTheme.msgDefaultPadding;
 
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final worldType = ref.watch(P.rwkv.currentWorldType);
@@ -249,7 +249,7 @@ class Message extends ConsumerWidget {
 
     if (isChat) {
       border = null;
-      padding = isMine ? customTheme.chatUserMsgBubblePadding : customTheme.chatBotMsgBubblePadding;
+      padding = isMine ? appTheme.chatUserMsgBubblePadding : appTheme.chatBotMsgBubblePadding;
       borderRadius = .circular(16);
     }
 
@@ -392,10 +392,10 @@ class Message extends ConsumerWidget {
             duration: 250.ms,
             child: Padding(
               padding: .only(
-                left: customTheme.msgListMarginLeft,
-                right: customTheme.msgListMarginRight,
-                top: customTheme.msgListMarginTop,
-                bottom: customTheme.msgListMarginBottom,
+                left: appTheme.msgListMarginLeft,
+                right: appTheme.msgListMarginRight,
+                top: appTheme.msgListMarginTop,
+                bottom: appTheme.msgListMarginBottom,
               ),
               child: Column(
                 children: [

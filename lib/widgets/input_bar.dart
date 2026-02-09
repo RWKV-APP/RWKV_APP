@@ -31,7 +31,7 @@ class InputBar extends ConsumerWidget {
     final selectMessageMode = ref.watch(P.chat.isSharing);
     if (selectMessageMode) return const SizedBox.shrink();
 
-    final customTheme = ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
 
     return Positioned(
       bottom: 0,
@@ -44,8 +44,8 @@ class InputBar extends ConsumerWidget {
             // color: kCR,
             gradient: LinearGradient(
               colors: [
-                customTheme.scaffold.q(0),
-                customTheme.scaffold.q(1),
+                appTheme.scaffoldBg.q(0),
+                appTheme.scaffoldBg.q(1),
               ],
               begin: .topCenter,
               end: const Alignment(0, -0.6),

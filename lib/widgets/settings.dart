@@ -71,15 +71,14 @@ class Settings extends ConsumerWidget {
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
     final paddingLeft = ref.watch(P.app.paddingLeft);
     final qb = ref.watch(P.app.qb);
-    final customTheme = ref.watch(P.app.theme);
-    final isLightMode = customTheme.isLight;
+    final appTheme = ref.watch(P.app.theme);
+    final isLightMode = appTheme.isLight;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final isChat = demoType == .chat;
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
+    final tabBarHeight = appTheme.tabBarHeight;
 
     final totalUsage = ref.watch(P.remote.totalSizeInModelsDirDisplay);
-
-    final appTheme = ref.watch(P.app.theme);
 
     final iconWidget = SizedBox(
       width: 64,
@@ -98,14 +97,14 @@ class Settings extends ConsumerWidget {
               topRight: .circular(16),
             ),
       child: Scaffold(
-        backgroundColor: customTheme.setting,
+        backgroundColor: appTheme.settingBg,
         appBar: noBorderRadiusAndAppBar
             ? null
             : AppBar(
                 automaticallyImplyLeading: false,
                 title: Text(s.settings),
                 centerTitle: false,
-                backgroundColor: customTheme.setting,
+                backgroundColor: appTheme.settingBg,
                 actions: [
                   Padding(
                     padding: const .only(right: 8),
@@ -119,7 +118,12 @@ class Settings extends ConsumerWidget {
                 ],
               ),
         body: ListView(
-          padding: .only(left: 12 + paddingLeft, top: paddingTop, right: 12, bottom: math.max(paddingBottom, 12)),
+          padding: .only(
+            left: 12 + paddingLeft,
+            top: paddingTop,
+            right: 12,
+            bottom: math.max(paddingBottom, 12) + tabBarHeight + 12,
+          ),
           controller: scrollController,
           children: [
             if (isChat) const SizedBox(height: 40),

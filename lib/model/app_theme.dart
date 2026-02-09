@@ -7,9 +7,11 @@ enum AppTheme {
   /// 浅色主题
   light(
     isLight: true,
-    scaffold: Color(0xFFFFFFFF),
+
+    scaffoldBg: Color(0xFFFFFFFF),
+    settingBg: Color(0xFFF5F5F5),
+
     appBarBgC: Color(0xFFFFFFFF),
-    setting: Color(0xFFF5F5F5),
     settingItem: Color(0xFFFFFFFF),
     pagerDim: Color(0xFF000000),
     textInputShadowC: Color(0x22000000),
@@ -25,9 +27,11 @@ enum AppTheme {
   /// 深色主题, 中对比度
   dim(
     isLight: false,
-    scaffold: Color(0xFF151515),
+
+    scaffoldBg: Color(0xFF151515),
+    settingBg: Color(0xFF252525),
+
     appBarBgC: Color(0xFF151515),
-    setting: Color(0xFF252525),
     settingItem: Color(0xFF353535),
     pagerDim: Color(0xFFFFFFFF),
     textInputShadowC: Color(0x22000000),
@@ -43,9 +47,11 @@ enum AppTheme {
   /// 全黑主题, 高对比度
   lightsOut(
     isLight: false,
-    scaffold: Color(0xFF000000),
+
+    scaffoldBg: Color(0xFF000000),
+    settingBg: Color(0xFF000000),
+
     appBarBgC: Color(0xFF000000),
-    setting: Color(0xFF000000),
     settingItem: Color(0xFF121212),
     pagerDim: Color(0xFFFFFFFF),
     textInputShadowC: Color(0x22000000),
@@ -55,7 +61,7 @@ enum AppTheme {
     stopButtonC: Color(0xFF000000),
     generatingIndicatorC: Color(0xFF000000),
     botMsgBg: Color(0xFF000000),
-    userMsgBg: Color(0xFF000000),
+    userMsgBg: Color(0xFF121212),
   ),
   ;
 
@@ -64,8 +70,8 @@ enum AppTheme {
     required this.textInputShadowC,
     required this.isLight,
     required this.pagerDim,
-    required this.scaffold,
-    required this.setting,
+    required this.scaffoldBg,
+    required this.settingBg,
     required this.settingItem,
     required this.textInputBgC,
     required this.sendingButtonC,
@@ -79,12 +85,12 @@ enum AppTheme {
   /// 是否为浅色主题
   final bool isLight;
 
-  final Color scaffold;
+  final Color scaffoldBg;
 
   final Color appBarBgC;
   final double appBarBottomLineHeight = 0.5;
 
-  final Color setting;
+  final Color settingBg;
   final Color settingItem;
   final Color pagerDim;
 
@@ -124,6 +130,12 @@ enum AppTheme {
   final double settingsSectionTitleBottomSpace = 20;
   final double settingsSectionTitleTopSpace = 12;
   final double settingVersionOpacity = 0.8;
+
+  final double tabBarHeight = 60;
+  final double tabBarBorderRadius = 100;
+  final double tabBarBorderWidth = 0.5;
+  final double tabBarRightPadding = 12;
+  final double tabBarLeftPadding = 12;
 
   /// displayName 不能作为 const 构造参数，
   /// 因为 S.current 是运行时获取的（非 const），所以必须写成 getter。
