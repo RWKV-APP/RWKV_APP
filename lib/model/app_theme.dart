@@ -98,7 +98,7 @@ enum AppTheme {
   final double inputBarMinPaddingBottom = 8;
   final double inputBarTopDistance = 8;
 
-  final Size sendingButtonTouchMinSize = const Size(44, 44);
+  final Size sendingButtonTouchMinSize = const Size(44, 48);
   final Size sendingButtonVisualSize = const Size(38, 38);
   final Size sendingButtonIconSize = const Size(24, 24);
 

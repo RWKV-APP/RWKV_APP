@@ -36,6 +36,7 @@ class TTSInteractions extends ConsumerWidget {
     final selectSourceAudioPath = ref.watch(P.talk.selectSourceAudioPath);
     final sourceWavName = selectSourceAudioPath != null ? path.basename(selectSourceAudioPath) : null;
     final pairs = ref.watch(P.talk.spkPairs);
+    final paddingBottom = ref.watch(P.app.paddingBottom);
 
     String target = "";
 
@@ -49,6 +50,7 @@ class TTSInteractions extends ConsumerWidget {
     return GestureDetector(
       onTap: P.talk.dismissAllShown,
       child: Container(
+        padding: .only(bottom: paddingBottom, left: 12, right: 12),
         decoration: const BoxDecoration(color: Colors.transparent),
         child: Column(
           crossAxisAlignment: .stretch,
@@ -73,8 +75,6 @@ class TTSInteractions extends ConsumerWidget {
             if (audioInteractorShown) const _AudioInteractor(),
             if (spkShown) const _SpkPanel(),
             if (intonationShown) const _IntonationPanel(),
-            if (!audioInteractorShown && !intonationShown && !spkShown && selectedSpkName == null)
-              const _Instruction(preferredDemoType: .tts),
           ],
         ),
       ),
@@ -342,61 +342,61 @@ class _Actions extends ConsumerWidget {
             ],
           ),
         ),
-        if (generating)
-          Container(
-            decoration: const BoxDecoration(color: Colors.transparent),
-            child: Stack(
-              children: [
-                SizedBox(
-                  width: 46,
-                  height: 34,
-                  child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.transparent, borderRadius: 2.r),
-                      width: 12,
-                      height: 12,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 46,
-                  height: 34,
-                  child: Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: color.q(.5),
-                        strokeWidth: 3,
-                        strokeCap: StrokeCap.round,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        if (!generating)
-          AnimatedOpacity(
-            opacity: (canSend && loaded) ? 1 : .333,
-            duration: 250.ms,
-            child: GestureDetector(
-              onTap: _onRightButtonPressed,
-              child: Container(
-                padding: const .symmetric(horizontal: 10, vertical: 5),
-                child: Icon(
-                  (Platform.isIOS || Platform.isMacOS)
-                      ? editingBotMessage
-                            ? CupertinoIcons.pencil_circle_fill
-                            : CupertinoIcons.arrow_up_circle_fill
-                      : editingBotMessage
-                      ? Icons.edit
-                      : Icons.send,
-                  color: color,
-                ),
-              ),
-            ),
-          ),
+        // if (generating)
+        //   Container(
+        //     decoration: const BoxDecoration(color: Colors.transparent),
+        //     child: Stack(
+        //       children: [
+        //         SizedBox(
+        //           width: 46,
+        //           height: 34,
+        //           child: Center(
+        //             child: Container(
+        //               decoration: BoxDecoration(color: Colors.transparent, borderRadius: 2.r),
+        //               width: 12,
+        //               height: 12,
+        //             ),
+        //           ),
+        //         ),
+        //         SizedBox(
+        //           width: 46,
+        //           height: 34,
+        //           child: Center(
+        //             child: SizedBox(
+        //               width: 24,
+        //               height: 24,
+        //               child: CircularProgressIndicator(
+        //                 color: color.q(.5),
+        //                 strokeWidth: 3,
+        //                 strokeCap: StrokeCap.round,
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // if (!generating)
+        //   AnimatedOpacity(
+        //     opacity: (canSend && loaded) ? 1 : .333,
+        //     duration: 250.ms,
+        //     child: GestureDetector(
+        //       onTap: _onRightButtonPressed,
+        //       child: Container(
+        //         padding: const .symmetric(horizontal: 10, vertical: 5),
+        //         child: Icon(
+        //           (Platform.isIOS || Platform.isMacOS)
+        //               ? editingBotMessage
+        //                     ? CupertinoIcons.pencil_circle_fill
+        //                     : CupertinoIcons.arrow_up_circle_fill
+        //               : editingBotMessage
+        //               ? Icons.edit
+        //               : Icons.send,
+        //           color: color,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
       ],
     );
   }

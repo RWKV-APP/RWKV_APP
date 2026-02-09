@@ -20,16 +20,23 @@ class PageTab extends ConsumerWidget {
     final tabIndex = ref.watch(P.app.tabIndex);
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
-    final paddingBottom = ref.watch(P.app.paddingBottom);
+    final rawPaddingBottom = ref.watch(P.app.paddingBottom);
+    double paddingBottom = rawPaddingBottom / 2;
     final qb = ref.watch(P.app.qb);
+
+    double tabBarLeftPadding = appTheme.tabBarLeftPadding;
+    tabBarLeftPadding += rawPaddingBottom / 5;
+
+    double tabBarRightPadding = appTheme.tabBarRightPadding;
+    tabBarRightPadding += rawPaddingBottom / 5;
 
     final verticalLayout = Stack(
       children: <Widget>[
         child,
         Positioned(
           bottom: paddingBottom + 12,
-          left: appTheme.tabBarLeftPadding,
-          right: appTheme.tabBarRightPadding,
+          left: tabBarLeftPadding,
+          right: tabBarRightPadding,
           height: appTheme.tabBarHeight,
           child: ClipRRect(
             borderRadius: .circular(100),
@@ -43,8 +50,8 @@ class PageTab extends ConsumerWidget {
         ),
         Positioned(
           bottom: paddingBottom + 12,
-          left: appTheme.tabBarLeftPadding,
-          right: appTheme.tabBarRightPadding,
+          left: tabBarLeftPadding,
+          right: tabBarRightPadding,
           height: appTheme.tabBarHeight,
           child: Container(
             decoration: BoxDecoration(

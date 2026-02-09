@@ -147,7 +147,7 @@ class FileInfo extends Equatable {
     final platforms = supportedPlatforms;
     if (Platform.isAndroid) return platforms.contains('android');
     if (Platform.isIOS) return platforms.contains('ios');
-    if (Platform.isMacOS) return platforms.contains('macos');
+    if (Platform.isMacOS) return platforms.contains('macos') || (kDebugMode && platforms.contains('macos_debug'));
     if (Platform.isLinux) return platforms.contains('linux');
     if (Platform.isWindows) return platforms.contains('windows');
     if (Platform.isFuchsia) return platforms.contains('fuchsia');

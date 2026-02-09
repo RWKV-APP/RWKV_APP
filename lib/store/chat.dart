@@ -31,6 +31,8 @@ class _Chat {
 
   late final inputHeight = qs(77.0);
 
+  late final ttsBottomHeight = qs(0.0);
+
   late final receiveId = qs<int?>(null);
 
   late final hasFocus = qs(false);
@@ -108,6 +110,11 @@ extension $Chat on _Chat {
   Future<void> onSendButtonPressed({
     required DemoType preferredDemoType,
   }) async {
+    if (P.app.demoType.q == .tts) {
+      await P.talk.gen();
+      return;
+    }
+
     qq;
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 

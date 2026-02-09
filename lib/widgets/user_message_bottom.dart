@@ -10,14 +10,100 @@ import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
+import 'package:zone/model/world_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
 
 class UserMessageBottom extends ConsumerWidget {
   final model.Message msg;
   final int index;
+  final bool showInlineEditAndCopyButtons;
 
-  const UserMessageBottom(this.msg, this.index, {super.key});
+  const UserMessageBottom(
+    this.msg,
+    this.index, {
+    super.key,
+    this.showInlineEditAndCopyButtons = true,
+  });
+
+  static ({bool showUserEditButton, bool showUserCopyButton, bool showUserTTSPlayButton}) resolveActionVisibility({
+    required model.Message msg,
+    required WorldType? worldType,
+  }) {
+    var showUserEditButton = false;
+    var showUserCopyButton = false;
+    var showUserTTSPlayButton = false;
+
+    switch (worldType) {
+      case null:
+        switch (msg.type) {
+          case model.MessageType.text:
+          case model.MessageType.userImage:
+            showUserEditButton = true;
+            showUserCopyButton = true;
+          case model.MessageType.userTTS:
+            showUserEditButton = false;
+            showUserCopyButton = true;
+            if (msg.audioUrl != null) {
+              showUserTTSPlayButton = true;
+            }
+          case model.MessageType.ttsGeneration:
+            showUserEditButton = false;
+            showUserCopyButton = false;
+        }
+      default:
+        showUserEditButton = false;
+        showUserCopyButton = false;
+    }
+
+    return (
+      showUserEditButton: showUserEditButton,
+      showUserCopyButton: showUserCopyButton,
+      showUserTTSPlayButton: showUserTTSPlayButton,
+    );
+  }
+
+  static ({bool canEdit, bool canCopy}) resolveContextMenuActions({
+    required model.Message msg,
+    required WorldType? worldType,
+    required bool selectMessageMode,
+  }) {
+    if (!msg.isMine || selectMessageMode) {
+      return (canEdit: false, canCopy: false);
+    }
+
+    switch (msg.type) {
+      case model.MessageType.userImage:
+      case model.MessageType.userTTS:
+        return (canEdit: false, canCopy: false);
+      case model.MessageType.text:
+      case model.MessageType.ttsGeneration:
+    }
+
+    final actions = resolveActionVisibility(msg: msg, worldType: worldType);
+    return (
+      canEdit: actions.showUserEditButton,
+      canCopy: actions.showUserCopyButton,
+    );
+  }
+
+  static Future<void> onUserEditPressed({required int index}) async {
+    await P.chat.onTapEditInUserMessageBubble(index: index);
+  }
+
+  static void onCopyPressed(model.Message msg) {
+    Alert.success(S.current.chat_copied_to_clipboard);
+    if (msg.ttsTarget != null) {
+      Clipboard.setData(ClipboardData(text: msg.ttsTarget!.replaceAll(Config.userMsgModifierSep, "").trim()));
+      return;
+    }
+    final content = msg.content.replaceAll(Config.userMsgModifierSep, "").trim();
+    if (content.isEmpty) {
+      Alert.warning("No content to copy");
+      return;
+    }
+    Clipboard.setData(ClipboardData(text: content));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,31 +125,14 @@ class UserMessageBottom extends ConsumerWidget {
       return const SizedBox(height: 12);
     }
 
-    bool showUserEditButton = false;
-    bool showUserCopyButton = false;
-    bool showUserTTSPlayButton = false;
+    final actions = resolveActionVisibility(msg: msg, worldType: worldType);
+    var showUserEditButton = actions.showUserEditButton;
+    var showUserCopyButton = actions.showUserCopyButton;
+    final showUserTTSPlayButton = actions.showUserTTSPlayButton;
 
-    switch (worldType) {
-      case null:
-        switch (msg.type) {
-          case model.MessageType.text:
-          case model.MessageType.userImage:
-            showUserEditButton = true;
-            showUserCopyButton = true;
-          case model.MessageType.userTTS:
-            showUserEditButton = false;
-            showUserCopyButton = true;
-            if (msg.audioUrl != null) {
-              showUserTTSPlayButton = true;
-            }
-          case model.MessageType.ttsGeneration:
-            showUserEditButton = false;
-            showUserCopyButton = false;
-        }
-
-      default:
-        showUserEditButton = false;
-        showUserCopyButton = false;
+    if (!showInlineEditAndCopyButtons) {
+      showUserEditButton = false;
+      showUserCopyButton = false;
     }
 
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
@@ -79,7 +148,7 @@ class UserMessageBottom extends ConsumerWidget {
           Tooltip(
             message: S.current.change,
             child: GestureDetector(
-              onTap: _onUserEditPressed,
+              onTap: () => onUserEditPressed(index: index),
               child: Padding(
                 padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
                 child: Icon(
@@ -116,7 +185,7 @@ class UserMessageBottom extends ConsumerWidget {
           Tooltip(
             message: S.current.copy_text,
             child: GestureDetector(
-              onTap: _onCopyPressed,
+              onTap: () => onCopyPressed(msg),
               child: Padding(
                 padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
                 child: Icon(
@@ -130,24 +199,6 @@ class UserMessageBottom extends ConsumerWidget {
         if (!showUserEditButton && !showUserCopyButton) const SizedBox(height: 8),
       ],
     );
-  }
-
-  void _onUserEditPressed() async {
-    await P.chat.onTapEditInUserMessageBubble(index: index);
-  }
-
-  void _onCopyPressed() {
-    Alert.success(S.current.chat_copied_to_clipboard);
-    if (msg.ttsTarget != null) {
-      Clipboard.setData(ClipboardData(text: msg.ttsTarget!.replaceAll(Config.userMsgModifierSep, "").trim()));
-      return;
-    }
-    final content = msg.content.replaceAll(Config.userMsgModifierSep, "").trim();
-    if (content.isEmpty) {
-      Alert.warning("No content to copy");
-      return;
-    }
-    Clipboard.setData(ClipboardData(text: content));
   }
 
   void _onTTSPlayPressed() {

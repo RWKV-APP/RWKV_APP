@@ -19,12 +19,11 @@ class PageTalk extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     P.tts.test();
-      //   },
-      // ),
+    final inputHeight = ref.watch(P.chat.inputHeight);
+    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
+    final ttsBottomHeight = ref.watch(P.chat.ttsBottomHeight);
+
+    return Scaffold(
       body: Stack(
         children: [
           _List(),
@@ -36,18 +35,12 @@ class PageTalk extends ConsumerWidget {
             child: ChatAppBar(preferredDemoType: .tts),
           ),
           Positioned(
-            bottom: 0,
+            bottom: inputHeight,
             right: 0,
             left: 0,
-            child: Column(
-              crossAxisAlignment: .stretch,
-              mainAxisSize: .min,
-              children: [
-                Suggestions(),
-                InputBar(preferredDemoType: .tts),
-              ],
-            ),
+            child: Suggestions(),
           ),
+          InputBar(preferredDemoType: .tts),
           AudioInput(demoType: .tts),
         ],
       ),

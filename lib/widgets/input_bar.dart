@@ -19,6 +19,7 @@ class InputBar extends ConsumerWidget {
   const InputBar({super.key, this.preferredDemoType = .chat});
 
   void _onChangeSize(Size size) {
+    qqr(size);
     P.chat.inputHeight.q = size.height;
   }
 
@@ -56,12 +57,12 @@ class InputBar extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: .start,
               children: [
-                const SizedBox(height: 12),
+                if (preferredDemoType != .tts) const SizedBox(height: 12),
                 if (inRWKVSee) const _WaitingMsg(),
                 if (inRWKVSee) _ImagePreview(imagePath: imagePath ?? ""),
                 if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
-                if (preferredDemoType == .tts) const TTSInteractions(),
                 InputTextField(preferredDemoType: preferredDemoType),
+                if (preferredDemoType == .tts) const TTSInteractions(),
               ],
             ),
           ),

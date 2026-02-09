@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'dart:math' as math;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -28,6 +29,11 @@ import 'package:zone/widgets/see/photo_viewer_overlay.dart';
 import 'package:zone/widgets/user_message_bottom.dart';
 import 'package:zone/widgets/talk/user_tts_content.dart';
 import 'package:zone/widgets/markdown_render.dart';
+
+enum _UserMessageMenuAction {
+  edit,
+  copy,
+}
 
 class Message extends ConsumerWidget {
   final model.Message msg;
@@ -71,6 +77,124 @@ class Message extends ConsumerWidget {
     }
   }
 
+  void _showUserMessageContextMenu({
+    required BuildContext context,
+    required bool useCupertinoStyle,
+    required bool canEdit,
+    required bool canCopy,
+    Offset? globalPosition,
+  }) {
+    if (!canEdit && !canCopy) return;
+
+    final menuFuture = useCupertinoStyle
+        ? _showMobileUserMessageMenu(
+            context: context,
+            canEdit: canEdit,
+            canCopy: canCopy,
+          )
+        : _showDesktopUserMessageMenu(
+            context: context,
+            canEdit: canEdit,
+            canCopy: canCopy,
+            globalPosition: globalPosition,
+          );
+
+    menuFuture.then((selectedAction) {
+      if (selectedAction == _UserMessageMenuAction.edit) {
+        UserMessageBottom.onUserEditPressed(index: index);
+        return;
+      }
+      if (selectedAction == _UserMessageMenuAction.copy) {
+        UserMessageBottom.onCopyPressed(msg);
+      }
+    });
+  }
+
+  Future<_UserMessageMenuAction?> _showMobileUserMessageMenu({
+    required BuildContext context,
+    required bool canEdit,
+    required bool canCopy,
+  }) async {
+    final s = S.of(context);
+    return showCupertinoModalPopup<_UserMessageMenuAction>(
+      context: context,
+      builder: (sheetContext) {
+        return CupertinoActionSheet(
+          actions: [
+            if (canEdit)
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(sheetContext).pop(_UserMessageMenuAction.edit);
+                },
+                child: Text(s.change),
+              ),
+            if (canCopy)
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(sheetContext).pop(_UserMessageMenuAction.copy);
+                },
+                child: Text(s.copy_text),
+              ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(sheetContext).pop();
+            },
+            child: Text(s.cancel),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<_UserMessageMenuAction?> _showDesktopUserMessageMenu({
+    required BuildContext context,
+    required bool canEdit,
+    required bool canCopy,
+    required Offset? globalPosition,
+  }) async {
+    if (globalPosition == null) return null;
+
+    final s = S.of(context);
+    final screenSize = MediaQuery.sizeOf(context);
+    return showMenu<_UserMessageMenuAction>(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+      color: Theme.of(context).colorScheme.surface,
+      position: RelativeRect.fromLTRB(
+        globalPosition.dx,
+        globalPosition.dy,
+        screenSize.width - globalPosition.dx,
+        screenSize.height - globalPosition.dy,
+      ),
+      items: [
+        if (canEdit)
+          PopupMenuItem(
+            value: _UserMessageMenuAction.edit,
+            child: Row(
+              children: [
+                const Icon(Icons.edit_outlined),
+                const SizedBox(width: 8),
+                Text(s.change),
+              ],
+            ),
+          ),
+        if (canEdit && canCopy) const PopupMenuDivider(indent: 8, endIndent: 8),
+        if (canCopy)
+          PopupMenuItem(
+            value: _UserMessageMenuAction.copy,
+            child: Row(
+              children: [
+                const Icon(Icons.copy_outlined),
+                const SizedBox(width: 8),
+                Text(s.copy_text),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
@@ -84,6 +208,8 @@ class Message extends ConsumerWidget {
 
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final worldType = ref.watch(P.rwkv.currentWorldType);
+    final isMobile = ref.watch(P.app.isMobile);
+    final sharingMode = ref.watch(P.chat.isSharing);
 
     // 由 message 对象是否正在 changing 来决定是否根据 receivedTokens 渲染消息内容
     final received = ref.watch(P.chat.receivedTokens.select((v) => msg.changing ? v : ""));
@@ -97,6 +223,12 @@ class Message extends ConsumerWidget {
     final inSee = ref.watch(P.app.pageKey) == .see;
     final isMine = msg.isMine;
     final isChat = demoType == .chat;
+    final contextActions = UserMessageBottom.resolveContextMenuActions(
+      msg: msg,
+      worldType: worldType,
+      selectMessageMode: selectMode || sharingMode,
+    );
+    final canShowUserMessageMenu = contextActions.canEdit || contextActions.canCopy;
     final Alignment alignment = isMine ? .centerRight : .centerLeft;
     const kBubbleMinHeight = 44.0;
     const kBubbleMaxWidthAdjust = .0;
@@ -222,14 +354,10 @@ class Message extends ConsumerWidget {
       bottomRight: .circular(isMine ? 0 : radius),
     );
 
-    BorderRadius clipBorderRadius = .zero;
-
     switch (msg.type) {
       case .userImage:
         padding = .zero;
         border = Border.all(width: 0);
-        clipBorderRadius = borderRadius;
-        borderRadius = null;
 
       case .userTTS:
         padding = .zero;
@@ -237,6 +365,7 @@ class Message extends ConsumerWidget {
       case .text:
         if (!msg.isMine) border = null;
         if (!msg.isMine) padding = const .only(left: 6, top: 12, right: 6);
+
       case .ttsGeneration:
     }
 
@@ -250,7 +379,6 @@ class Message extends ConsumerWidget {
     if (isChat) {
       border = null;
       padding = isMine ? appTheme.chatUserMsgBubblePadding : appTheme.chatBotMsgBubblePadding;
-      borderRadius = .circular(16);
     }
 
     late final bool isBatch;
@@ -275,6 +403,7 @@ class Message extends ConsumerWidget {
         padding: padding,
         decoration: BoxDecoration(
           color: isMine ? userMsgBg : botMsgBg,
+          // color: kCR,
           border: border,
           borderRadius: borderRadius,
         ),
@@ -291,20 +420,27 @@ class Message extends ConsumerWidget {
               if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
               // 🔥 User message image
               if (isUserImage)
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
-                  child: PhotoViewerImage(
-                    borderRadius: 24,
-                    imageUrl: msg.imageUrl!,
-                    showDefaultCloseButton: false,
-                    overlayBuilder: (context) {
-                      return const PhotoViewerOverlay();
-                    },
+                ClipRRect(
+                  borderRadius: borderRadius,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
+                    child: PhotoViewerImage(
+                      borderRadius: 24,
+                      imageUrl: msg.imageUrl!,
+                      showDefaultCloseButton: false,
+                      overlayBuilder: (context) {
+                        return const PhotoViewerOverlay();
+                      },
+                    ),
                   ),
                 ),
               // 🔥 User message audio
               if (preferredDemoType == .tts) UserTTSContent(msg, index),
-              UserMessageBottom(msg, index),
+              UserMessageBottom(
+                msg,
+                index,
+                showInlineEditAndCopyButtons: !isMobile,
+              ),
             ],
             if (!isMine) ...[
               if (isBatch)
@@ -400,7 +536,32 @@ class Message extends ConsumerWidget {
               child: Column(
                 children: [
                   if (demoType == .chat && reference.enable) _ReferenceInfo(refInfo: reference, generating: changing),
-                  GestureDetector(onTap: _onTap, child: bubbleContent),
+                  GestureDetector(
+                    onTap: _onTap,
+                    onLongPressStart: canShowUserMessageMenu && isMobile
+                        ? (_) {
+                            P.app.hapticLight();
+                            _showUserMessageContextMenu(
+                              context: context,
+                              useCupertinoStyle: true,
+                              canEdit: contextActions.canEdit,
+                              canCopy: contextActions.canCopy,
+                            );
+                          }
+                        : null,
+                    onSecondaryTapDown: canShowUserMessageMenu && !isMobile
+                        ? (details) {
+                            _showUserMessageContextMenu(
+                              context: context,
+                              useCupertinoStyle: false,
+                              canEdit: contextActions.canEdit,
+                              canCopy: contextActions.canCopy,
+                              globalPosition: details.globalPosition,
+                            );
+                          }
+                        : null,
+                    child: bubbleContent,
+                  ),
                 ],
               ),
             ),

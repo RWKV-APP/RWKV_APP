@@ -185,9 +185,9 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.1b-20260129-ctx8192-coreml-lut8.zip",
         "fileSize": 179127401,
         "quantization": "INT8",
-        "platforms": ["ios"],
+        "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
-        "tags": ["reason", "coreml", "npu"],
+        "tags": ["reason", "coreml"],
         "date": 1770636632,
         "isDebug": true
       },
@@ -197,9 +197,9 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1c-1.5b-20260110-ctx8192-coreml-lut6.zip",
         "fileSize": 1157211967,
         "quantization": "INT6",
-        "platforms": ["ios"],
+        "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
-        "tags": ["reason", "coreml", "npu"],
+        "tags": ["reason", "coreml"],
         "date": 1770208511,
         "isDebug": true
       },
@@ -209,10 +209,11 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-2.9b-20260131-ctx8192-coreml-mixed-lut4-test.zip",
         "fileSize": 1907292264,
         "quantization": "INT4",
-        "platforms": ["ios"],
+        "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
-        "tags": ["reason", "coreml", "npu"],
-        "date": 1770636534
+        "tags": ["reason", "coreml"],
+        "date": 1770636534,
+        "isDebug": true
       },
       {
         "name": "RWKV7-G1d 7.2B",

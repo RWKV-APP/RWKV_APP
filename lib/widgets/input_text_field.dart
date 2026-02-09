@@ -19,11 +19,11 @@ class InputTextField extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final primary = Theme.of(context).colorScheme.primary;
     final loaded = ref.watch(P.rwkv.loaded);
     final loading = ref.watch(P.rwkv.loading);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final isChat = demoType == .chat;
+    final isTTS = demoType == .tts;
 
     String hintText;
     switch (demoType) {
@@ -42,9 +42,6 @@ class InputTextField extends ConsumerWidget {
 
     bool textFieldEnabled = loaded && !loading;
 
-    final borderRadius = demoType != .tts ? 12.r : 6.r;
-
-    final textInInput = ref.watch(P.chat.textInInput);
     final intonationShown = ref.watch(P.talk.intonationShown);
     final keyboardType = intonationShown ? TextInputType.none : TextInputType.multiline;
 
@@ -66,10 +63,10 @@ class InputTextField extends ConsumerWidget {
 
     final textFieldWidget = Container(
       padding: .only(
-        top: appTheme.inputBarTopDistance,
+        top: isTTS ? 0 : appTheme.inputBarTopDistance,
         left: inputBarHorizontalPadding,
         right: inputBarHorizontalPadding,
-        bottom: paddingBottom,
+        bottom: isTTS ? 0 : paddingBottom,
       ),
       child: GestureDetector(
         onTap: textFieldEnabled ? null : _onTapTextFieldWhenItsDisabled,
@@ -87,6 +84,7 @@ class InputTextField extends ConsumerWidget {
             ],
           ),
           child: Row(
+            crossAxisAlignment: .end,
             children: [
               Expanded(
                 child: TextField(

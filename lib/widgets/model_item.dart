@@ -30,6 +30,7 @@ class ModelItem extends ConsumerWidget {
   final bool showLoadModel;
   final bool showDelete;
   final bool isCurrentModel;
+  final String? dimInfo;
 
   const ModelItem(
     this.fileInfo,
@@ -40,6 +41,7 @@ class ModelItem extends ConsumerWidget {
     this.showDelete = true,
     this.isCurrentModel = false,
     this.loadButtonTextShowLoad = false,
+    this.dimInfo,
   });
 
   void _onStartTap() async {
