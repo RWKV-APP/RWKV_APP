@@ -56,7 +56,7 @@ enum AppTheme {
     pagerDim: Color(0xFFFFFFFF),
     textInputShadowC: Color(0x22000000),
     textInputBorderC: Color(0x11FFFFFF),
-    textInputBgC: Color(0xFF303030),
+    textInputBgC: Color(0xFF141414),
     sendingButtonC: Color(0xFFFFFFFF),
     stopButtonC: Color(0xFF000000),
     generatingIndicatorC: Color(0xFF000000),

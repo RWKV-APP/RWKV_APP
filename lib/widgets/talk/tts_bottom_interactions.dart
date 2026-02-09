@@ -322,86 +322,14 @@ class _Actions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final generating = ref.watch(P.talk.generating);
-    final canSend = ref.watch(P.chat.inputHasContent);
-    final editingBotMessage = ref.watch(P.msg.editingBotMessage);
-    final color = Theme.of(context).colorScheme.primary;
-    final loaded = ref.watch(P.rwkv.loaded);
-
-    return const Row(
+    return Wrap(
+      crossAxisAlignment: .center,
       children: [
-        Expanded(
-          child: Wrap(
-            crossAxisAlignment: .center,
-            children: [
-              _AudioButton(),
-              _SpkButton(),
-              _IntonationButton(),
-            ],
-          ),
-        ),
-        // if (generating)
-        //   Container(
-        //     decoration: const BoxDecoration(color: Colors.transparent),
-        //     child: Stack(
-        //       children: [
-        //         SizedBox(
-        //           width: 46,
-        //           height: 34,
-        //           child: Center(
-        //             child: Container(
-        //               decoration: BoxDecoration(color: Colors.transparent, borderRadius: 2.r),
-        //               width: 12,
-        //               height: 12,
-        //             ),
-        //           ),
-        //         ),
-        //         SizedBox(
-        //           width: 46,
-        //           height: 34,
-        //           child: Center(
-        //             child: SizedBox(
-        //               width: 24,
-        //               height: 24,
-        //               child: CircularProgressIndicator(
-        //                 color: color.q(.5),
-        //                 strokeWidth: 3,
-        //                 strokeCap: StrokeCap.round,
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // if (!generating)
-        //   AnimatedOpacity(
-        //     opacity: (canSend && loaded) ? 1 : .333,
-        //     duration: 250.ms,
-        //     child: GestureDetector(
-        //       onTap: _onRightButtonPressed,
-        //       child: Container(
-        //         padding: const .symmetric(horizontal: 10, vertical: 5),
-        //         child: Icon(
-        //           (Platform.isIOS || Platform.isMacOS)
-        //               ? editingBotMessage
-        //                     ? CupertinoIcons.pencil_circle_fill
-        //                     : CupertinoIcons.arrow_up_circle_fill
-        //               : editingBotMessage
-        //               ? Icons.edit
-        //               : Icons.send,
-        //           color: color,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
+        _AudioButton(),
+        _SpkButton(),
+        _IntonationButton(),
       ],
     );
-  }
-
-  void _onRightButtonPressed() async {
-    qq;
-    await P.talk.gen();
   }
 }
 

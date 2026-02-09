@@ -79,6 +79,7 @@ class _Stop extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appTheme = ref.watch(P.app.theme);
     final sendingButtonColor = appTheme.sendingButtonC;
+    final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
 
     return GestureDetector(
       onTap: P.chat.onStopButtonPressed,
@@ -87,8 +88,8 @@ class _Stop extends ConsumerWidget {
         child: Stack(
           children: [
             SizedBox(
-              width: 46,
-              height: 34,
+              width: sendingButtonTouchMinSize.width,
+              height: sendingButtonTouchMinSize.height,
               child: Center(
                 child: Container(
                   decoration: BoxDecoration(color: sendingButtonColor, borderRadius: 2.r),
@@ -98,8 +99,8 @@ class _Stop extends ConsumerWidget {
               ),
             ),
             SizedBox(
-              width: 46,
-              height: 34,
+              width: sendingButtonTouchMinSize.width,
+              height: sendingButtonTouchMinSize.height,
               child: Center(
                 child: SizedBox(
                   width: 24,
