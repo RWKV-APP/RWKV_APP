@@ -191,6 +191,17 @@
         "date": 1770636632
       },
       {
+        "name": "RWKV7-G1d 0.4B (CoreML INT8)",
+        "modelSize": 0.4,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.4b-20260210-ctx8192-coreml-lut8.zip",
+        "fileSize": 427917683,
+        "quantization": "INT8",
+        "platforms": ["ios", "macos_debug"],
+        "backends": ["coreml"],
+        "tags": ["reason", "coreml"],
+        "date": 1770708143
+      },
+      {
         "name": "RWKV7-G1c 1.5B (CoreML INT6)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1c-1.5b-20260110-ctx8192-coreml-lut6.zip",
