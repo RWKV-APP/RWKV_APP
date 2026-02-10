@@ -68,7 +68,7 @@ class MarkdownRender extends ConsumerWidget {
     );
 
     return Theme(
-      data: ThemeData(
+      data: theme.copyWith(
         checkboxTheme: CheckboxThemeData(
           visualDensity: const VisualDensity(horizontal: -4.0, vertical: -4.0),
           side: BorderSide(width: 1, color: primary),
