@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gpt_markdown/custom_widgets/markdown_config.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart' show OrderedListView;
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo/halo.dart';
@@ -48,6 +49,7 @@ class MarkdownRender extends ConsumerWidget {
       raw.replaceAll("\n\n", "\n").trim(),
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
+      inlineComponents: [...MarkdownComponent.inlineComponents, _HtmlBreakMd()],
       addNewLineAfterH1: false,
       orderedListBuilder: (context, no, child, config) => OrderedListView(
         no: "$no.",
@@ -81,6 +83,25 @@ class MarkdownRender extends ConsumerWidget {
         gptThemeData: gptThemeData,
         child: gptMarkdown,
       ),
+    );
+  }
+}
+
+class _HtmlBreakMd extends InlineMd {
+  _HtmlBreakMd();
+
+  @override
+  RegExp get exp => RegExp(r"<[bB][rR]\s*/?>");
+
+  @override
+  InlineSpan span(
+    BuildContext context,
+    String text,
+    final GptMarkdownConfig config,
+  ) {
+    return TextSpan(
+      text: "\n",
+      style: config.style,
     );
   }
 }

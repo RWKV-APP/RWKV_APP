@@ -74,8 +74,8 @@ class _Page extends ConsumerWidget {
             right: 0,
             child: ChatAppBar(),
           ),
+          if (!selectMessageMode) const InputBar(),
           if (selectMessageMode) const Positioned.fill(child: ShareChatSheet()),
-          const InputBar(),
         ],
       ),
     );
@@ -160,6 +160,7 @@ class _MessageWrap extends ConsumerWidget {
     if (!selectMessageMode) {
       return Message(msg, finalIndex, selectMode: false);
     }
+
     final selectedIds = ref.watch(P.chat.sharingSelectedMsgIds);
     final selected = selectedIds.contains(msg.id);
 

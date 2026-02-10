@@ -157,6 +157,7 @@ class Message extends ConsumerWidget {
 
     final s = S.of(context);
     final screenSize = MediaQuery.sizeOf(context);
+
     return showMenu<_UserMessageMenuAction>(
       context: context,
       shape: RoundedRectangleBorder(borderRadius: .circular(12)),
@@ -337,7 +338,7 @@ class Message extends ConsumerWidget {
 
     EdgeInsets padding = msgDefaultPadding;
     Border? border = .all(color: primary.q(.2));
-    double radius = 20;
+    double radius = 12;
 
     switch (msg.type) {
       case .userTTS:
@@ -351,7 +352,7 @@ class Message extends ConsumerWidget {
       topLeft: .circular(isMine ? radius : 0),
       topRight: .circular(radius),
       bottomLeft: .circular(radius),
-      bottomRight: .circular(isMine ? 0 : radius),
+      bottomRight: .circular(radius),
     );
 
     switch (msg.type) {
