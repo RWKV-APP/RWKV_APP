@@ -19,7 +19,6 @@ class InputBar extends ConsumerWidget {
   const InputBar({super.key, this.preferredDemoType = .chat});
 
   void _onChangeSize(Size size) {
-    qqr(size);
     P.chat.inputHeight.q = size.height;
   }
 

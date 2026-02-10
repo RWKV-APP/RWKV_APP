@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:halo/halo.dart';
 
 extension WidgetDebugger on Widget {
+  // TODO: @wangce 如何更优雅地做这件事儿
   Widget get qwe {
     return this;
     return _WidgetDebugger(child: this);
