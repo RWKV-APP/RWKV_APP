@@ -322,7 +322,7 @@ class _Actions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Wrap(
+    return const Wrap(
       crossAxisAlignment: .center,
       children: [
         _AudioButton(),

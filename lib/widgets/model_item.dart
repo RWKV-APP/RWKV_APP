@@ -296,7 +296,7 @@ class ModelItem extends ConsumerWidget {
                 child: Text(
                   S.current.model_item_ios18_weight_hint,
                   textAlign: TextAlign.center,
-                  style: TS(c: kCY, s: 13, w: .w600, height: 1.3),
+                  style: const TS(c: kCY, s: 13, w: .w600, height: 1.3),
                 ),
               ),
             ),

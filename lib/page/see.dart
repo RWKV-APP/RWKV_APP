@@ -23,9 +23,9 @@ class PageSee extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          _List(),
-          _Empty(),
-          Positioned(
+          const _List(),
+          const _Empty(),
+          const Positioned(
             top: 0,
             left: 0,
             right: 0,
@@ -35,9 +35,9 @@ class PageSee extends ConsumerWidget {
             bottom: inputHeight,
             right: 0,
             left: 0,
-            child: FloatingSuggestions(),
+            child: const FloatingSuggestions(),
           ),
-          InputBar(preferredDemoType: .see),
+          const InputBar(preferredDemoType: .see),
         ],
       ),
     );
