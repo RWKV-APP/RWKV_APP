@@ -188,8 +188,7 @@
         "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1770636632,
-        "isDebug": true
+        "date": 1770636632
       },
       {
         "name": "RWKV7-G1c 1.5B (CoreML INT6)",
@@ -212,8 +211,7 @@
         "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1770636534,
-        "isDebug": true
+        "date": 1770636534
       },
       {
         "name": "RWKV7-G1d 7.2B",
