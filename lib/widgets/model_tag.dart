@@ -49,7 +49,11 @@ class ModelTag extends ConsumerWidget {
       case "coreml":
       case "npu":
         return _RenderingOptions(
-          footer: Text("⚡", style: TS(s: 13, c: qb, height: 1)),
+          footer: Icon(
+            Icons.bolt,
+            size: 14,
+            color: Color(0xFFFFD54F),
+          ),
           bgColor: kCG,
           textColor: qw,
           borderColor: kCG,
@@ -129,17 +133,24 @@ class ModelTag extends ConsumerWidget {
         border: .all(color: opt.borderColor, width: .5),
         borderRadius: .circular(4),
       ),
-      padding: const .symmetric(horizontal: 4),
+      padding: const .only(
+        left: 4,
+        right: 4,
+      ),
       child: IntrinsicWidth(
         child: Row(
           mainAxisAlignment: .center,
-          crossAxisAlignment: .end,
           children: [
-            Text(
-              forceUppercase ? opt.displayTagName.toUpperCase() : opt.displayTagName,
-              style: TS(
-                c: forceTextColor ?? opt.textColor,
-                w: opt.fontWeight,
+            if (opt.footer != null) 2.w,
+            Container(
+              padding: const .symmetric(vertical: 1),
+              child: Text(
+                forceUppercase ? opt.displayTagName.toUpperCase() : opt.displayTagName,
+                style: TS(
+                  c: forceTextColor ?? opt.textColor,
+                  w: opt.fontWeight,
+                  height: 1.2,
+                ),
               ),
             ),
             ?opt.footer,

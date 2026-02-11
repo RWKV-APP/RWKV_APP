@@ -107,7 +107,7 @@
   ],
   "compounds": [
     {
-      "name": "All (Halo)",
+      "name": "all (Halo)",
       "configurations": [
         // 同时启动, 方便同时 debug 多个平台
         "debug (Halo) - macOS",
