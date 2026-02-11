@@ -13,6 +13,19 @@ extension _$UI on _UI {
   FV _init() async {
     P.app.screenWidth.l(_onScreenWidthChanged, fireImmediately: true);
     homeController.addListener(_onHomeScroll);
+    P.app.pageKey.l(_onPageKeyChanged);
+  }
+
+  void _onPageKeyChanged(PageKey pageKey) async {
+    switch (pageKey) {
+      case .home:
+        homePixels.q = 0;
+        homePixelsFromBottom.q = 1;
+        homeController.animateTo(0, duration: 200.ms, curve: Curves.easeOutCubic);
+        break;
+      default:
+        break;
+    }
   }
 
   void _onHomeScroll() async {

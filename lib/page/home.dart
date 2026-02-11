@@ -66,7 +66,7 @@ class PageHome extends ConsumerWidget {
                 top: containerPaddingTop,
                 left: containerPaddingHorizontal,
                 right: containerPaddingHorizontal,
-                bottom: paddingBottom + tabBarHeight + 12,
+                bottom: max(paddingBottom, 12) + tabBarHeight + 12,
               ),
               physics: const BouncingScrollPhysics(),
               child: MasonryGridView.count(

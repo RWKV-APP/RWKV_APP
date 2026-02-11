@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:zone/func/open_folder.dart';
@@ -184,7 +186,7 @@ class _ConversationList extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final paddingBottom = ref.watch(P.app.paddingBottom);
     return ListView.separated(
-      padding: .only(bottom: paddingBottom + appTheme.tabBarHeight + 12),
+      padding: .only(bottom: max(paddingBottom, 12) + appTheme.tabBarHeight + 12),
       itemCount: conversations.length,
       cacheExtent: 200,
       physics: const AlwaysScrollableScrollPhysics(),
