@@ -40,29 +40,16 @@ class ModelTag extends ConsumerWidget {
     switch (logicTagName) {
       case "mlx":
         return _RenderingOptions(
-          footer: Padding(
-            padding: const .only(bottom: 2),
-            child: Icon(Icons.apple, size: 13, color: qb),
-          ),
-          bgColor: Colors.transparent,
+          bgColor: kG.q(.2),
           textColor: qb,
-          borderColor: qb,
+          borderColor: kG.q(.2),
           displayTagName: "GPU",
+          fontWeight: .w400,
         );
       case "coreml":
-        return _RenderingOptions(
-          footer: Padding(
-            padding: const .only(bottom: 2),
-            child: Icon(Icons.apple, size: 13, color: qb),
-          ),
-          bgColor: Colors.transparent,
-          textColor: qb,
-          borderColor: qb,
-          displayTagName: "NPU",
-        );
       case "npu":
         return _RenderingOptions(
-          footer: const Text("⚡"),
+          footer: Text("⚡", style: TS(s: 13, c: qb, height: 1)),
           bgColor: kCG,
           textColor: qw,
           borderColor: kCG,
@@ -151,6 +138,8 @@ class ModelTag extends ConsumerWidget {
       padding: const .symmetric(horizontal: 4),
       child: IntrinsicWidth(
         child: Row(
+          mainAxisSize: .min,
+          crossAxisAlignment: .end,
           children: [
             Text(
               forceUppercase ? opt.displayTagName.toUpperCase() : opt.displayTagName,

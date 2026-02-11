@@ -99,10 +99,7 @@ class _ChatAppBar extends ConsumerWidget {
     final completionMode = ref.watch(P.chat.completionMode);
     final qb = ref.watch(P.app.qb);
     final qt = ref.watch(P.app.theme);
-    final scaffold = qt.scaffoldBg;
     final isChat = preferredDemoType == .chat;
-    final isTTS = preferredDemoType == .tts;
-    final isWorld = preferredDemoType == .see;
 
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);

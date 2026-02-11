@@ -336,6 +336,10 @@ class _ModelsInConfigFile extends ConsumerWidget {
   ///
   /// 只要没用 CPU 就排前面
   int _compare(FileInfo a, FileInfo b) {
+    final aHasCoreML = a.tags.contains("coreml");
+    final bHasCoreML = b.tags.contains("coreml");
+    if (aHasCoreML != bHasCoreML) return aHasCoreML ? -1 : 1;
+
     final aHasMLX = a.tags.contains("mlx");
     final bHasMLX = b.tags.contains("mlx");
     if (aHasMLX != bHasMLX) return aHasMLX ? -1 : 1;

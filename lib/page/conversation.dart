@@ -127,10 +127,13 @@ class _ConversationAppBar extends ConsumerWidget {
               onPressed: () => P.conversation.toggleBatchMode(),
               child: Text(s.cancel),
             )
-          : TextButton(
+          : IconButton(
               onPressed: () => P.conversation.toggleBatchMode(),
-              child: Text(s.conversation_management),
+              // child: Text(s.conversation_management),
+              icon: const Icon(Icons.list),
+              tooltip: s.conversation_management,
             ),
+      leadingWidth: isBatchMode ? 80 : null,
       actions: [
         if (isDesktop && !isBatchMode)
           IconButton(
