@@ -40,6 +40,11 @@ class ModelTag extends ConsumerWidget {
     switch (logicTagName) {
       case "mlx":
         return _RenderingOptions(
+          footer: Icon(
+            Icons.apple,
+            size: 14,
+            color: qb,
+          ),
           bgColor: kG.q(.2),
           textColor: qb,
           borderColor: kG.q(.2),
