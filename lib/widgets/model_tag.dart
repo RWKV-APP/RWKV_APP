@@ -54,7 +54,7 @@ class ModelTag extends ConsumerWidget {
       case "coreml":
       case "npu":
         return _RenderingOptions(
-          footer: Icon(
+          footer: const Icon(
             Icons.bolt,
             size: 14,
             color: Color(0xFFFFD54F),
