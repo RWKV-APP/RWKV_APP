@@ -7,6 +7,7 @@ enum AppTheme {
   /// 浅色主题
   light(
     isLight: true,
+    primary: Color(0xFF0D9488),
 
     scaffoldBg: Color(0xFFFFFFFF),
     settingBg: Color(0xFFF5F5F5),
@@ -27,6 +28,7 @@ enum AppTheme {
   /// 深色主题, 中对比度
   dim(
     isLight: false,
+    primary: Color(0xFF0D9488),
 
     scaffoldBg: Color(0xFF151515),
     settingBg: Color(0xFF252525),
@@ -47,6 +49,7 @@ enum AppTheme {
   /// 全黑主题, 高对比度
   lightsOut(
     isLight: false,
+    primary: Color(0xFF0D9488),
 
     scaffoldBg: Color(0xFF000000),
     settingBg: Color(0xFF000000),
@@ -66,6 +69,7 @@ enum AppTheme {
   ;
 
   const AppTheme({
+    required this.primary,
     required this.textInputBorderC,
     required this.textInputShadowC,
     required this.isLight,
@@ -84,6 +88,7 @@ enum AppTheme {
 
   /// 是否为浅色主题
   final bool isLight;
+  final Color primary;
 
   final Color scaffoldBg;
 
@@ -136,6 +141,17 @@ enum AppTheme {
   final double tabBarBorderWidth = 0.5;
   final double tabBarRightPadding = 12;
   final double tabBarLeftPadding = 12;
+
+  ColorScheme get colorScheme {
+    final Brightness brightness = isLight ? Brightness.light : Brightness.dark;
+    final ColorScheme seeded = ColorScheme.fromSeed(
+      seedColor: primary,
+      brightness: brightness,
+    );
+    return seeded.copyWith(
+      primary: primary,
+    );
+  }
 
   /// displayName 不能作为 const 构造参数，
   /// 因为 S.current 是运行时获取的（非 const），所以必须写成 getter。

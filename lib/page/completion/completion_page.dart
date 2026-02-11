@@ -41,7 +41,7 @@ class _CompletionPageState extends State<CompletionPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFF9E7C59) : const Color(0xFF80B0CC);
+    final Color primaryColor = theme.colorScheme.primary;
     Color backgroundColor = isDark ? const Color(0xFF242424) : const Color(0xFFFDFBF7);
     Color dividerColor = isDark ? const Color(0x99FFFFFF) : const Color(0x26000000);
     if (isDark && P.preference.preferredDarkCustomTheme.q == .lightsOut) {
