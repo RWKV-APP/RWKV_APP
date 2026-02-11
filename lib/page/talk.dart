@@ -20,8 +20,6 @@ class PageTalk extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final inputHeight = ref.watch(P.chat.inputHeight);
-    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final ttsBottomHeight = ref.watch(P.chat.ttsBottomHeight);
 
     return Scaffold(
       body: Stack(
@@ -35,7 +33,7 @@ class PageTalk extends ConsumerWidget {
             child: ChatAppBar(preferredDemoType: .tts),
           ),
           Positioned(
-            bottom: inputHeight,
+            bottom: inputHeight + 4,
             right: 0,
             left: 0,
             child: const Suggestions(),

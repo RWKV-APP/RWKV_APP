@@ -37,14 +37,13 @@ class Suggestions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestions = ref.watch(P.suggestion.talkSuggestion);
+    final appTheme = ref.watch(P.app.theme);
 
     if (suggestions.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final primary = Theme.of(context).colorScheme.primary;
     final qb = P.app.qb.q;
-    final qw = P.app.qw.q;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -54,22 +53,23 @@ class Suggestions extends ConsumerWidget {
           for (var item in suggestions)
             Padding(
               padding: const .only(right: 4),
-              child: OutlinedButton(
-                onPressed: () => _onSuggestionTap(item),
-                style: TextButton.styleFrom(
-                  foregroundColor: primary,
-                  backgroundColor: Platform.isIOS ? qw.q(.9) : qw,
-                  padding: const .symmetric(horizontal: 10, vertical: 0),
-                  visualDensity: .compact,
-                  shape: RoundedRectangleBorder(borderRadius: .circular(6)),
-                ),
-                child: Text(
-                  item,
-                  style: TextStyle(fontSize: 14, color: qb, fontWeight: .w400),
+              child: GD(
+                onTap: () => _onSuggestionTap(item),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: appTheme.scaffoldBg,
+                    borderRadius: .circular(8),
+                    border: .all(color: qb.q(.3), width: .5),
+                  ),
+                  padding: const .symmetric(horizontal: 12, vertical: 8),
+                  child: Text(
+                    item,
+                    style: TextStyle(color: qb.q(.9)),
+                  ),
                 ),
               ),
             ),
-        ],
+        ].widgetJoin((index) => const SizedBox(width: 2)),
       ),
     );
   }

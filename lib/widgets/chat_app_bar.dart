@@ -194,7 +194,7 @@ class _ChatAppBar extends ConsumerWidget {
             if ((preferredDemoType == .chat || preferredDemoType == .see) && !completionMode)
               _NewConversationButton(preferredDemoType: preferredDemoType),
             if (preferredDemoType == .chat && userType.isGreaterThan(.user)) _MorePopupMenuButton(preferredDemoType: preferredDemoType),
-            if (preferredDemoType != .chat && preferredDemoType != .sudoku && userType.isGreaterThan(.user))
+            if (preferredDemoType != .chat && preferredDemoType != .sudoku && userType.isGreaterThan(.user) && preferredDemoType != .tts)
               IconButton(
                 onPressed: _onSettingsPressed,
                 icon: const Icon(Icons.tune),

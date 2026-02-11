@@ -602,6 +602,7 @@ class _LocalPthFileItem extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final date = fileInfo.dateDisplayString;
+    final primary = Theme.of(context).colorScheme.primary;
 
     return Row(
       children: [
@@ -639,7 +640,7 @@ class _LocalPthFileItem extends ConsumerWidget {
             onTap: loading ? null : () => onStartToChat!(),
             child: Container(
               decoration: BoxDecoration(
-                color: (loading) ? kCG.q(.5) : kCG,
+                color: primary.q(loading ? .2 : 1),
                 borderRadius: .circular(4),
               ),
               padding: const .all(8),

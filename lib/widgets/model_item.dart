@@ -228,6 +228,7 @@ class ModelItem extends ConsumerWidget {
     }
 
     final qw = ref.watch(P.app.qw);
+    final primary = Theme.of(context).colorScheme.primary;
 
     return ClipRRect(
       borderRadius: .circular(8),
@@ -254,7 +255,7 @@ class ModelItem extends ConsumerWidget {
                       onTap: _onStartTap,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: (loading || unzipping) ? kCG.q(.5) : kCG,
+                          color: primary.q(loading || unzipping ? .2 : 1),
                           borderRadius: .circular(4),
                         ),
                         padding: const .all(8),

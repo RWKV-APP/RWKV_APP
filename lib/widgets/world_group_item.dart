@@ -304,6 +304,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final appTheme = ref.watch(P.app.theme);
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
 
     final files = _fileInfos.m((e) {
       return ref.watch(P.remote.locals(e));
@@ -399,7 +400,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                           onTap: (loading || modelLoading) ? null : _onStartToChatTap,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: (loading || modelLoading) ? kCG.q(.5) : kCG,
+                              color: primary.q(loading || modelLoading ? .2 : 1),
                               borderRadius: .circular(4),
                             ),
                             padding: const .all(8),
