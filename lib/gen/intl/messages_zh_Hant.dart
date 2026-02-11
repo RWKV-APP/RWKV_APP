@@ -363,6 +363,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "確定要刪除對話嗎？",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage("刪除完成"),
+    "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "確定要刪除這個 MLX/CoreML 快取嗎？",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("難度"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "難度必須大於 0",
@@ -573,6 +576,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m20,
     "message_content": MessageLookupByLibrary.simpleMessage("訊息內容"),
     "message_in_queue": m21,
+    "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML 快取"),
+    "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
+      "刪除 MLX/CoreML 快取可釋放磁碟空間，但下次載入對應的 MLX/CoreML 模型會更慢。",
+    ),
     "mode": MessageLookupByLibrary.simpleMessage("模式"),
     "model": MessageLookupByLibrary.simpleMessage("模型"),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(

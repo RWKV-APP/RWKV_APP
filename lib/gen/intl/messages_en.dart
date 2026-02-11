@@ -460,6 +460,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Are you sure you want to delete this conversation?",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage("Delete completed"),
+    "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete this MLX/CoreML cache?",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("Difficulty"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "Difficulty must be greater than 0",
@@ -733,6 +736,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m20,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
     "message_in_queue": m21,
+    "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML Cache"),
+    "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
+      "Deleting MLX/CoreML cache can free disk space, but the next MLX/CoreML model load may take longer.",
+    ),
     "mode": MessageLookupByLibrary.simpleMessage("Mode"),
     "model": MessageLookupByLibrary.simpleMessage("Model"),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(

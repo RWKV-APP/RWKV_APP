@@ -366,6 +366,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "确定要删除会话吗？",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage("删除完成"),
+    "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "确定要删除这个 MLX/CoreML 缓存吗？",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("难度"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "难度必须大于 0",
@@ -575,6 +578,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m20,
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
     "message_in_queue": m21,
+    "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML 缓存"),
+    "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
+      "删除 MLX/CoreML 缓存可释放磁盘空间，但下次加载对应的 MLX/CoreML 模型会更慢。",
+    ),
     "mode": MessageLookupByLibrary.simpleMessage("模式"),
     "model": MessageLookupByLibrary.simpleMessage("模型"),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(

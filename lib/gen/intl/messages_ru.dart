@@ -472,6 +472,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_finished": MessageLookupByLibrary.simpleMessage(
       "Удаление завершено",
     ),
+    "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "Удалить этот кэш MLX/CoreML?",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("Сложность"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "Сложность должна быть больше 0",
@@ -768,6 +771,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Содержимое сообщения",
     ),
     "message_in_queue": m21,
+    "mlx_cache": MessageLookupByLibrary.simpleMessage("Кэш MLX/CoreML"),
+    "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
+      "Удаление кэша MLX/CoreML освободит место, но следующая загрузка модели MLX/CoreML будет дольше.",
+    ),
     "mode": MessageLookupByLibrary.simpleMessage("Режим"),
     "model": MessageLookupByLibrary.simpleMessage("Модель"),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(

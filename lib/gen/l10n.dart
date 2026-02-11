@@ -3894,6 +3894,31 @@ class S {
     );
   }
 
+  /// `MLX/CoreML 缓存`
+  String get mlx_cache {
+    return Intl.message('MLX/CoreML 缓存', name: 'mlx_cache', desc: '', args: []);
+  }
+
+  /// `删除 MLX/CoreML 缓存可释放磁盘空间，但下次加载对应的 MLX/CoreML 模型会更慢。`
+  String get mlx_cache_notice {
+    return Intl.message(
+      '删除 MLX/CoreML 缓存可释放磁盘空间，但下次加载对应的 MLX/CoreML 模型会更慢。',
+      name: 'mlx_cache_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确定要删除这个 MLX/CoreML 缓存吗？`
+  String get delete_mlx_cache_confirmation {
+    return Intl.message(
+      '确定要删除这个 MLX/CoreML 缓存吗？',
+      name: 'delete_mlx_cache_confirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `导入权重文件`
   String get import_weight_file {
     return Intl.message(

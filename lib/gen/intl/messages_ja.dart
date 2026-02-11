@@ -388,6 +388,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "会話を削除してもよろしいですか？",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage("削除が完了しました"),
+    "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "この MLX/CoreML キャッシュを削除しますか？",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("難易度"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "難易度は0より大きくなければなりません",
@@ -630,6 +633,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m20,
     "message_content": MessageLookupByLibrary.simpleMessage("メッセージ内容"),
     "message_in_queue": m21,
+    "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML キャッシュ"),
+    "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
+      "MLX/CoreML キャッシュを削除すると容量を解放できますが、次回の MLX/CoreML モデル読み込みが遅くなります。",
+    ),
     "mode": MessageLookupByLibrary.simpleMessage("モード"),
     "model": MessageLookupByLibrary.simpleMessage("モデル"),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(

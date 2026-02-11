@@ -388,6 +388,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "대화를 삭제하시겠습니까?",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage("삭제가 완료되었습니다"),
+    "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
+      "이 MLX/CoreML 캐시를 삭제하시겠습니까?",
+    ),
     "difficulty": MessageLookupByLibrary.simpleMessage("난이도"),
     "difficulty_must_be_greater_than_0": MessageLookupByLibrary.simpleMessage(
       "난이도는 0보다 커야 합니다",
@@ -628,6 +631,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m20,
     "message_content": MessageLookupByLibrary.simpleMessage("메시지 내용"),
     "message_in_queue": m21,
+    "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML 캐시"),
+    "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
+      "MLX/CoreML 캐시를 삭제하면 저장 공간을 확보할 수 있지만, 다음 MLX/CoreML 모델 로딩은 더 오래 걸립니다.",
+    ),
     "mode": MessageLookupByLibrary.simpleMessage("모드"),
     "model": MessageLookupByLibrary.simpleMessage("모델"),
     "model_item_ios18_weight_hint": MessageLookupByLibrary.simpleMessage(

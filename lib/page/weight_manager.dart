@@ -102,6 +102,7 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final isDesktop = ref.watch(P.app.isDesktop);
     final chatWeights = ref.watch(P.remote.chatWeights);
     final ttsWeights = ref.watch(P.remote.ttsWeights);
@@ -112,6 +113,7 @@ class _Body extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
 
     final unrecognizedFiles = ref.watch(P.remote.unrecognizedFiles);
+    final mlxCacheDirectories = ref.watch(P.remote.mlxCacheDirectories);
 
     final allWeights = [
       ...chatWeights,
@@ -127,6 +129,7 @@ class _Body extends ConsumerWidget {
       final local = ref.watch(P.remote.locals(fileInfo));
       return local.hasFile;
     });
+    final hasVisibleFiles = hasDownloadedFiles || unrecognizedFiles.isNotEmpty || mlxCacheDirectories.isNotEmpty;
 
     // Show empty state if no downloaded files
 
@@ -136,7 +139,7 @@ class _Body extends ConsumerWidget {
 
     final children = [
       if (allWeights.any((e) => locals(e).q.downloading)) _DownloadingSection(allWeights: allWeights),
-      if (!hasDownloadedFiles) const _EmptyStateGuide(),
+      if (!hasVisibleFiles) const _EmptyStateGuide(),
       if (chatWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.rwkv_chat, weights: chatWeights),
       if (roleplayWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.role_play, weights: roleplayWeights),
       if (seeWeights.where((e) => locals(e).q.hasFile).isNotEmpty)
@@ -144,6 +147,7 @@ class _Body extends ConsumerWidget {
       if (ttsWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.tts, weights: ttsWeights),
       if (sudokuWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: "Sudoku", weights: sudokuWeights),
       if (othelloWeights.where((e) => locals(e).q.hasFile).isNotEmpty) _WeightSection(title: s.rwkv_othello, weights: othelloWeights),
+      if (mlxCacheDirectories.isNotEmpty) const _MlxCacheSection(),
       if (unrecognizedFiles.isNotEmpty) _OtherFilesSection(),
     ];
 
@@ -159,6 +163,7 @@ class _Body extends ConsumerWidget {
         ],
         Expanded(
           child: RefreshIndicator(
+            color: theme.colorScheme.primary,
             onRefresh: () async {
               await P.remote.sync();
               Alert.success(s.refresh_complete);
@@ -299,10 +304,10 @@ class _DownloadingSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final downloadingEntries = <(FileInfo, LocalFile)>[];
+    final List<(FileInfo, LocalFile)> downloadingEntries = <(FileInfo, LocalFile)>[];
 
-    for (final fileInfo in allWeights) {
-      final local = ref.watch(P.remote.locals(fileInfo));
+    for (final FileInfo fileInfo in allWeights) {
+      final LocalFile local = ref.watch(P.remote.locals(fileInfo));
       if (local.downloading) {
         downloadingEntries.add((fileInfo, local));
       }
@@ -312,28 +317,42 @@ class _DownloadingSection extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final theme = Theme.of(context);
     final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    int totalSize = 0;
+    for (final (FileInfo fileInfo, LocalFile localFile) in downloadingEntries) {
+      final double progressRatio = localFile.progress.clamp(0, 100).toDouble() / 100.0;
+      final int estimatedDownloadedBytes = (fileInfo.fileSize * progressRatio).round();
+      int occupiedBytes = estimatedDownloadedBytes;
+      if (occupiedBytes < 0) {
+        occupiedBytes = 0;
+      }
+      if (occupiedBytes > fileInfo.fileSize) {
+        occupiedBytes = fileInfo.fileSize;
+      }
+      totalSize += occupiedBytes;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _SectionHeader(
+          title: s.downloading,
+          totalSize: totalSize,
+        ),
+        for (final (FileInfo fileInfo, LocalFile localFile) in downloadingEntries)
+          _DownloadingItem(
+            fileInfo: fileInfo,
+            localFile: localFile,
+          ),
         Padding(
-          padding: const .fromLTRB(16, 16, 16, 8),
-          child: Text(
-            s.downloading,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+          padding: const .symmetric(horizontal: 8),
+          child: Container(
+            decoration: BoxDecoration(color: qb.q(.3)),
+            height: .5,
           ),
         ),
-        for (final entry in downloadingEntries)
-          _DownloadingItem(
-            fileInfo: entry.$1,
-            localFile: entry.$2,
-          ),
-        const Divider(height: 1),
       ],
     );
   }
@@ -347,31 +366,29 @@ class _WeightSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     // Filter for downloaded weights
-    final downloadedWeights = weights.where((w) {
+    final List<FileInfo> downloadedWeights = weights.where((FileInfo w) {
       final local = ref.watch(P.remote.locals(w));
       return local.hasFile;
-    }).toList()..sort((a, b) => b.fileSize.compareTo(a.fileSize));
+    }).toList()..sort((FileInfo a, FileInfo b) => b.fileSize.compareTo(a.fileSize));
 
     if (downloadedWeights.isEmpty) {
       return const SizedBox.shrink();
     }
 
+    int totalSize = 0;
+    for (final FileInfo fileInfo in downloadedWeights) {
+      totalSize += fileInfo.fileSize;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const .fromLTRB(16, 16, 16, 8),
-          child: Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+        _SectionHeader(
+          title: title,
+          totalSize: totalSize,
         ),
-        ...downloadedWeights.map((e) => _WeightItem(fileInfo: e)),
+        ...downloadedWeights.map((FileInfo e) => _WeightItem(fileInfo: e)),
       ],
     );
   }
@@ -568,34 +585,204 @@ class _WeightItem extends ConsumerWidget {
   }
 }
 
-class _OtherFilesSection extends ConsumerWidget {
+class _MlxCacheSection extends ConsumerWidget {
+  const _MlxCacheSection();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    // Check if weight lists have changed
+    final s = S.of(context);
 
-    final files = ref.watch(P.remote.unrecognizedFiles)..sort((a, b) => b.fileSize.compareTo(a.fileSize));
-    if (files.isEmpty) return const SizedBox.shrink();
+    final List<MlxCacheDirectory> directories = [...ref.watch(P.remote.mlxCacheDirectories)]
+      ..sort((MlxCacheDirectory a, MlxCacheDirectory b) => b.directorySize.compareTo(a.directorySize));
+    if (directories.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    int totalSize = 0;
+    for (final MlxCacheDirectory directory in directories) {
+      totalSize += directory.directorySize;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _SectionHeader(
+          title: s.mlx_cache,
+          totalSize: totalSize,
+        ),
         Padding(
-          padding: const .fromLTRB(16, 16, 16, 8),
+          padding: const .fromLTRB(16, 0, 16, 4),
           child: Text(
-            S.current.other_files,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+            s.mlx_cache_notice,
+            style: theme.textTheme.bodySmall,
           ),
         ),
-        for (final file in files)
+        for (final MlxCacheDirectory directory in directories)
+          _MlxCacheItem(
+            directory: directory,
+            onDeleted: P.remote.sync,
+          ),
+      ],
+    );
+  }
+}
+
+class _MlxCacheItem extends ConsumerWidget {
+  final MlxCacheDirectory directory;
+  final Future<void> Function() onDeleted;
+
+  const _MlxCacheItem({
+    required this.directory,
+    required this.onDeleted,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    return Padding(
+      padding: const .fromLTRB(16, 8, 4, 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(directory.directoryName, style: theme.textTheme.bodyLarge),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 4,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Container(
+                      padding: const .symmetric(horizontal: 4, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: qb.q(_tagBgOpacity),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        formatBytes(directory.directorySize),
+                        style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () async {
+              final String message =
+                  "${S.current.delete_mlx_cache_confirmation} (${directory.directoryName})\n\n${S.current.mlx_cache_notice}";
+              final result = await showOkCancelAlertDialog(
+                context: context,
+                title: S.current.delete,
+                message: message,
+                okLabel: S.current.delete,
+                isDestructiveAction: true,
+              );
+              if (result != OkCancelResult.ok) {
+                return;
+              }
+              try {
+                await P.remote.deleteMlxCacheDirectory(directory);
+                await onDeleted();
+                Alert.info(S.current.delete_finished);
+              } catch (e) {
+                if (context.mounted) {
+                  await showOkAlertDialog(
+                    context: context,
+                    title: S.current.delete,
+                    message: S.current.failed_to_delete_file("$e"),
+                    okLabel: S.current.got_it,
+                  );
+                }
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OtherFilesSection extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Check if weight lists have changed
+
+    final List<UnrecognizedFile> files = [...ref.watch(P.remote.unrecognizedFiles)]
+      ..sort((UnrecognizedFile a, UnrecognizedFile b) => b.fileSize.compareTo(a.fileSize));
+    if (files.isEmpty) return const SizedBox.shrink();
+
+    int totalSize = 0;
+    for (final UnrecognizedFile file in files) {
+      totalSize += file.fileSize;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeader(
+          title: S.current.other_files,
+          totalSize: totalSize,
+        ),
+        for (final UnrecognizedFile file in files)
           _OtherFileItem(
             file: file,
             onDeleted: P.remote.sync,
           ),
       ],
+    );
+  }
+}
+
+class _SectionHeader extends ConsumerWidget {
+  final String title;
+  final int totalSize;
+
+  const _SectionHeader({
+    required this.title,
+    required this.totalSize,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+    return Padding(
+      padding: const .fromLTRB(16, 16, 16, 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const .symmetric(horizontal: 4, vertical: 2),
+            decoration: BoxDecoration(
+              color: qb.q(_tagBgOpacity),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              formatBytes(totalSize),
+              style: TS(s: _tagTextSize, c: qb.q(_tagTextColorOpacity)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
