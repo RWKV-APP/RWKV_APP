@@ -308,7 +308,6 @@ extension _$Talk on _Talk {
     P.chat._updateMessageById(
       id: receiveId,
       changing: !allReceived,
-      ttsOverallProgress: allReceived ? 1.0 : 0.5,
     );
 
     this.generating.q = generating;
@@ -520,9 +519,6 @@ extension $Talk on _Talk {
       paused: false,
       type: MessageType.ttsGeneration,
       audioUrl: outputWavPath,
-      ttsOverallProgress: 0.0,
-      ttsPerWavProgress: const [],
-      ttsFilePaths: const [],
     );
 
     P.chat.receiveId.q = receiveId;

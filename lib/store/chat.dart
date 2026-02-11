@@ -839,9 +839,6 @@ extension _$Chat on _Chat {
     bool? paused,
     String? callingFunction,
     bool? isSensitive,
-    double? ttsOverallProgress,
-    List<double>? ttsPerWavProgress,
-    List<String>? ttsFilePaths,
     RefInfo? reference,
   }) {
     if (completionMode.q) {
@@ -871,9 +868,6 @@ extension _$Chat on _Chat {
       isReasoning: isReasoning,
       paused: paused,
       isSensitive: isSensitive,
-      ttsOverallProgress: ttsOverallProgress,
-      ttsPerWavProgress: ttsPerWavProgress,
-      ttsFilePaths: ttsFilePaths,
     );
     P.msg._syncMsg(id, newMsg);
   }

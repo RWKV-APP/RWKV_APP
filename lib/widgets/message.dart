@@ -70,7 +70,7 @@ class Message extends ConsumerWidget {
       if (P.see.playing.q) {
         P.see.stopPlaying();
       } else {
-        if (!msg.ttsIsDone) Alert.info(S.current.playing_partial_generated_audio);
+        if (msg.changing) Alert.info(S.current.playing_partial_generated_audio);
         P.see.play(path: msg.audioUrl!);
       }
       return;

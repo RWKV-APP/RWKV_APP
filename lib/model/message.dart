@@ -30,12 +30,6 @@ final class Message extends Equatable {
   final String? ttsSpeakerName;
   final String? ttsSourceAudioPath;
   final String? ttsInstruction;
-  @Deprecated("")
-  final double? ttsOverallProgress;
-  @Deprecated("")
-  final List<double>? ttsPerWavProgress;
-  @Deprecated("")
-  final List<String>? ttsFilePaths;
 
   final String? modelName;
   final String? runningMode;
@@ -58,9 +52,6 @@ final class Message extends Equatable {
     this.ttsInstruction,
     this.ttsCFMSteps = 5,
     this.isSensitive = false,
-    this.ttsOverallProgress,
-    this.ttsPerWavProgress,
-    this.ttsFilePaths,
     this.modelName,
     this.runningMode,
     this.rawDecodeParams,
@@ -84,9 +75,6 @@ final class Message extends Equatable {
     ttsSourceAudioPath,
     ttsInstruction,
     isSensitive,
-    ttsOverallProgress,
-    ...ttsPerWavProgress ?? [],
-    ...ttsFilePaths ?? [],
     modelName,
     runningMode,
     rawDecodeParams,
@@ -109,9 +97,6 @@ final class Message extends Equatable {
       ttsSourceAudioPath: json["ttsSourceAudioPath"] as String?,
       ttsInstruction: json["ttsInstruction"] as String?,
       isSensitive: json["isSensitive"] as bool,
-      ttsOverallProgress: json["ttsOverallProgress"] as double?,
-      ttsPerWavProgress: json["ttsPerWavProgress"] as List<double>?,
-      ttsFilePaths: json["ttsFilePaths"] as List<String>?,
       modelName: json["modelName"] as String?,
       runningMode: json["runningMode"] as String?,
       rawDecodeParams: json["rawDecodeParams"] as String?,
@@ -136,9 +121,6 @@ final class Message extends Equatable {
       "ttsSourceAudioPath": ttsSourceAudioPath,
       "ttsInstruction": ttsInstruction,
       "isSensitive": isSensitive,
-      "ttsOverallProgress": ttsOverallProgress,
-      "ttsPerWavProgress": ttsPerWavProgress,
-      "ttsFilePaths": ttsFilePaths,
       "modelName": modelName,
       "runningMode": runningMode,
       "rawDecodeParams": rawDecodeParams,
@@ -162,9 +144,6 @@ final class Message extends Equatable {
     String? ttsSourceAudioPath,
     String? ttsInstruction,
     bool? isSensitive,
-    double? ttsOverallProgress,
-    List<double>? ttsPerWavProgress,
-    List<String>? ttsFilePaths,
     String? modelName,
     String? runningMode,
     String? rawDecodeParams,
@@ -185,9 +164,6 @@ final class Message extends Equatable {
       ttsSourceAudioPath: ttsSourceAudioPath ?? this.ttsSourceAudioPath,
       ttsInstruction: ttsInstruction ?? this.ttsInstruction,
       isSensitive: isSensitive ?? this.isSensitive,
-      ttsOverallProgress: ttsOverallProgress ?? this.ttsOverallProgress,
-      ttsPerWavProgress: ttsPerWavProgress ?? this.ttsPerWavProgress,
-      ttsFilePaths: ttsFilePaths ?? this.ttsFilePaths,
       modelName: modelName ?? this.modelName,
       runningMode: runningMode ?? this.runningMode,
       rawDecodeParams: rawDecodeParams ?? this.rawDecodeParams,
@@ -214,9 +190,6 @@ Message(
   ttsSourceAudioPath: $ttsSourceAudioPath,
   ttsInstruction: $ttsInstruction,
   isSensitive: $isSensitive,
-  ttsOverallProgress: $ttsOverallProgress,
-  ttsPerWavProgress: $ttsPerWavProgress,
-  ttsFilePaths: $ttsFilePaths,
   modelName: $modelName,
   runningMode: $runningMode,
   rawDecodeParams: $rawDecodeParams,
@@ -226,10 +199,6 @@ Message(
 
 extension MessageX on Message {
   bool get isReasoning => content.startsWith("<think>");
-
-  bool get ttsHasContent => ttsFilePaths?.isNotEmpty ?? false;
-
-  bool get ttsIsDone => (ttsOverallProgress ?? 0.0) >= 1.0;
 
   int get createAtInMS => id;
 

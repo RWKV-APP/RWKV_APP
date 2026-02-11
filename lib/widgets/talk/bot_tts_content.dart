@@ -64,12 +64,6 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
   }
 
   Future<double> _syncWavDuration() async {
-    final filePaths = widget.msg.ttsFilePaths ?? [];
-    if (filePaths.isNotEmpty) {
-      final durations = await Future.wait(filePaths.map((e) => _getWavDuration(e)));
-      return durations.reduce((a, b) => a + b).toDouble();
-    }
-
     final audioUrl = widget.msg.audioUrl;
     if (audioUrl != null) {
       final value = await _getWavDuration(audioUrl);
@@ -82,6 +76,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
   @override
   Widget build(BuildContext context) {
     if (widget.msg.isMine) return const SizedBox.shrink();
+    final theme = Theme.of(context);
     final s = S.of(context);
 
     _syncWavDuration().then((value) {
@@ -95,7 +90,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final changing = widget.msg.changing;
     // final changing = true;
 
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = theme.colorScheme.primary;
     final length = _length;
     final base = 4000;
     final width = 80 * (length / (length + base)) + 55;
@@ -103,10 +98,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     final latestClickedMessage = ref.watch(P.msg.latestClicked);
     final isLatestClickedMessage = latestClickedMessage?.id == widget.msg.id;
 
-    final overallProgress = widget.msg.ttsOverallProgress ?? 0.0;
-    final perWavProgress = widget.msg.ttsPerWavProgress ?? [];
-
-    final allDone = overallProgress >= 1;
+    final allDone = !changing;
     final qb = ref.watch(P.app.qb);
 
     return Container(
@@ -118,25 +110,6 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
         mainAxisSize: .min,
         crossAxisAlignment: .stretch,
         children: [
-          if (!allDone)
-            Wrap(
-              children: [
-                ...perWavProgress.map((e) {
-                  return Column(
-                    children: [
-                      Icon(Icons.audio_file, color: primaryColor),
-                      const SizedBox(height: 2),
-                      if (e < 1)
-                        Text(
-                          (e * 100).toStringAsFixed(0) + "%",
-                          style: TS(c: qb.q(.8), w: .w600, s: 10),
-                        ),
-                      if (e >= 1) Icon(Icons.check, color: primaryColor, size: 12),
-                    ],
-                  );
-                }),
-              ],
-            ),
           if (changing && generating)
             Padding(
               padding: const .only(top: 4, bottom: 12),
@@ -164,7 +137,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
                 ],
               ),
             ),
-          if (!changing || widget.msg.ttsHasContent)
+          if (!changing)
             Padding(
               padding: const .only(top: 4, bottom: 4),
               child: Row(

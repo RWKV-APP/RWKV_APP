@@ -12,7 +12,6 @@ import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/msg_node.dart';
 import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/store/p.dart';
-import 'dart:convert';
 
 import 'db.steps.dart';
 
@@ -79,12 +78,6 @@ class _Msg extends Table {
 
   TextColumn get ttsInstruction => text().nullable()();
 
-  RealColumn get ttsOverallProgress => real().nullable()();
-
-  TextColumn get ttsPerWavProgress => text().nullable()();
-
-  TextColumn get ttsFilePaths => text().nullable()();
-
   TextColumn get modelName => text().nullable()();
 
   TextColumn get runningMode => text().nullable()();
@@ -99,7 +92,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration {
@@ -113,6 +106,9 @@ class AppDatabase extends _$AppDatabase {
         },
         from3To4: (m, schema) async {
           await m.addColumn(schema.msg, schema.msg.rawDecodeParams);
+        },
+        from4To5: (m, schema) async {
+          await m.alterTable(TableMigration(schema.msg));
         },
       ),
       beforeOpen: (details) async {
@@ -174,9 +170,6 @@ class AppDatabase extends _$AppDatabase {
       ttsSpeakerName: Value(message.ttsSpeakerName),
       ttsSourceAudioPath: Value(message.ttsSourceAudioPath),
       ttsInstruction: Value(message.ttsInstruction),
-      ttsOverallProgress: Value(message.ttsOverallProgress),
-      ttsPerWavProgress: Value(message.ttsPerWavProgress != null ? json.encode(message.ttsPerWavProgress) : null),
-      ttsFilePaths: Value(message.ttsFilePaths != null ? json.encode(message.ttsFilePaths) : null),
       modelName: Value(message.modelName),
       runningMode: Value(message.runningMode),
       build: P.app.buildNumber.q,
@@ -297,18 +290,6 @@ class AppDatabase extends _$AppDatabase {
 }
 
 model.Message _msgDataToMessage(_MsgData msgData) {
-  List<double>? ttsPerWavProgress;
-  if (msgData.ttsPerWavProgress != null && msgData.ttsPerWavProgress!.isNotEmpty) {
-    final List<dynamic> parsed = json.decode(msgData.ttsPerWavProgress!);
-    ttsPerWavProgress = parsed.cast<double>();
-  }
-
-  List<String>? ttsFilePaths;
-  if (msgData.ttsFilePaths != null && msgData.ttsFilePaths!.isNotEmpty) {
-    final List<dynamic> parsed = json.decode(msgData.ttsFilePaths!);
-    ttsFilePaths = parsed.cast<String>();
-  }
-
   return model.Message(
     id: msgData.id,
     content: msgData.content,
@@ -326,9 +307,6 @@ model.Message _msgDataToMessage(_MsgData msgData) {
     ttsInstruction: msgData.ttsInstruction,
     ttsCFMSteps: msgData.ttsCFMSteps,
     isSensitive: msgData.isSensitive,
-    ttsOverallProgress: msgData.ttsOverallProgress,
-    ttsPerWavProgress: ttsPerWavProgress,
-    ttsFilePaths: ttsFilePaths,
     modelName: msgData.modelName,
     runningMode: msgData.runningMode,
     rawDecodeParams: msgData.rawDecodeParams,

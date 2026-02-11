@@ -608,40 +608,6 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _ttsOverallProgressMeta =
-      const VerificationMeta('ttsOverallProgress');
-  @override
-  late final GeneratedColumn<double> ttsOverallProgress =
-      GeneratedColumn<double>(
-        'tts_overall_progress',
-        aliasedName,
-        true,
-        type: DriftSqlType.double,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _ttsPerWavProgressMeta = const VerificationMeta(
-    'ttsPerWavProgress',
-  );
-  @override
-  late final GeneratedColumn<String> ttsPerWavProgress =
-      GeneratedColumn<String>(
-        'tts_per_wav_progress',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _ttsFilePathsMeta = const VerificationMeta(
-    'ttsFilePaths',
-  );
-  @override
-  late final GeneratedColumn<String> ttsFilePaths = GeneratedColumn<String>(
-    'tts_file_paths',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _modelNameMeta = const VerificationMeta(
     'modelName',
   );
@@ -702,9 +668,6 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     ttsSpeakerName,
     ttsSourceAudioPath,
     ttsInstruction,
-    ttsOverallProgress,
-    ttsPerWavProgress,
-    ttsFilePaths,
     modelName,
     runningMode,
     build,
@@ -846,33 +809,6 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         ),
       );
     }
-    if (data.containsKey('tts_overall_progress')) {
-      context.handle(
-        _ttsOverallProgressMeta,
-        ttsOverallProgress.isAcceptableOrUnknown(
-          data['tts_overall_progress']!,
-          _ttsOverallProgressMeta,
-        ),
-      );
-    }
-    if (data.containsKey('tts_per_wav_progress')) {
-      context.handle(
-        _ttsPerWavProgressMeta,
-        ttsPerWavProgress.isAcceptableOrUnknown(
-          data['tts_per_wav_progress']!,
-          _ttsPerWavProgressMeta,
-        ),
-      );
-    }
-    if (data.containsKey('tts_file_paths')) {
-      context.handle(
-        _ttsFilePathsMeta,
-        ttsFilePaths.isAcceptableOrUnknown(
-          data['tts_file_paths']!,
-          _ttsFilePathsMeta,
-        ),
-      );
-    }
     if (data.containsKey('model_name')) {
       context.handle(
         _modelNameMeta,
@@ -978,18 +914,6 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         DriftSqlType.string,
         data['${effectivePrefix}tts_instruction'],
       ),
-      ttsOverallProgress: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}tts_overall_progress'],
-      ),
-      ttsPerWavProgress: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}tts_per_wav_progress'],
-      ),
-      ttsFilePaths: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}tts_file_paths'],
-      ),
       modelName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}model_name'],
@@ -1032,9 +956,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   final String? ttsSpeakerName;
   final String? ttsSourceAudioPath;
   final String? ttsInstruction;
-  final double? ttsOverallProgress;
-  final String? ttsPerWavProgress;
-  final String? ttsFilePaths;
   final String? modelName;
   final String? runningMode;
   final String build;
@@ -1056,9 +977,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     this.ttsSpeakerName,
     this.ttsSourceAudioPath,
     this.ttsInstruction,
-    this.ttsOverallProgress,
-    this.ttsPerWavProgress,
-    this.ttsFilePaths,
     this.modelName,
     this.runningMode,
     required this.build,
@@ -1100,15 +1018,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     }
     if (!nullToAbsent || ttsInstruction != null) {
       map['tts_instruction'] = Variable<String>(ttsInstruction);
-    }
-    if (!nullToAbsent || ttsOverallProgress != null) {
-      map['tts_overall_progress'] = Variable<double>(ttsOverallProgress);
-    }
-    if (!nullToAbsent || ttsPerWavProgress != null) {
-      map['tts_per_wav_progress'] = Variable<String>(ttsPerWavProgress);
-    }
-    if (!nullToAbsent || ttsFilePaths != null) {
-      map['tts_file_paths'] = Variable<String>(ttsFilePaths);
     }
     if (!nullToAbsent || modelName != null) {
       map['model_name'] = Variable<String>(modelName);
@@ -1159,15 +1068,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       ttsInstruction: ttsInstruction == null && nullToAbsent
           ? const Value.absent()
           : Value(ttsInstruction),
-      ttsOverallProgress: ttsOverallProgress == null && nullToAbsent
-          ? const Value.absent()
-          : Value(ttsOverallProgress),
-      ttsPerWavProgress: ttsPerWavProgress == null && nullToAbsent
-          ? const Value.absent()
-          : Value(ttsPerWavProgress),
-      ttsFilePaths: ttsFilePaths == null && nullToAbsent
-          ? const Value.absent()
-          : Value(ttsFilePaths),
       modelName: modelName == null && nullToAbsent
           ? const Value.absent()
           : Value(modelName),
@@ -1205,13 +1105,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
         json['ttsSourceAudioPath'],
       ),
       ttsInstruction: serializer.fromJson<String?>(json['ttsInstruction']),
-      ttsOverallProgress: serializer.fromJson<double?>(
-        json['ttsOverallProgress'],
-      ),
-      ttsPerWavProgress: serializer.fromJson<String?>(
-        json['ttsPerWavProgress'],
-      ),
-      ttsFilePaths: serializer.fromJson<String?>(json['ttsFilePaths']),
       modelName: serializer.fromJson<String?>(json['modelName']),
       runningMode: serializer.fromJson<String?>(json['runningMode']),
       build: serializer.fromJson<String>(json['build']),
@@ -1238,9 +1131,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       'ttsSpeakerName': serializer.toJson<String?>(ttsSpeakerName),
       'ttsSourceAudioPath': serializer.toJson<String?>(ttsSourceAudioPath),
       'ttsInstruction': serializer.toJson<String?>(ttsInstruction),
-      'ttsOverallProgress': serializer.toJson<double?>(ttsOverallProgress),
-      'ttsPerWavProgress': serializer.toJson<String?>(ttsPerWavProgress),
-      'ttsFilePaths': serializer.toJson<String?>(ttsFilePaths),
       'modelName': serializer.toJson<String?>(modelName),
       'runningMode': serializer.toJson<String?>(runningMode),
       'build': serializer.toJson<String>(build),
@@ -1265,9 +1155,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     Value<String?> ttsSpeakerName = const Value.absent(),
     Value<String?> ttsSourceAudioPath = const Value.absent(),
     Value<String?> ttsInstruction = const Value.absent(),
-    Value<double?> ttsOverallProgress = const Value.absent(),
-    Value<String?> ttsPerWavProgress = const Value.absent(),
-    Value<String?> ttsFilePaths = const Value.absent(),
     Value<String?> modelName = const Value.absent(),
     Value<String?> runningMode = const Value.absent(),
     String? build,
@@ -1295,13 +1182,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     ttsInstruction: ttsInstruction.present
         ? ttsInstruction.value
         : this.ttsInstruction,
-    ttsOverallProgress: ttsOverallProgress.present
-        ? ttsOverallProgress.value
-        : this.ttsOverallProgress,
-    ttsPerWavProgress: ttsPerWavProgress.present
-        ? ttsPerWavProgress.value
-        : this.ttsPerWavProgress,
-    ttsFilePaths: ttsFilePaths.present ? ttsFilePaths.value : this.ttsFilePaths,
     modelName: modelName.present ? modelName.value : this.modelName,
     runningMode: runningMode.present ? runningMode.value : this.runningMode,
     build: build ?? this.build,
@@ -1341,15 +1221,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       ttsInstruction: data.ttsInstruction.present
           ? data.ttsInstruction.value
           : this.ttsInstruction,
-      ttsOverallProgress: data.ttsOverallProgress.present
-          ? data.ttsOverallProgress.value
-          : this.ttsOverallProgress,
-      ttsPerWavProgress: data.ttsPerWavProgress.present
-          ? data.ttsPerWavProgress.value
-          : this.ttsPerWavProgress,
-      ttsFilePaths: data.ttsFilePaths.present
-          ? data.ttsFilePaths.value
-          : this.ttsFilePaths,
       modelName: data.modelName.present ? data.modelName.value : this.modelName,
       runningMode: data.runningMode.present
           ? data.runningMode.value
@@ -1380,9 +1251,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           ..write('ttsSpeakerName: $ttsSpeakerName, ')
           ..write('ttsSourceAudioPath: $ttsSourceAudioPath, ')
           ..write('ttsInstruction: $ttsInstruction, ')
-          ..write('ttsOverallProgress: $ttsOverallProgress, ')
-          ..write('ttsPerWavProgress: $ttsPerWavProgress, ')
-          ..write('ttsFilePaths: $ttsFilePaths, ')
           ..write('modelName: $modelName, ')
           ..write('runningMode: $runningMode, ')
           ..write('build: $build, ')
@@ -1392,7 +1260,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   }
 
   @override
-  int get hashCode => Object.hashAll([
+  int get hashCode => Object.hash(
     id,
     content,
     reference,
@@ -1409,14 +1277,11 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     ttsSpeakerName,
     ttsSourceAudioPath,
     ttsInstruction,
-    ttsOverallProgress,
-    ttsPerWavProgress,
-    ttsFilePaths,
     modelName,
     runningMode,
     build,
     rawDecodeParams,
-  ]);
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1437,9 +1302,6 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           other.ttsSpeakerName == this.ttsSpeakerName &&
           other.ttsSourceAudioPath == this.ttsSourceAudioPath &&
           other.ttsInstruction == this.ttsInstruction &&
-          other.ttsOverallProgress == this.ttsOverallProgress &&
-          other.ttsPerWavProgress == this.ttsPerWavProgress &&
-          other.ttsFilePaths == this.ttsFilePaths &&
           other.modelName == this.modelName &&
           other.runningMode == this.runningMode &&
           other.build == this.build &&
@@ -1463,9 +1325,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   final Value<String?> ttsSpeakerName;
   final Value<String?> ttsSourceAudioPath;
   final Value<String?> ttsInstruction;
-  final Value<double?> ttsOverallProgress;
-  final Value<String?> ttsPerWavProgress;
-  final Value<String?> ttsFilePaths;
   final Value<String?> modelName;
   final Value<String?> runningMode;
   final Value<String> build;
@@ -1487,9 +1346,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     this.ttsSpeakerName = const Value.absent(),
     this.ttsSourceAudioPath = const Value.absent(),
     this.ttsInstruction = const Value.absent(),
-    this.ttsOverallProgress = const Value.absent(),
-    this.ttsPerWavProgress = const Value.absent(),
-    this.ttsFilePaths = const Value.absent(),
     this.modelName = const Value.absent(),
     this.runningMode = const Value.absent(),
     this.build = const Value.absent(),
@@ -1512,9 +1368,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     this.ttsSpeakerName = const Value.absent(),
     this.ttsSourceAudioPath = const Value.absent(),
     this.ttsInstruction = const Value.absent(),
-    this.ttsOverallProgress = const Value.absent(),
-    this.ttsPerWavProgress = const Value.absent(),
-    this.ttsFilePaths = const Value.absent(),
     this.modelName = const Value.absent(),
     this.runningMode = const Value.absent(),
     required String build,
@@ -1542,9 +1395,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Expression<String>? ttsSpeakerName,
     Expression<String>? ttsSourceAudioPath,
     Expression<String>? ttsInstruction,
-    Expression<double>? ttsOverallProgress,
-    Expression<String>? ttsPerWavProgress,
-    Expression<String>? ttsFilePaths,
     Expression<String>? modelName,
     Expression<String>? runningMode,
     Expression<String>? build,
@@ -1568,10 +1418,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       if (ttsSourceAudioPath != null)
         'tts_source_audio_path': ttsSourceAudioPath,
       if (ttsInstruction != null) 'tts_instruction': ttsInstruction,
-      if (ttsOverallProgress != null)
-        'tts_overall_progress': ttsOverallProgress,
-      if (ttsPerWavProgress != null) 'tts_per_wav_progress': ttsPerWavProgress,
-      if (ttsFilePaths != null) 'tts_file_paths': ttsFilePaths,
       if (modelName != null) 'model_name': modelName,
       if (runningMode != null) 'running_mode': runningMode,
       if (build != null) 'build': build,
@@ -1596,9 +1442,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Value<String?>? ttsSpeakerName,
     Value<String?>? ttsSourceAudioPath,
     Value<String?>? ttsInstruction,
-    Value<double?>? ttsOverallProgress,
-    Value<String?>? ttsPerWavProgress,
-    Value<String?>? ttsFilePaths,
     Value<String?>? modelName,
     Value<String?>? runningMode,
     Value<String>? build,
@@ -1621,9 +1464,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       ttsSpeakerName: ttsSpeakerName ?? this.ttsSpeakerName,
       ttsSourceAudioPath: ttsSourceAudioPath ?? this.ttsSourceAudioPath,
       ttsInstruction: ttsInstruction ?? this.ttsInstruction,
-      ttsOverallProgress: ttsOverallProgress ?? this.ttsOverallProgress,
-      ttsPerWavProgress: ttsPerWavProgress ?? this.ttsPerWavProgress,
-      ttsFilePaths: ttsFilePaths ?? this.ttsFilePaths,
       modelName: modelName ?? this.modelName,
       runningMode: runningMode ?? this.runningMode,
       build: build ?? this.build,
@@ -1682,15 +1522,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     if (ttsInstruction.present) {
       map['tts_instruction'] = Variable<String>(ttsInstruction.value);
     }
-    if (ttsOverallProgress.present) {
-      map['tts_overall_progress'] = Variable<double>(ttsOverallProgress.value);
-    }
-    if (ttsPerWavProgress.present) {
-      map['tts_per_wav_progress'] = Variable<String>(ttsPerWavProgress.value);
-    }
-    if (ttsFilePaths.present) {
-      map['tts_file_paths'] = Variable<String>(ttsFilePaths.value);
-    }
     if (modelName.present) {
       map['model_name'] = Variable<String>(modelName.value);
     }
@@ -1725,9 +1556,6 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
           ..write('ttsSpeakerName: $ttsSpeakerName, ')
           ..write('ttsSourceAudioPath: $ttsSourceAudioPath, ')
           ..write('ttsInstruction: $ttsInstruction, ')
-          ..write('ttsOverallProgress: $ttsOverallProgress, ')
-          ..write('ttsPerWavProgress: $ttsPerWavProgress, ')
-          ..write('ttsFilePaths: $ttsFilePaths, ')
           ..write('modelName: $modelName, ')
           ..write('runningMode: $runningMode, ')
           ..write('build: $build, ')
@@ -1990,9 +1818,6 @@ typedef $$_MsgTableCreateCompanionBuilder =
       Value<String?> ttsSpeakerName,
       Value<String?> ttsSourceAudioPath,
       Value<String?> ttsInstruction,
-      Value<double?> ttsOverallProgress,
-      Value<String?> ttsPerWavProgress,
-      Value<String?> ttsFilePaths,
       Value<String?> modelName,
       Value<String?> runningMode,
       required String build,
@@ -2016,9 +1841,6 @@ typedef $$_MsgTableUpdateCompanionBuilder =
       Value<String?> ttsSpeakerName,
       Value<String?> ttsSourceAudioPath,
       Value<String?> ttsInstruction,
-      Value<double?> ttsOverallProgress,
-      Value<String?> ttsPerWavProgress,
-      Value<String?> ttsFilePaths,
       Value<String?> modelName,
       Value<String?> runningMode,
       Value<String> build,
@@ -2110,21 +1932,6 @@ class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
 
   ColumnFilters<String> get ttsInstruction => $composableBuilder(
     column: $table.ttsInstruction,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get ttsOverallProgress => $composableBuilder(
-    column: $table.ttsOverallProgress,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get ttsPerWavProgress => $composableBuilder(
-    column: $table.ttsPerWavProgress,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get ttsFilePaths => $composableBuilder(
-    column: $table.ttsFilePaths,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2237,21 +2044,6 @@ class $$_MsgTableOrderingComposer extends Composer<_$AppDatabase, $_MsgTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get ttsOverallProgress => $composableBuilder(
-    column: $table.ttsOverallProgress,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get ttsPerWavProgress => $composableBuilder(
-    column: $table.ttsPerWavProgress,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get ttsFilePaths => $composableBuilder(
-    column: $table.ttsFilePaths,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get modelName => $composableBuilder(
     column: $table.modelName,
     builder: (column) => ColumnOrderings(column),
@@ -2344,21 +2136,6 @@ class $$_MsgTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get ttsOverallProgress => $composableBuilder(
-    column: $table.ttsOverallProgress,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get ttsPerWavProgress => $composableBuilder(
-    column: $table.ttsPerWavProgress,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get ttsFilePaths => $composableBuilder(
-    column: $table.ttsFilePaths,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get modelName =>
       $composableBuilder(column: $table.modelName, builder: (column) => column);
 
@@ -2420,9 +2197,6 @@ class $$_MsgTableTableManager
                 Value<String?> ttsSpeakerName = const Value.absent(),
                 Value<String?> ttsSourceAudioPath = const Value.absent(),
                 Value<String?> ttsInstruction = const Value.absent(),
-                Value<double?> ttsOverallProgress = const Value.absent(),
-                Value<String?> ttsPerWavProgress = const Value.absent(),
-                Value<String?> ttsFilePaths = const Value.absent(),
                 Value<String?> modelName = const Value.absent(),
                 Value<String?> runningMode = const Value.absent(),
                 Value<String> build = const Value.absent(),
@@ -2444,9 +2218,6 @@ class $$_MsgTableTableManager
                 ttsSpeakerName: ttsSpeakerName,
                 ttsSourceAudioPath: ttsSourceAudioPath,
                 ttsInstruction: ttsInstruction,
-                ttsOverallProgress: ttsOverallProgress,
-                ttsPerWavProgress: ttsPerWavProgress,
-                ttsFilePaths: ttsFilePaths,
                 modelName: modelName,
                 runningMode: runningMode,
                 build: build,
@@ -2470,9 +2241,6 @@ class $$_MsgTableTableManager
                 Value<String?> ttsSpeakerName = const Value.absent(),
                 Value<String?> ttsSourceAudioPath = const Value.absent(),
                 Value<String?> ttsInstruction = const Value.absent(),
-                Value<double?> ttsOverallProgress = const Value.absent(),
-                Value<String?> ttsPerWavProgress = const Value.absent(),
-                Value<String?> ttsFilePaths = const Value.absent(),
                 Value<String?> modelName = const Value.absent(),
                 Value<String?> runningMode = const Value.absent(),
                 required String build,
@@ -2494,9 +2262,6 @@ class $$_MsgTableTableManager
                 ttsSpeakerName: ttsSpeakerName,
                 ttsSourceAudioPath: ttsSourceAudioPath,
                 ttsInstruction: ttsInstruction,
-                ttsOverallProgress: ttsOverallProgress,
-                ttsPerWavProgress: ttsPerWavProgress,
-                ttsFilePaths: ttsFilePaths,
                 modelName: modelName,
                 runningMode: runningMode,
                 build: build,
