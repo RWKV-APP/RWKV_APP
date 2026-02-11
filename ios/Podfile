@@ -32,8 +32,6 @@ target 'Runner' do
   use_modular_headers!
   inhibit_all_warnings!
 
-  pod 'GoogleMLKit/TextRecognitionChinese', '~> 7.0.0'
-
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 

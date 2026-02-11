@@ -48,24 +48,21 @@ PODS:
   - gal (1.0.0):
     - Flutter
     - FlutterMacOS
-  - google_mlkit_commons (0.11.0):
+  - google_mlkit_commons (0.11.1):
     - Flutter
-    - MLKitVision
-  - google_mlkit_text_recognition (0.15.0):
+    - MLKitVision (~> 10.0.0)
+  - google_mlkit_text_recognition (0.15.1):
     - Flutter
     - google_mlkit_commons
-    - GoogleMLKit/TextRecognition (~> 7.0.0)
+    - GoogleMLKit/TextRecognition (~> 9.0.0)
   - GoogleDataTransport (10.1.0):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
-  - GoogleMLKit/MLKitCore (7.0.0):
-    - MLKitCommon (~> 12.0.0)
-  - GoogleMLKit/TextRecognition (7.0.0):
+  - GoogleMLKit/MLKitCore (9.0.0):
+    - MLKitCommon (~> 14.0.0)
+  - GoogleMLKit/TextRecognition (9.0.0):
     - GoogleMLKit/MLKitCore
-    - MLKitTextRecognition (~> 5.0.0)
-  - GoogleMLKit/TextRecognitionChinese (7.0.0):
-    - GoogleMLKit/MLKitCore
-    - MLKitTextRecognitionChinese (~> 4.0.0)
+    - MLKitTextRecognition (~> 7.0.0)
   - GoogleToolboxForMac/Defines (4.2.1)
   - GoogleToolboxForMac/Logger (4.2.1):
     - GoogleToolboxForMac/Defines (= 4.2.1)
@@ -83,31 +80,27 @@ PODS:
   - GTMSessionFetcher/Core (3.5.0)
   - image_picker_ios (0.0.1):
     - Flutter
-  - MLImage (1.0.0-beta6)
-  - MLKitCommon (12.0.0):
+  - MLImage (1.0.0-beta8)
+  - MLKitCommon (14.0.0):
     - GoogleDataTransport (~> 10.0)
     - GoogleToolboxForMac/Logger (< 5.0, >= 4.2.1)
     - "GoogleToolboxForMac/NSData+zlib (< 5.0, >= 4.2.1)"
     - GoogleUtilities/Logger (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - GTMSessionFetcher/Core (< 4.0, >= 3.3.2)
-  - MLKitTextRecognition (5.0.0):
-    - MLKitCommon (~> 12.0)
-    - MLKitTextRecognitionCommon (= 4.0.0)
-    - MLKitVision (~> 8.0)
-  - MLKitTextRecognitionChinese (4.0.0):
-    - MLKitCommon (~> 12.0)
-    - MLKitTextRecognitionCommon (= 4.0.0)
-    - MLKitVision (~> 8.0)
-  - MLKitTextRecognitionCommon (4.0.0):
-    - MLKitCommon (~> 12.0)
-    - MLKitVision (~> 8.0)
-  - MLKitVision (8.0.0):
+  - MLKitTextRecognition (7.0.0):
+    - MLKitCommon (~> 14.0)
+    - MLKitTextRecognitionCommon (= 6.0.0)
+    - MLKitVision (~> 10.0)
+  - MLKitTextRecognitionCommon (6.0.0):
+    - MLKitCommon (~> 14.0)
+    - MLKitVision (~> 10.0)
+  - MLKitVision (10.0.0):
     - GoogleToolboxForMac/Logger (< 5.0, >= 4.2.1)
     - "GoogleToolboxForMac/NSData+zlib (< 5.0, >= 4.2.1)"
     - GTMSessionFetcher/Core (< 4.0, >= 3.3.2)
-    - MLImage (= 1.0.0-beta6)
-    - MLKitCommon (~> 12.0)
+    - MLImage (= 1.0.0-beta8)
+    - MLKitCommon (~> 14.0)
   - mp_audio_stream (0.0.3):
     - Flutter
   - nanopb (3.30910.0):
@@ -124,11 +117,11 @@ PODS:
     - Flutter
   - rwkv_mobile_flutter (0.0.1):
     - Flutter
-  - SDWebImage (5.21.5):
-    - SDWebImage/Core (= 5.21.5)
-  - SDWebImage/Core (5.21.5)
+  - SDWebImage (5.21.6):
+    - SDWebImage/Core (= 5.21.6)
+  - SDWebImage/Core (5.21.6)
   - Sentry/HybridSDK (8.56.2)
-  - sentry_flutter (9.11.0):
+  - sentry_flutter (9.12.0):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.56.2)
@@ -180,7 +173,6 @@ DEPENDENCIES:
   - gal (from `.symlinks/plugins/gal/darwin`)
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
   - google_mlkit_text_recognition (from `.symlinks/plugins/google_mlkit_text_recognition/ios`)
-  - GoogleMLKit/TextRecognitionChinese (~> 7.0.0)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - mp_audio_stream (from `.symlinks/plugins/mp_audio_stream/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -206,7 +198,6 @@ SPEC REPOS:
     - MLImage
     - MLKitCommon
     - MLKitTextRecognition
-    - MLKitTextRecognitionChinese
     - MLKitTextRecognitionCommon
     - MLKitVision
     - nanopb
@@ -273,20 +264,19 @@ SPEC CHECKSUMS:
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   gaimon: ce0b5c042363ed957bb92ee755c361903d3ce0ef
   gal: baecd024ebfd13c441269ca7404792a7152fde89
-  google_mlkit_commons: 2abe6a70e1824e431d16a51085cb475b672c8aab
-  google_mlkit_text_recognition: ec2122ec89bfe0d7200763336a6e4ef44810674c
+  google_mlkit_commons: a5e4ffae5bc59ea4c7b9025dc72cb6cb79dc1166
+  google_mlkit_text_recognition: b3de5adb786ad7a0fe8e13618387b8d2df0f3c70
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
-  GoogleMLKit: eff9e23ec1d90ea4157a1ee2e32a4f610c5b3318
+  GoogleMLKit: b1eee21a41c57704fe72483b15c85cb2c0cd7444
   GoogleToolboxForMac: d1a2cbf009c453f4d6ded37c105e2f67a32206d8
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
-  MLImage: 0ad1c5f50edd027672d8b26b0fee78a8b4a0fc56
-  MLKitCommon: 07c2c33ae5640e5380beaaa6e4b9c249a205542d
-  MLKitTextRecognition: 3b41f3ff084a79afb214408d25d2068d77ab322c
-  MLKitTextRecognitionChinese: a7e2d3e54d8be80091f7064741c54e2298a9d498
-  MLKitTextRecognitionCommon: cd44577a8c506fc6bba065096de03bec0d01a213
-  MLKitVision: 45e79d68845a2de77e2dd4d7f07947f0ed157b0e
+  MLImage: 0de5c6c2bf9e93b80ef752e2797f0836f03b58c0
+  MLKitCommon: 47d47b50a031d00db62f1b0efe5a1d8b09a3b2e6
+  MLKitTextRecognition: c0ad24510481dfc8893ad15dfcb8a5f05ed9e826
+  MLKitTextRecognitionCommon: 234ceb1cfdfb5fceb4fd664943046609a2961cc2
+  MLKitVision: 39a5a812db83c4a0794445088e567f3631c11961
   mp_audio_stream: 3aeeb992433b114917bffc30accf51ce8114aea2
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
@@ -294,9 +284,9 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   record_ios: 412daca2350b228e698fffcd08f1f94ceb1e3844
   rwkv_mobile_flutter: 1ac221dbc3469b5cb1aab8248b34e1804e68aa98
-  SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
+  SDWebImage: 1bb6a1b84b6fe87b972a102bdc77dd589df33477
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
-  sentry_flutter: 8621fa384e86f069bd88b29258c55c19f43e24f2
+  sentry_flutter: 26f4615de8bdc741318397fdc78ba3e4e08df07f
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
@@ -305,6 +295,6 @@ SPEC CHECKSUMS:
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
-PODFILE CHECKSUM: 104ff7ee395b8180ef7de9e2ec96d0df841f24b7
+PODFILE CHECKSUM: f6e0e11f280911c69ffb587d41e1e71192df362a
 
 COCOAPODS: 1.16.2
