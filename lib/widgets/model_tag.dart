@@ -55,13 +55,6 @@ class ModelTag extends ConsumerWidget {
           borderColor: kCG,
           displayTagName: "NPU",
         );
-      case "gpu":
-        return _RenderingOptions(
-          bgColor: kCG,
-          textColor: qw,
-          borderColor: kCG,
-          displayTagName: "GPU",
-        );
       case "DeepEmbedding":
         return _RenderingOptions(
           bgColor: kCG,
@@ -114,6 +107,7 @@ class ModelTag extends ConsumerWidget {
           displayTagName: tagName.toUpperCase(),
           fontWeight: .w400,
         );
+      case "GPU":
       default:
         return _RenderingOptions(
           bgColor: kG.q(.2),
@@ -138,7 +132,7 @@ class ModelTag extends ConsumerWidget {
       padding: const .symmetric(horizontal: 4),
       child: IntrinsicWidth(
         child: Row(
-          mainAxisSize: .min,
+          mainAxisAlignment: .center,
           crossAxisAlignment: .end,
           children: [
             Text(

@@ -516,6 +516,7 @@ class _Tags extends ConsumerWidget {
       runSpacing: 8,
       children: [
         ...tags.where((tag) => !hiddenTags.contains(tag)).map((tag) => ModelTag(tag: tag)),
+        if (fileInfo.backend == .webRwkv) const ModelTag(tag: "GPU"),
         if (kDebugMode && fileInfo.isDebug) const ModelTag(tag: "DEBUG", forceBgColor: Colors.red, forceTextColor: kW),
         if (quantization != null && quantization.isNotEmpty) ModelTag(tag: quantization, forceUppercase: true),
         if (date != null) ModelTag(tag: date),
