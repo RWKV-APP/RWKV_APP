@@ -136,26 +136,26 @@
         "date": 1770013840
       },
       {
-        "name": "RWKV7-G1d 0.1B (MLX INT6)",
+        "name": "RWKV7-G1d 0.1B (MLX INT8)",
         "modelSize": 0.1,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.1B-g1d-20260129-ctx8192-mlx-6bit.zip",
-        "fileSize": 160608624,
-        "quantization": "INT6",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.1B-g1d-20260129-ctx8192-mlx-8bit.zip",
+        "fileSize": 181405705,
+        "quantization": "INT8",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1770014736
+        "date": 1770801812
       },
       {
-        "name": "RWKV7-G1d 0.4B (MLX INT6)",
+        "name": "RWKV7-G1d 0.4B (MLX INT8)",
         "modelSize": 0.4,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.4B-g1d-20260210-ctx8192-mlx-6bit.zip",
-        "fileSize": 377344131,
-        "quantization": "INT6",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-0.4B-g1d-20260210-ctx8192-mlx-8bit.zip",
+        "fileSize": 453509054,
+        "quantization": "INT8",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1770707159
+        "date": 1770801812
       },
       {
         "name": "RWKV7-G1c 1.5B (MLX INT6)",
