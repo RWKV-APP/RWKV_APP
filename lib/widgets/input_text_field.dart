@@ -21,6 +21,7 @@ class InputTextField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final loaded = ref.watch(P.rwkv.loaded);
     final loading = ref.watch(P.rwkv.loading);
@@ -96,14 +97,39 @@ class InputTextField extends ConsumerWidget {
             crossAxisAlignment: .stretch,
             children: [
               if (isSee)
-                _SeeImageSection(
-                  imagePath: imagePath,
-                  shouldGuideImageSelection: shouldGuideImageSelection,
-                  textFieldEnabled: textFieldEnabled,
+                AnimatedSwitcher(
+                  duration: 250.ms,
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SizeTransition(
+                        axisAlignment: -1,
+                        sizeFactor: animation,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: hasCurrentImage
+                      ? _SeeImageSection(
+                          key: const ValueKey("see-image-selected"),
+                          imagePath: imagePath,
+                          textFieldEnabled: textFieldEnabled,
+                        )
+                      : const SizedBox(
+                          key: ValueKey("see-image-empty"),
+                        ),
                 ),
               Row(
                 crossAxisAlignment: .end,
                 children: [
+                  if (isSee)
+                    _SeeImageQuickButton(
+                      hasImage: hasCurrentImage,
+                      shouldGuideImageSelection: shouldGuideImageSelection,
+                      textFieldEnabled: textFieldEnabled,
+                    ),
                   Expanded(
                     child: TextField(
                       focusNode: P.chat.focusNode,
@@ -122,7 +148,7 @@ class InputTextField extends ConsumerWidget {
                       minLines: 1,
                       decoration: InputDecoration(
                         contentPadding: isSee
-                            ? const .only(left: 12, top: 8, right: 8, bottom: 8)
+                            ? .only(left: hasCurrentImage ? 12 : 8, top: 8, right: 8, bottom: 8)
                             : const .only(left: 12, top: 4, right: 12, bottom: 4),
                         fillColor: qw,
                         focusColor: qw,
@@ -133,7 +159,7 @@ class InputTextField extends ConsumerWidget {
                         focusedBorder: .none,
                         focusedErrorBorder: .none,
                         hintText: hintText,
-                        hintStyle: !isChat ? null : const TextStyle(color: Colors.grey),
+                        hintStyle: !isChat ? null : TextStyle(color: theme.colorScheme.onSurface.q(.5)),
                       ),
                     ),
                   ),
@@ -182,13 +208,111 @@ class InputTextField extends ConsumerWidget {
   }
 }
 
-class _SeeImageSection extends ConsumerWidget {
-  final String? imagePath;
-  final bool shouldGuideImageSelection;
+class _SeeImageSection extends StatelessWidget {
+  final String imagePath;
   final bool textFieldEnabled;
 
   const _SeeImageSection({
+    super.key,
     required this.imagePath,
+    required this.textFieldEnabled,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final surfaceContainer = theme.colorScheme.surfaceContainer;
+    final onSurface = theme.colorScheme.onSurface;
+
+    return Padding(
+      padding: const .fromLTRB(8, 8, 8, 6),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: textFieldEnabled ? P.see.selectImage : null,
+          borderRadius: .circular(14),
+          child: Container(
+            padding: const .only(left: 8, top: 8, right: 4, bottom: 8),
+            decoration: BoxDecoration(
+              color: surfaceContainer.q(.7),
+              borderRadius: .circular(14),
+              border: Border.all(color: primary.q(.16)),
+            ),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: .circular(10),
+                  child: SizedBox(
+                    width: 56,
+                    height: 56,
+                    child: Image.file(
+                      File(imagePath),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return ColoredBox(
+                          color: surfaceContainer,
+                          child: Icon(Icons.broken_image_outlined, color: onSurface.q(.45)),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    mainAxisAlignment: .center,
+                    children: [
+                      Text(
+                        s.change_selected_image,
+                        maxLines: 1,
+                        overflow: .ellipsis,
+                        style: TS(c: onSurface.q(.88), w: .w600),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        imagePath.split(Platform.pathSeparator).last,
+                        maxLines: 1,
+                        overflow: .ellipsis,
+                        style: TS(c: onSurface.q(.56), s: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: textFieldEnabled ? P.see.selectImage : null,
+                  visualDensity: .compact,
+                  tooltip: s.change_selected_image,
+                  icon: Icon(Icons.swap_horiz_rounded, size: 18, color: onSurface.q(.75)),
+                ),
+                IconButton(
+                  onPressed: textFieldEnabled
+                      ? () {
+                          P.see.imagePath.q = null;
+                        }
+                      : null,
+                  visualDensity: .compact,
+                  tooltip: s.clear,
+                  icon: Icon(Icons.close_rounded, size: 18, color: onSurface.q(.75)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SeeImageQuickButton extends ConsumerWidget {
+  final bool hasImage;
+  final bool shouldGuideImageSelection;
+  final bool textFieldEnabled;
+
+  const _SeeImageQuickButton({
+    required this.hasImage,
     required this.shouldGuideImageSelection,
     required this.textFieldEnabled,
   });
@@ -200,134 +324,54 @@ class _SeeImageSection extends ConsumerWidget {
     final primary = theme.colorScheme.primary;
     final surfaceContainer = theme.colorScheme.surfaceContainer;
     final onSurface = theme.colorScheme.onSurface;
-    final hasImage = imagePath != null && imagePath!.isNotEmpty;
+    final appTheme = ref.watch(P.app.theme);
+    final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
 
-    return Padding(
-      padding: const .fromLTRB(8, 8, 8, 6),
-      child: AnimatedSwitcher(
-        duration: 180.ms,
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        child: hasImage
-            ? Material(
-                key: const ValueKey("see-image-selected"),
+    return AnimatedSwitcher(
+      duration: 250.ms,
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (child, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: SizeTransition(
+            axis: Axis.horizontal,
+            axisAlignment: -1,
+            sizeFactor: animation,
+            child: child,
+          ),
+        );
+      },
+      child: hasImage
+          ? const SizedBox(
+              key: ValueKey("see-image-quick-button-hidden"),
+            )
+          : C(
+              key: const ValueKey("see-image-quick-button"),
+              child: Material(
                 color: Colors.transparent,
-                child: InkWell(
-                  onTap: textFieldEnabled ? P.see.selectImage : null,
-                  borderRadius: .circular(14),
-                  child: Container(
-                    padding: const .only(left: 8, top: 8, right: 4, bottom: 8),
-                    decoration: BoxDecoration(
-                      color: surfaceContainer.q(.7),
-                      borderRadius: .circular(14),
-                      border: Border.all(color: primary.q(.16)),
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: .circular(10),
-                          child: SizedBox(
-                            width: 56,
-                            height: 56,
-                            child: Image.file(
-                              File(imagePath!),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return ColoredBox(
-                                  color: surfaceContainer,
-                                  child: Icon(Icons.broken_image_outlined, color: onSurface.q(.45)),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            mainAxisAlignment: .center,
-                            children: [
-                              Text(
-                                s.change_selected_image,
-                                maxLines: 1,
-                                overflow: .ellipsis,
-                                style: TS(c: onSurface.q(.88), w: .w600),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                imagePath!.split(Platform.pathSeparator).last,
-                                maxLines: 1,
-                                overflow: .ellipsis,
-                                style: TS(c: onSurface.q(.56), s: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: textFieldEnabled ? P.see.selectImage : null,
-                          visualDensity: .compact,
-                          tooltip: s.change_selected_image,
-                          icon: Icon(Icons.swap_horiz_rounded, size: 18, color: onSurface.q(.75)),
-                        ),
-                        IconButton(
-                          onPressed: textFieldEnabled
-                              ? () {
-                                  P.see.imagePath.q = null;
-                                }
-                              : null,
-                          visualDensity: .compact,
-                          tooltip: s.clear,
-                          icon: Icon(Icons.close_rounded, size: 18, color: onSurface.q(.75)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            : Material(
-                key: const ValueKey("see-image-empty"),
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: textFieldEnabled ? P.see.selectImage : null,
-                  borderRadius: .circular(14),
-                  child: AnimatedContainer(
-                    duration: 180.ms,
-                    curve: Curves.easeOutCubic,
-                    padding: const .symmetric(horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: shouldGuideImageSelection ? primary.q(.1) : surfaceContainer.q(.5),
-                      borderRadius: .circular(14),
-                      border: Border.all(color: shouldGuideImageSelection ? primary.q(.32) : primary.q(.14)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
+                child: Tooltip(
+                  message: s.select_new_image,
+                  child: GD(
+                    onTap: textFieldEnabled ? P.see.selectImage : null,
+                    child: Container(
+                      width: sendingButtonTouchMinSize.width,
+                      height: sendingButtonTouchMinSize.height,
+                      decoration: BoxDecoration(
+                        borderRadius: .circular(1000),
+                      ),
+                      child: Center(
+                        child: Icon(
                           Icons.add_photo_alternate_outlined,
-                          size: 18,
-                          color: shouldGuideImageSelection ? primary : onSurface.q(.8),
+                          size: 22,
+                          color: shouldGuideImageSelection ? primary : onSurface.q(.82),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            shouldGuideImageSelection ? s.please_select_an_image_first : s.select_new_image,
-                            maxLines: 1,
-                            overflow: .ellipsis,
-                            style: TS(c: shouldGuideImageSelection ? primary.q(.95) : onSurface.q(.8), w: .w500),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          s.select_new_image,
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                          style: TS(c: primary.q(.88), s: 13, w: .w600),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-      ),
+            ),
     );
   }
 }

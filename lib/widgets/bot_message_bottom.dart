@@ -141,26 +141,6 @@ class BotMessageBottom extends ConsumerWidget {
       mainAxisAlignment: .start,
       children: [
         if (isBatch) const SizedBox(width: 12),
-        if (changing)
-          Tooltip(
-            message: s.generating,
-            child: Padding(
-              padding: const .only(top: 12, right: 4, bottom: 12),
-              child: TweenAnimationBuilder(
-                tween: Tween(begin: .0, end: 1.0),
-                duration: const Duration(milliseconds: 1000000000),
-                builder: (context, value, child) => Transform.rotate(
-                  angle: value * 2 * math.pi * 1000000,
-                  child: child,
-                ),
-                child: Icon(
-                  Icons.hourglass_top,
-                  color: primaryColor,
-                  size: 20,
-                ),
-              ),
-            ),
-          ),
         if (showCopyButton)
           Tooltip(
             message: s.copy_text,
@@ -191,7 +171,7 @@ class BotMessageBottom extends ConsumerWidget {
               ),
             ),
           ),
-        if (showEditButton)
+        if (showEditButton && !changing)
           Tooltip(
             message: s.change,
             child: GestureDetector(
@@ -201,6 +181,26 @@ class BotMessageBottom extends ConsumerWidget {
                 child: Icon(
                   Icons.edit,
                   color: primaryColor.q(.8),
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        if (changing)
+          Tooltip(
+            message: s.generating,
+            child: Padding(
+              padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
+              child: TweenAnimationBuilder(
+                tween: Tween(begin: .0, end: 1.0),
+                duration: const Duration(milliseconds: 1000000000),
+                builder: (context, value, child) => Transform.rotate(
+                  angle: value * 2 * math.pi * 1000000,
+                  child: child,
+                ),
+                child: Icon(
+                  Icons.hourglass_top,
+                  color: primaryColor,
                   size: 20,
                 ),
               ),
