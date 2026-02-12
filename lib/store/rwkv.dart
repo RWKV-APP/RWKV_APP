@@ -98,6 +98,7 @@ class _RWKV {
   /// 模型加载状态, 曾经被加载过的模型, 也会显示在这里
   late final loadingStatus = qs<Map<FileInfo, LoadingStatus>>({});
 
+  // TODO: @wangce 改成 qsff 以便减少不必要的页面刷新
   /// 注意, 后端给的是 0-1 的 double, 且, 在模型加载完成时, progress 不一定为 1.0, 可能是, 0.1, 0.5, 0.999, 但是这不影响我们判断模型是否加载完成
   late final loadingProgress = qs<Map<FileInfo, double>>({});
 
