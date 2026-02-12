@@ -15,7 +15,7 @@ class Debugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // if (!false) return const SizedBox.shrink();
+    if (!false) return const SizedBox.shrink();
     if (!kDebugMode) return const SizedBox.shrink();
 
     final demoType = ref.watch(P.app.demoType);
@@ -84,6 +84,10 @@ class Debugger extends ConsumerWidget {
     final defaultModelsDir = ref.watch(P.remote.defaultModelsDir);
     final usingCustomModelsDir = ref.watch(P.remote.usingCustomModelsDir);
     final customModelsDir = ref.watch(P.preference.customModelsDir);
+
+    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
+
+    final isMobile = ref.watch(P.app.isMobile);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -164,18 +168,20 @@ class Debugger extends ConsumerWidget {
                       Text(preferredUIFont ?? "null"),
                       Text("preferredMonospaceFont".codeToName),
                       Text(preferredMonospaceFont ?? "null"),
-                      Text("pthFolderEntries".codeToName),
-                      Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
-                      Text("pthFolders".codeToName),
-                      Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
-                      Text("effectiveModelsDir".codeToName),
-                      Text(effectiveModelsDir),
-                      Text("defaultModelsDir".codeToName),
-                      Text(defaultModelsDir),
-                      Text("usingCustomModelsDir".codeToName),
-                      Text(usingCustomModelsDir.toString()),
-                      Text("customModelsDir".codeToName),
-                      Text(customModelsDir ?? "null"),
+                      if (!isMobile) Text("pthFolderEntries".codeToName),
+                      if (!isMobile) Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
+                      if (!isMobile) Text("pthFolders".codeToName),
+                      if (!isMobile) Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
+                      if (!isMobile) Text("effectiveModelsDir".codeToName),
+                      if (!isMobile) Text(effectiveModelsDir),
+                      if (!isMobile) Text("defaultModelsDir".codeToName),
+                      if (!isMobile) Text(defaultModelsDir),
+                      if (!isMobile) Text("usingCustomModelsDir".codeToName),
+                      if (!isMobile) Text(usingCustomModelsDir.toString()),
+                      if (!isMobile) Text("customModelsDir".codeToName),
+                      if (!isMobile) Text(customModelsDir ?? "null"),
+                      Text("loadingProgress".codeToName),
+                      Text(loadingProgress.entries.map((e) => "${e.key.name} ${e.value}").join("\n")),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

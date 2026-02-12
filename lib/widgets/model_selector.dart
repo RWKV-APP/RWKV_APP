@@ -518,7 +518,8 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSource = ref.watch(P.remote.downloadSource);
-    final primary = Theme.of(context).colorScheme.primary;
+    final appTheme = ref.watch(P.app.theme);
+    final primary = appTheme.primary;
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
@@ -591,18 +592,21 @@ class _LocalPthFileItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    ref.watch(P.app.theme);
+    final appTheme = ref.watch(P.app.theme);
     final currentModel = ref.watch(P.rwkv.latestModel);
     final isCurrent = currentModel == fileInfo;
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+
     final loading =
         loadingStatus[fileInfo] == LoadingStatus.loading ||
         loadingStatus[fileInfo] == LoadingStatus.loadModelWithExtra ||
         loadingStatus[fileInfo] == LoadingStatus.setQnnLibraryPath;
-    ref.watch(P.app.theme);
+
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
     final date = fileInfo.dateDisplayString;
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = appTheme.primary;
 
     return Row(
       children: [

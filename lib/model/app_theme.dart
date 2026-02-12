@@ -7,7 +7,16 @@ enum AppTheme {
   /// 浅色主题
   light(
     isLight: true,
-    primary: Color(0xFF0D9488),
+    primary: Color(0xFF0F968A),
+    themePrimary: Color(0xFF404040),
+
+    g1: Color(0xFFEEEEEE),
+    g2: Color(0xFFDDDDDD),
+    g3: Color(0xFFCCCCCC),
+    g4: Color(0xFFBBBBBB),
+    g5: Color(0xFFAAAAAA),
+    g6: Color(0xFF999999),
+    g7: Color(0xFF888888),
 
     scaffoldBg: Color(0xFFFFFFFF),
     settingBg: Color(0xFFF5F5F5),
@@ -29,6 +38,15 @@ enum AppTheme {
   dim(
     isLight: false,
     primary: Color(0xFF0D9488),
+    themePrimary: Color(0xFFAAAAAA),
+
+    g1: Color(0xFF111111),
+    g2: Color(0xFF222222),
+    g3: Color(0xFF333333),
+    g4: Color(0xFF444444),
+    g5: Color(0xFF555555),
+    g6: Color(0xFF666666),
+    g7: Color(0xFF777777),
 
     scaffoldBg: Color(0xFF151515),
     settingBg: Color(0xFF252525),
@@ -50,6 +68,15 @@ enum AppTheme {
   lightsOut(
     isLight: false,
     primary: Color(0xFF0D9488),
+    themePrimary: Color(0xFFCCCCCC),
+
+    g1: Color(0xFF101010),
+    g2: Color(0xFF202020),
+    g3: Color(0xFF303030),
+    g4: Color(0xFF404040),
+    g5: Color(0xFF505050),
+    g6: Color(0xFF606060),
+    g7: Color(0xFF707070),
 
     scaffoldBg: Color(0xFF000000),
     settingBg: Color(0xFF000000),
@@ -70,6 +97,7 @@ enum AppTheme {
 
   const AppTheme({
     required this.primary,
+    required this.themePrimary,
     required this.textInputBorderC,
     required this.textInputShadowC,
     required this.isLight,
@@ -84,11 +112,31 @@ enum AppTheme {
     required this.botMsgBg,
     required this.userMsgBg,
     required this.appBarBgC,
+    required this.g1,
+    required this.g2,
+    required this.g3,
+    required this.g4,
+    required this.g5,
+    required this.g6,
+    required this.g7,
   });
 
   /// 是否为浅色主题
   final bool isLight;
+
+  /// RWKV Chat 专属主题色
   final Color primary;
+
+  /// 提供给 Material Design 的主题色
+  final Color themePrimary;
+
+  final Color g1;
+  final Color g2;
+  final Color g3;
+  final Color g4;
+  final Color g5;
+  final Color g6;
+  final Color g7;
 
   final Color scaffoldBg;
 
@@ -142,14 +190,16 @@ enum AppTheme {
   final double tabBarRightPadding = 12;
   final double tabBarLeftPadding = 12;
 
+  final double startButtonRadius = 4.0;
+
   ColorScheme get colorScheme {
     final Brightness brightness = isLight ? Brightness.light : Brightness.dark;
     final ColorScheme seeded = ColorScheme.fromSeed(
-      seedColor: primary,
+      seedColor: themePrimary,
       brightness: brightness,
     );
     return seeded.copyWith(
-      primary: primary,
+      primary: themePrimary,
     );
   }
 

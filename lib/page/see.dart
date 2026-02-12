@@ -19,7 +19,6 @@ class PageSee extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final inputHeight = ref.watch(P.chat.inputHeight);
-    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     return Scaffold(
       body: Stack(
         children: [

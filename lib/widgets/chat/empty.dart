@@ -154,7 +154,7 @@ class _EmptyV2 extends ConsumerWidget {
     return HSLColor.fromAHSL(1, Random().nextDouble() * 360, .6, 0.7).toColor();
   }
 
-  void onTap(dynamic suggestion) {
+  void _onTap(dynamic suggestion) {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
     final s = (suggestion as Suggestion);
     P.chat.send(s.prompt.isEmpty ? s.display : s.prompt);
@@ -180,21 +180,22 @@ class _EmptyV2 extends ConsumerWidget {
           const SizedBox(height: 12),
           Padding(
             padding: const .symmetric(horizontal: 24),
-            child: buildSuggestion(item),
+            child: _buildSuggestion(item),
           ),
         ],
         if (suggestions.isNotEmpty) const SizedBox(height: 12),
         if (suggestions.isNotEmpty)
           Material(
             borderRadius: .circular(60),
+            color: kG.q(.1),
             child: InkWell(
               borderRadius: .circular(60),
               onTap: () async {
                 final suggestion = await AllSuggestionDialog.show(context);
-                if (suggestion != null) onTap(suggestion);
+                if (suggestion != null) _onTap(suggestion);
               },
               child: Padding(
-                padding: const .symmetric(horizontal: 22, vertical: 12),
+                padding: const .symmetric(horizontal: 20, vertical: 12),
                 child: Text(
                   S.current.more_questions,
                   maxLines: 1,
@@ -208,14 +209,15 @@ class _EmptyV2 extends ConsumerWidget {
     );
   }
 
-  Widget buildSuggestion(dynamic item) {
+  Widget _buildSuggestion(dynamic item) {
     return Material(
       borderRadius: .circular(60),
+      color: kG.q(.1),
       child: InkWell(
         borderRadius: .circular(60),
-        onTap: () => onTap(item),
+        onTap: () => _onTap(item),
         child: Padding(
-          padding: const .symmetric(horizontal: 22, vertical: 12),
+          padding: const .symmetric(horizontal: 16, vertical: 12),
           child: Row(
             mainAxisSize: .min,
             children: [

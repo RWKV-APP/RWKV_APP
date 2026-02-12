@@ -111,81 +111,36 @@ class _ChatAppBar extends ConsumerWidget {
     return Column(
       children: [
         AppBar(
-          elevation: 0,
           centerTitle: true,
           backgroundColor: backgroundColor.q(listAtTop ? 1 : 0.5),
           systemOverlayStyle: qt.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
-          title: GestureDetector(
-            onTap: _onTitlePressed,
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.transparent),
-              child: Column(
-                crossAxisAlignment: .center,
-                children: [
-                  if (isChat)
+          title: Tooltip(
+            message: displayName,
+            child: GestureDetector(
+              onTap: _onTitlePressed,
+              child: Container(
+                decoration: const BoxDecoration(color: Colors.transparent),
+                child: Column(
+                  crossAxisAlignment: .center,
+                  children: [
                     Row(
                       mainAxisAlignment: .center,
                       mainAxisSize: .min,
                       crossAxisAlignment: .end,
                       children: [
                         const Text(
-                          Config.appTitle,
+                        Config.appTitle,
                           style: TextStyle(fontSize: 16, fontWeight: .w600),
                         ),
                         Padding(
-                          padding: const .only(bottom: 2, left: 1),
+                          padding: const .only(bottom: 3, left: 1),
                           child: Text(' $version', style: const TS(s: 8, w: .bold)),
                         ),
                       ],
                     ),
-                  if (!isChat)
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: version,
-                            style: const TS(s: 10, c: Colors.transparent),
-                          ),
-                          const TextSpan(text: Config.appTitle, style: TS(s: 18)),
-                          TextSpan(
-                            text: ' $version',
-                            style: const TS(s: 8),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (isChat) const ModelSelectButton(),
-                  if (!isChat)
-                    Container(
-                      padding: const .only(left: 4, top: 1, right: 4, bottom: 1),
-                      decoration: BoxDecoration(
-                        color: kB.q(.1),
-                        borderRadius: .circular(10),
-                      ),
-                      child: Row(
-                        mainAxisSize: .min,
-                        crossAxisAlignment: .center,
-                        mainAxisAlignment: .center,
-                        children: [
-                          Text(
-                            displayName,
-                            style: TS(s: 10, c: primary),
-                          ),
-                          const SizedBox(width: 4),
-                          Transform.rotate(
-                            angle: 0, // 90度
-                            child: SizedBox(
-                              width: 10,
-                              height: 5,
-                              child: CustomPaint(
-                                painter: TrianglePainter(color: qb.q(.667)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
+                    const ModelSelectButton(),
+                  ],
+                ),
               ),
             ),
           ),

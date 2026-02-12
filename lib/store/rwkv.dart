@@ -98,6 +98,9 @@ class _RWKV {
   /// 模型加载状态, 曾经被加载过的模型, 也会显示在这里
   late final loadingStatus = qs<Map<FileInfo, LoadingStatus>>({});
 
+  /// 注意, 后端给的是 0-1 的 double, 且, 在模型加载完成时, progress 不一定为 1.0, 可能是, 0.1, 0.5, 0.999, 但是这不影响我们判断模型是否加载完成
+  late final loadingProgress = qs<Map<FileInfo, double>>({});
+
   /// 模型加载完成器, 用于等待模型加载完成
   late final modelLoadingCompleters = qs<Map<FileInfo, Completer<int?>>>({});
 
@@ -238,6 +241,68 @@ class _RWKV {
 }
 
 extension $RWKVLoad on _RWKV {
+  Future<(SendPort?, int?)> loadChat({
+    required FileInfo fileInfo,
+  }) async {
+    qq;
+    prefillSpeed.q = 0;
+    decodeSpeed.q = 0;
+    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/rwkv_vocab_v20230424.txt");
+
+    String modelPath;
+
+    if (fileInfo.fromPthFile) {
+      modelPath = fileInfo.raw;
+    } else {
+      final localFile = P.remote.locals(fileInfo).q;
+      modelPath = localFile.targetPath;
+    }
+
+    final backend = fileInfo.backend;
+
+    if (backend == null) {
+      throw Exception("Backend is null");
+    }
+
+    final enableReasoning = fileInfo.isReasoning;
+
+    if (backend == Backend.mlx || backend == Backend.coreml) {
+      unzippingStatus(fileInfo).q = true;
+      modelPath = await unzipInPlace(modelPath);
+      unzippingStatus(fileInfo).q = false;
+    }
+
+    await _ensureQNNCopied();
+    await _createRWKVIsolateIfNeeded();
+    await _releaseModelByWeightTypeIfNeeded(weightType: .chat);
+    await _releaseModelByWeightTypeIfNeeded(weightType: .roleplay);
+
+    final modelID = await _loadModel(
+      modelPath: modelPath,
+      tokenizerPath: tokenizerPath,
+      backend: backend,
+      fileInfo: fileInfo,
+    );
+    if (modelID == null) {
+      final msg = "Failed to load model, modelID is null";
+      qqw(msg);
+      return (_sendPort, null);
+    }
+    P.app.demoType.q = .chat;
+    loadedModels.q = {
+      ...loadedModels.q,
+      fileInfo: modelID,
+    };
+
+    await setModelConfig(enableReasoning: enableReasoning);
+    await resetSamplerParams(enableReasoning: enableReasoning);
+    await resetMaxLength(enableReasoning: enableReasoning);
+    // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
+    _syncMaxBatchCount();
+
+    return (_sendPort, modelID);
+  }
+
   Future<int?> loadSee({
     required String modelPath,
     required String encoderPath,
@@ -354,68 +419,6 @@ extension $RWKVLoad on _RWKV {
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerDatePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerPhonePath));
     send(to_rwkv.LoadTTSTextNormalizer(ttsTextNormalizerNumberPath));
-    return (_sendPort, modelID);
-  }
-
-  Future<(SendPort?, int?)> loadChat({
-    required FileInfo fileInfo,
-  }) async {
-    qq;
-    prefillSpeed.q = 0;
-    decodeSpeed.q = 0;
-    final tokenizerPath = await fromAssetsToTemp("assets/config/chat/rwkv_vocab_v20230424.txt");
-
-    String modelPath;
-
-    if (fileInfo.fromPthFile) {
-      modelPath = fileInfo.raw;
-    } else {
-      final localFile = P.remote.locals(fileInfo).q;
-      modelPath = localFile.targetPath;
-    }
-
-    final backend = fileInfo.backend;
-
-    if (backend == null) {
-      throw Exception("Backend is null");
-    }
-
-    final enableReasoning = fileInfo.isReasoning;
-
-    if (backend == Backend.mlx || backend == Backend.coreml) {
-      unzippingStatus(fileInfo).q = true;
-      modelPath = await unzipInPlace(modelPath);
-      unzippingStatus(fileInfo).q = false;
-    }
-
-    await _ensureQNNCopied();
-    await _createRWKVIsolateIfNeeded();
-    await _releaseModelByWeightTypeIfNeeded(weightType: .chat);
-    await _releaseModelByWeightTypeIfNeeded(weightType: .roleplay);
-
-    final modelID = await _loadModel(
-      modelPath: modelPath,
-      tokenizerPath: tokenizerPath,
-      backend: backend,
-      fileInfo: fileInfo,
-    );
-    if (modelID == null) {
-      final msg = "Failed to load model, modelID is null";
-      qqw(msg);
-      return (_sendPort, null);
-    }
-    P.app.demoType.q = .chat;
-    loadedModels.q = {
-      ...loadedModels.q,
-      fileInfo: modelID,
-    };
-
-    await setModelConfig(enableReasoning: enableReasoning);
-    await resetSamplerParams(enableReasoning: enableReasoning);
-    await resetMaxLength(enableReasoning: enableReasoning);
-    // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
-    _syncMaxBatchCount();
-
     return (_sendPort, modelID);
   }
 
@@ -1170,6 +1173,8 @@ extension _$RWKV on _RWKV {
       extra: fileInfo,
     );
     send(req);
+    loadingStatus.q = {...loadingStatus.q, fileInfo: .loading};
+    loadingProgress.q = {...loadingProgress.q, fileInfo: 0.0};
     final modelID = await completer.future;
     modelLoadingCompleters.q = {...modelLoadingCompleters.q..remove(fileInfo)};
     // 如果我们得到的 modelID 为 null, 则表示加载失败
@@ -1405,6 +1410,7 @@ extension _$RWKV on _RWKV {
         } else {
           qqe("modelLoadingCompleter is null,  but status is loaded, this is impossible");
         }
+
       case .failedInLoading:
         if (modelLoadingCompleter != null) {
           modelLoadingCompleter.complete(null);
@@ -1423,6 +1429,7 @@ extension _$RWKV on _RWKV {
           qqe("modelReleasingCompleters: ${modelReleasingCompleters.q}");
           qqe("trying to find completer by id: $modelID");
         }
+
       case .failedInReleasing:
         if (modelReleasingCompleter != null) {
           modelReleasingCompleter.complete(false);
@@ -1431,8 +1438,11 @@ extension _$RWKV on _RWKV {
           qqe("modelReleasingCompleters: ${modelReleasingCompleters.q}");
           qqe("trying to find completer by id: $modelID");
         }
-      case .none:
+
       case .loading:
+        final progress = response.progress;
+        if (progress != null) loadingProgress.q = {...loadingProgress.q, extra: progress};
+      case .none:
       case .releasing:
       case .setQnnLibraryPath:
       case .loadModelWithExtra:

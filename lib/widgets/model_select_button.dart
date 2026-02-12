@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
 import 'package:zone/store/p.dart' show P, $RWKV;
 
 import 'package:zone/gen/l10n.dart';
@@ -13,7 +14,6 @@ class ModelSelectButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentModel = ref.watch(P.rwkv.latestModel);
     final s = S.of(context);
-    final theme = Theme.of(context);
 
     final batchEnabled = ref.watch(P.chat.batchEnabled);
 
@@ -25,11 +25,13 @@ class ModelSelectButton extends ConsumerWidget {
       modelDisplay = modelDisplay.replaceAll(RegExp(r"\([^)]*\)"), "");
     }
 
-    return Ink(
-      decoration: BoxDecoration(
-        borderRadius: .circular(16),
-        border: .all(color: theme.colorScheme.surfaceContainerHighest),
-        color: theme.colorScheme.surfaceContainerLow,
+    final qb = ref.watch(P.app.qb);
+
+    return C(
+      decoration: BD(
+        color: qb.q(.05),
+        borderRadius: .circular(1000),
+        border: .all(color: qb.q(.1)),
       ),
       child: IntrinsicHeight(
         child: Row(

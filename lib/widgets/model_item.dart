@@ -24,13 +24,14 @@ import 'package:zone/widgets/model_tag.dart';
 
 class ModelItem extends ConsumerWidget {
   final FileInfo fileInfo;
-  final bool showTags;
-  final bool loadButtonTextShowLoad;
-  final VoidCallback? onLoadModelTap;
-  final bool showLoadModel;
-  final bool showDelete;
-  final bool isCurrentModel;
   final String? dimInfo;
+
+  final VoidCallback? onLoadModelTap;
+  final bool isCurrentModel;
+  final bool loadButtonTextShowLoad;
+  final bool showDelete;
+  final bool showLoadModel;
+  final bool showTags;
 
   const ModelItem(
     this.fileInfo,
@@ -45,11 +46,11 @@ class ModelItem extends ConsumerWidget {
   });
 
   void _onStartTap() async {
+    qq;
     if (onLoadModelTap != null) {
       onLoadModelTap!();
       return;
     }
-    qq;
 
     switch (P.app.demoType.q) {
       case .sudoku:
@@ -198,6 +199,7 @@ class ModelItem extends ConsumerWidget {
 
     final demoType = ref.watch(P.app.demoType);
     final appTheme = ref.watch(P.app.theme);
+    final startButtonRadius = appTheme.startButtonRadius;
 
     String startTitle;
 
@@ -218,17 +220,13 @@ class ModelItem extends ConsumerWidget {
         startTitle = isTranslate ? s.use_it_now : s.start_to_chat;
     }
 
-    if (loadButtonTextShowLoad) {
-      startTitle = S.current.load_;
-    }
+    if (loadButtonTextShowLoad) startTitle = S.current.load_;
 
     final unzipping = ref.watch(P.rwkv.unzippingStatus(fileInfo));
-    if (unzipping) {
-      startTitle = s.unzipping;
-    }
+    if (unzipping) startTitle = s.unzipping;
 
     final qw = ref.watch(P.app.qw);
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = appTheme.primary;
 
     return ClipRRect(
       borderRadius: .circular(8),
@@ -256,7 +254,7 @@ class ModelItem extends ConsumerWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           color: primary.q(loading || unzipping ? .2 : 1),
-                          borderRadius: .circular(4),
+                          borderRadius: .circular(startButtonRadius),
                         ),
                         padding: const .all(8),
                         child: Text(
@@ -271,7 +269,7 @@ class ModelItem extends ConsumerWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           color: kG.q(.5),
-                          borderRadius: .circular(4),
+                          borderRadius: .circular(startButtonRadius),
                         ),
                         padding: const .all(8),
                         child: Text(loadButtonTextShowLoad ? S.current.loaded : s.chatting, style: TS(c: qw)),

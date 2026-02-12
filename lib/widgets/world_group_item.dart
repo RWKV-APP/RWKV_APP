@@ -304,7 +304,8 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final appTheme = ref.watch(P.app.theme);
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = appTheme.primary;
+    final startButtonRadius = appTheme.startButtonRadius;
 
     final files = _fileInfos.m((e) {
       return ref.watch(P.remote.locals(e));
@@ -329,12 +330,13 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final currentWorldType = ref.watch(P.rwkv.currentWorldType);
     final alreadyStarted = currentWorldType == widget.worldType && isCurrentModel;
     final loading = ref.watch(P.rwkv.loading);
-    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
 
     final modelFileKey = _fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
     if (modelFileKey == null) {
       return const SizedBox.shrink();
     }
+
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
     final modelLoading =
         loadingStatus[modelFileKey] == .loading ||
         loadingStatus[modelFileKey] == .loadModelWithExtra ||
@@ -401,7 +403,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: primary.q(loading || modelLoading ? .2 : 1),
-                              borderRadius: .circular(4),
+                              borderRadius: .circular(startButtonRadius),
                             ),
                             padding: const .all(8),
                             child: Text(
@@ -416,7 +418,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: kG.q(.5),
-                              borderRadius: .circular(8),
+                              borderRadius: .circular(startButtonRadius),
                             ),
                             padding: const .all(8),
                             child: Text(s.chatting, style: TS(c: qw)),

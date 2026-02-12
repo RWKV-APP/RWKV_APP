@@ -334,9 +334,12 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     }
 
     final appTheme = ref.watch(P.app.theme);
+
     final qw = ref.watch(P.app.qw);
     final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = appTheme.primary;
+
+    final startButtonRadius = appTheme.startButtonRadius;
 
     final files = _fileInfos.m((e) {
       return ref.watch(P.remote.locals(e));
@@ -428,7 +431,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: primary.q(loading ? .2 : 1),
-                              borderRadius: .circular(4),
+                              borderRadius: .circular(startButtonRadius),
                             ),
                             padding: const .all(8),
                             child: Text(
@@ -443,7 +446,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: kG.q(.5),
-                              borderRadius: .circular(8),
+                              borderRadius: .circular(startButtonRadius),
                             ),
                             padding: const .all(8),
                             child: Text(s.chatting, style: TS(c: qw)),

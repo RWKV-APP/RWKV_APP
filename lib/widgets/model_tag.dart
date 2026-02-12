@@ -25,6 +25,9 @@ class _RenderingOptions {
 }
 
 class ModelTag extends ConsumerWidget {
+  static final Color _tagSoftGreenIconColor = Color(0xFF_FF_B5_2F);
+  static final Color _tagSoftGreenIconColorDark = Color(0xFFFFD54F);
+
   final String tag;
   final bool forceUppercase;
   final Color? forceBgColor;
@@ -32,11 +35,14 @@ class ModelTag extends ConsumerWidget {
 
   const ModelTag({super.key, required this.tag, this.forceUppercase = false, this.forceBgColor, this.forceTextColor});
 
-  _RenderingOptions _getRenderingOptions(String tagName, WidgetRef ref, BuildContext context) {
+  _RenderingOptions _getRenderingOptions(String tagName, WidgetRef ref, Color primary, Brightness brightness) {
     final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
+
+    final bool isDark = brightness == Brightness.dark;
+
+    final Color tagBoltColor = isDark ? _tagSoftGreenIconColorDark : _tagSoftGreenIconColor;
+
     final logicTagName = tagName.toLowerCase();
-    final primary = Theme.of(context).colorScheme.primary;
     switch (logicTagName) {
       case "mlx":
         return _RenderingOptions(
@@ -45,83 +51,83 @@ class ModelTag extends ConsumerWidget {
             size: 14,
             color: qb,
           ),
-          bgColor: kG.q(.2),
+          bgColor: qb.q(.1),
           textColor: qb,
-          borderColor: kG.q(.2),
+          borderColor: qb.q(.1),
           displayTagName: "GPU",
           fontWeight: .w400,
         );
       case "coreml":
       case "npu":
         return _RenderingOptions(
-          footer: const Icon(
+          footer: Icon(
             Icons.bolt,
             size: 14,
-            color: Color(0xFFFFD54F),
+            color: tagBoltColor,
           ),
-          bgColor: kCG,
-          textColor: qw,
-          borderColor: kCG,
+          bgColor: qb.q(.1),
+          textColor: qb,
+          borderColor: qb.q(.1),
           displayTagName: "NPU",
         );
       case "DeepEmbedding":
         return _RenderingOptions(
-          bgColor: kCG,
-          textColor: qw,
-          borderColor: kCG,
+          bgColor: qb.q(.1),
+          textColor: qb,
+          borderColor: qb.q(.1),
           displayTagName: "DE",
         );
       case "batch":
         return _RenderingOptions(
-          bgColor: kCG,
-          textColor: qw,
-          borderColor: kCG,
+          bgColor: qb.q(.1),
+          textColor: qb,
+          borderColor: qb.q(.1),
           displayTagName: "BATCH",
         );
       case "webrwkv":
         return _RenderingOptions(
-          bgColor: kCG,
-          textColor: qw,
-          borderColor: kCG,
+          bgColor: qb.q(.1),
+          textColor: qb,
+          borderColor: qb.q(.1),
           displayTagName: "WebRWKV",
         );
       case "cpu":
         return _RenderingOptions(
-          bgColor: kG.q(.2),
+          bgColor: qb.q(.1),
           textColor: qb,
-          borderColor: kG.q(.2),
+          borderColor: qb.q(.1),
           displayTagName: "CPU",
           fontWeight: .w400,
         );
       case "translate":
         return _RenderingOptions(
-          bgColor: kG.q(.2),
+          bgColor: qb.q(.1),
           textColor: qb,
-          borderColor: kG.q(.2),
+          borderColor: qb.q(.1),
           displayTagName: "Translation",
         );
       case "tts":
         return _RenderingOptions(
-          bgColor: primary.q(.2),
-          textColor: primary.q(1),
-          borderColor: primary.q(1),
+          bgColor: qb.q(.1),
+          textColor: qb,
+          borderColor: qb.q(.1),
           displayTagName: tagName.toUpperCase(),
           fontWeight: .w400,
         );
       case "vision":
         return _RenderingOptions(
-          bgColor: primary.q(.2),
-          textColor: primary.q(1),
-          borderColor: primary.q(1),
+          bgColor: qb.q(.1),
+          textColor: qb,
+          borderColor: qb.q(.1),
           displayTagName: tagName.toUpperCase(),
           fontWeight: .w400,
         );
       case "GPU":
       default:
         return _RenderingOptions(
-          bgColor: kG.q(.2),
+          bgColor: qb.q(.1),
           textColor: qb,
-          borderColor: kG.q(.2),
+          borderColor: qb.q(.1),
           displayTagName: tagName,
           fontWeight: .w400,
         );
@@ -130,7 +136,8 @@ class ModelTag extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final opt = _getRenderingOptions(tag, ref, context);
+    final theme = Theme.of(context);
+    final opt = _getRenderingOptions(tag, ref, theme.colorScheme.primary, theme.brightness);
 
     return Container(
       decoration: BoxDecoration(
