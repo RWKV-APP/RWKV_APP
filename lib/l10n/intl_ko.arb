@@ -128,6 +128,13 @@
   "select_a_world_type": "작업 유형 선택",
   "please_select_a_world_type": "작업 유형을 선택해주세요",
   "loading": "로드 중...",
+  "loading_progress_percent": "로딩 {percent}%",
+  "@loading_progress_percent": {
+    "description": "로딩 버튼의 진행률 문구",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "cancel": "취소",
   "session_configuration": "세션 구성",
   "apply": "적용",

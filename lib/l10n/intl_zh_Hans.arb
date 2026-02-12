@@ -128,6 +128,13 @@
   "select_a_world_type": "选择任务类型",
   "please_select_a_world_type": "请选择任务类型",
   "loading": "加载中...",
+  "loading_progress_percent": "加载{percent}%",
+  "@loading_progress_percent": {
+    "description": "加载按钮上的进度文案",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "cancel": "取消",
   "session_configuration": "会话配置",
   "apply": "应用",

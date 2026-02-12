@@ -920,6 +920,7 @@ extension $RWKV on _RWKV {
     }
 
     final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
+    qqr("currentModelIsBefore20250922: $currentModelIsBefore20250922");
     if (currentModelIsBefore20250922) {
       final current = thinkingMode.q;
       switch (current) {
@@ -951,6 +952,8 @@ extension $RWKV on _RWKV {
       (label: s.think_button_mode_en_short(""), key: .enShort),
       (label: s.think_button_mode_en_long(""), key: .enLong),
     ];
+
+    qqr("actionPairs: $actionPairs");
 
     final actions = actionPairs.map((e) {
       final isCurrent = e.key == current;

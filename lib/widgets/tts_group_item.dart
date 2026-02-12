@@ -19,6 +19,7 @@ import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
 
 ModelInfo? rolePlayTTSModel;
@@ -363,6 +364,13 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     final currentModel = ref.watch(P.rwkv.latestModel);
     bool alreadyStarted = currentModel == widget.fileInfo;
     final loading = ref.watch(P.rwkv.loading);
+    final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
+    final modelLoading =
+        loadingStatus[widget.fileInfo] == .loading ||
+        loadingStatus[widget.fileInfo] == .loadModelWithExtra ||
+        loadingStatus[widget.fileInfo] == .setQnnLibraryPath;
+    final double? modelLoadingProgress = loadingProgress[widget.fileInfo];
 
     if (P.app.pageKey.q == .rolePlaying) {
       alreadyStarted = widget.fileInfo.fileName == rolePlayTTSModel?.id;
@@ -428,15 +436,25 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
                       if (!alreadyStarted)
                         GestureDetector(
                           onTap: loading ? null : _onSparkTap,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: primary.q(loading ? .2 : 1),
-                              borderRadius: .circular(startButtonRadius),
-                            ),
-                            padding: const .all(8),
-                            child: Text(
-                              startTitle,
-                              style: TS(c: qw),
+                          child: AnimatedOpacity(
+                            opacity: loading ? 0.6 : 1,
+                            duration: 200.ms,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: primary,
+                                borderRadius: .circular(startButtonRadius),
+                              ),
+                              padding: const .all(8),
+                              child: modelLoading
+                                  ? LoadingProgressButtonContent(
+                                      progress: modelLoadingProgress,
+                                      textStyle: TS(c: qw),
+                                      indicatorColor: qw,
+                                    )
+                                  : Text(
+                                      startTitle,
+                                      style: TS(c: qw),
+                                    ),
                             ),
                           ),
                         ),

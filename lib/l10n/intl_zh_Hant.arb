@@ -128,6 +128,13 @@
   "select_a_world_type": "選擇任務類型",
   "please_select_a_world_type": "請選擇任務類型",
   "loading": "載入中...",
+  "loading_progress_percent": "載入{percent}%",
+  "@loading_progress_percent": {
+    "description": "載入按鈕上的進度文案",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "cancel": "取消",
   "session_configuration": "會話組態",
   "apply": "套用",

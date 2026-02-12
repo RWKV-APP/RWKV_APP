@@ -20,6 +20,7 @@ import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
 
 class ModelItem extends ConsumerWidget {
@@ -191,11 +192,13 @@ class ModelItem extends ConsumerWidget {
     final currentModel = ref.watch(P.rwkv.latestModel);
     final isCurrentModel = this.isCurrentModel || currentModel == fileInfo;
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
 
     final loading =
         loadingStatus[fileInfo] == .loading ||
         loadingStatus[fileInfo] == .loadModelWithExtra ||
         loadingStatus[fileInfo] == .setQnnLibraryPath;
+    final double? modelLoadingProgress = loadingProgress[fileInfo];
 
     final demoType = ref.watch(P.app.demoType);
     final appTheme = ref.watch(P.app.theme);
@@ -224,6 +227,7 @@ class ModelItem extends ConsumerWidget {
 
     final unzipping = ref.watch(P.rwkv.unzippingStatus(fileInfo));
     if (unzipping) startTitle = s.unzipping;
+    final bool showLoadingProgress = loading && !unzipping;
 
     final qw = ref.watch(P.app.qw);
     final primary = appTheme.primary;
@@ -251,15 +255,25 @@ class ModelItem extends ConsumerWidget {
                   if (!isCurrentModel && showLoadModel)
                     GestureDetector(
                       onTap: _onStartTap,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: primary.q(loading || unzipping ? .2 : 1),
-                          borderRadius: .circular(startButtonRadius),
-                        ),
-                        padding: const .all(8),
-                        child: Text(
-                          loading ? s.loading : startTitle,
-                          style: TS(c: qw),
+                      child: AnimatedContainer(
+                        // opacity: loading || unzipping ? 0.6 : 1,
+                        duration: 200.ms,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: loading || unzipping ? appTheme.qb8 : primary,
+                            borderRadius: .circular(startButtonRadius),
+                          ),
+                          padding: const .all(8),
+                          child: showLoadingProgress
+                              ? LoadingProgressButtonContent(
+                                  progress: modelLoadingProgress,
+                                  textStyle: TS(c: qw),
+                                  indicatorColor: qw,
+                                )
+                              : Text(
+                                  startTitle,
+                                  style: TS(c: qw),
+                                ),
                         ),
                       ),
                     ),
@@ -268,7 +282,7 @@ class ModelItem extends ConsumerWidget {
                       onTap: null,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: kG.q(.5),
+                          color: appTheme.qb8,
                           borderRadius: .circular(startButtonRadius),
                         ),
                         padding: const .all(8),

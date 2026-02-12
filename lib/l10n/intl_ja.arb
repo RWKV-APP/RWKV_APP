@@ -128,6 +128,13 @@
   "select_a_world_type": "タスクの種類を選択",
   "please_select_a_world_type": "タスクの種類を選択してください",
   "loading": "ロード中...",
+  "loading_progress_percent": "読み込み{percent}%",
+  "@loading_progress_percent": {
+    "description": "読み込みボタン上の進捗テキスト",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "cancel": "キャンセル",
   "session_configuration": "セッション構成",
   "apply": "適用",

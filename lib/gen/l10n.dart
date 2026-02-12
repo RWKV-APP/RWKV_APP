@@ -1086,6 +1086,16 @@ class S {
     return Intl.message('加载中...', name: 'loading', desc: '', args: []);
   }
 
+  /// `加载{percent}%`
+  String loading_progress_percent(Object percent) {
+    return Intl.message(
+      '加载$percent%',
+      name: 'loading_progress_percent',
+      desc: '加载按钮上的进度文案',
+      args: [percent],
+    );
+  }
+
   /// `取消`
   String get cancel {
     return Intl.message('取消', name: 'cancel', desc: '', args: []);

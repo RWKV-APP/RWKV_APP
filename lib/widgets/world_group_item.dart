@@ -17,6 +17,7 @@ import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/func/gb_display.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
 
 class WorldGroupItem extends ConsumerStatefulWidget {
@@ -341,6 +342,8 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
         loadingStatus[modelFileKey] == .loading ||
         loadingStatus[modelFileKey] == .loadModelWithExtra ||
         loadingStatus[modelFileKey] == .setQnnLibraryPath;
+    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
+    final double? modelLoadingProgress = loadingProgress[modelFileKey];
 
     String startTitle = s.start_to_chat;
     if (loading || modelLoading) {
@@ -400,15 +403,25 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
                       if (!alreadyStarted)
                         GestureDetector(
                           onTap: (loading || modelLoading) ? null : _onStartToChatTap,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: primary.q(loading || modelLoading ? .2 : 1),
-                              borderRadius: .circular(startButtonRadius),
-                            ),
-                            padding: const .all(8),
-                            child: Text(
-                              startTitle,
-                              style: TS(c: qw),
+                          child: AnimatedOpacity(
+                            opacity: loading || modelLoading ? 0.6 : 1,
+                            duration: 200.ms,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: primary,
+                                borderRadius: .circular(startButtonRadius),
+                              ),
+                              padding: const .all(8),
+                              child: modelLoading
+                                  ? LoadingProgressButtonContent(
+                                      progress: modelLoadingProgress,
+                                      textStyle: TS(c: qw),
+                                      indicatorColor: qw,
+                                    )
+                                  : Text(
+                                      startTitle,
+                                      style: TS(c: qw),
+                                    ),
                             ),
                           ),
                         ),
