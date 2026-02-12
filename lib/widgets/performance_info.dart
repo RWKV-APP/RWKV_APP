@@ -25,7 +25,7 @@ class PerformanceInfo extends ConsumerWidget {
       mainAxisAlignment: .center,
       children: [
         Text.rich(
-          style: TS(c: qb.q(.6), s: 10),
+          style: TS(c: qb.q(1), s: 10),
           TextSpan(
             children: [
               TextSpan(text: short ? "P: " : "Prefill: "),
@@ -38,7 +38,7 @@ class PerformanceInfo extends ConsumerWidget {
           ),
         ),
         Text.rich(
-          style: TS(c: qb.q(.6), s: 10),
+          style: TS(c: qb.q(1), s: 10),
           TextSpan(
             children: [
               TextSpan(text: short ? "D: " : "Decode: "),

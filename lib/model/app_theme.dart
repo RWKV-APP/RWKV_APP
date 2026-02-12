@@ -18,6 +18,21 @@ enum AppTheme {
     g6: Color(0xFF999999),
     g7: Color(0xFF888888),
 
+    qb1: Color(0xFF111111),
+    qb2: Color(0xFF222222),
+    qb3: Color(0xFF333333),
+    qb4: Color(0xFF444444),
+    qb5: Color(0xFF555555),
+    qb6: Color(0xFF666666),
+    qb7: Color(0xFF777777),
+    qb8: Color(0xFF888888),
+    qb9: Color(0xFF999999),
+    qb10: Color(0xFFAAAAAA),
+    qb11: Color(0xFFBBBBBB),
+    qb12: Color(0xFFCCCCCC),
+    qb13: Color(0xFFDDDDDD),
+    qb14: Color(0xFFEEEEEE),
+
     scaffoldBg: Color(0xFFFFFFFF),
     settingBg: Color(0xFFF5F5F5),
 
@@ -48,6 +63,21 @@ enum AppTheme {
     g6: Color(0xFF666666),
     g7: Color(0xFF777777),
 
+    qb14: Color(0xFF101010),
+    qb13: Color(0xFF202020),
+    qb12: Color(0xFF303030),
+    qb11: Color(0xFF404040),
+    qb10: Color(0xFF505050),
+    qb9: Color(0xFF606060),
+    qb8: Color(0xFF707070),
+    qb7: Color(0xFF808080),
+    qb6: Color(0xFF909090),
+    qb5: Color(0xFFA0A0A0),
+    qb4: Color(0xFFB0B0B0),
+    qb3: Color(0xFFC0C0C0),
+    qb2: Color(0xFFD0D0D0),
+    qb1: Color(0xFFE0E0E0),
+
     scaffoldBg: Color(0xFF151515),
     settingBg: Color(0xFF252525),
 
@@ -77,6 +107,21 @@ enum AppTheme {
     g5: Color(0xFF505050),
     g6: Color(0xFF606060),
     g7: Color(0xFF707070),
+
+    qb14: Color(0xFF111111),
+    qb13: Color(0xFF222222),
+    qb12: Color(0xFF333333),
+    qb11: Color(0xFF444444),
+    qb10: Color(0xFF555555),
+    qb9: Color(0xFF666666),
+    qb8: Color(0xFF777777),
+    qb7: Color(0xFF888888),
+    qb6: Color(0xFF999999),
+    qb5: Color(0xFFAAAAAA),
+    qb4: Color(0xFFBBBBBB),
+    qb3: Color(0xFFCCCCCC),
+    qb2: Color(0xFFDDDDDD),
+    qb1: Color(0xFFEEEEEE),
 
     scaffoldBg: Color(0xFF000000),
     settingBg: Color(0xFF000000),
@@ -119,6 +164,20 @@ enum AppTheme {
     required this.g5,
     required this.g6,
     required this.g7,
+    required this.qb1,
+    required this.qb2,
+    required this.qb3,
+    required this.qb4,
+    required this.qb5,
+    required this.qb6,
+    required this.qb7,
+    required this.qb8,
+    required this.qb9,
+    required this.qb10,
+    required this.qb11,
+    required this.qb12,
+    required this.qb13,
+    required this.qb14,
   });
 
   /// 是否为浅色主题
@@ -137,6 +196,21 @@ enum AppTheme {
   final Color g5;
   final Color g6;
   final Color g7;
+
+  final Color qb1;
+  final Color qb2;
+  final Color qb3;
+  final Color qb4;
+  final Color qb5;
+  final Color qb6;
+  final Color qb7;
+  final Color qb8;
+  final Color qb9;
+  final Color qb10;
+  final Color qb11;
+  final Color qb12;
+  final Color qb13;
+  final Color qb14;
 
   final Color scaffoldBg;
 

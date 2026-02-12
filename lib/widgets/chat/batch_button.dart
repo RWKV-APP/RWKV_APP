@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/interactions.dart';
 
 class BatchButton extends ConsumerWidget {
@@ -13,19 +14,28 @@ class BatchButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
+    final appTheme = ref.watch(P.app.theme);
     final height = InputInteractions.calculateButtonHeight(context);
-    final surfaceContainer = theme.colorScheme.surfaceContainer;
+    final loading = ref.watch(P.rwkv.loading);
+    final generating = ref.watch(P.rwkv.generating);
+    final loaded = ref.watch(P.rwkv.loaded);
+    final latestModel = ref.watch(P.rwkv.latestModel);
+    final batchAllowed = latestModel?.tags.contains("batch") ?? false;
     final batchEnabled = ref.watch(P.chat.batchEnabled);
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-
-    final primary = theme.colorScheme.primary;
     final s = S.of(context);
 
-    final bgColor = batchEnabled ? primary : surfaceContainer;
-    final textColor = batchEnabled ? qw.q(1) : qb.q(.667);
     final batchCount = ref.watch(P.chat.batchCount);
-    final borderColor = batchEnabled ? primary : primary.q(.1);
+    final canEnable = loaded && !loading && !generating && batchAllowed;
+    final interactionState = switch ((canEnable, batchEnabled)) {
+      (false, _) => InteractionVisualState.unavailable,
+      (true, true) => InteractionVisualState.enabled,
+      (true, false) => InteractionVisualState.available,
+    };
+    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
+    final bgColor = colors.background;
+    final textColor = colors.foreground;
+    final borderColor = colors.border;
 
     return IntrinsicWidth(
       child: GestureDetector(
@@ -42,8 +52,16 @@ class BatchButton extends ConsumerWidget {
             mainAxisAlignment: .center,
             crossAxisAlignment: .center,
             children: [
-              if (batchEnabled) Text(s.batch_inference_button(batchCount), style: TS(c: textColor)),
-              if (!batchEnabled) Text(s.batch_inference_short, style: TS(c: textColor)),
+              if (batchEnabled)
+                Text(
+                  s.batch_inference_button(batchCount),
+                  style: TS(c: textColor, s: fontSize),
+                ),
+              if (!batchEnabled)
+                Text(
+                  s.batch_inference_short,
+                  style: TS(c: textColor, s: fontSize),
+                ),
             ],
           ),
         ),

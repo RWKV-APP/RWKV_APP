@@ -12,6 +12,7 @@ import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/decode_param_button.dart';
+import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/model_selector.dart';
@@ -102,12 +103,21 @@ class _WebSearchModeButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
+    final menuTextStyle = theme.textTheme.bodyMedium;
+    final appTheme = ref.watch(P.app.theme);
+    final generating = ref.watch(P.rwkv.generating);
     final webSearchMode = ref.watch(P.chat.webSearchMode);
 
-    final enabled = webSearchMode != WebSearchMode.off;
-    final color = enabled ? primary : theme.colorScheme.surfaceContainer;
-    final textColor = enabled ? theme.colorScheme.onPrimary : Colors.grey;
+    final canEnable = !generating;
+    final interactionState = switch ((canEnable, webSearchMode)) {
+      (false, _) => InteractionVisualState.unavailable,
+      (true, WebSearchMode.off) => InteractionVisualState.available,
+      (true, _) => InteractionVisualState.enabled,
+    };
+    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
+    final color = colors.background;
+    final textColor = colors.foreground;
+    final borderColor = colors.border;
 
     final height = InputInteractions.calculateButtonHeight(context);
     const EdgeInsets padding = .only(left: 8);
@@ -120,6 +130,7 @@ class _WebSearchModeButton extends ConsumerWidget {
           decoration: BoxDecoration(
             color: color,
             borderRadius: .circular(60),
+            border: .all(color: borderColor),
           ),
           child: Row(
             children: [
@@ -130,14 +141,27 @@ class _WebSearchModeButton extends ConsumerWidget {
                 style: TS(c: textColor, s: 14, height: 1, w: .w500),
               ),
               const SizedBox(width: 4),
-              VerticalDivider(width: 2, indent: 8, endIndent: 8, color: textColor),
+              Container(
+                width: 0.5,
+                height: height - 16,
+                color: textColor,
+              ),
               PopupMenuButton(
                 offset: const Offset(-30, -80),
                 itemBuilder: (c) {
                   return [
-                    PopupMenuItem(value: WebSearchMode.off, child: Text(s.off)),
-                    PopupMenuItem(value: WebSearchMode.search, child: Text(s.web_search)),
-                    PopupMenuItem(value: WebSearchMode.deepSearch, child: Text(s.deep_web_search)),
+                    PopupMenuItem(
+                      value: WebSearchMode.off,
+                      child: Text(s.off, style: menuTextStyle),
+                    ),
+                    PopupMenuItem(
+                      value: WebSearchMode.search,
+                      child: Text(s.web_search, style: menuTextStyle),
+                    ),
+                    PopupMenuItem(
+                      value: WebSearchMode.deepSearch,
+                      child: Text(s.deep_web_search, style: menuTextStyle),
+                    ),
                   ];
                 },
                 onSelected: (mode) {
@@ -171,16 +195,23 @@ class _WenYanWenButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final menuTextStyle = theme.textTheme.bodyMedium;
+    final appTheme = ref.watch(P.app.theme);
     final mode = ref.watch(P.chat.wenYanWen);
     final model = ref.watch(P.rwkv.latestModel);
+    final loading = ref.watch(P.rwkv.loading);
+    final generating = ref.watch(P.rwkv.generating);
 
     final height = InputInteractions.calculateButtonHeight(context);
-
-    final bgColor = mode == WenyanMode.off ? theme.colorScheme.surfaceContainer : theme.colorScheme.primary;
-
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-    final textColor = mode != WenyanMode.off ? qw.q(1) : qb.q(.667);
+    final canEnable = model != null && !loading && !generating;
+    final interactionState = switch ((canEnable, mode)) {
+      (false, _) => InteractionVisualState.unavailable,
+      (true, WenyanMode.off) => InteractionVisualState.available,
+      (true, _) => InteractionVisualState.enabled,
+    };
+    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
+    final bgColor = colors.background;
+    final textColor = colors.foreground;
 
     String label = '';
     if (mode == WenyanMode.off) {
@@ -196,9 +227,18 @@ class _WenYanWenButton extends ConsumerWidget {
         offset: const Offset(-30, -80),
         itemBuilder: (c) {
           return [
-            const PopupMenuItem(value: WenyanMode.off, child: Text('文言: 关')),
-            const PopupMenuItem(value: WenyanMode.classic, child: Text('文言: 开')),
-            const PopupMenuItem(value: WenyanMode.mixed, child: Text('古今')),
+            PopupMenuItem(
+              value: WenyanMode.off,
+              child: Text('文言: 关', style: menuTextStyle),
+            ),
+            PopupMenuItem(
+              value: WenyanMode.classic,
+              child: Text('文言: 开', style: menuTextStyle),
+            ),
+            PopupMenuItem(
+              value: WenyanMode.mixed,
+              child: Text('古今', style: menuTextStyle),
+            ),
           ];
         },
         onSelected: (m) {
@@ -225,7 +265,7 @@ class _WenYanWenButton extends ConsumerWidget {
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: .circular(60),
-            border: .all(color: theme.colorScheme.primary.q(.1), width: 1),
+            border: .all(color: colors.border, width: 1),
           ),
           alignment: .center,
           child: Text(

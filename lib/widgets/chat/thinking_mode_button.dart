@@ -5,43 +5,40 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/interaction_visual_state.dart';
 
 class ThinkingModeButton extends ConsumerWidget {
   const ThinkingModeButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
     final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
+    final s = S.of(context);
+    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
+    final appTheme = ref.watch(P.app.theme);
     final loading = ref.watch(P.rwkv.loading);
-    ref.watch(P.app.qw);
+    final generating = ref.watch(P.rwkv.generating);
+    final loaded = ref.watch(P.rwkv.loaded);
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
 
-    final color = switch (thinkingMode) {
-      .lighting => theme.colorScheme.surfaceContainer,
-      .fast => theme.colorScheme.surfaceContainer,
-      .none => theme.colorScheme.surfaceContainer,
-      .free => primary,
-      .preferChinese => primary,
-      .en => primary,
-      .enShort => theme.colorScheme.surfaceContainer,
-      .enLong => primary,
+    final canEnable = loaded && !loading && !generating;
+    final interactionState = switch (thinkingMode) {
+      .free => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
+      .en => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
+      .enShort => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
+      .enLong => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
+      .none => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+      .fast => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+      .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+      .preferChinese => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
     };
-
-    final textColor = switch (thinkingMode) {
-      .lighting => primary,
-      .fast => primary,
-      .none => Colors.grey,
-      .preferChinese => theme.colorScheme.onPrimary,
-      .free => theme.colorScheme.onPrimary,
-      .en => theme.colorScheme.onPrimary,
-      .enShort => primary,
-      .enLong => theme.colorScheme.onPrimary,
-    };
+    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
+    final color = colors.background;
+    final textColor = colors.foreground;
+    final border = Border.all(color: colors.border);
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
-    final height = textScaleFactor.scale(14) + 20;
+    final height = textScaleFactor.scale(fontSize) + 20;
     const EdgeInsets padding = .symmetric(horizontal: 8);
 
     final text = switch (thinkingMode) {
@@ -53,17 +50,6 @@ class ThinkingModeButton extends ConsumerWidget {
       .en => s.think_button_mode_en(""),
       .enShort => s.think_button_mode_en_short(""),
       .enLong => s.think_button_mode_en_long(""),
-    };
-
-    final Border? border = switch (thinkingMode) {
-      .lighting => .all(color: textColor),
-      .none => null,
-      .free => .all(color: textColor),
-      .preferChinese => .all(color: textColor),
-      .fast => .all(color: textColor),
-      .en => .all(color: textColor),
-      .enShort => .all(color: textColor),
-      .enLong => .all(color: textColor),
     };
 
     return AnimatedSize(
@@ -91,7 +77,7 @@ class ThinkingModeButton extends ConsumerWidget {
                     const SizedBox(width: 2),
                     Text(
                       text,
-                      style: TS(c: textColor, s: 14, height: 1, w: .w500),
+                      style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                     ),
                     const SizedBox(width: 4),
                   ],

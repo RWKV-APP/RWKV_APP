@@ -11,6 +11,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/interactions.dart';
 
@@ -70,15 +71,25 @@ class DecodeParamButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
+    final theme = Theme.of(context);
+    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
+    final appTheme = ref.watch(P.app.theme);
     final height = InputInteractions.calculateButtonHeight(context);
+    final loading = ref.watch(P.rwkv.loading);
+    final generating = ref.watch(P.rwkv.generating);
+    final loaded = ref.watch(P.rwkv.loaded);
     final decodeParamType = ref.watch(P.rwkv.decodeParamType);
-    final surfaceContainer = Theme.of(context).colorScheme.surfaceContainer;
-    final primary = Theme.of(context).colorScheme.primary;
-    final bgColor = surfaceContainer;
-    final textColor = qb.q(.667);
-    final borderColor = primary.q(.1);
+    final canEnable = loaded && !loading && !generating;
+    final interactionState = switch (decodeParamType) {
+      .defaults => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+      _ => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
+    };
+    final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
+    final bgColor = colors.background;
+    final textColor = colors.foreground;
+    final borderColor = colors.border;
     final s = S.of(context);
+
     return Tooltip(
       message: s.decode_param,
       child: IntrinsicWidth(
@@ -98,7 +109,7 @@ class DecodeParamButton extends ConsumerWidget {
               children: [
                 Text(
                   s.style + s.hyphen + decodeParamType.displayNameShort,
-                  style: TS(c: textColor, s: 14, height: 1, w: .w500),
+                  style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                 ),
               ],
             ),
