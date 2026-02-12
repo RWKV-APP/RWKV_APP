@@ -26,7 +26,7 @@ extension RWKVColorExtension on Color {
   }
 
   Color lighterWhenDark(double v) {
-    final isLight = P.app.theme.q == .light;
+  final isLight = P.app.theme.q == .light;
     return isLight ? l(v) : d(v);
   }
 
@@ -40,5 +40,29 @@ extension RWKVColorExtension on Color {
     final __b = (b > 127 ? (b - (b - 127) * v) : b + (127 - b) * v);
     qqr("\na: $a,\nr: $r,\ng: $g,\nb: $b,\n__r: $__r, \n__g: $__g, \n__b: $__b");
     return Color.fromARGB(a.toInt(), __r.toInt(), __g.toInt(), __b.toInt());
+  }
+
+  Color toColor(Color targetColor, {required double step}) {
+    int r = (this.r * 255.0).round().clamp(0, 255);
+    int g = (this.g * 255.0).round().clamp(0, 255);
+    int b = (this.b * 255.0).round().clamp(0, 255);
+    int a = (this.a * 255.0).round().clamp(0, 255);
+
+    int tr = (targetColor.r * 255.0).round().clamp(0, 255);
+    int tg = (targetColor.g * 255.0).round().clamp(0, 255);
+    int tb = (targetColor.b * 255.0).round().clamp(0, 255);
+    int ta = (targetColor.a * 255.0).round().clamp(0, 255);
+
+    final dr = tr - r;
+    final dg = tg - g;
+    final db = tb - b;
+    final da = ta - a;
+
+    final nr = r + dr * step;
+    final ng = g + dg * step;
+    final nb = b + db * step;
+    final na = a + da * step;
+
+    return Color.fromARGB(na.toInt(), nr.toInt(), ng.toInt(), nb.toInt());
   }
 }

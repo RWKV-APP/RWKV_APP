@@ -18,6 +18,7 @@ enum AppTheme {
     g6: Color(0xFF999999),
     g7: Color(0xFF888888),
 
+    qb0: Color(0xFFFFFFFF),
     qb1: Color(0xFF111111),
     qb2: Color(0xFF222222),
     qb3: Color(0xFF333333),
@@ -32,6 +33,8 @@ enum AppTheme {
     qb12: Color(0xFFCCCCCC),
     qb13: Color(0xFFDDDDDD),
     qb14: Color(0xFFEEEEEE),
+    qb144: Color(0xFFF3F3F3),
+    qb15: Color(0xFF000000),
 
     scaffoldBg: Color(0xFFFFFFFF),
     settingBg: Color(0xFFF5F5F5),
@@ -63,20 +66,23 @@ enum AppTheme {
     g6: Color(0xFF666666),
     g7: Color(0xFF777777),
 
-    qb14: Color(0xFF101010),
-    qb13: Color(0xFF202020),
-    qb12: Color(0xFF303030),
-    qb11: Color(0xFF404040),
-    qb10: Color(0xFF505050),
-    qb9: Color(0xFF606060),
-    qb8: Color(0xFF707070),
-    qb7: Color(0xFF808080),
-    qb6: Color(0xFF909090),
-    qb5: Color(0xFFA0A0A0),
-    qb4: Color(0xFFB0B0B0),
-    qb3: Color(0xFFC0C0C0),
-    qb2: Color(0xFFD0D0D0),
-    qb1: Color(0xFFE0E0E0),
+    qb0: Color(0xFFFFFFFF),
+    qb1: Color(0xFFF5F5F5),
+    qb2: Color(0xFFE5E5E5),
+    qb3: Color(0xFFD5D5D5),
+    qb4: Color(0xFFC5C5C5),
+    qb5: Color(0xFFB5B5B5),
+    qb6: Color(0xFFA5A5A5),
+    qb7: Color(0xFF959595),
+    qb8: Color(0xFF858585),
+    qb9: Color(0xFF757575),
+    qb10: Color(0xFF656565),
+    qb11: Color(0xFF555555),
+    qb12: Color(0xFF454545),
+    qb13: Color(0xFF353535),
+    qb14: Color(0xFF252525),
+    qb144: Color(0xFF1D1D1D),
+    qb15: Color(0xFF151515),
 
     scaffoldBg: Color(0xFF151515),
     settingBg: Color(0xFF252525),
@@ -108,20 +114,23 @@ enum AppTheme {
     g6: Color(0xFF606060),
     g7: Color(0xFF707070),
 
-    qb14: Color(0xFF111111),
-    qb13: Color(0xFF222222),
-    qb12: Color(0xFF333333),
-    qb11: Color(0xFF444444),
-    qb10: Color(0xFF555555),
-    qb9: Color(0xFF666666),
-    qb8: Color(0xFF777777),
-    qb7: Color(0xFF888888),
-    qb6: Color(0xFF999999),
-    qb5: Color(0xFFAAAAAA),
-    qb4: Color(0xFFBBBBBB),
-    qb3: Color(0xFFCCCCCC),
-    qb2: Color(0xFFDDDDDD),
+    qb0: Color(0xFFFFFFFF),
     qb1: Color(0xFFEEEEEE),
+    qb2: Color(0xFFDDDDDD),
+    qb3: Color(0xFFCCCCCC),
+    qb4: Color(0xFFBBBBBB),
+    qb5: Color(0xFFAAAAAA),
+    qb6: Color(0xFF999999),
+    qb7: Color(0xFF888888),
+    qb8: Color(0xFF777777),
+    qb9: Color(0xFF666666),
+    qb10: Color(0xFF555555),
+    qb11: Color(0xFF444444),
+    qb12: Color(0xFF333333),
+    qb13: Color(0xFF222222),
+    qb14: Color(0xFF111111),
+    qb144: Color(0xFF101010),
+    qb15: Color(0xFF000000),
 
     scaffoldBg: Color(0xFF000000),
     settingBg: Color(0xFF000000),
@@ -164,6 +173,7 @@ enum AppTheme {
     required this.g5,
     required this.g6,
     required this.g7,
+    required this.qb0,
     required this.qb1,
     required this.qb2,
     required this.qb3,
@@ -178,6 +188,8 @@ enum AppTheme {
     required this.qb12,
     required this.qb13,
     required this.qb14,
+    required this.qb144,
+    required this.qb15,
   });
 
   /// 是否为浅色主题
@@ -197,6 +209,7 @@ enum AppTheme {
   final Color g6;
   final Color g7;
 
+  final Color qb0;
   final Color qb1;
   final Color qb2;
   final Color qb3;
@@ -211,6 +224,8 @@ enum AppTheme {
   final Color qb12;
   final Color qb13;
   final Color qb14;
+  final Color qb144;
+  final Color qb15;
 
   final Color scaffoldBg;
 

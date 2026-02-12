@@ -6,16 +6,18 @@
 
 import json
 import requests
-import time
 from typing import Dict, Any, List, Tuple
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 import argparse
-from email.utils import parsedate_to_datetime
+from datetime import datetime
+from urllib.parse import quote
 
 # 全局锁用于线程安全的打印
 print_lock = Lock()
+cache_lock = Lock()
+tree_cache: Dict[Tuple[str, str, str], List[Dict[str, Any]]] = {}
 
 
 def safe_print(*args, **kwargs):
@@ -24,7 +26,60 @@ def safe_print(*args, **kwargs):
         print(*args, **kwargs)
 
 
-def get_file_size_from_huggingface(url: str) -> Tuple[str, int]:
+def parse_hf_iso_datetime_to_timestamp(date_str: str) -> int:
+    if not date_str:
+        return 0
+
+    try:
+        dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+        return int(dt.timestamp())
+    except Exception:
+        return 0
+
+
+def parse_hf_resolve_url(url: str) -> Tuple[str, str, str]:
+    """
+    解析形如 owner/repo/resolve/revision/path/to/file 的 URL。
+
+    Returns:
+        (repo_id, revision, file_path)
+    """
+    pattern = r"^([^/]+/[^/]+)/resolve/([^/]+)/(.+)$"
+    match = re.match(pattern, url)
+    if not match:
+        return "", "", ""
+    return match.group(1), match.group(2), match.group(3)
+
+
+def get_model_tree_entries(repo_id: str, revision: str, dir_path: str) -> List[Dict[str, Any]]:
+    cache_key = (repo_id, revision, dir_path)
+    with cache_lock:
+        if cache_key in tree_cache:
+            return tree_cache[cache_key]
+
+    encoded_dir = quote(dir_path, safe="/")
+    if encoded_dir:
+        api_url = f"https://huggingface.co/api/models/{repo_id}/tree/{revision}/{encoded_dir}?recursive=false&expand=true"
+    else:
+        api_url = f"https://huggingface.co/api/models/{repo_id}/tree/{revision}?recursive=false&expand=true"
+
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+    response = requests.get(api_url, headers=headers, timeout=30)
+    if response.status_code != 200:
+        safe_print(f"\033[91m  HF tree API 请求失败: {response.status_code} - {api_url}\033[0m")
+        return []
+
+    entries = response.json()
+    if not isinstance(entries, list):
+        safe_print(f"\033[91m  HF tree API 响应格式异常: {api_url}\033[0m")
+        return []
+
+    with cache_lock:
+        tree_cache[cache_key] = entries
+    return entries
+
+
+def get_file_size_from_huggingface(url: str) -> Tuple[str, int, int]:
     """
     从HuggingFace URL获取文件大小
 
@@ -35,59 +90,48 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int]:
         (模型名称, 文件大小字节数)
     """
     try:
-        # 解析HuggingFace URL
-        # 格式: mollysama/rwkv-mobile-models/resolve/main/...
-        if not url.startswith("mollysama/rwkv-mobile-models/resolve/main/"):
+        repo_id, revision, file_path = parse_hf_resolve_url(url)
+        if not repo_id or not revision or not file_path:
             safe_print(f"\033[91m不支持的URL格式: {url}\033[0m")
             return url, 0, 0
 
-        # 提取文件路径
-        file_path = url.replace("mollysama/rwkv-mobile-models/resolve/main/", "")
+        safe_print(f"  查询HF tree API: {repo_id}@{revision}/{file_path}")
 
-        # 构建HuggingFace API URL
-        api_url = f"https://huggingface.co/mollysama/rwkv-mobile-models/resolve/main/{file_path}"
+        dir_path = ""
+        if "/" in file_path:
+            dir_path = file_path.rsplit("/", 1)[0]
 
-        safe_print(f"  请求API: {api_url}")
+        entries = get_model_tree_entries(repo_id, revision, dir_path)
+        matched_entry = None
+        for entry in entries:
+            if entry.get("path") == file_path and entry.get("type") == "file":
+                matched_entry = entry
+                break
 
-        # 发送HEAD请求获取文件信息
+        if matched_entry:
+            size = matched_entry.get("size", 0)
+            if not isinstance(size, int):
+                size = 0
+
+            last_commit = matched_entry.get("lastCommit", {})
+            last_commit_date = ""
+            if isinstance(last_commit, dict):
+                last_commit_date = last_commit.get("date", "")
+            timestamp = parse_hf_iso_datetime_to_timestamp(last_commit_date)
+
+            if size > 0:
+                return url, size, timestamp
+
+        # Fallback: 使用 resolve 响应头兜底大小（时间不作为最后提交时间）
+        api_url = f"https://huggingface.co/{repo_id}/resolve/{revision}/{quote(file_path, safe='/')}"
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-
         response = requests.head(api_url, headers=headers, timeout=30, allow_redirects=True)
-
-        if response.status_code == 200:
-            # 从Content-Length头获取文件大小
-            content_length = response.headers.get("Content-Length")
-            date_str = response.headers.get("Date")
-            timestamp = 0
-            if date_str:
-                try:
-                    dt = parsedate_to_datetime(date_str)
-                    timestamp = int(dt.timestamp())
-                except Exception:
-                    pass
-
-            if content_length:
-                return url, int(content_length), timestamp
-
-        # 如果HEAD请求失败，尝试GET请求
-        safe_print(f"  HEAD请求失败，尝试GET请求")
-        response = requests.get(api_url, headers=headers, stream=True, timeout=30, allow_redirects=True)
-
         if response.status_code == 200:
             content_length = response.headers.get("Content-Length")
-            date_str = response.headers.get("Date")
-            timestamp = 0
-            if date_str:
-                try:
-                    dt = parsedate_to_datetime(date_str)
-                    timestamp = int(dt.timestamp())
-                except Exception:
-                    pass
-
             if content_length:
-                return url, int(content_length), timestamp
+                return url, int(content_length), 0
 
-        safe_print(f"\033[91m  无法获取文件大小，状态码: {response.status_code}\033[0m")
+        safe_print(f"\033[91m  无法获取文件信息，状态码: {response.status_code}\033[0m")
         return url, 0, 0
 
     except Exception as e:
@@ -177,6 +221,7 @@ def update_filesizes(config_file: str, max_workers: int = 5):
                 new_timestamp = 0
 
             old_size = model.get("fileSize", 0)
+            old_timestamp = model.get("date", 0)
 
             if new_size > 0:
                 changed = False
@@ -186,14 +231,14 @@ def update_filesizes(config_file: str, max_workers: int = 5):
                     safe_print(f"    文件大小: {old_size:,} -> {new_size:,} 字节 ({new_size / 1024 / 1024:.2f} MB)")
                     changed = True
 
-                if changed and new_timestamp > 0:
+                if new_timestamp > 0 and old_timestamp != new_timestamp:
                     model["date"] = new_timestamp
-                    # 这里不打印日期更新日志，以免太啰嗦，除非需要
+                    changed = True
 
                 if changed:
                     updated_count += 1
                 else:
-                    safe_print(f"  跳过: {model['url']}（文件大小未变化）")
+                    safe_print(f"  跳过: {model['url']}（文件大小和时间未变化）")
             else:
                 safe_print(f"\033[91m  跳过: {model['url']}（无法获取文件大小）\033[0m")
         else:

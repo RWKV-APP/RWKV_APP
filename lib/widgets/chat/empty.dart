@@ -165,6 +165,9 @@ class _EmptyV2 extends ConsumerWidget {
     final s = S.of(context);
     final suggestions = ref.watch(P.suggestion.suggestion);
 
+    final appTheme = ref.watch(P.app.theme);
+    final bgColor = appTheme.qb144;
+
     return Column(
       mainAxisAlignment: .center,
       crossAxisAlignment: .center,
@@ -180,14 +183,45 @@ class _EmptyV2 extends ConsumerWidget {
           const SizedBox(height: 12),
           Padding(
             padding: const .symmetric(horizontal: 24),
-            child: _buildSuggestion(item),
+            child: Material(
+              borderRadius: .circular(60),
+              color: bgColor,
+              child: InkWell(
+                borderRadius: .circular(60),
+                onTap: () => _onTap(item),
+                child: Padding(
+                  padding: const .symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    mainAxisSize: .min,
+                    children: [
+                      Container(
+                        height: 10,
+                        width: 10,
+                        decoration: BoxDecoration(
+                          color: _rndColor(),
+                          borderRadius: .circular(60),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Flexible(
+                        child: Text(
+                          item is Suggestion ? item.display : item.toString(),
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
         if (suggestions.isNotEmpty) const SizedBox(height: 12),
         if (suggestions.isNotEmpty)
           Material(
             borderRadius: .circular(60),
-            color: kG.q(.1),
+            color: bgColor,
             child: InkWell(
               borderRadius: .circular(60),
               onTap: () async {
@@ -206,41 +240,6 @@ class _EmptyV2 extends ConsumerWidget {
           ),
         const SizedBox(height: 16),
       ],
-    );
-  }
-
-  Widget _buildSuggestion(dynamic item) {
-    return Material(
-      borderRadius: .circular(60),
-      color: kG.q(.1),
-      child: InkWell(
-        borderRadius: .circular(60),
-        onTap: () => _onTap(item),
-        child: Padding(
-          padding: const .symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            mainAxisSize: .min,
-            children: [
-              Container(
-                height: 10,
-                width: 10,
-                decoration: BoxDecoration(
-                  color: _rndColor(),
-                  borderRadius: .circular(60),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Flexible(
-                child: Text(
-                  item is Suggestion ? item.display : item.toString(),
-                  maxLines: 1,
-                  overflow: .ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

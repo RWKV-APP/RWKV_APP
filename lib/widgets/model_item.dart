@@ -437,6 +437,8 @@ class _FileKeyItem extends ConsumerWidget {
 
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
+    final appTheme = ref.watch(P.app.theme);
+
     return Column(
       crossAxisAlignment: .start,
       mainAxisAlignment: .center,
@@ -470,6 +472,8 @@ class _FileKeyItem extends ConsumerWidget {
             child: LinearProgressIndicator(
               value: (progress.isNaN || progress <= 0 || progress.isInfinite) ? null : progress,
               borderRadius: .circular(8),
+              backgroundColor: appTheme.qb11,
+              color: appTheme.qb5,
             ),
           ),
         if (downloading) const SizedBox(height: 4),

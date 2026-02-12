@@ -21,7 +21,8 @@ extension _$UI on _UI {
       case .home:
         homePixels.q = 0;
         homePixelsFromBottom.q = 1;
-        homeController.animateTo(0, duration: 200.ms, curve: Curves.easeOutCubic);
+        if (homeController.hasClients) homeController.animateTo(0, duration: 200.ms, curve: Curves.easeOutCubic);
+
         break;
       default:
         break;

@@ -30,7 +30,7 @@ InteractionVisualColors interactionVisualColors({
       border: appTheme.g2,
     ),
     .available => InteractionVisualColors(
-      background: appTheme.qb14,
+      background: appTheme.qb144,
       foreground: appTheme.qb4,
       border: appTheme.qb11,
     ),
