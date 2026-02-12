@@ -154,8 +154,9 @@ class _TestState extends ConsumerState<_Test> {
           "My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable.";
       P.rwkv.clearStates();
       subscription?.cancel();
-      // TODO: @molly Need a parameter to ignore prefill caching
-      subscription = P.rwkv.completion(prompt, batchSize: selectedBatchSize).listen((e) {}, onError: (e) {}, onDone: () {});
+      subscription = P.rwkv
+          .completion(prompt, batchSize: selectedBatchSize, disableCache: true)
+          .listen((e) {}, onError: (e) {}, onDone: () {});
     }
   }
 
@@ -392,9 +393,6 @@ class _KeyValuePairs extends StatelessWidget {
 }
 
 class _Utils {
-
-
-
   static Map<String, String> getMemInfo() {
     final out = _exec('cat', ['/proc/meminfo']);
     final lines = out?.replaceAll('\r\n', '\n').split('\n') ?? [];
