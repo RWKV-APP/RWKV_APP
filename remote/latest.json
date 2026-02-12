@@ -210,8 +210,7 @@
         "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1770884147,
-        "isDebug": true
+        "date": 1770884147
       },
       {
         "name": "RWKV7-G1d 2.9B (CoreML)",
