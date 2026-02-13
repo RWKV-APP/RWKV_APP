@@ -124,6 +124,8 @@ jobs:
           AppPublisher=RWKV Community
           DefaultDirName={autopf}\RWKV Chat
           DisableProgramGroupPage=yes
+          PrivilegesRequired=admin
+          PrivilegesRequiredOverridesAllowed=none
           OutputDir=$outputDir
           OutputBaseFilename=$installerName
           Compression=lzma
@@ -138,6 +140,9 @@ jobs:
 
           [Files]
           Source: "$sourceDir\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+          [Registry]
+          Root: HKLM; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"; ValueType: string; ValueName: "{app}\RWKV_Chat.exe"; ValueData: "~ RUNASADMIN"; Flags: uninsdeletevalue
 
           [Icons]
           Name: "{autoprograms}\RWKV Chat"; Filename: "{app}\RWKV_Chat.exe"
