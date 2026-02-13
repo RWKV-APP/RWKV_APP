@@ -153,7 +153,7 @@ jobs:
           Name: "{autodesktop}\RWKV Chat"; Filename: "{app}\RWKV_Chat.exe"; Tasks: desktopicon
 
           [Run]
-          Filename: "{app}\RWKV_Chat.exe"; Description: "{cm:LaunchProgram,RWKV Chat}"; Flags: nowait postinstall skipifsilent
+          Filename: "{app}\RWKV_Chat.exe"; Description: "{cm:LaunchProgram,RWKV Chat}"; Flags: nowait postinstall skipifsilent runascurrentuser
           "@
 
           $issContent | Out-File -FilePath "setup.iss" -Encoding ASCII
