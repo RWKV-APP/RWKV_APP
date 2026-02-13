@@ -25,8 +25,8 @@ class _RenderingOptions {
 }
 
 class ModelTag extends ConsumerWidget {
-  static final Color _tagSoftGreenIconColor = Color(0xFF_FF_B5_2F);
-  static final Color _tagSoftGreenIconColorDark = Color(0xFFFFD54F);
+  static final Color _tagSoftGreenIconColor = const Color(0xFF_FF_B5_2F);
+  static final Color _tagSoftGreenIconColorDark = const Color(0xFFFFD54F);
 
   final String tag;
   final bool forceUppercase;

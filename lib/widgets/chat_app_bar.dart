@@ -20,7 +20,6 @@ import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/widgets/state_panel.dart';
-import 'package:zone/widgets/triangle_painter.dart';
 
 class ChatAppBar extends ConsumerWidget {
   final DemoType? preferredDemoType;
