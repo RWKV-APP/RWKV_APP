@@ -740,12 +740,6 @@ class _ExpandedFileItem extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  if (hasFile)
-                    Icon(
-                      Icons.download_done,
-                      color: primary,
-                      size: 20,
-                    ),
                 ],
               ),
               if (downloading) ...[

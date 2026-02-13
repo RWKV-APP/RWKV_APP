@@ -469,12 +469,6 @@ class _FileKeyItem extends ConsumerWidget {
               gbDisplay(fileSize),
               style: TS(c: qb.q(.7), w: .w500),
             ),
-            if (localFile.hasFile)
-              Icon(
-                Icons.download_done,
-                color: primary,
-                size: 20,
-              ),
           ],
         ),
         if (showTags) const SizedBox(height: 4),
