@@ -7,6 +7,11 @@ on:
     tags:
       - "[0-9]*"
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Tag to publish installer assets to (e.g. 4.0.6). Leave empty to skip release/upload."
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -164,25 +169,27 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
         with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
           generate_release_notes: false
+          fail_on_unmatched_files: true
           # 修改点：使用正斜杠路径和通配符，确保能找到文件
           files: build/windows/installer/*.exe
 
       - name: 🛠️ Setup Python
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
       - name: 📦 Install dependencies
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
         shell: pwsh
         run: pip install huggingface_hub
 
       - name: 📤 Upload to HuggingFace
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
         shell: pwsh
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
