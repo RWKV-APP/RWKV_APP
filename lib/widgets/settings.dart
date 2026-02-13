@@ -62,7 +62,6 @@ class Settings extends ConsumerWidget {
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final paddingTop = ref.watch(P.app.paddingTop);
-    final demoType = ref.watch(P.app.demoType);
     final iconPath = "assets/img/chat/icon.png";
     final version = ref.watch(P.app.version);
     final buildNumber = ref.watch(P.app.buildNumber);
@@ -74,7 +73,6 @@ class Settings extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final isLightMode = appTheme.isLight;
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
-    final isChat = demoType == .chat;
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
     final tabBarHeight = appTheme.tabBarHeight;
 
@@ -120,13 +118,12 @@ class Settings extends ConsumerWidget {
         body: ListView(
           padding: .only(
             left: 12 + paddingLeft,
-            top: paddingTop,
+            top: paddingTop + 12,
             right: 12,
             bottom: math.max(paddingBottom, 12) + tabBarHeight + 12,
           ),
           controller: scrollController,
           children: [
-            if (isChat) const SizedBox(height: 40),
             Row(
               mainAxisAlignment: .center,
               children: [iconWidget],
@@ -188,7 +185,7 @@ class Settings extends ConsumerWidget {
               infoText: preferredLanguage.display ?? s.follow_system,
               onTap: P.preference.showLocaleDialog,
             ),
-            if (isChat && userType.isGreaterThan(.user))
+            if (userType.isGreaterThan(.user))
               FormItem(
                 icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
                 title: S.current.advance_settings,
