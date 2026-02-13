@@ -121,7 +121,6 @@ jobs:
           DefaultDirName={autopf}\RWKV Chat
           DisableProgramGroupPage=yes
           PrivilegesRequired=admin
-          PrivilegesRequiredOverridesAllowed=none
           OutputDir=$outputDir
           OutputBaseFilename=$installerName
           Compression=lzma
