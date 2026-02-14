@@ -55,7 +55,7 @@ class ThemeSelector extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
-    final primary = Theme.of(context).colorScheme.primary;
+    final isLight = appTheme.isLight;
 
     final items = <Widget>[
       FormItem(
@@ -66,8 +66,9 @@ class ThemeSelector extends ConsumerWidget {
         isSectionStart: true,
         onTap: null,
         trailing: Switch.adaptive(
-          value: preferredThemeMode == ThemeMode.dark,
+          value: !isLight,
           onChanged: _onDarkModeSwitchChanged,
+          activeThumbColor: appTheme.themePrimary,
         ),
       ),
       FormItem(
@@ -81,6 +82,7 @@ class ThemeSelector extends ConsumerWidget {
         trailing: Switch.adaptive(
           value: preferredThemeMode == ThemeMode.system,
           onChanged: _onAutoModeSwitchChanged,
+          activeThumbColor: appTheme.themePrimary,
         ),
       ),
       const SizedBox(height: 12),
@@ -105,7 +107,7 @@ class ThemeSelector extends ConsumerWidget {
         trailing: IconButton(
           icon: Icon(
             preferredDarkCustomTheme == .dim ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-            color: preferredDarkCustomTheme == .dim ? primary : qb.q(.33),
+            color: preferredDarkCustomTheme == .dim ? appTheme.themePrimary : qb.q(.33),
           ),
           onPressed: _onDimPressed,
         ),
@@ -119,7 +121,7 @@ class ThemeSelector extends ConsumerWidget {
         trailing: IconButton(
           icon: Icon(
             preferredDarkCustomTheme == .lightsOut ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-            color: preferredDarkCustomTheme == .lightsOut ? primary : qb.q(.33),
+            color: preferredDarkCustomTheme == .lightsOut ? appTheme.themePrimary : qb.q(.33),
           ),
           onPressed: _onLightsOutPressed,
         ),

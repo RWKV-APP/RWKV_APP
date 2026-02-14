@@ -965,7 +965,7 @@ extension $RWKV on _RWKV {
     final res = await showModalActionSheet<thinking_mode.ThinkingMode>(
       context: getContext()!,
       title: s.think_mode_selector_title,
-      message: s.think_mode_selector_message,
+      message: s.think_mode_selector_message + "\n" + s.think_mode_selector_recommendation,
       actions: actions,
     );
 

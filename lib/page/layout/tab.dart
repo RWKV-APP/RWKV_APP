@@ -15,8 +15,9 @@ class PageTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final useBottomNavigationBar = screenWidth <= 600;
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final screenHeight = ref.watch(P.app.screenHeight);
+    final useBottomNavigationBar = screenWidth <= 600 || screenWidth <= (screenHeight - 100);
     final tabIndex = ref.watch(P.app.tabIndex);
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
@@ -29,6 +30,8 @@ class PageTab extends ConsumerWidget {
 
     double tabBarRightPadding = appTheme.tabBarRightPadding;
     tabBarRightPadding += rawPaddingBottom / 5;
+
+    // TODO: @wangce 没有用到的话就不要创建两个 layout 的代码
 
     final verticalLayout = Stack(
       children: <Widget>[
@@ -92,33 +95,51 @@ class PageTab extends ConsumerWidget {
       ],
     );
 
+    final isLight = appTheme.isLight;
+    final hoverColor = isLight ? kW.q(.95) : kW.q(.15);
+    final indicatorColor = isLight ? kW.q(.99) : kW.q(.2);
+
     final horizontalLayout = Row(
       children: <Widget>[
-        NavigationRail(
-          selectedIndex: tabIndex,
-          onDestinationSelected: P.app.onTabSelected,
-          labelType: NavigationRailLabelType.all,
-          leading: const SizedBox(height: 12),
-          trailing: const SizedBox(height: 12),
-          destinations: <NavigationRailDestination>[
-            NavigationRailDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home),
-              label: Text(s.home),
+        Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: hoverColor, // Hover 颜色将变成 Colors.red.withOpacity(0.04)
             ),
-            NavigationRailDestination(
-              icon: const Icon(Icons.chat_bubble_outline),
-              selectedIcon: const Icon(Icons.chat_bubble),
-              label: Text(s.conversations),
-            ),
-            NavigationRailDestination(
-              icon: const Icon(Icons.settings_outlined),
-              selectedIcon: const Icon(Icons.settings),
-              label: Text(s.settings),
-            ),
-          ],
+          ),
+          child: NavigationRail(
+            backgroundColor: appTheme.qb144,
+            indicatorColor: indicatorColor,
+            indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            selectedIndex: tabIndex,
+            onDestinationSelected: P.app.onTabSelected,
+            labelType: NavigationRailLabelType.all,
+            leading: const SizedBox(height: 12),
+            trailing: const SizedBox(height: 12),
+            destinations: <NavigationRailDestination>[
+              NavigationRailDestination(
+                icon: Icon(Icons.home_outlined, color: appTheme.qb3),
+                selectedIcon: Icon(Icons.home, color: appTheme.qb3),
+                label: Text(s.home, style: TextStyle(color: appTheme.qb3)),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.chat_bubble_outline, color: appTheme.qb3),
+                selectedIcon: Icon(Icons.chat_bubble, color: appTheme.qb3),
+                label: Text(s.conversations, style: TextStyle(color: appTheme.qb3)),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.settings_outlined, color: appTheme.qb3),
+                selectedIcon: Icon(Icons.settings, color: appTheme.qb3),
+                label: Text(s.settings, style: TextStyle(color: appTheme.qb3)),
+              ),
+            ],
+          ),
         ),
-        const VerticalDivider(thickness: 0.5, width: 0.5),
+        Container(
+          width: .5,
+          height: double.infinity,
+          color: qb.q(.2),
+        ),
         Expanded(child: child),
       ],
     );

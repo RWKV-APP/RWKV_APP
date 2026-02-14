@@ -18,7 +18,7 @@ enum AppTheme {
     g6: Color(0xFF999999),
     g7: Color(0xFF888888),
 
-    qb0: Color(0xFFFFFFFF),
+    qb0: Color(0xFF000000),
     qb1: Color(0xFF111111),
     qb2: Color(0xFF222222),
     qb3: Color(0xFF333333),
@@ -34,7 +34,7 @@ enum AppTheme {
     qb13: Color(0xFFDDDDDD),
     qb14: Color(0xFFEEEEEE),
     qb144: Color(0xFFF3F3F3),
-    qb15: Color(0xFF000000),
+    qb15: Color(0xFFFFFFFF),
 
     scaffoldBg: Color(0xFFFFFFFF),
     settingBg: Color(0xFFF5F5F5),
