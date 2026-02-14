@@ -1216,6 +1216,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "The reasoning mode affects the model\'s performance during reasoning",
     ),
+    "think_mode_selector_recommendation": MessageLookupByLibrary.simpleMessage(
+      "Recommended: choose at least \"Reasoning-Fast\"",
+    ),
     "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
       "Please select a reasoning mode",
     ),

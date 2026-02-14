@@ -36,6 +36,7 @@
   "thinking_mode_alert_footer": "Режим",
   "think_mode_selector_title": "Выберите режим мышления",
   "think_mode_selector_message": "Режим мышления влияет на производительность модели при рассуждениях",
+  "think_mode_selector_recommendation": "Рекомендуется выбрать как минимум «Мышление-Быстро»",
   "think_button_mode_fast": "Мышление{footer}-Быстро",
   "think_button_mode_en": "Мышление{footer}-Англ",
   "think_button_mode_en_short": "Мышление{footer}-Англ Коротко",

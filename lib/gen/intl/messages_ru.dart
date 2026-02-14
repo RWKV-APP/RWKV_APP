@@ -1253,6 +1253,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "Режим мышления влияет на производительность модели при рассуждениях",
     ),
+    "think_mode_selector_recommendation": MessageLookupByLibrary.simpleMessage(
+      "Рекомендуется выбрать как минимум «Мышление-Быстро»",
+    ),
     "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
       "Выберите режим мышления",
     ),

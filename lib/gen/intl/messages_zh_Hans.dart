@@ -934,6 +934,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式会影响模型在推理时的表现",
     ),
+    "think_mode_selector_recommendation": MessageLookupByLibrary.simpleMessage(
+      "推荐至少选择【推理-快】",
+    ),
     "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
       "请选择推理模式",
     ),

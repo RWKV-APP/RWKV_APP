@@ -1023,6 +1023,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推論モードは、モデルの推論時のパフォーマンスに影響します",
     ),
+    "think_mode_selector_recommendation": MessageLookupByLibrary.simpleMessage(
+      "少なくとも「推論-速い」を選択することをおすすめします",
+    ),
     "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
       "推論モードを選択してください",
     ),

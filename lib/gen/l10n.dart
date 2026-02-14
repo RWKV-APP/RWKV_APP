@@ -334,6 +334,16 @@ class S {
     );
   }
 
+  /// `推荐至少选择【推理-快】`
+  String get think_mode_selector_recommendation {
+    return Intl.message(
+      '推荐至少选择【推理-快】',
+      name: 'think_mode_selector_recommendation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `推理{footer}-快`
   String think_button_mode_fast(Object footer) {
     return Intl.message(

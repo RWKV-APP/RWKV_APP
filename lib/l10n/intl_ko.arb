@@ -36,6 +36,7 @@
   "thinking_mode_alert_footer": "모드",
   "think_mode_selector_title": "추론 모드를 선택해주세요",
   "think_mode_selector_message": "추론 모드는 모델의 추론 성능에 영향을 미칩니다",
+  "think_mode_selector_recommendation": "최소한 \"추론-빠름\"을 선택하는 것을 권장합니다",
   "think_button_mode_fast": "추론{footer}-빠름",
   "think_button_mode_en": "추론{footer}-영어",
   "think_button_mode_en_short": "추론{footer}-영어 짧게",

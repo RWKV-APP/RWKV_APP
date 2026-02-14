@@ -1019,6 +1019,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "추론 모드는 모델의 추론 성능에 영향을 미칩니다",
     ),
+    "think_mode_selector_recommendation": MessageLookupByLibrary.simpleMessage(
+      "최소한 \"추론-빠름\"을 선택하는 것을 권장합니다",
+    ),
     "think_mode_selector_title": MessageLookupByLibrary.simpleMessage(
       "추론 모드를 선택해주세요",
     ),

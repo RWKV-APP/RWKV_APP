@@ -36,6 +36,7 @@
   "thinking_mode_alert_footer": "模式",
   "think_mode_selector_title": "請選擇推理模式",
   "think_mode_selector_message": "推理模式會影響模型在推理時的表現",
+  "think_mode_selector_recommendation": "建議至少選擇【推理-快】",
   "think_button_mode_fast": "推理{footer}-快",
   "think_button_mode_en": "推理{footer}-英",
   "think_button_mode_en_short": "推理{footer}-英短",
