@@ -178,6 +178,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
 
 class _MarkdownBody extends ConsumerWidget {
   final String data;
+
   final SamplerAndPenaltyParam? decodeParam;
 
   const _MarkdownBody({required this.data, this.decodeParam});
@@ -206,7 +207,7 @@ class _MarkdownBody extends ConsumerWidget {
 
     final s = S.of(context);
 
-    final displayText = s.decode_param + s.hyphen + decodeParam!.displayName;
+    final displayText = s.decode_param + s.hyphen + (decodeParam?.displayName ?? "unknown");
 
     final Widget? decodeParamWidget = decodeParam != null
         ? Align(

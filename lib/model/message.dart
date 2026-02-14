@@ -271,5 +271,8 @@ extension BatchMessage on Message {
 
   List<String> get contentAndTails => content.split(Config.userMsgModifierSep);
 
+  // TODO: 应该作为 msg 的内存值, 不要在 Build 方法中调用, 如果 msg 没有这个值, 调用并解析, 如果 msg 这个值不为空, 直接取值
+
+  // TODO: @wangce 检查一下什么时候这个方法会被传递空值
   List<SamplerAndPenaltyParam> get parsedDecodeParams => SamplerAndPenaltyParamWithString.fromRawDecodeParams(rawDecodeParams ?? "");
 }
