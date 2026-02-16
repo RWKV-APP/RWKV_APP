@@ -146,6 +146,7 @@ flutter run
 
 - 🐞 **发现错误或问题？** [在此报告！](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D)
 - 💡 **想提出建议？** [建议一项功能！](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D)
+- 🎨 **想贡献自定义主题？** [Theme 快速开始](CONTRIBUTING.zh-hans.md)
 
 ## 📄 开源许可协议
 

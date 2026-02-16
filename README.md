@@ -152,6 +152,7 @@ This is an **experimental early-stage version**, and your feedback is crucial to
 
 - 🐞 **Found a bug or issue?** [Report it here!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D)
 - 💡 **Have a suggestion?** [Suggest a feature!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D)
+- 🎨 **Want to contribute a custom theme?** [Theme quick start](CONTRIBUTING.md)
 
 ## 📄 License
 

@@ -152,6 +152,7 @@ flutter run
 
 - 🐞 **Нашли ошибку или проблему?** [Сообщите об этом здесь!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D)
 - 💡 **Есть предложение?** [Предложите функцию!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D)
+- 🎨 **Хотите внести свой вариант темы?** [Быстрый старт по темам](CONTRIBUTING.ru.md)
 
 ## 📄 Лицензия
 

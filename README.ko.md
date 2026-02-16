@@ -152,6 +152,7 @@ flutter run
 
 - 🐞 **버그나 문제를 발견하셨나요?** [여기에서 보고하세요!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D)
 - 💡 **제안 사항이 있으신가요?** [기능을 제안하세요!](https://github.com/RWKV-APP/RWKV_APP/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D)
+- 🎨 **커스텀 테마를 기여하고 싶나요?** [Theme 빠른 시작](CONTRIBUTING.ko.md)
 
 ## 📄 라이선스
 
