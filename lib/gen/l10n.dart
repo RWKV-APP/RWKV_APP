@@ -2968,6 +2968,11 @@ class S {
     return Intl.message('更改', name: 'change', desc: '', args: []);
   }
 
+  /// `编辑`
+  String get edit {
+    return Intl.message('编辑', name: 'edit', desc: '', args: []);
+  }
+
   /// `状态`
   String get status {
     return Intl.message('状态', name: 'status', desc: '', args: []);

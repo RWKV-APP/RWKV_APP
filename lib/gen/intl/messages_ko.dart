@@ -428,6 +428,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dump_started": MessageLookupByLibrary.simpleMessage("자동 덤프가 시작되었습니다"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("자동 덤프가 중지되었습니다"),
+    "edit": MessageLookupByLibrary.simpleMessage("편집"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("영->중"),
     "enabled": MessageLookupByLibrary.simpleMessage("활성화됨"),
     "end": MessageLookupByLibrary.simpleMessage("끝"),

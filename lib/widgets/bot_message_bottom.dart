@@ -173,7 +173,7 @@ class BotMessageBottom extends ConsumerWidget {
           ),
         if (showEditButton && !changing)
           Tooltip(
-            message: s.change,
+            message: s.edit,
             child: GestureDetector(
               onTap: _onBotEditPressed,
               child: Padding(

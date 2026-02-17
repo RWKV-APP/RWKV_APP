@@ -398,6 +398,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_see_files_subtitle": MessageLookupByLibrary.simpleMessage("协助我们改进算法"),
     "dump_started": MessageLookupByLibrary.simpleMessage("自动 dump 已开启"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自动 dump 已关闭"),
+    "edit": MessageLookupByLibrary.simpleMessage("编辑"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
     "enabled": MessageLookupByLibrary.simpleMessage("开启"),
     "end": MessageLookupByLibrary.simpleMessage("完"),

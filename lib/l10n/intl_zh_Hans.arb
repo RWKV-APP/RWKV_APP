@@ -416,6 +416,7 @@
   "model": "模型",
   "no_model_selected": "未选择模型",
   "change": "更改",
+  "edit": "编辑",
   "status": "状态",
   "translating": "翻译中...",
   "idle": "空闲",

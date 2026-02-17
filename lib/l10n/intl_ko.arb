@@ -416,6 +416,7 @@
   "model": "모델",
   "no_model_selected": "선택된 모델 없음",
   "change": "변경",
+  "edit": "편집",
   "status": "상태",
   "translating": "번역 중...",
   "idle": "대기",

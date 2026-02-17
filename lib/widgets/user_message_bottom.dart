@@ -139,6 +139,8 @@ class UserMessageBottom extends ConsumerWidget {
     final playing = ref.watch(P.see.playing);
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
+    final s = S.of(context);
+
     return Row(
       mainAxisAlignment: .end,
       mainAxisSize: .min,
@@ -146,7 +148,7 @@ class UserMessageBottom extends ConsumerWidget {
         BranchSwitcher(msg, index),
         if (showUserEditButton)
           Tooltip(
-            message: S.current.change,
+            message: s.edit,
             child: GestureDetector(
               onTap: () => onUserEditPressed(index: index),
               child: Padding(
@@ -161,7 +163,7 @@ class UserMessageBottom extends ConsumerWidget {
           ),
         if (showUserTTSPlayButton && (!playing || !isCurrentMessage))
           Tooltip(
-            message: S.current.resume,
+            message: s.resume,
             child: GestureDetector(
               onTap: _onTTSPlayPressed,
               child: Padding(
@@ -172,7 +174,7 @@ class UserMessageBottom extends ConsumerWidget {
           ),
         if (showUserTTSPlayButton && (playing && isCurrentMessage))
           Tooltip(
-            message: S.current.pause,
+            message: s.pause,
             child: GestureDetector(
               onTap: _onTTSPausePressed,
               child: Padding(
@@ -183,7 +185,7 @@ class UserMessageBottom extends ConsumerWidget {
           ),
         if (showUserCopyButton)
           Tooltip(
-            message: S.current.copy_text,
+            message: s.copy_text,
             child: GestureDetector(
               onTap: () => onCopyPressed(msg),
               child: Padding(

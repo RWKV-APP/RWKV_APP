@@ -504,6 +504,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dump_started": MessageLookupByLibrary.simpleMessage("Auto dump enabled"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("Auto dump disabled"),
+    "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("EN->ZH"),
     "enabled": MessageLookupByLibrary.simpleMessage("Enabled"),
     "end": MessageLookupByLibrary.simpleMessage("End"),

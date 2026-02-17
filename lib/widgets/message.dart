@@ -126,7 +126,7 @@ class Message extends ConsumerWidget {
                 onPressed: () {
                   Navigator.of(sheetContext).pop(_UserMessageMenuAction.edit);
                 },
-                child: Text(s.change),
+                child: Text(s.edit),
               ),
             if (canCopy)
               CupertinoActionSheetAction(
@@ -176,7 +176,7 @@ class Message extends ConsumerWidget {
               children: [
                 const Icon(Icons.edit_outlined),
                 const SizedBox(width: 8),
-                Text(s.change),
+                Text(s.edit),
               ],
             ),
           ),

@@ -524,6 +524,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dump_stopped": MessageLookupByLibrary.simpleMessage(
       "Автоматический дамп выключен",
     ),
+    "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("АН->КН"),
     "enabled": MessageLookupByLibrary.simpleMessage("Включено"),
     "end": MessageLookupByLibrary.simpleMessage("Конец"),

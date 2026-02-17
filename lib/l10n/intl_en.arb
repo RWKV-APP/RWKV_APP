@@ -416,6 +416,7 @@
   "model": "Model",
   "no_model_selected": "No model selected",
   "change": "Change",
+  "edit": "Edit",
   "status": "Status",
   "translating": "Translating...",
   "idle": "Idle",

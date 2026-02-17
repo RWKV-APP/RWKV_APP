@@ -430,6 +430,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dump_started": MessageLookupByLibrary.simpleMessage("自動ダンプが開始されました"),
     "dump_stopped": MessageLookupByLibrary.simpleMessage("自動ダンプが停止しました"),
+    "edit": MessageLookupByLibrary.simpleMessage("編集"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
     "enabled": MessageLookupByLibrary.simpleMessage("有効"),
     "end": MessageLookupByLibrary.simpleMessage("終"),
