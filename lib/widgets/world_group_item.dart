@@ -15,7 +15,7 @@ import 'package:zone/model/world_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:halo_alert/halo_alert.dart';
-import 'package:zone/func/gb_display.dart';
+import 'package:zone/func/format_bytes.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_tag.dart';
@@ -538,7 +538,7 @@ class _CollapsedContent extends ConsumerWidget {
               style: const TS(w: .w600),
             ),
             Text(
-              gbDisplay(totalSize),
+              formatBytes(totalSize),
               style: TS(c: qb.q(.7), w: .w500),
             ),
           ],
@@ -730,7 +730,7 @@ class _ExpandedFileItem extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          gbDisplay(fileSize),
+                          formatBytes(fileSize),
                           style: TS(
                             c: qb.q(.7),
                             w: .w500,

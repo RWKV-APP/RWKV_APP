@@ -610,6 +610,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "怠惰な思考モードテンプレート",
     ),
+    "less_than_01_gb": MessageLookupByLibrary.simpleMessage("0.01 GB 未満"),
     "license": MessageLookupByLibrary.simpleMessage("オープンソースライセンス"),
     "life_span": MessageLookupByLibrary.simpleMessage("Life Span"),
     "light_mode": MessageLookupByLibrary.simpleMessage("ライトモード"),

@@ -10,6 +10,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/lambada_test_item.dart';
+import 'package:zone/func/format_bytes.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $RWKV, $Lambada;
 import 'package:zone/widgets/model_selector.dart';
 
@@ -241,7 +242,7 @@ class _TestState extends ConsumerState<_Test> {
             if (socBrand != SocBrand.unknown) 'SocBrand'.codeToName: socBrand.name,
             if (model != null) '---': '',
             if (model != null) 'Model'.codeToName: "${model.name} ${model.quantization}",
-            if (model != null) 'FileSize'.codeToName: '${(model.fileSize / 1024 / 1024).toStringAsFixed(2)}MB',
+            if (model != null) 'FileSize'.codeToName: formatBytes(model.fileSize),
             if (model != null) 'Backend'.codeToName: model.backend?.asArgument ?? '-',
           },
         ),
@@ -402,18 +403,20 @@ class _Utils {
       if (parts.length < 2) {
         continue;
       }
-      //qqq('${parts[0]} ${(int.parse(parts[1]) / 1024 / 1024).toStringAsFixed(2) + 'GB'}');
       try {
+        // /proc/meminfo values are in KB
+        final kb = int.tryParse(parts[1]);
+        final bytes = (kb ?? 0) * 1024;
         if (line.contains("MemTotal")) {
-          memInfo['MemTotal'] = (int.parse(parts[1]) / 1024 / 1024).toStringAsFixed(2) + 'GB';
+          memInfo['MemTotal'] = formatBytes(bytes);
         }
         if (Platform.isWindows) {
           if (line.contains("MemFree")) {
-            memInfo['MemFree'] = (int.parse(parts[1]) / 1024 / 1024).toStringAsFixed(2) + 'GB';
+            memInfo['MemFree'] = formatBytes(bytes);
           }
         } else {
           if (line.contains("MemAvailable")) {
-            memInfo['MemAvailable'] = (int.parse(parts[1]) / 1024 / 1024).toStringAsFixed(2) + 'GB';
+            memInfo['MemAvailable'] = formatBytes(bytes);
           }
         }
       } catch (e) {

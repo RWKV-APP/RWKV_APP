@@ -27,11 +27,6 @@ class _Remote {
   /// 模型目录下所有文件的总大小
   late final totalSizeInModelsDir = qs(0);
 
-  late final totalSizeInModelsDirDisplay = qp<String>((ref) {
-    final totalSize = ref.watch(P.remote.totalSizeInModelsDir);
-    return formatBytes(totalSize);
-  });
-
   /// 本地文件状态
   late final locals = qsff<FileInfo, LocalFile>((ref, key) {
     return LocalFile(targetPath: ref.watch(_paths(key)));

@@ -21,6 +21,7 @@
   "show_prefill_log_only": "Показать только Prefill журнал",
   "text": "Текст",
   "life_span": "Life Span",
+  "less_than_01_gb": "< 0.01 GB",
   "state_panel": "Панель состояния",
   "open_state_panel": "Открыть панель состояния",
   "refreshed": "Обновлено",

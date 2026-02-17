@@ -21,6 +21,7 @@
   "show_prefill_log_only": "Prefill ログのみ表示",
   "text": "テキスト",
   "life_span": "Life Span",
+  "less_than_01_gb": "0.01 GB 未満",
   "refreshed": "更新",
   "state_panel": "状態パネル",
   "open_state_panel": "状態パネルを開く",

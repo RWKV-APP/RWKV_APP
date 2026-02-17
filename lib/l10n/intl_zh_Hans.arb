@@ -21,6 +21,7 @@
   "show_prefill_log_only": "仅显示 Prefill 日志",
   "text": "文本",
   "life_span": "Life Span",
+  "less_than_01_gb": "小于 0.01 GB",
   "state_panel": "状态面板",
   "open_state_panel": "打开状态面板",
   "refreshed": "已刷新",

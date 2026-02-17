@@ -12,6 +12,7 @@ import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
+import 'package:zone/func/format_bytes.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
 import 'package:zone/widgets/form_item.dart';
@@ -76,7 +77,7 @@ class Settings extends ConsumerWidget {
     final checkingLatestVersion = ref.watch(P.app.checkingLatestVersion);
     final tabBarHeight = appTheme.tabBarHeight;
 
-    final totalUsage = ref.watch(P.remote.totalSizeInModelsDirDisplay);
+    final totalUsage = formatBytes(ref.watch(P.remote.totalSizeInModelsDir));
 
     final iconWidget = SizedBox(
       width: 64,

@@ -20,7 +20,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
-import 'package:zone/func/gb_display.dart';
+import 'package:zone/func/format_bytes.dart';
 import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/model_tag.dart';
 import 'package:zone/widgets/role_play_item.dart';
@@ -621,7 +621,7 @@ class _LocalPthFileItem extends ConsumerWidget {
                 children: [
                   Text(fileInfo.name, style: const TS(w: .w600)),
                   Text(
-                    gbDisplay(fileInfo.fileSize),
+                    formatBytes(fileInfo.fileSize),
                     style: TS(c: qb.q(.7), w: .w500),
                   ),
                 ],

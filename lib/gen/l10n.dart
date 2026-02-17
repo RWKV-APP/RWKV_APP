@@ -214,6 +214,16 @@ class S {
     return Intl.message('Life Span', name: 'life_span', desc: '', args: []);
   }
 
+  /// `小于 0.01 GB`
+  String get less_than_01_gb {
+    return Intl.message(
+      '小于 0.01 GB',
+      name: 'less_than_01_gb',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `状态面板`
   String get state_panel {
     return Intl.message('状态面板', name: 'state_panel', desc: '', args: []);

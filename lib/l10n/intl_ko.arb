@@ -21,6 +21,7 @@
   "show_prefill_log_only": "Prefill 로그만 표시",
   "text": "텍스트",
   "life_span": "Life Span",
+  "less_than_01_gb": "0.01 GB 미만",
   "state_panel": "상태 패널",
   "open_state_panel": "State Panel 열기",
   "refreshed": "새로고침",

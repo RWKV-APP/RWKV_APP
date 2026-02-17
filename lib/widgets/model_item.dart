@@ -13,7 +13,7 @@ import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/extensions/num.dart';
-import 'package:zone/func/gb_display.dart';
+import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
@@ -466,7 +466,7 @@ class _FileKeyItem extends ConsumerWidget {
               style: const TS(w: .w600),
             ),
             Text(
-              gbDisplay(fileSize),
+              formatBytes(fileSize),
               style: TS(c: qb.q(.7), w: .w500),
             ),
           ],

@@ -114,7 +114,6 @@ import 'package:zone/func/unzip.dart';
 import 'package:zone/widgets/version_info_panel.dart';
 import 'package:zone/func/transfer_all_files_in_dir.dart';
 import 'package:zone/func/calculate_total_size_of_dir.dart';
-import 'package:zone/func/format_bytes.dart';
 
 part "adapter.dart";
 part "app.dart";

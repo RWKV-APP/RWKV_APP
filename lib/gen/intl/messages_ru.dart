@@ -742,6 +742,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "lazy_thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон ленивого режима мышления",
     ),
+    "less_than_01_gb": MessageLookupByLibrary.simpleMessage("< 0.01 GB"),
     "license": MessageLookupByLibrary.simpleMessage(
       "Лицензия с открытым исходным кодом",
     ),

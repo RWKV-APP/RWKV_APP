@@ -2,6 +2,7 @@ import 'package:background_downloader/background_downloader.dart' as bd;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:halo/halo.dart';
+import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 
 @Deprecated('Use VersionInfoPanel instead')
@@ -140,7 +141,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog> {
               const SizedBox(height: 8),
               if (progress != -1)
                 Text(
-                  '${(fileSizeMB * progress).round()}MB / ${fileSizeMB.round()}MB',
+                  '${formatBytes((fileSizeMB * progress * 1024 * 1024).round())} / ${formatBytes((fileSizeMB * 1024 * 1024).round())}',
                   style: theme.textTheme.bodyMedium,
                 ),
               if (progress == -1)
