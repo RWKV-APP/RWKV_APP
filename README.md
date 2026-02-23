@@ -95,6 +95,8 @@ When you first open the app, a model selection panel will appear. Please choose 
 
 **Ensure you have the [Flutter](https://flutter.dev/) development environment set up.**
 
+> Development requires **Flutter 3.41.1+** (stable channel recommended).
+
 1. **Clone the repository:**
 
 ```bash
@@ -119,7 +121,7 @@ flutter pub get
 
 4. **(Optional) Install dependencies for the `tools` directory:**
 
-*Doing this avoids the “Errors exist in your project” warning in VS Code and Cursor when you run the app.*
+_Doing this avoids the “Errors exist in your project” warning in VS Code and Cursor when you run the app._
 
 ```bash
 cd tools; flutter pub get; cd ..;

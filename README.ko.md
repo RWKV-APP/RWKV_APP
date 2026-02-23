@@ -95,6 +95,8 @@ RWKV App은 멀티턴 대화, 텍스트 음성 변환(TTS), 시각적 이해 및
 
 **[Flutter](https://flutter.dev/) 개발 환경이 설정되어 있는지 확인하십시오.**
 
+> 개발 환경에서는 **Flutter 3.41.1+** 가 필요합니다(stable channel 권장).
+
 1. **리포지토리 복제:**
 
 ```bash
@@ -119,7 +121,7 @@ flutter pub get
 
 4. **（선택 사항）`tools` 디렉토리 종속성 설치:**
 
-*이 단계를 수행하면 VS Code 또는 Cursor에서 앱을 실행할 때 "프로젝트에 오류가 있습니다" 경고를 피할 수 있습니다.*
+_이 단계를 수행하면 VS Code 또는 Cursor에서 앱을 실행할 때 "프로젝트에 오류가 있습니다" 경고를 피할 수 있습니다._
 
 ```bash
 cd tools; flutter pub get; cd ..;

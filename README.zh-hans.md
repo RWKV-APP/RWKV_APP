@@ -89,6 +89,8 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 
 **请确保您已搭建好 [Flutter](https://flutter.dev/) 开发环境。**
 
+> 开发环境要求 **Flutter 3.41.1+**（推荐使用 stable channel）。
+
 1. **克隆仓库：**
 
 ```bash
@@ -113,7 +115,7 @@ flutter pub get
 
 4. **（可选）为 `tools` 目录安装依赖：**
 
-*执行此步骤可避免在 VS Code 或 Cursor 中运行应用时出现「您的项目中存在错误」的提示。*
+_执行此步骤可避免在 VS Code 或 Cursor 中运行应用时出现「您的项目中存在错误」的提示。_
 
 ```bash
 cd tools; flutter pub get; cd ..;
