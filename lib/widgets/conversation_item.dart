@@ -74,19 +74,25 @@ class ConversationListItemData {
   }
 
   static String _processTitle(String title) {
-    final List<String> allStrings = [];
-
-    for (var i = Config.userMsgModifierSep.length - 1; i > 0; i--) {
-      allStrings.add(Config.userMsgModifierSep.substring(0, i));
+    final String separator = Config.userMsgModifierSep;
+    String processed = title.split(separator).first.trimRight();
+    if (processed.isEmpty) {
+      return processed;
     }
 
-    String processed = title;
+    final List<String> partialPrefixes = List<String>.generate(
+      separator.length - 1,
+      (int index) => separator.substring(0, separator.length - 1 - index),
+    );
 
-    for (var string in allStrings) {
-      processed = processed.replaceAll(string, '');
+    for (final String partialPrefix in partialPrefixes) {
+      if (!processed.endsWith(partialPrefix)) {
+        continue;
+      }
+      processed = processed.substring(0, processed.length - partialPrefix.length).trimRight();
+      return processed;
     }
 
-    processed = processed.replaceAll(Config.userMsgModifierSep.substring(0, Config.userMsgModifierSep.length - 1), '');
     return processed;
   }
 
