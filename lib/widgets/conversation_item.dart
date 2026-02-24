@@ -222,7 +222,7 @@ class ConversationItem extends ConsumerWidget {
       onTap: isBatchMode ? () => _handleBatchSelection() : () => _onTap(context),
       onLongPressStart: isBatchMode ? null : (details) => _onLongPressStart(details, context),
       child: Container(
-        color: appTheme.scaffoldBg,
+        color: appTheme.settingBg,
         padding: const .symmetric(horizontal: 12, vertical: 12),
         child: Row(
           crossAxisAlignment: .center,

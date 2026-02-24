@@ -46,7 +46,7 @@ class PageTab extends ConsumerWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
               child: Container(
-                color: appTheme.scaffoldBg.q(.5),
+                color: appTheme.settingBg.q(.5),
               ),
             ),
           ),
@@ -58,7 +58,7 @@ class PageTab extends ConsumerWidget {
           height: appTheme.tabBarHeight,
           child: Container(
             decoration: BoxDecoration(
-              color: appTheme.scaffoldBg.q(.4),
+              color: appTheme.settingBg.q(.5),
               borderRadius: .circular(100),
               border: Border.all(color: qb.q(.2), width: .5),
             ),

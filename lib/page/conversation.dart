@@ -58,8 +58,10 @@ class _PageConversationState extends ConsumerState<PageConversation> {
     final conversations = ref.watch(_compositedConversations);
     final isEmpty = conversations.isEmpty;
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
+    final appTheme = ref.watch(P.app.theme);
 
     return Scaffold(
+      backgroundColor: appTheme.settingBg,
       body: Column(
         children: [
           const _ConversationAppBar(),
@@ -67,39 +69,6 @@ class _PageConversationState extends ConsumerState<PageConversation> {
           if (isBatchMode) const _BatchActionBar(),
         ],
       ),
-    );
-  }
-
-  Widget buildConversationItem(ConversationListItemData item, int index) {
-    return Dismissible(
-      key: Key(item.id.toString()),
-      background: Container(
-        color: Colors.redAccent,
-        padding: const .only(right: 24),
-        alignment: .centerRight,
-        child: const FaIcon(FontAwesomeIcons.trashCan, color: Colors.white),
-      ),
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (d) async {
-        final s = S.of(context);
-        final res = await showOkCancelAlertDialog(
-          context: context,
-          title: s.delete_conversation,
-          message: s.delete_conversation_message,
-          okLabel: s.delete,
-          cancelLabel: s.cancel,
-          isDestructiveAction: true,
-        );
-        return res == OkCancelResult.ok;
-      },
-      onDismissed: (d) async {
-        if (item.isRoleplay) {
-          await RoleplayManage.deleteRolePlaySession(item.roleName!);
-          return;
-        }
-        await P.conversation.onDeleteClicked(context, item.conv!);
-      },
-      child: ConversationItem(conversation: item),
     );
   }
 }
