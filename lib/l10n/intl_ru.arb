@@ -46,6 +46,15 @@
   "model_size_increased_please_open_a_new_conversation": "Размер модели увеличен, откройте новый диалог, чтобы улучшить качество диалога",
   "batch_inference_short": "Ветвление",
   "your_voice_is_empty": "Данные вашего голоса пусты, проверьте микрофон",
+  "tts_voice_source_sheet_title": "Выберите голос, который RWKV будет имитировать",
+  "tts_voice_source_sheet_subtitle": "Выберите способ, которым вы хотите предоставить образец голоса",
+  "tts_voice_source_preset_title": "Предустановленный голос",
+  "tts_voice_source_preset_subtitle": "Выберите один из встроенных предустановленных голосов RWKV",
+  "tts_voice_source_my_voice_title": "Мой голос",
+  "tts_voice_source_my_voice_subtitle": "Запишите свой голос, чтобы RWKV мог его имитировать",
+  "tts_voice_source_file_title": "Аудиофайл",
+  "tts_voice_source_file_subtitle": "Выберите WAV‑файл, который RWKV будет имитировать",
+  "tts_voice_source_file_panel_hint": "Сгенерировать речь, используя голос аудиофайла ниже",
   "batch_inference_running": "Ветвление, генерируется {count} сообщений одновременно",
   "batch_inference_selected": "Выбрано {index} сообщение",
   "this_model_does_not_support_batch_inference": "Эта модель не поддерживает парралельный вывод, выберите модель с тегом \"batch\"",
@@ -692,5 +701,8 @@
       "error": {}
     }
   },
-  "model_item_ios18_weight_hint": "Обновитесь до iOS 18+, чтобы использовать этот вес — быстрее и экономичнее"
+  "model_item_ios18_weight_hint": "Обновитесь до iOS 18+, чтобы использовать этот вес — быстрее и экономичнее",
+  "tts_is_running_please_wait": "Синтез речи уже выполняется, дождитесь завершения",
+  "please_select_a_spk_or_a_wav_file": "Выберите предустановленный голос или запишите свой голос",
+  "please_enter_text_to_generate_tts": "Введите текст, чтобы сгенерировать речь"
 }

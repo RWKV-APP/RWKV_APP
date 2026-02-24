@@ -711,6 +711,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_conversation_name": MessageLookupByLibrary.simpleMessage(
       "請輸入對話名稱",
     ),
+    "please_enter_text_to_generate_tts": MessageLookupByLibrary.simpleMessage(
+      "請輸入文字以生成語音",
+    ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "請輸入難度",
     ),
@@ -722,6 +725,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage("請選擇您喜歡的分支以進行接下來的對話"),
+    "please_select_a_spk_or_a_wav_file": MessageLookupByLibrary.simpleMessage(
+      "請選擇一個預設聲音或錄製自己的聲音",
+    ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "請選擇任務類型",
     ),
@@ -955,6 +961,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "translator_debug_info": MessageLookupByLibrary.simpleMessage("翻譯器偵錯資訊"),
     "tts": MessageLookupByLibrary.simpleMessage("文字轉語音"),
     "tts_detail": MessageLookupByLibrary.simpleMessage("讓 RWKV 輸出語音"),
+    "tts_is_running_please_wait": MessageLookupByLibrary.simpleMessage(
+      "TTS 正在運行，請等待其完成",
+    ),
+    "tts_voice_source_file_panel_hint": MessageLookupByLibrary.simpleMessage(
+      "使用下方檔案的聲音來生成語音",
+    ),
+    "tts_voice_source_file_subtitle": MessageLookupByLibrary.simpleMessage(
+      "選擇一個 WAV 檔案讓 RWKV 模仿它",
+    ),
+    "tts_voice_source_file_title": MessageLookupByLibrary.simpleMessage("聲音檔案"),
+    "tts_voice_source_my_voice_subtitle": MessageLookupByLibrary.simpleMessage(
+      "錄製我的聲音，讓 RWKV 模仿它",
+    ),
+    "tts_voice_source_my_voice_title": MessageLookupByLibrary.simpleMessage(
+      "我的聲音",
+    ),
+    "tts_voice_source_preset_subtitle": MessageLookupByLibrary.simpleMessage(
+      "在 RWKV 內建的預設聲音中選擇",
+    ),
+    "tts_voice_source_preset_title": MessageLookupByLibrary.simpleMessage(
+      "預設聲音",
+    ),
+    "tts_voice_source_sheet_subtitle": MessageLookupByLibrary.simpleMessage(
+      "在下列的不同方式中選擇錄入聲音的方式",
+    ),
+    "tts_voice_source_sheet_title": MessageLookupByLibrary.simpleMessage(
+      "選擇 RWKV 要模仿的聲音",
+    ),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("落子權轉移"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ui_font_setting": MessageLookupByLibrary.simpleMessage("UI 字體設定"),

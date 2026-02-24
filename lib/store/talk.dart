@@ -449,7 +449,7 @@ extension $Talk on _Talk {
 
     if (generating.q) {
       qqq("Generating is true");
-      Alert.warning("TTS is running, please wait for it to finish");
+      Alert.warning(S.current.tts_is_running_please_wait);
       return;
     }
 
@@ -462,7 +462,8 @@ extension $Talk on _Talk {
     final spkName = selectedSpkName.q;
 
     if (spkName == null && this.selectSourceAudioPath.q == null) {
-      Alert.warning("Please select a spk or a wav file");
+      Alert.warning(S.current.please_select_a_spk_or_a_wav_file);
+      await TTSVoiceSourcePanels.showVoiceSourceTypePanel();
       return;
     }
 
@@ -478,7 +479,7 @@ extension $Talk on _Talk {
     // final outputWavPath = "/sdcard/Download/$receiveId.output.wav";
 
     if (ttsText.isEmpty) {
-      Alert.warning("Please enter text to generate TTS");
+      Alert.warning(S.current.please_enter_text_to_generate_tts);
       return;
     }
 

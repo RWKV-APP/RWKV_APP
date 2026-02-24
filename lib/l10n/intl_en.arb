@@ -46,6 +46,15 @@
   "model_size_increased_please_open_a_new_conversation": "Model size increased, please open a new conversation, to improve the conversation quality",
   "batch_inference_short": "Batch",
   "your_voice_is_empty": "Your voice data is empty, please check your microphone",
+  "tts_voice_source_sheet_title": "Choose a voice for RWKV to mimic",
+  "tts_voice_source_sheet_subtitle": "Choose how you want to provide a voice sample",
+  "tts_voice_source_preset_title": "Preset voice",
+  "tts_voice_source_preset_subtitle": "Choose from RWKV's built-in preset voices",
+  "tts_voice_source_my_voice_title": "My voice",
+  "tts_voice_source_my_voice_subtitle": "Record my voice so RWKV can mimic it",
+  "tts_voice_source_file_title": "Audio file",
+  "tts_voice_source_file_subtitle": "Select a WAV file for RWKV to mimic",
+  "tts_voice_source_file_panel_hint": "Use the audio file below to generate speech",
   "batch_inference_running": "Batch inference running, generating {count} messages at the same time",
   "batch_inference_selected": "Selected message {index}",
   "this_model_does_not_support_batch_inference": "This model does not support batch inference, please select a model with the \"batch\" tag",
@@ -698,5 +707,8 @@
       "error": {}
     }
   },
-  "model_item_ios18_weight_hint": "Upgrade to iOS 18+ to use this weight, faster and more power-efficient"
+  "model_item_ios18_weight_hint": "Upgrade to iOS 18+ to use this weight, faster and more power-efficient",
+  "tts_is_running_please_wait": "TTS is running, please wait for it to finish",
+  "please_select_a_spk_or_a_wav_file": "Please select a preset voice or record your voice",
+  "please_enter_text_to_generate_tts": "Please enter text to generate TTS"
 }

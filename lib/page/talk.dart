@@ -8,7 +8,6 @@ import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
-import 'package:zone/widgets/talk/audio_input.dart';
 import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/message.dart';
 import 'package:zone/widgets/talk/suggestions.dart';
@@ -20,7 +19,6 @@ class PageTalk extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final inputHeight = ref.watch(P.chat.inputHeight);
-
     return Scaffold(
       body: Stack(
         children: [
@@ -33,13 +31,12 @@ class PageTalk extends ConsumerWidget {
             child: ChatAppBar(preferredDemoType: .tts),
           ),
           Positioned(
-            bottom: inputHeight + 4,
+            bottom: inputHeight + 8,
             right: 0,
             left: 0,
             child: const Suggestions(),
           ),
           const InputBar(preferredDemoType: .tts),
-          const AudioInput(demoType: .tts),
         ],
       ),
     );

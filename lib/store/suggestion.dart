@@ -131,7 +131,7 @@ class _Suggestion {
         }
         break;
       case .tts:
-        return config.tts.toList().shuffled.take(5).toList();
+        return _buildMixedTalkSuggestions(config.tts);
       default:
         return [];
     }
@@ -167,8 +167,7 @@ class _Suggestion {
 
     final config = ref.watch(P.suggestion.config);
 
-    final r = config.tts.toList().shuffled.take(5).toList();
-    return r;
+    return _buildMixedTalkSuggestions(config.tts);
   });
 
   Future<void> loadSuggestions() async {
@@ -234,6 +233,36 @@ extension _$Suggestion on _Suggestion {
 
 /// Public methods
 extension $Suggestion on _Suggestion {}
+
+List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
+  const int totalCount = 5;
+  const int intonationCount = 1;
+  const int normalCount = totalCount - intonationCount;
+
+  final List<String> normalSuggestions = rawSuggestions.toList().shuffled.toList();
+  final List<String> selectedNormal = normalSuggestions.length <= normalCount
+      ? normalSuggestions
+      : normalSuggestions.take(normalCount).toList();
+
+  final List<String> intonationSuggestions = _buildIntonationSuggestionDisplays().shuffled.toList();
+  if (intonationSuggestions.isEmpty) {
+    if (normalSuggestions.length <= totalCount) return normalSuggestions;
+    return normalSuggestions.take(totalCount).toList();
+  }
+
+  final List<String> mixed = <String>[
+    ...selectedNormal,
+    intonationSuggestions.first,
+  ];
+  return mixed.shuffled.toList();
+}
+
+List<String> _buildIntonationSuggestionDisplays() {
+  return TTSInstruction.intonation.options.indexMap((index, option) {
+    final String emoji = TTSInstruction.intonation.emojiOptions[index];
+    return "$emoji$option";
+  });
+}
 
 class _DefaultSuggestion {
   static const SuggestionConfig zh = SuggestionConfig(

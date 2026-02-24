@@ -11,7 +11,6 @@ import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/interactions.dart';
 import 'package:zone/widgets/input_text_field.dart';
-import 'package:zone/widgets/talk/tts_bottom_interactions.dart';
 
 class InputBar extends ConsumerWidget {
   final DemoType preferredDemoType;
@@ -50,7 +49,7 @@ class InputBar extends ConsumerWidget {
             ),
           ),
           child: AnimatedSize(
-          duration: 250.ms,
+            duration: 250.ms,
             child: Column(
               crossAxisAlignment: .start,
               children: [
@@ -58,7 +57,6 @@ class InputBar extends ConsumerWidget {
                 if (inRWKVSee) const _WaitingMsg(),
                 if (preferredDemoType != .tts) InputInteractions(preferredDemoType: preferredDemoType),
                 InputTextField(preferredDemoType: preferredDemoType),
-                if (preferredDemoType == .tts) const TTSInteractions(),
               ],
             ),
           ),

@@ -46,6 +46,15 @@
   "model_size_increased_please_open_a_new_conversation": "模型大小增加，请打开一个新的对话, 以提升对话质量",
   "batch_inference_short": "并行",
   "your_voice_is_empty": "您的声音数据为空，请检查您的麦克风",
+  "tts_voice_source_sheet_title": "选择 RWKV 要模仿的声音",
+  "tts_voice_source_sheet_subtitle": "在下列的不同方式中选择录入声音的方式",
+  "tts_voice_source_preset_title": "预设声音",
+  "tts_voice_source_preset_subtitle": "在 RWKV 内置的预设声音中选择",
+  "tts_voice_source_my_voice_title": "我的声音",
+  "tts_voice_source_my_voice_subtitle": "录制我的声音，让 RWKV 模仿它",
+  "tts_voice_source_file_title": "声音文件",
+  "tts_voice_source_file_subtitle": "选择一个 WAV 文件让 RWKV 模仿它",
+  "tts_voice_source_file_panel_hint": "使用下方文件的声音来生成语音",
   "batch_inference_running": "并行推理中，同时生成 {count} 条消息",
   "batch_inference_selected": "已选择第 {index} 条消息",
   "this_model_does_not_support_batch_inference": "这个模型不支持并行推理, 请选择带有 batch 标签的模型",
@@ -698,5 +707,8 @@
       "error": {}
     }
   },
-  "model_item_ios18_weight_hint": "升级 iOS 18+ 可使用这款权重，更快更省电"
+  "model_item_ios18_weight_hint": "升级 iOS 18+ 可使用这款权重，更快更省电",
+  "tts_is_running_please_wait": "TTS 正在运行，请等待其完成",
+  "please_select_a_spk_or_a_wav_file": "请选择一个预设声音或录制您的声音",
+  "please_enter_text_to_generate_tts": "请输入文本以生成语音"
 }

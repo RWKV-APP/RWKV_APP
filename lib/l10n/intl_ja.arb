@@ -46,6 +46,15 @@
   "model_size_increased_please_open_a_new_conversation": "モデルサイズが大きくなりました。会話の品質を向上させるために、新しい会話を開始してください",
   "batch_inference_short": "並列",
   "your_voice_is_empty": "音声データが空です。マイクを確認してください",
+  "tts_voice_source_sheet_title": "RWKV がまねる声を選択",
+  "tts_voice_source_sheet_subtitle": "次のいずれかの方法で音声サンプルを選択してください",
+  "tts_voice_source_preset_title": "プリセット音声",
+  "tts_voice_source_preset_subtitle": "RWKV に組み込まれたプリセット音声から選ぶ",
+  "tts_voice_source_my_voice_title": "自分の声",
+  "tts_voice_source_my_voice_subtitle": "自分の声を録音して、RWKV にまねさせる",
+  "tts_voice_source_file_title": "音声ファイル",
+  "tts_voice_source_file_subtitle": "RWKV にまねさせたい WAV ファイルを選択",
+  "tts_voice_source_file_panel_hint": "下の音声ファイルの声で音声を生成します",
   "batch_inference_running": "並列推論を実行中、同時に{count}件のメッセージを生成しています",
   "batch_inference_selected": "{index}番目のメッセージが選択されました",
   "this_model_does_not_support_batch_inference": "このモデルは並列推論をサポートしていません。「batch」タグのあるモデルを選択してください",
@@ -692,5 +701,8 @@
       "error": {}
     }
   },
-  "model_item_ios18_weight_hint": "iOS 18以降にアップグレードすると、このウェイトが使え、より速く省電力になります"
+  "model_item_ios18_weight_hint": "iOS 18以降にアップグレードすると、このウェイトが使え、より速く省電力になります",
+  "tts_is_running_please_wait": "TTS を実行中です。完了するまでお待ちください。",
+  "please_select_a_spk_or_a_wav_file": "プリセット音声を選択するか、自分の声を録音してください",
+  "please_enter_text_to_generate_tts": "TTS を生成するテキストを入力してください"
 }

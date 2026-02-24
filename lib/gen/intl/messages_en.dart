@@ -919,6 +919,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_conversation_name": MessageLookupByLibrary.simpleMessage(
       "Please enter conversation name",
     ),
+    "please_enter_text_to_generate_tts": MessageLookupByLibrary.simpleMessage(
+      "Please enter text to generate TTS",
+    ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "Please enter the difficulty",
     ),
@@ -939,6 +942,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Please select a branch to continue the conversation",
         ),
+    "please_select_a_spk_or_a_wav_file": MessageLookupByLibrary.simpleMessage(
+      "Please select a preset voice or record your voice",
+    ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Please select a See Type",
     ),
@@ -1255,6 +1261,36 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tts": MessageLookupByLibrary.simpleMessage("Text-to-Speech"),
     "tts_detail": MessageLookupByLibrary.simpleMessage("Let RWKV output voice"),
+    "tts_is_running_please_wait": MessageLookupByLibrary.simpleMessage(
+      "TTS is running, please wait for it to finish",
+    ),
+    "tts_voice_source_file_panel_hint": MessageLookupByLibrary.simpleMessage(
+      "Use the audio file below to generate speech",
+    ),
+    "tts_voice_source_file_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Select a WAV file for RWKV to mimic",
+    ),
+    "tts_voice_source_file_title": MessageLookupByLibrary.simpleMessage(
+      "Audio file",
+    ),
+    "tts_voice_source_my_voice_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Record my voice so RWKV can mimic it",
+    ),
+    "tts_voice_source_my_voice_title": MessageLookupByLibrary.simpleMessage(
+      "My voice",
+    ),
+    "tts_voice_source_preset_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Choose from RWKV\'s built-in preset voices",
+    ),
+    "tts_voice_source_preset_title": MessageLookupByLibrary.simpleMessage(
+      "Preset voice",
+    ),
+    "tts_voice_source_sheet_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Choose how you want to provide a voice sample",
+    ),
+    "tts_voice_source_sheet_title": MessageLookupByLibrary.simpleMessage(
+      "Choose a voice for RWKV to mimic",
+    ),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Turn transfer"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ui_font_setting": MessageLookupByLibrary.simpleMessage("UI Font Setting"),

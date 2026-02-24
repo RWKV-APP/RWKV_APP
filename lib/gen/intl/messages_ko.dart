@@ -780,6 +780,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_conversation_name": MessageLookupByLibrary.simpleMessage(
       "대화 이름을 입력해주세요",
     ),
+    "please_enter_text_to_generate_tts": MessageLookupByLibrary.simpleMessage(
+      "TTS를 생성할 텍스트를 입력해 주세요",
+    ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "난이도를 입력해주세요",
     ),
@@ -793,6 +796,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage("대화를 계속하려면 분기를 선택해주세요"),
+    "please_select_a_spk_or_a_wav_file": MessageLookupByLibrary.simpleMessage(
+      "프리셋 음성을 선택하거나 본인의 목소리를 녹음해 주세요",
+    ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "작업 유형을 선택해주세요",
     ),
@@ -1050,6 +1056,36 @@ class MessageLookup extends MessageLookupByLibrary {
     "translator_debug_info": MessageLookupByLibrary.simpleMessage("번역기 디버그 정보"),
     "tts": MessageLookupByLibrary.simpleMessage("텍스트 음성 변환"),
     "tts_detail": MessageLookupByLibrary.simpleMessage("RWKV가 음성을 출력하도록 허용"),
+    "tts_is_running_please_wait": MessageLookupByLibrary.simpleMessage(
+      "TTS가 실행 중입니다. 완료될 때까지 기다려 주세요.",
+    ),
+    "tts_voice_source_file_panel_hint": MessageLookupByLibrary.simpleMessage(
+      "아래 오디오 파일의 목소리로 음성을 생성합니다",
+    ),
+    "tts_voice_source_file_subtitle": MessageLookupByLibrary.simpleMessage(
+      "RWKV가 모방할 WAV 파일 선택",
+    ),
+    "tts_voice_source_file_title": MessageLookupByLibrary.simpleMessage(
+      "음성 파일",
+    ),
+    "tts_voice_source_my_voice_subtitle": MessageLookupByLibrary.simpleMessage(
+      "내 음성을 녹음하여 RWKV가 모방하게 하기",
+    ),
+    "tts_voice_source_my_voice_title": MessageLookupByLibrary.simpleMessage(
+      "내 음성",
+    ),
+    "tts_voice_source_preset_subtitle": MessageLookupByLibrary.simpleMessage(
+      "RWKV에 내장된 프리셋 음성 중에서 선택",
+    ),
+    "tts_voice_source_preset_title": MessageLookupByLibrary.simpleMessage(
+      "프리셋 음성",
+    ),
+    "tts_voice_source_sheet_subtitle": MessageLookupByLibrary.simpleMessage(
+      "아래 방법 중 하나로 음성 샘플을 선택하세요",
+    ),
+    "tts_voice_source_sheet_title": MessageLookupByLibrary.simpleMessage(
+      "RWKV가 모방할 음성을 선택",
+    ),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("차례 넘기기"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ui_font_setting": MessageLookupByLibrary.simpleMessage("UI 글꼴 설정"),

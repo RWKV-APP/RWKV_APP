@@ -71,6 +71,7 @@ import 'package:zone/func/save_asset_to_file.dart';
 import 'package:zone/func/show_image_selector.dart';
 import 'package:zone/func/sudoku.dart' as func_sudoku;
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/widgets/talk/tts_voice_source_panels.dart';
 import 'package:zone/io.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/cell_type.dart';

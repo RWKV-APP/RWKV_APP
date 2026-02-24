@@ -83,7 +83,7 @@ class UserTTSContent extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
 
     return Padding(
-      padding: const .only(left: 6, top: 2, right: 6, bottom: 6),
+      padding: const .only(left: 8, top: 0, right: 8, bottom: 8),
       child: Column(
         crossAxisAlignment: .start,
         children: [

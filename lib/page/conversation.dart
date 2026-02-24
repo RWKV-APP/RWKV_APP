@@ -305,7 +305,7 @@ class _BatchActionBar extends ConsumerWidget {
           children: [
             Expanded(
               child: Text(
-                '已选择: $selectedCount',
+                s.selected_count(selectedCount),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: .w500,

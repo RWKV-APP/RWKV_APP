@@ -46,6 +46,15 @@
   "model_size_increased_please_open_a_new_conversation": "모델 크기가 증가했습니다. 대화 품질을 높이려면 새 대화를 시작해주세요",
   "batch_inference_short": "병렬",
   "your_voice_is_empty": "음성 데이터가 비어 있습니다. 마이크를 확인해주세요",
+  "tts_voice_source_sheet_title": "RWKV가 모방할 음성을 선택",
+  "tts_voice_source_sheet_subtitle": "아래 방법 중 하나로 음성 샘플을 선택하세요",
+  "tts_voice_source_preset_title": "프리셋 음성",
+  "tts_voice_source_preset_subtitle": "RWKV에 내장된 프리셋 음성 중에서 선택",
+  "tts_voice_source_my_voice_title": "내 음성",
+  "tts_voice_source_my_voice_subtitle": "내 음성을 녹음하여 RWKV가 모방하게 하기",
+  "tts_voice_source_file_title": "음성 파일",
+  "tts_voice_source_file_subtitle": "RWKV가 모방할 WAV 파일 선택",
+  "tts_voice_source_file_panel_hint": "아래 오디오 파일의 목소리로 음성을 생성합니다",
   "batch_inference_running": "병렬 추론 실행 중, 동시에 {count}개의 메시지 생성 중",
   "batch_inference_selected": "{index}번 메시지 선택됨",
   "this_model_does_not_support_batch_inference": "이 모델은 병렬 추론을 지원하지 않습니다. 'batch' 태그가 있는 모델을 선택해주세요",
@@ -692,5 +701,8 @@
       "error": {}
     }
   },
-  "model_item_ios18_weight_hint": "iOS 18+로 업그레이드하면 이 가중치를 사용할 수 있으며, 더 빠르고 절전됩니다"
+  "model_item_ios18_weight_hint": "iOS 18+로 업그레이드하면 이 가중치를 사용할 수 있으며, 더 빠르고 절전됩니다",
+  "tts_is_running_please_wait": "TTS가 실행 중입니다. 완료될 때까지 기다려 주세요.",
+  "please_select_a_spk_or_a_wav_file": "프리셋 음성을 선택하거나 본인의 목소리를 녹음해 주세요",
+  "please_enter_text_to_generate_tts": "TTS를 생성할 텍스트를 입력해 주세요"
 }

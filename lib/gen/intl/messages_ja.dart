@@ -788,6 +788,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_conversation_name": MessageLookupByLibrary.simpleMessage(
       "会話名を入力してください",
     ),
+    "please_enter_text_to_generate_tts": MessageLookupByLibrary.simpleMessage(
+      "TTS を生成するテキストを入力してください",
+    ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "難易度を入力してください",
     ),
@@ -801,6 +804,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_select_a_branch_to_continue_the_conversation":
         MessageLookupByLibrary.simpleMessage("会話を続けるにはブランチを選択してください"),
+    "please_select_a_spk_or_a_wav_file": MessageLookupByLibrary.simpleMessage(
+      "プリセット音声を選択するか、自分の声を録音してください",
+    ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "タスクの種類を選択してください",
     ),
@@ -1056,6 +1062,36 @@ class MessageLookup extends MessageLookupByLibrary {
     "translator_debug_info": MessageLookupByLibrary.simpleMessage("翻訳者デバッグ情報"),
     "tts": MessageLookupByLibrary.simpleMessage("テキスト読み上げ"),
     "tts_detail": MessageLookupByLibrary.simpleMessage("RWKVに音声を出力させる"),
+    "tts_is_running_please_wait": MessageLookupByLibrary.simpleMessage(
+      "TTS を実行中です。完了するまでお待ちください。",
+    ),
+    "tts_voice_source_file_panel_hint": MessageLookupByLibrary.simpleMessage(
+      "下の音声ファイルの声で音声を生成します",
+    ),
+    "tts_voice_source_file_subtitle": MessageLookupByLibrary.simpleMessage(
+      "RWKV にまねさせたい WAV ファイルを選択",
+    ),
+    "tts_voice_source_file_title": MessageLookupByLibrary.simpleMessage(
+      "音声ファイル",
+    ),
+    "tts_voice_source_my_voice_subtitle": MessageLookupByLibrary.simpleMessage(
+      "自分の声を録音して、RWKV にまねさせる",
+    ),
+    "tts_voice_source_my_voice_title": MessageLookupByLibrary.simpleMessage(
+      "自分の声",
+    ),
+    "tts_voice_source_preset_subtitle": MessageLookupByLibrary.simpleMessage(
+      "RWKV に組み込まれたプリセット音声から選ぶ",
+    ),
+    "tts_voice_source_preset_title": MessageLookupByLibrary.simpleMessage(
+      "プリセット音声",
+    ),
+    "tts_voice_source_sheet_subtitle": MessageLookupByLibrary.simpleMessage(
+      "次のいずれかの方法で音声サンプルを選択してください",
+    ),
+    "tts_voice_source_sheet_title": MessageLookupByLibrary.simpleMessage(
+      "RWKV がまねる声を選択",
+    ),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("ターンの移行"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
     "ui_font_setting": MessageLookupByLibrary.simpleMessage("UI フォント設定"),

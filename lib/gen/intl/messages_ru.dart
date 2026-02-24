@@ -952,6 +952,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_conversation_name": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, введите название диалога",
     ),
+    "please_enter_text_to_generate_tts": MessageLookupByLibrary.simpleMessage(
+      "Введите текст, чтобы сгенерировать речь",
+    ),
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, введите сложность",
     ),
@@ -969,6 +972,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Пожалуйста, выберите ветвь для продолжения диалога",
         ),
+    "please_select_a_spk_or_a_wav_file": MessageLookupByLibrary.simpleMessage(
+      "Выберите предустановленный голос или запишите свой голос",
+    ),
     "please_select_a_world_type": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, выберите тип задачи",
     ),
@@ -1293,6 +1299,36 @@ class MessageLookup extends MessageLookupByLibrary {
     "tts": MessageLookupByLibrary.simpleMessage("Текст в речь"),
     "tts_detail": MessageLookupByLibrary.simpleMessage(
       "Позволить RWKV выводить голос",
+    ),
+    "tts_is_running_please_wait": MessageLookupByLibrary.simpleMessage(
+      "Синтез речи уже выполняется, дождитесь завершения",
+    ),
+    "tts_voice_source_file_panel_hint": MessageLookupByLibrary.simpleMessage(
+      "Сгенерировать речь, используя голос аудиофайла ниже",
+    ),
+    "tts_voice_source_file_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Выберите WAV‑файл, который RWKV будет имитировать",
+    ),
+    "tts_voice_source_file_title": MessageLookupByLibrary.simpleMessage(
+      "Аудиофайл",
+    ),
+    "tts_voice_source_my_voice_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Запишите свой голос, чтобы RWKV мог его имитировать",
+    ),
+    "tts_voice_source_my_voice_title": MessageLookupByLibrary.simpleMessage(
+      "Мой голос",
+    ),
+    "tts_voice_source_preset_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Выберите один из встроенных предустановленных голосов RWKV",
+    ),
+    "tts_voice_source_preset_title": MessageLookupByLibrary.simpleMessage(
+      "Предустановленный голос",
+    ),
+    "tts_voice_source_sheet_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Выберите способ, которым вы хотите предоставить образец голоса",
+    ),
+    "tts_voice_source_sheet_title": MessageLookupByLibrary.simpleMessage(
+      "Выберите голос, который RWKV будет имитировать",
     ),
     "turn_transfer": MessageLookupByLibrary.simpleMessage("Переход хода"),
     "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),

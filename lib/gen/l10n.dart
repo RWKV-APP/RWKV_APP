@@ -434,6 +434,96 @@ class S {
     );
   }
 
+  /// `选择 RWKV 要模仿的声音`
+  String get tts_voice_source_sheet_title {
+    return Intl.message(
+      '选择 RWKV 要模仿的声音',
+      name: 'tts_voice_source_sheet_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `在下列的不同方式中选择录入声音的方式`
+  String get tts_voice_source_sheet_subtitle {
+    return Intl.message(
+      '在下列的不同方式中选择录入声音的方式',
+      name: 'tts_voice_source_sheet_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `预设声音`
+  String get tts_voice_source_preset_title {
+    return Intl.message(
+      '预设声音',
+      name: 'tts_voice_source_preset_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `在 RWKV 内置的预设声音中选择`
+  String get tts_voice_source_preset_subtitle {
+    return Intl.message(
+      '在 RWKV 内置的预设声音中选择',
+      name: 'tts_voice_source_preset_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `我的声音`
+  String get tts_voice_source_my_voice_title {
+    return Intl.message(
+      '我的声音',
+      name: 'tts_voice_source_my_voice_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `录制我的声音，让 RWKV 模仿它`
+  String get tts_voice_source_my_voice_subtitle {
+    return Intl.message(
+      '录制我的声音，让 RWKV 模仿它',
+      name: 'tts_voice_source_my_voice_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `声音文件`
+  String get tts_voice_source_file_title {
+    return Intl.message(
+      '声音文件',
+      name: 'tts_voice_source_file_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择一个 WAV 文件让 RWKV 模仿它`
+  String get tts_voice_source_file_subtitle {
+    return Intl.message(
+      '选择一个 WAV 文件让 RWKV 模仿它',
+      name: 'tts_voice_source_file_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用下方文件的声音来生成语音`
+  String get tts_voice_source_file_panel_hint {
+    return Intl.message(
+      '使用下方文件的声音来生成语音',
+      name: 'tts_voice_source_file_panel_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `并行推理中，同时生成 {count} 条消息`
   String batch_inference_running(Object count) {
     return Intl.message(
@@ -4654,6 +4744,36 @@ class S {
     return Intl.message(
       '升级 iOS 18+ 可使用这款权重，更快更省电',
       name: 'model_item_ios18_weight_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TTS 正在运行，请等待其完成`
+  String get tts_is_running_please_wait {
+    return Intl.message(
+      'TTS 正在运行，请等待其完成',
+      name: 'tts_is_running_please_wait',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请选择一个预设声音或录制您的声音`
+  String get please_select_a_spk_or_a_wav_file {
+    return Intl.message(
+      '请选择一个预设声音或录制您的声音',
+      name: 'please_select_a_spk_or_a_wav_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请输入文本以生成语音`
+  String get please_enter_text_to_generate_tts {
+    return Intl.message(
+      '请输入文本以生成语音',
+      name: 'please_enter_text_to_generate_tts',
       desc: '',
       args: [],
     );
