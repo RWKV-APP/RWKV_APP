@@ -133,7 +133,7 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
-### Windows ARM64 디버그 (QNN)
+#### Windows ARM64 디버그 (QNN)
 
 Windows ARM64에서 디버그하려면 `pubspec.yaml`의 아래 설정 주석을 해제하세요.
 

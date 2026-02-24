@@ -133,7 +133,7 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
-### Windows ARM64 Debug (QNN)
+#### Windows ARM64 Debug (QNN)
 
 If you are debugging on Windows ARM64, uncomment the following section in `pubspec.yaml`:
 

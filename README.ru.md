@@ -133,7 +133,7 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
-### Отладка Windows ARM64 (QNN)
+#### Отладка Windows ARM64 (QNN)
 
 Если вы отлаживаете на Windows ARM64, раскомментируйте следующий блок в `pubspec.yaml`:
 
