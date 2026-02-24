@@ -133,6 +133,17 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
+### Отладка Windows ARM64 (QNN)
+
+Если вы отлаживаете на Windows ARM64, раскомментируйте следующий блок в `pubspec.yaml`:
+
+```yaml
+- path: assets/lib/qnn-windows/
+  platforms: [windows]
+```
+
+Для отладки на Windows ARM64 используйте ветку Flutter `master`, а не `stable`.
+
 ## 🛠️ Технические особенности
 
 - **Flutter:** Фреймворк с открытым исходным кодом для создания кроссплатформенных пользовательских интерфейсов, поддерживающий Android, iOS, Windows и macOS.

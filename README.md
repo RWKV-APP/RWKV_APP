@@ -133,6 +133,17 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
+### Windows ARM64 Debug (QNN)
+
+If you are debugging on Windows ARM64, uncomment the following section in `pubspec.yaml`:
+
+```yaml
+- path: assets/lib/qnn-windows/
+  platforms: [windows]
+```
+
+For Windows ARM64 debugging, check out Flutter's `master` branch instead of the `stable` branch.
+
 ## 🛠️ Technical Highlights
 
 - **Flutter:** An open-source framework for building cross-platform user interfaces, supporting Android, iOS, Windows, and macOS.

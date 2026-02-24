@@ -133,6 +133,17 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
+### Windows ARM64 디버그 (QNN)
+
+Windows ARM64에서 디버그하려면 `pubspec.yaml`의 아래 설정 주석을 해제하세요.
+
+```yaml
+- path: assets/lib/qnn-windows/
+  platforms: [windows]
+```
+
+Windows ARM64 디버그 시에는 Flutter `stable` 브랜치가 아니라 `master` 브랜치를 사용하세요.
+
 ## 🛠️ 기술적 주요 사항
 
 - **Flutter:** Android, iOS, Windows 및 macOS를 지원하는 크로스 플랫폼 사용자 인터페이스 구축을 위한 오픈 소스 프레임워크입니다.

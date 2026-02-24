@@ -62,11 +62,53 @@ jobs:
         with:
           filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
 
+      - name: 🪟 Enable QNN Windows Assets (arm64)
+        shell: pwsh
+        run: |
+          $pubspecPath = "pubspec.yaml"
+          $content = Get-Content -Path $pubspecPath -Raw
+
+          $content = $content -replace '(?m)^(\s*)#\s*-\s*path:\s*assets/lib/qnn-windows/\s*$', '$1- path: assets/lib/qnn-windows/'
+          $content = $content -replace '(?m)^(\s*)#\s*platforms:\s*\[windows\]\s*$', '$1  platforms: [windows]'
+
+          Set-Content -Path $pubspecPath -Value $content -Encoding UTF8
+
+          if (-not ($content -match '(?m)^\s*-\s*path:\s*assets/lib/qnn-windows/\s*$')) {
+            throw "Failed to enable assets/lib/qnn-windows in pubspec.yaml"
+          }
+          if (-not ($content -match '(?m)^\s*platforms:\s*\[windows\]\s*$')) {
+            throw "Failed to enable windows platform mapping for qnn-windows in pubspec.yaml"
+          }
+
+          Write-Host "✅ Enabled windows-arm64 QNN assets in pubspec.yaml"
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build Windows arm64
         run: flutter build windows
+
+      - name: 🔎 Verify QNN Windows assets in build output
+        shell: pwsh
+        run: |
+          $assetsRoot = "build\windows\arm64\runner\Release\data\flutter_assets\assets\lib"
+          $qnnWindowsDir = Join-Path $assetsRoot "qnn-windows"
+          $qnnAndroidDir = Join-Path $assetsRoot "qnn"
+
+          if (-not (Test-Path $qnnWindowsDir)) {
+            throw "Expected qnn-windows assets are missing from build output: $qnnWindowsDir"
+          }
+
+          $qnnWindowsFiles = Get-ChildItem -Path $qnnWindowsDir -File -ErrorAction Stop
+          if ($qnnWindowsFiles.Count -eq 0) {
+            throw "qnn-windows directory exists but contains no files: $qnnWindowsDir"
+          }
+
+          if (Test-Path $qnnAndroidDir) {
+            throw "Unexpected Android qnn assets found in Windows arm64 build: $qnnAndroidDir"
+          }
+
+          Write-Host "✅ QNN Windows assets verification passed"
 
       - name: 🧹 Remove x64 DLLs
         shell: pwsh

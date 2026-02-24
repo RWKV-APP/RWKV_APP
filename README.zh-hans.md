@@ -127,6 +127,17 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
+### Windows ARM64 调试（QNN）
+
+如果您在 Windows ARM64 上调试，请在 `pubspec.yaml` 中取消以下配置的注释：
+
+```yaml
+- path: assets/lib/qnn-windows/
+  platforms: [windows]
+```
+
+在 Windows ARM64 上调试时，请使用 Flutter 的 `master` 分支，而不是 `stable` 分支。
+
 ## 🛠️ 技术亮点
 
 - **Flutter：** 一款用于构建跨平台用户界面的开源框架，支持安卓、苹果、Windows 和 macOS。

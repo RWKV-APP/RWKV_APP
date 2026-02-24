@@ -139,8 +139,6 @@ dependencies:
 dependency_overrides:
   rwkv_mobile_flutter:
     path: ../rwkv_mobile_flutter
-  # rwkv_downloader:
-  #   path: ../rwkv_downloader
 
 dev_dependencies:
   build_runner:
@@ -163,12 +161,19 @@ flutter:
     - assets/model/chat/
     - assets/config/chat/
     - assets/img/chat/
-    - assets/lib/qnn/
     - remote/latest.json
     - .env
     - assets/filter.txt
     - assets/lambada_test.jsonl
     - assets/config/code_highlights/
+
+    # QNN libraries for Android
+    - path: assets/lib/qnn/
+      platforms: [android]
+
+    # QNN libraries for Windows (arm64), uncomment when running on Windows ARM64
+    # - path: assets/lib/qnn-windows/
+    #   platforms: [windows]
 
 flutter_intl:
   enabled: true # Required. Must be set to true to activate the plugin. Default: false

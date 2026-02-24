@@ -133,6 +133,17 @@ cd tools; flutter pub get; cd ..;
 flutter run
 ```
 
+### Windows ARM64 デバッグ（QNN）
+
+Windows ARM64 でデバッグする場合は、`pubspec.yaml` の次の設定をアンコメントしてください。
+
+```yaml
+- path: assets/lib/qnn-windows/
+  platforms: [windows]
+```
+
+Windows ARM64 でデバッグする場合は、Flutter の `stable` ブランチではなく `master` ブランチを使用してください。
+
 ## 🛠️ 技術的ハイライト
 
 - **Flutter:** Android、iOS、Windows、macOS をサポートする、クロスプラットフォームのユーザーインターフェースを構築するためのオープンソースフレームワーク。
