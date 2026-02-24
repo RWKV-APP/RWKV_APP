@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/is_chinese.dart';
-import 'package:zone/func/widget_debugger.dart';
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/interactions.dart';

@@ -188,7 +188,7 @@ class _TTSVoiceSourceTypePanelBar extends ConsumerWidget {
         minHeight: kToolbarHeight - 4,
       ),
       padding: const .only(top: 4),
-      decoration: BoxDecoration(color: kC),
+      decoration: const BoxDecoration(color: kC),
       child: Row(
         crossAxisAlignment: .center,
         children: <Widget>[
@@ -296,7 +296,7 @@ class _TTSPanelBar extends ConsumerWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: kToolbarHeight - 4),
       padding: const .only(top: 4, left: 12, right: 8),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: kC,
       ),
       child: Row(
