@@ -96,8 +96,9 @@ lane :ios_upload do |params|
     archive_path: './build/ios/archive/Runner.xcarchive',
   )
   upload_to_testflight(
-    skip_submission: true,
+    skip_submission: false,
     distribute_external: params[:groups].include?('External'),
+    notify_external_testers: true,
     changelog: 'Bug fixes and UI improvements',
     groups: params[:groups],
     localized_build_info: {
@@ -113,8 +114,9 @@ end
 
 lane :ios_upload_to_testflight do |params|
   upload_to_testflight(
-    skip_submission: true,
+    skip_submission: false,
     distribute_external: true,
+    notify_external_testers: true,
     changelog: 'Bug fixes and UI improvements',
     groups: ['External'],
     localized_build_info: {
