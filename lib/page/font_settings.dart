@@ -7,9 +7,10 @@ import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/markdown_render.dart';
 import 'package:zone/widgets/font_picker_bottom_sheet.dart';
+import 'package:zone/widgets/message.dart' as message_widget;
 import 'package:zone/config.dart';
 
 class PageFontSettings extends ConsumerStatefulWidget {
@@ -22,6 +23,7 @@ class PageFontSettings extends ConsumerStatefulWidget {
 class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
   late double _currentScale;
   bool _useSystemSize = true;
+  String _previewTemplate = "";
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
     final stored = P.preference.preferredTextScaleFactor.q;
     _useSystemSize = stored == P.preference.textScaleFactorSystem;
     _currentScale = _useSystemSize ? 1.0 : stored;
+    _loadPreviewTemplate();
   }
 
   Future<void> _saveScale(double scale) async {
@@ -37,94 +40,23 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
     await sp.setDouble("halo_state.textScaleFactor", scale);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-    final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
-    final primaryContainer = theme.colorScheme.primaryContainer;
-    final surface = theme.colorScheme.surface;
-    final onSurface = theme.colorScheme.onSurface;
-
-    // Watch the provider for UI updates
-    ref.watch(P.preference.preferredTextScaleFactor);
-
-    final effectiveScale = _useSystemSize ? 1.0 : _currentScale;
-
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(s.font_setting),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const .all(8),
-              child: Column(
-                crossAxisAlignment: .stretch,
-                children: [
-                  // Preview section
-                  _PreviewCard(
-                    effectiveScale: effectiveScale,
-                    primaryContainer: primaryContainer,
-                    surface: surface,
-                    onSurface: onSurface,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // Settings controls
-          _SettingsControls(
-            useSystemSize: _useSystemSize,
-            currentScale: _currentScale,
-            primary: primary,
-            surface: surface,
-            onSurface: onSurface,
-            onUseSystemSizeChanged: (value) async {
-              setState(() {
-                _useSystemSize = value;
-                if (!value) {
-                  // Reset to default 100% when switching from system to manual
-                  _currentScale = 1.0;
-                }
-              });
-              if (value) {
-                await _saveScale(P.preference.textScaleFactorSystem);
-              } else {
-                await _saveScale(_currentScale);
-              }
-            },
-            onScaleChanged: (value) async {
-              setState(() {
-                _currentScale = value;
-              });
-              if (!_useSystemSize) {
-                await _saveScale(value);
-              }
-            },
-          ),
-        ],
-      ),
-    );
+  Future<void> _loadPreviewTemplate() async {
+    final assetPath = S.current.font_preview_markdown_asset;
+    String template = "";
+    try {
+      template = await rootBundle.loadString(assetPath);
+    } catch (_) {
+      template = "";
+    }
+    if (!mounted) return;
+    setState(() {
+      _previewTemplate = template;
+    });
   }
-}
 
-class _PreviewCard extends StatelessWidget {
-  final double effectiveScale;
-  final Color primaryContainer;
-  final Color surface;
-  final Color onSurface;
-
-  const _PreviewCard({
-    required this.effectiveScale,
-    required this.primaryContainer,
-    required this.surface,
-    required this.onSurface,
-  });
-
-  String _formatSize(double size) => size.toStringAsFixed(1);
+  String _formatSize(double size) {
+    return size.toStringAsFixed(1);
+  }
 
   String _applyFontPreviewPlaceholders(
     String template,
@@ -168,81 +100,135 @@ class _PreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final onSurface = theme.colorScheme.onSurface;
 
+    // Watch the provider for UI updates
+    ref.watch(P.preference.preferredTextScaleFactor);
+
+    final effectiveScale = _useSystemSize ? 1.0 : _currentScale;
     const fontScale = Config.msgFontScale;
     const sizes = Config.markdownHeaderFontSizes;
     const bodySize = Config.markdownBodyFontSize;
-    final scale = effectiveScale * fontScale;
-    final userMessage = s.font_preview_user_message;
-    final assetPath = s.font_preview_markdown_asset;
+    final markdownScale = effectiveScale * fontScale;
+    String botPreview = "";
+    if (_previewTemplate.trim().isNotEmpty) {
+      botPreview = _applyFontPreviewPlaceholders(_previewTemplate, markdownScale, sizes, bodySize);
+    }
+    if (botPreview.trim().isEmpty) {
+      botPreview = "```text\n...\n```";
+    }
 
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        // User message preview
-        Align(
-          alignment: .centerRight,
-          child: Container(
-            padding: const .symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: primaryContainer,
-              borderRadius: const .only(
-                topLeft: .circular(20),
-                topRight: .circular(20),
-                bottomLeft: .circular(20),
-              ),
-            ),
-            child: MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: .linear(effectiveScale),
-              ),
-              child: Text(
-                userMessage,
-                style: TextStyle(
-                  color: onSurface,
-                  fontSize: bodySize * fontScale,
-                ),
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(s.font_setting),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: _PreviewMessageList(
+              userMessage: s.font_preview_user_message,
+              botMessage: botPreview,
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        // Bot message preview
-        Align(
-          alignment: .centerLeft,
-          child: Container(
-            padding: const .all(12),
-            decoration: BoxDecoration(
-              color: surface,
-              borderRadius: const .only(
-                topLeft: .circular(0),
-                topRight: .circular(20),
-                bottomLeft: .circular(20),
-                bottomRight: .circular(20),
-              ),
-            ),
-            child: MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: .linear(effectiveScale),
-              ),
-              child: FutureBuilder<String>(
-                future: rootBundle.loadString(assetPath),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox.shrink();
-                  }
-                  if (!snapshot.hasData) {
-                    return const SizedBox.shrink();
-                  }
-                  final template = snapshot.data!;
-                  final botMessage = _applyFontPreviewPlaceholders(template, scale, sizes, bodySize);
-                  return MarkdownRender(raw: botMessage);
-                },
-              ),
-            ),
+          // Settings controls
+          _SettingsControls(
+            useSystemSize: _useSystemSize,
+            currentScale: _currentScale,
+            primary: primary,
+            onSurface: onSurface,
+            onUseSystemSizeChanged: (value) async {
+              setState(() {
+                _useSystemSize = value;
+                if (!value) {
+                  // Reset to default 100% when switching from system to manual
+                  _currentScale = 1.0;
+                }
+              });
+              if (value) {
+                await _saveScale(P.preference.textScaleFactorSystem);
+              } else {
+                await _saveScale(_currentScale);
+              }
+            },
+            onScaleChanged: (value) async {
+              setState(() {
+                _currentScale = value;
+              });
+              if (!_useSystemSize) {
+                await _saveScale(value);
+              }
+            },
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreviewMessageList extends ConsumerWidget {
+  final String userMessage;
+  final String botMessage;
+
+  const _PreviewMessageList({
+    required this.userMessage,
+    required this.botMessage,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+    final paddingLeft = ref.watch(P.app.paddingLeft);
+    final paddingRight = ref.watch(P.app.paddingRight);
+
+    final messages = <model.Message>[
+      model.Message(
+        id: -900000001,
+        content: userMessage,
+        isMine: true,
+        paused: false,
+      ),
+      model.Message(
+        id: -900000002,
+        content: botMessage,
+        isMine: false,
+        paused: false,
+      ),
+    ];
+
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: RawScrollbar(
+        radius: 100.rr,
+        thickness: 4,
+        thumbColor: qb.q(.4),
+        padding: const .only(top: 4, right: 4, bottom: 4),
+        child: ListView.separated(
+          reverse: true,
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: .only(left: paddingLeft, top: 4, right: paddingRight, bottom: 4),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+          itemCount: messages.length,
+          itemBuilder: (context, index) {
+            final finalIndex = messages.length - 1 - index;
+            final message = messages[finalIndex];
+            return IgnorePointer(
+              child: message_widget.Message(
+                message,
+                finalIndex,
+                preferredDemoType: .chat,
+              ),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 15);
+          },
         ),
-      ],
+      ),
     );
   }
 }
@@ -251,7 +237,6 @@ class _SettingsControls extends ConsumerWidget {
   final bool useSystemSize;
   final double currentScale;
   final Color primary;
-  final Color surface;
   final Color onSurface;
   final ValueChanged<bool> onUseSystemSizeChanged;
   final ValueChanged<double> onScaleChanged;
@@ -260,7 +245,6 @@ class _SettingsControls extends ConsumerWidget {
     required this.useSystemSize,
     required this.currentScale,
     required this.primary,
-    required this.surface,
     required this.onSurface,
     required this.onUseSystemSizeChanged,
     required this.onScaleChanged,
@@ -278,6 +262,7 @@ class _SettingsControls extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final appTheme = ref.watch(P.app.theme);
     final scalePairs = P.preference.textScalePairs;
     final scaleValues = scalePairs.keys.where((k) => k > 0).toList()..sort();
     double paddingBottom = ref.watch(P.app.paddingBottom);
@@ -286,10 +271,10 @@ class _SettingsControls extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: surface,
+        color: appTheme.settingBg,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.q(.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),

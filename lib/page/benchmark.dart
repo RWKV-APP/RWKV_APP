@@ -61,40 +61,61 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appTheme = ref.watch(P.app.theme);
+    final qb = ref.watch(P.app.qb);
     final s = S.of(context);
+    final ThemeData benchmarkTheme = theme.copyWith(
+      tabBarTheme: theme.tabBarTheme.copyWith(
+        dividerColor: qb.q(.16),
+        indicatorColor: qb.q(.5),
+        labelColor: qb,
+        unselectedLabelColor: qb.q(.68),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: qb.q(.62),
+        linearTrackColor: appTheme.settingBg,
+      ),
+      splashColor: qb.q(.06),
+      highlightColor: qb.q(.04),
+    );
+
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           _stopAllTests();
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(S.current.performance_test),
-          bottom: TabBar(
+      child: Theme(
+        data: benchmarkTheme,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text(S.current.performance_test),
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: s.performance_test),
+                Tab(text: s.lambada_test),
+              ],
+            ),
+          ),
+          body: TabBarView(
             controller: _tabController,
-            tabs: [
-              Tab(text: s.performance_test),
-              Tab(text: s.lambada_test),
+            children: [
+              SingleChildScrollView(
+                padding: const .symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: .stretch,
+                  children: [
+                    const SizedBox(height: 12),
+                    _Test(),
+                  ],
+                ),
+              ),
+              const _LambadaTest(),
             ],
           ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            SingleChildScrollView(
-              padding: const .symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: .stretch,
-                children: [
-                  const SizedBox(height: 12),
-                  _Test(),
-                ],
-              ),
-            ),
-            const _LambadaTest(),
-          ],
         ),
       ),
     );
@@ -217,10 +238,28 @@ class _TestState extends ConsumerState<_Test> {
   @override
   Widget build(BuildContext context) {
     listen();
+    final theme = Theme.of(context);
     final model = ref.watch(P.rwkv.latestModel);
     final socName = ref.watch(P.rwkv.socName);
     final socBrand = ref.watch(P.rwkv.socBrand);
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
+    final String socNameDisplay = socName.isEmpty ? "Unknown" : socName;
+    final ButtonStyle neutralOutlinedStyle = OutlinedButton.styleFrom(
+      foregroundColor: qb,
+      backgroundColor: appTheme.settingItem,
+      side: BorderSide(color: qb.q(.2), width: .5),
+      textStyle: theme.textTheme.bodyMedium,
+    );
+    final ButtonStyle neutralFilledStyle = FilledButton.styleFrom(
+      backgroundColor: qb.q(.15),
+      foregroundColor: qb,
+      disabledBackgroundColor: qb.q(.08),
+      disabledForegroundColor: qb.q(.4),
+      side: BorderSide(color: qb.q(.18), width: .5),
+      textStyle: theme.textTheme.bodyMedium,
+    );
 
     if (model != null) {
       final modelSizeGb = model.fileSize / 1024 / 1024 / 1024;
@@ -238,7 +277,7 @@ class _TestState extends ConsumerState<_Test> {
           title: '',
           pairs: {
             ...deviceInfo.map((key, value) => MapEntry(key.codeToName, value)),
-            if (socName.isNotEmpty && socName != "Unknown") 'SocName'.codeToName: socName,
+            'SocName'.codeToName: socNameDisplay,
             if (socBrand != SocBrand.unknown) 'SocBrand'.codeToName: socBrand.name,
             if (model != null) '---': '',
             if (model != null) 'Model'.codeToName: "${model.name} ${model.quantization}",
@@ -253,7 +292,9 @@ class _TestState extends ConsumerState<_Test> {
               child: OutlinedButton.icon(
                 icon: null,
                 onPressed: () => ModelSelector.show(),
-                style: const ButtonStyle(visualDensity: .standard),
+                style: neutralOutlinedStyle.copyWith(
+                  visualDensity: VisualDensity.standard,
+                ),
                 label: Text(S.current.select_model),
               ),
             ),
@@ -261,13 +302,19 @@ class _TestState extends ConsumerState<_Test> {
             Expanded(
               child: FilledButton.icon(
                 icon: generating
-                    ? const SizedBox.square(
+                    ? SizedBox.square(
                         dimension: 18,
-                        child: CircularProgressIndicator(color: Colors.white),
+                        child: CircularProgressIndicator(
+                          color: qb,
+                          strokeWidth: 2.2,
+                          backgroundColor: qb.q(.12),
+                        ),
                       )
                     : null,
                 onPressed: model == null ? null : () => onStartStopTap(),
-                style: const ButtonStyle(visualDensity: .standard),
+                style: neutralFilledStyle.copyWith(
+                  visualDensity: VisualDensity.standard,
+                ),
                 label: Text(generating ? S.current.stop : S.current.start),
               ),
             ),
@@ -312,11 +359,19 @@ class _BatchSizeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final options = <int>{1, ...supportedBatchSizes}.toList()..sort();
     final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
 
     return Material(
-      borderRadius: const .all(.circular(8)),
+      color: appTheme.settingItem,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: qb.q(.14), width: .5),
+      ),
       child: Padding(
         padding: const .symmetric(horizontal: 12, vertical: 12),
         child: Column(
@@ -329,10 +384,24 @@ class _BatchSizeSelector extends ConsumerWidget {
             const SizedBox(height: 8),
             DropdownButtonFormField<int>(
               initialValue: selectedBatchSize,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: .symmetric(horizontal: 12, vertical: 8),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: qb.q(.2), width: .5),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: qb.q(.2), width: .5),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: qb.q(.35), width: .8),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                filled: true,
+                fillColor: appTheme.settingBg,
+                contentPadding: const .symmetric(horizontal: 12, vertical: 8),
               ),
+              style: theme.textTheme.bodyLarge,
               items: options.map((size) {
                 final label = size == 1 ? '1 (${s.single_thread})' : '$size (${s.multi_thread})';
                 return DropdownMenuItem<int>(
@@ -353,16 +422,25 @@ class _BatchSizeSelector extends ConsumerWidget {
   }
 }
 
-class _KeyValuePairs extends StatelessWidget {
+class _KeyValuePairs extends ConsumerWidget {
   final Map<String, String> pairs;
   final String title;
 
   const _KeyValuePairs({required this.pairs, required this.title});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
+
     return Material(
-      borderRadius: const .all(.circular(8)),
+      color: appTheme.settingItem,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: qb.q(.14), width: .5),
+      ),
       child: Padding(
         padding: const .symmetric(horizontal: 12, vertical: 12),
         child: Column(
@@ -371,7 +449,7 @@ class _KeyValuePairs extends StatelessWidget {
             if (title.isNotEmpty)
               Text(
                 title,
-                style: const TextStyle(fontSize: 16, fontWeight: .w500),
+                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
             if (title.isNotEmpty) const SizedBox(height: 6),
             for (final pair in pairs.entries) ...[
@@ -384,7 +462,11 @@ class _KeyValuePairs extends StatelessWidget {
                   ],
                 )
               else
-                const Divider(height: 12, thickness: 1),
+                Container(
+                  margin: const .symmetric(vertical: 6),
+                  decoration: BoxDecoration(color: qb.q(.16)),
+                  height: .5,
+                ),
             ],
           ],
         ),
@@ -514,8 +596,19 @@ class _LambadaTestControlButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
+    final ButtonStyle neutralButtonStyle = ElevatedButton.styleFrom(
+      backgroundColor: appTheme.settingItem,
+      foregroundColor: qb,
+      surfaceTintColor: Colors.transparent,
+      side: BorderSide(color: qb.q(.18), width: .5),
+      elevation: 0,
+      textStyle: theme.textTheme.bodyMedium,
+    );
 
     return Row(
       children: [
@@ -523,13 +616,17 @@ class _LambadaTestControlButtons extends ConsumerWidget {
           child: ElevatedButton.icon(
             onPressed: isRunning ? null : () => P.lambada.startTest(),
             icon: isRunning
-                ? const SizedBox(
+                ? SizedBox(
                     width: 16,
                     height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: qb,
+                    ),
                   )
                 : const Icon(Icons.play_arrow),
             label: Text(isRunning ? s.testing : s.start_test),
+            style: neutralButtonStyle,
           ),
         ),
         const SizedBox(width: 8),
@@ -540,8 +637,11 @@ class _LambadaTestControlButtons extends ConsumerWidget {
               icon: const Icon(Icons.stop),
               label: Text(s.stop_test),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+                backgroundColor: qb.q(.18),
+                foregroundColor: qb,
+                surfaceTintColor: Colors.transparent,
+                side: BorderSide(color: qb.q(.25), width: .5),
+                elevation: 0,
               ),
             ),
           )
@@ -550,6 +650,7 @@ class _LambadaTestControlButtons extends ConsumerWidget {
             onPressed: () => P.lambada.loadTestData(),
             icon: const Icon(Icons.refresh),
             label: Text(s.load_data),
+            style: neutralButtonStyle,
           ),
       ],
     );
@@ -561,9 +662,12 @@ class _LambadaModelSelectionButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final currentModel = ref.watch(P.rwkv.latestModel);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
 
     return Row(
       children: [
@@ -573,6 +677,14 @@ class _LambadaModelSelectionButton extends ConsumerWidget {
           onPressed: isRunning ? null : () => P.lambada.reselectModel(),
           icon: const Icon(Icons.model_training),
           label: currentModel == null ? Text(s.please_select_model) : Text(s.reselect_model),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: appTheme.settingItem,
+            foregroundColor: qb,
+            surfaceTintColor: Colors.transparent,
+            side: BorderSide(color: qb.q(.18), width: .5),
+            elevation: 0,
+            textStyle: theme.textTheme.bodyMedium,
+          ),
         ),
       ],
     );
@@ -584,13 +696,22 @@ class _LambadaTestDataCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final testItems = ref.watch(P.lambada.testItems);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
     final progress = ((totalFinishCount / (testItems.isEmpty ? 1 : testItems.length)).toDouble()).clamp(0, 1.0).toDouble();
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
 
     return Card(
+      color: appTheme.settingItem,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: qb.q(.14), width: .5),
+      ),
       child: Padding(
         padding: const .all(16.0),
         child: Column(
@@ -598,7 +719,7 @@ class _LambadaTestDataCard extends ConsumerWidget {
           children: [
             Text(
               s.test_data,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(s.total_test_items(testItems.length)),
@@ -606,7 +727,11 @@ class _LambadaTestDataCard extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(s.current_progress(totalFinishCount, testItems.length)),
               const SizedBox(height: 8),
-              LinearProgressIndicator(value: progress),
+              LinearProgressIndicator(
+                value: progress,
+                color: qb.q(.62),
+                backgroundColor: qb.q(.1),
+              ),
             ],
           ],
         ),
@@ -620,14 +745,23 @@ class _LambadaTestResultsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final ppl = ref.watch(P.lambada.ppl);
     final acc = ref.watch(P.lambada.acc);
     final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
     final correctCount = ref.watch(P.lambada.correctCount);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
 
     return Card(
+      color: appTheme.settingItem,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: qb.q(.14), width: .5),
+      ),
       child: Padding(
         padding: const .all(16.0),
         child: Column(
@@ -637,31 +771,34 @@ class _LambadaTestResultsCard extends ConsumerWidget {
               children: [
                 Text(
                   s.test_results,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: theme.textTheme.titleMedium,
                 ),
                 if (isRunning) ...[
                   const SizedBox(width: 8),
                   Container(
                     padding: const .symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.orange.q(0.2),
+                      color: qb.q(.16),
                       borderRadius: .circular(12),
-                      border: .all(color: Colors.orange.q(0.5)),
+                      border: .all(color: qb.q(.35)),
                     ),
                     child: Row(
                       mainAxisSize: .min,
                       children: [
-                        const SizedBox(
+                        SizedBox(
                           width: 12,
                           height: 12,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: qb,
+                          ),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           s.real_time_update,
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.orange.shade700,
+                            color: qb.q(.75),
                             fontWeight: .w500,
                           ),
                         ),
@@ -678,7 +815,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.accuracy,
                     value: '${(acc * 100).toStringAsFixed(2)}%',
-                    color: Colors.green,
+                    color: qb.q(.95),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -686,7 +823,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.perplexity,
                     value: ppl.toStringAsFixed(2),
-                    color: Colors.blue,
+                    color: qb.q(.85),
                   ),
                 ),
               ],
@@ -698,7 +835,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.correct_count,
                     value: '$correctCount',
-                    color: Colors.orange,
+                    color: qb.q(.75),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -706,7 +843,7 @@ class _LambadaTestResultsCard extends ConsumerWidget {
                   child: _LambadaResultCard(
                     title: s.total_count,
                     value: '$totalFinishCount',
-                    color: Colors.grey,
+                    color: qb.q(.65),
                   ),
                 ),
               ],
@@ -745,7 +882,10 @@ class _LambadaTestListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
 
     if (isCurrentItem) {
       // 当前正在测试的项
@@ -775,6 +915,12 @@ class _LambadaTestListItem extends ConsumerWidget {
       final displayIsCorrect = displayOutputText.isNotEmpty && displayTargetText == displayOutputText;
 
       return Card(
+        color: appTheme.settingItem,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: qb.q(.14), width: .5),
+        ),
         child: Padding(
           padding: const .all(16.0),
           child: Column(
@@ -782,7 +928,7 @@ class _LambadaTestListItem extends ConsumerWidget {
             children: [
               Text(
                 s.current_test_item(currentIndex + 1, testItems!.length),
-                style: Theme.of(context).textTheme.titleMedium,
+                style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               Text(
@@ -793,7 +939,7 @@ class _LambadaTestListItem extends ConsumerWidget {
               if (displayOutputText.isEmpty)
                 Text(
                   s.target_text(displayTargetText),
-                  style: const TextStyle(fontSize: 12, color: Colors.blue),
+                  style: TextStyle(fontSize: 12, color: qb.q(.78)),
                 )
               else
                 Row(
@@ -802,7 +948,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         s.target_text(displayTargetText),
-                        style: const TextStyle(fontSize: 12, color: Colors.blue),
+                        style: TextStyle(fontSize: 12, color: qb.q(.78)),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -811,7 +957,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                         s.model_output(displayOutputText),
                         style: TextStyle(
                           fontSize: 12,
-                          color: displayIsCorrect ? Colors.green.shade700 : Colors.red.shade700,
+                          color: displayIsCorrect ? qb.q(.92) : qb.q(.62),
                           fontWeight: displayIsCorrect ? FontWeight.w500 : FontWeight.w600,
                         ),
                       ),
@@ -829,6 +975,12 @@ class _LambadaTestListItem extends ConsumerWidget {
       }
 
       return Card(
+        color: appTheme.settingItem,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: qb.q(.14), width: .5),
+        ),
         child: Padding(
           padding: const .all(16.0),
           child: Column(
@@ -836,10 +988,10 @@ class _LambadaTestListItem extends ConsumerWidget {
             children: [
               Text(
                 '#$index',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: .w600,
-                  color: Colors.grey,
+                  color: qb.q(.6),
                 ),
               ),
               const SizedBox(height: 8),
@@ -854,7 +1006,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       s.target_text(targetText!),
-                      style: const TextStyle(fontSize: 12, color: Colors.blue),
+                      style: TextStyle(fontSize: 12, color: qb.q(.78)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -863,7 +1015,7 @@ class _LambadaTestListItem extends ConsumerWidget {
                       s.model_output(outputText!),
                       style: TextStyle(
                         fontSize: 12,
-                        color: isCorrect! ? Colors.green.shade700 : Colors.red.shade700,
+                        color: isCorrect! ? qb.q(.92) : qb.q(.62),
                         fontWeight: isCorrect! ? FontWeight.w500 : FontWeight.w600,
                       ),
                     ),
