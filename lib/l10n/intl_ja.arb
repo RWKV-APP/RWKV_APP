@@ -704,5 +704,6 @@
   "model_item_ios18_weight_hint": "iOS 18以降にアップグレードすると、このウェイトが使え、より速く省電力になります",
   "tts_is_running_please_wait": "TTS を実行中です。完了するまでお待ちください。",
   "please_select_a_spk_or_a_wav_file": "プリセット音声を選択するか、自分の声を録音してください",
-  "please_enter_text_to_generate_tts": "TTS を生成するテキストを入力してください"
+  "please_enter_text_to_generate_tts": "TTS を生成するテキストを入力してください",
+  "mimic": "ミミック"
 }

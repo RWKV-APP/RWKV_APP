@@ -638,6 +638,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m21,
     "message_content": MessageLookupByLibrary.simpleMessage("メッセージ内容"),
     "message_in_queue": m22,
+    "mimic": MessageLookupByLibrary.simpleMessage("ミミック"),
     "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML キャッシュ"),
     "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
       "MLX/CoreML キャッシュを削除すると容量を解放できますが、次回の MLX/CoreML モデル読み込みが遅くなります。",

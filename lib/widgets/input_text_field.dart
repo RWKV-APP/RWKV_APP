@@ -482,7 +482,7 @@ class _TalkSourceVoiceSection extends StatelessWidget {
           onTap: textFieldEnabled ? onTapPlayVoice : null,
           borderRadius: .circular(14),
           child: Container(
-            padding: const .only(left: 10, top: 8, right: 4, bottom: 8),
+            padding: const .only(left: 10, top: 4, right: 4, bottom: 4),
             decoration: BoxDecoration(
               color: surfaceContainer.q(.7),
               borderRadius: .circular(14),
@@ -502,14 +502,7 @@ class _TalkSourceVoiceSection extends StatelessWidget {
                     mainAxisAlignment: .center,
                     children: <Widget>[
                       Text(
-                        s.tts_voice_source_file_panel_hint,
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                        style: TS(c: onSurface.q(.88), w: .w400, s: 12),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        sourceVoiceName,
+                        s.mimic + s.colon + sourceVoiceName,
                         maxLines: 1,
                         overflow: .ellipsis,
                         style: TS(c: onSurface.q(.56), s: 14, w: .w500),

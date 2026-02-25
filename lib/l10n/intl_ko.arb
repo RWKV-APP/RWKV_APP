@@ -704,5 +704,6 @@
   "model_item_ios18_weight_hint": "iOS 18+로 업그레이드하면 이 가중치를 사용할 수 있으며, 더 빠르고 절전됩니다",
   "tts_is_running_please_wait": "TTS가 실행 중입니다. 완료될 때까지 기다려 주세요.",
   "please_select_a_spk_or_a_wav_file": "프리셋 음성을 선택하거나 본인의 목소리를 녹음해 주세요",
-  "please_enter_text_to_generate_tts": "TTS를 생성할 텍스트를 입력해 주세요"
+  "please_enter_text_to_generate_tts": "TTS를 생성할 텍스트를 입력해 주세요",
+  "mimic": "미믹"
 }

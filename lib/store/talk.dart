@@ -463,6 +463,7 @@ extension $Talk on _Talk {
 
     if (spkName == null && this.selectSourceAudioPath.q == null) {
       Alert.warning(S.current.please_select_a_spk_or_a_wav_file);
+      await 500.msLater;
       await TTSVoiceSourcePanels.showVoiceSourceTypePanel();
       return;
     }

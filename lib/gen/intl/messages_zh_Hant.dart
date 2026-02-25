@@ -581,6 +581,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m21,
     "message_content": MessageLookupByLibrary.simpleMessage("訊息內容"),
     "message_in_queue": m22,
+    "mimic": MessageLookupByLibrary.simpleMessage("模仿"),
     "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML 快取"),
     "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
       "刪除 MLX/CoreML 快取可釋放磁碟空間，但下次載入對應的 MLX/CoreML 模型會更慢。",

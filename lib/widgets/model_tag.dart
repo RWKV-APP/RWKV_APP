@@ -16,7 +16,7 @@ class _RenderingOptions {
 
   _RenderingOptions({
     this.footer,
-    this.fontWeight = .w500,
+    this.fontWeight = .w400,
     required this.bgColor,
     required this.textColor,
     required this.borderColor,

@@ -776,6 +776,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Содержимое сообщения",
     ),
     "message_in_queue": m22,
+    "mimic": MessageLookupByLibrary.simpleMessage("Имитация"),
     "mlx_cache": MessageLookupByLibrary.simpleMessage("Кэш MLX/CoreML"),
     "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
       "Удаление кэша MLX/CoreML освободит место, но следующая загрузка модели MLX/CoreML будет дольше.",

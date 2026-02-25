@@ -636,6 +636,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m21,
     "message_content": MessageLookupByLibrary.simpleMessage("메시지 내용"),
     "message_in_queue": m22,
+    "mimic": MessageLookupByLibrary.simpleMessage("미믹"),
     "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML 캐시"),
     "mlx_cache_notice": MessageLookupByLibrary.simpleMessage(
       "MLX/CoreML 캐시를 삭제하면 저장 공간을 확보할 수 있지만, 다음 MLX/CoreML 모델 로딩은 더 오래 걸립니다.",

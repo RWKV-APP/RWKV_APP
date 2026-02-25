@@ -710,5 +710,6 @@
   "model_item_ios18_weight_hint": "升级 iOS 18+ 可使用这款权重，更快更省电",
   "tts_is_running_please_wait": "TTS 正在运行，请等待其完成",
   "please_select_a_spk_or_a_wav_file": "请选择一个预设声音或录制您的声音",
-  "please_enter_text_to_generate_tts": "请输入文本以生成语音"
+  "please_enter_text_to_generate_tts": "请输入文本以生成语音",
+  "mimic": "模仿"
 }

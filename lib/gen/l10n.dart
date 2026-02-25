@@ -4778,6 +4778,11 @@ class S {
       args: [],
     );
   }
+
+  /// `模仿`
+  String get mimic {
+    return Intl.message('模仿', name: 'mimic', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

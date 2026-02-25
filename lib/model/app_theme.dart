@@ -36,6 +36,8 @@ enum AppTheme {
     qb144: Color(0xFFF3F3F3),
     qb15: Color(0xFFFFFFFF),
 
+    inlineCodeBackgroundColor: Color(0xFFEEEEEE),
+
     scaffoldBg: Color(0xFFFFFFFF),
     settingBg: Color(0xFFF5F5F5),
 
@@ -84,6 +86,8 @@ enum AppTheme {
     qb144: Color(0xFF1D1D1D),
     qb15: Color(0xFF151515),
 
+    inlineCodeBackgroundColor: Color(0xFF353535),
+
     scaffoldBg: Color(0xFF151515),
     settingBg: Color(0xFF252525),
 
@@ -131,6 +135,8 @@ enum AppTheme {
     qb14: Color(0xFF111111),
     qb144: Color(0xFF101010),
     qb15: Color(0xFF000000),
+
+    inlineCodeBackgroundColor: Color(0xFF222222),
 
     scaffoldBg: Color(0xFF000000),
     settingBg: Color(0xFF000000),
@@ -190,6 +196,7 @@ enum AppTheme {
     required this.qb14,
     required this.qb144,
     required this.qb15,
+    required this.inlineCodeBackgroundColor,
   });
 
   /// 是否为浅色主题
@@ -226,6 +233,8 @@ enum AppTheme {
   final Color qb14;
   final Color qb144;
   final Color qb15;
+
+  final Color inlineCodeBackgroundColor;
 
   final Color scaffoldBg;
 
