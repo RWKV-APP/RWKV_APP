@@ -119,9 +119,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m47(id) => "창 ${id}";
 
-  static String m48(count) => "${count}개의 탭";
+  static String m48(buildArchitecture, operatingSystemArchitecture, url) =>
+      "현재 앱의 Build Architecture는 ${buildArchitecture}이고, Windows Operating System의 Architecture는 ${operatingSystemArchitecture}입니다.\n\n공식 다운로드 페이지에서 아키텍처에 맞는 실행 파일을 다운로드하세요:\n${url}";
 
-  static String m49(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
+  static String m49(buildArchitecture, operatingSystemArchitecture, url) =>
+      "아키텍처 불일치가 감지되었습니다: 현재 앱의 Build Architecture는 ${buildArchitecture}이고, Windows Operating System의 Architecture는 ${operatingSystemArchitecture}입니다. 공식 다운로드 페이지에서 일치하는 버전을 다운로드하세요: ${url}";
+
+  static String m50(count) => "${count}개의 탭";
+
+  static String m51(modelName) => "현재 ${modelName}을(를) 사용 중입니다";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -738,6 +744,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "폴더 경로가 비어 있습니다.",
     ),
     "open_folder_unsupported_on_platform": m27,
+    "open_official_download_page": MessageLookupByLibrary.simpleMessage(
+      "공식 다운로드 페이지 열기",
+    ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage("State Panel 열기"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
@@ -1137,11 +1146,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("백 점수"),
     "white_wins": MessageLookupByLibrary.simpleMessage("백이 이겼습니다!"),
     "window_id": m47,
+    "windows_architecture_mismatch_dialog_message": m48,
+    "windows_architecture_mismatch_dialog_title":
+        MessageLookupByLibrary.simpleMessage("아키텍처 불일치"),
+    "windows_architecture_mismatch_warning": m49,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d개 메시지 선택됨"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d페이지 찾음"),
-    "x_tabs": m48,
-    "you_are_now_using": m49,
+    "x_tabs": m50,
+    "you_are_now_using": m51,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "이제 RWKV와 채팅을 시작할 수 있습니다",
     ),

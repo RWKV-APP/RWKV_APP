@@ -87,9 +87,23 @@ class _Msg extends Table {
   TextColumn get rawDecodeParams => text().nullable()();
 }
 
+class _ConversationTitleRepairCandidate {
+  final int createdAtUS;
+  final int firstMsgId;
+  final String title;
+
+  const _ConversationTitleRepairCandidate({
+    required this.createdAtUS,
+    required this.firstMsgId,
+    required this.title,
+  });
+}
+
 @DriftDatabase(tables: [_Conversation, _Msg])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
+
+  bool _didRepairLegacyConversationTitles = false;
 
   @override
   int get schemaVersion => 5;
@@ -182,6 +196,127 @@ class AppDatabase extends _$AppDatabase {
     return msgDataList.map((msgData) => _msgDataToMessage(msgData)).toList();
   }
 
+  String _stripUserMsgModifier(String text) {
+    final String separator = Config.userMsgModifierSep;
+    String processed = text.split(separator).first.trimRight();
+    if (processed.isEmpty) {
+      return processed;
+    }
+
+    final List<String> partialPrefixes = List<String>.generate(
+      separator.length - 1,
+      (int index) => separator.substring(0, separator.length - 1 - index),
+    );
+
+    for (final String partialPrefix in partialPrefixes) {
+      if (!processed.endsWith(partialPrefix)) {
+        continue;
+      }
+      return processed.substring(0, processed.length - partialPrefix.length).trimRight();
+    }
+    return processed;
+  }
+
+  String _buildConversationTitle(String rawContent) {
+    final String withoutModifier = _stripUserMsgModifier(rawContent);
+    final String normalized = withoutModifier.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+    if (normalized.isEmpty) {
+      return normalized;
+    }
+    if (normalized.length <= Config.maxTitleLength) {
+      return normalized;
+    }
+    final String truncated = normalized.substring(0, Config.maxTitleLength);
+    final int lastWhitespaceIndex = truncated.lastIndexOf(RegExp(r'\s'));
+    if (lastWhitespaceIndex < Config.maxTitleLength ~/ 2) {
+      return truncated.trimRight();
+    }
+    return truncated.substring(0, lastWhitespaceIndex).trimRight();
+  }
+
+  String _buildLegacyConversationTitle(String rawContent) {
+    if (rawContent.length <= Config.legacyMaxTitleLength) {
+      return rawContent;
+    }
+    return rawContent.substring(0, Config.legacyMaxTitleLength);
+  }
+
+  Future<bool> _updateConvTitleWithoutTouchingUpdatedAt(int createAtInUS, String title) async {
+    final bool success =
+        await (update(conversation)..where((tbl) => tbl.createdAtUS.equals(createAtInUS))).write(
+          _ConversationCompanion(title: Value(title)),
+        ) >
+        0;
+    return success;
+  }
+
+  Future<bool> _repairLegacyTruncatedTitles(List<ConversationData> conversations) async {
+    if (_didRepairLegacyConversationTitles) {
+      return false;
+    }
+    _didRepairLegacyConversationTitles = true;
+    final List<_ConversationTitleRepairCandidate> candidates = [];
+    for (final ConversationData conversationData in conversations) {
+      if (conversationData.title.length != Config.legacyMaxTitleLength) {
+        continue;
+      }
+      late final MsgNode msgNode;
+      try {
+        msgNode = MsgNode.fromJson(
+          conversationData.data,
+          createAtInUS: conversationData.createdAtUS,
+        );
+      } catch (e) {
+        qqe("repair title: parse MsgNode failed, createAtUS=${conversationData.createdAtUS}, error=$e");
+        continue;
+      }
+      final int? firstMsgId = msgNode.latestMsgIdsWithoutRoot.firstOrNull;
+      if (firstMsgId == null) {
+        continue;
+      }
+      candidates.add(
+        _ConversationTitleRepairCandidate(
+          createdAtUS: conversationData.createdAtUS,
+          firstMsgId: firstMsgId,
+          title: conversationData.title,
+        ),
+      );
+    }
+    if (candidates.isEmpty) {
+      return false;
+    }
+
+    final Set<int> firstMsgIds = {
+      for (final _ConversationTitleRepairCandidate candidate in candidates) candidate.firstMsgId,
+    };
+    final List<_MsgData> firstMsgDataList = await (select(msg)..where((tbl) => tbl.id.isIn(firstMsgIds))).get();
+    final Map<int, _MsgData> firstMsgById = {
+      for (final _MsgData firstMsgData in firstMsgDataList) firstMsgData.id: firstMsgData,
+    };
+
+    bool hasRepairedTitle = false;
+    for (final _ConversationTitleRepairCandidate candidate in candidates) {
+      final _MsgData? firstMsgData = firstMsgById[candidate.firstMsgId];
+      if (firstMsgData == null) {
+        continue;
+      }
+      final String legacyTitle = _buildLegacyConversationTitle(firstMsgData.content);
+      if (legacyTitle != candidate.title) {
+        continue;
+      }
+      final String repairedTitle = _buildConversationTitle(firstMsgData.content);
+      if (repairedTitle == candidate.title) {
+        continue;
+      }
+      final bool updated = await _updateConvTitleWithoutTouchingUpdatedAt(candidate.createdAtUS, repairedTitle);
+      if (!updated) {
+        continue;
+      }
+      hasRepairedTitle = true;
+    }
+    return hasRepairedTitle;
+  }
+
   _ConversationCompanion _conversationToConversationCompanion(MsgNode msgNode, {required String title}) {
     return _ConversationCompanion.insert(
       createdAtUS: Value(msgNode.createAtInUS),
@@ -209,7 +344,7 @@ class AppDatabase extends _$AppDatabase {
     if (firstMsgId != null) {
       final firstMsg = P.msg.pool.q[firstMsgId];
       final firstMsgContent = firstMsg?.content ?? "";
-      title = firstMsgContent.length > Config.maxTitleLength ? firstMsgContent.substring(0, Config.maxTitleLength) : firstMsgContent;
+      title = _buildConversationTitle(firstMsgContent);
     } else {
       title = P.preference.currentLangIsZh.q ? "新会话" : "New Conversation";
     }
@@ -270,6 +405,11 @@ class AppDatabase extends _$AppDatabase {
       ])
       ..limit(pageSize, offset: pageIndex * pageSize);
 
+    final List<ConversationData> conversationDataList = await query.get();
+    final bool hasRepairedTitles = await _repairLegacyTruncatedTitles(conversationDataList);
+    if (!hasRepairedTitles) {
+      return conversationDataList;
+    }
     return await query.get();
   }
 

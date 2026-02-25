@@ -118,9 +118,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m47(id) => "窗口 ${id}";
 
-  static String m48(count) => "${count} 个标签页";
+  static String m48(buildArchitecture, operatingSystemArchitecture, url) =>
+      "当前应用 Build Architecture 为 ${buildArchitecture}，但 Windows Operating System 为 ${operatingSystemArchitecture}。\n\n请前往官方下载页下载匹配架构的可执行文件：\n${url}";
 
-  static String m49(modelName) => "您当前正在使用 ${modelName}";
+  static String m49(buildArchitecture, operatingSystemArchitecture, url) =>
+      "检测到架构不匹配：当前应用 Build Architecture 为 ${buildArchitecture}，但 Windows Operating System 为 ${operatingSystemArchitecture}。请前往官方下载页下载匹配版本：${url}";
+
+  static String m50(count) => "${count} 个标签页";
+
+  static String m51(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -675,6 +681,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "文件夹路径为空。",
     ),
     "open_folder_unsupported_on_platform": m27,
+    "open_official_download_page": MessageLookupByLibrary.simpleMessage(
+      "打开官方下载页",
+    ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage("打开状态面板"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage("或者选择一个 wav 文件，让 RWKV 模仿它。"),
@@ -1042,11 +1051,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
     "window_id": m47,
+    "windows_architecture_mismatch_dialog_message": m48,
+    "windows_architecture_mismatch_dialog_title":
+        MessageLookupByLibrary.simpleMessage("架构不匹配"),
+    "windows_architecture_mismatch_warning": m49,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m48,
-    "you_are_now_using": m49,
+    "x_tabs": m50,
+    "you_are_now_using": m51,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 // ignore: unused_import
 import 'dart:developer';
+import 'dart:ffi' show Abi;
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' as math;

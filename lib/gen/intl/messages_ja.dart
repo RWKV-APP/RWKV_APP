@@ -119,9 +119,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m47(id) => "ウィンドウ ${id}";
 
-  static String m48(count) => "${count}個のタブ";
+  static String m48(buildArchitecture, operatingSystemArchitecture, url) =>
+      "このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。\n\n公式ダウンロードページから一致する実行ファイルをダウンロードしてください：\n${url}";
 
-  static String m49(modelName) => "現在、${modelName}を使用しています";
+  static String m49(buildArchitecture, operatingSystemArchitecture, url) =>
+      "アーキテクチャの不一致を検出しました：このアプリの Build Architecture は ${buildArchitecture} ですが、Windows Operating System の Architecture は ${operatingSystemArchitecture} です。公式ダウンロードページから一致する版をダウンロードしてください：${url}";
+
+  static String m50(count) => "${count}個のタブ";
+
+  static String m51(modelName) => "現在、${modelName}を使用しています";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -746,6 +752,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "フォルダパスが空です。",
     ),
     "open_folder_unsupported_on_platform": m27,
+    "open_official_download_page": MessageLookupByLibrary.simpleMessage(
+      "公式ダウンロードページを開く",
+    ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage("状態パネルを開く"),
     "or_select_a_wav_file_to_let_rwkv_to_copy_it":
         MessageLookupByLibrary.simpleMessage(
@@ -1141,13 +1150,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("白のスコア"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
     "window_id": m47,
+    "windows_architecture_mismatch_dialog_message": m48,
+    "windows_architecture_mismatch_dialog_title":
+        MessageLookupByLibrary.simpleMessage("アーキテクチャ不一致"),
+    "windows_architecture_mismatch_warning": m49,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "%d件のメッセージが選択されました",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%dページ見つかりました"),
-    "x_tabs": m48,
-    "you_are_now_using": m49,
+    "x_tabs": m50,
+    "you_are_now_using": m51,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),

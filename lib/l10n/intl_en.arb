@@ -711,5 +711,23 @@
   "tts_is_running_please_wait": "TTS is running, please wait for it to finish",
   "please_select_a_spk_or_a_wav_file": "Please select a preset voice or record your voice",
   "please_enter_text_to_generate_tts": "Please enter text to generate TTS",
+  "windows_architecture_mismatch_warning": "Architecture mismatch detected: this app is built for {buildArchitecture}, but your Windows operating system architecture is {operatingSystemArchitecture}. Please download the matching build from the official page: {url}",
+  "@windows_architecture_mismatch_warning": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "windows_architecture_mismatch_dialog_title": "Architecture Mismatch",
+  "windows_architecture_mismatch_dialog_message": "This app is built for {buildArchitecture}, but your Windows operating system architecture is {operatingSystemArchitecture}.\n\nPlease go to the official download page and download the matching executable:\n{url}",
+  "@windows_architecture_mismatch_dialog_message": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "open_official_download_page": "Open Official Download Page",
   "mimic": "Mimic"
 }

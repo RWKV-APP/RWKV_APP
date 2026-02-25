@@ -705,5 +705,23 @@
   "tts_is_running_please_wait": "TTS 正在運行，請等待其完成",
   "please_select_a_spk_or_a_wav_file": "請選擇一個預設聲音或錄製自己的聲音",
   "please_enter_text_to_generate_tts": "請輸入文字以生成語音",
+  "windows_architecture_mismatch_warning": "偵測到架構不相符：目前應用程式 Build Architecture 為 {buildArchitecture}，但 Windows Operating System 為 {operatingSystemArchitecture}。請前往官方下載頁下載相符版本：{url}",
+  "@windows_architecture_mismatch_warning": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "windows_architecture_mismatch_dialog_title": "架構不相符",
+  "windows_architecture_mismatch_dialog_message": "目前應用程式 Build Architecture 為 {buildArchitecture}，但 Windows Operating System 為 {operatingSystemArchitecture}。\n\n請前往官方下載頁下載相符架構的可執行檔：\n{url}",
+  "@windows_architecture_mismatch_dialog_message": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "open_official_download_page": "開啟官方下載頁",
   "mimic": "模仿"
 }

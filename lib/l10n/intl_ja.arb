@@ -705,5 +705,23 @@
   "tts_is_running_please_wait": "TTS を実行中です。完了するまでお待ちください。",
   "please_select_a_spk_or_a_wav_file": "プリセット音声を選択するか、自分の声を録音してください",
   "please_enter_text_to_generate_tts": "TTS を生成するテキストを入力してください",
+  "windows_architecture_mismatch_warning": "アーキテクチャの不一致を検出しました：このアプリの Build Architecture は {buildArchitecture} ですが、Windows Operating System の Architecture は {operatingSystemArchitecture} です。公式ダウンロードページから一致する版をダウンロードしてください：{url}",
+  "@windows_architecture_mismatch_warning": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "windows_architecture_mismatch_dialog_title": "アーキテクチャ不一致",
+  "windows_architecture_mismatch_dialog_message": "このアプリの Build Architecture は {buildArchitecture} ですが、Windows Operating System の Architecture は {operatingSystemArchitecture} です。\n\n公式ダウンロードページから一致する実行ファイルをダウンロードしてください：\n{url}",
+  "@windows_architecture_mismatch_dialog_message": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "open_official_download_page": "公式ダウンロードページを開く",
   "mimic": "ミミック"
 }

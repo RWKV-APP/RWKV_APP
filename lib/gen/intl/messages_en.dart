@@ -127,9 +127,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m47(id) => "Window ${id}";
 
-  static String m48(count) => "${count} tabs";
+  static String m48(buildArchitecture, operatingSystemArchitecture, url) =>
+      "This app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}.\n\nPlease go to the official download page and download the matching executable:\n${url}";
 
-  static String m49(modelName) => "You are now using ${modelName}";
+  static String m49(buildArchitecture, operatingSystemArchitecture, url) =>
+      "Architecture mismatch detected: this app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}. Please download the matching build from the official page: ${url}";
+
+  static String m50(count) => "${count} tabs";
+
+  static String m51(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -871,6 +877,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Folder path is null.",
     ),
     "open_folder_unsupported_on_platform": m27,
+    "open_official_download_page": MessageLookupByLibrary.simpleMessage(
+      "Open Official Download Page",
+    ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage(
       "Open State Panel",
     ),
@@ -1346,11 +1355,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
     "window_id": m47,
+    "windows_architecture_mismatch_dialog_message": m48,
+    "windows_architecture_mismatch_dialog_title":
+        MessageLookupByLibrary.simpleMessage("Architecture Mismatch"),
+    "windows_architecture_mismatch_warning": m49,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m48,
-    "you_are_now_using": m49,
+    "x_tabs": m50,
+    "you_are_now_using": m51,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),

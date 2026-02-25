@@ -4779,6 +4779,54 @@ class S {
     );
   }
 
+  /// `检测到架构不匹配：当前应用 Build Architecture 为 {buildArchitecture}，但 Windows Operating System 为 {operatingSystemArchitecture}。请前往官方下载页下载匹配版本：{url}`
+  String windows_architecture_mismatch_warning(
+    Object buildArchitecture,
+    Object operatingSystemArchitecture,
+    Object url,
+  ) {
+    return Intl.message(
+      '检测到架构不匹配：当前应用 Build Architecture 为 $buildArchitecture，但 Windows Operating System 为 $operatingSystemArchitecture。请前往官方下载页下载匹配版本：$url',
+      name: 'windows_architecture_mismatch_warning',
+      desc: '',
+      args: [buildArchitecture, operatingSystemArchitecture, url],
+    );
+  }
+
+  /// `架构不匹配`
+  String get windows_architecture_mismatch_dialog_title {
+    return Intl.message(
+      '架构不匹配',
+      name: 'windows_architecture_mismatch_dialog_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前应用 Build Architecture 为 {buildArchitecture}，但 Windows Operating System 为 {operatingSystemArchitecture}。\n\n请前往官方下载页下载匹配架构的可执行文件：\n{url}`
+  String windows_architecture_mismatch_dialog_message(
+    Object buildArchitecture,
+    Object operatingSystemArchitecture,
+    Object url,
+  ) {
+    return Intl.message(
+      '当前应用 Build Architecture 为 $buildArchitecture，但 Windows Operating System 为 $operatingSystemArchitecture。\n\n请前往官方下载页下载匹配架构的可执行文件：\n$url',
+      name: 'windows_architecture_mismatch_dialog_message',
+      desc: '',
+      args: [buildArchitecture, operatingSystemArchitecture, url],
+    );
+  }
+
+  /// `打开官方下载页`
+  String get open_official_download_page {
+    return Intl.message(
+      '打开官方下载页',
+      name: 'open_official_download_page',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `模仿`
   String get mimic {
     return Intl.message('模仿', name: 'mimic', desc: '', args: []);

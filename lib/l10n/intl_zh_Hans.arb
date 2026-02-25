@@ -711,5 +711,23 @@
   "tts_is_running_please_wait": "TTS 正在运行，请等待其完成",
   "please_select_a_spk_or_a_wav_file": "请选择一个预设声音或录制您的声音",
   "please_enter_text_to_generate_tts": "请输入文本以生成语音",
+  "windows_architecture_mismatch_warning": "检测到架构不匹配：当前应用 Build Architecture 为 {buildArchitecture}，但 Windows Operating System 为 {operatingSystemArchitecture}。请前往官方下载页下载匹配版本：{url}",
+  "@windows_architecture_mismatch_warning": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "windows_architecture_mismatch_dialog_title": "架构不匹配",
+  "windows_architecture_mismatch_dialog_message": "当前应用 Build Architecture 为 {buildArchitecture}，但 Windows Operating System 为 {operatingSystemArchitecture}。\n\n请前往官方下载页下载匹配架构的可执行文件：\n{url}",
+  "@windows_architecture_mismatch_dialog_message": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "open_official_download_page": "打开官方下载页",
   "mimic": "模仿"
 }

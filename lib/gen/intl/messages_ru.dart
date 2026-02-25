@@ -127,9 +127,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m47(id) => "Окно ${id}";
 
-  static String m48(count) => "${count} вкладок";
+  static String m48(buildArchitecture, operatingSystemArchitecture, url) =>
+      "Приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}.\n\nПерейдите на официальную страницу загрузки и скачайте подходящий исполняемый файл:\n${url}";
 
-  static String m49(modelName) => "Вы сейчас используете ${modelName}";
+  static String m49(buildArchitecture, operatingSystemArchitecture, url) =>
+      "Обнаружено несоответствие архитектуры: приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}. Скачайте подходящую версию с официальной страницы: ${url}";
+
+  static String m50(count) => "${count} вкладок";
+
+  static String m51(modelName) => "Вы сейчас используете ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -904,6 +910,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Путь к папке пуст.",
     ),
     "open_folder_unsupported_on_platform": m27,
+    "open_official_download_page": MessageLookupByLibrary.simpleMessage(
+      "Открыть официальную страницу загрузки",
+    ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage(
       "Открыть панель состояния",
     ),
@@ -1389,13 +1398,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
     "window_id": m47,
+    "windows_architecture_mismatch_dialog_message": m48,
+    "windows_architecture_mismatch_dialog_title":
+        MessageLookupByLibrary.simpleMessage("Несоответствие архитектуры"),
+    "windows_architecture_mismatch_warning": m49,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("Найдено %d страниц"),
-    "x_tabs": m48,
-    "you_are_now_using": m49,
+    "x_tabs": m50,
+    "you_are_now_using": m51,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "Теперь вы можете начать общаться с RWKV",
     ),

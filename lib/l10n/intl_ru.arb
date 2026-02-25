@@ -705,5 +705,23 @@
   "tts_is_running_please_wait": "Синтез речи уже выполняется, дождитесь завершения",
   "please_select_a_spk_or_a_wav_file": "Выберите предустановленный голос или запишите свой голос",
   "please_enter_text_to_generate_tts": "Введите текст, чтобы сгенерировать речь",
+  "windows_architecture_mismatch_warning": "Обнаружено несоответствие архитектуры: приложение собрано для {buildArchitecture}, а архитектура Windows — {operatingSystemArchitecture}. Скачайте подходящую версию с официальной страницы: {url}",
+  "@windows_architecture_mismatch_warning": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "windows_architecture_mismatch_dialog_title": "Несоответствие архитектуры",
+  "windows_architecture_mismatch_dialog_message": "Приложение собрано для {buildArchitecture}, а архитектура Windows — {operatingSystemArchitecture}.\n\nПерейдите на официальную страницу загрузки и скачайте подходящий исполняемый файл:\n{url}",
+  "@windows_architecture_mismatch_dialog_message": {
+    "placeholders": {
+      "buildArchitecture": {},
+      "operatingSystemArchitecture": {},
+      "url": {}
+    }
+  },
+  "open_official_download_page": "Открыть официальную страницу загрузки",
   "mimic": "Имитация"
 }

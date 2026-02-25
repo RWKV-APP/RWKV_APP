@@ -31,6 +31,7 @@ class _App extends RawApp {
   }
 
   String get _configForAllDemosKey => "configForAllDemosKey_${buildNumber.q}";
+  static const String officialDownloadPageUrl = "https://rwkv.halowang.cloud/";
 
   @override
   BuildContext? get context => getContext();
@@ -237,16 +238,7 @@ extension $App on _App {
       return;
     }
 
-    try {
-      await launchUrl(
-        Uri.parse("https://rwkv.halowang.cloud/"),
-        mode: LaunchMode.externalApplication,
-      );
-    } catch (e) {
-      qqe(e);
-      // Alert.error(S.current.failed_to_open_url);
-      // Sentry.captureException(e, stackTrace: StackTrace.current);
-    }
+    await _openOfficialDownloadPage();
   }
 
   /// Convert Language enum to locale string for API
@@ -322,6 +314,7 @@ extension _$App on _App {
     }
 
     await init();
+    unawaited(_warnIfWindowsBuildArchitectureMismatched());
 
     // On Windows, use AppData instead of Documents for sandbox-like behavior
     if (Platform.isWindows) {
@@ -517,6 +510,133 @@ extension _$App on _App {
     return null;
   }
 
+  Future<void> _warnIfWindowsBuildArchitectureMismatched() async {
+    if (!Platform.isWindows) {
+      return;
+    }
+
+    await 2000.msLater;
+
+    final buildArchitecture = _getWindowsBuildArchitecture();
+    if (buildArchitecture != 'arm64') {
+      return;
+    }
+
+    final operatingSystemArchitecture = _getWindowsOperatingSystemArchitecture();
+    if (operatingSystemArchitecture != 'x64') {
+      return;
+    }
+
+    final buildArchitectureLabel = buildArchitecture.toUpperCase();
+    final operatingSystemArchitectureLabel = operatingSystemArchitecture.toUpperCase();
+    qqw("Windows architecture mismatch detected. build=$buildArchitecture os=$operatingSystemArchitecture");
+
+    await WidgetsBinding.instance.endOfFrame;
+    await 300.msLater;
+
+    final s = S.current;
+    final warningMessage = s.windows_architecture_mismatch_warning(
+      buildArchitectureLabel,
+      operatingSystemArchitectureLabel,
+      _App.officialDownloadPageUrl,
+    );
+    Alert.warning(warningMessage);
+
+    final context = getContext();
+    if (context == null || !context.mounted) {
+      return;
+    }
+
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: s.windows_architecture_mismatch_dialog_title,
+      message: s.windows_architecture_mismatch_dialog_message(
+        buildArchitectureLabel,
+        operatingSystemArchitectureLabel,
+        _App.officialDownloadPageUrl,
+      ),
+      okLabel: s.open_official_download_page,
+      cancelLabel: s.cancel,
+    );
+    if (result != OkCancelResult.ok) {
+      return;
+    }
+
+    await _openOfficialDownloadPage();
+  }
+
+  String _getWindowsBuildArchitecture() {
+    final abi = Abi.current();
+    if (abi == Abi.windowsArm64) {
+      return 'arm64';
+    }
+    if (abi == Abi.windowsX64) {
+      return 'x64';
+    }
+    if (abi == Abi.windowsIA32) {
+      return 'x86';
+    }
+    return 'unknown';
+  }
+
+  String _getWindowsOperatingSystemArchitecture() {
+    final wow64Architecture = _normalizeWindowsArchitecture(
+      Platform.environment['PROCESSOR_ARCHITEW6432'],
+    );
+    if (wow64Architecture != 'unknown') {
+      return wow64Architecture;
+    }
+
+    final processArchitecture = _normalizeWindowsArchitecture(
+      Platform.environment['PROCESSOR_ARCHITECTURE'],
+    );
+    if (processArchitecture != 'unknown') {
+      return processArchitecture;
+    }
+
+    final kernelArchitecture = _normalizeWindowsArchitecture(SysInfo.rawKernelArchitecture);
+    if (kernelArchitecture != 'unknown') {
+      return kernelArchitecture;
+    }
+
+    final programFilesArm = Platform.environment['ProgramFiles(Arm)'] ?? '';
+    if (programFilesArm.isNotEmpty) {
+      return 'arm64';
+    }
+
+    return 'unknown';
+  }
+
+  String _normalizeWindowsArchitecture(String? rawArchitecture) {
+    final architecture = (rawArchitecture ?? '').trim().toUpperCase();
+    if (architecture.isEmpty) {
+      return 'unknown';
+    }
+    if (architecture == 'ARM64' || architecture == 'AARCH64') {
+      return 'arm64';
+    }
+    if (architecture == 'AMD64' || architecture == 'X64' || architecture == 'X86_64') {
+      return 'x64';
+    }
+    if (architecture == 'X86' || architecture == 'IA32' || architecture == 'I386') {
+      return 'x86';
+    }
+    return 'unknown';
+  }
+
+  Future<void> _openOfficialDownloadPage() async {
+    try {
+      await launchUrl(
+        Uri.parse(_App.officialDownloadPageUrl),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      qqe(e);
+      // Alert.error(S.current.failed_to_open_url);
+      // Sentry.captureException(e, stackTrace: StackTrace.current);
+    }
+  }
+
   /// 根据运行环境获取对应的 distribution keys
   Future<List<String>> _getDistributionKeysForPlatform() async {
     if (Platform.isMacOS) {
@@ -528,13 +648,8 @@ extension _$App on _App {
       ];
     } else if (Platform.isWindows) {
       try {
-        // 检测 Windows 架构
-        // 在 Windows 上，可以通过环境变量 PROCESSOR_ARCHITECTURE 来判断
-        final processorArch = Platform.environment['PROCESSOR_ARCHITECTURE']?.toUpperCase() ?? '';
-        final processorArchW6432 = Platform.environment['PROCESSOR_ARCHITEW6432']?.toUpperCase() ?? '';
-
-        // ARM64 架构会显示为 ARM64
-        final isArm64 = processorArch == 'ARM64' || processorArchW6432 == 'ARM64';
+        final windowsArchitecture = _getWindowsOperatingSystemArchitecture();
+        final isArm64 = windowsArchitecture == 'arm64';
 
         if (isArm64) {
           return [

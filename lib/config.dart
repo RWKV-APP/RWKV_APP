@@ -50,7 +50,8 @@ abstract class Config {
     'sans-serif',
   ];
 
-  static const maxTitleLength = 60;
+  static const maxTitleLength = 120;
+  static const legacyMaxTitleLength = 60;
 
   static const batchMarker = "V9m!T7#q2fH@x1Lz*8YwK0^g4";
   static const userMsgModifierSep = "G7!k9#rVq2@Xz8LpY4m%";
