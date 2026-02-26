@@ -47,6 +47,15 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 
 - `rwkv_mobile_flutter` 是本项目 LLM inference 引擎。
 
+### 图标与包体积规则（Material Symbols）
+
+- 若使用 `material_symbols_icons`，仅允许 `import 'package:material_symbols_icons/symbols.dart';`。
+- 仅允许静态常量方式引用图标：`Icon(Symbols.xxx)`；禁止动态按名称取图标。
+- 严禁引入 `package:material_symbols_icons/get.dart`。
+- 严禁引入 `package:material_symbols_icons/symbols_map.dart`。
+- 打包时禁止使用 `--no-tree-shake-icons`，保持默认 icon tree-shake 开启。
+- 若已添加 `material_symbols_icons` 依赖，必须至少存在一个静态 `Symbols.xxx` 引用，避免字体资源未被裁剪而整包进入产物。
+
 ### i18n 规则
 
 - 项目当前有 6 个 ARB 文件：
