@@ -117,6 +117,7 @@ dependencies:
   intl:
   json_annotation:
   macos_secure_bookmarks: ^0.2.1
+  material_symbols_icons:
   mp_audio_stream:
   package_info_plus:
   path:
