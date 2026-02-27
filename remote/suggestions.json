@@ -51,7 +51,7 @@
         "name": "百科",
         "items": [
           {
-            "display": "为什么某些定时机器在科幻小说和电影中会出现时间旅行者却无法改变自己的过去？"
+            "display": "为什么在一些科幻作品中，即便拥有时间机器，时间旅行者仍然无法改变自己的过去？"
           },
           {
             "display": "为什么旧书翻阅多了，书页后面会出现容易折断的地方？"
@@ -204,10 +204,7 @@
       "What is written in this image?",
       "What do you see in this picture?"
     ],
-    "see_reasoning_qa": [
-      "请向我描述这张图片",
-      "Please describe this image for me~"
-    ]
+    "see_reasoning_qa": ["请向我描述这张图片", "Please describe this image for me~"]
   },
   "en": {
     "chat": [
@@ -949,9 +946,6 @@
       "What is written in this image?",
       "What do you see in this picture?"
     ],
-    "see_reasoning_qa": [
-      "请向我描述这张图片",
-      "Please describe this image for me~"
-    ]
+    "see_reasoning_qa": ["请向我描述这张图片", "Please describe this image for me~"]
   }
 }
