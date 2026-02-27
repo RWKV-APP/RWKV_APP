@@ -1,5 +1,3 @@
-// dart format width=140
-
 /// GENERATED CODE - DO NOT MODIFY BY HAND
 /// *****************************************************
 ///  FlutterGen
@@ -7,7 +5,7 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
 
@@ -26,6 +24,9 @@ class $AssetsConfigGen {
 
   /// Directory path: assets/config/chat
   $AssetsConfigChatGen get chat => const $AssetsConfigChatGen();
+
+  /// Directory path: assets/config/code_highlights
+  $AssetsConfigCodeHighlightsGen get codeHighlights => const $AssetsConfigCodeHighlightsGen();
 }
 
 class $AssetsImgGen {
@@ -41,6 +42,9 @@ class $AssetsLibGen {
   /// Directory path: assets/lib/chat
   $AssetsLibChatGen get chat => const $AssetsLibChatGen();
 
+  /// Directory path: assets/lib/font_preview
+  $AssetsLibFontPreviewGen get fontPreview => const $AssetsLibFontPreviewGen();
+
   /// Directory path: assets/lib/qnn
   $AssetsLibQnnGen get qnn => const $AssetsLibQnnGen();
 }
@@ -55,9 +59,6 @@ class $AssetsModelGen {
 class $AssetsConfigChatGen {
   const $AssetsConfigChatGen();
 
-  /// File path: assets/config/chat/rwkv_vocab_v20230424.txt
-  String get rwkvVocabV20230424 => 'assets/config/chat/rwkv_vocab_v20230424.txt';
-
   /// File path: assets/config/chat/date-zh.fst
   String get dateZh => 'assets/config/chat/date-zh.fst';
 
@@ -66,6 +67,9 @@ class $AssetsConfigChatGen {
 
   /// File path: assets/config/chat/phone-zh.fst
   String get phoneZh => 'assets/config/chat/phone-zh.fst';
+
+  /// File path: assets/config/chat/rwkv_vocab_v20230424.txt
+  String get rwkvVocabV20230424 => 'assets/config/chat/rwkv_vocab_v20230424.txt';
 
   /// File path: assets/config/chat/suggestions.en-US.debug.json
   String get suggestionsEnUSDebug => 'assets/config/chat/suggestions.en-US.debug.json';
@@ -84,15 +88,83 @@ class $AssetsConfigChatGen {
 
   /// List of all assets
   List<String> get values => [
-    rwkvVocabV20230424,
     dateZh,
     numberZh,
     phoneZh,
+    rwkvVocabV20230424,
     suggestionsEnUSDebug,
     suggestionsEnUS,
     suggestionsZhHansDebug,
     suggestionsZhHans,
     vocabTalk,
+  ];
+}
+
+class $AssetsConfigCodeHighlightsGen {
+  const $AssetsConfigCodeHighlightsGen();
+
+  /// File path: assets/config/code_highlights/css.json
+  String get css => 'assets/config/code_highlights/css.json';
+
+  /// File path: assets/config/code_highlights/dart.json
+  String get dart => 'assets/config/code_highlights/dart.json';
+
+  /// File path: assets/config/code_highlights/go.json
+  String get go => 'assets/config/code_highlights/go.json';
+
+  /// File path: assets/config/code_highlights/html.json
+  String get html => 'assets/config/code_highlights/html.json';
+
+  /// File path: assets/config/code_highlights/java.json
+  String get java => 'assets/config/code_highlights/java.json';
+
+  /// File path: assets/config/code_highlights/javascript.json
+  String get javascript => 'assets/config/code_highlights/javascript.json';
+
+  /// File path: assets/config/code_highlights/json.json
+  String get json => 'assets/config/code_highlights/json.json';
+
+  /// File path: assets/config/code_highlights/kotlin.json
+  String get kotlin => 'assets/config/code_highlights/kotlin.json';
+
+  /// File path: assets/config/code_highlights/python.json
+  String get python => 'assets/config/code_highlights/python.json';
+
+  /// File path: assets/config/code_highlights/rust.json
+  String get rust => 'assets/config/code_highlights/rust.json';
+
+  /// File path: assets/config/code_highlights/serverpod_protocol.json
+  String get serverpodProtocol => 'assets/config/code_highlights/serverpod_protocol.json';
+
+  /// File path: assets/config/code_highlights/sql.json
+  String get sql => 'assets/config/code_highlights/sql.json';
+
+  /// File path: assets/config/code_highlights/swift.json
+  String get swift => 'assets/config/code_highlights/swift.json';
+
+  /// File path: assets/config/code_highlights/typescript.json
+  String get typescript => 'assets/config/code_highlights/typescript.json';
+
+  /// File path: assets/config/code_highlights/yaml.json
+  String get yaml => 'assets/config/code_highlights/yaml.json';
+
+  /// List of all assets
+  List<String> get values => [
+    css,
+    dart,
+    go,
+    html,
+    java,
+    javascript,
+    json,
+    kotlin,
+    python,
+    rust,
+    serverpodProtocol,
+    sql,
+    swift,
+    typescript,
+    yaml,
   ];
 }
 
@@ -117,8 +189,19 @@ class $AssetsImgChatGen {
   /// File path: assets/img/chat/rwkv.png
   AssetGenImage get rwkv => const AssetGenImage('assets/img/chat/rwkv.png');
 
+  /// File path: assets/img/chat/think.svg
+  String get think => 'assets/img/chat/think.svg';
+
   /// List of all assets
-  List<dynamic> get values => [downloadQrcode, icon, logoSquare, newChat, regenerate, rwkv];
+  List<dynamic> get values => [
+    downloadQrcode,
+    icon,
+    logoSquare,
+    newChat,
+    regenerate,
+    rwkv,
+    think,
+  ];
 }
 
 class $AssetsLibChatGen {
@@ -601,6 +684,38 @@ class $AssetsLibChatGen {
   ];
 }
 
+class $AssetsLibFontPreviewGen {
+  const $AssetsLibFontPreviewGen();
+
+  /// File path: assets/lib/font_preview/font_preview_en.md
+  String get fontPreviewEn => 'assets/lib/font_preview/font_preview_en.md';
+
+  /// File path: assets/lib/font_preview/font_preview_ja.md
+  String get fontPreviewJa => 'assets/lib/font_preview/font_preview_ja.md';
+
+  /// File path: assets/lib/font_preview/font_preview_ko.md
+  String get fontPreviewKo => 'assets/lib/font_preview/font_preview_ko.md';
+
+  /// File path: assets/lib/font_preview/font_preview_ru.md
+  String get fontPreviewRu => 'assets/lib/font_preview/font_preview_ru.md';
+
+  /// File path: assets/lib/font_preview/font_preview_zh_Hans.md
+  String get fontPreviewZhHans => 'assets/lib/font_preview/font_preview_zh_Hans.md';
+
+  /// File path: assets/lib/font_preview/font_preview_zh_Hant.md
+  String get fontPreviewZhHant => 'assets/lib/font_preview/font_preview_zh_Hant.md';
+
+  /// List of all assets
+  List<String> get values => [
+    fontPreviewEn,
+    fontPreviewJa,
+    fontPreviewKo,
+    fontPreviewRu,
+    fontPreviewZhHans,
+    fontPreviewZhHant,
+  ];
+}
+
 class $AssetsLibQnnGen {
   const $AssetsLibQnnGen();
 
@@ -724,13 +839,12 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}, this.animation});
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
   final Size? size;
   final Set<String> flavors;
-  final AssetGenImageAnimation? animation;
 
   Image image({
     Key? key,
@@ -792,12 +906,4 @@ class AssetGenImage {
   String get path => _assetName;
 
   String get keyName => _assetName;
-}
-
-class AssetGenImageAnimation {
-  const AssetGenImageAnimation({required this.isAnimation, required this.duration, required this.frames});
-
-  final bool isAnimation;
-  final Duration duration;
-  final int frames;
 }

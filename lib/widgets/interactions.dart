@@ -3,11 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
-import 'package:halo_state/halo_state.dart';
-import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/model/web_search_mode.dart';
 import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
@@ -15,7 +11,6 @@ import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
-import 'package:zone/widgets/model_selector.dart';
 
 class InputInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;
@@ -81,14 +76,6 @@ class _Interactions extends ConsumerWidget {
         },
       ),
     );
-
-    // return Wrap(
-    //   spacing: 4,
-    //   runSpacing: 4,
-    //   crossAxisAlignment: .center,
-    //   alignment: .start,
-    //   children: children,
-    // );
   }
 }
 
@@ -96,31 +83,38 @@ class _WebSearchModeButton extends ConsumerWidget {
   const _WebSearchModeButton();
 
   void _onTap() {
-    P.chat.onSwitchWebSearchMode(P.chat.webSearchMode.q == WebSearchMode.off ? WebSearchMode.search : WebSearchMode.off);
+    P.chat.onWebSearchModeTapped();
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
     final theme = Theme.of(context);
-    final menuTextStyle = theme.textTheme.bodyMedium;
+    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
+    final currentLangIsZh = ref.watch(P.preference.currentLangIsZh);
+    final loading = ref.watch(P.rwkv.loading);
+    final loaded = ref.watch(P.rwkv.loaded);
     final generating = ref.watch(P.rwkv.generating);
     final webSearchMode = ref.watch(P.chat.webSearchMode);
 
-    final canEnable = !generating;
+    final canEnable = loaded && !loading && !generating;
     final interactionState = switch ((canEnable, webSearchMode)) {
       (false, _) => InteractionVisualState.unavailable,
-      (true, WebSearchMode.off) => InteractionVisualState.available,
+      (true, .off) => InteractionVisualState.available,
       (true, _) => InteractionVisualState.enabled,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
     final textColor = colors.foreground;
     final borderColor = colors.border;
+    final actionColor = textColor;
+    final backgroundColor = color;
+    final actionBorderColor = borderColor;
+    final showDeepLabel = webSearchMode == .deepSearch;
+    final deepLabel = currentLangIsZh ? "深度" : "Deep";
 
     final height = InputInteractions.calculateButtonHeight(context);
-    const EdgeInsets padding = .only(left: 8);
+    const EdgeInsets padding = .symmetric(horizontal: 8);
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
@@ -128,59 +122,20 @@ class _WebSearchModeButton extends ConsumerWidget {
           height: height,
           padding: padding,
           decoration: BoxDecoration(
-            color: color,
+            color: backgroundColor,
             borderRadius: .circular(60),
-            border: .all(color: borderColor),
+            border: .all(color: actionBorderColor),
           ),
           child: Row(
             children: [
-              Icon(Icons.travel_explore, color: textColor, size: 16),
-              const SizedBox(width: 2),
-              Text(
-                webSearchMode == WebSearchMode.deepSearch ? s.deep_web_search : s.web_search,
-                style: TS(c: textColor, s: 14, height: 1, w: .w500),
-              ),
-              const SizedBox(width: 4),
-              Container(
-                width: 0.5,
-                height: height - 16,
-                color: textColor,
-              ),
-              PopupMenuButton(
-                offset: const Offset(-30, -80),
-                itemBuilder: (c) {
-                  return [
-                    PopupMenuItem(
-                      value: WebSearchMode.off,
-                      child: Text(s.off, style: menuTextStyle),
-                    ),
-                    PopupMenuItem(
-                      value: WebSearchMode.search,
-                      child: Text(s.web_search, style: menuTextStyle),
-                    ),
-                    PopupMenuItem(
-                      value: WebSearchMode.deepSearch,
-                      child: Text(s.deep_web_search, style: menuTextStyle),
-                    ),
-                  ];
-                },
-                onSelected: (mode) {
-                  P.chat.onSwitchWebSearchMode(mode);
-                },
-                initialValue: webSearchMode,
-                popUpAnimationStyle: AnimationStyle(
-                  curve: Curves.linear,
-                  duration: 250.ms,
-                  reverseCurve: Curves.linear,
-                  reverseDuration: 250.ms,
+              Icon(Icons.travel_explore, color: actionColor, size: 16),
+              if (showDeepLabel) ...[
+                const SizedBox(width: 2),
+                Text(
+                  deepLabel,
+                  style: TS(c: actionColor, s: fontSize, height: 1, w: .w500),
                 ),
-                child: Container(
-                  height: height,
-                  padding: const .symmetric(horizontal: 4),
-                  alignment: .center,
-                  child: Icon(Icons.expand_more_outlined, color: textColor, size: 16),
-                ),
-              ),
+              ],
             ],
           ),
         ),
@@ -192,10 +147,14 @@ class _WebSearchModeButton extends ConsumerWidget {
 class _WenYanWenButton extends ConsumerWidget {
   const _WenYanWenButton();
 
+  void _onTap() {
+    P.chat.onWenYanWenTapped();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final menuTextStyle = theme.textTheme.bodyMedium;
+    final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
     final mode = ref.watch(P.chat.wenYanWen);
     final model = ref.watch(P.rwkv.latestModel);
@@ -212,65 +171,28 @@ class _WenYanWenButton extends ConsumerWidget {
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final bgColor = colors.background;
     final textColor = colors.foreground;
-
-    String label = '';
-    if (mode == WenyanMode.off) {
-      label = '文言';
-    } else if (mode == WenyanMode.classic) {
-      label = '文言';
-    } else if (mode == WenyanMode.mixed) {
-      label = '古今';
-    }
+    final borderColor = colors.border;
+    final String label = switch (mode) {
+      WenyanMode.off => "文言",
+      WenyanMode.classic => "文言",
+      WenyanMode.mixed => "古今",
+    };
 
     return IntrinsicWidth(
-      child: PopupMenuButton(
-        offset: const Offset(-30, -80),
-        itemBuilder: (c) {
-          return [
-            PopupMenuItem(
-              value: WenyanMode.off,
-              child: Text('文言: 关', style: menuTextStyle),
-            ),
-            PopupMenuItem(
-              value: WenyanMode.classic,
-              child: Text('文言: 开', style: menuTextStyle),
-            ),
-            PopupMenuItem(
-              value: WenyanMode.mixed,
-              child: Text('古今', style: menuTextStyle),
-            ),
-          ];
-        },
-        onSelected: (m) {
-          if (model == null) {
-            ModelSelector.show();
-            return;
-          }
-          if (!model.tags.contains('batch') && m == WenyanMode.mixed) {
-            Alert.warning(S.current.this_model_does_not_support_batch_inference);
-            return;
-          }
-          P.chat.onSwitchWenYanWen(m);
-        },
-        initialValue: mode,
-        popUpAnimationStyle: AnimationStyle(
-          curve: Curves.linear,
-          duration: 250.ms,
-          reverseCurve: Curves.linear,
-          reverseDuration: 250.ms,
-        ),
+      child: GestureDetector(
+        onTap: _onTap,
         child: Container(
           height: height,
           padding: const .symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: .circular(60),
-            border: .all(color: colors.border, width: 1),
+            border: .all(color: borderColor, width: 1),
           ),
           alignment: .center,
           child: Text(
             label,
-            style: TS(c: textColor, s: 14, height: 1, w: .w500),
+            style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
           ),
         ),
       ),

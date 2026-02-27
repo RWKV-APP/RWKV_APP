@@ -2,10 +2,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:halo/halo.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
+
+String _extractInteractionSuffix({
+  required String source,
+  required String separator,
+}) {
+  final int separatorIndex = source.lastIndexOf(separator);
+  if (separatorIndex < 0) return source;
+  return source.substring(separatorIndex + separator.length);
+}
 
 class ThinkingModeButton extends ConsumerWidget {
   const ThinkingModeButton({super.key});
@@ -29,7 +41,7 @@ class ThinkingModeButton extends ConsumerWidget {
       .enLong => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
       .none => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
       .fast => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-      .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+    .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
       .preferChinese => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
@@ -51,6 +63,7 @@ class ThinkingModeButton extends ConsumerWidget {
       .enShort => s.think_button_mode_en_short(""),
       .enLong => s.think_button_mode_en_long(""),
     };
+    final compactText = _extractInteractionSuffix(source: text, separator: s.hyphen);
 
     return AnimatedSize(
       key: const Key("_ThinkingModeButton"),
@@ -73,10 +86,17 @@ class ThinkingModeButton extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.lightbulb_outline, color: textColor, size: 18),
-                    const SizedBox(width: 2),
+                    // FaIcon(FontAwesomeIcons.brain, color: textColor, size: 18),
+                    // Icon(Symbols.psychology_alt, color: textColor, size: 18),
+                    SvgPicture.asset(
+                      Assets.img.chat.think,
+                      color: textColor,
+                      width: 18,
+                      height: 18,
+                    ),
+                    const SizedBox(width: 4),
                     Text(
-                      text,
+                      compactText,
                       style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                     ),
                     const SizedBox(width: 4),

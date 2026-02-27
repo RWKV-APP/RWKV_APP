@@ -84,12 +84,62 @@ extension $Chat on _Chat {
     webSearchMode.q = mode;
   }
 
+  Future<void> onWebSearchModeTapped() async {
+    final bool receiving = P.rwkv.generating.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
+
+    final BuildContext? context = getContext();
+    if (context == null) return;
+
+    P.app.hapticLight();
+
+    final S s = S.current;
+    final WebSearchMode current = webSearchMode.q;
+    final List<({String label, WebSearchMode key})> actionPairs = [
+      (label: s.off, key: .off),
+      (label: s.web_search, key: .search),
+      (label: s.deep_web_search, key: .deepSearch),
+    ];
+
+    final List<SheetAction<WebSearchMode>> actions = actionPairs.map((entry) {
+      final bool isCurrent = entry.key == current;
+      final String label = isCurrent ? "☑ ${entry.label}" : entry.label;
+      final WebSearchMode key = entry.key;
+      return SheetAction(label: label, key: key);
+    }).toList();
+
+    final WebSearchMode? selectedMode = await showModalActionSheet<WebSearchMode>(
+      context: context,
+      title: s.web_search,
+      message: "${s.web_search} / ${s.deep_web_search}",
+      cancelLabel: s.cancel,
+      actions: actions,
+    );
+
+    if (selectedMode == null) return;
+
+    onSwitchWebSearchMode(selectedMode);
+  }
+
   void onSwitchWenYanWen(WenyanMode mode) async {
     final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
+
+    switch (mode) {
+      case .off:
+      case .classic:
+        break;
+      case .mixed:
+        if (batchEnabled.q == false) batchEnabled.q = true;
+    }
+
     if (mode != WenyanMode.off) {
       webSearchMode.q = WebSearchMode.off;
       if (mode == WenyanMode.mixed && P.rwkv.supportedBatchSizes.q.isNotEmpty) {
@@ -98,12 +148,60 @@ extension $Chat on _Chat {
       }
     } else {
       if (wenYanWen.q == WenyanMode.mixed && batchCount.q == 2) {
-        batchCount.q = 1;
         onBatchInferenceSwitchChanged(false);
       }
     }
 
     wenYanWen.q = mode;
+  }
+
+  Future<void> onWenYanWenTapped() async {
+    final bool receiving = P.rwkv.generating.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    final FileInfo? model = P.rwkv.latestModel.q;
+    if (model == null) {
+      ModelSelector.show();
+      return;
+    }
+
+    final BuildContext? context = getContext();
+    if (context == null) return;
+
+    P.app.hapticLight();
+
+    final WenyanMode currentMode = wenYanWen.q;
+    final List<({String label, WenyanMode key})> actionPairs = [
+      (label: "文言: 关", key: .off),
+      (label: "文言: 开", key: .classic),
+      (label: "古今", key: .mixed),
+    ];
+    final List<SheetAction<WenyanMode>> actions = actionPairs.map((entry) {
+      final bool isCurrent = entry.key == currentMode;
+      final String label = isCurrent ? "☑ ${entry.label}" : entry.label;
+      final WenyanMode key = entry.key;
+      return SheetAction(label: label, key: key);
+    }).toList();
+
+    final WenyanMode? selectedMode = await showModalActionSheet<WenyanMode>(
+      context: context,
+      title: "文言",
+      message: "请选择文言模式",
+      cancelLabel: S.current.cancel,
+      actions: actions,
+    );
+
+    if (selectedMode == null) return;
+
+    if (!model.tags.contains('batch') && selectedMode == WenyanMode.mixed) {
+      Alert.warning(S.current.this_model_does_not_support_batch_inference);
+      return;
+    }
+
+    onSwitchWenYanWen(selectedMode);
   }
 
   // TODO: 适时去掉 preferredDemoType

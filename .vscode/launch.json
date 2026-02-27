@@ -62,7 +62,7 @@
         "--dart-define=logLevel=3",
         "--dart-define=showHaloDebugger=true",
         // "--dart-define=debuggingLatestUI",
-        "--dart-define=disableRemoteConfig=true",
+        // "--dart-define=disableRemoteConfig=true",
         "--dart-define=showHaloDebugger=true"
         // "--dart-define=disableRemoteConfig=true"
       ],

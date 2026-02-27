@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
@@ -107,8 +108,10 @@ class DecodeParamButton extends ConsumerWidget {
               mainAxisAlignment: .center,
               crossAxisAlignment: .center,
               children: [
+                Icon(Symbols.auto_awesome, color: textColor, size: 18),
+                const SizedBox(width: 4),
                 Text(
-                  s.style + s.hyphen + decodeParamType.displayNameShort,
+                  decodeParamType.displayNameShort,
                   style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                 ),
               ],

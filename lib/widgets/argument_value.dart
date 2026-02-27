@@ -56,6 +56,7 @@ class ArgumentValue extends ConsumerWidget {
     }
     if (!argument.show) return const SizedBox.shrink();
     final qb = ref.watch(P.app.qb);
+
     return Column(
       crossAxisAlignment: .stretch,
       children: [
