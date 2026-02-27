@@ -12,7 +12,7 @@
       "flutterMode": "debug"
     },
     {
-      "name": "debug (Halo)",
+      "name": "debug (halo)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "name": "debug (Halo) - Android",
+      "name": "debug (halo) - Android",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -52,7 +52,7 @@
       "deviceId": "90313e34"
     },
     {
-      "name": "debug (Halo) - iOS",
+      "name": "debug (halo) - iOS",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -69,7 +69,7 @@
       "deviceId": "00008140-000641E02EDB001C"
     },
     {
-      "name": "debug (Halo) - macOS",
+      "name": "debug (halo) - macOS",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -113,12 +113,12 @@
   ],
   "compounds": [
     {
-      "name": "all (Halo)",
+      "name": "all (halo)",
       "configurations": [
         // 同时启动, 方便同时 debug 多个平台
-        "debug (Halo) - macOS",
-        "debug (Halo) - Android"
-        // "debug (Halo) - iOS"
+        "debug (halo) - macOS",
+        "debug (halo) - Android"
+        // "debug (halo) - iOS"
       ]
     }
   ]
