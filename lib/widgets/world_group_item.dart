@@ -590,7 +590,7 @@ class _WorldTags extends ConsumerWidget {
     return Wrap(
       spacing: 4,
       runSpacing: 8,
-      children: [
+      children: <ModelTag>[
         const ModelTag(tag: "Vision"),
         ModelTag(tag: isNPU ? "NPU" : "CPU"),
         if (backend == Backend.webRwkv) const ModelTag(tag: "WebRWKV"),

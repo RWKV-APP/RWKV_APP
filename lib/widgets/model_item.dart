@@ -525,7 +525,7 @@ class _Tags extends ConsumerWidget {
     return Wrap(
       spacing: 4,
       runSpacing: 8,
-      children: [
+      children: <ModelTag>[
         if (fileInfo.backend == .webRwkv) const ModelTag(tag: "GPU"),
         ...tags.where((tag) => !hiddenTags.contains(tag)).map((tag) => ModelTag(tag: tag)),
         if (kDebugMode && fileInfo.isDebug) const ModelTag(tag: "DEBUG", forceBgColor: Colors.red, forceTextColor: kW),

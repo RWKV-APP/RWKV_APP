@@ -623,7 +623,7 @@ class _TTSTags extends StatelessWidget {
     return Wrap(
       spacing: 4,
       runSpacing: 8,
-      children: [
+      children: <ModelTag>[
         const ModelTag(tag: "TTS"),
         if (isNpu) const ModelTag(tag: "NPU"),
         if (backend == Backend.webRwkv) const ModelTag(tag: "WebRWKV"),

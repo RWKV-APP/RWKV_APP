@@ -70,12 +70,12 @@ class ModelTag extends ConsumerWidget {
           borderColor: qb.q(.1),
           displayTagName: "NPU",
         );
-      case "DeepEmbedding":
+      case "deepembedding":
         return _RenderingOptions(
           bgColor: qb.q(.1),
           textColor: qb,
           borderColor: qb.q(.1),
-          displayTagName: "DE",
+          displayTagName: "DeepEmb",
         );
       case "batch":
         return _RenderingOptions(
