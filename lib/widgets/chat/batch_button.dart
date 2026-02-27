@@ -55,12 +55,12 @@ class BatchButton extends ConsumerWidget {
               if (batchEnabled)
                 Text(
                   s.batch_inference_button(batchCount),
-                  style: TS(c: textColor, s: fontSize),
+                  style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                 ),
               if (!batchEnabled)
                 Text(
                   s.batch_inference_short,
-                  style: TS(c: textColor, s: fontSize),
+                  style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                 ),
             ],
           ),

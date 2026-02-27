@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/store/p.dart';
@@ -128,7 +129,7 @@ class _WebSearchModeButton extends ConsumerWidget {
           ),
           child: Row(
             children: [
-              Icon(Icons.travel_explore, color: actionColor, size: 16),
+              Icon(Symbols.travel_explore, color: actionColor, size: 18),
               if (showDeepLabel) ...[
                 const SizedBox(width: 2),
                 Text(
