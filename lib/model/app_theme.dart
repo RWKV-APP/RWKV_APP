@@ -290,6 +290,8 @@ enum AppTheme {
 
   final double startButtonRadius = 4.0;
 
+  final double inputBarInteractionsIconSize = 18;
+
   ColorScheme get colorScheme {
     final Brightness brightness = isLight ? Brightness.light : Brightness.dark;
     final ColorScheme seeded = ColorScheme.fromSeed(

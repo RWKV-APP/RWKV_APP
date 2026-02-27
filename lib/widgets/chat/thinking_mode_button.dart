@@ -40,7 +40,7 @@ class ThinkingModeButton extends ConsumerWidget {
       .enLong => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
       .none => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
       .fast => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-    .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+      .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
       .preferChinese => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
@@ -85,13 +85,11 @@ class ThinkingModeButton extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    // FaIcon(FontAwesomeIcons.brain, color: textColor, size: 18),
-                    // Icon(Symbols.psychology_alt, color: textColor, size: 18),
                     SvgPicture.asset(
                       Assets.img.chat.think,
-                      color: textColor,
-                      width: 18,
-                      height: 18,
+                      colorFilter: .mode(textColor, BlendMode.srcIn),
+                      width: appTheme.inputBarInteractionsIconSize,
+                      height: appTheme.inputBarInteractionsIconSize,
                     ),
                     const SizedBox(width: 4),
                     Text(

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
@@ -23,7 +24,6 @@ class BatchButton extends ConsumerWidget {
     final latestModel = ref.watch(P.rwkv.latestModel);
     final batchAllowed = latestModel?.tags.contains("batch") ?? false;
     final batchEnabled = ref.watch(P.chat.batchEnabled);
-    final s = S.of(context);
 
     final batchCount = ref.watch(P.chat.batchCount);
     final canEnable = loaded && !loading && !generating && batchAllowed;
@@ -52,14 +52,11 @@ class BatchButton extends ConsumerWidget {
             mainAxisAlignment: .center,
             crossAxisAlignment: .center,
             children: [
+              Icon(Symbols.airware, color: textColor, size: appTheme.inputBarInteractionsIconSize),
+              if (batchEnabled) const SizedBox(width: 4),
               if (batchEnabled)
                 Text(
-                  s.batch_inference_button(batchCount),
-                  style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
-                ),
-              if (!batchEnabled)
-                Text(
-                  s.batch_inference_short,
+                  "× $batchCount",
                   style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                 ),
             ],

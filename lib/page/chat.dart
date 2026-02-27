@@ -1,6 +1,7 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
@@ -9,6 +10,8 @@ import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/func/extensions/num.dart';
+import 'package:zone/router/method.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
 import 'package:zone/widgets/input_bar.dart';
@@ -64,6 +67,14 @@ class _Page extends ConsumerWidget {
     final selectMessageMode = ref.watch(P.chat.isSharing);
 
     return Scaffold(
+      floatingActionButton: kDebugMode
+          ? FloatingActionButton(
+              onPressed: () {
+                push(PageKey.interactionsPreview);
+              },
+              child: const Icon(Icons.playlist_play),
+            )
+          : null,
       body: Stack(
         children: [
           const _List(),

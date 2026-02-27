@@ -108,7 +108,7 @@ class DecodeParamButton extends ConsumerWidget {
               mainAxisAlignment: .center,
               crossAxisAlignment: .center,
               children: [
-                Icon(Symbols.auto_awesome, color: textColor, size: 18),
+                Icon(Symbols.auto_awesome, color: textColor, size: appTheme.inputBarInteractionsIconSize),
                 const SizedBox(width: 4),
                 Text(
                   decodeParamType.displayNameShort,

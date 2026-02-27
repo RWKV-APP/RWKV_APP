@@ -61,7 +61,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.translate, color: textColor, size: 18),
+                  Icon(Icons.translate, color: textColor, size: appTheme.inputBarInteractionsIconSize),
                   const SizedBox(width: 4),
                   Column(
                     crossAxisAlignment: .start,
