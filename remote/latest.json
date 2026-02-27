@@ -590,7 +590,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Elite"],
         "date": 1770110041
       },
@@ -602,7 +602,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Elite Gen5"],
         "date": 1770110041
       },
@@ -614,7 +614,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Gen 3"],
         "date": 1770110095
       },
@@ -626,7 +626,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8s Gen 3"],
         "date": 1770110095
       },
@@ -638,7 +638,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["7+ Gen 3"],
         "date": 1770110095
       },
@@ -650,7 +650,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Gen 2"],
         "date": 1770110095
       },
@@ -662,7 +662,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8+ Gen 1"],
         "date": 1770014071
       },
@@ -674,7 +674,7 @@
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["qnn"],
-        "tags": ["DeepEmbedding", "reason", "npu"],
+        "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["888"],
         "date": 1770014071
       },
