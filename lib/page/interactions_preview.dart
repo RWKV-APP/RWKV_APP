@@ -140,7 +140,7 @@ class PageInteractionsPreview extends ConsumerWidget {
                     border: .all(color: AppTheme.light.qb0.q(.14)),
                   ),
                   width: paneWidth,
-                  child: _ThemePreviewPane(
+                  child: const _ThemePreviewPane(
                     modeLabel: "浅色模式",
                     previewTheme: AppTheme.light,
                   ),

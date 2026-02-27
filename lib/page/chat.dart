@@ -67,14 +67,6 @@ class _Page extends ConsumerWidget {
     final selectMessageMode = ref.watch(P.chat.isSharing);
 
     return Scaffold(
-      floatingActionButton: kDebugMode
-          ? FloatingActionButton(
-              onPressed: () {
-                push(PageKey.interactionsPreview);
-              },
-              child: const Icon(Icons.playlist_play),
-            )
-          : null,
       body: Stack(
         children: [
           const _List(),

@@ -81,10 +81,7 @@ class DecodeParamButton extends ConsumerWidget {
     final loaded = ref.watch(P.rwkv.loaded);
     final decodeParamType = ref.watch(P.rwkv.decodeParamType);
     final canEnable = loaded && !loading && !generating;
-    final interactionState = switch (decodeParamType) {
-      .defaults => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-      _ => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
-    };
+    final interactionState = canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable;
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final bgColor = colors.background;
     final textColor = colors.foreground;

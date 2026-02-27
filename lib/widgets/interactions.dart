@@ -101,8 +101,9 @@ class _WebSearchModeButton extends ConsumerWidget {
     final canEnable = loaded && !loading && !generating;
     final interactionState = switch ((canEnable, webSearchMode)) {
       (false, _) => InteractionVisualState.unavailable,
-      (true, .off) => InteractionVisualState.available,
-      (true, _) => InteractionVisualState.enabled,
+      (true, .off) => InteractionVisualState.idleInteractive,
+      (true, .search) => InteractionVisualState.available,
+      (true, .deepSearch) => InteractionVisualState.enabled,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
@@ -166,8 +167,9 @@ class _WenYanWenButton extends ConsumerWidget {
     final canEnable = model != null && !loading && !generating;
     final interactionState = switch ((canEnable, mode)) {
       (false, _) => InteractionVisualState.unavailable,
-      (true, WenyanMode.off) => InteractionVisualState.available,
-      (true, _) => InteractionVisualState.enabled,
+      (true, WenyanMode.off) => InteractionVisualState.idleInteractive,
+      (true, WenyanMode.classic) => InteractionVisualState.available,
+      (true, WenyanMode.mixed) => InteractionVisualState.enabled,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final bgColor = colors.background;

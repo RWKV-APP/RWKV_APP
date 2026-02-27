@@ -34,14 +34,14 @@ class ThinkingModeButton extends ConsumerWidget {
 
     final canEnable = loaded && !loading && !generating;
     final interactionState = switch (thinkingMode) {
+      .none => canEnable ? InteractionVisualState.idleInteractive : InteractionVisualState.unavailable,
+      .fast => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+      .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
       .free => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
       .en => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
       .enShort => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
       .enLong => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
-      .none => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-      .fast => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-      .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-      .preferChinese => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
+      .preferChinese => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
