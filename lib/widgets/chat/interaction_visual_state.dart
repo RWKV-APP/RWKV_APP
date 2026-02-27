@@ -25,9 +25,9 @@ InteractionVisualColors interactionVisualColors({
 }) {
   return switch (state) {
     .unavailable => InteractionVisualColors(
-      background: appTheme.g1,
-      foreground: appTheme.g5,
-      border: appTheme.g2,
+      background: Color.lerp(appTheme.g1, appTheme.scaffoldBg, .33) ?? appTheme.g1,
+      foreground: Color.lerp(appTheme.g5, appTheme.scaffoldBg, .33) ?? appTheme.g5,
+      border: Color.lerp(appTheme.g2, appTheme.scaffoldBg, .33) ?? appTheme.g2,
     ),
     .available => InteractionVisualColors(
       background: appTheme.qb144,

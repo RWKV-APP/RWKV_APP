@@ -133,7 +133,12 @@ class PageInteractionsPreview extends ConsumerWidget {
             child: Row(
               crossAxisAlignment: .start,
               children: [
-                SizedBox(
+                C(
+                  decoration: BD(
+                    color: AppTheme.light.scaffoldBg,
+                    borderRadius: .circular(12),
+                    border: .all(color: AppTheme.light.qb0.q(.14)),
+                  ),
                   width: paneWidth,
                   child: _ThemePreviewPane(
                     modeLabel: "浅色模式",
@@ -141,7 +146,12 @@ class PageInteractionsPreview extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: paneGap),
-                SizedBox(
+                C(
+                  decoration: BD(
+                    color: darkTheme.scaffoldBg,
+                    borderRadius: .circular(12),
+                    border: .all(color: darkTheme.qb0.q(.14)),
+                  ),
                   width: paneWidth,
                   child: _ThemePreviewPane(
                     modeLabel: "深色模式",
@@ -173,12 +183,7 @@ class _ThemePreviewPane extends StatelessWidget {
     final Color secondaryText = previewTheme.qb0.q(.72);
 
     return Container(
-      padding: const .all(12),
-      decoration: BoxDecoration(
-        color: previewTheme.scaffoldBg,
-        borderRadius: .circular(12),
-        border: .all(color: previewTheme.qb0.q(.14)),
-      ),
+      padding: const .all(4),
       child: Column(
         crossAxisAlignment: .start,
         children: [
@@ -296,7 +301,7 @@ class _StateSection extends StatelessWidget {
     return Container(
       padding: const .all(12),
       decoration: BoxDecoration(
-        color: previewTheme.settingItem,
+        color: previewTheme.scaffoldBg,
         borderRadius: .circular(12),
         border: .all(color: previewTheme.qb0.q(.12)),
       ),
