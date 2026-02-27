@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/interactions.dart';
@@ -52,11 +51,11 @@ class BatchButton extends ConsumerWidget {
             mainAxisAlignment: .center,
             crossAxisAlignment: .center,
             children: [
-              Icon(Symbols.airware, color: textColor, size: appTheme.inputBarInteractionsIconSize),
+              Icon(Symbols.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
               if (batchEnabled) const SizedBox(width: 4),
               if (batchEnabled)
                 Text(
-                  "× $batchCount",
+                  batchCount.toString(),
                   style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
                 ),
             ],
