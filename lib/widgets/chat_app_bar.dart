@@ -94,11 +94,8 @@ class _ChatAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final primary = Theme.of(context).colorScheme.primary;
     final completionMode = ref.watch(P.chat.completionMode);
-    final qb = ref.watch(P.app.qb);
     final qt = ref.watch(P.app.theme);
-    final isChat = preferredDemoType == .chat;
 
     final userType = ref.watch(P.preference.userType);
     final version = ref.watch(P.app.version);
@@ -128,7 +125,7 @@ class _ChatAppBar extends ConsumerWidget {
                       crossAxisAlignment: .end,
                       children: [
                         const Text(
-                        Config.appTitle,
+                          Config.appTitle,
                           style: TextStyle(fontSize: 16, fontWeight: .w600),
                         ),
                         Padding(

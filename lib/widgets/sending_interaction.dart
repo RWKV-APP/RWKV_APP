@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
 
@@ -49,7 +50,7 @@ class _Send extends ConsumerWidget {
         ? (!hasText ? sendingButtonDisabledOpacity : (readyForSee ? 1.0 : .38))
         : (hasText ? 1.0 : sendingButtonDisabledOpacity);
 
-    final icon = editingBotMessage ? Icons.edit : CupertinoIcons.arrow_up_circle_fill;
+    final icon = editingBotMessage ? Symbols.edit_note : CupertinoIcons.arrow_up_circle_fill;
 
     return AnimatedOpacity(
       opacity: opacity,

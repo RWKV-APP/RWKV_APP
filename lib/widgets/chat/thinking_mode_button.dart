@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:halo/halo.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';

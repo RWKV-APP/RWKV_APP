@@ -21,7 +21,7 @@ class ModelSelectButton extends ConsumerWidget {
 
     String modelDisplay = currentModel?.name ?? s.click_to_select_model;
 
-    if (screenWidth < 400) {
+    if (screenWidth < 350) {
       modelDisplay = modelDisplay.replaceAll(RegExp(r"\([^)]*\)"), "");
     }
 

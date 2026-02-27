@@ -45,11 +45,17 @@ class MarkdownRender extends ConsumerWidget {
       hrHeight: 6,
     );
 
+    final List<MarkdownComponent> inlineComponents = <MarkdownComponent>[
+      for (final MarkdownComponent component in MarkdownComponent.inlineComponents)
+        if (component is ItalicMd) _SafeItalicMd() else component,
+      _HtmlBreakMd(),
+    ];
+
     final GptMarkdown gptMarkdown = GptMarkdown(
       raw.replaceAll("\n\n", "\n").trim(),
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
-      inlineComponents: [...MarkdownComponent.inlineComponents, _HtmlBreakMd()],
+      inlineComponents: inlineComponents,
       addNewLineAfterH1: false,
       orderedListBuilder: (context, no, child, config) => OrderedListView(
         no: "$no.",
@@ -87,6 +93,33 @@ class MarkdownRender extends ConsumerWidget {
   }
 }
 
+class _SafeItalicMd extends InlineMd {
+  @override
+  RegExp get exp => RegExp(
+    r"(?:(?<![\w\*])\*(?![\s\*])(.+?)(?<!\s)\*(?![\w\*]))",
+    dotAll: true,
+  );
+
+  @override
+  InlineSpan span(
+    BuildContext context,
+    String text,
+    final GptMarkdownConfig config,
+  ) {
+    final RegExpMatch? match = exp.firstMatch(text.trim());
+    final String data = match?[1] ?? "";
+    final GptMarkdownConfig conf = config.copyWith(
+      style: (config.style ?? const TextStyle()).copyWith(
+        fontStyle: FontStyle.italic,
+      ),
+    );
+    return TextSpan(
+      children: MarkdownComponent.generate(context, data, conf, false),
+      style: conf.style,
+    );
+  }
+}
+
 class _HtmlBreakMd extends InlineMd {
   _HtmlBreakMd();
 
@@ -115,7 +148,6 @@ class _Highlight extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
-    final qb = ref.watch(P.app.qb);
 
     final Color inlineCodeBackgroundColor = appTheme.inlineCodeBackgroundColor;
 
