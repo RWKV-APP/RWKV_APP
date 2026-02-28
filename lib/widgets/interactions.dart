@@ -49,10 +49,10 @@ class _Interactions extends ConsumerWidget {
 
     final children = [
       if (features.webSearch && preferredDemoType == .chat) const _WebSearchModeButton(),
-      if (preferredDemoType == .chat) const ThinkingModeButton(),
+      if (!isAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
       if (!isAlbatrossLoaded && preferredDemoType == .chat && currentLangIsZh && currentModelIsBefore20250922)
         const SecondaryOptionsButton(),
-      if (!isAlbatrossLoaded && preferredDemoType == .chat) const DecodeParamButton(),
+      if (preferredDemoType == .chat) const ThinkingModeButton(),
       if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const _WenYanWenButton(),
     ];

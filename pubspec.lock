@@ -141,10 +141,10 @@ packages:
     dependency: "direct main"
     description:
       name: background_downloader
-      sha256: f15da01894a400103f4efc711d2d0782ad06c164f1a56a50735bd781d6fffc96
+      sha256: "4cb23d9ad4f5060944f38164e7b90d4bf99b57b2472a3bd4676e59b2db4afd06"
       url: "https://pub.dev"
     source: hosted
-    version: "9.5.3"
+    version: "9.5.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -1573,10 +1573,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: cbc40be9be1c5af4dab4d6e0de4d5d3729e6f3d65b89d21e1815d57705644a6f
+      sha256: "8374d6200ab33ac99031a852eba4c8eb2170c4bf20778b3e2c9eccb45384fb41"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.20"
+    version: "2.4.21"
   shared_preferences_foundation:
     dependency: transitive
     description:

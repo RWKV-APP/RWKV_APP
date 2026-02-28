@@ -200,18 +200,11 @@ class Settings extends ConsumerWidget {
               onTap: P.preference.showThemeSettings,
             ),
             FormItem(
-              isSectionEnd: false,
+              isSectionEnd: true,
               icon: Icon(Icons.storage, color: qb.q(.667), size: 16),
               title: s.weights_mangement,
               infoText: totalUsage,
               onTap: () => push(.weightManager),
-            ),
-            FormItem(
-              isSectionEnd: true,
-              icon: Icon(Icons.preview_outlined, color: qb.q(.667), size: 16),
-              title: "底部交互状态预览",
-              subtitle: "纯 UI 展示页",
-              onTap: () => push(.interactionsPreview),
             ),
             appTheme.settingsSectionTitleBottomSpace.h,
             Row(

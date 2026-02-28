@@ -39,8 +39,8 @@ class DecodeParamButton extends ConsumerWidget {
     final List<({String label, DecodeParamType key})> actionPairs = [
       (label: s.decode_param_custom, key: .custom),
       (label: s.decode_param_default_, key: .defaults),
-      (label: s.decode_param_comprehensive, key: .comprehensive),
       (label: s.decode_param_creative, key: .creative),
+      (label: s.decode_param_comprehensive, key: .comprehensive),
       (label: s.decode_param_conservative, key: .conservative),
       (label: s.decode_param_fixed, key: .fixed),
     ];
