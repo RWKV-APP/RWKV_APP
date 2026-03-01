@@ -20,6 +20,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
+import 'package:zone/model/world_type.dart' as world_type;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
 
@@ -28,10 +29,23 @@ class BotMessageBottom extends ConsumerWidget {
   final int index;
   final DemoType? preferredDemoType;
   final String? finalContent;
+  final VoidCallback? onRegeneratePressed;
+  final VoidCallback? onResumePressed;
+  final bool disableDefaultActions;
 
-  const BotMessageBottom(this.msg, this.index, {super.key, this.preferredDemoType, this.finalContent});
+  const BotMessageBottom(
+    this.msg,
+    this.index, {
+    super.key,
+    this.preferredDemoType,
+    this.finalContent,
+    this.onRegeneratePressed,
+    this.onResumePressed,
+    this.disableDefaultActions = false,
+  });
 
   void _onSharePressed() {
+    if (disableDefaultActions) return;
     if (P.rwkv.generating.q) {
       P.chat.onStopButtonPressed();
     }
@@ -45,18 +59,30 @@ class BotMessageBottom extends ConsumerWidget {
   }
 
   void _onResumePressed() {
+    if (onResumePressed != null) {
+      onResumePressed?.call();
+      return;
+    }
+    if (disableDefaultActions) return;
     P.chat.resumeMessageById(id: msg.id);
   }
 
   void _onBotEditPressed() async {
+    if (disableDefaultActions) return;
     await P.chat.onTapEditInBotMessageBubble(index: index);
   }
 
   void _onRegeneratePressed() async {
+    if (onRegeneratePressed != null) {
+      onRegeneratePressed?.call();
+      return;
+    }
+    if (disableDefaultActions) return;
     await P.chat.onRegeneratePressed(index: index, preferredDemoType: preferredDemoType ?? .chat);
   }
 
   void _onCopyPressed() {
+    if (disableDefaultActions) return;
     Alert.success(S.current.chat_copied_to_clipboard);
     final isBatch = getIsBatch(msg.content);
     String message = msg.content;
@@ -71,23 +97,24 @@ class BotMessageBottom extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (msg.isMine) return const SizedBox.shrink();
 
-    final s = S.of(context);
+    final ThemeData theme = Theme.of(context);
+    final S s = S.of(context);
 
-    final demoType = preferredDemoType ?? ref.watch(P.app.demoType);
+    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     if (demoType == .tts) return const SizedBox.shrink();
 
-    final receiveId = ref.watch(P.chat.receiveId);
-    final selectMessageMode = ref.watch(P.chat.isSharing);
+    final int? receiveId = ref.watch(P.chat.receiveId);
+    final bool selectMessageMode = ref.watch(P.chat.isSharing);
 
-    final isMobile = ref.watch(P.app.isMobile);
+    final bool isMobile = ref.watch(P.app.isMobile);
 
-    final paused = msg.paused;
+    final bool paused = msg.paused;
 
-    final changing = msg.changing;
+    final bool changing = msg.changing;
 
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final Color primaryColor = theme.colorScheme.primary;
 
-    final worldType = ref.watch(P.rwkv.currentWorldType);
+    final world_type.WorldType? worldType = ref.watch(P.rwkv.currentWorldType);
 
     bool showEditButton = true;
     bool showCopyButton = true;
@@ -128,7 +155,7 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     final thinkingMode = thinking_mode.ThinkingMode.fromString(msg.runningMode);
-    final inSee = ref.watch(P.app.pageKey) == .see;
+    final bool inSee = ref.watch(P.app.pageKey) == .see;
 
     final Widget? modeWidget = switch (thinkingMode) {
       .none =>
@@ -145,21 +172,40 @@ class BotMessageBottom extends ConsumerWidget {
       _ => null,
     };
 
-    final isBatch = getIsBatch(finalContent ?? msg.content);
+    final bool isBatch = getIsBatch(finalContent ?? msg.content);
 
     if (isBatch) {
       showEditButton = false;
     }
 
-    final verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
+    if (changing) {
+      showCopyButton = false;
+      showBotRegenerateButton = false;
+      showEditButton = false;
+      showShareButton = false;
+    }
+
+    final double verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
+    final Widget branchSwitcher = IgnorePointer(
+      ignoring: disableDefaultActions,
+      child: BranchSwitcher(msg, index).debug,
+    );
+    const Duration actionAnimDuration = Duration(milliseconds: 200);
+    const Curve actionAnimCurve = Curves.easeOutCubic;
+    final bool showEditAction = showEditButton && !changing;
+    final bool resumeMatched = disableDefaultActions ? true : receiveId == msg.id;
+    final bool showResumeAction = showResumeButton && paused && resumeMatched && !isBatch;
 
     return Padding(
       padding: .only(top: isMobile ? .0 : 8.0),
       child: Row(
         mainAxisAlignment: .start,
         children: [
-          if (showCopyButton)
-            Tooltip(
+          _AnimatedActionItem(
+            visible: showCopyButton,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
               message: s.copy_text,
               child: GestureDetector(
                 onTap: _onCopyPressed,
@@ -176,8 +222,12 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
               ),
             ).debug,
-          if (showBotRegenerateButton)
-            Tooltip(
+          ),
+          _AnimatedActionItem(
+            visible: showBotRegenerateButton,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
               message: s.regenerate,
               child: GestureDetector(
                 onTap: _onRegeneratePressed,
@@ -194,8 +244,12 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
               ),
             ).debug,
-          if (showEditButton && !changing)
-            Tooltip(
+          ),
+          _AnimatedActionItem(
+            visible: showEditAction,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
               message: s.edit,
               child: GestureDetector(
                 onTap: _onBotEditPressed,
@@ -212,8 +266,12 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
               ),
             ).debug,
-          if (changing)
-            Tooltip(
+          ),
+          _AnimatedActionItem(
+            visible: changing,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
               message: s.generating,
               child: Padding(
                 padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
@@ -232,8 +290,12 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
               ),
             ).debug,
-          if (showShareButton)
-            Tooltip(
+          ),
+          _AnimatedActionItem(
+            visible: showShareButton,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
               message: s.share,
               child: GestureDetector(
                 onTap: _onSharePressed,
@@ -250,7 +312,8 @@ class BotMessageBottom extends ConsumerWidget {
                 ),
               ),
             ).debug,
-          BranchSwitcher(msg, index).debug,
+          ),
+          branchSwitcher,
           if (msg.modelName != null) ...[
             4.w,
             Expanded(
@@ -263,32 +326,87 @@ class BotMessageBottom extends ConsumerWidget {
             ),
           ],
           ?modeWidget,
-          if (showResumeButton && paused && receiveId == msg.id && !isBatch) ...[
-            4.w,
-            Tooltip(
-              message: s.chat_resume,
-              child: GestureDetector(
-                onTap: _onResumePressed,
-                child: Container(
-                  padding: .zero,
-                  child: Container(
-                    padding: const .symmetric(horizontal: 4, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: .all(color: primaryColor.q(.67)),
-                      borderRadius: .circular(4),
+          _AnimatedActionItem(
+            visible: showResumeAction,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Row(
+              mainAxisSize: .min,
+              children: [
+                4.w,
+                Tooltip(
+                  message: s.chat_resume,
+                  child: GestureDetector(
+                    onTap: _onResumePressed,
+                    child: Container(
+                      padding: .zero,
+                      child: Container(
+                        padding: const .symmetric(horizontal: 4, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: .all(color: primaryColor.q(.67)),
+                          borderRadius: .circular(4),
+                        ),
+                        child: Text(
+                          s.chat_resume,
+                          style: TS(c: primaryColor, w: .w600, s: 16),
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      s.chat_resume,
-                      style: TS(c: primaryColor, w: .w600, s: 16),
-                    ),
-                  ),
+                  ).debug,
                 ),
-              ).debug,
+              ],
             ),
-          ],
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _AnimatedActionItem extends StatelessWidget {
+  final bool visible;
+  final Widget child;
+  final Duration duration;
+  final Curve curve;
+
+  const _AnimatedActionItem({
+    required this.visible,
+    required this.child,
+    required this.duration,
+    required this.curve,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final Alignment alignment = theme.useMaterial3 ? .centerLeft : .centerLeft;
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: .0, end: visible ? 1.0 : .0),
+      duration: duration,
+      curve: curve,
+      child: child,
+      builder: (BuildContext context, double value, Widget? child) {
+        final bool hidden = value <= .001;
+
+        return IgnorePointer(
+          ignoring: !visible,
+          child: ExcludeSemantics(
+            excluding: hidden,
+            child: Opacity(
+              opacity: value,
+              child: ClipRect(
+                child: Align(
+                  alignment: alignment,
+                  widthFactor: value,
+                  child: child,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

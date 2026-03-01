@@ -2,6 +2,7 @@
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -64,7 +65,8 @@ class Settings extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context);
+    final ThemeData theme = Theme.of(context);
+    final S s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final paddingTop = ref.watch(P.app.paddingTop);
     final iconPath = "assets/img/chat/icon.png";
@@ -195,6 +197,12 @@ class Settings extends ConsumerWidget {
                 icon: Icon(Icons.settings_applications, color: qb.q(.667), size: 16),
                 title: S.current.advance_settings,
                 onTap: () => push(.advancedSettings),
+              ),
+            if (kDebugMode)
+              FormItem(
+                icon: Icon(Icons.bug_report_outlined, color: theme.colorScheme.primary.q(.8), size: 16),
+                title: "BotMessageBottom 调试预览",
+                onTap: () => push(.botMessageBottomPreview),
               ),
             FormItem(
               isSectionEnd: false,
