@@ -218,7 +218,7 @@ class _MessageState extends ConsumerState<Message> {
             ),
           ),
         ),
-      ),
+      ).debug,
     );
   }
 }
@@ -253,52 +253,56 @@ class _UserMessageBubble extends ConsumerWidget {
     final ThemeData theme = Theme.of(context);
     final bool isUserImage = msg.type == .userImage;
     final Color debugColor = theme.colorScheme.error;
+    final screenWidth = ref.watch(P.app.screenWidth);
 
-    return Column(
-      mainAxisSize: .min,
-      crossAxisAlignment: .end,
-      children: [
-        Container(
-          padding: bubbleStyleData.padding,
-          decoration: BoxDecoration(
-            color: userMsgBg,
-            border: bubbleStyleData.border,
-            borderRadius: bubbleStyleData.borderRadius,
-          ),
-          child: Column(
-            mainAxisSize: .min,
-            crossAxisAlignment: .end,
-            children: [
-              if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
-              if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
-              if (isUserImage)
-                ClipRRect(
-                  clipBehavior: Clip.antiAlias,
-                  borderRadius: bubbleStyleData.borderRadius,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
-                    child: PhotoViewerImage(
-                      borderRadius: 24,
-                      imageUrl: msg.imageUrl!,
-                      showDefaultCloseButton: false,
-                      overlayBuilder: (BuildContext context) {
-                        return const PhotoViewerOverlay();
-                      },
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: screenWidth * 0.8),
+      child: Column(
+        mainAxisSize: .min,
+        crossAxisAlignment: .end,
+        children: [
+          Container(
+            padding: bubbleStyleData.padding,
+            decoration: BoxDecoration(
+              color: userMsgBg,
+              border: bubbleStyleData.border,
+              borderRadius: bubbleStyleData.borderRadius,
+            ),
+            child: Column(
+              mainAxisSize: .min,
+              crossAxisAlignment: .end,
+              children: [
+                if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
+                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
+                if (isUserImage)
+                  ClipRRect(
+                    clipBehavior: Clip.antiAlias,
+                    borderRadius: bubbleStyleData.borderRadius,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
+                      child: PhotoViewerImage(
+                        borderRadius: 24,
+                        imageUrl: msg.imageUrl!,
+                        showDefaultCloseButton: false,
+                        overlayBuilder: (BuildContext context) {
+                          return const PhotoViewerOverlay();
+                        },
+                      ),
                     ),
                   ),
-                ),
-              if (preferredDemoType == .tts) UserTTSContent(msg, index),
-            ],
+                if (preferredDemoType == .tts) UserTTSContent(msg, index),
+              ],
+            ),
           ),
-        ),
-        if (!isMobile)
-          UserMessageBottom(
-            msg,
-            index,
-            showInlineEditAndCopyButtons: true,
-            desktopActionsHovered: desktopActionsHovered,
-          ),
-      ],
+          if (!isMobile)
+            UserMessageBottom(
+              msg,
+              index,
+              showInlineEditAndCopyButtons: true,
+              desktopActionsHovered: desktopActionsHovered,
+            ),
+        ],
+      ),
     );
   }
 }
