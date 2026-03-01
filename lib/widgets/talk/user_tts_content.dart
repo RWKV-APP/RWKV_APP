@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
 
@@ -151,7 +152,7 @@ class UserTTSContent extends ConsumerWidget {
                 child: Padding(
                   padding: buttonPadding,
                   child: Icon(
-                    Icons.copy,
+                    Symbols.content_copy,
                     color: primary.q(.8),
                     size: buttonSize,
                   ),

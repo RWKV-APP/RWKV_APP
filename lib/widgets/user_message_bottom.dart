@@ -1,15 +1,13 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
-import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
@@ -22,11 +20,15 @@ class UserMessageBottom extends ConsumerWidget {
   final int index;
   final bool showInlineEditAndCopyButtons;
 
+  /// On desktop, when non-null: edit/copy buttons use this for opacity (hover = 1, else 0) but keep same layout size.
+  final bool? desktopActionsHovered;
+
   const UserMessageBottom(
     this.msg,
     this.index, {
     super.key,
     this.showInlineEditAndCopyButtons = true,
+    this.desktopActionsHovered,
   });
 
   static ({bool showUserEditButton, bool showUserCopyButton, bool showUserTTSPlayButton}) resolveActionVisibility({
@@ -95,17 +97,7 @@ class UserMessageBottom extends ConsumerWidget {
   }
 
   static void onCopyPressed(model.Message msg) {
-    Alert.success(S.current.chat_copied_to_clipboard);
-    if (msg.ttsTarget != null) {
-      Clipboard.setData(ClipboardData(text: msg.ttsTarget!.replaceAll(Config.userMsgModifierSep, "").trim()));
-      return;
-    }
-    final content = msg.content.replaceAll(Config.userMsgModifierSep, "").trim();
-    if (content.isEmpty) {
-      Alert.warning("No content to copy");
-      return;
-    }
-    Clipboard.setData(ClipboardData(text: content));
+    P.chat.onCopyUserMessage(msg);
   }
 
   @override
@@ -144,25 +136,41 @@ class UserMessageBottom extends ConsumerWidget {
 
     final s = S.of(context);
 
+    final desktopOpacity = desktopActionsHovered != null ? (desktopActionsHovered! ? 1.0 : 0.0) : null;
+
+    Widget wrapDesktopOpacity(Widget child, {required bool isEditOrCopy}) {
+      if (desktopOpacity == null || !isEditOrCopy) return child;
+      return AnimatedOpacity(
+        opacity: desktopOpacity,
+        duration: 200.ms,
+        child: child,
+      );
+    }
+
+    final EdgeInsets padding = const .only(left: 4, top: 4, right: 4, bottom: 4);
+
     return Row(
       mainAxisAlignment: .end,
       mainAxisSize: .min,
       children: [
         BranchSwitcher(msg, index),
         if (showUserEditButton)
-          Tooltip(
-            message: s.edit,
-            child: GestureDetector(
-              onTap: () => onUserEditPressed(index: index),
-              child: Padding(
-                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-                child: Icon(
-                  Icons.edit,
-                  color: primary.q(.8),
-                  size: 20,
+          wrapDesktopOpacity(
+            Tooltip(
+              message: s.edit,
+              child: GestureDetector(
+                onTap: () => onUserEditPressed(index: index),
+                child: Padding(
+                  padding: padding,
+                  child: Icon(
+                    Icons.edit,
+                    color: primary.q(.8),
+                    size: 20,
+                  ),
                 ),
               ),
             ),
+            isEditOrCopy: true,
           ),
         if (showUserTTSPlayButton && (!playing || !isCurrentMessage))
           Tooltip(
@@ -170,7 +178,7 @@ class UserMessageBottom extends ConsumerWidget {
             child: GestureDetector(
               onTap: _onTTSPlayPressed,
               child: Padding(
-                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
+                padding: padding,
                 child: Icon(Icons.play_arrow, color: primary.q(.8), size: 20),
               ),
             ),
@@ -181,25 +189,28 @@ class UserMessageBottom extends ConsumerWidget {
             child: GestureDetector(
               onTap: _onTTSPausePressed,
               child: Padding(
-                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
+                padding: padding,
                 child: Icon(Icons.pause, color: primary.q(.8), size: 20),
               ),
             ),
           ),
         if (showUserCopyButton)
-          Tooltip(
-            message: s.copy_text,
-            child: GestureDetector(
-              onTap: () => onCopyPressed(msg),
-              child: Padding(
-                padding: const .only(left: 4, top: 12, right: 4, bottom: 12),
-                child: Icon(
-                  Icons.copy,
-                  color: primary.q(.8),
-                  size: 20,
+          wrapDesktopOpacity(
+            Tooltip(
+              message: s.copy_text,
+              child: GestureDetector(
+                onTap: () => onCopyPressed(msg),
+                child: Padding(
+                  padding: padding,
+                  child: Icon(
+                    Symbols.content_copy,
+                    color: primary.q(.8),
+                    size: 20,
+                  ),
                 ),
               ),
             ),
+            isEditOrCopy: true,
           ),
         if (!showUserEditButton && !showUserCopyButton) const SizedBox(height: 8),
       ],

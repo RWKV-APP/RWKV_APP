@@ -270,7 +270,7 @@ enum AppTheme {
   final Color botMsgBg;
   final Color userMsgBg;
   final EdgeInsets msgDefaultPadding = const .only(left: 12, top: 12, right: 12);
-  final EdgeInsets chatUserMsgBubblePadding = const .only(left: 12, top: 12, right: 4, bottom: 0);
+  final EdgeInsets chatUserMsgBubblePadding = const .only(left: 12, top: 12, right: 4, bottom: 12);
   final EdgeInsets chatBotMsgBubblePadding = const .only(left: 0, top: 0, right: 0, bottom: 0);
 
   final Color textInputShadowC;

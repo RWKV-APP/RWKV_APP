@@ -1,5 +1,10 @@
 part of 'p.dart';
 
+enum _UserMessageMenuAction {
+  edit,
+  copy,
+}
+
 class _Chat {
   // ===========================================================================
   // Instance
@@ -370,6 +375,80 @@ extension $Chat on _Chat {
     textEditingController.value = TextEditingValue(text: content);
     focusNode.requestFocus();
     P.msg.editingOrRegeneratingIndex.q = index;
+  }
+
+  void onMessageTapped(Message msg) {
+    if (P.rwkv.currentWorldType.q != null) {
+      Focus.of(getContext()!).unfocus();
+    }
+    focusNode.unfocus();
+    P.talk.dismissAllShown();
+    P.msg.latestClicked.q = msg;
+    if (msg.type == MessageType.ttsGeneration) {
+      if (P.see.playing.q) {
+        P.see.stopPlaying();
+      } else {
+        if (msg.changing) Alert.info(S.current.playing_partial_generated_audio);
+        P.see.play(path: msg.audioUrl!);
+      }
+    }
+  }
+
+  void onCopyUserMessage(Message msg) {
+    Alert.success(S.current.chat_copied_to_clipboard);
+    if (msg.ttsTarget != null) {
+      Clipboard.setData(ClipboardData(text: msg.ttsTarget!.replaceAll(Config.userMsgModifierSep, "").trim()));
+      return;
+    }
+    final content = msg.content.replaceAll(Config.userMsgModifierSep, "").trim();
+    if (content.isEmpty) {
+      Alert.warning("No content to copy");
+      return;
+    }
+    Clipboard.setData(ClipboardData(text: content));
+  }
+
+  Future<void> showUserMessageContextMenu({
+    required BuildContext context,
+    required bool canEdit,
+    required bool canCopy,
+    required int index,
+    required Message msg,
+  }) async {
+    if (!canEdit && !canCopy) return;
+    if (!P.app.isMobile.q) return;
+
+    final _UserMessageMenuAction? selectedAction = await _showMobileUserMessageMenu(
+      context: context,
+      canEdit: canEdit,
+      canCopy: canCopy,
+    );
+    if (selectedAction == null) return;
+    if (selectedAction == .edit) {
+      await onTapEditInUserMessageBubble(index: index);
+      return;
+    }
+    if (selectedAction == .copy) {
+      onCopyUserMessage(msg);
+    }
+  }
+
+  Future<_UserMessageMenuAction?> _showMobileUserMessageMenu({
+    required BuildContext context,
+    required bool canEdit,
+    required bool canCopy,
+  }) async {
+    final S s = S.of(context);
+    final List<SheetAction<_UserMessageMenuAction>> actions = [
+      if (canEdit) SheetAction(label: s.edit, key: .edit),
+      if (canCopy) SheetAction(label: s.copy_text, key: .copy),
+    ];
+
+    return showModalActionSheet<_UserMessageMenuAction>(
+      context: context,
+      cancelLabel: s.cancel,
+      actions: actions,
+    );
   }
 
   Future<void> onTapEditInBotMessageBubble({required int index}) async {

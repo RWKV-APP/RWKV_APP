@@ -29,7 +29,7 @@ import 'package:zone/widgets/role_play_item.dart';
 import 'package:zone/widgets/tts_group_item.dart';
 import 'package:zone/widgets/world_group_item.dart';
 
-import 'package:zone/widgets/model_item.dart';w
+import 'package:zone/widgets/model_item.dart';
 
 /// 模型选择器
 ///

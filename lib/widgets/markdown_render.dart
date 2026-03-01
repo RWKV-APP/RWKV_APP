@@ -9,6 +9,7 @@ import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart' show Or
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -347,7 +348,7 @@ class _CodeState extends ConsumerState<_Code> {
               const Spacer(),
               IconButton(
                 onPressed: _onCopyPressed,
-                icon: const Icon(Icons.copy),
+                icon: const Icon(Symbols.content_copy),
                 color: qb.q(.5),
                 iconSize: 20,
                 style: IconButton.styleFrom(

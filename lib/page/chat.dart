@@ -116,7 +116,7 @@ class _List extends ConsumerWidget {
 
     final qb = ref.watch(P.app.qb);
 
-    // return Positioned.fill(child: Container());
+    final isMobile = ref.watch(P.app.isMobile);
 
     return Positioned.fill(
       child: GestureDetector(
@@ -140,7 +140,7 @@ class _List extends ConsumerWidget {
               return _MessageWrap(msg: msg, finalIndex: finalIndex);
             },
             separatorBuilder: (context, index) {
-              return const SizedBox(height: 15);
+              return isMobile ? const SizedBox(height: 12) : const SizedBox(height: 0);
             },
           ),
         ),

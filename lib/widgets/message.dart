@@ -2,14 +2,12 @@
 import 'dart:math' as math;
 
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
 
@@ -21,7 +19,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/world_type.dart';
-import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/bot_message_bottom.dart';
 import 'package:zone/widgets/chat/batch_message_content.dart';
@@ -32,7 +29,7 @@ import 'package:zone/widgets/talk/bot_tts_content.dart';
 import 'package:zone/widgets/talk/user_tts_content.dart';
 import 'package:zone/widgets/user_message_bottom.dart';
 
-class Message extends ConsumerWidget {
+class Message extends ConsumerStatefulWidget {
   final model.Message msg;
   final bool selectMode;
   final DemoType? preferredDemoType;
@@ -48,153 +45,19 @@ class Message extends ConsumerWidget {
     this.preferredDemoType,
   });
 
-  void _onTap() async {
-    qq;
+  @override
+  ConsumerState<Message> createState() => _MessageState();
+}
 
-    if (P.rwkv.currentWorldType.q != null) {
-      Focus.of(getContext()!).unfocus();
-    }
-
-    P.chat.focusNode.unfocus();
-    P.talk.dismissAllShown();
-
-    P.msg.latestClicked.q = msg;
-
-    if (msg.type == .ttsGeneration) {
-      final start = DateTime.now().millisecondsSinceEpoch;
-      final end = DateTime.now().millisecondsSinceEpoch;
-      qqq("mergeWavFiles: ${end - start}ms");
-      if (P.see.playing.q) {
-        P.see.stopPlaying();
-      } else {
-        if (msg.changing) Alert.info(S.current.playing_partial_generated_audio);
-        P.see.play(path: msg.audioUrl!);
-      }
-      return;
-    }
-  }
-
-  void _showUserMessageContextMenu({
-    required BuildContext context,
-    required bool useCupertinoStyle,
-    required bool canEdit,
-    required bool canCopy,
-    Offset? globalPosition,
-  }) {
-    if (!canEdit && !canCopy) return;
-
-    final menuFuture = useCupertinoStyle
-        ? _showMobileUserMessageMenu(
-            context: context,
-            canEdit: canEdit,
-            canCopy: canCopy,
-          )
-        : _showDesktopUserMessageMenu(
-            context: context,
-            canEdit: canEdit,
-            canCopy: canCopy,
-            globalPosition: globalPosition,
-          );
-
-    menuFuture.then((selectedAction) {
-      if (selectedAction == _UserMessageMenuAction.edit) {
-        UserMessageBottom.onUserEditPressed(index: index);
-        return;
-      }
-      if (selectedAction == _UserMessageMenuAction.copy) {
-        UserMessageBottom.onCopyPressed(msg);
-      }
-    });
-  }
-
-  Future<_UserMessageMenuAction?> _showMobileUserMessageMenu({
-    required BuildContext context,
-    required bool canEdit,
-    required bool canCopy,
-  }) async {
-    final s = S.of(context);
-    return showCupertinoModalPopup<_UserMessageMenuAction>(
-      context: context,
-      builder: (sheetContext) {
-        return CupertinoActionSheet(
-          actions: [
-            if (canEdit)
-              CupertinoActionSheetAction(
-                onPressed: () {
-                  Navigator.of(sheetContext).pop(_UserMessageMenuAction.edit);
-                },
-                child: Text(s.edit),
-              ),
-            if (canCopy)
-              CupertinoActionSheetAction(
-                onPressed: () {
-                  Navigator.of(sheetContext).pop(_UserMessageMenuAction.copy);
-                },
-                child: Text(s.copy_text),
-              ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.of(sheetContext).pop();
-            },
-            child: Text(s.cancel),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<_UserMessageMenuAction?> _showDesktopUserMessageMenu({
-    required BuildContext context,
-    required bool canEdit,
-    required bool canCopy,
-    required Offset? globalPosition,
-  }) async {
-    if (globalPosition == null) return null;
-
-    final s = S.of(context);
-    final screenSize = MediaQuery.sizeOf(context);
-
-    return showMenu<_UserMessageMenuAction>(
-      context: context,
-      shape: RoundedRectangleBorder(borderRadius: .circular(12)),
-      color: Theme.of(context).colorScheme.surface,
-      position: RelativeRect.fromLTRB(
-        globalPosition.dx,
-        globalPosition.dy,
-        screenSize.width - globalPosition.dx,
-        screenSize.height - globalPosition.dy,
-      ),
-      items: [
-        if (canEdit)
-          PopupMenuItem(
-            value: _UserMessageMenuAction.edit,
-            child: Row(
-              children: [
-                const Icon(Icons.edit_outlined),
-                const SizedBox(width: 8),
-                Text(s.edit),
-              ],
-            ),
-          ),
-        if (canEdit && canCopy) const PopupMenuDivider(indent: 8, endIndent: 8),
-        if (canCopy)
-          PopupMenuItem(
-            value: _UserMessageMenuAction.copy,
-            child: Row(
-              children: [
-                const Icon(Icons.copy_outlined),
-                const SizedBox(width: 8),
-                Text(s.copy_text),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
+class _MessageState extends ConsumerState<Message> {
+  bool _userMessageHovered = false;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final msg = widget.msg;
+    final index = widget.index;
+    final selectMode = widget.selectMode;
+    final preferredDemoType = widget.preferredDemoType;
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final primary = Theme.of(context).colorScheme.primary;
@@ -397,124 +260,139 @@ class Message extends ConsumerWidget {
         maxWidth: width - kBubbleMaxWidthAdjust,
         minHeight: kBubbleMinHeight,
       ),
-      child: Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          color: isMine ? userMsgBg : botMsgBg,
-          // color: kCR,
-          border: border,
-          borderRadius: borderRadius,
-        ),
-        child: Column(
-          crossAxisAlignment: isMine ? .end : .start,
-          children: [
-            if (kDebugMode && Args.debugMsgId)
-              Container(
-                decoration: BoxDecoration(color: Colors.red.q(1)),
-                child: Text("Debug: ${msg.id}", style: const TS(c: kW)),
-              ),
-            if (isMine) ...[
-              // 🔥 User message
-              if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
-              // 🔥 User message image
-              if (isUserImage)
-                ClipRRect(
-                  clipBehavior: Clip.antiAlias,
-                  borderRadius: borderRadius,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
-                    child: PhotoViewerImage(
-                      borderRadius: 24,
-                      imageUrl: msg.imageUrl!,
-                      showDefaultCloseButton: false,
-                      overlayBuilder: (context) {
-                        return const PhotoViewerOverlay();
-                      },
-                    ),
+      child: isMine
+          ? Column(
+              mainAxisSize: .min,
+              crossAxisAlignment: .end,
+              children: [
+                Container(
+                  padding: padding,
+                  decoration: BoxDecoration(
+                    color: userMsgBg,
+                    border: border,
+                    borderRadius: borderRadius,
                   ),
-                ),
-              // 🔥 User message audio
-              if (preferredDemoType == .tts) UserTTSContent(msg, index),
-              UserMessageBottom(
-                msg,
-                index,
-                showInlineEditAndCopyButtons: !isMobile,
-              ),
-            ],
-            if (!isMine) ...[
-              if (isBatch)
-                Padding(
-                  padding: const .only(left: 14, right: 14, bottom: 4),
-                  child: Wrap(
+                  child: Column(
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .end,
                     children: [
-                      Text(
-                        s.batch_inference_running(batchCount),
-                        style: const TS(c: kCG),
-                      ),
-                      if (batchSelection != null) const SizedBox(width: 16),
-                      if (batchSelection != null)
-                        Text(
-                          s.batch_inference_selected(batchSelection + 1),
-                          style: const TS(c: kCG),
+                      if (kDebugMode && Args.debugMsgId)
+                        Container(
+                          decoration: BoxDecoration(color: Colors.red.q(1)),
+                          child: Text("Debug: ${msg.id}", style: const TS(c: kW)),
                         ),
+                      if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
+                      if (isUserImage)
+                        ClipRRect(
+                          clipBehavior: Clip.antiAlias,
+                          borderRadius: borderRadius,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: rawMaxWidth * .8, maxHeight: rawMaxWidth * .8),
+                            child: PhotoViewerImage(
+                              borderRadius: 24,
+                              imageUrl: msg.imageUrl!,
+                              showDefaultCloseButton: false,
+                              overlayBuilder: (context) {
+                                return const PhotoViewerOverlay();
+                              },
+                            ),
+                          ),
+                        ),
+                      if (preferredDemoType == .tts) UserTTSContent(msg, index),
                     ],
                   ),
                 ),
-              // 🔥 Bot message audio recognition result
-              if (worldDemoMessageHeader.isNotEmpty)
-                Text(
-                  worldDemoMessageHeader,
-                  style: TS(c: qb.q(.5), w: .w700, s: 10),
-                ),
-              if (worldDemoMessageHeader.isNotEmpty) const SizedBox(height: 4),
-              // 🔥 Bot message
-              if (!reasoning && !isBatch) MarkdownRender(raw: finalContent),
-              // 🔥 Bot message cot header
-              if (reasoning && !isQuickThinking && !isBatch)
-                Semantics(
-                  button: true,
-                  label: s.thought_result,
-                  expanded: showingCotContent,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (showingCotContent) {
-                        P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
-                      } else {
-                        P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
-                      }
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.transparent),
-                      child: Row(
+                if (!isMobile)
+                  UserMessageBottom(
+                    msg,
+                    index,
+                    showInlineEditAndCopyButtons: !isMobile,
+                    desktopActionsHovered: isMine && !isMobile ? _userMessageHovered : null,
+                  ),
+              ],
+            )
+          : Container(
+              padding: padding,
+              decoration: BoxDecoration(
+                color: botMsgBg,
+                border: border,
+                borderRadius: borderRadius,
+              ),
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  if (kDebugMode && Args.debugMsgId)
+                    Container(
+                      decoration: BoxDecoration(color: Colors.red.q(1)),
+                      child: Text("Debug: ${msg.id}", style: const TS(c: kW)),
+                    ),
+                  if (isBatch)
+                    Padding(
+                      padding: const .only(left: 14, right: 14, bottom: 4),
+                      child: Wrap(
                         children: [
                           Text(
-                            thisMessageIsReceiving ? s.thinking : s.thought_result,
-                            style: TS(c: qb.q(.5), w: .w600),
+                            s.batch_inference_running(batchCount),
+                            style: const TS(c: kCG),
                           ),
-                          showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
+                          if (batchSelection != null) const SizedBox(width: 16),
+                          if (batchSelection != null)
+                            Text(
+                              s.batch_inference_selected(batchSelection + 1),
+                              style: const TS(c: kCG),
+                            ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-              // 🔥 Bot message cot content
-              if (reasoning && !isQuickThinking && !isBatch) const SizedBox(height: 4),
-              if (reasoning && !isQuickThinking && !isBatch)
-                AnimatedContainer(
-                  duration: 250.ms,
-                  height: cotContentHeight,
-                  child: MarkdownRender(raw: cotContent, color: qb.q(.55)),
-                ),
-              // 🔥 Bot message cot result
-              if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) const SizedBox(height: 12),
-              if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRender(raw: cotResult),
-              if (isBatch) BatchMessageContent(msg, index, finalContent),
-              if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
-              if (preferredDemoType == .tts) BotTtsContent(msg, index),
-            ],
-          ],
-        ),
-      ),
+                  if (worldDemoMessageHeader.isNotEmpty)
+                    Text(
+                      worldDemoMessageHeader,
+                      style: TS(c: qb.q(.5), w: .w700, s: 10),
+                    ),
+                  if (worldDemoMessageHeader.isNotEmpty) const SizedBox(height: 4),
+                  if (!reasoning && !isBatch) MarkdownRender(raw: finalContent),
+                  if (reasoning && !isQuickThinking && !isBatch)
+                    Semantics(
+                      button: true,
+                      label: s.thought_result,
+                      expanded: showingCotContent,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (showingCotContent) {
+                            P.msg.cotDisplayState(msg.id).q = .hideCotHeader;
+                          } else {
+                            P.msg.cotDisplayState(msg.id).q = .showCotHeaderAndCotContent;
+                          }
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(color: Colors.transparent),
+                          child: Row(
+                            children: [
+                              Text(
+                                thisMessageIsReceiving ? s.thinking : s.thought_result,
+                                style: TS(c: qb.q(.5), w: .w600),
+                              ),
+                              showingCotContent ? Icon(Icons.expand_more, color: qb.q(.5)) : Icon(Icons.expand_less, color: qb.q(.5)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (reasoning && !isQuickThinking && !isBatch) const SizedBox(height: 4),
+                  if (reasoning && !isQuickThinking && !isBatch)
+                    AnimatedContainer(
+                      duration: 250.ms,
+                      height: cotContentHeight,
+                      child: MarkdownRender(raw: cotContent, color: qb.q(.55)),
+                    ),
+                  if (cotResult.isNotEmpty && reasoning && showingCotContent && !isQuickThinking && !isBatch) const SizedBox(height: 12),
+                  if (cotResult.isNotEmpty && reasoning && !isBatch) MarkdownRender(raw: cotResult),
+                  if (isBatch) BatchMessageContent(msg, index, finalContent),
+                  if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
+                  if (preferredDemoType == .tts) BotTtsContent(msg, index),
+                ],
+              ),
+            ),
     );
 
     return GestureDetector(
@@ -536,30 +414,26 @@ class Message extends ConsumerWidget {
                 children: [
                   if (demoType == .chat && reference.enable) ReferenceInfo(refInfo: reference, generating: changing),
                   GestureDetector(
-                    onTap: _onTap,
+                    onTap: () => P.chat.onMessageTapped(msg),
                     onLongPressStart: canShowUserMessageMenu && isMobile
                         ? (_) {
                             P.app.hapticLight();
-                            _showUserMessageContextMenu(
+                            P.chat.showUserMessageContextMenu(
                               context: context,
-                              useCupertinoStyle: true,
                               canEdit: contextActions.canEdit,
                               canCopy: contextActions.canCopy,
+                              index: index,
+                              msg: msg,
                             );
                           }
                         : null,
-                    onSecondaryTapDown: canShowUserMessageMenu && !isMobile
-                        ? (details) {
-                            _showUserMessageContextMenu(
-                              context: context,
-                              useCupertinoStyle: false,
-                              canEdit: contextActions.canEdit,
-                              canCopy: contextActions.canCopy,
-                              globalPosition: details.globalPosition,
-                            );
-                          }
-                        : null,
-                    child: bubbleContent,
+                    child: isMine && !isMobile
+                        ? MouseRegion(
+                            onEnter: (_) => setState(() => _userMessageHovered = true),
+                            onExit: (_) => setState(() => _userMessageHovered = false),
+                            child: bubbleContent,
+                          )
+                        : bubbleContent,
                   ),
                 ],
               ),
@@ -569,9 +443,4 @@ class Message extends ConsumerWidget {
       ),
     );
   }
-}
-
-enum _UserMessageMenuAction {
-  edit,
-  copy,
 }
