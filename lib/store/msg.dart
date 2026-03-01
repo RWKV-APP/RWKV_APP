@@ -29,6 +29,11 @@ class _Msg {
 
   late final batchSelection = qsf<Message, int?>(null);
 
+  /// Message bottom 的详情展开状态
+  ///
+  /// key format: "{scope}::{messageId}"
+  late final bottomDetailsExpanded = qs<Map<String, bool>>({});
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -84,6 +89,7 @@ extension _$Msg on _Msg {
     if (syncNode) P.conversation._syncNode();
     ids.q = [];
     msgNode.q = MsgNode(0);
+    bottomDetailsExpanded.q = {};
   }
 
   /// 在内存和数据库中同时更新消息
@@ -114,6 +120,67 @@ extension _$Msg on _Msg {
 
 /// Public methods
 extension $Msg on _Msg {
+  String _bottomDetailsStateKey({
+    required String scope,
+    required int messageId,
+  }) {
+    return "$scope::$messageId";
+  }
+
+  bool isBottomDetailsExpanded({
+    required String scope,
+    required int messageId,
+  }) {
+    final String key = _bottomDetailsStateKey(scope: scope, messageId: messageId);
+    final bool? expanded = bottomDetailsExpanded.q[key];
+    if (expanded == null) return false;
+    return expanded;
+  }
+
+  void setBottomDetailsExpanded({
+    required String scope,
+    required int messageId,
+    required bool expanded,
+  }) {
+    final String key = _bottomDetailsStateKey(scope: scope, messageId: messageId);
+    final Map<String, bool> current = bottomDetailsExpanded.q;
+
+    if (!expanded) {
+      if (!current.containsKey(key)) return;
+      final Map<String, bool> next = {...current};
+      next.remove(key);
+      bottomDetailsExpanded.q = next;
+      return;
+    }
+
+    if (current[key] == true) return;
+    bottomDetailsExpanded.q = {...current, key: true};
+  }
+
+  void toggleBottomDetailsExpanded({
+    required String scope,
+    required int messageId,
+  }) {
+    final bool expanded = isBottomDetailsExpanded(scope: scope, messageId: messageId);
+    setBottomDetailsExpanded(scope: scope, messageId: messageId, expanded: !expanded);
+  }
+
+  void clearBottomDetailsStateInScope({
+    required String scope,
+  }) {
+    final Map<String, bool> current = bottomDetailsExpanded.q;
+    if (current.isEmpty) return;
+
+    final String prefix = "$scope::";
+    final Map<String, bool> next = {};
+    for (final MapEntry<String, bool> entry in current.entries) {
+      if (entry.key.startsWith(prefix)) continue;
+      next[entry.key] = entry.value;
+    }
+    if (next.length == current.length) return;
+    bottomDetailsExpanded.q = next;
+  }
+
   int siblingCount(Message msg) {
     final parent = msgNode.q.findParentByMsgId(msg.id);
     if (parent == null) return 1;

@@ -324,9 +324,14 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
   int _currentBranchIndex = 0;
   Timer? _resetTimer;
 
+  String _bottomDetailsScope() {
+    return "preview_bot_message_bottom_case_${widget.caseNumber}";
+  }
+
   @override
   void initState() {
     super.initState();
+    P.msg.clearBottomDetailsStateInScope(scope: _bottomDetailsScope());
     _resetCaseState(rerandomRunningMode: true);
   }
 
@@ -335,6 +340,7 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.resetSignal == widget.resetSignal) return;
     _resetTimer?.cancel();
+    P.msg.clearBottomDetailsStateInScope(scope: _bottomDetailsScope());
     _resetCaseState(rerandomRunningMode: true);
   }
 
@@ -498,6 +504,7 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
   @override
   void dispose() {
     _resetTimer?.cancel();
+    P.msg.clearBottomDetailsStateInScope(scope: _bottomDetailsScope());
     super.dispose();
   }
 
@@ -542,6 +549,7 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
         onPreviewBranchBackPressed: onPreviewBranchBackPressed,
         onPreviewBranchForwardPressed: onPreviewBranchForwardPressed,
         branchIndicator: "${_currentBranchIndex + 1} / ${_branches.length}",
+        bottomDetailsScope: _bottomDetailsScope(),
         currentActionButton: currentActionButton,
         displayTitle: displayTitle,
         displayDescription: displayDescription,
@@ -561,6 +569,7 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
         onPreviewBranchBackPressed: onPreviewBranchBackPressed,
         onPreviewBranchForwardPressed: onPreviewBranchForwardPressed,
         branchIndicator: "${_currentBranchIndex + 1} / ${_branches.length}",
+        bottomDetailsScope: _bottomDetailsScope(),
         currentActionButton: currentActionButton,
         displayTitle: displayTitle,
         displayDescription: displayDescription,
@@ -595,6 +604,7 @@ class _PreviewPane extends StatelessWidget {
   final VoidCallback? onPreviewBranchBackPressed;
   final VoidCallback? onPreviewBranchForwardPressed;
   final String branchIndicator;
+  final String bottomDetailsScope;
   final _PreviewActionButton currentActionButton;
   final String displayTitle;
   final String displayDescription;
@@ -611,6 +621,7 @@ class _PreviewPane extends StatelessWidget {
     required this.onPreviewBranchBackPressed,
     required this.onPreviewBranchForwardPressed,
     required this.branchIndicator,
+    required this.bottomDetailsScope,
     required this.currentActionButton,
     required this.displayTitle,
     required this.displayDescription,
@@ -663,6 +674,7 @@ class _PreviewPane extends StatelessWidget {
               onRegeneratePressed: onPreviewRegeneratePressed,
               onResumePressed: onPreviewInlineResumePressed,
               disableDefaultActions: true,
+              bottomDetailsScope: bottomDetailsScope,
             ),
             const SizedBox(height: 8),
             Row(
@@ -681,8 +693,8 @@ class _PreviewPane extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: .end,
+            Wrap(
+              crossAxisAlignment: .center,
               children: [
                 TextButton(
                   onPressed: onPreviewBranchBackPressed,
