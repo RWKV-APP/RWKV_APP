@@ -1,13 +1,17 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/gen/assets.gen.dart';
+import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/store/p.dart';
-
-import '_completion_controller.dart';
 
 class CompletionItemDecoration extends StatelessWidget {
   final Widget child;

@@ -1,14 +1,20 @@
+// Dart imports:
 import 'dart:math';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:zone/func/open_folder.dart';
+
+// Package imports:
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_roleplay/services/role_play_manage.dart' show RoleplayManage;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path_provider/path_provider.dart';
+
+// Project imports:
+import 'package:zone/func/open_folder.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';

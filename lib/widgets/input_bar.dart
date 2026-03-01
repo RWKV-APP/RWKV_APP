@@ -1,16 +1,20 @@
-// ignore: unused_import
-import 'dart:developer';
+// Dart imports:
 import 'dart:io';
 
-import 'package:halo_state/halo_state.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/interactions.dart';
 import 'package:zone/widgets/input_text_field.dart';
+import 'package:zone/widgets/interactions.dart';
 
 class InputBar extends ConsumerWidget {
   final DemoType preferredDemoType;

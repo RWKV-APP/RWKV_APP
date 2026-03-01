@@ -1,10 +1,16 @@
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
+
+// Project imports:
 import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/store/p.dart';
 

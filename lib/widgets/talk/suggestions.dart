@@ -1,7 +1,11 @@
-// ignore: unused_import
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/func/is_chinese.dart';
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/store/p.dart';

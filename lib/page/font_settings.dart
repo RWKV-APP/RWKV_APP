@@ -1,17 +1,23 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
+import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/font_picker_bottom_sheet.dart';
 import 'package:zone/widgets/message.dart' as message_widget;
-import 'package:zone/config.dart';
 
 class PageFontSettings extends ConsumerStatefulWidget {
   const PageFontSettings({super.key});

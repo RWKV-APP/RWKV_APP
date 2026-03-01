@@ -1,32 +1,36 @@
-// ignore: unused_import
-import 'dart:developer';
+// Dart imports:
 import 'dart:math' as math;
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:photo_viewer/photo_viewer.dart';
+
+// Project imports:
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halo/halo.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/world_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/chat/batch_message_content.dart';
 import 'package:zone/widgets/bot_message_bottom.dart';
+import 'package:zone/widgets/chat/batch_message_content.dart';
 import 'package:zone/widgets/chat/reference_info.dart';
-import 'package:zone/widgets/talk/bot_tts_content.dart';
-import 'package:zone/widgets/see/photo_viewer_overlay.dart';
-import 'package:zone/widgets/user_message_bottom.dart';
-import 'package:zone/widgets/talk/user_tts_content.dart';
 import 'package:zone/widgets/markdown_render.dart';
+import 'package:zone/widgets/see/photo_viewer_overlay.dart';
+import 'package:zone/widgets/talk/bot_tts_content.dart';
+import 'package:zone/widgets/talk/user_tts_content.dart';
+import 'package:zone/widgets/user_message_bottom.dart';
 
 class Message extends ConsumerWidget {
   final model.Message msg;
@@ -566,7 +570,6 @@ class Message extends ConsumerWidget {
     );
   }
 }
-
 
 enum _UserMessageMenuAction {
   edit,

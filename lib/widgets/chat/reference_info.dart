@@ -1,13 +1,14 @@
-// ignore: unused_import
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zone/model/ref_info.dart' as model;
-
-
-import 'package:sprintf/sprintf.dart';
-import 'package:zone/gen/l10n.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:sprintf/sprintf.dart';
+
+// Project imports:
+import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/ref_info.dart' as model;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/search_reference_dialog.dart';
 

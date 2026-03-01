@@ -1,10 +1,12 @@
-// ignore: unused_import
-import 'dart:developer';
+// Dart imports:
 import 'dart:io';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
@@ -12,6 +14,8 @@ import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_downloader/downloader.dart' show TaskState;
 import 'package:rwkv_mobile_flutter/rwkv.dart';
 import 'package:sprintf/sprintf.dart';
+
+// Project imports:
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';

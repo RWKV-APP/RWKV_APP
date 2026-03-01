@@ -1,17 +1,22 @@
+// Dart imports:
 import 'dart:io';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
+import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_item_batch.dart';
+import 'package:zone/page/completion/_completion_list_item.dart';
 import 'package:zone/page/completion/_completion_state.dart';
 import 'package:zone/page/completion/_completion_titlebar.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/arguments_panel.dart';
-
-import '../../gen/l10n.dart' show S;
-import '_completion_list_item.dart';
 
 class CompletionPage extends StatefulWidget {
   const CompletionPage({super.key});

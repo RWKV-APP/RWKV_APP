@@ -1,13 +1,19 @@
 // ignore_for_file: dead_code, unused_local_variable, unused_element
 
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
-import 'package:zone/args.dart';
-import 'package:zone/store/p.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+
+// Project imports:
+import 'package:zone/args.dart';
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/pager.dart';
 
 class Debugger extends ConsumerWidget {

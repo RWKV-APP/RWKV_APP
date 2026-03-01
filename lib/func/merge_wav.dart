@@ -1,7 +1,11 @@
+// Dart imports:
 import 'dart:io';
 import 'dart:typed_data';
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
 import 'package:path/path.dart' as p;
 
 /// Helper to find the offset of the 'data' chunk ID, its size, and the data start offset.

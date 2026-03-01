@@ -1,17 +1,21 @@
-// ignore: unused_import
-import 'dart:developer';
 
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+
+// Project imports:
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
 import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/message.dart';
-import 'package:zone/widgets/talk/suggestions.dart';
 import 'package:zone/widgets/model_selector.dart';
+import 'package:zone/widgets/talk/suggestions.dart';
 
 class PageTalk extends ConsumerWidget {
   const PageTalk({super.key});

@@ -1,8 +1,13 @@
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/backend_state.dart';
 import 'package:zone/model/browser_tab.dart';

@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:equatable/equatable.dart';
+
+// Project imports:
 import 'package:zone/model/file_info.dart';
 
 /// 持久化用的 pth 文件夹条目：路径 + 可选的 macOS security-scoped bookmark 数据。

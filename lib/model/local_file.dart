@@ -1,6 +1,11 @@
-import 'package:equatable/equatable.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:equatable/equatable.dart';
 import 'package:rwkv_downloader/downloader.dart';
+
+// Project imports:
 import 'package:zone/model/file_info.dart';
 
 @immutable

@@ -1,6 +1,11 @@
+// Dart imports:
 import 'dart:io';
-import 'package:crypto/crypto.dart';
+
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:crypto/crypto.dart';
 
 /// 通过流式读取文件，计算其 MD5 值
 Future<String> calculateFileMd5(String filePath) {

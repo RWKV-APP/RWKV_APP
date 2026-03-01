@@ -1,20 +1,25 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:device_info_plus/device_info_plus.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
+
+// Project imports:
+import 'package:zone/func/format_bytes.dart';
+import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/lambada_test_item.dart';
-import 'package:zone/func/format_bytes.dart';
 import 'package:zone/store/p.dart' show P, $Chat, $RWKV, $Lambada;
 import 'package:zone/widgets/model_selector.dart';
-
-import 'package:zone/gen/l10n.dart' show S;
 
 class PageBenchmark extends ConsumerStatefulWidget {
   const PageBenchmark({super.key});

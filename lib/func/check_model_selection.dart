@@ -1,7 +1,8 @@
-// ignore: unused_import
-
+// Package imports:
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';

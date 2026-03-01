@@ -1,11 +1,14 @@
-// ignore: unused_import
-
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;

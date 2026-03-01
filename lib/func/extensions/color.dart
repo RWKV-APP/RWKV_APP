@@ -1,8 +1,14 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/widgets.dart';
+
+// Package imports:
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/store/p.dart';
 
 extension RWKVColorExtension on Color {

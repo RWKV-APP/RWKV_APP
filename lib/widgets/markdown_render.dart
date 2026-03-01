@@ -1,5 +1,8 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gpt_markdown/custom_widgets/markdown_config.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart' show OrderedListView;
@@ -8,6 +11,8 @@ import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+// Project imports:
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';

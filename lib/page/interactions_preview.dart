@@ -1,8 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:halo/halo.dart';
 import 'package:material_symbols_icons/symbols.dart';
+
+// Project imports:
 import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/model/app_theme.dart';
 import 'package:zone/store/p.dart';

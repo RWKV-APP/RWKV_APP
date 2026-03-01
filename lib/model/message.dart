@@ -1,6 +1,11 @@
-import 'package:equatable/equatable.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:equatable/equatable.dart';
 import 'package:halo/halo.dart';
+
+// Project imports:
 import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/model/message_type.dart';

@@ -1,9 +1,12 @@
-// ignore: unused_import
-
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+// Package imports:
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 

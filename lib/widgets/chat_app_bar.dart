@@ -1,12 +1,17 @@
-// ignore: unused_import
-import 'dart:developer';
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:sprintf/sprintf.dart';
+
+// Project imports:
 import 'package:zone/config.dart';
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
@@ -18,7 +23,6 @@ import 'package:zone/widgets/arguments_panel.dart';
 import 'package:zone/widgets/log_panel.dart';
 import 'package:zone/widgets/model_select_button.dart';
 import 'package:zone/widgets/model_selector.dart';
-import 'package:sprintf/sprintf.dart';
 import 'package:zone/widgets/state_panel.dart';
 
 class ChatAppBar extends ConsumerWidget {

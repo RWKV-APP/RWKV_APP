@@ -1,6 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+
+// Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/store/p.dart';

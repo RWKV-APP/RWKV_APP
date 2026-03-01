@@ -1,8 +1,11 @@
-// ignore: unused_import
-
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+
+// Project imports:
 import 'package:zone/store/p.dart';
 
 class PerformanceInfo extends ConsumerWidget {

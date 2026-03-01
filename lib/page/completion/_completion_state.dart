@@ -1,5 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/completion/batch_completion_settings_panel.dart';
 

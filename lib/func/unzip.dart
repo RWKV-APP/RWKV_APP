@@ -1,7 +1,11 @@
+// Dart imports:
 import 'dart:io';
 
-import 'package:archive/archive_io.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:archive/archive_io.dart';
 import 'package:halo/halo.dart';
 import 'package:path/path.dart' as p;
 

@@ -1,8 +1,13 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';

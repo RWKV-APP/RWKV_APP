@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:halo/halo.dart';
 
 extension WidgetDebugger on Widget {

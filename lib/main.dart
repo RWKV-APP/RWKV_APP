@@ -1,22 +1,29 @@
+// Dart imports:
 import 'dart:async';
+
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halo/halo.dart';
+import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+
+// Project imports:
 import 'package:zone/args.dart';
 import 'package:zone/config.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:halo/halo.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/router/router.dart';
-import 'package:zone/func/extensions/num.dart';
 import 'package:zone/store/p.dart';
-import 'package:halo_alert/halo_alert.dart';
 import 'package:zone/widgets/debugger.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:zone/widgets/floating_performace_info.dart';
 
 void main() async {

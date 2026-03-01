@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:equatable/equatable.dart';
+
+// Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 

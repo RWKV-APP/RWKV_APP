@@ -1,7 +1,12 @@
-import 'package:background_downloader/background_downloader.dart' as bd;
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:background_downloader/background_downloader.dart' as bd;
 import 'package:halo/halo.dart';
+
+// Project imports:
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 

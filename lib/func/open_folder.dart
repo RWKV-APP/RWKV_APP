@@ -1,9 +1,13 @@
+// Dart imports:
 import 'dart:io';
 
+// Package imports:
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+// Project imports:
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
 

@@ -1,14 +1,19 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart' as path;
 import 'package:sprintf/sprintf.dart' show sprintf;
+
+// Project imports:
 import 'package:zone/func/extensions/num.dart';
-import 'package:zone/gen/l10n.dart';
 import 'package:zone/func/format_bytes.dart';
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/model/local_file.dart';
 import 'package:zone/router/method.dart';

@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:halo/halo.dart';
 
 class SuggestionChips extends StatelessWidget {

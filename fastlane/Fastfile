@@ -148,6 +148,7 @@ end
 lane :lint do |params|
   raw_change_analysis_options()
   dart_fix()
+  sort_imports()
   raw_change_analysis_options()
 end
 
@@ -160,6 +161,17 @@ end
 
 lane :dart_fix do
   sh 'cd ..;dart fix --apply;cd fastlane'
+end
+
+lane :sort_imports do
+  sh <<~'SH'
+    cd ..
+    rg -l "^// (Dart|Flutter|Package|Project) imports:$" lib -g '*.dart' -g '!lib/gen/**' -g '!lib/**/*.g.dart' -g '!lib/**/*.freezed.dart' -g '!lib/**/*.steps.dart' | while IFS= read -r file; do
+      perl -i -ne 'print unless /^\/\/ (Dart|Flutter|Package|Project) imports:$/;' "$file"
+    done
+    dart run import_sorter:main '^.*/lib/(?!gen/)(?!.*\.(?:g|freezed|steps)\.dart$).*\.dart'
+    cd fastlane
+  SH
 end
 
 lane :git_reset do

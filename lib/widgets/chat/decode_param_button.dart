@@ -1,19 +1,22 @@
-// ignore: unused_import
-
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:material_symbols_icons/symbols.dart';
+
+// Project imports:
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/arguments_panel.dart';
+import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/interactions.dart';
 
 class DecodeParamButton extends ConsumerWidget {

@@ -1,6 +1,10 @@
-
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:halo_state/halo_state.dart';
+
+// Project imports:
 import 'package:zone/model/feature_rollout.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart' show P, $Preference;

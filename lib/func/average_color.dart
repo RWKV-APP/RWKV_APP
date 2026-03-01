@@ -1,3 +1,4 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 Color averageColors(Color c1, Color c2) {
