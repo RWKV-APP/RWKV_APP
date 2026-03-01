@@ -141,7 +141,7 @@ class BotMessageBottom extends ConsumerWidget {
                   color: primaryColor.q(.8),
                   size: 14,
                 ),
-              ),
+              ).debug,
       _ => null,
     };
 
@@ -262,7 +262,7 @@ class BotMessageBottom extends ConsumerWidget {
               ).debug,
             ),
           ],
-          ?modeWidget?.debug,
+          ?modeWidget,
           if (showResumeButton && paused && receiveId == msg.id && !isBatch) ...[
             4.w,
             Tooltip(

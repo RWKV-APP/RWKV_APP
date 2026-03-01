@@ -140,7 +140,7 @@ class _List extends ConsumerWidget {
               return _MessageWrap(msg: msg, finalIndex: finalIndex);
             },
             separatorBuilder: (context, index) {
-              return isMobile ? const SizedBox(height: 12) : const SizedBox(height: 0);
+              return isMobile ? const SizedBox(height: 12) : const SizedBox(height: 4);
             },
           ),
         ),
