@@ -362,10 +362,6 @@ class BotMessageBottom extends ConsumerWidget {
                       padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
                       decoration: BoxDecoration(
                         color: detailsExpanded ? Colors.transparent : Colors.transparent,
-                        // borderRadius: .circular(6),
-                        // border: Border.all(
-                        //   color: detailsExpanded ? primaryColor.q(.42) : primaryColor.q(.18),
-                        // ),
                       ),
                       child: Row(
                         mainAxisSize: .min,
@@ -373,7 +369,7 @@ class BotMessageBottom extends ConsumerWidget {
                           Icon(
                             Symbols.more_horiz,
                             color: detailsExpanded ? primaryColor : primaryColor.q(.82),
-                            size: 18,
+                            size: 20,
                           ).debug,
                           AnimatedRotation(
                             turns: detailsExpanded ? .5 : .0,
