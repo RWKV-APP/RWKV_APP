@@ -257,19 +257,19 @@ class BotMessageBottom extends ConsumerWidget {
             mainAxisAlignment: .start,
             children: [
               _AnimatedActionItem(
-                visible: showBotRegenerateButton,
+                visible: showCopyButton,
                 duration: actionAnimDuration,
                 curve: actionAnimCurve,
                 child: Tooltip(
-                  message: s.regenerate,
+                  message: s.copy_text,
                   child: GestureDetector(
-                    onTap: _onRegeneratePressed,
+                    onTap: _onCopyPressed,
                     child: Container(
                       decoration: const BoxDecoration(color: Colors.transparent),
                       child: Padding(
                         padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
                         child: Icon(
-                          Symbols.refresh,
+                          Symbols.content_copy,
                           color: primaryColor.q(.8),
                           size: 20,
                         ).debug,
@@ -300,20 +300,21 @@ class BotMessageBottom extends ConsumerWidget {
                   ),
                 ).debug,
               ),
+
               _AnimatedActionItem(
-                visible: showCopyButton,
+                visible: showBotRegenerateButton,
                 duration: actionAnimDuration,
                 curve: actionAnimCurve,
                 child: Tooltip(
-                  message: s.copy_text,
+                  message: s.regenerate,
                   child: GestureDetector(
-                    onTap: _onCopyPressed,
+                    onTap: _onRegeneratePressed,
                     child: Container(
                       decoration: const BoxDecoration(color: Colors.transparent),
                       child: Padding(
                         padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
                         child: Icon(
-                          Symbols.content_copy,
+                          Symbols.refresh,
                           color: primaryColor.q(.8),
                           size: 20,
                         ).debug,
@@ -322,6 +323,7 @@ class BotMessageBottom extends ConsumerWidget {
                   ),
                 ).debug,
               ),
+
               _AnimatedActionItem(
                 visible: changing,
                 duration: actionAnimDuration,
