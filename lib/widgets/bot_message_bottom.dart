@@ -323,28 +323,6 @@ class BotMessageBottom extends ConsumerWidget {
                 ).debug,
               ),
               _AnimatedActionItem(
-                visible: showMoreButton,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Tooltip(
-                  message: s.more,
-                  child: GestureDetector(
-                    onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.transparent),
-                      child: Padding(
-                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                        child: Icon(
-                          Symbols.more_horiz,
-                          color: detailsExpanded ? primaryColor : primaryColor.q(.8),
-                          size: 20,
-                        ).debug,
-                      ),
-                    ),
-                  ),
-                ).debug,
-              ),
-              _AnimatedActionItem(
                 visible: changing,
                 duration: actionAnimDuration,
                 curve: actionAnimCurve,
@@ -370,6 +348,49 @@ class BotMessageBottom extends ConsumerWidget {
               ),
               branchSwitcher,
               const Spacer(),
+              _AnimatedActionItem(
+                visible: showMoreButton,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Tooltip(
+                  message: detailsExpanded ? "${s.more} ↑" : "${s.more} ↓",
+                  child: GestureDetector(
+                    onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
+                    child: AnimatedContainer(
+                      duration: actionAnimDuration,
+                      curve: actionAnimCurve,
+                      padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
+                      decoration: BoxDecoration(
+                        color: detailsExpanded ? Colors.transparent : Colors.transparent,
+                        // borderRadius: .circular(6),
+                        // border: Border.all(
+                        //   color: detailsExpanded ? primaryColor.q(.42) : primaryColor.q(.18),
+                        // ),
+                      ),
+                      child: Row(
+                        mainAxisSize: .min,
+                        children: [
+                          Icon(
+                            Symbols.more_horiz,
+                            color: detailsExpanded ? primaryColor : primaryColor.q(.82),
+                            size: 18,
+                          ).debug,
+                          AnimatedRotation(
+                            turns: detailsExpanded ? .5 : .0,
+                            duration: actionAnimDuration,
+                            curve: actionAnimCurve,
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: detailsExpanded ? primaryColor : primaryColor.q(.72),
+                              size: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ).debug,
+              ),
               _AnimatedActionItem(
                 visible: showResumeAction,
                 duration: actionAnimDuration,

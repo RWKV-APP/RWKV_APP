@@ -273,7 +273,7 @@ class _UserMessageBubble extends ConsumerWidget {
               crossAxisAlignment: .end,
               children: [
                 if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
-                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
+                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle).debug,
                 if (isUserImage)
                   ClipRRect(
                     clipBehavior: Clip.antiAlias,
