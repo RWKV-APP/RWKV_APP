@@ -233,7 +233,18 @@
   "new_game": "新しいゲーム",
   "rwkv": "RWKV",
   "prefill": "事前入力",
+  "prefill_progress_percent": "プレフィル進捗 {percent}",
+  "@prefill_progress_percent": {
+    "description": "BotMessageBottom の生成インジケーター横に表示するプレフィル進捗文言",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "decode": "デコード",
+  "message_token_count": "メッセージのトークン数",
+  "conversation_token_count": "現在の会話のトークン数",
+  "prefill_speed_tokens_per_second": "プレフィル速度（1秒あたりのトークン数）",
+  "decode_speed_tokens_per_second": "デコード速度（1秒あたりのトークン数）",
   "current_turn": "現在のターン",
   "start_a_new_game": "ゲーム開始",
   "please_wait_for_the_model_to_generate": "モデルの生成を待ってください",
@@ -430,6 +441,7 @@
   "no_model_selected": "モデルが選択されていません",
   "change": "変更",
   "edit": "編集",
+  "editing": "編集中",
   "status": "ステータス",
   "translating": "翻訳中...",
   "idle": "待機中",

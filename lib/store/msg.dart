@@ -34,6 +34,12 @@ class _Msg {
   /// key format: "{scope}::{messageId}"
   late final bottomDetailsExpanded = qs<Map<String, bool>>({});
 
+  /// Message bottom 详情中展示的单条消息 token 数
+  late final bottomMessageTokensCount = qs<Map<int, int>>({});
+
+  /// Message bottom 详情中展示的当前会话 token 数
+  late final bottomConversationTokensCount = qs<Map<int, int>>({});
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -90,6 +96,8 @@ extension _$Msg on _Msg {
     ids.q = [];
     msgNode.q = MsgNode(0);
     bottomDetailsExpanded.q = {};
+    bottomMessageTokensCount.q = {};
+    bottomConversationTokensCount.q = {};
   }
 
   /// 在内存和数据库中同时更新消息
@@ -179,6 +187,72 @@ extension $Msg on _Msg {
     }
     if (next.length == current.length) return;
     bottomDetailsExpanded.q = next;
+  }
+
+  int? getBottomMessageTokensCount({
+    required int messageId,
+  }) {
+    return bottomMessageTokensCount.q[messageId];
+  }
+
+  int? getBottomConversationTokensCount({
+    required int messageId,
+  }) {
+    return bottomConversationTokensCount.q[messageId];
+  }
+
+  void setBottomTokensCount({
+    required int messageId,
+    int? messageTokensCount,
+    int? conversationTokensCount,
+  }) {
+    if (messageTokensCount != null) {
+      final int? current = bottomMessageTokensCount.q[messageId];
+      if (current != messageTokensCount) {
+        bottomMessageTokensCount.q = {
+          ...bottomMessageTokensCount.q,
+          messageId: messageTokensCount,
+        };
+      }
+    }
+
+    if (conversationTokensCount != null) {
+      final int? current = bottomConversationTokensCount.q[messageId];
+      if (current != conversationTokensCount) {
+        bottomConversationTokensCount.q = {
+          ...bottomConversationTokensCount.q,
+          messageId: conversationTokensCount,
+        };
+      }
+    }
+  }
+
+  void clearBottomTokensCount({
+    int? messageId,
+  }) {
+    if (messageId == null) {
+      if (bottomMessageTokensCount.q.isNotEmpty) {
+        bottomMessageTokensCount.q = {};
+      }
+      if (bottomConversationTokensCount.q.isNotEmpty) {
+        bottomConversationTokensCount.q = {};
+      }
+      return;
+    }
+
+    final Map<int, int> currentMessageCount = bottomMessageTokensCount.q;
+    if (currentMessageCount.containsKey(messageId)) {
+      final Map<int, int> nextMessageCount = {...currentMessageCount};
+      nextMessageCount.remove(messageId);
+      bottomMessageTokensCount.q = nextMessageCount;
+    }
+
+    final Map<int, int> currentConversationCount = bottomConversationTokensCount.q;
+    if (currentConversationCount.containsKey(messageId)) {
+      final Map<int, int> nextConversationCount = {...currentConversationCount};
+      nextConversationCount.remove(messageId);
+      bottomConversationTokensCount.q = nextConversationCount;
+    }
   }
 
   int siblingCount(Message msg) {

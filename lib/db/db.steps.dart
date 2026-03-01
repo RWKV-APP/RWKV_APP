@@ -833,11 +833,265 @@ i1.GeneratedColumn<String> _column_54(String aliasedName) =>
       type: i1.DriftSqlType.string,
       $customConstraints: 'NULL',
     );
+
+final class Schema6 extends i0.VersionedSchema {
+  Schema6({required super.database}) : super(version: 6);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [conv, msg];
+  late final Shape2 conv = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'conv',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(created_at_u_s)'],
+      columns: [
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 msg = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'msg',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_35,
+        _column_36,
+        _column_37,
+        _column_38,
+        _column_39,
+        _column_40,
+        _column_41,
+        _column_42,
+        _column_43,
+        _column_44,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_50,
+        _column_51,
+        _column_52,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape5 extends i0.VersionedTable {
+  Shape5({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get content =>
+      columnsByName['content']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get reference =>
+      columnsByName['reference']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get isMine =>
+      columnsByName['is_mine']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get type =>
+      columnsByName['type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get isReasoning =>
+      columnsByName['is_reasoning']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get paused =>
+      columnsByName['paused']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get imageUrl =>
+      columnsByName['image_url']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get audioUrl =>
+      columnsByName['audio_url']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get audioLength =>
+      columnsByName['audio_length']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get isSensitive =>
+      columnsByName['is_sensitive']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get ttsCFMSteps =>
+      columnsByName['tts_c_f_m_steps']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get ttsTarget =>
+      columnsByName['tts_target']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get ttsSpeakerName =>
+      columnsByName['tts_speaker_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get ttsSourceAudioPath =>
+      columnsByName['tts_source_audio_path']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get ttsInstruction =>
+      columnsByName['tts_instruction']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get modelName =>
+      columnsByName['model_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get runningMode =>
+      columnsByName['running_mode']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get build =>
+      columnsByName['build']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get rawDecodeParams =>
+      columnsByName['raw_decode_params']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get prefillSpeed =>
+      columnsByName['prefill_speed']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<double> get decodeSpeed =>
+      columnsByName['decode_speed']! as i1.GeneratedColumn<double>;
+}
+
+i1.GeneratedColumn<double> _column_55(String aliasedName) =>
+    i1.GeneratedColumn<double>(
+      'prefill_speed',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.double,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<double> _column_56(String aliasedName) =>
+    i1.GeneratedColumn<double>(
+      'decode_speed',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.double,
+      $customConstraints: 'NULL',
+    );
+
+final class Schema7 extends i0.VersionedSchema {
+  Schema7({required super.database}) : super(version: 7);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [conv, msg];
+  late final Shape2 conv = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'conv',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(created_at_u_s)'],
+      columns: [
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 msg = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'msg',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_35,
+        _column_36,
+        _column_37,
+        _column_38,
+        _column_39,
+        _column_40,
+        _column_41,
+        _column_42,
+        _column_43,
+        _column_44,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_50,
+        _column_51,
+        _column_52,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+        _column_57,
+        _column_58,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape6 extends i0.VersionedTable {
+  Shape6({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get content =>
+      columnsByName['content']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get reference =>
+      columnsByName['reference']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get isMine =>
+      columnsByName['is_mine']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get type =>
+      columnsByName['type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get isReasoning =>
+      columnsByName['is_reasoning']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get paused =>
+      columnsByName['paused']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get imageUrl =>
+      columnsByName['image_url']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get audioUrl =>
+      columnsByName['audio_url']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get audioLength =>
+      columnsByName['audio_length']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get isSensitive =>
+      columnsByName['is_sensitive']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get ttsCFMSteps =>
+      columnsByName['tts_c_f_m_steps']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get ttsTarget =>
+      columnsByName['tts_target']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get ttsSpeakerName =>
+      columnsByName['tts_speaker_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get ttsSourceAudioPath =>
+      columnsByName['tts_source_audio_path']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get ttsInstruction =>
+      columnsByName['tts_instruction']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get modelName =>
+      columnsByName['model_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get runningMode =>
+      columnsByName['running_mode']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get build =>
+      columnsByName['build']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get rawDecodeParams =>
+      columnsByName['raw_decode_params']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get prefillSpeed =>
+      columnsByName['prefill_speed']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<double> get decodeSpeed =>
+      columnsByName['decode_speed']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<int> get messageTokensCount =>
+      columnsByName['message_tokens_count']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get conversationTokensCount =>
+      columnsByName['conversation_tokens_count']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_57(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'message_tokens_count',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<int> _column_58(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'conversation_tokens_count',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
+  required Future<void> Function(i1.Migrator m, Schema7 schema) from6To7,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -861,6 +1115,16 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from4To5(migrator, schema);
         return 5;
+      case 5:
+        final schema = Schema6(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from5To6(migrator, schema);
+        return 6;
+      case 6:
+        final schema = Schema7(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from6To7(migrator, schema);
+        return 7;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -872,11 +1136,15 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
+  required Future<void> Function(i1.Migrator m, Schema7 schema) from6To7,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
     from2To3: from2To3,
     from3To4: from3To4,
     from4To5: from4To5,
+    from5To6: from5To6,
+    from6To7: from6To7,
   ),
 );

@@ -39,6 +39,10 @@ final class Message extends Equatable {
   final String? modelName;
   final String? runningMode;
   final String? rawDecodeParams;
+  final double? prefillSpeed;
+  final double? decodeSpeed;
+  final int? messageTokensCount;
+  final int? conversationTokensCount;
 
   const Message({
     required this.id,
@@ -60,6 +64,10 @@ final class Message extends Equatable {
     this.modelName,
     this.runningMode,
     this.rawDecodeParams,
+    this.prefillSpeed,
+    this.decodeSpeed,
+    this.messageTokensCount,
+    this.conversationTokensCount,
   });
 
   @override
@@ -83,6 +91,10 @@ final class Message extends Equatable {
     modelName,
     runningMode,
     rawDecodeParams,
+    prefillSpeed,
+    decodeSpeed,
+    messageTokensCount,
+    conversationTokensCount,
   ];
 
   factory Message.fromJson(Map<String, dynamic> json) {
@@ -105,6 +117,10 @@ final class Message extends Equatable {
       modelName: json["modelName"] as String?,
       runningMode: json["runningMode"] as String?,
       rawDecodeParams: json["rawDecodeParams"] as String?,
+      prefillSpeed: (json["prefillSpeed"] as num?)?.toDouble(),
+      decodeSpeed: (json["decodeSpeed"] as num?)?.toDouble(),
+      messageTokensCount: json["messageTokensCount"] as int?,
+      conversationTokensCount: json["conversationTokensCount"] as int?,
     );
   }
 
@@ -129,6 +145,10 @@ final class Message extends Equatable {
       "modelName": modelName,
       "runningMode": runningMode,
       "rawDecodeParams": rawDecodeParams,
+      "prefillSpeed": prefillSpeed,
+      "decodeSpeed": decodeSpeed,
+      "messageTokensCount": messageTokensCount,
+      "conversationTokensCount": conversationTokensCount,
     };
   }
 
@@ -152,6 +172,10 @@ final class Message extends Equatable {
     String? modelName,
     String? runningMode,
     String? rawDecodeParams,
+    double? prefillSpeed,
+    double? decodeSpeed,
+    int? messageTokensCount,
+    int? conversationTokensCount,
   }) {
     return Message(
       id: id ?? this.id,
@@ -172,6 +196,10 @@ final class Message extends Equatable {
       modelName: modelName ?? this.modelName,
       runningMode: runningMode ?? this.runningMode,
       rawDecodeParams: rawDecodeParams ?? this.rawDecodeParams,
+      prefillSpeed: prefillSpeed ?? this.prefillSpeed,
+      decodeSpeed: decodeSpeed ?? this.decodeSpeed,
+      messageTokensCount: messageTokensCount ?? this.messageTokensCount,
+      conversationTokensCount: conversationTokensCount ?? this.conversationTokensCount,
     );
   }
 
@@ -198,6 +226,10 @@ Message(
   modelName: $modelName,
   runningMode: $runningMode,
   rawDecodeParams: $rawDecodeParams,
+  prefillSpeed: $prefillSpeed,
+  decodeSpeed: $decodeSpeed,
+  messageTokensCount: $messageTokensCount,
+  conversationTokensCount: $conversationTokensCount,
 )""";
   }
 }

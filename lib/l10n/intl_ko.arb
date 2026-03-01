@@ -233,7 +233,18 @@
   "new_game": "새 게임",
   "rwkv": "RWKV",
   "prefill": "사전 채우기",
+  "prefill_progress_percent": "프리필 진행률 {percent}",
+  "@prefill_progress_percent": {
+    "description": "BotMessageBottom 생성 인디케이터 옆에 표시되는 프리필 진행률 문구",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "decode": "디코딩",
+  "message_token_count": "메시지 토큰 수",
+  "conversation_token_count": "현재 대화 토큰 수",
+  "prefill_speed_tokens_per_second": "프리필 속도(초당 토큰 수)",
+  "decode_speed_tokens_per_second": "디코딩 속도(초당 토큰 수)",
   "current_turn": "현재 차례",
   "start_a_new_game": "게임 시작",
   "please_wait_for_the_model_to_generate": "모델 생성을 기다려 주세요",
@@ -430,6 +441,7 @@
   "no_model_selected": "선택된 모델 없음",
   "change": "변경",
   "edit": "편집",
+  "editing": "편집 중",
   "status": "상태",
   "translating": "번역 중...",
   "idle": "대기",

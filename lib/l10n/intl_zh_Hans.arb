@@ -232,8 +232,19 @@
   "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2": "当搜索深度和宽度都大于 2 时，将激活上下文搜索",
   "new_game": "新游戏",
   "rwkv": "RWKV",
-  "prefill": "预填",
+  "prefill": "预填充",
+  "prefill_progress_percent": "预填充进度 {percent}",
+  "@prefill_progress_percent": {
+    "description": "BotMessageBottom 生成指示器旁的预填充进度文案",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "decode": "解码",
+  "message_token_count": "单条消息 Token 数量",
+  "conversation_token_count": "当前对话 Token 数量",
+  "prefill_speed_tokens_per_second": "预填充速度（tokens 每秒）",
+  "decode_speed_tokens_per_second": "解码速度（tokens 每秒）",
   "current_turn": "当前回合",
   "start_a_new_game": "开始对局",
   "please_wait_for_the_model_to_generate": "请等待模型生成",
@@ -430,6 +441,7 @@
   "no_model_selected": "未选择模型",
   "change": "更改",
   "edit": "编辑",
+  "editing": "编辑中",
   "status": "状态",
   "translating": "翻译中...",
   "idle": "空闲",

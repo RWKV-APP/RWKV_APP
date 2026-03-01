@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -15,10 +16,13 @@ import 'package:material_symbols_icons/symbols.dart';
 // Project imports:
 import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
+import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
+import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/model/world_type.dart' as world_type;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
@@ -94,39 +98,56 @@ class BotMessageBottom extends ConsumerWidget {
     Clipboard.setData(ClipboardData(text: message));
   }
 
-  int _estimateTokenCount(String content) {
-    final String normalized = content.trim();
-    if (normalized.isEmpty) return 0;
-
-    final RegExp cjk = RegExp(r'[\u3400-\u9FFF]');
-    final RegExp latinDigit = RegExp(r'[A-Za-z0-9]');
-
-    int cjkCount = 0;
-    int latinCount = 0;
-    int otherCount = 0;
-
-    for (final int rune in normalized.runes) {
-      final String char = String.fromCharCode(rune);
-      if (char.trim().isEmpty) continue;
-      if (cjk.hasMatch(char)) {
-        cjkCount = cjkCount + 1;
-        continue;
-      }
-      if (latinDigit.hasMatch(char)) {
-        latinCount = latinCount + 1;
-        continue;
-      }
-      otherCount = otherCount + 1;
-    }
-
-    final int latinTokenEstimate = (latinCount / 4).ceil();
-    final int estimated = cjkCount + latinTokenEstimate + otherCount;
-    return estimated;
+  String _formatSpeed({required double? speed}) {
+    if (speed == null || speed <= 0) return "--";
+    return speed.toStringAsFixed(1);
   }
 
-  String _formatSpeed({required double speed}) {
-    if (speed <= 0) return "--";
-    return "${speed.toStringAsFixed(1)} tok/s";
+  String _formatCompactSpeed({required double? speed}) {
+    if (speed == null || speed <= 0) return "--";
+    return speed.toStringAsFixed(1);
+  }
+
+  String _formatProgressPercent({required double progress}) {
+    final double clampedProgress = progress.clamp(0, 1).toDouble();
+    final int percent = (clampedProgress * 100).round();
+    return "$percent%";
+  }
+
+  String _extractSuffixBySeparator({
+    required String source,
+    required String separator,
+  }) {
+    final int separatorIndex = source.lastIndexOf(separator);
+    if (separatorIndex < 0) return source;
+    return source.substring(separatorIndex + separator.length).trim();
+  }
+
+  String _localizedReasoningMode({
+    required S s,
+    required String? runningMode,
+  }) {
+    final thinking_mode.ThinkingMode mode = thinking_mode.ThinkingMode.fromString(runningMode);
+    final String localizedWithPrefix = switch (mode) {
+      .lighting => s.thinking_mode_auto(""),
+      .none => s.thinking_mode_off(""),
+      .free => s.thinking_mode_high(""),
+      .preferChinese => s.thinking_mode_high(""),
+      .fast => s.think_button_mode_fast(""),
+      .en => s.think_button_mode_en(""),
+      .enShort => s.think_button_mode_en_short(""),
+      .enLong => s.think_button_mode_en_long(""),
+    };
+    return _extractSuffixBySeparator(source: localizedWithPrefix, separator: s.hyphen);
+  }
+
+  String? _localizedDecodeParamSummary({
+    required List<SamplerAndPenaltyParam> parsedDecodeParams,
+  }) {
+    if (parsedDecodeParams.isEmpty) return null;
+    final String displayName = parsedDecodeParams.first.displayName;
+    if (parsedDecodeParams.length == 1) return displayName;
+    return "$displayName x${parsedDecodeParams.length}";
   }
 
   @override
@@ -210,6 +231,8 @@ class BotMessageBottom extends ConsumerWidget {
     final bool detailsExpanded = detailsExpandedMap[detailsStateKey] ?? false;
 
     final double verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
+    final bool branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
+    final bool showBranchSwitcher = !changing && branchSwitcherAvailable;
     final Widget branchSwitcher = IgnorePointer(
       ignoring: disableDefaultActions,
       child: BranchSwitcher(msg, index).debug,
@@ -220,35 +243,47 @@ class BotMessageBottom extends ConsumerWidget {
     final bool showResumeAction = showResumeButton && paused && resumeMatched && !isBatch;
     final bool showEditAction = showEditButton && !changing;
     ref.watch(P.msg.msgNode);
-    final bool hasBranchSwitcher = P.msg.siblingCount(msg) > 1;
 
-    final int messageTokenCount = _estimateTokenCount(msg.content);
-    final List<model.Message> pathMessages = ref.watch(P.msg.list);
-    final int currentPathIndex = pathMessages.indexWhere((model.Message message) => message.id == msg.id);
-    final Iterable<model.Message> contextMessages = currentPathIndex < 0 ? <model.Message>[msg] : pathMessages.take(currentPathIndex + 1);
-    int contextTokenCount = 0;
-    for (final model.Message message in contextMessages) {
-      contextTokenCount = contextTokenCount + _estimateTokenCount(message.content);
-    }
+    final Map<int, int> messageTokensCountMap = ref.watch(P.msg.bottomMessageTokensCount);
+    final Map<int, int> conversationTokensCountMap = ref.watch(P.msg.bottomConversationTokensCount);
+    final int? adapterMessageTokenCount = messageTokensCountMap[msg.id];
+    final int? adapterConversationTokenCount = conversationTokensCountMap[msg.id];
+    final int? persistedMessageTokenCount = msg.messageTokensCount;
+    final int? persistedConversationTokenCount = msg.conversationTokensCount;
+    final String messageTokenCountText = msg.changing
+        ? s.generating
+        : (persistedMessageTokenCount ?? adapterMessageTokenCount)?.toString() ?? "--";
+    final String contextTokenCountText = msg.changing
+        ? s.generating
+        : (persistedConversationTokenCount ?? adapterConversationTokenCount)?.toString() ?? "--";
 
-    final double prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
-    final double decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
-    final bool showLiveSpeed = receiveId == msg.id || msg.changing || msg.paused;
-    final String prefillSpeedText = showLiveSpeed ? _formatSpeed(speed: prefillSpeed) : "--";
-    final String decodeSpeedText = showLiveSpeed ? _formatSpeed(speed: decodeSpeed) : "--";
+    final double livePrefillSpeed = ref.watch(P.rwkv.prefillSpeed);
+    final double liveDecodeSpeed = ref.watch(P.rwkv.decodeSpeed);
+    final double effectiveLivePrefillSpeed = livePrefillSpeed > 0 ? livePrefillSpeed : (msg.prefillSpeed ?? .0);
+    final double effectiveLiveDecodeSpeed = liveDecodeSpeed > 0 ? liveDecodeSpeed : (msg.decodeSpeed ?? .0);
+    final String changingInlinePrefillSpeedText = _formatCompactSpeed(speed: effectiveLivePrefillSpeed);
+    final String changingInlineDecodeSpeedText = _formatCompactSpeed(speed: effectiveLiveDecodeSpeed);
+    final String changingInlinePrefillProgressText = changing
+        ? _formatProgressPercent(progress: ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble())
+        : "";
+    final String changingInlinePrefillProgressLabel = changing ? s.prefill_progress_percent(changingInlinePrefillProgressText) : "";
+    final String settledPrefillSpeedText = _formatSpeed(speed: msg.prefillSpeed);
+    final String settledDecodeSpeedText = _formatSpeed(speed: msg.decodeSpeed);
+    final String detailsPrefillSpeedText = msg.changing ? changingInlinePrefillSpeedText : settledPrefillSpeedText;
+    final String detailsDecodeSpeedText = msg.changing ? changingInlineDecodeSpeedText : settledDecodeSpeedText;
 
     final List<SamplerAndPenaltyParam> parsedDecodeParams = msg.parsedDecodeParams;
-    final String decodeParamSummary = switch (parsedDecodeParams.length) {
-      0 => "--",
-      1 => parsedDecodeParams.first.displayName,
-      _ => "${parsedDecodeParams.first.displayName} x${parsedDecodeParams.length}",
-    };
-
-    final String runningModeText = msg.runningMode ?? "--";
+    final DecodeParamType currentDecodeParamType = ref.watch(P.rwkv.decodeParamType);
+    final String currentDecodeParamDisplayName = SamplerAndPenaltyParam.fromDecodeParamType(currentDecodeParamType).displayName;
+    String? decodeParamSummary = _localizedDecodeParamSummary(parsedDecodeParams: parsedDecodeParams);
+    if (decodeParamSummary == null && (msg.changing || msg.paused || receiveId == msg.id)) {
+      decodeParamSummary = currentDecodeParamDisplayName;
+    }
+    final String runningModeText = _localizedReasoningMode(
+      s: s,
+      runningMode: msg.runningMode,
+    );
     final String modelNameText = msg.modelName ?? "--";
-    final String rawDecodeParamsText = (msg.rawDecodeParams == null || msg.rawDecodeParams!.trim().isEmpty)
-        ? "--"
-        : msg.rawDecodeParams!.trim();
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -258,7 +293,9 @@ class BotMessageBottom extends ConsumerWidget {
           showShareButton: showShareButton,
           showRegenerateButton: showBotRegenerateButton,
           showChangingIndicator: changing,
-          hasBranchSwitcher: hasBranchSwitcher,
+          showChangingSpeedTexts: changing && !detailsExpanded,
+          showChangingProgressText: changing,
+          hasBranchSwitcher: showBranchSwitcher,
           showMoreButton: showMoreButton,
           showResumeButton: showResumeAction,
         );
@@ -352,23 +389,55 @@ class BotMessageBottom extends ConsumerWidget {
                       message: s.generating,
                       child: Padding(
                         padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                        child: TweenAnimationBuilder(
-                          tween: Tween(begin: .0, end: 1.0),
-                          duration: const Duration(milliseconds: 1000000000),
-                          builder: (context, value, child) => Transform.rotate(
-                            angle: value * 2 * math.pi * 1000000,
-                            child: child,
-                          ),
-                          child: Icon(
-                            Symbols.hourglass_top,
-                            color: primaryColor,
-                            size: 20,
-                          ).debug,
+                        child: Row(
+                          mainAxisSize: .min,
+                          children: [
+                            TweenAnimationBuilder(
+                              tween: Tween(begin: .0, end: 1.0),
+                              duration: const Duration(milliseconds: 1000000000),
+                              builder: (context, value, child) => Transform.rotate(
+                                angle: value * 2 * math.pi * 1000000,
+                                child: child,
+                              ),
+                              child: Icon(
+                                Symbols.hourglass_top,
+                                color: primaryColor,
+                                size: 20,
+                              ).debug,
+                            ),
+                            if (!detailsExpanded) ...[
+                              const SizedBox(width: 4),
+                              Column(
+                                mainAxisSize: .min,
+                                crossAxisAlignment: .start,
+                                children: [
+                                  Text(
+                                    "${s.prefill}: $changingInlinePrefillSpeedText t/s",
+                                    style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                                  ),
+                                  Text(
+                                    "${s.decode}: $changingInlineDecodeSpeedText t/s",
+                                    style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            SizedBox(width: detailsExpanded ? 6 : 8),
+                            Text(
+                              changingInlinePrefillProgressLabel,
+                              style: TS(c: primaryColor.q(.92), s: 10, w: .w700),
+                            ),
+                          ],
                         ),
                       ),
                     ).debug,
                   ),
-                  branchSwitcher,
+                  _AnimatedActionItem(
+                    visible: showBranchSwitcher,
+                    duration: actionAnimDuration,
+                    curve: actionAnimCurve,
+                    child: branchSwitcher,
+                  ),
                   const Spacer(),
                   _AnimatedActionItem(
                     visible: showMoreButton,
@@ -384,6 +453,7 @@ class BotMessageBottom extends ConsumerWidget {
                           padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
                           decoration: BoxDecoration(
                             color: Colors.transparent,
+                            borderRadius: .circular(6),
                           ),
                           child: Row(
                             mainAxisSize: .min,
@@ -449,77 +519,97 @@ class BotMessageBottom extends ConsumerWidget {
                 curve: actionAnimCurve,
                 child: Padding(
                   padding: const .only(top: 4),
-                  child: Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
+                  child: Column(
+                    crossAxisAlignment: .start,
                     children: [
-                      if (showEditAction)
-                        _BottomDetailsActionChip(
-                          icon: Symbols.edit,
-                          label: s.edit,
-                          color: primaryColor,
-                          onTap: disableDefaultActions ? null : _onBotEditPressed,
+                      if (showEditAction || showRegenerateInPanel || showShareInPanel || showCopyInPanel)
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 6,
+                          children: [
+                            if (showEditAction)
+                              _BottomDetailsActionChip(
+                                icon: Symbols.edit,
+                                label: s.edit,
+                                color: primaryColor,
+                                onTap: disableDefaultActions ? null : _onBotEditPressed,
+                              ),
+                            if (showRegenerateInPanel)
+                              _BottomDetailsActionChip(
+                                icon: Symbols.refresh,
+                                label: s.regenerate,
+                                color: primaryColor,
+                                onTap: disableDefaultActions ? null : _onRegeneratePressed,
+                              ),
+                            if (showShareInPanel)
+                              _BottomDetailsActionChip(
+                                icon: Symbols.share_rounded,
+                                label: s.share,
+                                color: primaryColor,
+                                onTap: disableDefaultActions ? null : _onSharePressed,
+                              ),
+                            if (showCopyInPanel)
+                              _BottomDetailsActionChip(
+                                icon: Symbols.content_copy,
+                                label: s.copy_text,
+                                color: primaryColor,
+                                onTap: disableDefaultActions ? null : _onCopyPressed,
+                              ),
+                          ],
                         ),
-                      if (showRegenerateInPanel)
-                        _BottomDetailsActionChip(
-                          icon: Symbols.refresh,
-                          label: s.regenerate,
-                          color: primaryColor,
-                          onTap: disableDefaultActions ? null : _onRegeneratePressed,
-                        ),
-                      if (showShareInPanel)
-                        _BottomDetailsActionChip(
-                          icon: Symbols.share_rounded,
-                          label: s.share,
-                          color: primaryColor,
-                          onTap: disableDefaultActions ? null : _onSharePressed,
-                        ),
-                      if (showCopyInPanel)
-                        _BottomDetailsActionChip(
-                          icon: Symbols.content_copy,
-                          label: s.copy_text,
-                          color: primaryColor,
-                          onTap: disableDefaultActions ? null : _onCopyPressed,
-                        ),
-                      _BottomDetailsMetaChip(
-                        label: "msg tok",
-                        value: messageTokenCount.toString(),
-                        color: primaryColor,
-                      ),
-                      _BottomDetailsMetaChip(
-                        label: "ctx tok",
-                        value: contextTokenCount.toString(),
-                        color: primaryColor,
-                      ),
-                      _BottomDetailsMetaChip(
-                        label: s.prefill,
-                        value: prefillSpeedText,
-                        color: primaryColor,
-                      ),
-                      _BottomDetailsMetaChip(
-                        label: s.decode,
-                        value: decodeSpeedText,
-                        color: primaryColor,
-                      ),
-                      _BottomDetailsMetaChip(
-                        label: "mode",
-                        value: runningModeText,
-                        color: primaryColor,
-                      ),
-                      _BottomDetailsMetaChip(
-                        label: "model",
-                        value: modelNameText,
-                        color: primaryColor,
-                      ),
-                      _BottomDetailsMetaChip(
-                        label: s.decode_param,
-                        value: decodeParamSummary,
-                        color: primaryColor,
-                      ),
-                      _BottomDetailsMetaChip(
-                        label: "raw",
-                        value: rawDecodeParamsText,
-                        color: primaryColor,
+                      if (showEditAction || showRegenerateInPanel || showShareInPanel || showCopyInPanel) 6.h,
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          _BottomDetailsMetaChip(
+                            label: s.model,
+                            value: modelNameText,
+                            color: primaryColor,
+                          ),
+                          _BottomDetailsMetaChip(
+                            label: s.message_token_count,
+                            value: messageTokenCountText,
+                            color: primaryColor,
+                          ),
+                          _BottomDetailsMetaChip(
+                            label: s.conversation_token_count,
+                            value: contextTokenCountText,
+                            color: primaryColor,
+                          ),
+                          _BottomDetailsMetaChip(
+                            label: s.prefill_speed_tokens_per_second,
+                            value: detailsPrefillSpeedText,
+                            color: primaryColor,
+                          ),
+                          _BottomDetailsMetaChip(
+                            label: s.decode_speed_tokens_per_second,
+                            value: detailsDecodeSpeedText,
+                            color: primaryColor,
+                          ),
+                          _BottomDetailsMetaChip(
+                            label: s.reasoning_enabled,
+                            value: runningModeText,
+                            color: primaryColor,
+                            leading: SvgPicture.asset(
+                              Assets.img.chat.think,
+                              width: 12,
+                              height: 12,
+                              colorFilter: .mode(primaryColor.q(.82), BlendMode.srcIn),
+                            ),
+                          ),
+                          if (decodeParamSummary != null)
+                            _BottomDetailsMetaChip(
+                              label: s.decode_param,
+                              value: decodeParamSummary,
+                              color: primaryColor,
+                              leading: Icon(
+                                Symbols.auto_awesome,
+                                size: 13,
+                                color: primaryColor.q(.82),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),
@@ -556,6 +646,8 @@ class _BottomActionLayout {
     required bool showShareButton,
     required bool showCopyButton,
     required bool showChangingIndicator,
+    required bool showChangingSpeedTexts,
+    required bool showChangingProgressText,
     required bool hasBranchSwitcher,
     required bool showMoreButton,
     required bool showResumeButton,
@@ -572,6 +664,8 @@ class _BottomActionLayout {
       showShareButton: mainShare,
       showCopyButton: mainCopy,
       showChangingIndicator: showChangingIndicator,
+      showChangingSpeedTexts: showChangingSpeedTexts,
+      showChangingProgressText: showChangingProgressText,
       hasBranchSwitcher: hasBranchSwitcher,
       showMoreButton: showMoreButton,
       showResumeButton: showResumeButton,
@@ -585,6 +679,8 @@ class _BottomActionLayout {
         showShareButton: mainShare,
         showCopyButton: mainCopy,
         showChangingIndicator: showChangingIndicator,
+        showChangingSpeedTexts: showChangingSpeedTexts,
+        showChangingProgressText: showChangingProgressText,
         hasBranchSwitcher: hasBranchSwitcher,
         showMoreButton: showMoreButton,
         showResumeButton: showResumeButton,
@@ -599,6 +695,8 @@ class _BottomActionLayout {
         showShareButton: mainShare,
         showCopyButton: mainCopy,
         showChangingIndicator: showChangingIndicator,
+        showChangingSpeedTexts: showChangingSpeedTexts,
+        showChangingProgressText: showChangingProgressText,
         hasBranchSwitcher: hasBranchSwitcher,
         showMoreButton: showMoreButton,
         showResumeButton: showResumeButton,
@@ -625,6 +723,8 @@ class _BottomActionLayout {
     required bool showShareButton,
     required bool showCopyButton,
     required bool showChangingIndicator,
+    required bool showChangingSpeedTexts,
+    required bool showChangingProgressText,
     required bool hasBranchSwitcher,
     required bool showMoreButton,
     required bool showResumeButton,
@@ -633,7 +733,11 @@ class _BottomActionLayout {
     if (showRegenerateButton) width = width + 30;
     if (showShareButton) width = width + 30;
     if (showCopyButton) width = width + 30;
-    if (showChangingIndicator) width = width + 30;
+    if (showChangingIndicator) {
+      width = width + 32;
+      if (showChangingSpeedTexts) width = width + 102;
+      if (showChangingProgressText) width = width + 78;
+    }
     if (hasBranchSwitcher) width = width + 92;
     if (showMoreButton) width = width + 52;
     if (showResumeButton) width = width + 84;
@@ -646,11 +750,13 @@ class _BottomDetailsMetaChip extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
+  final Widget? leading;
 
   const _BottomDetailsMetaChip({
     required this.label,
     required this.value,
     required this.color,
+    this.leading,
   });
 
   @override
@@ -658,22 +764,32 @@ class _BottomDetailsMetaChip extends StatelessWidget {
     return Tooltip(
       message: "$label: $value",
       child: Container(
-        padding: const .symmetric(horizontal: 6, vertical: 2),
+        padding: const .symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
-          color: color.q(.08),
-          borderRadius: .circular(6),
-          border: Border.all(color: color.q(.22)),
+          color: color.q(.05),
+          borderRadius: .circular(8),
+          border: Border.all(color: color.q(.14)),
         ),
         child: Row(
           mainAxisSize: .min,
           children: [
-            Text(
-              "$label: ",
-              style: TS(c: color.q(.82), s: 11, w: .w500),
-            ),
-            Text(
-              value,
-              style: TS(c: color, s: 11, w: .w600),
+            if (leading != null) ...[
+              leading!,
+              const SizedBox(width: 4),
+            ],
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: "$label: ",
+                    style: TS(c: color.q(.62), s: 10, w: .w500),
+                  ),
+                  TextSpan(
+                    text: value,
+                    style: TS(c: color.q(.92), s: 11, w: .w600),
+                  ),
+                ],
+              ),
               maxLines: 1,
               overflow: .ellipsis,
             ),
@@ -699,30 +815,46 @@ class _BottomDetailsActionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     final bool disabled = onTap == null;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const .symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: disabled ? color.q(.04) : color.q(.08),
-          borderRadius: .circular(6),
-          border: Border.all(color: disabled ? color.q(.14) : color.q(.24)),
-        ),
-        child: Row(
-          mainAxisSize: .min,
-          children: [
-            Icon(
-              icon,
-              size: 14,
-              color: disabled ? color.q(.42) : color,
+    return Tooltip(
+      message: label,
+      child: MouseRegion(
+        cursor: disabled ? SystemMouseCursors.basic : SystemMouseCursors.click,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: .circular(6),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 120),
+              curve: Curves.easeOut,
+              padding: const .symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: disabled ? color.q(.04) : color.q(.1),
+                borderRadius: .circular(6),
+                border: Border.all(color: disabled ? color.q(.14) : color.q(.28)),
+              ),
+              child: Row(
+                mainAxisSize: .min,
+                children: [
+                  Icon(
+                    icon,
+                    size: 18,
+                    color: disabled ? color.q(.42) : color.q(.86),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    label,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: disabled ? color.q(.5) : color.q(.92),
+                      fontWeight: .w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TS(c: disabled ? color.q(.42) : color, s: 11, w: .w600),
-            ),
-          ],
+          ),
         ),
       ),
     );

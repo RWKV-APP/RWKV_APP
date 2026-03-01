@@ -233,7 +233,18 @@
   "new_game": "New Game",
   "rwkv": "RWKV",
   "prefill": "Prefill",
+  "prefill_progress_percent": "Prefill progress {percent}",
+  "@prefill_progress_percent": {
+    "description": "Prefill progress text shown near the generating indicator in bot message bottom",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "decode": "Decode",
+  "message_token_count": "Message Token Count",
+  "conversation_token_count": "Conversation Token Count",
+  "prefill_speed_tokens_per_second": "Prefill Speed (tokens per second)",
+  "decode_speed_tokens_per_second": "Decode Speed (tokens per second)",
   "current_turn": "Current Turn",
   "start_a_new_game": "Start Game",
   "please_wait_for_the_model_to_generate": "Please wait for the model to generate",
@@ -430,6 +441,7 @@
   "no_model_selected": "No model selected",
   "change": "Change",
   "edit": "Edit",
+  "editing": "Editing",
   "status": "Status",
   "translating": "Translating...",
   "idle": "Idle",

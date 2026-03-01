@@ -35,6 +35,8 @@ class InputTextField extends ConsumerWidget {
     final isChat = demoType == .chat;
     final isTalk = demoType == .tts;
     final isSee = demoType == .see;
+    final int? editingOrRegeneratingIndex = isChat ? ref.watch(P.msg.editingOrRegeneratingIndex) : null;
+    final bool editingMessage = editingOrRegeneratingIndex != null;
 
     final imagePath = isSee ? ref.watch(P.see.imagePath) : null;
     final hasAtLeastOneImage = isSee ? ref.watch(P.msg.hasAtLeastOneImage) : false;
@@ -104,6 +106,28 @@ class InputTextField extends ConsumerWidget {
             mainAxisSize: .min,
             crossAxisAlignment: .stretch,
             children: [
+              AnimatedSwitcher(
+                duration: 250.ms,
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeInCubic,
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(
+                      axisAlignment: -1,
+                      sizeFactor: animation,
+                      child: child,
+                    ),
+                  );
+                },
+                child: editingMessage
+                    ? const _EditingMessageBanner(
+                        key: ValueKey("editing-message-banner"),
+                      )
+                    : const SizedBox(
+                        key: ValueKey("editing-message-banner-empty"),
+                      ),
+              ),
               if (isSee)
                 AnimatedSwitcher(
                   duration: 250.ms,
@@ -286,6 +310,77 @@ class InputTextField extends ConsumerWidget {
 
     P.msg.latestClicked.q = null;
     await P.see.play(path: targetPath);
+  }
+}
+
+class _EditingMessageBanner extends StatelessWidget {
+  const _EditingMessageBanner({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final S s = S.of(context);
+    final Color primary = theme.colorScheme.primary;
+    final Color onSurface = theme.colorScheme.onSurface;
+    final Color bgColor = theme.colorScheme.surfaceContainer.q(.72);
+
+    return Padding(
+      padding: const .fromLTRB(8, 8, 8, 2),
+      child: Container(
+        padding: const .only(left: 10, top: 6, right: 6, bottom: 6),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: .circular(12),
+          border: Border.all(color: primary.q(.16), width: .5),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.edit_outlined,
+              size: 16,
+              color: primary.q(.88),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                s.editing,
+                maxLines: 1,
+                overflow: .ellipsis,
+                style: TS(c: onSurface.q(.88), w: .w600, s: 13),
+              ),
+            ),
+            Tooltip(
+              message: s.cancel,
+              child: GestureDetector(
+                onTap: _onCancelEditingPressed,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: .circular(1000),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 18,
+                      color: onSurface.q(.78),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onCancelEditingPressed() {
+    P.app.hapticLight();
+    P.chat.cancelEditing(clearInput: true);
   }
 }
 
