@@ -209,6 +209,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bot_message_edited": MessageLookupByLibrary.simpleMessage(
       "ボットメッセージが編集されました。新しいメッセージを送信できます。",
     ),
+    "branch_switcher_tooltip_first": MessageLookupByLibrary.simpleMessage(
+      "すでに最初のメッセージです",
+    ),
+    "branch_switcher_tooltip_last": MessageLookupByLibrary.simpleMessage(
+      "すでに最後のメッセージです",
+    ),
+    "branch_switcher_tooltip_next": MessageLookupByLibrary.simpleMessage(
+      "次のメッセージ",
+    ),
+    "branch_switcher_tooltip_prev": MessageLookupByLibrary.simpleMessage(
+      "前のメッセージ",
+    ),
     "browser_status": MessageLookupByLibrary.simpleMessage("ブラウザのステータス"),
     "cached_translations_disk": MessageLookupByLibrary.simpleMessage(
       "キャッシュされた翻訳（ディスク）",

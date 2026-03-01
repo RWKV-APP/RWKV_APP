@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 
 // Project imports:
+import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
 
@@ -28,6 +29,7 @@ class BranchSwitcher extends ConsumerWidget {
     final primary = Theme.of(context).colorScheme.primary;
     final siblingCount = P.msg.siblingCount(msg);
     final index = P.msg.siblingIds(msg).indexOf(msg.id);
+    final s = S.of(context);
 
     if (siblingCount <= 1) return const SizedBox.shrink();
 
@@ -51,6 +53,7 @@ class BranchSwitcher extends ConsumerWidget {
           mainAxisSize: .min,
           children: [
             IconButton(
+              tooltip: isFirst ? s.branch_switcher_tooltip_first : s.branch_switcher_tooltip_prev,
               onPressed: isFirst ? null : _onBackPressed,
               padding: const .only(left: 4, right: 16, top: 4, bottom: 4),
               constraints: const BoxConstraints(), // override default min size of 48px
@@ -59,8 +62,9 @@ class BranchSwitcher extends ConsumerWidget {
                 color: isFirst ? primary.q(.5) : primary,
                 size: 16,
               ),
-            ),
+            ).debug,
             IconButton(
+              tooltip: isLast ? s.branch_switcher_tooltip_last : s.branch_switcher_tooltip_next,
               onPressed: isLast ? null : _onForwardPressed,
               padding: const .only(left: 16, right: 4, top: 4, bottom: 4),
               constraints: const BoxConstraints(), // override default min size of 48px
@@ -69,7 +73,7 @@ class BranchSwitcher extends ConsumerWidget {
                 color: isLast ? primary.q(.5) : primary,
                 size: 16,
               ),
-            ),
+            ).debug,
           ],
         ),
       ],

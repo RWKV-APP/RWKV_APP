@@ -574,6 +574,46 @@ class S {
     );
   }
 
+  /// `已经是第一条消息了`
+  String get branch_switcher_tooltip_first {
+    return Intl.message(
+      '已经是第一条消息了',
+      name: 'branch_switcher_tooltip_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `上一条消息`
+  String get branch_switcher_tooltip_prev {
+    return Intl.message(
+      '上一条消息',
+      name: 'branch_switcher_tooltip_prev',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已经是最后一条消息了`
+  String get branch_switcher_tooltip_last {
+    return Intl.message(
+      '已经是最后一条消息了',
+      name: 'branch_switcher_tooltip_last',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `下一条消息`
+  String get branch_switcher_tooltip_next {
+    return Intl.message(
+      '下一条消息',
+      name: 'branch_switcher_tooltip_next',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `屏幕宽度`
   String get screen_width {
     return Intl.message('屏幕宽度', name: 'screen_width', desc: '', args: []);

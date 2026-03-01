@@ -206,6 +206,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bot_message_edited": MessageLookupByLibrary.simpleMessage(
       "机器人消息已编辑，现在可以发送新消息",
     ),
+    "branch_switcher_tooltip_first": MessageLookupByLibrary.simpleMessage(
+      "已经是第一条消息了",
+    ),
+    "branch_switcher_tooltip_last": MessageLookupByLibrary.simpleMessage(
+      "已经是最后一条消息了",
+    ),
+    "branch_switcher_tooltip_next": MessageLookupByLibrary.simpleMessage(
+      "下一条消息",
+    ),
+    "branch_switcher_tooltip_prev": MessageLookupByLibrary.simpleMessage(
+      "上一条消息",
+    ),
     "browser_status": MessageLookupByLibrary.simpleMessage("浏览器状态"),
     "cached_translations_disk": MessageLookupByLibrary.simpleMessage(
       "缓存的翻译 (磁盘)",

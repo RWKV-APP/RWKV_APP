@@ -97,7 +97,6 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
             mainAxisAlignment: .start,
             crossAxisAlignment: .start,
             children: [
-              const SizedBox(width: 4),
               for (var i = 0; i < batchCount; i++)
                 GD(
                   onTap: () {

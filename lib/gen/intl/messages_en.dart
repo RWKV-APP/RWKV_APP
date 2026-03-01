@@ -245,6 +245,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bot_message_edited": MessageLookupByLibrary.simpleMessage(
       "Bot message edited, you can now send a new message",
     ),
+    "branch_switcher_tooltip_first": MessageLookupByLibrary.simpleMessage(
+      "Already the first message",
+    ),
+    "branch_switcher_tooltip_last": MessageLookupByLibrary.simpleMessage(
+      "Already the last message",
+    ),
+    "branch_switcher_tooltip_next": MessageLookupByLibrary.simpleMessage(
+      "Next message",
+    ),
+    "branch_switcher_tooltip_prev": MessageLookupByLibrary.simpleMessage(
+      "Previous message",
+    ),
     "browser_status": MessageLookupByLibrary.simpleMessage("Browser Status"),
     "cached_translations_disk": MessageLookupByLibrary.simpleMessage(
       "Cached translations (disk)",

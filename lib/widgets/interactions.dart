@@ -34,7 +34,7 @@ class InputInteractions extends ConsumerWidget {
     return Container(
       decoration: const BoxDecoration(color: kC),
       child: _Interactions(preferredDemoType: preferredDemoType),
-    );
+    ).debug;
   }
 }
 

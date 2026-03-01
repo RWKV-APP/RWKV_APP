@@ -211,6 +211,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bot_message_edited": MessageLookupByLibrary.simpleMessage(
       "봇 메시지가 편집되었습니다. 이제 새 메시지를 보낼 수 있습니다.",
     ),
+    "branch_switcher_tooltip_first": MessageLookupByLibrary.simpleMessage(
+      "이미 첫 번째 메시지입니다",
+    ),
+    "branch_switcher_tooltip_last": MessageLookupByLibrary.simpleMessage(
+      "이미 마지막 메시지입니다",
+    ),
+    "branch_switcher_tooltip_next": MessageLookupByLibrary.simpleMessage(
+      "다음 메시지",
+    ),
+    "branch_switcher_tooltip_prev": MessageLookupByLibrary.simpleMessage(
+      "이전 메시지",
+    ),
     "browser_status": MessageLookupByLibrary.simpleMessage("브라우저 상태"),
     "cached_translations_disk": MessageLookupByLibrary.simpleMessage(
       "캐시된 번역 (디스크)",

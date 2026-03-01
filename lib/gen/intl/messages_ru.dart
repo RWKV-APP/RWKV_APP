@@ -247,6 +247,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bot_message_edited": MessageLookupByLibrary.simpleMessage(
       "Сообщение бота отредактировано, теперь вы можете отправить новое сообщение",
     ),
+    "branch_switcher_tooltip_first": MessageLookupByLibrary.simpleMessage(
+      "Уже первое сообщение",
+    ),
+    "branch_switcher_tooltip_last": MessageLookupByLibrary.simpleMessage(
+      "Уже последнее сообщение",
+    ),
+    "branch_switcher_tooltip_next": MessageLookupByLibrary.simpleMessage(
+      "Следующее сообщение",
+    ),
+    "branch_switcher_tooltip_prev": MessageLookupByLibrary.simpleMessage(
+      "Предыдущее сообщение",
+    ),
     "browser_status": MessageLookupByLibrary.simpleMessage("Статус браузера"),
     "cached_translations_disk": MessageLookupByLibrary.simpleMessage(
       "Кэшированные переводы (диск)",

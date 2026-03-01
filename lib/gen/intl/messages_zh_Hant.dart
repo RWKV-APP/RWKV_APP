@@ -204,6 +204,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bot_message_edited": MessageLookupByLibrary.simpleMessage(
       "機器人訊息已編輯，現在可以傳送新訊息",
     ),
+    "branch_switcher_tooltip_first": MessageLookupByLibrary.simpleMessage(
+      "已經是第一則訊息了",
+    ),
+    "branch_switcher_tooltip_last": MessageLookupByLibrary.simpleMessage(
+      "已經是最後一則訊息了",
+    ),
+    "branch_switcher_tooltip_next": MessageLookupByLibrary.simpleMessage(
+      "下一則訊息",
+    ),
+    "branch_switcher_tooltip_prev": MessageLookupByLibrary.simpleMessage(
+      "上一則訊息",
+    ),
     "browser_status": MessageLookupByLibrary.simpleMessage("瀏覽器狀態"),
     "cached_translations_disk": MessageLookupByLibrary.simpleMessage(
       "快取的翻譯 (磁碟)",
