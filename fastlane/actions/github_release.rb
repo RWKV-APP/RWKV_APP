@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module Fastlane
   module Actions
     class GithubReleaseAction < Action
@@ -10,6 +12,10 @@ module Fastlane
         branch = params[:branch] || "dev"
         release_name = params[:release_name] || full_version
         release_notes = params[:release_notes] || "Release #{full_version}"
+        upload_retry_count = (params[:upload_retry_count] || 3).to_i
+        if upload_retry_count < 1
+          UI.user_error!("upload_retry_count must be >= 1")
+        end
 
         if repo.nil? || repo.empty?
           UI.user_error!("You have to provide a repo (e.g., 'RWKV-APP/RWKV_APP')")
@@ -66,8 +72,12 @@ module Fastlane
           end
           
           # Upload file to existing release (--clobber will overwrite if file exists)
-          upload_result = sh("gh release upload #{version} '#{file_path}' --repo #{repo} --clobber")
-          UI.success("Successfully uploaded #{file_name} to release #{version}")
+          upload_asset_with_retry(
+            repo: repo,
+            version: version,
+            file_path: file_path,
+            upload_retry_count: upload_retry_count,
+          )
         else
           # Release doesn't exist, check if tag exists
           project_root = File.expand_path('../..', __dir__)
@@ -171,11 +181,57 @@ module Fastlane
           end
 
           # Upload file to the release (whether it was just created or already existed)
-          upload_result = sh("gh release upload #{version} '#{file_path}' --repo #{repo} --clobber")
-          UI.success("Successfully uploaded #{File.basename(file_path)} to release #{version}")
+          upload_asset_with_retry(
+            repo: repo,
+            version: version,
+            file_path: file_path,
+            upload_retry_count: upload_retry_count,
+          )
         end
 
         UI.success("Release URL: https://github.com/#{repo}/releases/tag/#{version}")
+      end
+
+      def self.upload_asset_with_retry(repo:, version:, file_path:, upload_retry_count:)
+        file_name = File.basename(file_path)
+        attempt = 1
+        escaped_version = Shellwords.escape(version)
+        escaped_file_path = Shellwords.escape(file_path)
+        escaped_repo = Shellwords.escape(repo)
+
+        loop do
+          begin
+            sh("gh release upload #{escaped_version} #{escaped_file_path} --repo #{escaped_repo} --clobber")
+            UI.success("Successfully uploaded #{file_name} to release #{version}")
+            return
+          rescue => e
+            error_message = e.message.to_s
+            retryable = retryable_upload_error?(error_message)
+            first_line = error_message.split("\n").first.to_s.strip
+            if !retryable || attempt >= upload_retry_count
+              UI.user_error!("Failed to upload #{file_name} to release #{version}: #{first_line}")
+            end
+            wait_seconds = attempt * 3
+            UI.important("Upload failed (attempt #{attempt}/#{upload_retry_count}): #{first_line}")
+            UI.message("Retrying in #{wait_seconds}s...")
+            sleep(wait_seconds)
+            attempt += 1
+          end
+        end
+      end
+
+      def self.retryable_upload_error?(error_message)
+        normalized = error_message.to_s.downcase
+        return true if normalized.include?('eof')
+        return true if normalized.include?('timed out')
+        return true if normalized.include?('timeout')
+        return true if normalized.include?('connection reset')
+        return true if normalized.include?('connection refused')
+        return true if normalized.include?('network is unreachable')
+        return true if normalized.include?('502')
+        return true if normalized.include?('503')
+        return true if normalized.include?('504')
+        false
       end
 
       def self.description
@@ -230,6 +286,15 @@ module Fastlane
                                        description: "Release notes",
                                        optional: true,
                                        type: String),
+          FastlaneCore::ConfigItem.new(key: :upload_retry_count,
+                                       env_name: "GITHUB_RELEASE_UPLOAD_RETRY_COUNT",
+                                       description: "How many times to retry `gh release upload` on transient network failures",
+                                       optional: true,
+                                       default_value: 3,
+                                       verify_block: proc do |value|
+                                         UI.user_error!("upload_retry_count must be >= 1") if value.to_i < 1
+                                       end,
+                                       type: Integer),
         ]
       end
 
@@ -239,4 +304,3 @@ module Fastlane
     end
   end
 end
-
