@@ -105,7 +105,7 @@ class UserTTSContent extends ConsumerWidget {
                     borderRadius: .circular(8),
                     border: .all(color: primary, width: .5),
                   ),
-                  margin: const .only(top: 2),
+                  margin: const .only(top: 6),
                   padding: const .only(left: 4, top: 3, right: 4, bottom: 3),
                   child: Text.rich(
                     TextSpan(
