@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:async';
 import 'dart:math' as math;
 
 // Flutter imports:
@@ -229,7 +228,7 @@ class BotMessageBottom extends ConsumerWidget {
 
     final double verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
     final bool branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
-    final bool showBranchSwitcher = !changing && branchSwitcherAvailable;
+    final bool showBranchSwitcher = branchSwitcherAvailable;
     final Widget branchSwitcher = IgnorePointer(
       ignoring: disableDefaultActions,
       child: BranchSwitcher(msg, index),
@@ -258,6 +257,11 @@ class BotMessageBottom extends ConsumerWidget {
         !msg.changing &&
         resolvedConversationTokenCount != null &&
         resolvedConversationTokenCount >= Config.newConversationTokenReminderThreshold;
+    final bool isContextTokenGenerating = contextTokenCountText == s.generating;
+    final String inlineConversationTokenCoreText = isContextTokenGenerating ? contextTokenCountText : "$contextTokenCountText tokens";
+    final String inlineConversationTokenText = showConversationTokenLimitHint
+        ? "$inlineConversationTokenCoreText · ${s.conversation_token_limit_hint_short}"
+        : inlineConversationTokenCoreText;
 
     final double livePrefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final double liveDecodeSpeed = ref.watch(P.rwkv.decodeSpeed);
@@ -269,6 +273,8 @@ class BotMessageBottom extends ConsumerWidget {
     final String settledDecodeSpeedText = _formatSpeed(speed: msg.decodeSpeed);
     final String detailsPrefillSpeedText = msg.changing ? changingInlinePrefillSpeedText : settledPrefillSpeedText;
     final String detailsDecodeSpeedText = msg.changing ? changingInlineDecodeSpeedText : settledDecodeSpeedText;
+    final String detailsPrefillSpeedDisplay = detailsPrefillSpeedText == "--" ? "--" : "$detailsPrefillSpeedText t/s";
+    final String detailsDecodeSpeedDisplay = detailsDecodeSpeedText == "--" ? "--" : "$detailsDecodeSpeedText t/s";
 
     final List<SamplerAndPenaltyParam> parsedDecodeParams = msg.parsedDecodeParams;
     final DecodeParamType currentDecodeParamType = ref.watch(P.rwkv.decodeParamType);
@@ -291,6 +297,7 @@ class BotMessageBottom extends ConsumerWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final _BottomActionLayout layout = _BottomActionLayout.resolve(
           availableWidth: constraints.maxWidth,
+          showEditButton: showEditAction,
           showCopyButton: showCopyButton,
           showShareButton: showShareButton,
           showRegenerateButton: showBotRegenerateButton,
@@ -298,16 +305,19 @@ class BotMessageBottom extends ConsumerWidget {
           showChangingSpeedTexts: changing && !detailsExpanded,
           showChangingProgressText: showChangingPrefillProgress,
           hasBranchSwitcher: showBranchSwitcher,
+          showInlineConversationTokens: !isTTSDemo,
           showMoreButton: showMoreButton,
           showResumeButton: showResumeAction,
         );
         final bool showCopyInMain = layout.showCopyInMain;
         final bool showShareInMain = layout.showShareInMain;
         final bool showRegenerateInMain = layout.showRegenerateInMain;
+        final bool showEditInMain = layout.showEditInMain;
+        final bool showEditInPanel = layout.showEditInPanel;
         final bool showCopyInPanel = layout.showCopyInPanel;
         final bool showShareInPanel = layout.showShareInPanel;
         final bool showRegenerateInPanel = layout.showRegenerateInPanel;
-        final bool hasCompactedActions = showCopyInPanel || showShareInPanel || showRegenerateInPanel;
+        final bool hasCompactedActions = showEditInPanel || showCopyInPanel || showShareInPanel || showRegenerateInPanel;
 
         return Padding(
           padding: .only(top: isMobile ? .0 : 8.0),
@@ -384,6 +394,28 @@ class BotMessageBottom extends ConsumerWidget {
                     ),
                   ),
                   _AnimatedActionItem(
+                    visible: showEditInMain,
+                    duration: actionAnimDuration,
+                    curve: actionAnimCurve,
+                    child: Tooltip(
+                      message: s.edit,
+                      child: GestureDetector(
+                        onTap: _onBotEditPressed,
+                        child: Container(
+                          decoration: const BoxDecoration(color: Colors.transparent),
+                          child: Padding(
+                            padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                            child: Icon(
+                              Symbols.edit,
+                              color: primaryColor.q(.8),
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  _AnimatedActionItem(
                     visible: changing,
                     duration: actionAnimDuration,
                     curve: actionAnimCurve,
@@ -408,7 +440,7 @@ class BotMessageBottom extends ConsumerWidget {
                               ),
                             ),
                             if (!detailsExpanded) ...[
-                              const SizedBox(width: 4),
+                              const SizedBox(width: 8),
                               Column(
                                 mainAxisSize: .min,
                                 crossAxisAlignment: .start,
@@ -441,7 +473,26 @@ class BotMessageBottom extends ConsumerWidget {
                     curve: actionAnimCurve,
                     child: branchSwitcher,
                   ),
-                  const Spacer(),
+                  if (!isTTSDemo)
+                    Expanded(
+                      child: Padding(
+                        padding: const .symmetric(horizontal: 4),
+                        child: Text(
+                          inlineConversationTokenText,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          softWrap: false,
+                          style: TS(
+                            c: primaryColor.q(.76),
+                            s: 10,
+                            w: .w600,
+                          ),
+                          textAlign: .left,
+                        ),
+                      ),
+                    )
+                  else
+                    const Spacer(),
                   _AnimatedActionItem(
                     visible: showMoreButton,
                     duration: actionAnimDuration,
@@ -525,12 +576,12 @@ class BotMessageBottom extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
-                      if (showEditAction || showRegenerateInPanel || showShareInPanel || showCopyInPanel)
+                      if (showEditInPanel || showRegenerateInPanel || showShareInPanel || showCopyInPanel)
                         Wrap(
                           spacing: 8,
                           runSpacing: 6,
                           children: [
-                            if (showEditAction)
+                            if (showEditInPanel)
                               _BottomDetailsActionChip(
                                 icon: Symbols.edit,
                                 label: s.edit,
@@ -560,13 +611,13 @@ class BotMessageBottom extends ConsumerWidget {
                               ),
                           ],
                         ),
-                      if (showEditAction || showRegenerateInPanel || showShareInPanel || showCopyInPanel) 6.h,
+                      if (showEditInPanel || showRegenerateInPanel || showShareInPanel || showCopyInPanel) 6.h,
                       Wrap(
                         spacing: 6,
                         runSpacing: 6,
                         children: [
                           _BottomDetailsMetaChip(
-                            label: s.model,
+                            label: "",
                             value: modelNameText,
                             color: primaryColor,
                           ),
@@ -576,61 +627,16 @@ class BotMessageBottom extends ConsumerWidget {
                               value: messageTokenCountText,
                               color: primaryColor,
                             ),
-                          if (!isTTSDemo)
-                            Row(
-                              mainAxisSize: .min,
-                              children: [
-                                _BottomDetailsMetaChip(
-                                  label: s.conversation_token_count,
-                                  value: contextTokenCountText,
-                                  color: primaryColor,
-                                ),
-                                if (showConversationTokenLimitHint) ...[
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    s.conversation_token_limit_hint_short,
-                                    style: TS(
-                                      c: primaryColor.q(.64),
-                                      s: 10,
-                                      w: .w600,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
                           _BottomDetailsMetaChip(
-                            label: s.prefill_speed_tokens_per_second,
-                            value: detailsPrefillSpeedText,
+                            label: s.prefill,
+                            value: detailsPrefillSpeedDisplay,
                             color: primaryColor,
                           ),
                           _BottomDetailsMetaChip(
-                            label: s.decode_speed_tokens_per_second,
-                            value: detailsDecodeSpeedText,
+                            label: s.decode,
+                            value: detailsDecodeSpeedDisplay,
                             color: primaryColor,
                           ),
-                          if (!isTTSDemo)
-                            _BottomDetailsMetaChip(
-                              label: s.reasoning_enabled,
-                              value: runningModeText,
-                              color: primaryColor,
-                              leading: SvgPicture.asset(
-                                Assets.img.chat.think,
-                                width: 12,
-                                height: 12,
-                                colorFilter: .mode(primaryColor.q(.82), BlendMode.srcIn),
-                              ),
-                            ),
-                          if (!isTTSDemo && decodeParamSummary != null)
-                            _BottomDetailsMetaChip(
-                              label: s.decode_param,
-                              value: decodeParamSummary,
-                              color: primaryColor,
-                              leading: Icon(
-                                Symbols.auto_awesome,
-                                size: 13,
-                                color: primaryColor.q(.82),
-                              ),
-                            ),
                         ],
                       ),
                     ],
@@ -645,7 +651,7 @@ class BotMessageBottom extends ConsumerWidget {
   }
 }
 
-class _ChangingPrefillProgressInline extends ConsumerStatefulWidget {
+class _ChangingPrefillProgressInline extends ConsumerWidget {
   final bool changing;
   final bool detailsExpanded;
   final Color color;
@@ -656,72 +662,32 @@ class _ChangingPrefillProgressInline extends ConsumerStatefulWidget {
     required this.color,
   });
 
-  @override
-  ConsumerState<_ChangingPrefillProgressInline> createState() => _ChangingPrefillProgressInlineState();
-}
-
-class _ChangingPrefillProgressInlineState extends ConsumerState<_ChangingPrefillProgressInline> {
-  Timer? _hideTimer;
-  bool _hiddenAfterComplete = false;
-
-  @override
-  void didUpdateWidget(covariant _ChangingPrefillProgressInline oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.changing) return;
-    _hideTimer?.cancel();
-    _hideTimer = null;
-    _hiddenAfterComplete = false;
-  }
-
-  @override
-  void dispose() {
-    _hideTimer?.cancel();
-    _hideTimer = null;
-    super.dispose();
-  }
-
   int _percentValue({required double progress}) {
     final double clampedProgress = progress.clamp(0, 1).toDouble();
     return (clampedProgress * 100).round();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    if (!widget.changing) return const SizedBox.shrink();
+    if (!changing) return const SizedBox.shrink();
 
     final S s = S.of(context);
     final double progress = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
     final int percent = _percentValue(progress: progress);
+    if (percent >= 100) return const SizedBox.shrink();
 
-    if (percent >= 100) {
-      if (!_hiddenAfterComplete && _hideTimer == null) {
-        _hideTimer = Timer(const Duration(milliseconds: 500), () {
-          _hideTimer = null;
-          if (!mounted) return;
-          setState(() {
-            _hiddenAfterComplete = true;
-          });
-        });
-      }
-    } else {
-      _hideTimer?.cancel();
-      _hideTimer = null;
-      _hiddenAfterComplete = false;
-    }
-
-    if (_hiddenAfterComplete) return const SizedBox.shrink();
     final String percentText = "$percent%";
     final String progressLabel = s.prefill_progress_percent(percentText);
 
     return Row(
       mainAxisSize: .min,
       children: [
-        SizedBox(width: widget.detailsExpanded ? 6 : 8),
+        SizedBox(width: detailsExpanded ? 6 : 8),
         Text(
           progressLabel,
           style: theme.textTheme.labelSmall?.copyWith(
-            color: widget.color.q(.92),
+            color: color.q(.92),
             fontWeight: .w700,
             fontSize: 10,
           ),
@@ -732,17 +698,21 @@ class _ChangingPrefillProgressInlineState extends ConsumerState<_ChangingPrefill
 }
 
 class _BottomActionLayout {
+  final bool showEditInMain;
   final bool showRegenerateInMain;
   final bool showShareInMain;
   final bool showCopyInMain;
+  final bool showEditInPanel;
   final bool showRegenerateInPanel;
   final bool showShareInPanel;
   final bool showCopyInPanel;
 
   const _BottomActionLayout({
+    required this.showEditInMain,
     required this.showRegenerateInMain,
     required this.showShareInMain,
     required this.showCopyInMain,
+    required this.showEditInPanel,
     required this.showRegenerateInPanel,
     required this.showShareInPanel,
     required this.showCopyInPanel,
@@ -750,6 +720,7 @@ class _BottomActionLayout {
 
   static _BottomActionLayout resolve({
     required double availableWidth,
+    required bool showEditButton,
     required bool showRegenerateButton,
     required bool showShareButton,
     required bool showCopyButton,
@@ -757,17 +728,21 @@ class _BottomActionLayout {
     required bool showChangingSpeedTexts,
     required bool showChangingProgressText,
     required bool hasBranchSwitcher,
+    required bool showInlineConversationTokens,
     required bool showMoreButton,
     required bool showResumeButton,
   }) {
+    bool mainEdit = showEditButton;
     bool mainRegenerate = showRegenerateButton;
     bool mainShare = showShareButton;
     bool mainCopy = showCopyButton;
+    bool panelEdit = false;
     bool panelRegenerate = false;
     bool panelShare = false;
     bool panelCopy = false;
 
     double estimatedWidth = _estimateMainRowWidth(
+      showEditButton: mainEdit,
       showRegenerateButton: mainRegenerate,
       showShareButton: mainShare,
       showCopyButton: mainCopy,
@@ -775,6 +750,7 @@ class _BottomActionLayout {
       showChangingSpeedTexts: showChangingSpeedTexts,
       showChangingProgressText: showChangingProgressText,
       hasBranchSwitcher: hasBranchSwitcher,
+      showInlineConversationTokens: showInlineConversationTokens,
       showMoreButton: showMoreButton,
       showResumeButton: showResumeButton,
     );
@@ -783,6 +759,7 @@ class _BottomActionLayout {
       mainRegenerate = false;
       panelRegenerate = true;
       estimatedWidth = _estimateMainRowWidth(
+        showEditButton: mainEdit,
         showRegenerateButton: mainRegenerate,
         showShareButton: mainShare,
         showCopyButton: mainCopy,
@@ -790,6 +767,25 @@ class _BottomActionLayout {
         showChangingSpeedTexts: showChangingSpeedTexts,
         showChangingProgressText: showChangingProgressText,
         hasBranchSwitcher: hasBranchSwitcher,
+        showInlineConversationTokens: showInlineConversationTokens,
+        showMoreButton: showMoreButton,
+        showResumeButton: showResumeButton,
+      );
+    }
+
+    if (estimatedWidth > availableWidth && mainEdit) {
+      mainEdit = false;
+      panelEdit = true;
+      estimatedWidth = _estimateMainRowWidth(
+        showEditButton: mainEdit,
+        showRegenerateButton: mainRegenerate,
+        showShareButton: mainShare,
+        showCopyButton: mainCopy,
+        showChangingIndicator: showChangingIndicator,
+        showChangingSpeedTexts: showChangingSpeedTexts,
+        showChangingProgressText: showChangingProgressText,
+        hasBranchSwitcher: hasBranchSwitcher,
+        showInlineConversationTokens: showInlineConversationTokens,
         showMoreButton: showMoreButton,
         showResumeButton: showResumeButton,
       );
@@ -799,6 +795,7 @@ class _BottomActionLayout {
       mainCopy = false;
       panelCopy = true;
       estimatedWidth = _estimateMainRowWidth(
+        showEditButton: mainEdit,
         showRegenerateButton: mainRegenerate,
         showShareButton: mainShare,
         showCopyButton: mainCopy,
@@ -806,6 +803,7 @@ class _BottomActionLayout {
         showChangingSpeedTexts: showChangingSpeedTexts,
         showChangingProgressText: showChangingProgressText,
         hasBranchSwitcher: hasBranchSwitcher,
+        showInlineConversationTokens: showInlineConversationTokens,
         showMoreButton: showMoreButton,
         showResumeButton: showResumeButton,
       );
@@ -817,9 +815,11 @@ class _BottomActionLayout {
     }
 
     return _BottomActionLayout(
+      showEditInMain: mainEdit,
       showRegenerateInMain: mainRegenerate,
       showShareInMain: mainShare,
       showCopyInMain: mainCopy,
+      showEditInPanel: panelEdit,
       showRegenerateInPanel: panelRegenerate,
       showShareInPanel: panelShare,
       showCopyInPanel: panelCopy,
@@ -827,6 +827,7 @@ class _BottomActionLayout {
   }
 
   static double _estimateMainRowWidth({
+    required bool showEditButton,
     required bool showRegenerateButton,
     required bool showShareButton,
     required bool showCopyButton,
@@ -834,10 +835,12 @@ class _BottomActionLayout {
     required bool showChangingSpeedTexts,
     required bool showChangingProgressText,
     required bool hasBranchSwitcher,
+    required bool showInlineConversationTokens,
     required bool showMoreButton,
     required bool showResumeButton,
   }) {
     double width = 0;
+    if (showEditButton) width = width + 30;
     if (showRegenerateButton) width = width + 30;
     if (showShareButton) width = width + 30;
     if (showCopyButton) width = width + 30;
@@ -847,6 +850,7 @@ class _BottomActionLayout {
       if (showChangingProgressText) width = width + 78;
     }
     if (hasBranchSwitcher) width = width + 92;
+    if (showInlineConversationTokens) width = width + 112;
     if (showMoreButton) width = width + 52;
     if (showResumeButton) width = width + 84;
 
@@ -888,10 +892,11 @@ class _BottomDetailsMetaChip extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(
-                    text: "$label: ",
-                    style: TS(c: color.q(.62), s: 10, w: .w500),
-                  ),
+                  if (label.isNotEmpty)
+                    TextSpan(
+                      text: "$label: ",
+                      style: TS(c: color.q(.62), s: 10, w: .w500),
+                    ),
                   TextSpan(
                     text: value,
                     style: TS(c: color.q(.92), s: 11, w: .w600),
