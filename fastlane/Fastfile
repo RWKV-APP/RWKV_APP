@@ -4,6 +4,31 @@ lane :all do |params|
   upload_to_testflight = params[:upload_to_testflight] == false ? false : true
   upload_to_pgyer = params[:upload_to_pgyer] == false ? false : true
   skip_git_reset = params[:skip_git_reset] == true ? true : false
+  upload_retry_count = (params[:upload_retry_count] || 3).to_i
+  if upload_retry_count < 1
+    upload_retry_count = 3
+  end
+
+  resume_upload_only = params[:resume_upload] == true ? true : false
+  if resume_upload_only
+    resume_upload_to_pgyer = params[:upload_to_pgyer]
+    if resume_upload_to_pgyer.nil?
+      resume_upload_to_pgyer = false
+    end
+
+    resume_upload(
+      apk_path: params[:apk_path],
+      run_android: params[:run_android],
+      upload_to_pgyer: resume_upload_to_pgyer,
+      upload_to_github: params[:upload_to_github],
+      continue_on_github_error: params[:continue_on_github_error],
+      run_macos: params[:run_macos],
+      upload_retry_count: upload_retry_count,
+      upload_to_testflight: upload_to_testflight,
+      skip_git_reset: skip_git_reset,
+    )
+    next
+  end
 
   build_number = raw_increase_build_number()
   raw_change_analysis_options()
@@ -53,6 +78,7 @@ lane :all do |params|
       branch: 'dev',
       release_name: semantic_version,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
+      upload_retry_count: upload_retry_count,
     )
 
     # 🔥 上传到 Hugging Face (android-arm64)
@@ -76,6 +102,7 @@ lane :all do |params|
   # 🔥 构建并上传 macOS DMG
   macos_build_and_upload(
     upload_to_github: true,
+    upload_retry_count: upload_retry_count,
   )
 
   # 🔥 上传到 TestFlight
@@ -200,6 +227,10 @@ end
 lane :macos_build_and_upload do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
   upload_to_huggingface = params[:upload_to_huggingface] == false ? false : true
+  upload_retry_count = (params[:upload_retry_count] || 3).to_i
+  if upload_retry_count < 1
+    upload_retry_count = 3
+  end
 
   # 1. 基础信息准备
   require 'yaml'
@@ -310,6 +341,7 @@ lane :macos_build_and_upload do |params|
       branch: 'dev',
       release_name: version_number,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
+      upload_retry_count: upload_retry_count,
     )
   end
 
@@ -375,6 +407,16 @@ end
 #  用于 all lane 构建成功但在上传阶段失败时，从上传 APK 开始继续执行
 # -----------------------------------------------------------------------
 lane :resume_upload do |params|
+  run_android = params[:run_android] == false ? false : true
+  upload_to_pgyer = params[:upload_to_pgyer] == true ? true : false
+  upload_to_github = params[:upload_to_github] == false ? false : true
+  run_macos = params[:run_macos] == false ? false : true
+  continue_on_github_error = params[:continue_on_github_error] == true ? true : false
+  upload_retry_count = (params[:upload_retry_count] || 3).to_i
+  if upload_retry_count < 1
+    upload_retry_count = 3
+  end
+
   # 1. 读取当前 pubspec.yaml 中的版本号 (因为之前的 all lane 已经修改并提交了)
   require 'yaml'
   project_root = File.expand_path('..', __dir__)
@@ -388,64 +430,91 @@ lane :resume_upload do |params|
 
   UI.message "🔄 恢复上传流程: 版本 #{full_version}"
 
-  # 2. 尝试定位之前构建好的 APK 文件
-  # 根据你的日志，文件名格式似乎是 rwkv_chat_版本_构建号.apk
-  apk_name = "rwkv_chat_#{semantic_version}_#{build_number}.apk"
-  apk_path = File.join(project_root, "build/app/outputs/flutter-apk/#{apk_name}")
-
-  # 如果找不到带版本号的，尝试找默认的 app-release.apk
-  unless File.exist?(apk_path)
-    UI.important "未找到 #{apk_name}，尝试查找 app-release.apk..."
-    apk_path = File.join(project_root, 'build/app/outputs/flutter-apk/app-release.apk')
-  end
-
-  if File.exist?(apk_path)
-    UI.success "✅ 找到 APK 文件: #{apk_path}"
-
-    # 3. 🔥 重试上传到 GitHub Release (Android)
-    # 注意：如果 Release 已存在但为空，github_release 可能会报错，这里假设它能处理或只是上传资源
-    # 如果 github_release 报错说 tag 已存在，你可能需要手动在网页上传一次 APK，或者暂时注释掉这块
-    begin
-      github_release(
-        repo: 'RWKV-APP/RWKV_APP',
-        version: full_version,
-        file_path: apk_path,
-        branch: 'dev',
-        release_name: semantic_version,
-        release_notes: "Release #{full_version}\n\nVersion: #{semantic_version}\nBuild: #{build_number}",
-      )
-    rescue => e
-      UI.error "GitHub Release 上传遇到问题 (可能是 Release 已存在): #{e.message}"
-      UI.important '请尝试手动上传 APK，脚本将继续执行后续步骤...'
-    end
-
-    # 4. 🔥 恢复上传到 Hugging Face (Android)
-    if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
-      apk_filename = File.basename(apk_path)
-      huggingface(
-        repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
-        file_path: apk_path,
-        path_in_repo: "android-arm64/#{apk_filename}",
-        commit_message: "Upload APK #{apk_filename} (v#{full_version})",
-        repo_type: 'dataset',
-      )
+  # 2. 优先使用传入的 apk_path，否则按版本自动定位
+  apk_path = params[:apk_path]
+  if apk_path.nil? || apk_path.empty?
+    apk_name = "rwkv_chat_#{semantic_version}_#{build_number}.apk"
+    apk_path = File.join(project_root, "build/app/outputs/flutter-apk/#{apk_name}")
+    unless File.exist?(apk_path)
+      UI.important "未找到 #{apk_name}，尝试查找 app-release.apk..."
+      apk_path = File.join(project_root, 'build/app/outputs/flutter-apk/app-release.apk')
     end
   else
-    UI.user_error! '❌ 无法找到构建好的 APK 文件，无法恢复 Android 上传。'
+    apk_path = File.expand_path(apk_path, project_root)
+    UI.message "使用手动指定 APK: #{apk_path}"
   end
 
-  # 5. 🔥 继续 macOS 流程 (macOS lane 内部会自己构建，所以是安全的)
-  macos_build_and_upload(
-    upload_to_github: true,
-  )
+  if run_android
+    if File.exist?(apk_path)
+      UI.success "✅ 找到 APK 文件: #{apk_path}"
 
-  # 6. 🔥 继续 iOS 流程 (iOS lane 内部会自己构建，所以是安全的)
+      # 3. 可选：重新上传到蒲公英（默认关闭，避免重复上传）
+      if upload_to_pgyer
+        pgyer_api_key = ENV['PGYER_API_KEY']
+        pgyer(
+          api_key: pgyer_api_key,
+          apk: apk_path,
+          user_download_file_name: File.basename(apk_path),
+        )
+      end
+
+      # 4. 🔥 重试上传到 GitHub Release (Android)
+      if upload_to_github
+        begin
+          github_release(
+            repo: 'RWKV-APP/RWKV_APP',
+            version: full_version,
+            file_path: apk_path,
+            branch: 'dev',
+            release_name: semantic_version,
+            release_notes: "Release #{full_version}\n\nVersion: #{semantic_version}\nBuild: #{build_number}",
+            upload_retry_count: upload_retry_count,
+          )
+        rescue => e
+          UI.error "GitHub Release 上传失败: #{e.message}"
+          if continue_on_github_error
+            UI.important 'continue_on_github_error=true，继续执行后续步骤。'
+          else
+            raise e
+          end
+        end
+      end
+
+      # 5. 🔥 恢复上传到 Hugging Face (Android)
+      if ENV['HF_TOKEN'] && !ENV['HF_TOKEN'].empty?
+        apk_filename = File.basename(apk_path)
+        huggingface(
+          repo_id: ENV['HF_DATASETS_ID'] || 'rwkv-app/RWKV-Chat',
+          file_path: apk_path,
+          path_in_repo: "android-arm64/#{apk_filename}",
+          commit_message: "Upload APK #{apk_filename} (v#{full_version})",
+          repo_type: 'dataset',
+        )
+      end
+    else
+      UI.user_error! '❌ 无法找到构建好的 APK 文件，无法恢复 Android 上传。'
+    end
+  else
+    UI.important '跳过 Android 恢复流程 (run_android=false)'
+  end
+
+  # 6. 🔥 继续 macOS 流程 (macOS lane 内部会自己构建，所以是安全的)
+  if run_macos
+    macos_build_and_upload(
+      upload_to_github: true,
+      upload_retry_count: upload_retry_count,
+    )
+  else
+    UI.important '跳过 macOS 恢复流程 (run_macos=false)'
+  end
+
+  # 7. 🔥 继续 iOS 流程 (iOS lane 内部会自己构建，所以是安全的)
   upload_to_testflight_flag = params[:upload_to_testflight] == false ? false : true
   if upload_to_testflight_flag
     ios_upload(groups: ['External'])
   end
 
-  # 7. Git Reset (清理)
+  # 8. Git Reset (清理)
   skip_git_reset = params[:skip_git_reset] == true ? true : false
   if !skip_git_reset
     git_reset()
