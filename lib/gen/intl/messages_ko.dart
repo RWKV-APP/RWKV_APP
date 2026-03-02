@@ -330,6 +330,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_token_count": MessageLookupByLibrary.simpleMessage(
       "현재 대화 토큰 수",
     ),
+    "conversation_token_limit_hint_short": MessageLookupByLibrary.simpleMessage(
+      "새 대화 시작 권장",
+    ),
+    "conversation_token_limit_recommend_new_chat":
+        MessageLookupByLibrary.simpleMessage(
+          "현재 대화가 8,000 토큰을 초과했습니다. 새 대화를 시작하는 것을 권장합니다.",
+        ),
     "conversations": MessageLookupByLibrary.simpleMessage("대화"),
     "copy_code": MessageLookupByLibrary.simpleMessage("코드 복사"),
     "copy_text": MessageLookupByLibrary.simpleMessage("텍스트 복사"),

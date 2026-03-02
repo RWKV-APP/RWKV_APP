@@ -243,6 +243,8 @@
   "decode": "Decode",
   "message_token_count": "Message Token Count",
   "conversation_token_count": "Conversation Token Count",
+  "conversation_token_limit_hint_short": "Consider a new chat",
+  "conversation_token_limit_recommend_new_chat": "This conversation has exceeded 8,000 tokens. We recommend starting a new chat.",
   "prefill_speed_tokens_per_second": "Prefill Speed (tokens per second)",
   "decode_speed_tokens_per_second": "Decode Speed (tokens per second)",
   "current_turn": "Current Turn",

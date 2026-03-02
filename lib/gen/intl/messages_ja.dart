@@ -328,6 +328,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_token_count": MessageLookupByLibrary.simpleMessage(
       "現在の会話のトークン数",
     ),
+    "conversation_token_limit_hint_short": MessageLookupByLibrary.simpleMessage(
+      "新しいチャットを推奨",
+    ),
+    "conversation_token_limit_recommend_new_chat":
+        MessageLookupByLibrary.simpleMessage(
+          "この会話は 8,000 トークンを超えています。新しいチャットを開始することをおすすめします。",
+        ),
     "conversations": MessageLookupByLibrary.simpleMessage("会話"),
     "copy_code": MessageLookupByLibrary.simpleMessage("コードをコピー"),
     "copy_text": MessageLookupByLibrary.simpleMessage("テキストをコピー"),

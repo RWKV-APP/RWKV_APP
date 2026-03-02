@@ -316,6 +316,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_token_count": MessageLookupByLibrary.simpleMessage(
       "当前对话 Token 数量",
     ),
+    "conversation_token_limit_hint_short": MessageLookupByLibrary.simpleMessage(
+      "建议开启新对话",
+    ),
+    "conversation_token_limit_recommend_new_chat":
+        MessageLookupByLibrary.simpleMessage("当前对话已超过 8,000 tokens，建议开启新对话"),
     "conversations": MessageLookupByLibrary.simpleMessage("会话"),
     "copy_code": MessageLookupByLibrary.simpleMessage("复制代码"),
     "copy_text": MessageLookupByLibrary.simpleMessage("复制文本"),

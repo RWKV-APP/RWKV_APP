@@ -243,6 +243,8 @@
   "decode": "解码",
   "message_token_count": "单条消息 Token 数量",
   "conversation_token_count": "当前对话 Token 数量",
+  "conversation_token_limit_hint_short": "建议开启新对话",
+  "conversation_token_limit_recommend_new_chat": "当前对话已超过 8,000 tokens，建议开启新对话",
   "prefill_speed_tokens_per_second": "预填充速度（tokens 每秒）",
   "decode_speed_tokens_per_second": "解码速度（tokens 每秒）",
   "current_turn": "当前回合",

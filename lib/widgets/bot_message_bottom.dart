@@ -247,12 +247,17 @@ class BotMessageBottom extends ConsumerWidget {
     final int? adapterConversationTokenCount = conversationTokensCountMap[msg.id];
     final int? persistedMessageTokenCount = msg.messageTokensCount;
     final int? persistedConversationTokenCount = msg.conversationTokensCount;
+    final int? resolvedConversationTokenCount = persistedConversationTokenCount ?? adapterConversationTokenCount;
     final String messageTokenCountText = msg.changing
         ? s.generating
         : (persistedMessageTokenCount ?? adapterMessageTokenCount)?.toString() ?? "--";
     final String contextTokenCountText = msg.changing
         ? s.generating
         : (persistedConversationTokenCount ?? adapterConversationTokenCount)?.toString() ?? "--";
+    final bool showConversationTokenLimitHint =
+        !msg.changing &&
+        resolvedConversationTokenCount != null &&
+        resolvedConversationTokenCount >= Config.newConversationTokenReminderThreshold;
 
     final double livePrefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final double liveDecodeSpeed = ref.watch(P.rwkv.decodeSpeed);
@@ -572,10 +577,26 @@ class BotMessageBottom extends ConsumerWidget {
                               color: primaryColor,
                             ),
                           if (!isTTSDemo)
-                            _BottomDetailsMetaChip(
-                              label: s.conversation_token_count,
-                              value: contextTokenCountText,
-                              color: primaryColor,
+                            Row(
+                              mainAxisSize: .min,
+                              children: [
+                                _BottomDetailsMetaChip(
+                                  label: s.conversation_token_count,
+                                  value: contextTokenCountText,
+                                  color: primaryColor,
+                                ),
+                                if (showConversationTokenLimitHint) ...[
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    s.conversation_token_limit_hint_short,
+                                    style: TS(
+                                      c: primaryColor.q(.64),
+                                      s: 10,
+                                      w: .w600,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           _BottomDetailsMetaChip(
                             label: s.prefill_speed_tokens_per_second,

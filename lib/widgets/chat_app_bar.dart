@@ -287,19 +287,46 @@ class _NewConversationButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    late final Widget icon;
-
-    icon = const Icon(Icons.add_comment_outlined);
+    final theme = Theme.of(context);
+    final s = S.of(context);
     final isEmpty = ref.watch(P.msg.list.select((v) => v.isEmpty));
+    final int currentConversationId = ref.watch(P.msg.msgNode.select((v) => v.createAtInUS));
+    final int? guideConversationId = ref.watch(P.chat.newConversationGuideConversationId);
+    final bool showGuide = !isEmpty && guideConversationId == currentConversationId;
+    final Color? iconColor = showGuide ? theme.colorScheme.primary : null;
 
-    return IconButton(
-      onPressed: !isEmpty
-          ? () {
-              if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
-              P.chat.startNewChat();
-            }
-          : null,
-      icon: icon,
+    final Widget icon = Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Icon(Icons.add_comment_outlined, color: iconColor),
+        if (showGuide)
+          Positioned(
+            right: -1,
+            top: -1,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.error,
+                borderRadius: .circular(999),
+              ),
+            ),
+          ),
+      ],
+    );
+
+    return Tooltip(
+      message: showGuide ? s.conversation_token_limit_recommend_new_chat : s.start_a_new_chat,
+      child: IconButton(
+        onPressed: !isEmpty
+            ? () {
+                if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
+                if (showGuide) P.chat.dismissNewConversationGuide();
+                P.chat.startNewChat();
+              }
+            : null,
+        icon: icon,
+      ),
     );
   }
 }

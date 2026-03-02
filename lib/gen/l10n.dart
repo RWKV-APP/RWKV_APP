@@ -1793,6 +1793,26 @@ class S {
     );
   }
 
+  /// `建议开启新对话`
+  String get conversation_token_limit_hint_short {
+    return Intl.message(
+      '建议开启新对话',
+      name: 'conversation_token_limit_hint_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前对话已超过 8,000 tokens，建议开启新对话`
+  String get conversation_token_limit_recommend_new_chat {
+    return Intl.message(
+      '当前对话已超过 8,000 tokens，建议开启新对话',
+      name: 'conversation_token_limit_recommend_new_chat',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `预填充速度（tokens 每秒）`
   String get prefill_speed_tokens_per_second {
     return Intl.message(

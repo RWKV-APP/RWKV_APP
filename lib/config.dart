@@ -1,4 +1,5 @@
 // Project imports:
+import 'package:zone/args.dart';
 import 'package:zone/router/page_key.dart';
 
 abstract class Config {
@@ -61,6 +62,7 @@ abstract class Config {
   // Markdown font sizes: h1=18, h2=17, h3=16, h4=16, h5=15, h6=15, body=14
   static const markdownHeaderFontSizes = [18.0, 17.0, 16.0, 16.0, 15.0, 15.0];
   static const markdownBodyFontSize = 14.0;
+  static const newConversationTokenReminderThreshold = Args.conversationTokenReminderThreshold;
 
   static const seePrefillId = -42;
 }

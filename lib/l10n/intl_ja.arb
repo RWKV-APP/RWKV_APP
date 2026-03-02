@@ -243,6 +243,8 @@
   "decode": "デコード",
   "message_token_count": "メッセージのトークン数",
   "conversation_token_count": "現在の会話のトークン数",
+  "conversation_token_limit_hint_short": "新しいチャットを推奨",
+  "conversation_token_limit_recommend_new_chat": "この会話は 8,000 トークンを超えています。新しいチャットを開始することをおすすめします。",
   "prefill_speed_tokens_per_second": "プレフィル速度（1秒あたりのトークン数）",
   "decode_speed_tokens_per_second": "デコード速度（1秒あたりのトークン数）",
   "current_turn": "現在のターン",

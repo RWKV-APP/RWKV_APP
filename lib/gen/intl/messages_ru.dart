@@ -386,6 +386,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_token_count": MessageLookupByLibrary.simpleMessage(
       "Количество токенов в текущем диалоге",
     ),
+    "conversation_token_limit_hint_short": MessageLookupByLibrary.simpleMessage(
+      "Рекомендуется новый чат",
+    ),
+    "conversation_token_limit_recommend_new_chat":
+        MessageLookupByLibrary.simpleMessage(
+          "Текущий диалог превысил 8 000 токенов. Рекомендуется начать новый чат.",
+        ),
     "conversations": MessageLookupByLibrary.simpleMessage("Диалоги"),
     "copy_code": MessageLookupByLibrary.simpleMessage("Копировать код"),
     "copy_text": MessageLookupByLibrary.simpleMessage("Копировать текст"),

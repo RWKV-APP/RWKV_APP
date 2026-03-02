@@ -381,6 +381,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_token_count": MessageLookupByLibrary.simpleMessage(
       "Conversation Token Count",
     ),
+    "conversation_token_limit_hint_short": MessageLookupByLibrary.simpleMessage(
+      "Consider a new chat",
+    ),
+    "conversation_token_limit_recommend_new_chat":
+        MessageLookupByLibrary.simpleMessage(
+          "This conversation has exceeded 8,000 tokens. We recommend starting a new chat.",
+        ),
     "conversations": MessageLookupByLibrary.simpleMessage("Conversations"),
     "copy_code": MessageLookupByLibrary.simpleMessage("Copy code"),
     "copy_text": MessageLookupByLibrary.simpleMessage("Copy text"),

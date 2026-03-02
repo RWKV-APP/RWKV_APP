@@ -63,6 +63,12 @@ class _Chat {
   late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
   late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
 
+  /// 当前需要在 AppBar 新对话按钮上展示引导的会话 id
+  late final newConversationGuideConversationId = qs<int?>(null);
+
+  /// 已经触发过 token 超限提示的会话集合（纯内存态）
+  late final tokenReminderShownConversationIds = qs<Set<int>>({});
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -499,9 +505,15 @@ extension $Chat on _Chat {
     if (P.rwkv.generating.q) await onStopButtonPressed();
     await 100.msLater;
     // Alert.success(S.current.new_chat_started);
+    dismissNewConversationGuide();
     P.msg._clear();
     P.rwkv.clearStates();
     P.conversation.currentCreatedAtUS.q = P.msg.msgNode.q.createAtInUS;
+  }
+
+  void dismissNewConversationGuide() {
+    if (newConversationGuideConversationId.q == null) return;
+    newConversationGuideConversationId.q = null;
   }
 
   void toggleCompletionMode() {
@@ -799,6 +811,24 @@ extension _$Chat on _Chat {
     } else {
       listAtTop.q = true;
     }
+  }
+
+  void _onConversationTokenCountObserved({
+    required int? conversationTokensCount,
+  }) {
+    if (conversationTokensCount == null) return;
+    if (conversationTokensCount < Config.newConversationTokenReminderThreshold) return;
+
+    final int conversationId = P.msg.msgNode.q.createAtInUS;
+    final Set<int> shownConversationIds = tokenReminderShownConversationIds.q;
+    if (shownConversationIds.contains(conversationId)) return;
+
+    tokenReminderShownConversationIds.q = {
+      ...shownConversationIds,
+      conversationId,
+    };
+    newConversationGuideConversationId.q = conversationId;
+    Alert.info(S.current.conversation_token_limit_recommend_new_chat);
   }
 
   void _onBatchCountChanged(int value) async {
@@ -1129,6 +1159,8 @@ extension _$Chat on _Chat {
       final bool hasCachedCount = existingMessageCount != null && existingConversationCount != null;
       final bool hasPersistedCount = persistedMessageCount != null && persistedConversationCount != null;
       if (hasCachedCount || hasPersistedCount) {
+        final int? observedConversationCount = persistedConversationCount ?? existingConversationCount;
+        _onConversationTokenCountObserved(conversationTokensCount: observedConversationCount);
         if (!message.changing && hasPersistedCount && !hasCachedCount) {
           P.msg.setBottomTokensCount(
             messageId: messageId,
@@ -1184,6 +1216,8 @@ extension _$Chat on _Chat {
     if (messageTokensCount == null && conversationTokensCount == null) return;
     final Message? latestMessage = P.msg.pool.q[messageId];
     if (latestMessage == null) return;
+    final int? observedConversationTokensCount = conversationTokensCount ?? latestMessage.conversationTokensCount;
+    _onConversationTokenCountObserved(conversationTokensCount: observedConversationTokensCount);
 
     P.msg.setBottomTokensCount(
       messageId: messageId,

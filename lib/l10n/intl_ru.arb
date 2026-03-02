@@ -243,6 +243,8 @@
   "decode": "вывод",
   "message_token_count": "Количество токенов в сообщении",
   "conversation_token_count": "Количество токенов в текущем диалоге",
+  "conversation_token_limit_hint_short": "Рекомендуется новый чат",
+  "conversation_token_limit_recommend_new_chat": "Текущий диалог превысил 8 000 токенов. Рекомендуется начать новый чат.",
   "prefill_speed_tokens_per_second": "Скорость prefill (токенов в секунду)",
   "decode_speed_tokens_per_second": "Скорость декодирования (токенов в секунду)",
   "current_turn": "Текущий ход",
