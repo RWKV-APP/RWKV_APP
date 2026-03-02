@@ -171,6 +171,7 @@ extension $Msg on _Msg {
   }) {
     final bool expanded = isBottomDetailsExpanded(scope: scope, messageId: messageId);
     setBottomDetailsExpanded(scope: scope, messageId: messageId, expanded: !expanded);
+    P.app.hapticLight();
   }
 
   void clearBottomDetailsStateInScope({

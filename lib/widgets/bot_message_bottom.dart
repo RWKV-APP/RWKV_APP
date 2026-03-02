@@ -310,281 +310,316 @@ class BotMessageBottom extends ConsumerWidget {
     final bool showShareInMain = showShareButton;
     final bool showRegenerateInMain = showBotRegenerateButton;
     final bool showEditInMain = showEditAction;
+    final bool shouldUseWrapRatherThanRow = ref.watch(P.ui.shouldUseWrapRatherThanRow);
+    final Map<String, double> messageListLayoutKeys = ref.watch(P.ui.messageListLayoutKeys);
+    final Map<String, bool> layoutItemVisibility = {
+      "copy": showCopyInMain,
+      "share": showShareInMain,
+      "regenerate": showRegenerateInMain,
+      "edit": showEditInMain,
+      "changing": changing,
+      "branch_switcher": showBranchSwitcher,
+      "t": true,
+      "more": showMoreButton,
+      "resume": showResumeAction,
+    };
+    bool hasStaleHiddenLayoutKey = false;
+    for (final MapEntry<String, bool> entry in layoutItemVisibility.entries) {
+      if (entry.value) {
+        continue;
+      }
+      final double hiddenItemWidth = messageListLayoutKeys[entry.key] ?? .0;
+      if (hiddenItemWidth <= .0) {
+        continue;
+      }
+      hasStaleHiddenLayoutKey = true;
+      break;
+    }
+    if (hasStaleHiddenLayoutKey) {
+      Future.microtask(() {
+        final Map<String, double> updatedLayoutKeys = {
+          ...P.ui.messageListLayoutKeys.q,
+        };
+        bool changed = false;
+        for (final MapEntry<String, bool> entry in layoutItemVisibility.entries) {
+          if (entry.value) {
+            continue;
+          }
+          final double hiddenItemWidth = updatedLayoutKeys[entry.key] ?? .0;
+          if (hiddenItemWidth <= .0) {
+            continue;
+          }
+          updatedLayoutKeys[entry.key] = .0;
+          changed = true;
+        }
+        if (!changed) {
+          return;
+        }
+        P.ui.messageListLayoutKeys.q = updatedLayoutKeys;
+      });
+    }
 
     final List<Widget> children =
         [
-          _AnimatedActionItem(
-            layoutKey: "copy",
-            visible: showCopyInMain,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: Tooltip(
-              message: s.copy_text,
-              child: GestureDetector(
-                onTap: _onCopyPressed,
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.transparent),
-                  child: Padding(
-                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                    child: Icon(
-                      Symbols.content_copy,
-                      color: primaryColor.q(.8),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          _AnimatedActionItem(
-            layoutKey: "share",
-            visible: showShareInMain,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: Tooltip(
-              message: s.share,
-              child: GestureDetector(
-                onTap: _onSharePressed,
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.transparent),
-                  child: Padding(
-                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                    child: Icon(
-                      Symbols.share_rounded,
-                      color: primaryColor.q(.8),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          _AnimatedActionItem(
-            layoutKey: "regenerate",
-            visible: showRegenerateInMain,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: Tooltip(
-              message: s.regenerate,
-              child: GestureDetector(
-                onTap: _onRegeneratePressed,
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.transparent),
-                  child: Padding(
-                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                    child: Icon(
-                      Symbols.refresh,
-                      color: primaryColor.q(.8),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          _AnimatedActionItem(
-            layoutKey: "edit",
-            visible: showEditInMain,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: Tooltip(
-              message: s.edit,
-              child: GestureDetector(
-                onTap: _onBotEditPressed,
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.transparent),
-                  child: Padding(
-                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                    child: Icon(
-                      Icons.edit_outlined,
-                      color: primaryColor.q(.8),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          _AnimatedActionItem(
-            layoutKey: "changing",
-            visible: changing,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: Tooltip(
-              message: s.generating,
-              child: Padding(
-                padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                child: Row(
-                  mainAxisSize: .min,
-                  children: [
-                    TweenAnimationBuilder(
-                      tween: Tween(begin: .0, end: 1.0),
-                      duration: const Duration(milliseconds: 1000000000),
-                      builder: (context, value, child) => Transform.rotate(
-                        angle: value * 2 * math.pi * 1000000,
-                        child: child,
-                      ),
+          if (showCopyInMain)
+            KeyedSubtree(
+              key: const ValueKey<String>("copy"),
+              child: Tooltip(
+                message: s.copy_text,
+                child: GestureDetector(
+                  onTap: _onCopyPressed,
+                  child: Container(
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                    child: Padding(
+                      padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
                       child: Icon(
-                        Symbols.hourglass_top,
-                        color: primaryColor,
+                        Symbols.content_copy,
+                        color: primaryColor.q(.8),
                         size: 20,
                       ),
                     ),
-                    if (!detailsExpanded) ...[
-                      const SizedBox(width: 8),
-                      Column(
-                        mainAxisSize: .min,
-                        crossAxisAlignment: .start,
-                        children: [
-                          Text(
-                            "${s.prefill} $changingInlinePrefillSpeedText t/s",
-                            style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
-                          ),
-                          Text(
-                            "${s.decode} $changingInlineDecodeSpeedText t/s",
-                            style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
-                          ),
-                        ],
-                      ),
-                    ],
-                    if (showChangingPrefillProgress)
-                      _ChangingPrefillProgressInline(
-                        changing: changing,
-                        detailsExpanded: detailsExpanded,
-                        color: primaryColor,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          _AnimatedActionItem(
-            layoutKey: "branch_switcher",
-            visible: showBranchSwitcher,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: branchSwitcher,
-          ),
-          Padding(
-            padding: const .symmetric(horizontal: 4),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: inlineConversationTokenEstimatedWidth,
-              ),
-              child: Text(
-                inlineConversationTokenText,
-                maxLines: 1,
-                overflow: .ellipsis,
-                softWrap: false,
-                style: TS(
-                  c: primaryColor.q(.76),
-                  s: 10,
-                  w: .w600,
-                ),
-                textAlign: .left,
-              ),
-            ),
-          ),
-          const Spacer(),
-          _AnimatedActionItem(
-            layoutKey: "more",
-            visible: showMoreButton,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: Tooltip(
-              message: detailsExpanded ? "${s.more} ↑" : "${s.more} ↓",
-              child: GestureDetector(
-                onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
-                child: AnimatedContainer(
-                  duration: actionAnimDuration,
-                  curve: actionAnimCurve,
-                  padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: .circular(6),
                   ),
+                ),
+              ),
+            ),
+          if (showShareInMain)
+            KeyedSubtree(
+              key: const ValueKey<String>("share"),
+              child: Tooltip(
+                message: s.share,
+                child: GestureDetector(
+                  onTap: _onSharePressed,
+                  child: Container(
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                    child: Padding(
+                      padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                      child: Icon(
+                        Symbols.share_rounded,
+                        color: primaryColor.q(.8),
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (showRegenerateInMain)
+            KeyedSubtree(
+              key: const ValueKey<String>("regenerate"),
+              child: Tooltip(
+                message: s.regenerate,
+                child: GestureDetector(
+                  onTap: _onRegeneratePressed,
+                  child: Container(
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                    child: Padding(
+                      padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                      child: Icon(
+                        Symbols.refresh,
+                        color: primaryColor.q(.8),
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (showEditInMain)
+            KeyedSubtree(
+              key: const ValueKey<String>("edit"),
+              child: Tooltip(
+                message: s.edit,
+                child: GestureDetector(
+                  onTap: _onBotEditPressed,
+                  child: Container(
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                    child: Padding(
+                      padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                      child: Icon(
+                        Icons.edit_outlined,
+                        color: primaryColor.q(.8),
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (changing)
+            KeyedSubtree(
+              key: const ValueKey<String>("changing"),
+              child: Tooltip(
+                message: s.generating,
+                child: Padding(
+                  padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
                   child: Row(
                     mainAxisSize: .min,
                     children: [
-                      Icon(
-                        Symbols.more_horiz,
-                        color: detailsExpanded ? primaryColor : primaryColor.q(.82),
-                        size: 20,
-                      ),
-                      AnimatedRotation(
-                        turns: detailsExpanded ? .5 : .0,
-                        duration: actionAnimDuration,
-                        curve: actionAnimCurve,
+                      TweenAnimationBuilder(
+                        tween: Tween(begin: .0, end: 1.0),
+                        duration: const Duration(milliseconds: 1000000000),
+                        builder: (context, value, child) => Transform.rotate(
+                          angle: value * 2 * math.pi * 1000000,
+                          child: child,
+                        ),
                         child: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: detailsExpanded ? primaryColor : primaryColor.q(.72),
-                          size: 16,
+                          Symbols.hourglass_top,
+                          color: primaryColor,
+                          size: 20,
                         ),
                       ),
+                      if (!detailsExpanded) ...[
+                        const SizedBox(width: 8),
+                        Column(
+                          mainAxisSize: .min,
+                          crossAxisAlignment: .start,
+                          children: [
+                            Text(
+                              "${s.prefill} $changingInlinePrefillSpeedText t/s",
+                              style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                            ),
+                            Text(
+                              "${s.decode} $changingInlineDecodeSpeedText t/s",
+                              style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (showChangingPrefillProgress)
+                        _ChangingPrefillProgressInline(
+                          changing: changing,
+                          detailsExpanded: detailsExpanded,
+                          color: primaryColor,
+                        ),
                     ],
                   ),
                 ),
               ),
             ),
+          if (showBranchSwitcher)
+            KeyedSubtree(
+              key: const ValueKey<String>("branch_switcher"),
+              child: branchSwitcher,
+            ),
+          KeyedSubtree(
+            key: const ValueKey<String>("t"),
+            child: Padding(
+              padding: const .symmetric(horizontal: 4),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: inlineConversationTokenEstimatedWidth,
+                ),
+                child: Text(
+                  inlineConversationTokenText,
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  softWrap: false,
+                  style: TS(
+                    c: primaryColor.q(.76),
+                    s: 10,
+                    w: .w600,
+                  ),
+                  textAlign: .left,
+                ),
+              ),
+            ),
           ),
-          _AnimatedActionItem(
-            layoutKey: "resume",
-            visible: showResumeAction,
-            duration: actionAnimDuration,
-            curve: actionAnimCurve,
-            child: Row(
-              mainAxisSize: .min,
-              children: [
-                4.w,
-                Tooltip(
-                  message: s.chat_resume,
-                  child: GestureDetector(
-                    onTap: _onResumePressed,
-                    child: Container(
-                      padding: .zero,
-                      child: Container(
-                        padding: const .symmetric(horizontal: 4, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          border: .all(color: primaryColor.q(.67)),
-                          borderRadius: .circular(4),
+          if (!shouldUseWrapRatherThanRow) const Spacer(),
+          if (showMoreButton)
+            KeyedSubtree(
+              key: const ValueKey<String>("more"),
+              child: Tooltip(
+                message: detailsExpanded ? "${s.more} ↑" : "${s.more} ↓",
+                child: GestureDetector(
+                  onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
+                  child: AnimatedContainer(
+                    duration: actionAnimDuration,
+                    curve: actionAnimCurve,
+                    padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: .circular(6),
+                    ),
+                    child: Row(
+                      mainAxisSize: .min,
+                      children: [
+                        Icon(
+                          Symbols.more_horiz,
+                          color: detailsExpanded ? primaryColor : primaryColor.q(.82),
+                          size: 20,
                         ),
-                        child: Text(
-                          s.chat_resume,
-                          style: TS(c: primaryColor, w: .w600, s: 16),
+                        AnimatedRotation(
+                          turns: detailsExpanded ? .5 : .0,
+                          duration: actionAnimDuration,
+                          curve: actionAnimCurve,
+                          child: Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: detailsExpanded ? primaryColor : primaryColor.q(.72),
+                            size: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (showResumeAction)
+            KeyedSubtree(
+              key: const ValueKey<String>("resume"),
+              child: Row(
+                mainAxisSize: .min,
+                children: [
+                  4.w,
+                  Tooltip(
+                    message: s.chat_resume,
+                    child: GestureDetector(
+                      onTap: _onResumePressed,
+                      child: Container(
+                        padding: .zero,
+                        child: Container(
+                          padding: const .symmetric(horizontal: 4, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: .all(color: primaryColor.q(.67)),
+                            borderRadius: .circular(4),
+                          ),
+                          child: Text(
+                            s.chat_resume,
+                            style: TS(c: primaryColor, w: .w600, s: 16),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           // TODO: Horizontal layout logic
         ].m((w) {
           if (w is Spacer) return w;
           return MeasureSize(
             onChange: (size) async {
-              final width = size.width.roundToDouble();
+              final double width = size.width.roundToDouble();
               qqr("onChange: $width");
               await 0.msLater;
-              if (w is _AnimatedActionItem) {
-                P.ui.messageListLayoutKeys.q = {
-                  ...P.ui.messageListLayoutKeys.q,
-                  w.layoutKey: width,
-                };
-              } else {
-                P.ui.messageListLayoutKeys.q = {
-                  ...P.ui.messageListLayoutKeys.q,
-                  "t": width,
-                };
+              final Key? widgetKey = w.key;
+              final String layoutKey = widgetKey is ValueKey<String> ? widgetKey.value : "t";
+              final Map<String, double> updatedLayoutKeys = {
+                ...P.ui.messageListLayoutKeys.q,
+              };
+              for (final MapEntry<String, bool> entry in layoutItemVisibility.entries) {
+                if (entry.value) {
+                  continue;
+                }
+                updatedLayoutKeys[entry.key] = .0;
               }
+              updatedLayoutKeys[layoutKey] = width;
+              P.ui.messageListLayoutKeys.q = updatedLayoutKeys;
             },
-            child: w.debug,
+            child: w,
           );
         });
-
-    final shouldUseWrapRatherThanRow = ref.watch(P.ui.shouldUseWrapRatherThanRow);
 
     return Padding(
       padding: .only(top: isMobile ? .0 : 8.0),
@@ -604,6 +639,7 @@ class BotMessageBottom extends ConsumerWidget {
                 return Wrap(
                   alignment: WrapAlignment.start,
                   crossAxisAlignment: .center,
+                  runSpacing: 8,
                   children: children,
                 );
               }
@@ -798,33 +834,5 @@ class _AnimatedBottomDetailsSection extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-class _AnimatedActionItem extends StatelessWidget {
-  final bool visible;
-  final Widget child;
-  final Duration duration;
-  final Curve curve;
-  final String layoutKey;
-
-  const _AnimatedActionItem({
-    required this.visible,
-    required this.child,
-    required this.duration,
-    required this.curve,
-    required this.layoutKey,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Alignment alignment = theme.useMaterial3 ? .centerLeft : .centerLeft;
-
-    if (!visible) {
-      return const SizedBox.shrink();
-    }
-
-    return child;
   }
 }
