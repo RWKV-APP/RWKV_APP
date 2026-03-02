@@ -95,6 +95,10 @@ class Debugger extends ConsumerWidget {
 
     final isMobile = ref.watch(P.app.isMobile);
 
+    final maxWidthAllowedForLayout = ref.watch(P.ui.maxWidthAllowedForLayout);
+    final widthRequiredForLayout = ref.watch(P.ui.widthRequiredForLayout);
+    final shouldUseWrapRatherThanRow = ref.watch(P.ui.shouldUseWrapRatherThanRow);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -188,6 +192,12 @@ class Debugger extends ConsumerWidget {
                       if (!isMobile) Text(customModelsDir ?? "null"),
                       Text("loadingProgress".codeToName),
                       Text(loadingProgress.entries.map((e) => "${e.key.name} ${e.value}").join("\n")),
+                      Text("maxWidthAllowedForLayout".codeToName),
+                      Text(maxWidthAllowedForLayout.toString()),
+                      Text("widthRequiredForLayout".codeToName),
+                      Text(widthRequiredForLayout.toString()),
+                      Text("shouldUseWrapRatherThanRow".codeToName),
+                      Text(shouldUseWrapRatherThanRow.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

@@ -14,6 +14,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
+import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
@@ -310,255 +311,303 @@ class BotMessageBottom extends ConsumerWidget {
     final bool showRegenerateInMain = showBotRegenerateButton;
     final bool showEditInMain = showEditAction;
 
+    final List<Widget> children =
+        [
+          _AnimatedActionItem(
+            layoutKey: "copy",
+            visible: showCopyInMain,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
+              message: s.copy_text,
+              child: GestureDetector(
+                onTap: _onCopyPressed,
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.transparent),
+                  child: Padding(
+                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                    child: Icon(
+                      Symbols.content_copy,
+                      color: primaryColor.q(.8),
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          _AnimatedActionItem(
+            layoutKey: "share",
+            visible: showShareInMain,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
+              message: s.share,
+              child: GestureDetector(
+                onTap: _onSharePressed,
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.transparent),
+                  child: Padding(
+                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                    child: Icon(
+                      Symbols.share_rounded,
+                      color: primaryColor.q(.8),
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          _AnimatedActionItem(
+            layoutKey: "regenerate",
+            visible: showRegenerateInMain,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
+              message: s.regenerate,
+              child: GestureDetector(
+                onTap: _onRegeneratePressed,
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.transparent),
+                  child: Padding(
+                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                    child: Icon(
+                      Symbols.refresh,
+                      color: primaryColor.q(.8),
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          _AnimatedActionItem(
+            layoutKey: "edit",
+            visible: showEditInMain,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
+              message: s.edit,
+              child: GestureDetector(
+                onTap: _onBotEditPressed,
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.transparent),
+                  child: Padding(
+                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                    child: Icon(
+                      Icons.edit_outlined,
+                      color: primaryColor.q(.8),
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          _AnimatedActionItem(
+            layoutKey: "changing",
+            visible: changing,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
+              message: s.generating,
+              child: Padding(
+                padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                child: Row(
+                  mainAxisSize: .min,
+                  children: [
+                    TweenAnimationBuilder(
+                      tween: Tween(begin: .0, end: 1.0),
+                      duration: const Duration(milliseconds: 1000000000),
+                      builder: (context, value, child) => Transform.rotate(
+                        angle: value * 2 * math.pi * 1000000,
+                        child: child,
+                      ),
+                      child: Icon(
+                        Symbols.hourglass_top,
+                        color: primaryColor,
+                        size: 20,
+                      ),
+                    ),
+                    if (!detailsExpanded) ...[
+                      const SizedBox(width: 8),
+                      Column(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .start,
+                        children: [
+                          Text(
+                            "${s.prefill} $changingInlinePrefillSpeedText t/s",
+                            style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                          ),
+                          Text(
+                            "${s.decode} $changingInlineDecodeSpeedText t/s",
+                            style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                          ),
+                        ],
+                      ),
+                    ],
+                    if (showChangingPrefillProgress)
+                      _ChangingPrefillProgressInline(
+                        changing: changing,
+                        detailsExpanded: detailsExpanded,
+                        color: primaryColor,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          _AnimatedActionItem(
+            layoutKey: "branch_switcher",
+            visible: showBranchSwitcher,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: branchSwitcher,
+          ),
+          Padding(
+            padding: const .symmetric(horizontal: 4),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: inlineConversationTokenEstimatedWidth,
+              ),
+              child: Text(
+                inlineConversationTokenText,
+                maxLines: 1,
+                overflow: .ellipsis,
+                softWrap: false,
+                style: TS(
+                  c: primaryColor.q(.76),
+                  s: 10,
+                  w: .w600,
+                ),
+                textAlign: .left,
+              ),
+            ),
+          ),
+          const Spacer(),
+          _AnimatedActionItem(
+            layoutKey: "more",
+            visible: showMoreButton,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Tooltip(
+              message: detailsExpanded ? "${s.more} ↑" : "${s.more} ↓",
+              child: GestureDetector(
+                onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
+                child: AnimatedContainer(
+                  duration: actionAnimDuration,
+                  curve: actionAnimCurve,
+                  padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: .circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: .min,
+                    children: [
+                      Icon(
+                        Symbols.more_horiz,
+                        color: detailsExpanded ? primaryColor : primaryColor.q(.82),
+                        size: 20,
+                      ),
+                      AnimatedRotation(
+                        turns: detailsExpanded ? .5 : .0,
+                        duration: actionAnimDuration,
+                        curve: actionAnimCurve,
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: detailsExpanded ? primaryColor : primaryColor.q(.72),
+                          size: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          _AnimatedActionItem(
+            layoutKey: "resume",
+            visible: showResumeAction,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Row(
+              mainAxisSize: .min,
+              children: [
+                4.w,
+                Tooltip(
+                  message: s.chat_resume,
+                  child: GestureDetector(
+                    onTap: _onResumePressed,
+                    child: Container(
+                      padding: .zero,
+                      child: Container(
+                        padding: const .symmetric(horizontal: 4, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: .all(color: primaryColor.q(.67)),
+                          borderRadius: .circular(4),
+                        ),
+                        child: Text(
+                          s.chat_resume,
+                          style: TS(c: primaryColor, w: .w600, s: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // TODO: Horizontal layout logic
+        ].m((w) {
+          if (w is Spacer) return w;
+          return MeasureSize(
+            onChange: (size) async {
+              await 10.msLater;
+              if (w is _AnimatedActionItem) {
+                P.ui.messageListLayoutKeys.q = {
+                  ...P.ui.messageListLayoutKeys.q,
+                  w.layoutKey: size.width,
+                };
+              } else {
+                P.ui.messageListLayoutKeys.q = {
+                  ...P.ui.messageListLayoutKeys.q,
+                  "t": size.width,
+                };
+              }
+            },
+            child: w,
+          );
+        });
+
+    final shouldUseWrapRatherThanRow = true;
+
     return Padding(
       padding: .only(top: isMobile ? .0 : 8.0),
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          Row(
-            mainAxisAlignment: .start,
-            children: [
-              _AnimatedActionItem(
-                visible: showCopyInMain,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Tooltip(
-                  message: s.copy_text,
-                  child: GestureDetector(
-                    onTap: _onCopyPressed,
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.transparent),
-                      child: Padding(
-                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                        child: Icon(
-                          Symbols.content_copy,
-                          color: primaryColor.q(.8),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              _AnimatedActionItem(
-                visible: showShareInMain,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Tooltip(
-                  message: s.share,
-                  child: GestureDetector(
-                    onTap: _onSharePressed,
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.transparent),
-                      child: Padding(
-                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                        child: Icon(
-                          Symbols.share_rounded,
-                          color: primaryColor.q(.8),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              _AnimatedActionItem(
-                visible: showRegenerateInMain,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Tooltip(
-                  message: s.regenerate,
-                  child: GestureDetector(
-                    onTap: _onRegeneratePressed,
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.transparent),
-                      child: Padding(
-                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                        child: Icon(
-                          Symbols.refresh,
-                          color: primaryColor.q(.8),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              _AnimatedActionItem(
-                visible: showEditInMain,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Tooltip(
-                  message: s.edit,
-                  child: GestureDetector(
-                    onTap: _onBotEditPressed,
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.transparent),
-                      child: Padding(
-                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                        child: Icon(
-                          Icons.edit_outlined,
-                          color: primaryColor.q(.8),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              _AnimatedActionItem(
-                visible: changing,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Tooltip(
-                  message: s.generating,
-                  child: Padding(
-                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                    child: Row(
-                      mainAxisSize: .min,
-                      children: [
-                        TweenAnimationBuilder(
-                          tween: Tween(begin: .0, end: 1.0),
-                          duration: const Duration(milliseconds: 1000000000),
-                          builder: (context, value, child) => Transform.rotate(
-                            angle: value * 2 * math.pi * 1000000,
-                            child: child,
-                          ),
-                          child: Icon(
-                            Symbols.hourglass_top,
-                            color: primaryColor,
-                            size: 20,
-                          ),
-                        ),
-                        if (!detailsExpanded) ...[
-                          const SizedBox(width: 8),
-                          Column(
-                            mainAxisSize: .min,
-                            crossAxisAlignment: .start,
-                            children: [
-                              Text(
-                                "${s.prefill} $changingInlinePrefillSpeedText t/s",
-                                style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
-                              ),
-                              Text(
-                                "${s.decode} $changingInlineDecodeSpeedText t/s",
-                                style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
-                              ),
-                            ],
-                          ),
-                        ],
-                        if (showChangingPrefillProgress)
-                          _ChangingPrefillProgressInline(
-                            changing: changing,
-                            detailsExpanded: detailsExpanded,
-                            color: primaryColor,
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              _AnimatedActionItem(
-                visible: showBranchSwitcher,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: branchSwitcher,
-              ),
-              Padding(
-                padding: const .symmetric(horizontal: 4),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: inlineConversationTokenEstimatedWidth,
-                  ),
-                  child: Text(
-                    inlineConversationTokenText,
-                    maxLines: 1,
-                    overflow: .ellipsis,
-                    softWrap: false,
-                    style: TS(
-                      c: primaryColor.q(.76),
-                      s: 10,
-                      w: .w600,
-                    ),
-                    textAlign: .left,
-                  ),
-                ),
-              ),
-              Spacer(),
-              _AnimatedActionItem(
-                visible: showMoreButton,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Tooltip(
-                  message: detailsExpanded ? "${s.more} ↑" : "${s.more} ↓",
-                  child: GestureDetector(
-                    onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
-                    child: AnimatedContainer(
-                      duration: actionAnimDuration,
-                      curve: actionAnimCurve,
-                      padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: .circular(6),
-                      ),
-                      child: Row(
-                        mainAxisSize: .min,
-                        children: [
-                          Icon(
-                            Symbols.more_horiz,
-                            color: detailsExpanded ? primaryColor : primaryColor.q(.82),
-                            size: 20,
-                          ),
-                          AnimatedRotation(
-                            turns: detailsExpanded ? .5 : .0,
-                            duration: actionAnimDuration,
-                            curve: actionAnimCurve,
-                            child: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: detailsExpanded ? primaryColor : primaryColor.q(.72),
-                              size: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              _AnimatedActionItem(
-                visible: showResumeAction,
-                duration: actionAnimDuration,
-                curve: actionAnimCurve,
-                child: Row(
-                  mainAxisSize: .min,
-                  children: [
-                    4.w,
-                    Tooltip(
-                      message: s.chat_resume,
-                      child: GestureDetector(
-                        onTap: _onResumePressed,
-                        child: Container(
-                          padding: .zero,
-                          child: Container(
-                            padding: const .symmetric(horizontal: 4, vertical: 1),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              border: .all(color: primaryColor.q(.67)),
-                              borderRadius: .circular(4),
-                            ),
-                            child: Text(
-                              s.chat_resume,
-                              style: TS(c: primaryColor, w: .w600, s: 16),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // TODO: Horizontal layout logic
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final double maxWidth = constraints.maxWidth;
+              Future.delayed(0.ms).then((_) {
+                P.ui.maxWidthAllowedForLayout.q = maxWidth;
+              });
+
+              if (shouldUseWrapRatherThanRow) {
+                return Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: children,
+                );
+              }
+              return Row(
+                mainAxisAlignment: .start,
+                children: children,
+              );
+            },
           ),
           _AnimatedBottomDetailsSection(
             visible: detailsExpanded,
@@ -752,12 +801,14 @@ class _AnimatedActionItem extends StatelessWidget {
   final Widget child;
   final Duration duration;
   final Curve curve;
+  final String layoutKey;
 
   const _AnimatedActionItem({
     required this.visible,
     required this.child,
     required this.duration,
     required this.curve,
+    required this.layoutKey,
   });
 
   @override

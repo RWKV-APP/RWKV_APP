@@ -6,6 +6,24 @@ class _UI {
   late final homeController = ScrollController(initialScrollOffset: 1);
   late final homePixels = qs(0.0);
   late final homePixelsFromBottom = qs(1.0);
+
+  late final messageListLayoutKeys = qs<Map<String, double>>({});
+  late final maxWidthAllowedForLayout = qs<double>(0.0);
+
+  late final widthRequiredForLayout = qp<double>((ref) {
+    final _messageListLayoutKeys = ref.watch(messageListLayoutKeys);
+    double v = 0.0;
+    for (final key in _messageListLayoutKeys.keys) {
+      v += _messageListLayoutKeys[key] ?? 0.0;
+    }
+    return v;
+  });
+
+  late final shouldUseWrapRatherThanRow = qp<bool>((ref) {
+    final _widthRequiredForLayout = ref.watch(widthRequiredForLayout);
+    final _maxWidthAllowedForLayout = ref.watch(maxWidthAllowedForLayout);
+    return _widthRequiredForLayout > _maxWidthAllowedForLayout;
+  });
 }
 
 /// Private methods
