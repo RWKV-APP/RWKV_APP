@@ -84,6 +84,14 @@ class _Msg extends Table {
   TextColumn get build => text()();
 
   TextColumn get rawDecodeParams => text().nullable()();
+
+  RealColumn get prefillSpeed => real().nullable()();
+
+  RealColumn get decodeSpeed => real().nullable()();
+
+  IntColumn get messageTokensCount => integer().nullable()();
+
+  IntColumn get conversationTokensCount => integer().nullable()();
 }
 
 class _ConversationTitleRepairCandidate {
@@ -105,7 +113,7 @@ class AppDatabase extends _$AppDatabase {
   bool _didRepairLegacyConversationTitles = false;
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -122,6 +130,14 @@ class AppDatabase extends _$AppDatabase {
         },
         from4To5: (m, schema) async {
           await m.alterTable(TableMigration(schema.msg));
+        },
+        from5To6: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.prefillSpeed);
+          await m.addColumn(schema.msg, schema.msg.decodeSpeed);
+        },
+        from6To7: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.messageTokensCount);
+          await m.addColumn(schema.msg, schema.msg.conversationTokensCount);
         },
       ),
       beforeOpen: (details) async {
@@ -187,6 +203,10 @@ class AppDatabase extends _$AppDatabase {
       runningMode: Value(message.runningMode),
       build: P.app.buildNumber.q,
       rawDecodeParams: Value(message.rawDecodeParams),
+      prefillSpeed: Value(message.prefillSpeed),
+      decodeSpeed: Value(message.decodeSpeed),
+      messageTokensCount: Value(message.messageTokensCount),
+      conversationTokensCount: Value(message.conversationTokensCount),
     );
   }
 
@@ -449,5 +469,9 @@ model.Message _msgDataToMessage(_MsgData msgData) {
     modelName: msgData.modelName,
     runningMode: msgData.runningMode,
     rawDecodeParams: msgData.rawDecodeParams,
+    prefillSpeed: msgData.prefillSpeed,
+    decodeSpeed: msgData.decodeSpeed,
+    messageTokensCount: msgData.messageTokensCount,
+    conversationTokensCount: msgData.conversationTokensCount,
   );
 }

@@ -74,8 +74,9 @@ class UserTTSContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = theme.colorScheme.primary;
 
     final (String displayFlag, String displayNameCn, String displayNameEn) = P.talk.getSpkInfo(msg.ttsSpeakerName ?? "");
 
@@ -83,14 +84,14 @@ class UserTTSContent extends ConsumerWidget {
     final playing = ref.watch(P.see.playing);
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
-    const EdgeInsets buttonPadding = .only(left: 4, top: 8, right: 4, bottom: 4);
+    const EdgeInsets buttonPadding = .only(left: 4, top: 6, right: 4, bottom: 4);
 
     const buttonSize = 24.0;
 
     final qw = ref.watch(P.app.qw);
 
     return Padding(
-      padding: const .only(left: 8, top: 0, right: 8, bottom: 8),
+      padding: const .only(left: 6, top: 0, right: 6, bottom: 4),
       child: Column(
         crossAxisAlignment: .start,
         children: [
@@ -104,8 +105,8 @@ class UserTTSContent extends ConsumerWidget {
                     borderRadius: .circular(8),
                     border: .all(color: primary, width: .5),
                   ),
-                  margin: const .only(top: 4),
-                  padding: const .only(left: 4, top: 4, right: 4, bottom: 4),
+                  margin: const .only(top: 2),
+                  padding: const .only(left: 4, top: 3, right: 4, bottom: 3),
                   child: Text.rich(
                     TextSpan(
                       children: [
@@ -171,7 +172,7 @@ class UserTTSContent extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             msg.ttsTarget ?? "null",
             style: const TS(s: 16),

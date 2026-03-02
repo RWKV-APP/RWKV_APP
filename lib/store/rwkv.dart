@@ -749,6 +749,73 @@ extension $RWKV on _RWKV {
     }
   }
 
+  Future<int?> calculateTokensCountRaw({
+    required String text,
+    WeightType? preferredWeightType,
+  }) async {
+    if (text.isEmpty) return 0;
+    if (_sendPort == null) return null;
+    final WeightType weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
+    final int? modelID = findModelIDByWeightType(weightType: weightType);
+    if (modelID == null) return null;
+
+    final to_rwkv.CalculateTokensCountRaw request = to_rwkv.CalculateTokensCountRaw(text, modelID: modelID);
+    send(request);
+
+    try {
+      final from_rwkv.TokensCount response = await broadcastStream
+          .whereType<from_rwkv.TokensCount>()
+          .where((from_rwkv.TokensCount event) => event.req?.requestId == request.requestId)
+          .first
+          .timeout(const Duration(seconds: 3));
+      return response.tokensCount;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<int?> calculateTokensCountFromMessages({
+    required List<String> messages,
+    WeightType? preferredWeightType,
+  }) async {
+    if (messages.isEmpty) return 0;
+    if (_sendPort == null) return null;
+    final WeightType weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
+    final int? modelID = findModelIDByWeightType(weightType: weightType);
+    if (modelID == null) return null;
+
+    final to_rwkv.CalculateTokensCountFromMessages request = to_rwkv.CalculateTokensCountFromMessages(messages, modelID: modelID);
+    send(request);
+
+    try {
+      final from_rwkv.TokensCount response = await broadcastStream
+          .whereType<from_rwkv.TokensCount>()
+          .where((from_rwkv.TokensCount event) => event.req?.requestId == request.requestId)
+          .first
+          .timeout(const Duration(seconds: 3));
+      return response.tokensCount;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  WeightType _resolveWeightTypeForTokenCount({
+    WeightType? preferredWeightType,
+  }) {
+    if (preferredWeightType != null) {
+      return preferredWeightType;
+    }
+    final DemoType demoType = P.app.demoType.q;
+    return switch (demoType) {
+      .see => .see,
+      .tts => .tts,
+      .sudoku => .sudoku,
+      .othello => .othello,
+      .chat => .chat,
+      .fifthteenPuzzle => .chat,
+    };
+  }
+
   void send(to_rwkv.ToRWKV toRwkv) {
     final sendPort = _sendPort;
     if (sendPort == null) {

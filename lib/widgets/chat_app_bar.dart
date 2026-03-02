@@ -195,11 +195,11 @@ class _MorePopupMenuButton extends ConsumerWidget {
   }
 
   void _logPanelTapped() async {
-    await LogPanel.show(getContext()!);
+    await LogPanel.show();
   }
 
   void _statePanelTapped() async {
-    await StatePanel.show(getContext()!);
+    await StatePanel.show();
   }
 
   @override

@@ -154,24 +154,7 @@ class UserMessageBottom extends ConsumerWidget {
       mainAxisSize: .min,
       children: [
         BranchSwitcher(msg, index),
-        if (showUserEditButton)
-          wrapDesktopOpacity(
-            Tooltip(
-              message: s.edit,
-              child: GestureDetector(
-                onTap: () => onUserEditPressed(index: index),
-                child: Padding(
-                  padding: padding,
-                  child: Icon(
-                    Icons.edit,
-                    color: primary.q(.8),
-                    size: 20,
-                  ),
-                ),
-              ),
-            ),
-            isEditOrCopy: true,
-          ),
+
         if (showUserTTSPlayButton && (!playing || !isCurrentMessage))
           Tooltip(
             message: s.resume,
@@ -204,6 +187,24 @@ class UserMessageBottom extends ConsumerWidget {
                   padding: padding,
                   child: Icon(
                     Symbols.content_copy,
+                    color: primary.q(.8),
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+            isEditOrCopy: true,
+          ),
+        if (showUserEditButton)
+          wrapDesktopOpacity(
+            Tooltip(
+              message: s.edit,
+              child: GestureDetector(
+                onTap: () => onUserEditPressed(index: index),
+                child: Padding(
+                  padding: padding,
+                  child: Icon(
+                    Symbols.edit,
                     color: primary.q(.8),
                     size: 20,
                   ),

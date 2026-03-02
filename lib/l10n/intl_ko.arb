@@ -61,6 +61,10 @@
   "enabled": "활성화됨",
   "disabled": "비활성화됨",
   "please_select_a_branch_to_continue_the_conversation": "대화를 계속하려면 분기를 선택해주세요",
+  "branch_switcher_tooltip_first": "이미 첫 번째 메시지입니다",
+  "branch_switcher_tooltip_prev": "이전 메시지",
+  "branch_switcher_tooltip_last": "이미 마지막 메시지입니다",
+  "branch_switcher_tooltip_next": "다음 메시지",
   "screen_width": "화면 너비",
   "batch_inference_button": "병렬 × {count}",
   "batch_inference": "병렬 추론",
@@ -229,7 +233,18 @@
   "new_game": "새 게임",
   "rwkv": "RWKV",
   "prefill": "사전 채우기",
+  "prefill_progress_percent": "프리필 진행률 {percent}",
+  "@prefill_progress_percent": {
+    "description": "BotMessageBottom 생성 인디케이터 옆에 표시되는 프리필 진행률 문구",
+    "placeholders": {
+      "percent": {}
+    }
+  },
   "decode": "디코딩",
+  "message_token_count": "메시지 토큰 수",
+  "conversation_token_count": "현재 대화 토큰 수",
+  "prefill_speed_tokens_per_second": "프리필 속도(초당 토큰 수)",
+  "decode_speed_tokens_per_second": "디코딩 속도(초당 토큰 수)",
   "current_turn": "현재 차례",
   "start_a_new_game": "게임 시작",
   "please_wait_for_the_model_to_generate": "모델 생성을 기다려 주세요",
@@ -426,6 +441,7 @@
   "no_model_selected": "선택된 모델 없음",
   "change": "변경",
   "edit": "편집",
+  "editing": "편집 중",
   "status": "상태",
   "translating": "번역 중...",
   "idle": "대기",

@@ -574,6 +574,46 @@ class S {
     );
   }
 
+  /// `已经是第一条消息了`
+  String get branch_switcher_tooltip_first {
+    return Intl.message(
+      '已经是第一条消息了',
+      name: 'branch_switcher_tooltip_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `上一条消息`
+  String get branch_switcher_tooltip_prev {
+    return Intl.message(
+      '上一条消息',
+      name: 'branch_switcher_tooltip_prev',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已经是最后一条消息了`
+  String get branch_switcher_tooltip_last {
+    return Intl.message(
+      '已经是最后一条消息了',
+      name: 'branch_switcher_tooltip_last',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `下一条消息`
+  String get branch_switcher_tooltip_next {
+    return Intl.message(
+      '下一条消息',
+      name: 'branch_switcher_tooltip_next',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `屏幕宽度`
   String get screen_width {
     return Intl.message('屏幕宽度', name: 'screen_width', desc: '', args: []);
@@ -1713,14 +1753,64 @@ class S {
     return Intl.message('RWKV', name: 'rwkv', desc: '', args: []);
   }
 
-  /// `预填`
+  /// `预填充`
   String get prefill {
-    return Intl.message('预填', name: 'prefill', desc: '', args: []);
+    return Intl.message('预填充', name: 'prefill', desc: '', args: []);
+  }
+
+  /// `预填充进度 {percent}`
+  String prefill_progress_percent(Object percent) {
+    return Intl.message(
+      '预填充进度 $percent',
+      name: 'prefill_progress_percent',
+      desc: 'BotMessageBottom 生成指示器旁的预填充进度文案',
+      args: [percent],
+    );
   }
 
   /// `解码`
   String get decode {
     return Intl.message('解码', name: 'decode', desc: '', args: []);
+  }
+
+  /// `单条消息 Token 数量`
+  String get message_token_count {
+    return Intl.message(
+      '单条消息 Token 数量',
+      name: 'message_token_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前对话 Token 数量`
+  String get conversation_token_count {
+    return Intl.message(
+      '当前对话 Token 数量',
+      name: 'conversation_token_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `预填充速度（tokens 每秒）`
+  String get prefill_speed_tokens_per_second {
+    return Intl.message(
+      '预填充速度（tokens 每秒）',
+      name: 'prefill_speed_tokens_per_second',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `解码速度（tokens 每秒）`
+  String get decode_speed_tokens_per_second {
+    return Intl.message(
+      '解码速度（tokens 每秒）',
+      name: 'decode_speed_tokens_per_second',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `当前回合`
@@ -3061,6 +3151,11 @@ class S {
   /// `编辑`
   String get edit {
     return Intl.message('编辑', name: 'edit', desc: '', args: []);
+  }
+
+  /// `编辑中`
+  String get editing {
+    return Intl.message('编辑中', name: 'editing', desc: '', args: []);
   }
 
   /// `状态`

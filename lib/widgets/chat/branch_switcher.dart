@@ -6,14 +6,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 
 // Project imports:
+import 'package:zone/gen/l10n.dart' show S;
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/store/p.dart';
 
 class BranchSwitcher extends ConsumerWidget {
   final model.Message msg;
   final int index;
+  final int? debugSiblingCountOverride;
+  final int? debugSiblingIndexOverride;
+  final VoidCallback? debugOnBackPressedOverride;
+  final VoidCallback? debugOnForwardPressedOverride;
 
-  const BranchSwitcher(this.msg, this.index, {super.key});
+  const BranchSwitcher(
+    this.msg,
+    this.index, {
+    super.key,
+    this.debugSiblingCountOverride,
+    this.debugSiblingIndexOverride,
+    this.debugOnBackPressedOverride,
+    this.debugOnForwardPressedOverride,
+  });
 
   void _onBackPressed() {
     P.msg.onTapSwitchAtIndex(index, isBack: true, msg: msg);
@@ -25,14 +38,20 @@ class BranchSwitcher extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final primary = Theme.of(context).colorScheme.primary;
-    final siblingCount = P.msg.siblingCount(msg);
-    final index = P.msg.siblingIds(msg).indexOf(msg.id);
+    final Color primary = Theme.of(context).colorScheme.primary;
+    final int siblingCount = debugSiblingCountOverride ?? P.msg.siblingCount(msg);
+    final S s = S.of(context);
 
     if (siblingCount <= 1) return const SizedBox.shrink();
 
-    bool isFirst = index == 0;
-    bool isLast = index == siblingCount - 1;
+    int siblingIndex = debugSiblingIndexOverride ?? P.msg.siblingIds(msg).indexOf(msg.id);
+    if (siblingIndex < 0) siblingIndex = 0;
+    if (siblingIndex >= siblingCount) siblingIndex = siblingCount - 1;
+
+    final bool isFirst = siblingIndex == 0;
+    final bool isLast = siblingIndex == siblingCount - 1;
+    final VoidCallback onBackPressed = debugOnBackPressedOverride ?? _onBackPressed;
+    final VoidCallback onForwardPressed = debugOnForwardPressedOverride ?? _onForwardPressed;
 
     return Stack(
       children: [
@@ -41,7 +60,7 @@ class BranchSwitcher extends ConsumerWidget {
             constraints: const BoxConstraints(minWidth: 16),
             child: Center(
               child: Text(
-                "${index + 1} / $siblingCount",
+                "${siblingIndex + 1} / $siblingCount",
                 style: TS(c: primary, s: 12, w: .w600),
               ),
             ),
@@ -51,7 +70,8 @@ class BranchSwitcher extends ConsumerWidget {
           mainAxisSize: .min,
           children: [
             IconButton(
-              onPressed: isFirst ? null : _onBackPressed,
+              tooltip: isFirst ? s.branch_switcher_tooltip_first : s.branch_switcher_tooltip_prev,
+              onPressed: isFirst ? null : onBackPressed,
               padding: const .only(left: 4, right: 16, top: 4, bottom: 4),
               constraints: const BoxConstraints(), // override default min size of 48px
               icon: Icon(
@@ -61,7 +81,8 @@ class BranchSwitcher extends ConsumerWidget {
               ),
             ),
             IconButton(
-              onPressed: isLast ? null : _onForwardPressed,
+              tooltip: isLast ? s.branch_switcher_tooltip_last : s.branch_switcher_tooltip_next,
+              onPressed: isLast ? null : onForwardPressed,
               padding: const .only(left: 16, right: 4, top: 4, bottom: 4),
               constraints: const BoxConstraints(), // override default min size of 48px
               icon: Icon(

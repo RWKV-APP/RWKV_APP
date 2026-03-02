@@ -22,6 +22,8 @@ class _Chat {
   late final focusNode = FocusNode();
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
+  late final _liveTokenCountDebouncer = Debouncer(milliseconds: 240);
+  int _refreshTokenCountEpoch = 0;
 
   // ===========================================================================
   // StateProvider
@@ -352,21 +354,25 @@ extension $Chat on _Chat {
     await send(textToSend);
   }
 
+  void cancelEditing({bool clearInput = false}) {
+    final int? editingIndex = P.msg.editingOrRegeneratingIndex.q;
+    if (editingIndex == null && !clearInput) return;
+    P.msg.editingOrRegeneratingIndex.q = null;
+    if (!clearInput) return;
+    textEditingController.clear();
+    textInInput.q = "";
+  }
+
   Future<void> onTapMessageList() async {
     qq;
     focusNode.unfocus();
     P.talk.dismissAllShown();
-    final _editingIndex = P.msg.editingOrRegeneratingIndex.q;
-    if (_editingIndex == null) return;
-    P.msg.editingOrRegeneratingIndex.q = null;
-    textEditingController.value = const TextEditingValue(text: "");
+    cancelEditing(clearInput: true);
   }
 
   Future<void> onTapClearInput() async {
     qq;
-    textEditingController.clear();
-    textInInput.q = "";
-    P.msg.editingOrRegeneratingIndex.q = null;
+    cancelEditing(clearInput: true);
   }
 
   Future<void> onTapEditInUserMessageBubble({required int index}) async {
@@ -618,6 +624,8 @@ extension $Chat on _Chat {
       return;
     }
 
+    P.msg.clearBottomDetailsStateInScope(scope: "chat_bot_message_bottom");
+
     final receiveId = HF.milliseconds + 1;
     this.receiveId.q = receiveId;
 
@@ -636,13 +644,14 @@ extension $Chat on _Chat {
       paused: false,
       modelName: currentModel.name,
       runningMode: thinkingMode.toString(),
-      rawDecodeParams: P.rwkv.backendBatchParams.q.rawDecodeParams,
+      rawDecodeParams: _resolveDecodeParamsSnapshotRaw(),
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;
     parentNode.add(MsgNode(receiveId));
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
+    _scheduleRefreshLiveTokenCounts(messageId: receiveId, liveBotContent: "");
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
     final inSee = P.app.pageKey.q == .see;
@@ -680,6 +689,7 @@ extension $Chat on _Chat {
       paused: false,
       callingFunction: "resumeMessageById",
     );
+    _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
   }
 
   Future<void> onBatchInferenceSwitchChanged(bool value) async {
@@ -776,6 +786,8 @@ extension _$Chat on _Chat {
     batchCount.l(_onBatchCountChanged);
 
     scrollController.addListener(_onScroll);
+    P.msg.ids.l(_onMessageIdsChangedForTokenCount);
+    _onMessageIdsChangedForTokenCount(P.msg.ids.q);
   }
 
   void _onScroll() async {
@@ -901,8 +913,6 @@ extension _$Chat on _Chat {
   Future<void> _pauseMessageById({required int id, bool isSensitive = false}) async {
     qq;
 
-    P.rwkv.stop();
-
     final msg = P.msg.pool.q[id];
     if (msg == null) {
       qqw("message not found");
@@ -914,8 +924,28 @@ extension _$Chat on _Chat {
       return;
     }
 
-    final newMsg = msg.copyWith(paused: true, isSensitive: isSensitive);
+    final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
+    final double? finalPrefillSpeed = snapshotPrefillSpeed ?? msg.prefillSpeed;
+    final double? finalDecodeSpeed = snapshotDecodeSpeed ?? msg.decodeSpeed;
+
+    P.rwkv.stop();
+
+    final newMsg = msg.copyWith(
+      paused: true,
+      changing: false,
+      isSensitive: isSensitive,
+      prefillSpeed: finalPrefillSpeed,
+      decodeSpeed: finalDecodeSpeed,
+    );
     P.msg._syncMsg(id, newMsg);
+    final String currentGeneratedContent = id == receiveId.q ? receivedTokens.q : newMsg.content;
+    unawaited(
+      _refreshTokenCountsForMessage(
+        messageId: id,
+        overrideBotContent: currentGeneratedContent,
+        persistToMessage: true,
+      ),
+    );
   }
 
   Future<void> _onFocusNodeChanged() async {
@@ -991,12 +1021,25 @@ extension _$Chat on _Chat {
     }
 
     final receivedTokens = this.receivedTokens.q;
+    final Message? currentMessage = P.msg.pool.q[id];
+    final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
+    final double? finalPrefillSpeed = snapshotPrefillSpeed ?? currentMessage?.prefillSpeed;
+    final double? finalDecodeSpeed = snapshotDecodeSpeed ?? currentMessage?.decodeSpeed;
 
     _updateMessageById(
       id: id,
       content: receivedTokens,
       changing: false,
+      prefillSpeed: finalPrefillSpeed,
+      decodeSpeed: finalDecodeSpeed,
       callingFunction: callingFunction,
+    );
+    unawaited(
+      _refreshTokenCountsForMessage(
+        messageId: id,
+        overrideBotContent: receivedTokens,
+        persistToMessage: true,
+      ),
     );
   }
 
@@ -1017,6 +1060,10 @@ extension _$Chat on _Chat {
     String? callingFunction,
     bool? isSensitive,
     RefInfo? reference,
+    double? prefillSpeed,
+    double? decodeSpeed,
+    int? messageTokensCount,
+    int? conversationTokensCount,
   }) {
     if (completionMode.q) {
       return;
@@ -1045,8 +1092,186 @@ extension _$Chat on _Chat {
       isReasoning: isReasoning,
       paused: paused,
       isSensitive: isSensitive,
+      prefillSpeed: prefillSpeed,
+      decodeSpeed: decodeSpeed,
+      messageTokensCount: messageTokensCount,
+      conversationTokensCount: conversationTokensCount,
     );
     P.msg._syncMsg(id, newMsg);
+  }
+
+  (double? prefillSpeed, double? decodeSpeed) _currentSpeedSnapshotForStore() {
+    final double currentPrefillSpeed = P.rwkv.prefillSpeed.q;
+    final double currentDecodeSpeed = P.rwkv.decodeSpeed.q;
+    final double? snapshotPrefillSpeed = currentPrefillSpeed > 0 ? currentPrefillSpeed : null;
+    final double? snapshotDecodeSpeed = currentDecodeSpeed > 0 ? currentDecodeSpeed : null;
+    return (snapshotPrefillSpeed, snapshotDecodeSpeed);
+  }
+
+  void _onMessageIdsChangedForTokenCount(List<int> messageIds) {
+    _refreshTokenCountEpoch = _refreshTokenCountEpoch + 1;
+    final int epoch = _refreshTokenCountEpoch;
+    unawaited(_refreshMissingTokenCountsForMessages(messageIds: messageIds, epoch: epoch));
+  }
+
+  Future<void> _refreshMissingTokenCountsForMessages({
+    required List<int> messageIds,
+    required int epoch,
+  }) async {
+    for (final int messageId in messageIds) {
+      if (epoch != _refreshTokenCountEpoch) return;
+      final Message? message = P.msg.pool.q[messageId];
+      if (message == null || message.isMine || message.type != MessageType.text) continue;
+      final int? existingMessageCount = P.msg.getBottomMessageTokensCount(messageId: messageId);
+      final int? existingConversationCount = P.msg.getBottomConversationTokensCount(messageId: messageId);
+      final int? persistedMessageCount = message.messageTokensCount;
+      final int? persistedConversationCount = message.conversationTokensCount;
+      final bool hasCachedCount = existingMessageCount != null && existingConversationCount != null;
+      final bool hasPersistedCount = persistedMessageCount != null && persistedConversationCount != null;
+      if (hasCachedCount || hasPersistedCount) {
+        if (!message.changing && hasPersistedCount && !hasCachedCount) {
+          P.msg.setBottomTokensCount(
+            messageId: messageId,
+            messageTokensCount: persistedMessageCount,
+            conversationTokensCount: persistedConversationCount,
+          );
+        }
+        continue;
+      }
+      final String? overrideBotContent = message.changing && receiveId.q == messageId ? receivedTokens.q : null;
+      await _refreshTokenCountsForMessage(
+        messageId: messageId,
+        overrideBotContent: overrideBotContent,
+        persistToMessage: !message.changing,
+      );
+    }
+  }
+
+  void _scheduleRefreshLiveTokenCounts({
+    required int messageId,
+    required String liveBotContent,
+  }) {
+    _liveTokenCountDebouncer.call(() {
+      unawaited(_refreshTokenCountsForMessage(messageId: messageId, overrideBotContent: liveBotContent));
+    });
+  }
+
+  Future<void> _refreshTokenCountsForMessage({
+    required int messageId,
+    String? overrideBotContent,
+    bool persistToMessage = false,
+  }) async {
+    final Message? message = P.msg.pool.q[messageId];
+    if (message == null || message.isMine || message.type != MessageType.text) return;
+
+    String botContent = overrideBotContent ?? message.content;
+    if (botContent.isEmpty && messageId == receiveId.q) {
+      botContent = receivedTokens.q;
+    }
+
+    final List<String>? history = _historyForTokenCountUntilMessage(
+      messageId: messageId,
+      overrideBotContent: botContent,
+    );
+    if (history == null || history.isEmpty) return;
+
+    final List<int?> counts = await Future.wait([
+      P.rwkv.calculateTokensCountRaw(text: botContent),
+      P.rwkv.calculateTokensCountFromMessages(messages: history),
+    ]);
+    final int? messageTokensCount = counts[0];
+    final int? conversationTokensCount = counts[1];
+    if (messageTokensCount == null && conversationTokensCount == null) return;
+    final Message? latestMessage = P.msg.pool.q[messageId];
+    if (latestMessage == null) return;
+
+    P.msg.setBottomTokensCount(
+      messageId: messageId,
+      messageTokensCount: messageTokensCount,
+      conversationTokensCount: conversationTokensCount,
+    );
+
+    if (!persistToMessage) return;
+
+    final int? resolvedMessageTokensCount = messageTokensCount ?? latestMessage.messageTokensCount;
+    final int? resolvedConversationTokensCount = conversationTokensCount ?? latestMessage.conversationTokensCount;
+    if (resolvedMessageTokensCount == null && resolvedConversationTokensCount == null) return;
+
+    final bool noMessageCountChanges = resolvedMessageTokensCount == latestMessage.messageTokensCount;
+    final bool noConversationCountChanges = resolvedConversationTokensCount == latestMessage.conversationTokensCount;
+    if (noMessageCountChanges && noConversationCountChanges) return;
+
+    final Message updatedMessage = latestMessage.copyWith(
+      messageTokensCount: resolvedMessageTokensCount,
+      conversationTokensCount: resolvedConversationTokensCount,
+    );
+    await P.msg._syncMsg(messageId, updatedMessage);
+  }
+
+  List<String>? _historyForTokenCountUntilMessage({
+    required int messageId,
+    String? overrideBotContent,
+  }) {
+    final MsgNode? targetNode = P.msg.msgNode.q.findNodeByMsgId(messageId);
+    if (targetNode == null) return null;
+    final List<int> idsFromTargetToRoot = P.msg.msgNode.q.msgIdsFrom(targetNode);
+    final List<int> orderedPathIds = idsFromTargetToRoot.reversed.where((int id) => id != 0).toList();
+    if (orderedPathIds.isEmpty) return null;
+
+    final List<Message> scopedMessages = [];
+    for (final int id in orderedPathIds) {
+      final Message? pathMessage = P.msg.pool.q[id];
+      if (pathMessage == null) continue;
+      if (pathMessage.type != MessageType.text) continue;
+      scopedMessages.add(pathMessage);
+    }
+    if (scopedMessages.isEmpty) return null;
+
+    final List<String> history = [];
+    final bool isSingleTurnPath = scopedMessages.length == 2 && scopedMessages.first.isMine;
+    if (isSingleTurnPath) {
+      final String template = P.preference.promptTemplate.newChatTemplate.trim();
+      if (template.isNotEmpty) {
+        final List<String> templateMessages = template.split("\n\n").where((String entry) => entry.isNotEmpty).toList();
+        history.addAll(templateMessages);
+      }
+    }
+    for (int i = 0; i < scopedMessages.length; i = i + 2) {
+      final Message userMsg = scopedMessages[i];
+      final Message? botMsg = i + 1 < scopedMessages.length ? scopedMessages[i + 1] : null;
+
+      String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
+      if (wenYanWen.q == WenyanMode.classic) {
+        userContent = "$userContent 请用文言文回答。";
+      }
+      history.add(userContent);
+
+      if (botMsg == null) continue;
+
+      String botContent = botMsg.getHistoryContent();
+      if (botMsg.id == messageId && overrideBotContent != null) {
+        botContent = overrideBotContent;
+      }
+      history.add(botContent);
+    }
+    return history;
+  }
+
+  String? _resolveDecodeParamsSnapshotRaw() {
+    final List<SamplerAndPenaltyParam> backendParams = P.rwkv.backendBatchParams.q;
+    if (backendParams.isNotEmpty) return backendParams.rawDecodeParams;
+
+    final List<SamplerAndPenaltyParam> frontendParams = P.rwkv.frontendBatchParams.q;
+    if (frontendParams.isNotEmpty) return frontendParams.rawDecodeParams;
+
+    final SamplerAndPenaltyParam currentParam = SamplerAndPenaltyParam(
+      temperature: P.rwkv.arguments(Argument.temperature).q,
+      topP: P.rwkv.arguments(Argument.topP).q,
+      presencePenalty: P.rwkv.arguments(Argument.presencePenalty).q,
+      frequencyPenalty: P.rwkv.arguments(Argument.frequencyPenalty).q,
+      penaltyDecay: P.rwkv.arguments(Argument.penaltyDecay).q,
+    );
+    return <SamplerAndPenaltyParam>[currentParam].rawDecodeParams;
   }
 
   @Deprecated("Use _onStreamEvent instead")
@@ -1076,6 +1301,13 @@ extension _$Chat on _Chat {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
         if (completionMode.q) return;
+        final int? currentReceiveId = receiveId.q;
+        if (currentReceiveId != null) {
+          _scheduleRefreshLiveTokenCounts(
+            messageId: currentReceiveId,
+            liveBotContent: res.responseBufferContent,
+          );
+        }
         _sensitiveThrottler.call(() {
           _checkSensitive(res.responseBufferContent);
         });
@@ -1085,6 +1317,13 @@ extension _$Chat on _Chat {
         final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
         receivedTokens.q = responseBufferContent;
         if (completionMode.q) return;
+        final int? currentReceiveId = receiveId.q;
+        if (currentReceiveId != null) {
+          _scheduleRefreshLiveTokenCounts(
+            messageId: currentReceiveId,
+            liveBotContent: responseBufferContent,
+          );
+        }
         _sensitiveThrottler.call(() {
           _checkSensitive(responseBufferContent);
         });

@@ -1,6 +1,6 @@
 # AGENTS.override.md
 
-本文件由 `/Users/wangce/docs/repo/rwkv_app/.cursor/rules/*.mdc` 抽取并整理，用于 Codex 的项目级行为约束（override）。
+本文件由当前仓的 `.cursor/rules/*.mdc` 抽取并整理，用于 Codex 的项目级行为约束（override）。
 
 ## 应用方式
 
@@ -46,6 +46,15 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 ### 推理引擎
 
 - `rwkv_mobile_flutter` 是本项目 LLM inference 引擎。
+
+### 双仓协作与需求解析（RWKV_APP + rwkv_mobile_flutter）
+
+- 本项目默认由两个强关联仓库组成：
+  - Frontend：当前工作仓（即 `rwkv_app`）
+  - Adapter / FFI：`rwkv_mobile_flutter`（与 frontend 同级、共享同一父目录）
+- 路径解析规则（默认）：
+  - frontend 根目录 = 当前工作目录仓库根
+  - adapter 根目录 = `../rwkv_mobile_flutter`
 
 ### 图标与包体积规则（Material Symbols）
 

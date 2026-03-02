@@ -247,7 +247,7 @@ class _ResultState extends ConsumerState<_Result> {
               ),
               const Spacer(),
               IconButton(
-                icon: Icon(Symbols.content_copy, size: 20),
+                icon: const Icon(Symbols.content_copy, size: 20),
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: P.translator.resultTextEditingController.text));
                   ScaffoldMessenger.of(context).showSnackBar(
