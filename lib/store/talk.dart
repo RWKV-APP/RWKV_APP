@@ -460,6 +460,9 @@ extension $Talk on _Talk {
     final id = HF.milliseconds;
     final receiveId = HF.milliseconds + 1;
     final spkName = selectedSpkName.q;
+    final FileInfo? currentModel = P.rwkv.latestModel.q;
+    final GroupInfo? currentGroupInfo = P.rwkv.currentGroupInfo.q;
+    final String? currentModelName = currentModel?.name ?? currentGroupInfo?.displayName;
 
     if (spkName == null && this.selectSourceAudioPath.q == null) {
       Alert.warning(S.current.please_select_a_spk_or_a_wav_file);
@@ -521,6 +524,7 @@ extension $Talk on _Talk {
       paused: false,
       type: MessageType.ttsGeneration,
       audioUrl: outputWavPath,
+      modelName: currentModelName,
     );
 
     P.chat.receiveId.q = receiveId;

@@ -105,6 +105,7 @@ class _MessageState extends ConsumerState<Message> {
       demoType: demoType,
       s: s,
     );
+    final bool showTTSBottomOutsideBubble = !isMine && !selectMode && demoType == .tts;
     final _ThinkingData thinkingData = _resolveThinkingData(
       msg: msg,
       finalContent: finalContent,
@@ -189,6 +190,7 @@ class _MessageState extends ConsumerState<Message> {
                 bottom: appTheme.msgListMarginBottom,
               ),
               child: Column(
+                crossAxisAlignment: .start,
                 children: [
                   if (demoType == .chat && msg.reference.enable) ReferenceInfo(refInfo: msg.reference, generating: msg.changing),
                   GestureDetector(
@@ -213,12 +215,22 @@ class _MessageState extends ConsumerState<Message> {
                           )
                         : bubbleContent,
                   ),
+                  if (showTTSBottomOutsideBubble)
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: screenWidth - _kBubbleMaxWidthAdjust),
+                      child: BotMessageBottom(
+                        msg,
+                        index,
+                        preferredDemoType: preferredDemoType,
+                        finalContent: finalContent,
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
         ),
-      ).debug,
+      ),
     );
   }
 }
@@ -273,7 +285,7 @@ class _UserMessageBubble extends ConsumerWidget {
               crossAxisAlignment: .end,
               children: [
                 if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
-                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle).debug,
+                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
                 if (isUserImage)
                   ClipRRect(
                     clipBehavior: Clip.antiAlias,
@@ -354,6 +366,7 @@ class _BotMessageBubble extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
     final S s = S.of(context);
+    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
     final bool showReasoningHeader = thinkingData.reasoning && !thinkingData.isQuickThinking && !isBatch;
     final Color debugColor = theme.colorScheme.error;
     final Color cotColor = qb.q(.55);
@@ -421,8 +434,9 @@ class _BotMessageBubble extends ConsumerWidget {
             const SizedBox(height: 12),
           if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch) MarkdownRender(raw: thinkingData.cotResult),
           if (isBatch) BatchMessageContent(msg, index, finalContent),
-          if (!selectMode) BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent).debug,
-          if (preferredDemoType == .tts) BotTtsContent(msg, index),
+          if (demoType == .tts) BotTtsContent(msg, index),
+          if (!selectMode && demoType != .tts)
+            BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
         ],
       ),
     );
@@ -637,6 +651,9 @@ _BubbleStyleData _resolveBubbleStyleData({
         padding = const .only(left: 6, top: 12, right: 6);
       }
     case .ttsGeneration:
+      if (!isMine) {
+        padding = const .only(left: 6, top: 6, right: 6, bottom: 2);
+      }
       break;
   }
 

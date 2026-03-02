@@ -33,7 +33,7 @@ class InputInteractions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(color: kC),
-      child: _Interactions(preferredDemoType: preferredDemoType).debug,
+      child: _Interactions(preferredDemoType: preferredDemoType),
     );
   }
 }

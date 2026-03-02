@@ -79,30 +79,35 @@ class _WaitingMsg extends ConsumerWidget {
     final waitingText = ref.watch(P.see.waitingText);
     if (waitingText == null) return const SizedBox.shrink();
     final waitingImagePath = ref.watch(P.see.waitingImagePath);
+    final appTheme = ref.watch(P.app.theme);
+    final horizontalPadding = appTheme.inputBarHorizontalPadding;
     final count = 1;
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        Text(
-          s.message_in_queue(count),
-          style: const TS(s: 12),
-        ),
-        Container(
-          decoration: BoxDecoration(color: kC.q(.1), borderRadius: 12.r),
-          margin: const .only(bottom: 4, top: 4),
-          child: Row(
-            crossAxisAlignment: .center,
-            children: [
-              if (waitingImagePath != null) _ImagePreview(small: true, imagePath: waitingImagePath),
-              if (waitingImagePath != null) const SizedBox(width: 4),
-              Text(
-                waitingText,
-                style: const TS(s: 12),
-              ),
-            ],
+    return Padding(
+      padding: .symmetric(horizontal: horizontalPadding),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Text(
+            s.message_in_queue(count),
+            style: const TS(s: 12),
           ),
-        ),
-      ],
+          Container(
+            decoration: BoxDecoration(color: kC.q(.1), borderRadius: 12.r),
+            margin: const .only(bottom: 4, top: 4),
+            child: Row(
+              crossAxisAlignment: .center,
+              children: [
+                if (waitingImagePath != null) _ImagePreview(small: true, imagePath: waitingImagePath),
+                if (waitingImagePath != null) const SizedBox(width: 4),
+                Text(
+                  waitingText,
+                  style: const TS(s: 12),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

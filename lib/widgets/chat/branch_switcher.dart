@@ -79,7 +79,7 @@ class BranchSwitcher extends ConsumerWidget {
                 color: isFirst ? primary.q(.5) : primary,
                 size: 16,
               ),
-            ).debug,
+            ),
             IconButton(
               tooltip: isLast ? s.branch_switcher_tooltip_last : s.branch_switcher_tooltip_next,
               onPressed: isLast ? null : onForwardPressed,
@@ -90,7 +90,7 @@ class BranchSwitcher extends ConsumerWidget {
                 color: isLast ? primary.q(.5) : primary,
                 size: 16,
               ),
-            ).debug,
+            ),
           ],
         ),
       ],

@@ -11,9 +11,9 @@ import 'package:zone/widgets/performance_info.dart';
 
 extension _VisiblePage on PageKey {
   bool get isVisible => switch (this) {
-    .chat => true,
-    .talk => true,
-    .see => true,
+    .chat => false,
+    .talk => false,
+    .see => false,
     .translator => true,
     .ocr => true,
     _ => false,

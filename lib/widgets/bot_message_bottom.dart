@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:math' as math;
 
 // Flutter imports:
@@ -20,6 +21,8 @@ import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/demo_type.dart';
+import 'package:zone/model/file_info.dart';
+import 'package:zone/model/group_info.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
@@ -108,12 +111,6 @@ class BotMessageBottom extends ConsumerWidget {
     return speed.toStringAsFixed(1);
   }
 
-  String _formatProgressPercent({required double progress}) {
-    final double clampedProgress = progress.clamp(0, 1).toDouble();
-    final int percent = (clampedProgress * 100).round();
-    return "$percent%";
-  }
-
   String _extractSuffixBySeparator({
     required String source,
     required String separator,
@@ -158,7 +155,7 @@ class BotMessageBottom extends ConsumerWidget {
     final S s = S.of(context);
 
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    if (demoType == .tts) return const SizedBox.shrink();
+    final bool isTTSDemo = demoType == .tts;
 
     final int? receiveId = ref.watch(P.chat.receiveId);
     final bool selectMessageMode = ref.watch(P.chat.isSharing);
@@ -235,7 +232,7 @@ class BotMessageBottom extends ConsumerWidget {
     final bool showBranchSwitcher = !changing && branchSwitcherAvailable;
     final Widget branchSwitcher = IgnorePointer(
       ignoring: disableDefaultActions,
-      child: BranchSwitcher(msg, index).debug,
+      child: BranchSwitcher(msg, index),
     );
     const Duration actionAnimDuration = Duration(milliseconds: 200);
     const Curve actionAnimCurve = Curves.easeOutCubic;
@@ -263,10 +260,6 @@ class BotMessageBottom extends ConsumerWidget {
     final double effectiveLiveDecodeSpeed = liveDecodeSpeed > 0 ? liveDecodeSpeed : (msg.decodeSpeed ?? .0);
     final String changingInlinePrefillSpeedText = _formatCompactSpeed(speed: effectiveLivePrefillSpeed);
     final String changingInlineDecodeSpeedText = _formatCompactSpeed(speed: effectiveLiveDecodeSpeed);
-    final String changingInlinePrefillProgressText = changing
-        ? _formatProgressPercent(progress: ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble())
-        : "";
-    final String changingInlinePrefillProgressLabel = changing ? s.prefill_progress_percent(changingInlinePrefillProgressText) : "";
     final String settledPrefillSpeedText = _formatSpeed(speed: msg.prefillSpeed);
     final String settledDecodeSpeedText = _formatSpeed(speed: msg.decodeSpeed);
     final String detailsPrefillSpeedText = msg.changing ? changingInlinePrefillSpeedText : settledPrefillSpeedText;
@@ -283,7 +276,11 @@ class BotMessageBottom extends ConsumerWidget {
       s: s,
       runningMode: msg.runningMode,
     );
-    final String modelNameText = msg.modelName ?? "--";
+    final FileInfo? latestModel = ref.watch(P.rwkv.latestModel);
+    final GroupInfo? currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
+    final String? liveModelName = isTTSDemo ? (latestModel?.name ?? currentGroupInfo?.displayName) : null;
+    final String modelNameText = msg.modelName?.isNotEmpty == true ? msg.modelName! : (liveModelName ?? "--");
+    final bool showChangingPrefillProgress = changing && !isTTSDemo;
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -294,7 +291,7 @@ class BotMessageBottom extends ConsumerWidget {
           showRegenerateButton: showBotRegenerateButton,
           showChangingIndicator: changing,
           showChangingSpeedTexts: changing && !detailsExpanded,
-          showChangingProgressText: changing,
+          showChangingProgressText: showChangingPrefillProgress,
           hasBranchSwitcher: showBranchSwitcher,
           showMoreButton: showMoreButton,
           showResumeButton: showResumeAction,
@@ -331,11 +328,11 @@ class BotMessageBottom extends ConsumerWidget {
                               Symbols.content_copy,
                               color: primaryColor.q(.8),
                               size: 20,
-                            ).debug,
+                            ),
                           ),
                         ),
                       ),
-                    ).debug,
+                    ),
                   ),
                   _AnimatedActionItem(
                     visible: showShareInMain,
@@ -353,11 +350,11 @@ class BotMessageBottom extends ConsumerWidget {
                               Symbols.share_rounded,
                               color: primaryColor.q(.8),
                               size: 20,
-                            ).debug,
+                            ),
                           ),
                         ),
                       ),
-                    ).debug,
+                    ),
                   ),
                   _AnimatedActionItem(
                     visible: showRegenerateInMain,
@@ -375,11 +372,11 @@ class BotMessageBottom extends ConsumerWidget {
                               Symbols.refresh,
                               color: primaryColor.q(.8),
                               size: 20,
-                            ).debug,
+                            ),
                           ),
                         ),
                       ),
-                    ).debug,
+                    ),
                   ),
                   _AnimatedActionItem(
                     visible: changing,
@@ -403,7 +400,7 @@ class BotMessageBottom extends ConsumerWidget {
                                 Symbols.hourglass_top,
                                 color: primaryColor,
                                 size: 20,
-                              ).debug,
+                              ),
                             ),
                             if (!detailsExpanded) ...[
                               const SizedBox(width: 4),
@@ -422,15 +419,16 @@ class BotMessageBottom extends ConsumerWidget {
                                 ],
                               ),
                             ],
-                            SizedBox(width: detailsExpanded ? 6 : 8),
-                            Text(
-                              changingInlinePrefillProgressLabel,
-                              style: TS(c: primaryColor.q(.92), s: 10, w: .w700),
-                            ),
+                            if (showChangingPrefillProgress)
+                              _ChangingPrefillProgressInline(
+                                changing: changing,
+                                detailsExpanded: detailsExpanded,
+                                color: primaryColor,
+                              ),
                           ],
                         ),
                       ),
-                    ).debug,
+                    ),
                   ),
                   _AnimatedActionItem(
                     visible: showBranchSwitcher,
@@ -462,7 +460,7 @@ class BotMessageBottom extends ConsumerWidget {
                                 Symbols.more_horiz,
                                 color: detailsExpanded || hasCompactedActions ? primaryColor : primaryColor.q(.82),
                                 size: 20,
-                              ).debug,
+                              ),
                               AnimatedRotation(
                                 turns: detailsExpanded ? .5 : .0,
                                 duration: actionAnimDuration,
@@ -477,7 +475,7 @@ class BotMessageBottom extends ConsumerWidget {
                           ),
                         ),
                       ),
-                    ).debug,
+                    ),
                   ),
                   _AnimatedActionItem(
                     visible: showResumeAction,
@@ -506,7 +504,7 @@ class BotMessageBottom extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                          ).debug,
+                          ),
                         ),
                       ],
                     ),
@@ -567,16 +565,18 @@ class BotMessageBottom extends ConsumerWidget {
                             value: modelNameText,
                             color: primaryColor,
                           ),
-                          _BottomDetailsMetaChip(
-                            label: s.message_token_count,
-                            value: messageTokenCountText,
-                            color: primaryColor,
-                          ),
-                          _BottomDetailsMetaChip(
-                            label: s.conversation_token_count,
-                            value: contextTokenCountText,
-                            color: primaryColor,
-                          ),
+                          if (!isTTSDemo)
+                            _BottomDetailsMetaChip(
+                              label: s.message_token_count,
+                              value: messageTokenCountText,
+                              color: primaryColor,
+                            ),
+                          if (!isTTSDemo)
+                            _BottomDetailsMetaChip(
+                              label: s.conversation_token_count,
+                              value: contextTokenCountText,
+                              color: primaryColor,
+                            ),
                           _BottomDetailsMetaChip(
                             label: s.prefill_speed_tokens_per_second,
                             value: detailsPrefillSpeedText,
@@ -587,18 +587,19 @@ class BotMessageBottom extends ConsumerWidget {
                             value: detailsDecodeSpeedText,
                             color: primaryColor,
                           ),
-                          _BottomDetailsMetaChip(
-                            label: s.reasoning_enabled,
-                            value: runningModeText,
-                            color: primaryColor,
-                            leading: SvgPicture.asset(
-                              Assets.img.chat.think,
-                              width: 12,
-                              height: 12,
-                              colorFilter: .mode(primaryColor.q(.82), BlendMode.srcIn),
+                          if (!isTTSDemo)
+                            _BottomDetailsMetaChip(
+                              label: s.reasoning_enabled,
+                              value: runningModeText,
+                              color: primaryColor,
+                              leading: SvgPicture.asset(
+                                Assets.img.chat.think,
+                                width: 12,
+                                height: 12,
+                                colorFilter: .mode(primaryColor.q(.82), BlendMode.srcIn),
+                              ),
                             ),
-                          ),
-                          if (decodeParamSummary != null)
+                          if (!isTTSDemo && decodeParamSummary != null)
                             _BottomDetailsMetaChip(
                               label: s.decode_param,
                               value: decodeParamSummary,
@@ -619,6 +620,92 @@ class BotMessageBottom extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _ChangingPrefillProgressInline extends ConsumerStatefulWidget {
+  final bool changing;
+  final bool detailsExpanded;
+  final Color color;
+
+  const _ChangingPrefillProgressInline({
+    required this.changing,
+    required this.detailsExpanded,
+    required this.color,
+  });
+
+  @override
+  ConsumerState<_ChangingPrefillProgressInline> createState() => _ChangingPrefillProgressInlineState();
+}
+
+class _ChangingPrefillProgressInlineState extends ConsumerState<_ChangingPrefillProgressInline> {
+  Timer? _hideTimer;
+  bool _hiddenAfterComplete = false;
+
+  @override
+  void didUpdateWidget(covariant _ChangingPrefillProgressInline oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.changing) return;
+    _hideTimer?.cancel();
+    _hideTimer = null;
+    _hiddenAfterComplete = false;
+  }
+
+  @override
+  void dispose() {
+    _hideTimer?.cancel();
+    _hideTimer = null;
+    super.dispose();
+  }
+
+  int _percentValue({required double progress}) {
+    final double clampedProgress = progress.clamp(0, 1).toDouble();
+    return (clampedProgress * 100).round();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    if (!widget.changing) return const SizedBox.shrink();
+
+    final S s = S.of(context);
+    final double progress = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
+    final int percent = _percentValue(progress: progress);
+
+    if (percent >= 100) {
+      if (!_hiddenAfterComplete && _hideTimer == null) {
+        _hideTimer = Timer(const Duration(milliseconds: 500), () {
+          _hideTimer = null;
+          if (!mounted) return;
+          setState(() {
+            _hiddenAfterComplete = true;
+          });
+        });
+      }
+    } else {
+      _hideTimer?.cancel();
+      _hideTimer = null;
+      _hiddenAfterComplete = false;
+    }
+
+    if (_hiddenAfterComplete) return const SizedBox.shrink();
+    final String percentText = "$percent%";
+    final String progressLabel = s.prefill_progress_percent(percentText);
+
+    return Row(
+      mainAxisSize: .min,
+      children: [
+        SizedBox(width: widget.detailsExpanded ? 6 : 8),
+        Text(
+          progressLabel,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: widget.color.q(.92),
+            fontWeight: .w700,
+            fontSize: 10,
+          ),
+        ),
+      ],
     );
   }
 }

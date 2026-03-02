@@ -604,7 +604,7 @@ class _TalkSourceVoiceSection extends StatelessWidget {
                         s.mimic + s.colon + sourceVoiceName,
                         maxLines: 1,
                         overflow: .ellipsis,
-                        style: TS(c: onSurface.q(.56), s: 14, w: .w500),
+                        style: TS(c: onSurface.q(.74), s: 14, w: .w600),
                       ),
                     ],
                   ),
