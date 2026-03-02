@@ -198,12 +198,6 @@ class Settings extends ConsumerWidget {
                 title: S.current.advance_settings,
                 onTap: () => push(.advancedSettings),
               ),
-            if (kDebugMode)
-              FormItem(
-                icon: Icon(Icons.bug_report_outlined, color: theme.colorScheme.primary.q(.8), size: 16),
-                title: "BotMessageBottom 调试预览",
-                onTap: () => push(.botMessageBottomPreview),
-              ),
             FormItem(
               isSectionEnd: false,
               icon: Icon(isLightMode ? Icons.light_mode : Icons.dark_mode, color: qb.q(.667), size: 16),
