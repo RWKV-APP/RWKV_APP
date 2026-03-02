@@ -557,6 +557,7 @@ class BotMessageBottom extends ConsumerWidget {
                   ],
                 ),
               ),
+              // TODO: Horizontal layout logic
             ],
           ),
           _AnimatedBottomDetailsSection(
