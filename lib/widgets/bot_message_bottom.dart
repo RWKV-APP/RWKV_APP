@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
@@ -16,7 +15,6 @@ import 'package:material_symbols_icons/symbols.dart';
 // Project imports:
 import 'package:zone/config.dart';
 import 'package:zone/func/get_batch_info.dart';
-import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/demo_type.dart';
@@ -108,6 +106,16 @@ class BotMessageBottom extends ConsumerWidget {
   String _formatCompactSpeed({required double? speed}) {
     if (speed == null || speed <= 0) return "--";
     return speed.toStringAsFixed(1);
+  }
+
+  double _estimateInlineTokenWidth({
+    required String text,
+  }) {
+    final int length = text.runes.length;
+    final double estimated = 18 + length * 4.8;
+    if (estimated < 52) return 52;
+    if (estimated > 90) return 90;
+    return estimated;
   }
 
   String _extractSuffixBySeparator({
@@ -246,19 +254,22 @@ class BotMessageBottom extends ConsumerWidget {
     final int? adapterConversationTokenCount = conversationTokensCountMap[msg.id];
     final int? persistedMessageTokenCount = msg.messageTokensCount;
     final int? persistedConversationTokenCount = msg.conversationTokensCount;
-    final int? resolvedConversationTokenCount = persistedConversationTokenCount ?? adapterConversationTokenCount;
-    final String messageTokenCountText = msg.changing
-        ? s.generating
-        : (persistedMessageTokenCount ?? adapterMessageTokenCount)?.toString() ?? "--";
-    final String contextTokenCountText = msg.changing
-        ? s.generating
-        : (persistedConversationTokenCount ?? adapterConversationTokenCount)?.toString() ?? "--";
+    final int? resolvedMessageTokenCount = msg.changing
+        ? (adapterMessageTokenCount ?? persistedMessageTokenCount)
+        : (persistedMessageTokenCount ?? adapterMessageTokenCount);
+    final int? resolvedConversationTokenCount = msg.changing
+        ? (adapterConversationTokenCount ?? persistedConversationTokenCount)
+        : (persistedConversationTokenCount ?? adapterConversationTokenCount);
+    final String messageTokenCountText = resolvedMessageTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
+    final String contextTokenCountText = resolvedConversationTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
     final bool showConversationTokenLimitHint =
         !msg.changing &&
         resolvedConversationTokenCount != null &&
         resolvedConversationTokenCount >= Config.newConversationTokenReminderThreshold;
-    final bool isContextTokenGenerating = contextTokenCountText == s.generating;
-    final String inlineConversationTokenCoreText = isContextTokenGenerating ? contextTokenCountText : "$contextTokenCountText tokens";
+    final bool isInlineTokenGenerating = messageTokenCountText == s.generating || contextTokenCountText == s.generating;
+    final String inlineConversationTokenCoreText = isInlineTokenGenerating
+        ? s.generating
+        : "$messageTokenCountText/$contextTokenCountText tok";
     final String inlineConversationTokenText = showConversationTokenLimitHint
         ? "$inlineConversationTokenCoreText · ${s.conversation_token_limit_hint_short}"
         : inlineConversationTokenCoreText;
@@ -293,360 +304,297 @@ class BotMessageBottom extends ConsumerWidget {
     final String modelNameText = msg.modelName?.isNotEmpty == true ? msg.modelName! : (liveModelName ?? "--");
     final bool showChangingPrefillProgress = changing && !isTTSDemo;
 
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final _BottomActionLayout layout = _BottomActionLayout.resolve(
-          availableWidth: constraints.maxWidth,
-          showEditButton: showEditAction,
-          showCopyButton: showCopyButton,
-          showShareButton: showShareButton,
-          showRegenerateButton: showBotRegenerateButton,
-          showChangingIndicator: changing,
-          showChangingSpeedTexts: changing && !detailsExpanded,
-          showChangingProgressText: showChangingPrefillProgress,
-          hasBranchSwitcher: showBranchSwitcher,
-          showInlineConversationTokens: !isTTSDemo,
-          showMoreButton: showMoreButton,
-          showResumeButton: showResumeAction,
-        );
-        final bool showCopyInMain = layout.showCopyInMain;
-        final bool showShareInMain = layout.showShareInMain;
-        final bool showRegenerateInMain = layout.showRegenerateInMain;
-        final bool showEditInMain = layout.showEditInMain;
-        final bool showEditInPanel = layout.showEditInPanel;
-        final bool showCopyInPanel = layout.showCopyInPanel;
-        final bool showShareInPanel = layout.showShareInPanel;
-        final bool showRegenerateInPanel = layout.showRegenerateInPanel;
-        final bool hasCompactedActions = showEditInPanel || showCopyInPanel || showShareInPanel || showRegenerateInPanel;
+    final double inlineConversationTokenEstimatedWidth = isTTSDemo ? .0 : _estimateInlineTokenWidth(text: inlineConversationTokenText);
+    final bool showCopyInMain = showCopyButton;
+    final bool showShareInMain = showShareButton;
+    final bool showRegenerateInMain = showBotRegenerateButton;
+    final bool showEditInMain = showEditAction;
 
-        return Padding(
-          padding: .only(top: isMobile ? .0 : 8.0),
-          child: Column(
-            crossAxisAlignment: .start,
+    return Padding(
+      padding: .only(top: isMobile ? .0 : 8.0),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Row(
+            mainAxisAlignment: .start,
             children: [
-              Row(
-                mainAxisAlignment: .start,
-                children: [
-                  _AnimatedActionItem(
-                    visible: showCopyInMain,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
-                    child: Tooltip(
-                      message: s.copy_text,
-                      child: GestureDetector(
-                        onTap: _onCopyPressed,
-                        child: Container(
-                          decoration: const BoxDecoration(color: Colors.transparent),
-                          child: Padding(
-                            padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                            child: Icon(
-                              Symbols.content_copy,
-                              color: primaryColor.q(.8),
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  _AnimatedActionItem(
-                    visible: showShareInMain,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
-                    child: Tooltip(
-                      message: s.share,
-                      child: GestureDetector(
-                        onTap: _onSharePressed,
-                        child: Container(
-                          decoration: const BoxDecoration(color: Colors.transparent),
-                          child: Padding(
-                            padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                            child: Icon(
-                              Symbols.share_rounded,
-                              color: primaryColor.q(.8),
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  _AnimatedActionItem(
-                    visible: showRegenerateInMain,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
-                    child: Tooltip(
-                      message: s.regenerate,
-                      child: GestureDetector(
-                        onTap: _onRegeneratePressed,
-                        child: Container(
-                          decoration: const BoxDecoration(color: Colors.transparent),
-                          child: Padding(
-                            padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                            child: Icon(
-                              Symbols.refresh,
-                              color: primaryColor.q(.8),
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  _AnimatedActionItem(
-                    visible: showEditInMain,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
-                    child: Tooltip(
-                      message: s.edit,
-                      child: GestureDetector(
-                        onTap: _onBotEditPressed,
-                        child: Container(
-                          decoration: const BoxDecoration(color: Colors.transparent),
-                          child: Padding(
-                            padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                            child: Icon(
-                              Symbols.edit,
-                              color: primaryColor.q(.8),
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  _AnimatedActionItem(
-                    visible: changing,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
-                    child: Tooltip(
-                      message: s.generating,
+              _AnimatedActionItem(
+                visible: showCopyInMain,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Tooltip(
+                  message: s.copy_text,
+                  child: GestureDetector(
+                    onTap: _onCopyPressed,
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.transparent),
                       child: Padding(
                         padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
-                        child: Row(
-                          mainAxisSize: .min,
-                          children: [
-                            TweenAnimationBuilder(
-                              tween: Tween(begin: .0, end: 1.0),
-                              duration: const Duration(milliseconds: 1000000000),
-                              builder: (context, value, child) => Transform.rotate(
-                                angle: value * 2 * math.pi * 1000000,
-                                child: child,
-                              ),
-                              child: Icon(
-                                Symbols.hourglass_top,
-                                color: primaryColor,
-                                size: 20,
-                              ),
-                            ),
-                            if (!detailsExpanded) ...[
-                              const SizedBox(width: 8),
-                              Column(
-                                mainAxisSize: .min,
-                                crossAxisAlignment: .start,
-                                children: [
-                                  Text(
-                                    "${s.prefill}: $changingInlinePrefillSpeedText t/s",
-                                    style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
-                                  ),
-                                  Text(
-                                    "${s.decode}: $changingInlineDecodeSpeedText t/s",
-                                    style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
-                                  ),
-                                ],
-                              ),
-                            ],
-                            if (showChangingPrefillProgress)
-                              _ChangingPrefillProgressInline(
-                                changing: changing,
-                                detailsExpanded: detailsExpanded,
-                                color: primaryColor,
-                              ),
-                          ],
+                        child: Icon(
+                          Symbols.content_copy,
+                          color: primaryColor.q(.8),
+                          size: 20,
                         ),
                       ),
                     ),
                   ),
-                  _AnimatedActionItem(
-                    visible: showBranchSwitcher,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
-                    child: branchSwitcher,
-                  ),
-                  if (!isTTSDemo)
-                    Expanded(
+                ),
+              ),
+              _AnimatedActionItem(
+                visible: showShareInMain,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Tooltip(
+                  message: s.share,
+                  child: GestureDetector(
+                    onTap: _onSharePressed,
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.transparent),
                       child: Padding(
-                        padding: const .symmetric(horizontal: 4),
-                        child: Text(
-                          inlineConversationTokenText,
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                          softWrap: false,
-                          style: TS(
-                            c: primaryColor.q(.76),
-                            s: 10,
-                            w: .w600,
-                          ),
-                          textAlign: .left,
-                        ),
-                      ),
-                    )
-                  else
-                    const Spacer(),
-                  _AnimatedActionItem(
-                    visible: showMoreButton,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
-                    child: Tooltip(
-                      message: detailsExpanded ? "${s.more} ↑" : "${s.more} ↓",
-                      child: GestureDetector(
-                        onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
-                        child: AnimatedContainer(
-                          duration: actionAnimDuration,
-                          curve: actionAnimCurve,
-                          padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: .circular(6),
-                          ),
-                          child: Row(
-                            mainAxisSize: .min,
-                            children: [
-                              Icon(
-                                Symbols.more_horiz,
-                                color: detailsExpanded || hasCompactedActions ? primaryColor : primaryColor.q(.82),
-                                size: 20,
-                              ),
-                              AnimatedRotation(
-                                turns: detailsExpanded ? .5 : .0,
-                                duration: actionAnimDuration,
-                                curve: actionAnimCurve,
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: detailsExpanded ? primaryColor : primaryColor.q(.72),
-                                  size: 16,
-                                ),
-                              ),
-                            ],
-                          ),
+                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                        child: Icon(
+                          Symbols.share_rounded,
+                          color: primaryColor.q(.8),
+                          size: 20,
                         ),
                       ),
                     ),
                   ),
-                  _AnimatedActionItem(
-                    visible: showResumeAction,
-                    duration: actionAnimDuration,
-                    curve: actionAnimCurve,
+                ),
+              ),
+              _AnimatedActionItem(
+                visible: showRegenerateInMain,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Tooltip(
+                  message: s.regenerate,
+                  child: GestureDetector(
+                    onTap: _onRegeneratePressed,
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.transparent),
+                      child: Padding(
+                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                        child: Icon(
+                          Symbols.refresh,
+                          color: primaryColor.q(.8),
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              _AnimatedActionItem(
+                visible: showEditInMain,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Tooltip(
+                  message: s.edit,
+                  child: GestureDetector(
+                    onTap: _onBotEditPressed,
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.transparent),
+                      child: Padding(
+                        padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
+                        child: Icon(
+                          Icons.edit_outlined,
+                          color: primaryColor.q(.8),
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              _AnimatedActionItem(
+                visible: changing,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Tooltip(
+                  message: s.generating,
+                  child: Padding(
+                    padding: .only(left: 4, top: 4 + verticalPaddingAdditions, right: 4, bottom: 4 + verticalPaddingAdditions),
                     child: Row(
                       mainAxisSize: .min,
                       children: [
-                        4.w,
-                        Tooltip(
-                          message: s.chat_resume,
-                          child: GestureDetector(
-                            onTap: _onResumePressed,
-                            child: Container(
-                              padding: .zero,
-                              child: Container(
-                                padding: const .symmetric(horizontal: 4, vertical: 1),
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  border: .all(color: primaryColor.q(.67)),
-                                  borderRadius: .circular(4),
-                                ),
-                                child: Text(
-                                  s.chat_resume,
-                                  style: TS(c: primaryColor, w: .w600, s: 16),
-                                ),
-                              ),
-                            ),
+                        TweenAnimationBuilder(
+                          tween: Tween(begin: .0, end: 1.0),
+                          duration: const Duration(milliseconds: 1000000000),
+                          builder: (context, value, child) => Transform.rotate(
+                            angle: value * 2 * math.pi * 1000000,
+                            child: child,
+                          ),
+                          child: Icon(
+                            Symbols.hourglass_top,
+                            color: primaryColor,
+                            size: 20,
                           ),
                         ),
+                        if (!detailsExpanded) ...[
+                          const SizedBox(width: 8),
+                          Column(
+                            mainAxisSize: .min,
+                            crossAxisAlignment: .start,
+                            children: [
+                              Text(
+                                "${s.prefill} $changingInlinePrefillSpeedText t/s",
+                                style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                              ),
+                              Text(
+                                "${s.decode} $changingInlineDecodeSpeedText t/s",
+                                style: TS(c: primaryColor.q(.92), s: 10, w: .w600),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (showChangingPrefillProgress)
+                          _ChangingPrefillProgressInline(
+                            changing: changing,
+                            detailsExpanded: detailsExpanded,
+                            color: primaryColor,
+                          ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
-              _AnimatedBottomDetailsSection(
-                visible: detailsExpanded,
+              _AnimatedActionItem(
+                visible: showBranchSwitcher,
                 duration: actionAnimDuration,
                 curve: actionAnimCurve,
-                child: Padding(
-                  padding: const .only(top: 4),
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      if (showEditInPanel || showRegenerateInPanel || showShareInPanel || showCopyInPanel)
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 6,
-                          children: [
-                            if (showEditInPanel)
-                              _BottomDetailsActionChip(
-                                icon: Symbols.edit,
-                                label: s.edit,
-                                color: primaryColor,
-                                onTap: disableDefaultActions ? null : _onBotEditPressed,
-                              ),
-                            if (showRegenerateInPanel)
-                              _BottomDetailsActionChip(
-                                icon: Symbols.refresh,
-                                label: s.regenerate,
-                                color: primaryColor,
-                                onTap: disableDefaultActions ? null : _onRegeneratePressed,
-                              ),
-                            if (showShareInPanel)
-                              _BottomDetailsActionChip(
-                                icon: Symbols.share_rounded,
-                                label: s.share,
-                                color: primaryColor,
-                                onTap: disableDefaultActions ? null : _onSharePressed,
-                              ),
-                            if (showCopyInPanel)
-                              _BottomDetailsActionChip(
-                                icon: Symbols.content_copy,
-                                label: s.copy_text,
-                                color: primaryColor,
-                                onTap: disableDefaultActions ? null : _onCopyPressed,
-                              ),
-                          ],
-                        ),
-                      if (showEditInPanel || showRegenerateInPanel || showShareInPanel || showCopyInPanel) 6.h,
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
+                child: branchSwitcher,
+              ),
+              Padding(
+                padding: const .symmetric(horizontal: 4),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: inlineConversationTokenEstimatedWidth,
+                  ),
+                  child: Text(
+                    inlineConversationTokenText,
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    softWrap: false,
+                    style: TS(
+                      c: primaryColor.q(.76),
+                      s: 10,
+                      w: .w600,
+                    ),
+                    textAlign: .left,
+                  ),
+                ),
+              ),
+              Spacer(),
+              _AnimatedActionItem(
+                visible: showMoreButton,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Tooltip(
+                  message: detailsExpanded ? "${s.more} ↑" : "${s.more} ↓",
+                  child: GestureDetector(
+                    onTap: () => P.msg.toggleBottomDetailsExpanded(scope: detailsScope, messageId: msg.id),
+                    child: AnimatedContainer(
+                      duration: actionAnimDuration,
+                      curve: actionAnimCurve,
+                      padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: .circular(6),
+                      ),
+                      child: Row(
+                        mainAxisSize: .min,
                         children: [
-                          _BottomDetailsMetaChip(
-                            label: "",
-                            value: modelNameText,
-                            color: primaryColor,
+                          Icon(
+                            Symbols.more_horiz,
+                            color: detailsExpanded ? primaryColor : primaryColor.q(.82),
+                            size: 20,
                           ),
-                          if (!isTTSDemo)
-                            _BottomDetailsMetaChip(
-                              label: s.message_token_count,
-                              value: messageTokenCountText,
-                              color: primaryColor,
+                          AnimatedRotation(
+                            turns: detailsExpanded ? .5 : .0,
+                            duration: actionAnimDuration,
+                            curve: actionAnimCurve,
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: detailsExpanded ? primaryColor : primaryColor.q(.72),
+                              size: 16,
                             ),
-                          _BottomDetailsMetaChip(
-                            label: s.prefill,
-                            value: detailsPrefillSpeedDisplay,
-                            color: primaryColor,
-                          ),
-                          _BottomDetailsMetaChip(
-                            label: s.decode,
-                            value: detailsDecodeSpeedDisplay,
-                            color: primaryColor,
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
+                ),
+              ),
+              _AnimatedActionItem(
+                visible: showResumeAction,
+                duration: actionAnimDuration,
+                curve: actionAnimCurve,
+                child: Row(
+                  mainAxisSize: .min,
+                  children: [
+                    4.w,
+                    Tooltip(
+                      message: s.chat_resume,
+                      child: GestureDetector(
+                        onTap: _onResumePressed,
+                        child: Container(
+                          padding: .zero,
+                          child: Container(
+                            padding: const .symmetric(horizontal: 4, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: .all(color: primaryColor.q(.67)),
+                              borderRadius: .circular(4),
+                            ),
+                            child: Text(
+                              s.chat_resume,
+                              style: TS(c: primaryColor, w: .w600, s: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        );
-      },
+          _AnimatedBottomDetailsSection(
+            visible: detailsExpanded,
+            duration: actionAnimDuration,
+            curve: actionAnimCurve,
+            child: Padding(
+              padding: const .only(top: 4),
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      _BottomDetailsMetaChip(
+                        label: "",
+                        value: modelNameText,
+                        color: primaryColor,
+                      ),
+                      _BottomDetailsMetaChip(
+                        label: s.prefill,
+                        value: detailsPrefillSpeedDisplay,
+                        color: primaryColor,
+                      ),
+                      _BottomDetailsMetaChip(
+                        label: s.decode,
+                        value: detailsDecodeSpeedDisplay,
+                        color: primaryColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -697,167 +645,6 @@ class _ChangingPrefillProgressInline extends ConsumerWidget {
   }
 }
 
-class _BottomActionLayout {
-  final bool showEditInMain;
-  final bool showRegenerateInMain;
-  final bool showShareInMain;
-  final bool showCopyInMain;
-  final bool showEditInPanel;
-  final bool showRegenerateInPanel;
-  final bool showShareInPanel;
-  final bool showCopyInPanel;
-
-  const _BottomActionLayout({
-    required this.showEditInMain,
-    required this.showRegenerateInMain,
-    required this.showShareInMain,
-    required this.showCopyInMain,
-    required this.showEditInPanel,
-    required this.showRegenerateInPanel,
-    required this.showShareInPanel,
-    required this.showCopyInPanel,
-  });
-
-  static _BottomActionLayout resolve({
-    required double availableWidth,
-    required bool showEditButton,
-    required bool showRegenerateButton,
-    required bool showShareButton,
-    required bool showCopyButton,
-    required bool showChangingIndicator,
-    required bool showChangingSpeedTexts,
-    required bool showChangingProgressText,
-    required bool hasBranchSwitcher,
-    required bool showInlineConversationTokens,
-    required bool showMoreButton,
-    required bool showResumeButton,
-  }) {
-    bool mainEdit = showEditButton;
-    bool mainRegenerate = showRegenerateButton;
-    bool mainShare = showShareButton;
-    bool mainCopy = showCopyButton;
-    bool panelEdit = false;
-    bool panelRegenerate = false;
-    bool panelShare = false;
-    bool panelCopy = false;
-
-    double estimatedWidth = _estimateMainRowWidth(
-      showEditButton: mainEdit,
-      showRegenerateButton: mainRegenerate,
-      showShareButton: mainShare,
-      showCopyButton: mainCopy,
-      showChangingIndicator: showChangingIndicator,
-      showChangingSpeedTexts: showChangingSpeedTexts,
-      showChangingProgressText: showChangingProgressText,
-      hasBranchSwitcher: hasBranchSwitcher,
-      showInlineConversationTokens: showInlineConversationTokens,
-      showMoreButton: showMoreButton,
-      showResumeButton: showResumeButton,
-    );
-
-    if (estimatedWidth > availableWidth && mainRegenerate) {
-      mainRegenerate = false;
-      panelRegenerate = true;
-      estimatedWidth = _estimateMainRowWidth(
-        showEditButton: mainEdit,
-        showRegenerateButton: mainRegenerate,
-        showShareButton: mainShare,
-        showCopyButton: mainCopy,
-        showChangingIndicator: showChangingIndicator,
-        showChangingSpeedTexts: showChangingSpeedTexts,
-        showChangingProgressText: showChangingProgressText,
-        hasBranchSwitcher: hasBranchSwitcher,
-        showInlineConversationTokens: showInlineConversationTokens,
-        showMoreButton: showMoreButton,
-        showResumeButton: showResumeButton,
-      );
-    }
-
-    if (estimatedWidth > availableWidth && mainEdit) {
-      mainEdit = false;
-      panelEdit = true;
-      estimatedWidth = _estimateMainRowWidth(
-        showEditButton: mainEdit,
-        showRegenerateButton: mainRegenerate,
-        showShareButton: mainShare,
-        showCopyButton: mainCopy,
-        showChangingIndicator: showChangingIndicator,
-        showChangingSpeedTexts: showChangingSpeedTexts,
-        showChangingProgressText: showChangingProgressText,
-        hasBranchSwitcher: hasBranchSwitcher,
-        showInlineConversationTokens: showInlineConversationTokens,
-        showMoreButton: showMoreButton,
-        showResumeButton: showResumeButton,
-      );
-    }
-
-    if (estimatedWidth > availableWidth && mainCopy) {
-      mainCopy = false;
-      panelCopy = true;
-      estimatedWidth = _estimateMainRowWidth(
-        showEditButton: mainEdit,
-        showRegenerateButton: mainRegenerate,
-        showShareButton: mainShare,
-        showCopyButton: mainCopy,
-        showChangingIndicator: showChangingIndicator,
-        showChangingSpeedTexts: showChangingSpeedTexts,
-        showChangingProgressText: showChangingProgressText,
-        hasBranchSwitcher: hasBranchSwitcher,
-        showInlineConversationTokens: showInlineConversationTokens,
-        showMoreButton: showMoreButton,
-        showResumeButton: showResumeButton,
-      );
-    }
-
-    if (estimatedWidth > availableWidth && mainShare) {
-      mainShare = false;
-      panelShare = true;
-    }
-
-    return _BottomActionLayout(
-      showEditInMain: mainEdit,
-      showRegenerateInMain: mainRegenerate,
-      showShareInMain: mainShare,
-      showCopyInMain: mainCopy,
-      showEditInPanel: panelEdit,
-      showRegenerateInPanel: panelRegenerate,
-      showShareInPanel: panelShare,
-      showCopyInPanel: panelCopy,
-    );
-  }
-
-  static double _estimateMainRowWidth({
-    required bool showEditButton,
-    required bool showRegenerateButton,
-    required bool showShareButton,
-    required bool showCopyButton,
-    required bool showChangingIndicator,
-    required bool showChangingSpeedTexts,
-    required bool showChangingProgressText,
-    required bool hasBranchSwitcher,
-    required bool showInlineConversationTokens,
-    required bool showMoreButton,
-    required bool showResumeButton,
-  }) {
-    double width = 0;
-    if (showEditButton) width = width + 30;
-    if (showRegenerateButton) width = width + 30;
-    if (showShareButton) width = width + 30;
-    if (showCopyButton) width = width + 30;
-    if (showChangingIndicator) {
-      width = width + 32;
-      if (showChangingSpeedTexts) width = width + 102;
-      if (showChangingProgressText) width = width + 78;
-    }
-    if (hasBranchSwitcher) width = width + 92;
-    if (showInlineConversationTokens) width = width + 112;
-    if (showMoreButton) width = width + 52;
-    if (showResumeButton) width = width + 84;
-
-    return width + 12;
-  }
-}
-
 class _BottomDetailsMetaChip extends StatelessWidget {
   final String label;
   final String value;
@@ -868,13 +655,16 @@ class _BottomDetailsMetaChip extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
+    // ignore: unused_element_parameter
     this.leading,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String tooltipText = label.isEmpty ? value : "$label $value";
+
     return Tooltip(
-      message: "$label: $value",
+      message: tooltipText,
       child: Container(
         padding: const .symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
@@ -894,7 +684,7 @@ class _BottomDetailsMetaChip extends StatelessWidget {
                 children: [
                   if (label.isNotEmpty)
                     TextSpan(
-                      text: "$label: ",
+                      text: "$label ",
                       style: TS(c: color.q(.62), s: 10, w: .w500),
                     ),
                   TextSpan(
@@ -907,67 +697,6 @@ class _BottomDetailsMetaChip extends StatelessWidget {
               overflow: .ellipsis,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BottomDetailsActionChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback? onTap;
-
-  const _BottomDetailsActionChip({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool disabled = onTap == null;
-    return Tooltip(
-      message: label,
-      child: MouseRegion(
-        cursor: disabled ? SystemMouseCursors.basic : SystemMouseCursors.click,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: .circular(6),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 120),
-              curve: Curves.easeOut,
-              padding: const .symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: disabled ? color.q(.04) : color.q(.1),
-                borderRadius: .circular(6),
-                border: Border.all(color: disabled ? color.q(.14) : color.q(.28)),
-              ),
-              child: Row(
-                mainAxisSize: .min,
-                children: [
-                  Icon(
-                    icon,
-                    size: 18,
-                    color: disabled ? color.q(.42) : color.q(.86),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    label,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: disabled ? color.q(.5) : color.q(.92),
-                      fontWeight: .w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
       ),
     );

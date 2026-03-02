@@ -338,7 +338,7 @@ class _EditingMessageBanner extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              Icons.edit_note,
+              Icons.edit_outlined,
               size: 16,
               color: primary.q(.88),
             ),

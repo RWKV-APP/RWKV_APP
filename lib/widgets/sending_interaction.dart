@@ -53,7 +53,7 @@ class _Send extends ConsumerWidget {
         ? (!hasText ? sendingButtonDisabledOpacity : (readyForSee ? 1.0 : .38))
         : (hasText ? 1.0 : sendingButtonDisabledOpacity);
 
-    final icon = editingBotMessage ? Symbols.edit_note : CupertinoIcons.arrow_up_circle_fill;
+    final icon = editingBotMessage ? Icons.edit_outlined : CupertinoIcons.arrow_up_circle_fill;
 
     return AnimatedOpacity(
       opacity: opacity,
@@ -68,7 +68,7 @@ class _Send extends ConsumerWidget {
           child: Icon(
             icon,
             color: sendingButtonColor,
-            size: sendingButtonVisualSize.width,
+            size: editingBotMessage ? 24 : sendingButtonVisualSize.width,
           ),
         ),
       ),
