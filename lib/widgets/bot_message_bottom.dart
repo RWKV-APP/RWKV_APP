@@ -565,24 +565,26 @@ class BotMessageBottom extends ConsumerWidget {
           if (w is Spacer) return w;
           return MeasureSize(
             onChange: (size) async {
-              await 10.msLater;
+              final width = size.width.roundToDouble();
+              qqr("onChange: $width");
+              await 0.msLater;
               if (w is _AnimatedActionItem) {
                 P.ui.messageListLayoutKeys.q = {
                   ...P.ui.messageListLayoutKeys.q,
-                  w.layoutKey: size.width,
+                  w.layoutKey: width,
                 };
               } else {
                 P.ui.messageListLayoutKeys.q = {
                   ...P.ui.messageListLayoutKeys.q,
-                  "t": size.width,
+                  "t": width,
                 };
               }
             },
-            child: w,
+            child: w.debug,
           );
         });
 
-    final shouldUseWrapRatherThanRow = true;
+    final shouldUseWrapRatherThanRow = ref.watch(P.ui.shouldUseWrapRatherThanRow);
 
     return Padding(
       padding: .only(top: isMobile ? .0 : 8.0),
@@ -591,18 +593,21 @@ class BotMessageBottom extends ConsumerWidget {
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
+              // qqq("constraints.maxWidth: $constraints.maxWidth");
               final double maxWidth = constraints.maxWidth;
-              Future.delayed(0.ms).then((_) {
+
+              Future.delayed(30.ms).then((_) {
                 P.ui.maxWidthAllowedForLayout.q = maxWidth;
               });
 
               if (shouldUseWrapRatherThanRow) {
                 return Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: .center,
                   children: children,
                 );
               }
+
               return Row(
                 mainAxisAlignment: .start,
                 children: children,
@@ -816,31 +821,10 @@ class _AnimatedActionItem extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final Alignment alignment = theme.useMaterial3 ? .centerLeft : .centerLeft;
 
-    return TweenAnimationBuilder<double>(
-      tween: Tween<double>(begin: .0, end: visible ? 1.0 : .0),
-      duration: duration,
-      curve: curve,
-      child: child,
-      builder: (BuildContext context, double value, Widget? child) {
-        final bool hidden = value <= .001;
+    if (!visible) {
+      return const SizedBox.shrink();
+    }
 
-        return IgnorePointer(
-          ignoring: !visible,
-          child: ExcludeSemantics(
-            excluding: hidden,
-            child: Opacity(
-              opacity: value,
-              child: ClipRect(
-                child: Align(
-                  alignment: alignment,
-                  widthFactor: value,
-                  child: child,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    return child;
   }
 }

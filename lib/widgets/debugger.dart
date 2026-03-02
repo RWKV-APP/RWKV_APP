@@ -21,7 +21,7 @@ class Debugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!false) return const SizedBox.shrink();
+    // if (!false) return const SizedBox.shrink();
     if (!kDebugMode) return const SizedBox.shrink();
 
     final demoType = ref.watch(P.app.demoType);
@@ -98,6 +98,8 @@ class Debugger extends ConsumerWidget {
     final maxWidthAllowedForLayout = ref.watch(P.ui.maxWidthAllowedForLayout);
     final widthRequiredForLayout = ref.watch(P.ui.widthRequiredForLayout);
     final shouldUseWrapRatherThanRow = ref.watch(P.ui.shouldUseWrapRatherThanRow);
+
+    final messageListLayoutKeys = ref.watch(P.ui.messageListLayoutKeys);
 
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
@@ -198,6 +200,8 @@ class Debugger extends ConsumerWidget {
                       Text(widthRequiredForLayout.toString()),
                       Text("shouldUseWrapRatherThanRow".codeToName),
                       Text(shouldUseWrapRatherThanRow.toString()),
+                      Text("messageListLayoutKeys".codeToName),
+                      Text(messageListLayoutKeys.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

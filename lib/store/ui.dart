@@ -16,7 +16,7 @@ class _UI {
     for (final key in _messageListLayoutKeys.keys) {
       v += _messageListLayoutKeys[key] ?? 0.0;
     }
-    return v;
+    return (v + 3).roundToDouble();
   });
 
   late final shouldUseWrapRatherThanRow = qp<bool>((ref) {
