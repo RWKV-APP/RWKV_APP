@@ -20,7 +20,7 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/bot_message_bottom.dart';
 
 final List<_BotMessageBottomPreviewCase> _previewCases = [
-  _BotMessageBottomPreviewCase(
+  const _BotMessageBottomPreviewCase(
     title: "Chat: 默认状态",
     description: "常规消息，按钮可见，非生成中。",
     message: model.Message(
@@ -36,7 +36,7 @@ final List<_BotMessageBottomPreviewCase> _previewCases = [
     demoType: DemoType.chat,
     actionButton: .send,
   ),
-  _BotMessageBottomPreviewCase(
+  const _BotMessageBottomPreviewCase(
     title: "Chat: changing=true",
     description: "只保留生成中漏斗，隐藏复制/重试/分享/edit。",
     message: model.Message(
@@ -53,7 +53,7 @@ final List<_BotMessageBottomPreviewCase> _previewCases = [
     demoType: DemoType.chat,
     actionButton: .send,
   ),
-  _BotMessageBottomPreviewCase(
+  const _BotMessageBottomPreviewCase(
     title: "Chat: paused + Resume",
     description: "外部点击 Resume 后切换为 changing=true，5 秒后恢复。",
     message: model.Message(
@@ -70,7 +70,7 @@ final List<_BotMessageBottomPreviewCase> _previewCases = [
     actionButton: .send,
     resumeChangesToChanging: true,
   ),
-  _BotMessageBottomPreviewCase(
+  const _BotMessageBottomPreviewCase(
     title: "Chat: 已存在分叉",
     description: "初始即渲染 BranchSwitcher；可直接切换分叉。",
     message: model.Message(
@@ -88,7 +88,7 @@ final List<_BotMessageBottomPreviewCase> _previewCases = [
     initialBranchCount: 4,
     initialBranchIndex: 2,
   ),
-  _BotMessageBottomPreviewCase(
+  const _BotMessageBottomPreviewCase(
     title: "Chat: Batch 内容",
     description: "Batch Inference 预览：会隐藏编辑按钮；这不是消息分叉。",
     message: model.Message(
@@ -103,7 +103,7 @@ final List<_BotMessageBottomPreviewCase> _previewCases = [
     ),
     demoType: DemoType.chat,
   ),
-  _BotMessageBottomPreviewCase(
+  const _BotMessageBottomPreviewCase(
     title: "Chat: Sensitive / Share 模式",
     description: "敏感或选择模式下隐藏复制、编辑、分享等按钮。",
     message: model.Message(
@@ -120,7 +120,7 @@ final List<_BotMessageBottomPreviewCase> _previewCases = [
     demoType: DemoType.chat,
     actionButton: .send,
   ),
-  _BotMessageBottomPreviewCase(
+  const _BotMessageBottomPreviewCase(
     title: "See 页面专用分支",
     description: "使用 see demo type + runningMode=.None 观察样式。",
     message: model.Message(

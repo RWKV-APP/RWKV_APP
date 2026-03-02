@@ -31,7 +31,7 @@ class PerformanceInfo extends ConsumerWidget {
           style: TS(c: qb.q(1), s: 10),
           TextSpan(
             children: [
-              TextSpan(text: short ? "P: " : "Prefill: "),
+              TextSpan(text: short ? "P " : "Prefill "),
               TextSpan(
                 text: prefillSpeed.toStringAsFixed(1),
                 style: TS(ff: monospaceFF),
@@ -44,7 +44,7 @@ class PerformanceInfo extends ConsumerWidget {
           style: TS(c: qb.q(1), s: 10),
           TextSpan(
             children: [
-              TextSpan(text: short ? "D: " : "Decode: "),
+              TextSpan(text: short ? "D " : "Decode "),
               TextSpan(
                 text: decodeSpeed.toStringAsFixed(1),
                 style: TS(ff: monospaceFF),

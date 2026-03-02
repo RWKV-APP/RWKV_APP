@@ -22,7 +22,7 @@ class _Chat {
   late final focusNode = FocusNode();
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
-  late final _liveTokenCountDebouncer = Debouncer(milliseconds: 240);
+  late final _liveTokenCountThrottler = Throttler(milliseconds: 997, trailing: true);
   int _refreshTokenCountEpoch = 0;
 
   // ===========================================================================
@@ -647,6 +647,7 @@ extension $Chat on _Chat {
 
     receivedTokens.q = "";
     P.rwkv.generating.q = true;
+    _liveTokenCountThrottler.cancel();
 
     final receiveMsg = Message(
       id: receiveId,
@@ -694,13 +695,15 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
-    P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
+    receiveId.q = id;
     _updateMessageById(
       id: id,
       changing: true,
       paused: false,
       callingFunction: "resumeMessageById",
     );
+    _liveTokenCountThrottler.cancel();
+    P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
     _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
   }
 
@@ -958,6 +961,7 @@ extension _$Chat on _Chat {
     final double? finalPrefillSpeed = snapshotPrefillSpeed ?? msg.prefillSpeed;
     final double? finalDecodeSpeed = snapshotDecodeSpeed ?? msg.decodeSpeed;
 
+    _liveTokenCountThrottler.cancel();
     P.rwkv.stop();
 
     final newMsg = msg.copyWith(
@@ -1042,6 +1046,7 @@ extension _$Chat on _Chat {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator || pageKey == .ocr || pageKey == .benchmark || pageKey == .completion) return;
     qqq("callingFunction: $callingFunction");
+    _liveTokenCountThrottler.cancel();
 
     final id = receiveId.q;
 
@@ -1183,7 +1188,9 @@ extension _$Chat on _Chat {
     required int messageId,
     required String liveBotContent,
   }) {
-    _liveTokenCountDebouncer.call(() {
+    _liveTokenCountThrottler.call(() {
+      final Message? latestMessage = P.msg.pool.q[messageId];
+      if (latestMessage == null || !latestMessage.changing) return;
       unawaited(_refreshTokenCountsForMessage(messageId: messageId, overrideBotContent: liveBotContent));
     });
   }
@@ -1382,6 +1389,7 @@ extension _$Chat on _Chat {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator) return;
     qq;
+    _liveTokenCountThrottler.cancel();
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
     P.rwkv.generating.q = false;
@@ -1391,6 +1399,7 @@ extension _$Chat on _Chat {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator) return;
     qqe("error: $error");
+    _liveTokenCountThrottler.cancel();
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;

@@ -120,14 +120,16 @@ class _MessageState extends ConsumerState<Message> {
       isMine: isMine,
       finalContent: finalContent,
     );
+
     final _BubbleStyleData bubbleStyleData = _resolveBubbleStyleData(
       msg: msg,
       isMine: isMine,
-      isChat: isChat,
+      demoType: demoType,
       appTheme: appTheme,
       primary: theme.colorScheme.primary,
       isBatch: batchData.isBatch,
     );
+
     final double opacity = _resolveMessageOpacity(
       editingIndex: editingIndex,
       index: index,
@@ -614,7 +616,7 @@ _BatchData _resolveBatchData({
 _BubbleStyleData _resolveBubbleStyleData({
   required model.Message msg,
   required bool isMine,
-  required bool isChat,
+  required DemoType demoType,
   required AppTheme appTheme,
   required Color primary,
   required bool isBatch,
@@ -657,9 +659,13 @@ _BubbleStyleData _resolveBubbleStyleData({
       break;
   }
 
-  if (isChat) {
+  if (demoType == .chat) {
     border = null;
     padding = isMine ? appTheme.chatUserMsgBubblePadding : appTheme.chatBotMsgBubblePadding;
+  }
+
+  if (demoType == .see && isMine) {
+    padding = appTheme.chatUserMsgBubblePadding.copyWith(bottom: appTheme.chatUserMsgBubblePadding.top);
   }
 
   if (isBatch) {
