@@ -724,7 +724,7 @@ class _ChangingPrefillProgressInline extends ConsumerWidget {
       children: [
         SizedBox(width: detailsExpanded ? 6 : 8),
         Text(
-          progressLabel,
+          percentText,
           style: theme.textTheme.labelSmall?.copyWith(
             color: color.q(.92),
             fontWeight: .w700,
