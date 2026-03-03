@@ -73,7 +73,10 @@ class BranchSwitcher extends ConsumerWidget {
               tooltip: isFirst ? s.branch_switcher_tooltip_first : s.branch_switcher_tooltip_prev,
               onPressed: isFirst ? null : onBackPressed,
               padding: const .only(left: 4, right: 16, top: 4, bottom: 4),
-              constraints: const BoxConstraints(), // override default min size of 48px
+              constraints: const BoxConstraints(),
+              style: ButtonStyle(
+                visualDensity: VisualDensity(horizontal: -3, vertical: -2),
+              ),
               icon: Icon(
                 Icons.arrow_back_ios_new,
                 color: isFirst ? primary.q(.5) : primary,
@@ -84,7 +87,10 @@ class BranchSwitcher extends ConsumerWidget {
               tooltip: isLast ? s.branch_switcher_tooltip_last : s.branch_switcher_tooltip_next,
               onPressed: isLast ? null : onForwardPressed,
               padding: const .only(left: 16, right: 4, top: 4, bottom: 4),
-              constraints: const BoxConstraints(), // override default min size of 48px
+              constraints: const BoxConstraints(),
+              style: ButtonStyle(
+                visualDensity: VisualDensity(horizontal: -3, vertical: -2),
+              ),
               icon: Icon(
                 Icons.arrow_forward_ios,
                 color: isLast ? primary.q(.5) : primary,

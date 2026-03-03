@@ -498,11 +498,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "default_font": MessageLookupByLibrary.simpleMessage("По умолчанию"),
     "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Удалить все"),
+    "delete_branch_confirmation_message": MessageLookupByLibrary.simpleMessage(
+      "Это опасное действие: текущее сообщение и все его дочерние узлы будут удалены навсегда, а связанные записи в базе данных также будут удалены. Это действие нельзя отменить. Продолжить?",
+    ),
+    "delete_branch_title": MessageLookupByLibrary.simpleMessage(
+      "Удалить текущее сообщение",
+    ),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
       "Удалить диалог",
     ),
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "Вы уверены, что хотите удалить этот диалог?",
+    ),
+    "delete_current_branch": MessageLookupByLibrary.simpleMessage(
+      "Удалить текущее сообщение",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage(
       "Удаление завершено",
@@ -1387,6 +1396,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "updated_at": MessageLookupByLibrary.simpleMessage("Обновлено"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("Использовать сейчас"),
     "user": MessageLookupByLibrary.simpleMessage("Пользователь:"),
+    "user_message_actions_panel_empty": MessageLookupByLibrary.simpleMessage(
+      "Для этого сообщения нет доступных действий",
+    ),
+    "user_message_actions_panel_switch_branch_subtitle":
+        MessageLookupByLibrary.simpleMessage(
+          "Переключайте соседние ветки кнопками «Назад» / «Вперёд»",
+        ),
+    "user_message_actions_panel_switch_branch_title":
+        MessageLookupByLibrary.simpleMessage("Переключение ветки"),
+    "user_message_actions_panel_title": MessageLookupByLibrary.simpleMessage(
+      "Операции с сообщением",
+    ),
+    "user_message_branch_switched": MessageLookupByLibrary.simpleMessage(
+      "Ветка переключена",
+    ),
     "using_custom_directory": MessageLookupByLibrary.simpleMessage(
       "Используется пользовательский каталог",
     ),

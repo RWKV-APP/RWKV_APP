@@ -96,8 +96,14 @@ class UserMessageBottom extends ConsumerWidget {
     await P.chat.onTapEditInUserMessageBubble(index: index);
   }
 
-  static void onCopyPressed(model.Message msg) {
+  static void _onCopyPressed(model.Message msg) {
     P.chat.onCopyUserMessage(msg);
+  }
+
+  static Future<void> onDeleteBranchPressed({
+    required model.Message msg,
+  }) async {
+    await P.chat.onDeleteBranchPressed(msg: msg);
   }
 
   @override
@@ -112,34 +118,44 @@ class UserMessageBottom extends ConsumerWidget {
       case model.MessageType.ttsGeneration:
     }
 
-    final primary = Theme.of(context).colorScheme.primary;
-    final worldType = ref.watch(P.rwkv.currentWorldType);
-    final selectMessageMode = ref.watch(P.chat.isSharing);
+    final ThemeData theme = Theme.of(context);
+    final Color primary = theme.colorScheme.primary;
+    final WorldType? worldType = ref.watch(P.rwkv.currentWorldType);
+    final bool selectMessageMode = ref.watch(P.chat.isSharing);
+    ref.watch(P.msg.msgNode);
 
     if (selectMessageMode) {
       return const SizedBox(height: 12);
     }
 
-    final actions = resolveActionVisibility(msg: msg, worldType: worldType);
-    var showUserEditButton = actions.showUserEditButton;
-    var showUserCopyButton = actions.showUserCopyButton;
-    final showUserTTSPlayButton = actions.showUserTTSPlayButton;
+    final ({bool showUserEditButton, bool showUserCopyButton, bool showUserTTSPlayButton}) actions = resolveActionVisibility(
+      msg: msg,
+      worldType: worldType,
+    );
+    bool showUserEditButton = actions.showUserEditButton;
+    bool showUserCopyButton = actions.showUserCopyButton;
+    final bool showUserTTSPlayButton = actions.showUserTTSPlayButton;
+    final bool branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
+    final bool showUserDeleteButton = branchSwitcherAvailable && showInlineEditAndCopyButtons;
 
     if (!showInlineEditAndCopyButtons) {
       showUserEditButton = false;
       showUserCopyButton = false;
     }
 
-    final latestClickedMessage = ref.watch(P.msg.latestClicked);
-    final playing = ref.watch(P.see.playing);
-    final isCurrentMessage = latestClickedMessage?.id == msg.id;
+    final model.Message? latestClickedMessage = ref.watch(P.msg.latestClicked);
+    final bool playing = ref.watch(P.see.playing);
+    final bool isCurrentMessage = latestClickedMessage?.id == msg.id;
 
-    final s = S.of(context);
+    final S s = S.of(context);
 
-    final desktopOpacity = desktopActionsHovered != null ? (desktopActionsHovered! ? 1.0 : 0.0) : null;
+    final double? desktopOpacity = desktopActionsHovered != null ? (desktopActionsHovered! ? 1.0 : 0.0) : null;
 
-    Widget wrapDesktopOpacity(Widget child, {required bool isEditOrCopy}) {
-      if (desktopOpacity == null || !isEditOrCopy) return child;
+    Widget wrapDesktopOpacity(
+      Widget child, {
+      required bool applyDesktopHoverAnimation,
+    }) {
+      if (desktopOpacity == null || !applyDesktopHoverAnimation) return child;
       return AnimatedOpacity(
         opacity: desktopOpacity,
         duration: 200.ms,
@@ -153,7 +169,11 @@ class UserMessageBottom extends ConsumerWidget {
       mainAxisAlignment: .end,
       mainAxisSize: .min,
       children: [
-        BranchSwitcher(msg, index),
+        if (branchSwitcherAvailable)
+          wrapDesktopOpacity(
+            BranchSwitcher(msg, index),
+            applyDesktopHoverAnimation: true,
+          ),
 
         if (showUserTTSPlayButton && (!playing || !isCurrentMessage))
           Tooltip(
@@ -182,7 +202,7 @@ class UserMessageBottom extends ConsumerWidget {
             Tooltip(
               message: s.copy_text,
               child: GestureDetector(
-                onTap: () => onCopyPressed(msg),
+                onTap: () => _onCopyPressed(msg),
                 child: Padding(
                   padding: padding,
                   child: Icon(
@@ -193,7 +213,7 @@ class UserMessageBottom extends ConsumerWidget {
                 ),
               ),
             ),
-            isEditOrCopy: true,
+            applyDesktopHoverAnimation: true,
           ),
         if (showUserEditButton)
           wrapDesktopOpacity(
@@ -211,11 +231,34 @@ class UserMessageBottom extends ConsumerWidget {
                 ),
               ),
             ),
-            isEditOrCopy: true,
+            applyDesktopHoverAnimation: true,
           ),
-        if (!showUserEditButton && !showUserCopyButton) const SizedBox(height: 8),
+        if (showUserDeleteButton)
+          wrapDesktopOpacity(
+            Tooltip(
+              message: s.delete,
+              child: GestureDetector(
+                onTap: _onDeleteBranchPressed,
+                child: Padding(
+                  padding: padding,
+                  child: Icon(
+                    Icons.delete_outline,
+                    color: primary.q(.8),
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+            applyDesktopHoverAnimation: true,
+          ),
+        if (!branchSwitcherAvailable && !showUserEditButton && !showUserCopyButton && !showUserDeleteButton && showInlineEditAndCopyButtons)
+          const SizedBox(height: 8),
       ],
     );
+  }
+
+  void _onDeleteBranchPressed() async {
+    await onDeleteBranchPressed(msg: msg);
   }
 
   void _onTTSPlayPressed() {

@@ -488,11 +488,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "default_font": MessageLookupByLibrary.simpleMessage("Default"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_all": MessageLookupByLibrary.simpleMessage("Delete All"),
+    "delete_branch_confirmation_message": MessageLookupByLibrary.simpleMessage(
+      "This is a destructive action: it will permanently delete the current message and all its child nodes, and sync the related database records. This action cannot be undone. Continue?",
+    ),
+    "delete_branch_title": MessageLookupByLibrary.simpleMessage(
+      "Delete Current Message",
+    ),
     "delete_conversation": MessageLookupByLibrary.simpleMessage(
       "Delete Conversation",
     ),
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to delete this conversation?",
+    ),
+    "delete_current_branch": MessageLookupByLibrary.simpleMessage(
+      "Delete Current Message",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage("Delete completed"),
     "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
@@ -1346,6 +1355,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "updated_at": MessageLookupByLibrary.simpleMessage("Updated at"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("Use it now"),
     "user": MessageLookupByLibrary.simpleMessage("User:"),
+    "user_message_actions_panel_empty": MessageLookupByLibrary.simpleMessage(
+      "No actions are available for this message",
+    ),
+    "user_message_actions_panel_switch_branch_subtitle":
+        MessageLookupByLibrary.simpleMessage(
+          "Switch adjacent branches with previous / next",
+        ),
+    "user_message_actions_panel_switch_branch_title":
+        MessageLookupByLibrary.simpleMessage("Switch Branch"),
+    "user_message_actions_panel_title": MessageLookupByLibrary.simpleMessage(
+      "Message Actions",
+    ),
+    "user_message_branch_switched": MessageLookupByLibrary.simpleMessage(
+      "Branch switched",
+    ),
     "using_custom_directory": MessageLookupByLibrary.simpleMessage(
       "Using custom directory",
     ),

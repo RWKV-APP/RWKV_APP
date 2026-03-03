@@ -90,13 +90,14 @@ class _MessageState extends ConsumerState<Message> {
     final int? batchSelection = ref.watch(P.msg.batchSelection(msg));
 
     final bool isMine = msg.isMine;
-    final bool isChat = demoType == .chat;
     final ({bool canEdit, bool canCopy}) contextActions = UserMessageBottom.resolveContextMenuActions(
       msg: msg,
       worldType: worldType,
       selectMessageMode: selectMode || sharingMode,
     );
-    final bool canShowUserMessageMenu = contextActions.canEdit || contextActions.canCopy;
+    ref.watch(P.msg.msgNode);
+    final bool canSwitchUserBranch = isMine && !selectMode && !sharingMode && P.msg.siblingCount(msg) > 1;
+    final bool canShowUserMessageMenu = contextActions.canEdit || contextActions.canCopy || canSwitchUserBranch;
 
     final String finalContent = _resolveFinalContent(
       msg: msg,
@@ -267,7 +268,9 @@ class _UserMessageBubble extends ConsumerWidget {
     final ThemeData theme = Theme.of(context);
     final bool isUserImage = msg.type == .userImage;
     final Color debugColor = theme.colorScheme.error;
-    final screenWidth = ref.watch(P.app.screenWidth);
+    final double screenWidth = ref.watch(P.app.screenWidth);
+    ref.watch(P.msg.msgNode);
+    final bool branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: screenWidth * 0.8),
@@ -308,12 +311,12 @@ class _UserMessageBubble extends ConsumerWidget {
               ],
             ),
           ),
-          if (!isMobile)
+          if (!isMobile || branchSwitcherAvailable)
             UserMessageBottom(
               msg,
               index,
-              showInlineEditAndCopyButtons: true,
-              desktopActionsHovered: desktopActionsHovered,
+              showInlineEditAndCopyButtons: !isMobile,
+              desktopActionsHovered: isMobile ? null : desktopActionsHovered,
             ),
         ],
       ),

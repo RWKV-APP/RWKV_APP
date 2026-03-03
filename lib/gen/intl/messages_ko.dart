@@ -418,10 +418,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "default_font": MessageLookupByLibrary.simpleMessage("기본값"),
     "delete": MessageLookupByLibrary.simpleMessage("삭제"),
     "delete_all": MessageLookupByLibrary.simpleMessage("모두 삭제"),
+    "delete_branch_confirmation_message": MessageLookupByLibrary.simpleMessage(
+      "이 작업은 위험합니다. 현재 메시지와 모든 하위 노드를 영구적으로 삭제하고, 관련 데이터베이스 기록도 함께 삭제합니다. 이 작업은 되돌릴 수 없습니다. 계속하시겠습니까?",
+    ),
+    "delete_branch_title": MessageLookupByLibrary.simpleMessage("현재 메시지 삭제"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage("대화 삭제"),
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "대화를 삭제하시겠습니까?",
     ),
+    "delete_current_branch": MessageLookupByLibrary.simpleMessage("현재 메시지 삭제"),
     "delete_finished": MessageLookupByLibrary.simpleMessage("삭제가 완료되었습니다"),
     "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
       "이 MLX/CoreML 캐시를 삭제하시겠습니까?",
@@ -1139,6 +1144,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "updated_at": MessageLookupByLibrary.simpleMessage("업데이트 시간"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("지금 사용하기"),
     "user": MessageLookupByLibrary.simpleMessage("사용자:"),
+    "user_message_actions_panel_empty": MessageLookupByLibrary.simpleMessage(
+      "이 메시지에 사용할 수 있는 작업이 없습니다",
+    ),
+    "user_message_actions_panel_switch_branch_subtitle":
+        MessageLookupByLibrary.simpleMessage("이전/다음으로 인접한 분기를 전환합니다"),
+    "user_message_actions_panel_switch_branch_title":
+        MessageLookupByLibrary.simpleMessage("분기 전환"),
+    "user_message_actions_panel_title": MessageLookupByLibrary.simpleMessage(
+      "메시지 작업",
+    ),
+    "user_message_branch_switched": MessageLookupByLibrary.simpleMessage(
+      "분기를 전환했습니다",
+    ),
     "using_custom_directory": MessageLookupByLibrary.simpleMessage(
       "사용자 지정 디렉토리 사용 중",
     ),

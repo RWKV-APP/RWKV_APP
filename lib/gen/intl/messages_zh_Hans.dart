@@ -394,10 +394,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "default_font": MessageLookupByLibrary.simpleMessage("默认"),
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("全部删除"),
+    "delete_branch_confirmation_message": MessageLookupByLibrary.simpleMessage(
+      "这是危险操作：将永久删除当前消息及其所有子节点，并同步删除数据库中的相关记录。该操作不可恢复，是否继续？",
+    ),
+    "delete_branch_title": MessageLookupByLibrary.simpleMessage("删除当前消息"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage("删除会话"),
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "确定要删除会话吗？",
     ),
+    "delete_current_branch": MessageLookupByLibrary.simpleMessage("删除当前消息"),
     "delete_finished": MessageLookupByLibrary.simpleMessage("删除完成"),
     "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
       "确定要删除这个 MLX/CoreML 缓存吗？",
@@ -1050,6 +1055,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "updated_at": MessageLookupByLibrary.simpleMessage("更新时间"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("立即使用"),
     "user": MessageLookupByLibrary.simpleMessage("用户:"),
+    "user_message_actions_panel_empty": MessageLookupByLibrary.simpleMessage(
+      "当前消息暂无可用操作",
+    ),
+    "user_message_actions_panel_switch_branch_subtitle":
+        MessageLookupByLibrary.simpleMessage("通过上一条 / 下一条切换相邻分支"),
+    "user_message_actions_panel_switch_branch_title":
+        MessageLookupByLibrary.simpleMessage("切换分支"),
+    "user_message_actions_panel_title": MessageLookupByLibrary.simpleMessage(
+      "消息操作",
+    ),
+    "user_message_branch_switched": MessageLookupByLibrary.simpleMessage(
+      "已切换分支",
+    ),
     "using_custom_directory": MessageLookupByLibrary.simpleMessage("正在使用自定义目录"),
     "using_default_directory": MessageLookupByLibrary.simpleMessage("正在使用默认目录"),
     "value_must_be_between_0_and_9": MessageLookupByLibrary.simpleMessage(

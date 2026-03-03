@@ -418,9 +418,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "default_font": MessageLookupByLibrary.simpleMessage("デフォルト"),
     "delete": MessageLookupByLibrary.simpleMessage("削除"),
     "delete_all": MessageLookupByLibrary.simpleMessage("すべて削除"),
+    "delete_branch_confirmation_message": MessageLookupByLibrary.simpleMessage(
+      "これは危険な操作です。現在のメッセージとそのすべての子ノード、さらに関連するデータベース記録を完全に削除します。この操作は元に戻せません。続行しますか？",
+    ),
+    "delete_branch_title": MessageLookupByLibrary.simpleMessage("現在のメッセージを削除"),
     "delete_conversation": MessageLookupByLibrary.simpleMessage("会話を削除"),
     "delete_conversation_message": MessageLookupByLibrary.simpleMessage(
       "会話を削除してもよろしいですか？",
+    ),
+    "delete_current_branch": MessageLookupByLibrary.simpleMessage(
+      "現在のメッセージを削除",
     ),
     "delete_finished": MessageLookupByLibrary.simpleMessage("削除が完了しました"),
     "delete_mlx_cache_confirmation": MessageLookupByLibrary.simpleMessage(
@@ -1145,6 +1152,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "updated_at": MessageLookupByLibrary.simpleMessage("更新日時"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("今すぐ使用"),
     "user": MessageLookupByLibrary.simpleMessage("ユーザー："),
+    "user_message_actions_panel_empty": MessageLookupByLibrary.simpleMessage(
+      "このメッセージで利用できる操作はありません",
+    ),
+    "user_message_actions_panel_switch_branch_subtitle":
+        MessageLookupByLibrary.simpleMessage("前へ / 次へ で隣接するブランチを切り替えます"),
+    "user_message_actions_panel_switch_branch_title":
+        MessageLookupByLibrary.simpleMessage("ブランチ切り替え"),
+    "user_message_actions_panel_title": MessageLookupByLibrary.simpleMessage(
+      "メッセージ操作",
+    ),
+    "user_message_branch_switched": MessageLookupByLibrary.simpleMessage(
+      "分岐を切り替えました",
+    ),
     "using_custom_directory": MessageLookupByLibrary.simpleMessage(
       "カスタムディレクトリを使用中",
     ),

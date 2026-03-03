@@ -3,6 +3,7 @@ part of 'p.dart';
 enum _UserMessageMenuAction {
   edit,
   copy,
+  deleteCurrentBranch,
 }
 
 class _Chat {
@@ -114,15 +115,10 @@ extension $Chat on _Chat {
     final BuildContext? context = getContext();
     if (context == null) return;
     final S s = S.of(context);
-    final bool isZh = P.preference.currentLangIsZh.q;
-    final String confirmTitle = isZh ? "删除分支" : "Delete Branch";
-    final String confirmMessage = isZh
-        ? "这是危险操作：将永久删除当前分支消息及其所有子节点，并同步删除数据库中的相关记录。该操作不可恢复，是否继续？"
-        : "This is a destructive action: it will permanently delete the current branch message and all its child nodes, and sync the related database records. This action cannot be undone. Continue?";
     final OkCancelResult confirmResult = await showOkCancelAlertDialog(
       context: context,
-      title: confirmTitle,
-      message: confirmMessage,
+      title: s.delete_branch_title,
+      message: s.delete_branch_confirmation_message,
       okLabel: s.delete,
       cancelLabel: s.cancel,
       isDestructiveAction: true,
@@ -546,21 +542,30 @@ extension $Chat on _Chat {
     required int index,
     required Message msg,
   }) async {
-    if (!canEdit && !canCopy) return;
+    final bool canDeleteCurrentBranch = P.msg.siblingCount(msg) > 1;
+    if (!canEdit && !canCopy && !canDeleteCurrentBranch) return;
     if (!P.app.isMobile.q) return;
 
     final _UserMessageMenuAction? selectedAction = await _showMobileUserMessageMenu(
       context: context,
       canEdit: canEdit,
       canCopy: canCopy,
+      canDeleteCurrentBranch: canDeleteCurrentBranch,
     );
     if (selectedAction == null) return;
+
     if (selectedAction == .edit) {
       await onTapEditInUserMessageBubble(index: index);
       return;
     }
+
     if (selectedAction == .copy) {
       onCopyUserMessage(msg);
+      return;
+    }
+
+    if (selectedAction == .deleteCurrentBranch) {
+      await onDeleteBranchPressed(msg: msg);
     }
   }
 
@@ -568,11 +573,13 @@ extension $Chat on _Chat {
     required BuildContext context,
     required bool canEdit,
     required bool canCopy,
+    required bool canDeleteCurrentBranch,
   }) async {
     final S s = S.of(context);
     final List<SheetAction<_UserMessageMenuAction>> actions = [
       if (canEdit) SheetAction(label: s.edit, key: .edit),
       if (canCopy) SheetAction(label: s.copy_text, key: .copy),
+      if (canDeleteCurrentBranch) SheetAction(label: s.delete_current_branch, key: .deleteCurrentBranch),
     ];
 
     return showModalActionSheet<_UserMessageMenuAction>(

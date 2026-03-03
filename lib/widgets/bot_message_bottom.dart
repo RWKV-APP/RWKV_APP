@@ -510,7 +510,7 @@ class BotMessageBottom extends ConsumerWidget {
           KeyedSubtree(
             key: const ValueKey<String>("t"),
             child: Padding(
-              padding: const .symmetric(horizontal: 4),
+              padding: const .symmetric(horizontal: 0),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: inlineConversationTokenEstimatedWidth,
@@ -541,7 +541,12 @@ class BotMessageBottom extends ConsumerWidget {
                   child: AnimatedContainer(
                     duration: actionAnimDuration,
                     curve: actionAnimCurve,
-                    padding: .only(left: 6, top: 4 + verticalPaddingAdditions, right: 6, bottom: 4 + verticalPaddingAdditions),
+                    padding: .only(
+                      left: 2,
+                      top: 4 + verticalPaddingAdditions,
+                      right: 2,
+                      bottom: 4 + verticalPaddingAdditions,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: .circular(6),
@@ -617,6 +622,7 @@ class BotMessageBottom extends ConsumerWidget {
               updatedLayoutKeys[layoutKey] = width;
               P.ui.messageListLayoutKeys.q = updatedLayoutKeys;
             },
+            // child: w.debug,
             child: w,
           );
         });
@@ -690,22 +696,22 @@ class BotMessageBottom extends ConsumerWidget {
                           child: Container(
                             padding: const .symmetric(horizontal: 8, vertical: 5),
                             decoration: BoxDecoration(
-                              color: Colors.red.q(.08),
+                              color: primaryColor.q(.05),
                               borderRadius: .circular(8),
-                              border: Border.all(color: Colors.red.q(.26)),
+                              border: Border.all(color: primaryColor.q(.14)),
                             ),
                             child: Row(
                               mainAxisSize: .min,
                               children: [
                                 Icon(
                                   Icons.delete_outline,
-                                  color: Colors.red.q(.86),
+                                  color: primaryColor.q(.9),
                                   size: 14,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   s.delete,
-                                  style: TS(c: Colors.red.q(.9), s: 11, w: .w600),
+                                  style: TS(c: primaryColor.q(.92), s: 11, w: .w600),
                                 ),
                               ],
                             ),

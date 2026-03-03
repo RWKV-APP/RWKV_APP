@@ -614,6 +614,86 @@ class S {
     );
   }
 
+  /// `已切换分支`
+  String get user_message_branch_switched {
+    return Intl.message(
+      '已切换分支',
+      name: 'user_message_branch_switched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `消息操作`
+  String get user_message_actions_panel_title {
+    return Intl.message(
+      '消息操作',
+      name: 'user_message_actions_panel_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前消息暂无可用操作`
+  String get user_message_actions_panel_empty {
+    return Intl.message(
+      '当前消息暂无可用操作',
+      name: 'user_message_actions_panel_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `切换分支`
+  String get user_message_actions_panel_switch_branch_title {
+    return Intl.message(
+      '切换分支',
+      name: 'user_message_actions_panel_switch_branch_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `通过上一条 / 下一条切换相邻分支`
+  String get user_message_actions_panel_switch_branch_subtitle {
+    return Intl.message(
+      '通过上一条 / 下一条切换相邻分支',
+      name: 'user_message_actions_panel_switch_branch_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `删除当前消息`
+  String get delete_current_branch {
+    return Intl.message(
+      '删除当前消息',
+      name: 'delete_current_branch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `删除当前消息`
+  String get delete_branch_title {
+    return Intl.message(
+      '删除当前消息',
+      name: 'delete_branch_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `这是危险操作：将永久删除当前消息及其所有子节点，并同步删除数据库中的相关记录。该操作不可恢复，是否继续？`
+  String get delete_branch_confirmation_message {
+    return Intl.message(
+      '这是危险操作：将永久删除当前消息及其所有子节点，并同步删除数据库中的相关记录。该操作不可恢复，是否继续？',
+      name: 'delete_branch_confirmation_message',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `屏幕宽度`
   String get screen_width {
     return Intl.message('屏幕宽度', name: 'screen_width', desc: '', args: []);
