@@ -190,6 +190,53 @@ extension $Msg on _Msg {
     bottomDetailsExpanded.q = next;
   }
 
+  void syncBottomDetailsExpandedBetweenMessages({
+    required int sourceMessageId,
+    required int targetMessageId,
+  }) {
+    if (sourceMessageId == targetMessageId) return;
+
+    final Map<String, bool> current = bottomDetailsExpanded.q;
+    if (current.isEmpty) return;
+
+    final String sourceSuffix = "::$sourceMessageId";
+    final String targetSuffix = "::$targetMessageId";
+    final Set<String> scopesToSync = {};
+
+    for (final String key in current.keys) {
+      if (!key.endsWith(sourceSuffix) && !key.endsWith(targetSuffix)) continue;
+      final int splitIndex = key.lastIndexOf("::");
+      if (splitIndex <= 0) continue;
+      final String scope = key.substring(0, splitIndex);
+      scopesToSync.add(scope);
+    }
+
+    if (scopesToSync.isEmpty) return;
+
+    final Map<String, bool> next = {...current};
+    bool changed = false;
+
+    for (final String scope in scopesToSync) {
+      final String sourceKey = _bottomDetailsStateKey(scope: scope, messageId: sourceMessageId);
+      final String targetKey = _bottomDetailsStateKey(scope: scope, messageId: targetMessageId);
+      final bool sourceExpanded = current[sourceKey] ?? false;
+      final bool targetExpanded = current[targetKey] ?? false;
+
+      if (sourceExpanded == targetExpanded) continue;
+      changed = true;
+
+      if (!sourceExpanded) {
+        next.remove(targetKey);
+        continue;
+      }
+
+      next[targetKey] = true;
+    }
+
+    if (!changed) return;
+    bottomDetailsExpanded.q = next;
+  }
+
   int? getBottomMessageTokensCount({
     required int messageId,
   }) {
@@ -293,6 +340,11 @@ extension $Msg on _Msg {
       qqe("newIndex is out of range");
       return;
     }
+    final int targetMessageId = siblingIds[newIndex];
+    syncBottomDetailsExpandedBetweenMessages(
+      sourceMessageId: msg.id,
+      targetMessageId: targetMessageId,
+    );
     parent.latest = parent.children[newIndex];
     ids.q = msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
