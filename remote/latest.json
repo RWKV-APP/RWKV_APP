@@ -580,7 +580,8 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1770014071
+        "date": 1770014071,
+        "isDebug": true
       },
       {
         "name": "RWKV7a-G1d 0.1B (8 Elite)",
@@ -676,7 +677,8 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["888"],
-        "date": 1770014071
+        "date": 1770014071,
+        "isDebug": true
       },
       {
         "name": "RWKV7-G1d 0.4B (8 Elite Gen5)",
@@ -784,7 +786,8 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1770704540
+        "date": 1770704540,
+        "isDebug": true
       },
       {
         "name": "RWKV7-G1d 1.5B (8 Elite)",
@@ -895,6 +898,18 @@
         "date": 1770884152
       },
       {
+        "name": "RWKV7-G1d 1.5B (778)",
+        "modelSize": 1.5,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1d-1.5b-20260212-ctx8192-a16w8-6490.rmpack",
+        "fileSize": 1684926464,
+        "quantization": "w8a16",
+        "platforms": ["android"],
+        "backends": ["qnn"],
+        "tags": ["reason", "npu"],
+        "socLimitations": ["778"],
+        "date": 1770884152
+      },
+      {
         "name": "RWKV7-G1d 2.9B (8 Elite)",
         "modelSize": 2.9,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1d-2.9b-20260131-ctx8192-a16w4-8elite-batch.rmpack",
@@ -995,12 +1010,13 @@
         "modelSize": 2.9,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/rwkv7-g1d-2.9b-20260131-ctx8192-a16w4-888.rmpack",
         "fileSize": 2011262976,
-        "quantization": "w8a16",
+        "quantization": "w4a16",
         "platforms": ["android"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1770013846
+        "date": 1770013846,
+        "isDebug": true
       },
       {
         "name": "RWKV7-G1 1.5B Neko (8 Elite)",
