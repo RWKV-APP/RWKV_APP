@@ -567,32 +567,26 @@ class BotMessageBottom extends ConsumerWidget {
           if (showResumeAction)
             KeyedSubtree(
               key: const ValueKey<String>("resume"),
-              child: Row(
-                mainAxisSize: .min,
-                children: [
-                  4.w,
-                  Tooltip(
-                    message: s.chat_resume,
-                    child: GestureDetector(
-                      onTap: _onResumePressed,
-                      child: Container(
-                        padding: .zero,
-                        child: Container(
-                          padding: const .symmetric(horizontal: 4, vertical: 1),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: .all(color: primaryColor.q(.67)),
-                            borderRadius: .circular(4),
-                          ),
-                          child: Text(
-                            s.chat_resume,
-                            style: TS(c: primaryColor, w: .w600, s: 16),
-                          ),
-                        ),
+              child: Tooltip(
+                message: s.chat_resume,
+                child: GestureDetector(
+                  onTap: _onResumePressed,
+                  child: Container(
+                    padding: .zero,
+                    child: Container(
+                      padding: const .symmetric(horizontal: 4, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: .all(color: primaryColor.q(.67)),
+                        borderRadius: .circular(4),
+                      ),
+                      child: Text(
+                        s.chat_resume,
+                        style: TS(c: primaryColor, w: .w600, s: 16),
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           // TODO: Horizontal layout logic
