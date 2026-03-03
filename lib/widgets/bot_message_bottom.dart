@@ -87,6 +87,11 @@ class BotMessageBottom extends ConsumerWidget {
     await P.chat.onRegeneratePressed(index: index, preferredDemoType: preferredDemoType ?? .chat);
   }
 
+  void _onDeleteBranchPressed() async {
+    if (disableDefaultActions) return;
+    await P.chat.onDeleteBranchPressed(msg: msg);
+  }
+
   void _onCopyPressed() {
     if (disableDefaultActions) return;
     Alert.success(S.current.chat_copied_to_clipboard);
@@ -238,6 +243,7 @@ class BotMessageBottom extends ConsumerWidget {
     final double verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
     final bool branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
     final bool showBranchSwitcher = branchSwitcherAvailable;
+    final bool showDeleteBranchAction = branchSwitcherAvailable && !disableDefaultActions && !changing && !selectMessageMode;
     final Widget branchSwitcher = IgnorePointer(
       ignoring: disableDefaultActions,
       child: BranchSwitcher(msg, index),
@@ -674,6 +680,39 @@ class BotMessageBottom extends ConsumerWidget {
                       ),
                     ],
                   ),
+                  if (showDeleteBranchAction)
+                    Padding(
+                      padding: const .only(top: 8),
+                      child: Tooltip(
+                        message: s.delete,
+                        child: GestureDetector(
+                          onTap: _onDeleteBranchPressed,
+                          child: Container(
+                            padding: const .symmetric(horizontal: 8, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.red.q(.08),
+                              borderRadius: .circular(8),
+                              border: Border.all(color: Colors.red.q(.26)),
+                            ),
+                            child: Row(
+                              mainAxisSize: .min,
+                              children: [
+                                Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.red.q(.86),
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  s.delete,
+                                  style: TS(c: Colors.red.q(.9), s: 11, w: .w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

@@ -85,6 +85,125 @@ extension $Chat on _Chat {
     P.msg._clear();
   }
 
+  Future<void> onDeleteBranchPressed({
+    required Message msg,
+  }) async {
+    if (P.rwkv.generating.q) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    final MsgNode? targetNode = P.msg.msgNode.q.findNodeByMsgId(msg.id);
+    final MsgNode? parentNode = targetNode?.parent;
+    if (targetNode == null || parentNode == null) {
+      Alert.warning(S.current.please_select_a_branch_to_continue_the_conversation);
+      return;
+    }
+
+    final List<MsgNode> siblings = parentNode.children;
+    if (siblings.length <= 1) {
+      return;
+    }
+
+    final int targetIndex = siblings.indexWhere((MsgNode node) => node.id == msg.id);
+    if (targetIndex < 0) {
+      Alert.warning(S.current.please_select_a_branch_to_continue_the_conversation);
+      return;
+    }
+
+    final BuildContext? context = getContext();
+    if (context == null) return;
+    final S s = S.of(context);
+    final bool isZh = P.preference.currentLangIsZh.q;
+    final String confirmTitle = isZh ? "删除分支" : "Delete Branch";
+    final String confirmMessage = isZh
+        ? "这是危险操作：将永久删除当前分支消息及其所有子节点，并同步删除数据库中的相关记录。该操作不可恢复，是否继续？"
+        : "This is a destructive action: it will permanently delete the current branch message and all its child nodes, and sync the related database records. This action cannot be undone. Continue?";
+    final OkCancelResult confirmResult = await showOkCancelAlertDialog(
+      context: context,
+      title: confirmTitle,
+      message: confirmMessage,
+      okLabel: s.delete,
+      cancelLabel: s.cancel,
+      isDestructiveAction: true,
+    );
+    if (confirmResult != OkCancelResult.ok) return;
+
+    final List<int> deletedIds = _collectSubtreeIds(targetNode);
+    final Set<int> deletedIdSet = deletedIds.toSet();
+
+    parentNode.children.removeAt(targetIndex);
+    if (parentNode.latest?.id == msg.id) {
+      if (parentNode.children.isEmpty) {
+        parentNode.latest = null;
+      } else {
+        final int settledIndex = targetIndex >= parentNode.children.length ? parentNode.children.length - 1 : targetIndex;
+        parentNode.latest = parentNode.children[settledIndex];
+      }
+    }
+
+    final Map<int, Message> nextPool = {...P.msg.pool.q};
+    for (final int deletedId in deletedIds) {
+      nextPool.remove(deletedId);
+    }
+    P.msg.pool.q = nextPool;
+
+    P.msg.clearBottomDetailsStateByMessageIds(messageIds: deletedIds);
+    P.msg.clearBottomTokensCountByMessageIds(messageIds: deletedIds);
+
+    final Message? latestClickedMessage = P.msg.latestClicked.q;
+    if (latestClickedMessage != null && deletedIdSet.contains(latestClickedMessage.id)) {
+      P.msg.latestClicked.q = null;
+    }
+
+    final Set<int> selectedSharingIds = sharingSelectedMsgIds.q;
+    final Set<int> filteredSharingIds = selectedSharingIds.where((int id) => !deletedIdSet.contains(id)).toSet();
+    if (filteredSharingIds.length != selectedSharingIds.length) {
+      sharingSelectedMsgIds.q = filteredSharingIds;
+    }
+    if (filteredSharingIds.length < 2) {
+      isSharing.q = false;
+    }
+
+    final int? editingIndex = P.msg.editingOrRegeneratingIndex.q;
+    if (editingIndex != null) {
+      final Message? editingMessage = P.msg.findByIndex(editingIndex);
+      if (editingMessage != null && deletedIdSet.contains(editingMessage.id)) {
+        P.msg.editingOrRegeneratingIndex.q = null;
+      }
+    }
+
+    final int? currentReceiveId = receiveId.q;
+    if (currentReceiveId != null && deletedIdSet.contains(currentReceiveId)) {
+      receiveId.q = null;
+      receivedTokens.q = "";
+    }
+
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
+    await P.conversation._syncNode();
+
+    try {
+      await P.app._db.deleteMsgsByCreateAtInUS(deletedIds);
+      Alert.success(S.current.delete_finished);
+    } catch (e) {
+      qqe("delete branch failed: $e");
+      Alert.error("Delete failed");
+    }
+  }
+
+  List<int> _collectSubtreeIds(MsgNode rootNode) {
+    final List<int> ids = [];
+    final List<MsgNode> stack = [rootNode];
+    while (stack.isNotEmpty) {
+      final MsgNode node = stack.removeLast();
+      ids.add(node.id);
+      for (final MsgNode child in node.children) {
+        stack.add(child);
+      }
+    }
+    return ids;
+  }
+
   void onSwitchWebSearchMode(WebSearchMode mode) async {
     final receiving = P.rwkv.generating.q;
     if (receiving) {

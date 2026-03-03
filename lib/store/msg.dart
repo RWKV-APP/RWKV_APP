@@ -190,6 +190,31 @@ extension $Msg on _Msg {
     bottomDetailsExpanded.q = next;
   }
 
+  void clearBottomDetailsStateByMessageIds({
+    required Iterable<int> messageIds,
+  }) {
+    final Set<int> targets = messageIds.toSet();
+    if (targets.isEmpty) return;
+
+    final Map<String, bool> current = bottomDetailsExpanded.q;
+    if (current.isEmpty) return;
+
+    final Map<String, bool> next = {};
+    for (final MapEntry<String, bool> entry in current.entries) {
+      final int splitIndex = entry.key.lastIndexOf("::");
+      if (splitIndex <= 0) {
+        next[entry.key] = entry.value;
+        continue;
+      }
+      final String idText = entry.key.substring(splitIndex + 2);
+      final int? id = int.tryParse(idText);
+      if (id != null && targets.contains(id)) continue;
+      next[entry.key] = entry.value;
+    }
+    if (next.length == current.length) return;
+    bottomDetailsExpanded.q = next;
+  }
+
   void syncBottomDetailsExpandedBetweenMessages({
     required int sourceMessageId,
     required int targetMessageId,
@@ -299,6 +324,41 @@ extension $Msg on _Msg {
     if (currentConversationCount.containsKey(messageId)) {
       final Map<int, int> nextConversationCount = {...currentConversationCount};
       nextConversationCount.remove(messageId);
+      bottomConversationTokensCount.q = nextConversationCount;
+    }
+  }
+
+  void clearBottomTokensCountByMessageIds({
+    required Iterable<int> messageIds,
+  }) {
+    final Set<int> targets = messageIds.toSet();
+    if (targets.isEmpty) return;
+
+    final Map<int, int> currentMessageCount = bottomMessageTokensCount.q;
+    final Map<int, int> nextMessageCount = {};
+    bool messageCountChanged = false;
+    for (final MapEntry<int, int> entry in currentMessageCount.entries) {
+      if (targets.contains(entry.key)) {
+        messageCountChanged = true;
+        continue;
+      }
+      nextMessageCount[entry.key] = entry.value;
+    }
+    if (messageCountChanged) {
+      bottomMessageTokensCount.q = nextMessageCount;
+    }
+
+    final Map<int, int> currentConversationCount = bottomConversationTokensCount.q;
+    final Map<int, int> nextConversationCount = {};
+    bool conversationCountChanged = false;
+    for (final MapEntry<int, int> entry in currentConversationCount.entries) {
+      if (targets.contains(entry.key)) {
+        conversationCountChanged = true;
+        continue;
+      }
+      nextConversationCount[entry.key] = entry.value;
+    }
+    if (conversationCountChanged) {
       bottomConversationTokensCount.q = nextConversationCount;
     }
   }
