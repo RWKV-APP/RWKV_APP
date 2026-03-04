@@ -1219,6 +1219,12 @@ extension _$Chat on _Chat {
       ),
     );
 
+    final bool isCurrentMessagePaused = currentMessage?.paused ?? false;
+    if (isCurrentMessagePaused) {
+      qqq("skip prefill for paused message: $id");
+      return;
+    }
+
     _prefillAfterReply();
   }
 
