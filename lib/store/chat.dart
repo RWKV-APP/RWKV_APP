@@ -1195,6 +1195,8 @@ extension _$Chat on _Chat {
       return;
     }
 
+    if (id == Config.chatPrefillId) return;
+
     final receivedTokens = this.receivedTokens.q;
     final Message? currentMessage = P.msg.pool.q[id];
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
@@ -1216,6 +1218,35 @@ extension _$Chat on _Chat {
         persistToMessage: true,
       ),
     );
+
+    _prefillAfterReply();
+  }
+
+  static final _thinkTagRegex = RegExp(r'<think>[\s\S]*?</think>');
+
+  void _prefillAfterReply() {
+    final pageKey = P.app.pageKey.q;
+    if (pageKey != .chat) return;
+
+    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text).toList();
+    if (messages.isEmpty) return;
+    if (messages.length % 2 != 0) return;
+
+    final history = <String>[];
+    for (int i = 0; i < messages.length; i += 2) {
+      final userMsg = messages[i];
+      final botMsg = i + 1 < messages.length ? messages[i + 1] : null;
+
+      history.add(userMsg.getContentForHistoryWithRef(botMsg?.reference));
+
+      if (botMsg != null) {
+        final content = botMsg.content.replaceAll(_thinkTagRegex, '').trim();
+        history.add(content);
+      }
+    }
+
+    receiveId.q = Config.chatPrefillId;
+    P.rwkv.sendMessages(history, maxLength: 0);
   }
 
   /// Update a message by id
@@ -1246,6 +1277,11 @@ extension _$Chat on _Chat {
 
     if (id == Config.seePrefillId) {
       qqw("see prefill id: $id");
+      return;
+    }
+
+    if (id == Config.chatPrefillId) {
+      qqw("chat prefill id: $id");
       return;
     }
 
