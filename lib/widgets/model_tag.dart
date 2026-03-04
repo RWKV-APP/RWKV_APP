@@ -1,5 +1,3 @@
-
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -126,7 +124,7 @@ class ModelTag extends ConsumerWidget {
           displayTagName: tagName.toUpperCase(),
           fontWeight: .w400,
         );
-      case "GPU":
+      case "gpu":
       default:
         return _RenderingOptions(
           bgColor: qb.q(.1),

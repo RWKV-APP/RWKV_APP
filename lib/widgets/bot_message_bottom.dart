@@ -138,7 +138,7 @@ class BotMessageBottom extends ConsumerWidget {
     required String? runningMode,
   }) {
     final thinking_mode.ThinkingMode mode = thinking_mode.ThinkingMode.fromString(runningMode);
-    final String localizedWithPrefix = switch (mode) {
+    final localizedWithPrefix = switch (mode) {
       .lighting => s.thinking_mode_auto(""),
       .none => s.thinking_mode_off(""),
       .free => s.thinking_mode_high(""),
@@ -155,7 +155,7 @@ class BotMessageBottom extends ConsumerWidget {
     required List<SamplerAndPenaltyParam> parsedDecodeParams,
   }) {
     if (parsedDecodeParams.isEmpty) return null;
-    final String displayName = parsedDecodeParams.first.displayName;
+    final displayName = parsedDecodeParams.first.displayName;
     if (parsedDecodeParams.length == 1) return displayName;
     return "$displayName x${parsedDecodeParams.length}";
   }
@@ -235,9 +235,9 @@ class BotMessageBottom extends ConsumerWidget {
       showShareButton = false;
     }
 
-    final String detailsScope = bottomDetailsScope ?? (disableDefaultActions ? "preview_bot_message_bottom" : "chat_bot_message_bottom");
+    final detailsScope = bottomDetailsScope ?? (disableDefaultActions ? "preview_bot_message_bottom" : "chat_bot_message_bottom");
     final Map<String, bool> detailsExpandedMap = ref.watch(P.msg.bottomDetailsExpanded);
-    final String detailsStateKey = "$detailsScope::${msg.id}";
+    final detailsStateKey = "$detailsScope::${msg.id}";
     final bool detailsExpanded = detailsExpandedMap[detailsStateKey] ?? false;
 
     final double verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
@@ -267,17 +267,15 @@ class BotMessageBottom extends ConsumerWidget {
     final int? resolvedConversationTokenCount = msg.changing
         ? (adapterConversationTokenCount ?? persistedConversationTokenCount)
         : (persistedConversationTokenCount ?? adapterConversationTokenCount);
-    final String messageTokenCountText = resolvedMessageTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
-    final String contextTokenCountText = resolvedConversationTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
+    final messageTokenCountText = resolvedMessageTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
+    final contextTokenCountText = resolvedConversationTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
     final bool showConversationTokenLimitHint =
         !msg.changing &&
         resolvedConversationTokenCount != null &&
         resolvedConversationTokenCount >= Config.newConversationTokenReminderThreshold;
     final bool isInlineTokenGenerating = messageTokenCountText == s.generating || contextTokenCountText == s.generating;
-    final String inlineConversationTokenCoreText = isInlineTokenGenerating
-        ? s.generating
-        : "$messageTokenCountText/$contextTokenCountText tok";
-    final String inlineConversationTokenText = showConversationTokenLimitHint
+    final inlineConversationTokenCoreText = isInlineTokenGenerating ? s.generating : "$messageTokenCountText/$contextTokenCountText tok";
+    final inlineConversationTokenText = showConversationTokenLimitHint
         ? "$inlineConversationTokenCoreText · ${s.conversation_token_limit_hint_short}"
         : inlineConversationTokenCoreText;
 
@@ -285,30 +283,30 @@ class BotMessageBottom extends ConsumerWidget {
     final double liveDecodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final double effectiveLivePrefillSpeed = livePrefillSpeed > 0 ? livePrefillSpeed : (msg.prefillSpeed ?? .0);
     final double effectiveLiveDecodeSpeed = liveDecodeSpeed > 0 ? liveDecodeSpeed : (msg.decodeSpeed ?? .0);
-    final String changingInlinePrefillSpeedText = _formatCompactSpeed(speed: effectiveLivePrefillSpeed);
-    final String changingInlineDecodeSpeedText = _formatCompactSpeed(speed: effectiveLiveDecodeSpeed);
-    final String settledPrefillSpeedText = _formatSpeed(speed: msg.prefillSpeed);
-    final String settledDecodeSpeedText = _formatSpeed(speed: msg.decodeSpeed);
-    final String detailsPrefillSpeedText = msg.changing ? changingInlinePrefillSpeedText : settledPrefillSpeedText;
-    final String detailsDecodeSpeedText = msg.changing ? changingInlineDecodeSpeedText : settledDecodeSpeedText;
-    final String detailsPrefillSpeedDisplay = detailsPrefillSpeedText == "--" ? "--" : "$detailsPrefillSpeedText t/s";
-    final String detailsDecodeSpeedDisplay = detailsDecodeSpeedText == "--" ? "--" : "$detailsDecodeSpeedText t/s";
+    final changingInlinePrefillSpeedText = _formatCompactSpeed(speed: effectiveLivePrefillSpeed);
+    final changingInlineDecodeSpeedText = _formatCompactSpeed(speed: effectiveLiveDecodeSpeed);
+    final settledPrefillSpeedText = _formatSpeed(speed: msg.prefillSpeed);
+    final settledDecodeSpeedText = _formatSpeed(speed: msg.decodeSpeed);
+    final detailsPrefillSpeedText = msg.changing ? changingInlinePrefillSpeedText : settledPrefillSpeedText;
+    final detailsDecodeSpeedText = msg.changing ? changingInlineDecodeSpeedText : settledDecodeSpeedText;
+    final detailsPrefillSpeedDisplay = detailsPrefillSpeedText == "--" ? "--" : "$detailsPrefillSpeedText t/s";
+    final detailsDecodeSpeedDisplay = detailsDecodeSpeedText == "--" ? "--" : "$detailsDecodeSpeedText t/s";
 
     final List<SamplerAndPenaltyParam> parsedDecodeParams = msg.parsedDecodeParams;
     final DecodeParamType currentDecodeParamType = ref.watch(P.rwkv.decodeParamType);
-    final String currentDecodeParamDisplayName = SamplerAndPenaltyParam.fromDecodeParamType(currentDecodeParamType).displayName;
+    final currentDecodeParamDisplayName = SamplerAndPenaltyParam.fromDecodeParamType(currentDecodeParamType).displayName;
     String? decodeParamSummary = _localizedDecodeParamSummary(parsedDecodeParams: parsedDecodeParams);
     if (decodeParamSummary == null && (msg.changing || msg.paused || receiveId == msg.id)) {
       decodeParamSummary = currentDecodeParamDisplayName;
     }
-    final String runningModeText = _localizedReasoningMode(
+    final runningModeText = _localizedReasoningMode(
       s: s,
       runningMode: msg.runningMode,
     );
     final FileInfo? latestModel = ref.watch(P.rwkv.latestModel);
     final GroupInfo? currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
     final String? liveModelName = isTTSDemo ? (latestModel?.name ?? currentGroupInfo?.displayName) : null;
-    final String modelNameText = msg.modelName?.isNotEmpty == true ? msg.modelName! : (liveModelName ?? "--");
+    final modelNameText = msg.modelName?.isNotEmpty == true ? msg.modelName! : (liveModelName ?? "--");
     final bool showChangingPrefillProgress = changing && !isTTSDemo;
 
     final double inlineConversationTokenEstimatedWidth = isTTSDemo ? .0 : _estimateInlineTokenWidth(text: inlineConversationTokenText);
@@ -608,7 +606,7 @@ class BotMessageBottom extends ConsumerWidget {
               final double width = size.width.roundToDouble();
               await 0.msLater;
               final Key? widgetKey = w.key;
-              final String layoutKey = widgetKey is ValueKey<String> ? widgetKey.value : "t";
+              final layoutKey = widgetKey is ValueKey<String> ? widgetKey.value : "t";
               final Map<String, double> updatedLayoutKeys = {
                 ...P.ui.messageListLayoutKeys.q,
               };
@@ -754,8 +752,8 @@ class _ChangingPrefillProgressInline extends ConsumerWidget {
     final int percent = _percentValue(progress: progress);
     if (percent >= 100) return const SizedBox.shrink();
 
-    final String percentText = "$percent%";
-    final String progressLabel = s.prefill_progress_percent(percentText);
+    final percentText = "$percent%";
+    final progressLabel = s.prefill_progress_percent(percentText);
 
     return Row(
       mainAxisSize: .min,
@@ -775,8 +773,8 @@ class _ChangingPrefillProgressInline extends ConsumerWidget {
 }
 
 class _BottomDetailsMetaChip extends StatelessWidget {
-  final String label;
-  final String value;
+  final label;
+  final value;
   final Color color;
   final Widget? leading;
 
@@ -790,7 +788,7 @@ class _BottomDetailsMetaChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String tooltipText = label.isEmpty ? value : "$label $value";
+    final tooltipText = label.isEmpty ? value : "$label $value";
 
     return Tooltip(
       message: tooltipText,

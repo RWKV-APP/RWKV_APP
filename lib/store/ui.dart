@@ -28,10 +28,10 @@ class _UI {
   late final useBackdropFilterForInputOptions = qs(false);
 
   // from 0.0 to 1.0
-  late final backdropFilterBgAlphaForInputOptions = qs(1.0);
+  late final backdropFilterBgAlphaForInputOptions = qs<double>(.75);
 
   // from 0.0 to 32.0
-  late final sigmaForBackdropFilterForInputOptions = qs(0.0);
+  late final sigmaForBackdropFilterForInputOptions = qs<double>(8.0);
 
   // 现阶段不需要渲染
   late final useBackdropFilterForInputTextFields = qs(false);
