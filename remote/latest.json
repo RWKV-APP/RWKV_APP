@@ -15,7 +15,7 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1769846040
       },
       {
@@ -96,7 +96,7 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1769846040
       },
       {
@@ -108,7 +108,7 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1770703355
       },
       {
@@ -120,7 +120,7 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1770884182
       },
       {
@@ -132,7 +132,7 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1770013840
       },
       {
@@ -232,7 +232,7 @@
         "platforms": ["macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1770013840
       },
       {
@@ -245,7 +245,7 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1747375158
       },
       {
@@ -257,7 +257,7 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["gpu", "translate"],
+        "tags": ["translate"],
         "date": 1758108687
       },
       {
@@ -352,7 +352,7 @@
         "platforms": ["ios", "macos", "web", "windows"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["gpu", "translate"],
+        "tags": ["translate"],
         "date": 1768809217
       },
       {
@@ -1245,7 +1245,7 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1768913741
       },
       {
@@ -1352,7 +1352,7 @@
         "platforms": ["macos", "web", "windows", "ios"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "batch"],
         "date": 1768915037
       }
     ]
@@ -1580,7 +1580,7 @@
         "quantization": "fp16",
         "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webrwkv"],
-        "tags": ["gpu", "core", "spark"],
+        "tags": ["core", "spark"],
         "date": 1755592162
       },
       {
@@ -1686,7 +1686,7 @@
         "quantization": "fp16",
         "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webrwkv"],
-        "tags": ["gpu", "core", "spark"],
+        "tags": ["core", "spark"],
         "date": 1756702587
       },
       {
@@ -1796,7 +1796,7 @@
         "platforms": ["ios", "macos", "windows", "linux"],
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
-        "tags": ["gpu"],
+        "tags": [],
         "date": 1761295500
       }
     ]
