@@ -31,6 +31,7 @@ class _Chat {
   // ===========================================================================
 
   late final textInInput = qs("");
+  late final inputBarDebuggerShown = qs(false);
 
   late final prefillPercentage = qs(0.0);
 
@@ -82,6 +83,16 @@ class _Chat {
 
 /// Public methods
 extension $Chat on _Chat {
+  bool tryShowInputBarDebuggerByPassword(String text) {
+    final String input = text.trim();
+    if (input != Config.inputBarDebuggerPassword) return false;
+    inputBarDebuggerShown.q = true;
+    textEditingController.clear();
+    textInInput.q = "";
+    focusNode.unfocus();
+    return true;
+  }
+
   void clearMessages() {
     P.msg._clear();
   }
@@ -336,6 +347,9 @@ extension $Chat on _Chat {
   Future<void> onSendButtonPressed({
     required DemoType preferredDemoType,
   }) async {
+    final String textToSend = textInInput.q.trim();
+    if (tryShowInputBarDebuggerByPassword(textToSend)) return;
+
     if (P.app.demoType.q == .tts) {
       await P.talk.gen();
       return;
@@ -378,7 +392,6 @@ extension $Chat on _Chat {
     }
 
     focusNode.unfocus();
-    final textToSend = textInInput.q.trim();
     textInInput.q = "";
 
     final _editingBotMessage = P.msg.editingBotMessage.q;
@@ -455,6 +468,8 @@ extension $Chat on _Chat {
 
   Future<void> onKeyboardSubmitted(String aString) async {
     qqq(aString);
+    final String textToSend = textInInput.q.trim();
+    if (tryShowInputBarDebuggerByPassword(textToSend)) return;
 
     final generating = P.rwkv.generating.q;
 
@@ -468,7 +483,6 @@ extension $Chat on _Chat {
       return;
     }
 
-    final textToSend = textInInput.q.trim();
     if (textToSend.isEmpty) return;
     textInInput.q = "";
     focusNode.unfocus();

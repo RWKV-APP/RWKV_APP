@@ -425,6 +425,10 @@ extension _$App on _App {
       checkUpdates();
     });
 
+    2000.msLater.then((_) async {
+      if (Args.autoPushTestPage) push(.test2);
+    });
+
     deleteOutdatedConfigInPreference();
   }
 

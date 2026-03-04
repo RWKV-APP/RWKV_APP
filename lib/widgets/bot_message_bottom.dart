@@ -606,7 +606,6 @@ class BotMessageBottom extends ConsumerWidget {
           return MeasureSize(
             onChange: (size) async {
               final double width = size.width.roundToDouble();
-              qqr("onChange: $width");
               await 0.msLater;
               final Key? widgetKey = w.key;
               final String layoutKey = widgetKey is ValueKey<String> ? widgetKey.value : "t";

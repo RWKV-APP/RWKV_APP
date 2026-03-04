@@ -16,4 +16,5 @@ abstract class Args {
   static const showHaloDebugger = bool.fromEnvironment("showHaloDebugger", defaultValue: false);
   static const testingSeeQueue = bool.fromEnvironment("testingSeeQueue", defaultValue: false);
   static const forceShowNewVersionPanel = bool.fromEnvironment("forceShowNewVersionPanel", defaultValue: false);
+  static const autoPushTestPage = bool.fromEnvironment("autoPushTestPage", defaultValue: false);
 }

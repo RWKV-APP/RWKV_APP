@@ -25,6 +25,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/debugger.dart';
 import 'package:zone/widgets/floating_performace_info.dart';
+import 'package:zone/widgets/input_bar_debugger.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -174,6 +175,7 @@ class _App extends ConsumerWidget {
             Positioned(left: 0, right: 0, top: 0, bottom: 0, child: Container(color: appTheme.scaffoldBg)),
             ?child,
             const FloatingPerformaceInfo(),
+            const InputBarDebugger(),
             const Alert(),
             if (kDebugMode) const Debugger(),
           ],

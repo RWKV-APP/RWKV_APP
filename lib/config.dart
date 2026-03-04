@@ -65,4 +65,6 @@ abstract class Config {
   static const newConversationTokenReminderThreshold = Args.conversationTokenReminderThreshold;
 
   static const seePrefillId = -42;
+
+  static final inputBarDebuggerPassword = 'RWKV_A9!vT7#qL2@mX8kN5%pR';
 }

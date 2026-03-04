@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:ui';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -89,6 +92,9 @@ class DecodeParamButton extends ConsumerWidget {
     final bgColor = colors.background;
     final textColor = colors.foreground;
     final borderColor = colors.border;
+    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
     final s = S.of(context);
 
     return Tooltip(
@@ -96,25 +102,35 @@ class DecodeParamButton extends ConsumerWidget {
       child: IntrinsicWidth(
         child: GestureDetector(
           onTap: _onTap,
-          child: Container(
-            height: height,
-            padding: const .symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: .circular(60),
-              border: .all(color: borderColor),
-            ),
-            child: Row(
-              mainAxisAlignment: .center,
-              crossAxisAlignment: .center,
-              children: [
-                Icon(Symbols.auto_awesome, color: textColor, size: appTheme.inputBarInteractionsIconSize),
-                const SizedBox(width: 4),
-                Text(
-                  decodeParamType.displayNameShort,
-                  style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+          child: ClipRRect(
+            borderRadius: .circular(60),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
+                sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
+              ),
+              enabled: userBackdropFilterForInputOptions,
+              child: Container(
+                height: height,
+                padding: const .symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: bgColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                  borderRadius: .circular(60),
+                  border: .all(color: borderColor),
                 ),
-              ],
+                child: Row(
+                  mainAxisAlignment: .center,
+                  crossAxisAlignment: .center,
+                  children: [
+                    Icon(Symbols.auto_awesome, color: textColor, size: appTheme.inputBarInteractionsIconSize),
+                    const SizedBox(width: 4),
+                    Text(
+                      decodeParamType.displayNameShort,
+                      style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

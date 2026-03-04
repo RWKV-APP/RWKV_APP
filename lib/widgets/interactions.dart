@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:ui';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -117,31 +120,44 @@ class _WebSearchModeButton extends ConsumerWidget {
     final actionBorderColor = borderColor;
     final showDeepLabel = webSearchMode == .deepSearch;
     final deepLabel = currentLangIsZh ? "深度" : "Deep";
+    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     final height = InputInteractions.calculateButtonHeight(context);
     const EdgeInsets padding = .symmetric(horizontal: 8);
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
-        child: Container(
-          height: height,
-          padding: padding,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: .circular(60),
-            border: .all(color: actionBorderColor),
-          ),
-          child: Row(
-            children: [
-              Icon(Symbols.travel_explore, color: actionColor, size: 18),
-              if (showDeepLabel) ...[
-                const SizedBox(width: 2),
-                Text(
-                  deepLabel,
-                  style: TS(c: actionColor, s: fontSize, height: 1, w: .w500),
-                ),
-              ],
-            ],
+        child: ClipRRect(
+          borderRadius: .circular(60),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
+              sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
+            ),
+            enabled: userBackdropFilterForInputOptions,
+            child: Container(
+              height: height,
+              padding: padding,
+              decoration: BoxDecoration(
+                color: backgroundColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                borderRadius: .circular(60),
+                border: .all(color: actionBorderColor),
+              ),
+              child: Row(
+                children: [
+                  Icon(Symbols.travel_explore, color: actionColor, size: 18),
+                  if (showDeepLabel) ...[
+                    const SizedBox(width: 2),
+                    Text(
+                      deepLabel,
+                      style: TS(c: actionColor, s: fontSize, height: 1, w: .w500),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -178,6 +194,9 @@ class _WenYanWenButton extends ConsumerWidget {
     final bgColor = colors.background;
     final textColor = colors.foreground;
     final borderColor = colors.border;
+    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
     final String label = switch (mode) {
       WenyanMode.off => "文言",
       WenyanMode.classic => "文言",
@@ -187,18 +206,28 @@ class _WenYanWenButton extends ConsumerWidget {
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
-        child: Container(
-          height: height,
-          padding: const .symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: .circular(60),
-            border: .all(color: borderColor, width: 1),
-          ),
-          alignment: .center,
-          child: Text(
-            label,
-            style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+        child: ClipRRect(
+          borderRadius: .circular(60),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
+              sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
+            ),
+            enabled: userBackdropFilterForInputOptions,
+            child: Container(
+              height: height,
+              padding: const .symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: bgColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                borderRadius: .circular(60),
+                border: .all(color: borderColor, width: 1),
+              ),
+              alignment: .center,
+              child: Text(
+                label,
+                style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+              ),
+            ),
           ),
         ),
       ),

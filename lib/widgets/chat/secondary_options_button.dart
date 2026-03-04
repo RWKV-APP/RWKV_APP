@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:ui';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -37,6 +40,9 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
     final textColor = colors.foreground;
+    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
@@ -52,36 +58,46 @@ class SecondaryOptionsButton extends ConsumerWidget {
           duration: 250.ms,
           child: GestureDetector(
             onTap: _onTap,
-            child: AnimatedContainer(
-              height: height,
-              duration: 150.ms,
-              curve: Curves.easeOutCubic,
-              padding: padding,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: .circular(60),
-                border: .all(color: colors.border),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.translate, color: textColor, size: appTheme.inputBarInteractionsIconSize),
-                  const SizedBox(width: 4),
-                  Column(
-                    crossAxisAlignment: .start,
-                    mainAxisAlignment: .center,
+            child: ClipRRect(
+              borderRadius: .circular(60),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
+                  sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
+                ),
+                enabled: userBackdropFilterForInputOptions,
+                child: AnimatedContainer(
+                  height: height,
+                  duration: 150.ms,
+                  curve: Curves.easeOutCubic,
+                  padding: padding,
+                  decoration: BoxDecoration(
+                    color: color.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                    borderRadius: .circular(60),
+                    border: .all(color: colors.border),
+                  ),
+                  child: Row(
                     children: [
-                      Text(
-                        s.prefer,
-                        style: TS(c: textColor, s: fontSize, height: 1),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        s.chinese,
-                        style: TS(c: textColor, s: fontSize, height: 1),
+                      Icon(Icons.translate, color: textColor, size: appTheme.inputBarInteractionsIconSize),
+                      const SizedBox(width: 4),
+                      Column(
+                        crossAxisAlignment: .start,
+                        mainAxisAlignment: .center,
+                        children: [
+                          Text(
+                            s.prefer,
+                            style: TS(c: textColor, s: fontSize, height: 1),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            s.chinese,
+                            style: TS(c: textColor, s: fontSize, height: 1),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

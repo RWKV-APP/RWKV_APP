@@ -30,6 +30,7 @@
         "--dart-define=disableRemoteConfig=true",
         "--dart-define=showHaloDebugger=true",
         "--dart-define=conversationTokenReminderThreshold=1000"
+        // "--dart-define=autoPushTestPage=true",
         // "--dart-define=debuggingLatestUI"
         // "--dart-define=forceShowNewVersionPanel=true"
         // "--dart-define=testingSeeQueue=true"

@@ -74,7 +74,7 @@ class BranchSwitcher extends ConsumerWidget {
               onPressed: isFirst ? null : onBackPressed,
               padding: const .only(left: 4, right: 16, top: 4, bottom: 4),
               constraints: const BoxConstraints(),
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 visualDensity: VisualDensity(horizontal: -3, vertical: -2),
               ),
               icon: Icon(
@@ -88,7 +88,7 @@ class BranchSwitcher extends ConsumerWidget {
               onPressed: isLast ? null : onForwardPressed,
               padding: const .only(left: 16, right: 4, top: 4, bottom: 4),
               constraints: const BoxConstraints(),
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 visualDensity: VisualDensity(horizontal: -3, vertical: -2),
               ),
               icon: Icon(

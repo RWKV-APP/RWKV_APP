@@ -34,6 +34,9 @@ class InputBar extends ConsumerWidget {
 
     final appTheme = ref.watch(P.app.theme);
 
+    final gradientStartForInputBar = ref.watch(P.ui.gradientStartForInputBar);
+    final gradientForInputBar = ref.watch(P.ui.gradientForInputBar);
+
     return Positioned(
       bottom: 0,
       right: 0,
@@ -48,8 +51,8 @@ class InputBar extends ConsumerWidget {
                 appTheme.scaffoldBg.q(0),
                 appTheme.scaffoldBg.q(1),
               ],
-              begin: .topCenter,
-              end: const Alignment(0, -0.6),
+              begin: Alignment(0, gradientStartForInputBar),
+              end: Alignment(0, gradientForInputBar),
             ),
           ),
           child: AnimatedSize(

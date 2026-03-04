@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -39,29 +41,43 @@ class BatchButton extends ConsumerWidget {
     final textColor = colors.foreground;
     final borderColor = colors.border;
 
+    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
+
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: P.rwkv.onBatchInferenceTapped,
-        child: Container(
-          height: height,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: .circular(60),
-            border: .all(color: borderColor),
-          ),
-          padding: const .only(left: 8, right: 8),
-          child: Row(
-            mainAxisAlignment: .center,
-            crossAxisAlignment: .center,
-            children: [
-              Icon(Symbols.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
-              if (batchEnabled) const SizedBox(width: 4),
-              if (batchEnabled)
-                Text(
-                  batchCount.toString(),
-                  style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
-                ),
-            ],
+        child: ClipRRect(
+          borderRadius: .circular(60),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
+              sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
+            ),
+            enabled: userBackdropFilterForInputOptions,
+            child: Container(
+              height: height,
+              decoration: BoxDecoration(
+                color: bgColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                borderRadius: .circular(60),
+                border: .all(color: borderColor),
+              ),
+              padding: const .only(left: 8, right: 8),
+              child: Row(
+                mainAxisAlignment: .center,
+                crossAxisAlignment: .center,
+                children: [
+                  Icon(Symbols.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
+                  if (batchEnabled) const SizedBox(width: 4),
+                  if (batchEnabled)
+                    Text(
+                      batchCount.toString(),
+                      style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                    ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

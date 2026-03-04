@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/model/app_theme.dart';
@@ -29,11 +30,13 @@ InteractionVisualColors interactionVisualColors({
 }) {
   final InteractionVisualColors unavailableColors = InteractionVisualColors(
     background: Color.lerp(appTheme.g1, appTheme.scaffoldBg, .33) ?? appTheme.g1,
+    // background: kC,
     foreground: Color.lerp(appTheme.g5, appTheme.scaffoldBg, .33) ?? appTheme.g5,
     border: Color.lerp(appTheme.g2, appTheme.scaffoldBg, .33) ?? appTheme.g2,
   );
   final InteractionVisualColors availableColors = InteractionVisualColors(
     background: appTheme.qb144,
+    // background: kC,
     foreground: appTheme.qb4,
     border: appTheme.qb11,
   );
@@ -42,12 +45,14 @@ InteractionVisualColors interactionVisualColors({
     .unavailable => unavailableColors,
     .idleInteractive => InteractionVisualColors(
       background: Color.lerp(unavailableColors.background, availableColors.background, .55) ?? availableColors.background,
+      // background: kC,
       foreground: Color.lerp(unavailableColors.foreground, availableColors.foreground, .45) ?? availableColors.foreground,
       border: Color.lerp(unavailableColors.border, availableColors.border, .5) ?? availableColors.border,
     ),
     .available => availableColors,
     .enabled => InteractionVisualColors(
       background: appTheme.qb5,
+      // background: kC,
       foreground: appTheme.g1,
       border: appTheme.qb5,
     ),

@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -67,6 +69,10 @@ class ThinkingModeButton extends ConsumerWidget {
     };
     final compactText = _extractInteractionSuffix(source: text, separator: s.hyphen);
 
+    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
+
     return AnimatedSize(
       key: const Key("_ThinkingModeButton"),
       duration: 150.ms,
@@ -77,30 +83,40 @@ class ThinkingModeButton extends ConsumerWidget {
           duration: 250.ms,
           child: GestureDetector(
             onTap: P.rwkv.onThinkModeTapped,
-            child: SizedBox(
-              height: height,
-              child: Container(
-                padding: padding,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: .circular(60),
-                  border: border,
+            child: ClipRRect(
+              borderRadius: .circular(60),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
+                  sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
                 ),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      Assets.img.chat.think,
-                      colorFilter: .mode(textColor, BlendMode.srcIn),
-                      width: appTheme.inputBarInteractionsIconSize,
-                      height: appTheme.inputBarInteractionsIconSize,
+                enabled: userBackdropFilterForInputOptions,
+                child: SizedBox(
+                  height: height,
+                  child: Container(
+                    padding: padding,
+                    decoration: BoxDecoration(
+                      color: color.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                      borderRadius: .circular(60),
+                      border: border,
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      compactText,
-                      style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          Assets.img.chat.think,
+                          colorFilter: .mode(textColor, BlendMode.srcIn),
+                          width: appTheme.inputBarInteractionsIconSize,
+                          height: appTheme.inputBarInteractionsIconSize,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          compactText,
+                          style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                        ),
+                        const SizedBox(width: 4),
+                      ],
                     ),
-                    const SizedBox(width: 4),
-                  ],
+                  ),
                 ),
               ),
             ),

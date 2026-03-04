@@ -1,5 +1,3 @@
-
-
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,81 +54,6 @@ class ThemeSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
-    final qb = ref.watch(P.app.qb);
-    final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
-    final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
-    final isLight = appTheme.isLight;
-
-    final items = <Widget>[
-      FormItem(
-        icon: Icon(Icons.dark_mode_outlined, color: qb.q(.667), size: 16),
-        title: s.dark_mode,
-        subtitle: s.force_dark_mode,
-        showArrow: false,
-        isSectionStart: true,
-        onTap: null,
-        trailing: Switch.adaptive(
-          value: !isLight,
-          onChanged: _onDarkModeSwitchChanged,
-          activeThumbColor: appTheme.themePrimary,
-        ),
-      ),
-      FormItem(
-        icon: Icon(Icons.auto_mode, color: qb.q(.667), size: 16),
-        title: s.system_mode,
-        subtitle: s.color_theme_follow_system,
-        showArrow: false,
-        isSectionStart: false,
-        isSectionEnd: true,
-        onTap: null,
-        trailing: Switch.adaptive(
-          value: preferredThemeMode == ThemeMode.system,
-          onChanged: _onAutoModeSwitchChanged,
-          activeThumbColor: appTheme.themePrimary,
-        ),
-      ),
-      const SizedBox(height: 12),
-      Row(
-        mainAxisAlignment: .start,
-        children: [
-          const SizedBox(width: 4),
-          Expanded(
-            child: Text(
-              s.dark_mode_theme,
-              style: TS(w: .w500, c: qb.q(.8), s: 12),
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 12),
-      FormItem(
-        title: s.theme_dim,
-        showArrow: false,
-        isSectionStart: true,
-        onTap: _onDimPressed,
-        trailing: IconButton(
-          icon: Icon(
-            preferredDarkCustomTheme == .dim ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-            color: preferredDarkCustomTheme == .dim ? appTheme.themePrimary : qb.q(.33),
-          ),
-          onPressed: _onDimPressed,
-        ),
-      ),
-      FormItem(
-        title: s.theme_lights_out,
-        showArrow: false,
-        isSectionStart: false,
-        isSectionEnd: true,
-        onTap: _onLightsOutPressed,
-        trailing: IconButton(
-          icon: Icon(
-            preferredDarkCustomTheme == .lightsOut ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
-            color: preferredDarkCustomTheme == .lightsOut ? appTheme.themePrimary : qb.q(.33),
-          ),
-          onPressed: _onLightsOutPressed,
-        ),
-      ),
-    ];
 
     return ClipRRect(
       borderRadius: const .only(
@@ -159,11 +82,105 @@ class ThemeSelector extends ConsumerWidget {
           controller: scrollController,
           padding: const .only(left: 12, right: 12),
           itemBuilder: (context, index) {
-            return items[index];
+            return const ThemeColorSettingSection();
           },
-          itemCount: items.length,
+          itemCount: 1,
         ),
       ),
+    );
+  }
+}
+
+class ThemeColorSettingSection extends ConsumerWidget {
+  final bool showDarkThemeTitle;
+
+  const ThemeColorSettingSection({
+    super.key,
+    this.showDarkThemeTitle = true,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final appTheme = ref.watch(P.app.theme);
+    final qb = ref.watch(P.app.qb);
+    final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
+    final preferredDarkCustomTheme = ref.watch(P.preference.preferredDarkCustomTheme);
+    final isLight = appTheme.isLight;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FormItem(
+          icon: Icon(Icons.dark_mode_outlined, color: qb.q(.667), size: 16),
+          title: s.dark_mode,
+          subtitle: s.force_dark_mode,
+          showArrow: false,
+          isSectionStart: true,
+          onTap: null,
+          trailing: Switch.adaptive(
+            value: !isLight,
+            onChanged: _onDarkModeSwitchChanged,
+            activeThumbColor: appTheme.themePrimary,
+          ),
+        ),
+        FormItem(
+          icon: Icon(Icons.auto_mode, color: qb.q(.667), size: 16),
+          title: s.system_mode,
+          subtitle: s.color_theme_follow_system,
+          showArrow: false,
+          isSectionStart: false,
+          isSectionEnd: true,
+          onTap: null,
+          trailing: Switch.adaptive(
+            value: preferredThemeMode == ThemeMode.system,
+            onChanged: _onAutoModeSwitchChanged,
+            activeThumbColor: appTheme.themePrimary,
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (showDarkThemeTitle)
+          Row(
+            mainAxisAlignment: .start,
+            children: [
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  s.dark_mode_theme,
+                  style: TS(w: .w500, c: qb.q(.8), s: 12),
+                ),
+              ),
+            ],
+          ),
+        if (showDarkThemeTitle) const SizedBox(height: 12),
+        FormItem(
+          title: s.theme_dim,
+          showArrow: false,
+          isSectionStart: true,
+          onTap: _onDimPressed,
+          trailing: IconButton(
+            icon: Icon(
+              preferredDarkCustomTheme == .dim ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
+              color: preferredDarkCustomTheme == .dim ? appTheme.themePrimary : qb.q(.33),
+            ),
+            onPressed: _onDimPressed,
+          ),
+        ),
+        FormItem(
+          title: s.theme_lights_out,
+          showArrow: false,
+          isSectionStart: false,
+          isSectionEnd: true,
+          onTap: _onLightsOutPressed,
+          trailing: IconButton(
+            icon: Icon(
+              preferredDarkCustomTheme == .lightsOut ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.circle,
+              color: preferredDarkCustomTheme == .lightsOut ? appTheme.themePrimary : qb.q(.33),
+            ),
+            onPressed: _onLightsOutPressed,
+          ),
+        ),
+      ],
     );
   }
 

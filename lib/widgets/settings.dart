@@ -2,6 +2,7 @@
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,42 +17,12 @@ import 'package:zone/config.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
-import 'package:zone/router/router.dart';
+import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
 import 'package:zone/widgets/form_item.dart';
 
 class Settings extends ConsumerWidget {
-  static final _shown = qs(false);
-
-  static Future<void> show() async {
-    qq;
-    if (_shown.q) return;
-    _shown.q = true;
-    final context = getContext();
-    if (context == null || !context.mounted) {
-      _shown.q = false;
-      return;
-    }
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: .75,
-          maxChildSize: .85,
-          minChildSize: .5,
-          expand: false,
-          snap: false,
-          builder: (context, scrollController) {
-            return Settings(scrollController: scrollController, noBorderRadiusAndAppBar: false);
-          },
-        );
-      },
-    );
-    _shown.q = false;
-  }
-
   final ScrollController? scrollController;
 
   final bool noBorderRadiusAndAppBar;
@@ -64,7 +35,6 @@ class Settings extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeData theme = Theme.of(context);
     final S s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final paddingTop = ref.watch(P.app.paddingTop);
@@ -238,6 +208,13 @@ class Settings extends ConsumerWidget {
               subtitle: "${s.technical_research_group}: 325154699",
               onTap: _openQQGroup2,
             ),
+            if (kDebugMode)
+              FormItem(
+                icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
+                title: "Test Page",
+                subtitle: "Test Page",
+                onTap: _onTestPageClicked,
+              ),
             FormItem(
               icon: Icon(Icons.chat_bubble_outline, color: qb.q(.667), size: 16),
               title: s.discord,
@@ -330,6 +307,11 @@ class Settings extends ConsumerWidget {
     } else {
       launchUrlString("https://qm.qq.com/q/y0gOHcguty", mode: LaunchMode.externalApplication);
     }
+  }
+
+  void _onTestPageClicked() async {
+    qq;
+    push(PageKey.test);
   }
 
   void _openQQGroup2() async {

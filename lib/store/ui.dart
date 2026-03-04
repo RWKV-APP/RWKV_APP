@@ -24,6 +24,25 @@ class _UI {
     final _maxWidthAllowedForLayout = ref.watch(maxWidthAllowedForLayout);
     return _widthRequiredForLayout > _maxWidthAllowedForLayout;
   });
+
+  late final useBackdropFilterForInputOptions = qs(false);
+
+  // from 0.0 to 1.0
+  late final backdropFilterBgAlphaForInputOptions = qs(1.0);
+
+  // from 0.0 to 32.0
+  late final sigmaForBackdropFilterForInputOptions = qs(0.0);
+
+  // 现阶段不需要渲染
+  late final useBackdropFilterForInputTextFields = qs(false);
+  late final backdropFilterBgAlphaForInputTextFields = qs(1.0);
+  late final sigmaForBackdropFilterForInputTextFields = qs(0.0);
+
+  // from -1.0 to 1.0
+  late final gradientStartForInputBar = qs(-1.0);
+
+  // from -1.0 to 1.0
+  late final gradientForInputBar = qs(-0.6);
 }
 
 /// Private methods
@@ -32,6 +51,12 @@ extension _$UI on _UI {
     P.app.screenWidth.l(_onScreenWidthChanged, fireImmediately: true);
     homeController.addListener(_onHomeScroll);
     P.app.pageKey.l(_onPageKeyChanged);
+    backdropFilterBgAlphaForInputOptions.l(_onBackdropFilterBgAlphaForInputOptionsChanged, fireImmediately: true);
+    sigmaForBackdropFilterForInputOptions.l(_onSigmaForBackdropFilterForInputOptionsChanged, fireImmediately: true);
+    backdropFilterBgAlphaForInputTextFields.l(_onBackdropFilterBgAlphaForInputTextFieldsChanged, fireImmediately: true);
+    sigmaForBackdropFilterForInputTextFields.l(_onSigmaForBackdropFilterForInputTextFieldsChanged, fireImmediately: true);
+    gradientStartForInputBar.l(_onGradientStartForInputBarChanged, fireImmediately: true);
+    gradientForInputBar.l(_onGradientForInputBarChanged, fireImmediately: true);
   }
 
   void _onPageKeyChanged(PageKey pageKey) async {
@@ -58,6 +83,93 @@ extension _$UI on _UI {
   void _onScreenWidthChanged(double screenWidth) async {
     // TODO: @wangce adjust layout based on screen width
   }
+
+  void _onBackdropFilterBgAlphaForInputOptionsChanged(double value) {
+    final double normalized = _normalizeAlpha(value);
+    if ((normalized - value).abs() > .0001) {
+      backdropFilterBgAlphaForInputOptions.q = normalized;
+      return;
+    }
+    _syncUseBackdropFilterForInputOptions();
+  }
+
+  void _onBackdropFilterBgAlphaForInputTextFieldsChanged(double value) {
+    final double normalized = _normalizeAlpha(value);
+    if ((normalized - value).abs() > .0001) {
+      backdropFilterBgAlphaForInputTextFields.q = normalized;
+      return;
+    }
+    _syncUseBackdropFilterForInputTextFields();
+  }
+
+  void _onSigmaForBackdropFilterForInputOptionsChanged(double value) {
+    final double normalized = _normalizeSigma(value);
+    if ((normalized - value).abs() > .0001) {
+      sigmaForBackdropFilterForInputOptions.q = normalized;
+      return;
+    }
+    _syncUseBackdropFilterForInputOptions();
+  }
+
+  void _onSigmaForBackdropFilterForInputTextFieldsChanged(double value) {
+    final double normalized = _normalizeSigma(value);
+    if ((normalized - value).abs() > .0001) {
+      sigmaForBackdropFilterForInputTextFields.q = normalized;
+      return;
+    }
+    _syncUseBackdropFilterForInputTextFields();
+  }
+
+  void _onGradientStartForInputBarChanged(double value) {
+    final double normalized = _normalizeGradient(value);
+    if ((normalized - value).abs() > .0001) {
+      gradientStartForInputBar.q = normalized;
+      return;
+    }
+
+    final double gradientEnd = gradientForInputBar.q;
+    if (normalized <= gradientEnd) return;
+    gradientForInputBar.q = normalized;
+  }
+
+  void _onGradientForInputBarChanged(double value) {
+    final double normalized = _normalizeGradient(value);
+    if ((normalized - value).abs() > .0001) {
+      gradientForInputBar.q = normalized;
+      return;
+    }
+
+    final double gradientStart = gradientStartForInputBar.q;
+    if (normalized >= gradientStart) return;
+    gradientStartForInputBar.q = normalized;
+  }
+
+  void _syncUseBackdropFilterForInputOptions() {
+    final bool shouldEnable = backdropFilterBgAlphaForInputOptions.q < 1 && sigmaForBackdropFilterForInputOptions.q > 0;
+    if (useBackdropFilterForInputOptions.q == shouldEnable) return;
+    useBackdropFilterForInputOptions.q = shouldEnable;
+  }
+
+  void _syncUseBackdropFilterForInputTextFields() {
+    final bool shouldEnable = backdropFilterBgAlphaForInputTextFields.q < 1 && sigmaForBackdropFilterForInputTextFields.q > 0;
+    if (useBackdropFilterForInputTextFields.q == shouldEnable) return;
+    useBackdropFilterForInputTextFields.q = shouldEnable;
+  }
+
+  double _normalizeAlpha(double value) {
+    if (!value.isFinite) return 1;
+    return value.clamp(0, 1).toDouble();
+  }
+
+  double _normalizeSigma(double value) {
+    if (!value.isFinite) return 0;
+    return value.clamp(0, 32).toDouble();
+  }
+
+  double _normalizeGradient(double value) {
+    if (!value.isFinite) return 1;
+    return value.clamp(-1, 1).toDouble();
+  }
 }
 
 /// Public methods
@@ -67,6 +179,7 @@ extension $UI on _UI {
     required Widget Function(ScrollController scrollController) builder,
     FutureOr<void> Function()? beforeShow,
     FutureOr<void> Function(Res? res)? afterHide,
+    bool isDismissible = true,
     bool isScrollControlled = true,
     double initialChildSize = .8,
     double maxChildSize = .905,
@@ -91,6 +204,7 @@ extension $UI on _UI {
     final res = await showModalBottomSheet<Res>(
       // ignore: use_build_context_synchronously
       context: context,
+      isDismissible: isDismissible,
       isScrollControlled: isScrollControlled,
       shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.vertical(top: 16.rr)),
       builder: (context) => DraggableScrollableSheet(
