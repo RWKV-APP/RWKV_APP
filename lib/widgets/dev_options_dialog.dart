@@ -9,7 +9,7 @@ import 'package:zone/model/feature_rollout.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/albatross.dart';
-import 'package:zone/store/p.dart' show P, $Preference, $UI;
+import 'package:zone/store/p.dart';
 
 class WithDevOption extends StatefulWidget {
   final Widget child;
