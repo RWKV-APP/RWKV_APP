@@ -202,7 +202,7 @@ class ModelItem extends ConsumerWidget {
         loadingStatus[fileInfo] == .loading ||
         loadingStatus[fileInfo] == .loadModelWithExtra ||
         loadingStatus[fileInfo] == .setQnnLibraryPath;
-    final double? modelLoadingProgress = loadingProgress[fileInfo];
+    final modelLoadingProgress = loadingProgress[fileInfo];
 
     final demoType = ref.watch(P.app.demoType);
     final appTheme = ref.watch(P.app.theme);
@@ -231,7 +231,7 @@ class ModelItem extends ConsumerWidget {
 
     final unzipping = ref.watch(P.rwkv.unzippingStatus(fileInfo));
     if (unzipping) startTitle = s.unzipping;
-    final bool showLoadingProgress = loading && !unzipping;
+    final showLoadingProgress = loading && !unzipping;
 
     final qw = ref.watch(P.app.qw);
     final primary = appTheme.primary;

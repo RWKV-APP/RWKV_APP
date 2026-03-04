@@ -46,7 +46,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(14) + 20;
-    const EdgeInsets padding = .symmetric(horizontal: 12);
+    const padding = EdgeInsets.symmetric(horizontal: 12);
 
     return AnimatedSize(
       key: const Key("_SecondaryOptionsButton"),

@@ -125,7 +125,7 @@ class _WebSearchModeButton extends ConsumerWidget {
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     final height = InputInteractions.calculateButtonHeight(context);
-    const EdgeInsets padding = .symmetric(horizontal: 8);
+    const padding = EdgeInsets.symmetric(horizontal: 8);
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,
@@ -197,7 +197,7 @@ class _WenYanWenButton extends ConsumerWidget {
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
-    final String label = switch (mode) {
+    final label = switch (mode) {
       WenyanMode.off => "文言",
       WenyanMode.classic => "文言",
       WenyanMode.mixed => "古今",

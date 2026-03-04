@@ -172,25 +172,25 @@ class _Remote {
 /// Public methods
 extension $Remote on _Remote {
   Future<String?> _getModelsDirPathForScan() async {
-    final bool isDesktop = P.app.isDesktop.q;
+    final isDesktop = P.app.isDesktop.q;
     if (isDesktop) {
       return P.remote.effectiveModelsDir.q;
     }
 
-    final String? documentsDir = P.app.documentsDir.q?.path;
+    final documentsDir = P.app.documentsDir.q?.path;
     if (documentsDir == null) {
       Sentry.captureException(Exception("documentsDir is null, WTF?"), stackTrace: StackTrace.current);
       return null;
     }
 
-    final String oldModelsDirPathInMobile = join(documentsDir, Config.desktopModelsDirName);
-    final bool oldModelsDirPathInMobileExists = await Directory(oldModelsDirPathInMobile).exists();
+    final oldModelsDirPathInMobile = join(documentsDir, Config.desktopModelsDirName);
+    final oldModelsDirPathInMobileExists = await Directory(oldModelsDirPathInMobile).exists();
     if (oldModelsDirPathInMobileExists) {
       qqw("Old models directory exists in mobile: $oldModelsDirPathInMobile");
       qqw("Transferring files from old models directory to new models directory...");
     }
 
-    final String targetDirPath = join(documentsDir, Config.mobileModelsDirName);
+    final targetDirPath = join(documentsDir, Config.mobileModelsDirName);
     await transferAllFilesInDir(oldModelsDirPathInMobile, targetDirPath);
     return targetDirPath;
   }
@@ -1455,7 +1455,7 @@ extension $Remote on _Remote {
 
   /// 获取 /models 目录下未, 未记录至 latest.json 的文件
   Future<List<UnrecognizedFile>> getUnrecognizedFiles() async {
-    final String? targetDirPath = await _getModelsDirPathForScan();
+    final targetDirPath = await _getModelsDirPathForScan();
     if (targetDirPath == null) {
       return [];
     }
@@ -1487,8 +1487,8 @@ extension $Remote on _Remote {
       downloadingTmpPaths.add("${local.targetPath}.tmp");
     }
 
-    final Set<String> currentConfigInPlaceCacheDirNames = _getCurrentConfigInPlaceCacheDirNames();
-    final bool shouldDetectInPlaceCacheDirs = Platform.isIOS || Platform.isMacOS;
+    final currentConfigInPlaceCacheDirNames = _getCurrentConfigInPlaceCacheDirNames();
+    final shouldDetectInPlaceCacheDirs = Platform.isIOS || Platform.isMacOS;
     final unrecognizedFiles = <UnrecognizedFile>[];
 
     try {
@@ -1523,16 +1523,16 @@ extension $Remote on _Remote {
         if (!shouldDetectInPlaceCacheDirs) {
           continue;
         }
-        final String dirName = basename(entity.path);
-        final String dirNameLower = dirName.toLowerCase();
-        final bool looksLikeInPlaceCache = dirNameLower.contains("-mlx-") || dirNameLower.contains("-coreml-");
+        final dirName = basename(entity.path);
+        final dirNameLower = dirName.toLowerCase();
+        final looksLikeInPlaceCache = dirNameLower.contains("-mlx-") || dirNameLower.contains("-coreml-");
         if (!looksLikeInPlaceCache) {
           continue;
         }
         if (currentConfigInPlaceCacheDirNames.contains(dirName)) {
           continue;
         }
-        final int directorySize = await calculateTotalSizeOfDir(entity.path);
+        final directorySize = await calculateTotalSizeOfDir(entity.path);
 
         unrecognizedFiles.add(
           UnrecognizedFile(
@@ -1552,40 +1552,40 @@ extension $Remote on _Remote {
 
   /// 获取 /models 目录中由 MLX/CoreML zip 解压产生的缓存目录
   Future<List<MlxCacheDirectory>> getMlxCacheDirectories() async {
-    final bool shouldDetectInPlaceCacheDirs = Platform.isIOS || Platform.isMacOS;
+    final shouldDetectInPlaceCacheDirs = Platform.isIOS || Platform.isMacOS;
     if (!shouldDetectInPlaceCacheDirs) {
       return [];
     }
 
-    final String? targetDirPath = await _getModelsDirPathForScan();
+    final targetDirPath = await _getModelsDirPathForScan();
     if (targetDirPath == null) {
       return [];
     }
 
-    final Directory directory = Directory(targetDirPath);
+    final directory = Directory(targetDirPath);
     if (!await directory.exists()) {
       Sentry.captureException(Exception("directory not found: $targetDirPath"), stackTrace: StackTrace.current);
       return [];
     }
 
-    final Set<String> mlxCacheDirNames = _getCurrentConfigInPlaceCacheDirNames();
+    final mlxCacheDirNames = _getCurrentConfigInPlaceCacheDirNames();
     if (mlxCacheDirNames.isEmpty) {
       return [];
     }
 
-    final List<MlxCacheDirectory> caches = <MlxCacheDirectory>[];
+    final caches = <MlxCacheDirectory>[];
     try {
-      final List<FileSystemEntity> entities = directory.listSync();
-      for (final FileSystemEntity entity in entities) {
+      final entities = directory.listSync();
+      for (final entity in entities) {
         if (entity is! Directory) {
           continue;
         }
-        final String dirName = basename(entity.path);
+        final dirName = basename(entity.path);
         if (!mlxCacheDirNames.contains(dirName)) {
           continue;
         }
 
-        final int directorySize = await calculateTotalSizeOfDir(entity.path);
+        final directorySize = await calculateTotalSizeOfDir(entity.path);
         caches.add(
           MlxCacheDirectory(
             directoryName: dirName,
@@ -1610,7 +1610,7 @@ extension $Remote on _Remote {
 
   /// Refresh MLX cache directories and store into state
   Future<void> refreshMlxCacheDirectories() async {
-    final List<MlxCacheDirectory> directories = await getMlxCacheDirectories();
+    final directories = await getMlxCacheDirectories();
     mlxCacheDirectories.q = directories;
   }
 
@@ -1695,7 +1695,7 @@ extension $Remote on _Remote {
 }
 
 Set<String> _getCurrentConfigInPlaceCacheDirNames() {
-  final List<FileInfo> allWeights = [
+  final allWeights = <FileInfo>[
     ...P.remote.chatWeights.q,
     ...P.remote.roleplayWeights.q,
     ...P.remote.ttsWeights.q,
@@ -1704,13 +1704,13 @@ Set<String> _getCurrentConfigInPlaceCacheDirNames() {
     ...P.remote.othelloWeights.q,
   ];
 
-  final Set<String> dirNames = <String>{};
-  for (final FileInfo fileInfo in allWeights) {
-    final Backend? backend = fileInfo.backend;
+  final dirNames = <String>{};
+  for (final fileInfo in allWeights) {
+    final backend = fileInfo.backend;
     if (backend != Backend.mlx && backend != Backend.coreml) {
       continue;
     }
-    final String dirName = basenameWithoutExtension(fileInfo.fileName);
+    final dirName = basenameWithoutExtension(fileInfo.fileName);
     if (dirName.isEmpty) {
       continue;
     }

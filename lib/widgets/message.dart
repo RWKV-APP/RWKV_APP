@@ -66,63 +66,63 @@ class _MessageState extends ConsumerState<Message> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final model.Message msg = widget.msg;
-    final int index = widget.index;
-    final bool selectMode = widget.selectMode;
-    final DemoType? preferredDemoType = widget.preferredDemoType;
-    final S s = S.of(context);
+    final theme = Theme.of(context);
+    final msg = widget.msg;
+    final index = widget.index;
+    final selectMode = widget.selectMode;
+    final preferredDemoType = widget.preferredDemoType;
+    final s = S.of(context);
 
-    final AppTheme appTheme = ref.watch(P.app.theme);
-    final Color qb = ref.watch(P.app.qb);
+    final appTheme = ref.watch(P.app.theme);
+    final qb = ref.watch(P.app.qb);
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final WorldType? worldType = ref.watch(P.rwkv.currentWorldType);
-    final bool isMobile = ref.watch(P.app.isMobile);
-    final bool sharingMode = ref.watch(P.chat.isSharing);
-    final int? editingIndex = ref.watch(P.msg.editingOrRegeneratingIndex);
-    final int? receiveId = ref.watch(P.chat.receiveId);
-    final bool receiving = ref.watch(P.rwkv.generating);
-    final bool inSee = ref.watch(P.app.pageKey) == .see;
-    final double screenWidth = ref.watch(P.app.screenWidth);
-    final double screenHeight = ref.watch(P.app.screenHeight);
-    final String received = ref.watch(P.chat.receivedTokens.select((String value) => msg.changing ? value : ""));
-    final CoTDisplayState cotDisplayState = ref.watch(P.msg.cotDisplayState(msg.id));
-    final int? batchSelection = ref.watch(P.msg.batchSelection(msg));
+    final worldType = ref.watch(P.rwkv.currentWorldType);
+    final isMobile = ref.watch(P.app.isMobile);
+    final sharingMode = ref.watch(P.chat.isSharing);
+    final editingIndex = ref.watch(P.msg.editingOrRegeneratingIndex);
+    final receiveId = ref.watch(P.chat.receiveId);
+    final receiving = ref.watch(P.rwkv.generating);
+    final inSee = ref.watch(P.app.pageKey) == .see;
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final screenHeight = ref.watch(P.app.screenHeight);
+    final received = ref.watch(P.chat.receivedTokens.select((String value) => msg.changing ? value : ""));
+    final cotDisplayState = ref.watch(P.msg.cotDisplayState(msg.id));
+    final batchSelection = ref.watch(P.msg.batchSelection(msg));
 
-    final bool isMine = msg.isMine;
-    final ({bool canEdit, bool canCopy}) contextActions = UserMessageBottom.resolveContextMenuActions(
+    final isMine = msg.isMine;
+    final contextActions = UserMessageBottom.resolveContextMenuActions(
       msg: msg,
       worldType: worldType,
       selectMessageMode: selectMode || sharingMode,
     );
     ref.watch(P.msg.msgNode);
-    final bool canSwitchUserBranch = isMine && !selectMode && !sharingMode && P.msg.siblingCount(msg) > 1;
-    final bool canShowUserMessageMenu = contextActions.canEdit || contextActions.canCopy || canSwitchUserBranch;
+    final canSwitchUserBranch = isMine && !selectMode && !sharingMode && P.msg.siblingCount(msg) > 1;
+    final canShowUserMessageMenu = contextActions.canEdit || contextActions.canCopy || canSwitchUserBranch;
 
-    final String finalContent = _resolveFinalContent(
+    final finalContent = _resolveFinalContent(
       msg: msg,
       received: received,
       inSee: inSee,
       demoType: demoType,
       s: s,
     );
-    final bool showTTSBottomOutsideBubble = !isMine && !selectMode && demoType == .tts;
-    final _ThinkingData thinkingData = _resolveThinkingData(
+    final showTTSBottomOutsideBubble = !isMine && !selectMode && demoType == .tts;
+    final thinkingData = _resolveThinkingData(
       msg: msg,
       finalContent: finalContent,
       worldType: worldType,
     );
-    final double? cotContentHeight = _resolveCotContentHeight(
+    final cotContentHeight = _resolveCotContentHeight(
       cotDisplayState: cotDisplayState,
       cotResult: thinkingData.cotResult,
     );
-    final bool showingCotContent = cotContentHeight != 0;
-    final _BatchData batchData = _resolveBatchData(
+    final showingCotContent = cotContentHeight != 0;
+    final batchData = _resolveBatchData(
       isMine: isMine,
       finalContent: finalContent,
     );
 
-    final _BubbleStyleData bubbleStyleData = _resolveBubbleStyleData(
+    final bubbleStyleData = _resolveBubbleStyleData(
       msg: msg,
       isMine: isMine,
       demoType: demoType,
@@ -131,13 +131,13 @@ class _MessageState extends ConsumerState<Message> {
       isBatch: batchData.isBatch,
     );
 
-    final double opacity = _resolveMessageOpacity(
+    final opacity = _resolveMessageOpacity(
       editingIndex: editingIndex,
       index: index,
     );
-    final bool thisMessageIsReceiving = receiveId == msg.id && receiving;
-    final double rawFontSize = theme.textTheme.bodyMedium?.fontSize ?? 14.0;
-    final TS userMessageStyle = TS(s: rawFontSize * Config.msgFontScale);
+    final thisMessageIsReceiving = receiveId == msg.id && receiving;
+    final rawFontSize = theme.textTheme.bodyMedium?.fontSize ?? 14.0;
+    final userMessageStyle = TS(s: rawFontSize * Config.msgFontScale);
     final double rawMaxWidth = math.min(screenWidth, screenHeight);
 
     final Widget bubbleContent = ConstrainedBox(
@@ -265,12 +265,12 @@ class _UserMessageBubble extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeData theme = Theme.of(context);
-    final bool isUserImage = msg.type == .userImage;
-    final Color debugColor = theme.colorScheme.error;
-    final double screenWidth = ref.watch(P.app.screenWidth);
+    final theme = Theme.of(context);
+    final isUserImage = msg.type == .userImage;
+    final debugColor = theme.colorScheme.error;
+    final screenWidth = ref.watch(P.app.screenWidth);
     ref.watch(P.msg.msgNode);
-    final bool branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
+    final branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: screenWidth * 0.8),
@@ -369,13 +369,13 @@ class _BotMessageBubble extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeData theme = Theme.of(context);
-    final S s = S.of(context);
-    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final bool showReasoningHeader = thinkingData.reasoning && !thinkingData.isQuickThinking && !isBatch;
-    final Color debugColor = theme.colorScheme.error;
-    final Color cotColor = qb.q(.55);
-    final Color thoughtLabelColor = qb.q(.5);
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final demoType = preferredDemoType ?? ref.watch(P.app.demoType);
+    final showReasoningHeader = thinkingData.reasoning && !thinkingData.isQuickThinking && !isBatch;
+    final debugColor = theme.colorScheme.error;
+    final cotColor = qb.q(.55);
+    final thoughtLabelColor = qb.q(.5);
 
     return Container(
       padding: bubbleStyleData.padding,
@@ -459,8 +459,8 @@ class _MessageDebugId extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Color effectiveDebugColor = debugColor == Colors.transparent ? theme.colorScheme.error : debugColor;
+    final theme = Theme.of(context);
+    final effectiveDebugColor = debugColor == Colors.transparent ? theme.colorScheme.error : debugColor;
 
     return Container(
       decoration: BoxDecoration(color: effectiveDebugColor),
@@ -539,7 +539,7 @@ _ThinkingData _resolveThinkingData({
   required String finalContent,
   required WorldType? worldType,
 }) {
-  final bool reasoning = finalContent.startsWith("<think>") && !msg.isSensitive;
+  final reasoning = finalContent.startsWith("<think>") && !msg.isSensitive;
   if (!reasoning) {
     return const _ThinkingData(
       reasoning: false,
@@ -548,12 +548,12 @@ _ThinkingData _resolveThinkingData({
     );
   }
 
-  const int thinkStartTagLength = 7;
-  const int thinkEndTagLength = 8;
-  final int endIndex = finalContent.indexOf("</think>");
+  const thinkStartTagLength = 7;
+  const thinkEndTagLength = 8;
+  final endIndex = finalContent.indexOf("</think>");
 
   if (endIndex < 0) {
-    final String cotContent = finalContent.substring(thinkStartTagLength);
+    final cotContent = finalContent.substring(thinkStartTagLength);
     return _ThinkingData(
       reasoning: true,
       cotContent: cotContent,
@@ -561,7 +561,7 @@ _ThinkingData _resolveThinkingData({
     );
   }
 
-  final String cotContent = finalContent.substring(thinkStartTagLength, endIndex);
+  final cotContent = finalContent.substring(thinkStartTagLength, endIndex);
   if (endIndex + thinkEndTagLength >= finalContent.length) {
     return _ThinkingData(
       reasoning: true,
@@ -637,7 +637,7 @@ _BubbleStyleData _resolveBubbleStyleData({
       break;
   }
 
-  final BorderRadius borderRadius = .only(
+  final borderRadius = BorderRadius.only(
     topLeft: .circular(isMine ? radius : 0),
     topRight: .circular(radius),
     bottomLeft: .circular(radius),

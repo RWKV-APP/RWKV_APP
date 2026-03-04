@@ -42,7 +42,7 @@ class DecodeParamButton extends ConsumerWidget {
 
     qqr(current);
 
-    final List<({String label, DecodeParamType key})> actionPairs = [
+    final actionPairs = <({String label, DecodeParamType key})>[
       (label: s.decode_param_custom, key: .custom),
       (label: s.decode_param_default_, key: .defaults),
       (label: s.decode_param_creative, key: .creative),

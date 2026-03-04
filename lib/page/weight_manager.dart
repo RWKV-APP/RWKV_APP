@@ -309,10 +309,10 @@ class _DownloadingSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<(FileInfo, LocalFile)> downloadingEntries = <(FileInfo, LocalFile)>[];
+    final downloadingEntries = <(FileInfo, LocalFile)>[];
 
-    for (final FileInfo fileInfo in allWeights) {
-      final LocalFile local = ref.watch(P.remote.locals(fileInfo));
+    for (final fileInfo in allWeights) {
+      final local = ref.watch(P.remote.locals(fileInfo));
       if (local.downloading) {
         downloadingEntries.add((fileInfo, local));
       }
@@ -372,7 +372,7 @@ class _WeightSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Filter for downloaded weights
-    final List<FileInfo> downloadedWeights = weights.where((FileInfo w) {
+    final downloadedWeights = weights.where((FileInfo w) {
       final local = ref.watch(P.remote.locals(w));
       return local.hasFile;
     }).toList()..sort((FileInfo a, FileInfo b) => b.fileSize.compareTo(a.fileSize));
@@ -598,7 +598,7 @@ class _MlxCacheSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
 
-    final List<MlxCacheDirectory> directories = [...ref.watch(P.remote.mlxCacheDirectories)]
+    final directories = <MlxCacheDirectory>[...ref.watch(P.remote.mlxCacheDirectories)]
       ..sort((MlxCacheDirectory a, MlxCacheDirectory b) => b.directorySize.compareTo(a.directorySize));
     if (directories.isEmpty) {
       return const SizedBox.shrink();
@@ -682,7 +682,7 @@ class _MlxCacheItem extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
-              final String message =
+              final message =
                   "${S.current.delete_mlx_cache_confirmation} (${directory.directoryName})\n\n${S.current.mlx_cache_notice}";
               final result = await showOkCancelAlertDialog(
                 context: context,
@@ -721,7 +721,7 @@ class _OtherFilesSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Check if weight lists have changed
 
-    final List<UnrecognizedFile> files = [...ref.watch(P.remote.unrecognizedFiles)]
+    final files = <UnrecognizedFile>[...ref.watch(P.remote.unrecognizedFiles)]
       ..sort((UnrecognizedFile a, UnrecognizedFile b) => b.fileSize.compareTo(a.fileSize));
     if (files.isEmpty) return const SizedBox.shrink();
 

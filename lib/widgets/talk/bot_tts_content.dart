@@ -42,7 +42,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
     super.initState();
 
     if (widget.msg.isMine) return;
-    const DemoType demoType = .tts;
+    const demoType = DemoType.tts;
     if (demoType != .tts) return;
 
     ref.listenManual(P.msg.latestClicked, (previous, next) {
@@ -72,8 +72,8 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
   @override
   void didUpdateWidget(covariant BotTtsContent oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final bool audioUrlChanged = oldWidget.msg.audioUrl != widget.msg.audioUrl;
-    final bool changedToDone = oldWidget.msg.changing && !widget.msg.changing;
+    final audioUrlChanged = oldWidget.msg.audioUrl != widget.msg.audioUrl;
+    final changedToDone = oldWidget.msg.changing && !widget.msg.changing;
     if (!audioUrlChanged && !changedToDone) return;
     _durationRetryCount = 0;
     _durationRetryTimer?.cancel();
@@ -82,7 +82,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
   }
 
   Future<void> _refreshWavDuration() async {
-    final double value = await _syncWavDuration();
+    final value = await _syncWavDuration();
     if (_length != value) {
       _length = value;
       if (mounted) {
@@ -97,7 +97,7 @@ class _BotTtsContentState extends ConsumerState<BotTtsContent> {
       return;
     }
 
-    final String? audioUrl = widget.msg.audioUrl;
+    final audioUrl = widget.msg.audioUrl;
     if (audioUrl == null || widget.msg.changing || _durationRetryCount >= _maxDurationRetryCount) return;
 
     _durationRetryCount += 1;

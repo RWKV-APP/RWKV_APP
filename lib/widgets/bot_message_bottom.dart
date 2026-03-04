@@ -17,14 +17,10 @@ import 'package:zone/config.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/model/file_info.dart';
-import 'package:zone/model/group_info.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
 import 'package:zone/model/thinking_mode.dart' as thinking_mode;
-import 'package:zone/model/world_type.dart' as world_type;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
 
@@ -117,8 +113,8 @@ class BotMessageBottom extends ConsumerWidget {
   double _estimateInlineTokenWidth({
     required String text,
   }) {
-    final int length = text.runes.length;
-    final double estimated = 18 + length * 4.8;
+    final length = text.runes.length;
+    final estimated = 18 + length * 4.8;
     if (estimated < 52) return 52;
     if (estimated > 90) return 90;
     return estimated;
@@ -128,7 +124,7 @@ class BotMessageBottom extends ConsumerWidget {
     required String source,
     required String separator,
   }) {
-    final int separatorIndex = source.lastIndexOf(separator);
+    final separatorIndex = source.lastIndexOf(separator);
     if (separatorIndex < 0) return source;
     return source.substring(separatorIndex + separator.length).trim();
   }
@@ -137,7 +133,7 @@ class BotMessageBottom extends ConsumerWidget {
     required S s,
     required String? runningMode,
   }) {
-    final thinking_mode.ThinkingMode mode = thinking_mode.ThinkingMode.fromString(runningMode);
+    final mode = thinking_mode.ThinkingMode.fromString(runningMode);
     final localizedWithPrefix = switch (mode) {
       .lighting => s.thinking_mode_auto(""),
       .none => s.thinking_mode_off(""),
@@ -164,24 +160,24 @@ class BotMessageBottom extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (msg.isMine) return const SizedBox.shrink();
 
-    final ThemeData theme = Theme.of(context);
-    final S s = S.of(context);
+    final theme = Theme.of(context);
+    final s = S.of(context);
 
-    final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
-    final bool isTTSDemo = demoType == .tts;
+    final demoType = preferredDemoType ?? ref.watch(P.app.demoType);
+    final isTTSDemo = demoType == .tts;
 
-    final int? receiveId = ref.watch(P.chat.receiveId);
-    final bool selectMessageMode = ref.watch(P.chat.isSharing);
+    final receiveId = ref.watch(P.chat.receiveId);
+    final selectMessageMode = ref.watch(P.chat.isSharing);
 
-    final bool isMobile = ref.watch(P.app.isMobile);
+    final isMobile = ref.watch(P.app.isMobile);
 
-    final bool paused = msg.paused;
+    final paused = msg.paused;
 
-    final bool changing = msg.changing;
+    final changing = msg.changing;
 
-    final Color primaryColor = theme.colorScheme.primary;
+    final primaryColor = theme.colorScheme.primary;
 
-    final world_type.WorldType? worldType = ref.watch(P.rwkv.currentWorldType);
+    final worldType = ref.watch(P.rwkv.currentWorldType);
 
     bool showEditButton = true;
     bool showCopyButton = true;
@@ -222,7 +218,7 @@ class BotMessageBottom extends ConsumerWidget {
       showBotRegenerateButton = false;
     }
 
-    final bool isBatch = getIsBatch(finalContent ?? msg.content);
+    final isBatch = getIsBatch(finalContent ?? msg.content);
 
     if (isBatch) {
       showEditButton = false;
@@ -236,53 +232,59 @@ class BotMessageBottom extends ConsumerWidget {
     }
 
     final detailsScope = bottomDetailsScope ?? (disableDefaultActions ? "preview_bot_message_bottom" : "chat_bot_message_bottom");
-    final Map<String, bool> detailsExpandedMap = ref.watch(P.msg.bottomDetailsExpanded);
+    final detailsExpandedMap = ref.watch(P.msg.bottomDetailsExpanded);
     final detailsStateKey = "$detailsScope::${msg.id}";
-    final bool detailsExpanded = detailsExpandedMap[detailsStateKey] ?? false;
+    final detailsExpanded = detailsExpandedMap[detailsStateKey] ?? false;
 
-    final double verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
-    final bool branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
-    final bool showBranchSwitcher = branchSwitcherAvailable;
-    final bool showDeleteBranchAction = branchSwitcherAvailable && !disableDefaultActions && !changing && !selectMessageMode;
+    final verticalPaddingAdditions = isMobile ? 8.0 : 0.0;
+    final branchSwitcherAvailable = P.msg.siblingCount(msg) > 1;
+    final showBranchSwitcher = branchSwitcherAvailable;
+    final showDeleteBranchAction = branchSwitcherAvailable && !disableDefaultActions && !changing && !selectMessageMode;
     final Widget branchSwitcher = IgnorePointer(
       ignoring: disableDefaultActions,
       child: BranchSwitcher(msg, index),
     );
-    const Duration actionAnimDuration = Duration(milliseconds: 200);
+    const actionAnimDuration = Duration(milliseconds: 200);
     const Curve actionAnimCurve = Curves.easeOutCubic;
-    final bool resumeMatched = disableDefaultActions ? true : receiveId == msg.id;
-    final bool showResumeAction = showResumeButton && paused && resumeMatched && !isBatch;
-    final bool showEditAction = showEditButton && !changing;
+    final resumeMatched = disableDefaultActions ? true : receiveId == msg.id;
+    final showResumeAction = showResumeButton && paused && resumeMatched && !isBatch;
+    final showEditAction = showEditButton && !changing;
     ref.watch(P.msg.msgNode);
 
-    final Map<int, int> messageTokensCountMap = ref.watch(P.msg.bottomMessageTokensCount);
-    final Map<int, int> conversationTokensCountMap = ref.watch(P.msg.bottomConversationTokensCount);
-    final int? adapterMessageTokenCount = messageTokensCountMap[msg.id];
-    final int? adapterConversationTokenCount = conversationTokensCountMap[msg.id];
-    final int? persistedMessageTokenCount = msg.messageTokensCount;
-    final int? persistedConversationTokenCount = msg.conversationTokensCount;
-    final int? resolvedMessageTokenCount = msg.changing
+    final messageTokensCountMap = ref.watch(P.msg.bottomMessageTokensCount);
+    final conversationTokensCountMap = ref.watch(P.msg.bottomConversationTokensCount);
+    final adapterMessageTokenCount = messageTokensCountMap[msg.id];
+    final adapterConversationTokenCount = conversationTokensCountMap[msg.id];
+    final persistedMessageTokenCount = msg.messageTokensCount;
+    final persistedConversationTokenCount = msg.conversationTokensCount;
+
+    final resolvedMessageTokenCount = msg.changing
         ? (adapterMessageTokenCount ?? persistedMessageTokenCount)
         : (persistedMessageTokenCount ?? adapterMessageTokenCount);
-    final int? resolvedConversationTokenCount = msg.changing
+
+    final resolvedConversationTokenCount = msg.changing
         ? (adapterConversationTokenCount ?? persistedConversationTokenCount)
         : (persistedConversationTokenCount ?? adapterConversationTokenCount);
+
     final messageTokenCountText = resolvedMessageTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
     final contextTokenCountText = resolvedConversationTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
-    final bool showConversationTokenLimitHint =
+
+    final showConversationTokenLimitHint =
         !msg.changing &&
         resolvedConversationTokenCount != null &&
         resolvedConversationTokenCount >= Config.newConversationTokenReminderThreshold;
-    final bool isInlineTokenGenerating = messageTokenCountText == s.generating || contextTokenCountText == s.generating;
+    final isInlineTokenGenerating = messageTokenCountText == s.generating || contextTokenCountText == s.generating;
+
     final inlineConversationTokenCoreText = isInlineTokenGenerating ? s.generating : "$messageTokenCountText/$contextTokenCountText tok";
+
     final inlineConversationTokenText = showConversationTokenLimitHint
         ? "$inlineConversationTokenCoreText · ${s.conversation_token_limit_hint_short}"
         : inlineConversationTokenCoreText;
 
-    final double livePrefillSpeed = ref.watch(P.rwkv.prefillSpeed);
-    final double liveDecodeSpeed = ref.watch(P.rwkv.decodeSpeed);
-    final double effectiveLivePrefillSpeed = livePrefillSpeed > 0 ? livePrefillSpeed : (msg.prefillSpeed ?? .0);
-    final double effectiveLiveDecodeSpeed = liveDecodeSpeed > 0 ? liveDecodeSpeed : (msg.decodeSpeed ?? .0);
+    final livePrefillSpeed = ref.watch(P.rwkv.prefillSpeed);
+    final liveDecodeSpeed = ref.watch(P.rwkv.decodeSpeed);
+    final effectiveLivePrefillSpeed = livePrefillSpeed > 0 ? livePrefillSpeed : (msg.prefillSpeed ?? .0);
+    final effectiveLiveDecodeSpeed = liveDecodeSpeed > 0 ? liveDecodeSpeed : (msg.decodeSpeed ?? .0);
     final changingInlinePrefillSpeedText = _formatCompactSpeed(speed: effectiveLivePrefillSpeed);
     final changingInlineDecodeSpeedText = _formatCompactSpeed(speed: effectiveLiveDecodeSpeed);
     final settledPrefillSpeedText = _formatSpeed(speed: msg.prefillSpeed);
@@ -292,8 +294,8 @@ class BotMessageBottom extends ConsumerWidget {
     final detailsPrefillSpeedDisplay = detailsPrefillSpeedText == "--" ? "--" : "$detailsPrefillSpeedText t/s";
     final detailsDecodeSpeedDisplay = detailsDecodeSpeedText == "--" ? "--" : "$detailsDecodeSpeedText t/s";
 
-    final List<SamplerAndPenaltyParam> parsedDecodeParams = msg.parsedDecodeParams;
-    final DecodeParamType currentDecodeParamType = ref.watch(P.rwkv.decodeParamType);
+    final parsedDecodeParams = msg.parsedDecodeParams;
+    final currentDecodeParamType = ref.watch(P.rwkv.decodeParamType);
     final currentDecodeParamDisplayName = SamplerAndPenaltyParam.fromDecodeParamType(currentDecodeParamType).displayName;
     String? decodeParamSummary = _localizedDecodeParamSummary(parsedDecodeParams: parsedDecodeParams);
     if (decodeParamSummary == null && (msg.changing || msg.paused || receiveId == msg.id)) {
@@ -303,20 +305,20 @@ class BotMessageBottom extends ConsumerWidget {
       s: s,
       runningMode: msg.runningMode,
     );
-    final FileInfo? latestModel = ref.watch(P.rwkv.latestModel);
-    final GroupInfo? currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
-    final String? liveModelName = isTTSDemo ? (latestModel?.name ?? currentGroupInfo?.displayName) : null;
+    final latestModel = ref.watch(P.rwkv.latestModel);
+    final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
+    final liveModelName = isTTSDemo ? (latestModel?.name ?? currentGroupInfo?.displayName) : null;
     final modelNameText = msg.modelName?.isNotEmpty == true ? msg.modelName! : (liveModelName ?? "--");
-    final bool showChangingPrefillProgress = changing && !isTTSDemo;
+    final showChangingPrefillProgress = changing && !isTTSDemo;
 
-    final double inlineConversationTokenEstimatedWidth = isTTSDemo ? .0 : _estimateInlineTokenWidth(text: inlineConversationTokenText);
-    final bool showCopyInMain = showCopyButton;
-    final bool showShareInMain = showShareButton;
-    final bool showRegenerateInMain = showBotRegenerateButton;
-    final bool showEditInMain = showEditAction;
-    final bool shouldUseWrapRatherThanRow = ref.watch(P.ui.shouldUseWrapRatherThanRow);
-    final Map<String, double> messageListLayoutKeys = ref.watch(P.ui.messageListLayoutKeys);
-    final Map<String, bool> layoutItemVisibility = {
+    final inlineConversationTokenEstimatedWidth = isTTSDemo ? .0 : _estimateInlineTokenWidth(text: inlineConversationTokenText);
+    final showCopyInMain = showCopyButton;
+    final showShareInMain = showShareButton;
+    final showRegenerateInMain = showBotRegenerateButton;
+    final showEditInMain = showEditAction;
+    final shouldUseWrapRatherThanRow = ref.watch(P.ui.shouldUseWrapRatherThanRow);
+    final messageListLayoutKeys = ref.watch(P.ui.messageListLayoutKeys);
+    final layoutItemVisibility = {
       "copy": showCopyInMain,
       "share": showShareInMain,
       "regenerate": showRegenerateInMain,
@@ -332,7 +334,7 @@ class BotMessageBottom extends ConsumerWidget {
       if (entry.value) {
         continue;
       }
-      final double hiddenItemWidth = messageListLayoutKeys[entry.key] ?? .0;
+      final hiddenItemWidth = messageListLayoutKeys[entry.key] ?? .0;
       if (hiddenItemWidth <= .0) {
         continue;
       }
@@ -341,7 +343,7 @@ class BotMessageBottom extends ConsumerWidget {
     }
     if (hasStaleHiddenLayoutKey) {
       Future.microtask(() {
-        final Map<String, double> updatedLayoutKeys = {
+        final updatedLayoutKeys = {
           ...P.ui.messageListLayoutKeys.q,
         };
         bool changed = false;
@@ -349,7 +351,7 @@ class BotMessageBottom extends ConsumerWidget {
           if (entry.value) {
             continue;
           }
-          final double hiddenItemWidth = updatedLayoutKeys[entry.key] ?? .0;
+          final hiddenItemWidth = updatedLayoutKeys[entry.key] ?? .0;
           if (hiddenItemWidth <= .0) {
             continue;
           }
@@ -363,7 +365,7 @@ class BotMessageBottom extends ConsumerWidget {
       });
     }
 
-    final List<Widget> children =
+    final children =
         [
           if (showCopyInMain)
             KeyedSubtree(
@@ -603,14 +605,14 @@ class BotMessageBottom extends ConsumerWidget {
           if (w is Spacer) return w;
           return MeasureSize(
             onChange: (size) async {
-              final double width = size.width.roundToDouble();
+              final width = size.width.roundToDouble();
               await 0.msLater;
-              final Key? widgetKey = w.key;
+              final widgetKey = w.key;
               final layoutKey = widgetKey is ValueKey<String> ? widgetKey.value : "t";
-              final Map<String, double> updatedLayoutKeys = {
+              final updatedLayoutKeys = {
                 ...P.ui.messageListLayoutKeys.q,
               };
-              for (final MapEntry<String, bool> entry in layoutItemVisibility.entries) {
+              for (final entry in layoutItemVisibility.entries) {
                 if (entry.value) {
                   continue;
                 }
@@ -632,7 +634,7 @@ class BotMessageBottom extends ConsumerWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               // qqq("constraints.maxWidth: $constraints.maxWidth");
-              final double maxWidth = constraints.maxWidth;
+              final maxWidth = constraints.maxWidth;
 
               Future.delayed(30.ms).then((_) {
                 P.ui.maxWidthAllowedForLayout.q = maxWidth;
@@ -727,8 +729,8 @@ class BotMessageBottom extends ConsumerWidget {
 }
 
 class _ChangingPrefillProgressInline extends ConsumerWidget {
-  final bool changing;
-  final bool detailsExpanded;
+  final changing;
+  final detailsExpanded;
   final Color color;
 
   const _ChangingPrefillProgressInline({
@@ -738,18 +740,18 @@ class _ChangingPrefillProgressInline extends ConsumerWidget {
   });
 
   int _percentValue({required double progress}) {
-    final double clampedProgress = progress.clamp(0, 1).toDouble();
+    final clampedProgress = progress.clamp(0, 1).toDouble();
     return (clampedProgress * 100).round();
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
     if (!changing) return const SizedBox.shrink();
 
-    final S s = S.of(context);
-    final double progress = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
-    final int percent = _percentValue(progress: progress);
+    final s = S.of(context);
+    final progress = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
+    final percent = _percentValue(progress: progress);
     if (percent >= 100) return const SizedBox.shrink();
 
     final percentText = "$percent%";
@@ -831,7 +833,7 @@ class _BottomDetailsMetaChip extends StatelessWidget {
 }
 
 class _AnimatedBottomDetailsSection extends StatelessWidget {
-  final bool visible;
+  final visible;
   final Widget child;
   final Duration duration;
   final Curve curve;
@@ -851,7 +853,7 @@ class _AnimatedBottomDetailsSection extends StatelessWidget {
       curve: curve,
       child: child,
       builder: (BuildContext context, double value, Widget? child) {
-        final bool hidden = value <= .001;
+        final hidden = value <= .001;
         return IgnorePointer(
           ignoring: !visible,
           child: ExcludeSemantics(

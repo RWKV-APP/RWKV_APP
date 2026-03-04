@@ -40,7 +40,7 @@ class SuggestionChips extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: listPadding,
         itemBuilder: (BuildContext context, int index) {
-          final String item = suggestions[index];
+          final item = suggestions[index];
           return GD(
             onTap: () {
               onTap(item);

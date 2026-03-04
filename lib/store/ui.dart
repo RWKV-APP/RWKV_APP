@@ -85,7 +85,7 @@ extension _$UI on _UI {
   }
 
   void _onBackdropFilterBgAlphaForInputOptionsChanged(double value) {
-    final double normalized = _normalizeAlpha(value);
+    final normalized = _normalizeAlpha(value);
     if ((normalized - value).abs() > .0001) {
       backdropFilterBgAlphaForInputOptions.q = normalized;
       return;
@@ -94,7 +94,7 @@ extension _$UI on _UI {
   }
 
   void _onBackdropFilterBgAlphaForInputTextFieldsChanged(double value) {
-    final double normalized = _normalizeAlpha(value);
+    final normalized = _normalizeAlpha(value);
     if ((normalized - value).abs() > .0001) {
       backdropFilterBgAlphaForInputTextFields.q = normalized;
       return;
@@ -103,7 +103,7 @@ extension _$UI on _UI {
   }
 
   void _onSigmaForBackdropFilterForInputOptionsChanged(double value) {
-    final double normalized = _normalizeSigma(value);
+    final normalized = _normalizeSigma(value);
     if ((normalized - value).abs() > .0001) {
       sigmaForBackdropFilterForInputOptions.q = normalized;
       return;
@@ -112,7 +112,7 @@ extension _$UI on _UI {
   }
 
   void _onSigmaForBackdropFilterForInputTextFieldsChanged(double value) {
-    final double normalized = _normalizeSigma(value);
+    final normalized = _normalizeSigma(value);
     if ((normalized - value).abs() > .0001) {
       sigmaForBackdropFilterForInputTextFields.q = normalized;
       return;
@@ -121,37 +121,37 @@ extension _$UI on _UI {
   }
 
   void _onGradientStartForInputBarChanged(double value) {
-    final double normalized = _normalizeGradient(value);
+    final normalized = _normalizeGradient(value);
     if ((normalized - value).abs() > .0001) {
       gradientStartForInputBar.q = normalized;
       return;
     }
 
-    final double gradientEnd = gradientForInputBar.q;
+    final gradientEnd = gradientForInputBar.q;
     if (normalized <= gradientEnd) return;
     gradientForInputBar.q = normalized;
   }
 
   void _onGradientForInputBarChanged(double value) {
-    final double normalized = _normalizeGradient(value);
+    final normalized = _normalizeGradient(value);
     if ((normalized - value).abs() > .0001) {
       gradientForInputBar.q = normalized;
       return;
     }
 
-    final double gradientStart = gradientStartForInputBar.q;
+    final gradientStart = gradientStartForInputBar.q;
     if (normalized >= gradientStart) return;
     gradientStartForInputBar.q = normalized;
   }
 
   void _syncUseBackdropFilterForInputOptions() {
-    final bool shouldEnable = backdropFilterBgAlphaForInputOptions.q < 1 && sigmaForBackdropFilterForInputOptions.q > 0;
+    final shouldEnable = backdropFilterBgAlphaForInputOptions.q < 1 && sigmaForBackdropFilterForInputOptions.q > 0;
     if (useBackdropFilterForInputOptions.q == shouldEnable) return;
     useBackdropFilterForInputOptions.q = shouldEnable;
   }
 
   void _syncUseBackdropFilterForInputTextFields() {
-    final bool shouldEnable = backdropFilterBgAlphaForInputTextFields.q < 1 && sigmaForBackdropFilterForInputTextFields.q > 0;
+    final shouldEnable = backdropFilterBgAlphaForInputTextFields.q < 1 && sigmaForBackdropFilterForInputTextFields.q > 0;
     if (useBackdropFilterForInputTextFields.q == shouldEnable) return;
     useBackdropFilterForInputTextFields.q = shouldEnable;
   }

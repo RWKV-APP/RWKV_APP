@@ -118,7 +118,7 @@ class _App extends ConsumerWidget {
     final preferredThemeMode = ref.watch(P.app.preferredThemeMode);
     final appTheme = ref.watch(P.app.theme);
     final brightness = appTheme.isLight ? Brightness.light : Brightness.dark;
-    final ColorScheme appColorScheme = appTheme.colorScheme;
+    final appColorScheme = appTheme.colorScheme;
     final modalBarrierColor = appTheme.pagerDim.q(.25);
 
     final bottomSheetTheme = BottomSheetThemeData(

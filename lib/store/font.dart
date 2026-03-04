@@ -31,7 +31,7 @@ extension $Font on _Font {
     }
 
     try {
-      final List<dynamic>? fontsData = await P.adapter.call<List<dynamic>>(ToNative.getSystemFonts);
+      final fontsData = await P.adapter.call<List<dynamic>>(ToNative.getSystemFonts);
       if (fontsData == null) throw Exception("Failed to get fonts data from native");
       final allFonts = fontsData.map((font) => FontInfo.fromMap(font as Map<dynamic, dynamic>)).toList();
 

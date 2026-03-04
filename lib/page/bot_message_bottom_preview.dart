@@ -156,14 +156,14 @@ class _PageBotMessageBottomPreviewState extends ConsumerState<PageBotMessageBott
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool isCurrentLight = theme.brightness == Brightness.light;
-    final Color qb = ref.watch(P.app.qb);
-    final AppTheme preferredDarkTheme = ref.watch(P.preference.preferredDarkCustomTheme);
-    final AppTheme darkTheme = preferredDarkTheme == AppTheme.light ? AppTheme.lightsOut : preferredDarkTheme;
-    final double viewportWidth = MediaQuery.sizeOf(context).width;
+    final theme = Theme.of(context);
+    final isCurrentLight = theme.brightness == Brightness.light;
+    final qb = ref.watch(P.app.qb);
+    final preferredDarkTheme = ref.watch(P.preference.preferredDarkCustomTheme);
+    final darkTheme = preferredDarkTheme == AppTheme.light ? AppTheme.lightsOut : preferredDarkTheme;
+    final viewportWidth = MediaQuery.sizeOf(context).width;
     const double paneGap = 12;
-    final double preferredPaneWidth = (viewportWidth - 32 - paneGap) / 2;
+    final preferredPaneWidth = (viewportWidth - 32 - paneGap) / 2;
     final double paneWidth = preferredPaneWidth < 120 ? 120 : preferredPaneWidth;
 
     return Scaffold(
@@ -183,7 +183,7 @@ class _PageBotMessageBottomPreviewState extends ConsumerState<PageBotMessageBott
               onResetAllPressed: _onResetAllPressed,
             );
           }
-          final _BotMessageBottomPreviewCase previewCase = _previewCases[index - 1];
+          final previewCase = _previewCases[index - 1];
           return Padding(
             padding: const .only(top: 12),
             child: _PreviewCaseRow(
@@ -218,10 +218,10 @@ class _PreviewHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final String orderText = isCurrentLight ? "左侧浅色，右侧深色" : "左侧深色，右侧浅色";
-    final String leftPaneTitle = isCurrentLight ? "浅色" : "深色";
-    final String rightPaneTitle = isCurrentLight ? "深色" : "浅色";
+    final theme = Theme.of(context);
+    final orderText = isCurrentLight ? "左侧浅色，右侧深色" : "左侧深色，右侧浅色";
+    final leftPaneTitle = isCurrentLight ? "浅色" : "深色";
+    final rightPaneTitle = isCurrentLight ? "深色" : "浅色";
 
     return Column(
       crossAxisAlignment: .start,
@@ -292,7 +292,7 @@ class _PaneTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       width: width,
@@ -364,8 +364,8 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
   }
 
   model.Message _withRandomRunningMode(model.Message source) {
-    final bool useNoneMode = _runningModeRandom.nextBool();
-    final String runningMode = useNoneMode ? ".None" : ".Fast";
+    final useNoneMode = _runningModeRandom.nextBool();
+    final runningMode = useNoneMode ? ".None" : ".Fast";
     return source.copyWith(runningMode: runningMode);
   }
 
@@ -377,18 +377,18 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
       template = widget.previewCase.message.copyWith(runningMode: _initialMessage.runningMode);
     }
 
-    final int rawBranchCount = widget.previewCase.initialBranchCount;
-    final int branchCount = rawBranchCount <= 0 ? 1 : rawBranchCount;
-    final int maxBranchIndex = branchCount - 1;
-    final int rawBranchIndex = widget.previewCase.initialBranchIndex;
-    final int branchIndex = rawBranchIndex < 0 ? 0 : (rawBranchIndex > maxBranchIndex ? maxBranchIndex : rawBranchIndex);
+    final rawBranchCount = widget.previewCase.initialBranchCount;
+    final branchCount = rawBranchCount <= 0 ? 1 : rawBranchCount;
+    final maxBranchIndex = branchCount - 1;
+    final rawBranchIndex = widget.previewCase.initialBranchIndex;
+    final branchIndex = rawBranchIndex < 0 ? 0 : (rawBranchIndex > maxBranchIndex ? maxBranchIndex : rawBranchIndex);
 
     _parentMessageId = _allocatePreviewMessageId();
-    final List<model.Message> branches = <model.Message>[];
-    for (final int i in List<int>.generate(branchCount, (int index) => index)) {
-      final bool useInitialState = branchCount == 1 && i == 0;
-      final String branchContent = branchCount == 1 ? template.content : "${template.content}（分支 ${i + 1}）";
-      final model.Message branch = template.copyWith(
+    final branches = <model.Message>[];
+    for (final i in List<int>.generate(branchCount, (int index) => index)) {
+      final useInitialState = branchCount == 1 && i == 0;
+      final branchContent = branchCount == 1 ? template.content : "${template.content}（分支 ${i + 1}）";
+      final branch = template.copyWith(
         id: _allocatePreviewMessageId(),
         content: branchContent,
         changing: useInitialState ? template.changing : false,
@@ -423,7 +423,7 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
       if (exists) continue;
       parentNode.add(MsgNode(branch.id), keepLatest: true);
     }
-    for (final MsgNode child in parentNode.children) {
+    for (final child in parentNode.children) {
       if (child.id != _branches[_currentBranchIndex].id) continue;
       parentNode.latest = child;
       break;
@@ -462,7 +462,7 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
     if (_message.changing) return;
     _resetTimer?.cancel();
 
-    final model.Message regeneratedMessage = _message.copyWith(
+    final regeneratedMessage = _message.copyWith(
       id: _allocatePreviewMessageId(),
       changing: true,
       paused: false,
@@ -475,12 +475,12 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
       _ensureBranchTree();
     });
 
-    final int settledBranchIndex = _currentBranchIndex;
+    final settledBranchIndex = _currentBranchIndex;
     _resetTimer = Timer(const Duration(seconds: 5), () {
       if (!mounted) return;
       if (settledBranchIndex < 0 || settledBranchIndex >= _branches.length) return;
 
-      final model.Message settledMessage = _branches[settledBranchIndex].copyWith(changing: false, paused: false);
+      final settledMessage = _branches[settledBranchIndex].copyWith(changing: false, paused: false);
       setState(() {
         _branches[settledBranchIndex] = settledMessage;
         if (_currentBranchIndex != settledBranchIndex) return;
@@ -538,17 +538,17 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool isCurrentLight = theme.brightness == Brightness.light;
-    final VoidCallback? onPreviewPrimaryPressed = _message.changing ? null : _onPreviewPrimaryPressed;
-    final VoidCallback? onPreviewRegeneratePressed = _message.changing ? null : _onPreviewRegeneratePressed;
-    final VoidCallback? onPreviewInlineResumePressed = _message.changing ? null : _onPreviewInlineResumePressed;
-    final VoidCallback? onPreviewPausePressed = _message.changing ? _onPreviewPausePressed : null;
-    final VoidCallback? onPreviewBranchBackPressed = _currentBranchIndex <= 0 ? null : _onPreviewBranchBackPressed;
-    final VoidCallback? onPreviewBranchForwardPressed = _currentBranchIndex >= _branches.length - 1 ? null : _onPreviewBranchForwardPressed;
-    final _PreviewActionButton currentActionButton = widget.previewCase.actionButton;
-    final String displayTitle = "${widget.caseNumber}. ${_resolvedTitle()}";
-    final String displayDescription = _resolvedDescription();
+    final theme = Theme.of(context);
+    final isCurrentLight = theme.brightness == Brightness.light;
+    final onPreviewPrimaryPressed = _message.changing ? null : _onPreviewPrimaryPressed;
+    final onPreviewRegeneratePressed = _message.changing ? null : _onPreviewRegeneratePressed;
+    final onPreviewInlineResumePressed = _message.changing ? null : _onPreviewInlineResumePressed;
+    final onPreviewPausePressed = _message.changing ? _onPreviewPausePressed : null;
+    final onPreviewBranchBackPressed = _currentBranchIndex <= 0 ? null : _onPreviewBranchBackPressed;
+    final onPreviewBranchForwardPressed = _currentBranchIndex >= _branches.length - 1 ? null : _onPreviewBranchForwardPressed;
+    final currentActionButton = widget.previewCase.actionButton;
+    final displayTitle = "${widget.caseNumber}. ${_resolvedTitle()}";
+    final displayDescription = _resolvedDescription();
 
     final Widget lightPane = SizedBox(
       width: widget.paneWidth,
@@ -590,8 +590,8 @@ class _PreviewCaseRowState extends State<_PreviewCaseRow> {
         isDark: true,
       ),
     );
-    final Widget leftPane = isCurrentLight ? lightPane : darkPane;
-    final Widget rightPane = isCurrentLight ? darkPane : lightPane;
+    final leftPane = isCurrentLight ? lightPane : darkPane;
+    final rightPane = isCurrentLight ? darkPane : lightPane;
 
     return SingleChildScrollView(
       scrollDirection: .horizontal,
@@ -644,10 +644,10 @@ class _PreviewPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ThemeData previewThemeData = _bwThemeData(isDark: isDark);
-    final Color titleColor = appTheme.qb0;
-    final Color bodyColor = appTheme.qb0.q(.72);
+    final theme = Theme.of(context);
+    final previewThemeData = _bwThemeData(isDark: isDark);
+    final titleColor = appTheme.qb0;
+    final bodyColor = appTheme.qb0.q(.72);
 
     return Theme(
       data: previewThemeData,
@@ -763,9 +763,9 @@ enum _PreviewActionButton {
 }
 
 ThemeData _bwThemeData({required bool isDark}) {
-  final ThemeData base = isDark ? ThemeData.dark() : ThemeData.light();
-  final Color primary = isDark ? Colors.white : Colors.black;
-  final ColorScheme colorScheme = base.colorScheme.copyWith(
+  final base = isDark ? ThemeData.dark() : ThemeData.light();
+  final primary = isDark ? Colors.white : Colors.black;
+  final colorScheme = base.colorScheme.copyWith(
     primary: primary,
     onPrimary: isDark ? Colors.black : Colors.white,
   );

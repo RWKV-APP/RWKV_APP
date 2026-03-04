@@ -118,17 +118,17 @@ class UserMessageBottom extends ConsumerWidget {
       case model.MessageType.ttsGeneration:
     }
 
-    final ThemeData theme = Theme.of(context);
-    final Color primary = theme.colorScheme.primary;
-    final WorldType? worldType = ref.watch(P.rwkv.currentWorldType);
-    final bool selectMessageMode = ref.watch(P.chat.isSharing);
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final worldType = ref.watch(P.rwkv.currentWorldType);
+    final selectMessageMode = ref.watch(P.chat.isSharing);
     ref.watch(P.msg.msgNode);
 
     if (selectMessageMode) {
       return const SizedBox(height: 12);
     }
 
-    final ({bool showUserEditButton, bool showUserCopyButton, bool showUserTTSPlayButton}) actions = resolveActionVisibility(
+    final actions = resolveActionVisibility(
       msg: msg,
       worldType: worldType,
     );
@@ -143,13 +143,13 @@ class UserMessageBottom extends ConsumerWidget {
       showUserCopyButton = false;
     }
 
-    final model.Message? latestClickedMessage = ref.watch(P.msg.latestClicked);
-    final bool playing = ref.watch(P.see.playing);
-    final bool isCurrentMessage = latestClickedMessage?.id == msg.id;
+    final latestClickedMessage = ref.watch(P.msg.latestClicked);
+    final playing = ref.watch(P.see.playing);
+    final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
-    final S s = S.of(context);
+    final s = S.of(context);
 
-    final double? desktopOpacity = desktopActionsHovered != null ? (desktopActionsHovered! ? 1.0 : 0.0) : null;
+    final desktopOpacity = desktopActionsHovered != null ? (desktopActionsHovered! ? 1.0 : 0.0) : null;
 
     Widget wrapDesktopOpacity(
       Widget child, {
@@ -163,7 +163,7 @@ class UserMessageBottom extends ConsumerWidget {
       );
     }
 
-    final EdgeInsets padding = const .only(left: 4, top: 4, right: 4, bottom: 4);
+    final padding = const EdgeInsets.only(left: 4, top: 4, right: 4, bottom: 4);
 
     return Row(
       mainAxisAlignment: .end,

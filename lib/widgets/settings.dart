@@ -35,7 +35,7 @@ class Settings extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final S s = S.of(context);
+    final s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final paddingTop = ref.watch(P.app.paddingTop);
     final iconPath = "assets/img/chat/icon.png";

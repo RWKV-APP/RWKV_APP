@@ -84,7 +84,7 @@ class UserTTSContent extends ConsumerWidget {
     final playing = ref.watch(P.see.playing);
     final isCurrentMessage = latestClickedMessage?.id == msg.id;
 
-    const EdgeInsets buttonPadding = .only(left: 4, top: 6, right: 4, bottom: 4);
+    const buttonPadding = EdgeInsets.only(left: 4, top: 6, right: 4, bottom: 4);
 
     const buttonSize = 24.0;
 

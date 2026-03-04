@@ -222,12 +222,12 @@ class AppDatabase extends _$AppDatabase {
       return processed;
     }
 
-    final List<String> partialPrefixes = List<String>.generate(
+    final partialPrefixes = List<String>.generate(
       separator.length - 1,
       (int index) => separator.substring(0, separator.length - 1 - index),
     );
 
-    for (final String partialPrefix in partialPrefixes) {
+    for (final partialPrefix in partialPrefixes) {
       if (!processed.endsWith(partialPrefix)) {
         continue;
       }
@@ -237,16 +237,16 @@ class AppDatabase extends _$AppDatabase {
   }
 
   String _buildConversationTitle(String rawContent) {
-    final String withoutModifier = _stripUserMsgModifier(rawContent);
-    final String normalized = withoutModifier.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+    final withoutModifier = _stripUserMsgModifier(rawContent);
+    final normalized = withoutModifier.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
     if (normalized.isEmpty) {
       return normalized;
     }
     if (normalized.length <= Config.maxTitleLength) {
       return normalized;
     }
-    final String truncated = normalized.substring(0, Config.maxTitleLength);
-    final int lastWhitespaceIndex = truncated.lastIndexOf(RegExp(r'\s'));
+    final truncated = normalized.substring(0, Config.maxTitleLength);
+    final lastWhitespaceIndex = truncated.lastIndexOf(RegExp(r'\s'));
     if (lastWhitespaceIndex < Config.maxTitleLength ~/ 2) {
       return truncated.trimRight();
     }
@@ -261,7 +261,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<bool> _updateConvTitleWithoutTouchingUpdatedAt(int createAtInUS, String title) async {
-    final bool success =
+    final success =
         await (update(conversation)..where((tbl) => tbl.createdAtUS.equals(createAtInUS))).write(
           _ConversationCompanion(title: Value(title)),
         ) >
@@ -274,8 +274,8 @@ class AppDatabase extends _$AppDatabase {
       return false;
     }
     _didRepairLegacyConversationTitles = true;
-    final List<_ConversationTitleRepairCandidate> candidates = [];
-    for (final ConversationData conversationData in conversations) {
+    final candidates = <_ConversationTitleRepairCandidate>[];
+    for (final conversationData in conversations) {
       if (conversationData.title.length != Config.legacyMaxTitleLength) {
         continue;
       }
@@ -289,7 +289,7 @@ class AppDatabase extends _$AppDatabase {
         qqe("repair title: parse MsgNode failed, createAtUS=${conversationData.createdAtUS}, error=$e");
         continue;
       }
-      final int? firstMsgId = msgNode.latestMsgIdsWithoutRoot.firstOrNull;
+      final firstMsgId = msgNode.latestMsgIdsWithoutRoot.firstOrNull;
       if (firstMsgId == null) {
         continue;
       }
@@ -305,11 +305,11 @@ class AppDatabase extends _$AppDatabase {
       return false;
     }
 
-    final Set<int> firstMsgIds = {
+    final firstMsgIds = <int>{
       for (final _ConversationTitleRepairCandidate candidate in candidates) candidate.firstMsgId,
     };
-    final List<_MsgData> firstMsgDataList = await (select(msg)..where((tbl) => tbl.id.isIn(firstMsgIds))).get();
-    final Map<int, _MsgData> firstMsgById = {
+    final firstMsgDataList = await (select(msg)..where((tbl) => tbl.id.isIn(firstMsgIds))).get();
+    final firstMsgById = <int, _MsgData>{
       for (final _MsgData firstMsgData in firstMsgDataList) firstMsgData.id: firstMsgData,
     };
 
@@ -319,15 +319,15 @@ class AppDatabase extends _$AppDatabase {
       if (firstMsgData == null) {
         continue;
       }
-      final String legacyTitle = _buildLegacyConversationTitle(firstMsgData.content);
+      final legacyTitle = _buildLegacyConversationTitle(firstMsgData.content);
       if (legacyTitle != candidate.title) {
         continue;
       }
-      final String repairedTitle = _buildConversationTitle(firstMsgData.content);
+      final repairedTitle = _buildConversationTitle(firstMsgData.content);
       if (repairedTitle == candidate.title) {
         continue;
       }
-      final bool updated = await _updateConvTitleWithoutTouchingUpdatedAt(candidate.createdAtUS, repairedTitle);
+      final updated = await _updateConvTitleWithoutTouchingUpdatedAt(candidate.createdAtUS, repairedTitle);
       if (!updated) {
         continue;
       }
@@ -424,8 +424,8 @@ class AppDatabase extends _$AppDatabase {
       ])
       ..limit(pageSize, offset: pageIndex * pageSize);
 
-    final List<ConversationData> conversationDataList = await query.get();
-    final bool hasRepairedTitles = await _repairLegacyTruncatedTitles(conversationDataList);
+    final conversationDataList = await query.get();
+    final hasRepairedTitles = await _repairLegacyTruncatedTitles(conversationDataList);
     if (!hasRepairedTitles) {
       return conversationDataList;
     }

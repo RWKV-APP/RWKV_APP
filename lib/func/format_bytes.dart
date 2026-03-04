@@ -11,18 +11,18 @@ String formatBytes(int bytes) {
     return "0.01 GB";
   }
 
-  const int bytesPerGB = 1024 * 1024 * 1024;
+  const bytesPerGB = 1024 * 1024 * 1024;
 
   /// 0.01 GB in bytes
-  const int threshold01Gb = 10737418;
+  const threshold01Gb = 10737418;
 
   if (bytes < threshold01Gb) {
     return "0.01 GB";
   }
 
-  final int centiGb = ((bytes * 100) + (bytesPerGB ~/ 2)) ~/ bytesPerGB;
-  final int gbInteger = centiGb ~/ 100;
-  final int gbDecimal = centiGb % 100;
-  final String gbDecimalText = gbDecimal < 10 ? "0$gbDecimal" : "$gbDecimal";
+  final centiGb = ((bytes * 100) + (bytesPerGB ~/ 2)) ~/ bytesPerGB;
+  final gbInteger = centiGb ~/ 100;
+  final gbDecimal = centiGb % 100;
+  final gbDecimalText = gbDecimal < 10 ? "0$gbDecimal" : "$gbDecimal";
   return "$gbInteger.$gbDecimalText GB";
 }

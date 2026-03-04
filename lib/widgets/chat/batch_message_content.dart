@@ -50,8 +50,8 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
   void _updateButtonsVisibility() {
     if (!_scrollController.hasClients) return;
     final position = _scrollController.position;
-    final bool left = position.pixels > 0.5;
-    final bool right = position.pixels < (position.maxScrollExtent - 0.5);
+    final left = position.pixels > 0.5;
+    final right = position.pixels < (position.maxScrollExtent - 0.5);
     if (left != _showLeft || right != _showRight) {
       setState(() {
         _showLeft = left;
@@ -63,7 +63,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
   Future<void> _scrollBy(double delta) async {
     if (!_scrollController.hasClients) return;
     final position = _scrollController.position;
-    final double target = (position.pixels + delta).clamp(0.0, position.maxScrollExtent);
+    final target = (position.pixels + delta).clamp(0.0, position.maxScrollExtent);
     if ((target - position.pixels).abs() < 0.5) return;
     await _scrollController.animateTo(
       target,
@@ -82,7 +82,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
     final qb = ref.watch(P.app.qb);
     final batchSelection = ref.watch(P.msg.batchSelection(widget.msg));
 
-    final double step = screenWidth * (batchVW / 100) * 0.9;
+    final step = screenWidth * (batchVW / 100) * 0.9;
 
     final qw = ref.watch(P.app.qw);
 

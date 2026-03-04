@@ -38,9 +38,9 @@ class BranchSwitcher extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Color primary = Theme.of(context).colorScheme.primary;
-    final int siblingCount = debugSiblingCountOverride ?? P.msg.siblingCount(msg);
-    final S s = S.of(context);
+    final primary = Theme.of(context).colorScheme.primary;
+    final siblingCount = debugSiblingCountOverride ?? P.msg.siblingCount(msg);
+    final s = S.of(context);
 
     if (siblingCount <= 1) return const SizedBox.shrink();
 
@@ -48,10 +48,10 @@ class BranchSwitcher extends ConsumerWidget {
     if (siblingIndex < 0) siblingIndex = 0;
     if (siblingIndex >= siblingCount) siblingIndex = siblingCount - 1;
 
-    final bool isFirst = siblingIndex == 0;
-    final bool isLast = siblingIndex == siblingCount - 1;
-    final VoidCallback onBackPressed = debugOnBackPressedOverride ?? _onBackPressed;
-    final VoidCallback onForwardPressed = debugOnForwardPressedOverride ?? _onForwardPressed;
+    final isFirst = siblingIndex == 0;
+    final isLast = siblingIndex == siblingCount - 1;
+    final onBackPressed = debugOnBackPressedOverride ?? _onBackPressed;
+    final onForwardPressed = debugOnForwardPressedOverride ?? _onForwardPressed;
 
     return Stack(
       children: [

@@ -311,8 +311,8 @@ class _UI extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final RenderBox renderBox = context.findRenderObject() as RenderBox;
-      final Offset position = renderBox.localToGlobal(Offset.zero);
+      final renderBox = context.findRenderObject() as RenderBox;
+      final position = renderBox.localToGlobal(Offset.zero);
       P.sudoku.uiOffset.q = Offset(position.dx, 0);
     });
 
@@ -330,7 +330,7 @@ class _UI extends ConsumerWidget {
 
     final shouldUseVerticalLayout = isDesktop && ratio < 1.9 && !isPortrait;
 
-    final List<Widget> buttons = [
+    final buttons = <Widget>[
       const SizedBox(width: 12, height: 12),
       Text(
         Config.appTitle,
@@ -416,7 +416,7 @@ class _Sudoku extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDesktop = ref.watch(P.app.isDesktop);
-    final double magnification = isDesktop ? 4 : 1;
+    final magnification = isDesktop ? 4 : 1;
     return Container(
       decoration: const BoxDecoration(color: _kGridBGColor),
       padding: .all(4 * magnification.toDouble()),
@@ -438,7 +438,7 @@ class _Board extends ConsumerWidget {
     final staticData = ref.watch(P.sudoku.staticData);
     final dynamicData = ref.watch(P.sudoku.dynamicData);
     final isDesktop = ref.watch(P.app.isDesktop);
-    final double magnification = isDesktop ? 2 : 1;
+    final magnification = isDesktop ? 2 : 1;
     return Column(
       children:
           List.generate(9, (rowIndex) {
@@ -650,7 +650,7 @@ class _Grid extends ConsumerWidget {
       };
     });
 
-    final double magnification = isDesktop ? 2 : 1;
+    final magnification = isDesktop ? 2 : 1;
     return GestureDetector(
       onTap: () => _onPressed(context, ref),
       child: AnimatedContainer(

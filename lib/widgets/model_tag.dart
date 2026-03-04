@@ -40,9 +40,9 @@ class ModelTag extends ConsumerWidget {
   _RenderingOptions _getRenderingOptions(String tagName, WidgetRef ref, Color primary, Brightness brightness) {
     final qb = ref.watch(P.app.qb);
 
-    final bool isDark = brightness == Brightness.dark;
+    final isDark = brightness == Brightness.dark;
 
-    final Color tagBoltColor = isDark ? _tagSoftGreenIconColorDark : _tagSoftGreenIconColor;
+    final tagBoltColor = isDark ? _tagSoftGreenIconColorDark : _tagSoftGreenIconColor;
 
     final logicTagName = tagName.toLowerCase();
     switch (logicTagName) {

@@ -138,6 +138,7 @@ void Function(Object)? onError,
 - 获取屏幕宽度必须用 `MediaQuery.sizeOf(context).width`，不要用 `MediaQuery.of(context).size.width`。
 - 获取屏幕内边距必须用 `MediaQuery.paddingOf(context)`，不要用 `MediaQuery.of(context).padding`。
 - 调整 `Color` 透明度使用 `.q(.x)`，不要用 `withOpacity`。
+- 当你写 `final _Symbol_ foo = bar;` 这种形式的代码时, 如果 `_Symbol_` 可以被后面的 `bar` 明确地推导出类型, 就一定不要写明 `_Symbol_` 类型
 
 ### 范围：`**/*.md`（README 多语言同步）
 

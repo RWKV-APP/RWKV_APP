@@ -290,10 +290,10 @@ class _NewConversationButton extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final isEmpty = ref.watch(P.msg.list.select((v) => v.isEmpty));
-    final int currentConversationId = ref.watch(P.msg.msgNode.select((v) => v.createAtInUS));
-    final int? guideConversationId = ref.watch(P.chat.newConversationGuideConversationId);
-    final bool showGuide = !isEmpty && guideConversationId == currentConversationId;
-    final Color? iconColor = showGuide ? theme.colorScheme.primary : null;
+    final currentConversationId = ref.watch(P.msg.msgNode.select((v) => v.createAtInUS));
+    final guideConversationId = ref.watch(P.chat.newConversationGuideConversationId);
+    final showGuide = !isEmpty && guideConversationId == currentConversationId;
+    final iconColor = showGuide ? theme.colorScheme.primary : null;
 
     final Widget icon = Stack(
       clipBehavior: Clip.none,

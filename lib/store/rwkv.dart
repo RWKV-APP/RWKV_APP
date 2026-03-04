@@ -755,15 +755,15 @@ extension $RWKV on _RWKV {
   }) async {
     if (text.isEmpty) return 0;
     if (_sendPort == null) return null;
-    final WeightType weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
-    final int? modelID = findModelIDByWeightType(weightType: weightType);
+    final weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
+    final modelID = findModelIDByWeightType(weightType: weightType);
     if (modelID == null) return null;
 
-    final to_rwkv.CalculateTokensCountRaw request = to_rwkv.CalculateTokensCountRaw(text, modelID: modelID);
+    final request = to_rwkv.CalculateTokensCountRaw(text, modelID: modelID);
     send(request);
 
     try {
-      final from_rwkv.TokensCount response = await broadcastStream
+      final response = await broadcastStream
           .whereType<from_rwkv.TokensCount>()
           .where((from_rwkv.TokensCount event) => event.req?.requestId == request.requestId)
           .first
@@ -780,15 +780,15 @@ extension $RWKV on _RWKV {
   }) async {
     if (messages.isEmpty) return 0;
     if (_sendPort == null) return null;
-    final WeightType weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
-    final int? modelID = findModelIDByWeightType(weightType: weightType);
+    final weightType = _resolveWeightTypeForTokenCount(preferredWeightType: preferredWeightType);
+    final modelID = findModelIDByWeightType(weightType: weightType);
     if (modelID == null) return null;
 
-    final to_rwkv.CalculateTokensCountFromMessages request = to_rwkv.CalculateTokensCountFromMessages(messages, modelID: modelID);
+    final request = to_rwkv.CalculateTokensCountFromMessages(messages, modelID: modelID);
     send(request);
 
     try {
-      final from_rwkv.TokensCount response = await broadcastStream
+      final response = await broadcastStream
           .whereType<from_rwkv.TokensCount>()
           .where((from_rwkv.TokensCount event) => event.req?.requestId == request.requestId)
           .first
@@ -805,7 +805,7 @@ extension $RWKV on _RWKV {
     if (preferredWeightType != null) {
       return preferredWeightType;
     }
-    final DemoType demoType = P.app.demoType.q;
+    final demoType = P.app.demoType.q;
     return switch (demoType) {
       .see => .see,
       .tts => .tts,
@@ -1011,7 +1011,7 @@ extension $RWKV on _RWKV {
 
     final current = thinkingMode.q;
 
-    final List<({thinking_mode.ThinkingMode key, String label})> actionPairs = [
+    final actionPairs = <({thinking_mode.ThinkingMode key, String label})>[
       (label: s.thinking_mode_off(""), key: .none),
       (label: s.think_button_mode_fast(""), key: .fast),
       (label: s.thinking_mode_high(""), key: .free),
@@ -1616,7 +1616,7 @@ extension _$RWKV on _RWKV {
     }
 
     if (Platform.isAndroid) {
-      final Set<String> qnnLibList = {
+      final qnnLibList = <String>{
         "libQnnHtp.so",
         "libQnnHtpNetRunExtensions.so",
         "libQnnHtpV68Stub.so",
@@ -1640,7 +1640,7 @@ extension _$RWKV on _RWKV {
         "libQnnRwkvWkvOpPackageV79.so",
         "libQnnRwkvWkvOpPackageV81.so",
       };
-      for (final String lib in qnnLibList) {
+      for (final lib in qnnLibList) {
         await fromAssetsToTemp("assets/lib/qnn/$lib", targetPath: "assets/lib/$lib");
       }
       _qnnLibsCopied.q = true;
@@ -1651,7 +1651,7 @@ extension _$RWKV on _RWKV {
       return;
     }
 
-    final Set<String> qnnLibList = {
+    final qnnLibList = <String>{
       "QnnHtp.dll",
       "QnnHtpNetRunExtensions.dll",
       "QnnHtpPrepare.dll",
@@ -1664,7 +1664,7 @@ extension _$RWKV on _RWKV {
       "libqnnhtpv73.cat",
       "libqnnhtpv81.cat",
     };
-    for (final String lib in qnnLibList) {
+    for (final lib in qnnLibList) {
       await fromAssetsToTemp("assets/lib/qnn-windows/$lib", targetPath: "assets/lib/$lib");
     }
     _qnnLibsCopied.q = true;

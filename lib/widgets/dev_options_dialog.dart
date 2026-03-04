@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:halo_state/halo_state.dart';
 
 // Project imports:
-import 'package:zone/model/feature_rollout.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/albatross.dart';
@@ -33,7 +32,7 @@ class _WithDevOptionState extends State<WithDevOption> {
         }
         count++;
         if (count < 6) return;
-        final int span = DateTime.now().millisecondsSinceEpoch - firstTap;
+        final span = DateTime.now().millisecondsSinceEpoch - firstTap;
         count = 0;
         if (span >= 1300) return;
         await _DevOptionsDialog.show();
@@ -70,7 +69,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
 
   @override
   void dispose() {
-    final String host = _controllerHost.text;
+    final host = _controllerHost.text;
     if (host != Albatross.instance.host) {
       Albatross.instance.host = host;
       Albatross.instance.init();
@@ -80,7 +79,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
   }
 
   void _onWebSearchChanged(bool value) {
-    final FeatureRollout nextFeatureRollout = P.app.featureRollout.q.copyWith(webSearch: value);
+    final nextFeatureRollout = P.app.featureRollout.q.copyWith(webSearch: value);
     P.preference.setFeatureRollout(nextFeatureRollout);
     P.app.featureRollout.q = nextFeatureRollout;
     setState(() {});
@@ -98,12 +97,12 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final FeatureRollout featureRollout = P.app.featureRollout.q;
-    final Color panelColor = theme.colorScheme.surface;
-    final Color cardColor = theme.colorScheme.surfaceContainerHighest;
-    final Color borderColor = theme.colorScheme.outlineVariant;
-    final double bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final theme = Theme.of(context);
+    final featureRollout = P.app.featureRollout.q;
+    final panelColor = theme.colorScheme.surface;
+    final cardColor = theme.colorScheme.surfaceContainerHighest;
+    final borderColor = theme.colorScheme.outlineVariant;
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
 
     return ClipRRect(
       borderRadius: const .only(
@@ -182,7 +181,7 @@ class _DevPanelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       padding: const .only(left: 16, top: 8, right: 8, bottom: 8),
@@ -237,7 +236,7 @@ class _DevSwitchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       padding: const .symmetric(horizontal: 12, vertical: 10),
@@ -286,7 +285,7 @@ class _DevHostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -359,7 +358,7 @@ class _DevActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       decoration: BoxDecoration(

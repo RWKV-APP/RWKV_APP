@@ -235,22 +235,22 @@ extension _$Suggestion on _Suggestion {
 extension $Suggestion on _Suggestion {}
 
 List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
-  const int totalCount = 5;
-  const int intonationCount = 1;
-  const int normalCount = totalCount - intonationCount;
+  const totalCount = 5;
+  const intonationCount = 1;
+  const normalCount = totalCount - intonationCount;
 
-  final List<String> normalSuggestions = rawSuggestions.toList().shuffled.toList();
-  final List<String> selectedNormal = normalSuggestions.length <= normalCount
+  final normalSuggestions = rawSuggestions.toList().shuffled.toList();
+  final selectedNormal = normalSuggestions.length <= normalCount
       ? normalSuggestions
       : normalSuggestions.take(normalCount).toList();
 
-  final List<String> intonationSuggestions = _buildIntonationSuggestionDisplays().shuffled.toList();
+  final intonationSuggestions = _buildIntonationSuggestionDisplays().shuffled.toList();
   if (intonationSuggestions.isEmpty) {
     if (normalSuggestions.length <= totalCount) return normalSuggestions;
     return normalSuggestions.take(totalCount).toList();
   }
 
-  final List<String> mixed = <String>[
+  final mixed = <String>[
     ...selectedNormal,
     intonationSuggestions.first,
   ];
@@ -259,7 +259,7 @@ List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
 
 List<String> _buildIntonationSuggestionDisplays() {
   return TTSInstruction.intonation.options.indexMap((index, option) {
-    final String emoji = TTSInstruction.intonation.emojiOptions[index];
+    final emoji = TTSInstruction.intonation.emojiOptions[index];
     return "$emoji$option";
   });
 }

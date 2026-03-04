@@ -232,7 +232,7 @@ class _AudioButton extends ConsumerWidget {
     final s = S.of(context);
     final qw = ref.watch(P.app.qw);
     final primary = Theme.of(context).colorScheme.primary;
-    const DemoType demoType = .tts;
+    const demoType = DemoType.tts;
     final borderRadius = demoType != .tts ? 12.r : 6.r;
     final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
     return GestureDetector(
@@ -263,7 +263,7 @@ class _SpkButton extends ConsumerWidget {
     final s = S.of(context);
     final qw = ref.watch(P.app.qw);
     final primary = Theme.of(context).colorScheme.primary;
-    const DemoType demoType = .tts;
+    const demoType = DemoType.tts;
     final borderRadius = demoType != .tts ? 12.r : 6.r;
     ref.watch(P.talk.intonationShown);
     ref.watch(P.talk.audioInteractorShown);
@@ -296,7 +296,7 @@ class _IntonationButton extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final s = S.of(context);
     final primary = Theme.of(context).colorScheme.primary;
-    const DemoType demoType = .tts;
+    const demoType = DemoType.tts;
     final borderRadius = demoType != .tts ? 12.r : 6.r;
     final intonationShown = ref.watch(P.talk.intonationShown);
     return GestureDetector(

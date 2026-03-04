@@ -139,8 +139,8 @@ extension $Msg on _Msg {
     required String scope,
     required int messageId,
   }) {
-    final String key = _bottomDetailsStateKey(scope: scope, messageId: messageId);
-    final bool? expanded = bottomDetailsExpanded.q[key];
+    final key = _bottomDetailsStateKey(scope: scope, messageId: messageId);
+    final expanded = bottomDetailsExpanded.q[key];
     if (expanded == null) return false;
     return expanded;
   }
@@ -150,12 +150,12 @@ extension $Msg on _Msg {
     required int messageId,
     required bool expanded,
   }) {
-    final String key = _bottomDetailsStateKey(scope: scope, messageId: messageId);
-    final Map<String, bool> current = bottomDetailsExpanded.q;
+    final key = _bottomDetailsStateKey(scope: scope, messageId: messageId);
+    final current = bottomDetailsExpanded.q;
 
     if (!expanded) {
       if (!current.containsKey(key)) return;
-      final Map<String, bool> next = {...current};
+      final next = <String, bool>{...current};
       next.remove(key);
       bottomDetailsExpanded.q = next;
       return;
@@ -169,7 +169,7 @@ extension $Msg on _Msg {
     required String scope,
     required int messageId,
   }) {
-    final bool expanded = isBottomDetailsExpanded(scope: scope, messageId: messageId);
+    final expanded = isBottomDetailsExpanded(scope: scope, messageId: messageId);
     setBottomDetailsExpanded(scope: scope, messageId: messageId, expanded: !expanded);
     P.app.hapticLight();
   }
@@ -177,12 +177,12 @@ extension $Msg on _Msg {
   void clearBottomDetailsStateInScope({
     required String scope,
   }) {
-    final Map<String, bool> current = bottomDetailsExpanded.q;
+    final current = bottomDetailsExpanded.q;
     if (current.isEmpty) return;
 
-    final String prefix = "$scope::";
-    final Map<String, bool> next = {};
-    for (final MapEntry<String, bool> entry in current.entries) {
+    final prefix = "$scope::";
+    final next = <String, bool>{};
+    for (final entry in current.entries) {
       if (entry.key.startsWith(prefix)) continue;
       next[entry.key] = entry.value;
     }
@@ -193,21 +193,21 @@ extension $Msg on _Msg {
   void clearBottomDetailsStateByMessageIds({
     required Iterable<int> messageIds,
   }) {
-    final Set<int> targets = messageIds.toSet();
+    final targets = messageIds.toSet();
     if (targets.isEmpty) return;
 
-    final Map<String, bool> current = bottomDetailsExpanded.q;
+    final current = bottomDetailsExpanded.q;
     if (current.isEmpty) return;
 
-    final Map<String, bool> next = {};
-    for (final MapEntry<String, bool> entry in current.entries) {
-      final int splitIndex = entry.key.lastIndexOf("::");
+    final next = <String, bool>{};
+    for (final entry in current.entries) {
+      final splitIndex = entry.key.lastIndexOf("::");
       if (splitIndex <= 0) {
         next[entry.key] = entry.value;
         continue;
       }
-      final String idText = entry.key.substring(splitIndex + 2);
-      final int? id = int.tryParse(idText);
+      final idText = entry.key.substring(splitIndex + 2);
+      final id = int.tryParse(idText);
       if (id != null && targets.contains(id)) continue;
       next[entry.key] = entry.value;
     }
@@ -221,18 +221,18 @@ extension $Msg on _Msg {
   }) {
     if (sourceMessageId == targetMessageId) return;
 
-    final Map<String, bool> current = bottomDetailsExpanded.q;
+    final current = bottomDetailsExpanded.q;
     if (current.isEmpty) return;
 
-    final String sourceSuffix = "::$sourceMessageId";
-    final String targetSuffix = "::$targetMessageId";
-    final Set<String> scopesToSync = {};
+    final sourceSuffix = "::$sourceMessageId";
+    final targetSuffix = "::$targetMessageId";
+    final scopesToSync = <String>{};
 
-    for (final String key in current.keys) {
+    for (final key in current.keys) {
       if (!key.endsWith(sourceSuffix) && !key.endsWith(targetSuffix)) continue;
-      final int splitIndex = key.lastIndexOf("::");
+      final splitIndex = key.lastIndexOf("::");
       if (splitIndex <= 0) continue;
-      final String scope = key.substring(0, splitIndex);
+      final scope = key.substring(0, splitIndex);
       scopesToSync.add(scope);
     }
 
@@ -241,11 +241,11 @@ extension $Msg on _Msg {
     final Map<String, bool> next = {...current};
     bool changed = false;
 
-    for (final String scope in scopesToSync) {
-      final String sourceKey = _bottomDetailsStateKey(scope: scope, messageId: sourceMessageId);
-      final String targetKey = _bottomDetailsStateKey(scope: scope, messageId: targetMessageId);
-      final bool sourceExpanded = current[sourceKey] ?? false;
-      final bool targetExpanded = current[targetKey] ?? false;
+    for (final scope in scopesToSync) {
+      final sourceKey = _bottomDetailsStateKey(scope: scope, messageId: sourceMessageId);
+      final targetKey = _bottomDetailsStateKey(scope: scope, messageId: targetMessageId);
+      final sourceExpanded = current[sourceKey] ?? false;
+      final targetExpanded = current[targetKey] ?? false;
 
       if (sourceExpanded == targetExpanded) continue;
       changed = true;
@@ -280,7 +280,7 @@ extension $Msg on _Msg {
     int? conversationTokensCount,
   }) {
     if (messageTokensCount != null) {
-      final int? current = bottomMessageTokensCount.q[messageId];
+      final current = bottomMessageTokensCount.q[messageId];
       if (current != messageTokensCount) {
         bottomMessageTokensCount.q = {
           ...bottomMessageTokensCount.q,
@@ -290,7 +290,7 @@ extension $Msg on _Msg {
     }
 
     if (conversationTokensCount != null) {
-      final int? current = bottomConversationTokensCount.q[messageId];
+      final current = bottomConversationTokensCount.q[messageId];
       if (current != conversationTokensCount) {
         bottomConversationTokensCount.q = {
           ...bottomConversationTokensCount.q,
@@ -313,16 +313,16 @@ extension $Msg on _Msg {
       return;
     }
 
-    final Map<int, int> currentMessageCount = bottomMessageTokensCount.q;
+    final currentMessageCount = bottomMessageTokensCount.q;
     if (currentMessageCount.containsKey(messageId)) {
-      final Map<int, int> nextMessageCount = {...currentMessageCount};
+      final nextMessageCount = <int, int>{...currentMessageCount};
       nextMessageCount.remove(messageId);
       bottomMessageTokensCount.q = nextMessageCount;
     }
 
-    final Map<int, int> currentConversationCount = bottomConversationTokensCount.q;
+    final currentConversationCount = bottomConversationTokensCount.q;
     if (currentConversationCount.containsKey(messageId)) {
-      final Map<int, int> nextConversationCount = {...currentConversationCount};
+      final nextConversationCount = <int, int>{...currentConversationCount};
       nextConversationCount.remove(messageId);
       bottomConversationTokensCount.q = nextConversationCount;
     }
@@ -331,7 +331,7 @@ extension $Msg on _Msg {
   void clearBottomTokensCountByMessageIds({
     required Iterable<int> messageIds,
   }) {
-    final Set<int> targets = messageIds.toSet();
+    final targets = messageIds.toSet();
     if (targets.isEmpty) return;
 
     final Map<int, int> currentMessageCount = bottomMessageTokensCount.q;
@@ -400,7 +400,7 @@ extension $Msg on _Msg {
       qqe("newIndex is out of range");
       return;
     }
-    final int targetMessageId = siblingIds[newIndex];
+    final targetMessageId = siblingIds[newIndex];
     syncBottomDetailsExpandedBetweenMessages(
       sourceMessageId: msg.id,
       targetMessageId: targetMessageId,

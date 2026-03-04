@@ -296,8 +296,8 @@ enum AppTheme {
   final double inputBarInteractionsIconSize = 18;
 
   ColorScheme get colorScheme {
-    final Brightness brightness = isLight ? Brightness.light : Brightness.dark;
-    final ColorScheme seeded = ColorScheme.fromSeed(
+    final brightness = isLight ? Brightness.light : Brightness.dark;
+    final seeded = ColorScheme.fromSeed(
       seedColor: themePrimary,
       brightness: brightness,
     );

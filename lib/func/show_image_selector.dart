@@ -45,7 +45,7 @@ Future<String?> showImageSelector() async {
     ],
   );
   if (result == null) return null;
-  final ImagePicker picker = ImagePicker();
+  final picker = ImagePicker();
   late final String? imagePath;
   switch (result) {
     case _Actions.takePhoto:

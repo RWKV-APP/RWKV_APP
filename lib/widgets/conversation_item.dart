@@ -83,12 +83,12 @@ class ConversationListItemData {
       return processed;
     }
 
-    final List<String> partialPrefixes = List<String>.generate(
+    final partialPrefixes = List<String>.generate(
       separator.length - 1,
       (int index) => separator.substring(0, separator.length - 1 - index),
     );
 
-    for (final String partialPrefix in partialPrefixes) {
+    for (final partialPrefix in partialPrefixes) {
       if (!processed.endsWith(partialPrefix)) {
         continue;
       }

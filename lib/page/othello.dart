@@ -866,7 +866,7 @@ class _Console extends ConsumerWidget {
         controller: controller,
         itemCount: received.length,
         itemBuilder: (context, index) {
-          final List<CellType> girds = [];
+          final girds = <CellType>[];
 
           final line = received[index];
           final chars = line.split("");

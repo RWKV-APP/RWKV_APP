@@ -26,21 +26,21 @@ class InputBarDebugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
-    final PageKey pageKey = ref.watch(P.app.pageKey);
-    final bool shown = ref.watch(P.chat.inputBarDebuggerShown);
-    final bool visible = pageKey.isInputBarDebuggerVisible && shown;
-    final bool useBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
-    final double backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
-    final double sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
-    final double gradientStartForInputBar = ref.watch(P.ui.gradientStartForInputBar);
-    final double gradientForInputBar = ref.watch(P.ui.gradientForInputBar);
+    final pageKey = ref.watch(P.app.pageKey);
+    final shown = ref.watch(P.chat.inputBarDebuggerShown);
+    final visible = pageKey.isInputBarDebuggerVisible && shown;
+    final useBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
+    final gradientStartForInputBar = ref.watch(P.ui.gradientStartForInputBar);
+    final gradientForInputBar = ref.watch(P.ui.gradientForInputBar);
 
-    final double screenWidth = ref.watch(P.app.screenWidth);
-    final double paddingTop = MediaQuery.paddingOf(context).top;
-    final double panelWidth = screenWidth - 100;
-    final double maxPanelHeight = MediaQuery.sizeOf(context).height * .6;
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final paddingTop = MediaQuery.paddingOf(context).top;
+    final panelWidth = screenWidth - 100;
+    final maxPanelHeight = MediaQuery.sizeOf(context).height * .6;
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 1000),
@@ -169,22 +169,22 @@ class InputBarDebugger extends ConsumerWidget {
   }
 
   void _onInputOptionsAlphaChanged(double value) {
-    final double nextValue = ((value * 100).roundToDouble() / 100).clamp(0, 1).toDouble();
+    final nextValue = ((value * 100).roundToDouble() / 100).clamp(0, 1).toDouble();
     P.ui.backdropFilterBgAlphaForInputOptions.q = nextValue;
   }
 
   void _onInputOptionsSigmaChanged(double value) {
-    final double nextValue = ((value * 10).roundToDouble() / 10).clamp(0, 32).toDouble();
+    final nextValue = ((value * 10).roundToDouble() / 10).clamp(0, 32).toDouble();
     P.ui.sigmaForBackdropFilterForInputOptions.q = nextValue;
   }
 
   void _onInputBarGradientChanged(double value) {
-    final double nextValue = ((value * 100).roundToDouble() / 100).clamp(-1, 1).toDouble();
+    final nextValue = ((value * 100).roundToDouble() / 100).clamp(-1, 1).toDouble();
     P.ui.gradientForInputBar.q = nextValue;
   }
 
   void _onInputBarGradientStartChanged(double value) {
-    final double nextValue = ((value * 100).roundToDouble() / 100).clamp(-1, 1).toDouble();
+    final nextValue = ((value * 100).roundToDouble() / 100).clamp(-1, 1).toDouble();
     P.ui.gradientStartForInputBar.q = nextValue;
   }
 }
@@ -206,11 +206,11 @@ class _BackdropAlphaSliderSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Color borderColor = theme.colorScheme.outlineVariant;
-    final Color cardColor = theme.colorScheme.surfaceContainerHighest;
-    final String status = backdropFilterEnabled ? '当前状态：模糊已启用（Alpha < 1 且 Sigma > 0）' : '当前状态：模糊已关闭';
-    final double sliderValue = value.clamp(0, 1).toDouble();
+    final theme = Theme.of(context);
+    final borderColor = theme.colorScheme.outlineVariant;
+    final cardColor = theme.colorScheme.surfaceContainerHighest;
+    final status = backdropFilterEnabled ? '当前状态：模糊已启用（Alpha < 1 且 Sigma > 0）' : '当前状态：模糊已关闭';
+    final sliderValue = value.clamp(0, 1).toDouble();
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -283,11 +283,11 @@ class _BackdropSigmaSliderSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Color borderColor = theme.colorScheme.outlineVariant;
-    final Color cardColor = theme.colorScheme.surfaceContainerHighest;
-    final String status = backdropFilterEnabled ? '当前状态：模糊已启用（Alpha < 1 且 Sigma > 0）' : '当前状态：模糊已关闭';
-    final double sliderValue = value.toDouble().clamp(0, 32).toDouble();
+    final theme = Theme.of(context);
+    final borderColor = theme.colorScheme.outlineVariant;
+    final cardColor = theme.colorScheme.surfaceContainerHighest;
+    final status = backdropFilterEnabled ? '当前状态：模糊已启用（Alpha < 1 且 Sigma > 0）' : '当前状态：模糊已关闭';
+    final sliderValue = value.toDouble().clamp(0, 32).toDouble();
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -358,10 +358,10 @@ class _InputBarGradientSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Color borderColor = theme.colorScheme.outlineVariant;
-    final Color cardColor = theme.colorScheme.surfaceContainerHighest;
-    final double sliderValue = value.clamp(-1, 1).toDouble();
+    final theme = Theme.of(context);
+    final borderColor = theme.colorScheme.outlineVariant;
+    final cardColor = theme.colorScheme.surfaceContainerHighest;
+    final sliderValue = value.clamp(-1, 1).toDouble();
 
     return Container(
       padding: const EdgeInsets.all(10),

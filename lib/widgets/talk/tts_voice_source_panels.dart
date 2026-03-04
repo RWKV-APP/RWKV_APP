@@ -55,7 +55,7 @@ class TTSVoiceSourcePanels {
   }
 
   static Future<void> showRecordVoicePanel() async {
-    final bool previousAudioInteractorShown = P.talk.audioInteractorShown.q;
+    final previousAudioInteractorShown = P.talk.audioInteractorShown.q;
     await P.ui.showPanel(
       key: recordVoicePanelKey,
       beforeShow: () async {
@@ -77,20 +77,20 @@ class TTSVoiceSourcePanels {
   }
 
   static Future<void> pickWavFile() async {
-    final FilePickerResult? result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: <String>['wav'],
       allowMultiple: false,
     );
     if (result == null) return;
 
-    final String? selectedPath = result.files.single.path;
+    final selectedPath = result.files.single.path;
     if (selectedPath == null) {
       Alert.error('File path not found');
       return;
     }
 
-    final String extension = path.extension(selectedPath).replaceFirst('.', '').toLowerCase();
+    final extension = path.extension(selectedPath).replaceFirst('.', '').toLowerCase();
     if (extension != 'wav') {
       Alert.error('File extension must be wav');
       return;
@@ -109,9 +109,9 @@ class _TTSVoiceSourceTypePanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final S s = S.of(context);
-    final Color qb = ref.watch(P.app.qb);
-    final Color primary = Theme.of(context).colorScheme.primary;
+    final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+    final primary = Theme.of(context).colorScheme.primary;
     final double listPadding = P.app.isMobile.q ? 8 : 12;
 
     return ClipRRect(
@@ -186,7 +186,7 @@ class _TTSVoiceSourceTypePanelBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final S s = S.of(context);
+    final s = S.of(context);
 
     return Container(
       constraints: const BoxConstraints(
@@ -235,7 +235,7 @@ class _TTSVoiceSourceOptionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color onSurface = theme.colorScheme.onSurface;
+    final onSurface = theme.colorScheme.onSurface;
 
     return Material(
       color: Colors.transparent,
@@ -357,7 +357,7 @@ class _TTSPrebuiltVoicesPanel extends ConsumerWidget {
         spkNames = spkPairs.keys.where((String e) => e.contains(Language.zh_Hans.enName!));
     }
 
-    final List<String> spkNameList = spkNames.toList(growable: false);
+    final spkNameList = spkNames.toList(growable: false);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -394,14 +394,14 @@ class _TTSPrebuiltVoicesPanel extends ConsumerWidget {
               padding: const .only(left: 12, top: 8, right: 12, bottom: 16),
               itemCount: spkNameList.length,
               itemBuilder: (BuildContext context, int index) {
-                final String spkName = spkNameList[index];
+                final spkName = spkNameList[index];
                 final dynamic displayNameRaw = spkPairs[spkName];
-                final String displayName = displayNameRaw is String ? displayNameRaw : '';
-                final bool selected = selectedSpkName == spkName;
-                final Language? language = Language.values
+                final displayName = displayNameRaw is String ? displayNameRaw : '';
+                final selected = selectedSpkName == spkName;
+                final language = Language.values
                     .where((Language e) => e.enName != null)
                     .firstWhereOrNull((Language e) => spkName.contains(e.enName!));
-                final String display = '${P.talk.safe(spkName)} $displayName ${language?.flag ?? ''}'.trim();
+                final display = '${P.talk.safe(spkName)} $displayName ${language?.flag ?? ''}'.trim();
 
                 return Padding(
                   padding: const .only(bottom: 6),
@@ -443,7 +443,7 @@ class _TTSPrebuiltVoicesPanel extends ConsumerWidget {
                             ),
                             IconButton(
                               onPressed: () async {
-                                final String localPath = await P.talk.getPrebuiltSpkAudioPathFromTemp(spkName);
+                                final localPath = await P.talk.getPrebuiltSpkAudioPathFromTemp(spkName);
                                 P.msg.latestClicked.q = null;
                                 await P.see.play(path: localPath);
                               },
@@ -483,11 +483,11 @@ class _LanguageFilterChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final Color primary = theme.colorScheme.primary;
-    final Color qb = ref.watch(P.app.qb);
-    final String label = '${language.flag ?? ''} ${language.soundDisplay ?? ''}'.trim();
-    final bool isCurrentSelected = selectedLanguage == language;
-    final bool isFiltered = selectedFilter == language;
+    final primary = theme.colorScheme.primary;
+    final qb = ref.watch(P.app.qb);
+    final label = '${language.flag ?? ''} ${language.soundDisplay ?? ''}'.trim();
+    final isCurrentSelected = selectedLanguage == language;
+    final isFiltered = selectedFilter == language;
 
     return GestureDetector(
       onTap: () {
@@ -524,7 +524,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
   const _TTSRecordVoicePanel({required this.scrollController});
 
   Future<void> _onPressStart() async {
-    final bool receiving = P.rwkv.generating.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) return;
     if (P.see.recording.q) return;
     P.app.hapticLight();
@@ -533,7 +533,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
   }
 
   Future<void> _onPressEnd(BuildContext context, {bool isCancel = false}) async {
-    final bool receiving = P.rwkv.generating.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) return;
     if (!P.see.recording.q) return;
     if (isCancel) {
@@ -542,7 +542,7 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
       P.app.hapticMedium();
     }
 
-    final bool success = await P.see.stopRecord(isCancel: isCancel);
+    final success = await P.see.stopRecord(isCancel: isCancel);
     if (isCancel) return;
     if (!success) return;
 
@@ -565,11 +565,11 @@ class _TTSRecordVoicePanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final S s = S.of(context);
-    final Color primary = theme.colorScheme.primary;
-    final Color qb = ref.watch(P.app.qb);
-    final bool generating = ref.watch(P.rwkv.generating);
-    final bool recording = ref.watch(P.see.recording);
+    final s = S.of(context);
+    final primary = theme.colorScheme.primary;
+    final qb = ref.watch(P.app.qb);
+    final generating = ref.watch(P.rwkv.generating);
+    final recording = ref.watch(P.see.recording);
     final paddingBottom = ref.watch(P.app.paddingBottom);
 
     return ClipRRect(

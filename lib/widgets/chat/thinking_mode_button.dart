@@ -1,6 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,7 +19,7 @@ String _extractInteractionSuffix({
   required String source,
   required String separator,
 }) {
-  final int separatorIndex = source.lastIndexOf(separator);
+  final separatorIndex = source.lastIndexOf(separator);
   if (separatorIndex < 0) return source;
   return source.substring(separatorIndex + separator.length);
 }
@@ -55,7 +56,7 @@ class ThinkingModeButton extends ConsumerWidget {
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(fontSize) + 20;
-    const EdgeInsets padding = .symmetric(horizontal: 8);
+    const padding = EdgeInsets.symmetric(horizontal: 8);
 
     final text = switch (thinkingMode) {
       .lighting => s.thinking_mode_auto(""),

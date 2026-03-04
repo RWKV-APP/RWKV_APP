@@ -184,14 +184,14 @@ class _BBoxPainter extends CustomPainter {
     if (imageSize == Size.zero) return;
 
     // Calculate scale to "contain" the canvas
-    final double scaleX = size.width / imageSize.width;
-    final double scaleY = size.height / imageSize.height;
+    final scaleX = size.width / imageSize.width;
+    final scaleY = size.height / imageSize.height;
     // Use min scale for contain
-    final double scale = scaleX < scaleY ? scaleX : scaleY;
+    final scale = scaleX < scaleY ? scaleX : scaleY;
 
     // Calculate offset to center the image
-    final double offsetX = (size.width - imageSize.width * scale) / 2;
-    final double offsetY = (size.height - imageSize.height * scale) / 2;
+    final offsetX = (size.width - imageSize.width * scale) / 2;
+    final offsetY = (size.height - imageSize.height * scale) / 2;
 
     // Draw imageSize rect (Blue) - transformed
     final imageRectPaint = Paint()
@@ -296,8 +296,8 @@ class _BBoxPainter extends CustomPainter {
       if (printTargetText) {
         for (final box in boxes) {
           // Map box coordinates to screen coordinates
-          final double left = box.x * scale + offsetX;
-          final double bottom = (box.y + box.height) * scale + offsetY;
+          final left = box.x * scale + offsetX;
+          final bottom = (box.y + box.height) * scale + offsetY;
 
           final textPainter = TextPainter(
             text: TextSpan(

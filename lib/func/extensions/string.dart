@@ -12,7 +12,7 @@ extension RWKVStringExtension on String {
     if (isEmpty) return false;
 
     // 计算匹配到的中文字符数量
-    final int chineseCount = _chineseRegex.allMatches(this).length;
+    final chineseCount = _chineseRegex.allMatches(this).length;
 
     // 判断是否超过总长度的一半
     return chineseCount > (length / 2);

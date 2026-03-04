@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/model/app_theme.dart';
@@ -28,13 +27,13 @@ InteractionVisualColors interactionVisualColors({
   required AppTheme appTheme,
   required InteractionVisualState state,
 }) {
-  final InteractionVisualColors unavailableColors = InteractionVisualColors(
+  final unavailableColors = InteractionVisualColors(
     background: Color.lerp(appTheme.g1, appTheme.scaffoldBg, .33) ?? appTheme.g1,
     // background: kC,
     foreground: Color.lerp(appTheme.g5, appTheme.scaffoldBg, .33) ?? appTheme.g5,
     border: Color.lerp(appTheme.g2, appTheme.scaffoldBg, .33) ?? appTheme.g2,
   );
-  final InteractionVisualColors availableColors = InteractionVisualColors(
+  final availableColors = InteractionVisualColors(
     background: appTheme.qb144,
     // background: kC,
     foreground: appTheme.qb4,

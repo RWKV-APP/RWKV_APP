@@ -345,7 +345,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
         loadingStatus[modelFileKey] == .loadModelWithExtra ||
         loadingStatus[modelFileKey] == .setQnnLibraryPath;
     final loadingProgress = ref.watch(P.rwkv.loadingProgress);
-    final double? modelLoadingProgress = loadingProgress[modelFileKey];
+    final modelLoadingProgress = loadingProgress[modelFileKey];
 
     String startTitle = s.start_to_chat;
     if (loading || modelLoading) {

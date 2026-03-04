@@ -229,7 +229,7 @@ class _PreviewState extends ConsumerState<_Preview> {
     // FIXME: 注意, 新和成的图片尺寸仍然无法超过 16384, 需要找到新的方法
 
     // ignore: invalid_use_of_protected_member
-    final OffsetLayer offsetLayer = repaintBoundary.layer! as OffsetLayer;
+    final offsetLayer = repaintBoundary.layer! as OffsetLayer;
     final image = await offsetLayer.toImage(const Offset(0, 0) & imageSize, pixelRatio: finalDPI);
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 

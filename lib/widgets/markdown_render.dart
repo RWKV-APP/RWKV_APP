@@ -51,13 +51,13 @@ class MarkdownRender extends ConsumerWidget {
       hrHeight: 6,
     );
 
-    final List<MarkdownComponent> inlineComponents = <MarkdownComponent>[
+    final inlineComponents = <MarkdownComponent>[
       for (final MarkdownComponent component in MarkdownComponent.inlineComponents)
         if (component is ItalicMd) _SafeItalicMd() else component,
       _HtmlBreakMd(),
     ];
 
-    final GptMarkdown gptMarkdown = GptMarkdown(
+    final gptMarkdown = GptMarkdown(
       raw.replaceAll("\n\n", "\n").trim(),
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
@@ -112,9 +112,9 @@ class _SafeItalicMd extends InlineMd {
     String text,
     final GptMarkdownConfig config,
   ) {
-    final RegExpMatch? match = exp.firstMatch(text.trim());
-    final String data = match?[1] ?? "";
-    final GptMarkdownConfig conf = config.copyWith(
+    final match = exp.firstMatch(text.trim());
+    final data = match?[1] ?? "";
+    final conf = config.copyWith(
       style: (config.style ?? const TextStyle()).copyWith(
         fontStyle: FontStyle.italic,
       ),
@@ -155,7 +155,7 @@ class _Highlight extends ConsumerWidget {
     final theme = Theme.of(context);
     final appTheme = ref.watch(P.app.theme);
 
-    final Color inlineCodeBackgroundColor = appTheme.inlineCodeBackgroundColor;
+    final inlineCodeBackgroundColor = appTheme.inlineCodeBackgroundColor;
 
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
     return Container(
@@ -319,7 +319,7 @@ class _CodeState extends ConsumerState<_Code> {
     }
 
     final qb = ref.watch(P.app.qb);
-    final Color codeBlockBackgroundColor = switch (appTheme) {
+    final codeBlockBackgroundColor = switch (appTheme) {
       .light => qb.q(.04),
       .dim => qb.q(.08),
       .lightsOut => qb.q(.1),

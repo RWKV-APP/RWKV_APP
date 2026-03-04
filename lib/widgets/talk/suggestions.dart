@@ -20,7 +20,7 @@ class Suggestions extends ConsumerWidget {
   void _onSuggestionTap(String suggestion) {
     P.suggestion.ttsTicker.q += 1;
 
-    final String? intonation = _decodeIntonationSuggestion(suggestion);
+    final intonation = _decodeIntonationSuggestion(suggestion);
     if (intonation != null) {
       _onIntonationTap(intonation);
       return;
@@ -55,8 +55,8 @@ class Suggestions extends ConsumerWidget {
       return;
     }
 
-    final String newText = text.replaceRange(selection.start, selection.end, intonation);
-    final int newOffset = selection.start + intonation.length;
+    final newText = text.replaceRange(selection.start, selection.end, intonation);
+    final newOffset = selection.start + intonation.length;
     controller.text = newText;
     controller.selection = TextSelection.collapsed(offset: newOffset);
     P.app.hapticLight();

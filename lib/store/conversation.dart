@@ -276,7 +276,7 @@ extension $Conversation on _Conversation {
       }
 
       // 6. 创建文件
-      final Directory tempDir = await getTemporaryDirectory();
+      final tempDir = await getTemporaryDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = "${conversation.title.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')}_$timestamp.txt";
       final file = File('${tempDir.path}/$fileName');

@@ -84,7 +84,7 @@ class _Chat {
 /// Public methods
 extension $Chat on _Chat {
   bool tryShowInputBarDebuggerByPassword(String text) {
-    final String input = text.trim();
+    final input = text.trim();
     if (input != Config.inputBarDebuggerPassword) return false;
     inputBarDebuggerShown.q = true;
     textEditingController.clear();
@@ -105,28 +105,28 @@ extension $Chat on _Chat {
       return;
     }
 
-    final MsgNode? targetNode = P.msg.msgNode.q.findNodeByMsgId(msg.id);
-    final MsgNode? parentNode = targetNode?.parent;
+    final targetNode = P.msg.msgNode.q.findNodeByMsgId(msg.id);
+    final parentNode = targetNode?.parent;
     if (targetNode == null || parentNode == null) {
       Alert.warning(S.current.please_select_a_branch_to_continue_the_conversation);
       return;
     }
 
-    final List<MsgNode> siblings = parentNode.children;
+    final siblings = parentNode.children;
     if (siblings.length <= 1) {
       return;
     }
 
-    final int targetIndex = siblings.indexWhere((MsgNode node) => node.id == msg.id);
+    final targetIndex = siblings.indexWhere((MsgNode node) => node.id == msg.id);
     if (targetIndex < 0) {
       Alert.warning(S.current.please_select_a_branch_to_continue_the_conversation);
       return;
     }
 
-    final BuildContext? context = getContext();
+    final context = getContext();
     if (context == null) return;
-    final S s = S.of(context);
-    final OkCancelResult confirmResult = await showOkCancelAlertDialog(
+    final s = S.of(context);
+    final confirmResult = await showOkCancelAlertDialog(
       context: context,
       title: s.delete_branch_title,
       message: s.delete_branch_confirmation_message,
@@ -136,21 +136,21 @@ extension $Chat on _Chat {
     );
     if (confirmResult != OkCancelResult.ok) return;
 
-    final List<int> deletedIds = _collectSubtreeIds(targetNode);
-    final Set<int> deletedIdSet = deletedIds.toSet();
+    final deletedIds = _collectSubtreeIds(targetNode);
+    final deletedIdSet = deletedIds.toSet();
 
     parentNode.children.removeAt(targetIndex);
     if (parentNode.latest?.id == msg.id) {
       if (parentNode.children.isEmpty) {
         parentNode.latest = null;
       } else {
-        final int settledIndex = targetIndex >= parentNode.children.length ? parentNode.children.length - 1 : targetIndex;
+        final settledIndex = targetIndex >= parentNode.children.length ? parentNode.children.length - 1 : targetIndex;
         parentNode.latest = parentNode.children[settledIndex];
       }
     }
 
-    final Map<int, Message> nextPool = {...P.msg.pool.q};
-    for (final int deletedId in deletedIds) {
+    final nextPool = <int, Message>{...P.msg.pool.q};
+    for (final deletedId in deletedIds) {
       nextPool.remove(deletedId);
     }
     P.msg.pool.q = nextPool;
@@ -158,13 +158,13 @@ extension $Chat on _Chat {
     P.msg.clearBottomDetailsStateByMessageIds(messageIds: deletedIds);
     P.msg.clearBottomTokensCountByMessageIds(messageIds: deletedIds);
 
-    final Message? latestClickedMessage = P.msg.latestClicked.q;
+    final latestClickedMessage = P.msg.latestClicked.q;
     if (latestClickedMessage != null && deletedIdSet.contains(latestClickedMessage.id)) {
       P.msg.latestClicked.q = null;
     }
 
-    final Set<int> selectedSharingIds = sharingSelectedMsgIds.q;
-    final Set<int> filteredSharingIds = selectedSharingIds.where((int id) => !deletedIdSet.contains(id)).toSet();
+    final selectedSharingIds = sharingSelectedMsgIds.q;
+    final filteredSharingIds = selectedSharingIds.where((int id) => !deletedIdSet.contains(id)).toSet();
     if (filteredSharingIds.length != selectedSharingIds.length) {
       sharingSelectedMsgIds.q = filteredSharingIds;
     }
@@ -172,15 +172,15 @@ extension $Chat on _Chat {
       isSharing.q = false;
     }
 
-    final int? editingIndex = P.msg.editingOrRegeneratingIndex.q;
+    final editingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (editingIndex != null) {
-      final Message? editingMessage = P.msg.findByIndex(editingIndex);
+      final editingMessage = P.msg.findByIndex(editingIndex);
       if (editingMessage != null && deletedIdSet.contains(editingMessage.id)) {
         P.msg.editingOrRegeneratingIndex.q = null;
       }
     }
 
-    final int? currentReceiveId = receiveId.q;
+    final currentReceiveId = receiveId.q;
     if (currentReceiveId != null && deletedIdSet.contains(currentReceiveId)) {
       receiveId.q = null;
       receivedTokens.q = "";
@@ -199,12 +199,12 @@ extension $Chat on _Chat {
   }
 
   List<int> _collectSubtreeIds(MsgNode rootNode) {
-    final List<int> ids = [];
-    final List<MsgNode> stack = [rootNode];
+    final ids = <int>[];
+    final stack = <MsgNode>[rootNode];
     while (stack.isNotEmpty) {
-      final MsgNode node = stack.removeLast();
+      final node = stack.removeLast();
       ids.add(node.id);
-      for (final MsgNode child in node.children) {
+      for (final child in node.children) {
         stack.add(child);
       }
     }
@@ -224,34 +224,34 @@ extension $Chat on _Chat {
   }
 
   Future<void> onWebSearchModeTapped() async {
-    final bool receiving = P.rwkv.generating.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
-    final BuildContext? context = getContext();
+    final context = getContext();
     if (context == null) return;
 
     P.app.hapticLight();
 
-    final S s = S.current;
-    final WebSearchMode current = webSearchMode.q;
-    final List<({String label, WebSearchMode key})> actionPairs = [
+    final s = S.current;
+    final current = webSearchMode.q;
+    final actionPairs = <({String label, WebSearchMode key})>[
       (label: s.off, key: .off),
       (label: s.web_search, key: .search),
       (label: s.deep_web_search, key: .deepSearch),
     ];
 
-    final List<SheetAction<WebSearchMode>> actions = actionPairs.map((entry) {
-      final bool isCurrent = entry.key == current;
-      final String label = isCurrent ? "☑ ${entry.label}" : entry.label;
-      final WebSearchMode key = entry.key;
+    final actions = actionPairs.map((entry) {
+      final isCurrent = entry.key == current;
+      final label = isCurrent ? "☑ ${entry.label}" : entry.label;
+      final key = entry.key;
       return SheetAction(label: label, key: key);
     }).toList();
 
-    final WebSearchMode? selectedMode = await showModalActionSheet<WebSearchMode>(
+    final selectedMode = await showModalActionSheet<WebSearchMode>(
       context: context,
       title: s.web_search,
       message: "${s.web_search} / ${s.deep_web_search}",
@@ -295,37 +295,37 @@ extension $Chat on _Chat {
   }
 
   Future<void> onWenYanWenTapped() async {
-    final bool receiving = P.rwkv.generating.q;
+    final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
 
-    final FileInfo? model = P.rwkv.latestModel.q;
+    final model = P.rwkv.latestModel.q;
     if (model == null) {
       ModelSelector.show();
       return;
     }
 
-    final BuildContext? context = getContext();
+    final context = getContext();
     if (context == null) return;
 
     P.app.hapticLight();
 
-    final WenyanMode currentMode = wenYanWen.q;
-    final List<({String label, WenyanMode key})> actionPairs = [
+    final currentMode = wenYanWen.q;
+    final actionPairs = <({String label, WenyanMode key})>[
       (label: "文言: 关", key: .off),
       (label: "文言: 开", key: .classic),
       (label: "古今", key: .mixed),
     ];
-    final List<SheetAction<WenyanMode>> actions = actionPairs.map((entry) {
-      final bool isCurrent = entry.key == currentMode;
-      final String label = isCurrent ? "☑ ${entry.label}" : entry.label;
-      final WenyanMode key = entry.key;
+    final actions = actionPairs.map((entry) {
+      final isCurrent = entry.key == currentMode;
+      final label = isCurrent ? "☑ ${entry.label}" : entry.label;
+      final key = entry.key;
       return SheetAction(label: label, key: key);
     }).toList();
 
-    final WenyanMode? selectedMode = await showModalActionSheet<WenyanMode>(
+    final selectedMode = await showModalActionSheet<WenyanMode>(
       context: context,
       title: "文言",
       message: "请选择文言模式",
@@ -347,7 +347,7 @@ extension $Chat on _Chat {
   Future<void> onSendButtonPressed({
     required DemoType preferredDemoType,
   }) async {
-    final String textToSend = textInInput.q.trim();
+    final textToSend = textInInput.q.trim();
     if (tryShowInputBarDebuggerByPassword(textToSend)) return;
 
     if (P.app.demoType.q == .tts) {
@@ -468,7 +468,7 @@ extension $Chat on _Chat {
 
   Future<void> onKeyboardSubmitted(String aString) async {
     qqq(aString);
-    final String textToSend = textInInput.q.trim();
+    final textToSend = textInInput.q.trim();
     if (tryShowInputBarDebuggerByPassword(textToSend)) return;
 
     final generating = P.rwkv.generating.q;
@@ -490,7 +490,7 @@ extension $Chat on _Chat {
   }
 
   void cancelEditing({bool clearInput = false}) {
-    final int? editingIndex = P.msg.editingOrRegeneratingIndex.q;
+    final editingIndex = P.msg.editingOrRegeneratingIndex.q;
     if (editingIndex == null && !clearInput) return;
     P.msg.editingOrRegeneratingIndex.q = null;
     if (!clearInput) return;
@@ -556,11 +556,11 @@ extension $Chat on _Chat {
     required int index,
     required Message msg,
   }) async {
-    final bool canDeleteCurrentBranch = P.msg.siblingCount(msg) > 1;
+    final canDeleteCurrentBranch = P.msg.siblingCount(msg) > 1;
     if (!canEdit && !canCopy && !canDeleteCurrentBranch) return;
     if (!P.app.isMobile.q) return;
 
-    final _UserMessageMenuAction? selectedAction = await _showMobileUserMessageMenu(
+    final selectedAction = await _showMobileUserMessageMenu(
       context: context,
       canEdit: canEdit,
       canCopy: canCopy,
@@ -589,8 +589,8 @@ extension $Chat on _Chat {
     required bool canCopy,
     required bool canDeleteCurrentBranch,
   }) async {
-    final S s = S.of(context);
-    final List<SheetAction<_UserMessageMenuAction>> actions = [
+    final s = S.of(context);
+    final actions = <SheetAction<_UserMessageMenuAction>>[
       if (canEdit) SheetAction(label: s.edit, key: .edit),
       if (canCopy) SheetAction(label: s.copy_text, key: .copy),
       if (canDeleteCurrentBranch) SheetAction(label: s.delete_current_branch, key: .deleteCurrentBranch),
@@ -862,7 +862,7 @@ extension $Chat on _Chat {
     final frequencyPenalty = P.rwkv.arguments(Argument.frequencyPenalty).q;
     final penaltyDecay = P.rwkv.arguments(Argument.penaltyDecay).q;
 
-    final List<SamplerAndPenaltyParam> newValue = List.generate(
+    final newValue = List<SamplerAndPenaltyParam>.generate(
       100,
       (index) => SamplerAndPenaltyParam(
         temperature: temperature,
@@ -962,8 +962,8 @@ extension _$Chat on _Chat {
     if (conversationTokensCount == null) return;
     if (conversationTokensCount < Config.newConversationTokenReminderThreshold) return;
 
-    final int conversationId = P.msg.msgNode.q.createAtInUS;
-    final Set<int> shownConversationIds = tokenReminderShownConversationIds.q;
+    final conversationId = P.msg.msgNode.q.createAtInUS;
+    final shownConversationIds = tokenReminderShownConversationIds.q;
     if (shownConversationIds.contains(conversationId)) return;
 
     tokenReminderShownConversationIds.q = {
@@ -1098,8 +1098,8 @@ extension _$Chat on _Chat {
     }
 
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
-    final double? finalPrefillSpeed = snapshotPrefillSpeed ?? msg.prefillSpeed;
-    final double? finalDecodeSpeed = snapshotDecodeSpeed ?? msg.decodeSpeed;
+    final finalPrefillSpeed = snapshotPrefillSpeed ?? msg.prefillSpeed;
+    final finalDecodeSpeed = snapshotDecodeSpeed ?? msg.decodeSpeed;
 
     _liveTokenCountThrottler.cancel();
     P.rwkv.stop();
@@ -1112,7 +1112,7 @@ extension _$Chat on _Chat {
       decodeSpeed: finalDecodeSpeed,
     );
     P.msg._syncMsg(id, newMsg);
-    final String currentGeneratedContent = id == receiveId.q ? receivedTokens.q : newMsg.content;
+    final currentGeneratedContent = id == receiveId.q ? receivedTokens.q : newMsg.content;
     unawaited(
       _refreshTokenCountsForMessage(
         messageId: id,
@@ -1198,10 +1198,10 @@ extension _$Chat on _Chat {
     if (id == Config.chatPrefillId) return;
 
     final receivedTokens = this.receivedTokens.q;
-    final Message? currentMessage = P.msg.pool.q[id];
+    final currentMessage = P.msg.pool.q[id];
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
-    final double? finalPrefillSpeed = snapshotPrefillSpeed ?? currentMessage?.prefillSpeed;
-    final double? finalDecodeSpeed = snapshotDecodeSpeed ?? currentMessage?.decodeSpeed;
+    final finalPrefillSpeed = snapshotPrefillSpeed ?? currentMessage?.prefillSpeed;
+    final finalDecodeSpeed = snapshotDecodeSpeed ?? currentMessage?.decodeSpeed;
 
     _updateMessageById(
       id: id,
@@ -1312,16 +1312,16 @@ extension _$Chat on _Chat {
   }
 
   (double? prefillSpeed, double? decodeSpeed) _currentSpeedSnapshotForStore() {
-    final double currentPrefillSpeed = P.rwkv.prefillSpeed.q;
-    final double currentDecodeSpeed = P.rwkv.decodeSpeed.q;
-    final double? snapshotPrefillSpeed = currentPrefillSpeed > 0 ? currentPrefillSpeed : null;
-    final double? snapshotDecodeSpeed = currentDecodeSpeed > 0 ? currentDecodeSpeed : null;
+    final currentPrefillSpeed = P.rwkv.prefillSpeed.q;
+    final currentDecodeSpeed = P.rwkv.decodeSpeed.q;
+    final snapshotPrefillSpeed = currentPrefillSpeed > 0 ? currentPrefillSpeed : null;
+    final snapshotDecodeSpeed = currentDecodeSpeed > 0 ? currentDecodeSpeed : null;
     return (snapshotPrefillSpeed, snapshotDecodeSpeed);
   }
 
   void _onMessageIdsChangedForTokenCount(List<int> messageIds) {
     _refreshTokenCountEpoch = _refreshTokenCountEpoch + 1;
-    final int epoch = _refreshTokenCountEpoch;
+    final epoch = _refreshTokenCountEpoch;
     unawaited(_refreshMissingTokenCountsForMessages(messageIds: messageIds, epoch: epoch));
   }
 
@@ -1329,18 +1329,18 @@ extension _$Chat on _Chat {
     required List<int> messageIds,
     required int epoch,
   }) async {
-    for (final int messageId in messageIds) {
+    for (final messageId in messageIds) {
       if (epoch != _refreshTokenCountEpoch) return;
-      final Message? message = P.msg.pool.q[messageId];
+      final message = P.msg.pool.q[messageId];
       if (message == null || message.isMine || message.type != MessageType.text) continue;
-      final int? existingMessageCount = P.msg.getBottomMessageTokensCount(messageId: messageId);
-      final int? existingConversationCount = P.msg.getBottomConversationTokensCount(messageId: messageId);
-      final int? persistedMessageCount = message.messageTokensCount;
-      final int? persistedConversationCount = message.conversationTokensCount;
-      final bool hasCachedCount = existingMessageCount != null && existingConversationCount != null;
-      final bool hasPersistedCount = persistedMessageCount != null && persistedConversationCount != null;
+      final existingMessageCount = P.msg.getBottomMessageTokensCount(messageId: messageId);
+      final existingConversationCount = P.msg.getBottomConversationTokensCount(messageId: messageId);
+      final persistedMessageCount = message.messageTokensCount;
+      final persistedConversationCount = message.conversationTokensCount;
+      final hasCachedCount = existingMessageCount != null && existingConversationCount != null;
+      final hasPersistedCount = persistedMessageCount != null && persistedConversationCount != null;
       if (hasCachedCount || hasPersistedCount) {
-        final int? observedConversationCount = persistedConversationCount ?? existingConversationCount;
+        final observedConversationCount = persistedConversationCount ?? existingConversationCount;
         _onConversationTokenCountObserved(conversationTokensCount: observedConversationCount);
         if (!message.changing && hasPersistedCount && !hasCachedCount) {
           P.msg.setBottomTokensCount(
@@ -1351,7 +1351,7 @@ extension _$Chat on _Chat {
         }
         continue;
       }
-      final String? overrideBotContent = message.changing && receiveId.q == messageId ? receivedTokens.q : null;
+      final overrideBotContent = message.changing && receiveId.q == messageId ? receivedTokens.q : null;
       await _refreshTokenCountsForMessage(
         messageId: messageId,
         overrideBotContent: overrideBotContent,
@@ -1365,7 +1365,7 @@ extension _$Chat on _Chat {
     required String liveBotContent,
   }) {
     _liveTokenCountThrottler.call(() {
-      final Message? latestMessage = P.msg.pool.q[messageId];
+      final latestMessage = P.msg.pool.q[messageId];
       if (latestMessage == null || !latestMessage.changing) return;
       unawaited(_refreshTokenCountsForMessage(messageId: messageId, overrideBotContent: liveBotContent));
     });
@@ -1376,7 +1376,7 @@ extension _$Chat on _Chat {
     String? overrideBotContent,
     bool persistToMessage = false,
   }) async {
-    final Message? message = P.msg.pool.q[messageId];
+    final message = P.msg.pool.q[messageId];
     if (message == null || message.isMine || message.type != MessageType.text) return;
 
     String botContent = overrideBotContent ?? message.content;
@@ -1384,22 +1384,22 @@ extension _$Chat on _Chat {
       botContent = receivedTokens.q;
     }
 
-    final List<String>? history = _historyForTokenCountUntilMessage(
+    final history = _historyForTokenCountUntilMessage(
       messageId: messageId,
       overrideBotContent: botContent,
     );
     if (history == null || history.isEmpty) return;
 
-    final List<int?> counts = await Future.wait([
+    final counts = await Future.wait([
       P.rwkv.calculateTokensCountRaw(text: botContent),
       P.rwkv.calculateTokensCountFromMessages(messages: history),
     ]);
-    final int? messageTokensCount = counts[0];
-    final int? conversationTokensCount = counts[1];
+    final messageTokensCount = counts[0];
+    final conversationTokensCount = counts[1];
     if (messageTokensCount == null && conversationTokensCount == null) return;
-    final Message? latestMessage = P.msg.pool.q[messageId];
+    final latestMessage = P.msg.pool.q[messageId];
     if (latestMessage == null) return;
-    final int? observedConversationTokensCount = conversationTokensCount ?? latestMessage.conversationTokensCount;
+    final observedConversationTokensCount = conversationTokensCount ?? latestMessage.conversationTokensCount;
     _onConversationTokenCountObserved(conversationTokensCount: observedConversationTokensCount);
 
     P.msg.setBottomTokensCount(
@@ -1410,15 +1410,15 @@ extension _$Chat on _Chat {
 
     if (!persistToMessage) return;
 
-    final int? resolvedMessageTokensCount = messageTokensCount ?? latestMessage.messageTokensCount;
-    final int? resolvedConversationTokensCount = conversationTokensCount ?? latestMessage.conversationTokensCount;
+    final resolvedMessageTokensCount = messageTokensCount ?? latestMessage.messageTokensCount;
+    final resolvedConversationTokensCount = conversationTokensCount ?? latestMessage.conversationTokensCount;
     if (resolvedMessageTokensCount == null && resolvedConversationTokensCount == null) return;
 
-    final bool noMessageCountChanges = resolvedMessageTokensCount == latestMessage.messageTokensCount;
-    final bool noConversationCountChanges = resolvedConversationTokensCount == latestMessage.conversationTokensCount;
+    final noMessageCountChanges = resolvedMessageTokensCount == latestMessage.messageTokensCount;
+    final noConversationCountChanges = resolvedConversationTokensCount == latestMessage.conversationTokensCount;
     if (noMessageCountChanges && noConversationCountChanges) return;
 
-    final Message updatedMessage = latestMessage.copyWith(
+    final updatedMessage = latestMessage.copyWith(
       messageTokensCount: resolvedMessageTokensCount,
       conversationTokensCount: resolvedConversationTokensCount,
     );
@@ -1429,27 +1429,27 @@ extension _$Chat on _Chat {
     required int messageId,
     String? overrideBotContent,
   }) {
-    final MsgNode? targetNode = P.msg.msgNode.q.findNodeByMsgId(messageId);
+    final targetNode = P.msg.msgNode.q.findNodeByMsgId(messageId);
     if (targetNode == null) return null;
-    final List<int> idsFromTargetToRoot = P.msg.msgNode.q.msgIdsFrom(targetNode);
-    final List<int> orderedPathIds = idsFromTargetToRoot.reversed.where((int id) => id != 0).toList();
+    final idsFromTargetToRoot = P.msg.msgNode.q.msgIdsFrom(targetNode);
+    final orderedPathIds = idsFromTargetToRoot.reversed.where((int id) => id != 0).toList();
     if (orderedPathIds.isEmpty) return null;
 
-    final List<Message> scopedMessages = [];
-    for (final int id in orderedPathIds) {
-      final Message? pathMessage = P.msg.pool.q[id];
+    final scopedMessages = <Message>[];
+    for (final id in orderedPathIds) {
+      final pathMessage = P.msg.pool.q[id];
       if (pathMessage == null) continue;
       if (pathMessage.type != MessageType.text) continue;
       scopedMessages.add(pathMessage);
     }
     if (scopedMessages.isEmpty) return null;
 
-    final List<String> history = [];
-    final bool isSingleTurnPath = scopedMessages.length == 2 && scopedMessages.first.isMine;
+    final history = <String>[];
+    final isSingleTurnPath = scopedMessages.length == 2 && scopedMessages.first.isMine;
     if (isSingleTurnPath) {
-      final String template = P.preference.promptTemplate.newChatTemplate.trim();
+      final template = P.preference.promptTemplate.newChatTemplate.trim();
       if (template.isNotEmpty) {
-        final List<String> templateMessages = template.split("\n\n").where((String entry) => entry.isNotEmpty).toList();
+        final templateMessages = template.split("\n\n").where((String entry) => entry.isNotEmpty).toList();
         history.addAll(templateMessages);
       }
     }
@@ -1475,13 +1475,13 @@ extension _$Chat on _Chat {
   }
 
   String? _resolveDecodeParamsSnapshotRaw() {
-    final List<SamplerAndPenaltyParam> backendParams = P.rwkv.backendBatchParams.q;
+    final backendParams = P.rwkv.backendBatchParams.q;
     if (backendParams.isNotEmpty) return backendParams.rawDecodeParams;
 
-    final List<SamplerAndPenaltyParam> frontendParams = P.rwkv.frontendBatchParams.q;
+    final frontendParams = P.rwkv.frontendBatchParams.q;
     if (frontendParams.isNotEmpty) return frontendParams.rawDecodeParams;
 
-    final SamplerAndPenaltyParam currentParam = SamplerAndPenaltyParam(
+    final currentParam = SamplerAndPenaltyParam(
       temperature: P.rwkv.arguments(Argument.temperature).q,
       topP: P.rwkv.arguments(Argument.topP).q,
       presencePenalty: P.rwkv.arguments(Argument.presencePenalty).q,
@@ -1518,7 +1518,7 @@ extension _$Chat on _Chat {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
         if (completionMode.q) return;
-        final int? currentReceiveId = receiveId.q;
+        final currentReceiveId = receiveId.q;
         if (currentReceiveId != null) {
           _scheduleRefreshLiveTokenCounts(
             messageId: currentReceiveId,
@@ -1534,7 +1534,7 @@ extension _$Chat on _Chat {
         final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
         receivedTokens.q = responseBufferContent;
         if (completionMode.q) return;
-        final int? currentReceiveId = receiveId.q;
+        final currentReceiveId = receiveId.q;
         if (currentReceiveId != null) {
           _scheduleRefreshLiveTokenCounts(
             messageId: currentReceiveId,

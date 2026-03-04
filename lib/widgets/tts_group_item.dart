@@ -374,7 +374,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
         loadingStatus[widget.fileInfo] == .loading ||
         loadingStatus[widget.fileInfo] == .loadModelWithExtra ||
         loadingStatus[widget.fileInfo] == .setQnnLibraryPath;
-    final double? modelLoadingProgress = loadingProgress[widget.fileInfo];
+    final modelLoadingProgress = loadingProgress[widget.fileInfo];
 
     if (P.app.pageKey.q == .rolePlaying) {
       alreadyStarted = widget.fileInfo.fileName == rolePlayTTSModel?.id;

@@ -43,11 +43,11 @@ InteractionVisualColors _previewInteractionVisualColors({
         state: .enabled,
       );
     case .idleInteractive:
-      final InteractionVisualColors unavailableColors = interactionVisualColors(
+      final unavailableColors = interactionVisualColors(
         appTheme: appTheme,
         state: .unavailable,
       );
-      final InteractionVisualColors availableColors = interactionVisualColors(
+      final availableColors = interactionVisualColors(
         appTheme: appTheme,
         state: .available,
       );
@@ -89,11 +89,11 @@ class PageInteractionsPreview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final qb = ref.watch(P.app.qb);
-    final AppTheme preferredDarkTheme = ref.watch(P.preference.preferredDarkCustomTheme);
-    final AppTheme darkTheme = preferredDarkTheme == AppTheme.light ? AppTheme.lightsOut : preferredDarkTheme;
-    final double viewportWidth = MediaQuery.sizeOf(context).width;
+    final preferredDarkTheme = ref.watch(P.preference.preferredDarkCustomTheme);
+    final darkTheme = preferredDarkTheme == AppTheme.light ? AppTheme.lightsOut : preferredDarkTheme;
+    final viewportWidth = MediaQuery.sizeOf(context).width;
     const double paneGap = 12;
-    final double preferredPaneWidth = (viewportWidth - 32 - paneGap) / 2;
+    final preferredPaneWidth = (viewportWidth - 32 - paneGap) / 2;
     final double paneWidth = preferredPaneWidth < 560 ? 560 : preferredPaneWidth;
 
     return Scaffold(
@@ -184,8 +184,8 @@ class _ThemePreviewPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color primaryText = previewTheme.qb0;
-    final Color secondaryText = previewTheme.qb0.q(.72);
+    final primaryText = previewTheme.qb0;
+    final secondaryText = previewTheme.qb0.q(.72);
 
     return Container(
       padding: const .all(4),
@@ -300,8 +300,8 @@ class _StateSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color primaryText = previewTheme.qb0;
-    final Color secondaryText = previewTheme.qb0.q(.72);
+    final primaryText = previewTheme.qb0;
+    final secondaryText = previewTheme.qb0.q(.72);
 
     return Container(
       padding: const .all(12),
@@ -371,7 +371,7 @@ class _InteractionsPreviewRow extends StatelessWidget {
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final textScaleFactor = MediaQuery.textScalerOf(context);
     final height = textScaleFactor.scale(fontSize) + 20;
-    final List<String> modeLabels = _modeLabelsForState(state);
+    final modeLabels = _modeLabelsForState(state);
 
     return Column(
       crossAxisAlignment: .start,
@@ -500,7 +500,7 @@ class _ButtonShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final InteractionVisualColors colors = _previewInteractionVisualColors(
+    final colors = _previewInteractionVisualColors(
       appTheme: previewTheme,
       state: state,
     );
@@ -541,7 +541,7 @@ class _WebSearchPreviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool showDeepLabel = state == _PreviewInteractionState.enabled;
+    final showDeepLabel = state == _PreviewInteractionState.enabled;
     final _PreviewInteractionState visualState = switch (state) {
       _PreviewInteractionState.defaultOnBatchModel => .idleInteractive,
       _ => state,
@@ -579,11 +579,11 @@ class _ThinkingPreviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final InteractionVisualColors colors = _previewInteractionVisualColors(
+    final colors = _previewInteractionVisualColors(
       appTheme: previewTheme,
       state: state,
     );
-    final String thinkingLabel = switch (state) {
+    final thinkingLabel = switch (state) {
       _PreviewInteractionState.unavailable => "关",
       _PreviewInteractionState.idleInteractive => "关",
       _PreviewInteractionState.available => "快",
@@ -631,9 +631,9 @@ class _DecodePreviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool isUnavailable = state == _PreviewInteractionState.unavailable;
+    final isUnavailable = state == _PreviewInteractionState.unavailable;
     final _PreviewInteractionState visualState = isUnavailable ? .unavailable : .available;
-    final bool showingCreative = state == _PreviewInteractionState.enabled;
+    final showingCreative = state == _PreviewInteractionState.enabled;
 
     return _ButtonShell(
       previewTheme: previewTheme,
@@ -665,7 +665,7 @@ class _BatchPreviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool enabled = state == _PreviewInteractionState.enabled;
+    final enabled = state == _PreviewInteractionState.enabled;
     final _PreviewInteractionState visualState = switch (state) {
       _PreviewInteractionState.unavailable => .unavailable,
       _PreviewInteractionState.enabled => .enabled,
@@ -704,7 +704,7 @@ class _WenyanPreviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool enabled = state == _PreviewInteractionState.enabled;
+    final enabled = state == _PreviewInteractionState.enabled;
     final _PreviewInteractionState visualState = switch (state) {
       _PreviewInteractionState.unavailable => .unavailable,
       _PreviewInteractionState.idleInteractive => .idleInteractive,

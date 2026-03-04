@@ -35,21 +35,21 @@ class InputTextField extends ConsumerWidget {
     final isChat = demoType == .chat;
     final isTalk = demoType == .tts;
     final isSee = demoType == .see;
-    final int? editingOrRegeneratingIndex = isChat ? ref.watch(P.msg.editingOrRegeneratingIndex) : null;
-    final bool editingMessage = editingOrRegeneratingIndex != null;
+    final editingOrRegeneratingIndex = isChat ? ref.watch(P.msg.editingOrRegeneratingIndex) : null;
+    final editingMessage = editingOrRegeneratingIndex != null;
 
     final imagePath = isSee ? ref.watch(P.see.imagePath) : null;
     final hasAtLeastOneImage = isSee ? ref.watch(P.msg.hasAtLeastOneImage) : false;
     final hasCurrentImage = imagePath != null && imagePath.isNotEmpty;
     final shouldGuideImageSelection = isSee && !hasCurrentImage && !hasAtLeastOneImage;
-    final String? selectedSourceWavPath = isTalk ? ref.watch(P.talk.selectSourceAudioPath) : null;
-    final String? selectedSpkName = isTalk ? ref.watch(P.talk.selectedSpkName) : null;
-    final String? sourceWavName = selectedSourceWavPath == null ? null : path.basename(selectedSourceWavPath);
-    final bool hasSourceWav = sourceWavName != null && sourceWavName.isNotEmpty;
-    final bool hasSelectedSpk = selectedSpkName != null && selectedSpkName.isNotEmpty;
-    final String selectedSpkDisplay = hasSelectedSpk ? _buildSpkDisplay(selectedSpkName) : "";
-    final String selectedVoiceDisplayName = hasSourceWav ? sourceWavName : selectedSpkDisplay;
-    final bool hasSelectedVoice = selectedVoiceDisplayName.isNotEmpty;
+    final selectedSourceWavPath = isTalk ? ref.watch(P.talk.selectSourceAudioPath) : null;
+    final selectedSpkName = isTalk ? ref.watch(P.talk.selectedSpkName) : null;
+    final sourceWavName = selectedSourceWavPath == null ? null : path.basename(selectedSourceWavPath);
+    final hasSourceWav = sourceWavName != null && sourceWavName.isNotEmpty;
+    final hasSelectedSpk = selectedSpkName != null && selectedSpkName.isNotEmpty;
+    final selectedSpkDisplay = hasSelectedSpk ? _buildSpkDisplay(selectedSpkName) : "";
+    final selectedVoiceDisplayName = hasSourceWav ? sourceWavName : selectedSpkDisplay;
+    final hasSelectedVoice = selectedVoiceDisplayName.isNotEmpty;
 
     String hintText;
     switch (demoType) {
@@ -286,7 +286,7 @@ class InputTextField extends ConsumerWidget {
   String _buildSpkDisplay(String? selectedSpkName) {
     if (selectedSpkName == null || selectedSpkName.isEmpty) return "";
     final (String flag, String nameCN, String nameEN) = P.talk.getSpkInfo(selectedSpkName);
-    final List<String> displayParts = <String>[
+    final displayParts = <String>[
       if (flag.isNotEmpty) flag,
       if (nameCN.isNotEmpty) nameCN,
       if (nameEN.isNotEmpty) nameEN,
@@ -320,11 +320,11 @@ class _EditingMessageBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final S s = S.of(context);
-    final Color primary = theme.colorScheme.primary;
-    final Color onSurface = theme.colorScheme.onSurface;
-    final Color bgColor = theme.colorScheme.surfaceContainer.q(.72);
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final primary = theme.colorScheme.primary;
+    final onSurface = theme.colorScheme.onSurface;
+    final bgColor = theme.colorScheme.surfaceContainer.q(.72);
 
     return Padding(
       padding: const .fromLTRB(8, 8, 8, 2),
@@ -569,9 +569,9 @@ class _TalkSourceVoiceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final theme = Theme.of(context);
-    final Color primary = theme.colorScheme.primary;
-    final Color surfaceContainer = theme.colorScheme.surfaceContainer;
-    final Color onSurface = theme.colorScheme.onSurface;
+    final primary = theme.colorScheme.primary;
+    final surfaceContainer = theme.colorScheme.surfaceContainer;
+    final onSurface = theme.colorScheme.onSurface;
 
     return Padding(
       padding: const .fromLTRB(8, 8, 8, 6),
@@ -650,8 +650,8 @@ class _TalkSourceQuickButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final theme = Theme.of(context);
-    final Color primary = theme.colorScheme.primary;
-    final Color onSurface = theme.colorScheme.onSurface;
+    final primary = theme.colorScheme.primary;
+    final onSurface = theme.colorScheme.onSurface;
     final appTheme = ref.watch(P.app.theme);
     final sendingButtonTouchMinSize = appTheme.sendingButtonTouchMinSize;
 

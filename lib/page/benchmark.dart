@@ -70,7 +70,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
     final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final s = S.of(context);
-    final ThemeData benchmarkTheme = theme.copyWith(
+    final benchmarkTheme = theme.copyWith(
       tabBarTheme: theme.tabBarTheme.copyWith(
         dividerColor: qb.q(.16),
         indicatorColor: qb.q(.5),
@@ -250,14 +250,14 @@ class _TestState extends ConsumerState<_Test> {
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final String socNameDisplay = socName.isEmpty ? "Unknown" : socName;
-    final ButtonStyle neutralOutlinedStyle = OutlinedButton.styleFrom(
+    final socNameDisplay = socName.isEmpty ? "Unknown" : socName;
+    final neutralOutlinedStyle = OutlinedButton.styleFrom(
       foregroundColor: qb,
       backgroundColor: appTheme.settingItem,
       side: BorderSide(color: qb.q(.2), width: .5),
       textStyle: theme.textTheme.bodyMedium,
     );
-    final ButtonStyle neutralFilledStyle = FilledButton.styleFrom(
+    final neutralFilledStyle = FilledButton.styleFrom(
       backgroundColor: qb.q(.15),
       foregroundColor: qb,
       disabledBackgroundColor: qb.q(.08),
@@ -606,7 +606,7 @@ class _LambadaTestControlButtons extends ConsumerWidget {
     final isRunning = ref.watch(P.lambada.autoStartNextTest);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final ButtonStyle neutralButtonStyle = ElevatedButton.styleFrom(
+    final neutralButtonStyle = ElevatedButton.styleFrom(
       backgroundColor: appTheme.settingItem,
       foregroundColor: qb,
       surfaceTintColor: Colors.transparent,

@@ -93,8 +93,8 @@ Future<String> mergeWavFiles(List<String> filePaths) async {
     if (!await file.exists()) {
       throw FileSystemException("File not found", filePath);
     }
-    final Uint8List fileBytes = await file.readAsBytes();
-    final ByteData byteDataView = ByteData.view(fileBytes.buffer);
+    final fileBytes = await file.readAsBytes();
+    final byteDataView = ByteData.view(fileBytes.buffer);
 
     final dataChunkInfo = _findWavDataChunkInfo(fileBytes);
     if (dataChunkInfo == null) {
@@ -106,12 +106,12 @@ Future<String> mergeWavFiles(List<String> filePaths) async {
       throw FormatException("Data chunk size indicates data beyond file length in $filePath. File might be corrupted.");
     }
 
-    final Uint8List currentAudioData = fileBytes.sublist(audioDataStartOffset, audioDataStartOffset + dataChunkSizeBytes);
+    final currentAudioData = fileBytes.sublist(audioDataStartOffset, audioDataStartOffset + dataChunkSizeBytes);
 
     if (sampleRate == null) {
       // First valid file, extract format details from 'fmt ' chunk
-      final int fmtChunkSizeFromFile = byteDataView.getUint32(16, Endian.little);
-      final int audioFormat = byteDataView.getUint16(20, Endian.little);
+      final fmtChunkSizeFromFile = byteDataView.getUint32(16, Endian.little);
+      final audioFormat = byteDataView.getUint16(20, Endian.little);
 
       if (fmtChunkSizeFromFile < 16 || audioFormat != 1) {
         // Standard PCM format requires 'fmt ' chunk size of at least 16 bytes
@@ -127,14 +127,14 @@ Future<String> mergeWavFiles(List<String> filePaths) async {
       }
     } else {
       // Validate subsequent files against the first one's parameters
-      final int currentFmtChunkSize = byteDataView.getUint32(16, Endian.little);
-      final int currentAudioFormat = byteDataView.getUint16(20, Endian.little);
+      final currentFmtChunkSize = byteDataView.getUint32(16, Endian.little);
+      final currentAudioFormat = byteDataView.getUint16(20, Endian.little);
       if (currentFmtChunkSize < 16 || currentAudioFormat != 1) {
         throw FormatException("Unsupported 'fmt ' chunk in $filePath during validation. Requires PCM format.");
       }
-      final int currentNumChannels = byteDataView.getUint16(22, Endian.little);
-      final int currentSampleRate = byteDataView.getUint32(24, Endian.little);
-      final int currentBitsPerSample = byteDataView.getUint16(34, Endian.little);
+      final currentNumChannels = byteDataView.getUint16(22, Endian.little);
+      final currentSampleRate = byteDataView.getUint32(24, Endian.little);
+      final currentBitsPerSample = byteDataView.getUint16(34, Endian.little);
 
       if (currentNumChannels != numChannels || currentSampleRate != sampleRate || currentBitsPerSample != bitsPerSample) {
         throw FormatException(
@@ -155,7 +155,7 @@ Future<String> mergeWavFiles(List<String> filePaths) async {
     throw StateError("No audio data could be extracted from the provided files.");
   }
 
-  final ByteData newHeader = ByteData(44);
+  final newHeader = ByteData(44);
   // RIFF chunk
   newHeader.setUint8(0, 0x52); // 'R'
   newHeader.setUint8(1, 0x49); // 'I'
@@ -175,9 +175,9 @@ Future<String> mergeWavFiles(List<String> filePaths) async {
   newHeader.setUint16(20, 1, Endian.little); // AudioFormat (1 for PCM)
   newHeader.setUint16(22, numChannels, Endian.little);
   newHeader.setUint32(24, sampleRate, Endian.little);
-  final int byteRate = sampleRate * numChannels * (bitsPerSample ~/ 8);
+  final byteRate = sampleRate * numChannels * (bitsPerSample ~/ 8);
   newHeader.setUint32(28, byteRate, Endian.little);
-  final int blockAlign = numChannels * (bitsPerSample ~/ 8);
+  final blockAlign = numChannels * (bitsPerSample ~/ 8);
   newHeader.setUint16(32, blockAlign, Endian.little);
   newHeader.setUint16(34, bitsPerSample, Endian.little);
   // "data" sub-chunk
@@ -187,12 +187,12 @@ Future<String> mergeWavFiles(List<String> filePaths) async {
   newHeader.setUint8(39, 0x61); // 'a'
   newHeader.setUint32(40, totalAudioDataLength, Endian.little);
 
-  final BytesBuilder mergedBytesBuilder = BytesBuilder(copy: false);
+  final mergedBytesBuilder = BytesBuilder(copy: false);
   mergedBytesBuilder.add(newHeader.buffer.asUint8List());
   for (final segment in audioDataSegments) {
     mergedBytesBuilder.add(segment);
   }
-  final Uint8List finalWavBytes = mergedBytesBuilder.toBytes();
+  final finalWavBytes = mergedBytesBuilder.toBytes();
 
   final outputFile = File(outputFilePath);
   await outputFile.writeAsBytes(finalWavBytes, flush: true);

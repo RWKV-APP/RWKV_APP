@@ -30,21 +30,21 @@ class LoadingProgressButtonContent extends ConsumerWidget {
       return 0.0;
     }
 
-    final double safe = progress.clamp(0.0, 1.0).toDouble();
+    final safe = progress.clamp(0.0, 1.0).toDouble();
     return safe;
   }
 
   static int progressToPercent(double? progress) {
-    final double safeProgress = normalizeProgress(progress);
-    final int progressPercent = (safeProgress * 100).round();
+    final safeProgress = normalizeProgress(progress);
+    final progressPercent = (safeProgress * 100).round();
     return progressPercent.clamp(0, 100);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final double safeProgress = normalizeProgress(progress);
-    final int progressPercent = progressToPercent(progress);
+    final safeProgress = normalizeProgress(progress);
+    final progressPercent = progressToPercent(progress);
 
     final monospaceFF = ref.watch(P.font.finalMonospaceFontFamily);
 
