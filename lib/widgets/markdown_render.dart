@@ -31,15 +31,18 @@ class MarkdownRender extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final textScaler = MediaQuery.textScalerOf(context);
     final primary = theme.colorScheme.primary;
     const scale = Config.msgFontScale;
+    final textScaleFactor = textScaler.scale(1.0);
+    final effectiveScale = scale * textScaleFactor;
     final qb = ref.watch(P.app.qb);
     final gptMarkdownStyle = TextStyle(
       color: color ?? qb,
-      fontSize: Config.markdownBodyFontSize * scale,
+      fontSize: Config.markdownBodyFontSize * effectiveScale,
     );
 
-    final headerFontSizes = Config.markdownHeaderFontSizes.map((e) => e * scale).toList();
+    final headerFontSizes = Config.markdownHeaderFontSizes.map((e) => e * effectiveScale).toList();
 
     final gptThemeData = GptMarkdownTheme.of(context).copyWith(
       h1: TextStyle(fontSize: headerFontSizes[0], fontWeight: .w500),
@@ -61,6 +64,7 @@ class MarkdownRender extends ConsumerWidget {
       raw.replaceAll("\n\n", "\n").trim(),
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
+      textScaler: .noScaling,
       inlineComponents: inlineComponents,
       addNewLineAfterH1: false,
       orderedListBuilder: (context, no, child, config) => OrderedListView(
@@ -81,19 +85,24 @@ class MarkdownRender extends ConsumerWidget {
       highlightBuilder: (context, text, style) => _Highlight(text: text, style: style),
     );
 
-    return Theme(
-      data: theme.copyWith(
-        checkboxTheme: CheckboxThemeData(
-          visualDensity: const VisualDensity(horizontal: -4.0, vertical: -4.0),
-          side: BorderSide(width: 1, color: primary),
-          shape: RoundedRectangleBorder(borderRadius: .circular(4)),
-          materialTapTargetSize: .shrinkWrap,
+    return MediaQuery.withNoTextScaling(
+      child: Theme(
+        data: theme.copyWith(
+          checkboxTheme: CheckboxThemeData(
+            visualDensity: const VisualDensity(horizontal: -4.0, vertical: -4.0),
+            side: BorderSide(width: 1, color: primary),
+            shape: RoundedRectangleBorder(borderRadius: .circular(4)),
+            materialTapTargetSize: .shrinkWrap,
+          ),
+          textTheme: theme.textTheme.apply(fontSizeFactor: effectiveScale),
         ),
-        textTheme: theme.textTheme.apply(fontSizeFactor: scale),
-      ),
-      child: GptMarkdownTheme(
-        gptThemeData: gptThemeData,
-        child: gptMarkdown,
+        child: DefaultTextStyle.merge(
+          style: gptMarkdownStyle,
+          child: GptMarkdownTheme(
+            gptThemeData: gptThemeData,
+            child: gptMarkdown,
+          ),
+        ),
       ),
     );
   }
