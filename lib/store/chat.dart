@@ -83,16 +83,6 @@ class _Chat {
 
 /// Public methods
 extension $Chat on _Chat {
-  bool tryShowInputBarDebuggerByPassword(String text) {
-    final input = text.trim();
-    if (input != Config.inputBarDebuggerPassword) return false;
-    inputBarDebuggerShown.q = true;
-    textEditingController.clear();
-    textInInput.q = "";
-    focusNode.unfocus();
-    return true;
-  }
-
   void clearMessages() {
     P.msg._clear();
   }
@@ -348,7 +338,6 @@ extension $Chat on _Chat {
     required DemoType preferredDemoType,
   }) async {
     final textToSend = textInInput.q.trim();
-    if (tryShowInputBarDebuggerByPassword(textToSend)) return;
 
     if (P.app.demoType.q == .tts) {
       await P.talk.gen();
@@ -469,7 +458,6 @@ extension $Chat on _Chat {
   Future<void> onKeyboardSubmitted(String aString) async {
     qqq(aString);
     final textToSend = textInInput.q.trim();
-    if (tryShowInputBarDebuggerByPassword(textToSend)) return;
 
     final generating = P.rwkv.generating.q;
 
