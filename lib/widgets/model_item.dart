@@ -446,7 +446,6 @@ class _FileKeyItem extends ConsumerWidget {
     double networkSpeed = localFile.networkSpeed.clamp(0, 99999999).toDouble();
     Duration timeRemaining = localFile.timeRemaining;
     if (timeRemaining.isNegative) timeRemaining = Duration.zero;
-    final primary = Theme.of(getContext()!).colorScheme.primary;
     final qb = ref.watch(P.app.qb);
 
     final remainText = timeRemaining.inMinutes == 0

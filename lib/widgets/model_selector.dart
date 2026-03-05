@@ -24,6 +24,7 @@ import 'package:zone/model/world_type.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_item.dart';
 import 'package:zone/widgets/model_tag.dart';
 import 'package:zone/widgets/role_play_item.dart';
@@ -600,11 +601,14 @@ class _LocalPthFileItem extends ConsumerWidget {
     final currentModel = ref.watch(P.rwkv.latestModel);
     final isCurrent = currentModel == fileInfo;
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
+    final loadingProgress = ref.watch(P.rwkv.loadingProgress);
 
     final loading =
         loadingStatus[fileInfo] == LoadingStatus.loading ||
         loadingStatus[fileInfo] == LoadingStatus.loadModelWithExtra ||
         loadingStatus[fileInfo] == LoadingStatus.setQnnLibraryPath;
+    final modelLoadingProgress = loadingProgress[fileInfo];
+    final showLoadingProgress = loading;
 
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
@@ -647,22 +651,29 @@ class _LocalPthFileItem extends ConsumerWidget {
             onTap: loading ? null : () => onStartToChat!(),
             child: Container(
               decoration: BoxDecoration(
-                color: primary.q(loading ? .2 : 1),
+                color: loading ? appTheme.qb8 : primary,
                 borderRadius: .circular(4),
               ),
               padding: const .all(8),
-              child: Text(loading ? s.loading : s.start_to_chat, style: TS(c: qw)),
+              child: showLoadingProgress
+                  ? LoadingProgressButtonContent(
+                      progress: modelLoadingProgress,
+                      textStyle: TS(c: qw),
+                      indicatorColor: qw,
+                    )
+                  : Text(s.start_to_chat, style: TS(c: qw)),
             ),
           ),
         if (isCurrent)
           GestureDetector(
             onTap: null,
             child: Container(
-              decoration: BoxDecoration(color: kG.q(.5), borderRadius: 8.r),
+              decoration: BoxDecoration(color: kG.q(.5), borderRadius: 4.r),
               padding: const .all(8),
               child: Text(s.chatting, style: TS(c: qw)),
             ),
           ),
+        2.w,
       ],
     );
   }
