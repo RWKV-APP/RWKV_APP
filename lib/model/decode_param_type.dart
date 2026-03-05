@@ -25,7 +25,7 @@ enum DecodeParamType {
   /// - 强存在惩罚，鼓励探索新话题和词汇
   /// - 适度的频率惩罚，减少重复
   creative(
-    temperature: 0.6,
+    temperature: 1,
     topP: 0.6,
     presencePenalty: 2,
     frequencyPenalty: 0.2,
