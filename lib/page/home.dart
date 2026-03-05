@@ -191,8 +191,10 @@ class _HomeCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              height: maxHeightOfTitle,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: maxHeightOfTitle ?? 0,
+              ),
               child: Center(
                 child: MeasureSize(
                   onChange: (size) {
@@ -201,13 +203,19 @@ class _HomeCard extends ConsumerWidget {
                       heightsKey: size.height,
                     };
                   },
-                  child: Text(title, style: _homeCardTitleTextStyle),
+                  child: Text(
+                    title,
+                    style: _homeCardTitleTextStyle,
+                    textAlign: .center,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 8),
-            SizedBox(
-              height: maxHeightOfDescription,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: maxHeightOfDescription ?? 0,
+              ),
               child: Center(
                 child: MeasureSize(
                   onChange: (size) {
@@ -216,7 +224,11 @@ class _HomeCard extends ConsumerWidget {
                       heightsKey: size.height,
                     };
                   },
-                  child: Text(description, style: _homeCardDescriptionTextStyle),
+                  child: Text(
+                    description,
+                    style: _homeCardDescriptionTextStyle,
+                    textAlign: .center,
+                  ),
                 ),
               ),
             ),
