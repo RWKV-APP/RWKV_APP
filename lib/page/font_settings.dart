@@ -325,8 +325,8 @@ class _SettingsControls extends ConsumerWidget {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: .spaceBetween,
                           children: [
+                            18.w,
                             Text(
                               'A',
                               style: TextStyle(
@@ -334,6 +334,7 @@ class _SettingsControls extends ConsumerWidget {
                                 color: onSurface.q(.6),
                               ),
                             ),
+                            Spacer(),
                             Text(
                               _getScaleLabel(currentScale),
                               style: TextStyle(
@@ -342,6 +343,7 @@ class _SettingsControls extends ConsumerWidget {
                                 color: primary,
                               ),
                             ),
+                            Spacer(),
                             Text(
                               'A',
                               style: TextStyle(
@@ -349,6 +351,7 @@ class _SettingsControls extends ConsumerWidget {
                                 color: onSurface.q(.6),
                               ),
                             ),
+                            18.w,
                           ],
                         ),
                         Slider(

@@ -21,7 +21,7 @@ class Debugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!false) return const SizedBox.shrink();
+    // if (!false) return const SizedBox.shrink();
     if (!kDebugMode) return const SizedBox.shrink();
 
     final demoType = ref.watch(P.app.demoType);
@@ -126,6 +126,11 @@ class Debugger extends ConsumerWidget {
     const showMsgNode = true;
     const showSupportedBatchSizes = true;
 
+    final homeItemTitleHeights = ref.watch(P.ui.homeItemTitleHeights);
+    final homeItemDescriptionHeights = ref.watch(P.ui.homeItemDescriptionHeights);
+    final maxHeightsOfHomeItemTitle = ref.watch(P.ui.maxHeightsOfHomeItemTitle);
+    final maxHeightsOfHomeItemDescription = ref.watch(P.ui.maxHeightsOfHomeItemDescription);
+
     return Positioned(
       left: 0,
       top: 0,
@@ -202,6 +207,14 @@ class Debugger extends ConsumerWidget {
                       Text(shouldUseWrapRatherThanRow.toString()),
                       Text("messageListLayoutKeys".codeToName),
                       Text(messageListLayoutKeys.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+                      Text("homeItemTitleHeights".codeToName),
+                      Text(homeItemTitleHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+                      Text("homeItemDescriptionHeights".codeToName),
+                      Text(homeItemDescriptionHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+                      Text("maxHeightsOfHomeItemTitle".codeToName),
+                      Text(maxHeightsOfHomeItemTitle.toString()),
+                      Text("maxHeightsOfHomeItemDescription".codeToName),
+                      Text(maxHeightsOfHomeItemDescription.toString()),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

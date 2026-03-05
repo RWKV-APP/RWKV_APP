@@ -48,6 +48,29 @@ class _UI {
 
   // from -1.0 to 1.0
   late final gradientForInputBar = qs<double>(1);
+
+  late final homeItemTitleHeights = qs<Map<String, double>>({});
+
+  late final maxHeightsOfHomeItemTitle = qp<double?>((ref) {
+    final _homeItemTitleHeights = ref.watch(homeItemTitleHeights);
+    if (_homeItemTitleHeights.isEmpty) return null;
+    double v = 0.0;
+    for (final key in _homeItemTitleHeights.keys) {
+      v = math.max(v, _homeItemTitleHeights[key] ?? 0.0);
+    }
+    return v;
+  });
+
+  late final homeItemDescriptionHeights = qs<Map<String, double>>({});
+  late final maxHeightsOfHomeItemDescription = qp<double?>((ref) {
+    final _homeItemDescriptionHeights = ref.watch(homeItemDescriptionHeights);
+    if (_homeItemDescriptionHeights.isEmpty) return null;
+    double v = 0.0;
+    for (final key in _homeItemDescriptionHeights.keys) {
+      v = math.max(v, _homeItemDescriptionHeights[key] ?? 0.0);
+    }
+    return v;
+  });
 }
 
 /// Private methods

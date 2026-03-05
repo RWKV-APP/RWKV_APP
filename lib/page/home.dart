@@ -150,8 +150,10 @@ class _HomeCard extends ConsumerWidget {
   final Widget icon;
   final String title;
   final String description;
+  final String heightsKey;
 
   const _HomeCard({
+    required this.heightsKey,
     required this.onTap,
     required this.color,
     required this.icon,
@@ -162,6 +164,8 @@ class _HomeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appTheme = ref.watch(P.app.theme);
+    final maxHeightOfTitle = ref.watch(P.ui.maxHeightsOfHomeItemTitle);
+    final maxHeightOfDescription = ref.watch(P.ui.maxHeightsOfHomeItemDescription);
     return GD(
       onTap: onTap,
       child: Container(
@@ -187,9 +191,35 @@ class _HomeCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            Text(title, style: _homeCardTitleTextStyle),
+            SizedBox(
+              height: maxHeightOfTitle,
+              child: Center(
+                child: MeasureSize(
+                  onChange: (size) {
+                    P.ui.homeItemTitleHeights.q = {
+                      ...P.ui.homeItemTitleHeights.q,
+                      heightsKey: size.height,
+                    };
+                  },
+                  child: Text(title, style: _homeCardTitleTextStyle),
+                ),
+              ),
+            ),
             const SizedBox(height: 8),
-            Text(description, style: _homeCardDescriptionTextStyle),
+            SizedBox(
+              height: maxHeightOfDescription,
+              child: Center(
+                child: MeasureSize(
+                  onChange: (size) {
+                    P.ui.homeItemDescriptionHeights.q = {
+                      ...P.ui.homeItemDescriptionHeights.q,
+                      heightsKey: size.height,
+                    };
+                  },
+                  child: Text(description, style: _homeCardDescriptionTextStyle),
+                ),
+              ),
+            ),
             const SizedBox(height: 6),
           ],
         ),
@@ -206,6 +236,7 @@ class _ChatButton extends ConsumerWidget {
     final s = S.of(context);
 
     return _HomeCard(
+      heightsKey: 'chat',
       onTap: () {
         P.chat.startNewChat();
         push(.chat);
@@ -226,6 +257,7 @@ class _TTSButton extends ConsumerWidget {
     final s = S.of(context);
 
     return _HomeCard(
+      heightsKey: 'tts',
       onTap: () {
         P.chat.startNewChat();
         push(.talk);
@@ -249,6 +281,7 @@ class _VisualButton extends ConsumerWidget {
     final s = S.of(context);
 
     return _HomeCard(
+      heightsKey: 'see',
       onTap: () {
         push(.see);
       },
@@ -268,6 +301,7 @@ class _NekoButton extends ConsumerWidget {
     final s = S.of(context);
 
     return _HomeCard(
+      heightsKey: 'neko',
       onTap: () => _onTap(context),
       color: Colors.pinkAccent,
       icon: const FaIcon(FontAwesomeIcons.cat, color: Colors.white),
@@ -306,6 +340,7 @@ class _CompletionButton extends ConsumerWidget {
     final s = S.of(context);
 
     return _HomeCard(
+      heightsKey: 'completion',
       onTap: () {
         push(.completion);
       },
@@ -326,6 +361,7 @@ class _TranslatorButton extends ConsumerWidget {
     final isDesktop = ref.watch(P.app.isDesktop);
 
     return _HomeCard(
+      heightsKey: 'translator',
       onTap: () {
         if (isDesktop) push(.translator);
         if (!isDesktop) push(.ocr);
@@ -345,6 +381,7 @@ class _BenchmarkButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     return _HomeCard(
+      heightsKey: 'benchmark',
       onTap: () {
         push(.benchmark);
       },
@@ -418,6 +455,7 @@ class _RolePlayButton extends ConsumerWidget {
     final s = S.of(context);
 
     return _HomeCard(
+      heightsKey: 'rolePlaying',
       onTap: () {
         push(.rolePlaying);
       },
