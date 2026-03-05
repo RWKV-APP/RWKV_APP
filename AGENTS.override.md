@@ -86,8 +86,8 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 
 ### 版本与技术栈基线
 
-- Flutter 3.38.3+（stable）。
-- Dart 3.10+（大量使用 Dot Shorthand）。
+- Flutter 3.41.3+（stable）。
+- Dart 3.11.0+（大量使用 Dot Shorthand）。
 - 状态管理：Riverpod（`qs` / `qp` / `qsf` / `qsff`）。
 - 路由：`go_router`。
 - 推理：RWKV（权重加载到显存/统一内存）。

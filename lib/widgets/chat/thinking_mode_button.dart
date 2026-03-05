@@ -72,6 +72,7 @@ class ThinkingModeButton extends ConsumerWidget {
 
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     return AnimatedSize(
@@ -97,7 +98,11 @@ class ThinkingModeButton extends ConsumerWidget {
                   child: Container(
                     padding: padding,
                     decoration: BoxDecoration(
-                      color: color.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                      color: color.q(
+                        userBackdropFilterForInputOptions
+                            ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                            : 1,
+                      ),
                       borderRadius: .circular(60),
                       border: border,
                     ),

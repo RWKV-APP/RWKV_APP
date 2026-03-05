@@ -44,6 +44,7 @@ class BatchButton extends ConsumerWidget {
 
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     return IntrinsicWidth(
@@ -60,7 +61,11 @@ class BatchButton extends ConsumerWidget {
             child: Container(
               height: height,
               decoration: BoxDecoration(
-                color: bgColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                color: bgColor.q(
+                  userBackdropFilterForInputOptions
+                      ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                      : 1,
+                ),
                 borderRadius: .circular(60),
                 border: .all(color: borderColor),
               ),

@@ -30,6 +30,11 @@ class _UI {
   // from 0.0 to 1.0
   late final backdropFilterBgAlphaForInputOptions = qs<double>(.75);
 
+  late final backdropFilterBgAlphaForInputOptionsDarkModifier = qp<double>((ref) {
+    final appTheme = ref.watch(P.app.theme);
+    return appTheme.isLight ? 1.0 : 0.7;
+  });
+
   // from 0.0 to 32.0
   late final sigmaForBackdropFilterForInputOptions = qs<double>(8.0);
 
@@ -39,10 +44,10 @@ class _UI {
   late final sigmaForBackdropFilterForInputTextFields = qs(0.0);
 
   // from -1.0 to 1.0
-  late final gradientStartForInputBar = qs(-1.0);
+  late final gradientStartForInputBar = qs<double>(0);
 
   // from -1.0 to 1.0
-  late final gradientForInputBar = qs(-0.6);
+  late final gradientForInputBar = qs<double>(1);
 }
 
 /// Private methods

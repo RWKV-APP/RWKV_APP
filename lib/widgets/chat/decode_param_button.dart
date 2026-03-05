@@ -94,6 +94,7 @@ class DecodeParamButton extends ConsumerWidget {
     final borderColor = colors.border;
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
     final s = S.of(context);
 
@@ -114,7 +115,11 @@ class DecodeParamButton extends ConsumerWidget {
                 height: height,
                 padding: const .symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  color: bgColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                  color: bgColor.q(
+                    userBackdropFilterForInputOptions
+                        ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                        : 1,
+                  ),
                   borderRadius: .circular(60),
                   border: .all(color: borderColor),
                 ),

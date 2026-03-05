@@ -122,6 +122,7 @@ class _WebSearchModeButton extends ConsumerWidget {
     final deepLabel = currentLangIsZh ? "深度" : "Deep";
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     final height = InputInteractions.calculateButtonHeight(context);
@@ -141,7 +142,11 @@ class _WebSearchModeButton extends ConsumerWidget {
               height: height,
               padding: padding,
               decoration: BoxDecoration(
-                color: backgroundColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                color: backgroundColor.q(
+                  userBackdropFilterForInputOptions
+                      ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                      : 1,
+                ),
                 borderRadius: .circular(60),
                 border: .all(color: actionBorderColor),
               ),
@@ -196,6 +201,7 @@ class _WenYanWenButton extends ConsumerWidget {
     final borderColor = colors.border;
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
     final label = switch (mode) {
       WenyanMode.off => "文言",
@@ -218,7 +224,11 @@ class _WenYanWenButton extends ConsumerWidget {
               height: height,
               padding: const .symmetric(horizontal: 8),
               decoration: BoxDecoration(
-                color: bgColor.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                color: bgColor.q(
+                  userBackdropFilterForInputOptions
+                      ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                      : 1,
+                ),
                 borderRadius: .circular(60),
                 border: .all(color: borderColor, width: 1),
               ),

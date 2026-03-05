@@ -42,6 +42,7 @@ class SecondaryOptionsButton extends ConsumerWidget {
     final textColor = colors.foreground;
     final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     final textScaleFactor = MediaQuery.textScalerOf(context);
@@ -72,7 +73,11 @@ class SecondaryOptionsButton extends ConsumerWidget {
                   curve: Curves.easeOutCubic,
                   padding: padding,
                   decoration: BoxDecoration(
-                    color: color.q(userBackdropFilterForInputOptions ? backdropFilterBgAlphaForInputOptions : 1),
+                    color: color.q(
+                      userBackdropFilterForInputOptions
+                          ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                          : 1,
+                    ),
                     borderRadius: .circular(60),
                     border: .all(color: colors.border),
                   ),
