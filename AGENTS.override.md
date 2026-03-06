@@ -103,6 +103,7 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 
 - 所有方法必须使用 early return 风格。
 - 禁止使用 `var`，使用显式类型 + `final`（需要重赋值时再用非 `final` 显式类型）。
+- 对于局部变量，若右侧初始化表达式已能明确推导出类型，则不要显式写类型；例如写 `final item = suggestions[index];`，不要写 `final String item = suggestions[index];`。写 `final foo = ref.watch(P.app.foo)`，不要写 `final String foo = ref.watch(P.app.foo)`。
 - `for` 循环中的迭代变量使用 `final`。
 - 使用 `for` 循环，禁止使用 `forEach`。
 - 不要使用 `then`，优先 `await`。
@@ -138,7 +139,6 @@ void Function(Object)? onError,
 - 获取屏幕宽度必须用 `MediaQuery.sizeOf(context).width`，不要用 `MediaQuery.of(context).size.width`。
 - 获取屏幕内边距必须用 `MediaQuery.paddingOf(context)`，不要用 `MediaQuery.of(context).padding`。
 - 调整 `Color` 透明度使用 `.q(.x)`，不要用 `withOpacity`。
-- 当你写 `final _Symbol_ foo = bar;` 这种形式的代码时, 如果 `_Symbol_` 可以被后面的 `bar` 明确地推导出类型, 就一定不要写明 `_Symbol_` 类型
 
 ### 范围：`**/*.md`（README 多语言同步）
 
