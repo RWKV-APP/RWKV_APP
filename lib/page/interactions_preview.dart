@@ -12,7 +12,7 @@ import 'package:zone/gen/assets.gen.dart';
 import 'package:zone/model/app_theme.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
-import 'package:zone/widgets/interactions.dart';
+import 'package:zone/widgets/input_interactions.dart';
 
 enum _PreviewInteractionState {
   unavailable,

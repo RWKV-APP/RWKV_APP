@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/interactions.dart';
+import 'package:zone/widgets/input_interactions.dart';
 import 'package:zone/widgets/suggestion_chips.dart';
 
 class FloatingSuggestions extends ConsumerWidget {

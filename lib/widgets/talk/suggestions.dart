@@ -9,7 +9,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/func/is_chinese.dart';
 import 'package:zone/model/tts_instruction.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/interactions.dart';
+import 'package:zone/widgets/input_interactions.dart';
 import 'package:zone/widgets/suggestion_chips.dart';
 
 class Suggestions extends ConsumerWidget {
