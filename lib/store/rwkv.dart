@@ -612,11 +612,13 @@ extension $RWKV on _RWKV {
     }
 
     final forceReasoning = thinkingMode.forceReasoning;
+    final addGenerationPrompt = messages.length.isOdd;
     final request = isBatchInference
         ? to_rwkv.ChatBatchAsync(
             batchMessages,
             enableReasoning: reasoning,
             forceReasoning: forceReasoning,
+            addGenerationPrompt: addGenerationPrompt,
             batchSize: batchSize,
             modelID: modelID,
             maxLength: maxLength,
@@ -626,6 +628,7 @@ extension $RWKV on _RWKV {
             messages,
             enableReasoning: reasoning,
             forceReasoning: forceReasoning,
+            addGenerationPrompt: addGenerationPrompt,
             modelID: modelID,
             maxLength: maxLength,
             forceLang: forceChinese ? 1 : null,

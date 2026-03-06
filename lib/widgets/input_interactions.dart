@@ -1,21 +1,15 @@
-// Dart imports:
-import 'dart:ui';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/decode_param_button.dart';
-import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/chat/web_search_mode_button.dart';

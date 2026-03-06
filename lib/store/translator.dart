@@ -477,6 +477,7 @@ extension _$Translator on _Translator {
         batchMessages,
         enableReasoning: reasoning,
         forceReasoning: thinkingMode.forceReasoning,
+        addGenerationPrompt: true,
         batchSize: batchSize,
         modelID: modelID,
       ),

@@ -75,9 +75,7 @@ dependencies:
       ref: master
 
   flutter_roleplay:
-    git:
-      url: https://github.com/chenqi2013/flutter_roleplay
-      ref: 0505c3b5ce3524d5d264978c73e46c637680720a
+    path: ../flutter_roleplay
 
   disable_battery_optimization:
     git:

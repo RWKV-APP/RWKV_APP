@@ -255,6 +255,7 @@ extension _$Ocr on _Ocr {
         batchMessages,
         enableReasoning: reasoning,
         forceReasoning: thinkingMode.forceReasoning,
+        addGenerationPrompt: true,
         batchSize: batchSize,
         modelID: modelID,
       ),
