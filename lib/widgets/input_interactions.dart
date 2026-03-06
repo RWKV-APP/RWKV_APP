@@ -8,6 +8,7 @@ import 'package:halo/halo.dart';
 // Project imports:
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/chat/ask_question_button.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/decode_param_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
@@ -57,6 +58,7 @@ class _ItemList extends ConsumerWidget {
       if (preferredDemoType == .chat) const ThinkingModeButton(),
       if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
       if (preferredDemoType == .chat && currentLangIsZh) const WenYanWenButton(),
+      if (preferredDemoType == .chat) const AskQuestionButton(),
     ];
 
     final appTheme = ref.watch(P.app.theme);

@@ -749,5 +749,23 @@
     }
   },
   "open_official_download_page": "공식 다운로드 페이지 열기",
-  "mimic": "미믹"
+  "mimic": "미믹",
+  "ask": "질문",
+  "question_generator": "질문 생성기",
+  "question_generator_mock_description": "현재 채팅 기록이 있으면 다음 사용자 질문을 생성하고, 기록이 비어 있으면 기본 질문 접두사로 후보를 만듭니다.",
+  "question_generator_empty_chat_hint": "아직 채팅 기록이 없습니다. Generate를 누르면 선택한 언어의 기본 질문 접두사로 후보를 만듭니다.",
+  "question_generator_tap_generate_hint": "Generate를 누르면 현재 채팅을 바탕으로 최대 {count}개의 후속 질문 후보를 만듭니다.",
+  "@question_generator_tap_generate_hint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "question_language": "언어",
+  "prefix_bank": "접두사 묶음",
+  "prefix_examples": "접두사 예시",
+  "generated_questions": "생성된 질문",
+  "english": "English",
+  "japanese": "日本語",
+  "korean": "한국어",
+  "russian": "Русский"
 }

@@ -1507,6 +1507,7 @@ extension _$Chat on _Chat {
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator) return;
+    if (P.askQuestion.generating.q) return;
 
     switch (event) {
       case from_rwkv.ResponseBufferContent res:

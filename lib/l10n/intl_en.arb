@@ -755,5 +755,23 @@
     }
   },
   "open_official_download_page": "Open Official Download Page",
-  "mimic": "Mimic"
+  "mimic": "Mimic",
+  "ask": "Ask",
+  "question_generator": "Question Generator",
+  "question_generator_mock_description": "Generate follow-up user questions from the current chat history, or fall back to default question prefixes when the chat is empty.",
+  "question_generator_empty_chat_hint": "There is no chat history yet. Generate will use the default question prefixes for the selected language.",
+  "question_generator_tap_generate_hint": "Tap Generate to create up to {count} follow-up questions from the current chat.",
+  "@question_generator_tap_generate_hint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "question_language": "Language",
+  "prefix_bank": "Prefix Bank",
+  "prefix_examples": "Prefix Examples",
+  "generated_questions": "Generated Questions",
+  "english": "English",
+  "japanese": "Japanese",
+  "korean": "Korean",
+  "russian": "Russian"
 }

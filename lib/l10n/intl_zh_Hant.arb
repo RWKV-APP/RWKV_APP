@@ -749,5 +749,23 @@
     }
   },
   "open_official_download_page": "開啟官方下載頁",
-  "mimic": "模仿"
+  "mimic": "模仿",
+  "ask": "提問",
+  "question_generator": "問題產生器",
+  "question_generator_mock_description": "優先根據當前聊天記錄產生後續可直接發送的使用者問題；如果目前沒有聊天記錄，則退回使用預設問題前綴來生成建議。",
+  "question_generator_empty_chat_hint": "目前還沒有聊天記錄。點擊產生後，會按所選語言的預設問題前綴來給出建議。",
+  "question_generator_tap_generate_hint": "點擊產生後，會基於目前聊天最多產出 {count} 條後續提問建議。",
+  "@question_generator_tap_generate_hint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "question_language": "語言",
+  "prefix_bank": "前綴組",
+  "prefix_examples": "前綴示例",
+  "generated_questions": "產生的問題",
+  "english": "English",
+  "japanese": "日本語",
+  "korean": "한국어",
+  "russian": "Русский"
 }

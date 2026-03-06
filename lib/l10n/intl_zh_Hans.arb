@@ -755,5 +755,23 @@
     }
   },
   "open_official_download_page": "打开官方下载页",
-  "mimic": "模仿"
+  "mimic": "模仿",
+  "ask": "提问",
+  "question_generator": "问题生成器",
+  "question_generator_mock_description": "优先根据当前聊天记录生成后续可直接发送的用户问题；如果当前没有聊天记录，则回退到默认问题前缀来生成建议。",
+  "question_generator_empty_chat_hint": "当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。",
+  "question_generator_tap_generate_hint": "点击生成后，会基于当前聊天最多产出 {count} 条后续提问建议。",
+  "@question_generator_tap_generate_hint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "question_language": "语言",
+  "prefix_bank": "前缀组",
+  "prefix_examples": "前缀示例",
+  "generated_questions": "生成的问题",
+  "english": "English",
+  "japanese": "日本語",
+  "korean": "한국어",
+  "russian": "Русский"
 }

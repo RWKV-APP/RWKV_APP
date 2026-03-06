@@ -749,5 +749,23 @@
     }
   },
   "open_official_download_page": "公式ダウンロードページを開く",
-  "mimic": "ミミック"
+  "mimic": "ミミック",
+  "ask": "質問",
+  "question_generator": "質問ジェネレーター",
+  "question_generator_mock_description": "現在のチャット履歴があれば次のユーザー質問を生成し、履歴が空なら既定の質問プレフィックスで候補を作ります。",
+  "question_generator_empty_chat_hint": "まだチャット履歴がありません。Generate を押すと、選択中の言語の既定プレフィックスで候補を作ります。",
+  "question_generator_tap_generate_hint": "Generate を押すと、現在のチャットから最大 {count} 件の追質問候補を作成します。",
+  "@question_generator_tap_generate_hint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "question_language": "言語",
+  "prefix_bank": "前置きグループ",
+  "prefix_examples": "前置きの例",
+  "generated_questions": "生成される質問",
+  "english": "English",
+  "japanese": "日本語",
+  "korean": "한국어",
+  "russian": "Русский"
 }

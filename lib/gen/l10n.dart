@@ -5026,6 +5026,96 @@ class S {
   String get mimic {
     return Intl.message('模仿', name: 'mimic', desc: '', args: []);
   }
+
+  /// `提问`
+  String get ask {
+    return Intl.message('提问', name: 'ask', desc: '', args: []);
+  }
+
+  /// `问题生成器`
+  String get question_generator {
+    return Intl.message(
+      '问题生成器',
+      name: 'question_generator',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `优先根据当前聊天记录生成后续可直接发送的用户问题；如果当前没有聊天记录，则回退到默认问题前缀来生成建议。`
+  String get question_generator_mock_description {
+    return Intl.message(
+      '优先根据当前聊天记录生成后续可直接发送的用户问题；如果当前没有聊天记录，则回退到默认问题前缀来生成建议。',
+      name: 'question_generator_mock_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。`
+  String get question_generator_empty_chat_hint {
+    return Intl.message(
+      '当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。',
+      name: 'question_generator_empty_chat_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点击生成后，会基于当前聊天最多产出 {count} 条后续提问建议。`
+  String question_generator_tap_generate_hint(Object count) {
+    return Intl.message(
+      '点击生成后，会基于当前聊天最多产出 $count 条后续提问建议。',
+      name: 'question_generator_tap_generate_hint',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `语言`
+  String get question_language {
+    return Intl.message('语言', name: 'question_language', desc: '', args: []);
+  }
+
+  /// `前缀组`
+  String get prefix_bank {
+    return Intl.message('前缀组', name: 'prefix_bank', desc: '', args: []);
+  }
+
+  /// `前缀示例`
+  String get prefix_examples {
+    return Intl.message('前缀示例', name: 'prefix_examples', desc: '', args: []);
+  }
+
+  /// `生成的问题`
+  String get generated_questions {
+    return Intl.message(
+      '生成的问题',
+      name: 'generated_questions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get english {
+    return Intl.message('English', name: 'english', desc: '', args: []);
+  }
+
+  /// `日本語`
+  String get japanese {
+    return Intl.message('日本語', name: 'japanese', desc: '', args: []);
+  }
+
+  /// `한국어`
+  String get korean {
+    return Intl.message('한국어', name: 'korean', desc: '', args: []);
+  }
+
+  /// `Русский`
+  String get russian {
+    return Intl.message('Русский', name: 'russian', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

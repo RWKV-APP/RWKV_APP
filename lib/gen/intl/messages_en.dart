@@ -97,47 +97,50 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m32(value) => "Presence Penalty: ${value}";
 
-  static String m33(count) => "Queued: ${count}";
+  static String m33(count) =>
+      "Tap Generate to create up to ${count} follow-up questions from the current chat.";
 
-  static String m34(count) => "Selected ${count}";
+  static String m34(count) => "Queued: ${count}";
 
-  static String m35(text) => "Source Text: ${text}";
+  static String m35(count) => "Selected ${count}";
 
-  static String m36(text) => "Target Text: ${text}";
+  static String m36(text) => "Source Text: ${text}";
 
-  static String m37(value) => "Temperature: ${value}";
+  static String m37(text) => "Target Text: ${text}";
 
-  static String m38(footer) => "Reasoning${footer}-EN";
+  static String m38(value) => "Temperature: ${value}";
 
-  static String m39(footer) => "Reasoning${footer}-EN Long";
+  static String m39(footer) => "Reasoning${footer}-EN";
 
-  static String m40(footer) => "Reasoning${footer}-EN Short";
+  static String m40(footer) => "Reasoning${footer}-EN Long";
 
-  static String m41(footer) => "Reasoning${footer}-Fast";
+  static String m41(footer) => "Reasoning${footer}-EN Short";
 
-  static String m42(footer) => "Reasoning${footer}-Auto";
+  static String m42(footer) => "Reasoning${footer}-Fast";
 
-  static String m43(footer) => "Reasoning${footer}-High";
+  static String m43(footer) => "Reasoning${footer}-Auto";
 
-  static String m44(footer) => "Reasoning${footer}-Off";
+  static String m44(footer) => "Reasoning${footer}-High";
 
-  static String m45(value) => "Top P: ${value}";
+  static String m45(footer) => "Reasoning${footer}-Off";
 
-  static String m46(count) => "Total Test Items: ${count}";
+  static String m46(value) => "Top P: ${value}";
 
-  static String m47(port) => "WebSocket Service (Port: ${port})";
+  static String m47(count) => "Total Test Items: ${count}";
 
-  static String m48(id) => "Window ${id}";
+  static String m48(port) => "WebSocket Service (Port: ${port})";
 
-  static String m49(buildArchitecture, operatingSystemArchitecture, url) =>
-      "This app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}.\n\nPlease go to the official download page and download the matching executable:\n${url}";
+  static String m49(id) => "Window ${id}";
 
   static String m50(buildArchitecture, operatingSystemArchitecture, url) =>
+      "This app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}.\n\nPlease go to the official download page and download the matching executable:\n${url}";
+
+  static String m51(buildArchitecture, operatingSystemArchitecture, url) =>
       "Architecture mismatch detected: this app is built for ${buildArchitecture}, but your Windows operating system architecture is ${operatingSystemArchitecture}. Please download the matching build from the official page: ${url}";
 
-  static String m51(count) => "${count} tabs";
+  static String m52(count) => "${count} tabs";
 
-  static String m52(modelName) => "You are now using ${modelName}";
+  static String m53(modelName) => "You are now using ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -188,6 +191,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Are you sure you want to delete this model?",
         ),
+    "ask": MessageLookupByLibrary.simpleMessage("Ask"),
     "ask_me_anything": MessageLookupByLibrary.simpleMessage(
       "Ask me anything...",
     ),
@@ -551,6 +555,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "en_to_zh": MessageLookupByLibrary.simpleMessage("EN->ZH"),
     "enabled": MessageLookupByLibrary.simpleMessage("Enabled"),
     "end": MessageLookupByLibrary.simpleMessage("End"),
+    "english": MessageLookupByLibrary.simpleMessage("English"),
     "english_translation_result": MessageLookupByLibrary.simpleMessage(
       "English Translation Result",
     ),
@@ -665,6 +670,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "generate_random_sudoku_puzzle": MessageLookupByLibrary.simpleMessage(
       "Generate Random Sudoku Puzzle",
     ),
+    "generated_questions": MessageLookupByLibrary.simpleMessage(
+      "Generated Questions",
+    ),
     "generating": MessageLookupByLibrary.simpleMessage("Generating..."),
     "github_repository": MessageLookupByLibrary.simpleMessage(
       "Github Repository",
@@ -740,6 +748,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Invalid ZIP file or file format not recognized",
     ),
     "its_your_turn": MessageLookupByLibrary.simpleMessage("Your turn~"),
+    "japanese": MessageLookupByLibrary.simpleMessage("Japanese"),
     "join_our_discord_server": MessageLookupByLibrary.simpleMessage(
       "Join our Discord Server",
     ),
@@ -747,6 +756,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Join the Community",
     ),
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 Watch me!"),
+    "korean": MessageLookupByLibrary.simpleMessage("Korean"),
     "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA Test"),
     "lan_server": MessageLookupByLibrary.simpleMessage("LAN Server"),
     "large": MessageLookupByLibrary.simpleMessage("Large (120%)"),
@@ -1052,12 +1062,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefill_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Prefill Speed (tokens per second)",
     ),
+    "prefix_bank": MessageLookupByLibrary.simpleMessage("Prefix Bank"),
+    "prefix_examples": MessageLookupByLibrary.simpleMessage("Prefix Examples"),
     "presence_penalty_with_value": m32,
     "prompt": MessageLookupByLibrary.simpleMessage("Prompt"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ Group 2"),
-    "queued_x": m33,
+    "question_generator": MessageLookupByLibrary.simpleMessage(
+      "Question Generator",
+    ),
+    "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
+      "There is no chat history yet. Generate will use the default question prefixes for the selected language.",
+    ),
+    "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
+      "Generate follow-up user questions from the current chat history, or fall back to default question prefixes when the chat is empty.",
+    ),
+    "question_generator_tap_generate_hint": m33,
+    "question_language": MessageLookupByLibrary.simpleMessage("Language"),
+    "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Quick Reasoning Enabled",
@@ -1103,6 +1126,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "runtime_log_panel": MessageLookupByLibrary.simpleMessage(
       "Runtime Log Panel",
     ),
+    "russian": MessageLookupByLibrary.simpleMessage("Russian"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV Othello"),
@@ -1142,7 +1166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "Select weights from config or local .pth file",
     ),
-    "selected_count": m34,
+    "selected_count": m35,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "Message RWKV",
     ),
@@ -1184,7 +1208,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("Small (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Source Code"),
-    "source_text": m35,
+    "source_text": m36,
     "speed": MessageLookupByLibrary.simpleMessage("Download Speed:"),
     "start": MessageLookupByLibrary.simpleMessage("Start"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage(
@@ -1248,11 +1272,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_day_of_week": MessageLookupByLibrary.simpleMessage("Day of Week"),
     "tag_time": MessageLookupByLibrary.simpleMessage("Time"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Take Photo"),
-    "target_text": m36,
+    "target_text": m37,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "Technical Research Group",
     ),
-    "temperature_with_value": m37,
+    "temperature_with_value": m38,
     "test_data": MessageLookupByLibrary.simpleMessage("Test Data"),
     "test_result": MessageLookupByLibrary.simpleMessage("Test Result"),
     "test_results": MessageLookupByLibrary.simpleMessage("Test Results"),
@@ -1271,10 +1295,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Then you can start to chat with RWKV",
         ),
-    "think_button_mode_en": m38,
-    "think_button_mode_en_long": m39,
-    "think_button_mode_en_short": m40,
-    "think_button_mode_fast": m41,
+    "think_button_mode_en": m39,
+    "think_button_mode_en_long": m40,
+    "think_button_mode_en_short": m41,
+    "think_button_mode_fast": m42,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "The reasoning mode affects the model\'s performance during reasoning",
     ),
@@ -1286,9 +1310,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("Thinking..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage(" Mode"),
-    "thinking_mode_auto": m42,
-    "thinking_mode_high": m43,
-    "thinking_mode_off": m44,
+    "thinking_mode_auto": m43,
+    "thinking_mode_high": m44,
+    "thinking_mode_off": m45,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Thinking Mode Template",
     ),
@@ -1301,12 +1325,12 @@ class MessageLookup extends MessageLookupByLibrary {
           "This model does not support batch inference, please select a model with the \"batch\" tag",
         ),
     "thought_result": MessageLookupByLibrary.simpleMessage("Thought Result"),
-    "top_p_with_value": m45,
+    "top_p_with_value": m46,
     "total_count": MessageLookupByLibrary.simpleMessage("Total Count"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage(
       "Storage Space Usage",
     ),
-    "total_test_items": m46,
+    "total_test_items": m47,
     "translate": MessageLookupByLibrary.simpleMessage("Translate"),
     "translating": MessageLookupByLibrary.simpleMessage("Translating..."),
     "translation": MessageLookupByLibrary.simpleMessage("Translation"),
@@ -1391,7 +1415,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Web Search Template",
     ),
-    "websocket_service_port": m47,
+    "websocket_service_port": m48,
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Weight File Management",
     ),
@@ -1413,16 +1437,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("White"),
     "white_score": MessageLookupByLibrary.simpleMessage("White Score"),
     "white_wins": MessageLookupByLibrary.simpleMessage("White Wins!"),
-    "window_id": m48,
-    "windows_architecture_mismatch_dialog_message": m49,
+    "window_id": m49,
+    "windows_architecture_mismatch_dialog_message": m50,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Architecture Mismatch"),
-    "windows_architecture_mismatch_warning": m50,
+    "windows_architecture_mismatch_warning": m51,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("%d Selected"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("%d Pages Found"),
-    "x_tabs": m51,
-    "you_are_now_using": m52,
+    "x_tabs": m52,
+    "you_are_now_using": m53,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "You can now start chatting with RWKV",
     ),
