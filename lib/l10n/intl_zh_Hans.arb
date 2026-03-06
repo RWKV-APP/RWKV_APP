@@ -766,6 +766,7 @@
       "count": {}
     }
   },
+  "question_generator_language_switched_hint": "由于你切换了问题语言，点击生成后会忽略当前聊天记录，并按所选语言生成与上下文无关的问题。",
   "question_language": "语言",
   "prefix_bank": "前缀组",
   "prefix_examples": "前缀示例",

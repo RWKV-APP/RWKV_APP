@@ -1109,6 +1109,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
       "История чата пока пуста. При нажатии Generate будут использованы стандартные префиксы вопросов для выбранного языка.",
     ),
+    "question_generator_language_switched_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "Поскольку вы сменили язык вопросов, Generate проигнорирует текущую историю чата и создаст вопросы вне контекста на выбранном языке.",
+        ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "Генерирует следующие пользовательские вопросы по текущей истории чата, а если чат пуст, использует стандартные префиксы вопросов.",
     ),

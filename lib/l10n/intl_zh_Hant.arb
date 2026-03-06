@@ -760,6 +760,7 @@
       "count": {}
     }
   },
+  "question_generator_language_switched_hint": "由於你切換了問題語言，點擊產生後會忽略目前聊天記錄，並按所選語言產生與上下文無關的問題。",
   "question_language": "語言",
   "prefix_bank": "前綴組",
   "prefix_examples": "前綴示例",

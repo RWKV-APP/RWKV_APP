@@ -1075,6 +1075,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
       "There is no chat history yet. Generate will use the default question prefixes for the selected language.",
     ),
+    "question_generator_language_switched_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "Because you changed the question language, Generate will ignore the current chat history and create context-free questions in the selected language.",
+        ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "Generate follow-up user questions from the current chat history, or fall back to default question prefixes when the chat is empty.",
     ),

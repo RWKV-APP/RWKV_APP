@@ -919,6 +919,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
       "まだチャット履歴がありません。Generate を押すと、選択中の言語の既定プレフィックスで候補を作ります。",
     ),
+    "question_generator_language_switched_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "質問の言語を切り替えたため、Generate は現在のチャット履歴を無視し、選択中の言語で文脈に依存しない質問を生成します。",
+        ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "現在のチャット履歴があれば次のユーザー質問を生成し、履歴が空なら既定の質問プレフィックスで候補を作ります。",
     ),

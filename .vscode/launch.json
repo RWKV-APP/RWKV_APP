@@ -19,7 +19,7 @@
       "flutterMode": "debug",
       "args": [
         // "--dart-define=autoShowTranslator=true",
-        "--dart-define=logLevel=3",
+        // "--dart-define=logLevel=3",
         // "--dart-define=enableBatchInference=true",
         // "--dart-define=batchCount=3",
         // "--dart-define=batchVW=50",
@@ -27,9 +27,9 @@
         // "--dart-define=debuggingThemes=truefalse,
         // "--dart-define=disableAutoShowOfWeightsPanel=true",
         // "--dart-define=maxTokens=200",
-        "--dart-define=disableRemoteConfig=true",
-        "--dart-define=showHaloDebugger=true",
-        "--dart-define=conversationTokenReminderThreshold=1000"
+        // "--dart-define=disableRemoteConfig=true"
+        // "--dart-define=showHaloDebugger=true",
+        // "--dart-define=conversationTokenReminderThreshold=1000"
         // "--dart-define=autoPushTestPage=true",
         // "--dart-define=debuggingLatestUI"
         // "--dart-define=forceShowNewVersionPanel=true"

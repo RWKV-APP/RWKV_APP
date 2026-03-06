@@ -5072,6 +5072,16 @@ class S {
     );
   }
 
+  /// `由于你切换了问题语言，点击生成后会忽略当前聊天记录，并按所选语言生成与上下文无关的问题。`
+  String get question_generator_language_switched_hint {
+    return Intl.message(
+      '由于你切换了问题语言，点击生成后会忽略当前聊天记录，并按所选语言生成与上下文无关的问题。',
+      name: 'question_generator_language_switched_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `语言`
   String get question_language {
     return Intl.message('语言', name: 'question_language', desc: '', args: []);

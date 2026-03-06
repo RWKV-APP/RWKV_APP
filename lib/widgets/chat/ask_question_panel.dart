@@ -24,7 +24,7 @@ String _askQuestionLanguageLabel(S s, AskQuestionLanguage language) {
   };
 }
 
-class AskQuestionPanel extends ConsumerWidget {
+class AskQuestionPanel extends ConsumerStatefulWidget {
   static const String panelKey = 'AskQuestionPanel';
 
   static Future<void> show() async {
@@ -46,7 +46,24 @@ class AskQuestionPanel extends ConsumerWidget {
   final ScrollController scrollController;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AskQuestionPanel> createState() => _AskQuestionPanelState();
+}
+
+class _AskQuestionPanelState extends ConsumerState<AskQuestionPanel> {
+  @override
+  void dispose() {
+    P.askQuestion.onPanelHidden();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    P.askQuestion.onPanelShown();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
@@ -56,7 +73,12 @@ class AskQuestionPanel extends ConsumerWidget {
     final questions = ref.watch(P.askQuestion.questions);
     final hasChatHistory = ref.watch(P.askQuestion.hasChatHistory);
     final maxParallelCount = ref.watch(P.askQuestion.maxParallelCount);
-    final emptyMessage = hasChatHistory ? s.question_generator_tap_generate_hint(maxParallelCount) : s.question_generator_empty_chat_hint;
+    final shouldGenerateWithoutContext = ref.watch(P.askQuestion.shouldGenerateWithoutContext);
+    final emptyMessage = switch ((shouldGenerateWithoutContext, hasChatHistory)) {
+      (true, _) => s.question_generator_language_switched_hint,
+      (false, true) => s.question_generator_tap_generate_hint(maxParallelCount),
+      (false, false) => s.question_generator_empty_chat_hint,
+    };
 
     return ClipRRect(
       borderRadius: const .only(
@@ -66,10 +88,10 @@ class AskQuestionPanel extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
-          _AskQuestionPanelBar(scrollController: scrollController),
+          _AskQuestionPanelBar(scrollController: widget.scrollController),
           Expanded(
             child: ListView(
-              controller: scrollController,
+              controller: widget.scrollController,
               physics: const BouncingScrollPhysics(),
               padding: .only(
                 left: 12,
@@ -116,6 +138,10 @@ class AskQuestionPanel extends ConsumerWidget {
                     ],
                   ),
                 ),
+                if (shouldGenerateWithoutContext) ...[
+                  const SizedBox(height: 8),
+                  _AskQuestionLanguageSwitchedHint(message: s.question_generator_language_switched_hint),
+                ],
                 const SizedBox(height: 8),
                 _AskQuestionSection(
                   title: s.generated_questions,
@@ -131,9 +157,10 @@ class AskQuestionPanel extends ConsumerWidget {
                         ),
                       for (final entry in questions.indexed) ...[
                         _AskQuestionCard(
+                          key: ValueKey(entry.$2),
                           question: entry.$2,
-                          onAsk: () {
-                            P.askQuestion.useQuestion(entry.$2);
+                          onAsk: (value) {
+                            P.askQuestion.useQuestion(value);
                           },
                         ),
                         if (entry.$1 != questions.length - 1) const SizedBox(height: 6),
@@ -285,11 +312,10 @@ class _AskQuestionSelectablePill extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
-    final bgColor = selected ? appTheme.primary.q(.15) : qb.q(.06);
-    final borderColor = selected ? appTheme.primary.q(.5) : qb.q(.12);
-    final textColor = selected ? appTheme.primary : qb.q(.92);
+    final bgColor = selected ? qb.q(.12) : qb.q(.06);
+    final borderColor = selected ? qb.q(.24) : qb.q(.12);
+    final textColor = selected ? qb.q(.98) : qb.q(.92);
 
     return GestureDetector(
       onTap: onTap,
@@ -312,17 +338,46 @@ class _AskQuestionSelectablePill extends ConsumerWidget {
   }
 }
 
-class _AskQuestionCard extends ConsumerWidget {
+class _AskQuestionCard extends ConsumerStatefulWidget {
   const _AskQuestionCard({
+    super.key,
     required this.question,
     required this.onAsk,
   });
 
   final String question;
-  final VoidCallback onAsk;
+  final ValueChanged<String> onAsk;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_AskQuestionCard> createState() => _AskQuestionCardState();
+}
+
+class _AskQuestionCardState extends ConsumerState<_AskQuestionCard> {
+  late final TextEditingController _controller;
+
+  @override
+  void didUpdateWidget(covariant _AskQuestionCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.question == oldWidget.question) return;
+    if (_controller.text == widget.question) return;
+    _controller.text = widget.question;
+    _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.question);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
@@ -338,8 +393,15 @@ class _AskQuestionCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          Text(
-            question,
+          TextField(
+            controller: _controller,
+            maxLines: null,
+            minLines: 1,
+            decoration: const InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+            ),
             style: theme.textTheme.bodyMedium?.copyWith(
               height: 1.35,
               color: qb.q(.94),
@@ -348,12 +410,61 @@ class _AskQuestionCard extends ConsumerWidget {
           const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerRight,
-            child: FilledButton.tonal(
-              onPressed: onAsk,
+            child: FilledButton(
+              onPressed: () {
+                widget.onAsk(_controller.text);
+              },
               style: FilledButton.styleFrom(
+                backgroundColor: qb.q(.12),
+                foregroundColor: qb.q(.96),
                 visualDensity: .compact,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: Text(s.ask),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AskQuestionLanguageSwitchedHint extends ConsumerWidget {
+  const _AskQuestionLanguageSwitchedHint({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: qb.q(.06),
+        borderRadius: .circular(12),
+        border: .all(color: qb.q(.14), width: .5),
+      ),
+      padding: const .all(12),
+      child: Row(
+        crossAxisAlignment: .start,
+        children: [
+          Icon(
+            Symbols.info,
+            size: 18,
+            color: qb.q(.68),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: qb.q(.84),
+                height: 1.4,
+              ),
             ),
           ),
         ],
@@ -390,6 +501,16 @@ class _AskQuestionBottomBar extends ConsumerWidget {
               : () {
                   P.askQuestion.generateFromCurrentChat();
                 },
+          style: FilledButton.styleFrom(
+            backgroundColor: qb.q(.1),
+            foregroundColor: qb.q(.96),
+            disabledBackgroundColor: qb.q(.05),
+            disabledForegroundColor: qb.q(.38),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
           icon: Icon(
             generating ? Symbols.progress_activity : Symbols.auto_awesome,
             size: theme.textTheme.titleMedium?.fontSize,

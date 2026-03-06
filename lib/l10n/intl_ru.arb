@@ -760,6 +760,7 @@
       "count": {}
     }
   },
+  "question_generator_language_switched_hint": "Поскольку вы сменили язык вопросов, Generate проигнорирует текущую историю чата и создаст вопросы вне контекста на выбранном языке.",
   "question_language": "Язык",
   "prefix_bank": "Набор префиксов",
   "prefix_examples": "Примеры префиксов",

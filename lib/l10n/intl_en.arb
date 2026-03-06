@@ -766,6 +766,7 @@
       "count": {}
     }
   },
+  "question_generator_language_switched_hint": "Because you changed the question language, Generate will ignore the current chat history and create context-free questions in the selected language.",
   "question_language": "Language",
   "prefix_bank": "Prefix Bank",
   "prefix_examples": "Prefix Examples",

@@ -760,6 +760,7 @@
       "count": {}
     }
   },
+  "question_generator_language_switched_hint": "질문 언어를 변경했기 때문에 Generate는 현재 채팅 기록을 무시하고 선택한 언어로 문맥과 무관한 질문을 생성합니다.",
   "question_language": "언어",
   "prefix_bank": "접두사 묶음",
   "prefix_examples": "접두사 예시",

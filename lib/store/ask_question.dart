@@ -123,6 +123,7 @@ const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
 
 class _AskQuestion {
   Timer? _getResponseTimer;
+  Timer? _panelAutoGenerateTimer;
   StreamSubscription<from_rwkv.FromRWKV>? _albatrossSubscription;
   AskQuestionLanguage? _runningLanguage;
   List<String> _runningPrefixes = const [];
@@ -157,13 +158,29 @@ class _AskQuestion {
     final transcript = ref.watch(currentTranscript);
     return transcript.trim().isNotEmpty;
   });
+
+  late final defaultLanguage = qp((ref) {
+    final preferredLanguage = ref.watch(P.preference.preferredLanguage);
+    return _resolveAskQuestionLanguage(preferredLanguage.resolved);
+  });
+
+  late final languageSwitched = qp((ref) {
+    final selectedLanguage = ref.watch(language);
+    final defaultLanguage = ref.watch(this.defaultLanguage);
+    return selectedLanguage != defaultLanguage;
+  });
+
+  late final shouldGenerateWithoutContext = qp((ref) {
+    final hasChatHistory = ref.watch(this.hasChatHistory);
+    final languageSwitched = ref.watch(this.languageSwitched);
+    return hasChatHistory && languageSwitched;
+  });
 }
 
 /// Private methods
 extension _$AskQuestion on _AskQuestion {
-  Future<void> _init() async {
-    final preferredLanguage = P.preference.preferredLanguage.q.resolved;
-    language.q = switch (preferredLanguage) {
+  AskQuestionLanguage _resolveAskQuestionLanguage(Language preferredLanguage) {
+    return switch (preferredLanguage) {
       Language.zh_Hant => AskQuestionLanguage.traditionalChinese,
       Language.ja => AskQuestionLanguage.japanese,
       Language.ko => AskQuestionLanguage.korean,
@@ -171,6 +188,11 @@ extension _$AskQuestion on _AskQuestion {
       Language.en => AskQuestionLanguage.english,
       _ => AskQuestionLanguage.simplifiedChinese,
     };
+  }
+
+  Future<void> _init() async {
+    final preferredLanguage = P.preference.preferredLanguage.q.resolved;
+    language.q = _resolveAskQuestionLanguage(preferredLanguage);
 
     P.rwkv.broadcastStream.listen(
       _onStreamEvent,
@@ -182,6 +204,8 @@ extension _$AskQuestion on _AskQuestion {
   void _cancelRunningTasks() {
     _getResponseTimer?.cancel();
     _getResponseTimer = null;
+    _panelAutoGenerateTimer?.cancel();
+    _panelAutoGenerateTimer = null;
     _albatrossSubscription?.cancel();
     _albatrossSubscription = null;
   }
@@ -246,6 +270,7 @@ extension _$AskQuestion on _AskQuestion {
     _cancelRunningTasks();
     generating.q = false;
     P.rwkv.generating.q = false;
+    _refreshChatModelGeneratingState();
 
     final runningLanguage = _runningLanguage ?? language.q;
     final finalizedQuestions = _dedupeQuestions(
@@ -272,10 +297,36 @@ extension _$AskQuestion on _AskQuestion {
         result.add("");
         continue;
       }
-      result.add("${_runningPrefixes[i]}$raw");
+      result.add(_mergePrefixIntoRawQuestion(prefix: _runningPrefixes[i], raw: raw));
+    }
+
+    if (rawQuestions.length <= count) return result;
+
+    for (int i = count; i < rawQuestions.length; i++) {
+      result.add(rawQuestions[i]);
     }
 
     return result;
+  }
+
+  String _mergePrefixIntoRawQuestion({
+    required String prefix,
+    required String raw,
+  }) {
+    final trimmedPrefix = prefix.trim();
+    if (trimmedPrefix.isEmpty) return raw;
+
+    final trimmedRaw = raw.trimLeft();
+    if (trimmedRaw.isEmpty) return raw;
+
+    final strippedRaw = _stripLinePrefix(trimmedRaw);
+    if (strippedRaw.isEmpty) return raw;
+
+    final normalizedPrefix = trimmedPrefix.toLowerCase();
+    final normalizedRaw = strippedRaw.toLowerCase();
+    if (normalizedRaw.startsWith(normalizedPrefix)) return raw;
+
+    return "$prefix$raw";
   }
 
   List<String> _buildHistoryMessagesForQuestionGeneration() {
@@ -323,12 +374,6 @@ extension _$AskQuestion on _AskQuestion {
     return _trimTranscript(lines.join("\n\n"));
   }
 
-  String _buildContinuationPromptFromTranscript(String transcript) {
-    final trimmedTranscript = _trimTranscript(transcript);
-    if (trimmedTranscript.isEmpty) return "";
-    return "$trimmedTranscript\n\nUser:";
-  }
-
   int _resolveParallelCount({
     int? cap,
   }) {
@@ -361,6 +406,31 @@ extension _$AskQuestion on _AskQuestion {
       }
       P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
     });
+  }
+
+  Future<bool> _ensureChatModelIdle({required int modelID}) async {
+    if (!P.rwkv.generating.q) return true;
+    if (generating.q) return false;
+
+    final request = to_rwkv.GetIsGenerating(modelID: modelID);
+    P.rwkv.send(request);
+
+    try {
+      final response = await P.rwkv.broadcastStream
+          .whereType<from_rwkv.IsGenerating>()
+          .firstWhere((event) => event.req == request)
+          .timeout(const Duration(milliseconds: 400));
+      P.rwkv.generating.q = response.isGenerating;
+      return !response.isGenerating;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void _refreshChatModelGeneratingState() {
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) return;
+    P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
   }
 
   Future<void> _startAlbatrossCompletion({required String prompt}) async {
@@ -471,6 +541,19 @@ extension _$AskQuestion on _AskQuestion {
 
 /// Public methods
 extension $AskQuestion on _AskQuestion {
+  void onPanelShown() {
+    _panelAutoGenerateTimer?.cancel();
+    _panelAutoGenerateTimer = Timer(const Duration(milliseconds: 100), () async {
+      if (generating.q) return;
+      await generateFromCurrentChat();
+    });
+  }
+
+  void onPanelHidden() {
+    _panelAutoGenerateTimer?.cancel();
+    _panelAutoGenerateTimer = null;
+  }
+
   void selectLanguage(AskQuestionLanguage nextLanguage) {
     if (generating.q) return;
     if (language.q == nextLanguage) return;
@@ -481,9 +564,8 @@ extension $AskQuestion on _AskQuestion {
 
   Future<void> generateFromCurrentChat() async {
     final historyMessages = _buildHistoryMessagesForQuestionGeneration();
-    if (historyMessages.isNotEmpty) {
-      final transcript = _buildTranscriptFromMessages(historyMessages);
-      await generateFromTranscript(transcript);
+    if (historyMessages.isNotEmpty && !shouldGenerateWithoutContext.q) {
+      await generateFromMessages(historyMessages);
       return;
     }
 
@@ -500,15 +582,10 @@ extension $AskQuestion on _AskQuestion {
     );
   }
 
-  Future<void> generateFromTranscript(
-    String transcript, {
+  Future<void> generateFromMessages(
+    List<String> historyMessages, {
     AskQuestionLanguage? preferredLanguage,
   }) async {
-    if (P.rwkv.generating.q) {
-      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
-      return;
-    }
-
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
@@ -517,19 +594,26 @@ extension $AskQuestion on _AskQuestion {
       return;
     }
 
-    final trimmedTranscript = _trimTranscript(transcript);
-    if (trimmedTranscript.isEmpty) {
+    final chatModelIdle = await _ensureChatModelIdle(modelID: modelID);
+    if (!chatModelIdle) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    if (historyMessages.isEmpty) {
+      Alert.info(S.current.chat_empty_message);
+      return;
+    }
+
+    final transcript = _buildTranscriptFromMessages(historyMessages);
+    if (transcript.isEmpty) {
       Alert.info(S.current.chat_empty_message);
       return;
     }
 
     final targetLanguage = preferredLanguage ?? language.q;
     final resolvedParallelCount = _resolveParallelCount();
-    final prompt = _buildContinuationPromptFromTranscript(trimmedTranscript);
-    if (prompt.isEmpty) {
-      Alert.info(S.current.chat_empty_message);
-      return;
-    }
+    final addGenerationPrompt = historyMessages.length.isEven;
 
     await P.rwkv.clearStates();
     _cancelRunningTasks();
@@ -540,25 +624,50 @@ extension $AskQuestion on _AskQuestion {
     questions.q = [];
     rawQuestions.q = [];
     parallelCount.q = resolvedParallelCount;
-    lastTranscript.q = trimmedTranscript;
+    lastTranscript.q = transcript;
 
     if (P.rwkv.isAlbatrossLoaded.q) {
+      final prompt = addGenerationPrompt ? "$transcript\n\nUser:" : transcript;
       await _startAlbatrossCompletion(prompt: prompt);
       return;
     }
 
-    P.rwkv.send(
-      to_rwkv.GenerateAsync(
-        prompt,
-        batch: resolvedParallelCount,
-        modelID: modelID,
-        maxLength: 64,
-      ),
-    );
+    P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
+    P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
+
+    final isBatchInference = resolvedParallelCount > 1;
+    if (isBatchInference) {
+      final batchMessages = <List<String>>[];
+      for (int i = 0; i < resolvedParallelCount; i++) {
+        batchMessages.add([...historyMessages]);
+      }
+      P.rwkv.send(
+        to_rwkv.ChatBatchAsync(
+          batchMessages,
+          enableReasoning: false,
+          forceReasoning: false,
+          addGenerationPrompt: addGenerationPrompt,
+          batchSize: resolvedParallelCount,
+          modelID: modelID,
+          maxLength: 64,
+        ),
+      );
+    } else {
+      P.rwkv.send(
+        to_rwkv.ChatAsync(
+          historyMessages,
+          enableReasoning: false,
+          forceReasoning: false,
+          addGenerationPrompt: addGenerationPrompt,
+          modelID: modelID,
+          maxLength: 64,
+        ),
+      );
+    }
 
     await _startPolling(
       modelID: modelID,
-      isBatchInference: resolvedParallelCount > 1,
+      isBatchInference: isBatchInference,
     );
   }
 
@@ -566,16 +675,17 @@ extension $AskQuestion on _AskQuestion {
     required AskQuestionLanguage language,
     required List<String> prefixes,
   }) async {
-    if (P.rwkv.generating.q) {
-      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
-      return;
-    }
-
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {
       Alert.info(S.current.please_load_model_first);
+      return;
+    }
+
+    final chatModelIdle = await _ensureChatModelIdle(modelID: modelID);
+    if (!chatModelIdle) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
 
