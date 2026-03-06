@@ -9,43 +9,6 @@ enum AskQuestionLanguage {
   russian,
 }
 
-class _AskQuestionLanguageSpec {
-  final String outputLanguageName;
-  final String questionMark;
-
-  const _AskQuestionLanguageSpec({
-    required this.outputLanguageName,
-    required this.questionMark,
-  });
-}
-
-const _askQuestionLanguageSpecs = <AskQuestionLanguage, _AskQuestionLanguageSpec>{
-  AskQuestionLanguage.simplifiedChinese: _AskQuestionLanguageSpec(
-    outputLanguageName: '简体中文',
-    questionMark: '？',
-  ),
-  AskQuestionLanguage.traditionalChinese: _AskQuestionLanguageSpec(
-    outputLanguageName: '繁體中文',
-    questionMark: '？',
-  ),
-  AskQuestionLanguage.english: _AskQuestionLanguageSpec(
-    outputLanguageName: 'English',
-    questionMark: '?',
-  ),
-  AskQuestionLanguage.japanese: _AskQuestionLanguageSpec(
-    outputLanguageName: '日本語',
-    questionMark: '？',
-  ),
-  AskQuestionLanguage.korean: _AskQuestionLanguageSpec(
-    outputLanguageName: '한국어',
-    questionMark: '?',
-  ),
-  AskQuestionLanguage.russian: _AskQuestionLanguageSpec(
-    outputLanguageName: 'Русский',
-    questionMark: '?',
-  ),
-};
-
 const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
   AskQuestionLanguage.simplifiedChinese: [
     '为什么',
@@ -125,7 +88,10 @@ class _AskQuestion {
   Timer? _getResponseTimer;
   Timer? _panelAutoGenerateTimer;
   StreamSubscription<from_rwkv.FromRWKV>? _albatrossSubscription;
-  AskQuestionLanguage? _runningLanguage;
+  DateTime? _lastRawQuestionsChangedAt;
+  int? _runningModelID;
+  bool _stopRequested = false;
+  List<String> _lastRawQuestions = const [];
   List<String> _runningPrefixes = const [];
 
   late final language = qs<AskQuestionLanguage>(AskQuestionLanguage.simplifiedChinese);
@@ -241,6 +207,8 @@ extension _$AskQuestion on _AskQuestion {
           _finalizeQuestions();
         }
       case from_rwkv.IsGenerating res:
+        final runningModelID = _runningModelID;
+        if (runningModelID != null && res.modelID != runningModelID) return;
         if (res.isGenerating) return;
         _finalizeQuestions();
       case from_rwkv.GenerateStop _:
@@ -254,16 +222,13 @@ extension _$AskQuestion on _AskQuestion {
     final effectiveRawQuestions = _mergePrefixesIntoRawQuestions(nextRawQuestions);
     rawQuestions.q = effectiveRawQuestions;
 
-    final runningLanguage = _runningLanguage ?? language.q;
     final cleanedQuestions = _dedupeQuestions(
       effectiveRawQuestions.map((raw) {
-        return _sanitizeQuestion(
-          raw: raw,
-          language: runningLanguage,
-        );
+        return _sanitizeQuestion(raw: raw);
       }),
     );
     questions.q = cleanedQuestions;
+    _maybeStopSettledGeneration(effectiveRawQuestions);
   }
 
   void _finalizeQuestions() {
@@ -272,18 +237,54 @@ extension _$AskQuestion on _AskQuestion {
     P.rwkv.generating.q = false;
     _refreshChatModelGeneratingState();
 
-    final runningLanguage = _runningLanguage ?? language.q;
     final finalizedQuestions = _dedupeQuestions(
       rawQuestions.q.map((raw) {
-        return _sanitizeQuestion(
-          raw: raw,
-          language: runningLanguage,
-        );
+        return _sanitizeQuestion(raw: raw);
       }),
     );
     questions.q = finalizedQuestions;
-    _runningLanguage = null;
+    _lastRawQuestions = const [];
+    _lastRawQuestionsChangedAt = null;
+    _runningModelID = null;
     _runningPrefixes = const [];
+    _stopRequested = false;
+  }
+
+  void _maybeStopSettledGeneration(List<String> rawQuestions) {
+    if (P.rwkv.isAlbatrossLoaded.q) return;
+    if (_stopRequested) return;
+    if (rawQuestions.isEmpty) return;
+
+    if (!_sameQuestionList(_lastRawQuestions, rawQuestions)) {
+      _lastRawQuestions = [...rawQuestions];
+      _lastRawQuestionsChangedAt = DateTime.now();
+      return;
+    }
+
+    final changedAt = _lastRawQuestionsChangedAt;
+    if (changedAt == null) {
+      _lastRawQuestionsChangedAt = DateTime.now();
+      return;
+    }
+
+    final settledFor = DateTime.now().difference(changedAt);
+    if (settledFor < const Duration(seconds: 2)) return;
+
+    final modelID = _runningModelID;
+    if (modelID == null) return;
+
+    _stopRequested = true;
+    P.rwkv.send(to_rwkv.Stop(modelID: modelID));
+  }
+
+  bool _sameQuestionList(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+
+    return true;
   }
 
   List<String> _mergePrefixesIntoRawQuestions(List<String> rawQuestions) {
@@ -481,23 +482,8 @@ extension _$AskQuestion on _AskQuestion {
     return text.contains("?") || text.contains("？");
   }
 
-  String _normalizeQuestionEnding({
-    required String text,
-    required AskQuestionLanguage language,
-  }) {
-    if (text.isEmpty) return text;
-    if (_looksLikeQuestion(text)) return text;
-
-    final spec = _askQuestionLanguageSpecs[language]!;
-    final cleaned = text.replaceFirst(RegExp(r'[.!。！？?]+$'), '').trim();
-    if (cleaned.isEmpty) return "";
-
-    return "$cleaned${spec.questionMark}";
-  }
-
   String _sanitizeQuestion({
     required String raw,
-    required AskQuestionLanguage language,
   }) {
     final normalized = raw.replaceAll("\r\n", "\n").replaceAll("\r", "\n").trim();
     if (normalized.isEmpty) return "";
@@ -515,11 +501,6 @@ extension _$AskQuestion on _AskQuestion {
     }
 
     if (candidate.isEmpty) return "";
-
-    candidate = _normalizeQuestionEnding(
-      text: candidate,
-      language: language,
-    );
 
     return candidate.trim();
   }
@@ -611,7 +592,6 @@ extension $AskQuestion on _AskQuestion {
       return;
     }
 
-    final targetLanguage = preferredLanguage ?? language.q;
     final resolvedParallelCount = _resolveParallelCount();
     final addGenerationPrompt = historyMessages.length.isEven;
 
@@ -619,8 +599,11 @@ extension $AskQuestion on _AskQuestion {
     _cancelRunningTasks();
     generating.q = true;
     P.rwkv.generating.q = true;
-    _runningLanguage = targetLanguage;
+    _lastRawQuestions = const [];
+    _lastRawQuestionsChangedAt = null;
+    _runningModelID = modelID;
     _runningPrefixes = const [];
+    _stopRequested = false;
     questions.q = [];
     rawQuestions.q = [];
     parallelCount.q = resolvedParallelCount;
@@ -649,7 +632,6 @@ extension $AskQuestion on _AskQuestion {
           addGenerationPrompt: addGenerationPrompt,
           batchSize: resolvedParallelCount,
           modelID: modelID,
-          maxLength: 64,
         ),
       );
     } else {
@@ -660,7 +642,6 @@ extension $AskQuestion on _AskQuestion {
           forceReasoning: false,
           addGenerationPrompt: addGenerationPrompt,
           modelID: modelID,
-          maxLength: 64,
         ),
       );
     }
@@ -697,8 +678,11 @@ extension $AskQuestion on _AskQuestion {
     _cancelRunningTasks();
     generating.q = true;
     P.rwkv.generating.q = true;
-    _runningLanguage = language;
+    _lastRawQuestions = const [];
+    _lastRawQuestionsChangedAt = null;
+    _runningModelID = modelID;
     _runningPrefixes = selectedPrefixes;
+    _stopRequested = false;
     questions.q = [];
     rawQuestions.q = [];
     parallelCount.q = selectedPrefixes.length;
@@ -726,7 +710,6 @@ extension $AskQuestion on _AskQuestion {
           addGenerationPrompt: false,
           batchSize: selectedPrefixes.length,
           modelID: modelID,
-          maxLength: 64,
         ),
       );
     } else {
@@ -737,7 +720,6 @@ extension $AskQuestion on _AskQuestion {
           forceReasoning: false,
           addGenerationPrompt: false,
           modelID: modelID,
-          maxLength: 64,
         ),
       );
     }
