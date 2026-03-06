@@ -51,6 +51,7 @@ import 'package:sprintf/sprintf.dart' show sprintf;
 import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:web_socket_channel/web_socket_channel.dart' as ws_channel;
 
 // Project imports:

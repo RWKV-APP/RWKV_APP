@@ -135,6 +135,7 @@ dependencies:
   sqflite_common_ffi:
   system_info2:
   url_launcher:
+  wakelock_plus:
   web_socket_channel:
 
 dependency_overrides:

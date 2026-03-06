@@ -77,6 +77,36 @@ class _Remote {
     return customDir != null && customDir.isNotEmpty && customDir != defaultDir;
   });
 
+  late final allWeights = qp<Set<FileInfo>>((ref) {
+    final groups = <Set<FileInfo>>[
+      ref.watch(chatWeights),
+      ref.watch(roleplayWeights),
+      ref.watch(ttsWeights),
+      ref.watch(seeWeights),
+      ref.watch(sudokuWeights),
+      ref.watch(othelloWeights),
+    ];
+    final result = <FileInfo>{};
+    for (final group in groups) {
+      for (final fileInfo in group) {
+        result.add(fileInfo);
+        result.addAll(fileInfo.state);
+      }
+    }
+    return result;
+  });
+
+  late final hasActiveDownload = qp<bool>((ref) {
+    final allWeights = ref.watch(this.allWeights);
+    for (final fileInfo in allWeights) {
+      final localFile = ref.watch(locals(fileInfo));
+      if (localFile.downloading) {
+        return true;
+      }
+    }
+    return false;
+  });
+
   /// 量化好的权重被保存的文件夹位置
   late final effectiveModelsDir = qp<String>((ref) {
     final customDir = ref.watch(P.preference.customModelsDir);
@@ -1745,9 +1775,14 @@ extension _$Remote on _Remote {
     }
 
     P.app.pageKey.lb(_onPageKeyChanged);
+    hasActiveDownload.l(_onHasActiveDownloadChanged, fireImmediately: true);
 
     await _transferAllFilesFromOldModelsDirToNewModelsDirIfNeeded();
     sync();
+  }
+
+  void _onHasActiveDownloadChanged(bool hasActiveDownload) {
+    P.app.setKeepScreenAwakeForReason(reason: .download, enabled: hasActiveDownload);
   }
 
   void _onPageKeyChanged(PageKey? previous, PageKey next) async {

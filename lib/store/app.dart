@@ -1,11 +1,19 @@
 part of 'p.dart';
 
+enum _KeepScreenAwakeReason {
+  generation,
+  download,
+}
+
 class _App extends RawApp {
   // ===========================================================================
   // Instance
   // ===========================================================================
 
   late final db.AppDatabase _db;
+  bool _screenAwakeApplied = false;
+  bool _screenAwakeSyncing = false;
+  bool _screenAwakeNeedsSync = false;
 
   // ===========================================================================
   // Getters
@@ -90,6 +98,7 @@ class _App extends RawApp {
   late final checkingLatestVersion = qs(false);
   late final latestVersionInfo = qs<VersionInfo?>(null);
   late final releaseNotesContent = qs<({String? content, String? version})?>(null);
+  late final _keepScreenAwakeReasons = qs<Set<_KeepScreenAwakeReason>>({});
 
   // ===========================================================================
   // Provider
@@ -99,6 +108,7 @@ class _App extends RawApp {
 
   late final isDesktop = qp((ref) => ref.watch(_isDesktop));
   late final isMobile = qp((ref) => ref.watch(_isMobile));
+  late final keepingScreenAwake = qp((ref) => ref.watch(_keepScreenAwakeReasons).isNotEmpty);
 
   late final osVersionNumbers = qp<List<int>>((ref) {
     final osVersion = ref.watch(this.osVersion);
@@ -162,6 +172,17 @@ extension $App on _App {
 
   void hapticMedium() {
     if (_isMobile.q) Gaimon.medium();
+  }
+
+  void setKeepScreenAwakeForReason({
+    required _KeepScreenAwakeReason reason,
+    required bool enabled,
+  }) {
+    final nextReasons = {..._keepScreenAwakeReasons.q};
+    final changed = enabled ? nextReasons.add(reason) : nextReasons.remove(reason);
+    if (!changed) return;
+    _keepScreenAwakeReasons.q = nextReasons;
+    unawaited(_syncKeepScreenAwake());
   }
 
   Future<void> customThemeChanged() async {
@@ -466,6 +487,36 @@ extension _$App on _App {
 
   Future<void> _statusBarToDarkMode() async {
     SystemChrome.setSystemUIOverlayStyle(systemOverlayStyleDark);
+  }
+
+  Future<void> _syncKeepScreenAwake() async {
+    if (_screenAwakeSyncing) {
+      _screenAwakeNeedsSync = true;
+      return;
+    }
+
+    _screenAwakeSyncing = true;
+    while (true) {
+      _screenAwakeNeedsSync = false;
+      final shouldKeepScreenAwake = _keepScreenAwakeReasons.q.isNotEmpty;
+      if (_screenAwakeApplied != shouldKeepScreenAwake) {
+        try {
+          if (_isMobile.q) {
+            await WakelockPlus.toggle(enable: shouldKeepScreenAwake);
+          }
+          _screenAwakeApplied = shouldKeepScreenAwake;
+        } catch (e) {
+          qqe("Failed to toggle wakelock: $e");
+          if (!kDebugMode) {
+            Sentry.captureException(e, stackTrace: StackTrace.current);
+          }
+        }
+      }
+      if (!_screenAwakeNeedsSync) {
+        break;
+      }
+    }
+    _screenAwakeSyncing = false;
   }
 
   Future<void> _onLifecycleStateChanged() async {}

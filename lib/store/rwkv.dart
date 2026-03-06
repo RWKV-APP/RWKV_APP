@@ -1220,6 +1220,7 @@ extension _$RWKV on _RWKV {
   }
 
   void _onGeneratingChanged(bool generating) async {
+    P.app.setKeepScreenAwakeForReason(reason: .generation, enabled: generating);
     if (P.rwkv.generatingId.q == null) return;
     if (!generating) P.rwkv.generatingId.q = null;
   }
