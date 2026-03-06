@@ -334,7 +334,7 @@ class _SettingsControls extends ConsumerWidget {
                                 color: onSurface.q(.6),
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               _getScaleLabel(currentScale),
                               style: TextStyle(
@@ -343,7 +343,7 @@ class _SettingsControls extends ConsumerWidget {
                                 color: primary,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               'A',
                               style: TextStyle(
