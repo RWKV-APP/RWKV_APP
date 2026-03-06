@@ -1258,6 +1258,9 @@ extension $Remote on _Remote {
     // If there are existing files, ask user for confirmation
     bool shouldOverwrite = false;
     if (hasExistingFiles) {
+      if (!context.mounted) {
+        return (0, 0, <String>[]);
+      }
       final s = S.current;
       final existingCount = fileInfos.where((info) => info.existingFileInfo != null && info.error == null).length;
       final message = existingCount == 1
@@ -1284,8 +1287,7 @@ extension $Remote on _Remote {
     final List<String> failedFiles = [];
 
     // Process each file
-    for (var i = 0; i < fileInfos.length; i++) {
-      final fileInfo = fileInfos[i];
+    for (final fileInfo in fileInfos) {
       final pickedFile = fileInfo.pickedFile;
       final fileName = pickedFile.name;
 

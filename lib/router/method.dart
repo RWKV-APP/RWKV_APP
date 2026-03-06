@@ -30,19 +30,19 @@ void replace(PageKey pageKey, {Object? extra}) {
 }
 
 /// # 可能有返回值的推
-Future<T?> push<T extends Object?>(PageKey pageKey, {Object? extra}) async {
+Future<ResultT?> push<ResultT extends Object?>(PageKey pageKey, {Object? extra}) async {
   final location = pageKey.path;
   final context = getContext();
   if (context == null) {
     qqw("Context is null when calling push");
     return null;
   }
-  final r = await context.push<T>(location, extra: extra);
+  final r = await context.push<ResultT>(location, extra: extra);
   return r;
 }
 
 /// # 返回, 传递返回值
-Future<void> pop<T extends Object?>([T? result]) async {
+Future<void> pop<ResultT extends Object?>([ResultT? result]) async {
   final context = getContext();
   if (context == null) {
     qqw("Context is null when calling pop");

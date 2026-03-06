@@ -347,89 +347,87 @@ class _Guide extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.paddingBottom);
     final screenWidth = ref.watch(P.app.screenWidth);
     final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = theme.colorScheme.primary;
     final qw = ref.watch(P.app.qw);
-    return Container(
-      // decoration: BoxDecoration(color: Colors.red.q(.2)),
-      child: Column(
-        crossAxisAlignment: .center,
-        mainAxisAlignment: .center,
-        children: [
-          Container(
-            // decoration: BoxDecoration(color: Colors.red.q(.2)),
-            padding: const .all(32),
-            width: screenWidth,
-            height: screenWidth,
-            child: Column(
-              crossAxisAlignment: .center,
-              mainAxisAlignment: .center,
-              children: [
-                FaIcon(FontAwesomeIcons.camera, size: 48, color: qb.q(.6667)),
-                const SizedBox(height: 16),
-                Text.rich(
-                  textAlign: .center,
-                  TextSpan(
-                    children: [
-                      TextSpan(text: s.ocr_guide_text(s.take_photo)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 16,
+    return Column(
+      crossAxisAlignment: .center,
+      mainAxisAlignment: .center,
+      children: [
+        Container(
+          // decoration: BoxDecoration(color: Colors.red.q(.2)),
+          padding: const .all(32),
+          width: screenWidth,
+          height: screenWidth,
+          child: Column(
+            crossAxisAlignment: .center,
+            mainAxisAlignment: .center,
             children: [
-              GD(
-                onTap: P.ocr.takePhoto,
-                child: Container(
-                  decoration: BoxDecoration(
-                    // border: .all(color: Colors.blue, width: 1),
-                    borderRadius: .circular(48),
-                    color: primary.q(1),
-                    boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
-                  ),
-                  height: 96,
-                  width: 96,
-                  child: Center(
-                    child: Text(
-                      s.camera,
-                      style: TS(c: qw, s: 16, w: .w600),
-                      textAlign: .center,
-                    ),
-                  ),
-                ),
-              ),
-              GD(
-                onTap: P.ocr.pickFromGallery,
-                child: Container(
-                  decoration: BoxDecoration(
-                    // border: .all(color: Colors.blue, width: 1),
-                    borderRadius: .circular(48),
-                    color: primary.q(1),
-                    boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
-                  ),
-                  height: 96,
-                  width: 96,
-                  child: Center(
-                    child: Text(
-                      s.gallery,
-                      style: TS(c: qw, s: 16, w: .w600),
-                      textAlign: .center,
-                    ),
-                  ),
+              FaIcon(FontAwesomeIcons.camera, size: 48, color: qb.q(.6667)),
+              const SizedBox(height: 16),
+              Text.rich(
+                textAlign: .center,
+                TextSpan(
+                  children: [
+                    TextSpan(text: s.ocr_guide_text(s.take_photo)),
+                  ],
                 ),
               ),
             ],
           ),
-          paddingBottom.h,
-        ],
-      ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 16,
+          children: [
+            GD(
+              onTap: P.ocr.takePhoto,
+              child: Container(
+                decoration: BoxDecoration(
+                  // border: .all(color: Colors.blue, width: 1),
+                  borderRadius: .circular(48),
+                  color: primary.q(1),
+                  boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
+                ),
+                height: 96,
+                width: 96,
+                child: Center(
+                  child: Text(
+                    s.camera,
+                    style: TS(c: qw, s: 16, w: .w600),
+                    textAlign: .center,
+                  ),
+                ),
+              ),
+            ),
+            GD(
+              onTap: P.ocr.pickFromGallery,
+              child: Container(
+                decoration: BoxDecoration(
+                  // border: .all(color: Colors.blue, width: 1),
+                  borderRadius: .circular(48),
+                  color: primary.q(1),
+                  boxShadow: [BoxShadow(color: kB.q(.33), blurRadius: 10, offset: const Offset(0, 2))],
+                ),
+                height: 96,
+                width: 96,
+                child: Center(
+                  child: Text(
+                    s.gallery,
+                    style: TS(c: qw, s: 16, w: .w600),
+                    textAlign: .center,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        paddingBottom.h,
+      ],
     );
   }
 }

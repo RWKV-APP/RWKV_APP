@@ -13,16 +13,16 @@ enum _EA {
 
 final _httpClient = http.Client();
 
-Future<T?> Function<T extends http.BaseResponse>(
-  Future<T> response, {
+Future<ResponseT?> Function<ResponseT extends http.BaseResponse>(
+  Future<ResponseT> response, {
   required Uri uri,
   required Map<String, String> headers,
   required List<_EA> ea,
   Encoding? encoding,
 })
 _errorWrapper =
-    <T extends http.BaseResponse>(
-      Future<T> response, {
+    <ResponseT extends http.BaseResponse>(
+      Future<ResponseT> response, {
       required Uri uri,
       required Map<String, String> headers,
       required List<_EA> ea,

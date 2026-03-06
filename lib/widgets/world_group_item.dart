@@ -694,7 +694,6 @@ class _ExpandedFileItem extends ConsumerWidget {
     final progress = localFile.progress / 100;
     final fileSize = fileInfo.fileSize;
     final qb = ref.watch(P.app.qb);
-    final primary = Theme.of(context).colorScheme.primary;
     final state = localFile.state;
     double networkSpeed = localFile.networkSpeed.clamp(0, 99999999).toDouble();
     Duration timeRemaining = localFile.timeRemaining;

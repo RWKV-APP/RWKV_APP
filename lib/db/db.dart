@@ -129,6 +129,7 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(schema.msg, schema.msg.rawDecodeParams);
         },
         from4To5: (m, schema) async {
+          // ignore: experimental_member_use
           await m.alterTable(TableMigration(schema.msg));
         },
         from5To6: (m, schema) async {

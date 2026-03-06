@@ -145,6 +145,8 @@ dev_dependencies:
   build_runner:
   custom_lint:
   drift_dev:
+  flutter_test:
+    sdk: flutter
   flutter_gen_runner:
   flutter_lints:
   freezed:

@@ -284,9 +284,12 @@ extension $Conversation on _Conversation {
 
       // 7. 分享文件
       final xFile = XFile(file.path, mimeType: 'text/plain');
-      await Share.shareXFiles(
-        [xFile],
-        subject: conversation.title,
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [xFile],
+          subject: conversation.title,
+          title: conversation.title,
+        ),
       );
     } catch (e) {
       qqe("Export conversation failed: $e");

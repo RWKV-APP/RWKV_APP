@@ -21,6 +21,7 @@ class PageTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final screenWidth = ref.watch(P.app.screenWidth);
     final screenHeight = ref.watch(P.app.screenHeight);
     final useBottomNavigationBar = screenWidth <= 600 || screenWidth <= (screenHeight - 100);
@@ -90,7 +91,7 @@ class PageTab extends ConsumerWidget {
                   child: _TabItem(
                     labelKey: _TabLabelKey.settings,
                     icon: FontAwesomeIcons.gear,
-                    selectedIcon: FontAwesomeIcons.cog,
+                    selectedIcon: FontAwesomeIcons.gear,
                     index: 2,
                   ),
                 ),
@@ -108,8 +109,8 @@ class PageTab extends ConsumerWidget {
     final horizontalLayout = Row(
       children: <Widget>[
         Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
+          data: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
               primary: hoverColor, // Hover 颜色将变成 Colors.red.withOpacity(0.04)
             ),
           ),
@@ -150,8 +151,8 @@ class PageTab extends ConsumerWidget {
       ],
     );
 
-    final theme = ref.watch(P.app.theme);
-    final systemOverlayStyle = theme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark;
+    final currentTheme = ref.watch(P.app.theme);
+    final systemOverlayStyle = currentTheme.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: systemOverlayStyle,
@@ -212,7 +213,7 @@ class _TabItem extends ConsumerWidget {
             const SizedBox(height: 2),
             Text(
               _resolveLabel(context),
-              style: TextStyle(fontSize: 12, color: color),
+              style: theme.textTheme.labelSmall?.copyWith(fontSize: 12, color: color) ?? TextStyle(fontSize: 12, color: color),
             ),
             const SizedBox(height: 8),
           ],

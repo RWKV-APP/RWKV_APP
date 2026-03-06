@@ -20,7 +20,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
-import 'package:zone/model/thinking_mode.dart' as thinking_mode;
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/branch_switcher.dart';
 
@@ -118,33 +117,6 @@ class BotMessageBottom extends ConsumerWidget {
     if (estimated < 52) return 52;
     if (estimated > 90) return 90;
     return estimated;
-  }
-
-  String _extractSuffixBySeparator({
-    required String source,
-    required String separator,
-  }) {
-    final separatorIndex = source.lastIndexOf(separator);
-    if (separatorIndex < 0) return source;
-    return source.substring(separatorIndex + separator.length).trim();
-  }
-
-  String _localizedReasoningMode({
-    required S s,
-    required String? runningMode,
-  }) {
-    final mode = thinking_mode.ThinkingMode.fromString(runningMode);
-    final localizedWithPrefix = switch (mode) {
-      .lighting => s.thinking_mode_auto(""),
-      .none => s.thinking_mode_off(""),
-      .free => s.thinking_mode_high(""),
-      .preferChinese => s.thinking_mode_high(""),
-      .fast => s.think_button_mode_fast(""),
-      .en => s.think_button_mode_en(""),
-      .enShort => s.think_button_mode_en_short(""),
-      .enLong => s.think_button_mode_en_long(""),
-    };
-    return _extractSuffixBySeparator(source: localizedWithPrefix, separator: s.hyphen);
   }
 
   String? _localizedDecodeParamSummary({
@@ -301,10 +273,6 @@ class BotMessageBottom extends ConsumerWidget {
     if (decodeParamSummary == null && (msg.changing || msg.paused || receiveId == msg.id)) {
       decodeParamSummary = currentDecodeParamDisplayName;
     }
-    final runningModeText = _localizedReasoningMode(
-      s: s,
-      runningMode: msg.runningMode,
-    );
     final latestModel = ref.watch(P.rwkv.latestModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
     final liveModelName = isTTSDemo ? (latestModel?.name ?? currentGroupInfo?.displayName) : null;
@@ -729,8 +697,8 @@ class BotMessageBottom extends ConsumerWidget {
 }
 
 class _ChangingPrefillProgressInline extends ConsumerWidget {
-  final changing;
-  final detailsExpanded;
+  final bool changing;
+  final bool detailsExpanded;
   final Color color;
 
   const _ChangingPrefillProgressInline({
@@ -749,13 +717,11 @@ class _ChangingPrefillProgressInline extends ConsumerWidget {
     final theme = Theme.of(context);
     if (!changing) return const SizedBox.shrink();
 
-    final s = S.of(context);
     final progress = ref.watch(P.rwkv.prefillProgress).clamp(0, 1).toDouble();
     final percent = _percentValue(progress: progress);
     if (percent >= 100) return const SizedBox.shrink();
 
     final percentText = "$percent%";
-    final progressLabel = s.prefill_progress_percent(percentText);
 
     return Row(
       mainAxisSize: .min,
@@ -775,8 +741,8 @@ class _ChangingPrefillProgressInline extends ConsumerWidget {
 }
 
 class _BottomDetailsMetaChip extends StatelessWidget {
-  final label;
-  final value;
+  final String label;
+  final String value;
   final Color color;
   final Widget? leading;
 
@@ -833,7 +799,7 @@ class _BottomDetailsMetaChip extends StatelessWidget {
 }
 
 class _AnimatedBottomDetailsSection extends StatelessWidget {
-  final visible;
+  final bool visible;
   final Widget child;
   final Duration duration;
   final Curve curve;

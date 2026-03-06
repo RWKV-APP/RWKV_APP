@@ -174,7 +174,7 @@ class _ModelSettings extends ConsumerWidget {
             padding: .zero,
             onPressed: searchDepthRemoveAvailable
                 ? () {
-                    P.othello.searchDepth.ua(-1);
+                    P.othello.searchDepth.q = searchDepth - 1;
                   }
                 : null,
             icon: const Icon(Icons.remove),
@@ -192,7 +192,7 @@ class _ModelSettings extends ConsumerWidget {
           child: IconButton(
             onPressed: searchDepthAddAvailable
                 ? () {
-                    P.othello.searchDepth.ua(1);
+                    P.othello.searchDepth.q = searchDepth + 1;
                   }
                 : null,
             icon: const Icon(Icons.add),
@@ -216,7 +216,7 @@ class _ModelSettings extends ConsumerWidget {
           child: IconButton(
             onPressed: searchBreadthRemoveAvailable
                 ? () {
-                    P.othello.searchBreadth.ua(-1);
+                    P.othello.searchBreadth.q = searchBreadth - 1;
                   }
                 : null,
             icon: const Icon(Icons.remove),
@@ -234,7 +234,7 @@ class _ModelSettings extends ConsumerWidget {
           child: IconButton(
             onPressed: searchBreadthAddAvailable
                 ? () {
-                    P.othello.searchBreadth.ua(1);
+                    P.othello.searchBreadth.q = searchBreadth + 1;
                   }
                 : null,
             icon: const Icon(Icons.add),
@@ -337,35 +337,32 @@ class _Players extends ConsumerWidget {
             textAlign: TextAlign.center,
             style: const TS(w: .w700),
           ),
-          Wrap(
-            children: [
-              Row(
-                mainAxisSize: .min,
-                children: [
-                  Radio(
-                    value: false,
-                    groupValue: blackIsAI,
-                    onChanged: (value) {
-                      P.othello.blackIsAI.q = false;
-                    },
-                  ),
-                  Text(s.human),
-                ],
-              ),
-              Row(
-                mainAxisSize: .min,
-                children: [
-                  Radio(
-                    value: true,
-                    groupValue: blackIsAI,
-                    onChanged: (value) {
-                      P.othello.blackIsAI.q = true;
-                    },
-                  ),
-                  Text(s.rwkv),
-                ],
-              ),
-            ],
+          RadioGroup<bool>(
+            groupValue: blackIsAI,
+            onChanged: (bool? value) {
+              if (value == null) {
+                return;
+              }
+              P.othello.blackIsAI.q = value;
+            },
+            child: Wrap(
+              children: [
+                Row(
+                  mainAxisSize: .min,
+                  children: [
+                    const Radio<bool>(value: false),
+                    Text(s.human),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: .min,
+                  children: [
+                    const Radio<bool>(value: true),
+                    Text(s.rwkv),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -386,35 +383,32 @@ class _Players extends ConsumerWidget {
             textAlign: TextAlign.center,
             style: const TS(w: .w700),
           ),
-          Wrap(
-            children: [
-              Row(
-                mainAxisSize: .min,
-                children: [
-                  Radio(
-                    value: false,
-                    groupValue: whiteIsAI,
-                    onChanged: (value) {
-                      P.othello.whiteIsAI.q = false;
-                    },
-                  ),
-                  Text(s.human),
-                ],
-              ),
-              Row(
-                mainAxisSize: .min,
-                children: [
-                  Radio(
-                    value: true,
-                    groupValue: whiteIsAI,
-                    onChanged: (value) {
-                      P.othello.whiteIsAI.q = true;
-                    },
-                  ),
-                  Text(s.rwkv),
-                ],
-              ),
-            ],
+          RadioGroup<bool>(
+            groupValue: whiteIsAI,
+            onChanged: (bool? value) {
+              if (value == null) {
+                return;
+              }
+              P.othello.whiteIsAI.q = value;
+            },
+            child: Wrap(
+              children: [
+                Row(
+                  mainAxisSize: .min,
+                  children: [
+                    const Radio<bool>(value: false),
+                    Text(s.human),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: .min,
+                  children: [
+                    const Radio<bool>(value: true),
+                    Text(s.rwkv),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

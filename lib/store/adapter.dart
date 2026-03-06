@@ -12,9 +12,9 @@ class _Adapter {
 
 /// Public methods
 extension $Adapter on _Adapter {
-  Future<T?> call<T>(ToNative toNative, [dynamic arguments]) async {
+  Future<ResultT?> call<ResultT>(ToNative toNative, [dynamic arguments]) async {
     try {
-      return await _channel.invokeMethod<T>(toNative.name, arguments);
+      return await _channel.invokeMethod<ResultT>(toNative.name, arguments);
     } catch (e) {
       if (!kDebugMode) Sentry.captureException(e, stackTrace: StackTrace.current);
       return null;

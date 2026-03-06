@@ -31,7 +31,6 @@ InteractionVisualColors interactionVisualColors({
   required InteractionVisualState state,
 }) {
   final qw = appTheme.isLight ? kW : kB;
-  final qb = appTheme.isLight ? kB : kW;
 
   final unavailableColors = InteractionVisualColors(
     // background: Color.lerp(appTheme.g1, appTheme.scaffoldBg, .33) ?? appTheme.g1,

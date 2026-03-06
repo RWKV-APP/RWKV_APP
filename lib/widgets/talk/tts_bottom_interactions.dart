@@ -487,6 +487,7 @@ class _SpkPanel extends ConsumerWidget {
   }
 }
 
+// ignore: unused_element
 class _Instruction extends ConsumerWidget {
   final DemoType preferredDemoType;
   const _Instruction({required this.preferredDemoType});
