@@ -24,6 +24,7 @@ class _Chat {
 
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
   late final _liveTokenCountThrottler = Throttler(milliseconds: 997, trailing: true);
+  static const _autoScrollBottomThreshold = 80.0;
   int _refreshTokenCountEpoch = 0;
 
   // ===========================================================================
@@ -611,7 +612,12 @@ extension $Chat on _Chat {
     await send(content, isRegenerate: true);
   }
 
-  Future<void> scrollToBottom({Duration? duration, bool? animate = true}) async {
+  Future<void> scrollToBottom({
+    Duration? duration,
+    bool? animate = true,
+    bool respectUserScroll = true,
+  }) async {
+    if (respectUserScroll && !_canAutoScrollToBottom()) return;
     await scrollTo(offset: 0, duration: duration, animate: animate);
   }
 
@@ -755,9 +761,10 @@ extension $Chat on _Chat {
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
 
-    34.msLater.then((_) {
-      scrollToBottom();
-    });
+    unawaited(() async {
+      await 34.msLater;
+      await scrollToBottom(respectUserScroll: false);
+    }());
 
     if (type == MessageType.userImage) {
       // 在之前的操作中已经注入了 LLM 了
@@ -942,6 +949,13 @@ extension _$Chat on _Chat {
     } else {
       listAtTop.q = true;
     }
+  }
+
+  bool _canAutoScrollToBottom() {
+    if (scrollController.hasClients == false) return true;
+
+    final pixels = scrollController.position.pixels;
+    return pixels <= _Chat._autoScrollBottomThreshold;
   }
 
   void _onConversationTokenCountObserved({
@@ -1511,6 +1525,7 @@ extension _$Chat on _Chat {
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
         receivedTokens.q = res.responseBufferContent;
+        unawaited(scrollToBottom(duration: 60.ms));
         if (completionMode.q) return;
         final currentReceiveId = receiveId.q;
         if (currentReceiveId != null) {
@@ -1527,6 +1542,7 @@ extension _$Chat on _Chat {
       case from_rwkv.ResponseBatchBufferContent res:
         final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
         receivedTokens.q = responseBufferContent;
+        unawaited(scrollToBottom(duration: 60.ms));
         if (completionMode.q) return;
         final currentReceiveId = receiveId.q;
         if (currentReceiveId != null) {

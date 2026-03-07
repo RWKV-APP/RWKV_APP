@@ -512,9 +512,10 @@ extension $Talk on _Talk {
     P.msg._syncMsg(id, msg);
     P.msg.msgNode.q.rootAdd(MsgNode(id));
 
-    34.msLater.then((_) {
-      P.chat.scrollToBottom();
-    });
+    unawaited(() async {
+      await 34.msLater;
+      await P.chat.scrollToBottom(respectUserScroll: false);
+    }());
 
     final receiveMsg = Message(
       id: receiveId,

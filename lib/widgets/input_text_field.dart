@@ -271,7 +271,7 @@ class InputTextField extends ConsumerWidget {
   void _onTap() async {
     qq;
     await 300.msLater;
-    await P.chat.scrollToBottom();
+    await P.chat.scrollToBottom(respectUserScroll: false);
   }
 
   void _onAppPrivateCommand(String action, Map<String, dynamic> data) {}
