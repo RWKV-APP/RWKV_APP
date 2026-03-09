@@ -156,13 +156,20 @@ class _RWKV {
     return loadedModels.length;
   });
 
-  late final latestModel = qp((ref) {
+  late final latestModel = qp<FileInfo?>((ref) {
     final loadedModels = ref.watch(P.rwkv.loadedModels);
     final m = loadedModels.keys.lastOrNull;
     if (m?.weightType == .roleplay) {
       return null;
     }
     return m;
+  });
+
+  late final latestModelId = qp<int?>((ref) {
+    final _latestModel = ref.watch(P.rwkv.latestModel);
+    final _loadedModels = ref.watch(P.rwkv.loadedModels);
+    if (_latestModel == null || _loadedModels.isEmpty) return null;
+    return _loadedModels[_latestModel];
   });
 
   late final frontendBatchParamsAreAllSame = qp((ref) {

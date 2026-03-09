@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:halo_state/halo_state.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 
 // Project imports:
 import 'package:zone/func/check_model_selection.dart';
@@ -25,7 +27,7 @@ String _askQuestionLanguageLabel(S s, Language language) {
   };
 }
 
-class AskQuestionPanel extends ConsumerStatefulWidget {
+class AskQuestionPanel extends ConsumerWidget {
   static const String panelKey = 'AskQuestionPanel';
 
   static Future<void> show() async {
@@ -35,6 +37,19 @@ class AskQuestionPanel extends ConsumerStatefulWidget {
       key: panelKey,
       initialChildSize: .74,
       maxChildSize: .92,
+      beforeShow: () async {
+        final latestModelId = P.rwkv.latestModelId.q;
+        if (latestModelId != null) {
+          P.rwkv.send(to_rwkv.SetEosToken("\n", modelID: latestModelId));
+        }
+        P.askQuestion.onPanelShown();
+      },
+      afterHide: (_) {
+        final latestModelId = P.rwkv.latestModelId.q;
+        P.askQuestion.onPanelHidden();
+        if (latestModelId == null) return;
+        P.rwkv.send(to_rwkv.SetEosToken("\n\n", modelID: latestModelId));
+      },
       builder: (scrollController) => AskQuestionPanel(scrollController: scrollController),
     );
   }
@@ -47,30 +62,13 @@ class AskQuestionPanel extends ConsumerStatefulWidget {
   final ScrollController scrollController;
 
   @override
-  ConsumerState<AskQuestionPanel> createState() => _AskQuestionPanelState();
-}
-
-class _AskQuestionPanelState extends ConsumerState<AskQuestionPanel> {
-  @override
-  void dispose() {
-    P.askQuestion.onPanelHidden();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    P.askQuestion.onPanelShown();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
     final selectedLanguage = ref.watch(P.askQuestion.language);
-    final generating = ref.watch(P.askQuestion.generating);
+    final generating = ref.watch(P.rwkv.generating) && ref.watch(P.askQuestion.interceptingEvents);
     final questions = ref.watch(P.askQuestion.questions);
     final hasChatHistory = ref.watch(P.askQuestion.hasChatHistory);
     final maxParallelCount = ref.watch(P.askQuestion.maxParallelCount);
@@ -89,12 +87,12 @@ class _AskQuestionPanelState extends ConsumerState<AskQuestionPanel> {
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
-          _AskQuestionPanelBar(scrollController: widget.scrollController),
+          _AskQuestionPanelBar(scrollController: scrollController),
           Expanded(
             child: ListView(
-              controller: widget.scrollController,
+              controller: scrollController,
               physics: const BouncingScrollPhysics(),
-              padding: .only(
+              padding: const .only(
                 left: 12,
                 top: 12,
                 right: 12,
@@ -482,7 +480,7 @@ class _AskQuestionBottomBar extends ConsumerWidget {
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final generating = ref.watch(P.askQuestion.generating);
+    final generating = ref.watch(P.rwkv.generating) && ref.watch(P.askQuestion.interceptingEvents);
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;

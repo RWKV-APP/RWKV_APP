@@ -106,6 +106,8 @@ class Debugger extends ConsumerWidget {
     final maxHeightsOfHomeItemTitle = ref.watch(P.ui.maxHeightsOfHomeItemTitle);
     final maxHeightsOfHomeItemDescription = ref.watch(P.ui.maxHeightsOfHomeItemDescription);
 
+    final questions = ref.watch(P.askQuestion.questions);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -146,7 +148,6 @@ class Debugger extends ConsumerWidget {
     const showCurrentGroupInfo = false;
     const showLatestModel = false;
     const showGeneratingId = false;
-    const showGenerating = false;
     const showHiddenPrefilling = false;
     const showFrontendSocName = false;
     const showFrontendSocBrand = false;
@@ -158,6 +159,8 @@ class Debugger extends ConsumerWidget {
     const showDefaultModelsDir = false;
     const showUsingCustomModelsDir = false;
     const showCustomModelsDir = false;
+    const showQuestions = true;
+    const showGenerating = true;
 
     return Positioned(
       left: 0,
@@ -248,6 +251,8 @@ class Debugger extends ConsumerWidget {
                       if (showMaxHeightsOfHomeItemTitle) Text(maxHeightsOfHomeItemTitle.toString()),
                       if (showMaxHeightsOfHomeItemDescription) Text("maxHeightsOfHomeItemDescription".codeToName),
                       if (showMaxHeightsOfHomeItemDescription) Text(maxHeightsOfHomeItemDescription.toString()),
+                      if (showQuestions) Text("questions".codeToName),
+                      if (showQuestions) Text(questions.join("\n")),
                     ].indexMap((index, e) {
                       return Container(
                         margin: .only(top: index % 2 == 0 ? 0 : 1),

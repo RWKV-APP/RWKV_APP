@@ -77,8 +77,6 @@ const _askQuestionPrefixes = <Language, List<String>>{
 
 class _AskQuestion {
   Timer? _getResponseTimer;
-  Timer? _panelAutoGenerateTimer;
-  StreamSubscription<from_rwkv.FromRWKV>? _albatrossSubscription;
   DateTime? _lastRawQuestionsChangedAt;
   int? _runningModelID;
   bool _stopRequested = false;
@@ -86,11 +84,9 @@ class _AskQuestion {
   List<String> _runningPrefixes = const [];
 
   late final language = qs<Language>(.zh_Hans);
-  late final generating = qs(false);
+  late final interceptingEvents = qs(false);
   late final questions = qs<List<String>>([]);
-  late final rawQuestions = qs<List<String>>([]);
   late final parallelCount = qs(1);
-  late final lastTranscript = qs("");
 
   late final maxParallelCount = qp((ref) {
     final currentModel = ref.watch(P.rwkv.latestModel);
@@ -105,14 +101,10 @@ class _AskQuestion {
     return supportedBatchSizes.max;
   });
 
-  late final currentTranscript = qp((ref) {
+  late final hasChatHistory = qp((ref) {
     final _ = ref.watch(P.msg.list);
     final messages = _buildHistoryMessagesForQuestionGeneration();
-    return _buildTranscriptFromMessages(messages);
-  });
-
-  late final hasChatHistory = qp((ref) {
-    final transcript = ref.watch(currentTranscript);
+    final transcript = _buildTranscriptFromMessages(messages);
     return transcript.trim().isNotEmpty;
   });
 
@@ -136,6 +128,8 @@ class _AskQuestion {
 
 /// Private methods
 extension _$AskQuestion on _AskQuestion {
+  bool get _isGenerating => P.rwkv.generating.q && interceptingEvents.q;
+
   Language _resolveLanguage(Language preferredLanguage) {
     return switch (preferredLanguage) {
       .zh_Hant => .zh_Hant,
@@ -161,19 +155,15 @@ extension _$AskQuestion on _AskQuestion {
   void _cancelRunningTasks() {
     _getResponseTimer?.cancel();
     _getResponseTimer = null;
-    _panelAutoGenerateTimer?.cancel();
-    _panelAutoGenerateTimer = null;
-    _albatrossSubscription?.cancel();
-    _albatrossSubscription = null;
   }
 
   void _onStreamDone() async {
-    if (!generating.q) return;
+    if (!interceptingEvents.q) return;
     _finalizeQuestions();
   }
 
   void _onStreamError(Object error, StackTrace stackTrace) async {
-    if (!generating.q) return;
+    if (!interceptingEvents.q) return;
     qqe("ask question stream error: $error");
     if (!kDebugMode) {
       Sentry.captureException(error, stackTrace: stackTrace);
@@ -182,21 +172,17 @@ extension _$AskQuestion on _AskQuestion {
   }
 
   void _onStreamEvent(from_rwkv.FromRWKV event) {
-    if (!generating.q) return;
+    if (!interceptingEvents.q) return;
 
     switch (event) {
       case from_rwkv.ResponseBatchBufferContent res:
+        if (!_isGenerating) return;
         if (parallelCount.q <= 1) return;
         _updateQuestionsFromRaw(res.responseBufferContent);
-        if (res.eosFound.isNotEmpty && res.eosFound.every((item) => item)) {
-          _finalizeQuestions();
-        }
       case from_rwkv.ResponseBufferContent res:
+        if (!_isGenerating) return;
         if (parallelCount.q != 1) return;
         _updateQuestionsFromRaw([res.responseBufferContent]);
-        if (res.eosFound) {
-          _finalizeQuestions();
-        }
       case from_rwkv.IsGenerating res:
         final runningModelID = _runningModelID;
         if (runningModelID != null && res.modelID != runningModelID) return;
@@ -211,7 +197,6 @@ extension _$AskQuestion on _AskQuestion {
 
   void _updateQuestionsFromRaw(List<String> nextRawQuestions) {
     final effectiveRawQuestions = _mergePrefixesIntoRawQuestions(nextRawQuestions);
-    rawQuestions.q = effectiveRawQuestions;
 
     final cleanedQuestions = _dedupeQuestions(
       effectiveRawQuestions.map((raw) => raw.trim()),
@@ -222,12 +207,11 @@ extension _$AskQuestion on _AskQuestion {
 
   void _finalizeQuestions() {
     _cancelRunningTasks();
-    generating.q = false;
+    interceptingEvents.q = false;
     P.rwkv.generating.q = false;
-    _refreshChatModelGeneratingState();
 
     final finalizedQuestions = _dedupeQuestions(
-      rawQuestions.q.map((raw) => raw.trim()),
+      questions.q.map((question) => question.trim()),
     );
     questions.q = finalizedQuestions;
     _lastRawQuestions = const [];
@@ -238,7 +222,6 @@ extension _$AskQuestion on _AskQuestion {
   }
 
   void _maybeStopSettledGeneration(List<String> currentQuestions) {
-    if (P.rwkv.isAlbatrossLoaded.q) return;
     if (_stopRequested) return;
     if (currentQuestions.isEmpty) return;
 
@@ -359,8 +342,6 @@ extension _$AskQuestion on _AskQuestion {
   int _resolveParallelCount({
     int? cap,
   }) {
-    if (P.rwkv.isAlbatrossLoaded.q) return 1;
-
     final currentModel = P.rwkv.latestModel.q;
     if (currentModel == null) return 1;
 
@@ -393,7 +374,7 @@ extension _$AskQuestion on _AskQuestion {
 
   Future<bool> _ensureChatModelIdle({required int modelID}) async {
     if (!P.rwkv.generating.q) return true;
-    if (generating.q) return false;
+    if (interceptingEvents.q) return false;
 
     final request = to_rwkv.GetIsGenerating(modelID: modelID);
     P.rwkv.send(request);
@@ -414,15 +395,6 @@ extension _$AskQuestion on _AskQuestion {
     final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
     if (modelID == null) return;
     P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-  }
-
-  Future<void> _startAlbatrossCompletion({required String prompt}) async {
-    final stream = Albatross.instance.completion(prompt, batchSize: 1);
-    _albatrossSubscription = stream.listen(
-      _onStreamEvent,
-      onDone: _onStreamDone,
-      onError: _onStreamError,
-    );
   }
 
   String _trimTranscript(String transcript) {
@@ -453,24 +425,18 @@ extension _$AskQuestion on _AskQuestion {
 /// Public methods
 extension $AskQuestion on _AskQuestion {
   void onPanelShown() {
-    _panelAutoGenerateTimer?.cancel();
-    _panelAutoGenerateTimer = Timer(const Duration(milliseconds: 100), () async {
-      if (generating.q) return;
-      await generateFromCurrentChat();
-    });
+    if (_isGenerating) return;
+    generateFromCurrentChat();
   }
 
   void onPanelHidden() {
-    _panelAutoGenerateTimer?.cancel();
-    _panelAutoGenerateTimer = null;
-    if (!generating.q) return;
+    if (!_isGenerating) return;
     _pauseGeneration();
     questions.q = [];
-    rawQuestions.q = [];
   }
 
   void pauseGeneration() {
-    if (!generating.q) return;
+    if (!_isGenerating) return;
     _pauseGeneration();
   }
 
@@ -482,7 +448,6 @@ extension $AskQuestion on _AskQuestion {
 
     _cancelRunningTasks();
 
-    generating.q = false;
     P.rwkv.generating.q = false;
     _refreshChatModelGeneratingState();
     _lastRawQuestions = const [];
@@ -493,11 +458,10 @@ extension $AskQuestion on _AskQuestion {
   }
 
   void selectLanguage(Language nextLanguage) {
-    if (generating.q) return;
+    if (_isGenerating) return;
     if (language.q == nextLanguage) return;
     language.q = nextLanguage;
     questions.q = [];
-    rawQuestions.q = [];
   }
 
   Future<void> generateFromCurrentChat() async {
@@ -515,15 +479,11 @@ extension $AskQuestion on _AskQuestion {
     }
 
     await _generateFromDefaultPrefixes(
-      language: targetLanguage,
       prefixes: prefixes,
     );
   }
 
-  Future<void> generateFromMessages(
-    List<String> historyMessages, {
-    Language? preferredLanguage,
-  }) async {
+  Future<void> generateFromMessages(List<String> historyMessages) async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
@@ -554,7 +514,7 @@ extension $AskQuestion on _AskQuestion {
 
     await P.rwkv.clearStates();
     _cancelRunningTasks();
-    generating.q = true;
+    interceptingEvents.q = true;
     P.rwkv.generating.q = true;
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
@@ -562,14 +522,7 @@ extension $AskQuestion on _AskQuestion {
     _runningPrefixes = const [];
     _stopRequested = false;
     questions.q = [];
-    rawQuestions.q = [];
     parallelCount.q = resolvedParallelCount;
-    lastTranscript.q = transcript;
-
-    if (P.rwkv.isAlbatrossLoaded.q) {
-      await _startAlbatrossCompletion(prompt: "$transcript\n\nUser:");
-      return;
-    }
 
     P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
     P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
@@ -609,7 +562,6 @@ extension $AskQuestion on _AskQuestion {
   }
 
   Future<void> _generateFromDefaultPrefixes({
-    required Language language,
     required List<String> prefixes,
   }) async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
@@ -632,7 +584,7 @@ extension $AskQuestion on _AskQuestion {
 
     await P.rwkv.clearStates();
     _cancelRunningTasks();
-    generating.q = true;
+    interceptingEvents.q = true;
     P.rwkv.generating.q = true;
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
@@ -640,14 +592,7 @@ extension $AskQuestion on _AskQuestion {
     _runningPrefixes = selectedPrefixes;
     _stopRequested = false;
     questions.q = [];
-    rawQuestions.q = [];
     parallelCount.q = selectedPrefixes.length;
-    lastTranscript.q = "";
-
-    if (P.rwkv.isAlbatrossLoaded.q) {
-      await _startAlbatrossCompletion(prompt: "User: ${selectedPrefixes.first}");
-      return;
-    }
 
     P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
     P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));

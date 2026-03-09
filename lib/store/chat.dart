@@ -1487,7 +1487,7 @@ extension _$Chat on _Chat {
 
   @Deprecated("Use _onStreamEvent instead")
   void _onOldStreamEvent(LLMEvent event) {
-    if (P.askQuestion.generating.q) return;
+    if (P.askQuestion.interceptingEvents.q) return;
 
     switch (event.type) {
       case _RWKVMessageType.isGenerating:
@@ -1509,7 +1509,7 @@ extension _$Chat on _Chat {
   void _onStreamEvent(from_rwkv.FromRWKV event) {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator) return;
-    if (P.askQuestion.generating.q) return;
+    if (P.askQuestion.interceptingEvents.q) return;
 
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
