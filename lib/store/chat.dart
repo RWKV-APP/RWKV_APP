@@ -1487,6 +1487,8 @@ extension _$Chat on _Chat {
 
   @Deprecated("Use _onStreamEvent instead")
   void _onOldStreamEvent(LLMEvent event) {
+    if (P.askQuestion.generating.q) return;
+
     switch (event.type) {
       case _RWKVMessageType.isGenerating:
         final isGenerating = event.content == "true";

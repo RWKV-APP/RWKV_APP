@@ -13,14 +13,15 @@ import 'package:zone/model/language.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 
-String _askQuestionLanguageLabel(S s, AskQuestionLanguage language) {
+String _askQuestionLanguageLabel(S s, Language language) {
   return switch (language) {
-    AskQuestionLanguage.simplifiedChinese => Language.zh_Hans.display!,
-    AskQuestionLanguage.traditionalChinese => Language.zh_Hant.display!,
-    AskQuestionLanguage.english => s.english,
-    AskQuestionLanguage.japanese => s.japanese,
-    AskQuestionLanguage.korean => s.korean,
-    AskQuestionLanguage.russian => s.russian,
+    .zh_Hans => s.chinese,
+    .zh_Hant => s.chinese,
+    .en => s.english,
+    .ja => s.japanese,
+    .ko => s.korean,
+    .ru => s.russian,
+    .none => "",
   };
 }
 
@@ -127,13 +128,11 @@ class _AskQuestionPanelState extends ConsumerState<AskQuestionPanel> {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      for (final language in AskQuestionLanguage.values)
+                      for (final language in Language.values)
                         _AskQuestionSelectablePill(
                           label: _askQuestionLanguageLabel(s, language),
                           selected: language == selectedLanguage,
-                          onTap: () {
-                            P.askQuestion.selectLanguage(language);
-                          },
+                          onTap: () => P.askQuestion.selectLanguage(language),
                         ),
                     ],
                   ),
@@ -484,6 +483,20 @@ class _AskQuestionBottomBar extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final generating = ref.watch(P.askQuestion.generating);
+    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
+    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
+    final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
+
+    final String label;
+    if (!generating) {
+      label = s.generate;
+    } else if (decodeSpeed > 0) {
+      label = "decode ${decodeSpeed.toStringAsFixed(1)} tok/s";
+    } else if (prefillSpeed > 0) {
+      label = "prefill ${prefillSpeed.toStringAsFixed(1)} tok/s";
+    } else {
+      label = s.generating;
+    }
 
     return Container(
       padding: .fromLTRB(12, 10, 12, 12 + paddingBottom),
@@ -493,30 +506,50 @@ class _AskQuestionBottomBar extends ConsumerWidget {
           top: BorderSide(color: qb.q(.12), width: .5),
         ),
       ),
-      child: SizedBox(
-        width: double.infinity,
-        child: FilledButton.tonalIcon(
-          onPressed: generating
-              ? null
-              : () {
-                  P.askQuestion.generateFromCurrentChat();
-                },
-          style: FilledButton.styleFrom(
-            backgroundColor: qb.q(.1),
-            foregroundColor: qb.q(.96),
-            disabledBackgroundColor: qb.q(.05),
-            disabledForegroundColor: qb.q(.38),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+      child: Row(
+        crossAxisAlignment: .center,
+        children: [
+          if (generating)
+            IconButton(
+              onPressed: () => P.askQuestion.pauseGeneration(),
+              style: IconButton.styleFrom(
+                backgroundColor: qb.q(.08),
+                foregroundColor: qb.q(.9),
+              ),
+              icon: Icon(Symbols.pause, size: iconSize),
+            ),
+          if (generating) const SizedBox(width: 8),
+          Expanded(
+            child: FilledButton.tonalIcon(
+              onPressed: generating
+                  ? null
+                  : () {
+                      P.askQuestion.generateFromCurrentChat();
+                    },
+              style: FilledButton.styleFrom(
+                backgroundColor: qb.q(.1),
+                foregroundColor: qb.q(.96),
+                disabledBackgroundColor: qb.q(.05),
+                disabledForegroundColor: qb.q(.38),
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              icon: generating
+                  ? SizedBox(
+                      width: iconSize,
+                      height: iconSize,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: qb.q(.38),
+                      ),
+                    )
+                  : Icon(Symbols.auto_awesome, size: iconSize),
+              label: Text(label),
             ),
           ),
-          icon: Icon(
-            generating ? Symbols.progress_activity : Symbols.auto_awesome,
-            size: theme.textTheme.titleMedium?.fontSize,
-          ),
-          label: Text(generating ? s.generating : s.generate),
-        ),
+        ],
       ),
     );
   }

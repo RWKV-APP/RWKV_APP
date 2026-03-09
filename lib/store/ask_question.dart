@@ -1,16 +1,7 @@
 part of 'p.dart';
 
-enum AskQuestionLanguage {
-  simplifiedChinese,
-  traditionalChinese,
-  english,
-  japanese,
-  korean,
-  russian,
-}
-
-const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
-  AskQuestionLanguage.simplifiedChinese: [
+const _askQuestionPrefixes = <Language, List<String>>{
+  .zh_Hans: [
     '为什么',
     '如果',
     '请扮演',
@@ -22,7 +13,7 @@ const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
     '请构建',
     '请为',
   ],
-  AskQuestionLanguage.traditionalChinese: [
+  .zh_Hant: [
     '為什麼',
     '如果',
     '請扮演',
@@ -34,7 +25,7 @@ const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
     '請構建',
     '請為',
   ],
-  AskQuestionLanguage.english: [
+  .en: [
     'Why ',
     'How ',
     'What ',
@@ -46,7 +37,7 @@ const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
     'If ',
     'Assume ',
   ],
-  AskQuestionLanguage.japanese: [
+  .ja: [
     'なぜ',
     'どうして',
     'どうやって',
@@ -58,7 +49,7 @@ const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
     '仮に',
     '想像してください',
   ],
-  AskQuestionLanguage.korean: [
+  .ko: [
     '왜 ',
     '어떻게 ',
     '무엇이 ',
@@ -70,7 +61,7 @@ const _askQuestionPrefixes = <AskQuestionLanguage, List<String>>{
     '가정해 보면 ',
     '누구 ',
   ],
-  AskQuestionLanguage.russian: [
+  .ru: [
     'Почему ',
     'Как ',
     'Что ',
@@ -94,7 +85,7 @@ class _AskQuestion {
   List<String> _lastRawQuestions = const [];
   List<String> _runningPrefixes = const [];
 
-  late final language = qs<AskQuestionLanguage>(AskQuestionLanguage.simplifiedChinese);
+  late final language = qs<Language>(.zh_Hans);
   late final generating = qs(false);
   late final questions = qs<List<String>>([]);
   late final rawQuestions = qs<List<String>>([]);
@@ -127,7 +118,7 @@ class _AskQuestion {
 
   late final defaultLanguage = qp((ref) {
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
-    return _resolveAskQuestionLanguage(preferredLanguage.resolved);
+    return _resolveLanguage(preferredLanguage.resolved);
   });
 
   late final languageSwitched = qp((ref) {
@@ -145,20 +136,20 @@ class _AskQuestion {
 
 /// Private methods
 extension _$AskQuestion on _AskQuestion {
-  AskQuestionLanguage _resolveAskQuestionLanguage(Language preferredLanguage) {
+  Language _resolveLanguage(Language preferredLanguage) {
     return switch (preferredLanguage) {
-      Language.zh_Hant => AskQuestionLanguage.traditionalChinese,
-      Language.ja => AskQuestionLanguage.japanese,
-      Language.ko => AskQuestionLanguage.korean,
-      Language.ru => AskQuestionLanguage.russian,
-      Language.en => AskQuestionLanguage.english,
-      _ => AskQuestionLanguage.simplifiedChinese,
+      .zh_Hant => .zh_Hant,
+      .ja => .ja,
+      .ko => .ko,
+      .ru => .ru,
+      .en => .en,
+      _ => .zh_Hans,
     };
   }
 
   Future<void> _init() async {
     final preferredLanguage = P.preference.preferredLanguage.q.resolved;
-    language.q = _resolveAskQuestionLanguage(preferredLanguage);
+    language.q = _resolveLanguage(preferredLanguage);
 
     P.rwkv.broadcastStream.listen(
       _onStreamEvent,
@@ -223,12 +214,10 @@ extension _$AskQuestion on _AskQuestion {
     rawQuestions.q = effectiveRawQuestions;
 
     final cleanedQuestions = _dedupeQuestions(
-      effectiveRawQuestions.map((raw) {
-        return _sanitizeQuestion(raw: raw);
-      }),
+      effectiveRawQuestions.map((raw) => raw.trim()),
     );
     questions.q = cleanedQuestions;
-    _maybeStopSettledGeneration(effectiveRawQuestions);
+    _maybeStopSettledGeneration(cleanedQuestions);
   }
 
   void _finalizeQuestions() {
@@ -238,9 +227,7 @@ extension _$AskQuestion on _AskQuestion {
     _refreshChatModelGeneratingState();
 
     final finalizedQuestions = _dedupeQuestions(
-      rawQuestions.q.map((raw) {
-        return _sanitizeQuestion(raw: raw);
-      }),
+      rawQuestions.q.map((raw) => raw.trim()),
     );
     questions.q = finalizedQuestions;
     _lastRawQuestions = const [];
@@ -250,13 +237,13 @@ extension _$AskQuestion on _AskQuestion {
     _stopRequested = false;
   }
 
-  void _maybeStopSettledGeneration(List<String> rawQuestions) {
+  void _maybeStopSettledGeneration(List<String> currentQuestions) {
     if (P.rwkv.isAlbatrossLoaded.q) return;
     if (_stopRequested) return;
-    if (rawQuestions.isEmpty) return;
+    if (currentQuestions.isEmpty) return;
 
-    if (!_sameQuestionList(_lastRawQuestions, rawQuestions)) {
-      _lastRawQuestions = [...rawQuestions];
+    if (!_sameQuestionList(_lastRawQuestions, currentQuestions)) {
+      _lastRawQuestions = [...currentQuestions];
       _lastRawQuestionsChangedAt = DateTime.now();
       return;
     }
@@ -320,12 +307,7 @@ extension _$AskQuestion on _AskQuestion {
     final trimmedRaw = raw.trimLeft();
     if (trimmedRaw.isEmpty) return raw;
 
-    final strippedRaw = _stripLinePrefix(trimmedRaw);
-    if (strippedRaw.isEmpty) return raw;
-
-    final normalizedPrefix = trimmedPrefix.toLowerCase();
-    final normalizedRaw = strippedRaw.toLowerCase();
-    if (normalizedRaw.startsWith(normalizedPrefix)) return raw;
+    if (trimmedRaw.toLowerCase().startsWith(trimmedPrefix.toLowerCase())) return raw;
 
     return "$prefix$raw";
   }
@@ -347,16 +329,15 @@ extension _$AskQuestion on _AskQuestion {
     for (int i = 0; i < scopedMessages.length; i = i + 2) {
       final userMsg = scopedMessages[i];
       final botMsg = i + 1 < scopedMessages.length ? scopedMessages[i + 1] : null;
-
-      final userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference).trim();
-      if (userContent.isNotEmpty) {
-        messages.add(userContent);
-      }
-
       if (botMsg == null) continue;
+
+      final userContent = userMsg.getContentForHistoryWithRef(botMsg.reference).trim();
+      if (userContent.isEmpty) continue;
 
       final botContent = botMsg.getHistoryContent().trim();
       if (botContent.isEmpty) continue;
+
+      messages.add(userContent);
       messages.add(botContent);
     }
 
@@ -406,6 +387,7 @@ extension _$AskQuestion on _AskQuestion {
         P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
       }
       P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+      P.rwkv.send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
     });
   }
 
@@ -453,58 +435,6 @@ extension _$AskQuestion on _AskQuestion {
     return "...\n${normalized.substring(normalized.length - maxChars)}";
   }
 
-  String _stripLinePrefix(String input) {
-    String result = input.trim();
-    final patterns = <RegExp>[
-      RegExp(r'^\s*>+\s*'),
-      RegExp(r'^\s*[-*•]+\s*'),
-      RegExp(r'^\s*\d+[\.\)]\s*'),
-      RegExp(r'^\s*(User|Assistant|Question|Suggested question|Possible question|User question)\s*[:：]\s*', caseSensitive: false),
-      RegExp(r'^\s*(用户|助手|问题|建议问题|可直接提问|提问)\s*[:：]\s*'),
-      RegExp(r'^\s*(你可以问|可以问|建议你问|建议提问)\s*[:：]\s*'),
-    ];
-
-    bool changed = true;
-    while (changed) {
-      changed = false;
-      for (final pattern in patterns) {
-        final replaced = result.replaceFirst(pattern, '').trim();
-        if (replaced == result) continue;
-        result = replaced;
-        changed = true;
-      }
-    }
-
-    return result;
-  }
-
-  bool _looksLikeQuestion(String text) {
-    return text.contains("?") || text.contains("？");
-  }
-
-  String _sanitizeQuestion({
-    required String raw,
-  }) {
-    final normalized = raw.replaceAll("\r\n", "\n").replaceAll("\r", "\n").trim();
-    if (normalized.isEmpty) return "";
-
-    final lines = normalized.split("\n").map((line) => line.trim()).where((line) => line.isNotEmpty && line != "```").toList();
-    if (lines.isEmpty) return "";
-
-    String candidate = "";
-    for (final line in lines) {
-      final cleanedLine = _stripLinePrefix(line).replaceAll(RegExp("^[`\"']+"), '').replaceAll(RegExp("[`\"']+\$"), '').trim();
-      if (cleanedLine.isEmpty) continue;
-
-      candidate = cleanedLine;
-      if (_looksLikeQuestion(cleanedLine)) break;
-    }
-
-    if (candidate.isEmpty) return "";
-
-    return candidate.trim();
-  }
-
   List<String> _dedupeQuestions(Iterable<String> values) {
     final seen = <String>{};
     final result = <String>[];
@@ -533,9 +463,36 @@ extension $AskQuestion on _AskQuestion {
   void onPanelHidden() {
     _panelAutoGenerateTimer?.cancel();
     _panelAutoGenerateTimer = null;
+    if (!generating.q) return;
+    _pauseGeneration();
+    questions.q = [];
+    rawQuestions.q = [];
   }
 
-  void selectLanguage(AskQuestionLanguage nextLanguage) {
+  void pauseGeneration() {
+    if (!generating.q) return;
+    _pauseGeneration();
+  }
+
+  void _pauseGeneration() {
+    final modelID = _runningModelID;
+    if (modelID != null) {
+      P.rwkv.send(to_rwkv.Stop(modelID: modelID));
+    }
+
+    _cancelRunningTasks();
+
+    generating.q = false;
+    P.rwkv.generating.q = false;
+    _refreshChatModelGeneratingState();
+    _lastRawQuestions = const [];
+    _lastRawQuestionsChangedAt = null;
+    _runningModelID = null;
+    _runningPrefixes = const [];
+    _stopRequested = false;
+  }
+
+  void selectLanguage(Language nextLanguage) {
     if (generating.q) return;
     if (language.q == nextLanguage) return;
     language.q = nextLanguage;
@@ -565,7 +522,7 @@ extension $AskQuestion on _AskQuestion {
 
   Future<void> generateFromMessages(
     List<String> historyMessages, {
-    AskQuestionLanguage? preferredLanguage,
+    Language? preferredLanguage,
   }) async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
@@ -593,7 +550,7 @@ extension $AskQuestion on _AskQuestion {
     }
 
     final resolvedParallelCount = _resolveParallelCount();
-    final addGenerationPrompt = historyMessages.length.isEven;
+    final addGenerationPrompt = true;
 
     await P.rwkv.clearStates();
     _cancelRunningTasks();
@@ -610,8 +567,7 @@ extension $AskQuestion on _AskQuestion {
     lastTranscript.q = transcript;
 
     if (P.rwkv.isAlbatrossLoaded.q) {
-      final prompt = addGenerationPrompt ? "$transcript\n\nUser:" : transcript;
-      await _startAlbatrossCompletion(prompt: prompt);
+      await _startAlbatrossCompletion(prompt: "$transcript\n\nUser:");
       return;
     }
 
@@ -653,7 +609,7 @@ extension $AskQuestion on _AskQuestion {
   }
 
   Future<void> _generateFromDefaultPrefixes({
-    required AskQuestionLanguage language,
+    required Language language,
     required List<String> prefixes,
   }) async {
     if (!checkModelSelection(preferredDemoType: .chat)) return;

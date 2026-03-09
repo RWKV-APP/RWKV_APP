@@ -46,15 +46,17 @@ class AskQuestionButton extends ConsumerWidget {
     final generating = ref.watch(P.rwkv.generating);
     final loaded = ref.watch(P.rwkv.loaded);
     final canEnable = loaded && !loading && !generating;
-    final interactionState = canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable;
+    final interactionState = canEnable ? InteractionVisualState.available : InteractionVisualState.idleInteractive;
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
     final textColor = colors.foreground;
     final border = Border.all(color: colors.border);
     final useBackdropFilter = ref.watch(P.ui.useBackdropFilterForInputOptions);
-    final backdropFilterBgAlpha = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
-    final backdropFilterBgAlphaDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigma = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
+
+    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
 
     return AnimatedOpacity(
       opacity: canEnable ? 1 : .4,
@@ -75,7 +77,9 @@ class AskQuestionButton extends ConsumerWidget {
                 padding: const .symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   color: color.q(
-                    useBackdropFilter ? backdropFilterBgAlpha * backdropFilterBgAlphaDarkModifier : 1,
+                    userBackdropFilterForInputOptions
+                        ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                        : 1,
                   ),
                   borderRadius: .circular(60),
                   border: border,
