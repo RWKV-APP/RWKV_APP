@@ -752,7 +752,7 @@
   "mimic": "模仿",
   "ask": "提問",
   "question_generator": "問題產生器",
-  "question_generator_mock_description": "優先根據當前聊天記錄產生後續可直接發送的使用者問題；如果目前沒有聊天記錄，則退回使用預設問題前綴來生成建議。",
+  "question_generator_mock_description": "不知道要問什麼嗎？試試讓 RWKV 幫你想一個吧！",
   "question_generator_empty_chat_hint": "目前還沒有聊天記錄。點擊產生後，會按所選語言的預設問題前綴來給出建議。",
   "question_generator_tap_generate_hint": "點擊產生後，會基於目前聊天最多產出 {count} 條後續提問建議。",
   "@question_generator_tap_generate_hint": {

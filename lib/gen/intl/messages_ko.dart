@@ -914,7 +914,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "질문 언어를 변경했기 때문에 Generate는 현재 채팅 기록을 무시하고 선택한 언어로 문맥과 무관한 질문을 생성합니다.",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "현재 채팅 기록이 있으면 다음 사용자 질문을 생성하고, 기록이 비어 있으면 기본 질문 접두사로 후보를 만듭니다.",
+      "무슨 질문을 해야 할지 모르겠나요? RWKV가 대신 하나 만들어 주도록 해보세요!",
     ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage("언어"),

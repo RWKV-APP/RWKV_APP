@@ -758,7 +758,7 @@
   "mimic": "模仿",
   "ask": "提问",
   "question_generator": "问题生成器",
-  "question_generator_mock_description": "优先根据当前聊天记录生成后续可直接发送的用户问题；如果当前没有聊天记录，则回退到默认问题前缀来生成建议。",
+  "question_generator_mock_description": "不知道问什么问题好？试试让 RWKV 生成一个吧！",
   "question_generator_empty_chat_hint": "当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。",
   "question_generator_tap_generate_hint": "点击生成后，会基于当前聊天最多产出 {count} 条后续提问建议。",
   "@question_generator_tap_generate_hint": {

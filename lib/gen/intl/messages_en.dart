@@ -1080,7 +1080,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Because you changed the question language, Generate will ignore the current chat history and create context-free questions in the selected language.",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "Generate follow-up user questions from the current chat history, or fall back to default question prefixes when the chat is empty.",
+      "Not sure what to ask? Try letting RWKV generate a question for you!",
     ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage("Language"),

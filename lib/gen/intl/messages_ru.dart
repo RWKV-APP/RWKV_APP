@@ -1114,7 +1114,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Поскольку вы сменили язык вопросов, Generate проигнорирует текущую историю чата и создаст вопросы вне контекста на выбранном языке.",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "Генерирует следующие пользовательские вопросы по текущей истории чата, а если чат пуст, использует стандартные префиксы вопросов.",
+      "Не знаете, о чём спросить? Пусть RWKV придумает вопрос за вас!",
     ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage("Язык"),

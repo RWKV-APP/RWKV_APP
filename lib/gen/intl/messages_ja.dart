@@ -924,7 +924,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "質問の言語を切り替えたため、Generate は現在のチャット履歴を無視し、選択中の言語で文脈に依存しない質問を生成します。",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "現在のチャット履歴があれば次のユーザー質問を生成し、履歴が空なら既定の質問プレフィックスで候補を作ります。",
+      "何を聞けばいいか分からない？RWKVに質問を考えてもらいましょう！",
     ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage("言語"),

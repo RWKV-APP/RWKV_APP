@@ -752,7 +752,7 @@
   "mimic": "Имитация",
   "ask": "Спросить",
   "question_generator": "Генератор вопросов",
-  "question_generator_mock_description": "Генерирует следующие пользовательские вопросы по текущей истории чата, а если чат пуст, использует стандартные префиксы вопросов.",
+  "question_generator_mock_description": "Не знаете, о чём спросить? Пусть RWKV придумает вопрос за вас!",
   "question_generator_empty_chat_hint": "История чата пока пуста. При нажатии Generate будут использованы стандартные префиксы вопросов для выбранного языка.",
   "question_generator_tap_generate_hint": "Нажмите Generate, чтобы получить до {count} вариантов следующих вопросов по текущему чату.",
   "@question_generator_tap_generate_hint": {

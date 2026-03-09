@@ -843,7 +843,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "由于你切换了问题语言，点击生成后会忽略当前聊天记录，并按所选语言生成与上下文无关的问题。",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "优先根据当前聊天记录生成后续可直接发送的用户问题；如果当前没有聊天记录，则回退到默认问题前缀来生成建议。",
+      "不知道问什么问题好？试试让 RWKV 生成一个吧！",
     ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage("语言"),

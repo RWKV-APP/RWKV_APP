@@ -838,7 +838,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "由於你切換了問題語言，點擊產生後會忽略目前聊天記錄，並按所選語言產生與上下文無關的問題。",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "優先根據當前聊天記錄產生後續可直接發送的使用者問題；如果目前沒有聊天記錄，則退回使用預設問題前綴來生成建議。",
+      "不知道要問什麼嗎？試試讓 RWKV 幫你想一個吧！",
     ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage("語言"),
