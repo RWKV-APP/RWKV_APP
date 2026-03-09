@@ -15,9 +15,9 @@ abstract class Config {
   static const desktopModelsDirName = "models";
   static const mobileModelsDirName = "rwkv_chat_models";
 
-  static const domain = "https://api-model.rwkvos.com";
-  // static const apiv2 = "http://localhost:3462";
-  static const apiv2 = "http://api.rwkv.halowang.cloud";
+  static const domain = "http://api.rwkv.halowang.cloud";
+  // static const domain = "http://localhost:3462";
+  static const suggestionsUrl = "$domain/suggestions.json";
 
   static const timeout = Duration(seconds: 60);
 

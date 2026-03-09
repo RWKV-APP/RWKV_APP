@@ -175,7 +175,7 @@ class _Suggestion {
     final lang = shouldUseEn ? "en" : "zh";
     dynamic config;
     try {
-      config = await _get("http://120.77.3.4:3010/suggestions.json") as dynamic;
+      config = await _get(Config.suggestionsUrl) as dynamic;
       if (config == null) {
         throw "empty response";
       }
@@ -240,9 +240,7 @@ List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
   const normalCount = totalCount - intonationCount;
 
   final normalSuggestions = rawSuggestions.toList().shuffled.toList();
-  final selectedNormal = normalSuggestions.length <= normalCount
-      ? normalSuggestions
-      : normalSuggestions.take(normalCount).toList();
+  final selectedNormal = normalSuggestions.length <= normalCount ? normalSuggestions : normalSuggestions.take(normalCount).toList();
 
   final intonationSuggestions = _buildIntonationSuggestionDisplays().shuffled.toList();
   if (intonationSuggestions.isEmpty) {

@@ -2,6 +2,13 @@
 
 本文件由当前仓的 `.cursor/rules/*.mdc` 抽取并整理，用于 Codex 的项目级行为约束（override）。
 
+## 本地项目路径
+
+- flutter 前端仓库：`./` (本项目)
+- flutter_cpp 桥接层：`../rwkv_mobile_flutter`
+- cpp 后端推理引擎：`../rwkv_mobile` (可能为空)
+- app 下载页面与 http 服务器后端 ：`../app_website` (可能为空)
+
 ## 应用方式
 
 - `全局规则`：默认始终生效。

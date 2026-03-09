@@ -283,7 +283,7 @@ extension $App on _App {
     final currentLanguage = P.preference.preferredLanguage.q;
     final locale = _languageToLocaleString(currentLanguage);
 
-    final baseUrl = "${Config.apiv2}/distributions/release-notes";
+    final baseUrl = "${Config.domain}/distributions/release-notes";
     var fullUrl = "$baseUrl?build=$build&locale=${Uri.encodeComponent(locale)}";
     if (version != null && version.isNotEmpty) {
       fullUrl = "$fullUrl&version=${Uri.encodeComponent(version)}";
@@ -791,7 +791,7 @@ extension _$App on _App {
     final queryString = queryParts.join('&');
 
     // 构建完整的 URL，包含查询参数
-    final baseUrl = "${Config.apiv2}/distributions/latest";
+    final baseUrl = "${Config.domain}/distributions/latest";
     final fullUrl = "$baseUrl?$queryString";
 
     final res = await _get(fullUrl, timeout: 2000.ms);
