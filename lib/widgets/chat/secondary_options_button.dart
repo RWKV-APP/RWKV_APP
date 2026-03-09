@@ -92,11 +92,23 @@ class SecondaryOptionsButton extends ConsumerWidget {
                           Text(
                             s.prefer,
                             style: TS(c: textColor, s: fontSize, height: 1),
+                            strutStyle: StrutStyle(
+                              fontSize: fontSize,
+                              height: 1,
+                              forceStrutHeight: true,
+                              leadingDistribution: TextLeadingDistribution.even,
+                            ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             s.chinese,
                             style: TS(c: textColor, s: fontSize, height: 1),
+                            strutStyle: StrutStyle(
+                              fontSize: fontSize,
+                              height: 1,
+                              forceStrutHeight: true,
+                              leadingDistribution: TextLeadingDistribution.even,
+                            ),
                           ),
                         ],
                       ),

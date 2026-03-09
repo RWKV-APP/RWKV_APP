@@ -100,6 +100,12 @@ class AskQuestionButton extends ConsumerWidget {
                         height: 1,
                         w: .w500,
                       ),
+                      strutStyle: StrutStyle(
+                        fontSize: fontSize,
+                        height: 1,
+                        forceStrutHeight: true,
+                        leadingDistribution: TextLeadingDistribution.even,
+                      ),
                     ),
                   ],
                 ),

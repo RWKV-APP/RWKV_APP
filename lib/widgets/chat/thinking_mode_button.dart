@@ -118,6 +118,12 @@ class ThinkingModeButton extends ConsumerWidget {
                         Text(
                           compactText,
                           style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                          strutStyle: StrutStyle(
+                            fontSize: fontSize,
+                            height: 1,
+                            forceStrutHeight: true,
+                            leadingDistribution: TextLeadingDistribution.even,
+                          ),
                         ),
                         const SizedBox(width: 4),
                       ],

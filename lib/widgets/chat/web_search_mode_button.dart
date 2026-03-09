@@ -86,6 +86,12 @@ class WebSearchModeButton extends ConsumerWidget {
                     Text(
                       deepLabel,
                       style: TS(c: actionColor, s: fontSize, height: 1, w: .w500),
+                      strutStyle: StrutStyle(
+                        fontSize: fontSize,
+                        height: 1,
+                        forceStrutHeight: true,
+                        leadingDistribution: TextLeadingDistribution.even,
+                      ),
                     ),
                   ],
                 ],
