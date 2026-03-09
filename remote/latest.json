@@ -180,6 +180,17 @@
         "date": 1770001760
       },
       {
+        "name": "RWKV7-G1e 7.2B (MLX)",
+        "modelSize": 7.2,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-7.2B-g1e-20260301-ctx8192-mlx-6bit.zip",
+        "fileSize": 5983581289,
+        "quantization": "INT6",
+        "platforms": ["macos"],
+        "backends": ["mlx"],
+        "tags": ["reason", "mlx", "gpu"],
+        "date": 1772724864
+      },
+      {
         "name": "RWKV7-G1d 0.1B (CoreML)",
         "modelSize": 0.1,
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-0.1b-20260129-ctx8192-coreml-lut8.zip",
