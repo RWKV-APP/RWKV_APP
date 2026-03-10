@@ -47,6 +47,20 @@ jobs:
         shell: pwsh
         run: choco install innosetup --yes
 
+      - name: 🔐 Import code signing certificate
+        if: ${{ secrets.WINDOWS_CODESIGN_PFX_BASE64 != '' && secrets.WINDOWS_CODESIGN_PFX_PASSWORD != '' }}
+        shell: pwsh
+        run: |
+          $certPath = Join-Path $env:RUNNER_TEMP "codesign.pfx"
+          [IO.File]::WriteAllBytes($certPath, [Convert]::FromBase64String("${{ secrets.WINDOWS_CODESIGN_PFX_BASE64 }}"))
+          Import-PfxCertificate -FilePath $certPath -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString "${{ secrets.WINDOWS_CODESIGN_PFX_PASSWORD }}" -AsPlainText -Force) | Out-Null
+          Write-Host "✅ Code signing certificate imported"
+
+      - name: ⚠️ Code signing not configured
+        if: ${{ secrets.WINDOWS_CODESIGN_PFX_BASE64 == '' || secrets.WINDOWS_CODESIGN_PFX_PASSWORD == '' }}
+        shell: pwsh
+        run: Write-Host "⚠️ Skipping signing because WINDOWS_CODESIGN_PFX_BASE64 / WINDOWS_CODESIGN_PFX_PASSWORD are not configured"
+
       - name: Override dependency path
         run: |
           echo "dependency_overrides:" > pubspec_overrides.yaml
@@ -104,6 +118,18 @@ jobs:
       - name: 📁 Create models directory
         shell: pwsh
         run: New-Item -ItemType Directory -Force -Path "build\windows\x64\runner\Release\models" | Out-Null
+
+      - name: ✍️ Sign app executable (optional)
+        if: ${{ secrets.WINDOWS_CODESIGN_PFX_BASE64 != '' && secrets.WINDOWS_CODESIGN_PFX_PASSWORD != '' }}
+        shell: pwsh
+        run: |
+          $exePath = "build\windows\x64\runner\Release\RWKV_Chat.exe"
+          if (-not (Test-Path $exePath)) {
+            throw "Executable not found: $exePath"
+          }
+          & signtool sign /fd SHA256 /td SHA256 /tr "http://timestamp.digicert.com" /a $exePath
+          & signtool verify /pa $exePath
+          Write-Host "✅ Signed app executable"
 
       - name: 📦 Create Installer (Inno Setup)
         id: create-installer
@@ -167,6 +193,30 @@ jobs:
           } else { exit 1 }
           echo "::endgroup::"
 
+      - name: ✍️ Sign installer executable (optional)
+        if: ${{ secrets.WINDOWS_CODESIGN_PFX_BASE64 != '' && secrets.WINDOWS_CODESIGN_PFX_PASSWORD != '' }}
+        shell: pwsh
+        run: |
+          $installerPath = "${{ steps.create-installer.outputs.installer_path }}"
+          if (-not (Test-Path $installerPath)) {
+            throw "Installer not found: $installerPath"
+          }
+          & signtool sign /fd SHA256 /td SHA256 /tr "http://timestamp.digicert.com" /a $installerPath
+          & signtool verify /pa $installerPath
+          Write-Host "✅ Signed installer executable"
+
+      - name: 🧾 Generate silent install instructions
+        shell: pwsh
+        run: |
+          $docPath = "build/windows/installer/silent-install.txt"
+          New-Item -ItemType Directory -Force -Path (Split-Path -Parent $docPath) | Out-Null
+          @"
+          RWKV Chat Windows x64 installer silent install commands:
+          - Silent install: rwkv_chat_<version>_windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-
+          - Silent uninstall: "C:\Program Files\RWKV Chat\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+          "@ | Out-File -FilePath $docPath -Encoding utf8
+          Write-Host "✅ Wrote silent install instructions: $docPath"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
@@ -175,7 +225,9 @@ jobs:
           generate_release_notes: false
           fail_on_unmatched_files: true
           # 修改点：使用正斜杠路径和通配符，确保能找到文件
-          files: build/windows/installer/*.exe
+          files: |
+            build/windows/installer/*.exe
+            build/windows/installer/silent-install.txt
 
       - name: 🛠️ Setup Python
         if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
