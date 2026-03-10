@@ -46,7 +46,10 @@ class AskQuestionButton extends ConsumerWidget {
     final generating = ref.watch(P.rwkv.generating);
     final loaded = ref.watch(P.rwkv.loaded);
     final canEnable = loaded && !loading && !generating;
-    final interactionState = canEnable ? InteractionVisualState.available : InteractionVisualState.idleInteractive;
+
+    InteractionVisualState interactionState = canEnable ? .available : .idleInteractive;
+    if (generating || !loaded) interactionState = .unavailable;
+
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
     final textColor = colors.foreground;
@@ -58,57 +61,56 @@ class AskQuestionButton extends ConsumerWidget {
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
 
-    return AnimatedOpacity(
-      opacity: canEnable ? 1 : .4,
-      duration: 250.ms,
-      child: IntrinsicWidth(
-        child: GestureDetector(
-          onTap: _onTap,
-          child: ClipRRect(
-            borderRadius: .circular(60),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: sigma.toDouble(),
-                sigmaY: sigma.toDouble(),
+    qqr("sigma: $sigma");
+    qqr("canEnable: $canEnable");
+
+    return IntrinsicWidth(
+      child: GestureDetector(
+        onTap: _onTap,
+        child: ClipRRect(
+          borderRadius: .circular(60),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: sigma.toDouble(),
+              sigmaY: sigma.toDouble(),
+            ),
+            enabled: useBackdropFilter,
+            child: Container(
+              height: height,
+              padding: const .symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: color.q(
+                  userBackdropFilterForInputOptions
+                      ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
+                      : 1,
+                ),
+                borderRadius: .circular(60),
+                border: border,
               ),
-              enabled: useBackdropFilter,
-              child: Container(
-                height: height,
-                padding: const .symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: color.q(
-                    userBackdropFilterForInputOptions
-                        ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
-                        : 1,
+              child: Row(
+                children: [
+                  Icon(
+                    Symbols.lightbulb,
+                    color: textColor,
+                    size: appTheme.inputBarInteractionsIconSize,
                   ),
-                  borderRadius: .circular(60),
-                  border: border,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Symbols.lightbulb,
-                      color: textColor,
-                      size: appTheme.inputBarInteractionsIconSize,
+                  const SizedBox(width: 4),
+                  Text(
+                    s.ask,
+                    style: TS(
+                      c: textColor,
+                      s: fontSize,
+                      height: 1,
+                      w: .w500,
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      s.ask,
-                      style: TS(
-                        c: textColor,
-                        s: fontSize,
-                        height: 1,
-                        w: .w500,
-                      ),
-                      strutStyle: StrutStyle(
-                        fontSize: fontSize,
-                        height: 1,
-                        forceStrutHeight: true,
-                        leadingDistribution: TextLeadingDistribution.even,
-                      ),
+                    strutStyle: StrutStyle(
+                      fontSize: fontSize,
+                      height: 1,
+                      forceStrutHeight: true,
+                      leadingDistribution: TextLeadingDistribution.even,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -70,7 +70,7 @@ class ThinkingModeButton extends ConsumerWidget {
     };
     final compactText = _extractInteractionSuffix(source: text, separator: s.hyphen);
 
-    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final useBackdropFilter = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
     final sigma = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
@@ -92,14 +92,14 @@ class ThinkingModeButton extends ConsumerWidget {
                   sigmaX: sigma.toDouble(),
                   sigmaY: sigma.toDouble(),
                 ),
-                enabled: userBackdropFilterForInputOptions,
+                enabled: useBackdropFilter,
                 child: SizedBox(
                   height: height,
                   child: Container(
                     padding: padding,
                     decoration: BoxDecoration(
                       color: color.q(
-                        userBackdropFilterForInputOptions
+                        useBackdropFilter
                             ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                             : 1,
                       ),
