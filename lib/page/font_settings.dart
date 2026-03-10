@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:io';
 import 'dart:math';
 
 // Flutter imports:
@@ -30,6 +31,7 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
   late double _currentScale;
   bool _useSystemSize = true;
   String _previewTemplate = "";
+  late final ScrollController _previewScrollController = ScrollController();
 
   @override
   void initState() {
@@ -38,6 +40,12 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
     _useSystemSize = stored == P.preference.textScaleFactorSystem;
     _currentScale = _useSystemSize ? 1.0 : stored;
     _loadPreviewTemplate();
+  }
+
+  @override
+  void dispose() {
+    _previewScrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _saveScale(double scale) async {
@@ -135,6 +143,7 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
         children: [
           Expanded(
             child: _PreviewMessageList(
+              scrollController: _previewScrollController,
               userMessage: s.font_preview_user_message,
               botMessage: botPreview,
             ),
@@ -175,10 +184,12 @@ class _PageFontSettingsState extends ConsumerState<PageFontSettings> {
 }
 
 class _PreviewMessageList extends ConsumerWidget {
+  final ScrollController scrollController;
   final String userMessage;
   final String botMessage;
 
   const _PreviewMessageList({
+    required this.scrollController,
     required this.userMessage,
     required this.botMessage,
   });
@@ -204,38 +215,46 @@ class _PreviewMessageList extends ConsumerWidget {
       ),
     ];
 
-    return GestureDetector(
+    final listView = ListView.separated(
+      controller: scrollController,
+      reverse: true,
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: .only(left: paddingLeft, top: 4, right: paddingRight, bottom: 4),
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+      itemCount: messages.length,
+      itemBuilder: (context, index) {
+        final finalIndex = messages.length - 1 - index;
+        final message = messages[finalIndex];
+        return IgnorePointer(
+          child: message_widget.Message(
+            message,
+            finalIndex,
+            preferredDemoType: .chat,
+          ),
+        );
+      },
+      separatorBuilder: (context, index) {
+        return const SizedBox(height: 15);
+      },
+    );
+
+    final content = GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: RawScrollbar(
-        radius: 100.rr,
-        thickness: 4,
-        thumbColor: qb.q(.4),
-        padding: const .only(top: 4, right: 4, bottom: 4),
-        child: ListView.separated(
-          reverse: true,
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: .only(left: paddingLeft, top: 4, right: paddingRight, bottom: 4),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-          itemCount: messages.length,
-          itemBuilder: (context, index) {
-            final finalIndex = messages.length - 1 - index;
-            final message = messages[finalIndex];
-            return IgnorePointer(
-              child: message_widget.Message(
-                message,
-                finalIndex,
-                preferredDemoType: .chat,
-              ),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 15);
-          },
-        ),
-      ),
+      child: (Platform.isWindows || Platform.isLinux)
+          ? RawScrollbar(
+              controller: scrollController,
+              radius: 100.rr,
+              thickness: 4,
+              thumbColor: qb.q(.4),
+              padding: const .only(top: 4, right: 4, bottom: 4),
+              child: listView,
+            )
+          : listView,
     );
+
+    return content;
   }
 }
 
