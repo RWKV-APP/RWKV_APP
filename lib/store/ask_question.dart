@@ -1,5 +1,7 @@
 part of 'p.dart';
 
+final _askQuestionRandom = math.Random();
+
 const _askQuestionPrefixes = <Language, List<String>>{
   .zh_Hans: [
     '为什么',
@@ -579,7 +581,8 @@ extension $AskQuestion on _AskQuestion {
     }
 
     final resolvedParallelCount = _resolveParallelCount(cap: prefixes.length);
-    final selectedPrefixes = prefixes.take(resolvedParallelCount).toList();
+    final shuffledPrefixes = [...prefixes]..shuffle(_askQuestionRandom);
+    final selectedPrefixes = shuffledPrefixes.take(resolvedParallelCount).toList();
     if (selectedPrefixes.isEmpty) return;
 
     await P.rwkv.clearStates();

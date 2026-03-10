@@ -17,13 +17,7 @@ import 'package:zone/store/p.dart';
 
 String _askQuestionLanguageLabel(S s, Language language) {
   return switch (language) {
-    .zh_Hans => s.chinese,
-    .zh_Hant => s.chinese,
-    .en => s.english,
-    .ja => s.japanese,
-    .ko => s.korean,
-    .ru => s.russian,
-    .none => "",
+    _ => language.display ?? "",
   };
 }
 
@@ -39,16 +33,11 @@ class AskQuestionPanel extends ConsumerWidget {
       maxChildSize: .92,
       beforeShow: () async {
         final latestModelId = P.rwkv.latestModelId.q;
-        if (latestModelId != null) {
-          P.rwkv.send(to_rwkv.SetEosToken("\n", modelID: latestModelId));
-        }
+        if (latestModelId != null) {}
         P.askQuestion.onPanelShown();
       },
       afterHide: (_) {
-        final latestModelId = P.rwkv.latestModelId.q;
         P.askQuestion.onPanelHidden();
-        if (latestModelId == null) return;
-        P.rwkv.send(to_rwkv.SetEosToken("\n\n", modelID: latestModelId));
       },
       builder: (scrollController) => AskQuestionPanel(scrollController: scrollController),
     );
@@ -126,7 +115,7 @@ class AskQuestionPanel extends ConsumerWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      for (final language in Language.values)
+                      for (final language in Language.values.where((e) => e != .none))
                         _AskQuestionSelectablePill(
                           label: _askQuestionLanguageLabel(s, language),
                           selected: language == selectedLanguage,
