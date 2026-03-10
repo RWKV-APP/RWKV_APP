@@ -41,15 +41,15 @@
         "date": 1770699426
       },
       {
-        "name": "RWKV7-G1d 1.5B",
+        "name": "RWKV7-G1e 1.5B",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-1.5b-20260212-ctx8192-q6_k.gguf",
-        "fileSize": 1336082816,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1e-1.5b-20260309-ctx8192-q6_k.gguf",
+        "fileSize": 1336082784,
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1770884662
+        "date": 1773068705
       },
       {
         "name": "RWKV7-G1 1.5B Neko",
@@ -112,9 +112,9 @@
         "date": 1770703355
       },
       {
-        "name": "RWKV7-G1d 1.5B (WebRWKV)",
+        "name": "RWKV7-G1e 1.5B (WebRWKV)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1d-1.5b-20260212-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1e-1.5b-20260309-ctx8192-nf4.prefab",
         "fileSize": 1355373863,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
