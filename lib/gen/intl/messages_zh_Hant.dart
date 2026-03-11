@@ -88,7 +88,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m32(value) => "Presence Penalty: ${value}";
 
-  static String m33(count) => "點擊產生後，會基於目前聊天最多產出 ${count} 條後續提問建議。";
+  static String m33(count) =>
+      "點一下產生，讓 RWKV 幫你根據目前聊天內容，想出最多 ${count} 條可以繼續追問的問題。";
 
   static String m34(count) => "排隊中: ${count}";
 
@@ -830,18 +831,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("問題產生器"),
+    "question_generator_empty_chat_batch_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "點一下下方的產生按鈕，讓 RWKV 先為你想出幾個可以用來開場提問的問題。",
+        ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "目前還沒有聊天記錄。點擊產生後，會按所選語言的預設問題前綴來給出建議。",
+      "點一下下方的產生按鈕，讓 RWKV 先為你想出一個可以用來開場提問的問題。",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
           "由於你切換了問題語言，點擊產生後會忽略目前聊天記錄，並按所選語言產生與上下文無關的問題。",
         ),
+    "question_generator_mock_batch_description":
+        MessageLookupByLibrary.simpleMessage("不知道要問什麼嗎？試試讓 RWKV 幫你產生幾個吧！"),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "不知道要問什麼嗎？試試讓 RWKV 幫你想一個吧！",
     ),
     "question_generator_tap_generate_hint": m33,
-    "question_language": MessageLookupByLibrary.simpleMessage("語言"),
+    "question_language": MessageLookupByLibrary.simpleMessage(
+      "我想讓 RWKV 以這種語言提問...",
+    ),
     "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已經開啟"),

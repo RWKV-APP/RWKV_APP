@@ -753,15 +753,17 @@
   "ask": "Спросить",
   "question_generator": "Генератор вопросов",
   "question_generator_mock_description": "Не знаете, о чём спросить? Пусть RWKV придумает вопрос за вас!",
-  "question_generator_empty_chat_hint": "История чата пока пуста. При нажатии Generate будут использованы стандартные префиксы вопросов для выбранного языка.",
-  "question_generator_tap_generate_hint": "Нажмите Generate, чтобы получить до {count} вариантов следующих вопросов по текущему чату.",
+  "question_generator_mock_batch_description": "Не знаете, о чём спросить? Пусть RWKV придумает для вас несколько вопросов!",
+  "question_generator_empty_chat_hint": "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас один стартовый вопрос, который вы сможете задать.",
+  "question_generator_empty_chat_batch_hint": "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас несколько вопросов, которые вы сможете задать.",
+  "question_generator_tap_generate_hint": "Нажмите Generate — и RWKV предложит для вас до {count} вариантов следующих вопросов на основе текущего чата.",
   "@question_generator_tap_generate_hint": {
     "placeholders": {
       "count": {}
     }
   },
   "question_generator_language_switched_hint": "Поскольку вы сменили язык вопросов, Generate проигнорирует текущую историю чата и создаст вопросы вне контекста на выбранном языке.",
-  "question_language": "Язык",
+  "question_language": "Я хочу, чтобы RWKV задавал вопросы на этом языке...",
   "prefix_bank": "Набор префиксов",
   "prefix_examples": "Примеры префиксов",
   "generated_questions": "Сгенерированные вопросы",

@@ -90,7 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m32(value) => "Presence Penalty: ${value}";
 
   static String m33(count) =>
-      "Generate を押すと、現在のチャットから最大 ${count} 件の追質問候補を作成します。";
+      "Generate を押すと、RWKV がいまのチャットからあなたのために最大 ${count} 件の追質問候補を考えてくれます。";
 
   static String m34(count) => "キュー内：${count}";
 
@@ -916,18 +916,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQグループ1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQグループ2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("質問ジェネレーター"),
+    "question_generator_empty_chat_batch_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "下の「生成」ボタンを押して、RWKV にあなたが聞ける質問をいくつか考えてもらいましょう。",
+        ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "まだチャット履歴がありません。Generate を押すと、選択中の言語の既定プレフィックスで候補を作ります。",
+      "下の「生成」ボタンを押して、RWKV にあなたが最初に聞ける質問を 1 つ考えてもらいましょう。",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
           "質問の言語を切り替えたため、Generate は現在のチャット履歴を無視し、選択中の言語で文脈に依存しない質問を生成します。",
         ),
+    "question_generator_mock_batch_description":
+        MessageLookupByLibrary.simpleMessage(
+          "何を聞けばいいか分からない？RWKV にいくつか質問を考えてもらいましょう！",
+        ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "何を聞けばいいか分からない？RWKVに質問を考えてもらいましょう！",
     ),
     "question_generator_tap_generate_hint": m33,
-    "question_language": MessageLookupByLibrary.simpleMessage("言語"),
+    "question_language": MessageLookupByLibrary.simpleMessage(
+      "RWKV にこの言語で質問してほしい...",
+    ),
     "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("高速思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(

@@ -759,15 +759,17 @@
   "ask": "Ask",
   "question_generator": "Question Generator",
   "question_generator_mock_description": "Not sure what to ask? Try letting RWKV generate a question for you!",
-  "question_generator_empty_chat_hint": "There is no chat history yet. Generate will use the default question prefixes for the selected language.",
-  "question_generator_tap_generate_hint": "Tap Generate to create up to {count} follow-up questions from the current chat.",
+  "question_generator_mock_batch_description": "Not sure what to ask? Try letting RWKV generate a few for you!",
+  "question_generator_empty_chat_hint": "Tap the Generate button below and let RWKV come up with a question you can ask.",
+  "question_generator_empty_chat_batch_hint": "Tap the Generate button below and let RWKV come up with a few questions you can ask.",
+  "question_generator_tap_generate_hint": "Tap Generate and let RWKV create up to {count} follow‑up questions for you from the current chat.",
   "@question_generator_tap_generate_hint": {
     "placeholders": {
       "count": {}
     }
   },
   "question_generator_language_switched_hint": "Because you changed the question language, Generate will ignore the current chat history and create context-free questions in the selected language.",
-  "question_language": "Language",
+  "question_language": "I want RWKV to ask in this language...",
   "prefix_bank": "Prefix Bank",
   "prefix_examples": "Prefix Examples",
   "generated_questions": "Generated Questions",

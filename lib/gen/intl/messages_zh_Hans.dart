@@ -88,7 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m32(value) => "Presence Penalty: ${value}";
 
-  static String m33(count) => "点击生成后，会基于当前聊天最多产出 ${count} 条后续提问建议。";
+  static String m33(count) => "点一下生成，让 RWKV 帮你基于当前聊天，想出最多 ${count} 条后续要问的问题。";
 
   static String m34(count) => "排队中: ${count}";
 
@@ -834,19 +834,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 模板"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
-    "question_generator": MessageLookupByLibrary.simpleMessage("问题生成器"),
+    "question_generator": MessageLookupByLibrary.simpleMessage("RWKV 帮你问"),
+    "question_generator_empty_chat_batch_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "点击下方的生成按钮，让 RWKV 为你生成几个可以用来提问的问题。",
+        ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。",
+      "点击下方的生成按钮，让 RWKV 为你生成一个可以用来提问的问题。",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
           "由于你切换了问题语言，点击生成后会忽略当前聊天记录，并按所选语言生成与上下文无关的问题。",
         ),
+    "question_generator_mock_batch_description":
+        MessageLookupByLibrary.simpleMessage("不知道问什么问题好？试试让 RWKV 生成几个吧！"),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "不知道问什么问题好？试试让 RWKV 生成一个吧！",
     ),
     "question_generator_tap_generate_hint": m33,
-    "question_language": MessageLookupByLibrary.simpleMessage("语言"),
+    "question_language": MessageLookupByLibrary.simpleMessage(
+      "我想让 RWKV 以这种语言提问...",
+    ),
     "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已经开启"),

@@ -5032,10 +5032,10 @@ class S {
     return Intl.message('提问', name: 'ask', desc: '', args: []);
   }
 
-  /// `问题生成器`
+  /// `RWKV 帮你问`
   String get question_generator {
     return Intl.message(
-      '问题生成器',
+      'RWKV 帮你问',
       name: 'question_generator',
       desc: '',
       args: [],
@@ -5052,20 +5052,40 @@ class S {
     );
   }
 
-  /// `当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。`
+  /// `不知道问什么问题好？试试让 RWKV 生成几个吧！`
+  String get question_generator_mock_batch_description {
+    return Intl.message(
+      '不知道问什么问题好？试试让 RWKV 生成几个吧！',
+      name: 'question_generator_mock_batch_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点击下方的生成按钮，让 RWKV 为你生成一个可以用来提问的问题。`
   String get question_generator_empty_chat_hint {
     return Intl.message(
-      '当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。',
+      '点击下方的生成按钮，让 RWKV 为你生成一个可以用来提问的问题。',
       name: 'question_generator_empty_chat_hint',
       desc: '',
       args: [],
     );
   }
 
-  /// `点击生成后，会基于当前聊天最多产出 {count} 条后续提问建议。`
+  /// `点击下方的生成按钮，让 RWKV 为你生成几个可以用来提问的问题。`
+  String get question_generator_empty_chat_batch_hint {
+    return Intl.message(
+      '点击下方的生成按钮，让 RWKV 为你生成几个可以用来提问的问题。',
+      name: 'question_generator_empty_chat_batch_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点一下生成，让 RWKV 帮你基于当前聊天，想出最多 {count} 条后续要问的问题。`
   String question_generator_tap_generate_hint(Object count) {
     return Intl.message(
-      '点击生成后，会基于当前聊天最多产出 $count 条后续提问建议。',
+      '点一下生成，让 RWKV 帮你基于当前聊天，想出最多 $count 条后续要问的问题。',
       name: 'question_generator_tap_generate_hint',
       desc: '',
       args: [count],
@@ -5082,9 +5102,14 @@ class S {
     );
   }
 
-  /// `语言`
+  /// `我想让 RWKV 以这种语言提问...`
   String get question_language {
-    return Intl.message('语言', name: 'question_language', desc: '', args: []);
+    return Intl.message(
+      '我想让 RWKV 以这种语言提问...',
+      name: 'question_language',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `前缀组`

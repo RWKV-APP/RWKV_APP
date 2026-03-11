@@ -757,17 +757,19 @@
   "open_official_download_page": "打开官方下载页",
   "mimic": "模仿",
   "ask": "提问",
-  "question_generator": "问题生成器",
+  "question_generator": "RWKV 帮你问",
   "question_generator_mock_description": "不知道问什么问题好？试试让 RWKV 生成一个吧！",
-  "question_generator_empty_chat_hint": "当前还没有聊天记录。点击生成后，会按所选语言的默认问题前缀来产出建议。",
-  "question_generator_tap_generate_hint": "点击生成后，会基于当前聊天最多产出 {count} 条后续提问建议。",
+  "question_generator_mock_batch_description": "不知道问什么问题好？试试让 RWKV 生成几个吧！",
+  "question_generator_empty_chat_hint": "点击下方的生成按钮，让 RWKV 为你生成一个可以用来提问的问题。",
+  "question_generator_empty_chat_batch_hint": "点击下方的生成按钮，让 RWKV 为你生成几个可以用来提问的问题。",
+  "question_generator_tap_generate_hint": "点一下生成，让 RWKV 帮你基于当前聊天，想出最多 {count} 条后续要问的问题。",
   "@question_generator_tap_generate_hint": {
     "placeholders": {
       "count": {}
     }
   },
   "question_generator_language_switched_hint": "由于你切换了问题语言，点击生成后会忽略当前聊天记录，并按所选语言生成与上下文无关的问题。",
-  "question_language": "语言",
+  "question_language": "我想让 RWKV 以这种语言提问...",
   "prefix_bank": "前缀组",
   "prefix_examples": "前缀示例",
   "generated_questions": "生成的问题",

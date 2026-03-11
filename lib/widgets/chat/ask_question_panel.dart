@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:rwkv_mobile_flutter/to_rwkv.dart' as to_rwkv;
 
 // Project imports:
 import 'package:zone/func/check_model_selection.dart';
@@ -19,6 +18,23 @@ String _askQuestionLanguageLabel(S s, Language language) {
   return switch (language) {
     _ => language.display ?? "",
   };
+}
+
+Language? _askQuestionUILanguageForLocale(Locale locale) {
+  switch (locale.languageCode) {
+    case 'en':
+      return Language.en;
+    case 'ru':
+      return Language.ru;
+    case 'ja':
+      return Language.ja;
+    case 'ko':
+      return Language.ko;
+    case 'zh':
+      return locale.scriptCode == 'Hant' ? Language.zh_Hant : Language.zh_Hans;
+    default:
+      return null;
+  }
 }
 
 class AskQuestionPanel extends ConsumerWidget {
@@ -62,10 +78,11 @@ class AskQuestionPanel extends ConsumerWidget {
     final hasChatHistory = ref.watch(P.askQuestion.hasChatHistory);
     final maxParallelCount = ref.watch(P.askQuestion.maxParallelCount);
     final shouldGenerateWithoutContext = ref.watch(P.askQuestion.shouldGenerateWithoutContext);
+
     final emptyMessage = switch ((shouldGenerateWithoutContext, hasChatHistory)) {
-      (true, _) => s.question_generator_language_switched_hint,
+      (true, _) => maxParallelCount <= 1 ? s.question_generator_empty_chat_hint : s.question_generator_empty_chat_batch_hint,
       (false, true) => s.question_generator_tap_generate_hint(maxParallelCount),
-      (false, false) => s.question_generator_empty_chat_hint,
+      (false, false) => maxParallelCount <= 1 ? s.question_generator_empty_chat_hint : s.question_generator_empty_chat_batch_hint,
     };
 
     return ClipRRect(
@@ -99,7 +116,11 @@ class AskQuestionPanel extends ConsumerWidget {
                     crossAxisAlignment: .start,
                     children: [
                       Text(
-                        s.question_generator_mock_description,
+                        switch (questions.length) {
+                          0 => s.question_generator_mock_description,
+                          1 => s.question_generator_mock_description,
+                          _ => s.question_generator_mock_batch_description,
+                        },
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: qb.q(.82),
                           height: 1.4,
@@ -115,7 +136,18 @@ class AskQuestionPanel extends ConsumerWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      for (final language in Language.values.where((e) => e != .none))
+                      for (final language in (() {
+                        final uiLocale = Localizations.localeOf(context);
+                        final uiLanguage = _askQuestionUILanguageForLocale(uiLocale);
+                        final languages = Language.values.where((e) => e != .none).toList();
+                        if (uiLanguage == null) return languages;
+                        languages.sort((a, b) {
+                          if (a == uiLanguage && b != uiLanguage) return -1;
+                          if (b == uiLanguage && a != uiLanguage) return 1;
+                          return a.index.compareTo(b.index);
+                        });
+                        return languages;
+                      })())
                         _AskQuestionSelectablePill(
                           label: _askQuestionLanguageLabel(s, language),
                           selected: language == selectedLanguage,

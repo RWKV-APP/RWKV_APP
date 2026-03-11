@@ -90,7 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m32(value) => "Presence Penalty: ${value}";
 
   static String m33(count) =>
-      "Generate를 누르면 현재 채팅을 바탕으로 최대 ${count}개의 후속 질문 후보를 만듭니다.";
+      "Generate를 누르면 RWKV가 현재 채팅을 바탕으로 당신을 위해 최대 ${count}개의 후속 질문 후보를 만들어 줍니다.";
 
   static String m34(count) => "대기열: ${count}";
 
@@ -906,18 +906,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 그룹 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 그룹 2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("질문 생성기"),
+    "question_generator_empty_chat_batch_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "아래의 생성 버튼을 눌러 보세요. RWKV가 당신이 물어볼 수 있는 질문 몇 가지를 대신 생각해 줍니다.",
+        ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "아직 채팅 기록이 없습니다. Generate를 누르면 선택한 언어의 기본 질문 접두사로 후보를 만듭니다.",
+      "아래의 생성 버튼을 눌러 보세요. RWKV가 당신이 처음에 물어볼 수 있는 질문 하나를 대신 생각해 줍니다.",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
           "질문 언어를 변경했기 때문에 Generate는 현재 채팅 기록을 무시하고 선택한 언어로 문맥과 무관한 질문을 생성합니다.",
         ),
+    "question_generator_mock_batch_description":
+        MessageLookupByLibrary.simpleMessage(
+          "무슨 질문을 해야 할지 모르겠나요? RWKV가 대신 몇 개 만들어 주도록 해보세요!",
+        ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "무슨 질문을 해야 할지 모르겠나요? RWKV가 대신 하나 만들어 주도록 해보세요!",
     ),
     "question_generator_tap_generate_hint": m33,
-    "question_language": MessageLookupByLibrary.simpleMessage("언어"),
+    "question_language": MessageLookupByLibrary.simpleMessage(
+      "RWKV가 이 언어로 질문해 줬으면 좋겠어요...",
+    ),
     "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("빠른 사고"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(

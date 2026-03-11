@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m32(value) => "Presence Penalty: ${value}";
 
   static String m33(count) =>
-      "Нажмите Generate, чтобы получить до ${count} вариантов следующих вопросов по текущему чату.";
+      "Нажмите Generate — и RWKV предложит для вас до ${count} вариантов следующих вопросов на основе текущего чата.";
 
   static String m34(count) => "В очереди: ${count}";
 
@@ -1106,18 +1106,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage(
       "Генератор вопросов",
     ),
+    "question_generator_empty_chat_batch_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас несколько вопросов, которые вы сможете задать.",
+        ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "История чата пока пуста. При нажатии Generate будут использованы стандартные префиксы вопросов для выбранного языка.",
+      "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас один стартовый вопрос, который вы сможете задать.",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
           "Поскольку вы сменили язык вопросов, Generate проигнорирует текущую историю чата и создаст вопросы вне контекста на выбранном языке.",
         ),
+    "question_generator_mock_batch_description":
+        MessageLookupByLibrary.simpleMessage(
+          "Не знаете, о чём спросить? Пусть RWKV придумает для вас несколько вопросов!",
+        ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "Не знаете, о чём спросить? Пусть RWKV придумает вопрос за вас!",
     ),
     "question_generator_tap_generate_hint": m33,
-    "question_language": MessageLookupByLibrary.simpleMessage("Язык"),
+    "question_language": MessageLookupByLibrary.simpleMessage(
+      "Я хочу, чтобы RWKV задавал вопросы на этом языке...",
+    ),
     "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Быстрое мышление"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(

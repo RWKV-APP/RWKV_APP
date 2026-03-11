@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m32(value) => "Presence Penalty: ${value}";
 
   static String m33(count) =>
-      "Tap Generate to create up to ${count} follow-up questions from the current chat.";
+      "Tap Generate and let RWKV create up to ${count} follow‑up questions for you from the current chat.";
 
   static String m34(count) => "Queued: ${count}";
 
@@ -1072,18 +1072,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage(
       "Question Generator",
     ),
+    "question_generator_empty_chat_batch_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "Tap the Generate button below and let RWKV come up with a few questions you can ask.",
+        ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "There is no chat history yet. Generate will use the default question prefixes for the selected language.",
+      "Tap the Generate button below and let RWKV come up with a question you can ask.",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
           "Because you changed the question language, Generate will ignore the current chat history and create context-free questions in the selected language.",
         ),
+    "question_generator_mock_batch_description":
+        MessageLookupByLibrary.simpleMessage(
+          "Not sure what to ask? Try letting RWKV generate a few for you!",
+        ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "Not sure what to ask? Try letting RWKV generate a question for you!",
     ),
     "question_generator_tap_generate_hint": m33,
-    "question_language": MessageLookupByLibrary.simpleMessage("Language"),
+    "question_language": MessageLookupByLibrary.simpleMessage(
+      "I want RWKV to ask in this language...",
+    ),
     "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
