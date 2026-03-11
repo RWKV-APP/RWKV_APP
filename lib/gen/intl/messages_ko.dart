@@ -906,6 +906,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 그룹 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 그룹 2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("질문 생성기"),
+    "question_generator_count": MessageLookupByLibrary.simpleMessage("생성 수"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
           "위에서 질문 시작을 고른 뒤 생성 버튼을 누르면, RWKV가 바로 물어볼 수 있는 질문 몇 개를 생각해 줍니다.",
@@ -937,7 +938,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_question_action_guide":
         MessageLookupByLibrary.simpleMessage(
-          "마음에 드는 질문을 탭하면 바로 다듬거나 바로 물어볼 수 있습니다.",
+          "생성된 질문을 탭하면 대화 입력창에 바로 붙여 넣을 수 있습니다.",
         ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(

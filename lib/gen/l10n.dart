@@ -5122,6 +5122,16 @@ class S {
     );
   }
 
+  /// `生成数量`
+  String get question_generator_count {
+    return Intl.message(
+      '生成数量',
+      name: 'question_generator_count',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `在这里写下你想要的问题开头...`
   String get question_generator_prefix_input_placeholder {
     return Intl.message(
@@ -5142,10 +5152,10 @@ class S {
     );
   }
 
-  /// `点一下你喜欢的问题，就可以继续编辑，或者直接发出去。`
+  /// `点击已生成的问题，即可粘贴到对话输入框。`
   String get question_generator_question_action_guide {
     return Intl.message(
-      '点一下你喜欢的问题，就可以继续编辑，或者直接发出去。',
+      '点击已生成的问题，即可粘贴到对话输入框。',
       name: 'question_generator_question_action_guide',
       desc: '',
       args: [],

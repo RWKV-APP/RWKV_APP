@@ -12,6 +12,8 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
 
+const _maxRadius = 12.0;
+
 class AskQuestionPanel extends ConsumerWidget {
   static const String panelKey = 'AskQuestionPanel';
 
@@ -49,15 +51,12 @@ class AskQuestionPanel extends ConsumerWidget {
     final selectedPrefix = ref.watch(P.askQuestion.selectedPrefix);
     final prefixInput = ref.watch(P.askQuestion.prefixInput);
     final questions = ref.watch(P.askQuestion.questions);
-    final selectedQuestionIndex = ref.watch(P.askQuestion.selectedQuestionIndex);
-    final editingQuestionIndex = ref.watch(P.askQuestion.editingQuestionIndex);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final emptyMessage = targetQuestionCount <= 1 ? s.question_generator_empty_chat_hint : s.question_generator_empty_chat_batch_hint;
 
     return ClipRRect(
       borderRadius: const .only(
-        topLeft: .circular(16),
-        topRight: .circular(16),
+        topLeft: .circular(_maxRadius),
+        topRight: .circular(_maxRadius),
       ),
       child: Column(
         crossAxisAlignment: .stretch,
@@ -91,18 +90,14 @@ class AskQuestionPanel extends ConsumerWidget {
                       generating: generating,
                     ),
                     const SizedBox(height: 12),
-                    _AskQuestionGenerateBar(
+                    _GenerateBar(
                       generating: generating,
-                      targetQuestionCount: targetQuestionCount,
                     ),
                     const SizedBox(height: 12),
-                    _AskQuestionResultsCard(
+                    _Results(
                       title: s.generated_questions,
                       questions: questions,
-                      emptyMessage: emptyMessage,
                       generating: generating,
-                      selectedQuestionIndex: selectedQuestionIndex,
-                      editingQuestionIndex: editingQuestionIndex,
                       targetQuestionCount: targetQuestionCount,
                     ),
                   ],
@@ -199,7 +194,7 @@ class _AskQuestionSurface extends ConsumerWidget {
   const _AskQuestionSurface({
     required this.child,
     // ignore: unused_element_parameter
-    this.padding = const EdgeInsets.all(16),
+    this.padding = const EdgeInsets.all(12),
   });
 
   final Widget child;
@@ -213,7 +208,7 @@ class _AskQuestionSurface extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: appTheme.settingItem,
-        borderRadius: .circular(18),
+        borderRadius: .circular(_maxRadius),
         border: .all(color: qb.q(.15), width: .5),
       ),
       padding: padding,
@@ -263,7 +258,7 @@ class _AskQuestionPrefixComposerCard extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 for (final prefix in prefixes)
-                  _AskQuestionSelectablePill(
+                  _SelectablePill(
                     label: prefix,
                     selected: prefix == selectedPrefix,
                     onTap: () {
@@ -279,7 +274,7 @@ class _AskQuestionPrefixComposerCard extends ConsumerWidget {
               margin: const .only(top: 14, bottom: 14),
               color: qb.q(.1),
             ),
-          _AskQuestionPrefixInputField(
+          _PrefixInputField(
             value: prefixInput,
             enabled: !generating,
             placeholder: s.question_generator_prefix_input_placeholder,
@@ -290,8 +285,8 @@ class _AskQuestionPrefixComposerCard extends ConsumerWidget {
   }
 }
 
-class _AskQuestionPrefixInputField extends ConsumerStatefulWidget {
-  const _AskQuestionPrefixInputField({
+class _PrefixInputField extends ConsumerStatefulWidget {
+  const _PrefixInputField({
     required this.value,
     required this.enabled,
     required this.placeholder,
@@ -302,14 +297,14 @@ class _AskQuestionPrefixInputField extends ConsumerStatefulWidget {
   final String placeholder;
 
   @override
-  ConsumerState<_AskQuestionPrefixInputField> createState() => _AskQuestionPrefixInputFieldState();
+  ConsumerState<_PrefixInputField> createState() => _PrefixInputFieldState();
 }
 
-class _AskQuestionPrefixInputFieldState extends ConsumerState<_AskQuestionPrefixInputField> {
+class _PrefixInputFieldState extends ConsumerState<_PrefixInputField> {
   late final TextEditingController _controller;
 
   @override
-  void didUpdateWidget(covariant _AskQuestionPrefixInputField oldWidget) {
+  void didUpdateWidget(covariant _PrefixInputField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value == _controller.text) return;
 
@@ -338,7 +333,7 @@ class _AskQuestionPrefixInputFieldState extends ConsumerState<_AskQuestionPrefix
       duration: const Duration(milliseconds: 180),
       decoration: BoxDecoration(
         color: qb.q(widget.enabled ? .04 : .02),
-        borderRadius: .circular(16),
+        borderRadius: .circular(_maxRadius),
         border: .all(color: qb.q(widget.enabled ? .14 : .08), width: .5),
       ),
       padding: const .symmetric(horizontal: 14, vertical: 12),
@@ -366,107 +361,250 @@ class _AskQuestionPrefixInputFieldState extends ConsumerState<_AskQuestionPrefix
   }
 }
 
-class _AskQuestionGenerateBar extends ConsumerWidget {
-  const _AskQuestionGenerateBar({
+class _GenerateBar extends ConsumerWidget {
+  const _GenerateBar({
     required this.generating,
-    required this.targetQuestionCount,
   });
 
   final bool generating;
-  final int targetQuestionCount;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
     final hasPrefixInput = ref.watch(P.askQuestion.hasPrefixInput);
+    final targetQuestionCount = ref.watch(P.askQuestion.targetQuestionCount);
+    final generateCountOptions = ref.watch(P.askQuestion.generateCountOptions);
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
+    final buttonHeight = 56.0;
+    final isGenerateEnabled = !generating && hasPrefixInput;
+    final appTheme = ref.watch(P.app.theme);
+
+    final settingItemColor = appTheme.settingItem;
+    final qb = ref.watch(P.app.qb);
+
+    final pauseButtonBackground = appTheme.settingItem;
 
     final label = switch (generating) {
-      false => targetQuestionCount > 1 ? "${s.generate} · $targetQuestionCount" : s.generate,
-      true when decodeSpeed > 0 => "decode ${decodeSpeed.toStringAsFixed(1)} tok/s",
-      true when prefillSpeed > 0 => "prefill ${prefillSpeed.toStringAsFixed(1)} tok/s",
+      false => s.generate,
+      true when decodeSpeed > 0 => "${s.generating}\ndecode: ${decodeSpeed.toStringAsFixed(1)} tok/s",
+      true when prefillSpeed > 0 => "${s.generating}\nprefill: ${prefillSpeed.toStringAsFixed(1)} tok/s",
       _ => s.generating,
     };
+
+    final preferredMonospaceFont = ref.watch(P.font.finalMonospaceFontFamily);
 
     return Row(
       children: [
         if (generating)
-          IconButton(
-            onPressed: P.askQuestion.pauseGeneration,
-            style: IconButton.styleFrom(
-              backgroundColor: qb.q(.08),
-              foregroundColor: qb.q(.94),
+          SizedBox(
+            width: buttonHeight,
+            height: buttonHeight,
+            child: GD(
+              onTap: P.askQuestion.pauseGeneration,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: pauseButtonBackground,
+                  borderRadius: .circular(_maxRadius),
+                  border: .all(color: appTheme.qb12, width: .5),
+                ),
+                padding: const .symmetric(horizontal: 18),
+                child: Icon(Symbols.pause, size: iconSize),
+              ),
             ),
-            icon: Icon(Symbols.pause, size: iconSize),
           ),
         if (generating) const SizedBox(width: 10),
         Expanded(
-          child: FilledButton.tonalIcon(
-            onPressed: generating || !hasPrefixInput ? null : P.askQuestion.generateFromCurrentChat,
-            style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(52),
-              backgroundColor: qb.q(.1),
-              foregroundColor: qb.q(.96),
-              disabledBackgroundColor: qb.q(.05),
-              disabledForegroundColor: qb.q(.34),
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            icon: generating
-                ? SizedBox(
-                    width: iconSize,
-                    height: iconSize,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: qb.q(.38),
+          child: SizedBox(
+            height: buttonHeight,
+            child: GD(
+              onTap: isGenerateEnabled ? P.askQuestion.generateFromCurrentChat : null,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: settingItemColor,
+                  borderRadius: .circular(_maxRadius),
+                  border: .all(color: appTheme.qb12, width: .5),
+                ),
+                padding: const .symmetric(horizontal: 18),
+                child: Row(
+                  mainAxisAlignment: .center,
+                  children: [
+                    if (generating) ...[
+                      SizedBox(
+                        width: iconSize,
+                        height: iconSize,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: qb.q(.72),
+                        ),
+                      ),
+                      12.w,
+                    ],
+                    if (!generating) ...[
+                      Icon(Symbols.auto_awesome, size: iconSize),
+                      12.w,
+                    ],
+                    Text(
+                      label,
+                      style: TS(w: FW.w500, ff: preferredMonospaceFont, s: generating ? 14 : 16),
                     ),
-                  )
-                : Icon(Symbols.auto_awesome, size: iconSize),
-            label: Text(
-              label,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+                  ],
+                ),
               ),
             ),
           ),
+        ),
+        const SizedBox(width: 10),
+        _GenerateCountButton(
+          height: buttonHeight,
+          generating: generating,
+          selectedCount: targetQuestionCount,
+          options: generateCountOptions,
         ),
       ],
     );
   }
 }
 
-class _AskQuestionResultsCard extends ConsumerWidget {
-  const _AskQuestionResultsCard({
-    required this.title,
-    required this.questions,
-    required this.emptyMessage,
+class _GenerateCountButton extends ConsumerWidget {
+  const _GenerateCountButton({
+    required this.height,
     required this.generating,
-    required this.selectedQuestionIndex,
-    required this.editingQuestionIndex,
-    required this.targetQuestionCount,
+    required this.selectedCount,
+    required this.options,
   });
 
-  final String title;
-  final List<String> questions;
-  final String emptyMessage;
+  final double height;
   final bool generating;
-  final int? selectedQuestionIndex;
-  final int? editingQuestionIndex;
-  final int targetQuestionCount;
+  final int selectedCount;
+  final List<int> options;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
     final qb = ref.watch(P.app.qb);
+    final enabled = !generating;
+    final isDark = theme.brightness == Brightness.dark;
+    final buttonBackground = ref.watch(P.app.theme).settingItem;
+    final appTheme = ref.watch(P.app.theme);
+    final labelColor = switch ((isDark, enabled)) {
+      (true, true) => const Color(0xFFB8B8B8),
+      (true, false) => const Color(0xFF666666),
+      (false, true) => const Color(0xFF686868),
+      (false, false) => const Color(0xFF9A9A9A),
+    };
+    final valueColor = switch ((isDark, enabled)) {
+      (true, true) => const Color(0xFFF1F1F1),
+      (true, false) => const Color(0xFF7A7A7A),
+      (false, true) => const Color(0xFF181818),
+      (false, false) => const Color(0xFF8A8A8A),
+    };
+    final iconColor = switch ((isDark, enabled)) {
+      (true, true) => const Color(0xFFD9D9D9),
+      (true, false) => const Color(0xFF666666),
+      (false, true) => const Color(0xFF4D4D4D),
+      (false, false) => const Color(0xFF9A9A9A),
+    };
+
+    return PopupMenuButton<int>(
+      enabled: enabled,
+      padding: .zero,
+      onSelected: P.askQuestion.setGenerateCount,
+      itemBuilder: (_) {
+        return [
+          for (final count in options)
+            PopupMenuItem<int>(
+              value: count,
+              child: Row(
+                children: [
+                  Expanded(child: Text("$count")),
+                  if (count == selectedCount)
+                    Icon(
+                      Symbols.check,
+                      size: 18,
+                      color: qb.q(.88),
+                    ),
+                ],
+              ),
+            ),
+        ];
+      },
+      child: SizedBox(
+        height: height,
+        width: 100,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: const .symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: buttonBackground,
+            borderRadius: .circular(_maxRadius),
+            border: .all(
+              color: appTheme.qb12,
+              width: .5,
+            ),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      s.question_generator_count,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: labelColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      "$selectedCount",
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: valueColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Symbols.expand_more,
+                size: 18,
+                color: iconColor,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Results extends ConsumerWidget {
+  const _Results({
+    required this.title,
+    required this.questions,
+    required this.generating,
+    required this.targetQuestionCount,
+  });
+
+  final String title;
+  final List<String> questions;
+  final bool generating;
+  final int targetQuestionCount;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
 
     return _AskQuestionSurface(
+      padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: .start,
         children: [
@@ -508,30 +646,17 @@ class _AskQuestionResultsCard extends ConsumerWidget {
             margin: const .only(top: 12, bottom: 14),
             color: qb.q(.1),
           ),
-          if (questions.isEmpty)
-            _AskQuestionEmptyState(
-              message: generating ? s.generating : emptyMessage,
-            ),
           if (questions.isNotEmpty)
             Column(
               crossAxisAlignment: .stretch,
               children: [
                 for (final entry in questions.indexed) ...[
-                  _AskQuestionQuestionCard(
+                  _Question(
                     key: ValueKey(entry.$2),
                     question: entry.$2,
-                    selected: selectedQuestionIndex == entry.$1,
-                    editing: editingQuestionIndex == entry.$1,
-                    onSelect: () {
+                    onTap: () {
                       FocusScope.of(context).unfocus();
-                      P.askQuestion.selectQuestion(entry.$1);
-                    },
-                    onBeginEdit: () {
-                      P.askQuestion.beginEditingQuestion(entry.$1);
-                    },
-                    onCancelEdit: P.askQuestion.cancelEditingQuestion,
-                    onAsk: (value) {
-                      P.askQuestion.useQuestion(value);
+                      P.askQuestion.useQuestion(entry.$2);
                     },
                   ),
                   if (entry.$1 != questions.length - 1) const SizedBox(height: 8),
@@ -544,48 +669,8 @@ class _AskQuestionResultsCard extends ConsumerWidget {
   }
 }
 
-class _AskQuestionEmptyState extends ConsumerWidget {
-  const _AskQuestionEmptyState({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final qb = ref.watch(P.app.qb);
-
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: qb.q(.04),
-        borderRadius: .circular(16),
-        border: .all(color: qb.q(.1), width: .5),
-      ),
-      padding: const .all(18),
-      child: Column(
-        children: [
-          Icon(
-            Symbols.lightbulb,
-            color: qb.q(.6),
-            size: 20,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: qb.q(.74),
-              height: 1.45,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AskQuestionSelectablePill extends ConsumerWidget {
-  const _AskQuestionSelectablePill({
+class _SelectablePill extends ConsumerWidget {
+  const _SelectablePill({
     required this.label,
     required this.selected,
     required this.onTap,
@@ -599,9 +684,9 @@ class _AskQuestionSelectablePill extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final qb = ref.watch(P.app.qb);
-    final bgColor = selected ? qb.q(.12) : qb.q(.05);
-    final borderColor = selected ? qb.q(.18) : qb.q(.1);
-    final textColor = selected ? qb.q(.98) : qb.q(.86);
+    final bgColor = selected ? qb.q(.12) : qb.q(.025);
+    final borderColor = selected ? qb.q(.18) : qb.q(.075);
+    final textColor = selected ? qb.q(.96) : qb.q(.7);
 
     return GestureDetector(
       onTap: onTap,
@@ -617,7 +702,7 @@ class _AskQuestionSelectablePill extends ConsumerWidget {
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: textColor,
-            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
           ),
         ),
       ),
@@ -625,158 +710,39 @@ class _AskQuestionSelectablePill extends ConsumerWidget {
   }
 }
 
-class _AskQuestionQuestionCard extends ConsumerStatefulWidget {
-  const _AskQuestionQuestionCard({
+class _Question extends ConsumerWidget {
+  const _Question({
     super.key,
     required this.question,
-    required this.selected,
-    required this.editing,
-    required this.onSelect,
-    required this.onBeginEdit,
-    required this.onCancelEdit,
-    required this.onAsk,
+    required this.onTap,
   });
 
   final String question;
-  final bool selected;
-  final bool editing;
-  final VoidCallback onSelect;
-  final VoidCallback onBeginEdit;
-  final VoidCallback onCancelEdit;
-  final ValueChanged<String> onAsk;
+  final VoidCallback onTap;
 
   @override
-  ConsumerState<_AskQuestionQuestionCard> createState() => _AskQuestionQuestionCardState();
-}
-
-class _AskQuestionQuestionCardState extends ConsumerState<_AskQuestionQuestionCard> {
-  late final TextEditingController _controller;
-  late final FocusNode _focusNode;
-
-  @override
-  void didUpdateWidget(covariant _AskQuestionQuestionCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.editing && !oldWidget.editing) {
-      _controller.text = widget.question;
-      _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        _focusNode.requestFocus();
-      });
-      return;
-    }
-
-    if (widget.question == oldWidget.question) return;
-    if (_controller.text == widget.question) return;
-
-    _controller.text = widget.question;
-    _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.question);
-    _focusNode = FocusNode();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final backgroundColor = widget.selected ? qb.q(.1) : appTheme.settingItem;
-    final borderColor = widget.selected ? qb.q(.22) : qb.q(.12);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: widget.editing ? null : widget.onSelect,
+      onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: .circular(16),
-          border: .all(color: borderColor, width: .7),
+          color: appTheme.settingItem,
+          borderRadius: .circular(8),
+          border: .all(color: qb.q(.12), width: .7),
         ),
         padding: const .all(14),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            if (widget.editing)
-              TextField(
-                controller: _controller,
-                focusNode: _focusNode,
-                maxLines: null,
-                minLines: 2,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: InputBorder.none,
-                  contentPadding: .zero,
-                ),
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: qb.q(.96),
-                  height: 1.35,
-                ),
-              )
-            else
-              Text(
-                widget.question,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: qb.q(.94),
-                  height: 1.4,
-                ),
-              ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 180),
-              child: !widget.selected
-                  ? const SizedBox.shrink()
-                  : Padding(
-                      padding: const .only(top: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          OutlinedButton(
-                            onPressed: widget.editing ? widget.onCancelEdit : widget.onBeginEdit,
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: qb.q(.92),
-                              side: BorderSide(color: qb.q(.18)),
-                              visualDensity: .compact,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(widget.editing ? s.cancel : s.edit),
-                          ),
-                          const SizedBox(width: 8),
-                          FilledButton(
-                            onPressed: () {
-                              final value = widget.editing ? _controller.text : widget.question;
-                              widget.onAsk(value);
-                            },
-                            style: FilledButton.styleFrom(
-                              backgroundColor: qb.q(.14),
-                              foregroundColor: qb.q(.98),
-                              visualDensity: .compact,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(s.ask),
-                          ),
-                        ],
-                      ),
-                    ),
-            ),
-          ],
+        child: Text(
+          question,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: qb.q(.94),
+            height: 1.4,
+          ),
         ),
       ),
     );

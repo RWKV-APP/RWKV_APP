@@ -1106,6 +1106,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage(
       "Генератор вопросов",
     ),
+    "question_generator_count": MessageLookupByLibrary.simpleMessage(
+      "Количество",
+    ),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
           "Выберите начало вопроса выше, затем нажмите Generate — RWKV подскажет несколько вопросов, которые можно сразу отправить.",
@@ -1139,7 +1142,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_question_action_guide":
         MessageLookupByLibrary.simpleMessage(
-          "Нажмите на понравившийся вопрос, чтобы подправить его или сразу отправить.",
+          "Нажмите на сгенерированный вопрос, чтобы вставить его в поле ввода чата.",
         ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(

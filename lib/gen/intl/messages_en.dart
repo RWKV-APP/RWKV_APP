@@ -1072,6 +1072,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage(
       "Question Generator",
     ),
+    "question_generator_count": MessageLookupByLibrary.simpleMessage("Count"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
           "Choose an opening above, then tap Generate and let RWKV suggest a few questions you can send right away.",
@@ -1105,7 +1106,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_question_action_guide":
         MessageLookupByLibrary.simpleMessage(
-          "Tap any generated question to polish it or send it right away.",
+          "Tap any generated question to paste it into the chat input box.",
         ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(

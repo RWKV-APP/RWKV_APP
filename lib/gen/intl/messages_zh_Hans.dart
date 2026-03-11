@@ -835,6 +835,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("RWKV 帮你问"),
+    "question_generator_count": MessageLookupByLibrary.simpleMessage("生成数量"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
           "选好上面的问题开头后，点一下生成，RWKV 会先帮你想几个可以直接提问的问题。",
@@ -861,7 +862,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_prefixes": MessageLookupByLibrary.simpleMessage("问题前缀"),
     "question_generator_question_action_guide":
-        MessageLookupByLibrary.simpleMessage("点一下你喜欢的问题，就可以继续编辑，或者直接发出去。"),
+        MessageLookupByLibrary.simpleMessage("点击已生成的问题，即可粘贴到对话输入框。"),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "我想让 RWKV 以这种语言提问...",

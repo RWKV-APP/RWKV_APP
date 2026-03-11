@@ -2,6 +2,8 @@ part of 'p.dart';
 
 const _askQuestionSequentialQuestionCount = 5;
 const _askQuestionSequentialAttemptLimit = 8;
+const _askQuestionMinGenerateCount = 2;
+const _askQuestionMaxGenerateCount = 8;
 
 const _askQuestionPrefixes = <Language, List<String>>{
   .zh_Hans: [
@@ -89,6 +91,7 @@ class _AskQuestion {
   List<String> _currentRunQuestions = const [];
   List<String> _runningPrefixes = const [];
   String _activePrefix = "";
+  int _activeParallelCount = 1;
   bool _sequentialMode = false;
   int _attemptCount = 0;
   int _attemptLimit = 0;
@@ -102,6 +105,7 @@ class _AskQuestion {
   late final selectedPrefix = qs<String?>(null);
   late final selectedQuestionIndex = qs<int?>(null);
   late final editingQuestionIndex = qs<int?>(null);
+  late final generateCount = qs(_askQuestionSequentialQuestionCount);
   late final parallelCount = qs(1);
 
   late final prefixes = qp((ref) {
@@ -120,6 +124,13 @@ class _AskQuestion {
     if (supportedBatchSizes.isEmpty) return 1;
 
     return supportedBatchSizes.max;
+  });
+
+  late final generateCountOptions = qp((ref) {
+    return List<int>.generate(
+      _askQuestionMaxGenerateCount - _askQuestionMinGenerateCount + 1,
+      (index) => _askQuestionMinGenerateCount + index,
+    );
   });
 
   late final hasChatHistory = qp((ref) {
@@ -147,9 +158,10 @@ class _AskQuestion {
   });
 
   late final targetQuestionCount = qp((ref) {
-    final maxParallelCount = ref.watch(this.maxParallelCount);
-    if (maxParallelCount > 1) return maxParallelCount;
-    return _askQuestionSequentialQuestionCount;
+    final selectedCount = ref.watch(generateCount);
+    if (selectedCount < _askQuestionMinGenerateCount) return _askQuestionMinGenerateCount;
+    if (selectedCount > _askQuestionMaxGenerateCount) return _askQuestionMaxGenerateCount;
+    return selectedCount;
   });
 
   late final hasPrefixInput = qp((ref) {
@@ -234,10 +246,12 @@ extension _$AskQuestion on _AskQuestion {
       effectiveRawQuestions.map((raw) => raw.trim()),
     );
     _currentRunQuestions = cleanedCurrentQuestions;
-    final nextQuestions = _dedupeQuestions([
-      ..._completedQuestions,
-      ...cleanedCurrentQuestions,
-    ]);
+    final nextQuestions = _limitQuestions(
+      _dedupeQuestions([
+        ..._completedQuestions,
+        ...cleanedCurrentQuestions,
+      ]),
+    );
     questions.q = nextQuestions;
     _syncQuestionSelectionWithQuestions(nextQuestions);
     _maybeStopSettledGeneration(cleanedCurrentQuestions);
@@ -248,10 +262,12 @@ extension _$AskQuestion on _AskQuestion {
     final finalizedCurrentQuestions = _dedupeQuestions(
       _currentRunQuestions.map((question) => question.trim()),
     );
-    _completedQuestions = _dedupeQuestions([
-      ..._completedQuestions,
-      ...finalizedCurrentQuestions,
-    ]);
+    _completedQuestions = _limitQuestions(
+      _dedupeQuestions([
+        ..._completedQuestions,
+        ...finalizedCurrentQuestions,
+      ]),
+    );
     questions.q = _completedQuestions;
     _syncQuestionSelectionWithQuestions(_completedQuestions);
 
@@ -275,6 +291,7 @@ extension _$AskQuestion on _AskQuestion {
     _currentRunQuestions = const [];
     _runningPrefixes = const [];
     _activePrefix = "";
+    _activeParallelCount = 1;
     _sequentialMode = false;
     _attemptCount = 0;
     _attemptLimit = 0;
@@ -489,6 +506,12 @@ extension _$AskQuestion on _AskQuestion {
     return result;
   }
 
+  List<String> _limitQuestions(List<String> questions) {
+    if (_targetQuestionCount <= 0) return questions;
+    if (questions.length <= _targetQuestionCount) return questions;
+    return questions.take(_targetQuestionCount).toList();
+  }
+
   void _applyPrefixForLanguage(Language targetLanguage) {
     final prefixes = _askQuestionPrefixes[targetLanguage] ?? const <String>[];
     if (prefixes.isEmpty) {
@@ -576,6 +599,7 @@ extension _$AskQuestion on _AskQuestion {
     _currentRunQuestions = const [];
     _runningPrefixes = const [];
     _activePrefix = prefix;
+    _activeParallelCount = parallelCount;
     _sequentialMode = sequentialMode;
     _attemptCount = 0;
     _attemptLimit = attemptLimit;
@@ -667,7 +691,7 @@ extension _$AskQuestion on _AskQuestion {
     await _startPrefixRun(
       modelID: modelID,
       prefix: activePrefix,
-      parallelCount: 1,
+      parallelCount: _activeParallelCount,
       sessionId: sessionId,
     );
   }
@@ -722,6 +746,7 @@ extension $AskQuestion on _AskQuestion {
     _currentRunQuestions = const [];
     _runningPrefixes = const [];
     _activePrefix = "";
+    _activeParallelCount = 1;
     _sequentialMode = false;
     _attemptCount = 0;
     _attemptLimit = 0;
@@ -780,6 +805,15 @@ extension $AskQuestion on _AskQuestion {
     editingQuestionIndex.q = null;
   }
 
+  void setGenerateCount(int nextCount) {
+    if (_isGenerating) return;
+    if (nextCount < _askQuestionMinGenerateCount) return;
+    if (nextCount > _askQuestionMaxGenerateCount) return;
+    if (generateCount.q == nextCount) return;
+
+    generateCount.q = nextCount;
+  }
+
   Future<void> generateFromCurrentChat() async {
     final prefix = prefixInput.q.trim();
     if (prefix.isEmpty) {
@@ -801,15 +835,19 @@ extension $AskQuestion on _AskQuestion {
       return;
     }
 
-    final resolvedParallelCount = _resolveParallelCount();
+    final targetQuestionCount = this.targetQuestionCount.q;
+    final resolvedParallelCount = _resolveParallelCount(cap: targetQuestionCount);
+    final shouldContinueInMultipleRuns = resolvedParallelCount < targetQuestionCount;
+    final attemptLimit = math.max(_askQuestionSequentialAttemptLimit, targetQuestionCount * 2);
+
     if (resolvedParallelCount > 1) {
       await _startPrefixGenerationSession(
         modelID: modelID,
         prefix: prefix,
         parallelCount: resolvedParallelCount,
-        sequentialMode: false,
-        targetQuestionCount: resolvedParallelCount,
-        attemptLimit: 1,
+        sequentialMode: shouldContinueInMultipleRuns,
+        targetQuestionCount: targetQuestionCount,
+        attemptLimit: shouldContinueInMultipleRuns ? attemptLimit : 1,
       );
       return;
     }
@@ -819,8 +857,8 @@ extension $AskQuestion on _AskQuestion {
       prefix: prefix,
       parallelCount: 1,
       sequentialMode: true,
-      targetQuestionCount: _askQuestionSequentialQuestionCount,
-      attemptLimit: _askQuestionSequentialAttemptLimit,
+      targetQuestionCount: targetQuestionCount,
+      attemptLimit: attemptLimit,
     );
   }
 
@@ -921,6 +959,6 @@ extension $AskQuestion on _AskQuestion {
     P.chat.textInInput.q = normalized;
     await pop();
     await 1.msLater;
-    await P.chat.onSendButtonPressed(preferredDemoType: .chat);
+    P.chat.focusNode.requestFocus();
   }
 }

@@ -916,6 +916,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQグループ1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQグループ2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("質問ジェネレーター"),
+    "question_generator_count": MessageLookupByLibrary.simpleMessage("生成数"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
           "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問をいくつか考えてくれます。",
@@ -947,7 +948,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_question_action_guide":
         MessageLookupByLibrary.simpleMessage(
-          "気になる質問をタップすると、そのまま整えたり、すぐに送ったりできます。",
+          "生成された質問をタップすると、チャット入力欄にそのまま入れられます。",
         ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(

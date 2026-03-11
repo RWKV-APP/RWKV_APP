@@ -79,6 +79,17 @@ class InputTextField extends ConsumerWidget {
     final inputBarBgColor = appTheme.textInputBgC;
     final inputBarShadowRadius = appTheme.inputBarShadowRadius;
     final inputBarShadowOffset = appTheme.inputBarShadowOffset;
+    final inputContentPadding = isSee
+        ? EdgeInsets.only(left: hasCurrentImage ? 12 : 8, top: 10, right: 8, bottom: 10)
+        : isTalk
+        ? EdgeInsets.only(left: hasSelectedVoice ? 12 : 8, top: 10, right: 8, bottom: 10)
+        : const EdgeInsets.only(left: 12, top: 10, right: 12, bottom: 10);
+    final inputTextStyle = theme.textTheme.bodyLarge?.copyWith(height: 1.35);
+    final inputTextStrutStyle = const StrutStyle(
+      height: 1.35,
+      leading: 0.15,
+      forceStrutHeight: true,
+    );
 
     final textFieldWidget = Container(
       padding: .only(
@@ -220,12 +231,10 @@ class InputTextField extends ConsumerWidget {
                       textInputAction: TextInputAction.newline,
                       maxLines: 10,
                       minLines: 1,
+                      style: inputTextStyle,
+                      strutStyle: inputTextStrutStyle,
                       decoration: InputDecoration(
-                        contentPadding: isSee
-                            ? .only(left: hasCurrentImage ? 12 : 8, top: 8, right: 8, bottom: 8)
-                            : isTalk
-                            ? .only(left: hasSelectedVoice ? 12 : 8, top: 8, right: 8, bottom: 8)
-                            : const .only(left: 12, top: 4, right: 12, bottom: 4),
+                        contentPadding: inputContentPadding,
                         fillColor: qw,
                         focusColor: qw,
                         hoverColor: qw,
