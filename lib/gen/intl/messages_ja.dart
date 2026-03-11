@@ -90,7 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m32(value) => "Presence Penalty: ${value}";
 
   static String m33(count) =>
-      "Generate を押すと、RWKV がいまのチャットからあなたのために最大 ${count} 件の追質問候補を考えてくれます。";
+      "「生成」を押すと、RWKV が選んだ書き出しから最大 ${count} 件の質問案を考えてくれます。";
 
   static String m34(count) => "キュー内：${count}";
 
@@ -918,22 +918,37 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage("質問ジェネレーター"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
-          "下の「生成」ボタンを押して、RWKV にあなたが聞ける質問をいくつか考えてもらいましょう。",
+          "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問をいくつか考えてくれます。",
         ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "下の「生成」ボタンを押して、RWKV にあなたが最初に聞ける質問を 1 つ考えてもらいましょう。",
+      "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問を 1 つ考えてくれます。",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
-          "質問の言語を切り替えたため、Generate は現在のチャット履歴を無視し、選択中の言語で文脈に依存しない質問を生成します。",
+          "言語を切り替えると、上に並ぶ書き出しも一緒に切り替わります。気になるものを選んで、その続きから考えてもらいましょう。",
         ),
     "question_generator_mock_batch_description":
         MessageLookupByLibrary.simpleMessage(
-          "何を聞けばいいか分からない？RWKV にいくつか質問を考えてもらいましょう！",
+          "少しヒントが欲しいときは、RWKV にいくつか質問を考えてもらいましょう。",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "何を聞けばいいか分からない？RWKVに質問を考えてもらいましょう！",
+      "どう聞き始めればいいか迷ったら、まずは RWKV に 1 つ考えてもらいましょう。",
     ),
+    "question_generator_prefix_guide": MessageLookupByLibrary.simpleMessage(
+      "下の書き出しをいろいろ試すと、RWKV がその続きから質問を作ってくれます。下の入力欄を直接編集して、自分らしい書き出しにすることもできます。",
+    ),
+    "question_generator_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage("ここに質問の書き出しを書いてみましょう..."),
+    "question_generator_prefix_required": MessageLookupByLibrary.simpleMessage(
+      "先に質問の書き出しを入力してください",
+    ),
+    "question_generator_prefixes": MessageLookupByLibrary.simpleMessage(
+      "質問の書き出し",
+    ),
+    "question_generator_question_action_guide":
+        MessageLookupByLibrary.simpleMessage(
+          "気になる質問をタップすると、そのまま整えたり、すぐに送ったりできます。",
+        ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "RWKV にこの言語で質問してほしい...",

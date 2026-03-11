@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m32(value) => "Presence Penalty: ${value}";
 
   static String m33(count) =>
-      "Tap Generate and let RWKV create up to ${count} follow‑up questions for you from the current chat.";
+      "Tap Generate and let RWKV turn your chosen opening into up to ${count} question ideas.";
 
   static String m34(count) => "Queued: ${count}";
 
@@ -1074,22 +1074,39 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
-          "Tap the Generate button below and let RWKV come up with a few questions you can ask.",
+          "Choose an opening above, then tap Generate and let RWKV suggest a few questions you can send right away.",
         ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "Tap the Generate button below and let RWKV come up with a question you can ask.",
+      "Choose an opening above, then tap Generate and let RWKV suggest a question you can send right away.",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
-          "Because you changed the question language, Generate will ignore the current chat history and create context-free questions in the selected language.",
+          "After switching languages, the suggested openings above will change as well. Pick one you like and let RWKV continue from there.",
         ),
     "question_generator_mock_batch_description":
         MessageLookupByLibrary.simpleMessage(
-          "Not sure what to ask? Try letting RWKV generate a few for you!",
+          "Need a little inspiration? Let RWKV suggest a few questions for you.",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "Not sure what to ask? Try letting RWKV generate a question for you!",
+      "Not sure how to start? Let RWKV come up with a question for you.",
     ),
+    "question_generator_prefix_guide": MessageLookupByLibrary.simpleMessage(
+      "Tap different openings below and RWKV will build questions from them. You can also edit the text box below to write your own opening.",
+    ),
+    "question_generator_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage(
+          "Write the opening you want RWKV to continue...",
+        ),
+    "question_generator_prefix_required": MessageLookupByLibrary.simpleMessage(
+      "Please enter a question prefix first",
+    ),
+    "question_generator_prefixes": MessageLookupByLibrary.simpleMessage(
+      "Question Prefixes",
+    ),
+    "question_generator_question_action_guide":
+        MessageLookupByLibrary.simpleMessage(
+          "Tap any generated question to polish it or send it right away.",
+        ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to ask in this language...",

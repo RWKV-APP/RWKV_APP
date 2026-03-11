@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m32(value) => "Presence Penalty: ${value}";
 
   static String m33(count) =>
-      "Нажмите Generate — и RWKV предложит для вас до ${count} вариантов следующих вопросов на основе текущего чата.";
+      "Нажмите Generate, и RWKV превратит выбранное начало в максимум ${count} вариантов вопросов.";
 
   static String m34(count) => "В очереди: ${count}";
 
@@ -1108,22 +1108,39 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
-          "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас несколько вопросов, которые вы сможете задать.",
+          "Выберите начало вопроса выше, затем нажмите Generate — RWKV подскажет несколько вопросов, которые можно сразу отправить.",
         ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас один стартовый вопрос, который вы сможете задать.",
+      "Выберите начало вопроса выше, затем нажмите Generate — RWKV подскажет один вопрос, который можно сразу отправить.",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
-          "Поскольку вы сменили язык вопросов, Generate проигнорирует текущую историю чата и создаст вопросы вне контекста на выбранном языке.",
+          "После смены языка поменяются и варианты начала вопроса выше. Выберите тот, который вам ближе, и позвольте RWKV продолжить его.",
         ),
     "question_generator_mock_batch_description":
         MessageLookupByLibrary.simpleMessage(
-          "Не знаете, о чём спросить? Пусть RWKV придумает для вас несколько вопросов!",
+          "Если хочется немного вдохновения, пусть RWKV предложит вам несколько вопросов.",
         ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "Не знаете, о чём спросить? Пусть RWKV придумает вопрос за вас!",
+      "Не знаете, с чего начать? Пусть RWKV подскажет вам один вопрос.",
     ),
+    "question_generator_prefix_guide": MessageLookupByLibrary.simpleMessage(
+      "Попробуйте разные начала ниже, и RWKV продолжит их в полноценные вопросы. А если хочется, вы можете просто отредактировать поле ниже и написать своё начало.",
+    ),
+    "question_generator_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage(
+          "Напишите здесь начало вопроса...",
+        ),
+    "question_generator_prefix_required": MessageLookupByLibrary.simpleMessage(
+      "Сначала введите префикс вопроса",
+    ),
+    "question_generator_prefixes": MessageLookupByLibrary.simpleMessage(
+      "Префиксы вопросов",
+    ),
+    "question_generator_question_action_guide":
+        MessageLookupByLibrary.simpleMessage(
+          "Нажмите на понравившийся вопрос, чтобы подправить его или сразу отправить.",
+        ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "Я хочу, чтобы RWKV задавал вопросы на этом языке...",

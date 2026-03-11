@@ -88,7 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m32(value) => "Presence Penalty: ${value}";
 
-  static String m33(count) => "点一下生成，让 RWKV 帮你基于当前聊天，想出最多 ${count} 条后续要问的问题。";
+  static String m33(count) => "点一下生成，RWKV 会顺着你选好的开头，帮你想出最多 ${count} 个问题。";
 
   static String m34(count) => "排队中: ${count}";
 
@@ -837,20 +837,31 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage("RWKV 帮你问"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
-          "点击下方的生成按钮，让 RWKV 为你生成几个可以用来提问的问题。",
+          "选好上面的问题开头后，点一下生成，RWKV 会先帮你想几个可以直接提问的问题。",
         ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
-      "点击下方的生成按钮，让 RWKV 为你生成一个可以用来提问的问题。",
+      "选好上面的问题开头后，点一下生成，RWKV 会先帮你想一个可以直接提问的问题。",
     ),
     "question_generator_language_switched_hint":
         MessageLookupByLibrary.simpleMessage(
-          "由于你切换了问题语言，点击生成后会忽略当前聊天记录，并按所选语言生成与上下文无关的问题。",
+          "切换语言后，上面可选的问题开头也会一起变化。挑一个顺手的开头，再让 RWKV 接着往下想就好。",
         ),
     "question_generator_mock_batch_description":
-        MessageLookupByLibrary.simpleMessage("不知道问什么问题好？试试让 RWKV 生成几个吧！"),
+        MessageLookupByLibrary.simpleMessage("一时想不到怎么问？让 RWKV 多帮你想几个问题吧。"),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
-      "不知道问什么问题好？试试让 RWKV 生成一个吧！",
+      "不知道怎么开口更合适？让 RWKV 先帮你想一个吧。",
     ),
+    "question_generator_prefix_guide": MessageLookupByLibrary.simpleMessage(
+      "点一点不同的问题开头，RWKV 会顺着这个开头继续帮你生成问题。你也可以直接改下面的输入框，写一个更符合你想法的开头。",
+    ),
+    "question_generator_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage("在这里写下你想要的问题开头..."),
+    "question_generator_prefix_required": MessageLookupByLibrary.simpleMessage(
+      "请先输入一个问题前缀",
+    ),
+    "question_generator_prefixes": MessageLookupByLibrary.simpleMessage("问题前缀"),
+    "question_generator_question_action_guide":
+        MessageLookupByLibrary.simpleMessage("点一下你喜欢的问题，就可以继续编辑，或者直接发出去。"),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "我想让 RWKV 以这种语言提问...",

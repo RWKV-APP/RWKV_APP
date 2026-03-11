@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
@@ -37,6 +36,20 @@ Language? _askQuestionUILanguageForLocale(Locale locale) {
   }
 }
 
+List<Language> _askQuestionDisplayLanguages(BuildContext context) {
+  final uiLocale = Localizations.localeOf(context);
+  final uiLanguage = _askQuestionUILanguageForLocale(uiLocale);
+  final languages = Language.values.where((language) => language != .none).toList();
+  if (uiLanguage == null) return languages;
+
+  languages.sort((a, b) {
+    if (a == uiLanguage && b != uiLanguage) return -1;
+    if (b == uiLanguage && a != uiLanguage) return 1;
+    return a.index.compareTo(b.index);
+  });
+  return languages;
+}
+
 class AskQuestionPanel extends ConsumerWidget {
   static const String panelKey = 'AskQuestionPanel';
 
@@ -45,11 +58,9 @@ class AskQuestionPanel extends ConsumerWidget {
 
     await P.ui.showPanel(
       key: panelKey,
-      initialChildSize: .74,
-      maxChildSize: .92,
+      initialChildSize: .78,
+      maxChildSize: .94,
       beforeShow: () async {
-        final latestModelId = P.rwkv.latestModelId.q;
-        if (latestModelId != null) {}
         P.askQuestion.onPanelShown();
       },
       afterHide: (_) {
@@ -70,20 +81,17 @@ class AskQuestionPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-    final selectedLanguage = ref.watch(P.askQuestion.language);
+    final targetQuestionCount = ref.watch(P.askQuestion.targetQuestionCount);
     final generating = ref.watch(P.rwkv.generating) && ref.watch(P.askQuestion.interceptingEvents);
+    final selectedLanguage = ref.watch(P.askQuestion.language);
+    final prefixes = ref.watch(P.askQuestion.prefixes);
+    final selectedPrefix = ref.watch(P.askQuestion.selectedPrefix);
+    final prefixInput = ref.watch(P.askQuestion.prefixInput);
     final questions = ref.watch(P.askQuestion.questions);
-    final hasChatHistory = ref.watch(P.askQuestion.hasChatHistory);
-    final maxParallelCount = ref.watch(P.askQuestion.maxParallelCount);
-    final shouldGenerateWithoutContext = ref.watch(P.askQuestion.shouldGenerateWithoutContext);
-
-    final emptyMessage = switch ((shouldGenerateWithoutContext, hasChatHistory)) {
-      (true, _) => maxParallelCount <= 1 ? s.question_generator_empty_chat_hint : s.question_generator_empty_chat_batch_hint,
-      (false, true) => s.question_generator_tap_generate_hint(maxParallelCount),
-      (false, false) => maxParallelCount <= 1 ? s.question_generator_empty_chat_hint : s.question_generator_empty_chat_batch_hint,
-    };
+    final selectedQuestionIndex = ref.watch(P.askQuestion.selectedQuestionIndex);
+    final editingQuestionIndex = ref.watch(P.askQuestion.editingQuestionIndex);
+    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
+    final emptyMessage = targetQuestionCount <= 1 ? s.question_generator_empty_chat_hint : s.question_generator_empty_chat_batch_hint;
 
     return ClipRRect(
       borderRadius: const .only(
@@ -95,101 +103,60 @@ class AskQuestionPanel extends ConsumerWidget {
         children: [
           _AskQuestionPanelBar(scrollController: scrollController),
           Expanded(
-            child: ListView(
-              controller: scrollController,
-              physics: const BouncingScrollPhysics(),
-              padding: const .only(
-                left: 12,
-                top: 12,
-                right: 12,
-                bottom: 12,
+            child: DefaultTextStyle.merge(
+              style: theme.textTheme.bodyMedium,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                  P.askQuestion.clearQuestionSelection();
+                },
+                child: ListView(
+                  controller: scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: .fromLTRB(12, 12, 12, 12 + paddingBottom),
+                  children: [
+                    _AskQuestionHeroCard(
+                      description: targetQuestionCount > 1
+                          ? s.question_generator_mock_batch_description
+                          : s.question_generator_mock_description,
+                    ),
+                    const SizedBox(height: 12),
+                    _AskQuestionLanguageCard(
+                      title: s.question_language,
+                      languages: _askQuestionDisplayLanguages(context),
+                      selectedLanguage: selectedLanguage,
+                    ),
+                    const SizedBox(height: 12),
+                    _AskQuestionPrefixComposerCard(
+                      title: s.question_generator_prefixes,
+                      prefixes: prefixes,
+                      selectedPrefix: selectedPrefix,
+                      prefixInput: prefixInput,
+                      generating: generating,
+                    ),
+                    const SizedBox(height: 12),
+                    _AskQuestionGenerateBar(
+                      generating: generating,
+                      targetQuestionCount: targetQuestionCount,
+                    ),
+                    const SizedBox(height: 12),
+                    _AskQuestionResultsCard(
+                      title: s.generated_questions,
+                      guide: s.question_generator_question_action_guide,
+                      questions: questions,
+                      emptyMessage: emptyMessage,
+                      generating: generating,
+                      selectedQuestionIndex: selectedQuestionIndex,
+                      editingQuestionIndex: editingQuestionIndex,
+                      targetQuestionCount: targetQuestionCount,
+                    ),
+                  ],
+                ),
               ),
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: appTheme.settingItem,
-                    borderRadius: .circular(12),
-                    border: .all(color: qb.q(.15), width: .5),
-                  ),
-                  padding: const .all(14),
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        switch (questions.length) {
-                          0 => s.question_generator_mock_description,
-                          1 => s.question_generator_mock_description,
-                          _ => s.question_generator_mock_batch_description,
-                        },
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: qb.q(.82),
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                _AskQuestionSection(
-                  title: s.question_language,
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      for (final language in (() {
-                        final uiLocale = Localizations.localeOf(context);
-                        final uiLanguage = _askQuestionUILanguageForLocale(uiLocale);
-                        final languages = Language.values.where((e) => e != .none).toList();
-                        if (uiLanguage == null) return languages;
-                        languages.sort((a, b) {
-                          if (a == uiLanguage && b != uiLanguage) return -1;
-                          if (b == uiLanguage && a != uiLanguage) return 1;
-                          return a.index.compareTo(b.index);
-                        });
-                        return languages;
-                      })())
-                        _AskQuestionSelectablePill(
-                          label: _askQuestionLanguageLabel(s, language),
-                          selected: language == selectedLanguage,
-                          onTap: () => P.askQuestion.selectLanguage(language),
-                        ),
-                    ],
-                  ),
-                ),
-                if (shouldGenerateWithoutContext) ...[
-                  const SizedBox(height: 8),
-                  _AskQuestionLanguageSwitchedHint(message: s.question_generator_language_switched_hint),
-                ],
-                const SizedBox(height: 8),
-                _AskQuestionSection(
-                  title: s.generated_questions,
-                  child: Column(
-                    children: [
-                      if (questions.isEmpty)
-                        Text(
-                          generating ? s.generating : emptyMessage,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: qb.q(.72),
-                            height: 1.4,
-                          ),
-                        ),
-                      for (final entry in questions.indexed) ...[
-                        _AskQuestionCard(
-                          key: ValueKey(entry.$2),
-                          question: entry.$2,
-                          onAsk: (value) {
-                            P.askQuestion.useQuestion(value);
-                          },
-                        ),
-                        if (entry.$1 != questions.length - 1) const SizedBox(height: 6),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
             ),
           ),
-          const _AskQuestionBottomBar(),
         ],
       ),
     );
@@ -273,13 +240,14 @@ class _AskQuestionPanelBarState extends ConsumerState<_AskQuestionPanelBar> {
   }
 }
 
-class _AskQuestionSection extends ConsumerWidget {
-  const _AskQuestionSection({
-    required this.title,
+class _AskQuestionSurface extends ConsumerWidget {
+  final EdgeInsets padding;
+
+  const _AskQuestionSurface({
     required this.child,
+    this.padding = const .all(16),
   });
 
-  final String title;
   final Widget child;
 
   @override
@@ -291,10 +259,153 @@ class _AskQuestionSection extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: appTheme.settingItem,
-        borderRadius: .circular(12),
+        borderRadius: .circular(18),
         border: .all(color: qb.q(.15), width: .5),
       ),
-      padding: const .all(14),
+      padding: padding,
+      child: DefaultTextStyle.merge(
+        style: theme.textTheme.bodyMedium,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _AskQuestionHeroCard extends ConsumerWidget {
+  const _AskQuestionHeroCard({required this.description});
+
+  final String description;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: qb.q(.04),
+        borderRadius: .circular(22),
+        border: .all(color: qb.q(.16), width: .5),
+      ),
+      padding: const .all(18),
+      child: Row(
+        crossAxisAlignment: .start,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: qb.q(.1),
+              borderRadius: .circular(14),
+              border: .all(color: qb.q(.16)),
+            ),
+            child: Icon(
+              Symbols.auto_awesome,
+              color: qb.q(.94),
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  description,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: qb.q(.9),
+                    fontWeight: FontWeight.w600,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AskQuestionLanguageCard extends ConsumerWidget {
+  const _AskQuestionLanguageCard({
+    required this.title,
+    required this.languages,
+    required this.selectedLanguage,
+  });
+
+  final String title;
+  final List<Language> languages;
+  final Language selectedLanguage;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+
+    return _AskQuestionSurface(
+      padding: const .symmetric(vertical: 16),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Padding(
+            padding: const .symmetric(horizontal: 16),
+            child: Text(
+              title,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                16.w,
+                for (final language in languages) ...[
+                  _AskQuestionSelectablePill(
+                    label: _askQuestionLanguageLabel(s, language),
+                    selected: language == selectedLanguage,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      P.askQuestion.selectLanguage(language);
+                    },
+                  ),
+                  if (language != languages.last) const SizedBox(width: 8),
+                ],
+                16.w,
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AskQuestionPrefixComposerCard extends ConsumerWidget {
+  const _AskQuestionPrefixComposerCard({
+    required this.title,
+    required this.prefixes,
+    required this.selectedPrefix,
+    required this.prefixInput,
+    required this.generating,
+  });
+
+  final String title;
+  final List<String> prefixes;
+  final String? selectedPrefix;
+  final String prefixInput;
+  final bool generating;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    return _AskQuestionSurface(
       child: Column(
         crossAxisAlignment: .start,
         children: [
@@ -304,12 +415,346 @@ class _AskQuestionSection extends ConsumerWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
+          const SizedBox(height: 6),
+          Text(
+            s.question_generator_prefix_guide,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: qb.q(.68),
+              height: 1.45,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (prefixes.isNotEmpty)
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final prefix in prefixes)
+                  _AskQuestionSelectablePill(
+                    label: prefix,
+                    selected: prefix == selectedPrefix,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      P.askQuestion.selectPrefix(prefix);
+                    },
+                  ),
+              ],
+            ),
+          if (prefixes.isNotEmpty)
+            Container(
+              height: .5,
+              margin: const .only(top: 14, bottom: 14),
+              color: qb.q(.1),
+            ),
+          _AskQuestionPrefixInputField(
+            value: prefixInput,
+            enabled: !generating,
+            placeholder: s.question_generator_prefix_input_placeholder,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AskQuestionPrefixInputField extends ConsumerStatefulWidget {
+  const _AskQuestionPrefixInputField({
+    required this.value,
+    required this.enabled,
+    required this.placeholder,
+  });
+
+  final String value;
+  final bool enabled;
+  final String placeholder;
+
+  @override
+  ConsumerState<_AskQuestionPrefixInputField> createState() => _AskQuestionPrefixInputFieldState();
+}
+
+class _AskQuestionPrefixInputFieldState extends ConsumerState<_AskQuestionPrefixInputField> {
+  late final TextEditingController _controller;
+
+  @override
+  void didUpdateWidget(covariant _AskQuestionPrefixInputField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value == _controller.text) return;
+
+    _controller.text = widget.value;
+    _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      decoration: BoxDecoration(
+        color: qb.q(widget.enabled ? .04 : .02),
+        borderRadius: .circular(16),
+        border: .all(color: qb.q(widget.enabled ? .14 : .08), width: .5),
+      ),
+      padding: const .symmetric(horizontal: 14, vertical: 12),
+      child: TextField(
+        controller: _controller,
+        enabled: widget.enabled,
+        maxLines: 4,
+        minLines: 3,
+        onChanged: P.askQuestion.updatePrefixInput,
+        decoration: InputDecoration(
+          isDense: true,
+          border: InputBorder.none,
+          contentPadding: .zero,
+          hintText: widget.placeholder,
+          hintStyle: theme.textTheme.bodyMedium?.copyWith(
+            color: qb.q(.42),
+          ),
+        ),
+        style: theme.textTheme.bodyLarge?.copyWith(
+          color: qb.q(.95),
+          height: 1.35,
+        ),
+      ),
+    );
+  }
+}
+
+class _AskQuestionGenerateBar extends ConsumerWidget {
+  const _AskQuestionGenerateBar({
+    required this.generating,
+    required this.targetQuestionCount,
+  });
+
+  final bool generating;
+  final int targetQuestionCount;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+    final hasPrefixInput = ref.watch(P.askQuestion.hasPrefixInput);
+    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
+    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
+    final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
+
+    final label = switch (generating) {
+      false => targetQuestionCount > 1 ? "${s.generate} · $targetQuestionCount" : s.generate,
+      true when decodeSpeed > 0 => "decode ${decodeSpeed.toStringAsFixed(1)} tok/s",
+      true when prefillSpeed > 0 => "prefill ${prefillSpeed.toStringAsFixed(1)} tok/s",
+      _ => s.generating,
+    };
+
+    return Row(
+      children: [
+        if (generating)
+          IconButton(
+            onPressed: P.askQuestion.pauseGeneration,
+            style: IconButton.styleFrom(
+              backgroundColor: qb.q(.08),
+              foregroundColor: qb.q(.94),
+            ),
+            icon: Icon(Symbols.pause, size: iconSize),
+          ),
+        if (generating) const SizedBox(width: 10),
+        Expanded(
+          child: FilledButton.tonalIcon(
+            onPressed: generating || !hasPrefixInput ? null : P.askQuestion.generateFromCurrentChat,
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+              backgroundColor: qb.q(.1),
+              foregroundColor: qb.q(.96),
+              disabledBackgroundColor: qb.q(.05),
+              disabledForegroundColor: qb.q(.34),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            icon: generating
+                ? SizedBox(
+                    width: iconSize,
+                    height: iconSize,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: qb.q(.38),
+                    ),
+                  )
+                : Icon(Symbols.auto_awesome, size: iconSize),
+            label: Text(
+              label,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AskQuestionResultsCard extends ConsumerWidget {
+  const _AskQuestionResultsCard({
+    required this.title,
+    required this.guide,
+    required this.questions,
+    required this.emptyMessage,
+    required this.generating,
+    required this.selectedQuestionIndex,
+    required this.editingQuestionIndex,
+    required this.targetQuestionCount,
+  });
+
+  final String title;
+  final String guide;
+  final List<String> questions;
+  final String emptyMessage;
+  final bool generating;
+  final int? selectedQuestionIndex;
+  final int? editingQuestionIndex;
+  final int targetQuestionCount;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    return _AskQuestionSurface(
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      guide,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: qb.q(.68),
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (questions.isNotEmpty || generating)
+                Container(
+                  decoration: BoxDecoration(
+                    color: qb.q(.08),
+                    borderRadius: .circular(999),
+                    border: .all(color: qb.q(.12)),
+                  ),
+                  padding: const .symmetric(horizontal: 10, vertical: 5),
+                  child: Text(
+                    generating ? "${questions.length}/$targetQuestionCount" : "${questions.length}",
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: qb.q(.78),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           Container(
             height: .5,
-            margin: const .only(top: 10, bottom: 12),
-            color: qb.q(.12),
+            margin: const .only(top: 12, bottom: 14),
+            color: qb.q(.1),
           ),
-          child,
+          if (questions.isEmpty)
+            _AskQuestionEmptyState(
+              message: generating ? s.generating : emptyMessage,
+            ),
+          if (questions.isNotEmpty)
+            Column(
+              crossAxisAlignment: .stretch,
+              children: [
+                for (final entry in questions.indexed) ...[
+                  _AskQuestionQuestionCard(
+                    key: ValueKey(entry.$2),
+                    question: entry.$2,
+                    selected: selectedQuestionIndex == entry.$1,
+                    editing: editingQuestionIndex == entry.$1,
+                    onSelect: () {
+                      FocusScope.of(context).unfocus();
+                      P.askQuestion.selectQuestion(entry.$1);
+                    },
+                    onBeginEdit: () {
+                      P.askQuestion.beginEditingQuestion(entry.$1);
+                    },
+                    onCancelEdit: P.askQuestion.cancelEditingQuestion,
+                    onAsk: (value) {
+                      P.askQuestion.useQuestion(value);
+                    },
+                  ),
+                  if (entry.$1 != questions.length - 1) const SizedBox(height: 8),
+                ],
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AskQuestionEmptyState extends ConsumerWidget {
+  const _AskQuestionEmptyState({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final qb = ref.watch(P.app.qb);
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: qb.q(.04),
+        borderRadius: .circular(16),
+        border: .all(color: qb.q(.1), width: .5),
+      ),
+      padding: const .all(18),
+      child: Column(
+        children: [
+          Icon(
+            Symbols.lightbulb,
+            color: qb.q(.6),
+            size: 20,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: qb.q(.74),
+              height: 1.45,
+            ),
+          ),
         ],
       ),
     );
@@ -331,19 +776,20 @@ class _AskQuestionSelectablePill extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final qb = ref.watch(P.app.qb);
-    final bgColor = selected ? qb.q(.12) : qb.q(.06);
-    final borderColor = selected ? qb.q(.24) : qb.q(.12);
-    final textColor = selected ? qb.q(.98) : qb.q(.92);
+    final bgColor = selected ? qb.q(.12) : qb.q(.05);
+    final borderColor = selected ? qb.q(.18) : qb.q(.1);
+    final textColor = selected ? qb.q(.98) : qb.q(.86);
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: .circular(999),
           border: .all(color: borderColor),
         ),
-        padding: const .symmetric(horizontal: 12, vertical: 8),
+        padding: const .symmetric(horizontal: 14, vertical: 9),
         child: Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
@@ -356,28 +802,50 @@ class _AskQuestionSelectablePill extends ConsumerWidget {
   }
 }
 
-class _AskQuestionCard extends ConsumerStatefulWidget {
-  const _AskQuestionCard({
+class _AskQuestionQuestionCard extends ConsumerStatefulWidget {
+  const _AskQuestionQuestionCard({
     super.key,
     required this.question,
+    required this.selected,
+    required this.editing,
+    required this.onSelect,
+    required this.onBeginEdit,
+    required this.onCancelEdit,
     required this.onAsk,
   });
 
   final String question;
+  final bool selected;
+  final bool editing;
+  final VoidCallback onSelect;
+  final VoidCallback onBeginEdit;
+  final VoidCallback onCancelEdit;
   final ValueChanged<String> onAsk;
 
   @override
-  ConsumerState<_AskQuestionCard> createState() => _AskQuestionCardState();
+  ConsumerState<_AskQuestionQuestionCard> createState() => _AskQuestionQuestionCardState();
 }
 
-class _AskQuestionCardState extends ConsumerState<_AskQuestionCard> {
+class _AskQuestionQuestionCardState extends ConsumerState<_AskQuestionQuestionCard> {
   late final TextEditingController _controller;
+  late final FocusNode _focusNode;
 
   @override
-  void didUpdateWidget(covariant _AskQuestionCard oldWidget) {
+  void didUpdateWidget(covariant _AskQuestionQuestionCard oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.editing && !oldWidget.editing) {
+      _controller.text = widget.question;
+      _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _focusNode.requestFocus();
+      });
+      return;
+    }
+
     if (widget.question == oldWidget.question) return;
     if (_controller.text == widget.question) return;
+
     _controller.text = widget.question;
     _controller.selection = TextSelection.collapsed(offset: _controller.text.length);
   }
@@ -385,6 +853,7 @@ class _AskQuestionCardState extends ConsumerState<_AskQuestionCard> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -392,183 +861,100 @@ class _AskQuestionCardState extends ConsumerState<_AskQuestionCard> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.question);
+    _focusNode = FocusNode();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final appTheme = ref.watch(P.app.theme);
-    final qb = ref.watch(P.app.qb);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: appTheme.settingItem,
-        borderRadius: .circular(12),
-        border: .all(color: qb.q(.15), width: .5),
-      ),
-      padding: const .all(12),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          TextField(
-            controller: _controller,
-            maxLines: null,
-            minLines: 1,
-            decoration: const InputDecoration(
-              isDense: true,
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.zero,
-            ),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              height: 1.35,
-              color: qb.q(.94),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () {
-                widget.onAsk(_controller.text);
-              },
-              style: FilledButton.styleFrom(
-                backgroundColor: qb.q(.12),
-                foregroundColor: qb.q(.96),
-                visualDensity: .compact,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(s.ask),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AskQuestionLanguageSwitchedHint extends ConsumerWidget {
-  const _AskQuestionLanguageSwitchedHint({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final qb = ref.watch(P.app.qb);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: qb.q(.06),
-        borderRadius: .circular(12),
-        border: .all(color: qb.q(.14), width: .5),
-      ),
-      padding: const .all(12),
-      child: Row(
-        crossAxisAlignment: .start,
-        children: [
-          Icon(
-            Symbols.info,
-            size: 18,
-            color: qb.q(.68),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              message,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: qb.q(.84),
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AskQuestionBottomBar extends ConsumerWidget {
-  const _AskQuestionBottomBar();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
-    final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final generating = ref.watch(P.rwkv.generating) && ref.watch(P.askQuestion.interceptingEvents);
-    final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
-    final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
-    final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
+    final backgroundColor = widget.selected ? qb.q(.1) : appTheme.settingItem;
+    final borderColor = widget.selected ? qb.q(.22) : qb.q(.12);
 
-    final String label;
-    if (!generating) {
-      label = s.generate;
-    } else if (decodeSpeed > 0) {
-      label = "decode ${decodeSpeed.toStringAsFixed(1)} tok/s";
-    } else if (prefillSpeed > 0) {
-      label = "prefill ${prefillSpeed.toStringAsFixed(1)} tok/s";
-    } else {
-      label = s.generating;
-    }
-
-    return Container(
-      padding: .fromLTRB(12, 10, 12, 12 + paddingBottom),
-      decoration: BoxDecoration(
-        color: appTheme.settingItem,
-        border: Border(
-          top: BorderSide(color: qb.q(.12), width: .5),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: widget.editing ? null : widget.onSelect,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: .circular(16),
+          border: .all(color: borderColor, width: .7),
         ),
-      ),
-      child: Row(
-        crossAxisAlignment: .center,
-        children: [
-          if (generating)
-            IconButton(
-              onPressed: () => P.askQuestion.pauseGeneration(),
-              style: IconButton.styleFrom(
-                backgroundColor: qb.q(.08),
-                foregroundColor: qb.q(.9),
-              ),
-              icon: Icon(Symbols.pause, size: iconSize),
-            ),
-          if (generating) const SizedBox(width: 8),
-          Expanded(
-            child: FilledButton.tonalIcon(
-              onPressed: generating
-                  ? null
-                  : () {
-                      P.askQuestion.generateFromCurrentChat();
-                    },
-              style: FilledButton.styleFrom(
-                backgroundColor: qb.q(.1),
-                foregroundColor: qb.q(.96),
-                disabledBackgroundColor: qb.q(.05),
-                disabledForegroundColor: qb.q(.38),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+        padding: const .all(14),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            if (widget.editing)
+              TextField(
+                controller: _controller,
+                focusNode: _focusNode,
+                maxLines: null,
+                minLines: 2,
+                decoration: const InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                  contentPadding: .zero,
+                ),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: qb.q(.96),
+                  height: 1.35,
+                ),
+              )
+            else
+              Text(
+                widget.question,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: qb.q(.94),
+                  height: 1.4,
                 ),
               ),
-              icon: generating
-                  ? SizedBox(
-                      width: iconSize,
-                      height: iconSize,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: qb.q(.38),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              child: !widget.selected
+                  ? const SizedBox.shrink()
+                  : Padding(
+                      padding: const .only(top: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          OutlinedButton(
+                            onPressed: widget.editing ? widget.onCancelEdit : widget.onBeginEdit,
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: qb.q(.92),
+                              side: BorderSide(color: qb.q(.18)),
+                              visualDensity: .compact,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(widget.editing ? s.cancel : s.edit),
+                          ),
+                          const SizedBox(width: 8),
+                          FilledButton(
+                            onPressed: () {
+                              final value = widget.editing ? _controller.text : widget.question;
+                              widget.onAsk(value);
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: qb.q(.14),
+                              foregroundColor: qb.q(.98),
+                              visualDensity: .compact,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(s.ask),
+                          ),
+                        ],
                       ),
-                    )
-                  : Icon(Symbols.auto_awesome, size: iconSize),
-              label: Text(label),
+                    ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -152,12 +152,6 @@
   "please_select_a_world_type": "Пожалуйста, выберите тип задачи",
   "loading": "Загрузка...",
   "loading_progress_percent": "Загрузка {percent}%",
-  "@loading_progress_percent": {
-    "description": "Текст прогресса на кнопке загрузки",
-    "placeholders": {
-      "percent": {}
-    }
-  },
   "cancel": "Отмена",
   "session_configuration": "Конфигурация сессии",
   "apply": "Применить",
@@ -242,12 +236,6 @@
   "rwkv": "RWKV",
   "prefill": "ввод",
   "prefill_progress_percent": "Прогресс prefill {percent}",
-  "@prefill_progress_percent": {
-    "description": "Текст прогресса prefill рядом с индикатором генерации в BotMessageBottom",
-    "placeholders": {
-      "percent": {}
-    }
-  },
   "decode": "вывод",
   "message_token_count": "Количество токенов в сообщении",
   "conversation_token_count": "Количество токенов в текущем диалоге",
@@ -372,11 +360,6 @@
   "prompt": "Промпт",
   "output": "Вывод",
   "model_output": "Вывод модели: {text}",
-  "@model_output": {
-    "placeholders": {
-      "text": {}
-    }
-  },
   "submit": "Отправить",
   "regenerate": "Сгенерировать заново",
   "resume": "Возобновить",
@@ -461,38 +444,13 @@
   "start_service": "Запустить службу",
   "lan_server": "LAN-сервер",
   "http_service_port": "HTTP-сервис (Порт: {port})",
-  "@http_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "websocket_service_port": "WebSocket-сервис (Порт: {port})",
-  "@websocket_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "browser_status": "Статус браузера",
   "no_browser_windows_connected": "Нет подключенных окон браузера",
   "start_service_and_open_browser": "Запустите службу и откройте поддерживаемую страницу браузера.",
   "window_id": "Окно {id}",
-  "@window_id": {
-    "placeholders": {
-      "id": {}
-    }
-  },
   "x_tabs": "{count} вкладок",
-  "@x_tabs": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "queued_x": "В очереди: {count}",
-  "@queued_x": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "translator_debug_info": "Отладочная информация переводчика",
   "cached_translations_memory": "Кэшированные переводы (память)",
   "cached_translations_disk": "Кэшированные переводы (диск)",
@@ -589,19 +547,9 @@
   "camera": "Камера",
   "gallery": "Галерея",
   "ocr_guide_text": "Нажмите {takePhoto}. RWKV переведет текст на изображении.",
-  "@ocr_guide_text": {
-    "placeholders": {
-      "takePhoto": {}
-    }
-  },
   "reached_bottom": "Следите за обновлениями",
   "open_database_folder": "Открыть папку базы данных",
   "npu_not_supported_title": "Поддержка NPU для вашего чипа {socName} пока недоступна",
-  "@npu_not_supported_title": {
-    "placeholders": {
-      "socName": {}
-    }
-  },
   "adapting_more_inference_chips": "Мы продолжаем адаптировать больше чипов для вывода, следите за обновлениями.",
   "other_files": "Другие файлы (Эти файлы могут быть устаревшими или больше не поддерживаемыми весами, которые больше не используются RWKV Chat)",
   "mlx_cache": "Кэш MLX/CoreML",
@@ -629,23 +577,11 @@
   "import_all_weight_files": "Импортировать все файлы весов",
   "import_all_weight_files_description": "Выберите ZIP-файл, экспортированный из этого приложения. Все файлы весов в ZIP-файле будут импортированы. Существующие файлы с тем же именем будут перезаписаны.",
   "import_all_weight_files_success": "Импорт успешен: импортировано {count} файлов",
-  "@import_all_weight_files_success": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "invalid_zip_file": "Неверный ZIP-файл или формат файла не распознан",
   "no_files_in_zip": "В ZIP-файле не найдено действительных файлов весов",
   "current_model_from_latest_json_not_pth": "Текущая модель загружена из конфигурации latest.json, а не из локального .pth файла",
   "no_local_pth_loaded_yet": "Локальные .pth файлы ещё не загружены",
   "ctx_length_label": "ctx {length}",
-  "@ctx_length_label": {
-    "placeholders": {
-      "length": {}
-    }
-  },
   "local_pth_option_files_in_config": "Веса из конфигурации",
   "local_pth_option_local_pth_files": "Локальный .pth файл",
   "select_weights_or_local_pth_hint": "Выберите веса из конфигурации или локальный .pth файл",
@@ -677,17 +613,7 @@
   "folder_not_found_on_device": "Эта папка не найдена на вашем устройстве",
   "folder_not_accessible_check_permission": "К этой папке нет доступа. Проверьте права доступа",
   "path_label": "Путь: {path}",
-  "@path_label": {
-    "placeholders": {
-      "path": {}
-    }
-  },
   "local_folder_name": "Локальная папка: {folderName}",
-  "@local_folder_name": {
-    "placeholders": {
-      "folderName": {}
-    }
-  },
   "custom_directory_set": "Пользовательский каталог установлен",
   "reset_to_default_directory": "Сброс к каталогу по умолчанию",
   "failed_to_create_directory": "Не удалось создать каталог",
@@ -698,71 +624,36 @@
   "moving_files": "Перемещение файлов...",
   "already_using_this_directory": "Уже используется этот каталог",
   "files_moved_with_failures": "{successCount} файлов перемещено, {failCount} не удалось",
-  "@files_moved_with_failures": {
-    "placeholders": {
-      "successCount": {},
-      "failCount": {}
-    }
-  },
   "please_manually_migrate_files": "Путь обновлён. При необходимости перенесите файлы вручную.",
   "open_folder_unsupported_on_platform": "Открытие папки не поддерживается в текущей ОС ({os}).",
-  "@open_folder_unsupported_on_platform": {
-    "placeholders": {
-      "os": {}
-    }
-  },
   "delete_finished": "Удаление завершено",
   "failed_to_delete_file": "Не удалось удалить файл: {error}",
-  "@failed_to_delete_file": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "open_folder_path_is_null": "Путь к папке пуст.",
   "open_folder_creating_empty": "Папка не существует, создаём пустую папку.",
   "open_folder_created_success": "Пустая папка успешно создана.",
   "open_folder_create_failed": "Не удалось создать пустую папку: {error}",
-  "@open_folder_create_failed": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "model_item_ios18_weight_hint": "Обновитесь до iOS 18+, чтобы использовать этот вес — быстрее и экономичнее",
   "tts_is_running_please_wait": "Синтез речи уже выполняется, дождитесь завершения",
   "please_select_a_spk_or_a_wav_file": "Выберите предустановленный голос или запишите свой голос",
   "please_enter_text_to_generate_tts": "Введите текст, чтобы сгенерировать речь",
   "windows_architecture_mismatch_warning": "Обнаружено несоответствие архитектуры: приложение собрано для {buildArchitecture}, а архитектура Windows — {operatingSystemArchitecture}. Скачайте подходящую версию с официальной страницы: {url}",
-  "@windows_architecture_mismatch_warning": {
-    "placeholders": {
-      "buildArchitecture": {},
-      "operatingSystemArchitecture": {},
-      "url": {}
-    }
-  },
   "windows_architecture_mismatch_dialog_title": "Несоответствие архитектуры",
   "windows_architecture_mismatch_dialog_message": "Приложение собрано для {buildArchitecture}, а архитектура Windows — {operatingSystemArchitecture}.\n\nПерейдите на официальную страницу загрузки и скачайте подходящий исполняемый файл:\n{url}",
-  "@windows_architecture_mismatch_dialog_message": {
-    "placeholders": {
-      "buildArchitecture": {},
-      "operatingSystemArchitecture": {},
-      "url": {}
-    }
-  },
   "open_official_download_page": "Открыть официальную страницу загрузки",
   "mimic": "Имитация",
   "ask": "Спросить",
   "question_generator": "Генератор вопросов",
-  "question_generator_mock_description": "Не знаете, о чём спросить? Пусть RWKV придумает вопрос за вас!",
-  "question_generator_mock_batch_description": "Не знаете, о чём спросить? Пусть RWKV придумает для вас несколько вопросов!",
-  "question_generator_empty_chat_hint": "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас один стартовый вопрос, который вы сможете задать.",
-  "question_generator_empty_chat_batch_hint": "Нажмите кнопку «Generate» внизу — RWKV подберёт для вас несколько вопросов, которые вы сможете задать.",
-  "question_generator_tap_generate_hint": "Нажмите Generate — и RWKV предложит для вас до {count} вариантов следующих вопросов на основе текущего чата.",
-  "@question_generator_tap_generate_hint": {
-    "placeholders": {
-      "count": {}
-    }
-  },
-  "question_generator_language_switched_hint": "Поскольку вы сменили язык вопросов, Generate проигнорирует текущую историю чата и создаст вопросы вне контекста на выбранном языке.",
+  "question_generator_mock_description": "Не знаете, с чего начать? Пусть RWKV подскажет вам один вопрос.",
+  "question_generator_mock_batch_description": "Если хочется немного вдохновения, пусть RWKV предложит вам несколько вопросов.",
+  "question_generator_empty_chat_hint": "Выберите начало вопроса выше, затем нажмите Generate — RWKV подскажет один вопрос, который можно сразу отправить.",
+  "question_generator_empty_chat_batch_hint": "Выберите начало вопроса выше, затем нажмите Generate — RWKV подскажет несколько вопросов, которые можно сразу отправить.",
+  "question_generator_tap_generate_hint": "Нажмите Generate, и RWKV превратит выбранное начало в максимум {count} вариантов вопросов.",
+  "question_generator_language_switched_hint": "После смены языка поменяются и варианты начала вопроса выше. Выберите тот, который вам ближе, и позвольте RWKV продолжить его.",
+  "question_generator_prefix_guide": "Попробуйте разные начала ниже, и RWKV продолжит их в полноценные вопросы. А если хочется, вы можете просто отредактировать поле ниже и написать своё начало.",
+  "question_generator_prefixes": "Префиксы вопросов",
+  "question_generator_prefix_input_placeholder": "Напишите здесь начало вопроса...",
+  "question_generator_prefix_required": "Сначала введите префикс вопроса",
+  "question_generator_question_action_guide": "Нажмите на понравившийся вопрос, чтобы подправить его или сразу отправить.",
   "question_language": "Я хочу, чтобы RWKV задавал вопросы на этом языке...",
   "prefix_bank": "Набор префиксов",
   "prefix_examples": "Примеры префиксов",

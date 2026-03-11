@@ -152,12 +152,6 @@
   "please_select_a_world_type": "タスクの種類を選択してください",
   "loading": "ロード中...",
   "loading_progress_percent": "読み込み{percent}%",
-  "@loading_progress_percent": {
-    "description": "読み込みボタン上の進捗テキスト",
-    "placeholders": {
-      "percent": {}
-    }
-  },
   "cancel": "キャンセル",
   "session_configuration": "セッション構成",
   "apply": "適用",
@@ -242,12 +236,6 @@
   "rwkv": "RWKV",
   "prefill": "事前入力",
   "prefill_progress_percent": "プレフィル進捗 {percent}",
-  "@prefill_progress_percent": {
-    "description": "BotMessageBottom の生成インジケーター横に表示するプレフィル進捗文言",
-    "placeholders": {
-      "percent": {}
-    }
-  },
   "decode": "デコード",
   "message_token_count": "メッセージのトークン数",
   "conversation_token_count": "現在の会話のトークン数",
@@ -372,11 +360,6 @@
   "prompt": "プロンプト",
   "output": "出力",
   "model_output": "モデル出力: {text}",
-  "@model_output": {
-    "placeholders": {
-      "text": {}
-    }
-  },
   "submit": "送信",
   "regenerate": "再生成",
   "resume": "再開",
@@ -461,38 +444,13 @@
   "start_service": "サービスを開始",
   "lan_server": "LANサーバー",
   "http_service_port": "HTTPサービス（ポート：{port}）",
-  "@http_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "websocket_service_port": "WebSocketサービス（ポート：{port}）",
-  "@websocket_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "browser_status": "ブラウザのステータス",
   "no_browser_windows_connected": "接続されているブラウザウィンドウはありません",
   "start_service_and_open_browser": "サービスを開始し、サポートされているブラウザページを開いてください。",
   "window_id": "ウィンドウ {id}",
-  "@window_id": {
-    "placeholders": {
-      "id": {}
-    }
-  },
   "x_tabs": "{count}個のタブ",
-  "@x_tabs": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "queued_x": "キュー内：{count}",
-  "@queued_x": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "translator_debug_info": "翻訳者デバッグ情報",
   "cached_translations_memory": "キャッシュされた翻訳（メモリ）",
   "cached_translations_disk": "キャッシュされた翻訳（ディスク）",
@@ -589,19 +547,9 @@
   "camera": "カメラ",
   "gallery": "ギャラリー",
   "ocr_guide_text": "{takePhoto} をクリックしてください。RWKV が画像内のテキストを翻訳します。",
-  "@ocr_guide_text": {
-    "placeholders": {
-      "takePhoto": {}
-    }
-  },
   "reached_bottom": "お楽しみに",
   "open_database_folder": "データベースフォルダを開く",
   "npu_not_supported_title": "お使いのチップ {socName} の NPU サポートはまだ利用できません",
-  "@npu_not_supported_title": {
-    "placeholders": {
-      "socName": {}
-    }
-  },
   "adapting_more_inference_chips": "より多くの推論チップへの対応を継続しています。ご期待ください。",
   "other_files": "その他のファイル (これらのファイルは期限切れまたはサポートされなくなった重みファイルであり、RWKV Chat ではもう使用されていない可能性があります)",
   "mlx_cache": "MLX/CoreML キャッシュ",
@@ -629,23 +577,11 @@
   "import_all_weight_files": "すべての重みファイルをインポート",
   "import_all_weight_files_description": "このアプリからエクスポートされたZIPファイルを選択してください。ZIPファイル内のすべての重みファイルがインポートされます。同じ名前のファイルが存在する場合、既存のファイルが上書きされます。",
   "import_all_weight_files_success": "インポート成功：{count} 個のファイルをインポートしました",
-  "@import_all_weight_files_success": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "invalid_zip_file": "無効なZIPファイルまたはファイル形式が認識されません",
   "no_files_in_zip": "ZIPファイル内に有効な重みファイルが見つかりませんでした",
   "current_model_from_latest_json_not_pth": "現在読み込んでいるのは latest.json の設定であり、ローカル .pth ファイルではありません",
   "no_local_pth_loaded_yet": "読み込み済みのローカル .pth ファイルはありません",
   "ctx_length_label": "ctx {length}",
-  "@ctx_length_label": {
-    "placeholders": {
-      "length": {}
-    }
-  },
   "local_pth_option_files_in_config": "設定ファイルの重み",
   "local_pth_option_local_pth_files": "ローカル .pth ファイル",
   "select_weights_or_local_pth_hint": "設定ファイルの重みまたはローカル .pth ファイルを選択",
@@ -677,17 +613,7 @@
   "folder_not_found_on_device": "お使いのデバイスでこのフォルダが見つかりませんでした",
   "folder_not_accessible_check_permission": "このフォルダにアクセスできません。フォルダの権限を確認してください",
   "path_label": "パス：{path}",
-  "@path_label": {
-    "placeholders": {
-      "path": {}
-    }
-  },
   "local_folder_name": "ローカルフォルダ：{folderName}",
-  "@local_folder_name": {
-    "placeholders": {
-      "folderName": {}
-    }
-  },
   "custom_directory_set": "カスタムディレクトリを設定しました",
   "reset_to_default_directory": "デフォルトディレクトリに戻しました",
   "failed_to_create_directory": "ディレクトリの作成に失敗しました",
@@ -698,71 +624,36 @@
   "moving_files": "ファイルを移動中...",
   "already_using_this_directory": "既にこのディレクトリを使用しています",
   "files_moved_with_failures": "{successCount}個のファイルを移動、{failCount}個が失敗",
-  "@files_moved_with_failures": {
-    "placeholders": {
-      "successCount": {},
-      "failCount": {}
-    }
-  },
   "please_manually_migrate_files": "パスを更新しました。ファイルの移動が必要な場合は手動で行ってください。",
   "open_folder_unsupported_on_platform": "現在のOS（{os}）ではフォルダを開く操作はサポートされていません。",
-  "@open_folder_unsupported_on_platform": {
-    "placeholders": {
-      "os": {}
-    }
-  },
   "delete_finished": "削除が完了しました",
   "failed_to_delete_file": "ファイルの削除に失敗しました: {error}",
-  "@failed_to_delete_file": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "open_folder_path_is_null": "フォルダパスが空です。",
   "open_folder_creating_empty": "フォルダが存在しないため、空のフォルダを作成しています。",
   "open_folder_created_success": "空のフォルダの作成に成功しました。",
   "open_folder_create_failed": "空のフォルダの作成に失敗しました：{error}",
-  "@open_folder_create_failed": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "model_item_ios18_weight_hint": "iOS 18以降にアップグレードすると、このウェイトが使え、より速く省電力になります",
   "tts_is_running_please_wait": "TTS を実行中です。完了するまでお待ちください。",
   "please_select_a_spk_or_a_wav_file": "プリセット音声を選択するか、自分の声を録音してください",
   "please_enter_text_to_generate_tts": "TTS を生成するテキストを入力してください",
   "windows_architecture_mismatch_warning": "アーキテクチャの不一致を検出しました：このアプリの Build Architecture は {buildArchitecture} ですが、Windows Operating System の Architecture は {operatingSystemArchitecture} です。公式ダウンロードページから一致する版をダウンロードしてください：{url}",
-  "@windows_architecture_mismatch_warning": {
-    "placeholders": {
-      "buildArchitecture": {},
-      "operatingSystemArchitecture": {},
-      "url": {}
-    }
-  },
   "windows_architecture_mismatch_dialog_title": "アーキテクチャ不一致",
   "windows_architecture_mismatch_dialog_message": "このアプリの Build Architecture は {buildArchitecture} ですが、Windows Operating System の Architecture は {operatingSystemArchitecture} です。\n\n公式ダウンロードページから一致する実行ファイルをダウンロードしてください：\n{url}",
-  "@windows_architecture_mismatch_dialog_message": {
-    "placeholders": {
-      "buildArchitecture": {},
-      "operatingSystemArchitecture": {},
-      "url": {}
-    }
-  },
   "open_official_download_page": "公式ダウンロードページを開く",
   "mimic": "ミミック",
   "ask": "質問",
   "question_generator": "質問ジェネレーター",
-  "question_generator_mock_description": "何を聞けばいいか分からない？RWKVに質問を考えてもらいましょう！",
-  "question_generator_mock_batch_description": "何を聞けばいいか分からない？RWKV にいくつか質問を考えてもらいましょう！",
-  "question_generator_empty_chat_hint": "下の「生成」ボタンを押して、RWKV にあなたが最初に聞ける質問を 1 つ考えてもらいましょう。",
-  "question_generator_empty_chat_batch_hint": "下の「生成」ボタンを押して、RWKV にあなたが聞ける質問をいくつか考えてもらいましょう。",
-  "question_generator_tap_generate_hint": "Generate を押すと、RWKV がいまのチャットからあなたのために最大 {count} 件の追質問候補を考えてくれます。",
-  "@question_generator_tap_generate_hint": {
-    "placeholders": {
-      "count": {}
-    }
-  },
-  "question_generator_language_switched_hint": "質問の言語を切り替えたため、Generate は現在のチャット履歴を無視し、選択中の言語で文脈に依存しない質問を生成します。",
+  "question_generator_mock_description": "どう聞き始めればいいか迷ったら、まずは RWKV に 1 つ考えてもらいましょう。",
+  "question_generator_mock_batch_description": "少しヒントが欲しいときは、RWKV にいくつか質問を考えてもらいましょう。",
+  "question_generator_empty_chat_hint": "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問を 1 つ考えてくれます。",
+  "question_generator_empty_chat_batch_hint": "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問をいくつか考えてくれます。",
+  "question_generator_tap_generate_hint": "「生成」を押すと、RWKV が選んだ書き出しから最大 {count} 件の質問案を考えてくれます。",
+  "question_generator_language_switched_hint": "言語を切り替えると、上に並ぶ書き出しも一緒に切り替わります。気になるものを選んで、その続きから考えてもらいましょう。",
+  "question_generator_prefix_guide": "下の書き出しをいろいろ試すと、RWKV がその続きから質問を作ってくれます。下の入力欄を直接編集して、自分らしい書き出しにすることもできます。",
+  "question_generator_prefixes": "質問の書き出し",
+  "question_generator_prefix_input_placeholder": "ここに質問の書き出しを書いてみましょう...",
+  "question_generator_prefix_required": "先に質問の書き出しを入力してください",
+  "question_generator_question_action_guide": "気になる質問をタップすると、そのまま整えたり、すぐに送ったりできます。",
   "question_language": "RWKV にこの言語で質問してほしい...",
   "prefix_bank": "前置きグループ",
   "prefix_examples": "前置きの例",

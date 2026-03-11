@@ -1,6 +1,7 @@
 part of 'p.dart';
 
-final _askQuestionRandom = math.Random();
+const _askQuestionSequentialQuestionCount = 5;
+const _askQuestionSequentialAttemptLimit = 8;
 
 const _askQuestionPrefixes = <Language, List<String>>{
   .zh_Hans: [
@@ -83,12 +84,29 @@ class _AskQuestion {
   int? _runningModelID;
   bool _stopRequested = false;
   List<String> _lastRawQuestions = const [];
+  List<String> _completedQuestions = const [];
+  List<String> _currentRunQuestions = const [];
   List<String> _runningPrefixes = const [];
+  String _activePrefix = "";
+  bool _sequentialMode = false;
+  int _attemptCount = 0;
+  int _attemptLimit = 0;
+  int _targetQuestionCount = 0;
+  int _sessionId = 0;
 
   late final language = qs<Language>(.zh_Hans);
   late final interceptingEvents = qs(false);
   late final questions = qs<List<String>>([]);
+  late final prefixInput = qs("");
+  late final selectedPrefix = qs<String?>(null);
+  late final selectedQuestionIndex = qs<int?>(null);
+  late final editingQuestionIndex = qs<int?>(null);
   late final parallelCount = qs(1);
+
+  late final prefixes = qp((ref) {
+    final selectedLanguage = ref.watch(language);
+    return _askQuestionPrefixes[selectedLanguage] ?? const <String>[];
+  });
 
   late final maxParallelCount = qp((ref) {
     final currentModel = ref.watch(P.rwkv.latestModel);
@@ -126,6 +144,17 @@ class _AskQuestion {
     final languageSwitched = ref.watch(this.languageSwitched);
     return hasChatHistory && languageSwitched;
   });
+
+  late final targetQuestionCount = qp((ref) {
+    final maxParallelCount = ref.watch(this.maxParallelCount);
+    if (maxParallelCount > 1) return maxParallelCount;
+    return _askQuestionSequentialQuestionCount;
+  });
+
+  late final hasPrefixInput = qp((ref) {
+    final prefixInput = ref.watch(this.prefixInput);
+    return prefixInput.trim().isNotEmpty;
+  });
 }
 
 /// Private methods
@@ -146,6 +175,7 @@ extension _$AskQuestion on _AskQuestion {
   Future<void> _init() async {
     final preferredLanguage = P.preference.preferredLanguage.q.resolved;
     language.q = _resolveLanguage(preferredLanguage);
+    _applyPrefixForLanguage(language.q);
 
     P.rwkv.broadcastStream.listen(
       _onStreamEvent,
@@ -161,6 +191,7 @@ extension _$AskQuestion on _AskQuestion {
 
   void _onStreamDone() async {
     if (!interceptingEvents.q) return;
+    _attemptCount = _attemptLimit;
     _finalizeQuestions();
   }
 
@@ -170,6 +201,7 @@ extension _$AskQuestion on _AskQuestion {
     if (!kDebugMode) {
       Sentry.captureException(error, stackTrace: stackTrace);
     }
+    _attemptCount = _attemptLimit;
     _finalizeQuestions();
   }
 
@@ -199,28 +231,63 @@ extension _$AskQuestion on _AskQuestion {
 
   void _updateQuestionsFromRaw(List<String> nextRawQuestions) {
     final effectiveRawQuestions = _mergePrefixesIntoRawQuestions(nextRawQuestions);
-
-    final cleanedQuestions = _dedupeQuestions(
+    final cleanedCurrentQuestions = _dedupeQuestions(
       effectiveRawQuestions.map((raw) => raw.trim()),
     );
-    questions.q = cleanedQuestions;
-    _maybeStopSettledGeneration(cleanedQuestions);
+    _currentRunQuestions = cleanedCurrentQuestions;
+    final nextQuestions = _dedupeQuestions([
+      ..._completedQuestions,
+      ...cleanedCurrentQuestions,
+    ]);
+    questions.q = nextQuestions;
+    _syncQuestionSelectionWithQuestions(nextQuestions);
+    _maybeStopSettledGeneration(cleanedCurrentQuestions);
   }
 
   void _finalizeQuestions() {
     _cancelRunningTasks();
+    final finalizedCurrentQuestions = _dedupeQuestions(
+      _currentRunQuestions.map((question) => question.trim()),
+    );
+    _completedQuestions = _dedupeQuestions([
+      ..._completedQuestions,
+      ...finalizedCurrentQuestions,
+    ]);
+    questions.q = _completedQuestions;
+    _syncQuestionSelectionWithQuestions(_completedQuestions);
+
+    if (_shouldContinueSequentialGeneration()) {
+      final sessionId = _sessionId;
+      _currentRunQuestions = const [];
+      _lastRawQuestions = const [];
+      _lastRawQuestionsChangedAt = null;
+      _runningPrefixes = const [];
+      _stopRequested = false;
+      unawaited(_continueSequentialGeneration(sessionId: sessionId));
+      return;
+    }
+
     interceptingEvents.q = false;
     P.rwkv.generating.q = false;
-
-    final finalizedQuestions = _dedupeQuestions(
-      questions.q.map((question) => question.trim()),
-    );
-    questions.q = finalizedQuestions;
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     _runningModelID = null;
+    _completedQuestions = const [];
+    _currentRunQuestions = const [];
     _runningPrefixes = const [];
+    _activePrefix = "";
+    _sequentialMode = false;
+    _attemptCount = 0;
+    _attemptLimit = 0;
+    _targetQuestionCount = 0;
     _stopRequested = false;
+  }
+
+  bool _shouldContinueSequentialGeneration() {
+    if (!_sequentialMode) return false;
+    if (_completedQuestions.length >= _targetQuestionCount) return false;
+    if (_attemptCount >= _attemptLimit) return false;
+    return true;
   }
 
   void _maybeStopSettledGeneration(List<String> currentQuestions) {
@@ -422,19 +489,184 @@ extension _$AskQuestion on _AskQuestion {
 
     return result;
   }
+
+  void _applyPrefixForLanguage(Language targetLanguage) {
+    final prefixes = _askQuestionPrefixes[targetLanguage] ?? const <String>[];
+    if (prefixes.isEmpty) {
+      selectedPrefix.q = null;
+      prefixInput.q = "";
+      return;
+    }
+
+    final nextPrefix = prefixes.first;
+    selectedPrefix.q = nextPrefix;
+    prefixInput.q = nextPrefix;
+  }
+
+  void _syncSelectedPrefixFromInput() {
+    final normalized = prefixInput.q.trim();
+    if (normalized.isEmpty) {
+      selectedPrefix.q = null;
+      return;
+    }
+
+    final prefixes = _askQuestionPrefixes[language.q] ?? const <String>[];
+    if (!prefixes.contains(normalized)) {
+      selectedPrefix.q = null;
+      return;
+    }
+
+    selectedPrefix.q = normalized;
+  }
+
+  void _clearQuestionSelectionState() {
+    selectedQuestionIndex.q = null;
+    editingQuestionIndex.q = null;
+  }
+
+  void _syncQuestionSelectionWithQuestions(List<String> questions) {
+    if (questions.isEmpty) {
+      _clearQuestionSelectionState();
+      return;
+    }
+
+    final selectedIndex = selectedQuestionIndex.q;
+    if (selectedIndex == null || selectedIndex < 0 || selectedIndex >= questions.length) {
+      selectedQuestionIndex.q = 0;
+    }
+  }
+
+  Future<void> _startPrefixGenerationSession({
+    required int modelID,
+    required String prefix,
+    required int parallelCount,
+    required bool sequentialMode,
+    required int targetQuestionCount,
+    required int attemptLimit,
+  }) async {
+    _sessionId = _sessionId + 1;
+    _cancelRunningTasks();
+    _lastRawQuestions = const [];
+    _lastRawQuestionsChangedAt = null;
+    _runningModelID = modelID;
+    _completedQuestions = const [];
+    _currentRunQuestions = const [];
+    _runningPrefixes = const [];
+    _activePrefix = prefix;
+    _sequentialMode = sequentialMode;
+    _attemptCount = 0;
+    _attemptLimit = attemptLimit;
+    _targetQuestionCount = targetQuestionCount;
+    _stopRequested = false;
+    questions.q = [];
+    this.parallelCount.q = parallelCount;
+    interceptingEvents.q = true;
+    P.rwkv.generating.q = true;
+    _clearQuestionSelectionState();
+
+    await _startPrefixRun(
+      modelID: modelID,
+      prefix: prefix,
+      parallelCount: parallelCount,
+      sessionId: _sessionId,
+    );
+  }
+
+  Future<void> _startPrefixRun({
+    required int modelID,
+    required String prefix,
+    required int parallelCount,
+    required int sessionId,
+  }) async {
+    _attemptCount = _attemptCount + 1;
+    _lastRawQuestions = const [];
+    _lastRawQuestionsChangedAt = null;
+    _currentRunQuestions = const [];
+    _runningPrefixes = List<String>.filled(parallelCount, prefix);
+    _stopRequested = false;
+
+    await P.rwkv.clearStates();
+    if (sessionId != _sessionId) return;
+    if (!interceptingEvents.q) return;
+
+    P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
+    P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
+
+    final isBatchInference = parallelCount > 1;
+    if (isBatchInference) {
+      final batchMessages = <List<String>>[];
+      for (int i = 0; i < parallelCount; i++) {
+        batchMessages.add([prefix]);
+      }
+      P.rwkv.send(
+        to_rwkv.ChatBatchAsync(
+          batchMessages,
+          enableReasoning: false,
+          forceReasoning: false,
+          addGenerationPrompt: false,
+          batchSize: parallelCount,
+          modelID: modelID,
+        ),
+      );
+    } else {
+      P.rwkv.send(
+        to_rwkv.ChatAsync(
+          [prefix],
+          enableReasoning: false,
+          forceReasoning: false,
+          addGenerationPrompt: false,
+          modelID: modelID,
+        ),
+      );
+    }
+
+    await _startPolling(
+      modelID: modelID,
+      isBatchInference: isBatchInference,
+    );
+  }
+
+  Future<void> _continueSequentialGeneration({
+    required int sessionId,
+  }) async {
+    if (sessionId != _sessionId) return;
+    if (!interceptingEvents.q) return;
+
+    final modelID = _runningModelID;
+    final activePrefix = _activePrefix.trim();
+    if (modelID == null || activePrefix.isEmpty) {
+      _sequentialMode = false;
+      _attemptCount = _attemptLimit;
+      _finalizeQuestions();
+      return;
+    }
+
+    await _startPrefixRun(
+      modelID: modelID,
+      prefix: activePrefix,
+      parallelCount: 1,
+      sessionId: sessionId,
+    );
+  }
 }
 
 /// Public methods
 extension $AskQuestion on _AskQuestion {
   void onPanelShown() {
-    if (_isGenerating) return;
-    generateFromCurrentChat();
+    if (prefixInput.q.trim().isNotEmpty) {
+      _syncSelectedPrefixFromInput();
+    } else {
+      _applyPrefixForLanguage(language.q);
+    }
+
+    _syncQuestionSelectionWithQuestions(questions.q);
   }
 
   void onPanelHidden() {
-    if (!_isGenerating) return;
-    _pauseGeneration();
-    questions.q = [];
+    if (_isGenerating) {
+      _pauseGeneration();
+    }
+    _clearQuestionSelectionState();
   }
 
   void pauseGeneration() {
@@ -443,6 +675,7 @@ extension $AskQuestion on _AskQuestion {
   }
 
   void _pauseGeneration() {
+    _sessionId = _sessionId + 1;
     final modelID = _runningModelID;
     if (modelID != null) {
       P.rwkv.send(to_rwkv.Stop(modelID: modelID));
@@ -451,11 +684,19 @@ extension $AskQuestion on _AskQuestion {
     _cancelRunningTasks();
 
     P.rwkv.generating.q = false;
+    interceptingEvents.q = false;
     _refreshChatModelGeneratingState();
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     _runningModelID = null;
+    _completedQuestions = const [];
+    _currentRunQuestions = const [];
     _runningPrefixes = const [];
+    _activePrefix = "";
+    _sequentialMode = false;
+    _attemptCount = 0;
+    _attemptLimit = 0;
+    _targetQuestionCount = 0;
     _stopRequested = false;
   }
 
@@ -463,25 +704,97 @@ extension $AskQuestion on _AskQuestion {
     if (_isGenerating) return;
     if (language.q == nextLanguage) return;
     language.q = nextLanguage;
+    _applyPrefixForLanguage(nextLanguage);
     questions.q = [];
+    _completedQuestions = const [];
+    _currentRunQuestions = const [];
+    _clearQuestionSelectionState();
+  }
+
+  void selectPrefix(String prefix) {
+    if (_isGenerating) return;
+
+    final normalized = prefix.trim();
+    if (normalized.isEmpty) return;
+
+    prefixInput.q = normalized;
+    selectedPrefix.q = normalized;
+    _clearQuestionSelectionState();
+  }
+
+  void updatePrefixInput(String next) {
+    if (_isGenerating) return;
+    prefixInput.q = next;
+    _syncSelectedPrefixFromInput();
+    _clearQuestionSelectionState();
+  }
+
+  void selectQuestion(int index) {
+    final questions = this.questions.q;
+    if (index < 0 || index >= questions.length) return;
+    if (selectedQuestionIndex.q == index) return;
+
+    selectedQuestionIndex.q = index;
+    editingQuestionIndex.q = null;
+  }
+
+  void clearQuestionSelection() {
+    _clearQuestionSelectionState();
+  }
+
+  void beginEditingQuestion(int index) {
+    final questions = this.questions.q;
+    if (index < 0 || index >= questions.length) return;
+
+    selectedQuestionIndex.q = index;
+    editingQuestionIndex.q = index;
+  }
+
+  void cancelEditingQuestion() {
+    editingQuestionIndex.q = null;
   }
 
   Future<void> generateFromCurrentChat() async {
-    final historyMessages = _buildHistoryMessagesForQuestionGeneration();
-    if (historyMessages.isNotEmpty && !shouldGenerateWithoutContext.q) {
-      await generateFromMessages(historyMessages);
+    final prefix = prefixInput.q.trim();
+    if (prefix.isEmpty) {
+      Alert.warning(S.current.question_generator_prefix_required);
       return;
     }
 
-    final targetLanguage = language.q;
-    final prefixes = _askQuestionPrefixes[targetLanguage] ?? const [];
-    if (prefixes.isEmpty) {
-      Alert.info(S.current.chat_empty_message);
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
+
+    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+    if (modelID == null) {
+      Alert.info(S.current.please_load_model_first);
       return;
     }
 
-    await _generateFromDefaultPrefixes(
-      prefixes: prefixes,
+    final chatModelIdle = await _ensureChatModelIdle(modelID: modelID);
+    if (!chatModelIdle) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    final resolvedParallelCount = _resolveParallelCount();
+    if (resolvedParallelCount > 1) {
+      await _startPrefixGenerationSession(
+        modelID: modelID,
+        prefix: prefix,
+        parallelCount: resolvedParallelCount,
+        sequentialMode: false,
+        targetQuestionCount: resolvedParallelCount,
+        attemptLimit: 1,
+      );
+      return;
+    }
+
+    await _startPrefixGenerationSession(
+      modelID: modelID,
+      prefix: prefix,
+      parallelCount: 1,
+      sequentialMode: true,
+      targetQuestionCount: _askQuestionSequentialQuestionCount,
+      attemptLimit: _askQuestionSequentialAttemptLimit,
     );
   }
 
@@ -515,16 +828,25 @@ extension $AskQuestion on _AskQuestion {
     final addGenerationPrompt = true;
 
     await P.rwkv.clearStates();
+    _sessionId = _sessionId + 1;
     _cancelRunningTasks();
     interceptingEvents.q = true;
     P.rwkv.generating.q = true;
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     _runningModelID = modelID;
+    _completedQuestions = const [];
+    _currentRunQuestions = const [];
     _runningPrefixes = const [];
+    _activePrefix = "";
+    _sequentialMode = false;
+    _attemptCount = 0;
+    _attemptLimit = 0;
+    _targetQuestionCount = 0;
     _stopRequested = false;
     questions.q = [];
     parallelCount.q = resolvedParallelCount;
+    _clearQuestionSelectionState();
 
     P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
     P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
@@ -552,77 +874,6 @@ extension $AskQuestion on _AskQuestion {
           enableReasoning: false,
           forceReasoning: false,
           addGenerationPrompt: addGenerationPrompt,
-          modelID: modelID,
-        ),
-      );
-    }
-
-    await _startPolling(
-      modelID: modelID,
-      isBatchInference: isBatchInference,
-    );
-  }
-
-  Future<void> _generateFromDefaultPrefixes({
-    required List<String> prefixes,
-  }) async {
-    if (!checkModelSelection(preferredDemoType: .chat)) return;
-
-    final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
-    if (modelID == null) {
-      Alert.info(S.current.please_load_model_first);
-      return;
-    }
-
-    final chatModelIdle = await _ensureChatModelIdle(modelID: modelID);
-    if (!chatModelIdle) {
-      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
-      return;
-    }
-
-    final resolvedParallelCount = _resolveParallelCount(cap: prefixes.length);
-    final shuffledPrefixes = [...prefixes]..shuffle(_askQuestionRandom);
-    final selectedPrefixes = shuffledPrefixes.take(resolvedParallelCount).toList();
-    if (selectedPrefixes.isEmpty) return;
-
-    await P.rwkv.clearStates();
-    _cancelRunningTasks();
-    interceptingEvents.q = true;
-    P.rwkv.generating.q = true;
-    _lastRawQuestions = const [];
-    _lastRawQuestionsChangedAt = null;
-    _runningModelID = modelID;
-    _runningPrefixes = selectedPrefixes;
-    _stopRequested = false;
-    questions.q = [];
-    parallelCount.q = selectedPrefixes.length;
-
-    P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
-    P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
-
-    final isBatchInference = selectedPrefixes.length > 1;
-    if (isBatchInference) {
-      final batchMessages = <List<String>>[];
-      for (final prefix in selectedPrefixes) {
-        batchMessages.add([prefix]);
-      }
-      P.rwkv.send(
-        to_rwkv.ChatBatchAsync(
-          batchMessages,
-          enableReasoning: false,
-          forceReasoning: false,
-          addGenerationPrompt: false,
-          batchSize: selectedPrefixes.length,
-          modelID: modelID,
-        ),
-      );
-    } else {
-      P.rwkv.send(
-        to_rwkv.ChatAsync(
-          [selectedPrefixes.first],
-          enableReasoning: false,
-          forceReasoning: false,
-          addGenerationPrompt: false,
           modelID: modelID,
         ),
       );
