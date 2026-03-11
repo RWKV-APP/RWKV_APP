@@ -123,6 +123,7 @@ import 'package:zone/widgets/theme_selector.dart';
 import 'package:zone/widgets/version_info_panel.dart';
 
 part "adapter.dart";
+part "ask_question.dart";
 part "app.dart";
 part "backend.dart";
 part "chat.dart";
@@ -150,6 +151,7 @@ part "pth.dart";
 
 abstract class P {
   static final adapter = _Adapter();
+  static final askQuestion = _AskQuestion();
   static final app = _App();
   static final backend = _Backend();
   static final chat = _Chat();
@@ -195,6 +197,7 @@ abstract class P {
 
   static Future<void> _unorderedInit() async {
     await Future.wait([
+      _safeInit(() => askQuestion._init(), mark: "askQuestion"),
       _safeInit(() => rwkv._init(), mark: "rwkv"),
       _safeInit(() => chat._init(), mark: "chat"),
       _safeInit(() => othello._init(), mark: "othello"),

@@ -1321,7 +1321,7 @@ class S {
     return Intl.message(
       '加载$percent%',
       name: 'loading_progress_percent',
-      desc: '加载按钮上的进度文案',
+      desc: '',
       args: [percent],
     );
   }
@@ -1843,7 +1843,7 @@ class S {
     return Intl.message(
       '预填充进度 $percent',
       name: 'prefill_progress_percent',
-      desc: 'BotMessageBottom 生成指示器旁的预填充进度文案',
+      desc: '',
       args: [percent],
     );
   }
@@ -4410,7 +4410,7 @@ class S {
   }
 
   /// `导入成功：已导入 {count} 个文件`
-  String import_all_weight_files_success(int count) {
+  String import_all_weight_files_success(Object count) {
     return Intl.message(
       '导入成功：已导入 $count 个文件',
       name: 'import_all_weight_files_success',
@@ -5025,6 +5025,201 @@ class S {
   /// `模仿`
   String get mimic {
     return Intl.message('模仿', name: 'mimic', desc: '', args: []);
+  }
+
+  /// `提问`
+  String get ask {
+    return Intl.message('提问', name: 'ask', desc: '', args: []);
+  }
+
+  /// `RWKV 帮你问`
+  String get question_generator {
+    return Intl.message(
+      'RWKV 帮你问',
+      name: 'question_generator',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `不知道怎么开口更合适？让 RWKV 先帮你想一个吧。`
+  String get question_generator_mock_description {
+    return Intl.message(
+      '不知道怎么开口更合适？让 RWKV 先帮你想一个吧。',
+      name: 'question_generator_mock_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `一时想不到怎么问？让 RWKV 多帮你想几个问题吧。`
+  String get question_generator_mock_batch_description {
+    return Intl.message(
+      '一时想不到怎么问？让 RWKV 多帮你想几个问题吧。',
+      name: 'question_generator_mock_batch_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选好上面的问题开头后，点一下生成，RWKV 会先帮你想一个可以直接提问的问题。`
+  String get question_generator_empty_chat_hint {
+    return Intl.message(
+      '选好上面的问题开头后，点一下生成，RWKV 会先帮你想一个可以直接提问的问题。',
+      name: 'question_generator_empty_chat_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选好上面的问题开头后，点一下生成，RWKV 会先帮你想几个可以直接提问的问题。`
+  String get question_generator_empty_chat_batch_hint {
+    return Intl.message(
+      '选好上面的问题开头后，点一下生成，RWKV 会先帮你想几个可以直接提问的问题。',
+      name: 'question_generator_empty_chat_batch_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点一下生成，RWKV 会顺着你选好的开头，帮你想出最多 {count} 个问题。`
+  String question_generator_tap_generate_hint(Object count) {
+    return Intl.message(
+      '点一下生成，RWKV 会顺着你选好的开头，帮你想出最多 $count 个问题。',
+      name: 'question_generator_tap_generate_hint',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `切换语言后，上面可选的问题开头也会一起变化。挑一个顺手的开头，再让 RWKV 接着往下想就好。`
+  String get question_generator_language_switched_hint {
+    return Intl.message(
+      '切换语言后，上面可选的问题开头也会一起变化。挑一个顺手的开头，再让 RWKV 接着往下想就好。',
+      name: 'question_generator_language_switched_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点一点不同的问题开头，RWKV 会顺着这个开头继续帮你生成问题。你也可以直接改下面的输入框，写一个更符合你想法的开头。`
+  String get question_generator_prefix_guide {
+    return Intl.message(
+      '点一点不同的问题开头，RWKV 会顺着这个开头继续帮你生成问题。你也可以直接改下面的输入框，写一个更符合你想法的开头。',
+      name: 'question_generator_prefix_guide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `问题前缀`
+  String get question_generator_prefixes {
+    return Intl.message(
+      '问题前缀',
+      name: 'question_generator_prefixes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `生成数量`
+  String get question_generator_count {
+    return Intl.message(
+      '生成数量',
+      name: 'question_generator_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `在这里写下你想要的问题开头...`
+  String get question_generator_prefix_input_placeholder {
+    return Intl.message(
+      '在这里写下你想要的问题开头...',
+      name: 'question_generator_prefix_input_placeholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `留空也可以，RWKV 会结合上下文和聊天记录，自由帮你想问题。`
+  String get question_generator_context_prefix_input_placeholder {
+    return Intl.message(
+      '留空也可以，RWKV 会结合上下文和聊天记录，自由帮你想问题。',
+      name: 'question_generator_context_prefix_input_placeholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请先输入一个问题前缀`
+  String get question_generator_prefix_required {
+    return Intl.message(
+      '请先输入一个问题前缀',
+      name: 'question_generator_prefix_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点击已生成的问题，即可粘贴到对话输入框。`
+  String get question_generator_question_action_guide {
+    return Intl.message(
+      '点击已生成的问题，即可粘贴到对话输入框。',
+      name: 'question_generator_question_action_guide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `我想让 RWKV 以这种语言提问...`
+  String get question_language {
+    return Intl.message(
+      '我想让 RWKV 以这种语言提问...',
+      name: 'question_language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `前缀组`
+  String get prefix_bank {
+    return Intl.message('前缀组', name: 'prefix_bank', desc: '', args: []);
+  }
+
+  /// `前缀示例`
+  String get prefix_examples {
+    return Intl.message('前缀示例', name: 'prefix_examples', desc: '', args: []);
+  }
+
+  /// `生成的问题`
+  String get generated_questions {
+    return Intl.message(
+      '生成的问题',
+      name: 'generated_questions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get english {
+    return Intl.message('English', name: 'english', desc: '', args: []);
+  }
+
+  /// `日本語`
+  String get japanese {
+    return Intl.message('日本語', name: 'japanese', desc: '', args: []);
+  }
+
+  /// `한국어`
+  String get korean {
+    return Intl.message('한국어', name: 'korean', desc: '', args: []);
+  }
+
+  /// `Русский`
+  String get russian {
+    return Intl.message('Русский', name: 'russian', desc: '', args: []);
   }
 }
 

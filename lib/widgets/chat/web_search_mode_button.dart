@@ -1,10 +1,15 @@
 // Dart imports:
-
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:material_symbols_icons/symbols.dart';
+
+// Project imports:
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/input_interactions.dart';
@@ -81,6 +86,12 @@ class WebSearchModeButton extends ConsumerWidget {
                     Text(
                       deepLabel,
                       style: TS(c: actionColor, s: fontSize, height: 1, w: .w500),
+                      strutStyle: StrutStyle(
+                        fontSize: fontSize,
+                        height: 1,
+                        forceStrutHeight: true,
+                        leadingDistribution: TextLeadingDistribution.even,
+                      ),
                     ),
                   ],
                 ],

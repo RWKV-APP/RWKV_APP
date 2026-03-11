@@ -152,12 +152,6 @@
   "please_select_a_world_type": "작업 유형을 선택해주세요",
   "loading": "로드 중...",
   "loading_progress_percent": "로딩 {percent}%",
-  "@loading_progress_percent": {
-    "description": "로딩 버튼의 진행률 문구",
-    "placeholders": {
-      "percent": {}
-    }
-  },
   "cancel": "취소",
   "session_configuration": "세션 구성",
   "apply": "적용",
@@ -242,12 +236,6 @@
   "rwkv": "RWKV",
   "prefill": "사전 채우기",
   "prefill_progress_percent": "프리필 진행률 {percent}",
-  "@prefill_progress_percent": {
-    "description": "BotMessageBottom 생성 인디케이터 옆에 표시되는 프리필 진행률 문구",
-    "placeholders": {
-      "percent": {}
-    }
-  },
   "decode": "디코딩",
   "message_token_count": "메시지 토큰 수",
   "conversation_token_count": "현재 대화 토큰 수",
@@ -372,11 +360,6 @@
   "prompt": "프롬프트",
   "output": "출력",
   "model_output": "모델 출력: {text}",
-  "@model_output": {
-    "placeholders": {
-      "text": {}
-    }
-  },
   "submit": "제출",
   "regenerate": "재생성",
   "resume": "재개",
@@ -461,38 +444,13 @@
   "start_service": "서비스 시작",
   "lan_server": "LAN 서버",
   "http_service_port": "HTTP 서비스 (포트: {port})",
-  "@http_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "websocket_service_port": "WebSocket 서비스 (포트: {port})",
-  "@websocket_service_port": {
-    "placeholders": {
-      "port": {}
-    }
-  },
   "browser_status": "브라우저 상태",
   "no_browser_windows_connected": "연결된 브라우저 창 없음",
   "start_service_and_open_browser": "서비스를 시작하고 지원되는 브라우저 페이지를 여세요.",
   "window_id": "창 {id}",
-  "@window_id": {
-    "placeholders": {
-      "id": {}
-    }
-  },
   "x_tabs": "{count}개의 탭",
-  "@x_tabs": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "queued_x": "대기열: {count}",
-  "@queued_x": {
-    "placeholders": {
-      "count": {}
-    }
-  },
   "translator_debug_info": "번역기 디버그 정보",
   "cached_translations_memory": "캐시된 번역 (메모리)",
   "cached_translations_disk": "캐시된 번역 (디스크)",
@@ -589,19 +547,9 @@
   "camera": "카메라",
   "gallery": "갤러리",
   "ocr_guide_text": "{takePhoto}를 클릭하세요. RWKV가 이미지의 텍스트를 번역합니다.",
-  "@ocr_guide_text": {
-    "placeholders": {
-      "takePhoto": {}
-    }
-  },
   "reached_bottom": "기대해 주세요",
   "open_database_folder": "데이터베이스 폴더 열기",
   "npu_not_supported_title": "귀하의 칩 {socName}에 대한 NPU 지원은 아직 사용할 수 없습니다",
-  "@npu_not_supported_title": {
-    "placeholders": {
-      "socName": {}
-    }
-  },
   "adapting_more_inference_chips": "더 많은 추론 칩에 대한 지원을 지속적으로 추가하고 있습니다. 기대해 주세요.",
   "other_files": "기타 파일 (이러한 파일은 만료되었거나 더 이상 지원되지 않는 가중치로, RWKV Chat 에서 더 이상 사용할 필요가 없을 수 있습니다)",
   "mlx_cache": "MLX/CoreML 캐시",
@@ -629,23 +577,11 @@
   "import_all_weight_files": "모든 가중치 파일 가져오기",
   "import_all_weight_files_description": "이 앱에서 내보낸 ZIP 파일을 선택하세요. ZIP 파일의 모든 가중치 파일이 가져와집니다. 같은 이름의 파일이 있으면 기존 파일이 덮어쓰기됩니다.",
   "import_all_weight_files_success": "가져오기 성공: {count} 개의 파일을 가져왔습니다",
-  "@import_all_weight_files_success": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "invalid_zip_file": "잘못된 ZIP 파일이거나 파일 형식을 인식할 수 없습니다",
   "no_files_in_zip": "ZIP 파일에서 유효한 가중치 파일을 찾을 수 없습니다",
   "current_model_from_latest_json_not_pth": "현재 로드된 모델은 latest.json 설정에서 가져온 것이며 로컬 .pth 파일이 아닙니다",
   "no_local_pth_loaded_yet": "로드된 로컬 .pth 파일이 없습니다",
   "ctx_length_label": "ctx {length}",
-  "@ctx_length_label": {
-    "placeholders": {
-      "length": {}
-    }
-  },
   "local_pth_option_files_in_config": "설정 파일의 가중치",
   "local_pth_option_local_pth_files": "로컬 .pth 파일",
   "select_weights_or_local_pth_hint": "설정 파일의 가중치 또는 로컬 .pth 파일 선택",
@@ -677,17 +613,7 @@
   "folder_not_found_on_device": "기기에서 이 폴더를 찾을 수 없습니다",
   "folder_not_accessible_check_permission": "이 폴더에 액세스할 수 없습니다. 폴더 권한을 확인하세요",
   "path_label": "경로: {path}",
-  "@path_label": {
-    "placeholders": {
-      "path": {}
-    }
-  },
   "local_folder_name": "로컬 폴더: {folderName}",
-  "@local_folder_name": {
-    "placeholders": {
-      "folderName": {}
-    }
-  },
   "custom_directory_set": "사용자 지정 디렉토리가 설정되었습니다",
   "reset_to_default_directory": "기본 디렉토리로 재설정되었습니다",
   "failed_to_create_directory": "디렉토리 생성에 실패했습니다",
@@ -698,56 +624,44 @@
   "moving_files": "파일 이동 중...",
   "already_using_this_directory": "이미 이 디렉토리를 사용 중입니다",
   "files_moved_with_failures": "{successCount}개 파일 이동됨, {failCount}개 실패",
-  "@files_moved_with_failures": {
-    "placeholders": {
-      "successCount": {},
-      "failCount": {}
-    }
-  },
   "please_manually_migrate_files": "경로가 업데이트되었습니다. 파일 이동이 필요하면 수동으로 선택하여 이동하세요.",
   "open_folder_unsupported_on_platform": "현재 OS({os})에서는 폴더 열기 작업을 지원하지 않습니다.",
-  "@open_folder_unsupported_on_platform": {
-    "placeholders": {
-      "os": {}
-    }
-  },
   "delete_finished": "삭제가 완료되었습니다",
   "failed_to_delete_file": "파일 삭제에 실패했습니다: {error}",
-  "@failed_to_delete_file": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "open_folder_path_is_null": "폴더 경로가 비어 있습니다.",
   "open_folder_creating_empty": "폴더가 존재하지 않아 빈 폴더를 생성 중입니다.",
   "open_folder_created_success": "빈 폴더가 성공적으로 생성되었습니다.",
   "open_folder_create_failed": "빈 폴더 생성 실패: {error}",
-  "@open_folder_create_failed": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "model_item_ios18_weight_hint": "iOS 18+로 업그레이드하면 이 가중치를 사용할 수 있으며, 더 빠르고 절전됩니다",
   "tts_is_running_please_wait": "TTS가 실행 중입니다. 완료될 때까지 기다려 주세요.",
   "please_select_a_spk_or_a_wav_file": "프리셋 음성을 선택하거나 본인의 목소리를 녹음해 주세요",
   "please_enter_text_to_generate_tts": "TTS를 생성할 텍스트를 입력해 주세요",
   "windows_architecture_mismatch_warning": "아키텍처 불일치가 감지되었습니다: 현재 앱의 Build Architecture는 {buildArchitecture}이고, Windows Operating System의 Architecture는 {operatingSystemArchitecture}입니다. 공식 다운로드 페이지에서 일치하는 버전을 다운로드하세요: {url}",
-  "@windows_architecture_mismatch_warning": {
-    "placeholders": {
-      "buildArchitecture": {},
-      "operatingSystemArchitecture": {},
-      "url": {}
-    }
-  },
   "windows_architecture_mismatch_dialog_title": "아키텍처 불일치",
   "windows_architecture_mismatch_dialog_message": "현재 앱의 Build Architecture는 {buildArchitecture}이고, Windows Operating System의 Architecture는 {operatingSystemArchitecture}입니다.\n\n공식 다운로드 페이지에서 아키텍처에 맞는 실행 파일을 다운로드하세요:\n{url}",
-  "@windows_architecture_mismatch_dialog_message": {
-    "placeholders": {
-      "buildArchitecture": {},
-      "operatingSystemArchitecture": {},
-      "url": {}
-    }
-  },
   "open_official_download_page": "공식 다운로드 페이지 열기",
-  "mimic": "미믹"
+  "mimic": "미믹",
+  "ask": "질문",
+  "question_generator": "질문 생성기",
+  "question_generator_mock_description": "어떻게 말을 꺼내야 할지 모르겠다면, 먼저 RWKV에게 질문 하나를 부탁해 보세요.",
+  "question_generator_mock_batch_description": "조금 더 힌트가 필요하다면, RWKV에게 질문 몇 개를 추천받아 보세요.",
+  "question_generator_empty_chat_hint": "위에서 질문 시작을 고른 뒤 생성 버튼을 누르면, RWKV가 바로 물어볼 수 있는 질문 하나를 생각해 줍니다.",
+  "question_generator_empty_chat_batch_hint": "위에서 질문 시작을 고른 뒤 생성 버튼을 누르면, RWKV가 바로 물어볼 수 있는 질문 몇 개를 생각해 줍니다.",
+  "question_generator_tap_generate_hint": "생성을 누르면 RWKV가 고른 질문 시작을 바탕으로 최대 {count}개의 질문 아이디어를 만들어 줍니다.",
+  "question_generator_language_switched_hint": "언어를 바꾸면 위의 질문 시작 목록도 함께 바뀝니다. 마음에 드는 시작을 골라 이어서 생성해 보세요.",
+  "question_generator_prefix_guide": "아래의 여러 질문 시작을 눌러 보면, RWKV가 그 흐름에 맞춰 질문을 이어서 만들어 줍니다. 아래 입력칸을 직접 고쳐서 원하는 시작으로 바꿔도 됩니다.",
+  "question_generator_prefixes": "질문 접두사",
+  "question_generator_count": "생성 수",
+  "question_generator_prefix_input_placeholder": "여기에 질문의 시작을 적어 보세요...",
+  "question_generator_context_prefix_input_placeholder": "비워 두셔도 괜찮아요. RWKV가 문맥과 대화 기록을 바탕으로 자연스럽게 질문을 떠올려 드립니다.",
+  "question_generator_prefix_required": "먼저 질문 접두사를 입력해 주세요",
+  "question_generator_question_action_guide": "생성된 질문을 탭하면 대화 입력창에 바로 붙여 넣을 수 있습니다.",
+  "question_language": "RWKV가 이 언어로 질문해 줬으면 좋겠어요...",
+  "prefix_bank": "접두사 묶음",
+  "prefix_examples": "접두사 예시",
+  "generated_questions": "생성된 질문",
+  "english": "English",
+  "japanese": "日本語",
+  "korean": "한국어",
+  "russian": "Русский"
 }

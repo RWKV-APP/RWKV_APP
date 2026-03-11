@@ -88,47 +88,49 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m32(value) => "Presence Penalty: ${value}";
 
-  static String m33(count) => "排隊中: ${count}";
+  static String m33(count) => "點一下產生，RWKV 會順著你選好的開頭，幫你想出最多 ${count} 個問題。";
 
-  static String m34(count) => "已選擇 ${count}";
+  static String m34(count) => "排隊中: ${count}";
 
-  static String m35(text) => "來源文字: ${text}";
+  static String m35(count) => "已選擇 ${count}";
 
-  static String m36(text) => "目標文字: ${text}";
+  static String m36(text) => "來源文字: ${text}";
 
-  static String m37(value) => "Temperature: ${value}";
+  static String m37(text) => "目標文字: ${text}";
 
-  static String m38(footer) => "推理${footer}-英";
+  static String m38(value) => "Temperature: ${value}";
 
-  static String m39(footer) => "推理${footer}-英長";
+  static String m39(footer) => "推理${footer}-英";
 
-  static String m40(footer) => "推理${footer}-英短";
+  static String m40(footer) => "推理${footer}-英長";
 
-  static String m41(footer) => "推理${footer}-快";
+  static String m41(footer) => "推理${footer}-英短";
 
-  static String m42(footer) => "推理${footer}-中";
+  static String m42(footer) => "推理${footer}-快";
 
-  static String m43(footer) => "推理${footer}-高";
+  static String m43(footer) => "推理${footer}-中";
 
-  static String m44(footer) => "推理${footer}-關";
+  static String m44(footer) => "推理${footer}-高";
 
-  static String m45(value) => "Top P: ${value}";
+  static String m45(footer) => "推理${footer}-關";
 
-  static String m46(count) => "總測試項: ${count}";
+  static String m46(value) => "Top P: ${value}";
 
-  static String m47(port) => "WebSocket 服務 (連接埠: ${port})";
+  static String m47(count) => "總測試項: ${count}";
 
-  static String m48(id) => "視窗 ${id}";
+  static String m48(port) => "WebSocket 服務 (連接埠: ${port})";
 
-  static String m49(buildArchitecture, operatingSystemArchitecture, url) =>
-      "目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。\n\n請前往官方下載頁下載相符架構的可執行檔：\n${url}";
+  static String m49(id) => "視窗 ${id}";
 
   static String m50(buildArchitecture, operatingSystemArchitecture, url) =>
+      "目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。\n\n請前往官方下載頁下載相符架構的可執行檔：\n${url}";
+
+  static String m51(buildArchitecture, operatingSystemArchitecture, url) =>
       "偵測到架構不相符：目前應用程式 Build Architecture 為 ${buildArchitecture}，但 Windows Operating System 為 ${operatingSystemArchitecture}。請前往官方下載頁下載相符版本：${url}";
 
-  static String m51(count) => "${count} 個分頁";
+  static String m52(count) => "${count} 個分頁";
 
-  static String m52(modelName) => "您目前正在使用 ${modelName}";
+  static String m53(modelName) => "您目前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -163,6 +165,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "apply": MessageLookupByLibrary.simpleMessage("套用"),
     "are_you_sure_you_want_to_delete_this_model":
         MessageLookupByLibrary.simpleMessage("確定要刪除這個模型嗎？"),
+    "ask": MessageLookupByLibrary.simpleMessage("提問"),
     "ask_me_anything": MessageLookupByLibrary.simpleMessage("隨意向我提問..."),
     "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
     "auto": MessageLookupByLibrary.simpleMessage("自動"),
@@ -438,6 +441,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
     "enabled": MessageLookupByLibrary.simpleMessage("開啟"),
     "end": MessageLookupByLibrary.simpleMessage("完"),
+    "english": MessageLookupByLibrary.simpleMessage("English"),
     "english_translation_result": MessageLookupByLibrary.simpleMessage(
       "英文翻譯結果",
     ),
@@ -525,6 +529,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generate_random_sudoku_puzzle": MessageLookupByLibrary.simpleMessage(
       "產生隨機數獨",
     ),
+    "generated_questions": MessageLookupByLibrary.simpleMessage("產生的問題"),
     "generating": MessageLookupByLibrary.simpleMessage("產生中..."),
     "github_repository": MessageLookupByLibrary.simpleMessage("Github 倉庫"),
     "go_to_home_page": MessageLookupByLibrary.simpleMessage("前往首頁"),
@@ -578,11 +583,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "無效的 ZIP 檔案或檔案格式無法識別",
     ),
     "its_your_turn": MessageLookupByLibrary.simpleMessage("輪到你了~"),
+    "japanese": MessageLookupByLibrary.simpleMessage("日本語"),
     "join_our_discord_server": MessageLookupByLibrary.simpleMessage(
       "加入我們的 Discord 伺服器",
     ),
     "join_the_community": MessageLookupByLibrary.simpleMessage("加入社群"),
     "just_watch_me": MessageLookupByLibrary.simpleMessage("😎 看我表演！"),
+    "korean": MessageLookupByLibrary.simpleMessage("한국어"),
     "lambada_test": MessageLookupByLibrary.simpleMessage("LAMBADA 測試"),
     "lan_server": MessageLookupByLibrary.simpleMessage("區域網路伺服器"),
     "large": MessageLookupByLibrary.simpleMessage("大 (120%)"),
@@ -815,12 +822,49 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefill_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "預填充速度（tokens 每秒）",
     ),
+    "prefix_bank": MessageLookupByLibrary.simpleMessage("前綴組"),
+    "prefix_examples": MessageLookupByLibrary.simpleMessage("前綴示例"),
     "presence_penalty_with_value": m32,
     "prompt": MessageLookupByLibrary.simpleMessage("提示詞"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 範本"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
-    "queued_x": m33,
+    "question_generator": MessageLookupByLibrary.simpleMessage("問題產生器"),
+    "question_generator_context_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage("留空也可以，RWKV 會結合上下文和聊天記錄，自由幫你想問題。"),
+    "question_generator_count": MessageLookupByLibrary.simpleMessage("生成數量"),
+    "question_generator_empty_chat_batch_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "選好上方的問題開頭後，點一下產生，RWKV 會先幫你想幾個可以直接提問的問題。",
+        ),
+    "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
+      "選好上方的問題開頭後，點一下產生，RWKV 會先幫你想一個可以直接提問的問題。",
+    ),
+    "question_generator_language_switched_hint":
+        MessageLookupByLibrary.simpleMessage(
+          "切換語言後，上方可選的問題開頭也會一起改變。挑一個順手的開頭，再讓 RWKV 接著往下想就好。",
+        ),
+    "question_generator_mock_batch_description":
+        MessageLookupByLibrary.simpleMessage("一時想不到怎麼問？讓 RWKV 多幫你想幾個問題吧。"),
+    "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
+      "不知道怎麼開口比較好？讓 RWKV 先幫你想一個吧。",
+    ),
+    "question_generator_prefix_guide": MessageLookupByLibrary.simpleMessage(
+      "點一下不同的問題開頭，RWKV 會順著這個開頭繼續幫你產生問題。你也可以直接改下面的輸入框，寫一個更符合你想法的開頭。",
+    ),
+    "question_generator_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage("在這裡寫下你想要的問題開頭..."),
+    "question_generator_prefix_required": MessageLookupByLibrary.simpleMessage(
+      "請先輸入一個問題前綴",
+    ),
+    "question_generator_prefixes": MessageLookupByLibrary.simpleMessage("問題前綴"),
+    "question_generator_question_action_guide":
+        MessageLookupByLibrary.simpleMessage("點擊已產生的問題，即可貼到對話輸入框。"),
+    "question_generator_tap_generate_hint": m33,
+    "question_language": MessageLookupByLibrary.simpleMessage(
+      "我想讓 RWKV 以這種語言提問...",
+    ),
+    "queued_x": m34,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已經開啟"),
     "reached_bottom": MessageLookupByLibrary.simpleMessage("敬請期待"),
@@ -850,6 +894,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "role_play": MessageLookupByLibrary.simpleMessage("角色扮演"),
     "role_play_intro": MessageLookupByLibrary.simpleMessage("扮演你喜歡的角色"),
     "runtime_log_panel": MessageLookupByLibrary.simpleMessage("運行日誌面板"),
+    "russian": MessageLookupByLibrary.simpleMessage("Русский"),
     "rwkv": MessageLookupByLibrary.simpleMessage("RWKV"),
     "rwkv_chat": MessageLookupByLibrary.simpleMessage("RWKV 聊天"),
     "rwkv_othello": MessageLookupByLibrary.simpleMessage("RWKV 黑白棋"),
@@ -881,7 +926,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "選擇設定檔中的權重或本機 .pth 檔案",
     ),
-    "selected_count": m34,
+    "selected_count": m35,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("傳送訊息給 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("伺服器錯誤"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("會話組態"),
@@ -907,7 +952,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip_this_version": MessageLookupByLibrary.simpleMessage("跳過此版本"),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("原始碼"),
-    "source_text": m35,
+    "source_text": m36,
     "speed": MessageLookupByLibrary.simpleMessage("下載速度："),
     "start": MessageLookupByLibrary.simpleMessage("開始"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("開始新聊天"),
@@ -960,9 +1005,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system_mode": MessageLookupByLibrary.simpleMessage("跟隨系統"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("系統提示詞"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
-    "target_text": m36,
+    "target_text": m37,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技術研發群"),
-    "temperature_with_value": m37,
+    "temperature_with_value": m38,
     "test_data": MessageLookupByLibrary.simpleMessage("測試資料"),
     "test_result": MessageLookupByLibrary.simpleMessage("測試結果"),
     "test_results": MessageLookupByLibrary.simpleMessage("測試結果"),
@@ -975,10 +1020,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然後您就可以開始與 RWKV 對話了"),
-    "think_button_mode_en": m38,
-    "think_button_mode_en_long": m39,
-    "think_button_mode_en_short": m40,
-    "think_button_mode_fast": m41,
+    "think_button_mode_en": m39,
+    "think_button_mode_en_long": m40,
+    "think_button_mode_en_short": m41,
+    "think_button_mode_fast": m42,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式會影響模型在推理時的表現",
     ),
@@ -990,19 +1035,19 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
-    "thinking_mode_auto": m42,
-    "thinking_mode_high": m43,
-    "thinking_mode_off": m44,
+    "thinking_mode_auto": m43,
+    "thinking_mode_high": m44,
+    "thinking_mode_off": m45,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式範本"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("這是世界上最難的數獨"),
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage("此模型不支援並行推理，請選擇帶有 batch 標籤的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考結果"),
-    "top_p_with_value": m45,
+    "top_p_with_value": m46,
     "total_count": MessageLookupByLibrary.simpleMessage("總數"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage("儲存空間佔用量"),
-    "total_test_items": m46,
+    "total_test_items": m47,
     "translate": MessageLookupByLibrary.simpleMessage("翻譯"),
     "translating": MessageLookupByLibrary.simpleMessage("翻譯中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻譯結果"),
@@ -1075,7 +1120,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("網路搜尋"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("網路搜尋範本"),
-    "websocket_service_port": m47,
+    "websocket_service_port": m48,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("權重檔案管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "權重文件保存目錄",
@@ -1093,16 +1138,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方獲勝！"),
-    "window_id": m48,
-    "windows_architecture_mismatch_dialog_message": m49,
+    "window_id": m49,
+    "windows_architecture_mismatch_dialog_message": m50,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架構不相符"),
-    "windows_architecture_mismatch_warning": m50,
+    "windows_architecture_mismatch_warning": m51,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已選 %d 條訊息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 個相關網頁"),
-    "x_tabs": m51,
-    "you_are_now_using": m52,
+    "x_tabs": m52,
+    "you_are_now_using": m53,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "現在可以開始與 RWKV 聊天了",
     ),

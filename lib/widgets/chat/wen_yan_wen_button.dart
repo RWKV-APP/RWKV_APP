@@ -1,9 +1,14 @@
 // Dart imports:
-
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+
+// Project imports:
 import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
@@ -75,6 +80,12 @@ class WenYanWenButton extends ConsumerWidget {
               child: Text(
                 label,
                 style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                strutStyle: StrutStyle(
+                  fontSize: fontSize,
+                  height: 1,
+                  forceStrutHeight: true,
+                  leadingDistribution: TextLeadingDistribution.even,
+                ),
               ),
             ),
           ),

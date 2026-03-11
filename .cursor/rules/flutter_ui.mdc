@@ -95,3 +95,11 @@ Color color = Colors.red;
 color = color.withOpacity(0.5); // Bad 😡
 color = color.q(.5); // Good ✅
 ```
+
+## 忽视项目中的 albatross 逻辑
+
+仅保证编译通过即可
+
+## 忽视项目中的 flutter_roleplay 逻辑
+
+仅保证编译通过即可

@@ -85,6 +85,8 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 - 修改 `.arb` 后必须运行：`dart pub global run intl_utils:generate`。
 - 严禁运行 `flutter gen-l10n`。
 - 严禁编辑 `lib/gen/l10n.dart`。
+- ARB 中默认不保留单 `@` 开头的 metadata key；新增或修改文案时，不要补写 `@foo` 对应的 `placeholders`、`type`、`description` 等 metadata 块。
+- 若外部工具自动生成了单 `@` metadata，在确认不影响当前项目生成结果后，应直接删除并保持各语言 ARB 同步。
 
 ### 工程目录约束
 
@@ -103,6 +105,14 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 
 - 严禁自动 `commit`，必须由用户手动提交。
 - 不要向用户提供任何 Git 建议，除非用户明确要求。
+
+### 忽视项目中的 albatross 逻辑
+
+仅保证编译通过即可
+
+### 忽视项目中的 flutter_roleplay 逻辑
+
+仅保证编译通过即可
 
 ## 按范围规则
 

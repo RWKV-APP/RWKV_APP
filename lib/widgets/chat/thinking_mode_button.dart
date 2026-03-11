@@ -39,15 +39,15 @@ class ThinkingModeButton extends ConsumerWidget {
     final thinkingMode = ref.watch(P.rwkv.thinkingMode);
 
     final canEnable = loaded && !loading && !generating;
-    final interactionState = switch (thinkingMode) {
-      .none => canEnable ? InteractionVisualState.idleInteractive : InteractionVisualState.unavailable,
-      .fast => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-      .lighting => canEnable ? InteractionVisualState.available : InteractionVisualState.unavailable,
-      .free => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
-      .en => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
-      .enShort => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
-      .enLong => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
-      .preferChinese => canEnable ? InteractionVisualState.enabled : InteractionVisualState.unavailable,
+    final InteractionVisualState interactionState = switch (thinkingMode) {
+      .none => canEnable ? .idleInteractive : .unavailable,
+      .fast => canEnable ? .available : .unavailable,
+      .lighting => canEnable ? .available : .unavailable,
+      .free => canEnable ? .enabled : .unavailable,
+      .en => canEnable ? .enabled : .unavailable,
+      .enShort => canEnable ? .enabled : .unavailable,
+      .enLong => canEnable ? .enabled : .unavailable,
+      .preferChinese => canEnable ? .enabled : .unavailable,
     };
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final color = colors.background;
@@ -70,10 +70,10 @@ class ThinkingModeButton extends ConsumerWidget {
     };
     final compactText = _extractInteractionSuffix(source: text, separator: s.hyphen);
 
-    final userBackdropFilterForInputOptions = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final useBackdropFilter = ref.watch(P.ui.useBackdropFilterForInputOptions);
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
-    final sigmaForBackdropFilterForInputOptions = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
+    final sigma = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
 
     return AnimatedSize(
       key: const Key("_ThinkingModeButton"),
@@ -89,17 +89,17 @@ class ThinkingModeButton extends ConsumerWidget {
               borderRadius: .circular(60),
               child: BackdropFilter(
                 filter: ImageFilter.blur(
-                  sigmaX: sigmaForBackdropFilterForInputOptions.toDouble(),
-                  sigmaY: sigmaForBackdropFilterForInputOptions.toDouble(),
+                  sigmaX: sigma.toDouble(),
+                  sigmaY: sigma.toDouble(),
                 ),
-                enabled: userBackdropFilterForInputOptions,
+                enabled: useBackdropFilter,
                 child: SizedBox(
                   height: height,
                   child: Container(
                     padding: padding,
                     decoration: BoxDecoration(
                       color: color.q(
-                        userBackdropFilterForInputOptions
+                        useBackdropFilter
                             ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
                             : 1,
                       ),
@@ -118,6 +118,12 @@ class ThinkingModeButton extends ConsumerWidget {
                         Text(
                           compactText,
                           style: TS(c: textColor, s: fontSize, height: 1, w: .w500),
+                          strutStyle: StrutStyle(
+                            fontSize: fontSize,
+                            height: 1,
+                            forceStrutHeight: true,
+                            leadingDistribution: TextLeadingDistribution.even,
+                          ),
                         ),
                         const SizedBox(width: 4),
                       ],
