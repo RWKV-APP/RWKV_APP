@@ -161,12 +161,12 @@
         "name": "RWKV7-G1e 1.5B (MLX)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-1.5B-g1e-20260309-ctx8192-mlx-6bit.zip",
-        "fileSize": 1274033802,
+        "fileSize": 1274034138,
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1770876935
+        "date": 1773195999
       },
       {
         "name": "RWKV7-G1d 2.9B (MLX)",
@@ -216,12 +216,12 @@
         "name": "RWKV7-G1e 1.5B (CoreML)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1e-1.5b-20260309-ctx8192-coreml-lut6.zip",
-        "fileSize": 1130125577,
+        "fileSize": 1156197206,
         "quantization": "INT6",
         "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1770875790
+        "date": 1773197906
       },
       {
         "name": "RWKV7-G1d 2.9B (CoreML)",
@@ -474,16 +474,16 @@
         "date": 1770707306
       },
       {
-        "name": "RWKV7-G1d 1.5B (Dimensity 9300)",
+        "name": "RWKV7-G1e 1.5B (Dimensity 9300)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1d-1.5b-20260212-ctx8192-MT6989.rmpack",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1e-1.5b-20260309-ctx8192-MT6989.rmpack",
         "fileSize": 1676341248,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["mtk_np7"],
         "tags": ["reason", "npu"],
         "socLimitations": ["Dimensity 9300"],
-        "date": 1770881196
+        "date": 1773202201
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Elite)",
