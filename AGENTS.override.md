@@ -99,6 +99,14 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 - 严禁自动 `commit`，必须由用户手动提交。
 - 不要向用户提供任何 Git 建议，除非用户明确要求。
 
+### 忽视项目中的 albatross 逻辑
+
+仅保证编译通过即可
+
+### 忽视项目中的 flutter_roleplay 逻辑
+
+仅保证编译通过即可
+
 ## 按范围规则
 
 ### 范围：`**/*.dart`（Dart 编码风格）
