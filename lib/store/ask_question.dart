@@ -5,76 +5,76 @@ const _askQuestionSequentialAttemptLimit = 8;
 
 const _askQuestionPrefixes = <Language, List<String>>{
   .zh_Hans: [
-    '为什么',
     '如果',
-    '请扮演',
-    '请设计',
-    '请解释',
     '请以',
     '请从',
-    '请推荐',
-    '请构建',
     '请为',
+    '为什么',
+    '请解释',
+    '请设计',
+    '请推荐',
+    '请扮演',
+    '请构建',
   ],
   .zh_Hant: [
-    '為什麼',
     '如果',
-    '請扮演',
-    '請設計',
-    '請解釋',
     '請以',
     '請從',
-    '請推薦',
-    '請構建',
     '請為',
+    '為什麼',
+    '請解釋',
+    '請設計',
+    '請推薦',
+    '請扮演',
+    '請構建',
   ],
   .en: [
+    'If ',
     'Why ',
     'How ',
     'What ',
-    'Can you ',
-    'Could you ',
-    'Explain ',
     'Design ',
-    'Recommend ',
-    'If ',
     'Assume ',
+    'Can you ',
+    'Explain ',
+    'Could you ',
+    'Recommend ',
   ],
   .ja: [
     'なぜ',
-    'どうして',
-    'どうやって',
-    '説明してください',
-    '教えてください',
-    '設計してください',
-    'おすすめしてください',
     'もし',
     '仮に',
+    'どうして',
+    'どうやって',
+    '教えてください',
+    '説明してください',
+    '設計してください',
     '想像してください',
+    'おすすめしてください',
   ],
   .ko: [
     '왜 ',
-    '어떻게 ',
-    '무엇이 ',
-    '설명해 주세요 ',
-    '설계해 주세요 ',
-    '추천해 주세요 ',
-    '만들어 주세요 ',
     '만약 ',
-    '가정해 보면 ',
     '누구 ',
+    '무엇이 ',
+    '어떻게 ',
+    '설명해 주세요 ',
+    '추천해 주세요 ',
+    '설계해 주세요 ',
+    '만들어 주세요 ',
+    '가정해 보면 ',
   ],
   .ru: [
-    'Почему ',
     'Как ',
     'Что ',
-    'Объясни ',
+    'Если ',
+    'Почему ',
     'Опиши ',
     'Покажи ',
+    'Объясни ',
     'Предложи ',
-    'Разработай ',
-    'Если ',
     'Представь ',
+    'Разработай ',
   ],
 };
 
@@ -82,6 +82,7 @@ class _AskQuestion {
   Timer? _getResponseTimer;
   DateTime? _lastRawQuestionsChangedAt;
   int? _runningModelID;
+  Language? _lastResolvedLanguage;
   bool _stopRequested = false;
   List<String> _lastRawQuestions = const [];
   List<String> _completedQuestions = const [];
@@ -173,9 +174,7 @@ extension _$AskQuestion on _AskQuestion {
   }
 
   Future<void> _init() async {
-    final preferredLanguage = P.preference.preferredLanguage.q.resolved;
-    language.q = _resolveLanguage(preferredLanguage);
-    _applyPrefixForLanguage(language.q);
+    P.preference.preferredLanguage.lv(_onPreferredLanguageChanged, fireImmediately: true);
 
     P.rwkv.broadcastStream.listen(
       _onStreamEvent,
@@ -503,6 +502,30 @@ extension _$AskQuestion on _AskQuestion {
     prefixInput.q = nextPrefix;
   }
 
+  void _resetPanelStateForLanguage(Language nextLanguage) {
+    if (_isGenerating) {
+      _pauseGeneration();
+    }
+
+    language.q = nextLanguage;
+    questions.q = [];
+    prefixInput.q = "";
+    selectedPrefix.q = null;
+    parallelCount.q = 1;
+    _completedQuestions = const [];
+    _currentRunQuestions = const [];
+    _clearQuestionSelectionState();
+    _applyPrefixForLanguage(nextLanguage);
+  }
+
+  void _onPreferredLanguageChanged() {
+    final nextLanguage = _resolveLanguage(P.preference.preferredLanguage.q.resolved);
+    if (_lastResolvedLanguage == nextLanguage && language.q == nextLanguage) return;
+
+    _lastResolvedLanguage = nextLanguage;
+    _resetPanelStateForLanguage(nextLanguage);
+  }
+
   void _syncSelectedPrefixFromInput() {
     final normalized = prefixInput.q.trim();
     if (normalized.isEmpty) {
@@ -653,6 +676,12 @@ extension _$AskQuestion on _AskQuestion {
 /// Public methods
 extension $AskQuestion on _AskQuestion {
   void onPanelShown() {
+    final nextLanguage = _resolveLanguage(P.preference.preferredLanguage.q.resolved);
+    if (language.q != nextLanguage) {
+      _lastResolvedLanguage = nextLanguage;
+      _resetPanelStateForLanguage(nextLanguage);
+    }
+
     if (prefixInput.q.trim().isNotEmpty) {
       _syncSelectedPrefixFromInput();
     } else {
@@ -703,12 +732,9 @@ extension $AskQuestion on _AskQuestion {
   void selectLanguage(Language nextLanguage) {
     if (_isGenerating) return;
     if (language.q == nextLanguage) return;
-    language.q = nextLanguage;
-    _applyPrefixForLanguage(nextLanguage);
-    questions.q = [];
-    _completedQuestions = const [];
-    _currentRunQuestions = const [];
-    _clearQuestionSelectionState();
+
+    _lastResolvedLanguage = nextLanguage;
+    _resetPanelStateForLanguage(nextLanguage);
   }
 
   void selectPrefix(String prefix) {

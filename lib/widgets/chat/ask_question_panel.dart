@@ -9,46 +9,8 @@ import 'package:material_symbols_icons/symbols.dart';
 // Project imports:
 import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/language.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
-
-String _askQuestionLanguageLabel(S s, Language language) {
-  return switch (language) {
-    _ => language.display ?? "",
-  };
-}
-
-Language? _askQuestionUILanguageForLocale(Locale locale) {
-  switch (locale.languageCode) {
-    case 'en':
-      return Language.en;
-    case 'ru':
-      return Language.ru;
-    case 'ja':
-      return Language.ja;
-    case 'ko':
-      return Language.ko;
-    case 'zh':
-      return locale.scriptCode == 'Hant' ? Language.zh_Hant : Language.zh_Hans;
-    default:
-      return null;
-  }
-}
-
-List<Language> _askQuestionDisplayLanguages(BuildContext context) {
-  final uiLocale = Localizations.localeOf(context);
-  final uiLanguage = _askQuestionUILanguageForLocale(uiLocale);
-  final languages = Language.values.where((language) => language != .none).toList();
-  if (uiLanguage == null) return languages;
-
-  languages.sort((a, b) {
-    if (a == uiLanguage && b != uiLanguage) return -1;
-    if (b == uiLanguage && a != uiLanguage) return 1;
-    return a.index.compareTo(b.index);
-  });
-  return languages;
-}
 
 class AskQuestionPanel extends ConsumerWidget {
   static const String panelKey = 'AskQuestionPanel';
@@ -83,7 +45,6 @@ class AskQuestionPanel extends ConsumerWidget {
     final s = S.of(context);
     final targetQuestionCount = ref.watch(P.askQuestion.targetQuestionCount);
     final generating = ref.watch(P.rwkv.generating) && ref.watch(P.askQuestion.interceptingEvents);
-    final selectedLanguage = ref.watch(P.askQuestion.language);
     final prefixes = ref.watch(P.askQuestion.prefixes);
     final selectedPrefix = ref.watch(P.askQuestion.selectedPrefix);
     final prefixInput = ref.watch(P.askQuestion.prefixInput);
@@ -115,20 +76,13 @@ class AskQuestionPanel extends ConsumerWidget {
                   controller: scrollController,
                   physics: const BouncingScrollPhysics(),
                   keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: .fromLTRB(12, 12, 12, 12 + paddingBottom),
+                  padding: .fromLTRB(
+                    12,
+                    0,
+                    12,
+                    12 + paddingBottom,
+                  ),
                   children: [
-                    _AskQuestionHeroCard(
-                      description: targetQuestionCount > 1
-                          ? s.question_generator_mock_batch_description
-                          : s.question_generator_mock_description,
-                    ),
-                    const SizedBox(height: 12),
-                    _AskQuestionLanguageCard(
-                      title: s.question_language,
-                      languages: _askQuestionDisplayLanguages(context),
-                      selectedLanguage: selectedLanguage,
-                    ),
-                    const SizedBox(height: 12),
                     _AskQuestionPrefixComposerCard(
                       title: s.question_generator_prefixes,
                       prefixes: prefixes,
@@ -144,7 +98,6 @@ class AskQuestionPanel extends ConsumerWidget {
                     const SizedBox(height: 12),
                     _AskQuestionResultsCard(
                       title: s.generated_questions,
-                      guide: s.question_generator_question_action_guide,
                       questions: questions,
                       emptyMessage: emptyMessage,
                       generating: generating,
@@ -245,7 +198,8 @@ class _AskQuestionSurface extends ConsumerWidget {
 
   const _AskQuestionSurface({
     required this.child,
-    this.padding = const .all(16),
+    // ignore: unused_element_parameter
+    this.padding = const EdgeInsets.all(16),
   });
 
   final Widget child;
@@ -266,119 +220,6 @@ class _AskQuestionSurface extends ConsumerWidget {
       child: DefaultTextStyle.merge(
         style: theme.textTheme.bodyMedium,
         child: child,
-      ),
-    );
-  }
-}
-
-class _AskQuestionHeroCard extends ConsumerWidget {
-  const _AskQuestionHeroCard({required this.description});
-
-  final String description;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final qb = ref.watch(P.app.qb);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: qb.q(.04),
-        borderRadius: .circular(22),
-        border: .all(color: qb.q(.16), width: .5),
-      ),
-      padding: const .all(18),
-      child: Row(
-        crossAxisAlignment: .start,
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: qb.q(.1),
-              borderRadius: .circular(14),
-              border: .all(color: qb.q(.16)),
-            ),
-            child: Icon(
-              Symbols.auto_awesome,
-              color: qb.q(.94),
-              size: 22,
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                Text(
-                  description,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: qb.q(.9),
-                    fontWeight: FontWeight.w600,
-                    height: 1.35,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AskQuestionLanguageCard extends ConsumerWidget {
-  const _AskQuestionLanguageCard({
-    required this.title,
-    required this.languages,
-    required this.selectedLanguage,
-  });
-
-  final String title;
-  final List<Language> languages;
-  final Language selectedLanguage;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-
-    return _AskQuestionSurface(
-      padding: const .symmetric(vertical: 16),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Padding(
-            padding: const .symmetric(horizontal: 16),
-            child: Text(
-              title,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                16.w,
-                for (final language in languages) ...[
-                  _AskQuestionSelectablePill(
-                    label: _askQuestionLanguageLabel(s, language),
-                    selected: language == selectedLanguage,
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      P.askQuestion.selectLanguage(language);
-                    },
-                  ),
-                  if (language != languages.last) const SizedBox(width: 8),
-                ],
-                16.w,
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -413,14 +254,6 @@ class _AskQuestionPrefixComposerCard extends ConsumerWidget {
             title,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            s.question_generator_prefix_guide,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: qb.q(.68),
-              height: 1.45,
             ),
           ),
           const SizedBox(height: 12),
@@ -611,7 +444,6 @@ class _AskQuestionGenerateBar extends ConsumerWidget {
 class _AskQuestionResultsCard extends ConsumerWidget {
   const _AskQuestionResultsCard({
     required this.title,
-    required this.guide,
     required this.questions,
     required this.emptyMessage,
     required this.generating,
@@ -621,7 +453,6 @@ class _AskQuestionResultsCard extends ConsumerWidget {
   });
 
   final String title;
-  final String guide;
   final List<String> questions;
   final String emptyMessage;
   final bool generating;
@@ -649,14 +480,6 @@ class _AskQuestionResultsCard extends ConsumerWidget {
                       title,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      guide,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: qb.q(.68),
-                        height: 1.4,
                       ),
                     ),
                   ],
