@@ -61,9 +61,6 @@ class AskQuestionButton extends ConsumerWidget {
     final backdropFilterBgAlphaForInputOptions = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
     final backdropFilterBgAlphaForInputOptionsDarkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
 
-    qqr("sigma: $sigma");
-    qqr("canEnable: $canEnable");
-
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: _onTap,

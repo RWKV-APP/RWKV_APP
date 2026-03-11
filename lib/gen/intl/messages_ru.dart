@@ -1106,6 +1106,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage(
       "Генератор вопросов",
     ),
+    "question_generator_context_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage(
+          "Поле можно оставить пустым. RWKV сам придумает вопросы, опираясь на контекст и историю чата.",
+        ),
     "question_generator_count": MessageLookupByLibrary.simpleMessage(
       "Количество",
     ),

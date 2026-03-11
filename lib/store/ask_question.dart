@@ -1,6 +1,6 @@
 part of 'p.dart';
 
-const _askQuestionSequentialQuestionCount = 5;
+const _askQuestionSequentialQuestionCount = 4;
 const _askQuestionSequentialAttemptLimit = 8;
 const _askQuestionMinGenerateCount = 2;
 const _askQuestionMaxGenerateCount = 8;
@@ -90,7 +90,9 @@ class _AskQuestion {
   List<String> _completedQuestions = const [];
   List<String> _currentRunQuestions = const [];
   List<String> _runningPrefixes = const [];
+  List<String> _activeMessages = const [];
   String _activePrefix = "";
+  bool _activeAddGenerationPrompt = false;
   int _activeParallelCount = 1;
   bool _sequentialMode = false;
   int _attemptCount = 0;
@@ -107,6 +109,7 @@ class _AskQuestion {
   late final editingQuestionIndex = qs<int?>(null);
   late final generateCount = qs(_askQuestionSequentialQuestionCount);
   late final parallelCount = qs(1);
+  late final scheduledQuestionCount = qs(0);
 
   late final prefixes = qp((ref) {
     final selectedLanguage = ref.watch(language);
@@ -284,13 +287,17 @@ extension _$AskQuestion on _AskQuestion {
 
     interceptingEvents.q = false;
     P.rwkv.generating.q = false;
+    parallelCount.q = 1;
+    scheduledQuestionCount.q = 0;
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     _runningModelID = null;
     _completedQuestions = const [];
     _currentRunQuestions = const [];
     _runningPrefixes = const [];
+    _activeMessages = const [];
     _activePrefix = "";
+    _activeAddGenerationPrompt = false;
     _activeParallelCount = 1;
     _sequentialMode = false;
     _attemptCount = 0;
@@ -444,6 +451,24 @@ extension _$AskQuestion on _AskQuestion {
     return math.min(maxBatchSize, cap);
   }
 
+  Future<List<int>> _refreshSupportedBatchSizes({
+    required int modelID,
+  }) async {
+    final request = to_rwkv.GetSupportedBatchSizes(modelID: modelID);
+    P.rwkv.send(request);
+
+    try {
+      final response = await P.rwkv.broadcastStream
+          .whereType<from_rwkv.SupportedBatchSizes>()
+          .firstWhere((event) => event.req == request)
+          .timeout(const Duration(milliseconds: 400));
+      P.rwkv.supportedBatchSizes.q = response.supportedBatchSizes;
+      return response.supportedBatchSizes;
+    } catch (_) {
+      return P.rwkv.supportedBatchSizes.q;
+    }
+  }
+
   Future<void> _startPolling({required int modelID, required bool isBatchInference}) async {
     _getResponseTimer?.cancel();
     _getResponseTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
@@ -512,6 +537,51 @@ extension _$AskQuestion on _AskQuestion {
     return questions.take(_targetQuestionCount).toList();
   }
 
+  ({List<String> messages, String prefix, bool addGenerationPrompt}) _buildGenerationPayload({
+    required List<String> historyMessages,
+    required String prefix,
+  }) {
+    final normalizedPrefix = prefix.trim();
+    final hasContext = historyMessages.isNotEmpty;
+
+    if (!hasContext) {
+      if (normalizedPrefix.isEmpty) {
+        return (
+          messages: const <String>[""],
+          prefix: "",
+          addGenerationPrompt: true,
+        );
+      }
+      return (
+        messages: [normalizedPrefix],
+        prefix: normalizedPrefix,
+        addGenerationPrompt: false,
+      );
+    }
+
+    if (normalizedPrefix.isEmpty) {
+      return (
+        messages: [...historyMessages],
+        prefix: "",
+        addGenerationPrompt: true,
+      );
+    }
+
+    return (
+      messages: [...historyMessages, normalizedPrefix],
+      prefix: normalizedPrefix,
+      addGenerationPrompt: false,
+    );
+  }
+
+  bool _isDefaultPrefixStateForLanguage(Language targetLanguage) {
+    final prefixes = _askQuestionPrefixes[targetLanguage] ?? const <String>[];
+    if (prefixes.isEmpty) return prefixInput.q.trim().isEmpty && selectedPrefix.q == null;
+
+    final defaultPrefix = prefixes.first;
+    return prefixInput.q.trim() == defaultPrefix && selectedPrefix.q == defaultPrefix;
+  }
+
   void _applyPrefixForLanguage(Language targetLanguage) {
     final prefixes = _askQuestionPrefixes[targetLanguage] ?? const <String>[];
     if (prefixes.isEmpty) {
@@ -525,6 +595,26 @@ extension _$AskQuestion on _AskQuestion {
     prefixInput.q = nextPrefix;
   }
 
+  void _applyPrefixStateForCurrentContext(Language targetLanguage) {
+    if (hasChatHistory.q) {
+      if (prefixInput.q.trim().isEmpty || _isDefaultPrefixStateForLanguage(targetLanguage)) {
+        selectedPrefix.q = null;
+        prefixInput.q = "";
+        return;
+      }
+
+      _syncSelectedPrefixFromInput();
+      return;
+    }
+
+    if (prefixInput.q.trim().isNotEmpty) {
+      _syncSelectedPrefixFromInput();
+      return;
+    }
+
+    _applyPrefixForLanguage(targetLanguage);
+  }
+
   void _resetPanelStateForLanguage(Language nextLanguage) {
     if (_isGenerating) {
       _pauseGeneration();
@@ -535,9 +625,14 @@ extension _$AskQuestion on _AskQuestion {
     prefixInput.q = "";
     selectedPrefix.q = null;
     parallelCount.q = 1;
+    scheduledQuestionCount.q = 0;
     _completedQuestions = const [];
     _currentRunQuestions = const [];
+    _activeMessages = const [];
+    _activeAddGenerationPrompt = false;
     _clearQuestionSelectionState();
+
+    if (hasChatHistory.q) return;
     _applyPrefixForLanguage(nextLanguage);
   }
 
@@ -582,9 +677,11 @@ extension _$AskQuestion on _AskQuestion {
     }
   }
 
-  Future<void> _startPrefixGenerationSession({
+  Future<void> _startQuestionGenerationSession({
     required int modelID,
+    required List<String> messages,
     required String prefix,
+    required bool addGenerationPrompt,
     required int parallelCount,
     required bool sequentialMode,
     required int targetQuestionCount,
@@ -598,7 +695,9 @@ extension _$AskQuestion on _AskQuestion {
     _completedQuestions = const [];
     _currentRunQuestions = const [];
     _runningPrefixes = const [];
+    _activeMessages = [...messages];
     _activePrefix = prefix;
+    _activeAddGenerationPrompt = addGenerationPrompt;
     _activeParallelCount = parallelCount;
     _sequentialMode = sequentialMode;
     _attemptCount = 0;
@@ -607,30 +706,39 @@ extension _$AskQuestion on _AskQuestion {
     _stopRequested = false;
     questions.q = [];
     this.parallelCount.q = parallelCount;
+    scheduledQuestionCount.q = 0;
     interceptingEvents.q = true;
     P.rwkv.generating.q = true;
     _clearQuestionSelectionState();
 
-    await _startPrefixRun(
+    await _startQuestionGenerationRun(
       modelID: modelID,
+      messages: messages,
       prefix: prefix,
+      addGenerationPrompt: addGenerationPrompt,
       parallelCount: parallelCount,
       sessionId: _sessionId,
     );
   }
 
-  Future<void> _startPrefixRun({
+  Future<void> _startQuestionGenerationRun({
     required int modelID,
+    required List<String> messages,
     required String prefix,
+    required bool addGenerationPrompt,
     required int parallelCount,
     required int sessionId,
   }) async {
     _attemptCount = _attemptCount + 1;
+    final remainingQuestionCount = math.max(1, _targetQuestionCount - _completedQuestions.length);
+    final effectiveParallelCount = math.min(parallelCount, remainingQuestionCount);
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     _currentRunQuestions = const [];
-    _runningPrefixes = List<String>.filled(parallelCount, prefix);
+    _runningPrefixes = prefix.isEmpty ? const [] : List<String>.filled(effectiveParallelCount, prefix);
     _stopRequested = false;
+    this.parallelCount.q = effectiveParallelCount;
+    scheduledQuestionCount.q = math.min(_completedQuestions.length + effectiveParallelCount, _targetQuestionCount);
 
     await P.rwkv.clearStates();
     if (sessionId != _sessionId) return;
@@ -639,29 +747,29 @@ extension _$AskQuestion on _AskQuestion {
     P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
     P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
 
-    final isBatchInference = parallelCount > 1;
+    final isBatchInference = effectiveParallelCount > 1;
     if (isBatchInference) {
       final batchMessages = <List<String>>[];
-      for (int i = 0; i < parallelCount; i++) {
-        batchMessages.add([prefix]);
+      for (int i = 0; i < effectiveParallelCount; i++) {
+        batchMessages.add([...messages]);
       }
       P.rwkv.send(
         to_rwkv.ChatBatchAsync(
           batchMessages,
           enableReasoning: false,
           forceReasoning: false,
-          addGenerationPrompt: false,
-          batchSize: parallelCount,
+          addGenerationPrompt: addGenerationPrompt,
+          batchSize: effectiveParallelCount,
           modelID: modelID,
         ),
       );
     } else {
       P.rwkv.send(
         to_rwkv.ChatAsync(
-          [prefix],
+          messages,
           enableReasoning: false,
           forceReasoning: false,
-          addGenerationPrompt: false,
+          addGenerationPrompt: addGenerationPrompt,
           modelID: modelID,
         ),
       );
@@ -680,17 +788,19 @@ extension _$AskQuestion on _AskQuestion {
     if (!interceptingEvents.q) return;
 
     final modelID = _runningModelID;
-    final activePrefix = _activePrefix.trim();
-    if (modelID == null || activePrefix.isEmpty) {
+    final activeMessages = _activeMessages;
+    if (modelID == null || activeMessages.isEmpty) {
       _sequentialMode = false;
       _attemptCount = _attemptLimit;
       _finalizeQuestions();
       return;
     }
 
-    await _startPrefixRun(
+    await _startQuestionGenerationRun(
       modelID: modelID,
-      prefix: activePrefix,
+      messages: activeMessages,
+      prefix: _activePrefix,
+      addGenerationPrompt: _activeAddGenerationPrompt,
       parallelCount: _activeParallelCount,
       sessionId: sessionId,
     );
@@ -706,12 +816,7 @@ extension $AskQuestion on _AskQuestion {
       _resetPanelStateForLanguage(nextLanguage);
     }
 
-    if (prefixInput.q.trim().isNotEmpty) {
-      _syncSelectedPrefixFromInput();
-    } else {
-      _applyPrefixForLanguage(language.q);
-    }
-
+    _applyPrefixStateForCurrentContext(language.q);
     _syncQuestionSelectionWithQuestions(questions.q);
   }
 
@@ -738,6 +843,8 @@ extension $AskQuestion on _AskQuestion {
 
     P.rwkv.generating.q = false;
     interceptingEvents.q = false;
+    parallelCount.q = 1;
+    scheduledQuestionCount.q = 0;
     _refreshChatModelGeneratingState();
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
@@ -745,7 +852,9 @@ extension $AskQuestion on _AskQuestion {
     _completedQuestions = const [];
     _currentRunQuestions = const [];
     _runningPrefixes = const [];
+    _activeMessages = const [];
     _activePrefix = "";
+    _activeAddGenerationPrompt = false;
     _activeParallelCount = 1;
     _sequentialMode = false;
     _attemptCount = 0;
@@ -767,6 +876,13 @@ extension $AskQuestion on _AskQuestion {
 
     final normalized = prefix.trim();
     if (normalized.isEmpty) return;
+
+    if (hasChatHistory.q && selectedPrefix.q == normalized && prefixInput.q.trim() == normalized) {
+      prefixInput.q = "";
+      selectedPrefix.q = null;
+      _clearQuestionSelectionState();
+      return;
+    }
 
     prefixInput.q = normalized;
     selectedPrefix.q = normalized;
@@ -815,12 +931,6 @@ extension $AskQuestion on _AskQuestion {
   }
 
   Future<void> generateFromCurrentChat() async {
-    final prefix = prefixInput.q.trim();
-    if (prefix.isEmpty) {
-      Alert.warning(S.current.question_generator_prefix_required);
-      return;
-    }
-
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
@@ -835,28 +945,24 @@ extension $AskQuestion on _AskQuestion {
       return;
     }
 
+    final payload = _buildGenerationPayload(
+      historyMessages: _buildHistoryMessagesForQuestionGeneration(),
+      prefix: prefixInput.q,
+    );
+
+    await _refreshSupportedBatchSizes(modelID: modelID);
     final targetQuestionCount = this.targetQuestionCount.q;
     final resolvedParallelCount = _resolveParallelCount(cap: targetQuestionCount);
-    final shouldContinueInMultipleRuns = resolvedParallelCount < targetQuestionCount;
+    final sequentialMode = true;
     final attemptLimit = math.max(_askQuestionSequentialAttemptLimit, targetQuestionCount * 2);
 
-    if (resolvedParallelCount > 1) {
-      await _startPrefixGenerationSession(
-        modelID: modelID,
-        prefix: prefix,
-        parallelCount: resolvedParallelCount,
-        sequentialMode: shouldContinueInMultipleRuns,
-        targetQuestionCount: targetQuestionCount,
-        attemptLimit: shouldContinueInMultipleRuns ? attemptLimit : 1,
-      );
-      return;
-    }
-
-    await _startPrefixGenerationSession(
+    await _startQuestionGenerationSession(
       modelID: modelID,
-      prefix: prefix,
-      parallelCount: 1,
-      sequentialMode: true,
+      messages: payload.messages,
+      prefix: payload.prefix,
+      addGenerationPrompt: payload.addGenerationPrompt,
+      parallelCount: resolvedParallelCount,
+      sequentialMode: sequentialMode,
       targetQuestionCount: targetQuestionCount,
       attemptLimit: attemptLimit,
     );
@@ -888,70 +994,36 @@ extension $AskQuestion on _AskQuestion {
       return;
     }
 
-    final resolvedParallelCount = _resolveParallelCount();
-    final addGenerationPrompt = true;
+    final payload = _buildGenerationPayload(
+      historyMessages: historyMessages,
+      prefix: "",
+    );
 
-    await P.rwkv.clearStates();
-    _sessionId = _sessionId + 1;
-    _cancelRunningTasks();
-    interceptingEvents.q = true;
-    P.rwkv.generating.q = true;
-    _lastRawQuestions = const [];
-    _lastRawQuestionsChangedAt = null;
-    _runningModelID = modelID;
-    _completedQuestions = const [];
-    _currentRunQuestions = const [];
-    _runningPrefixes = const [];
-    _activePrefix = "";
-    _sequentialMode = false;
-    _attemptCount = 0;
-    _attemptLimit = 0;
-    _targetQuestionCount = 0;
-    _stopRequested = false;
-    questions.q = [];
-    parallelCount.q = resolvedParallelCount;
-    _clearQuestionSelectionState();
+    await _refreshSupportedBatchSizes(modelID: modelID);
+    final targetQuestionCount = this.targetQuestionCount.q;
+    final resolvedParallelCount = _resolveParallelCount(cap: targetQuestionCount);
+    final sequentialMode = true;
+    final attemptLimit = math.max(_askQuestionSequentialAttemptLimit, targetQuestionCount * 2);
 
-    P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
-    P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
-
-    final isBatchInference = resolvedParallelCount > 1;
-    if (isBatchInference) {
-      final batchMessages = <List<String>>[];
-      for (int i = 0; i < resolvedParallelCount; i++) {
-        batchMessages.add([...historyMessages]);
-      }
-      P.rwkv.send(
-        to_rwkv.ChatBatchAsync(
-          batchMessages,
-          enableReasoning: false,
-          forceReasoning: false,
-          addGenerationPrompt: addGenerationPrompt,
-          batchSize: resolvedParallelCount,
-          modelID: modelID,
-        ),
-      );
-    } else {
-      P.rwkv.send(
-        to_rwkv.ChatAsync(
-          historyMessages,
-          enableReasoning: false,
-          forceReasoning: false,
-          addGenerationPrompt: addGenerationPrompt,
-          modelID: modelID,
-        ),
-      );
-    }
-
-    await _startPolling(
+    await _startQuestionGenerationSession(
       modelID: modelID,
-      isBatchInference: isBatchInference,
+      messages: payload.messages,
+      prefix: payload.prefix,
+      addGenerationPrompt: payload.addGenerationPrompt,
+      parallelCount: resolvedParallelCount,
+      sequentialMode: sequentialMode,
+      targetQuestionCount: targetQuestionCount,
+      attemptLimit: attemptLimit,
     );
   }
 
   Future<void> useQuestion(String question) async {
     final normalized = question.trim();
     if (normalized.isEmpty) return;
+
+    prefixInput.q = "";
+    selectedPrefix.q = null;
+    _clearQuestionSelectionState();
 
     final controller = P.chat.textEditingController;
     controller.text = normalized;

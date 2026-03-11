@@ -835,6 +835,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("RWKV 帮你问"),
+    "question_generator_context_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage("留空也可以，RWKV 会结合上下文和聊天记录，自由帮你想问题。"),
     "question_generator_count": MessageLookupByLibrary.simpleMessage("生成数量"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(

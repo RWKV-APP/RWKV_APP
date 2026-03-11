@@ -906,6 +906,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 그룹 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 그룹 2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("질문 생성기"),
+    "question_generator_context_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage(
+          "비워 두셔도 괜찮아요. RWKV가 문맥과 대화 기록을 바탕으로 자연스럽게 질문을 떠올려 드립니다.",
+        ),
     "question_generator_count": MessageLookupByLibrary.simpleMessage("생성 수"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(

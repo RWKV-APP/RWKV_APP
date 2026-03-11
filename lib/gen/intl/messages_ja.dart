@@ -916,6 +916,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQグループ1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQグループ2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("質問ジェネレーター"),
+    "question_generator_context_prefix_input_placeholder":
+        MessageLookupByLibrary.simpleMessage(
+          "空欄のままでも大丈夫です。RWKV が文脈と会話履歴をもとに、自然に質問を考えます。",
+        ),
     "question_generator_count": MessageLookupByLibrary.simpleMessage("生成数"),
     "question_generator_empty_chat_batch_hint":
         MessageLookupByLibrary.simpleMessage(
