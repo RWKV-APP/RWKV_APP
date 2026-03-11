@@ -75,12 +75,12 @@ class AskQuestionPanel extends ConsumerWidget {
                     12,
                     12 + paddingBottom,
                   ),
-                  children: [
-                    const _PrefixComposerSection(),
-                    const SizedBox(height: 12),
-                    const _GenerateControls(),
-                    const SizedBox(height: 12),
-                    const _GeneratedQuestionsSection(),
+                  children: const [
+                    _PrefixComposerSection(),
+                    SizedBox(height: 12),
+                    _GenerateControls(),
+                    SizedBox(height: 12),
+                    _GeneratedQuestionsSection(),
                   ],
                 ),
               ),
@@ -344,8 +344,8 @@ class _GenerateControls extends ConsumerWidget {
             ),
           ),
         if (generating) const SizedBox(width: 10),
-        Expanded(
-          child: const _GenerateButton(),
+        const Expanded(
+          child: _GenerateButton(),
         ),
         const SizedBox(width: 10),
         const _GenerateCountButton(),
