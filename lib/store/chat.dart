@@ -1088,11 +1088,14 @@ extension _$Chat on _Chat {
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
     final finalPrefillSpeed = snapshotPrefillSpeed ?? msg.prefillSpeed;
     final finalDecodeSpeed = snapshotDecodeSpeed ?? msg.decodeSpeed;
+    final currentGeneratedContent = id == receiveId.q ? receivedTokens.q : msg.content;
+    final finalizedContent = currentGeneratedContent.isNotEmpty ? currentGeneratedContent : msg.content;
 
     _liveTokenCountThrottler.cancel();
     P.rwkv.stop();
 
     final newMsg = msg.copyWith(
+      content: finalizedContent,
       paused: true,
       changing: false,
       isSensitive: isSensitive,
@@ -1100,11 +1103,10 @@ extension _$Chat on _Chat {
       decodeSpeed: finalDecodeSpeed,
     );
     P.msg._syncMsg(id, newMsg);
-    final currentGeneratedContent = id == receiveId.q ? receivedTokens.q : newMsg.content;
     unawaited(
       _refreshTokenCountsForMessage(
         messageId: id,
-        overrideBotContent: currentGeneratedContent,
+        overrideBotContent: finalizedContent,
         persistToMessage: true,
       ),
     );
@@ -1185,11 +1187,21 @@ extension _$Chat on _Chat {
 
     if (id == Config.chatPrefillId) return;
 
-    final receivedTokens = this.receivedTokens.q;
     final currentMessage = P.msg.pool.q[id];
+    if (currentMessage == null) {
+      qqe("message not found when fully received: $id");
+      return;
+    }
+
+    if (!currentMessage.changing) {
+      qqq("skip fullyReceived for non-changing message: $id");
+      return;
+    }
+
+    final receivedTokens = this.receivedTokens.q;
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
-    final finalPrefillSpeed = snapshotPrefillSpeed ?? currentMessage?.prefillSpeed;
-    final finalDecodeSpeed = snapshotDecodeSpeed ?? currentMessage?.decodeSpeed;
+    final finalPrefillSpeed = snapshotPrefillSpeed ?? currentMessage.prefillSpeed;
+    final finalDecodeSpeed = snapshotDecodeSpeed ?? currentMessage.decodeSpeed;
 
     _updateMessageById(
       id: id,
@@ -1206,12 +1218,6 @@ extension _$Chat on _Chat {
         persistToMessage: true,
       ),
     );
-
-    final bool isCurrentMessagePaused = currentMessage?.paused ?? false;
-    if (isCurrentMessagePaused) {
-      qqq("skip prefill for paused message: $id");
-      return;
-    }
 
     _prefillAfterReply();
   }

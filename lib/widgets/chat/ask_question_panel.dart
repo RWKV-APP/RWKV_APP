@@ -46,7 +46,7 @@ class AskQuestionPanel extends ConsumerWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final targetQuestionCount = ref.watch(P.askQuestion.targetQuestionCount);
-    final generating = ref.watch(P.rwkv.generating) && ref.watch(P.askQuestion.interceptingEvents);
+    final generating = ref.watch(P.askQuestion.interceptingEvents);
     final prefixes = ref.watch(P.askQuestion.prefixes);
     final selectedPrefix = ref.watch(P.askQuestion.selectedPrefix);
     final prefixInput = ref.watch(P.askQuestion.prefixInput);
@@ -375,6 +375,7 @@ class _GenerateBar extends ConsumerWidget {
     final hasPrefixInput = ref.watch(P.askQuestion.hasPrefixInput);
     final targetQuestionCount = ref.watch(P.askQuestion.targetQuestionCount);
     final generateCountOptions = ref.watch(P.askQuestion.generateCountOptions);
+    final activelyGenerating = generating && ref.watch(P.rwkv.generating);
     final prefillSpeed = ref.watch(P.rwkv.prefillSpeed);
     final decodeSpeed = ref.watch(P.rwkv.decodeSpeed);
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
@@ -387,7 +388,7 @@ class _GenerateBar extends ConsumerWidget {
 
     final pauseButtonBackground = appTheme.settingItem;
 
-    final label = switch (generating) {
+    final label = switch (activelyGenerating) {
       false => s.generate,
       true when decodeSpeed > 0 => "${s.generating}\ndecode: ${decodeSpeed.toStringAsFixed(1)} tok/s",
       true when prefillSpeed > 0 => "${s.generating}\nprefill: ${prefillSpeed.toStringAsFixed(1)} tok/s",
