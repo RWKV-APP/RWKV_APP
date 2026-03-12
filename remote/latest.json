@@ -64,15 +64,15 @@
         "date": 1747374843
       },
       {
-        "name": "RWKV7-G1d 2.9B",
+        "name": "RWKV7-G1e 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-2.9b-20260131-ctx8192-imatrix-q4_k_m.gguf",
-        "fileSize": 1875794080,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1e-2.9b-20260312-ctx8192-q4_k_m.gguf",
+        "fileSize": 1875793856,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1770006388
+        "date": 1773324943
       },
       {
         "name": "RWKV7-G1e 7.2B",
@@ -124,9 +124,9 @@
         "date": 1770884182
       },
       {
-        "name": "RWKV7-G1d 2.9B (WebRWKV)",
+        "name": "RWKV7-G1e 2.9B (WebRWKV)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1d-2.9b-20260131-ctx8192-nf4.prefab",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/WebRWKV/rwkv7-g1e-2.9b-20260312-ctx8192-nf4.prefab",
         "fileSize": 2315788799,
         "quantization": "NF4",
         "platforms": ["macos", "web", "windows", "ios"],
@@ -169,15 +169,15 @@
         "date": 1773195999
       },
       {
-        "name": "RWKV7-G1d 2.9B (MLX)",
+        "name": "RWKV7-G1e 2.9B (MLX)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1d-20260131-ctx8192-mlx-6bit.zip",
-        "fileSize": 2134527658,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1e-20260312-ctx8192-mlx-6bit.zip",
+        "fileSize": 2454978758,
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1770001760
+        "date": 1773323256
       },
       {
         "name": "RWKV7-G1e 7.2B (MLX)",
