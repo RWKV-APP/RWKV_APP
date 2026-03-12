@@ -370,12 +370,18 @@ class _GenerateButton extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final qb = ref.watch(P.app.qb);
     final preferredMonospaceFont = ref.watch(P.font.finalMonospaceFontFamily);
+
     final label = switch (activelyGenerating) {
       false => s.generate,
       true when decodeSpeed > 0 => "${s.generating}\ndecode: ${decodeSpeed.toStringAsFixed(1)} tok/s",
       true when prefillSpeed > 0 => "${s.generating}\nprefill: ${prefillSpeed.toStringAsFixed(1)} tok/s",
       _ => s.generating,
     };
+
+    //     final label = '''
+    // ewdnekd
+    // lfknqjfblekrfbjeqlfjhwbdlwqd lfknqjfblekrfbjeqlfjhwbdlwqd lfknqjfblekrfbjeqlfjhwbdlwqd
+    // ''';
 
     return SizedBox(
       height: _generateBarButtonHeight,
@@ -387,7 +393,7 @@ class _GenerateButton extends ConsumerWidget {
             borderRadius: .circular(_maxRadius),
             border: .all(color: appTheme.qb12, width: .5),
           ),
-          padding: const .symmetric(horizontal: 18),
+          padding: .symmetric(horizontal: generating ? 8 : 12),
           child: Row(
             mainAxisAlignment: .center,
             children: [
@@ -406,9 +412,11 @@ class _GenerateButton extends ConsumerWidget {
                 Icon(Symbols.auto_awesome, size: iconSize),
                 12.w,
               ],
-              Text(
-                label,
-                style: TS(w: FW.w500, ff: preferredMonospaceFont, s: generating ? 14 : 16),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TS(w: FW.w500, ff: preferredMonospaceFont, s: generating ? 12 : 16),
+                ),
               ),
             ],
           ),
