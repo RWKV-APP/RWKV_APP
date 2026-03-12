@@ -323,6 +323,9 @@ class _GenerateControls extends ConsumerWidget {
     final generating = ref.watch(P.askQuestion.interceptingEvents);
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
     final appTheme = ref.watch(P.app.theme);
+    final pauseBackgroundColor = appTheme.isLight ? const Color(0xFFFFF3E2) : const Color(0xFF4A3416);
+    final pauseBorderColor = appTheme.isLight ? const Color(0xFFE6C39C) : const Color(0xFF8C6632);
+    final pauseForegroundColor = appTheme.isLight ? const Color(0xFFB7771F) : const Color(0xFFF6C67A);
 
     return Row(
       children: [
@@ -334,12 +337,12 @@ class _GenerateControls extends ConsumerWidget {
               onTap: P.askQuestion.pauseGeneration,
               child: Container(
                 decoration: BoxDecoration(
-                  color: appTheme.settingItem,
+                  color: pauseBackgroundColor,
                   borderRadius: .circular(_maxRadius),
-                  border: .all(color: appTheme.qb12, width: .5),
+                  border: .all(color: pauseBorderColor, width: .6),
                 ),
                 padding: const .symmetric(horizontal: 18),
-                child: Icon(Symbols.pause, size: iconSize),
+                child: Icon(Symbols.pause, size: iconSize, color: pauseForegroundColor),
               ),
             ),
           ),
@@ -368,8 +371,10 @@ class _GenerateButton extends ConsumerWidget {
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
     final isGenerateEnabled = !generating;
     final appTheme = ref.watch(P.app.theme);
-    final qb = ref.watch(P.app.qb);
     final preferredMonospaceFont = ref.watch(P.font.finalMonospaceFontFamily);
+    final backgroundColor = appTheme.primary.q(appTheme.isLight ? .12 : .18);
+    final borderColor = appTheme.primary.q(appTheme.isLight ? .28 : .42);
+    final foregroundColor = appTheme.primary;
 
     final label = switch (activelyGenerating) {
       false => s.generate,
@@ -384,9 +389,9 @@ class _GenerateButton extends ConsumerWidget {
         onTap: isGenerateEnabled ? P.askQuestion.generateFromCurrentChat : null,
         child: Container(
           decoration: BoxDecoration(
-            color: appTheme.settingItem,
+            color: backgroundColor,
             borderRadius: .circular(_maxRadius),
-            border: .all(color: appTheme.qb12, width: .5),
+            border: .all(color: borderColor, width: .7),
           ),
           padding: .symmetric(horizontal: generating ? 8 : 12),
           child: Row(
@@ -398,19 +403,25 @@ class _GenerateButton extends ConsumerWidget {
                   height: iconSize,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: qb.q(.72),
+                    color: foregroundColor,
                   ),
                 ),
                 12.w,
               ],
               if (!generating) ...[
-                Icon(Symbols.auto_awesome, size: iconSize),
+                Icon(Symbols.auto_awesome, size: iconSize, color: foregroundColor),
                 12.w,
               ],
               Expanded(
                 child: Text(
                   label,
-                  style: TS(w: FW.w500, ff: preferredMonospaceFont, s: generating ? 12 : 16),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: foregroundColor,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: preferredMonospaceFont,
+                    fontSize: generating ? 12 : 16,
+                    height: generating ? 1.2 : 1.0,
+                  ),
                 ),
               ),
             ],
@@ -436,24 +447,25 @@ class _GenerateCountButton extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final appTheme = ref.watch(P.app.theme);
-    final buttonBackground = appTheme.settingItem;
+    final buttonBackground = enabled ? appTheme.primary.q(isDark ? .16 : .08) : appTheme.primary.q(isDark ? .08 : .04);
+    final buttonBorderColor = enabled ? appTheme.primary.q(isDark ? .42 : .26) : appTheme.qb12;
 
     final labelColor = switch ((isDark, enabled)) {
-      (true, true) => const Color(0xFFB8B8B8),
+      (true, true) => appTheme.primary,
       (true, false) => const Color(0xFF666666),
-      (false, true) => const Color(0xFF686868),
+      (false, true) => appTheme.primary,
       (false, false) => const Color(0xFF9A9A9A),
     };
     final valueColor = switch ((isDark, enabled)) {
-      (true, true) => const Color(0xFFF1F1F1),
+      (true, true) => appTheme.primary,
       (true, false) => const Color(0xFF7A7A7A),
-      (false, true) => const Color(0xFF181818),
+      (false, true) => appTheme.primary,
       (false, false) => const Color(0xFF8A8A8A),
     };
     final iconColor = switch ((isDark, enabled)) {
-      (true, true) => const Color(0xFFD9D9D9),
+      (true, true) => appTheme.primary,
       (true, false) => const Color(0xFF666666),
-      (false, true) => const Color(0xFF4D4D4D),
+      (false, true) => appTheme.primary,
       (false, false) => const Color(0xFF9A9A9A),
     };
 
@@ -490,8 +502,8 @@ class _GenerateCountButton extends ConsumerWidget {
             color: buttonBackground,
             borderRadius: .circular(_maxRadius),
             border: .all(
-              color: appTheme.qb12,
-              width: .5,
+              color: buttonBorderColor,
+              width: .7,
             ),
           ),
           child: Row(
@@ -605,18 +617,6 @@ class _ClearQuestionsButton extends ConsumerWidget {
 
     final enabled = !generating;
     final isDark = theme.brightness == Brightness.dark;
-    final backgroundColor = switch ((isDark, enabled)) {
-      (true, true) => const Color(0xFF4A2121),
-      (true, false) => const Color(0xFF2B2323),
-      (false, true) => const Color(0xFFFDEBEC),
-      (false, false) => const Color(0xFFF5EEEE),
-    };
-    final borderColor = switch ((isDark, enabled)) {
-      (true, true) => const Color(0xFF8B4A4A),
-      (true, false) => const Color(0xFF4B3535),
-      (false, true) => const Color(0xFFE7B0B0),
-      (false, false) => const Color(0xFFE8D2D2),
-    };
     final foregroundColor = switch ((isDark, enabled)) {
       (true, true) => const Color(0xFFFFC1C1),
       (true, false) => const Color(0xFF8A6666),
@@ -626,31 +626,29 @@ class _ClearQuestionsButton extends ConsumerWidget {
 
     return GD(
       onTap: enabled ? P.askQuestion.clearGeneratedQuestions : null,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
-        padding: const .symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: .circular(999),
-          border: .all(color: borderColor, width: .8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Symbols.delete,
-              size: 16,
-              color: foregroundColor,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              s.delete,
-              style: theme.textTheme.labelMedium?.copyWith(
+      child: Padding(
+        padding: const .symmetric(horizontal: 4, vertical: 2),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 160),
+          opacity: enabled ? 1 : .55,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Symbols.delete,
+                size: 16,
                 color: foregroundColor,
-                fontWeight: FontWeight.w700,
               ),
-            ),
-          ],
+              const SizedBox(width: 6),
+              Text(
+                s.delete,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: foregroundColor,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
