@@ -378,11 +378,6 @@ class _GenerateButton extends ConsumerWidget {
       _ => s.generating,
     };
 
-    //     final label = '''
-    // ewdnekd
-    // lfknqjfblekrfbjeqlfjhwbdlwqd lfknqjfblekrfbjeqlfjhwbdlwqd lfknqjfblekrfbjeqlfjhwbdlwqd
-    // ''';
-
     return SizedBox(
       height: _generateBarButtonHeight,
       child: GD(
