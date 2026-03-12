@@ -8,6 +8,10 @@ lane :all do |params|
   if upload_retry_count < 1
     upload_retry_count = 100
   end
+  upload_timeout_seconds = (params[:upload_timeout_seconds] || 1200).to_i
+  if upload_timeout_seconds < 30
+    upload_timeout_seconds = 1200
+  end
 
   resume_upload_only = params[:resume_upload] == true ? true : false
   if resume_upload_only
@@ -24,6 +28,7 @@ lane :all do |params|
       continue_on_github_error: params[:continue_on_github_error],
       run_macos: params[:run_macos],
       upload_retry_count: upload_retry_count,
+      upload_timeout_seconds: upload_timeout_seconds,
       upload_to_testflight: upload_to_testflight,
       skip_git_reset: skip_git_reset,
     )
@@ -79,6 +84,7 @@ lane :all do |params|
       release_name: semantic_version,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
       upload_retry_count: upload_retry_count,
+      upload_timeout_seconds: upload_timeout_seconds,
     )
 
     # 🔥 上传到 Hugging Face (android-arm64)
@@ -103,6 +109,7 @@ lane :all do |params|
   macos_build_and_upload(
     upload_to_github: true,
     upload_retry_count: upload_retry_count,
+    upload_timeout_seconds: upload_timeout_seconds,
   )
 
   # 🔥 上传到 TestFlight
@@ -231,6 +238,10 @@ lane :macos_build_and_upload do |params|
   if upload_retry_count < 1
     upload_retry_count = 100
   end
+  upload_timeout_seconds = (params[:upload_timeout_seconds] || 1200).to_i
+  if upload_timeout_seconds < 30
+    upload_timeout_seconds = 1200
+  end
 
   # 1. 基础信息准备
   require 'yaml'
@@ -342,6 +353,7 @@ lane :macos_build_and_upload do |params|
       release_name: version_number,
       release_notes: "Release #{full_version}\n\nVersion: #{version_number}\nBuild: #{build_number}",
       upload_retry_count: upload_retry_count,
+      upload_timeout_seconds: upload_timeout_seconds,
     )
   end
 
@@ -416,6 +428,10 @@ lane :resume_upload do |params|
   if upload_retry_count < 1
     upload_retry_count = 100
   end
+  upload_timeout_seconds = (params[:upload_timeout_seconds] || 1200).to_i
+  if upload_timeout_seconds < 30
+    upload_timeout_seconds = 1200
+  end
 
   # 1. 读取当前 pubspec.yaml 中的版本号 (因为之前的 all lane 已经修改并提交了)
   require 'yaml'
@@ -469,6 +485,7 @@ lane :resume_upload do |params|
             release_name: semantic_version,
             release_notes: "Release #{full_version}\n\nVersion: #{semantic_version}\nBuild: #{build_number}",
             upload_retry_count: upload_retry_count,
+            upload_timeout_seconds: upload_timeout_seconds,
           )
         rescue => e
           UI.error "GitHub Release 上传失败: #{e.message}"
@@ -503,6 +520,7 @@ lane :resume_upload do |params|
     macos_build_and_upload(
       upload_to_github: true,
       upload_retry_count: upload_retry_count,
+      upload_timeout_seconds: upload_timeout_seconds,
     )
   else
     UI.important '跳过 macOS 恢复流程 (run_macos=false)'
