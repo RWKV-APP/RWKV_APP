@@ -4,9 +4,9 @@ lane :all do |params|
   upload_to_testflight = params[:upload_to_testflight] == false ? false : true
   upload_to_pgyer = params[:upload_to_pgyer] == false ? false : true
   skip_git_reset = params[:skip_git_reset] == true ? true : false
-  upload_retry_count = (params[:upload_retry_count] || 3).to_i
+  upload_retry_count = (params[:upload_retry_count] || 100).to_i
   if upload_retry_count < 1
-    upload_retry_count = 3
+    upload_retry_count = 100
   end
 
   resume_upload_only = params[:resume_upload] == true ? true : false
@@ -227,9 +227,9 @@ end
 lane :macos_build_and_upload do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
   upload_to_huggingface = params[:upload_to_huggingface] == false ? false : true
-  upload_retry_count = (params[:upload_retry_count] || 3).to_i
+  upload_retry_count = (params[:upload_retry_count] || 100).to_i
   if upload_retry_count < 1
-    upload_retry_count = 3
+    upload_retry_count = 100
   end
 
   # 1. 基础信息准备
@@ -412,9 +412,9 @@ lane :resume_upload do |params|
   upload_to_github = params[:upload_to_github] == false ? false : true
   run_macos = params[:run_macos] == false ? false : true
   continue_on_github_error = params[:continue_on_github_error] == true ? true : false
-  upload_retry_count = (params[:upload_retry_count] || 3).to_i
+  upload_retry_count = (params[:upload_retry_count] || 100).to_i
   if upload_retry_count < 1
-    upload_retry_count = 3
+    upload_retry_count = 100
   end
 
   # 1. 读取当前 pubspec.yaml 中的版本号 (因为之前的 all lane 已经修改并提交了)
