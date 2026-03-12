@@ -653,7 +653,7 @@
   "question_generator_prefixes": "質問の書き出し",
   "question_generator_count": "生成数",
   "question_generator_prefix_input_placeholder": "ここに質問の書き出しを書いてみましょう...",
-  "question_generator_context_prefix_input_placeholder": "空欄のままでも大丈夫です。RWKV が文脈と会話履歴をもとに、自然に質問を考えます。",
+  "question_generator_context_prefix_input_placeholder": "空欄のままにすると、RWKV が文脈に基づいて質問を生成します。",
   "question_generator_prefix_required": "先に質問の書き出しを入力してください",
   "question_generator_question_action_guide": "生成された質問をタップすると、チャット入力欄にそのまま入れられます。",
   "question_language": "RWKV にこの言語で質問してほしい...",

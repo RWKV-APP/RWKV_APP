@@ -918,7 +918,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator": MessageLookupByLibrary.simpleMessage("質問ジェネレーター"),
     "question_generator_context_prefix_input_placeholder":
         MessageLookupByLibrary.simpleMessage(
-          "空欄のままでも大丈夫です。RWKV が文脈と会話履歴をもとに、自然に質問を考えます。",
+          "空欄のままにすると、RWKV が文脈に基づいて質問を生成します。",
         ),
     "question_generator_count": MessageLookupByLibrary.simpleMessage("生成数"),
     "question_generator_empty_chat_batch_hint":

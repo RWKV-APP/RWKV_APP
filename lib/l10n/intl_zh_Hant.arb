@@ -653,7 +653,7 @@
   "question_generator_prefixes": "問題前綴",
   "question_generator_count": "生成數量",
   "question_generator_prefix_input_placeholder": "在這裡寫下你想要的問題開頭...",
-  "question_generator_context_prefix_input_placeholder": "留空也可以，RWKV 會結合上下文和聊天記錄，自由幫你想問題。",
+  "question_generator_context_prefix_input_placeholder": "如果留空，RWKV 會根據上下文產生問題",
   "question_generator_prefix_required": "請先輸入一個問題前綴",
   "question_generator_question_action_guide": "點擊已產生的問題，即可貼到對話輸入框。",
   "question_language": "我想讓 RWKV 以這種語言提問...",

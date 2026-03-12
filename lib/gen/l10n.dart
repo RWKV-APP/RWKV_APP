@@ -5142,10 +5142,10 @@ class S {
     );
   }
 
-  /// `留空也可以，RWKV 会结合上下文和聊天记录，自由帮你想问题。`
+  /// `如果留空，RWKV 会根据上下文生成问题`
   String get question_generator_context_prefix_input_placeholder {
     return Intl.message(
-      '留空也可以，RWKV 会结合上下文和聊天记录，自由帮你想问题。',
+      '如果留空，RWKV 会根据上下文生成问题',
       name: 'question_generator_context_prefix_input_placeholder',
       desc: '',
       args: [],

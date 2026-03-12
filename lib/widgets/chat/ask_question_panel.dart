@@ -1,3 +1,4 @@
+// Dart imports:
 import 'dart:math' as math;
 
 // Flutter imports:
@@ -323,12 +324,13 @@ class _GenerateControls extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     final generating = ref.watch(P.askQuestion.interceptingEvents);
     final iconSize = theme.textTheme.titleMedium?.fontSize ?? 16.0;
     final isDark = theme.brightness == Brightness.dark;
-    final pauseBackgroundColor = isDark ? const Color(0xFF2C2C2C) : const Color(0xFFF3F3F3);
-    final pauseBorderColor = isDark ? const Color(0xFF484848) : const Color(0xFFD2D2D2);
-    final pauseForegroundColor = isDark ? const Color(0xFFE6E6E6) : const Color(0xFF343434);
+    final stopBackgroundColor = isDark ? const Color(0xFF000000) : const Color(0xFFFFFFFF);
+    final stopBorderColor = isDark ? const Color(0xFF3C3C3C) : const Color(0xFFD4D4D4);
+    final stopForegroundColor = isDark ? const Color(0xFFE0E0E0) : const Color(0xFF2A2A2A);
 
     return Column(
       crossAxisAlignment: .stretch,
@@ -339,16 +341,24 @@ class _GenerateControls extends ConsumerWidget {
               SizedBox(
                 width: _generateBarButtonHeight,
                 height: _generateBarButtonHeight,
-                child: GD(
-                  onTap: P.askQuestion.pauseGeneration,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: pauseBackgroundColor,
-                      borderRadius: .circular(_maxRadius),
-                      border: .all(color: pauseBorderColor, width: .6),
+                child: Tooltip(
+                  message: s.stop,
+                  child: GD(
+                    onTap: P.askQuestion.pauseGeneration,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: stopBackgroundColor,
+                        borderRadius: .circular(_maxRadius),
+                        border: .all(color: stopBorderColor, width: .8),
+                      ),
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Symbols.stop,
+                        size: iconSize,
+                        color: stopForegroundColor,
+                        fill: 1,
+                      ),
                     ),
-                    padding: const .symmetric(horizontal: 18),
-                    child: Icon(Symbols.pause, size: iconSize, color: pauseForegroundColor),
                   ),
                 ),
               ),
@@ -389,8 +399,8 @@ class _PrefillProgressNotice extends ConsumerWidget {
     final borderColor = qb.q(isDark ? .18 : .1);
     final titleColor = qb.q(isDark ? .88 : .8);
     final metaColor = qb.q(isDark ? .68 : .56);
-    final progressColor = qb.q(isDark ? .76 : .68).q(.9);
-    final progressBackgroundColor = const Color(0xFFFFFFFF);
+    final progressColor = (isDark ? const Color(0xFFE0E0E0) : qb.q(.68)).q(.9);
+    final progressBackgroundColor = isDark ? const Color(0xFF000000) : const Color(0xFFFFFFFF);
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 200),

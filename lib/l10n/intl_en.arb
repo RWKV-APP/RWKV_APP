@@ -659,7 +659,7 @@
   "question_generator_prefixes": "Question Prefixes",
   "question_generator_count": "Count",
   "question_generator_prefix_input_placeholder": "Write the opening you want RWKV to continue...",
-  "question_generator_context_prefix_input_placeholder": "You can leave this blank. RWKV will come up with questions freely from the context and chat history.",
+  "question_generator_context_prefix_input_placeholder": "If you leave this blank, RWKV will generate questions based on the context.",
   "question_generator_prefix_required": "Please enter a question prefix first",
   "question_generator_question_action_guide": "Tap any generated question to paste it into the chat input box.",
   "question_language": "I want RWKV to ask in this language...",

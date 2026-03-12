@@ -653,7 +653,7 @@
   "question_generator_prefixes": "Префиксы вопросов",
   "question_generator_count": "Количество",
   "question_generator_prefix_input_placeholder": "Напишите здесь начало вопроса...",
-  "question_generator_context_prefix_input_placeholder": "Поле можно оставить пустым. RWKV сам придумает вопросы, опираясь на контекст и историю чата.",
+  "question_generator_context_prefix_input_placeholder": "Если оставить поле пустым, RWKV сгенерирует вопросы на основе контекста.",
   "question_generator_prefix_required": "Сначала введите префикс вопроса",
   "question_generator_question_action_guide": "Нажмите на сгенерированный вопрос, чтобы вставить его в поле ввода чата.",
   "question_language": "Я хочу, чтобы RWKV задавал вопросы на этом языке...",

@@ -1074,7 +1074,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "question_generator_context_prefix_input_placeholder":
         MessageLookupByLibrary.simpleMessage(
-          "You can leave this blank. RWKV will come up with questions freely from the context and chat history.",
+          "If you leave this blank, RWKV will generate questions based on the context.",
         ),
     "question_generator_count": MessageLookupByLibrary.simpleMessage("Count"),
     "question_generator_empty_chat_batch_hint":
