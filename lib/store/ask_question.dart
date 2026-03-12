@@ -886,6 +886,20 @@ extension $AskQuestion on _AskQuestion {
     _clearQuestionSelectionState();
   }
 
+  void clearGeneratedQuestions() {
+    if (questions.q.isEmpty) return;
+
+    questions.q = [];
+    _completedQuestions = const [];
+    _currentRunQuestions = const [];
+    _lastRawQuestions = const [];
+    _lastRawQuestionsChangedAt = null;
+    if (!interceptingEvents.q) {
+      scheduledQuestionCount.q = 0;
+    }
+    _clearQuestionSelectionState();
+  }
+
   void beginEditingQuestion(int index) {
     final questions = this.questions.q;
     if (index < 0 || index >= questions.length) return;

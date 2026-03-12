@@ -539,14 +539,10 @@ class _GeneratedQuestionsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
     final questions = ref.watch(P.askQuestion.questions);
     final generating = ref.watch(P.askQuestion.interceptingEvents);
-    final targetQuestionCount = ref.watch(P.askQuestion.targetQuestionCount);
     final scheduledQuestionCount = ref.watch(P.askQuestion.scheduledQuestionCount);
     final pendingQuestionCount = generating && scheduledQuestionCount > questions.length ? scheduledQuestionCount - questions.length : 0;
-    final displayQuestionCount = questions.length + pendingQuestionCount;
     final resultItems = <Widget>[
       for (final question in questions)
         _Question(
@@ -564,24 +560,21 @@ class _GeneratedQuestionsSection extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text(
-                      s.generated_questions,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  S.of(context).generated_questions,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
+              const SizedBox(width: 12),
+              const _ClearQuestionsButton(),
             ],
           ),
           Container(
             height: .5,
             margin: const .only(top: 12, bottom: 14),
-            color: qb.q(.1),
+            color: ref.watch(P.app.qb).q(.1),
           ),
           if (resultItems.isNotEmpty)
             Column(
@@ -594,6 +587,71 @@ class _GeneratedQuestionsSection extends ConsumerWidget {
               ],
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _ClearQuestionsButton extends ConsumerWidget {
+  const _ClearQuestionsButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final questions = ref.watch(P.askQuestion.questions);
+    final generating = ref.watch(P.askQuestion.interceptingEvents);
+    if (questions.isEmpty) return const SizedBox.shrink();
+
+    final enabled = !generating;
+    final isDark = theme.brightness == Brightness.dark;
+    final backgroundColor = switch ((isDark, enabled)) {
+      (true, true) => const Color(0xFF4A2121),
+      (true, false) => const Color(0xFF2B2323),
+      (false, true) => const Color(0xFFFDEBEC),
+      (false, false) => const Color(0xFFF5EEEE),
+    };
+    final borderColor = switch ((isDark, enabled)) {
+      (true, true) => const Color(0xFF8B4A4A),
+      (true, false) => const Color(0xFF4B3535),
+      (false, true) => const Color(0xFFE7B0B0),
+      (false, false) => const Color(0xFFE8D2D2),
+    };
+    final foregroundColor = switch ((isDark, enabled)) {
+      (true, true) => const Color(0xFFFFC1C1),
+      (true, false) => const Color(0xFF8A6666),
+      (false, true) => const Color(0xFFB83A3A),
+      (false, false) => const Color(0xFFB89292),
+    };
+
+    return GD(
+      onTap: enabled ? P.askQuestion.clearGeneratedQuestions : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        padding: const .symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: .circular(999),
+          border: .all(color: borderColor, width: .8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Symbols.delete,
+              size: 16,
+              color: foregroundColor,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              s.delete,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: foregroundColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
