@@ -317,8 +317,14 @@ module Fastlane
           'GH_PROMPT_DISABLED' => '1',
           'NO_COLOR' => '1',
         }
+        popen_options = {
+          pgroup: true,
+        }
+        if !cwd.nil? && !cwd.empty?
+          popen_options[:chdir] = cwd
+        end
 
-        Open3.popen3(env, *command, chdir: cwd, pgroup: true) do |stdin, out, err, wait_thr|
+        Open3.popen3(env, *command, **popen_options) do |stdin, out, err, wait_thr|
           stdin.close
 
           stdout_thread = Thread.new do
@@ -357,7 +363,7 @@ module Fastlane
       rescue StandardError => e
         {
           stdout: stdout,
-          stderr: [stderr, e.message].reject(&:empty?).join("\n"),
+          stderr: [stderr, e.message.to_s].compact.reject(&:empty?).join("\n"),
           status: nil,
           success: false,
           timed_out: false,
