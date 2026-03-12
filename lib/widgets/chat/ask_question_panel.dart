@@ -576,22 +576,6 @@ class _GeneratedQuestionsSection extends ConsumerWidget {
                   ],
                 ),
               ),
-              if (questions.isNotEmpty || generating)
-                Container(
-                  decoration: BoxDecoration(
-                    color: qb.q(.08),
-                    borderRadius: .circular(999),
-                    border: .all(color: qb.q(.12)),
-                  ),
-                  padding: const .symmetric(horizontal: 10, vertical: 5),
-                  child: Text(
-                    generating ? "$displayQuestionCount/$targetQuestionCount" : "${questions.length}",
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: qb.q(.78),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
             ],
           ),
           Container(

@@ -1181,7 +1181,7 @@ extension _$Chat on _Chat {
     final id = receiveId.q;
 
     if (id == null) {
-      qqe("receiveId is null");
+      qqw("receiveId is null");
       return;
     }
 

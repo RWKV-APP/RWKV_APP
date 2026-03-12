@@ -537,6 +537,17 @@ extension _$AskQuestion on _AskQuestion {
     return questions.take(_targetQuestionCount).toList();
   }
 
+  // `messages` is always assembled as a `List<String>` before entering
+  // `_startQuestionGenerationRun()`.
+  //
+  // Cases:
+  // 1. no history + no prefix => [""]
+  // 2. no history + prefix => [prefix]
+  // 3. history + no prefix => historyMessages
+  // 4. history + prefix => [...historyMessages, prefix]
+  //
+  // In batch mode, this base list is then copied into multiple slots as
+  // `List<List<String>>`, one identical message list per generated question.
   ({List<String> messages, String prefix, bool addGenerationPrompt}) _buildGenerationPayload({
     required List<String> historyMessages,
     required String prefix,
@@ -574,45 +585,14 @@ extension _$AskQuestion on _AskQuestion {
     );
   }
 
-  bool _isDefaultPrefixStateForLanguage(Language targetLanguage) {
-    final prefixes = _askQuestionPrefixes[targetLanguage] ?? const <String>[];
-    if (prefixes.isEmpty) return prefixInput.q.trim().isEmpty && selectedPrefix.q == null;
-
-    final defaultPrefix = prefixes.first;
-    return prefixInput.q.trim() == defaultPrefix && selectedPrefix.q == defaultPrefix;
-  }
-
-  void _applyPrefixForLanguage(Language targetLanguage) {
-    final prefixes = _askQuestionPrefixes[targetLanguage] ?? const <String>[];
-    if (prefixes.isEmpty) {
+  void _applyPrefixStateForCurrentContext() {
+    if (prefixInput.q.trim().isEmpty) {
       selectedPrefix.q = null;
       prefixInput.q = "";
       return;
     }
 
-    final nextPrefix = prefixes.first;
-    selectedPrefix.q = nextPrefix;
-    prefixInput.q = nextPrefix;
-  }
-
-  void _applyPrefixStateForCurrentContext(Language targetLanguage) {
-    if (hasChatHistory.q) {
-      if (prefixInput.q.trim().isEmpty || _isDefaultPrefixStateForLanguage(targetLanguage)) {
-        selectedPrefix.q = null;
-        prefixInput.q = "";
-        return;
-      }
-
-      _syncSelectedPrefixFromInput();
-      return;
-    }
-
-    if (prefixInput.q.trim().isNotEmpty) {
-      _syncSelectedPrefixFromInput();
-      return;
-    }
-
-    _applyPrefixForLanguage(targetLanguage);
+    _syncSelectedPrefixFromInput();
   }
 
   void _resetPanelStateForLanguage(Language nextLanguage) {
@@ -631,9 +611,6 @@ extension _$AskQuestion on _AskQuestion {
     _activeMessages = const [];
     _activeAddGenerationPrompt = false;
     _clearQuestionSelectionState();
-
-    if (hasChatHistory.q) return;
-    _applyPrefixForLanguage(nextLanguage);
   }
 
   void _onPreferredLanguageChanged() {
@@ -816,7 +793,7 @@ extension $AskQuestion on _AskQuestion {
       _resetPanelStateForLanguage(nextLanguage);
     }
 
-    _applyPrefixStateForCurrentContext(language.q);
+    _applyPrefixStateForCurrentContext();
     _syncQuestionSelectionWithQuestions(questions.q);
   }
 
