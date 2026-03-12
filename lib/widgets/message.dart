@@ -596,6 +596,7 @@ double? _resolveCotContentHeight({
     case .hideCotHeader:
       return 0;
   }
+  return null;
 }
 
 _BatchData _resolveBatchData({

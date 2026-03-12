@@ -37,6 +37,7 @@ extension _$Pth on _Pth {
       folders.q = [...folders.q, folder];
       refreshFolder(folder);
     }
+    return;
   }
 
   Future<void> _atuoCreateModelsDir() async {

@@ -85,6 +85,7 @@ extension _$UI on _UI {
     sigmaForBackdropFilterForInputTextFields.l(_onSigmaForBackdropFilterForInputTextFieldsChanged, fireImmediately: true);
     gradientStartForInputBar.l(_onGradientStartForInputBarChanged, fireImmediately: true);
     gradientForInputBar.l(_onGradientForInputBarChanged, fireImmediately: true);
+    return;
   }
 
   void _onPageKeyChanged(PageKey pageKey) async {
