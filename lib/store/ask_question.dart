@@ -89,6 +89,7 @@ class _AskQuestion {
   List<String> _lastRawQuestions = const [];
   List<String> _completedQuestions = const [];
   List<String> _currentRunQuestions = const [];
+  List<String> _retainedQuestions = const [];
   List<String> _runningPrefixes = const [];
   List<String> _activeMessages = const [];
   String _activePrefix = "";
@@ -110,6 +111,7 @@ class _AskQuestion {
   late final generateCount = qs(_askQuestionSequentialQuestionCount);
   late final parallelCount = qs(1);
   late final scheduledQuestionCount = qs(0);
+  late final retainedQuestionCount = qs(0);
 
   late final prefixes = qp((ref) {
     final selectedLanguage = ref.watch(language);
@@ -117,16 +119,13 @@ class _AskQuestion {
   });
 
   late final maxParallelCount = qp((ref) {
-    final currentModel = ref.watch(P.rwkv.latestModel);
-    if (currentModel == null) return 1;
-
-    final batchAllowed = currentModel.tags.contains("batch");
+    final latestModel = ref.watch(P.rwkv.latestModel);
+    final batchAllowed = latestModel?.tags.contains("batch") ?? false;
+    final batchEnabled = ref.watch(P.chat.batchEnabled);
+    final targetQuestionCount = ref.watch(this.targetQuestionCount);
     if (!batchAllowed) return 1;
-
-    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
-    if (supportedBatchSizes.isEmpty) return 1;
-
-    return supportedBatchSizes.max;
+    if (!batchEnabled) return 1;
+    return targetQuestionCount;
   });
 
   late final generateCountOptions = qp((ref) {
@@ -249,11 +248,15 @@ extension _$AskQuestion on _AskQuestion {
       effectiveRawQuestions.map((raw) => raw.trim()),
     );
     _currentRunQuestions = cleanedCurrentQuestions;
-    final nextQuestions = _limitQuestions(
+    final nextSessionQuestions = _limitQuestions(
       _dedupeQuestions([
         ..._completedQuestions,
         ...cleanedCurrentQuestions,
       ]),
+    );
+    final nextQuestions = _prependNewestQuestions(
+      newest: nextSessionQuestions,
+      retained: _retainedQuestions,
     );
     questions.q = nextQuestions;
     _syncQuestionSelectionWithQuestions(nextQuestions);
@@ -271,8 +274,12 @@ extension _$AskQuestion on _AskQuestion {
         ...finalizedCurrentQuestions,
       ]),
     );
-    questions.q = _completedQuestions;
-    _syncQuestionSelectionWithQuestions(_completedQuestions);
+    final nextQuestions = _prependNewestQuestions(
+      newest: _completedQuestions,
+      retained: _retainedQuestions,
+    );
+    questions.q = nextQuestions;
+    _syncQuestionSelectionWithQuestions(nextQuestions);
 
     if (_shouldContinueSequentialGeneration()) {
       final sessionId = _sessionId;
@@ -289,11 +296,13 @@ extension _$AskQuestion on _AskQuestion {
     P.rwkv.generating.q = false;
     parallelCount.q = 1;
     scheduledQuestionCount.q = 0;
+    retainedQuestionCount.q = 0;
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     _runningModelID = null;
     _completedQuestions = const [];
     _currentRunQuestions = const [];
+    _retainedQuestions = const [];
     _runningPrefixes = const [];
     _activeMessages = const [];
     _activePrefix = "";
@@ -316,6 +325,11 @@ extension _$AskQuestion on _AskQuestion {
   void _maybeStopSettledGeneration(List<String> currentQuestions) {
     if (_stopRequested) return;
     if (currentQuestions.isEmpty) return;
+
+    final expectedQuestionCount = parallelCount.q;
+    if (expectedQuestionCount > 1 && currentQuestions.length < expectedQuestionCount) {
+      return;
+    }
 
     if (!_sameQuestionList(_lastRawQuestions, currentQuestions)) {
       _lastRawQuestions = [...currentQuestions];
@@ -432,41 +446,15 @@ extension _$AskQuestion on _AskQuestion {
   }
 
   int _resolveParallelCount({
-    int? cap,
+    required int targetQuestionCount,
   }) {
-    final currentModel = P.rwkv.latestModel.q;
-    if (currentModel == null) return 1;
-
-    final batchAllowed = currentModel.tags.contains("batch");
+    final latestModel = P.rwkv.latestModel.q;
+    final batchAllowed = latestModel?.tags.contains("batch") ?? false;
+    final batchEnabled = P.chat.batchEnabled.q;
     if (!batchAllowed) return 1;
-
-    final supportedBatchSizes = P.rwkv.supportedBatchSizes.q;
-    if (supportedBatchSizes.isEmpty) return 1;
-
-    final maxBatchSize = supportedBatchSizes.max;
-    if (maxBatchSize <= 0) return 1;
-
-    if (cap == null) return maxBatchSize;
-
-    return math.min(maxBatchSize, cap);
-  }
-
-  Future<List<int>> _refreshSupportedBatchSizes({
-    required int modelID,
-  }) async {
-    final request = to_rwkv.GetSupportedBatchSizes(modelID: modelID);
-    P.rwkv.send(request);
-
-    try {
-      final response = await P.rwkv.broadcastStream
-          .whereType<from_rwkv.SupportedBatchSizes>()
-          .firstWhere((event) => event.req == request)
-          .timeout(const Duration(milliseconds: 400));
-      P.rwkv.supportedBatchSizes.q = response.supportedBatchSizes;
-      return response.supportedBatchSizes;
-    } catch (_) {
-      return P.rwkv.supportedBatchSizes.q;
-    }
+    if (!batchEnabled) return 1;
+    if (targetQuestionCount <= 1) return 1;
+    return targetQuestionCount;
   }
 
   Future<void> _startPolling({required int modelID, required bool isBatchInference}) async {
@@ -535,6 +523,25 @@ extension _$AskQuestion on _AskQuestion {
     if (_targetQuestionCount <= 0) return questions;
     if (questions.length <= _targetQuestionCount) return questions;
     return questions.take(_targetQuestionCount).toList();
+  }
+
+  List<String> _prependNewestQuestions({
+    required List<String> newest,
+    required List<String> retained,
+  }) {
+    final normalizedNewest = _dedupeQuestions(newest);
+    if (retained.isEmpty) return normalizedNewest;
+
+    final seen = normalizedNewest.map((question) => question.trim()).toSet();
+    final merged = <String>[...normalizedNewest];
+    for (final question in retained) {
+      final normalized = question.trim();
+      if (normalized.isEmpty) continue;
+      if (!seen.add(normalized)) continue;
+      merged.add(normalized);
+    }
+
+    return merged;
   }
 
   // `messages` is always assembled as a `List<String>` before entering
@@ -606,8 +613,10 @@ extension _$AskQuestion on _AskQuestion {
     selectedPrefix.q = null;
     parallelCount.q = 1;
     scheduledQuestionCount.q = 0;
+    retainedQuestionCount.q = 0;
     _completedQuestions = const [];
     _currentRunQuestions = const [];
+    _retainedQuestions = const [];
     _activeMessages = const [];
     _activeAddGenerationPrompt = false;
     _clearQuestionSelectionState();
@@ -681,7 +690,12 @@ extension _$AskQuestion on _AskQuestion {
     _attemptLimit = attemptLimit;
     _targetQuestionCount = targetQuestionCount;
     _stopRequested = false;
-    questions.q = [];
+    _retainedQuestions = _prependNewestQuestions(
+      newest: const [],
+      retained: questions.q,
+    );
+    retainedQuestionCount.q = _retainedQuestions.length;
+    questions.q = _retainedQuestions;
     this.parallelCount.q = parallelCount;
     scheduledQuestionCount.q = 0;
     interceptingEvents.q = true;
@@ -715,7 +729,8 @@ extension _$AskQuestion on _AskQuestion {
     _runningPrefixes = prefix.isEmpty ? const [] : List<String>.filled(effectiveParallelCount, prefix);
     _stopRequested = false;
     this.parallelCount.q = effectiveParallelCount;
-    scheduledQuestionCount.q = math.min(_completedQuestions.length + effectiveParallelCount, _targetQuestionCount);
+    scheduledQuestionCount.q =
+        _retainedQuestions.length + math.min(_completedQuestions.length + effectiveParallelCount, _targetQuestionCount);
 
     await P.rwkv.clearStates();
     if (sessionId != _sessionId) return;
@@ -794,6 +809,13 @@ extension $AskQuestion on _AskQuestion {
     }
 
     _applyPrefixStateForCurrentContext();
+    final dedupedQuestions = _prependNewestQuestions(
+      newest: const [],
+      retained: questions.q,
+    );
+    if (!_sameQuestionList(questions.q, dedupedQuestions)) {
+      questions.q = dedupedQuestions;
+    }
     _syncQuestionSelectionWithQuestions(questions.q);
   }
 
@@ -822,12 +844,14 @@ extension $AskQuestion on _AskQuestion {
     interceptingEvents.q = false;
     parallelCount.q = 1;
     scheduledQuestionCount.q = 0;
+    retainedQuestionCount.q = 0;
     _refreshChatModelGeneratingState();
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     _runningModelID = null;
     _completedQuestions = const [];
     _currentRunQuestions = const [];
+    _retainedQuestions = const [];
     _runningPrefixes = const [];
     _activeMessages = const [];
     _activePrefix = "";
@@ -892,11 +916,13 @@ extension $AskQuestion on _AskQuestion {
     questions.q = [];
     _completedQuestions = const [];
     _currentRunQuestions = const [];
+    _retainedQuestions = const [];
     _lastRawQuestions = const [];
     _lastRawQuestionsChangedAt = null;
     if (!interceptingEvents.q) {
       scheduledQuestionCount.q = 0;
     }
+    retainedQuestionCount.q = 0;
     _clearQuestionSelectionState();
   }
 
@@ -941,9 +967,8 @@ extension $AskQuestion on _AskQuestion {
       prefix: prefixInput.q,
     );
 
-    await _refreshSupportedBatchSizes(modelID: modelID);
     final targetQuestionCount = this.targetQuestionCount.q;
-    final resolvedParallelCount = _resolveParallelCount(cap: targetQuestionCount);
+    final resolvedParallelCount = _resolveParallelCount(targetQuestionCount: targetQuestionCount);
     final sequentialMode = true;
     final attemptLimit = math.max(_askQuestionSequentialAttemptLimit, targetQuestionCount * 2);
 
@@ -990,9 +1015,8 @@ extension $AskQuestion on _AskQuestion {
       prefix: "",
     );
 
-    await _refreshSupportedBatchSizes(modelID: modelID);
     final targetQuestionCount = this.targetQuestionCount.q;
-    final resolvedParallelCount = _resolveParallelCount(cap: targetQuestionCount);
+    final resolvedParallelCount = _resolveParallelCount(targetQuestionCount: targetQuestionCount);
     final sequentialMode = true;
     final attemptLimit = math.max(_askQuestionSequentialAttemptLimit, targetQuestionCount * 2);
 

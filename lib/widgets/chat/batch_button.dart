@@ -32,11 +32,13 @@ class BatchButton extends ConsumerWidget {
 
     final batchCount = ref.watch(P.chat.batchCount);
     final canEnable = loaded && !loading && !generating && batchAllowed;
-    final interactionState = switch ((canEnable, batchEnabled)) {
-      (false, _) => InteractionVisualState.unavailable,
-      (true, true) => InteractionVisualState.enabled,
-      (true, false) => InteractionVisualState.available,
+
+    final InteractionVisualState interactionState = switch ((canEnable, batchEnabled)) {
+      (false, _) => .unavailable,
+      (true, true) => .enabled,
+      (true, false) => .available,
     };
+
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);
     final bgColor = colors.background;
     final textColor = colors.foreground;
