@@ -197,6 +197,7 @@ extension $App on _App {
   void checkUpdates({bool manually = false}) async {
     qr;
     checkingLatestVersion.q = true;
+    releaseNotesContent.q = null;
     VersionInfo? latestVersionInfo;
     try {
       latestVersionInfo = await _getLatestVersionInfo();
@@ -211,18 +212,19 @@ extension $App on _App {
     qqr("latest version info: $latestVersionInfo");
     if (latestVersionInfo == null) {
       if (manually) Alert.info(S.current.app_is_already_up_to_date);
-      if (manually) await VersionInfoPanel.show(isLatest: true);
+      if (manually) await _showCurrentVersionInfoPanel();
       return;
     }
 
     this.latestVersionInfo.q = latestVersionInfo;
 
     final latestBuild = latestVersionInfo.build;
+    final currentBuild = int.tryParse(buildNumber.q) ?? 0;
 
     if (!Args.forceShowNewVersionPanel) {
-      if (latestBuild <= int.parse(buildNumber.q)) {
+      if (latestBuild <= currentBuild) {
         if (manually) Alert.info(S.current.app_is_already_up_to_date);
-        if (manually) await VersionInfoPanel.show(isLatest: true);
+        if (manually) await _showCurrentVersionInfoPanel();
         return;
       }
     }
@@ -232,6 +234,25 @@ extension $App on _App {
     getReleaseNotes(build: latestBuild, version: latestVersionInfo.version);
 
     await VersionInfoPanel.show();
+  }
+
+  Future<void> _showCurrentVersionInfoPanel() async {
+    releaseNotesContent.q = null;
+
+    final currentBuild = int.tryParse(buildNumber.q);
+    if (currentBuild == null) {
+      latestVersionInfo.q = null;
+      await VersionInfoPanel.show(isLatest: true);
+      return;
+    }
+
+    latestVersionInfo.q = VersionInfo(
+      type: 'current',
+      url: '',
+      version: version.q,
+      build: currentBuild,
+    );
+    await VersionInfoPanel.show(isLatest: true);
   }
 
   void onTabSelected(int index) {
