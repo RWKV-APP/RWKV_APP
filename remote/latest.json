@@ -224,15 +224,15 @@
         "date": 1773197906
       },
       {
-        "name": "RWKV7-G1d 2.9B (CoreML)",
+        "name": "RWKV7-G1e 2.9B (CoreML)",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1d-2.9b-20260131-ctx8192-coreml-mixed-lut4-test.zip",
-        "fileSize": 1907292264,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/coreml/rwkv7-g1e-2.9b-20260312-ctx8192-coreml-lut4.zip",
+        "fileSize": 1907281368,
         "quantization": "INT4",
         "platforms": ["ios", "macos_debug"],
         "backends": ["coreml"],
         "tags": ["reason", "coreml"],
-        "date": 1770635928
+        "date": 1773406936
       },
       {
         "name": "RWKV7-G1e 7.2B (WebRWKV)",
