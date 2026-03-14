@@ -66,13 +66,13 @@
       {
         "name": "RWKV7-G1e 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1e-2.9b-20260312-ctx8192-q4_k_m.gguf",
-        "fileSize": 1875793856,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1e-2.9b-20260312-ctx8192-imatrix-q4_k_m.gguf",
+        "fileSize": 1875794080,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
-        "date": 1773324943
+        "date": 1773466532
       },
       {
         "name": "RWKV7-G1e 7.2B",
