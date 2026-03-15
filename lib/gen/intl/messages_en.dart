@@ -199,6 +199,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "auto_detect": MessageLookupByLibrary.simpleMessage("Auto Detect"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Back to Chat"),
+    "background_color": MessageLookupByLibrary.simpleMessage(
+      "Background color",
+    ),
     "balanced": MessageLookupByLibrary.simpleMessage("Balanced"),
     "batch_completion": MessageLookupByLibrary.simpleMessage(
       "Batch Completion",
@@ -772,6 +775,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "line_break_rendered": MessageLookupByLibrary.simpleMessage(
       "Line break rendered",
     ),
+    "line_break_symbol_settings": MessageLookupByLibrary.simpleMessage(
+      "Line break symbol",
+    ),
     "load_": MessageLookupByLibrary.simpleMessage("Load"),
     "load_data": MessageLookupByLibrary.simpleMessage("Load Data"),
     "loaded": MessageLookupByLibrary.simpleMessage("Loaded"),
@@ -1065,6 +1071,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefix_bank": MessageLookupByLibrary.simpleMessage("Prefix Bank"),
     "prefix_examples": MessageLookupByLibrary.simpleMessage("Prefix Examples"),
     "presence_penalty_with_value": m32,
+    "preview": MessageLookupByLibrary.simpleMessage("Preview"),
     "prompt": MessageLookupByLibrary.simpleMessage("Prompt"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
@@ -1231,6 +1238,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Show only Prefill log",
     ),
+    "show_space_symbols": MessageLookupByLibrary.simpleMessage(
+      "Show space symbols",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage("Show Thought Stack"),
     "show_translations": MessageLookupByLibrary.simpleMessage(
       "Show Translations",
@@ -1245,6 +1255,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "small": MessageLookupByLibrary.simpleMessage("Small (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Source Code"),
     "source_text": m36,
+    "space_rendered": MessageLookupByLibrary.simpleMessage("Spaces rendered"),
+    "space_symbol_settings": MessageLookupByLibrary.simpleMessage(
+      "Space symbol",
+    ),
+    "space_symbol_style": MessageLookupByLibrary.simpleMessage(
+      "Space symbol style",
+    ),
+    "space_symbols_rendered": MessageLookupByLibrary.simpleMessage(
+      "Space symbols rendered",
+    ),
     "speed": MessageLookupByLibrary.simpleMessage("Download Speed:"),
     "start": MessageLookupByLibrary.simpleMessage("Start"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage(
@@ -1318,6 +1338,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_results": MessageLookupByLibrary.simpleMessage("Test Results"),
     "testing": MessageLookupByLibrary.simpleMessage("Testing..."),
     "text": MessageLookupByLibrary.simpleMessage("Text"),
+    "text_color": MessageLookupByLibrary.simpleMessage("Text color"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage(
       "Text completion mode",
     ),

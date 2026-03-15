@@ -175,6 +175,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("자동"),
     "auto_detect": MessageLookupByLibrary.simpleMessage("자동 감지"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("채팅으로 돌아가기"),
+    "background_color": MessageLookupByLibrary.simpleMessage("배경 색상"),
     "balanced": MessageLookupByLibrary.simpleMessage("균형"),
     "batch_completion": MessageLookupByLibrary.simpleMessage("배치 완성"),
     "batch_completion_settings": MessageLookupByLibrary.simpleMessage(
@@ -661,6 +662,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "line_break_rendered": MessageLookupByLibrary.simpleMessage(
       "새로운 줄 문자가 표시되었습니다",
     ),
+    "line_break_symbol_settings": MessageLookupByLibrary.simpleMessage(
+      "줄바꿈 기호 설정",
+    ),
     "load_": MessageLookupByLibrary.simpleMessage("로드"),
     "load_data": MessageLookupByLibrary.simpleMessage("데이터 로드"),
     "loaded": MessageLookupByLibrary.simpleMessage("로드됨"),
@@ -901,6 +905,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefix_bank": MessageLookupByLibrary.simpleMessage("접두사 묶음"),
     "prefix_examples": MessageLookupByLibrary.simpleMessage("접두사 예시"),
     "presence_penalty_with_value": m32,
+    "preview": MessageLookupByLibrary.simpleMessage("미리보기"),
     "prompt": MessageLookupByLibrary.simpleMessage("프롬프트"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("프롬프트 템플릿"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 그룹 1"),
@@ -1039,6 +1044,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Prefill 로그만 표시",
     ),
+    "show_space_symbols": MessageLookupByLibrary.simpleMessage("공백 기호 표시"),
     "show_stack": MessageLookupByLibrary.simpleMessage("사고 체인 스택 표시"),
     "show_translations": MessageLookupByLibrary.simpleMessage("번역 표시"),
     "single_thread": MessageLookupByLibrary.simpleMessage("단일 스레드"),
@@ -1049,6 +1055,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "small": MessageLookupByLibrary.simpleMessage("작게 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("소스 코드"),
     "source_text": m36,
+    "space_rendered": MessageLookupByLibrary.simpleMessage("공백이 표시되었습니다"),
+    "space_symbol_settings": MessageLookupByLibrary.simpleMessage("공백 기호 설정"),
+    "space_symbol_style": MessageLookupByLibrary.simpleMessage("공백 기호 스타일"),
+    "space_symbols_rendered": MessageLookupByLibrary.simpleMessage(
+      "공백 기호가 표시되었습니다",
+    ),
     "speed": MessageLookupByLibrary.simpleMessage("다운로드 속도:"),
     "start": MessageLookupByLibrary.simpleMessage("시작"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("새 채팅 시작"),
@@ -1113,6 +1125,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_results": MessageLookupByLibrary.simpleMessage("테스트 결과"),
     "testing": MessageLookupByLibrary.simpleMessage("테스트 중..."),
     "text": MessageLookupByLibrary.simpleMessage("텍스트"),
+    "text_color": MessageLookupByLibrary.simpleMessage("텍스트 색상"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage("텍스트 완성 모드"),
     "the_puzzle_is_not_valid": MessageLookupByLibrary.simpleMessage(
       "스도쿠가 유효하지 않습니다",

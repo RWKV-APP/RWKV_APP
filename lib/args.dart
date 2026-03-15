@@ -17,5 +17,5 @@ abstract class Args {
   static const testingSeeQueue = bool.fromEnvironment("testingSeeQueue", defaultValue: false);
   static const forceShowNewVersionPanel = bool.fromEnvironment("forceShowNewVersionPanel", defaultValue: false);
   static const autoPushTestPage = bool.fromEnvironment("autoPushTestPage", defaultValue: false);
-  static const domain = String.fromEnvironment("domain", defaultValue: "http://api.rwkv.halowang.cloud");
+  static const domain = String.fromEnvironment("domain", defaultValue: "https://api.rwkv.halowang.cloud");
 }

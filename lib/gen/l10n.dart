@@ -194,6 +194,76 @@ class S {
     );
   }
 
+  /// `空格符显示`
+  String get show_space_symbols {
+    return Intl.message(
+      '空格符显示',
+      name: 'show_space_symbols',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已渲染空格`
+  String get space_rendered {
+    return Intl.message('已渲染空格', name: 'space_rendered', desc: '', args: []);
+  }
+
+  /// `已渲染空格符号`
+  String get space_symbols_rendered {
+    return Intl.message(
+      '已渲染空格符号',
+      name: 'space_symbols_rendered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `空格符设置`
+  String get space_symbol_settings {
+    return Intl.message(
+      '空格符设置',
+      name: 'space_symbol_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `换行符设置`
+  String get line_break_symbol_settings {
+    return Intl.message(
+      '换行符设置',
+      name: 'line_break_symbol_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `空格符样式`
+  String get space_symbol_style {
+    return Intl.message(
+      '空格符样式',
+      name: 'space_symbol_style',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文本颜色`
+  String get text_color {
+    return Intl.message('文本颜色', name: 'text_color', desc: '', args: []);
+  }
+
+  /// `背景颜色`
+  String get background_color {
+    return Intl.message('背景颜色', name: 'background_color', desc: '', args: []);
+  }
+
+  /// `预览`
+  String get preview {
+    return Intl.message('预览', name: 'preview', desc: '', args: []);
+  }
+
   /// `仅显示 Prefill 日志`
   String get show_prefill_log_only {
     return Intl.message(

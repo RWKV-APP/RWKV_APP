@@ -98,6 +98,7 @@ dependencies:
   drift_flutter:
   equatable:
   file_picker:
+  flutter_colorpicker: 1.1.0
   flutter_dotenv:
   flutter_native_splash:
   flutter_riverpod: 2.6.1

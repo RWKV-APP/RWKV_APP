@@ -199,6 +199,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("Автоматически"),
     "auto_detect": MessageLookupByLibrary.simpleMessage("Автоопределение"),
     "back_to_chat": MessageLookupByLibrary.simpleMessage("Вернуться в чат"),
+    "background_color": MessageLookupByLibrary.simpleMessage("Цвет фона"),
     "balanced": MessageLookupByLibrary.simpleMessage("Сбалансированный"),
     "batch_completion": MessageLookupByLibrary.simpleMessage(
       "Пакетное дополнение",
@@ -805,6 +806,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "line_break_rendered": MessageLookupByLibrary.simpleMessage(
       "Новая строка отображена",
     ),
+    "line_break_symbol_settings": MessageLookupByLibrary.simpleMessage(
+      "Символ перевода строки",
+    ),
     "load_": MessageLookupByLibrary.simpleMessage("Загрузить"),
     "load_data": MessageLookupByLibrary.simpleMessage("Загрузить данные"),
     "loaded": MessageLookupByLibrary.simpleMessage("Загружено"),
@@ -1099,6 +1103,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Примеры префиксов",
     ),
     "presence_penalty_with_value": m32,
+    "preview": MessageLookupByLibrary.simpleMessage("Предпросмотр"),
     "prompt": MessageLookupByLibrary.simpleMessage("Промпт"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Шаблон промпта"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("Группа QQ 1"),
@@ -1273,6 +1278,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Показать только Prefill журнал",
     ),
+    "show_space_symbols": MessageLookupByLibrary.simpleMessage(
+      "Показать символы пробела",
+    ),
     "show_stack": MessageLookupByLibrary.simpleMessage(
       "Показать стек цепочки мыслей",
     ),
@@ -1289,6 +1297,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "small": MessageLookupByLibrary.simpleMessage("Маленький (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Исходный код"),
     "source_text": m36,
+    "space_rendered": MessageLookupByLibrary.simpleMessage(
+      "Пробелы отображены",
+    ),
+    "space_symbol_settings": MessageLookupByLibrary.simpleMessage(
+      "Символ пробела",
+    ),
+    "space_symbol_style": MessageLookupByLibrary.simpleMessage(
+      "Стиль символа пробела",
+    ),
+    "space_symbols_rendered": MessageLookupByLibrary.simpleMessage(
+      "Символы пробела отображены",
+    ),
     "speed": MessageLookupByLibrary.simpleMessage("Скорость загрузки:"),
     "start": MessageLookupByLibrary.simpleMessage("Начать"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage(
@@ -1359,6 +1379,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_results": MessageLookupByLibrary.simpleMessage("Результаты тестов"),
     "testing": MessageLookupByLibrary.simpleMessage("Тестирование..."),
     "text": MessageLookupByLibrary.simpleMessage("Текст"),
+    "text_color": MessageLookupByLibrary.simpleMessage("Цвет текста"),
     "text_completion_mode": MessageLookupByLibrary.simpleMessage(
       "Режим дополнения текста",
     ),

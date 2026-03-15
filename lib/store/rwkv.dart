@@ -76,7 +76,13 @@ class _RWKV {
   late final logPanelShown = qs(false);
   late final statePanelShown = qs(false);
   late final showEscapeCharacters = qs(false);
+  late final showSpaceSymbols = qs(false);
   late final showPrefillLogOnly = qs(true);
+  late final visibleSpaceSymbol = qs<DebugSpaceSymbol>(.middleDot);
+  late final spaceSymbolTextColor = qs<Color?>(null);
+  late final spaceSymbolBackgroundColor = qs<Color?>(null);
+  late final newlineSymbolTextColor = qs<Color?>(null);
+  late final newlineSymbolBackgroundColor = qs<Color?>(null);
 
   late final _thinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
 
@@ -1123,6 +1129,90 @@ extension $RWKV on _RWKV {
   Future<void> refreshStatePanel() async {
     final modelID = findModelIDByWeightType(weightType: .chat);
     if (modelID != null) send(to_rwkv.DumpStateInfo(modelID: modelID));
+  }
+
+  Future<void> setShowEscapeCharacters(bool value) async {
+    if (showEscapeCharacters.q == value) {
+      return;
+    }
+
+    showEscapeCharacters.q = value;
+    await P.preference.saveDebugShowEscapeCharacters(value);
+  }
+
+  Future<void> toggleShowEscapeCharacters() async {
+    await setShowEscapeCharacters(!showEscapeCharacters.q);
+  }
+
+  Future<void> setShowSpaceSymbols(bool value) async {
+    if (showSpaceSymbols.q == value) {
+      return;
+    }
+
+    showSpaceSymbols.q = value;
+    await P.preference.saveDebugShowSpaceSymbols(value);
+  }
+
+  Future<void> toggleShowSpaceSymbols() async {
+    await setShowSpaceSymbols(!showSpaceSymbols.q);
+  }
+
+  Future<void> setShowPrefillLogOnly(bool value) async {
+    if (showPrefillLogOnly.q == value) {
+      return;
+    }
+
+    showPrefillLogOnly.q = value;
+    await P.preference.saveDebugShowPrefillLogOnly(value);
+  }
+
+  Future<void> toggleShowPrefillLogOnly() async {
+    await setShowPrefillLogOnly(!showPrefillLogOnly.q);
+  }
+
+  Future<void> setVisibleSpaceSymbol(DebugSpaceSymbol value) async {
+    if (visibleSpaceSymbol.q == value) {
+      return;
+    }
+
+    visibleSpaceSymbol.q = value;
+    await P.preference.saveDebugVisibleSpaceSymbol(value);
+  }
+
+  Future<void> setSpaceSymbolTextColor(Color? value) async {
+    if (spaceSymbolTextColor.q == value) {
+      return;
+    }
+
+    spaceSymbolTextColor.q = value;
+    await P.preference.saveDebugSpaceSymbolTextColor(value);
+  }
+
+  Future<void> setSpaceSymbolBackgroundColor(Color? value) async {
+    if (spaceSymbolBackgroundColor.q == value) {
+      return;
+    }
+
+    spaceSymbolBackgroundColor.q = value;
+    await P.preference.saveDebugSpaceSymbolBackgroundColor(value);
+  }
+
+  Future<void> setNewlineSymbolTextColor(Color? value) async {
+    if (newlineSymbolTextColor.q == value) {
+      return;
+    }
+
+    newlineSymbolTextColor.q = value;
+    await P.preference.saveDebugNewlineSymbolTextColor(value);
+  }
+
+  Future<void> setNewlineSymbolBackgroundColor(Color? value) async {
+    if (newlineSymbolBackgroundColor.q == value) {
+      return;
+    }
+
+    newlineSymbolBackgroundColor.q = value;
+    await P.preference.saveDebugNewlineSymbolBackgroundColor(value);
   }
 
   /// 加载指定 pth 权重并完成聊天用配置（角色、batch、thinkingMode、GetSupportedBatchSizes）。

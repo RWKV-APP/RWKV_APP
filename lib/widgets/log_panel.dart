@@ -8,9 +8,11 @@ import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 
 // Project imports:
+import 'package:zone/func/format_debug_panel_text.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/debug_text_display_settings_section.dart';
 
 class LogPanel extends ConsumerWidget {
   static const String panelKey = 'LogPanel';
@@ -51,13 +53,24 @@ class LogPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final showEscapeCharacters = ref.watch(P.rwkv.showEscapeCharacters);
+    final showSpaceSymbols = ref.watch(P.rwkv.showSpaceSymbols);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
     final showPrefillLogOnly = ref.watch(P.rwkv.showPrefillLogOnly);
+    final visibleSpaceSymbol = ref.watch(P.rwkv.visibleSpaceSymbol);
+    final spaceSymbolTextColor = ref.watch(P.rwkv.spaceSymbolTextColor);
+    final spaceSymbolBackgroundColor = ref.watch(P.rwkv.spaceSymbolBackgroundColor);
+    final newlineSymbolTextColor = ref.watch(P.rwkv.newlineSymbolTextColor);
+    final newlineSymbolBackgroundColor = ref.watch(P.rwkv.newlineSymbolBackgroundColor);
     final rawRuntimeLog = ref.watch(P.rwkv.runtimeLog);
     final runtimeLog = rawRuntimeLog.where((log) => showPrefillLogOnly ? log.isPrefill : true).toList();
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
+    final effectiveSpaceTextColor = spaceSymbolTextColor ?? defaultDebugSpaceTextColor(appTheme: appTheme, qb: qb);
+    final effectiveSpaceBackgroundColor = spaceSymbolBackgroundColor ?? defaultDebugSpaceBackgroundColor(appTheme: appTheme);
+    final effectiveNewlineTextColor = newlineSymbolTextColor ?? defaultDebugNewlineTextColor(appTheme: appTheme, qb: qb);
+    final effectiveNewlineBackgroundColor = newlineSymbolBackgroundColor ?? defaultDebugNewlineBackgroundColor(appTheme: appTheme, qb: qb);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -91,7 +104,21 @@ class LogPanel extends ConsumerWidget {
                     ),
                     itemBuilder: (context, index) {
                       final log = runtimeLog[index];
-                      final content = showEscapeCharacters ? log.content.replaceAll('\\n', '\n') : log.content;
+                      final textStyle = TS(c: qb.q(.9), s: 12).copyWith(
+                        fontFamily: 'monospace',
+                        fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
+                      );
+                      final content = buildDebugPanelTextSpan(
+                        text: log.content,
+                        baseStyle: textStyle,
+                        showEscapeCharacters: showEscapeCharacters,
+                        showSpaceSymbols: showSpaceSymbols,
+                        spaceSymbol: visibleSpaceSymbol,
+                        spaceTextColor: effectiveSpaceTextColor,
+                        spaceBackgroundColor: effectiveSpaceBackgroundColor,
+                        newlineTextColor: effectiveNewlineTextColor,
+                        newlineBackgroundColor: effectiveNewlineBackgroundColor,
+                      );
                       return Container(
                         decoration: BoxDecoration(
                           color: appTheme.settingItem,
@@ -133,12 +160,8 @@ class LogPanel extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(height: 6),
-                            SelectableText(
+                            SelectableText.rich(
                               content,
-                              style: TS(c: qb.q(.9), s: 12).copyWith(
-                                fontFamily: 'monospace',
-                                fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
-                              ),
                             ),
                           ],
                         ),
@@ -152,33 +175,10 @@ class LogPanel extends ConsumerWidget {
             decoration: BoxDecoration(
               color: appTheme.settingItem,
               border: Border(
-                top: BorderSide(color: qb.q(.15), width: .5),
+                top: BorderSide(color: theme.colorScheme.outlineVariant, width: .5),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                _OptionRow(
-                  label: S.current.show_escape_characters,
-                  value: showEscapeCharacters,
-                  valueLabel: showEscapeCharacters ? S.current.line_break_rendered : S.current.escape_characters_rendered,
-                  onChanged: () {
-                    P.rwkv.showEscapeCharacters.q = !P.rwkv.showEscapeCharacters.q;
-                    P.rwkv.refreshStatePanel();
-                  },
-                ),
-                const SizedBox(height: 2),
-                _OptionRow(
-                  label: S.current.show_prefill_log_only,
-                  value: showPrefillLogOnly,
-                  valueLabel: showPrefillLogOnly ? S.current.enabled : S.current.disabled,
-                  onChanged: () {
-                    P.rwkv.showPrefillLogOnly.q = !P.rwkv.showPrefillLogOnly.q;
-                    P.rwkv.refreshRuntimeLog();
-                  },
-                ),
-              ],
-            ),
+            child: const DebugTextDisplaySettingsSection(includePrefillLogOnlySetting: true),
           ),
         ],
       ),
@@ -242,61 +242,6 @@ class _LogPanelBar extends ConsumerWidget {
           ),
           (listPadding + 4).w,
         ],
-      ),
-    );
-  }
-}
-
-class _OptionRow extends ConsumerWidget {
-  final String label;
-  final bool value;
-  final String valueLabel;
-  final VoidCallback onChanged;
-
-  const _OptionRow({
-    required this.label,
-    required this.value,
-    required this.valueLabel,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final qb = ref.watch(P.app.qb);
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onChanged,
-        borderRadius: .circular(8),
-        child: Padding(
-          padding: const .symmetric(horizontal: 4, vertical: 6),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: .start,
-                  mainAxisSize: .min,
-                  children: [
-                    Text(
-                      label,
-                      style: TS(c: qb.q(.9), s: 14, w: .w500),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      valueLabel,
-                      style: TS(c: qb.q(.6), s: 12),
-                    ),
-                  ],
-                ),
-              ),
-              Switch.adaptive(
-                value: value,
-                onChanged: (_) => onChanged(),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
