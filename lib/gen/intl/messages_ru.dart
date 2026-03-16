@@ -1182,6 +1182,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "regenerate": MessageLookupByLibrary.simpleMessage("Сгенерировать заново"),
     "remaining": MessageLookupByLibrary.simpleMessage("Оставшееся время:"),
     "rename": MessageLookupByLibrary.simpleMessage("Переименовать"),
+    "render_newline_directly": MessageLookupByLibrary.simpleMessage(
+      "Рендерить перенос строки напрямую",
+    ),
+    "render_space_symbol": MessageLookupByLibrary.simpleMessage(
+      "Рендерить символ пробела",
+    ),
     "report_an_issue_on_github": MessageLookupByLibrary.simpleMessage(
       "Сообщить о проблеме на Github",
     ),
@@ -1272,14 +1278,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
     "share": MessageLookupByLibrary.simpleMessage("Поделиться"),
     "share_chat": MessageLookupByLibrary.simpleMessage("Поделиться чатом"),
-    "show_escape_characters": MessageLookupByLibrary.simpleMessage(
-      "Рендерить символ новой строки",
-    ),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Показать только Prefill журнал",
-    ),
-    "show_space_symbols": MessageLookupByLibrary.simpleMessage(
-      "Рендерить символ пробела",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage(
       "Показать стек цепочки мыслей",

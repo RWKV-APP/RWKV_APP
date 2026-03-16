@@ -54,8 +54,8 @@ class LogPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final showEscapeCharacters = ref.watch(P.rwkv.showEscapeCharacters);
-    final showSpaceSymbols = ref.watch(P.rwkv.showSpaceSymbols);
+    final renderNewlineDirectly = ref.watch(P.rwkv.renderNewlineDirectly);
+    final renderSpaceSymbol = ref.watch(P.rwkv.renderSpaceSymbol);
     final qb = ref.watch(P.app.qb);
     final appTheme = ref.watch(P.app.theme);
     final showPrefillLogOnly = ref.watch(P.rwkv.showPrefillLogOnly);
@@ -100,11 +100,11 @@ class LogPanel extends ConsumerWidget {
                         fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
                       );
                       final symbolTextColor = textStyle.color ?? qb.q(.9);
-                      final content = buildDebugPanelTextSpan(
+                      final formattedContentSpan = buildDebugPanelTextSpan(
                         text: log.content,
                         baseStyle: textStyle,
-                        showEscapeCharacters: showEscapeCharacters,
-                        showSpaceSymbols: showSpaceSymbols,
+                        renderNewlineDirectly: renderNewlineDirectly,
+                        renderSpaceSymbol: renderSpaceSymbol,
                         spaceTextColor: symbolTextColor,
                         spaceBackgroundColor: kC,
                         newlineTextColor: symbolTextColor,
@@ -152,7 +152,7 @@ class LogPanel extends ConsumerWidget {
                             ),
                             const SizedBox(height: 6),
                             SelectableText.rich(
-                              content,
+                              formattedContentSpan,
                             ),
                           ],
                         ),

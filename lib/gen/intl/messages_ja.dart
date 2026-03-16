@@ -980,6 +980,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "regenerate": MessageLookupByLibrary.simpleMessage("再生成"),
     "remaining": MessageLookupByLibrary.simpleMessage("残り時間："),
     "rename": MessageLookupByLibrary.simpleMessage("名前を変更"),
+    "render_newline_directly": MessageLookupByLibrary.simpleMessage(
+      "改行をそのままレンダリング",
+    ),
+    "render_space_symbol": MessageLookupByLibrary.simpleMessage("空白記号をレンダリング"),
     "report_an_issue_on_github": MessageLookupByLibrary.simpleMessage(
       "Githubで問題を報告",
     ),
@@ -1048,13 +1052,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("設定"),
     "share": MessageLookupByLibrary.simpleMessage("共有"),
     "share_chat": MessageLookupByLibrary.simpleMessage("チャットを共有"),
-    "show_escape_characters": MessageLookupByLibrary.simpleMessage(
-      "改行記号をレンダリング",
-    ),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Prefill ログのみ表示",
     ),
-    "show_space_symbols": MessageLookupByLibrary.simpleMessage("空白記号をレンダリング"),
     "show_stack": MessageLookupByLibrary.simpleMessage("思考チェーンスタックを表示"),
     "show_translations": MessageLookupByLibrary.simpleMessage("翻訳を表示"),
     "single_thread": MessageLookupByLibrary.simpleMessage("シングルスレッド"),

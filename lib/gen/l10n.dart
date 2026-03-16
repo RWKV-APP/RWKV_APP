@@ -164,11 +164,11 @@ class S {
     );
   }
 
-  /// `是否渲染换行符号`
-  String get show_escape_characters {
+  /// `直接渲染换行`
+  String get render_newline_directly {
     return Intl.message(
-      '是否渲染换行符号',
-      name: 'show_escape_characters',
+      '直接渲染换行',
+      name: 'render_newline_directly',
       desc: '',
       args: [],
     );
@@ -194,11 +194,11 @@ class S {
     );
   }
 
-  /// `是否渲染空格符号`
-  String get show_space_symbols {
+  /// `渲染空格符号`
+  String get render_space_symbol {
     return Intl.message(
-      '是否渲染空格符号',
-      name: 'show_space_symbols',
+      '渲染空格符号',
+      name: 'render_space_symbol',
       desc: '',
       args: [],
     );

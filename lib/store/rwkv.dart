@@ -75,8 +75,8 @@ class _RWKV {
   late final argumentsPanelShown = qs(false);
   late final logPanelShown = qs(false);
   late final statePanelShown = qs(false);
-  late final showEscapeCharacters = qs(false);
-  late final showSpaceSymbols = qs(false);
+  late final renderNewlineDirectly = qs(false);
+  late final renderSpaceSymbol = qs(false);
   late final showPrefillLogOnly = qs(true);
 
   late final _thinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
@@ -1126,30 +1126,30 @@ extension $RWKV on _RWKV {
     if (modelID != null) send(to_rwkv.DumpStateInfo(modelID: modelID));
   }
 
-  Future<void> setShowEscapeCharacters(bool value) async {
-    if (showEscapeCharacters.q == value) {
+  Future<void> setRenderNewlineDirectly(bool value) async {
+    if (renderNewlineDirectly.q == value) {
       return;
     }
 
-    showEscapeCharacters.q = value;
-    await P.preference.saveDebugShowEscapeCharacters(value);
+    renderNewlineDirectly.q = value;
+    await P.preference.saveDebugRenderNewlineDirectly(value);
   }
 
-  Future<void> toggleShowEscapeCharacters() async {
-    await setShowEscapeCharacters(!showEscapeCharacters.q);
+  Future<void> toggleRenderNewlineDirectly() async {
+    await setRenderNewlineDirectly(!renderNewlineDirectly.q);
   }
 
-  Future<void> setShowSpaceSymbols(bool value) async {
-    if (showSpaceSymbols.q == value) {
+  Future<void> setRenderSpaceSymbol(bool value) async {
+    if (renderSpaceSymbol.q == value) {
       return;
     }
 
-    showSpaceSymbols.q = value;
-    await P.preference.saveDebugShowSpaceSymbols(value);
+    renderSpaceSymbol.q = value;
+    await P.preference.saveDebugRenderSpaceSymbol(value);
   }
 
-  Future<void> toggleShowSpaceSymbols() async {
-    await setShowSpaceSymbols(!showSpaceSymbols.q);
+  Future<void> toggleRenderSpaceSymbol() async {
+    await setRenderSpaceSymbol(!renderSpaceSymbol.q);
   }
 
   Future<void> setShowPrefillLogOnly(bool value) async {

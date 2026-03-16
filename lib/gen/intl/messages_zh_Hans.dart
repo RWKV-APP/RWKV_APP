@@ -887,6 +887,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "regenerate": MessageLookupByLibrary.simpleMessage("重新生成"),
     "remaining": MessageLookupByLibrary.simpleMessage("剩余时间："),
     "rename": MessageLookupByLibrary.simpleMessage("重命名"),
+    "render_newline_directly": MessageLookupByLibrary.simpleMessage("直接渲染换行"),
+    "render_space_symbol": MessageLookupByLibrary.simpleMessage("渲染空格符号"),
     "report_an_issue_on_github": MessageLookupByLibrary.simpleMessage(
       "在 Github 上报告问题",
     ),
@@ -947,11 +949,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("设置"),
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "share_chat": MessageLookupByLibrary.simpleMessage("分享聊天"),
-    "show_escape_characters": MessageLookupByLibrary.simpleMessage("是否渲染换行符号"),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "仅显示 Prefill 日志",
     ),
-    "show_space_symbols": MessageLookupByLibrary.simpleMessage("是否渲染空格符号"),
     "show_stack": MessageLookupByLibrary.simpleMessage("显示思维链堆栈"),
     "show_translations": MessageLookupByLibrary.simpleMessage("显示翻译"),
     "single_thread": MessageLookupByLibrary.simpleMessage("单线程"),

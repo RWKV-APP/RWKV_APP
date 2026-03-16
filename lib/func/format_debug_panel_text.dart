@@ -18,14 +18,18 @@ const List<String> kDebugPanelSymbolFontFallback = [
 TextSpan buildDebugPanelTextSpan({
   required String text,
   required TextStyle baseStyle,
-  required bool showEscapeCharacters,
-  required bool showSpaceSymbols,
+  required bool renderNewlineDirectly,
+  required bool renderSpaceSymbol,
   required Color spaceTextColor,
   required Color spaceBackgroundColor,
   required Color newlineTextColor,
   required Color newlineBackgroundColor,
 }) {
-  if (!text.contains(r'\n') && !text.contains('\n') && (!showSpaceSymbols || !text.contains(' '))) {
+  final hasEscapedNewline = text.contains(r'\n');
+  final hasActualNewline = text.contains('\n');
+  final hasSpace = text.contains(' ');
+
+  if (!hasEscapedNewline && !hasActualNewline && (!renderSpaceSymbol || !hasSpace)) {
     return TextSpan(text: text, style: baseStyle);
   }
 
@@ -63,8 +67,8 @@ TextSpan buildDebugPanelTextSpan({
       flushBuffer();
       spans.add(
         TextSpan(
-          text: showEscapeCharacters ? '\n' : r'\n',
-          style: showEscapeCharacters ? null : newlineStyle,
+          text: renderNewlineDirectly ? '\n' : r'\n',
+          style: renderNewlineDirectly ? null : newlineStyle,
         ),
       );
       index += 2;
@@ -75,15 +79,15 @@ TextSpan buildDebugPanelTextSpan({
       flushBuffer();
       spans.add(
         TextSpan(
-          text: showEscapeCharacters ? '\n' : r'\n',
-          style: showEscapeCharacters ? null : newlineStyle,
+          text: renderNewlineDirectly ? '\n' : r'\n',
+          style: renderNewlineDirectly ? null : newlineStyle,
         ),
       );
       index += 1;
       continue;
     }
 
-    if (current == ' ' && showSpaceSymbols) {
+    if (current == ' ' && renderSpaceSymbol) {
       flushBuffer();
       spans.add(TextSpan(text: kDebugSpaceSymbol, style: spaceStyle));
       index += 1;

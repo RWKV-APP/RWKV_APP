@@ -20,25 +20,23 @@ class DebugTextDisplaySettingsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final showEscapeCharacters = ref.watch(P.rwkv.showEscapeCharacters);
-    final showSpaceSymbols = ref.watch(P.rwkv.showSpaceSymbols);
+    final renderNewlineDirectly = ref.watch(P.rwkv.renderNewlineDirectly);
+    final renderSpaceSymbol = ref.watch(P.rwkv.renderSpaceSymbol);
     final showPrefillLogOnly = ref.watch(P.rwkv.showPrefillLogOnly);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _DebugSwitchRow(
-          label: S.current.show_escape_characters,
-          value: showEscapeCharacters,
-          valueLabel: null,
-          onChanged: P.rwkv.toggleShowEscapeCharacters,
+          label: S.current.render_newline_directly,
+          value: renderNewlineDirectly,
+          onChanged: P.rwkv.toggleRenderNewlineDirectly,
         ),
         const SizedBox(height: 2),
         _DebugSwitchRow(
-          label: S.current.show_space_symbols,
-          value: showSpaceSymbols,
-          valueLabel: null,
-          onChanged: P.rwkv.toggleShowSpaceSymbols,
+          label: S.current.render_space_symbol,
+          value: renderSpaceSymbol,
+          onChanged: P.rwkv.toggleRenderSpaceSymbol,
         ),
         if (includePrefillLogOnlySetting) const SizedBox(height: 2),
         if (includePrefillLogOnlySetting)
@@ -64,8 +62,8 @@ class _DebugSwitchRow extends ConsumerWidget {
   const _DebugSwitchRow({
     required this.label,
     required this.value,
-    required this.valueLabel,
     required this.onChanged,
+    this.valueLabel,
   });
 
   @override

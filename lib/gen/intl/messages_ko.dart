@@ -970,6 +970,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "regenerate": MessageLookupByLibrary.simpleMessage("재생성"),
     "remaining": MessageLookupByLibrary.simpleMessage("남은 시간:"),
     "rename": MessageLookupByLibrary.simpleMessage("이름 변경"),
+    "render_newline_directly": MessageLookupByLibrary.simpleMessage(
+      "줄바꿈 직접 렌더링",
+    ),
+    "render_space_symbol": MessageLookupByLibrary.simpleMessage("공백 기호 렌더링"),
     "report_an_issue_on_github": MessageLookupByLibrary.simpleMessage(
       "Github에 문제 보고",
     ),
@@ -1038,13 +1042,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("설정"),
     "share": MessageLookupByLibrary.simpleMessage("공유"),
     "share_chat": MessageLookupByLibrary.simpleMessage("채팅 공유"),
-    "show_escape_characters": MessageLookupByLibrary.simpleMessage(
-      "줄바꿈 기호 렌더링",
-    ),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Prefill 로그만 표시",
     ),
-    "show_space_symbols": MessageLookupByLibrary.simpleMessage("공백 기호 렌더링"),
     "show_stack": MessageLookupByLibrary.simpleMessage("사고 체인 스택 표시"),
     "show_translations": MessageLookupByLibrary.simpleMessage("번역 표시"),
     "single_thread": MessageLookupByLibrary.simpleMessage("단일 스레드"),

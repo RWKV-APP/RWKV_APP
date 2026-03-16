@@ -1,5 +1,11 @@
 part of 'p.dart';
 
+const String _debugRenderNewlineDirectlyPreferenceKey = "halo_state.debug.renderNewlineDirectly";
+const String _legacyDebugRenderNewlineDirectlyPreferenceKey = "halo_state.debug.renderEscapeDirectly";
+const String _debugRenderSpaceSymbolPreferenceKey = "halo_state.debug.renderSpaceSymbol";
+const String _legacyDebugRenderSpaceSymbolPreferenceKey = "halo_state.debug.showSpaceSymbols";
+const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefillLogOnly";
+
 class _Preference {
   // ===========================================================================
   // Static
@@ -260,17 +266,33 @@ extension _$Preference on _Preference {
       }
     }
 
-    final debugShowEscapeCharacters = sp.getBool("halo_state.debug.showEscapeCharacters");
-    if (debugShowEscapeCharacters != null) {
-      P.rwkv.showEscapeCharacters.q = debugShowEscapeCharacters;
+    final debugRenderNewlineDirectly = sp.getBool(_debugRenderNewlineDirectlyPreferenceKey);
+    if (debugRenderNewlineDirectly != null) {
+      P.rwkv.renderNewlineDirectly.q = debugRenderNewlineDirectly;
+      await sp.remove(_legacyDebugRenderNewlineDirectlyPreferenceKey);
+    } else {
+      final legacyDebugRenderNewlineDirectly = sp.getBool(_legacyDebugRenderNewlineDirectlyPreferenceKey);
+      if (legacyDebugRenderNewlineDirectly != null) {
+        P.rwkv.renderNewlineDirectly.q = legacyDebugRenderNewlineDirectly;
+        await sp.setBool(_debugRenderNewlineDirectlyPreferenceKey, legacyDebugRenderNewlineDirectly);
+        await sp.remove(_legacyDebugRenderNewlineDirectlyPreferenceKey);
+      }
     }
 
-    final debugShowSpaceSymbols = sp.getBool("halo_state.debug.showSpaceSymbols");
-    if (debugShowSpaceSymbols != null) {
-      P.rwkv.showSpaceSymbols.q = debugShowSpaceSymbols;
+    final debugRenderSpaceSymbol = sp.getBool(_debugRenderSpaceSymbolPreferenceKey);
+    if (debugRenderSpaceSymbol != null) {
+      P.rwkv.renderSpaceSymbol.q = debugRenderSpaceSymbol;
+      await sp.remove(_legacyDebugRenderSpaceSymbolPreferenceKey);
+    } else {
+      final legacyDebugRenderSpaceSymbol = sp.getBool(_legacyDebugRenderSpaceSymbolPreferenceKey);
+      if (legacyDebugRenderSpaceSymbol != null) {
+        P.rwkv.renderSpaceSymbol.q = legacyDebugRenderSpaceSymbol;
+        await sp.setBool(_debugRenderSpaceSymbolPreferenceKey, legacyDebugRenderSpaceSymbol);
+        await sp.remove(_legacyDebugRenderSpaceSymbolPreferenceKey);
+      }
     }
 
-    final debugShowPrefillLogOnly = sp.getBool("halo_state.debug.showPrefillLogOnly");
+    final debugShowPrefillLogOnly = sp.getBool(_debugShowPrefillLogOnlyPreferenceKey);
     if (debugShowPrefillLogOnly != null) {
       P.rwkv.showPrefillLogOnly.q = debugShowPrefillLogOnly;
     }
@@ -515,18 +537,18 @@ extension $Preference on _Preference {
     await sp.setBool("halo_state.hasUnlinkDefaultModelsDirOnce.$version.$buildNumber", value);
   }
 
-  Future<void> saveDebugShowEscapeCharacters(bool value) async {
+  Future<void> saveDebugRenderNewlineDirectly(bool value) async {
     final sp = await SharedPreferences.getInstance();
-    await sp.setBool("halo_state.debug.showEscapeCharacters", value);
+    await sp.setBool(_debugRenderNewlineDirectlyPreferenceKey, value);
   }
 
-  Future<void> saveDebugShowSpaceSymbols(bool value) async {
+  Future<void> saveDebugRenderSpaceSymbol(bool value) async {
     final sp = await SharedPreferences.getInstance();
-    await sp.setBool("halo_state.debug.showSpaceSymbols", value);
+    await sp.setBool(_debugRenderSpaceSymbolPreferenceKey, value);
   }
 
   Future<void> saveDebugShowPrefillLogOnly(bool value) async {
     final sp = await SharedPreferences.getInstance();
-    await sp.setBool("halo_state.debug.showPrefillLogOnly", value);
+    await sp.setBool(_debugShowPrefillLogOnlyPreferenceKey, value);
   }
 }

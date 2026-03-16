@@ -1148,6 +1148,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "regenerate": MessageLookupByLibrary.simpleMessage("Regenerate"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining Time:"),
     "rename": MessageLookupByLibrary.simpleMessage("Rename"),
+    "render_newline_directly": MessageLookupByLibrary.simpleMessage(
+      "Render newline directly",
+    ),
+    "render_space_symbol": MessageLookupByLibrary.simpleMessage(
+      "Render space symbol",
+    ),
     "report_an_issue_on_github": MessageLookupByLibrary.simpleMessage(
       "Report an issue on Github",
     ),
@@ -1232,14 +1238,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "share_chat": MessageLookupByLibrary.simpleMessage("Share Chat"),
-    "show_escape_characters": MessageLookupByLibrary.simpleMessage(
-      "Render newline symbol",
-    ),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Show only Prefill log",
-    ),
-    "show_space_symbols": MessageLookupByLibrary.simpleMessage(
-      "Render space symbol",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("Show Thought Stack"),
     "show_translations": MessageLookupByLibrary.simpleMessage(
