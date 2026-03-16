@@ -1273,13 +1273,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("Поделиться"),
     "share_chat": MessageLookupByLibrary.simpleMessage("Поделиться чатом"),
     "show_escape_characters": MessageLookupByLibrary.simpleMessage(
-      "Показать символы новой строки",
+      "Рендерить символ новой строки",
     ),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Показать только Prefill журнал",
     ),
     "show_space_symbols": MessageLookupByLibrary.simpleMessage(
-      "Показать символы пробела",
+      "Рендерить символ пробела",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage(
       "Показать стек цепочки мыслей",

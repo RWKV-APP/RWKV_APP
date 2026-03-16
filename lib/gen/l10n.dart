@@ -164,10 +164,10 @@ class S {
     );
   }
 
-  /// `换行符显示`
+  /// `是否渲染换行符号`
   String get show_escape_characters {
     return Intl.message(
-      '换行符显示',
+      '是否渲染换行符号',
       name: 'show_escape_characters',
       desc: '',
       args: [],
@@ -194,10 +194,10 @@ class S {
     );
   }
 
-  /// `空格符显示`
+  /// `是否渲染空格符号`
   String get show_space_symbols {
     return Intl.message(
-      '空格符显示',
+      '是否渲染空格符号',
       name: 'show_space_symbols',
       desc: '',
       args: [],

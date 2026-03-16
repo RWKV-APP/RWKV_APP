@@ -275,33 +275,11 @@ extension _$Preference on _Preference {
       P.rwkv.showPrefillLogOnly.q = debugShowPrefillLogOnly;
     }
 
-    final visibleSpaceSymbol = sp.getString("halo_state.debug.visibleSpaceSymbol");
-    if (visibleSpaceSymbol != null) {
-      final symbol = DebugSpaceSymbol.values.firstWhereOrNull((e) => e.name == visibleSpaceSymbol);
-      if (symbol != null) {
-        P.rwkv.visibleSpaceSymbol.q = symbol;
-      }
-    }
-
-    final spaceSymbolTextColor = sp.getInt("halo_state.debug.spaceSymbolTextColor");
-    if (spaceSymbolTextColor != null) {
-      P.rwkv.spaceSymbolTextColor.q = Color(spaceSymbolTextColor);
-    }
-
-    final spaceSymbolBackgroundColor = sp.getInt("halo_state.debug.spaceSymbolBackgroundColor");
-    if (spaceSymbolBackgroundColor != null) {
-      P.rwkv.spaceSymbolBackgroundColor.q = Color(spaceSymbolBackgroundColor);
-    }
-
-    final newlineSymbolTextColor = sp.getInt("halo_state.debug.newlineSymbolTextColor");
-    if (newlineSymbolTextColor != null) {
-      P.rwkv.newlineSymbolTextColor.q = Color(newlineSymbolTextColor);
-    }
-
-    final newlineSymbolBackgroundColor = sp.getInt("halo_state.debug.newlineSymbolBackgroundColor");
-    if (newlineSymbolBackgroundColor != null) {
-      P.rwkv.newlineSymbolBackgroundColor.q = Color(newlineSymbolBackgroundColor);
-    }
+    await sp.remove("halo_state.debug.visibleSpaceSymbol");
+    await sp.remove("halo_state.debug.spaceSymbolBackgroundColor");
+    await sp.remove("halo_state.debug.spaceSymbolTextColor");
+    await sp.remove("halo_state.debug.newlineSymbolBackgroundColor");
+    await sp.remove("halo_state.debug.newlineSymbolTextColor");
 
     // TODO: remove getter after refactor P.init logic is done @wangce
     final packageInfo = await PackageInfo.fromPlatform();
@@ -317,16 +295,6 @@ extension _$Preference on _Preference {
     this.dumpping.q = dumpping;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool("halo_state.dumpping", dumpping);
-  }
-
-  Future<void> _saveOptionalColor(String key, Color? color) async {
-    final sp = await SharedPreferences.getInstance();
-    if (color == null) {
-      await sp.remove(key);
-      return;
-    }
-
-    await sp.setInt(key, color.toARGB32());
   }
 }
 
@@ -560,26 +528,5 @@ extension $Preference on _Preference {
   Future<void> saveDebugShowPrefillLogOnly(bool value) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setBool("halo_state.debug.showPrefillLogOnly", value);
-  }
-
-  Future<void> saveDebugVisibleSpaceSymbol(DebugSpaceSymbol value) async {
-    final sp = await SharedPreferences.getInstance();
-    await sp.setString("halo_state.debug.visibleSpaceSymbol", value.name);
-  }
-
-  Future<void> saveDebugSpaceSymbolTextColor(Color? value) async {
-    await _saveOptionalColor("halo_state.debug.spaceSymbolTextColor", value);
-  }
-
-  Future<void> saveDebugSpaceSymbolBackgroundColor(Color? value) async {
-    await _saveOptionalColor("halo_state.debug.spaceSymbolBackgroundColor", value);
-  }
-
-  Future<void> saveDebugNewlineSymbolTextColor(Color? value) async {
-    await _saveOptionalColor("halo_state.debug.newlineSymbolTextColor", value);
-  }
-
-  Future<void> saveDebugNewlineSymbolBackgroundColor(Color? value) async {
-    await _saveOptionalColor("halo_state.debug.newlineSymbolBackgroundColor", value);
   }
 }

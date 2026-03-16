@@ -1233,13 +1233,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "share_chat": MessageLookupByLibrary.simpleMessage("Share Chat"),
     "show_escape_characters": MessageLookupByLibrary.simpleMessage(
-      "Show escape characters",
+      "Render newline symbol",
     ),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Show only Prefill log",
     ),
     "show_space_symbols": MessageLookupByLibrary.simpleMessage(
-      "Show space symbols",
+      "Render space symbol",
     ),
     "show_stack": MessageLookupByLibrary.simpleMessage("Show Thought Stack"),
     "show_translations": MessageLookupByLibrary.simpleMessage(

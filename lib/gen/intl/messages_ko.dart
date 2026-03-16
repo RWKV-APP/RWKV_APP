@@ -1039,12 +1039,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "share": MessageLookupByLibrary.simpleMessage("공유"),
     "share_chat": MessageLookupByLibrary.simpleMessage("채팅 공유"),
     "show_escape_characters": MessageLookupByLibrary.simpleMessage(
-      "새로운 줄 문자 표시",
+      "줄바꿈 기호 렌더링",
     ),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "Prefill 로그만 표시",
     ),
-    "show_space_symbols": MessageLookupByLibrary.simpleMessage("공백 기호 표시"),
+    "show_space_symbols": MessageLookupByLibrary.simpleMessage("공백 기호 렌더링"),
     "show_stack": MessageLookupByLibrary.simpleMessage("사고 체인 스택 표시"),
     "show_translations": MessageLookupByLibrary.simpleMessage("번역 표시"),
     "single_thread": MessageLookupByLibrary.simpleMessage("단일 스레드"),

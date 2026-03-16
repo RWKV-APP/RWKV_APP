@@ -947,11 +947,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("设置"),
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "share_chat": MessageLookupByLibrary.simpleMessage("分享聊天"),
-    "show_escape_characters": MessageLookupByLibrary.simpleMessage("换行符显示"),
+    "show_escape_characters": MessageLookupByLibrary.simpleMessage("是否渲染换行符号"),
     "show_prefill_log_only": MessageLookupByLibrary.simpleMessage(
       "仅显示 Prefill 日志",
     ),
-    "show_space_symbols": MessageLookupByLibrary.simpleMessage("空格符显示"),
+    "show_space_symbols": MessageLookupByLibrary.simpleMessage("是否渲染空格符号"),
     "show_stack": MessageLookupByLibrary.simpleMessage("显示思维链堆栈"),
     "show_translations": MessageLookupByLibrary.simpleMessage("显示翻译"),
     "single_thread": MessageLookupByLibrary.simpleMessage("单线程"),

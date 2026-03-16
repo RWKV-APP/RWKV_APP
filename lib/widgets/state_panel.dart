@@ -59,16 +59,7 @@ class StatePanel extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final showEscapeCharacters = ref.watch(P.rwkv.showEscapeCharacters);
     final showSpaceSymbols = ref.watch(P.rwkv.showSpaceSymbols);
-    final visibleSpaceSymbol = ref.watch(P.rwkv.visibleSpaceSymbol);
-    final spaceSymbolTextColor = ref.watch(P.rwkv.spaceSymbolTextColor);
-    final spaceSymbolBackgroundColor = ref.watch(P.rwkv.spaceSymbolBackgroundColor);
-    final newlineSymbolTextColor = ref.watch(P.rwkv.newlineSymbolTextColor);
-    final newlineSymbolBackgroundColor = ref.watch(P.rwkv.newlineSymbolBackgroundColor);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
-    final effectiveSpaceTextColor = spaceSymbolTextColor ?? defaultDebugSpaceTextColor(appTheme: appTheme, qb: qb);
-    final effectiveSpaceBackgroundColor = spaceSymbolBackgroundColor ?? defaultDebugSpaceBackgroundColor(appTheme: appTheme);
-    final effectiveNewlineTextColor = newlineSymbolTextColor ?? defaultDebugNewlineTextColor(appTheme: appTheme, qb: qb);
-    final effectiveNewlineBackgroundColor = newlineSymbolBackgroundColor ?? defaultDebugNewlineBackgroundColor(appTheme: appTheme, qb: qb);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -106,16 +97,16 @@ class StatePanel extends ConsumerWidget {
                         fontFamily: 'monospace',
                         fontFamilyFallback: const ['Menlo', 'Monaco', 'Courier'],
                       );
+                      final symbolTextColor = textStyle.color ?? qb.q(.9);
                       final text = buildDebugPanelTextSpan(
                         text: log.text,
                         baseStyle: textStyle,
                         showEscapeCharacters: showEscapeCharacters,
                         showSpaceSymbols: showSpaceSymbols,
-                        spaceSymbol: visibleSpaceSymbol,
-                        spaceTextColor: effectiveSpaceTextColor,
-                        spaceBackgroundColor: effectiveSpaceBackgroundColor,
-                        newlineTextColor: effectiveNewlineTextColor,
-                        newlineBackgroundColor: effectiveNewlineBackgroundColor,
+                        spaceTextColor: symbolTextColor,
+                        spaceBackgroundColor: kC,
+                        newlineTextColor: symbolTextColor,
+                        newlineBackgroundColor: kC,
                       );
                       return Container(
                         decoration: BoxDecoration(

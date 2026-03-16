@@ -1,12 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:halo/halo.dart';
-
-// Project imports:
-import 'package:zone/model/app_theme.dart' as app_theme;
-import 'package:zone/model/debug_space_symbol.dart';
+const String kDebugSpaceSymbol = '␣';
 
 const List<String> kDebugPanelSymbolFontFallback = [
   'Menlo',
@@ -20,39 +15,11 @@ const List<String> kDebugPanelSymbolFontFallback = [
   'Symbola',
 ];
 
-Color defaultDebugSpaceTextColor({
-  required app_theme.AppTheme appTheme,
-  required Color qb,
-}) {
-  return appTheme.primary;
-}
-
-Color defaultDebugSpaceBackgroundColor({
-  required app_theme.AppTheme appTheme,
-}) {
-  return appTheme.primary.q(appTheme.isLight ? .18 : .24);
-}
-
-Color defaultDebugNewlineTextColor({
-  required app_theme.AppTheme appTheme,
-  required Color qb,
-}) {
-  return qb.q(appTheme.isLight ? .9 : .94);
-}
-
-Color defaultDebugNewlineBackgroundColor({
-  required app_theme.AppTheme appTheme,
-  required Color qb,
-}) {
-  return qb.q(appTheme.isLight ? .14 : .2);
-}
-
 TextSpan buildDebugPanelTextSpan({
   required String text,
   required TextStyle baseStyle,
   required bool showEscapeCharacters,
   required bool showSpaceSymbols,
-  required DebugSpaceSymbol spaceSymbol,
   required Color spaceTextColor,
   required Color spaceBackgroundColor,
   required Color newlineTextColor,
@@ -118,7 +85,7 @@ TextSpan buildDebugPanelTextSpan({
 
     if (current == ' ' && showSpaceSymbols) {
       flushBuffer();
-      spans.add(TextSpan(text: spaceSymbol.symbol, style: spaceStyle));
+      spans.add(TextSpan(text: kDebugSpaceSymbol, style: spaceStyle));
       index += 1;
       continue;
     }
