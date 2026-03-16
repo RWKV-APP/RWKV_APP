@@ -138,7 +138,7 @@ class _ChatAppBar extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    const ModelSelectButton(),
+                    ModelSelectButton(preferredDemoType: preferredDemoType),
                   ],
                 ),
               ),
