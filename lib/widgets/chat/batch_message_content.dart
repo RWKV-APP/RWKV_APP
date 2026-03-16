@@ -235,7 +235,7 @@ class _MarkdownBody extends ConsumerWidget {
         crossAxisAlignment: .stretch,
         children: [
           ?decodeParamWidget,
-          MarkdownRender(raw: output),
+          MarkdownRender(raw: output, useMessageLineHeight: true),
         ],
       );
     }
@@ -244,9 +244,9 @@ class _MarkdownBody extends ConsumerWidget {
       crossAxisAlignment: .stretch,
       children: [
         ?decodeParamWidget,
-        if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.55)),
+        if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.55), useMessageLineHeight: true),
         if (output.isNotEmpty) const SizedBox(height: 4),
-        if (output.isNotEmpty) MarkdownRender(raw: output),
+        if (output.isNotEmpty) MarkdownRender(raw: output, useMessageLineHeight: true),
       ],
     );
   }

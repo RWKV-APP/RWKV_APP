@@ -46,15 +46,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m12(error) => "ファイルの削除に失敗しました: ${error}";
 
-  static String m13(successCount, failCount) =>
-      "${successCount}個のファイルを移動、${failCount}個が失敗";
+  static String m13(successCount, failCount) => "${successCount}個のファイルを移動、${failCount}個が失敗";
 
   static String m14(value) => "Frequency Penalty: ${value}";
 
   static String m15(port) => "HTTPサービス（ポート：${port}）";
 
-  static String m16(flag, nameCN, nameEN) =>
-      "${flag} ${nameCN}(${nameEN})の音声を模倣";
+  static String m16(flag, nameCN, nameEN) => "${flag} ${nameCN}(${nameEN})の音声を模倣";
 
   static String m17(fileName) => "${fileName}を模倣";
 
@@ -72,8 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m24(socName) => "お使いのチップ ${socName} の NPU サポートはまだ利用できません";
 
-  static String m25(takePhoto) =>
-      "${takePhoto} をクリックしてください。RWKV が画像内のテキストを翻訳します。";
+  static String m25(takePhoto) => "${takePhoto} をクリックしてください。RWKV が画像内のテキストを翻訳します。";
 
   static String m26(error) => "空のフォルダの作成に失敗しました：${error}";
 
@@ -89,8 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m32(value) => "Presence Penalty: ${value}";
 
-  static String m33(count) =>
-      "「生成」を押すと、RWKV が選んだ書き出しから最大 ${count} 件の質問案を考えてくれます。";
+  static String m33(count) => "「生成」を押すと、RWKV が選んだ書き出しから最大 ${count} 件の質問案を考えてくれます。";
 
   static String m34(count) => "キュー内：${count}";
 
@@ -137,8 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("について"),
-    "according_to_the_following_audio_file":
-        MessageLookupByLibrary.simpleMessage("以下に基づいて："),
+    "according_to_the_following_audio_file": MessageLookupByLibrary.simpleMessage("以下に基づいて："),
     "accuracy": MessageLookupByLibrary.simpleMessage("精度"),
     "adapting_more_inference_chips": MessageLookupByLibrary.simpleMessage(
       "より多くの推論チップへの対応を継続しています。ご期待ください。",
@@ -167,8 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "application_mode": MessageLookupByLibrary.simpleMessage("アプリケーションモード"),
     "application_settings": MessageLookupByLibrary.simpleMessage("アプリケーション設定"),
     "apply": MessageLookupByLibrary.simpleMessage("適用"),
-    "are_you_sure_you_want_to_delete_this_model":
-        MessageLookupByLibrary.simpleMessage("このモデルを削除してもよろしいですか？"),
+    "are_you_sure_you_want_to_delete_this_model": MessageLookupByLibrary.simpleMessage("このモデルを削除してもよろしいですか？"),
     "ask": MessageLookupByLibrary.simpleMessage("質問"),
     "ask_me_anything": MessageLookupByLibrary.simpleMessage("何でも聞いてください..."),
     "assistant": MessageLookupByLibrary.simpleMessage("RWKV："),
@@ -262,8 +256,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage(
       "RWKVモデルとチャット",
     ),
-    "chat_you_need_download_model_if_you_want_to_use_it":
-        MessageLookupByLibrary.simpleMessage("使用するには、まずモデルをダウンロードする必要があります"),
+    "chat_you_need_download_model_if_you_want_to_use_it": MessageLookupByLibrary.simpleMessage("使用するには、まずモデルをダウンロードする必要があります"),
     "chatting": MessageLookupByLibrary.simpleMessage("チャット中"),
     "check_for_updates": MessageLookupByLibrary.simpleMessage("更新を確認"),
     "chinese": MessageLookupByLibrary.simpleMessage("中国語"),
@@ -336,16 +329,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_token_limit_hint_short": MessageLookupByLibrary.simpleMessage(
       "新しいチャットを推奨",
     ),
-    "conversation_token_limit_recommend_new_chat":
-        MessageLookupByLibrary.simpleMessage(
-          "この会話は 8,000 トークンを超えています。新しいチャットを開始することをおすすめします。",
-        ),
+    "conversation_token_limit_recommend_new_chat": MessageLookupByLibrary.simpleMessage(
+      "この会話は 8,000 トークンを超えています。新しいチャットを開始することをおすすめします。",
+    ),
     "conversations": MessageLookupByLibrary.simpleMessage("会話"),
     "copy_code": MessageLookupByLibrary.simpleMessage("コードをコピー"),
     "copy_text": MessageLookupByLibrary.simpleMessage("テキストをコピー"),
     "correct_count": MessageLookupByLibrary.simpleMessage("正解数"),
-    "create_a_new_one_by_clicking_the_button_above":
-        MessageLookupByLibrary.simpleMessage("上のボタンをクリックして新しいセッションを作成"),
+    "create_a_new_one_by_clicking_the_button_above": MessageLookupByLibrary.simpleMessage("上のボタンをクリックして新しいセッションを作成"),
     "created_at": MessageLookupByLibrary.simpleMessage("作成日時"),
     "creative_recommended": MessageLookupByLibrary.simpleMessage("クリエイティブ（推奨）"),
     "creative_recommended_short": MessageLookupByLibrary.simpleMessage(
@@ -356,10 +347,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "このフォルダにローカルモデルはありません",
     ),
     "current_model": m8,
-    "current_model_from_latest_json_not_pth":
-        MessageLookupByLibrary.simpleMessage(
-          "現在読み込んでいるのは latest.json の設定であり、ローカル .pth ファイルではありません",
-        ),
+    "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
+      "現在読み込んでいるのは latest.json の設定であり、ローカル .pth ファイルではありません",
+    ),
     "current_progress": m9,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("現在のタスクのタブID"),
     "current_task_text_length": MessageLookupByLibrary.simpleMessage(
@@ -412,10 +402,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "各メッセージのデコードパラメータ",
     ),
-    "decode_params_for_each_message_detail":
-        MessageLookupByLibrary.simpleMessage(
-          "バッチ推論における各メッセージのデコードパラメータ。クリックして編集できます。",
-        ),
+    "decode_params_for_each_message_detail": MessageLookupByLibrary.simpleMessage(
+      "バッチ推論における各メッセージのデコードパラメータ。クリックして編集できます。",
+    ),
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "デコード速度（1秒あたりのトークン数）",
     ),
@@ -484,10 +473,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "english_translation_result": MessageLookupByLibrary.simpleMessage(
       "英語翻訳結果",
     ),
-    "ensure_you_have_enough_memory_to_load_the_model":
-        MessageLookupByLibrary.simpleMessage(
-          "デバイスのメモリが十分であることを確認してください。そうでない場合、アプリケーションがクラッシュする可能性があります。",
-        ),
+    "ensure_you_have_enough_memory_to_load_the_model": MessageLookupByLibrary.simpleMessage(
+      "デバイスのメモリが十分であることを確認してください。そうでない場合、アプリケーションがクラッシュする可能性があります。",
+    ),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "翻訳するテキストを入力...",
     ),
@@ -540,10 +528,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "folder_already_added": MessageLookupByLibrary.simpleMessage(
       "このフォルダは既に追加されています",
     ),
-    "folder_not_accessible_check_permission":
-        MessageLookupByLibrary.simpleMessage(
-          "このフォルダにアクセスできません。フォルダの権限を確認してください",
-        ),
+    "folder_not_accessible_check_permission": MessageLookupByLibrary.simpleMessage(
+      "このフォルダにアクセスできません。フォルダの権限を確認してください",
+    ),
     "folder_not_found_on_device": MessageLookupByLibrary.simpleMessage(
       "お使いのデバイスでこのフォルダが見つかりませんでした",
     ),
@@ -555,7 +542,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "assets/lib/font_preview/font_preview_ja.md",
     ),
     "font_preview_user_message": MessageLookupByLibrary.simpleMessage(
-      "Hello! こんにちは！これはユーザーメッセージのプレビューです。",
+      "Hello! こんにちは！これはユーザーメッセージのプレビューです。\n2 行目も選択した行間に合わせて変わります。",
     ),
     "font_setting": MessageLookupByLibrary.simpleMessage("フォント設定"),
     "font_size": MessageLookupByLibrary.simpleMessage("フォントサイズ"),
@@ -575,8 +562,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "gallery": MessageLookupByLibrary.simpleMessage("ギャラリー"),
     "game_over": MessageLookupByLibrary.simpleMessage("ゲームオーバー！"),
     "generate": MessageLookupByLibrary.simpleMessage("生成"),
-    "generate_hardest_sudoku_in_the_world":
-        MessageLookupByLibrary.simpleMessage("世界で最も難しい数独を生成"),
+    "generate_hardest_sudoku_in_the_world": MessageLookupByLibrary.simpleMessage("世界で最も難しい数独を生成"),
     "generate_random_sudoku_puzzle": MessageLookupByLibrary.simpleMessage(
       "ランダムな数独パズルを生成",
     ),
@@ -621,10 +607,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "import_failed": MessageLookupByLibrary.simpleMessage("インポート失敗"),
     "import_success": MessageLookupByLibrary.simpleMessage("インポート成功"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage("重みファイルをインポート"),
-    "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
-        MessageLookupByLibrary.simpleMessage(
-          "検索深度と検索幅の両方が2より大きい場合、インコンテキスト検索がアクティブになります",
-        ),
+    "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2": MessageLookupByLibrary.simpleMessage(
+      "検索深度と検索幅の両方が2より大きい場合、インコンテキスト検索がアクティブになります",
+    ),
     "inference_engine": MessageLookupByLibrary.simpleMessage("推論エンジン"),
     "inference_is_done": MessageLookupByLibrary.simpleMessage("🎉 推論完了"),
     "inference_is_running": MessageLookupByLibrary.simpleMessage("推論中"),
@@ -691,6 +676,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m21,
     "message_content": MessageLookupByLibrary.simpleMessage("メッセージ内容"),
     "message_in_queue": m22,
+    "message_line_height": MessageLookupByLibrary.simpleMessage("メッセージ行間"),
+    "message_line_height_default_hint": MessageLookupByLibrary.simpleMessage(
+      "デフォルトはフォントとレンダラー本来の行間を使うため、固定の 1.0x ではありません。ここでのカスタム範囲は 1.0x から 2.0x です。",
+    ),
     "message_token_count": MessageLookupByLibrary.simpleMessage("メッセージのトークン数"),
     "mimic": MessageLookupByLibrary.simpleMessage("ミミック"),
     "mlx_cache": MessageLookupByLibrary.simpleMessage("MLX/CoreML キャッシュ"),
@@ -705,10 +694,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "model_loading": MessageLookupByLibrary.simpleMessage("モデルを読み込み中..."),
     "model_output": m23,
     "model_settings": MessageLookupByLibrary.simpleMessage("モデル設定"),
-    "model_size_increased_please_open_a_new_conversation":
-        MessageLookupByLibrary.simpleMessage(
-          "モデルサイズが大きくなりました。会話の品質を向上させるために、新しい会話を開始してください",
-        ),
+    "model_size_increased_please_open_a_new_conversation": MessageLookupByLibrary.simpleMessage(
+      "モデルサイズが大きくなりました。会話の品質を向上させるために、新しい会話を開始してください",
+    ),
     "monospace_font_setting": MessageLookupByLibrary.simpleMessage("等幅フォント設定"),
     "more": MessageLookupByLibrary.simpleMessage("その他"),
     "more_questions": MessageLookupByLibrary.simpleMessage("その他の質問"),
@@ -804,10 +792,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "公式ダウンロードページを開く",
     ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage("状態パネルを開く"),
-    "or_select_a_wav_file_to_let_rwkv_to_copy_it":
-        MessageLookupByLibrary.simpleMessage(
-          "または、RWKVにコピーさせるためにwavファイルを選択できます。",
-        ),
+    "or_select_a_wav_file_to_let_rwkv_to_copy_it": MessageLookupByLibrary.simpleMessage(
+      "または、RWKVにコピーさせるためにwavファイルを選択できます。",
+    ),
     "or_you_can_start_a_new_empty_chat": MessageLookupByLibrary.simpleMessage(
       "または、新しい空のチャットを開始できます",
     ),
@@ -852,16 +839,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "難易度を入力してください",
     ),
-    "please_grant_permission_to_use_microphone":
-        MessageLookupByLibrary.simpleMessage("マイクの使用許可を付与してください"),
+    "please_grant_permission_to_use_microphone": MessageLookupByLibrary.simpleMessage("マイクの使用許可を付与してください"),
     "please_load_model_first": MessageLookupByLibrary.simpleMessage(
       "まずモデルをロードしてください",
     ),
     "please_manually_migrate_files": MessageLookupByLibrary.simpleMessage(
       "パスを更新しました。ファイルの移動が必要な場合は手動で行ってください。",
     ),
-    "please_select_a_branch_to_continue_the_conversation":
-        MessageLookupByLibrary.simpleMessage("会話を続けるにはブランチを選択してください"),
+    "please_select_a_branch_to_continue_the_conversation": MessageLookupByLibrary.simpleMessage("会話を続けるにはブランチを選択してください"),
     "please_select_a_spk_or_a_wav_file": MessageLookupByLibrary.simpleMessage(
       "プリセット音声を選択するか、自分の声を録音してください",
     ),
@@ -871,8 +856,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
       "まず画像を選択してください",
     ),
-    "please_select_an_image_from_the_following_options":
-        MessageLookupByLibrary.simpleMessage("以下のオプションから画像を選択してください"),
+    "please_select_an_image_from_the_following_options": MessageLookupByLibrary.simpleMessage("以下のオプションから画像を選択してください"),
     "please_select_application_language": MessageLookupByLibrary.simpleMessage(
       "アプリケーション言語を選択してください",
     ),
@@ -883,19 +867,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "難易度を選択してください",
     ),
-    "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m30,
-    "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
-        MessageLookupByLibrary.simpleMessage(
-          "すべてのメッセージに設定するサンプラーとペナルティパラメータを選択してください",
-        ),
+    "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index": m30,
+    "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages": MessageLookupByLibrary.simpleMessage(
+      "すべてのメッセージに設定するサンプラーとペナルティパラメータを選択してください",
+    ),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
       "推論の完了を待ってください",
     ),
-    "please_wait_for_the_model_to_finish_generating":
-        MessageLookupByLibrary.simpleMessage("モデルの生成完了を待ってください"),
-    "please_wait_for_the_model_to_generate":
-        MessageLookupByLibrary.simpleMessage("モデルの生成を待ってください"),
+    "please_wait_for_the_model_to_finish_generating": MessageLookupByLibrary.simpleMessage("モデルの生成完了を待ってください"),
+    "please_wait_for_the_model_to_generate": MessageLookupByLibrary.simpleMessage("モデルの生成を待ってください"),
     "please_wait_for_the_model_to_load": MessageLookupByLibrary.simpleMessage(
       "モデルのロードを待ってください",
     ),
@@ -921,44 +901,38 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQグループ1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQグループ2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("質問ジェネレーター"),
-    "question_generator_context_prefix_input_placeholder":
-        MessageLookupByLibrary.simpleMessage(
-          "空欄のままにすると、RWKV が文脈に基づいて質問を生成します。",
-        ),
+    "question_generator_context_prefix_input_placeholder": MessageLookupByLibrary.simpleMessage(
+      "空欄のままにすると、RWKV が文脈に基づいて質問を生成します。",
+    ),
     "question_generator_count": MessageLookupByLibrary.simpleMessage("生成数"),
-    "question_generator_empty_chat_batch_hint":
-        MessageLookupByLibrary.simpleMessage(
-          "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問をいくつか考えてくれます。",
-        ),
+    "question_generator_empty_chat_batch_hint": MessageLookupByLibrary.simpleMessage(
+      "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問をいくつか考えてくれます。",
+    ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
       "上の書き出しを選んでから「生成」を押すと、RWKV がそのまま聞ける質問を 1 つ考えてくれます。",
     ),
-    "question_generator_language_switched_hint":
-        MessageLookupByLibrary.simpleMessage(
-          "言語を切り替えると、上に並ぶ書き出しも一緒に切り替わります。気になるものを選んで、その続きから考えてもらいましょう。",
-        ),
-    "question_generator_mock_batch_description":
-        MessageLookupByLibrary.simpleMessage(
-          "少しヒントが欲しいときは、RWKV にいくつか質問を考えてもらいましょう。",
-        ),
+    "question_generator_language_switched_hint": MessageLookupByLibrary.simpleMessage(
+      "言語を切り替えると、上に並ぶ書き出しも一緒に切り替わります。気になるものを選んで、その続きから考えてもらいましょう。",
+    ),
+    "question_generator_mock_batch_description": MessageLookupByLibrary.simpleMessage(
+      "少しヒントが欲しいときは、RWKV にいくつか質問を考えてもらいましょう。",
+    ),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "どう聞き始めればいいか迷ったら、まずは RWKV に 1 つ考えてもらいましょう。",
     ),
     "question_generator_prefix_guide": MessageLookupByLibrary.simpleMessage(
       "下の書き出しをいろいろ試すと、RWKV がその続きから質問を作ってくれます。下の入力欄を直接編集して、自分らしい書き出しにすることもできます。",
     ),
-    "question_generator_prefix_input_placeholder":
-        MessageLookupByLibrary.simpleMessage("ここに質問の書き出しを書いてみましょう..."),
+    "question_generator_prefix_input_placeholder": MessageLookupByLibrary.simpleMessage("ここに質問の書き出しを書いてみましょう..."),
     "question_generator_prefix_required": MessageLookupByLibrary.simpleMessage(
       "先に質問の書き出しを入力してください",
     ),
     "question_generator_prefixes": MessageLookupByLibrary.simpleMessage(
       "質問の書き出し",
     ),
-    "question_generator_question_action_guide":
-        MessageLookupByLibrary.simpleMessage(
-          "生成された質問をタップすると、チャット入力欄にそのまま入れられます。",
-        ),
+    "question_generator_question_action_guide": MessageLookupByLibrary.simpleMessage(
+      "生成された質問をタップすると、チャット入力欄にそのまま入れられます。",
+    ),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "RWKV にこの言語で質問してほしい...",
@@ -1026,10 +1000,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("モデルを選択"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("画像を選択"),
-    "select_the_decode_parameters_to_set_all_to_for_index":
-        MessageLookupByLibrary.simpleMessage(
-          "以下からプリセットを選択するか、「カスタム」をタップして手動で設定してください",
-        ),
+    "select_the_decode_parameters_to_set_all_to_for_index": MessageLookupByLibrary.simpleMessage(
+      "以下からプリセットを選択するか、「カスタム」をタップして手動で設定してください",
+    ),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "設定ファイルの重みまたはローカル .pth ファイルを選択",
     ),
@@ -1074,8 +1047,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "speed": MessageLookupByLibrary.simpleMessage("ダウンロード速度："),
     "start": MessageLookupByLibrary.simpleMessage("開始"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("新しいチャットを開始"),
-    "start_a_new_chat_by_clicking_the_button_below":
-        MessageLookupByLibrary.simpleMessage("下のボタンをクリックして新しいチャットを開始"),
+    "start_a_new_chat_by_clicking_the_button_below": MessageLookupByLibrary.simpleMessage("下のボタンをクリックして新しいチャットを開始"),
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("ゲーム開始"),
     "start_download_updates_": MessageLookupByLibrary.simpleMessage(
       "アップデートのバックグラウンドダウンロードを開始...",
@@ -1117,10 +1089,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("エキスパート"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("普通"),
     "suggest": MessageLookupByLibrary.simpleMessage("提案"),
-    "switch_to_creative_mode_for_better_exp":
-        MessageLookupByLibrary.simpleMessage(
-          "より良い体験のために「クリエイティブモード」への切り替えをお勧めします",
-        ),
+    "switch_to_creative_mode_for_better_exp": MessageLookupByLibrary.simpleMessage(
+      "より良い体験のために「クリエイティブモード」への切り替えをお勧めします",
+    ),
     "syncing": MessageLookupByLibrary.simpleMessage("同期中"),
     "system_mode": MessageLookupByLibrary.simpleMessage("システムに従う"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("システムプロンプト"),
@@ -1141,8 +1112,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_dim": MessageLookupByLibrary.simpleMessage("暗い"),
     "theme_light": MessageLookupByLibrary.simpleMessage("明るい"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黒"),
-    "then_you_can_start_to_chat_with_rwkv":
-        MessageLookupByLibrary.simpleMessage("これでRWKVとのチャットを開始できます"),
+    "then_you_can_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage("これでRWKVとのチャットを開始できます"),
     "think_button_mode_en": m39,
     "think_button_mode_en_long": m40,
     "think_button_mode_en_short": m41,
@@ -1164,12 +1134,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "思考モードテンプレート",
     ),
-    "this_is_the_hardest_sudoku_in_the_world":
-        MessageLookupByLibrary.simpleMessage("これは世界で最も難しい数独です"),
-    "this_model_does_not_support_batch_inference":
-        MessageLookupByLibrary.simpleMessage(
-          "このモデルは並列推論をサポートしていません。「batch」タグのあるモデルを選択してください",
-        ),
+    "this_is_the_hardest_sudoku_in_the_world": MessageLookupByLibrary.simpleMessage("これは世界で最も難しい数独です"),
+    "this_model_does_not_support_batch_inference": MessageLookupByLibrary.simpleMessage(
+      "このモデルは並列推論をサポートしていません。「batch」タグのあるモデルを選択してください",
+    ),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考結果"),
     "top_p_with_value": m46,
     "total_count": MessageLookupByLibrary.simpleMessage("総数"),
@@ -1219,15 +1187,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "unzipping": MessageLookupByLibrary.simpleMessage("展開中"),
     "update_now": MessageLookupByLibrary.simpleMessage("今すぐ更新"),
     "updated_at": MessageLookupByLibrary.simpleMessage("更新日時"),
+    "use_default_line_height": MessageLookupByLibrary.simpleMessage(
+      "デフォルトの行間を使う",
+    ),
     "use_it_now": MessageLookupByLibrary.simpleMessage("今すぐ使用"),
     "user": MessageLookupByLibrary.simpleMessage("ユーザー："),
     "user_message_actions_panel_empty": MessageLookupByLibrary.simpleMessage(
       "このメッセージで利用できる操作はありません",
     ),
-    "user_message_actions_panel_switch_branch_subtitle":
-        MessageLookupByLibrary.simpleMessage("前へ / 次へ で隣接するブランチを切り替えます"),
-    "user_message_actions_panel_switch_branch_title":
-        MessageLookupByLibrary.simpleMessage("ブランチ切り替え"),
+    "user_message_actions_panel_switch_branch_subtitle": MessageLookupByLibrary.simpleMessage("前へ / 次へ で隣接するブランチを切り替えます"),
+    "user_message_actions_panel_switch_branch_title": MessageLookupByLibrary.simpleMessage("ブランチ切り替え"),
     "user_message_actions_panel_title": MessageLookupByLibrary.simpleMessage(
       "メッセージ操作",
     ),
@@ -1273,8 +1242,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_wins": MessageLookupByLibrary.simpleMessage("白の勝ち！"),
     "window_id": m49,
     "windows_architecture_mismatch_dialog_message": m50,
-    "windows_architecture_mismatch_dialog_title":
-        MessageLookupByLibrary.simpleMessage("アーキテクチャ不一致"),
+    "windows_architecture_mismatch_dialog_title": MessageLookupByLibrary.simpleMessage("アーキテクチャ不一致"),
     "windows_architecture_mismatch_warning": m51,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
@@ -1286,8 +1254,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "これでRWKVとのチャットを開始できます",
     ),
-    "you_can_record_your_voice_and_let_rwkv_to_copy_it":
-        MessageLookupByLibrary.simpleMessage("音声を録音して、RWKVにそれをコピーさせることができます。"),
+    "you_can_record_your_voice_and_let_rwkv_to_copy_it": MessageLookupByLibrary.simpleMessage("音声を録音して、RWKVにそれをコピーさせることができます。"),
     "you_can_select_a_role_to_chat": MessageLookupByLibrary.simpleMessage(
       "チャットする役割を選択できます",
     ),

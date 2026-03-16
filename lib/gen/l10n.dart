@@ -28,9 +28,7 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -1701,6 +1699,36 @@ class S {
     return Intl.message('字体大小', name: 'font_size', desc: '', args: []);
   }
 
+  /// `消息行距`
+  String get message_line_height {
+    return Intl.message(
+      '消息行距',
+      name: 'message_line_height',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用默认行距`
+  String get use_default_line_height {
+    return Intl.message(
+      '使用默认行距',
+      name: 'use_default_line_height',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `默认会使用字体和渲染器本身的行高，不是固定 1.0x。这里的自定义范围是 1.0x 到 2.0x。`
+  String get message_line_height_default_hint {
+    return Intl.message(
+      '默认会使用字体和渲染器本身的行高，不是固定 1.0x。这里的自定义范围是 1.0x 到 2.0x。',
+      name: 'message_line_height_default_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `字体设置`
   String get font_setting {
     return Intl.message('字体设置', name: 'font_setting', desc: '', args: []);
@@ -1882,12 +1910,10 @@ class S {
   }
 
   /// `当搜索深度和宽度都大于 2 时，将激活上下文搜索`
-  String
-  get in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2 {
+  String get in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2 {
     return Intl.message(
       '当搜索深度和宽度都大于 2 时，将激活上下文搜索',
-      name:
-          'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
+      name: 'in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2',
       desc: '',
       args: [],
     );
@@ -4049,26 +4075,22 @@ class S {
   }
 
   /// `请选择要为第 {index} 条消息设置的采样和惩罚参数`
-  String
-  please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(
+  String please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index(
     Object index,
   ) {
     return Intl.message(
       '请选择要为第 $index 条消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index',
       desc: '',
       args: [index],
     );
   }
 
   /// `请选择要为所有消息设置的采样和惩罚参数`
-  String
-  get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
+  String get please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages {
     return Intl.message(
       '请选择要为所有消息设置的采样和惩罚参数',
-      name:
-          'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
+      name: 'please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages',
       desc: '',
       args: [],
     );
@@ -4134,10 +4156,10 @@ class S {
     );
   }
 
-  /// `Hello! 你好！这是用户消息的预览。`
+  /// `Hello! 你好！这是用户消息的预览。\n第二行会跟着你调节的行距一起变化。`
   String get font_preview_user_message {
     return Intl.message(
-      'Hello! 你好！这是用户消息的预览。',
+      'Hello! 你好！这是用户消息的预览。\n第二行会跟着你调节的行距一起变化。',
       name: 'font_preview_user_message',
       desc: '',
       args: [],

@@ -46,15 +46,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m12(error) => "删除文件失败：${error}";
 
-  static String m13(successCount, failCount) =>
-      "${successCount} 个文件已移动，${failCount} 个失败";
+  static String m13(successCount, failCount) => "${successCount} 个文件已移动，${failCount} 个失败";
 
   static String m14(value) => "Frequency Penalty: ${value}";
 
   static String m15(port) => "HTTP 服务 (端口: ${port})";
 
-  static String m16(flag, nameCN, nameEN) =>
-      "模仿 ${flag} ${nameCN}(${nameEN}) 的声音";
+  static String m16(flag, nameCN, nameEN) => "模仿 ${flag} ${nameCN}(${nameEN}) 的声音";
 
   static String m17(fileName) => "模仿 ${fileName}";
 
@@ -135,8 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("关于"),
-    "according_to_the_following_audio_file":
-        MessageLookupByLibrary.simpleMessage("根据: "),
+    "according_to_the_following_audio_file": MessageLookupByLibrary.simpleMessage("根据: "),
     "accuracy": MessageLookupByLibrary.simpleMessage("准确率"),
     "adapting_more_inference_chips": MessageLookupByLibrary.simpleMessage(
       "我们正在持续适配更多的推理芯片，敬请期待。",
@@ -165,8 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "application_mode": MessageLookupByLibrary.simpleMessage("应用模式"),
     "application_settings": MessageLookupByLibrary.simpleMessage("应用设置"),
     "apply": MessageLookupByLibrary.simpleMessage("应用"),
-    "are_you_sure_you_want_to_delete_this_model":
-        MessageLookupByLibrary.simpleMessage("确定要删除这个模型吗？"),
+    "are_you_sure_you_want_to_delete_this_model": MessageLookupByLibrary.simpleMessage("确定要删除这个模型吗？"),
     "ask": MessageLookupByLibrary.simpleMessage("提问"),
     "ask_me_anything": MessageLookupByLibrary.simpleMessage("随意向我提问..."),
     "assistant": MessageLookupByLibrary.simpleMessage("RWKV:"),
@@ -252,8 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chat_title": MessageLookupByLibrary.simpleMessage("RWKV Chat"),
     "chat_welcome_to_use": m5,
     "chat_with_rwkv_model": MessageLookupByLibrary.simpleMessage("与 RWKV 模型对话"),
-    "chat_you_need_download_model_if_you_want_to_use_it":
-        MessageLookupByLibrary.simpleMessage("您需要先下载模型才能使用"),
+    "chat_you_need_download_model_if_you_want_to_use_it": MessageLookupByLibrary.simpleMessage("您需要先下载模型才能使用"),
     "chatting": MessageLookupByLibrary.simpleMessage("聊天中"),
     "check_for_updates": MessageLookupByLibrary.simpleMessage("检查更新"),
     "chinese": MessageLookupByLibrary.simpleMessage("中文"),
@@ -323,14 +318,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "conversation_token_limit_hint_short": MessageLookupByLibrary.simpleMessage(
       "建议开启新对话",
     ),
-    "conversation_token_limit_recommend_new_chat":
-        MessageLookupByLibrary.simpleMessage("当前对话已超过 8,000 tokens，建议开启新对话"),
+    "conversation_token_limit_recommend_new_chat": MessageLookupByLibrary.simpleMessage("当前对话已超过 8,000 tokens，建议开启新对话"),
     "conversations": MessageLookupByLibrary.simpleMessage("会话"),
     "copy_code": MessageLookupByLibrary.simpleMessage("复制代码"),
     "copy_text": MessageLookupByLibrary.simpleMessage("复制文本"),
     "correct_count": MessageLookupByLibrary.simpleMessage("正确数"),
-    "create_a_new_one_by_clicking_the_button_above":
-        MessageLookupByLibrary.simpleMessage("点击上方按钮创建新会话"),
+    "create_a_new_one_by_clicking_the_button_above": MessageLookupByLibrary.simpleMessage("点击上方按钮创建新会话"),
     "created_at": MessageLookupByLibrary.simpleMessage("创建时间"),
     "creative_recommended": MessageLookupByLibrary.simpleMessage("创意 (推荐)"),
     "creative_recommended_short": MessageLookupByLibrary.simpleMessage("创意"),
@@ -339,10 +332,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "当前文件夹没有本地模型",
     ),
     "current_model": m8,
-    "current_model_from_latest_json_not_pth":
-        MessageLookupByLibrary.simpleMessage(
-          "当前加载的是 latest.json 中的配置，不是本地 .pth 文件",
-        ),
+    "current_model_from_latest_json_not_pth": MessageLookupByLibrary.simpleMessage(
+      "当前加载的是 latest.json 中的配置，不是本地 .pth 文件",
+    ),
     "current_progress": m9,
     "current_task_tab_id": MessageLookupByLibrary.simpleMessage("当前任务标签页 ID"),
     "current_task_text_length": MessageLookupByLibrary.simpleMessage(
@@ -389,8 +381,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "decode_params_for_each_message": MessageLookupByLibrary.simpleMessage(
       "每条消息的解码参数",
     ),
-    "decode_params_for_each_message_detail":
-        MessageLookupByLibrary.simpleMessage("批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。"),
+    "decode_params_for_each_message_detail": MessageLookupByLibrary.simpleMessage("批量推理中每条消息的解码参数。点击编辑每条消息的解码参数。"),
     "decode_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "解码速度（tokens 每秒）",
     ),
@@ -447,8 +438,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "english_translation_result": MessageLookupByLibrary.simpleMessage(
       "英文翻译结果",
     ),
-    "ensure_you_have_enough_memory_to_load_the_model":
-        MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
+    "ensure_you_have_enough_memory_to_load_the_model": MessageLookupByLibrary.simpleMessage("请确保设备内存充足，否则可能导致应用崩溃"),
     "enter_text_to_expand": MessageLookupByLibrary.simpleMessage("输入要续写的段落"),
     "enter_text_to_translate": MessageLookupByLibrary.simpleMessage(
       "输入要翻译的文本...",
@@ -496,8 +486,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "finish_recording": MessageLookupByLibrary.simpleMessage("录音完成"),
     "folder_already_added": MessageLookupByLibrary.simpleMessage("该文件夹已添加"),
-    "folder_not_accessible_check_permission":
-        MessageLookupByLibrary.simpleMessage("该文件夹无法访问，请检查文件夹权限"),
+    "folder_not_accessible_check_permission": MessageLookupByLibrary.simpleMessage("该文件夹无法访问，请检查文件夹权限"),
     "folder_not_found_on_device": MessageLookupByLibrary.simpleMessage(
       "未在您的电脑上发现该文件夹",
     ),
@@ -509,7 +498,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "assets/lib/font_preview/font_preview_zh_Hans.md",
     ),
     "font_preview_user_message": MessageLookupByLibrary.simpleMessage(
-      "Hello! 你好！这是用户消息的预览。",
+      "Hello! 你好！这是用户消息的预览。\n第二行会跟着你调节的行距一起变化。",
     ),
     "font_setting": MessageLookupByLibrary.simpleMessage("字体设置"),
     "font_size": MessageLookupByLibrary.simpleMessage("字体大小"),
@@ -527,8 +516,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "gallery": MessageLookupByLibrary.simpleMessage("相册"),
     "game_over": MessageLookupByLibrary.simpleMessage("游戏结束！"),
     "generate": MessageLookupByLibrary.simpleMessage("生成"),
-    "generate_hardest_sudoku_in_the_world":
-        MessageLookupByLibrary.simpleMessage("生成世界上最难的数独"),
+    "generate_hardest_sudoku_in_the_world": MessageLookupByLibrary.simpleMessage("生成世界上最难的数独"),
     "generate_random_sudoku_puzzle": MessageLookupByLibrary.simpleMessage(
       "生成随机数独",
     ),
@@ -569,8 +557,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "import_failed": MessageLookupByLibrary.simpleMessage("导入失败"),
     "import_success": MessageLookupByLibrary.simpleMessage("导入成功"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage("导入权重文件"),
-    "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2":
-        MessageLookupByLibrary.simpleMessage("当搜索深度和宽度都大于 2 时，将激活上下文搜索"),
+    "in_context_search_will_be_activated_when_both_breadth_and_depth_are_greater_than_2": MessageLookupByLibrary.simpleMessage(
+      "当搜索深度和宽度都大于 2 时，将激活上下文搜索",
+    ),
     "inference_engine": MessageLookupByLibrary.simpleMessage("推理引擎"),
     "inference_is_done": MessageLookupByLibrary.simpleMessage("🎉 推理完成"),
     "inference_is_running": MessageLookupByLibrary.simpleMessage("推理中"),
@@ -629,6 +618,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memory_used": m21,
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
     "message_in_queue": m22,
+    "message_line_height": MessageLookupByLibrary.simpleMessage("消息行距"),
+    "message_line_height_default_hint": MessageLookupByLibrary.simpleMessage(
+      "默认会使用字体和渲染器本身的行高，不是固定 1.0x。这里的自定义范围是 1.0x 到 2.0x。",
+    ),
     "message_token_count": MessageLookupByLibrary.simpleMessage(
       "单条消息 Token 数量",
     ),
@@ -645,8 +638,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
     "model_output": m23,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
-    "model_size_increased_please_open_a_new_conversation":
-        MessageLookupByLibrary.simpleMessage("模型大小增加，请打开一个新的对话, 以提升对话质量"),
+    "model_size_increased_please_open_a_new_conversation": MessageLookupByLibrary.simpleMessage("模型大小增加，请打开一个新的对话, 以提升对话质量"),
     "monospace_font_setting": MessageLookupByLibrary.simpleMessage("等宽字体设置"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_questions": MessageLookupByLibrary.simpleMessage("更多问题"),
@@ -728,8 +720,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "打开官方下载页",
     ),
     "open_state_panel": MessageLookupByLibrary.simpleMessage("打开状态面板"),
-    "or_select_a_wav_file_to_let_rwkv_to_copy_it":
-        MessageLookupByLibrary.simpleMessage("或者选择一个 wav 文件，让 RWKV 模仿它。"),
+    "or_select_a_wav_file_to_let_rwkv_to_copy_it": MessageLookupByLibrary.simpleMessage("或者选择一个 wav 文件，让 RWKV 模仿它。"),
     "or_you_can_start_a_new_empty_chat": MessageLookupByLibrary.simpleMessage(
       "或开始一个空白聊天",
     ),
@@ -775,14 +766,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_entry_some_text_to_continue": MessageLookupByLibrary.simpleMessage(
       "请先输入要续写的段落",
     ),
-    "please_grant_permission_to_use_microphone":
-        MessageLookupByLibrary.simpleMessage("请授予使用麦克风的权限"),
+    "please_grant_permission_to_use_microphone": MessageLookupByLibrary.simpleMessage("请授予使用麦克风的权限"),
     "please_load_model_first": MessageLookupByLibrary.simpleMessage("请先加载模型"),
     "please_manually_migrate_files": MessageLookupByLibrary.simpleMessage(
       "路径已更新，如需迁移文件请手动选择并移动。",
     ),
-    "please_select_a_branch_to_continue_the_conversation":
-        MessageLookupByLibrary.simpleMessage("请选择你喜欢的分支以进行接下来的对话"),
+    "please_select_a_branch_to_continue_the_conversation": MessageLookupByLibrary.simpleMessage("请选择你喜欢的分支以进行接下来的对话"),
     "please_select_a_spk_or_a_wav_file": MessageLookupByLibrary.simpleMessage(
       "请选择一个预设声音或录制您的声音",
     ),
@@ -792,8 +781,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_an_image_first": MessageLookupByLibrary.simpleMessage(
       "请先选择一个图片",
     ),
-    "please_select_an_image_from_the_following_options":
-        MessageLookupByLibrary.simpleMessage("请从以下选项中选择一个图片"),
+    "please_select_an_image_from_the_following_options": MessageLookupByLibrary.simpleMessage("请从以下选项中选择一个图片"),
     "please_select_application_language": MessageLookupByLibrary.simpleMessage(
       "请选择应用语言",
     ),
@@ -802,17 +790,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_select_the_difficulty": MessageLookupByLibrary.simpleMessage(
       "请选择难度",
     ),
-    "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m30,
-    "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
-        MessageLookupByLibrary.simpleMessage("请选择要为所有消息设置的采样和惩罚参数"),
+    "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index": m30,
+    "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages": MessageLookupByLibrary.simpleMessage("请选择要为所有消息设置的采样和惩罚参数"),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
       "请等待推理完成",
     ),
-    "please_wait_for_the_model_to_finish_generating":
-        MessageLookupByLibrary.simpleMessage("请等待模型生成完成"),
-    "please_wait_for_the_model_to_generate":
-        MessageLookupByLibrary.simpleMessage("请等待模型生成"),
+    "please_wait_for_the_model_to_finish_generating": MessageLookupByLibrary.simpleMessage("请等待模型生成完成"),
+    "please_wait_for_the_model_to_generate": MessageLookupByLibrary.simpleMessage("请等待模型生成"),
     "please_wait_for_the_model_to_load": MessageLookupByLibrary.simpleMessage(
       "请等待模型加载",
     ),
@@ -838,36 +822,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
     "question_generator": MessageLookupByLibrary.simpleMessage("RWKV 帮你问"),
-    "question_generator_context_prefix_input_placeholder":
-        MessageLookupByLibrary.simpleMessage("如果留空，RWKV 会根据上下文生成问题"),
+    "question_generator_context_prefix_input_placeholder": MessageLookupByLibrary.simpleMessage("如果留空，RWKV 会根据上下文生成问题"),
     "question_generator_count": MessageLookupByLibrary.simpleMessage("生成数量"),
-    "question_generator_empty_chat_batch_hint":
-        MessageLookupByLibrary.simpleMessage(
-          "选好上面的问题开头后，点一下生成，RWKV 会先帮你想几个可以直接提问的问题。",
-        ),
+    "question_generator_empty_chat_batch_hint": MessageLookupByLibrary.simpleMessage(
+      "选好上面的问题开头后，点一下生成，RWKV 会先帮你想几个可以直接提问的问题。",
+    ),
     "question_generator_empty_chat_hint": MessageLookupByLibrary.simpleMessage(
       "选好上面的问题开头后，点一下生成，RWKV 会先帮你想一个可以直接提问的问题。",
     ),
-    "question_generator_language_switched_hint":
-        MessageLookupByLibrary.simpleMessage(
-          "切换语言后，上面可选的问题开头也会一起变化。挑一个顺手的开头，再让 RWKV 接着往下想就好。",
-        ),
-    "question_generator_mock_batch_description":
-        MessageLookupByLibrary.simpleMessage("一时想不到怎么问？让 RWKV 多帮你想几个问题吧。"),
+    "question_generator_language_switched_hint": MessageLookupByLibrary.simpleMessage(
+      "切换语言后，上面可选的问题开头也会一起变化。挑一个顺手的开头，再让 RWKV 接着往下想就好。",
+    ),
+    "question_generator_mock_batch_description": MessageLookupByLibrary.simpleMessage("一时想不到怎么问？让 RWKV 多帮你想几个问题吧。"),
     "question_generator_mock_description": MessageLookupByLibrary.simpleMessage(
       "不知道怎么开口更合适？让 RWKV 先帮你想一个吧。",
     ),
     "question_generator_prefix_guide": MessageLookupByLibrary.simpleMessage(
       "点一点不同的问题开头，RWKV 会顺着这个开头继续帮你生成问题。你也可以直接改下面的输入框，写一个更符合你想法的开头。",
     ),
-    "question_generator_prefix_input_placeholder":
-        MessageLookupByLibrary.simpleMessage("在这里写下你想要的问题开头..."),
+    "question_generator_prefix_input_placeholder": MessageLookupByLibrary.simpleMessage("在这里写下你想要的问题开头..."),
     "question_generator_prefix_required": MessageLookupByLibrary.simpleMessage(
       "请先输入一个问题前缀",
     ),
     "question_generator_prefixes": MessageLookupByLibrary.simpleMessage("问题前缀"),
-    "question_generator_question_action_guide":
-        MessageLookupByLibrary.simpleMessage("点击已生成的问题，即可粘贴到对话输入框。"),
+    "question_generator_question_action_guide": MessageLookupByLibrary.simpleMessage("点击已生成的问题，即可粘贴到对话输入框。"),
     "question_generator_tap_generate_hint": m33,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "我想让 RWKV 以这种语言提问...",
@@ -931,8 +909,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "select_model": MessageLookupByLibrary.simpleMessage("选择模型"),
     "select_new_image": MessageLookupByLibrary.simpleMessage("选择图片"),
-    "select_the_decode_parameters_to_set_all_to_for_index":
-        MessageLookupByLibrary.simpleMessage("请从下方选择预设参数，或点击“自定义”进行手动配置"),
+    "select_the_decode_parameters_to_set_all_to_for_index": MessageLookupByLibrary.simpleMessage("请从下方选择预设参数，或点击“自定义”进行手动配置"),
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "选择配置文件中的权重或者本地 .pth 文件",
     ),
@@ -969,8 +946,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "speed": MessageLookupByLibrary.simpleMessage("下载速度："),
     "start": MessageLookupByLibrary.simpleMessage("开始"),
     "start_a_new_chat": MessageLookupByLibrary.simpleMessage("开始新聊天"),
-    "start_a_new_chat_by_clicking_the_button_below":
-        MessageLookupByLibrary.simpleMessage("点击下方按钮开始新聊天"),
+    "start_a_new_chat_by_clicking_the_button_below": MessageLookupByLibrary.simpleMessage("点击下方按钮开始新聊天"),
     "start_a_new_game": MessageLookupByLibrary.simpleMessage("开始对局"),
     "start_download_updates_": MessageLookupByLibrary.simpleMessage(
       "开始后台下载更新...",
@@ -1012,8 +988,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sudoku_hard": MessageLookupByLibrary.simpleMessage("专家"),
     "sudoku_medium": MessageLookupByLibrary.simpleMessage("普通"),
     "suggest": MessageLookupByLibrary.simpleMessage("推荐"),
-    "switch_to_creative_mode_for_better_exp":
-        MessageLookupByLibrary.simpleMessage("解码参数建议选择 “创意”, 以便获得更好的体验"),
+    "switch_to_creative_mode_for_better_exp": MessageLookupByLibrary.simpleMessage("解码参数建议选择 “创意”, 以便获得更好的体验"),
     "syncing": MessageLookupByLibrary.simpleMessage("同步中"),
     "system_mode": MessageLookupByLibrary.simpleMessage("跟随系统"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("系统提示词"),
@@ -1035,8 +1010,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_dim": MessageLookupByLibrary.simpleMessage("深色"),
     "theme_light": MessageLookupByLibrary.simpleMessage("浅色"),
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
-    "then_you_can_start_to_chat_with_rwkv":
-        MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
+    "then_you_can_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
     "think_button_mode_en": m39,
     "think_button_mode_en_long": m40,
     "think_button_mode_en_short": m41,
@@ -1056,10 +1030,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "thinking_mode_high": m44,
     "thinking_mode_off": m45,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
-    "this_is_the_hardest_sudoku_in_the_world":
-        MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
-    "this_model_does_not_support_batch_inference":
-        MessageLookupByLibrary.simpleMessage("这个模型不支持并行推理, 请选择带有 batch 标签的模型"),
+    "this_is_the_hardest_sudoku_in_the_world": MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
+    "this_model_does_not_support_batch_inference": MessageLookupByLibrary.simpleMessage("这个模型不支持并行推理, 请选择带有 batch 标签的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考结果"),
     "top_p_with_value": m46,
     "total_count": MessageLookupByLibrary.simpleMessage("总数"),
@@ -1107,15 +1079,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "unzipping": MessageLookupByLibrary.simpleMessage("解压中"),
     "update_now": MessageLookupByLibrary.simpleMessage("立即更新"),
     "updated_at": MessageLookupByLibrary.simpleMessage("更新时间"),
+    "use_default_line_height": MessageLookupByLibrary.simpleMessage("使用默认行距"),
     "use_it_now": MessageLookupByLibrary.simpleMessage("立即使用"),
     "user": MessageLookupByLibrary.simpleMessage("用户:"),
     "user_message_actions_panel_empty": MessageLookupByLibrary.simpleMessage(
       "当前消息暂无可用操作",
     ),
-    "user_message_actions_panel_switch_branch_subtitle":
-        MessageLookupByLibrary.simpleMessage("通过上一条 / 下一条切换相邻分支"),
-    "user_message_actions_panel_switch_branch_title":
-        MessageLookupByLibrary.simpleMessage("切换分支"),
+    "user_message_actions_panel_switch_branch_subtitle": MessageLookupByLibrary.simpleMessage("通过上一条 / 下一条切换相邻分支"),
+    "user_message_actions_panel_switch_branch_title": MessageLookupByLibrary.simpleMessage("切换分支"),
     "user_message_actions_panel_title": MessageLookupByLibrary.simpleMessage(
       "消息操作",
     ),
@@ -1157,8 +1128,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
     "window_id": m49,
     "windows_architecture_mismatch_dialog_message": m50,
-    "windows_architecture_mismatch_dialog_title":
-        MessageLookupByLibrary.simpleMessage("架构不匹配"),
+    "windows_architecture_mismatch_dialog_title": MessageLookupByLibrary.simpleMessage("架构不匹配"),
     "windows_architecture_mismatch_warning": m51,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
@@ -1168,8 +1138,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),
-    "you_can_record_your_voice_and_let_rwkv_to_copy_it":
-        MessageLookupByLibrary.simpleMessage("您可以录制您的声音，然后让 RWKV 模仿它。"),
+    "you_can_record_your_voice_and_let_rwkv_to_copy_it": MessageLookupByLibrary.simpleMessage("您可以录制您的声音，然后让 RWKV 模仿它。"),
     "you_can_select_a_role_to_chat": MessageLookupByLibrary.simpleMessage(
       "您可以选择角色进行聊天",
     ),

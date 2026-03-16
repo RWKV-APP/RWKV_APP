@@ -21,7 +21,14 @@ import 'package:zone/store/p.dart';
 class MarkdownRender extends ConsumerWidget {
   final String raw;
   final Color? color;
-  const MarkdownRender({super.key, required this.raw, this.color});
+  final bool useMessageLineHeight;
+
+  const MarkdownRender({
+    super.key,
+    required this.raw,
+    this.color,
+    this.useMessageLineHeight = false,
+  });
 
   void _onTapLink(String? href, String title) async {
     if (href == null) return;
@@ -37,20 +44,23 @@ class MarkdownRender extends ConsumerWidget {
     final textScaleFactor = textScaler.scale(1.0);
     final effectiveScale = scale * textScaleFactor;
     final qb = ref.watch(P.app.qb);
+    final effectiveMessageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);
+    final messageLineHeight = useMessageLineHeight ? effectiveMessageLineHeight : null;
     final gptMarkdownStyle = TextStyle(
       color: color ?? qb,
       fontSize: Config.markdownBodyFontSize * effectiveScale,
+      height: messageLineHeight,
     );
 
     final headerFontSizes = Config.markdownHeaderFontSizes.map((e) => e * effectiveScale).toList();
 
     final gptThemeData = GptMarkdownTheme.of(context).copyWith(
-      h1: TextStyle(fontSize: headerFontSizes[0], fontWeight: .w500),
-      h2: TextStyle(fontSize: headerFontSizes[1], fontWeight: .w500),
-      h3: TextStyle(fontSize: headerFontSizes[2], fontWeight: .w500),
-      h4: TextStyle(fontSize: headerFontSizes[3]),
-      h5: TextStyle(fontSize: headerFontSizes[4]),
-      h6: TextStyle(fontSize: headerFontSizes[5]),
+      h1: TextStyle(fontSize: headerFontSizes[0], fontWeight: .w500, height: messageLineHeight),
+      h2: TextStyle(fontSize: headerFontSizes[1], fontWeight: .w500, height: messageLineHeight),
+      h3: TextStyle(fontSize: headerFontSizes[2], fontWeight: .w500, height: messageLineHeight),
+      h4: TextStyle(fontSize: headerFontSizes[3], height: messageLineHeight),
+      h5: TextStyle(fontSize: headerFontSizes[4], height: messageLineHeight),
+      h6: TextStyle(fontSize: headerFontSizes[5], height: messageLineHeight),
       hrHeight: 6,
     );
 

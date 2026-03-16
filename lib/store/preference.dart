@@ -5,6 +5,7 @@ const String _legacyDebugRenderNewlineDirectlyPreferenceKey = "halo_state.debug.
 const String _debugRenderSpaceSymbolPreferenceKey = "halo_state.debug.renderSpaceSymbol";
 const String _legacyDebugRenderSpaceSymbolPreferenceKey = "halo_state.debug.showSpaceSymbols";
 const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefillLogOnly";
+const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
 
 class _Preference {
   // ===========================================================================
@@ -12,6 +13,7 @@ class _Preference {
   // ===========================================================================
 
   final textScaleFactorSystem = -1.0;
+  final messageLineHeightDefault = 0.0;
 
   // ===========================================================================
   // Instance
@@ -65,6 +67,9 @@ class _Preference {
   /// 非空表示使用指定的 textScaleFactor
   late final preferredTextScaleFactor = qs<double>(-1.0);
 
+  /// 偏好的消息气泡行距；0 表示使用默认行高
+  late final preferredMessageLineHeight = qs<double>(0.0);
+
   /// 偏好的主题模式设置，跟随系统、深色模式、浅色模式
   late final themeMode = qs<ThemeMode>(ThemeMode.system);
 
@@ -115,6 +120,14 @@ class _Preference {
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
     return preferredLanguage.resolved.locale.languageCode == "zh";
   });
+
+  late final effectiveMessageLineHeight = qp<double?>((ref) {
+    final preferredMessageLineHeight = ref.watch(P.preference.preferredMessageLineHeight);
+    if (preferredMessageLineHeight <= 0) {
+      return null;
+    }
+    return preferredMessageLineHeight;
+  });
 }
 
 /// Private methods
@@ -145,6 +158,13 @@ extension _$Preference on _Preference {
       preferredTextScaleFactor.q = textScaleFactor;
     } else {
       preferredTextScaleFactor.q = -1;
+    }
+
+    final messageLineHeight = sp.getDouble(_messageLineHeightPreferenceKey);
+    if (messageLineHeight != null && messageLineHeight > 0) {
+      preferredMessageLineHeight.q = messageLineHeight;
+    } else {
+      preferredMessageLineHeight.q = messageLineHeightDefault;
     }
 
     final userType = sp.getInt("halo_state.user_type");
@@ -477,6 +497,17 @@ extension $Preference on _Preference {
       // Try to load the font
       await P.font.loadFontByName(fontFamily);
     }
+  }
+
+  Future<void> setPreferredMessageLineHeight(double lineHeight) async {
+    final normalizedLineHeight = lineHeight <= 0 ? messageLineHeightDefault : lineHeight;
+    preferredMessageLineHeight.q = normalizedLineHeight;
+    final sp = await SharedPreferences.getInstance();
+    if (normalizedLineHeight <= 0) {
+      await sp.remove(_messageLineHeightPreferenceKey);
+      return;
+    }
+    await sp.setDouble(_messageLineHeightPreferenceKey, normalizedLineHeight);
   }
 
   Future<void> setPreferredMonospaceFont(String? fontFamily) async {

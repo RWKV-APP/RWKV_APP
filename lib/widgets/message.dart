@@ -88,6 +88,7 @@ class _MessageState extends ConsumerState<Message> {
     final received = ref.watch(P.chat.receivedTokens.select((String value) => msg.changing ? value : ""));
     final cotDisplayState = ref.watch(P.msg.cotDisplayState(msg.id));
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
+    final messageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);
 
     final isMine = msg.isMine;
     final contextActions = UserMessageBottom.resolveContextMenuActions(
@@ -137,7 +138,10 @@ class _MessageState extends ConsumerState<Message> {
     );
     final thisMessageIsReceiving = receiveId == msg.id && receiving;
     final rawFontSize = theme.textTheme.bodyMedium?.fontSize ?? 14.0;
-    final userMessageStyle = TS(s: rawFontSize * Config.msgFontScale);
+    final userMessageStyle = TS(
+      s: rawFontSize * Config.msgFontScale,
+      height: messageLineHeight,
+    );
     final double rawMaxWidth = math.min(screenWidth, screenHeight);
 
     final Widget bubbleContent = ConstrainedBox(
@@ -406,7 +410,7 @@ class _BotMessageBubble extends ConsumerWidget {
                 ],
               ),
             ),
-          if (!thinkingData.reasoning && !isBatch) MarkdownRender(raw: finalContent),
+          if (!thinkingData.reasoning && !isBatch) MarkdownRender(raw: finalContent, useMessageLineHeight: true),
           if (showReasoningHeader)
             GestureDetector(
               onTap: _toggleCotContent,
@@ -433,11 +437,16 @@ class _BotMessageBubble extends ConsumerWidget {
               child: MarkdownRender(
                 raw: thinkingData.cotContent,
                 color: cotColor,
+                useMessageLineHeight: true,
               ),
             ),
           if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && showingCotContent && !thinkingData.isQuickThinking && !isBatch)
             const SizedBox(height: 12),
-          if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch) MarkdownRender(raw: thinkingData.cotResult),
+          if (thinkingData.cotResult.isNotEmpty && thinkingData.reasoning && !isBatch)
+            MarkdownRender(
+              raw: thinkingData.cotResult,
+              useMessageLineHeight: true,
+            ),
           if (isBatch) BatchMessageContent(msg, index, finalContent),
           if (demoType == .tts) BotTtsContent(msg, index),
           if (!selectMode && demoType != .tts)
@@ -596,7 +605,6 @@ double? _resolveCotContentHeight({
     case .hideCotHeader:
       return 0;
   }
-  return null;
 }
 
 _BatchData _resolveBatchData({
