@@ -145,6 +145,8 @@
   }
   button:hover { background: var(--accent-dim); }
   button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .button-stop { background: var(--red); }
+  .button-stop:hover { background: #dc2626; }
   .msg { margin-bottom: 12px; line-height: 1.6; }
   .msg-user .msg-role { color: var(--accent); }
   .msg-assistant .msg-role { color: var(--text-dim); }
@@ -264,6 +266,7 @@
         <div class="input-row">
           <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off" />
           <button id="send-btn" onclick="sendChat()">Send</button>
+          <button id="stop-btn" class="button-stop" onclick="stopChat()" disabled>Stop</button>
         </div>
       </div>
     </div>
@@ -385,6 +388,22 @@ data: [DONE]</pre>
 }</pre>
         </div>
       </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="method method-post">POST</span>
+          <span class="endpoint-path">/v1/server/stop</span>
+          <span class="endpoint-desc">Stop the active generation request</span>
+        </div>
+        <div class="endpoint-body">
+          <h4>Response</h4>
+<pre>{
+  "ok": true,
+  "stopped": true,
+  "active": false
+}</pre>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -394,7 +413,10 @@ const baseUrl = window.location.origin;
 const chatOutput = document.getElementById('chat-output');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
+const stopBtn = document.getElementById('stop-btn');
 let chatHistory = [];
+let chatInFlight = false;
+let serverActiveRequest = false;
 
 document.getElementById('baseUrlDisplay').textContent = baseUrl;
 document.getElementById('curlChatExample').textContent = `curl ${baseUrl}/v1/chat/completions \\
@@ -407,6 +429,12 @@ document.getElementById('curlCompletionExample').textContent = `curl ${baseUrl}/
 chatInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !sendBtn.disabled) sendChat();
 });
+
+function updateChatControls() {
+  sendBtn.disabled = chatInFlight || serverActiveRequest;
+  chatInput.disabled = chatInFlight || serverActiveRequest;
+  stopBtn.disabled = !chatInFlight && !serverActiveRequest;
+}
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t, i) => {
@@ -426,6 +454,7 @@ async function fetchStatus() {
   try {
     const res = await fetch(baseUrl + '/v1/server/status');
     const data = await res.json();
+    serverActiveRequest = data.active === true;
     document.getElementById('statusDot').className = data.status === 'running' ? 'dot running' : 'dot';
     document.getElementById('subtitle').textContent = data.status === 'running'
       ? 'Server is running at ' + baseUrl : 'Server is not running';
@@ -438,9 +467,11 @@ async function fetchStatus() {
     else if (secs < 3600) document.getElementById('uptime').textContent = Math.floor(secs / 60) + 'm';
     else document.getElementById('uptime').textContent = Math.floor(secs / 3600) + 'h ' + Math.floor((secs % 3600) / 60) + 'm';
   } catch (e) {
+    serverActiveRequest = false;
     document.getElementById('statusDot').className = 'dot';
     document.getElementById('subtitle').textContent = 'Cannot connect to server';
   }
+  updateChatControls();
 }
 
 function appendMsg(role, text) {
@@ -462,7 +493,8 @@ async function sendChat() {
   const text = chatInput.value.trim();
   if (!text) return;
   chatInput.value = '';
-  sendBtn.disabled = true;
+  chatInFlight = true;
+  updateChatControls();
 
   chatHistory.push({ role: 'user', content: text });
   appendMsg('user', text);
@@ -505,13 +537,23 @@ async function sendChat() {
     chatHistory.push({ role: 'assistant', content: fullContent });
   } catch (e) {
     assistantDiv.innerHTML = '<span class="msg-role">error:</span> ' + escapeHtml(e.message);
+  } finally {
+    chatInFlight = false;
+    updateChatControls();
+    chatInput.focus();
   }
+}
 
-  sendBtn.disabled = false;
-  chatInput.focus();
+async function stopChat() {
+  if (stopBtn.disabled) return;
+  stopBtn.disabled = true;
+  try {
+    await fetch(baseUrl + '/v1/server/stop', { method: 'POST' });
+  } catch (e) {}
 }
 
 fetchStatus();
+updateChatControls();
 setInterval(fetchStatus, 3000);
 </script>
 </body>

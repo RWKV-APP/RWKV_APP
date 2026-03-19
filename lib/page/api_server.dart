@@ -82,9 +82,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     });
     _scrollToBottom();
 
-    final requestMessages = _chatMessages
-        .map((m) => {'role': m.role, 'content': m.content})
-        .toList();
+    final requestMessages = _chatMessages.map((m) => {'role': m.role, 'content': m.content}).toList();
 
     try {
       final request = http.Request('POST', Uri.parse(url));
@@ -122,7 +120,9 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
       }
 
       setState(() {
-        _chatMessages.add(_ChatMsg('assistant', _streamingContent));
+        if (_streamingContent.isNotEmpty) {
+          _chatMessages.add(_ChatMsg('assistant', _streamingContent));
+        }
         _streamingContent = '';
         _chatSending = false;
       });
@@ -136,13 +136,19 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     _scrollToBottom();
   }
 
+  Future<void> _stopChatMessage() async {
+    await P.apiServer.stopActiveRequest(showAlert: false);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
     final serverState = ref.watch(P.apiServer.state);
     final serverPort = ref.watch(P.apiServer.port);
     final reqCount = ref.watch(P.apiServer.requestCount);
+    final activeRequest = ref.watch(P.apiServer.activeRequest);
     final latestModel = ref.watch(P.rwkv.latestModel);
     final isRunning = serverState == BackendState.running;
     final logs = ref.watch(P.apiServer.logs);
@@ -166,9 +172,9 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
           _buildControlSection(s, serverState),
           const SizedBox(height: 16),
           if (isRunning) ...[
-            _buildStatusSection(s, serverUrl, reqCount),
+            _buildStatusSection(s, serverUrl, reqCount, activeRequest),
             const SizedBox(height: 16),
-            _buildChatSection(s),
+            _buildChatSection(s, theme, activeRequest),
             const SizedBox(height: 16),
             _buildCurlHint(s, serverUrl),
             const SizedBox(height: 16),
@@ -282,8 +288,8 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
               onPressed: isStopped
                   ? () => P.apiServer.start()
                   : isRunning
-                      ? () => P.apiServer.stop()
-                      : null,
+                  ? () => P.apiServer.stop()
+                  : null,
               icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
               label: Text(isRunning ? s.api_server_stop : s.api_server_start),
               style: FilledButton.styleFrom(
@@ -296,7 +302,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     );
   }
 
-  Widget _buildStatusSection(S s, String serverUrl, int reqCount) {
+  Widget _buildStatusSection(S s, String serverUrl, int reqCount, bool activeRequest) {
     return _buildSectionCard(
       children: [
         Row(
@@ -321,11 +327,16 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
         ),
         const SizedBox(height: 8),
         Text('${s.api_server_request_count}: $reqCount', style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        const SizedBox(height: 4),
+        Text(
+          'Active Request: ${activeRequest ? 'Yes' : 'No'}',
+          style: const TextStyle(fontSize: 14, color: Colors.grey),
+        ),
       ],
     );
   }
 
-  Widget _buildChatSection(S s) {
+  Widget _buildChatSection(S s, ThemeData theme, bool activeRequest) {
     final allMessages = [
       ..._chatMessages,
       if (_chatSending && _streamingContent.isNotEmpty) _ChatMsg('assistant', _streamingContent),
@@ -339,7 +350,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
           width: double.infinity,
           height: 300,
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark ? Colors.black54 : Colors.grey.shade100,
+            color: theme.brightness == Brightness.dark ? Colors.black54 : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(8),
           ),
           child: allMessages.isEmpty
@@ -387,7 +398,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
             Expanded(
               child: TextField(
                 controller: _chatController,
-                enabled: !_chatSending,
+                enabled: !_chatSending && !activeRequest,
                 decoration: InputDecoration(
                   hintText: 'Type a message...',
                   isDense: true,
@@ -399,8 +410,14 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
             ),
             const SizedBox(width: 8),
             FilledButton(
-              onPressed: _chatSending ? null : _sendChatMessage,
+              onPressed: _chatSending || activeRequest ? null : _sendChatMessage,
               child: const Text('Send'),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              onPressed: activeRequest ? _stopChatMessage : null,
+              style: FilledButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Stop'),
             ),
           ],
         ),
@@ -486,7 +503,9 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: logs.isEmpty
-              ? const Center(child: Text('—', style: TextStyle(color: Colors.white38)))
+              ? const Center(
+                  child: Text('—', style: TextStyle(color: Colors.white38)),
+                )
               : ListView.builder(
                   reverse: true,
                   itemCount: logs.length,
