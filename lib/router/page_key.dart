@@ -25,6 +25,7 @@ import 'package:zone/page/talk.dart';
 import 'package:zone/page/test.dart';
 import 'package:zone/page/test_2.dart';
 import 'package:zone/page/translator.dart';
+import 'package:zone/page/api_server.dart' show PageApiServer;
 import 'package:zone/page/weight_manager.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/widgets/model_selector.dart';
@@ -54,6 +55,7 @@ enum PageKey {
   weightManager,
   test,
   test2,
+  apiServer,
   ;
 
   String get path => "/$name";
@@ -103,6 +105,7 @@ enum PageKey {
     ocr => const PageOcr(),
     test => const PageTest(),
     test2 => const PageTest2(),
+    apiServer => const PageApiServer(),
   };
 
   GoRoute get route {

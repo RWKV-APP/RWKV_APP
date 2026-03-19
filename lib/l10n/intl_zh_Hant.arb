@@ -675,5 +675,20 @@
   "english": "English",
   "japanese": "日本語",
   "korean": "한국어",
-  "russian": "Русский"
+  "russian": "Русский",
+  "api_server": "API 伺服器",
+  "api_server_description": "啟動 OpenAI 相容的本機伺服器",
+  "api_server_port": "連接埠",
+  "api_server_start": "啟動伺服器",
+  "api_server_stop": "停止伺服器",
+  "api_server_running": "伺服器執行中",
+  "api_server_stopped": "伺服器已停止",
+  "api_server_starting": "伺服器啟動中",
+  "api_server_url": "伺服器位址",
+  "api_server_select_model_first": "請先選擇一個聊天模型",
+  "api_server_request_count": "請求數",
+  "api_server_open_dashboard": "開啟控制面板",
+  "api_server_curl_hint": "使用範例",
+  "api_server_no_model": "未載入模型",
+  "api_server_logs": "請求日誌"
 }

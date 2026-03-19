@@ -148,6 +148,7 @@ part "md_render.dart";
 part "font.dart";
 part "ui.dart";
 part "pth.dart";
+part "api_server.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -175,6 +176,7 @@ abstract class P {
   static final mdRender = _MDRender();
   static final font = _Font();
   static final ui = _UI();
+  static final apiServer = _ApiServer();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -220,6 +222,7 @@ abstract class P {
       _safeInit(() => font._init(), mark: "font"),
       _safeInit(() => ui._init(), mark: "ui"),
       _safeInit(() => pth._init(), mark: "pth"),
+      _safeInit(() => apiServer._init(), mark: "apiServer"),
     ]);
   }
 

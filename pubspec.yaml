@@ -171,6 +171,7 @@ flutter:
     - assets/filter.txt
     - assets/lambada_test.jsonl
     - assets/config/code_highlights/
+    - assets/api_server/
 
     # QNN libraries for Android
     - path: assets/lib/qnn/

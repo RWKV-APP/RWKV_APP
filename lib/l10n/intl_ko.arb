@@ -675,5 +675,20 @@
   "english": "English",
   "japanese": "日本語",
   "korean": "한국어",
-  "russian": "Русский"
+  "russian": "Русский",
+  "api_server": "API 서버",
+  "api_server_description": "OpenAI 호환 로컬 서버 시작",
+  "api_server_port": "포트",
+  "api_server_start": "서버 시작",
+  "api_server_stop": "서버 중지",
+  "api_server_running": "서버 실행 중",
+  "api_server_stopped": "서버 중지됨",
+  "api_server_starting": "서버 시작 중",
+  "api_server_url": "서버 URL",
+  "api_server_select_model_first": "먼저 채팅 모델을 선택하세요",
+  "api_server_request_count": "요청 수",
+  "api_server_open_dashboard": "대시보드 열기",
+  "api_server_curl_hint": "사용 예시",
+  "api_server_no_model": "모델 미로드",
+  "api_server_logs": "요청 로그"
 }

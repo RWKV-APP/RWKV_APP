@@ -156,6 +156,27 @@ class MessageLookup extends MessageLookupByLibrary {
       "이미 이 디렉토리를 사용 중입니다",
     ),
     "analysing_result": MessageLookupByLibrary.simpleMessage("검색 결과 분석 중"),
+    "api_server": MessageLookupByLibrary.simpleMessage("API 서버"),
+    "api_server_curl_hint": MessageLookupByLibrary.simpleMessage("사용 예시"),
+    "api_server_description": MessageLookupByLibrary.simpleMessage(
+      "OpenAI 호환 로컬 서버 시작",
+    ),
+    "api_server_logs": MessageLookupByLibrary.simpleMessage("요청 로그"),
+    "api_server_no_model": MessageLookupByLibrary.simpleMessage("모델 미로드"),
+    "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage(
+      "대시보드 열기",
+    ),
+    "api_server_port": MessageLookupByLibrary.simpleMessage("포트"),
+    "api_server_request_count": MessageLookupByLibrary.simpleMessage("요청 수"),
+    "api_server_running": MessageLookupByLibrary.simpleMessage("서버 실행 중"),
+    "api_server_select_model_first": MessageLookupByLibrary.simpleMessage(
+      "먼저 채팅 모델을 선택하세요",
+    ),
+    "api_server_start": MessageLookupByLibrary.simpleMessage("서버 시작"),
+    "api_server_starting": MessageLookupByLibrary.simpleMessage("서버 시작 중"),
+    "api_server_stop": MessageLookupByLibrary.simpleMessage("서버 중지"),
+    "api_server_stopped": MessageLookupByLibrary.simpleMessage("서버 중지됨"),
+    "api_server_url": MessageLookupByLibrary.simpleMessage("서버 URL"),
     "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage(
       "앱이 이미 최신 버전입니다",
     ),

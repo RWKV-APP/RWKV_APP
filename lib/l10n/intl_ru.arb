@@ -675,5 +675,20 @@
   "english": "English",
   "japanese": "日本語",
   "korean": "한국어",
-  "russian": "Русский"
+  "russian": "Русский",
+  "api_server": "API Сервер",
+  "api_server_description": "Запустить локальный OpenAI-совместимый сервер",
+  "api_server_port": "Порт",
+  "api_server_start": "Запустить сервер",
+  "api_server_stop": "Остановить сервер",
+  "api_server_running": "Сервер работает",
+  "api_server_stopped": "Сервер остановлен",
+  "api_server_starting": "Сервер запускается",
+  "api_server_url": "URL сервера",
+  "api_server_select_model_first": "Сначала выберите модель чата",
+  "api_server_request_count": "Запросов",
+  "api_server_open_dashboard": "Открыть панель управления",
+  "api_server_curl_hint": "Пример использования",
+  "api_server_no_model": "Модель не загружена",
+  "api_server_logs": "Журнал запросов"
 }
