@@ -9,6 +9,8 @@ const _apiServerHeaders = {
   'Access-Control-Allow-Headers': 'X-Requested-With,content-type,Authorization',
 };
 
+class _ApiServerStoppingException implements Exception {}
+
 class _ApiServer {
   // ===========================================================================
   // Instance
@@ -152,8 +154,13 @@ extension _$ApiServer on _ApiServer {
       return _jsonResponse(_errorJson('Invalid JSON'), status: 400);
     }
 
-    final messagesRaw = json['messages'] as List<dynamic>?;
-    if (messagesRaw == null || messagesRaw.isEmpty) {
+    final messagesValue = json['messages'];
+    if (messagesValue is! List) {
+      return _jsonResponse(_errorJson('messages must be a list'), status: 400);
+    }
+
+    final messagesRaw = messagesValue;
+    if (messagesRaw.isEmpty) {
       return _jsonResponse(_errorJson('messages is required'), status: 400);
     }
 
@@ -167,6 +174,9 @@ extension _$ApiServer on _ApiServer {
 
     final messages = <String>[];
     for (final m in messagesRaw) {
+      if (m is! Map) {
+        return _jsonResponse(_errorJson('each message must be an object'), status: 400);
+      }
       final role = m['role'] as String? ?? '';
       final content = m['content'] as String? ?? '';
       if (role == 'system') {
@@ -211,154 +221,176 @@ extension _$ApiServer on _ApiServer {
       controller.add(utf8.encode('data: ${jsonEncode(data)}\n\n'));
     }
 
-    _enqueueInference(
-      modelID: modelID,
-      reqId: reqId,
-      work: () async {
-        final request = to_rwkv.ChatAsync(
-          messages,
-          enableReasoning: false,
-          forceReasoning: false,
-          addGenerationPrompt: messages.length.isOdd,
-          modelID: modelID,
-          maxLength: maxTokens,
-        );
+    unawaited(
+      _enqueueInference(
+        modelID: modelID,
+        reqId: reqId,
+        work: () async {
+          final request = to_rwkv.ChatAsync(
+            messages,
+            enableReasoning: false,
+            forceReasoning: false,
+            addGenerationPrompt: messages.length.isOdd,
+            modelID: modelID,
+            maxLength: maxTokens,
+          );
 
-        String previousContent = '';
-        String pendingContent = '';
-        DateTime? pendingSince;
-        bool generationStarted = false;
-        bool firstChunkSent = false;
-        final completer = Completer<void>();
-        _activeInferenceCompleter = completer;
+          String previousContent = '';
+          String pendingContent = '';
+          DateTime? pendingSince;
+          bool generationStarted = false;
+          bool firstChunkSent = false;
+          final completer = Completer<void>();
+          _activeInferenceCompleter = completer;
 
-        void markGenerationStarted() {
-          if (generationStarted) return;
-          generationStarted = true;
-          previousContent = '';
-          pendingContent = '';
-          pendingSince = null;
-          firstChunkSent = false;
-        }
-
-        void requestLatestBuffer() {
-          P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-          P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
-        }
-
-        _pollingTimer?.cancel();
-        _broadcastSub?.cancel();
-        _broadcastSub = P.rwkv.broadcastStream.listen((event) {
-          if (event is from_rwkv.GenerateStart) {
-            if (event.req?.requestId != request.requestId) return;
-            markGenerationStarted();
-            return;
+          void markGenerationStarted() {
+            if (generationStarted) return;
+            generationStarted = true;
+            previousContent = '';
+            pendingContent = '';
+            pendingSince = null;
+            firstChunkSent = false;
           }
-          if (event is from_rwkv.IsGenerating) {
-            if (event.modelID != modelID) return;
-            if (event.isGenerating) {
+
+          void requestLatestBuffer() {
+            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
+          }
+
+          _pollingTimer?.cancel();
+          _broadcastSub?.cancel();
+          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+            if (event is from_rwkv.GenerateStart) {
+              if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
-            } else if (generationStarted) {
+              return;
+            }
+            if (event is from_rwkv.IsGenerating) {
+              if (event.modelID != modelID) return;
+              if (event.isGenerating) {
+                markGenerationStarted();
+              } else if (generationStarted) {
+                if (!completer.isCompleted) completer.complete();
+              }
+              return;
+            }
+            if (event is from_rwkv.GenerateStop) {
+              if (event.req?.requestId != request.requestId) return;
               if (!completer.isCompleted) completer.complete();
+              return;
             }
-            return;
-          }
-          if (event is from_rwkv.GenerateStop) {
-            if (event.req?.requestId != request.requestId) return;
-            if (!completer.isCompleted) completer.complete();
-            return;
-          }
 
-          String full = '';
-          bool eosFound = false;
-          if (event is from_rwkv.ResponseBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
-            full = event.responseBufferContent;
-            eosFound = event.eosFound;
-          } else if (event is from_rwkv.ResponseBatchBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
-            full = event.responseBufferContent.isNotEmpty ? event.responseBufferContent[0] : '';
-            eosFound = event.eosFound.isNotEmpty ? event.eosFound[0] : false;
-          } else {
-            return;
-          }
-
-          if (!generationStarted) {
-            if (full.isEmpty) return;
-            markGenerationStarted();
-          }
-          if (!firstChunkSent) {
-            if (full.isEmpty) return;
-            final now = DateTime.now();
-            if (pendingContent.isEmpty) {
-              pendingContent = full;
-              pendingSince = now;
-              if (!eosFound) return;
-            } else if (!full.startsWith(pendingContent)) {
-              pendingContent = full;
-              pendingSince = now;
-              if (!eosFound) return;
+            String full = '';
+            bool eosFound = false;
+            if (event is from_rwkv.ResponseBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
+              full = event.responseBufferContent;
+              eosFound = event.eosFound;
+            } else if (event is from_rwkv.ResponseBatchBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
+              full = event.responseBufferContent.isNotEmpty ? event.responseBufferContent[0] : '';
+              eosFound = event.eosFound.isNotEmpty ? event.eosFound[0] : false;
             } else {
-              pendingContent = full;
+              return;
             }
 
-            final readyByTime = pendingSince != null && now.difference(pendingSince!) >= _apiServerStreamingFirstChunkDelay;
-            if (!readyByTime && !eosFound) return;
+            if (!generationStarted) {
+              if (full.isEmpty) return;
+              markGenerationStarted();
+            }
+            if (!firstChunkSent) {
+              if (full.isEmpty) return;
+              final now = DateTime.now();
+              if (pendingContent.isEmpty) {
+                pendingContent = full;
+                pendingSince = now;
+                if (!eosFound) return;
+              } else if (!full.startsWith(pendingContent)) {
+                pendingContent = full;
+                pendingSince = now;
+                if (!eosFound) return;
+              } else {
+                pendingContent = full;
+              }
 
-            previousContent = full;
-            firstChunkSent = true;
-            sendSSE({
-              'id': reqId,
-              'object': 'chat.completion.chunk',
-              'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-              'model': modelName,
-              'choices': [
-                {
-                  'index': 0,
-                  'delta': {'content': full},
-                  'finish_reason': null,
-                },
-              ],
-            });
-            return;
-          }
-          if (!full.startsWith(previousContent)) {
-            _addLog('chat stream prefix mismatch, ignored snapshot');
-            return;
-          }
-          if (full.length > previousContent.length) {
-            final delta = full.substring(previousContent.length);
-            previousContent = full;
-            sendSSE({
-              'id': reqId,
-              'object': 'chat.completion.chunk',
-              'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-              'model': modelName,
-              'choices': [
-                {
-                  'index': 0,
-                  'delta': {'content': delta},
-                  'finish_reason': null,
-                },
-              ],
-            });
-          }
-        });
-        P.rwkv.send(request);
-        requestLatestBuffer();
-        _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+              final readyByTime = pendingSince != null && now.difference(pendingSince!) >= _apiServerStreamingFirstChunkDelay;
+              if (!readyByTime && !eosFound) return;
+
+              previousContent = full;
+              firstChunkSent = true;
+              sendSSE({
+                'id': reqId,
+                'object': 'chat.completion.chunk',
+                'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                'model': modelName,
+                'choices': [
+                  {
+                    'index': 0,
+                    'delta': {'content': full},
+                    'finish_reason': null,
+                  },
+                ],
+              });
+              return;
+            }
+            if (!full.startsWith(previousContent)) {
+              _addLog('chat stream prefix mismatch, ignored snapshot');
+              return;
+            }
+            if (full.length > previousContent.length) {
+              final delta = full.substring(previousContent.length);
+              previousContent = full;
+              sendSSE({
+                'id': reqId,
+                'object': 'chat.completion.chunk',
+                'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                'model': modelName,
+                'choices': [
+                  {
+                    'index': 0,
+                    'delta': {'content': delta},
+                    'finish_reason': null,
+                  },
+                ],
+              });
+            }
+          });
+          P.rwkv.send(request);
           requestLatestBuffer();
-        });
+          _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+            requestLatestBuffer();
+          });
 
-        await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
+          await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
 
-        _pollingTimer?.cancel();
-        _pollingTimer = null;
-        _broadcastSub?.cancel();
-        _broadcastSub = null;
+          _pollingTimer?.cancel();
+          _pollingTimer = null;
+          _broadcastSub?.cancel();
+          _broadcastSub = null;
 
+          sendSSE({
+            'id': reqId,
+            'object': 'chat.completion.chunk',
+            'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+            'model': modelName,
+            'choices': [
+              {
+                'index': 0,
+                'delta': {},
+                'finish_reason': 'stop',
+              },
+            ],
+          });
+          controller.add(utf8.encode('data: [DONE]\n\n'));
+          await controller.close();
+        },
+      ).catchError((error, stackTrace) async {
+        if (controller.isClosed) return;
+        if (error is! _ApiServerStoppingException) {
+          qqe(error);
+        }
         sendSSE({
           'id': reqId,
           'object': 'chat.completion.chunk',
@@ -374,7 +406,7 @@ extension _$ApiServer on _ApiServer {
         });
         controller.add(utf8.encode('data: [DONE]\n\n'));
         await controller.close();
-      },
+      }),
     );
 
     return shelf.Response.ok(
@@ -398,88 +430,92 @@ extension _$ApiServer on _ApiServer {
   ) async {
     final resultCompleter = Completer<String>();
 
-    await _enqueueInference(
-      modelID: modelID,
-      reqId: reqId,
-      work: () async {
-        final request = to_rwkv.ChatAsync(
-          messages,
-          enableReasoning: false,
-          forceReasoning: false,
-          addGenerationPrompt: messages.length.isOdd,
-          modelID: modelID,
-          maxLength: maxTokens,
-        );
+    try {
+      await _enqueueInference(
+        modelID: modelID,
+        reqId: reqId,
+        work: () async {
+          final request = to_rwkv.ChatAsync(
+            messages,
+            enableReasoning: false,
+            forceReasoning: false,
+            addGenerationPrompt: messages.length.isOdd,
+            modelID: modelID,
+            maxLength: maxTokens,
+          );
 
-        String lastContent = '';
-        bool generationStarted = false;
-        final completer = Completer<void>();
-        _activeInferenceCompleter = completer;
+          String lastContent = '';
+          bool generationStarted = false;
+          final completer = Completer<void>();
+          _activeInferenceCompleter = completer;
 
-        void markGenerationStarted() {
-          if (generationStarted) return;
-          generationStarted = true;
-        }
-
-        void requestLatestBuffer() {
-          P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-          P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
-        }
-
-        _pollingTimer?.cancel();
-        _broadcastSub?.cancel();
-        _broadcastSub = P.rwkv.broadcastStream.listen((event) {
-          if (event is from_rwkv.GenerateStart) {
-            if (event.req?.requestId != request.requestId) return;
-            markGenerationStarted();
-            return;
+          void markGenerationStarted() {
+            if (generationStarted) return;
+            generationStarted = true;
           }
-          if (event is from_rwkv.IsGenerating) {
-            if (event.modelID != modelID) return;
-            if (event.isGenerating) {
+
+          void requestLatestBuffer() {
+            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID));
+          }
+
+          _pollingTimer?.cancel();
+          _broadcastSub?.cancel();
+          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+            if (event is from_rwkv.GenerateStart) {
+              if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
-            } else if (!event.isGenerating && generationStarted) {
-              if (!completer.isCompleted) completer.complete();
+              return;
             }
-            return;
-          }
-          if (event is from_rwkv.GenerateStop) {
-            if (event.req?.requestId != request.requestId) return;
-            if (!completer.isCompleted) completer.complete();
-            return;
-          }
+            if (event is from_rwkv.IsGenerating) {
+              if (event.modelID != modelID) return;
+              if (event.isGenerating) {
+                markGenerationStarted();
+              } else if (!event.isGenerating && generationStarted) {
+                if (!completer.isCompleted) completer.complete();
+              }
+              return;
+            }
+            if (event is from_rwkv.GenerateStop) {
+              if (event.req?.requestId != request.requestId) return;
+              if (!completer.isCompleted) completer.complete();
+              return;
+            }
 
-          if (event is from_rwkv.ResponseBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
-            if (!generationStarted && event.responseBufferContent.isEmpty) return;
-            markGenerationStarted();
-            lastContent = event.responseBufferContent;
-          } else if (event is from_rwkv.ResponseBatchBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
-            if (event.responseBufferContent.isEmpty) return;
-            if (!generationStarted && event.responseBufferContent[0].isEmpty) return;
-            markGenerationStarted();
-            lastContent = event.responseBufferContent[0];
-          }
-        });
-        P.rwkv.send(request);
-        requestLatestBuffer();
-        _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+            if (event is from_rwkv.ResponseBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
+              if (!generationStarted && event.responseBufferContent.isEmpty) return;
+              markGenerationStarted();
+              lastContent = event.responseBufferContent;
+            } else if (event is from_rwkv.ResponseBatchBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
+              if (event.responseBufferContent.isEmpty) return;
+              if (!generationStarted && event.responseBufferContent[0].isEmpty) return;
+              markGenerationStarted();
+              lastContent = event.responseBufferContent[0];
+            }
+          });
+          P.rwkv.send(request);
           requestLatestBuffer();
-        });
+          _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+            requestLatestBuffer();
+          });
 
-        await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
+          await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
 
-        _pollingTimer?.cancel();
-        _pollingTimer = null;
-        _broadcastSub?.cancel();
-        _broadcastSub = null;
+          _pollingTimer?.cancel();
+          _pollingTimer = null;
+          _broadcastSub?.cancel();
+          _broadcastSub = null;
 
-        resultCompleter.complete(lastContent);
-      },
-    );
+          resultCompleter.complete(lastContent);
+        },
+      );
+    } on _ApiServerStoppingException {
+      return _jsonResponse(_errorJson('API Server is stopping', type: 'server_unavailable'), status: 503);
+    }
 
     final content = await resultCompleter.future;
 
@@ -550,146 +586,164 @@ extension _$ApiServer on _ApiServer {
       controller.add(utf8.encode('data: ${jsonEncode(data)}\n\n'));
     }
 
-    _enqueueInference(
-      modelID: modelID,
-      reqId: reqId,
-      work: () async {
-        final request = to_rwkv.GenerateAsync(
-          prompt,
-          batch: 1,
-          modelID: modelID,
-          maxLength: maxTokens,
-        );
+    unawaited(
+      _enqueueInference(
+        modelID: modelID,
+        reqId: reqId,
+        work: () async {
+          final request = to_rwkv.GenerateAsync(
+            prompt,
+            batch: 1,
+            modelID: modelID,
+            maxLength: maxTokens,
+          );
 
-        String previousContent = prompt;
-        String pendingContent = '';
-        DateTime? pendingSince;
-        bool generationStarted = false;
-        bool firstChunkSent = false;
-        final completer = Completer<void>();
-        _activeInferenceCompleter = completer;
+          String previousContent = prompt;
+          String pendingContent = '';
+          DateTime? pendingSince;
+          bool generationStarted = false;
+          bool firstChunkSent = false;
+          final completer = Completer<void>();
+          _activeInferenceCompleter = completer;
 
-        void markGenerationStarted() {
-          if (generationStarted) return;
-          generationStarted = true;
-          previousContent = prompt;
-          pendingContent = '';
-          pendingSince = null;
-          firstChunkSent = false;
-        }
-
-        void requestLatestBuffer() {
-          P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-          P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
-        }
-
-        _pollingTimer?.cancel();
-        _broadcastSub?.cancel();
-        _broadcastSub = P.rwkv.broadcastStream.listen((event) {
-          if (event is from_rwkv.GenerateStart) {
-            if (event.req?.requestId != request.requestId) return;
-            markGenerationStarted();
-            return;
+          void markGenerationStarted() {
+            if (generationStarted) return;
+            generationStarted = true;
+            previousContent = prompt;
+            pendingContent = '';
+            pendingSince = null;
+            firstChunkSent = false;
           }
-          if (event is from_rwkv.IsGenerating) {
-            if (event.modelID != modelID) return;
-            if (event.isGenerating) {
+
+          void requestLatestBuffer() {
+            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
+          }
+
+          _pollingTimer?.cancel();
+          _broadcastSub?.cancel();
+          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+            if (event is from_rwkv.GenerateStart) {
+              if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
-            } else if (generationStarted) {
+              return;
+            }
+            if (event is from_rwkv.IsGenerating) {
+              if (event.modelID != modelID) return;
+              if (event.isGenerating) {
+                markGenerationStarted();
+              } else if (generationStarted) {
+                if (!completer.isCompleted) completer.complete();
+              }
+              return;
+            }
+            if (event is from_rwkv.GenerateStop) {
+              if (event.req?.requestId != request.requestId) return;
               if (!completer.isCompleted) completer.complete();
+              return;
             }
-            return;
-          }
-          if (event is from_rwkv.GenerateStop) {
-            if (event.req?.requestId != request.requestId) return;
-            if (!completer.isCompleted) completer.complete();
-            return;
-          }
 
-          String full = '';
-          bool eosFound = false;
-          if (event is from_rwkv.ResponseBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
-            full = event.responseBufferContent;
-            eosFound = event.eosFound;
-          } else if (event is from_rwkv.ResponseBatchBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
-            full = event.responseBufferContent.isNotEmpty ? event.responseBufferContent[0] : '';
-            eosFound = event.eosFound.isNotEmpty ? event.eosFound[0] : false;
-          } else {
-            return;
-          }
-
-          if (!generationStarted) {
-            if (full.isEmpty) return;
-            markGenerationStarted();
-          }
-          if (!firstChunkSent) {
-            if (full.length < prompt.length) return;
-            final now = DateTime.now();
-            if (pendingContent.isEmpty) {
-              pendingContent = full;
-              pendingSince = now;
-              if (!eosFound) return;
-            } else if (!full.startsWith(pendingContent)) {
-              pendingContent = full;
-              pendingSince = now;
-              if (!eosFound) return;
+            String full = '';
+            bool eosFound = false;
+            if (event is from_rwkv.ResponseBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
+              full = event.responseBufferContent;
+              eosFound = event.eosFound;
+            } else if (event is from_rwkv.ResponseBatchBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
+              full = event.responseBufferContent.isNotEmpty ? event.responseBufferContent[0] : '';
+              eosFound = event.eosFound.isNotEmpty ? event.eosFound[0] : false;
             } else {
-              pendingContent = full;
+              return;
             }
 
-            final readyByTime = pendingSince != null && now.difference(pendingSince!) >= _apiServerStreamingFirstChunkDelay;
-            if (!readyByTime && !eosFound) return;
+            if (!generationStarted) {
+              if (full.isEmpty) return;
+              markGenerationStarted();
+            }
+            if (!firstChunkSent) {
+              if (full.length < prompt.length) return;
+              final now = DateTime.now();
+              if (pendingContent.isEmpty) {
+                pendingContent = full;
+                pendingSince = now;
+                if (!eosFound) return;
+              } else if (!full.startsWith(pendingContent)) {
+                pendingContent = full;
+                pendingSince = now;
+                if (!eosFound) return;
+              } else {
+                pendingContent = full;
+              }
 
-            final firstDelta = full.startsWith(prompt) ? full.substring(prompt.length) : full;
-            previousContent = full;
-            firstChunkSent = true;
-            if (firstDelta.isEmpty) return;
-            sendSSE({
-              'id': reqId,
-              'object': 'text_completion',
-              'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-              'model': modelName,
-              'choices': [
-                {'index': 0, 'text': firstDelta, 'finish_reason': null},
-              ],
-            });
-            return;
-          }
-          if (!full.startsWith(previousContent)) {
-            _addLog('completion stream prefix mismatch, ignored snapshot');
-            return;
-          }
-          if (full.length > previousContent.length) {
-            final delta = full.substring(previousContent.length);
-            previousContent = full;
-            sendSSE({
-              'id': reqId,
-              'object': 'text_completion',
-              'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-              'model': modelName,
-              'choices': [
-                {'index': 0, 'text': delta, 'finish_reason': null},
-              ],
-            });
-          }
-        });
-        P.rwkv.send(request);
-        requestLatestBuffer();
-        _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+              final readyByTime = pendingSince != null && now.difference(pendingSince!) >= _apiServerStreamingFirstChunkDelay;
+              if (!readyByTime && !eosFound) return;
+
+              final firstDelta = full.startsWith(prompt) ? full.substring(prompt.length) : full;
+              previousContent = full;
+              firstChunkSent = true;
+              if (firstDelta.isEmpty) return;
+              sendSSE({
+                'id': reqId,
+                'object': 'text_completion',
+                'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                'model': modelName,
+                'choices': [
+                  {'index': 0, 'text': firstDelta, 'finish_reason': null},
+                ],
+              });
+              return;
+            }
+            if (!full.startsWith(previousContent)) {
+              _addLog('completion stream prefix mismatch, ignored snapshot');
+              return;
+            }
+            if (full.length > previousContent.length) {
+              final delta = full.substring(previousContent.length);
+              previousContent = full;
+              sendSSE({
+                'id': reqId,
+                'object': 'text_completion',
+                'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                'model': modelName,
+                'choices': [
+                  {'index': 0, 'text': delta, 'finish_reason': null},
+                ],
+              });
+            }
+          });
+          P.rwkv.send(request);
           requestLatestBuffer();
-        });
+          _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+            requestLatestBuffer();
+          });
 
-        await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
+          await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
 
-        _pollingTimer?.cancel();
-        _pollingTimer = null;
-        _broadcastSub?.cancel();
-        _broadcastSub = null;
+          _pollingTimer?.cancel();
+          _pollingTimer = null;
+          _broadcastSub?.cancel();
+          _broadcastSub = null;
 
+          sendSSE({
+            'id': reqId,
+            'object': 'text_completion',
+            'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+            'model': modelName,
+            'choices': [
+              {'index': 0, 'text': '', 'finish_reason': 'stop'},
+            ],
+          });
+          controller.add(utf8.encode('data: [DONE]\n\n'));
+          await controller.close();
+        },
+      ).catchError((error, stackTrace) async {
+        if (controller.isClosed) return;
+        if (error is! _ApiServerStoppingException) {
+          qqe(error);
+        }
         sendSSE({
           'id': reqId,
           'object': 'text_completion',
@@ -701,7 +755,7 @@ extension _$ApiServer on _ApiServer {
         });
         controller.add(utf8.encode('data: [DONE]\n\n'));
         await controller.close();
-      },
+      }),
     );
 
     return shelf.Response.ok(
@@ -725,86 +779,90 @@ extension _$ApiServer on _ApiServer {
   ) async {
     final resultCompleter = Completer<String>();
 
-    await _enqueueInference(
-      modelID: modelID,
-      reqId: reqId,
-      work: () async {
-        final request = to_rwkv.GenerateAsync(
-          prompt,
-          batch: 1,
-          modelID: modelID,
-          maxLength: maxTokens,
-        );
+    try {
+      await _enqueueInference(
+        modelID: modelID,
+        reqId: reqId,
+        work: () async {
+          final request = to_rwkv.GenerateAsync(
+            prompt,
+            batch: 1,
+            modelID: modelID,
+            maxLength: maxTokens,
+          );
 
-        String lastContent = '';
-        bool generationStarted = false;
-        final completer = Completer<void>();
-        _activeInferenceCompleter = completer;
+          String lastContent = '';
+          bool generationStarted = false;
+          final completer = Completer<void>();
+          _activeInferenceCompleter = completer;
 
-        void markGenerationStarted() {
-          if (generationStarted) return;
-          generationStarted = true;
-        }
-
-        void requestLatestBuffer() {
-          P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
-          P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
-        }
-
-        _pollingTimer?.cancel();
-        _broadcastSub?.cancel();
-        _broadcastSub = P.rwkv.broadcastStream.listen((event) {
-          if (event is from_rwkv.GenerateStart) {
-            if (event.req?.requestId != request.requestId) return;
-            markGenerationStarted();
-            return;
+          void markGenerationStarted() {
+            if (generationStarted) return;
+            generationStarted = true;
           }
-          if (event is from_rwkv.IsGenerating) {
-            if (event.modelID != modelID) return;
-            if (event.isGenerating) {
+
+          void requestLatestBuffer() {
+            P.rwkv.send(to_rwkv.GetIsGenerating(modelID: modelID));
+            P.rwkv.send(to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID));
+          }
+
+          _pollingTimer?.cancel();
+          _broadcastSub?.cancel();
+          _broadcastSub = P.rwkv.broadcastStream.listen((event) {
+            if (event is from_rwkv.GenerateStart) {
+              if (event.req?.requestId != request.requestId) return;
               markGenerationStarted();
-            } else if (!event.isGenerating && generationStarted) {
-              if (!completer.isCompleted) completer.complete();
+              return;
             }
-            return;
-          }
-          if (event is from_rwkv.GenerateStop) {
-            if (event.req?.requestId != request.requestId) return;
-            if (!completer.isCompleted) completer.complete();
-            return;
-          }
+            if (event is from_rwkv.IsGenerating) {
+              if (event.modelID != modelID) return;
+              if (event.isGenerating) {
+                markGenerationStarted();
+              } else if (!event.isGenerating && generationStarted) {
+                if (!completer.isCompleted) completer.complete();
+              }
+              return;
+            }
+            if (event is from_rwkv.GenerateStop) {
+              if (event.req?.requestId != request.requestId) return;
+              if (!completer.isCompleted) completer.complete();
+              return;
+            }
 
-          if (event is from_rwkv.ResponseBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
-            if (!generationStarted && event.responseBufferContent.isEmpty) return;
-            markGenerationStarted();
-            lastContent = event.responseBufferContent;
-          } else if (event is from_rwkv.ResponseBatchBufferContent) {
-            final req = event.req;
-            if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
-            if (event.responseBufferContent.isEmpty) return;
-            if (!generationStarted && event.responseBufferContent[0].isEmpty) return;
-            markGenerationStarted();
-            lastContent = event.responseBufferContent[0];
-          }
-        });
-        P.rwkv.send(request);
-        requestLatestBuffer();
-        _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+            if (event is from_rwkv.ResponseBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetResponseBufferContent || req.modelID != modelID) return;
+              if (!generationStarted && event.responseBufferContent.isEmpty) return;
+              markGenerationStarted();
+              lastContent = event.responseBufferContent;
+            } else if (event is from_rwkv.ResponseBatchBufferContent) {
+              final req = event.req;
+              if (req is! to_rwkv.GetBatchResponseBufferContent || req.modelID != modelID) return;
+              if (event.responseBufferContent.isEmpty) return;
+              if (!generationStarted && event.responseBufferContent[0].isEmpty) return;
+              markGenerationStarted();
+              lastContent = event.responseBufferContent[0];
+            }
+          });
+          P.rwkv.send(request);
           requestLatestBuffer();
-        });
+          _pollingTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+            requestLatestBuffer();
+          });
 
-        await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
+          await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
 
-        _pollingTimer?.cancel();
-        _pollingTimer = null;
-        _broadcastSub?.cancel();
-        _broadcastSub = null;
+          _pollingTimer?.cancel();
+          _pollingTimer = null;
+          _broadcastSub?.cancel();
+          _broadcastSub = null;
 
-        resultCompleter.complete(lastContent);
-      },
-    );
+          resultCompleter.complete(lastContent);
+        },
+      );
+    } on _ApiServerStoppingException {
+      return _jsonResponse(_errorJson('API Server is stopping', type: 'server_unavailable'), status: 503);
+    }
 
     final content = await resultCompleter.future;
     final completionText = content.startsWith(prompt) ? content.substring(prompt.length) : content;
@@ -830,12 +888,19 @@ extension _$ApiServer on _ApiServer {
     required String reqId,
     required Future<void> Function() work,
   }) async {
+    if (state.q == BackendState.stopping) {
+      throw _ApiServerStoppingException();
+    }
+
     final waiter = Completer<void>();
     _requestQueue.add(waiter);
     if (!_processing) {
       _processQueue();
     }
     await waiter.future;
+    if (state.q == BackendState.stopping) {
+      throw _ApiServerStoppingException();
+    }
     activeRequest.q = true;
     _activeModelID = modelID;
     _activeInferenceId = reqId;
@@ -867,6 +932,15 @@ extension _$ApiServer on _ApiServer {
     final completer = _activeInferenceCompleter;
     if (completer == null || completer.isCompleted) return;
     completer.complete();
+  }
+
+  void _abortQueuedInferences() {
+    final queued = List<Completer<void>>.from(_requestQueue);
+    _requestQueue.clear();
+    for (final waiter in queued) {
+      if (waiter.isCompleted) continue;
+      waiter.completeError(_ApiServerStoppingException());
+    }
   }
 
   Future<void> _processQueue() async {
@@ -953,6 +1027,7 @@ extension $ApiServer on _ApiServer {
     if (httpServer == null) return;
 
     state.q = BackendState.stopping;
+    _abortQueuedInferences();
     final hasActiveRequest = activeRequest.q;
     if (hasActiveRequest) {
       await _stopCurrentRequestInternal();
