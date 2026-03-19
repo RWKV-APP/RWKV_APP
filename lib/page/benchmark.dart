@@ -15,10 +15,10 @@ import 'package:rwkv_mobile_flutter/types.dart';
 
 // Project imports:
 import 'package:zone/func/format_bytes.dart';
-import 'package:zone/gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/lambada_test_item.dart';
-import 'package:zone/store/p.dart' show P, $Chat, $RWKV, $Lambada;
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class PageBenchmark extends ConsumerStatefulWidget {

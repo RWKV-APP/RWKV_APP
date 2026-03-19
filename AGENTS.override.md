@@ -44,6 +44,7 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 - 全局状态主要位于 `lib/store`。
 - 仅在 `lib/store/p.dart` 中集中 `import`，其他 `lib/store` 文件通过 `part of 'p.dart';` 共享引用。
 - 严禁相对路径导入，必须使用 `import 'package:.../...';`。
+- 严禁使用 `show` 形式的导入或导出；统一使用普通 `import` / `export`。
 
 ### 路由与 UI
 

@@ -1698,7 +1698,7 @@ extension _$RWKV on _RWKV {
       return;
     }
 
-    if (!Platform.isWindows || Abi.current() != Abi.windowsArm64) {
+    if (!Platform.isWindows || ffi.Abi.current() != ffi.Abi.windowsArm64) {
       return;
     }
 

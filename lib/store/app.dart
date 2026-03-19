@@ -642,14 +642,14 @@ extension _$App on _App {
   }
 
   String _getWindowsBuildArchitecture() {
-    final abi = Abi.current();
-    if (abi == Abi.windowsArm64) {
+    final abi = ffi.Abi.current();
+    if (abi == ffi.Abi.windowsArm64) {
       return 'arm64';
     }
-    if (abi == Abi.windowsX64) {
+    if (abi == ffi.Abi.windowsX64) {
       return 'x64';
     }
-    if (abi == Abi.windowsIA32) {
+    if (abi == ffi.Abi.windowsIA32) {
       return 'x86';
     }
     return 'unknown';

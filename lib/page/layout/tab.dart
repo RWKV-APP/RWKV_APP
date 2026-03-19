@@ -11,7 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo/halo.dart';
 
 // Project imports:
-import 'package:zone/gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 
 class PageTab extends ConsumerWidget {

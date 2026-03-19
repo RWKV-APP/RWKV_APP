@@ -8,7 +8,7 @@ import 'package:halo/halo.dart';
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/demo_type.dart';
-import 'package:zone/store/p.dart' show P, $RWKV;
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 import 'package:zone/widgets/triangle_painter.dart';
 

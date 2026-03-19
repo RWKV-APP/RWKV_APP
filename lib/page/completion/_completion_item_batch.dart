@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:zone/page/completion/_completion_controller.dart';
 import 'package:zone/page/completion/_completion_list_item.dart';
-import 'package:zone/page/completion/_completion_state.dart' show CompletionItemNode;
+import 'package:zone/page/completion/_completion_state.dart';
 
 class CompletionItemBatch extends StatefulWidget {
   final CompletionItemNode item;

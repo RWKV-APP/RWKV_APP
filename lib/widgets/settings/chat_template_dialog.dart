@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:halo_alert/halo_alert.dart';
 
 // Project imports:
-import 'package:zone/gen/l10n.dart' show S;
-import 'package:zone/model/prompt_template.dart' show PromptTemplate;
-import 'package:zone/store/p.dart' show P, $Preference;
+import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/prompt_template.dart';
+import 'package:zone/store/p.dart';
 
 class ChatTemplateDialog extends StatefulWidget {
   final bool newChat;

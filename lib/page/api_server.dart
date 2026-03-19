@@ -14,9 +14,9 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
-import 'package:zone/gen/l10n.dart' show S;
+import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/backend_state.dart';
-import 'package:zone/store/p.dart' show P, $ApiServer;
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 class _ChatMsg {

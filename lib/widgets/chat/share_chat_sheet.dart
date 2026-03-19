@@ -1,28 +1,28 @@
 // Dart imports:
-import 'dart:io' show File;
+import 'dart:io';
 import 'dart:ui' as ui;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show RenderRepaintBoundary, OffsetLayer;
+import 'package:flutter/rendering.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gal/gal.dart' show Gal;
+import 'package:gal/gal.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart' show getApplicationCacheDirectory;
+import 'package:path_provider/path_provider.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Project imports:
-import 'package:zone/config.dart' show Config;
+import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
-import 'package:zone/store/p.dart' show P;
+import 'package:zone/store/p.dart';
 import 'package:zone/widgets/message.dart';
 
 class ShareChatSheet extends ConsumerStatefulWidget {

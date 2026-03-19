@@ -2,7 +2,7 @@
 import 'dart:io';
 
 // Flutter imports:
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 
 Future<void> saveAssetToFile(String assetPath, String targetPath) async {
   final rawAssetFile = await rootBundle.load(assetPath);

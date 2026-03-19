@@ -10,7 +10,7 @@ import 'package:flutter_roleplay/models/model_info.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:rwkv_downloader/downloader.dart' show TaskState;
+import 'package:rwkv_downloader/downloader.dart';
 import 'package:rwkv_mobile_flutter/types.dart';
 import 'package:sprintf/sprintf.dart';
 
