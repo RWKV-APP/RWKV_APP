@@ -170,6 +170,43 @@ class MessageLookup extends MessageLookupByLibrary {
     "analysing_result": MessageLookupByLibrary.simpleMessage(
       "Анализ результатов поиска",
     ),
+    "api_server": MessageLookupByLibrary.simpleMessage("API Сервер"),
+    "api_server_curl_hint": MessageLookupByLibrary.simpleMessage(
+      "Пример использования",
+    ),
+    "api_server_description": MessageLookupByLibrary.simpleMessage(
+      "Запустить локальный OpenAI-совместимый сервер",
+    ),
+    "api_server_logs": MessageLookupByLibrary.simpleMessage("Журнал запросов"),
+    "api_server_no_model": MessageLookupByLibrary.simpleMessage(
+      "Модель не загружена",
+    ),
+    "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage(
+      "Открыть панель управления",
+    ),
+    "api_server_port": MessageLookupByLibrary.simpleMessage("Порт"),
+    "api_server_request_count": MessageLookupByLibrary.simpleMessage(
+      "Запросов",
+    ),
+    "api_server_running": MessageLookupByLibrary.simpleMessage(
+      "Сервер работает",
+    ),
+    "api_server_select_model_first": MessageLookupByLibrary.simpleMessage(
+      "Сначала выберите модель чата",
+    ),
+    "api_server_start": MessageLookupByLibrary.simpleMessage(
+      "Запустить сервер",
+    ),
+    "api_server_starting": MessageLookupByLibrary.simpleMessage(
+      "Сервер запускается",
+    ),
+    "api_server_stop": MessageLookupByLibrary.simpleMessage(
+      "Остановить сервер",
+    ),
+    "api_server_stopped": MessageLookupByLibrary.simpleMessage(
+      "Сервер остановлен",
+    ),
+    "api_server_url": MessageLookupByLibrary.simpleMessage("URL сервера"),
     "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage(
       "У вас последняя версия",
     ),

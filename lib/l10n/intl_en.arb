@@ -681,5 +681,20 @@
   "english": "English",
   "japanese": "Japanese",
   "korean": "Korean",
-  "russian": "Russian"
+  "russian": "Russian",
+  "api_server": "API Server",
+  "api_server_description": "Start an OpenAI compatible local server",
+  "api_server_port": "Port",
+  "api_server_start": "Start Server",
+  "api_server_stop": "Stop Server",
+  "api_server_running": "Server Running",
+  "api_server_stopped": "Server Stopped",
+  "api_server_starting": "Server Starting",
+  "api_server_url": "Server URL",
+  "api_server_select_model_first": "Please select a chat model first",
+  "api_server_request_count": "Requests",
+  "api_server_open_dashboard": "Open Dashboard",
+  "api_server_curl_hint": "Usage Example",
+  "api_server_no_model": "No model loaded",
+  "api_server_logs": "Request Logs"
 }

@@ -5321,6 +5321,126 @@ class S {
   String get russian {
     return Intl.message('Русский', name: 'russian', desc: '', args: []);
   }
+
+  /// `API 服务器`
+  String get api_server {
+    return Intl.message('API 服务器', name: 'api_server', desc: '', args: []);
+  }
+
+  /// `启动 OpenAI 兼容的本地服务器`
+  String get api_server_description {
+    return Intl.message(
+      '启动 OpenAI 兼容的本地服务器',
+      name: 'api_server_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `端口`
+  String get api_server_port {
+    return Intl.message('端口', name: 'api_server_port', desc: '', args: []);
+  }
+
+  /// `启动服务器`
+  String get api_server_start {
+    return Intl.message('启动服务器', name: 'api_server_start', desc: '', args: []);
+  }
+
+  /// `停止服务器`
+  String get api_server_stop {
+    return Intl.message('停止服务器', name: 'api_server_stop', desc: '', args: []);
+  }
+
+  /// `服务器运行中`
+  String get api_server_running {
+    return Intl.message(
+      '服务器运行中',
+      name: 'api_server_running',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器已停止`
+  String get api_server_stopped {
+    return Intl.message(
+      '服务器已停止',
+      name: 'api_server_stopped',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器启动中`
+  String get api_server_starting {
+    return Intl.message(
+      '服务器启动中',
+      name: 'api_server_starting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器地址`
+  String get api_server_url {
+    return Intl.message('服务器地址', name: 'api_server_url', desc: '', args: []);
+  }
+
+  /// `请先选择一个聊天模型`
+  String get api_server_select_model_first {
+    return Intl.message(
+      '请先选择一个聊天模型',
+      name: 'api_server_select_model_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求数`
+  String get api_server_request_count {
+    return Intl.message(
+      '请求数',
+      name: 'api_server_request_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开控制面板`
+  String get api_server_open_dashboard {
+    return Intl.message(
+      '打开控制面板',
+      name: 'api_server_open_dashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `使用示例`
+  String get api_server_curl_hint {
+    return Intl.message(
+      '使用示例',
+      name: 'api_server_curl_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未加载模型`
+  String get api_server_no_model {
+    return Intl.message(
+      '未加载模型',
+      name: 'api_server_no_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求日志`
+  String get api_server_logs {
+    return Intl.message('请求日志', name: 'api_server_logs', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

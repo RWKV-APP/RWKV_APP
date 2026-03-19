@@ -170,6 +170,39 @@ class MessageLookup extends MessageLookupByLibrary {
     "analysing_result": MessageLookupByLibrary.simpleMessage(
       "Analysing Search Result",
     ),
+    "api_server": MessageLookupByLibrary.simpleMessage("API Server"),
+    "api_server_curl_hint": MessageLookupByLibrary.simpleMessage(
+      "Usage Example",
+    ),
+    "api_server_description": MessageLookupByLibrary.simpleMessage(
+      "Start an OpenAI compatible local server",
+    ),
+    "api_server_logs": MessageLookupByLibrary.simpleMessage("Request Logs"),
+    "api_server_no_model": MessageLookupByLibrary.simpleMessage(
+      "No model loaded",
+    ),
+    "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage(
+      "Open Dashboard",
+    ),
+    "api_server_port": MessageLookupByLibrary.simpleMessage("Port"),
+    "api_server_request_count": MessageLookupByLibrary.simpleMessage(
+      "Requests",
+    ),
+    "api_server_running": MessageLookupByLibrary.simpleMessage(
+      "Server Running",
+    ),
+    "api_server_select_model_first": MessageLookupByLibrary.simpleMessage(
+      "Please select a chat model first",
+    ),
+    "api_server_start": MessageLookupByLibrary.simpleMessage("Start Server"),
+    "api_server_starting": MessageLookupByLibrary.simpleMessage(
+      "Server Starting",
+    ),
+    "api_server_stop": MessageLookupByLibrary.simpleMessage("Stop Server"),
+    "api_server_stopped": MessageLookupByLibrary.simpleMessage(
+      "Server Stopped",
+    ),
+    "api_server_url": MessageLookupByLibrary.simpleMessage("Server URL"),
     "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage(
       "App is already up to date",
     ),

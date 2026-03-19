@@ -156,6 +156,27 @@ class MessageLookup extends MessageLookupByLibrary {
       "既にこのディレクトリを使用しています",
     ),
     "analysing_result": MessageLookupByLibrary.simpleMessage("検索結果を分析中"),
+    "api_server": MessageLookupByLibrary.simpleMessage("APIサーバー"),
+    "api_server_curl_hint": MessageLookupByLibrary.simpleMessage("使用例"),
+    "api_server_description": MessageLookupByLibrary.simpleMessage(
+      "OpenAI互換のローカルサーバーを起動",
+    ),
+    "api_server_logs": MessageLookupByLibrary.simpleMessage("リクエストログ"),
+    "api_server_no_model": MessageLookupByLibrary.simpleMessage("モデル未読込"),
+    "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage(
+      "ダッシュボードを開く",
+    ),
+    "api_server_port": MessageLookupByLibrary.simpleMessage("ポート"),
+    "api_server_request_count": MessageLookupByLibrary.simpleMessage("リクエスト数"),
+    "api_server_running": MessageLookupByLibrary.simpleMessage("サーバー稼働中"),
+    "api_server_select_model_first": MessageLookupByLibrary.simpleMessage(
+      "先にチャットモデルを選択してください",
+    ),
+    "api_server_start": MessageLookupByLibrary.simpleMessage("サーバー起動"),
+    "api_server_starting": MessageLookupByLibrary.simpleMessage("サーバー起動中"),
+    "api_server_stop": MessageLookupByLibrary.simpleMessage("サーバー停止"),
+    "api_server_stopped": MessageLookupByLibrary.simpleMessage("サーバー停止中"),
+    "api_server_url": MessageLookupByLibrary.simpleMessage("サーバーURL"),
     "app_is_already_up_to_date": MessageLookupByLibrary.simpleMessage(
       "アプリは既に最新です",
     ),

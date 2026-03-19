@@ -49,15 +49,18 @@ class PageHome extends ConsumerWidget {
 
     if (maxWidth < 0) maxWidth = .infinity;
 
-    final widgets = const [
-      _ChatButton(),
-      _CompletionButton(),
-      _VisualButton(),
-      _TTSButton(),
-      _RolePlayButton(),
-      _TranslatorButton(),
-      _NekoButton(),
-      _BenchmarkButton(),
+    final isDesktop = ref.watch(P.app.isDesktop);
+
+    final widgets = [
+      const _ChatButton(),
+      const _CompletionButton(),
+      const _VisualButton(),
+      const _TTSButton(),
+      const _RolePlayButton(),
+      const _TranslatorButton(),
+      const _NekoButton(),
+      const _BenchmarkButton(),
+      if (isDesktop) const _ApiServerButton(),
     ];
 
     return Scaffold(
@@ -87,7 +90,7 @@ class PageHome extends ConsumerWidget {
                     child: widgets[index],
                   );
                 },
-                itemCount: 8,
+                itemCount: widgets.length,
               ),
             ),
           ),
@@ -475,6 +478,26 @@ class _RolePlayButton extends ConsumerWidget {
       icon: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
       title: s.role_play,
       description: s.role_play_intro,
+    );
+  }
+}
+
+class _ApiServerButton extends ConsumerWidget {
+  const _ApiServerButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+
+    return _HomeCard(
+      heightsKey: 'apiServer',
+      onTap: () {
+        push(.apiServer);
+      },
+      color: Colors.teal,
+      icon: const FaIcon(FontAwesomeIcons.server, color: Colors.white, size: 20),
+      title: s.api_server,
+      description: s.api_server_description,
     );
   }
 }
