@@ -7,28 +7,35 @@
 [![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./docs/README.ko.md)
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./docs/README.ru.md)
 
-**Explore and experience running Large Language Models offline on your edge devices with the RWKV App.**
-**A privacy-first, fully on-device LLM experience built for everyday devices.**
+**Run private, on-device AI on phones and desktops with RWKV App.**
+**A local-first playground for chat, speech, vision, and model experimentation.**
 
-RWKV App is an experimental application that brings Large Language Models (LLMs) directly to your Android/iOS devices. You can experiment with different models, engage in chats, generate speech, perform visual understanding, and more! All computations are performed locally, and no internet connection is required after loading the model.
+RWKV App is a privacy-first AI app for Android, iOS, Windows, macOS, and Linux. It lets you download local models, compare them on real hardware, and prototype AI experiences without depending on the cloud. After a model is loaded, inference stays on your device.
 
-**Overview**
+## Why RWKV App
 
-The RWKV App supports multi-turn conversations, text-to-speech, visual understanding, and various other tasks.
+- **Built for real edge devices:** Evaluate local models on phones and desktops instead of relying on cloud-only demos.
+- **One app, multiple workflows:** Chat, text-to-speech, and visual understanding live in one place.
+- **Fast model iteration:** Download and switch models from Hugging Face to compare quality, speed, and hardware fit.
+- **Privacy first:** Keep prompts, outputs, and inference on device after the model is loaded.
 
 ![RWKV App Screenshot](.github/images/readme/gallery.png)
 
 ## ✨ Core Features
 
-- **📱 Run Locally, Fully Offline:** Experience the magic of generative AI without an internet connection. All processing is done directly on your device.
-- **🤖 Switch Models Freely:** Easily download and switch between different models from Hugging Face to compare their performance.
-- **💬 AI Chat:** Engage in fluent multi-turn conversations.
-- **🔌 API Server:** Start an OpenAI-compatible local server so you can connect RWKV App to your own tools and workflows.
+- **📱 Cross-Platform, Local-First:** Run on Android, iOS, Windows, macOS, and Linux with on-device inference.
+- **🤖 Flexible Model Switching:** Download and compare different models from Hugging Face.
+- **💬 AI Chat:** Explore fluent multi-turn conversations on real hardware.
 - **🔊 Text-to-Speech (TTS):** Convert text into natural-sounding speech.
 - **🖼️ Visual Understanding:** Explore image-based AI use cases.
-- **🌓 Dark Mode:** Supports comfortable use in various lighting conditions.
+- **🔌 Optional Local API Access:** On desktop, you can expose an OpenAI-compatible local endpoint for tooling and experiments.
+- **🌓 Dark Mode:** Stay comfortable during long sessions.
 
-## 🧭 Download and Experience
+## 🚀 Get Started
+
+1. Download RWKV App from the official page or the platform links below.
+2. Open the app and load a chat model that fits your device.
+3. Start exploring chat, speech, or vision workflows. On desktop, you can also enable the built-in local API endpoint when you need it.
 
 ### Downloads
 
@@ -84,14 +91,14 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 > [!NOTE]
 > In the future, we will integrate all separate features into the RWKV Chat app to provide a unified experience.
 
-### Usage
+### First Run
 
 When you first open the app, a model selection panel will appear. Please choose the model weights you want to use based on your needs.
 
 > [!WARNING]
 > Devices older than the iPhone 14 may not be able to smoothly run models with 1.5B / 2.9B parameters.
 
-## 💻 Development
+## 💻 Build From Source
 
 **Ensure you have the [Flutter](https://flutter.dev/) development environment set up.**
 
@@ -105,6 +112,14 @@ git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
 # Make sure the rwkv_mobile_flutter and RWKV_APP are in the same directory
 git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
+```
+
+Project layout should look like this:
+
+```text
+parent/
+├─ rwkv_mobile_flutter/
+└─ RWKV_APP/
 ```
 
 2. **Create necessary configuration files:**
@@ -144,7 +159,7 @@ If you are debugging on Windows ARM64, uncomment the following section in `pubsp
 
 For Windows ARM64 debugging, check out Flutter's `master` branch instead of the `stable` branch.
 
-## 🛠️ Technical Highlights
+## 🏗️ Stack
 
 - **Flutter:** An open-source framework for building cross-platform user interfaces, supporting Android, iOS, Windows, and macOS.
 - **Dart FFI (Foreign Function Interface):** Used for efficient communication between Dart and the C++ inference engine.

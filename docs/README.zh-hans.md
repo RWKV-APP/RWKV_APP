@@ -7,28 +7,35 @@
 [![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
-**通过 RWKV App，探索、体验在端侧设备上离线运行大语言模型**
-**面向日常设备的隐私优先、完全端侧的 LLM 体验。**
+**在手机与桌面设备上运行私有、端侧 AI。**
+**一个面向聊天、语音、视觉与模型实验的本地优先 AI Playground。**
 
-RWKV Apps 是一款实验性的应用程序，它将大语言模型（LLM）直接带到您的 Android / iOS 设备上。您可以尽情试验不同的模型、进行聊天、生成语音、视觉理解等等！所有计算都在本地进行，加载模型后无需网络连接。
+RWKV App 是一款面向 Android、iOS、Windows、macOS 和 Linux 的隐私优先 AI 应用。您可以在真实硬件上下载、切换并比较本地模型，体验聊天、语音和视觉等能力，而无需依赖云端推理。模型加载完成后，推理会留在您的设备上。
 
-**概述**
+## 为什么选择 RWKV App
 
-RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
+- **面向真实边缘设备：** 在手机与桌面设备上验证本地模型，而不是只在云端 Demo 里体验。
+- **一个 App，覆盖多种 AI 工作流：** 将聊天、文本转语音和视觉理解放在同一处。
+- **更快地比较模型：** 从 Hugging Face 下载并切换不同模型，直观比较质量、速度与硬件适配。
+- **隐私优先：** 模型加载完成后，提示词、输出和推理过程都留在本地。
 
 ![RWKV App 截图](../.github/images/readme/gallery.png)
 
 ## ✨ 核心功能
 
-- **📱 本地运行，完全离线：** 无需互联网连接，即可体验生成式 AI 的魅力。所有计算都直接在您的设备上完成。
-- **🤖 随心切换模型：** 从 Hugging Face 轻松下载并切换不同的模型，比较它们的性能。
-- **💬 AI 聊天：** 进行流畅的多轮对话。
-- **🔌 API 服务器：** 启动 OpenAI 兼容的本地服务器，方便接入您自己的工具和工作流。
+- **📱 跨平台，本地优先：** 在 Android、iOS、Windows、macOS 和 Linux 上运行端侧推理。
+- **🤖 灵活切换模型：** 从 Hugging Face 下载并比较不同模型。
+- **💬 AI 聊天：** 在真实硬件上体验流畅的多轮对话。
 - **🔊 文本转语音 (TTS)：** 将文本转换成自然流畅的语音。
 - **🖼️ 视觉理解：** 探索基于图像的 AI 应用场景。
-- **🌓 深色模式：** 支持在不同光线环境下舒适使用。
+- **🔌 可选的本地 API 接口：** 在桌面端，您可以暴露 OpenAI 兼容的本地接口，用于工具集成和实验。
+- **🌓 深色模式：** 让长时间使用更加舒适。
 
-## 🧭 下载与体验
+## 🚀 快速开始
+
+1. 从官方下载页面或下方的平台链接下载安装包。
+2. 打开 App，加载适合您设备的聊天模型。
+3. 开始体验聊天、语音或视觉工作流；如果您在桌面端有集成需求，也可以启用内置本地 API 接口。
 
 ### 下载
 
@@ -78,14 +85,14 @@ RWKV App 支持多轮对话、文本转语音、视觉理解等多种任务。
 > [!NOTE]
 > 未来，我们会将所有独立功能整合进 RWKV Chat 应用中，为您提供统一的体验。
 
-### 使用
+### 首次使用
 
 首次打开 App 时，会弹出模型选择面板。请根据您的需求选择要使用的模型权重。
 
 > [!WARNING]
 > iPhone 14 及更早的设备可能无法流畅运行 1.5B / 2.9B 参数规模的模型。
 
-## 💻 开发
+## 💻 从源码构建
 
 **请确保您已搭建好 [Flutter](https://flutter.dev/) 开发环境。**
 
@@ -99,6 +106,14 @@ git clone -b dev https://github.com/MollySophia/rwkv_mobile_flutter.git
 # 确保 rwkv_mobile_flutter 和 RWKV_APP 在同一目录下
 git clone -b dev https://github.com/RWKV-APP/RWKV_APP.git
 cd RWKV_APP
+```
+
+目录结构应如下所示：
+
+```text
+parent/
+├─ rwkv_mobile_flutter/
+└─ RWKV_APP/
 ```
 
 2. **创建必要的配置文件：**
@@ -138,7 +153,7 @@ flutter run
 
 在 Windows ARM64 上调试时，请使用 Flutter 的 `master` 分支，而不是 `stable` 分支。
 
-## 🛠️ 技术亮点
+## 🏗️ 技术栈
 
 - **Flutter：** 一款用于构建跨平台用户界面的开源框架，支持安卓、苹果、Windows 和 macOS。
 - **Dart FFI (外部函数接口)：** 用于 Dart 语言与 C++ 推理引擎进行高效通信。
