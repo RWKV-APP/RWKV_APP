@@ -24,6 +24,7 @@ The RWKV App supports multi-turn conversations, text-to-speech, visual understan
 - **📱 Run Locally, Fully Offline:** Experience the magic of generative AI without an internet connection. All processing is done directly on your device.
 - **🤖 Switch Models Freely:** Easily download and switch between different models from Hugging Face to compare their performance.
 - **💬 AI Chat:** Engage in fluent multi-turn conversations.
+- **🔌 API Server:** Start an OpenAI-compatible local server so you can connect RWKV App to your own tools and workflows.
 - **🔊 Text-to-Speech (TTS):** Convert text into natural-sounding speech.
 - **🖼️ Visual Understanding:** Explore image-based AI use cases.
 - **🌓 Dark Mode:** Supports comfortable use in various lighting conditions.
