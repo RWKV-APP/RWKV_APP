@@ -6,7 +6,6 @@
 [![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-hant.md)
 [![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
 [![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
-[![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **Исследуйте и запускайте большие языковые модели (LLM) оффлайн на ваших пограничных устройствах с помощью RWKV App.**
 **Приватный LLM-опыт, полностью на устройстве и рассчитанный на повседневные девайсы.**

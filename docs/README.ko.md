@@ -5,7 +5,6 @@
 [![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh-hans.md)
 [![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-hant.md)
 [![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
-[![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
 [![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
 
 **RWKV App으로 엣지 디바이스에서 대규모 언어 모델(LLM)을 오프라인으로 실행하고 경험해보세요.**

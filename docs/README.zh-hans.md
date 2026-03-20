@@ -2,7 +2,6 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](../LICENSE)
 [![English](https://img.shields.io/badge/README-English-blue.svg)](../README.md)
-[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh-hans.md)
 [![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-hant.md)
 [![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
 [![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
