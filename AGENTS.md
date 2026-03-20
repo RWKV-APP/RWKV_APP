@@ -1,6 +1,8 @@
-# AGENTS.override.md
+# AGENTS.md
 
-本文件由当前仓的 `.cursor/rules/*.mdc` 抽取并整理，用于 Codex 的项目级行为约束（override）。
+## 对于本文件的修改
+
+- 当本文件被修改时, 必须同时修改 `CLAUDE.md` 文件, 保证 `CLAUDE.md` 文件和本文件的规则相同(除了本条规则)
 
 ## 本地项目路径
 
@@ -126,16 +128,16 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 - 使用 `for` 循环，禁止使用 `forEach`。
 - 不要使用 `then`，优先 `await`。
 - 优先使用 Dot Shorthand（枚举、静态方法、构造器等）。
-- 已知可用 Dot Shorthand 的 symbols：
-  - `Alignment`
-  - `BoxShape`
-  - `CrossAxisAlignment`
-  - `EdgeInsets`
-  - `FontWeight`
-  - `MainAxisAlignment`
-  - `MainAxisSize`
-  - `Radius`
-  - `TextScaler`
+  - 已知可用 Dot Shorthand 的 symbols：
+    - `Alignment`
+    - `BoxShape`
+    - `CrossAxisAlignment`
+    - `EdgeInsets`
+    - `FontWeight`
+    - `MainAxisAlignment`
+    - `MainAxisSize`
+    - `Radius`
+    - `TextScaler`
 
 ### 范围：`lib/**/*.dart`（Flutter UI 约束）
 
