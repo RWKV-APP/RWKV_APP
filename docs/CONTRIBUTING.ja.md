@@ -1,5 +1,11 @@
 # コントリビューションガイド: Theme クイックスタート
 
+[![English](https://img.shields.io/badge/CONTRIBUTING-English-blue.svg)](../CONTRIBUTING.md)
+[![Simplified Chinese](https://img.shields.io/badge/CONTRIBUTING-简体中文-blue.svg)](./CONTRIBUTING.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/CONTRIBUTING-繁體中文-blue.svg)](./CONTRIBUTING.zh-hant.md)
+[![Korean](https://img.shields.io/badge/CONTRIBUTING-한국어-blue.svg)](./CONTRIBUTING.ko.md)
+[![Russian](https://img.shields.io/badge/CONTRIBUTING-Русский-blue.svg)](./CONTRIBUTING.ru.md)
+
 このガイドは、主にアプリの配色テーマを変更する PR を出したい外部コントリビューター向けです。
 
 ## 1. `lib/model/app_theme.dart` にテーマを追加
@@ -33,4 +39,3 @@
 3. compound 設定を実行し、複数プラットフォーム UI を並行起動します。
 
 任意: 対象設定に `--dart-define=debuggingThemes=true` を追加すると、自動明暗切り替えで確認できます。
-

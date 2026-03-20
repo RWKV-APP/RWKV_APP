@@ -1,5 +1,11 @@
 # 貢獻指南：Theme 快速開始
 
+[![English](https://img.shields.io/badge/CONTRIBUTING-English-blue.svg)](../CONTRIBUTING.md)
+[![Simplified Chinese](https://img.shields.io/badge/CONTRIBUTING-简体中文-blue.svg)](./CONTRIBUTING.zh-hans.md)
+[![Japanese](https://img.shields.io/badge/CONTRIBUTING-日本語-blue.svg)](./CONTRIBUTING.ja.md)
+[![Korean](https://img.shields.io/badge/CONTRIBUTING-한국어-blue.svg)](./CONTRIBUTING.ko.md)
+[![Russian](https://img.shields.io/badge/CONTRIBUTING-Русский-blue.svg)](./CONTRIBUTING.ru.md)
+
 本指南面向主要想透過 PR 自訂 App 配色的外部貢獻者。
 
 ## 1. 在 `lib/model/app_theme.dart` 中新增主題
@@ -33,4 +39,3 @@
 3. 執行 compound 設定，即可並行啟動多端 UI 進行對照調色。
 
 可選：在對應設定中加入 `--dart-define=debuggingThemes=true`，做自動明暗切換預覽。
-

@@ -2,11 +2,11 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-blue.svg)](./README.md)
-[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./README.zh-hans.md)
-[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./README.zh-hant.md)
-[![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./README.ja.md)
-[![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./README.ko.md)
-[![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./README.ru.md)
+[![Simplified Chinese](https://img.shields.io/badge/README-简体中文-blue.svg)](./docs/README.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/README-繁體中文-blue.svg)](./docs/README.zh-hant.md)
+[![Japanese](https://img.shields.io/badge/README-日本語-blue.svg)](./docs/README.ja.md)
+[![Korean](https://img.shields.io/badge/README-한국어-blue.svg)](./docs/README.ko.md)
+[![Russian](https://img.shields.io/badge/README-Русский-blue.svg)](./docs/README.ru.md)
 
 **Explore and experience running Large Language Models offline on your edge devices with the RWKV App.**
 **A privacy-first, fully on-device LLM experience built for everyday devices.**

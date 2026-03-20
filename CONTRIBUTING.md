@@ -1,5 +1,11 @@
 # Contributing: Theme Quick Start
 
+[![Simplified Chinese](https://img.shields.io/badge/CONTRIBUTING-简体中文-blue.svg)](./docs/CONTRIBUTING.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/CONTRIBUTING-繁體中文-blue.svg)](./docs/CONTRIBUTING.zh-hant.md)
+[![Japanese](https://img.shields.io/badge/CONTRIBUTING-日本語-blue.svg)](./docs/CONTRIBUTING.ja.md)
+[![Korean](https://img.shields.io/badge/CONTRIBUTING-한국어-blue.svg)](./docs/CONTRIBUTING.ko.md)
+[![Russian](https://img.shields.io/badge/CONTRIBUTING-Русский-blue.svg)](./docs/CONTRIBUTING.ru.md)
+
 This guide is for external contributors who want to open a PR mainly to customize the app color theme.
 
 ## 1. Add your theme in `lib/model/app_theme.dart`
@@ -33,4 +39,3 @@ Note: Current structure is "one light theme + multiple dark themes". If you add 
 3. Run the compound config to start multi-platform UI side by side.
 
 Optional: add `--dart-define=debuggingThemes=true` in the related launch configs for auto light/dark preview.
-

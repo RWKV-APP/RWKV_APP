@@ -158,13 +158,20 @@ void Function(Object)? onError,
 - 获取屏幕内边距必须用 `MediaQuery.paddingOf(context)`，不要用 `MediaQuery.of(context).padding`。
 - 调整 `Color` 透明度使用 `.q(.x)`，不要用 `withOpacity`。
 
-### 范围：`**/*.md`（README 多语言同步）
+### 范围：`**/*.md`（README / CONTRIBUTING 多语言同步）
 
-- 根目录多语言 README：
+- 多语言 README：
   - `README.md`
-  - `README.zh-hans.md`
-  - `README.zh-hant.md`
-  - `README.ja.md`
-  - `README.ko.md`
-  - `README.ru.md`
-- 修改任一 README 后，必须检查并同步更新其他语言版本的对应内容（结构、章节、关键信息、链接、徽章等）。
+  - `docs/README.zh-hans.md`
+  - `docs/README.zh-hant.md`
+  - `docs/README.ja.md`
+  - `docs/README.ko.md`
+  - `docs/README.ru.md`
+- 多语言 CONTRIBUTING：
+  - `CONTRIBUTING.md`
+  - `docs/CONTRIBUTING.zh-hans.md`
+  - `docs/CONTRIBUTING.zh-hant.md`
+  - `docs/CONTRIBUTING.ja.md`
+  - `docs/CONTRIBUTING.ko.md`
+  - `docs/CONTRIBUTING.ru.md`
+- 修改任一 README 或 CONTRIBUTING 后，必须检查并同步更新其他语言版本的对应内容（结构、章节、关键信息、链接、徽章等）。

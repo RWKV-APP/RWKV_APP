@@ -1,5 +1,11 @@
 # Руководство по вкладу: быстрый старт по темам
 
+[![English](https://img.shields.io/badge/CONTRIBUTING-English-blue.svg)](../CONTRIBUTING.md)
+[![Simplified Chinese](https://img.shields.io/badge/CONTRIBUTING-简体中文-blue.svg)](./CONTRIBUTING.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/CONTRIBUTING-繁體中文-blue.svg)](./CONTRIBUTING.zh-hant.md)
+[![Japanese](https://img.shields.io/badge/CONTRIBUTING-日本語-blue.svg)](./CONTRIBUTING.ja.md)
+[![Korean](https://img.shields.io/badge/CONTRIBUTING-한국어-blue.svg)](./CONTRIBUTING.ko.md)
+
 Этот документ для внешних разработчиков, которые хотят открыть PR в основном для настройки цветовой темы приложения.
 
 ## 1. Добавьте тему в `lib/model/app_theme.dart`
@@ -33,4 +39,3 @@
 3. Запускайте compound-конфигурацию для параллельного запуска UI на нескольких платформах.
 
 Опционально: добавьте `--dart-define=debuggingThemes=true` в нужные launch-конфигурации для автоматического превью light/dark.
-

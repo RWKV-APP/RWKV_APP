@@ -1,5 +1,11 @@
 # 기여 가이드: Theme 빠른 시작
 
+[![English](https://img.shields.io/badge/CONTRIBUTING-English-blue.svg)](../CONTRIBUTING.md)
+[![Simplified Chinese](https://img.shields.io/badge/CONTRIBUTING-简体中文-blue.svg)](./CONTRIBUTING.zh-hans.md)
+[![Traditional Chinese](https://img.shields.io/badge/CONTRIBUTING-繁體中文-blue.svg)](./CONTRIBUTING.zh-hant.md)
+[![Japanese](https://img.shields.io/badge/CONTRIBUTING-日本語-blue.svg)](./CONTRIBUTING.ja.md)
+[![Russian](https://img.shields.io/badge/CONTRIBUTING-Русский-blue.svg)](./CONTRIBUTING.ru.md)
+
 이 문서는 앱 색상 테마를 변경하는 PR을 올리려는 외부 기여자를 위한 빠른 시작 가이드입니다.
 
 ## 1. `lib/model/app_theme.dart`에 테마 추가
@@ -33,4 +39,3 @@
 3. compound 설정을 실행하면 멀티 플랫폼 UI를 동시에 띄울 수 있습니다.
 
 선택 사항: 관련 launch 설정에 `--dart-define=debuggingThemes=true` 를 추가하면 자동 라이트/다크 미리보기가 가능합니다.
-
