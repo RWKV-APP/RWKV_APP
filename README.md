@@ -151,14 +151,6 @@ For Windows ARM64 debugging, check out Flutter's `master` branch instead of the 
 - **C++ Inference Engine:** The core on-device inference engine, built with C++, supporting multiple model formats and hardware acceleration (CPU/GPU/NPU).
 - **Hugging Face:** An open-source community providing models, datasets, and tools; used here as the source for model weights.
 
-## 🗺️ Roadmap
-
-- [x] Integrate all features into the RWKV Chat app
-- [ ] Support more model weights
-- [ ] Support more hardware
-- [ ] Support more operating systems
-- [ ] Support more devices (e.g., watches, VR glasses)
-
 ## 🤝 Feedback and Contribution
 
 This is an **experimental early-stage version**, and your feedback is crucial to us!
