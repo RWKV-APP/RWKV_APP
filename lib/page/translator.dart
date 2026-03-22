@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
