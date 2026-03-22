@@ -42,6 +42,10 @@ extension _$Pth on _Pth {
 
   Future<void> _atuoCreateModelsDir() async {
     if (!Platform.isWindows) return;
+    if (Args.useWindowsSandboxModels) {
+      qqr("Windows sandbox mode enabled, skip creating models dir in exe path");
+      return;
+    }
     qqr("Create models dir in exe dir");
     final exeDir = File(Platform.resolvedExecutable).parent;
     final modelsDir = Directory(join(exeDir.path, 'models'));

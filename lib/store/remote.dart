@@ -117,6 +117,15 @@ class _Remote {
   /// 默认的存放已量化权重的文件夹路径
   late final defaultModelsDir = qp<String>((ref) {
     if (Platform.isWindows) {
+      if (Args.useWindowsSandboxModels) {
+        final appSupportDir = ref.watch(P.app.effectiveDocumentsDir);
+        if (appSupportDir == null) {
+          qqw("Windows sandbox models dir is not ready yet, fallback to exe dir");
+        } else {
+          final res = join(appSupportDir.path, Config.desktopModelsDirName);
+          return res;
+        }
+      }
       final exePath = Platform.resolvedExecutable;
       final exeDir = dirname(exePath);
       final res = join(exeDir, Config.desktopModelsDirName);

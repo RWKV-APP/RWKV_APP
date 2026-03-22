@@ -280,6 +280,15 @@ extension $App on _App {
       return;
     }
 
+    final url = latestVersionInfo.url;
+    if (url.isNotEmpty) {
+      final uri = Uri.tryParse(url);
+      if (uri != null) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        return;
+      }
+    }
+
     await _openOfficialDownloadPage();
   }
 
@@ -723,6 +732,12 @@ extension _$App on _App {
         'macosHFM',
       ];
     } else if (Platform.isWindows) {
+      if (Args.distributionChannel == "windowsStore") {
+        return [
+          'winStore',
+          'winMS',
+        ];
+      }
       try {
         final windowsArchitecture = _getWindowsOperatingSystemArchitecture();
         final isArm64 = windowsArchitecture == 'arm64';
