@@ -11,9 +11,13 @@ class _Pth {
 extension _$Pth on _Pth {
   FV _init() async {
     if (!P.preference.hasUnlinkDefaultModelsDirOnce) {
-      qqr("add default models dir to pth folder entries");
       final defaultModelsDir = P.remote.defaultModelsDir.q;
-      await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
+      if (defaultModelsDir.isEmpty) {
+        qqw("Default models dir is not ready, skip adding it to pth folder entries");
+      } else {
+        qqr("add default models dir to pth folder entries");
+        await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
+      }
     }
 
     await _atuoCreateModelsDir();
