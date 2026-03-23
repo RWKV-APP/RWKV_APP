@@ -11,9 +11,13 @@ class _Pth {
 extension _$Pth on _Pth {
   FV _init() async {
     if (!P.preference.hasUnlinkDefaultModelsDirOnce) {
-      qqr("add default models dir to pth folder entries");
       final defaultModelsDir = P.remote.defaultModelsDir.q;
-      await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
+      if (defaultModelsDir.isEmpty) {
+        qqw("Default models dir is not ready, skip adding it to pth folder entries");
+      } else {
+        qqr("add default models dir to pth folder entries");
+        await P.preference.addPthFolderEntry(PthFolderEntry(path: defaultModelsDir));
+      }
     }
 
     await _atuoCreateModelsDir();
@@ -42,6 +46,10 @@ extension _$Pth on _Pth {
 
   Future<void> _atuoCreateModelsDir() async {
     if (!Platform.isWindows) return;
+    if (Args.useWindowsSandboxModels) {
+      qqr("Windows sandbox mode enabled, skip creating models dir in exe path");
+      return;
+    }
     qqr("Create models dir in exe dir");
     final exeDir = File(Platform.resolvedExecutable).parent;
     final modelsDir = Directory(join(exeDir.path, 'models'));

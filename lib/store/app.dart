@@ -280,6 +280,29 @@ extension $App on _App {
       return;
     }
 
+    final url = latestVersionInfo.url;
+    if (url.isEmpty) {
+      await _openOfficialDownloadPage();
+      return;
+    }
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) {
+      qqw('Invalid latest version url: $url');
+      await _openOfficialDownloadPage();
+      return;
+    }
+
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (launched) {
+        return;
+      }
+      qqw('Failed to launch latest version url: $url');
+    } catch (e) {
+      qqe('Failed to launch latest version url: $e');
+    }
+
     await _openOfficialDownloadPage();
   }
 
@@ -723,6 +746,9 @@ extension _$App on _App {
         'macosHFM',
       ];
     } else if (Platform.isWindows) {
+      if (Args.distributionChannel == "windowsStore") {
+        return [];
+      }
       try {
         final windowsArchitecture = _getWindowsOperatingSystemArchitecture();
         final isArm64 = windowsArchitecture == 'arm64';

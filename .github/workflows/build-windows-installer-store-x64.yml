@@ -1,11 +1,8 @@
-name: Windows Installer x64
+name: Windows Installer Store x64
 
-run-name: ${{ github.ref_name }} Windows Installer x64
+run-name: ${{ github.ref_name }} Windows Installer Store x64
 
 on:
-  push:
-    tags:
-      - "[0-9]*"
   workflow_dispatch:
     inputs:
       release_tag:
@@ -21,7 +18,7 @@ permissions:
   contents: write
 
 jobs:
-  build-windows-installer-x64:
+  build-windows-installer-store-x64:
     runs-on: windows-latest
 
     steps:
@@ -67,7 +64,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Windows x64
-        run: flutter build windows --release
+        run: flutter build windows --release --dart-define=useWindowsSandboxModels=true --dart-define=distributionChannel=windowsStore
 
       - name: 🧹 Remove arm64/aarch64 DLLs
         shell: pwsh
@@ -75,7 +72,6 @@ jobs:
           echo "::group::🧹 Cleaning up arm64/aarch64 DLLs"
           $sourceDir = "build\windows\x64\runner\Release"
           if (Test-Path $sourceDir) {
-            # 删除 arm64/aarch64 相关的 DLL 文件
             $filesToRemove = @(
               "*arm64*.dll",
               "*aarch64*.dll",
@@ -101,24 +97,20 @@ jobs:
           }
           echo "::endgroup::"
 
-      - name: 📁 Create models directory
-        shell: pwsh
-        run: New-Item -ItemType Directory -Force -Path "build\windows\x64\runner\Release\models" | Out-Null
-
-      - name: 📦 Create Installer (Inno Setup)
+      - name: 📦 Create Store Installer (Inno Setup)
         id: create-installer
         shell: pwsh
         run: |
-          echo "::group::📦 Creating Windows Installer"
+          echo "::group::📦 Creating Windows Store Installer"
           $versionLine = Get-Content pubspec.yaml | Select-String "^version:"
           $version = ($versionLine -replace "version:\s*", "").Split("+")[0]
           $buildNumber = ($versionLine -replace ".*\+", "")
           if ([string]::IsNullOrEmpty($buildNumber)) { $buildNumber = "1" }
 
-          $installerName = "rwkv_chat_${version}_${buildNumber}_windows-x64-setup"
+          $installerName = "rwkv_chat_${version}_${buildNumber}_windows-x64-store-sandbox-setup"
           $installerFilename = "$installerName.exe"
           $sourceDir = "build\windows\x64\runner\Release"
-          $outputDir = "build\windows\installer"
+          $outputDir = "build\windows\installer-store"
           New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
 
           $issContent = @"
@@ -127,9 +119,9 @@ jobs:
           AppName=RWKV Chat
           AppVersion=$version
           AppPublisher=RWKV Community
-          DefaultDirName={autopf}\RWKV Chat
+          DefaultDirName={localappdata}\RWKV Chat
           DisableProgramGroupPage=yes
-          PrivilegesRequired=admin
+          PrivilegesRequired=lowest
           OutputDir=$outputDir
           OutputBaseFilename=$installerName
           Compression=lzma
@@ -145,9 +137,6 @@ jobs:
           [Files]
           Source: "$sourceDir\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-          [Registry]
-          Root: HKLM; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"; ValueType: string; ValueName: "{app}\RWKV_Chat.exe"; ValueData: "~ RUNASADMIN"; Flags: uninsdeletevalue
-
           [Icons]
           Name: "{autoprograms}\RWKV Chat"; Filename: "{app}\RWKV_Chat.exe"
           Name: "{autodesktop}\RWKV Chat"; Filename: "{app}\RWKV_Chat.exe"; Tasks: desktopicon
@@ -156,10 +145,9 @@ jobs:
           Filename: "{app}\RWKV_Chat.exe"; Description: "{cm:LaunchProgram,RWKV Chat}"; Flags: nowait postinstall skipifsilent runascurrentuser
           "@
 
-          $issContent | Out-File -FilePath "setup.iss" -Encoding ASCII
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
+          $issContent | Out-File -FilePath "setup-store-x64.iss" -Encoding ASCII
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup-store-x64.iss
 
-          # 这里的输出路径虽然包含反斜杠，但既然我们下面改用了通配符，这里仅作为日志检查即可，不影响上传
           $installerPath = Join-Path $outputDir $installerFilename
           if (Test-Path $installerPath) {
             echo "installer_path=$installerPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
@@ -170,34 +158,33 @@ jobs:
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-installer-x64
+          name: windows-installer-store-x64
           path: ${{ steps.create-installer.outputs.installer_path }}
           retention-days: 7
           if-no-files-found: error
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
         with:
-          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
+          tag_name: ${{ inputs.release_tag }}
           generate_release_notes: false
           fail_on_unmatched_files: true
-          # 修改点：使用正斜杠路径和通配符，确保能找到文件
-          files: build/windows/installer/*.exe
+          files: build/windows/installer-store/*.exe
 
       - name: 🛠️ Setup Python
-        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
       - name: 📦 Install dependencies
-        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
         shell: pwsh
         run: pip install huggingface_hub
 
       - name: 📤 Upload to HuggingFace
-        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
         shell: pwsh
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -210,7 +197,7 @@ jobs:
           python scripts/upload_to_hf.py `
             --repo-id "$env:HF_DATASETS_ID" `
             --file "$installerPath" `
-            --path-in-repo "windows-x64-installer/$installerName" `
+            --path-in-repo "windows-x64-installer-store/$installerName" `
             --hf-token "$env:HF_TOKEN" `
             --hf-endpoint "$env:HF_ENDPOINT"
           Write-Host "✅ Upload completed"
