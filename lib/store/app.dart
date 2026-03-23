@@ -281,12 +281,26 @@ extension $App on _App {
     }
 
     final url = latestVersionInfo.url;
-    if (url.isNotEmpty) {
-      final uri = Uri.tryParse(url);
-      if (uri != null) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (url.isEmpty) {
+      await _openOfficialDownloadPage();
+      return;
+    }
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) {
+      qqw('Invalid latest version url: $url');
+      await _openOfficialDownloadPage();
+      return;
+    }
+
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (launched) {
         return;
       }
+      qqw('Failed to launch latest version url: $url');
+    } catch (e) {
+      qqe('Failed to launch latest version url: $e');
     }
 
     await _openOfficialDownloadPage();
