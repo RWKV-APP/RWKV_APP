@@ -747,10 +747,7 @@ extension _$App on _App {
       ];
     } else if (Platform.isWindows) {
       if (Args.distributionChannel == "windowsStore") {
-        return [
-          'winStore',
-          'winMS',
-        ];
+        return [];
       }
       try {
         final windowsArchitecture = _getWindowsOperatingSystemArchitecture();
