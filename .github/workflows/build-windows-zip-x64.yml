@@ -121,6 +121,14 @@ jobs:
           echo "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           echo "::endgroup::"
 
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-zip-x64
+          path: ${{ steps.create-zip.outputs.zip_path }}
+          retention-days: 7
+          if-no-files-found: error
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
