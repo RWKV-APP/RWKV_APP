@@ -34,7 +34,9 @@
         // "--dart-define=domain=http://localhost:3462"
         // "--dart-define=debuggingLatestUI"
         // "--dart-define=forceShowNewVersionPanel=true"
-        // "--dart-define=testingSeeQueue=true"
+        // "--dart-define=testingSeeQueue=true",
+        // "--dart-define=useWindowsSandboxModels=true",
+        // "--dart-define=distributionChannel=windowsStore"
       ]
     },
     {
