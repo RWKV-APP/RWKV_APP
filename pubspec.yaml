@@ -84,7 +84,7 @@ dependencies:
       url: https://github.com/pvsvamsi/Disable-Battery-Optimizations
       ref: 3bd744d
 
-  adaptive_dialog: 2.5.0
+  adaptive_dialog:
   archive:
   audioplayers:
   background_downloader:
