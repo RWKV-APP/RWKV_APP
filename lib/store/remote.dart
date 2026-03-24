@@ -439,7 +439,9 @@ extension $Remote on _Remote {
         .throttleTime(const Duration(milliseconds: 1000), trailing: true, leading: false)
         .listen(
           (e) {
-            qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
+            if (HF.randomBool(truePercentage: .2)) {
+              qqq('download update: state:${e.state}, speed:${e.speedInMB.toStringAsFixed(2)}MB/s, ${e.totalSize}');
+            }
             state.q = state.q.copyWith(
               timeRemaining: Duration(seconds: e.remainSeconds.round().clamp(0, 60 * 60 * 24)),
               progress: e.progress,
