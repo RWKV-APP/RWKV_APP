@@ -74,3 +74,5 @@ android/.kotlin/sessions/
 # Note: These files are NOT in .gitignore because they need to be in Git
 # for local development. The fastlane 'all' lane uses git_reset to discard
 # generated changes, preventing daily commits of version number images.
+
+samples/
