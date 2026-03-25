@@ -12,9 +12,16 @@
 目前对 prebuilt-prompt-zh-hans.json 文件中不同字段的解释如下
 
 ```
-category: 类目名称,
+category: [general / creation / role_play / encyclopedia / code / mathematics]
+  - 当前固定分类为:
+  - `general` / `日常`
+  - `creation` / `创作`
+  - `role_play` / `角色扮演`
+  - `encyclopedia` / `百科`
+  - `code` / `代码`
+  - `mathematics` / `数学`
 display_name: 类目在 RWKV Chat 中的渲染名称 (会随着应用程序语言改变)
-item: 该类目下所有的问题
+items: 该类目下所有的问题
   {
     rendering_name: 渲染在 RWKV Chat 的可点击按钮的文案
     prompt: 最终实际提交给 RWKV7 g1 系列模型的问题

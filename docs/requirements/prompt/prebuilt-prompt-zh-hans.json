@@ -2,13 +2,38 @@
   {
     "category": "general",
     "display_name": "日常",
-    "item": [
+    "items": [
       {
-        "rendering_name": "",
+        "rendering_name": "努力没白费，只是回报慢了",
         "prompt": "人到一个阶段之后，常常会觉得努力不是没有意义，而是回报越来越慢，整个人容易提不起劲。你如果站在一个比较成熟、理解人生起伏的角度，会怎么安慰这种状态下的人？不要鸡汤",
         "score": 0,
         "is_old_prompt": false
       }
     ]
+  },
+  {
+    "category": "creation",
+    "display_name": "创作",
+    "items": []
+  },
+  {
+    "category": "role_play",
+    "display_name": "角色扮演",
+    "items": []
+  },
+  {
+    "category": "encyclopedia",
+    "display_name": "百科",
+    "items": []
+  },
+  {
+    "category": "code",
+    "display_name": "代码",
+    "items": []
+  },
+  {
+    "category": "mathematics",
+    "display_name": "数学",
+    "items": []
   }
 ]
