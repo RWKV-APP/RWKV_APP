@@ -5441,6 +5441,116 @@ class S {
   String get api_server_logs {
     return Intl.message('请求日志', name: 'api_server_logs', desc: '', args: []);
   }
+
+  /// `当前请求: 有`
+  String get api_server_active_request_yes {
+    return Intl.message(
+      '当前请求: 有',
+      name: 'api_server_active_request_yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前请求: 无`
+  String get api_server_active_request_no {
+    return Intl.message(
+      '当前请求: 无',
+      name: 'api_server_active_request_no',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `对话测试`
+  String get api_server_chat_test {
+    return Intl.message(
+      '对话测试',
+      name: 'api_server_chat_test',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送一条消息来测试 API`
+  String get api_server_chat_empty_hint {
+    return Intl.message(
+      '发送一条消息来测试 API',
+      name: 'api_server_chat_empty_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `输入消息...`
+  String get api_server_chat_input_hint {
+    return Intl.message(
+      '输入消息...',
+      name: 'api_server_chat_input_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送`
+  String get api_server_send {
+    return Intl.message('发送', name: 'api_server_send', desc: '', args: []);
+  }
+
+  /// `API 文档`
+  String get api_server_docs {
+    return Intl.message('API 文档', name: 'api_server_docs', desc: '', args: []);
+  }
+
+  /// `错误: {error}`
+  String api_server_chat_error(Object error) {
+    return Intl.message(
+      '错误: $error',
+      name: 'api_server_chat_error',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `API 服务器已在端口 {port} 启动`
+  String api_server_started_on_port(Object port) {
+    return Intl.message(
+      'API 服务器已在端口 $port 启动',
+      name: 'api_server_started_on_port',
+      desc: '',
+      args: [port],
+    );
+  }
+
+  /// `API 服务器启动失败: {error}`
+  String api_server_failed_to_start(Object error) {
+    return Intl.message(
+      'API 服务器启动失败: $error',
+      name: 'api_server_failed_to_start',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `已停止当前请求`
+  String get api_server_active_request_stopped {
+    return Intl.message(
+      '已停止当前请求',
+      name: 'api_server_active_request_stopped',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前没有进行中的请求`
+  String get api_server_no_active_request {
+    return Intl.message(
+      '当前没有进行中的请求',
+      name: 'api_server_no_active_request',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

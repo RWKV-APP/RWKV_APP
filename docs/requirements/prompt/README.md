@@ -1,33 +1,100 @@
 # README
 
-本文件夹描述了为 RWKV Chat 整理预置提示词的新需求草案。
+本文件夹描述了 RWKV Chat 简体中文预置问题的整理方案。
 
-- 旧有的提示词文件为: [suggestions.json](./suggestions.json)
-- 我们新生成了一批更加日常、更加生活化的提示词: [chat_real_user_queries_zh_mixed.json](./chat_real_user_queries_zh_mixed.json), 目前仅包含中文
-- 我们将这两批提示词合成了一个文件: [prebuilt-prompt-zh-hans.json](./prebuilt-prompt-zh-hans.json)
-  - 该文件目前仅包含简体中文的问题
-  - 这份文件是上面两个提到文件的合体
-  - 我们打算遍历该文件中的所有问题，并且测试我们的2.9B模型在这些问题中的表现。我们会根据多个维度的评分选取一些较好的问题，并且优先展示在 RWKV 的界面中
+当前的目标不是只保留一批“看起来真实”的问题，而是把新旧两批问题统一整理成一个可评测、可筛选、可直接供 App 使用的中文题库。
 
-目前对 prebuilt-prompt-zh-hans.json 文件中不同字段的解释如下
+## 当前文件说明
 
-```
-category: [general / creation / role_play / encyclopedia / code / mathematics]
-  - 当前固定分类为:
-  - `general` / `日常`
-  - `creation` / `创作`
-  - `role_play` / `角色扮演`
-  - `encyclopedia` / `百科`
-  - `code` / `代码`
-  - `mathematics` / `数学`
-display_name: 类目在 RWKV Chat 中的渲染名称 (会随着应用程序语言改变)
-items: 该类目下所有的问题
+- 旧问题来源: [suggestions.json](./suggestions.json)
+  - 当前只使用其中 `zh.chat`
+- 新问题来源: [chat_real_user_queries_zh_mixed.json](./chat_real_user_queries_zh_mixed.json)
+  - 当前是 `225` 条简体中文 `string[]`
+- 合成结果: [prebuilt-prompt-zh-hans.json](./prebuilt-prompt-zh-hans.json)
+  - 当前仅包含简体中文
+  - 供后续 eval 和 App 预置问题展示使用
+- 生成脚本: [tools/build_prebuilt_prompt_zh_hans.py](./tools/build_prebuilt_prompt_zh_hans.py)
+  - 用于可重复生成 `prebuilt-prompt-zh-hans.json`
+
+## 当前需求口径
+
+- 新旧问题都要进入同一批评测
+- 旧问题不能直接保留，答得不好的也要删
+- 每个类别至少保留 `30` 题
+- 每个问题应让 RWKV 跑多次，当前按 `5` 次理解
+- 后续根据 eval 得分筛出更适合展示在 RWKV Chat 界面中的问题
+
+## prebuilt-prompt-zh-hans.json Schema
+
+```json
+[
   {
-    rendering_name: 渲染在 RWKV Chat 的可点击按钮的文案
-    prompt: 最终实际提交给 RWKV7 g1 系列模型的问题
-    score: 我们运行了测评之后的评分, 最终我们会根据这个评分来决定优先展示哪些问题
-    is_old_prompt: 是否来自老的 suggestions.json
-      如果为 false, 则我们会跑测评, 并有可能优先展示给用户, 表示来自于 chat_real_user_queries_zh_mixed.json
-      如果为 true, 因为目前被反馈说不足以体现 RWKV 的能力, 所以我们不对这些问题进行测试, 也不会优先展示这些问题在用户界面上, 表示来自于 suggestions.json
+    "category": "life",
+    "display_name": "日常生活",
+    "items": [
+      {
+        "rendering_name": "努力了很久却感觉看不到回报，怎么调整心态？",
+        "prompt": "完整 prompt",
+        "score": 0
+      }
+    ]
   }
+]
 ```
+
+字段说明:
+
+- `category`
+  - 固定分类 key
+- `display_name`
+  - 该分类在 RWKV Chat 中的简体中文显示名称
+- `items`
+  - 该分类下的所有问题
+- `rendering_name`
+  - 渲染在 RWKV Chat 中的可点击按钮文案
+- `prompt`
+  - 实际提交给 RWKV 模型的问题全文
+- `score`
+  - eval 之后写回的综合评分
+  - 当前生成阶段统一为 `0`
+
+## 当前分类
+
+当前固定分类为 `8` 个，顺序如下：
+
+1. `life` / `日常生活`
+2. `career` / `职场学业`
+3. `family` / `家庭亲子`
+4. `creation` / `创作`
+5. `role_play` / `角色扮演`
+6. `encyclopedia` / `百科`
+7. `code` / `代码`
+8. `mathematics` / `数学`
+
+## prebuilt-prompt-zh-hans.json 当前分布
+
+当前共 `340` 条，来自两个来源合并去重后生成，并对原本不足 `30` 题的分类补充了测试题。
+
+| 分类         | 中文名   | 新问题 | 旧问题 | 合计    |
+| ------------ | -------- | ------ | ------ | ------- |
+| life         | 日常生活 | 50     | 5      | 55      |
+| career       | 职场学业 | 68     | 0      | 68      |
+| family       | 家庭亲子 | 48     | 0      | 48      |
+| creation     | 创作     | 34     | 7      | 41      |
+| role_play    | 角色扮演 | 26     | 7      | 33      |
+| encyclopedia | 百科     | 24     | 7      | 31      |
+| code         | 代码     | 25     | 7      | 32      |
+| mathematics  | 数学     | 25     | 7      | 32      |
+| **合计**     |          | **300**| **40** | **340** |
+
+## 当前进度
+
+1. 合并新旧问题并生成预置文件
+2. 统一分类为 8 个固定类别，并补齐每类至少 30 题
+3. 后续基于 eval 结果筛题并回写 `score`
+4. 再决定 App 中如何优先展示高分问题
+
+## 备注
+
+- 当前 `prebuilt-prompt-zh-hans.json` 中不再保留来源字段
+- 新旧问题的来源区分只在生成脚本内部使用，不作为最终 JSON schema 的一部分

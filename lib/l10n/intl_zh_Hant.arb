@@ -690,5 +690,17 @@
   "api_server_open_dashboard": "開啟控制面板",
   "api_server_curl_hint": "使用範例",
   "api_server_no_model": "未載入模型",
-  "api_server_logs": "請求日誌"
+  "api_server_logs": "請求日誌",
+  "api_server_active_request_yes": "目前請求: 有",
+  "api_server_active_request_no": "目前請求: 無",
+  "api_server_chat_test": "對話測試",
+  "api_server_chat_empty_hint": "傳送一則訊息來測試 API",
+  "api_server_chat_input_hint": "輸入訊息...",
+  "api_server_send": "傳送",
+  "api_server_docs": "API 文件",
+  "api_server_chat_error": "錯誤: {error}",
+  "api_server_started_on_port": "API 伺服器已在連接埠 {port} 啟動",
+  "api_server_failed_to_start": "API 伺服器啟動失敗: {error}",
+  "api_server_active_request_stopped": "已停止目前請求",
+  "api_server_no_active_request": "目前沒有進行中的請求"
 }

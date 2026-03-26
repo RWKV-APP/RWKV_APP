@@ -690,5 +690,17 @@
   "api_server_open_dashboard": "ダッシュボードを開く",
   "api_server_curl_hint": "使用例",
   "api_server_no_model": "モデル未読込",
-  "api_server_logs": "リクエストログ"
+  "api_server_logs": "リクエストログ",
+  "api_server_active_request_yes": "進行中のリクエスト: あり",
+  "api_server_active_request_no": "進行中のリクエスト: なし",
+  "api_server_chat_test": "チャットテスト",
+  "api_server_chat_empty_hint": "API をテストするためにメッセージを送信",
+  "api_server_chat_input_hint": "メッセージを入力...",
+  "api_server_send": "送信",
+  "api_server_docs": "API ドキュメント",
+  "api_server_chat_error": "エラー: {error}",
+  "api_server_started_on_port": "ポート {port} で API サーバーを起動しました",
+  "api_server_failed_to_start": "API サーバーの起動に失敗しました: {error}",
+  "api_server_active_request_stopped": "進行中のリクエストを停止しました",
+  "api_server_no_active_request": "進行中のリクエストはありません"
 }

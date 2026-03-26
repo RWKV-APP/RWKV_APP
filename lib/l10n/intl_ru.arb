@@ -690,5 +690,17 @@
   "api_server_open_dashboard": "Открыть панель управления",
   "api_server_curl_hint": "Пример использования",
   "api_server_no_model": "Модель не загружена",
-  "api_server_logs": "Журнал запросов"
+  "api_server_logs": "Журнал запросов",
+  "api_server_active_request_yes": "Активный запрос: Да",
+  "api_server_active_request_no": "Активный запрос: Нет",
+  "api_server_chat_test": "Тест чата",
+  "api_server_chat_empty_hint": "Отправьте сообщение, чтобы проверить API",
+  "api_server_chat_input_hint": "Введите сообщение...",
+  "api_server_send": "Отправить",
+  "api_server_docs": "Документация API",
+  "api_server_chat_error": "Ошибка: {error}",
+  "api_server_started_on_port": "API сервер запущен на порту {port}",
+  "api_server_failed_to_start": "Не удалось запустить API сервер: {error}",
+  "api_server_active_request_stopped": "Активный запрос остановлен",
+  "api_server_no_active_request": "Активных запросов нет"
 }

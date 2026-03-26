@@ -696,5 +696,17 @@
   "api_server_open_dashboard": "打开控制面板",
   "api_server_curl_hint": "使用示例",
   "api_server_no_model": "未加载模型",
-  "api_server_logs": "请求日志"
+  "api_server_logs": "请求日志",
+  "api_server_active_request_yes": "当前请求: 有",
+  "api_server_active_request_no": "当前请求: 无",
+  "api_server_chat_test": "对话测试",
+  "api_server_chat_empty_hint": "发送一条消息来测试 API",
+  "api_server_chat_input_hint": "输入消息...",
+  "api_server_send": "发送",
+  "api_server_docs": "API 文档",
+  "api_server_chat_error": "错误: {error}",
+  "api_server_started_on_port": "API 服务器已在端口 {port} 启动",
+  "api_server_failed_to_start": "API 服务器启动失败: {error}",
+  "api_server_active_request_stopped": "已停止当前请求",
+  "api_server_no_active_request": "当前没有进行中的请求"
 }

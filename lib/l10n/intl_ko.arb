@@ -690,5 +690,17 @@
   "api_server_open_dashboard": "대시보드 열기",
   "api_server_curl_hint": "사용 예시",
   "api_server_no_model": "모델 미로드",
-  "api_server_logs": "요청 로그"
+  "api_server_logs": "요청 로그",
+  "api_server_active_request_yes": "진행 중인 요청: 있음",
+  "api_server_active_request_no": "진행 중인 요청: 없음",
+  "api_server_chat_test": "채팅 테스트",
+  "api_server_chat_empty_hint": "API를 테스트하려면 메시지를 보내세요",
+  "api_server_chat_input_hint": "메시지를 입력하세요...",
+  "api_server_send": "보내기",
+  "api_server_docs": "API 문서",
+  "api_server_chat_error": "오류: {error}",
+  "api_server_started_on_port": "포트 {port}에서 API 서버를 시작했습니다",
+  "api_server_failed_to_start": "API 서버 시작에 실패했습니다: {error}",
+  "api_server_active_request_stopped": "진행 중인 요청을 중지했습니다",
+  "api_server_no_active_request": "진행 중인 요청이 없습니다"
 }
