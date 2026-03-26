@@ -1,0 +1,63 @@
+{
+  "sample_index": 158,
+  "rendering_name": "想给全职妈妈老婆买母亲节礼物预算2000，不要鲜花和包有什么推荐？",
+  "prompt": "家里有娃，想给老婆买一份实用的母亲节礼物，不要鲜花和包，预算 2k 以内，有什么能让全职妈妈真正放松的东西？",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣需求，分类清晰且建议实用，特别强调时间置换。但部分建议如请保姆可能超预算，个别推荐略显生硬。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但严重忽视预算限制，推荐多款超 2k 产品，且部分建议如装修书房不切实际，实用性大打折扣。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰、理念温暖，但部分推荐产品（如特定饮料、桌游）与“放松”关联弱，且存在品牌虚构或功能夸大嫌疑，实用性打折。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求，分类清晰。但部分建议如按摩椅超预算，且“母亲节已过去”表述有误，略显瑕疵。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.65,
+      "brief_note": "结构清晰但严重超预算，部分产品如VR、投影仪偏离“放松”核心，且存在“充电懒人沙发”等常识性错误。"
+    }
+  ]
+}

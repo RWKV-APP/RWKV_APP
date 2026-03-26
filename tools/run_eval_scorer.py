@@ -93,6 +93,7 @@ def call_judge_api(
         ],
         "temperature": 0.1,
         "max_tokens": 1024,
+        "enable_thinking": False,
     }
 
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -111,7 +112,12 @@ def call_judge_api(
         try:
             with urllib.request.urlopen(request, timeout=120) as resp:
                 result = json.loads(resp.read().decode("utf-8"))
-            content = result["choices"][0]["message"]["content"]
+            message = result["choices"][0]["message"]
+            content = message.get("content") or ""
+            if not content and "reasoning_content" in message:
+                content = message["reasoning_content"]
+            if not content:
+                raise ValueError("Empty content from judge API")
             return parse_score_json(content)
         except urllib.error.HTTPError as e:
             error_body = ""
@@ -139,20 +145,26 @@ def call_judge_api(
 
 
 def parse_score_json(raw: str) -> dict:
-    json_match = re.search(r"\{[^{}]*\}", raw, re.DOTALL)
-    if json_match is None:
-        raise ValueError(f"No JSON found in judge response: {raw[:300]}")
-
-    parsed = json.loads(json_match.group())
-
+    # Extract scores with regex — more robust than json.loads when model
+    # outputs malformed JSON (e.g. unquoted brief_note value)
     scores = {}
     for key in ("relevance", "quality", "fluency", "satisfaction"):
-        value = parsed.get(key)
-        if value is None:
-            raise ValueError(f"Missing key '{key}' in judge response")
-        scores[key] = int(value)
+        m = re.search(rf'"{key}"\s*:\s*(\d+)', raw)
+        if m is None:
+            raise ValueError(f"Missing key '{key}' in judge response: {raw[:300]}")
+        scores[key] = int(m.group(1))
 
-    brief_note = parsed.get("brief_note", "")
+    # Extract brief_note: handles both quoted and unquoted values
+    note = ""
+    # Case 1: properly quoted  "brief_note": "..."
+    m = re.search(r'"brief_note"\s*:\s*"([^"]+)"', raw)
+    if m:
+        note = m.group(1).strip()
+    else:
+        # Case 2: unquoted  "brief_note": 回答...
+        m = re.search(r'"brief_note"\s*:\s*([^"\n}{,][^\n}{]*)', raw)
+        if m:
+            note = m.group(1).strip().rstrip('",')
 
     weighted_score = round(
         sum(scores[k] * WEIGHTS[k] for k in WEIGHTS),
@@ -162,7 +174,7 @@ def parse_score_json(raw: str) -> dict:
     return {
         "scores": scores,
         "weighted_score": weighted_score,
-        "brief_note": brief_note,
+        "brief_note": note,
     }
 
 
@@ -189,6 +201,7 @@ def score_sample(
     api_base: str,
     model: str,
     api_key: str,
+    force: bool = False,
 ) -> None:
     with open(sample_path, encoding="utf-8") as f:
         sample = json.load(f)
@@ -202,11 +215,12 @@ def score_sample(
     score_filename = f"{sample_index:04d}_score.json"
     score_path = scores_dir / score_filename
 
-    existing = load_existing_score(score_path)
     existing_evals = {}
-    if existing is not None:
-        for ev in existing.get("attempt_evals", []):
-            existing_evals[ev["attempt"]] = ev
+    if not force:
+        existing = load_existing_score(score_path)
+        if existing is not None:
+            for ev in existing.get("attempt_evals", []):
+                existing_evals[ev["attempt"]] = ev
 
     attempt_evals = []
     for att in attempts:
@@ -246,6 +260,19 @@ def score_sample(
     atomic_write_json(score_path, score_data)
 
 
+def is_sample_fully_scored(score_path: pathlib.Path, expected_attempts: int) -> bool:
+    """Check if a score file exists and has all attempts evaluated."""
+    if not score_path.exists():
+        return False
+    try:
+        with open(score_path, encoding="utf-8") as f:
+            data = json.load(f)
+        scored_attempts = len(data.get("attempt_evals", []))
+        return scored_attempts >= expected_attempts
+    except Exception:
+        return False
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Score completed generation samples using a judge LLM"
@@ -259,12 +286,13 @@ def main() -> None:
         "--sample-count",
         type=int,
         default=0,
-        help="Number of samples to score (0 = all)",
+        help="Target number of scored samples (0 = all). "
+        "If 330 already scored and you pass 340, only 10 new ones will run",
     )
     parser.add_argument(
-        "--random",
+        "--force",
         action="store_true",
-        help="Randomly select samples instead of sequential",
+        help="Force re-score even if score file already exists",
     )
     parser.add_argument(
         "--api-base",
@@ -293,19 +321,41 @@ def main() -> None:
     scores_dir.mkdir(exist_ok=True)
 
     all_samples = find_completed_samples(run_dir)
-    print(f"Found {len(all_samples)} completed samples")
+    total = len(all_samples)
+    print(f"Found {total} completed samples")
 
-    if args.sample_count > 0:
-        if args.random:
-            selected = random.sample(
-                all_samples, min(args.sample_count, len(all_samples))
-            )
+    # Split into already-scored and pending
+    already_scored: list[pathlib.Path] = []
+    pending: list[pathlib.Path] = []
+    for sample_path in all_samples:
+        with open(sample_path, encoding="utf-8") as f:
+            sample = json.load(f)
+        sample_index = sample["sample_index"]
+        expected = sum(
+            1 for a in sample.get("attempts", []) if a["status"] == "completed"
+        )
+        score_path = scores_dir / f"{sample_index:04d}_score.json"
+
+        if not args.force and is_sample_fully_scored(score_path, expected):
+            already_scored.append(sample_path)
         else:
-            selected = all_samples[: args.sample_count]
-    else:
-        selected = all_samples
+            pending.append(sample_path)
 
-    print(f"Will score {len(selected)} samples using {args.model}")
+    print(f"Already scored: {len(already_scored)}, Pending: {len(pending)}")
+
+    # Determine how many to run this batch
+    target = args.sample_count if args.sample_count > 0 else total
+    need = max(0, target - len(already_scored))
+    if need == 0:
+        print(f"Target {target} already reached. Nothing to do.")
+        print(f"Use --force to re-score existing samples.")
+        return
+
+    # Shuffle pending and take what we need
+    random.shuffle(pending)
+    selected = pending[:need]
+
+    print(f"Will score {len(selected)} new samples using {args.model}")
     print(f"Scores will be written to: {scores_dir}")
     print()
 
@@ -316,14 +366,22 @@ def main() -> None:
         print(f"[{i}/{len(selected)}] {sample_name}")
 
         try:
-            score_sample(sample_path, scores_dir, args.api_base, args.model, api_key)
+            score_sample(
+                sample_path,
+                scores_dir,
+                args.api_base,
+                args.model,
+                api_key,
+                force=args.force,
+            )
             scored += 1
         except Exception as e:
             print(f"  Failed: {e}")
             errors += 1
 
     print()
-    print(f"Done. Scored: {scored}, Errors: {errors}")
+    print(f"Done. New scored: {scored}, Errors: {errors}")
+    print(f"Total scored: {len(already_scored) + scored}/{total}")
     print(f"Score files: {scores_dir}")
 
 

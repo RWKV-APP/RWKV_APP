@@ -1,0 +1,63 @@
+{
+  "sample_index": 105,
+  "rendering_name": "大厂外包岗和初创公司核心岗，从长期职业发展看该怎么选？",
+  "prompt": "我收到了两份 offer，一份是大厂的外包岗，一份是初创公司的核心岗，请帮我从长期职业发展的角度分析利弊",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣主题，结构清晰，利弊分析全面。但大厂外包岗的‘晋升机会’描述有误导，实际转正难，建议更精准。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰流畅，但存在严重事实错误：将大厂外包岗描述为稳定、晋升路径清晰，完全违背行业常识，误导用户决策。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答结构清晰，紧扣主题。但大厂外包晋升机会少、培训资源有限等关键事实描述有误，建议实用性打折。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰切题，但事实有误：大厂外包岗稳定性差、福利通常不如正式员工，核心建议存在误导风险。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，利弊分析全面且逻辑清晰，建议实用。但大厂外包稳定性描述略有偏差，整体质量很高。"
+    }
+  ]
+}

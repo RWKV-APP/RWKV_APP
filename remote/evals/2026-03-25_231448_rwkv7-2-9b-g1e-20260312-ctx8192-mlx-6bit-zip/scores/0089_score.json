@@ -1,0 +1,63 @@
+{
+  "sample_index": 89,
+  "rendering_name": "销售团队这两年业绩波动大心态不稳，怎么激励而不把人逼太狠？",
+  "prompt": "我手下销售团队这两年业绩波动很大，大家心态也不太稳。老板又想要结果，又怕人走。你帮我想几个既能提高积极性、又不至于把团队逼得太狠的激励办法",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣平衡激励与压力的核心痛点，建议全面且具实操性。结构清晰，语气专业，能有效缓解管理者焦虑。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答切题且结构清晰，但建议过于通用，缺乏针对业绩波动和心态不稳的具体实操策略，深度不足。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣问题，涵盖多维激励策略，结构清晰。但内容略显泛泛，缺乏针对业绩波动的具体落地方案。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，十条建议兼顾激励与留人，结构清晰实用。内容全面且具操作性，能有效缓解管理者焦虑。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答切题但过于泛泛，像通用管理清单。缺乏针对销售波动和心态不稳的具体实操方案，实用性不足。"
+    }
+  ]
+}

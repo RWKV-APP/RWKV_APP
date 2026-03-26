@@ -1,0 +1,63 @@
+{
+  "sample_index": 313,
+  "rendering_name": "蒙提霍尔问题为什么换门概率更高，用数学解释？",
+  "prompt": "蒙提霍尔问题（三门问题）：选完一扇门后主持人打开一扇没有奖品的门，为什么换门的获奖概率更高？用条件概率或枚举法证明一下？",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 4
+      },
+      "weighted_score": 5.6,
+      "brief_note": "回答结构清晰但核心计算严重错误，将换门概率误算为7/9而非2/3，逻辑推导混乱，无法解决用户疑问。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "条件概率部分逻辑正确，但枚举法严重跑题，错误地将三门问题改为六门且奖品数量错误，导致证明无效。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "枚举法清晰直观，但条件概率推导逻辑混乱，公式定义错误且计算过程冗余，导致数学证明部分缺乏严谨性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但核心逻辑严重错误。条件概率推导得出换门必赢，枚举法计算结果混乱且结论错误，完全误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣主题且结构清晰，但枚举法证明过程存在严重逻辑错误，错误计算了换门后的条件概率，导致推导过程不严谨。"
+    }
+  ]
+}

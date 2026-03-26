@@ -1,0 +1,63 @@
+{
+  "sample_index": 258,
+  "rendering_name": "绝对音感是天生的还是后天训练出来的？",
+  "prompt": "绝对音感到底是天生遗传的，还是后天可以通过训练获得的？为什么有些人天生就有，而大多数人怎么练都练不出来？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，科学阐述遗传与训练关系，结构清晰逻辑严密。内容详实且具实用性，仅个别细节可更精准。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确阐述了遗传与训练的双重作用。内容详实且逻辑严密，仅对“几乎所有人”都能获得的表述略显乐观。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，科学解释遗传与训练关系。虽部分数据存疑，但整体逻辑严密，建议实用，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣问题，结构清晰。但关于特定基因（如MCPH1）决定绝对音感的说法缺乏确凿科学共识，存在事实夸大风险。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰。准确指出遗传与训练的双重作用，但关于后天训练可获绝对音感的说法在科学界尚有争议，略显绝对。"
+    }
+  ]
+}

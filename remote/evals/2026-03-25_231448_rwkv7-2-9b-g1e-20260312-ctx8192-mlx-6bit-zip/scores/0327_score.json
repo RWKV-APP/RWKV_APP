@@ -1,0 +1,63 @@
+{
+  "sample_index": 327,
+  "rendering_name": "合格率60%，取5件恰好3件合格的概率是多少？",
+  "prompt": "一批产品的合格率为60%，随机抽取5件，恰好有3件合格品的概率是多少？请用二项分布公式计算，并写出推导过程？",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣二项分布公式，推导过程清晰完整，计算准确无误，完美满足用户需求。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，公式引用准确，推导步骤清晰完整，计算无误，完美满足用户需求。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，公式引用准确，推导步骤清晰完整，计算无误，结构层次分明，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.25,
+      "brief_note": "回答结构清晰且紧扣题意，但计算结果错误。10*0.216*0.16 应为 0.3456 而非 3.456%，导致最终答案偏差十倍。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣二项分布要求，公式准确，推导步骤清晰完整，计算无误，完美解决用户问题。"
+    }
+  ]
+}

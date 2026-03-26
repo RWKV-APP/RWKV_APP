@@ -1,0 +1,63 @@
+{
+  "sample_index": 199,
+  "rendering_name": "请以'如果时间可以暂停一天'为主题，写一段脑洞大开的创意短文",
+  "prompt": "请以“如果时间可以暂停一天”为主题，写一段脑洞大开的创意短文，不用很长，但要有画面感和想象力",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "紧扣主题，画面感强，将时间暂停转化为传递感恩的温情故事，想象力独特且语言优美流畅。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣主题，画面感极强，琥珀与焦糖香气细节生动。结尾反转富有哲理，语言流畅优美，极具感染力。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "紧扣主题，结构清晰流畅。但画面感稍弱，逻辑有瑕疵：时间暂停时手机无法联系他人，削弱了创意真实感。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣主题，画面感极强，从城市晨昏到童年回忆，情感细腻流畅，极具感染力与想象力。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "紧扣主题，画面感极强，从清晨到深夜细节丰富。结尾升华自然，语言优美流畅，极具感染力。"
+    }
+  ]
+}

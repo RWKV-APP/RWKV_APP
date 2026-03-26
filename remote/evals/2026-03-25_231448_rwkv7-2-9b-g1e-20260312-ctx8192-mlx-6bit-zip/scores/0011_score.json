@@ -1,0 +1,63 @@
+{
+  "sample_index": 11,
+  "rendering_name": "家庭保险越看越乱，重疾医疗寿险按家庭角色怎么配置？",
+  "prompt": "我在考虑给家庭做一次保险重整，但市场上的方案看得人头大，一会儿重疾、一会儿医疗、一会儿寿险，越看越不知道什么才是真需要。你帮我按家庭支柱、配偶、孩子、老人这几个角色讲清楚思路",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "结构清晰但专业建议严重错误。如建议老人买重疾险、孩子买身故险、支柱保额过低，存在误导风险，实用性差。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰覆盖全角色，但存在事实错误：中国无520储蓄卡，儿童险不建议分红型，老人险推荐不够精准。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰覆盖四类角色，但建议支柱买终身寿险和年金险、配偶仅买意外险，存在严重误导，缺乏专业准确性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "结构清晰但建议严重错误：老人买寿险无意义，孩子买寿险违背伦理，且混淆了重疾险与医疗险功能，误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "结构清晰但存在严重事实错误：老人买终身寿险极不现实，重疾险非年金型，孩子寿险逻辑混乱，误导用户。"
+    }
+  ]
+}

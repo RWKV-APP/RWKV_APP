@@ -1,0 +1,63 @@
+{
+  "sample_index": 132,
+  "rendering_name": "下班太累对老婆说话敷衍，怎么用10分钟让她感觉被在意？",
+  "prompt": "我下班太累，经常对老婆说话很敷衍，回头自己也知道不应该，但当下真的没电了。你能不能给我几个下班回家后 10 分钟内就能做的小动作，让对方感觉到被在意，而不是只听到我累",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，列举了十个具体动作，结构清晰。但部分建议如做饭、玩游戏对极度疲惫者仍显吃力，实用性略有不足。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，结构清晰。但部分建议如送花、共同做饭耗时较长，不够贴合“极度疲惫”的实际情况。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，结构清晰。但部分建议如做饭、弹琴对“没电”状态不切实际，若能聚焦更低能耗动作更佳。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十条具体可操作建议，涵盖肢体与语言互动。结构清晰，语气温暖，极具实用价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十条具体可执行的小动作，兼顾语言与行动。结构清晰，语气温暖，极具实用价值。"
+    }
+  ]
+}

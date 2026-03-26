@@ -1,0 +1,63 @@
+{
+  "sample_index": 77,
+  "rendering_name": "一开口说英语就怕出错，适合上班族的30天口语练习方案是什么？",
+  "prompt": "我在准备英语口语，但一开口就特别怕出错，所以一直不敢说。你别给我很学术的方法，直接给我一个适合上班族和学生混合人群都能用的 30 天练口语方案",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "虽列满30条，但内容杂乱堆砌，未分周规划，且包含饮食运动等无关项，未解决怕错心理，实用性差。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "方案结构清晰、分阶段合理，针对性强。但部分建议如“故意口吃”略显怪异，且未完全避开学术感，整体实用。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答虽切题但严重跑偏，将30天方案写成30条杂乱清单，未分阶段且内容重复，缺乏针对性，实用性极差。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案紧扣需求，分阶段设计实用且易执行，兼顾上班族与学生。内容具体，语气鼓励，有效缓解开口焦虑。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "方案结构清晰但严重偏题，未解决“怕出错”心理，且阅读听力非口语练习，缺乏实操性。"
+    }
+  ]
+}

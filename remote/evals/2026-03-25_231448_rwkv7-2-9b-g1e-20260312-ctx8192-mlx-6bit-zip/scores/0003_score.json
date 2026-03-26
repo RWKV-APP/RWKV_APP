@@ -1,0 +1,63 @@
+{
+  "sample_index": 3,
+  "rendering_name": "预算15万买家庭用车，主要接送孩子，选哪类思路？",
+  "prompt": "我们家准备买第一辆真正的家庭用车，预算 15 万左右，主要是接送孩子、周末短途、偶尔回老家。我不太在乎品牌面子，更在乎空间、可靠性和后期省心。你帮我推荐几种思路",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 8,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.95,
+      "brief_note": "回答误判为二手车，且事实错误严重：将轿车当SUV、MPV当皮卡、品牌归属混乱，完全不可用。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "回答结构清晰但事实错误严重：五菱宏光无第三排，奥迪A3无第三排，大众CC非MPV，严重误导购车决策。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求，推荐了具体车型。但建议略显泛泛，缺乏针对 15 万预算的深度对比和具体配置分析。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 8,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.95,
+      "brief_note": "回答结构清晰但事实错误严重：凯美瑞无三排，Model 3 超预算，唐 DM-i 非增程，宋 Pro 无七座，严重误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "回答结构清晰但事实错误严重：凯美瑞/雅阁超预算，吉利无GL8车型，哈弗H6非三缸，严重误导用户。"
+    }
+  ]
+}

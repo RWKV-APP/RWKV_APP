@@ -1,0 +1,63 @@
+{
+  "sample_index": 140,
+  "rendering_name": "带一家三口出去玩3天孩子还小，怎么安排轻松不像打仗的行程？",
+  "prompt": "我想带一家三口出去玩 3 天，孩子还小，老人这次不去，所以核心诉求是轻松一点，不要像打仗一样。你帮我做一个适合亲子短途出游的安排模板，我以后也能套着用",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣轻松亲子诉求，模板结构清晰实用，建议具体。但部分活动如观演需运气，略显理想化，整体质量很高。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "模板结构清晰但第三天逻辑严重错误，提及“送别老人”与用户“老人不去”的前提矛盾，且部分活动如晨练瑜伽不适合带娃，实用性大打折扣。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 8,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.5,
+      "brief_note": "结构清晰但内容空洞，行程过于通用且第三天下午才返程，未体现带娃轻松游的实操细节。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "模板结构清晰，紧扣轻松亲子游诉求，建议实用。但基本信息栏未剔除老人，且部分活动对带娃家庭略显繁琐，需微调。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 4
+      },
+      "weighted_score": 5.15,
+      "brief_note": "回答虽切题但过于空泛，仅列通用步骤，未提供具体可套用的模板或轻松行程示例，实用性不足。"
+    }
+  ]
+}

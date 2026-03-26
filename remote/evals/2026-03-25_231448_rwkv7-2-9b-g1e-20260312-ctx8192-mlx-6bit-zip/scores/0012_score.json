@@ -1,0 +1,63 @@
+{
+  "sample_index": 12,
+  "rendering_name": "妈妈又安排相亲了，怎么礼貌回应又能把节奏拖开？",
+  "prompt": "我妈又开始安排相亲了，我其实现在没有精力进入关系，但也不想每次都直接顶回去，搞得家里气氛很差。你帮我写几个礼貌但能把节奏拖开的回复，分别适合发微信和当面说",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 2,
+        "fluency": 3,
+        "satisfaction": 2
+      },
+      "weighted_score": 2.95,
+      "brief_note": "回答切题但严重冗余，大量重复无效内容，且未提供当面沟通的话术，结尾突然中断，体验极差。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答未直接提供用户所需的回复话术，反而反问细节并说教，完全未解决用户“写几个回复”的核心需求，实用性差。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供微信与当面两种场景的回复，策略实用且语气得体，结构清晰，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供微信与当面两种场景的回复，礼貌且实用。结构清晰，附带解释，能有效帮助用户缓解家庭压力。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣需求，提供微信与当面两种场景话术，礼貌且实用。但部分回复内容重复，略显冗余，稍作精简更佳。"
+    }
+  ]
+}

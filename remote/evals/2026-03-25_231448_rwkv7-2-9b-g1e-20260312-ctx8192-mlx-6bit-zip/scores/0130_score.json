@@ -1,0 +1,63 @@
+{
+  "sample_index": 130,
+  "rendering_name": "孩子写作业变家庭战争，怎么设计一个协作流程？",
+  "prompt": "小学作业一到晚上就像家庭战争现场，孩子拖、我急、另一半夹在中间，最后谁都不开心。你帮我设计一个家庭作业协作流程，目标不是提高分数，而是别每天都这样耗",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣目标设计流程，结构清晰，话术具体实用。虽工具推荐略显通用，但整体极具操作性，能有效缓解家庭冲突。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣目标，结构清晰，规则与激励建议实用。但缺乏具体话术和冲突应对细节，实操性稍弱。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "流程结构清晰，但建议调整作业难度严重违规，且角色分工略显刻板，实用性打折。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，流程清晰实用，心态建议温暖。但部分奖励如冰淇淋可能需家长自行调整，整体极具操作性。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣降低冲突目标，流程设计详尽且具实操性，涵盖分工与心态。结构清晰，语气共情，能有效缓解家长焦虑。"
+    }
+  ]
+}

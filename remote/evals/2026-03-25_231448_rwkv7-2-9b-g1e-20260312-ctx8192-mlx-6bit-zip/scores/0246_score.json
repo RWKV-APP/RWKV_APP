@@ -1,0 +1,63 @@
+{
+  "sample_index": 246,
+  "rendering_name": "用费曼学习法向完全不懂的人解释沉没成本谬误，怎么解释？",
+  "prompt": "用费曼学习法解释一下“沉没成本谬误”，我想快速理解这个概念",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣费曼学习法，步骤清晰，案例生动易懂。虽未完全模拟向儿童讲解的口吻，但核心逻辑准确，极具启发性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣费曼法，定义清晰，案例生动且覆盖多场景。逻辑严密，建议实用，结构层次分明，易于快速理解。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰符合费曼法，但电影票例子逻辑有误（看完后无法再买票），且建议部分未完全剔除沉没成本，略有瑕疵。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "结构清晰，例子贴切，但“沉没成本”词源解释有误，且费曼法中缺少“复述验证”环节，略有瑕疵。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，结构清晰，但费曼法特征不足，缺乏通俗类比，解释略显抽象，实用性一般。"
+    }
+  ]
+}

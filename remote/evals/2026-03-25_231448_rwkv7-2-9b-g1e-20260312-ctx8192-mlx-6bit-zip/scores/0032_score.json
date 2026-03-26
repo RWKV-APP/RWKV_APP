@@ -1,0 +1,63 @@
+{
+  "sample_index": 32,
+  "rendering_name": "夫妻年收入税后60万有一个2岁孩子，家庭资产和教育金怎么配置？",
+  "prompt": "夫妻年收入税后 60 万，有一娃两岁，有房贷。请给我一个兼顾教育金储备和稳健理财的家庭资产配置比例建议",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 4
+      },
+      "weighted_score": 5.15,
+      "brief_note": "回答结构清晰但建议极不合理。房贷占50%且日常开支仅10%，严重脱离生活实际，缺乏实用价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣问题，结构清晰。但将房贷还款列为资产配置比例逻辑有误，且30%股票对稳健理财目标风险偏高，建议需更精准。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 3,
+        "fluency": 8,
+        "satisfaction": 4
+      },
+      "weighted_score": 4.65,
+      "brief_note": "结构清晰但内容严重失实：房贷月还2000元、货币基金年化4-6%、黄金含税收抵扣等均为错误信息，误导用户。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "结构清晰但逻辑混乱。建议比例与示例金额严重不符（70%对应30万），且推荐“申请教育贷款”理财属严重常识错误，误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答切题且结构清晰，但存在严重逻辑矛盾：将高风险股票归为稳健理财，且教育金推荐高收益国债，建议缺乏专业准确性。"
+    }
+  ]
+}

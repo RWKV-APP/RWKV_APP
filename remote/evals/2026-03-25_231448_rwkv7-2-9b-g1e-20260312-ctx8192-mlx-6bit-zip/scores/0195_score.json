@@ -1,0 +1,63 @@
+{
+  "sample_index": 195,
+  "rendering_name": "同学聚会让我上台说几句，怎么写一段简短真诚又不太客套的发言？",
+  "prompt": "同学聚会马上要到了，主持人让我上台简单说几句，我不想太客套也不想太严肃，能不能帮我写一段简短得体、真诚自然的发言文案",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 7,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.05,
+      "brief_note": "内容切题真诚，但结尾“谢谢大”明显截断，影响完整性。整体语气自然，稍显模板化，需补全结尾。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，语气真诚自然。但假设穿校服略显突兀，若改为通用场景会更得体实用。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣需求，结构完整流畅。但“尊敬的各位同学”略显正式，部分措辞偏套话，真诚自然感稍欠。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "内容切题得体，情感真诚。但提及“离开”的师生略显沉重，可能破坏聚会轻松氛围，建议微调。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣需求，结构完整流畅。但用词略显书面和客套，真诚自然的口语感稍弱，个性化不足。"
+    }
+  ]
+}

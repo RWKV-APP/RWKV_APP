@@ -1,0 +1,63 @@
+{
+  "sample_index": 242,
+  "rendering_name": "请扮演心理咨询师，温和引导我分析焦虑来源",
+  "prompt": "扮演心理咨询师。温和引导，帮助分析焦虑来源。",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣心理咨询主题，语气温和共情，引导提问具体实用。虽未直接分析来源，但符合引导式对话逻辑，体验良好。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣角色，结构清晰，引导温和专业。虽未直接分析具体焦虑源（因用户未提供细节），但提供了极佳的互动框架。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣角色，语气温和专业，引导清晰。虽未直接分析来源，但通过提问有效开启对话，实用性强。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 4,
+        "quality": 1,
+        "fluency": 2,
+        "satisfaction": 1
+      },
+      "weighted_score": 1.75,
+      "brief_note": "回答开头温和专业，但随后陷入严重重复循环，列出百条冗余问题，结构崩塌，完全无法使用。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣角色设定，语气温和专业，有效引导用户开启对话，但尚未深入分析焦虑来源。"
+    }
+  ]
+}

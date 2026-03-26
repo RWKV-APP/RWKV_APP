@@ -1,0 +1,63 @@
+{
+  "sample_index": 312,
+  "rendering_name": "线性回归最小二乘法的原理，用矩阵形式怎么表达？",
+  "prompt": "线性回归的最小二乘法原理是什么？损失函数怎么定义？用矩阵形式写出参数的解析解，并解释为什么这样求最小值？",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 5,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.25,
+      "brief_note": "回答结构清晰但存在严重数学错误：矩阵求导公式错误，解析解未给出标准形式，且将凸函数误称为凹函数，误导用户。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣问题，原理、损失函数、矩阵解及求导逻辑推导严谨准确，结构清晰，完全满足专业需求。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，公式推导准确，逻辑清晰。仅“带约束”表述略有瑕疵，但不影响整体理解，质量很高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，公式准确，逻辑清晰。解析解推导原理提及梯度为零，但可补充凸函数性质以解释全局最优，整体质量很高。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "回答结构清晰但数学推导严重错误。矩阵展开式混乱，错误引入拉格朗日乘子求解无约束问题，导致解析解推导过程完全不可信。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 52,
+  "rendering_name": "为什么大多数动物都是两只眼睛两只耳朵这样成对的？",
+  "prompt": "为什么地球上的动物大多数都是有两只眼睛、两只手、两只脚、两个耳朵？",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答流畅但事实错误严重，将人类特征（手、脚）强加于所有动物，且未解释两侧对称的演化根源，误导用户。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣进化论解释，逻辑清晰流畅。但将‘手’泛化至所有动物不准确，且部分原因如繁殖交流略显牵强。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答流畅但事实错误严重，将人类特征（手）强加于所有动物，且未解释为何是‘两只’而非其他数量，缺乏科学严谨性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答流畅但事实有误，将脊椎动物特征泛化为所有动物，且昆虫等无手脚，导致内容准确性不足。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，从进化、功能等角度解释合理。但将“手”泛用于所有动物不准确，且未提及两侧对称这一核心概念。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 206,
+  "rendering_name": "帮我写一段父子关于梦想与现实的对话，体现两代人的观念差异",
+  "prompt": "请编写一段父子关于'梦想与现实'的对话，要求体现两代人的观念差异，同时要有温情和理解的元素，对话长度约300字。",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 8,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答紧扣主题，体现观念差异与温情。但对话略显平淡套路，缺乏具体细节支撑，情感深度和字数稍显不足。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "对话紧扣主题，体现观念差异与温情。但字数略超，结尾旁白稍显冗余，削弱了对话本身的感染力。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 8,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "对话紧扣主题，体现观念差异与温情。但字数不足三百，结尾说教感略重，缺乏生活细节，感染力稍弱。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "对话紧扣主题，清晰展现两代人观念差异与温情理解。结构完整，情感自然，字数略少但核心要素齐全，整体质量较高。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "对话紧扣主题，体现观念差异与温情。但字数略少于300字，父亲说教感稍强，深度可再挖掘。"
+    }
+  ]
+}

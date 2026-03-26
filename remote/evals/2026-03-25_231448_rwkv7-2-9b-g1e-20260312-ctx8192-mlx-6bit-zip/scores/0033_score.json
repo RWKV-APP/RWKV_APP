@@ -1,0 +1,63 @@
+{
+  "sample_index": 33,
+  "rendering_name": "感觉自己知识结构有些老化，推荐一份中年版书单或播客",
+  "prompt": "感觉自己的知识结构有些老化，请推荐一份中年版的书单或播客，帮助我理解当下的年轻人文化和前沿科技",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 4
+      },
+      "weighted_score": 4.8,
+      "brief_note": "回答结构清晰流畅，但书单存在严重事实错误，多本书名与作者不匹配或虚构，误导用户，实用性极低。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.05,
+      "brief_note": "回答结构清晰且切题，但书单中《年轻人的世界》等书籍作者虚构，存在严重事实错误，误导用户。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.05,
+      "brief_note": "回答紧扣主题，结构清晰流畅。但多处书籍作者与书名严重张冠李戴，存在大量事实性幻觉，误导用户，实用性大打折扣。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.05,
+      "brief_note": "回答结构清晰且紧扣主题，但存在严重事实错误，如虚构书籍作者及将爱因斯坦列为当代播客嘉宾，误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰流畅，但推荐书籍《如何阅读一本小说》严重偏离主题，无法帮助理解青年文化，内容实用性不足。"
+    }
+  ]
+}

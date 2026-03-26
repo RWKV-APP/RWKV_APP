@@ -1,0 +1,63 @@
+{
+  "sample_index": 255,
+  "rendering_name": "为什么飞机在高空飞行反而不容易被雷击？",
+  "prompt": "为什么飞机在高空飞行反而不容易被雷击？雷电不是应该更容易击中高处的东西吗？这背后的物理原理是什么？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但核心事实错误：飞机实际常被雷击，且93号航班坠毁主因是恐怖袭击而非雷击，严重误导用户。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰流畅，但核心事实错误。飞机常飞于雷暴云顶部，易遭雷击，并非因高空不易被击。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.05,
+      "brief_note": "回答结构清晰但核心事实错误：飞机常穿越雷暴区，并非因高空电场弱而免遭雷击，且现代飞机无避雷针。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰流畅，但核心事实错误。飞机实际常遭雷击，且文中关于高空无雷云、金属外壳防雷等解释严重违背物理常识。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰流畅，但核心事实错误。飞机高空飞行并非因绝缘而不易被雷击，反而常因穿越雷暴云而遭雷击，原理解释完全偏离科学事实。"
+    }
+  ]
+}

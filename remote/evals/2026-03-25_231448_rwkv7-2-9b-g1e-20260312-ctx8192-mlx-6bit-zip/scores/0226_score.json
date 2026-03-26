@@ -1,0 +1,63 @@
+{
+  "sample_index": 226,
+  "rendering_name": "如果你是存在主义哲学家，怎么看待中年人努力边际效益递减的无意义感？",
+  "prompt": "人到中年，有时候觉得努力的边际效益递减了。如果你是存在主义哲学家，你怎么看待这种无意义感？请给我写一段温暖但有力量的鼓励",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣存在主义主题，语气温暖有力。但哲学深度稍浅，未深入探讨“荒谬”与“反抗”，略显通用。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣存在主义视角，引用虽存疑但意境温暖。结构清晰，从接纳情绪到引导关注当下，极具治愈力与启发性。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣存在主义视角，准确阐述“意义由人创造”的核心观点。语言温暖有力，结构清晰，有效缓解焦虑并赋予力量。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣存在主义视角，语气温暖有力。虽未深入哲学概念，但鼓励实用，能有效缓解焦虑，给予用户情感支持。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣存在主义视角，将无意义感重构为觉醒契机。语言温暖有力，结构清晰，极具共情与治愈感。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 188,
+  "rendering_name": "如果家里总爱拆家的猫会说话，被抓现行时它的内心独白是什么？",
+  "prompt": "如果我家那只总爱拆家的猫会说话，面对刚被我抓现行的情况，它的内心独白会是什么？",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "回答紧扣主题，拟人化独白生动有趣，逻辑自然流畅，成功塑造了猫咪狡黠可爱的形象，极具画面感。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "回答紧扣拆家场景，拟人化独白生动有趣且逻辑自洽。语言流畅自然，幽默感强，能引发养猫人共鸣，质量很高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，拟人化独白生动有趣，既解释了拆家理由又带出猫咪小心思，语言流畅自然。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣主题，拟人化独白生动有趣，语气可爱。虽“猫打扫卫生”略显违和，但整体创意与流畅度佳，令人会心一笑。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣拆家场景，拟人化独白生动有趣，心理活动丰富且逻辑连贯，极具画面感与幽默感。"
+    }
+  ]
+}

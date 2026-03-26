@@ -1,0 +1,63 @@
+{
+  "sample_index": 317,
+  "rendering_name": "素数有无穷多个，这个命题怎么证明？",
+  "prompt": "请完整写出欧几里得对'素数有无穷多个'的证明过程，解释反证法在这里是如何应用的？",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答结构清晰，但第二部分构造 N 的公式错误，且对整除逻辑的解释存在数学瑕疵，影响准确性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，逻辑清晰且结构完整。反证法解释透彻，仅个别表述略显冗余，整体质量极高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答紧扣主题，逻辑清晰。但存在事实错误：将“质因数分解定理”误述为“质因数之和”，且对N的性质解释略有瑕疵，影响严谨性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣主题，结构清晰。但步骤3中关于N被已知素数整除的表述有误，N除以任意已知素数余数均为1，此处逻辑解释不够严谨。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，逻辑清晰准确。反证法解释到位，但关于N不可能同时满足两种情况的表述略显冗余，整体质量很高。"
+    }
+  ]
+}

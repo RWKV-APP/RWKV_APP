@@ -1,0 +1,63 @@
+{
+  "sample_index": 131,
+  "rendering_name": "幼儿园家庭树手工，手不算巧的家长用快递盒怎么做？",
+  "prompt": "幼儿园让做一个家庭树手工作业，我手不算巧，家里有快递盒、卡纸和一些落叶。你帮我想一个最终看起来不寒酸、又不会复杂到做不出来的方案，步骤越清楚越好",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答未体现“家庭树”核心，误做成普通装饰树；步骤中要求圆柱形快递盒不切实际，且未指导如何展示家庭成员。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰流畅，但严重偏离“家庭树”主题，未提及如何展示家庭成员，且将落叶撒在树上不符合常理，实用性差。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但严重跑题，将“家庭树”做成了普通树木，完全忽略了展示家庭成员照片的核心需求，导致方案无法使用。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "方案结构清晰，但树干涂绿色不符合常识，且未说明如何将家庭成员融入树中，实用性稍欠。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但严重跑题，未利用用户提供的落叶，且将快递盒盖子当树干逻辑荒谬，无法执行。"
+    }
+  ]
+}

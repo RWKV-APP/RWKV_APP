@@ -1,0 +1,63 @@
+{
+  "sample_index": 185,
+  "rendering_name": "帮我以江湖为隐喻，写一段职场中年人知世故而不世故的散文",
+  "prompt": "请以江湖为隐喻，写一段关于职场中年人心境的散文，表达知世故而不世故的豁达",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "紧扣职场中年心境，隐喻自然深刻。文字优美流畅，情感真挚，完美诠释知世故而不世故的豁达，极具感染力。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "紧扣职场与江湖隐喻，文风沉稳豁达，准确传达知世故而不世故的心境，语言流畅优美，极具感染力。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "紧扣职场中年与江湖隐喻，文风沉稳豁达，情感真挚。排比句增强气势，结尾升华自然，极具共鸣。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "回答紧扣职场与江湖隐喻，意境优美，情感真挚。将“知世故而不世故”融入叙事，逻辑清晰，极具感染力。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "紧扣职场与江湖隐喻，文风优美，情感真挚。结构清晰层层递进，深刻诠释了知世故而不世故的豁达心境。"
+    }
+  ]
+}

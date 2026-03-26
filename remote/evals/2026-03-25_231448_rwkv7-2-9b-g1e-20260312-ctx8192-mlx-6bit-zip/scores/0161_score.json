@@ -1,0 +1,63 @@
+{
+  "sample_index": 161,
+  "rendering_name": "孩子上初二沉迷手机游戏成绩下滑，跟他讲道理就嫌烦，怎么沟通？",
+  "prompt": "孩子上初二，沉迷手机游戏，成绩下滑。我跟他讲道理他就嫌我烦，怎么沟通才能不激化矛盾，让他愿意跟我聊学校的事？",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答切题且结构清晰，策略实用。但推荐书籍《孤独症儿童的父母》严重错误，存在事实性硬伤，影响专业度。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，策略具体且富有同理心。表格时间规划略显刻板，可能增加执行难度，但整体极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，策略具体且具操作性，结构清晰。情感共鸣强，但部分建议如联系游戏历史知识对初二生略显理想化。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，策略具体实用且结构清晰。但推荐书籍《孤独症儿童》与初二沉迷游戏场景不符，属明显事实错误。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，策略具体且具心理学依据，结构清晰。部分建议如边做饭边教数学略显理想化，但整体极具实操价值。"
+    }
+  ]
+}

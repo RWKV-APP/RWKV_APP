@@ -1,0 +1,63 @@
+{
+  "sample_index": 114,
+  "rendering_name": "快45岁了总听不懂 AI 黑话，不是技术出身的管理者 AI 到底能帮什么？",
+  "prompt": "快 45 岁了，感觉跟不上年轻人的 AI 工具，请用最通俗的语言给我讲讲，除了聊天，AI 现在到底能帮我一个非技术背景的管理者做哪三件具体的事",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，用通俗比喻解释三件事，结构清晰。但情绪感知功能目前多属概念，落地性稍弱，整体实用且易懂。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣非技术管理者需求，用通俗比喻清晰列举三件实事，结构逻辑严密，极具实用价值与安抚效果。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣非技术管理者痛点，用通俗语言列举文档、数据、日程三件事，结构清晰实用，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣非技术管理者痛点，用通俗语言列举三件实事，结构清晰且极具实用价值，有效缓解焦虑。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，列举三件具体事，语言通俗流畅。虽未完全避开术语，但整体实用清晰，对管理者很有帮助。"
+    }
+  ]
+}

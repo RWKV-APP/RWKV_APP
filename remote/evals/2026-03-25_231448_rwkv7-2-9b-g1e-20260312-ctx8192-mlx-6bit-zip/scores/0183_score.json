@@ -1,0 +1,63 @@
+{
+  "sample_index": 183,
+  "rendering_name": "帮我生成10个适合发朋友圈的中年人崩溃瞬间搞笑文案",
+  "prompt": "帮我生成 10 个适合发在朋友圈的中年人的崩溃瞬间搞笑文案，要求自嘲但不要负能量",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "格式切题但内容偏沉重，缺乏幽默感，部分文案负能量明显，不符合“搞笑”和“无负能量”的核心要求。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 7,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.8,
+      "brief_note": "回答未紧扣“崩溃瞬间”与“搞笑自嘲”，多条内容平淡或负能量，缺乏幽默感与实用性，难以引发共鸣。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 5,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 4
+      },
+      "weighted_score": 4.8,
+      "brief_note": "回答虽紧扣主题，但文案缺乏幽默感和自嘲，多显平淡或负能量，未达“搞笑”要求，实用性较差。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "回答紧扣主题但部分文案负能量过重，缺乏真正幽默自嘲感，未能完全满足“不要负能量”的要求。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 8,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.95,
+      "brief_note": "回答虽列了十条，但内容多荒诞离谱，缺乏中年人真实共鸣，且部分文案负能量重，未达自嘲搞笑要求。"
+    }
+  ]
+}

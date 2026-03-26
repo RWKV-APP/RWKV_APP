@@ -1,0 +1,63 @@
+{
+  "sample_index": 129,
+  "rendering_name": "高考选科物理和历史成绩差不多，从发展路径看该怎么选？",
+  "prompt": "孩子马上要高考选科，物理和历史成绩差不多，我们家现在最大的问题不是选哪个更容易，而是以后发展路径到底差在哪。你帮我从未来 10 年就业趋势、孩子性格和学科特点这几个角度分析一下",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣三个维度，分析深入且具前瞻性。但关于选科组合的建议存在事实错误，物理历史通常不可兼选，略有瑕疵。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣三个维度，结构清晰流畅。但内容过于笼统，缺乏对具体发展路径差异的深度剖析，实用性一般。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 8,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.5,
+      "brief_note": "回答结构清晰但内容空泛，性格与学科匹配逻辑有误，缺乏未来十年具体趋势数据，实用性不足。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣三个维度，逻辑清晰。但未来趋势分析较泛，缺乏具体数据支撑，对性格匹配建议不够深入。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 8,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.85,
+      "brief_note": "回答结构清晰流畅，紧扣三个维度。但内容过于泛泛，缺乏未来十年具体就业数据支撑，未深入剖析发展路径差异，实用性不足。"
+    }
+  ]
+}

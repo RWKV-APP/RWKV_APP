@@ -1,0 +1,63 @@
+{
+  "sample_index": 153,
+  "rendering_name": "孩子高一喜欢考古但物理成绩一般，选科怎么平衡兴趣和就业面？",
+  "prompt": "孩子高一选科，物理成绩一般但喜欢考古，该如何平衡兴趣和就业面？请提供几个折中的专业组合建议",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，建议丰富。但存在事实错误：考古学通常不选物理，且将PCR等生物实验归为物理优势不准确，需修正。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答流畅但严重跑题。未结合新高考选科规则，推荐组合如哲学加生物无法报考考古，建议完全不可行。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.1,
+      "brief_note": "回答结构清晰、建议丰富，但严重脱离中国高考选科实际。考古专业通常必选历史，未考虑物理成绩一般导致无法选历史或选科受限的现实矛盾。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 5,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.5,
+      "brief_note": "回答罗列了40个无关专业，严重偏离“平衡兴趣与就业”的核心需求，且内容在末尾突然截断，未给出有效建议。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答流畅但严重跑题，未结合物理成绩与考古兴趣，推荐组合与高考选科逻辑脱节，缺乏实际指导价值。"
+    }
+  ]
+}

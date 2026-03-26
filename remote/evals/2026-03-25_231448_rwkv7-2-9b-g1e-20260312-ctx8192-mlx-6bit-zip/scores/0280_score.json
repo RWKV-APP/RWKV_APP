@@ -1,0 +1,63 @@
+{
+  "sample_index": 280,
+  "rendering_name": "每周会议太多没时间写代码，怎么用 AI 自动生成会议纪要？",
+  "prompt": "我每周有太多琐碎会议，无法集中精力写代码。请给我一套用 AI 工具管理日程和自动生成会议纪要的工作流",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣主题，结构清晰。但过度堆砌代码框架，缺乏现成工具推荐，且代码逻辑不完整，实用性稍弱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，提供完整工作流及代码框架。但代码含未实现函数且API过时，建议类内容实用，整体结构清晰。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣主题，结构清晰。但过度堆砌代码示例，对非开发者用户门槛过高，缺乏现成工具推荐，实用性稍欠。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣主题，结构清晰。但代码示例逻辑有误且不可直接运行，部分建议偏离日程管理核心，实用性稍欠。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣主题，工具推荐丰富且流程清晰。但部分工具组合（如Copilot生成摘要）略显理想化，实际落地需微调。"
+    }
+  ]
+}

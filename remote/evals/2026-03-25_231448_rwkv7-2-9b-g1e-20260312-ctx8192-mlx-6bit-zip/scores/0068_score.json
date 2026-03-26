@@ -1,0 +1,63 @@
+{
+  "sample_index": 68,
+  "rendering_name": "刚到新公司总插不上话，怎么自然地加入同事的聊天？",
+  "prompt": "我刚到新公司没两周，组里的人都挺熟，但我总感觉自己插不上话。你帮我想几个适合新人自然加入聊天的话题，最好是那种不会显得刻意套近乎的",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣新人融入话题，分类清晰且提供具体话术，实用性强。结构流畅自然，温馨提示贴心，能有效缓解用户焦虑。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣新人融入话题，结构清晰实用。部分话术略显生硬，如直接问公司文化可能稍显突兀，需视场合调整。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣新人融入话题，建议具体实用且分类清晰。语气自然谦逊，提醒观察反应，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣新人融入话题，分类清晰且提供具体话术，实用性强。但部分职场问题略显正式，需根据语境灵活调整。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，话题丰富且实用。但部分示例如询问项目进展略显生硬，幽默话题存在冒犯风险，需结合语境谨慎使用。"
+    }
+  ]
+}

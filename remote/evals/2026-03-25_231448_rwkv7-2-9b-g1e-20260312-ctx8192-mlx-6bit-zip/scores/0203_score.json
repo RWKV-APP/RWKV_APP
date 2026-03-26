@@ -1,0 +1,63 @@
+{
+  "sample_index": 203,
+  "rendering_name": "帮我把一首经典古诗用现代白话文重新表达，保留原意像散文一样流畅",
+  "prompt": "请帮我把一首经典古诗，用现代白话文重新表达，既要保留原意，又要读起来像现代散文一样流畅优美",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，礼貌请求用户提供具体古诗，语言通顺自然，逻辑清晰，为后续高质量创作奠定基础。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答虽礼貌但未能直接示范，未提供具体古诗译文，实用性不足，需用户二次交互。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答流畅但仅请求提供古诗，未直接示范或举例，未实质性解决用户关于如何转化的需求。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，礼貌指出缺失具体诗名，并给出示例引导用户补充，逻辑清晰流畅，实用性强。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，礼貌询问具体篇目以便精准创作。虽未直接展示示例，但逻辑合理，表达流畅自然。"
+    }
+  ]
+}

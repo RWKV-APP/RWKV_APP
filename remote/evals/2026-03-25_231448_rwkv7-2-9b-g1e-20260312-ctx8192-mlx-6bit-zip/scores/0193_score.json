@@ -1,0 +1,63 @@
+{
+  "sample_index": 193,
+  "rendering_name": "和最好的朋友因小事闹矛盾了，想主动和好，怎么开口才真诚不尴尬？",
+  "prompt": "我和最好的朋友因为一点小事闹矛盾了，现在谁都不理谁，我想主动缓和关系但又不知道怎么开口，能不能帮我写一段真诚又不尴尬的和解消息",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "回答紧扣需求，提供真诚自然的和解模板，结构清晰且实用。语气温暖，能有效缓解尴尬，帮助用户迈出和解第一步。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十条风格多样的和解话术及选择建议，真诚实用。结构清晰，语气温暖，能有效缓解用户焦虑。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供清晰步骤与真诚范文，结构流畅。若增加不同语气选项会更实用，整体质量很高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供五条真诚且自然的和解话术，结构清晰。内容实用，能有效帮助用户打破僵局，仅缺具体场景微调建议。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供五条真诚且自然的和解话术，结构清晰。内容实用，能有效缓解尴尬，帮助用户主动破冰。"
+    }
+  ]
+}

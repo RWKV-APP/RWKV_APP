@@ -1,0 +1,63 @@
+{
+  "sample_index": 95,
+  "rendering_name": "有点想离开现在的城市，但不确定是真的该换还是只是逃避情绪？",
+  "prompt": "我有点想离开现在的城市了，感觉一切都很熟但也很闷。可真让我辞职去另一个城市，我又怕自己只是短暂情绪。你帮我设计一个判断方法，让我知道自己到底是在逃避，还是确实该换环境",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供七步判断法，逻辑清晰且具实操性。建议先小范围调整再决策，有效区分情绪与逃避，极具参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供四维判断法与行动测试，逻辑清晰实用。结构分明，语气温暖，能有效缓解焦虑并引导理性决策。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，步骤清晰实用。但缺乏区分“逃避”与“需求”的具体量化指标，深度稍显不足。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供七步判断法，逻辑严密且具实操性。结构清晰，语气温暖，能有效缓解焦虑并引导理性决策。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答结构清晰，提供问卷与矩阵工具，实用性强。但评分逻辑存在明显矛盾，需修正以增强可信度。"
+    }
+  ]
+}

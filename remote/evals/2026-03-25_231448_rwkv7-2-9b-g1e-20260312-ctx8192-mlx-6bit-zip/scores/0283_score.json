@@ -1,0 +1,63 @@
+{
+  "sample_index": 283,
+  "rendering_name": "怎么用 AI 做一个数字分身，让它替我回复简单的邮件和微信消息？",
+  "prompt": "我想用 AI 做一个我自己的数字分身，让它替我回复一些简单的邮件和微信消息，请给我一个完整的搭建教程",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但内容空洞，仅罗列通用步骤，缺乏针对邮件微信的具体工具、API对接及数据隐私等实操细节，无法指导落地。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣主题，流程清晰。但缺乏具体工具推荐和实操细节，技术门槛描述不足，对新手指导价值有限。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 4
+      },
+      "weighted_score": 4.8,
+      "brief_note": "回答切题但流于表面，缺乏具体技术实现路径。步骤过于通用，未涉及 API 对接、自动化流程及微信接口限制，无法指导实际搭建。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰覆盖全流程，但微信自动回复涉及平台限制，代码示例过于简略，缺乏具体落地细节。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但内容空洞，未提供具体代码或微信接入方案，仅罗列平台名称，缺乏实操指导价值。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 281,
+  "rendering_name": "传统制造业要引入 AI 质检，可行性报告大纲和投资回报怎么写？",
+  "prompt": "我们传统制造业想引入 AI 质检，请帮我梳理一份项目可行性报告大纲，需包含投资回报率预估和潜在实施风险",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "大纲结构完整，紧扣制造业AI质检需求，涵盖ROI与风险。内容逻辑清晰，但缺乏具体计算示例，实用性略逊。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "大纲结构完整，紧扣 ROI 与风险要求，逻辑清晰。内容实用且具操作性，结尾引导补充信息，专业度高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，大纲结构完整，涵盖ROI与风险。内容专业实用，逻辑清晰，仅缺具体计算示例。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "大纲结构完整，紧扣ROI与风险要求，逻辑清晰。结尾略有截断，但不影响整体实用价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "大纲结构完整，紧扣ROI与风险核心需求，逻辑清晰。但结尾截断，附录内容缺失，稍显遗憾。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 177,
+  "rendering_name": "帮我把课程论文的开头润色得更符合学术规范",
+  "prompt": "帮我润色这篇课程论文的开头，让它更符合学术规范，同时保持批判性思维",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答准确识别缺失输入，礼貌请求提供原文，逻辑清晰且符合交互规范，引导用户继续。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣请求，礼貌请求用户提供原文以便润色，逻辑清晰，但缺乏主动引导或示例。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣学术规范与批判性要求，逻辑清晰流畅。但缺乏具体案例支撑，略显空泛，若能结合具体学科背景会更佳。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣润色要求，语言流畅规范。但内容较泛，缺乏具体批判视角，未体现用户原文特色。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣需求，礼貌请求用户提供原文，逻辑清晰自然，为后续高质量润色奠定基础。"
+    }
+  ]
+}

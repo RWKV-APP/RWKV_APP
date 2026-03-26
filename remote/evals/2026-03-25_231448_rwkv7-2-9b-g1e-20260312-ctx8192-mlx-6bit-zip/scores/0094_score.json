@@ -1,0 +1,63 @@
+{
+  "sample_index": 94,
+  "rendering_name": "杭州内容运营和上海用户增长，工资差不多该从哪些角度选？",
+  "prompt": "我有两个 offer，一个在杭州做内容运营，一个在上海做用户增长，工资差得不算太多。我现在纠结的是城市成本、成长空间和以后跳槽好不好跳。你帮我从这几个角度客观比一下",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰紧扣主题，但房价数据严重失实（单位错误），且跳槽后悔数据缺乏依据，影响参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰紧扣三点，但事实有误：杭州非一线城市且生活成本通常低于上海，建议需更精准。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣三个维度，结构清晰。但杭州部分误将内容运营归为产品经理，存在事实瑕疵，建议更精准。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.1,
+      "brief_note": "回答结构清晰但事实严重错误，如称杭州房价比上海高、上海房租仅几百元，导致建议不可信，实用性大打折扣。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 8,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.85,
+      "brief_note": "回答紧扣三个维度，结构清晰流畅。但内容过于泛泛，缺乏对岗位差异及城市产业特点的深度分析，实用性不足。"
+    }
+  ]
+}

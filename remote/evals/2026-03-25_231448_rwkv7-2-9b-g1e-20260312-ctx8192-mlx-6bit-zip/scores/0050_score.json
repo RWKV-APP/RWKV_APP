@@ -1,0 +1,63 @@
+{
+  "sample_index": 50,
+  "rendering_name": "想培养一个长期坚持的爱好缓解工作压力，中年人零基础从哪里入门？",
+  "prompt": "我想培养一个能长期坚持的爱好，缓解工作压力，比如书法、摄影、钓鱼之类，但完全零基础，能不能帮我选一个适合中年人入门的爱好并给一份入门指南",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣需求，结构清晰。但书法部分存在明显事实错误：推荐生宣给新手且混淆了行书与楷书，易误导初学者。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰、切题度高，但存在严重事实错误：书法推荐临摹碑帖却用硬笔，摄影建议买前置闪光灯，内容专业性不足。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣需求，结构清晰。但书法入门建议存在明显事实错误，如用铅笔练毛笔笔触、首周即临摹高难度名帖，缺乏专业性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供三种爱好及详细指南，结构清晰。书法工具建议略显专业，但整体实用性强，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.1,
+      "brief_note": "回答结构清晰流畅，但无视用户明确列举的选项，强行推荐未提及的绘画，切题度不足。"
+    }
+  ]
+}

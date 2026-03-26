@@ -1,0 +1,63 @@
+{
+  "sample_index": 180,
+  "rendering_name": "帮我想三个校园背景悬疑小说的高概念设定，结合元宇宙和中式恐怖",
+  "prompt": "我想写一部校园背景的悬疑小说，帮我想三个高概念设定，要求结合元宇宙和中式恐怖元素",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "紧扣元宇宙与中式恐怖，结构清晰。但“元朝墓葬”与校园结合稍显生硬，恐怖氛围营造可更深入。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "设定紧扣校园、元宇宙与中式恐怖，结构清晰。但第三个设定元宇宙元素较弱，中式恐怖氛围可更浓郁。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 8,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 7.8,
+      "brief_note": "回答结构清晰流畅，但后两个设定未体现元宇宙元素，仅第一个符合全部要求，创意结合度有待加强。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 8,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 7.8,
+      "brief_note": "回答紧扣校园、元宇宙与中式恐怖，结构清晰。但部分设定如“魔法阵”偏离科幻感，中式恐怖氛围营造稍显不足。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "设定紧扣元宇宙与中式恐怖，创意新颖。但第二个设定偏离校园背景，且部分描述略显冗长，整体质量较高。"
+    }
+  ]
+}

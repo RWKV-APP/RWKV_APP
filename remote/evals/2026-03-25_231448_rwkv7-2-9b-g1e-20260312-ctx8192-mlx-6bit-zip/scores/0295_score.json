@@ -1,0 +1,63 @@
+{
+  "sample_index": 295,
+  "rendering_name": "async/await 在 JavaScript 里怎么工作，和 Promise 是什么关系？",
+  "prompt": "async/await 在 JavaScript 里是怎么工作的？它和 Promise 是什么关系？背后的事件循环机制是怎么处理异步任务的？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答结构清晰，准确解释了 async/await 与 Promise 关系。但事件循环部分存在概念混淆，如错误描述上下文切换和运行栈机制，影响专业度。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣主题，结构清晰。但事件循环阶段描述略显混乱，将微任务执行时机表述为“周期开始”不够精准，易误导。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答结构清晰，但存在严重技术错误：将 await 产生的挂起任务误称为宏任务（实为微任务），且对事件循环执行顺序描述混乱，影响准确性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣主题，结构清晰。准确解释了 async/await 与 Promise 关系，但事件循环流程描述略显笼统，未深入宏微任务优先级细节。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 5,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.45,
+      "brief_note": "回答切题且准确，但存在严重重复，代码解释啰嗦，结尾完全复制开头，严重影响阅读体验。"
+    }
+  ]
+}

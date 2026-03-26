@@ -1,0 +1,63 @@
+{
+  "sample_index": 208,
+  "rendering_name": "帮我写一篇保湿修复面霜的小红书种草文案，含成分分析和使用体验",
+  "prompt": "为一款主打“保湿修复”功能的新款面霜写一篇小红书图文种草文案，要求包含引人注目的标题、使用体验分享、成分分析和前后对比图的文字描述。",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "格式规范、语气地道，但成分描述存在逻辑矛盾，如透明质酸钠无紧致功效，且“新晋宠物”标题用词不当。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰，语气符合小红书风格。成分与体验描述生动，仅价格等虚构细节需用户自行调整。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰，语气地道。成分与体验描述生动，前后对比画面感强，极具种草力。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰，语气地道。成分与体验描述具体，前后对比图描述生动，极具种草力。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰，语气生动符合小红书风格。成分与体验描述具体，仅“挂彩虹”等比喻略显夸张。"
+    }
+  ]
+}

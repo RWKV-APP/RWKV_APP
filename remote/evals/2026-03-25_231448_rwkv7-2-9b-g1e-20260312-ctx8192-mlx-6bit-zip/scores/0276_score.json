@@ -1,0 +1,63 @@
+{
+  "sample_index": 276,
+  "rendering_name": "鲸鱼潜水为什么能保持这么长时间的呼吸？",
+  "prompt": "为什么鲸鱼潜水能保持长时间的呼吸？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答结构清晰，但存在严重事实错误：鲸鱼无低氧血红蛋白，脂肪不直接供氧，皮肤与呼吸无关，误导用户。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答结构清晰，但存在事实错误：鲸鱼肺部相对较小且潜水时收缩，并非高容量；间歇性呼吸表述也不够准确。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰、语言流畅，紧扣主题。但存在事实错误：鲸鱼肺部并非充满空气，潜水时肺部会塌陷，且骨骼密度描述有误。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰，但存在严重事实错误：鲸鱼用肺呼吸无法水下保持呼吸，且血红蛋白位于红细胞而非肌肉。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答紧扣主题且结构清晰，但存在严重事实错误：鲸鱼无法在潜水时挤出肺部空气，且骨骼不含血红蛋白，误导用户。"
+    }
+  ]
+}

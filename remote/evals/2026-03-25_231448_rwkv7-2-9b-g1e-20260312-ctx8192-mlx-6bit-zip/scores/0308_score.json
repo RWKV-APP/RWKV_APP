@@ -1,0 +1,63 @@
+{
+  "sample_index": 308,
+  "rendering_name": "解释发布-订阅设计模式，用代码实现一个含 on/off/emit 的事件总线",
+  "prompt": "解释发布-订阅（Publish-Subscribe）设计模式。用代码实现一个简单的事件总线，包含 on, off, emit 方法。",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣主题，概念解释清晰，代码实现完整且包含异常处理与示例，结构逻辑严密，极具实用价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答结构清晰，概念解释准确。代码逻辑正确，但示例中移除订阅者因函数引用不同而失效，存在小瑕疵。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，概念解释清晰，代码实现完整且可运行。示例注释中输出描述略有瑕疵，但不影响整体理解与使用。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，概念清晰，代码实现完整且含异常处理。示例输出描述略有瑕疵，但整体质量高，实用性强。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣主题，概念解释清晰准确。代码实现完整且包含示例，逻辑严密，结构层次分明，极具实用价值。"
+    }
+  ]
+}

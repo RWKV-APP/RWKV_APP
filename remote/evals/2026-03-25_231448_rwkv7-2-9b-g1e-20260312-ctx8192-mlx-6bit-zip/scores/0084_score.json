@@ -1,0 +1,63 @@
+{
+  "sample_index": 84,
+  "rendering_name": "想找老板谈加薪，每次一想到这个场景就先怂了，怎么准备？",
+  "prompt": "我想找老板谈加薪，但我每次一想到这个场景就先怂了，总觉得自己像在求人。你帮我把这个谈话拆成准备材料、开场方式和对方常见反应的应对三部分",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构清晰紧扣需求，内容详实实用。但将老板误称为“面试官”，且部分开场白略显生硬，略有瑕疵。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰，内容实用且话术具体。虽未深入缓解心理恐惧，但整体极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构清晰，覆盖全面，话术实用。但建议涨幅30%-50%略显激进，可能误导用户，其余内容极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰，话术实用。唯积极回应时的应对逻辑有误，建议修正为感谢并确认细节。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三部分要求，结构清晰，建议实用且具操作性。语气专业鼓励，有效缓解用户焦虑，质量很高。"
+    }
+  ]
+}

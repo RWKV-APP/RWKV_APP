@@ -1,0 +1,63 @@
+{
+  "sample_index": 179,
+  "rendering_name": "以毕业季的操场为主题，帮我写一段适合 Vlog 的文艺旁白",
+  "prompt": "请以“毕业季的操场”为主题，生成一段适合 Vlog 使用的文艺旁白文案",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰且情感真挚，画面感强。虽略显套路化，但作为 Vlog 文案实用且流畅，能激发创作灵感。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "文案紧扣主题，意象优美且情感真挚，节奏舒缓适合 Vlog 旁白，能引发观众共鸣。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣毕业操场主题，情感细腻真挚，画面感强。语言流畅自然，结构清晰，非常适合作为 Vlog 旁白使用。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣毕业操场主题，结构清晰含音效提示，情感真挚实用。虽略显常规，但作为 Vlog 旁白已足够优秀。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "文案紧扣主题，情感细腻且包含镜头指引，极具画面感与实用性，语言流畅自然，能很好满足 Vlog 创作需求。"
+    }
+  ]
+}

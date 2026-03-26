@@ -1,0 +1,63 @@
+{
+  "sample_index": 58,
+  "rendering_name": "客户总说报价高，怎么谈价格不变成纯比价？",
+  "prompt": "客户总说我们报价太高，但他又确实认可我们做事更稳。每次到这一轮我就很容易被带着降价。你帮我设计一个谈价格的话术框架，目标是尽量不让价值讨论变成纯比价",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "结构清晰流畅，但话术略显通用，缺乏针对“认可稳但嫌贵”的具体博弈策略，实战防御力稍弱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，提供策略、话术及模板，结构清晰实用。内容极具操作性，能有效引导用户跳出比价陷阱。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "框架逻辑严密，话术具体实用，有效引导价值讨论。结构清晰，示例生动，能切实帮助用户应对比价困境。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "框架逻辑严密，话术具体实用，有效引导价值讨论。个别承诺如补贴差价略显激进，需结合实际情况调整。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "框架结构清晰，话术具体实用，有效引导价值讨论。部分话术略显生硬，但整体极具操作性，能解决用户痛点。"
+    }
+  ]
+}

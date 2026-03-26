@@ -1,0 +1,63 @@
+{
+  "sample_index": 146,
+  "rendering_name": "老婆产后情绪波动大有时控制不住，丈夫在高频场景下怎么回应？",
+  "prompt": "我老婆生完孩子以后情绪波动挺大，有时候她自己也知道是在发脾气，但就是停不下来。我既想陪她，又怕说错话。你帮我列几个高频场景下丈夫更合适的回应方式",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣场景，结构清晰。但部分话术略显说教，缺乏对产后抑郁的专业提示，实用性稍逊。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.05,
+      "brief_note": "回答切题且结构清晰，但场景设定有误（如产后谈工作压力），话术模板化重复，缺乏针对产后情绪的实际指导价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣场景，结构清晰。但部分建议如“转移注意力”略显说教，缺乏对产后抑郁专业性的深度共情。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣场景，结构清晰，话术具体实用且包含禁忌对比。内容专业温暖，能有效缓解用户焦虑，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣场景，结构清晰。但部分建议如“过段时间就好”可能无效，缺乏对情绪接纳的深层指导，实用性稍欠。"
+    }
+  ]
+}

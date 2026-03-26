@@ -1,0 +1,63 @@
+{
+  "sample_index": 143,
+  "rendering_name": "想生二胎但一想就头大，怎么和另一半冷静讨论而不是一聊就吵？",
+  "prompt": "我最近在想要不要生二胎，但这个问题一想到就头大，因为钱、精力、住房、老人帮忙程度全都要算进去。你帮我做一个讨论框架，让我能和另一半比较冷静地聊，而不是一聊就情绪上来",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "框架全面覆盖经济、精力等核心痛点，结构清晰。建议用表格量化评估并预设底线，极具实操性，能有效引导理性沟通。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "框架结构清晰，涵盖价值观与资源评估，实用性强。但“临时模式”等建议略显生硬，部分细节可更贴合实际。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "框架全面覆盖情感、财务及沟通话术，极具实操性。Mermaid 代码在纯文本环境可能无法渲染，略影响体验，但整体逻辑清晰。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "框架结构清晰，涵盖经济、住房等核心痛点，且包含开场与情感引导，极具实操性，能有效辅助理性沟通。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "框架全面覆盖用户痛点，逻辑清晰实用。虽未提供具体沟通话术，但作为讨论提纲已极具价值，能有效引导理性对话。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 251,
+  "rendering_name": "量子纠缠是什么，两个粒子真的能瞬间影响彼此吗？",
+  "prompt": "量子纠缠到底是什么意思？两个粒子真的可以瞬间影响彼此吗，这不就超过光速了？请帮我解释清楚这里的物理逻辑？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，逻辑清晰解释了纠缠与光速限制。概念准确，但“玻色子”举例略显生硬，整体质量很高。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "回答紧扣问题，准确解释纠缠不传信息从而不超光速，逻辑清晰。比喻通俗，但可补充贝尔不等式以增强深度。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.05,
+      "brief_note": "回答紧扣主题且流畅，但存在严重事实错误：将量子纠缠描述为符合局域性原理，实际上它违背了局域实在论，误导了核心物理逻辑。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣主题，逻辑清晰解释了不超光速的原因。但关于“破坏稳定性”的表述不够严谨，略显模糊。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣主题，逻辑清晰。但将纠缠解释为“预设关系”略显简化，未深入阐述非定域性与无通信定理，物理深度稍欠。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 231,
+  "rendering_name": "请扮演挑剔的甲方，对我的方案提各种刁钻问题",
+  "prompt": "请扮演一个挑剔的甲方客户，我来向你汇报我的产品方案，你可以随时提出各种刁钻的问题或质疑，帮我提前发现方案漏洞？",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣角色扮演要求，态度配合且表达流畅。虽未主动设定具体场景，但已准备好随时互动，引导用户开始。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣角色扮演要求，态度明确且自然流畅。虽未主动设定具体场景，但已准备好随时互动，引导用户开始汇报。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣角色扮演要求，语气专业且态度明确，成功引导用户提交方案，但尚未开始实际互动。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 10,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣角色设定，语言流畅。但仅表示准备就绪，未主动展现挑剔风格或引导用户，互动性稍显不足。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣角色扮演要求，简洁开启对话。虽未主动展示挑剔风格，但已建立场景，引导用户继续汇报。"
+    }
+  ]
+}

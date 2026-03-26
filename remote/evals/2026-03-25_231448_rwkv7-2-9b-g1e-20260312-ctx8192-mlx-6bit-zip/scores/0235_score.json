@@ -1,0 +1,63 @@
+{
+  "sample_index": 235,
+  "rendering_name": "请扮演不留情面的出版编辑，帮我评审这篇文章",
+  "prompt": "请扮演一个不留情面的资深出版编辑，帮我评审一篇文章，直接指出最致命的几个问题，不需要客气，越犀利越有帮助？",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答切题但缺乏实质，未直接展示犀利风格，仅索要文章，未体现编辑人设的犀利与专业深度。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答虽切题但流于通用模板，未针对具体文章指出致命问题，缺乏犀利度与实用价值，未能满足用户深度评审需求。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣角色设定，态度犀利且直接索要文章，语言流畅自然，完美承接用户指令，期待后续评审。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答虽未跑题，但用户未提供文章，模型仅索要内容，未展现犀利风格，缺乏实质价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答虽切题且流畅，但未提供待评审文章，导致内容空洞泛泛，缺乏针对性和实际价值，用户难以获得具体帮助。"
+    }
+  ]
+}

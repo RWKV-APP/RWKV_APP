@@ -1,0 +1,63 @@
+{
+  "sample_index": 163,
+  "rendering_name": "想给老家父母装防跌倒监控，但又怕他们觉得被监视，怎么沟通？",
+  "prompt": "父母在老家，我想给他们装一套智能家居监控防跌倒，但又怕他们觉得被监视，有没有既能保障安全又不侵犯隐私的设备方案？",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.7,
+      "brief_note": "回答结构清晰、共情到位，但存在严重事实错误：推荐了不存在的西门子型号，且误将手环、温湿度计描述为防跌倒设备，实用性大打折扣。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答结构清晰、态度诚恳，但存在严重事实错误：建议用花瓶遮挡镜头违背安全初衷，且推荐产品功能描述不准确，实用性大打折扣。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "方案全面且兼顾隐私，但部分建议如伪装摄像头可能加剧不信任，且提及失眠症略显突兀，整体实用性强。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.7,
+      "brief_note": "回答结构清晰、情感关怀到位，但存在严重事实错误：AirTag 无摄像头，Eufy 太阳能版不常见，部分方案不可行。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "方案切题且结构清晰，强调无感传感器。但部分硬件描述如伪装摄像头存在事实偏差，隐私建议极佳。"
+    }
+  ]
+}

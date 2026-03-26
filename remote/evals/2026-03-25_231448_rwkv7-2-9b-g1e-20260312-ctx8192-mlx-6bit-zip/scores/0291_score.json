@@ -1,0 +1,63 @@
+{
+  "sample_index": 291,
+  "rendering_name": "时间复杂度是什么，常见排序算法各是哪个级别？",
+  "prompt": "时间复杂度和空间复杂度是什么？O(n log n) 和 O(n²) 的排序算法分别是哪些？什么场景下该选哪种？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答结构清晰，定义准确，场景分析实用。但快速排序最坏情况描述有误，且部分场景建议略显牵强。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答结构清晰，定义准确，算法分类正确且场景分析实用。仅希尔排序最坏复杂度描述略有争议，整体质量极高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答结构清晰，覆盖全面。但存在事实错误：称快速排序稳定性好（实际不稳定），且归并排序适用场景描述有误（内存紧张时不宜用）。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答结构清晰，定义准确，算法分类正确。但归并排序适用场景描述有误，其高空间复杂度不适合内存受限场景。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答结构清晰，定义准确，算法列举全面。但堆排序并非稳定排序，存在一处事实性瑕疵，整体仍具高参考价值。"
+    }
+  ]
+}
