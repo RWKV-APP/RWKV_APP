@@ -1,0 +1,63 @@
+{
+  "sample_index": 282,
+  "rendering_name": "我要用 Citespace 做文献计量分析，能一步步教我参数怎么设置吗？",
+  "prompt": "我论文要用 Citespace 做文献计量分析，能一步步教我怎么做吗？包括参数设置",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答结构清晰流畅，但严重偏离 Citespace 真实操作。软件无需 Linux 编译，无“实体集”概念，参数设置完全虚构，无法指导用户完成真实任务。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰流畅，但严重缺乏 Citespace 核心操作细节。数据格式、参数设置（如 GNN、阈值）及界面操作描述错误，无法指导实际论文写作。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答结构清晰流畅，但核心步骤严重错误。CiteSpace 不支持直接导入 BibTeX，需从 Web of Science 等导出特定格式，且界面操作描述虚构，无法指导实际操作。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰流畅，但严重偏离Citespace实际操作。Citespace需导入Web of Science等格式数据，不支持直接导入BibTeX，且界面操作描述虚构，无法指导用户完成真实任务。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 6,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.65,
+      "brief_note": "回答结构清晰但内容严重失实。Citespace 无文中列举的 30 项提取选项，且未提供核心参数（如阈值、聚类）设置，无法指导实际操作。"
+    }
+  ]
+}

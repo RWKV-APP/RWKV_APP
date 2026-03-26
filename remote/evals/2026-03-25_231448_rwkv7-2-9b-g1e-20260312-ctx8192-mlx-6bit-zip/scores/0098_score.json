@@ -1,0 +1,63 @@
+{
+  "sample_index": 98,
+  "rendering_name": "每天待办很多，晚上回头看真正推进的却很少，怎么改这个问题？",
+  "prompt": "我现在最头疼的是每天待办很多，但一天结束回头看，真正推进的事情很少。你帮我设计一个适合拖延型人格的日计划方式，不要太复杂，不然我第一天就会放弃",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣拖延症痛点，结构清晰。但建议略显常规，缺乏针对拖延者的具体启动技巧，实用性中等。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣主题，但建议过于通用，缺乏针对拖延症的具体执行技巧，略显枯燥。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣主题，结构清晰。但计划过于刻板，缺乏针对拖延症的灵活策略，可能难以坚持。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣拖延症痛点，建议拆解任务与限时，简单实用。但缺乏具体工具或示例，略显常规，若能增加趣味技巧更佳。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣拖延痛点，提供具体框架与原则。但晨间安排过细，对“不复杂”要求略有违背，实操门槛稍高。"
+    }
+  ]
+}

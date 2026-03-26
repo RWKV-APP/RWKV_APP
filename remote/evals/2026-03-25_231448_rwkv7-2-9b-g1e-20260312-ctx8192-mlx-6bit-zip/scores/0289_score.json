@@ -1,0 +1,63 @@
+{
+  "sample_index": 289,
+  "rendering_name": "React 的 Hooks 原理是什么，useState 内部怎么工作的？",
+  "prompt": "React 的 Hooks 原理是什么？为什么 Hooks 不能在条件语句里使用？useState 内部是怎么实现状态存储和更新的？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 3,
+        "fluency": 8,
+        "satisfaction": 4
+      },
+      "weighted_score": 4.65,
+      "brief_note": "回答结构清晰但原理严重错误。代码示例无法运行，混淆了 useRef 与状态存储机制，未解释 Hooks 链表核心原理，误导用户。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.7,
+      "brief_note": "回答结构清晰且切题，但核心原理解释有误。将 Hooks 顺序依赖误读为条件语句导致执行次数问题，且 useState 内部实现代码为虚构，缺乏技术准确性。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但核心原理错误。未解释 Hooks 依赖链表机制，误称 useState 靠闭包存储，且对条件调用原因解释不准确。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 4
+      },
+      "weighted_score": 5.0,
+      "brief_note": "回答结构清晰但原理阐述错误。未解释链表机制，useState 伪代码逻辑混乱且无法运行，严重误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但原理错误。未解释链表机制，误称闭包存储状态，且对条件调用限制解释肤浅，缺乏技术深度。"
+    }
+  ]
+}

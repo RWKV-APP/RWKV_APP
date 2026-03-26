@@ -1,0 +1,63 @@
+{
+  "sample_index": 86,
+  "rendering_name": "想把多年经验做成个人品牌，课程文章咨询哪种形式起步最自然？",
+  "prompt": "我想把自己过去多年积累的经验做成更像个人品牌的东西，比如课程、文章、咨询服务，但又怕一发出来就像在卖人设。你帮我设计一个起步路径，先从哪种形式试最自然",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答切题且建议写文章起步合理，但缺乏具体执行步骤，对“卖人设”的心理疏导略显空泛，实用性一般。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，路径设计清晰自然，分阶段建议极具实操性。结构严谨，语言流畅，有效缓解用户焦虑，价值很高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣“自然起步”痛点，推荐文章形式并给出具体策略。结构清晰，后续路径规划合理，极具实操价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答切题且结构清晰，建议从写作起步合理。但开头自称ChatGPT有误，且缺乏针对“怕卖人设”的具体心理疏导与实操细节。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，分阶段路径清晰实用，强调真实感有效化解卖人设焦虑，结构流畅，极具参考价值。"
+    }
+  ]
+}

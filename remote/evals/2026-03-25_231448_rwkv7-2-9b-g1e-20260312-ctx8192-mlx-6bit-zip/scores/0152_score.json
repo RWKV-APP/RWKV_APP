@@ -1,0 +1,63 @@
+{
+  "sample_index": 152,
+  "rendering_name": "幼儿园中班孩子，周末怎么安排低成本非电子产品的放电行程？",
+  "prompt": "请推荐一份适合幼儿园中班孩子的周末放电行程，要求包含户外运动、低成本和非电子产品",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "行程紧扣户外、低成本要求，结构清晰。但上午活动安排过满，缺乏午休，对中班孩子略显不合理。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "行程紧扣户外、低成本及非电子要求，内容实用且结构清晰。下午建议提及室内游戏略显矛盾，但整体质量很高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "行程紧扣户外、低成本及非电子要求，结构清晰。但上午安排听故事略显静态，与“放电”主题稍有偏差。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，涵盖户外、低成本及非电子元素。结构清晰，活动丰富实用，仅个别细节如爬墙需注意安全。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，涵盖户外与低成本活动。但部分建议如沙滩排球对中班孩子难度偏高，且“游乐场”可能涉及高成本。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 14,
+  "rendering_name": "之前办卡买装备都坚持不住，怎么3周从零开始不用健身房健身？",
+  "prompt": "我想开始健身，但我是典型的三天热度，之前办卡、买装备都坚持不住。这次我只想从最小成本开始。请给我一个 3 周入门计划，要求是不用健身房，在宿舍或小区就能做",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "计划紧扣低成本与宿舍场景，结构清晰。但用户强调零成本，却推荐购买装备，略有矛盾；部分动作描述不够精准。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "计划紧扣低成本和宿舍场景，结构清晰。但训练量增幅过大，对“三天热度”人群极易劝退，缺乏趣味性和循序渐进的缓冲。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.8,
+      "brief_note": "回答结构清晰、建议实用，但严重偏离用户'3周'需求，错误规划至6周，且部分动作如跳绳在宿舍难以执行。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.2,
+      "brief_note": "计划紧扣低成本与宿舍场景，结构清晰。但部分动作描述有误，如“普拉提缩骨功”表述不当，且部分动作对新手难度偏高，需修正。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "计划结构清晰且贴合宿舍场景，但部分动作描述有误（如硬拉做法），且对“三天热度”人群的心理激励策略略显不足。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 125,
+  "rendering_name": "初二孩子沉迷手游，讲道理没用，怎么开口沟通？",
+  "prompt": "孩子上初二，最近明显沉迷手机游戏，成绩也有点下滑。我一讲道理他就烦，我一发火他就更关门不理人。你别给那种标准家长文章式建议，直接告诉我怎么开口，怎么把对话聊下去",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "结构清晰但违背“非标准建议”要求，内容偏理论化。对话脚本中强行展示家长游戏录像等情节不切实际，缺乏实操性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，提供了具体话术和策略，结构清晰。但部分建议如强制收手机略显生硬，可能引发新冲突。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，提供了具体话术和策略，避免了空洞说教。但篇幅稍长，部分建议略显常规，可更精简聚焦。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，提供了具体话术和步骤，结构清晰。但部分建议略显套路，若能更聚焦“如何开口”的实战细节会更完美。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 8,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.85,
+      "brief_note": "回答切题但略显套路，未完全避开“标准建议”感。话术具体但缺乏应对孩子抵触的深层策略，实用性一般。"
+    }
+  ]
+}

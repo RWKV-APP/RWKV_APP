@@ -1,0 +1,63 @@
+{
+  "sample_index": 233,
+  "rendering_name": "以鲁迅口吻写一篇关于内卷和摆烂的杂文",
+  "prompt": "请以鲁迅先生的口吻，给当代打工人写一篇关于内卷和摆烂的杂文，要有鲁迅式的犀利和讽刺，结尾带一点启发？",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "仿写神似，犀利讽刺到位，但夹杂KPI等现代词稍显违和，结尾启发略显温和，整体质量上乘。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 7,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.15,
+      "brief_note": "模仿口吻尚可，但事实错误严重：张天翼未写《海底两万里》，尼摩船长是凡尔纳笔下人物，引用混乱削弱了鲁迅式犀利。\"后生晚辈\"自称亦违和。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "紧扣主题，结构清晰。但鲁迅味不足，犀利讽刺欠缺，结尾说教味重，缺乏深刻洞察。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "文风模仿到位，讽刺犀利，结构完整。但结尾引用“革命尚未成功”略显违和，且说教味稍重，削弱了鲁迅式的冷峻感。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "文风模仿到位，讽刺犀利，结构清晰。但结尾引用鲁迅名言疑似杜撰，且部分说教略显直白，削弱了杂文的含蓄与深刻。"
+    }
+  ]
+}

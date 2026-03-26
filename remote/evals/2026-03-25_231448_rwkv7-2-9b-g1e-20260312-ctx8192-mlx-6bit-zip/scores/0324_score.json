@@ -1,0 +1,63 @@
+{
+  "sample_index": 324,
+  "rendering_name": "向量的点积和叉积分别有什么几何意义？",
+  "prompt": "向量的点积和叉积分别是什么？它们各自有什么几何意义？在三维空间的实际计算中分别用来做什么？",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答结构清晰，定义准确。但点积垂直判断描述有误，叉积用途中曲率计算不够典型，略有瑕疵。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰流畅，但核心概念存在严重事实错误：点积为零对应垂直而非平行，垂直时点积不为负，严重影响准确性。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答结构清晰，定义准确，几何意义与应用场景覆盖全面。仅点积符号判断描述略显不严谨，整体质量很高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰覆盖全面，但点积定义中关于“包含”导致零积的描述严重错误，且法向量计算逻辑有误，影响专业度。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "结构清晰覆盖全面，但点积判断平行性描述错误（应为垂直），且法向量计算逻辑有误，影响准确性。"
+    }
+  ]
+}

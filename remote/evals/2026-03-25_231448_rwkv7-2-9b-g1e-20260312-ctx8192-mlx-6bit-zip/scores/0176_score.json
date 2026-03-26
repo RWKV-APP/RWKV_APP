@@ -1,0 +1,63 @@
+{
+  "sample_index": 176,
+  "rendering_name": "暗恋图书馆对面的男生，怎么写一张不尴尬的纸条要他的微信？",
+  "prompt": "我暗恋图书馆对面的一个男生，最近他有几次看我，但我们一句话都没说。我想找个不那么尴尬的方式加微信，你能帮我写 5 句不同风格的小纸条吗？要自然一点，不要太土",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰流畅，但内容严重跑题。纸条未包含微信号，且部分文案逻辑混乱、过于文艺，无法实现加微信的实际目的。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求提供五种风格，语言自然流畅。但部分文案略显文艺矫情，作为小纸条可能稍显突兀，实用性中等。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求提供五句纸条，风格多样。但部分文案略显刻意，如谜题型不够自然，实用性稍弱。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求提供五句纸条，风格多样且自然。部分文案略显文艺或直白，实际使用需结合具体情境微调。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求提供五句纸条，风格多样。但部分文案略显油腻或过于戏剧化，不够自然，实用性稍弱。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 62,
+  "rendering_name": "33岁想搞副业，下班没什么精力，有哪些低成本方向？",
+  "prompt": "我 33 岁，想搞一点副业，但下班回家已经没多少精力了。我不想做那种听起来很赚钱、实际上投入巨大的事情。请你按时间成本、门槛和见效速度，给我推荐几个适合普通上班族的方向",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣低精力需求，分类清晰。但部分建议如跨境电商门槛较高，与“低投入”略有冲突，整体实用性强。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但严重脱离用户“下班没精力”的约束。推荐手机维修、夜市摆摊等重体力或高门槛项目，完全未考虑用户精力不足的核心痛点，实用性低。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但内容模板化严重，所有选项见效速度均被描述为“初期慢”，未针对用户“精力少”痛点提供真正低耗高效的具体建议。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，分类清晰。但部分建议如开发应用门槛过高，与用户精力不足的现状略有冲突，实用性稍欠。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，结构清晰，分类详细。但部分建议如短视频、二手翻新对精力要求较高，与用户“下班没精力”的痛点略有冲突。"
+    }
+  ]
+}

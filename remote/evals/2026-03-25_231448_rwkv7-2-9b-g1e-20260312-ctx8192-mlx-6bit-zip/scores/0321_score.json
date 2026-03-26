@@ -1,0 +1,63 @@
+{
+  "sample_index": 321,
+  "rendering_name": "平面上三点能构成三角形吗，面积怎么计算？",
+  "prompt": "已知平面上三点 A(1,2)、B(3,4)、C(5,1)，这三点是否构成三角形？如果是，用向量叉积法求出这个三角形的面积？",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣问题，逻辑清晰。向量计算准确，叉积法运用得当，结论正确，步骤完整易懂。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.25,
+      "brief_note": "回答紧扣问题且结构清晰，但向量叉积计算错误，正确面积应为5，导致核心结论不准确。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣问题，逻辑清晰。先验证不共线，再用向量叉积法准确算出面积为9，步骤完整无误。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 8,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.05,
+      "brief_note": "回答切题且计算准确，但提及“计算模和半径”表述有误，向量叉积无半径概念，属轻微术语瑕疵。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣问题，逻辑清晰。向量计算准确，叉积法运用得当，结论正确，步骤详尽易懂。"
+    }
+  ]
+}

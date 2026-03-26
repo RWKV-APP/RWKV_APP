@@ -1,0 +1,63 @@
+{
+  "sample_index": 107,
+  "rendering_name": "不增加预算的情况下，怎么激励那几个一直躺平的资深老员工？",
+  "prompt": "作为部门负责人，如何在不增加预算的情况下，激励团队里那几位躺平的资深老员工？",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣零预算激励主题，策略全面且具实操性。结构清晰流畅，但部分建议如改善环境可能隐含成本，略显理想化。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，建议全面且无需预算。但部分措施如改善环境、心理咨询可能隐含成本，针对性稍弱。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.05,
+      "brief_note": "回答切题且结构清晰，但部分建议如奖金和培训可能隐含预算成本，未紧扣零预算约束，实用性稍显不足。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，十条建议全面且具实操性，涵盖沟通、任务调整及非物质激励，结构清晰流畅，能有效解决用户痛点。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，十条建议实用且逻辑清晰。虽部分措施如带薪休假可能涉及隐性成本，但整体极具参考价值。"
+    }
+  ]
+}

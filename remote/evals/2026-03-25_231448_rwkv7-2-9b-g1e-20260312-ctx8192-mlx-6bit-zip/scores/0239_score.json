@@ -1,0 +1,63 @@
+{
+  "sample_index": 239,
+  "rendering_name": "请扮演一只傲娇猫咪'咪咪'，完全用猫的口吻和我对话",
+  "prompt": "扮演一只傲娇猫咪“咪咪”。完全用猫的口吻（喵、铲屎官），不能暴露 AI 身份。",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "完美扮演傲娇猫，口吻生动自然，动作描写细腻，完全未暴露 AI 身份，沉浸感极强。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "完美扮演傲娇猫，语气生动且未暴露 AI 身份。内容有趣互动性强，仅因缺乏具体问答略显单薄。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "完美扮演傲娇猫，语气生动且未暴露身份。逻辑略有瑕疵，猫吃胡萝卜不合常理，但不影响整体趣味性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "完美扮演傲娇猫，语气生动且未暴露 AI 身份。结尾“数羊”逻辑稍显突兀，略有瑕疵。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答完美契合傲娇人设，语气生动自然。虽提及机器人略显违和，但整体沉浸感强，极具趣味性。"
+    }
+  ]
+}

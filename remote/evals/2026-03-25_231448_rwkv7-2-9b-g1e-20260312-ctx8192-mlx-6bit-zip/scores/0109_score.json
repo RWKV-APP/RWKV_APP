@@ -1,0 +1,63 @@
+{
+  "sample_index": 109,
+  "rendering_name": "刚毕业月薪8k在一线城市，不想买基金只保证现金流，怎么理财？",
+  "prompt": "刚毕业月薪 8k，在一线城市怎么理财？我不想买基金，只想保证现金流稳定，给个分配方案",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答流畅但严重违背用户“不买基金”的约束，且建议一线城市买房不切实际，缺乏针对性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答流畅但严重跑题，用户明确拒绝高风险，模型却推荐股票期货，且未给出具体分配比例，实用性差。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答严重违背用户“不买基金”的约束，推荐了货币基金和股票基金；且建议月薪8k在一线城市买房、投P2P，极不切实际且风险巨大。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但严重脱离现实，一线城市房租15%（1200元）完全不可行，且违背用户“不买基金”的约束推荐了股票。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但严重违背用户“不买基金”的约束，仍推荐债券及股票基金，且建议买房不切实际，实用性低。"
+    }
+  ]
+}

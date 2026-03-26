@@ -1,0 +1,63 @@
+{
+  "sample_index": 339,
+  "rendering_name": "函数极限的 ε-δ 定义是什么，用它来证明 lim(x→2)(3x-1)=5？",
+  "prompt": "解释函数极限的严格 ε-δ 定义，并用它来证明一个简单的极限，例如 lim(x→2) (3x-1) = 5。",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答结构清晰，证明过程严谨。但定义部分关于δ与ε关系的描述存在逻辑瑕疵，略显误导。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣主题，定义准确，证明步骤逻辑严密且清晰。语言流畅自然，结构层次分明，极具教学价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，定义准确，证明步骤逻辑严密且清晰。唯一瑕疵是定义中“当且仅当”表述略显多余，但不影响整体理解。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣主题，定义准确，证明过程逻辑严密且步骤清晰。结构分层合理，语言流畅自然，极具教学价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答精准阐述定义，证明步骤逻辑严密、推导清晰，排版美观，完美满足用户需求。"
+    }
+  ]
+}

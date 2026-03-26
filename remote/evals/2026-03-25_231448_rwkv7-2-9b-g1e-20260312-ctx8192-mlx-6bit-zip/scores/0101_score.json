@@ -1,0 +1,63 @@
+{
+  "sample_index": 101,
+  "rendering_name": "这个年纪去读 EMBA，到底值不值？",
+  "prompt": "我这个年纪去读 EMBA 到底值不值？我怕读完只收获一堆名片和饭局，但也担心自己如果完全不更新认知，会越来越跟不上。你帮我从资源、人脉、知识和机会成本几个角度分析",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣四个维度，结构清晰，分析辩证且具实操建议。表格对比直观，但部分表格内容逻辑略显牵强，整体质量很高。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但事实严重错误：误将EMBA当作需全职脱产2-3年的项目，且建议“暂停事业”，完全违背EMBA在职学习的核心定义，误导用户。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣四个维度，逻辑清晰，建议实用。虽未纠正用户关于年龄的潜在误解，但整体分析透彻，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣四个维度，结构清晰，建议务实。但文中将35岁与20年经验关联略显矛盾，且部分数据偏概略。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣四个维度，结构清晰，建议务实。虽部分案例略显理想化，但整体逻辑严密，极具参考价值。"
+    }
+  ]
+}

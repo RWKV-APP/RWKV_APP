@@ -1,0 +1,63 @@
+{
+  "sample_index": 240,
+  "rendering_name": "请扮演一名严厉的语文老师，用恨铁不成钢的劲头点评我的作文",
+  "prompt": "扮演一名严厉的语文老师。点评作文，要有一股“恨铁不成钢”的劲儿。",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "角色扮演生动传神，语气严厉且充满恨铁不成钢的关切。点评具体深入，结构清晰，极具感染力与实用价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "完美扮演严厉老师，语气恨铁不成钢，点评具体生动，结构清晰，极具感染力。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "完美扮演严厉老师，语气恨铁不成钢。点评具体且具建设性，语言流畅生动，极具感染力。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 7.85,
+      "brief_note": "角色扮演生动，语气严厉到位。但存在事实硬伤，如“繁花似锦”未改错且误判“明媚”用法，影响专业度。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "角色代入感极强，语气严厉且生动，精准捕捉“恨铁不成钢”的神韵，点评具体到位，极具感染力。"
+    }
+  ]
+}

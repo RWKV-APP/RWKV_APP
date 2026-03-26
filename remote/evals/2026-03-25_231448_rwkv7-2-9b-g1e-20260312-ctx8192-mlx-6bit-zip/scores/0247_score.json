@@ -1,0 +1,63 @@
+{
+  "sample_index": 247,
+  "rendering_name": "怎么向5岁的孩子解释什么是 AI，用讲故事或比喻的方式？",
+  "prompt": "如何向 5 岁的孩子解释什么是 AI，请用讲故事或者比喻的方式，越生动越好",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "故事生动有趣，比喻恰当，但结尾总结过于成人化，缺乏童趣，稍显生硬。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "故事生动有趣，比喻贴切易懂，结构清晰。内容准确涵盖核心概念，非常适合向儿童解释 AI，极具实用价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "故事生动且比喻恰当，将AI比作聪明伙伴。但开头略显成人化，若全程保持童话口吻会更完美。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "故事生动有趣，比喻贴切，结构清晰。但“魔法苹果”侧重记忆而非学习，对AI核心特征“自我学习”的体现稍显不足。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "故事生动有趣，比喻形象贴切，适合低龄儿童。但部分概念如“分析数据”略显抽象，可进一步简化。"
+    }
+  ]
+}

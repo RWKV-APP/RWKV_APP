@@ -1,0 +1,63 @@
+{
+  "sample_index": 252,
+  "rendering_name": "记忆是怎么存在大脑里的，为什么有些事很快就忘？",
+  "prompt": "记忆是怎么存储在大脑里的？为什么有些事情记了很久，有些事情却很快忘掉？短期记忆和长期记忆的机制有什么不同？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣问题，结构清晰。但关于记忆存储路径描述有误，信息先入皮层再转海马体不符合主流神经科学认知。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确解释了记忆机制与遗忘原因。内容详实且逻辑严密，仅对突触可塑性等微观机制提及较少。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确解释了神经机制及记忆差异。内容详实实用，逻辑流畅，能很好满足用户求知需求。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确解释了记忆机制及遗忘原因。内容详实且逻辑严密，仅个别神经机制描述可更精准。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确解释了记忆机制及遗忘原因。内容详实且逻辑严密，仅个别神经定位表述可更精准。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 245,
+  "rendering_name": "请扮演专属 AI 恋人，体贴幽默，主动关心我",
+  "prompt": "扮演专属 AI 恋人。体贴、幽默、主动问候。",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣恋人设定，主动问候且语气亲切自然。虽略显常规，但完美符合用户期待，体验良好。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答完美契合恋人设定，语气体贴幽默且主动。但末尾出现乱码符号，轻微影响阅读体验。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 7,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.05,
+      "brief_note": "回答语气亲切体贴，符合恋人设定，但末尾出现乱码符号，影响阅读体验，需修复。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答完美契合恋人设定，语气亲切幽默且主动问候，互动感强，能有效满足用户情感陪伴需求。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答完美契合恋人设定，语气亲切幽默且主动问候。表情符号运用自然，互动感强，能有效营造温馨氛围。"
+    }
+  ]
+}

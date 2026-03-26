@@ -1,0 +1,63 @@
+{
+  "sample_index": 93,
+  "rendering_name": "客户回款拖了一个多月还没到，怎么催而不撕破脸以后还要合作？",
+  "prompt": "我最近要催一个客户回款，对方一直说流程中、下周、再等等，但已经拖了一个多月。我不想撕破脸，因为后面可能还要合作。你帮我写 3 个不同力度的催款话术，从温和到明确一点的都要",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，提供三个梯度话术。但第一个话术逾期时间描述与用户“拖了一个多月”不符，且格式略显生硬。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供三种力度话术，结构清晰实用。语气拿捏得当，既专业又留有余地，极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供三种力度话术，结构清晰实用。虽未明确具体日期，但整体专业得体，能有效维护客户关系。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "话术结构清晰，力度递进合理。但中等版时间描述与用户“拖了一个月”不符，需微调更精准。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求提供三种话术，结构清晰。但“明确型”语气仍偏软，缺乏具体截止日期或违约后果，威慑力不足。"
+    }
+  ]
+}

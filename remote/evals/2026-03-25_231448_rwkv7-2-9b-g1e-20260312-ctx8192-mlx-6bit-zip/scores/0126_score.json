@@ -1,0 +1,63 @@
+{
+  "sample_index": 126,
+  "rendering_name": "孩子上幼儿园天天哭，怎么帮他度过分离焦虑？",
+  "prompt": "孩子刚上幼儿园，每天早上都哭着不想去，接送的时候搞得我和他都情绪崩溃。我不想靠吼，也不想全靠哄。你能不能给我一个为期两周的适应方案，最好把接送时可以说的话也写出来",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "结构清晰但逻辑混乱，第一周建议放学讲故事不合逻辑，接送话术缺乏针对性，实操性较弱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 2,
+        "quality": 1,
+        "fluency": 3,
+        "satisfaction": 1
+      },
+      "weighted_score": 1.5,
+      "brief_note": "回答严重跑题，罗列百条无关且重复的育儿大道理，完全未提供两周具体方案及接送话术，内容空洞且逻辑混乱。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答通顺但偏离需求，未提供两周具体方案，且建议“不强迫”可能误导家长，缺乏实操性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "方案结构清晰但缺乏实操细节，接送话术过于笼统，未针对哭闹场景提供具体安抚策略，实用性不足。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 2,
+        "quality": 1,
+        "fluency": 1,
+        "satisfaction": 1
+      },
+      "weighted_score": 1.2,
+      "brief_note": "回答开头尚可，但随后陷入严重重复循环，生成大量无意义废话，完全未提供具体话术和两周方案，无法使用。"
+    }
+  ]
+}

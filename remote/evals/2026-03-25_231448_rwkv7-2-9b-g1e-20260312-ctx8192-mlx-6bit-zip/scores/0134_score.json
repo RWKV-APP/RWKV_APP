@@ -1,0 +1,63 @@
+{
+  "sample_index": 134,
+  "rendering_name": "发现妈妈最近记性明显变差，她又很敏感，怎么关注又不让她受伤？",
+  "prompt": "我发现我妈最近记性明显比以前差，但她自己很敏感，一提这件事就说我嫌她老。你帮我想一个更稳妥的方式，让我既能关注她的状态，也不至于让她太受伤",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，策略具体且充满同理心，结构清晰。部分话术略显刻意，但整体极具实用价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，建议具体且具同理心，结构清晰。但部分话术略显生硬，需更自然融入日常对话。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，提供七条具体话术与策略，兼顾关怀与尊重。结构清晰，语气温暖，极具实操性。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，提供环境改造、游戏化训练及沟通话术，方案具体实用且充满温情，结构清晰易执行。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣问题，建议实用且充满同理心。部分话术略显生硬，但整体结构清晰，能有效缓解用户焦虑。"
+    }
+  ]
+}

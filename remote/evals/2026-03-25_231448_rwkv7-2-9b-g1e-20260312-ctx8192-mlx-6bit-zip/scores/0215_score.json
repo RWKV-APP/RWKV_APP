@@ -1,0 +1,63 @@
+{
+  "sample_index": 215,
+  "rendering_name": "如果李白活在今天，他会怎么吐槽年轻人的痛苦？",
+  "prompt": "如果李白活在今天，是个会写歌词也会发微博的人，我想让他吐槽一下赶论文、改简历、做实习汇报这种年轻人的痛苦。你帮我写一段像他会发的内容，要有点幽默感",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "内容紧扣主题，幽默感足，但引用岳飞词句冒充李白口吻是明显硬伤，削弱了人设准确性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "紧扣主题，幽默地融合了李白风格与现代职场痛点。但部分吐槽略显直白，豪放气韵稍欠，结尾说教感略重。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 4
+      },
+      "weighted_score": 5.0,
+      "brief_note": "回答紧扣主题但完全未体现李白风格，缺乏幽默感与古风韵味，像普通鸡汤文，未满足用户核心创意需求。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣主题，结构清晰。但李白口吻不够鲜明，幽默感稍弱，缺乏其特有的狂放与诗意，略显平淡。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 8,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "紧扣主题涵盖三大痛点，幽默感尚可。但文风偏现代口语，缺乏李白特有的豪放诗意与古风韵味，代入感稍弱。"
+    }
+  ]
+}

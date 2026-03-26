@@ -1,0 +1,63 @@
+{
+  "sample_index": 26,
+  "rendering_name": "房贷还剩100万，手里有30万现金，提前还贷好还是留着？",
+  "prompt": "房贷还剩 100 万，我手里现在有 30 万现金。理智上我知道提前还贷和保留现金流各有好处，但我总想要一个更稳妥的方案。你帮我从心理安全感、家庭风险和收益三个角度分析一下",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣三个维度，结构清晰。但逻辑有硬伤：建议先存30万却忽略手头已有30万，且“高风险低回报”表述易误导，折中方案略显混乱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "结构清晰但严重跑题，全文仅分析保留现金，完全忽略用户拥有的30万可还贷选项，未提供对比方案，缺乏实际指导价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣三个维度，结构清晰。但家庭风险部分逻辑有误，将还贷与高风险投资混淆，且混合策略计算略显复杂。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰覆盖三角度，但存在严重事实错误：月供计算逻辑混乱，且误将利息差算作净收益，误导用户决策。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.7,
+      "brief_note": "回答紧扣三个维度，结构清晰。但建议矛盾：既建议还贷又建议投股票，未解决用户求稳需求，且逻辑有误。"
+    }
+  ]
+}

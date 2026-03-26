@@ -1,0 +1,63 @@
+{
+  "sample_index": 338,
+  "rendering_name": "怎么用乘法逆元的方法解同余方程 5x ≡ 7 (mod 12)？",
+  "prompt": "通过求乘法逆元的方法解同余方程 5x ≡ 7 (mod 12)。",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，步骤清晰完整，逆元求解与验证准确无误，逻辑严密，堪称完美示范。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 1,
+        "fluency": 5,
+        "satisfaction": 1
+      },
+      "weighted_score": 3.4,
+      "brief_note": "回答紧扣题目但方法完全错误，陷入无效穷举且未给出正确解，内容毫无价值，用户体验极差。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，步骤清晰完整，逆元求解与计算准确无误，逻辑严密且表达流畅，完美解决问题。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，步骤清晰完整，逆元求解与方程化简准确无误，逻辑严密，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，步骤清晰完整，逆元求解与方程化简准确无误，逻辑严密，极具参考价值。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 145,
+  "rendering_name": "想给老家父母装防跌倒的设备，但怕他们觉得被监视，怎么沟通？",
+  "prompt": "我爸妈在老家住，我想给他们装一套防跌倒和异常情况提醒的设备，但我最怕他们觉得被监视，心里别扭。你帮我想一个兼顾安全和体面的方案，重点是怎么跟老人沟通这件事",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣沟通痛点，策略实用且情感细腻。结构清晰，但部分产品推荐和模拟摔倒建议略显牵强，略有瑕疵。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "沟通策略细腻体贴，分阶段方案实用。但推荐设备存在事实错误，如智能灯泡无防跌倒功能，影响方案可信度。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣沟通痛点，方案兼顾隐私与安全，话术具体实用。结构清晰流畅，仅个别技术细节如数据脱敏表述稍显生硬。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣沟通痛点，策略全面且具实操性。语言温暖流畅，结构清晰，有效平衡了安全与尊严，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣沟通痛点，方案兼顾安全与体面，话术实用。但部分设备描述有瑕疵，如门磁无法防跌倒，需微调。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 212,
+  "rendering_name": "辩题是 AI 利大于弊，作为正方一辩帮我写一份3分钟的立论陈词",
+  "prompt": "辩题是“人工智能对人类利大于弊”，作为正方一辩，请写一份3分钟的立论陈词，要求逻辑清晰，论据充分。",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣辩题，结构清晰，论据涵盖医疗、环保及就业，逻辑严密。语言流畅自然，符合立论陈词规范，极具说服力。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣辩题，结构清晰，论据涵盖医疗、环保等实例。逻辑严密，语言流畅，有效回应潜在质疑，极具说服力。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣辩题，结构清晰，论据详实且逻辑严密。引用数据与案例增强说服力，语言流畅自然，极具感染力。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣辩题，结构清晰，论据涵盖医疗、就业及环保，逻辑严密。语言流畅专业，符合立论陈词规范，极具说服力。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣辩题，结构清晰，论据涵盖经济、社会及认知层面，逻辑严密且语言流畅，极具说服力。\"凡事皆有两面性\"引用略显生硬，但整体质量极高。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 303,
+  "rendering_name": "帮我实现一个 LRU 缓存，解释它用什么数据结构，get 和 put 怎么做？",
+  "prompt": "请用你熟悉的语言实现一个 LRU (Least Recently Used) 缓存。要求实现 get 和 put 方法，并说明其数据结构。",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣需求，代码正确且含示例，清晰解释了数据结构与复杂度，逻辑严密，用户体验极佳。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣需求，Python代码简洁高效，利用OrderedDict实现O(1)操作，逻辑清晰且注释详尽，质量极高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答紧扣主题，结构清晰。但示例代码逻辑有误，put 满时未先删旧项直接赋值，且注释称“抛出异常”与实际行为不符。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，代码逻辑正确且含示例。但注释中关于“移动到最前端”的描述与代码实际“移动到末尾”的操作存在矛盾，略有瑕疵。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣需求，Python代码简洁高效，利用OrderedDict实现O(1)操作，数据结构说明清晰，逻辑严密无瑕疵。"
+    }
+  ]
+}

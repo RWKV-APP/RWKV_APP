@@ -1,0 +1,63 @@
+{
+  "sample_index": 23,
+  "rendering_name": "第一次租房，进门先看什么，合同里最容易忽略哪些条款？",
+  "prompt": "我第一次租房，预算不高，又怕碰到黑中介或者二房东。你帮我列一个看房清单，告诉我进门先看什么、合同里最容易忽略什么、哪些坑一旦踩了会特别麻烦",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "结构清晰覆盖全面，但押金法规表述有误，部分建议如请律师对预算低者不实用，需优化。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "结构清晰覆盖全面，建议实用。但部分条款如“结冰”不切实际，且法律条款引用略显生硬，整体质量较高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣租房痛点，清单结构清晰实用。但部分建议如“敲隔壁门”略显不切实际，且推荐平台较旧，略有瑕疵。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣租房避坑主题，结构清晰实用。但部分建议如敲击承重墙判断空心、查营业执照等存在常识性错误或不适用于普通租房场景。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "结构清晰覆盖全面，但部分坑点如监控、改建与租房核心关联弱，且未提供核实二房东的具体实操技巧。"
+    }
+  ]
+}

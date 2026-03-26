@@ -1,0 +1,63 @@
+{
+  "sample_index": 278,
+  "rendering_name": "想用 AI 做一个数字分身处理邮件和消息，普通人怎么一步步搭？",
+  "prompt": "我想用 AI 搭一个自己的数字分身，最好能帮我先处理一些简单的邮件、微信消息和常见回复，但我又不想一上来就搞得太技术。你给我一个普通人能看懂的搭建路线，分阶段说",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但过于技术化，提及模型训练和参数调整，未提供普通人可操作的无代码工具方案，实用性不足。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "结构清晰但严重事实错误：混淆了文心一言与通义千问，且推荐了不存在的产品，误导非技术用户。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰分阶段，但部分工具如Chatbot for Messenger已失效，且微信自动化在国内受限，实操性稍弱。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "结构清晰分阶段，但内容过于笼统。微信国内无法直接对接，且未提供具体低代码工具，实操性差，普通人难以落地。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰分阶段，但首推书籍太深，且微信开发建议有误，未直接推荐现成分身工具，实操性稍弱。"
+    }
+  ]
+}

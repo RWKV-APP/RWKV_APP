@@ -1,0 +1,63 @@
+{
+  "sample_index": 298,
+  "rendering_name": "用 Python 调用大模型 API 做一个带对话历史的聊天机器人",
+  "prompt": "如何用 Python 调用大语言模型的 API 做一个带对话历史的简单聊天机器人？需要怎么管理上下文、控制 token 数量不超限？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰覆盖要点，但代码存在严重逻辑错误：历史管理未正确传入消息列表，且 API 调用方式已过时，无法直接运行。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答结构清晰，但代码使用了已废弃的旧版 API 且上下文拼接方式错误，无法直接运行，实用性较差。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 4,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.05,
+      "brief_note": "回答结构清晰但代码严重截断且逻辑错误，未完整展示上下文管理与Token控制方案，无法直接运行。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答结构清晰，但代码存在严重逻辑错误：将历史拼接成单条消息而非列表，且缺失 os 库导入，无法直接运行。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "结构清晰但代码存在严重逻辑错误：API调用方式过时且混用新旧库，Token估算方法完全错误，无法实际运行。"
+    }
+  ]
+}

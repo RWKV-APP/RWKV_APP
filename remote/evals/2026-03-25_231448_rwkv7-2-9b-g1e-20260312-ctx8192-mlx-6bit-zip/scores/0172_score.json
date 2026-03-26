@@ -1,0 +1,63 @@
+{
+  "sample_index": 172,
+  "rendering_name": "做了一年新媒体准备去读研，怎么写一封体面不官腔的离职信？",
+  "prompt": "我想做一份更像真人会写的离职信，不要太官腔，也不要搞得像控诉大会。背景是我做了一年新媒体，准备去读研。请你帮我写一个真诚、体面、好聚好散的版本",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.65,
+      "brief_note": "回答虽结构完整，但“尚未最终决定”与读研事实矛盾，且措辞仍显官腔，缺乏真诚感，未达用户预期。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答严重事实错误，将用户‘去读研’写成‘放弃读研’，完全违背核心需求，导致内容不可用。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 8,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答紧扣需求，结构完整。但“此致敬礼”等措辞略显官腔，真诚感稍欠，可更口语化些。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 2,
+        "quality": 1,
+        "fluency": 3,
+        "satisfaction": 1
+      },
+      "weighted_score": 1.5,
+      "brief_note": "开头尚可，但随后陷入严重重复循环，罗列百条负面理由完全违背“体面”要求，且回答未完整结束，质量极差。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求，语气真诚。但结尾承诺“继续为公司做贡献”略显违和，稍减体面感，整体流畅自然。"
+    }
+  ]
+}

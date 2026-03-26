@@ -1,0 +1,63 @@
+{
+  "sample_index": 85,
+  "rendering_name": "除了问问题，AI 还能帮学生和职场新人做哪5件实用的事？",
+  "prompt": "我想把 AI 真正用到我的日常里，但现在除了问问问题，好像也不知道还能干嘛。你能不能按学生/职场新人这个阶段，给我列 5 个特别实用的用法，而且要带具体例子",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，列举五类场景并配具体例子，结构清晰实用。内容准确且建议中肯，仅部分例子略显常规，整体质量很高。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，列举五个场景并配具体指令示例，结构清晰实用。唯日常任务管理部分对纯文本 AI 的自动化执行描述略显理想化。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，列出五个场景并配具体例子，结构清晰实用。部分工具归类略有偏差，但整体价值高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，列举五个场景并配具体案例，结构清晰实用。内容准确且涵盖学习工作，仅个别发音纠正示例略显理想化。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，结构清晰。但部分工具如Google Scholar非典型AI，且例子偏通用，缺乏针对新人的深度实操技巧。"
+    }
+  ]
+}

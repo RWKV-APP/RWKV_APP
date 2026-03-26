@@ -1,0 +1,63 @@
+{
+  "sample_index": 202,
+  "rendering_name": "我在写小说，帮我完善一个35岁有秘密、外冷内温的都市男主设定",
+  "prompt": "我在写小说，需要一个性格复杂的都市男性主角设定，年龄 35 岁左右，有过去的秘密，外表冷静内心温柔，请帮我完善人物背景和性格细节",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰，提供了丰富的性格细节与秘密方向，极具创作参考价值，仅缺具体人物小传示例。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求，结构清晰流畅。但人物设定略显套路化，缺乏独特细节和具体情节支撑，创意深度一般。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣需求，结构清晰全面。但“过去的秘密”设定略显俗套，缺乏独特性，深度稍欠。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，设定逻辑自洽。但细节略显套路，缺乏独特记忆点，若增加具体冲突会更出彩。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣设定，结构清晰。但“导致对方自杀”的设定略显俗套，缺乏新意，建议挖掘更独特的秘密。"
+    }
+  ]
+}

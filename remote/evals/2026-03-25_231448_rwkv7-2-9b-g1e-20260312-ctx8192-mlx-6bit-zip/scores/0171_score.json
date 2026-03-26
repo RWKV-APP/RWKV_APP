@@ -1,0 +1,63 @@
+{
+  "sample_index": 171,
+  "rendering_name": "和伴侣长期忙于工作感情越来越淡，有什么重建亲密关系的实用建议？",
+  "prompt": "夫妻之间长期忙于工作和家庭，交流越来越少，生活很平淡，有时候甚至觉得陌生，能不能给我一些重建亲密关系、提升家庭幸福感的实用建议",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，建议具体实用且分类清晰。语言温暖流畅，结构逻辑严密，能有效指导用户重建亲密关系。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，十条建议具体实用且涵盖沟通、活动及心态。结构清晰，语言温暖流畅，极具指导意义。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，建议全面且具实操性，涵盖沟通、活动及仪式感。结构清晰，语气温暖，能有效缓解用户焦虑。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答紧扣主题，建议全面实用且结构清晰。但内容略显常规，缺乏针对“陌生感”的深度心理引导或具体话术示例。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，十条建议全面且具实操性，涵盖沟通、活动及冲突处理。结构清晰，语气温暖，能有效缓解用户焦虑。"
+    }
+  ]
+}

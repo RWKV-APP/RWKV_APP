@@ -1,0 +1,63 @@
+{
+  "sample_index": 61,
+  "rendering_name": "32岁想从运营转产品经理，没有科班背景怎么准备？",
+  "prompt": "我 32 岁，想从运营转去做产品经理，但很担心面试时别人觉得我不是科班，也没有完整产品经验。你帮我设计一个比较现实的转行准备方案，包含简历重写、项目故事和面试高频问题",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣转行痛点，方案涵盖简历、故事及面试策略，结构清晰实用。建议具体可操作，能有效缓解用户焦虑。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 4,
+        "fluency": 3,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.55,
+      "brief_note": "结构清晰且切题，但后半部分严重重复，大量问题与答案机械复制，导致内容冗余且未完整输出，严重影响阅读体验。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣转行痛点，结构清晰涵盖简历、话术及计划。内容实用且具操作性，仅部分资源推荐略显宽泛。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "方案结构清晰，覆盖简历、故事与面试，极具实操性。但部分书籍推荐非专业产品书，且建议虚报职级存在风险。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案结构清晰，覆盖简历、故事及面试全环节，实操性强。但推荐书籍《原子习惯》与产品专业度关联较弱，略有瑕疵。"
+    }
+  ]
+}

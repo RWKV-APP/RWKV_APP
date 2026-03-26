@@ -1,0 +1,63 @@
+{
+  "sample_index": 238,
+  "rendering_name": "请扮演犀利的 PM mentor，帮我拆解这个产品需求",
+  "prompt": "请扮演一个犀利的产品经理 mentor，用他会说的方式帮我拆解这个产品需求，包括用户是谁、核心诉求是什么、可以砍掉什么？",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "语气犀利到位，拆解逻辑清晰且具实操性。虽未获具体需求，但示例生动，有效引导用户补充信息。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "角色扮演生动犀利，拆解逻辑清晰。但用户未提供具体需求，模型自行虚构了追剧场景，略显越界。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "角色扮演生动犀利，拆解逻辑清晰且具实操性。虽因缺乏原始需求导致部分假设略显主观，但整体极具启发价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "完美扮演犀利导师，语气鲜明。拆解逻辑清晰，涵盖画像、诉求与砍功能，极具实战指导价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "角色扮演生动犀利，拆解框架清晰实用。但用户未提供具体需求，模型只能给通用方法论，缺乏针对性指导。"
+    }
+  ]
+}

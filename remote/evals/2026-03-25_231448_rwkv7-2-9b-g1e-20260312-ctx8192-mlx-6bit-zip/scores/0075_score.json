@@ -1,0 +1,63 @@
+{
+  "sample_index": 75,
+  "rendering_name": "导师让做文献综述，几十篇论文怎么梳理成一条清晰的线？",
+  "prompt": "我在写毕业论文，导师让我做文献综述，但我现在最痛苦的是不知道怎么把几十篇论文梳理成一条清晰的线。你能不能按 1. 先怎么分类 2. 再怎么做笔记 3. 最后怎么落成正文，给我一个具体流程",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三步流程，分类逻辑清晰，笔记模板实用，正文写作指导具体。结构分明，工具推荐贴心，极具操作性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三步流程，结构清晰，工具推荐实用。但第三阶段章节安排略显冗余，未完全聚焦综述写作本身。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三步流程，结构清晰实用。分类示例略显宽泛，若结合具体学科会更精准，整体质量很高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三步流程，分类维度清晰，笔记方法实用。结构分明，逻辑顺畅，能有效指导用户梳理文献。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣三步流程，分类逻辑清晰，笔记模板实用，正文写作指导具体，还附带流程图，极具操作性。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 4,
+  "rendering_name": "中年人该提前排查哪些家庭风险，才不会真出问题时太被动？",
+  "prompt": "我其实有点担心老了以后照顾父母和照顾自己这两件事会在同一时间撞上。你帮我做一个中年阶段家庭风险排查清单，重点是那些平时很少主动去想、但真出问题会很被动的部分",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣风险排查，涵盖健康、财务及照护盲区，结构清晰且含自查表。内容实用全面，情感支持到位，极具参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣双重照护痛点，清单涵盖医疗、财务等易忽略盲区，结构清晰且具实操性，仅个别细节可更具体。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 8,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.5,
+      "brief_note": "回答结构清晰流畅，但内容偏通用，未深入挖掘“照护撞车”这一核心痛点，缺乏具体被动场景的应对策略。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣双重照护痛点，清单覆盖全面且具实操性。结构清晰，建议从财务健康入手，极具价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "结构清晰全面，涵盖财务健康等维度。但部分建议如遗产税略显脱离国内实际，整体实用性强。"
+    }
+  ]
+}

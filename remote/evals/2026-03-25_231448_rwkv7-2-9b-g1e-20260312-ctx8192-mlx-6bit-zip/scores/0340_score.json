@@ -1,0 +1,63 @@
+{
+  "sample_index": 340,
+  "rendering_name": "解释群的四个基本公理，以整数加法群为例说明",
+  "prompt": "解释群的四个基本公理（封闭性、结合律、单位元、逆元），并以整数加法群为例进行说明。",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣主题，准确阐述四大公理，并结合整数加法群举例验证，逻辑清晰，内容详实且无错误。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，准确解释了四个公理并辅以整数加法群实例。唯一小瑕疵是逆元定义处表述略显冗余，但不影响理解。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰。公理解释准确，整数加法群举例恰当。唯一瑕疵是逆元定义处表述略有歧义，但不影响整体理解。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答精准覆盖四个公理定义，整数加法群举例清晰准确，逻辑严密，语言流畅，完美满足用户需求。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣主题，准确阐述四大公理并完美结合整数加法实例，逻辑清晰，语言流畅，极具教学价值。"
+    }
+  ]
+}

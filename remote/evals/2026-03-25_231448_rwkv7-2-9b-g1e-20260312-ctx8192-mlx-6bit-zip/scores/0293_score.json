@@ -1,0 +1,63 @@
+{
+  "sample_index": 293,
+  "rendering_name": "JWT 鉴权是什么，和 Session Cookie 方案有什么不同？",
+  "prompt": "JWT 鉴权是什么？它的结构是怎样的？和传统的 Session Cookie 方案相比，在安全性、状态管理和跨域处理上有什么不同？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，准确解释了JWT组成。但在安全性对比上略显片面，未提及JWT无法服务端即时失效及跨域需配合CORS等关键细节。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "结构清晰切题，但存在严重事实错误：JWT 易受 CSRF 且 Session 并非需长连接，跨域描述也不准确。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.2,
+      "brief_note": "回答结构清晰，覆盖全面。但代码示例中 Header 字段重复冗余，且对 Cookie 同源策略的表述略有偏差，影响专业度。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答结构清晰，准确覆盖问题要点。但将签名误述为加密，且对跨域限制理解有误，存在技术瑕疵。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "结构清晰，但存在事实错误：JWT 是签名非加密，且 Session 并非仅限同源，跨域处理描述不准确。"
+    }
+  ]
+}

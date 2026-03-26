@@ -1,0 +1,63 @@
+{
+  "sample_index": 1,
+  "rendering_name": "努力了很久却感觉看不到回报，怎么调整心态？",
+  "prompt": "人到一个阶段之后，常常会觉得努力不是没有意义，而是回报越来越慢，整个人容易提不起劲。你如果站在一个比较成熟、理解人生起伏的角度，会怎么安慰这种状态下的人？不要鸡汤",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答结构清晰、逻辑通顺，但列举十条建议略显说教，且部分比喻如种子发芽仍带鸡汤色彩，未完全避开用户禁忌。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.05,
+      "brief_note": "回答结构清晰流畅，紧扣主题。但用户明确要求“不要鸡汤”，模型却大量使用土壤、星辰等比喻，说教感强，缺乏实质性建议，未达预期。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，结构清晰且提供了具体策略。但部分案例略显套路，结尾仍带鸡汤色彩，未完全避开用户禁忌。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，避开鸡汤，用海洋比喻和五点实操建议提供深度安慰，逻辑清晰，语言成熟自然。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，避开鸡汤，提供拆解目标、重定义回报等实操建议。逻辑清晰，语气成熟，极具安抚与指导价值。"
+    }
+  ]
+}

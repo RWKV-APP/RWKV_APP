@@ -1,0 +1,63 @@
+{
+  "sample_index": 149,
+  "rendering_name": "和伴侣进入室友期，有什么具体的沟通游戏或话题能增进亲密关系？",
+  "prompt": "结婚三年，感觉和伴侣进入了室友期，有哪些具体的、不尴尬的沟通游戏或话题能增进亲密关系？",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供具体游戏与评估表，结构清晰。部分话题如“世界末日”略显沉重，但整体实用且温暖。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供八类具体游戏与原则，结构清晰实用。部分建议如“画卡片”略显刻意，但整体极具操作性。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，建议丰富实用。但部分建议如“冲突管理”偏严肃，不够像“游戏”，且爱的语言理论归属有误。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供七种具体游戏，分类清晰且具实操性。部分玩法如接龙故事略显生硬，但整体建议实用温暖。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供四类具体方案，结构清晰且实用。部分建议如角色扮演可能略显尴尬，但整体极具参考价值。"
+    }
+  ]
+}

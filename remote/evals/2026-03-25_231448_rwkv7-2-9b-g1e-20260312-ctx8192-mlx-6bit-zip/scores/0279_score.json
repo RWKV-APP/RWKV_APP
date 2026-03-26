@@ -1,0 +1,63 @@
+{
+  "sample_index": 279,
+  "rendering_name": "计算机专业大一新生，从入门到参加竞赛的四年路线怎么规划？",
+  "prompt": "作为计算机专业大一新生，能为我制定一份从入门到参加竞赛的四年学习路线图吗？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "结构清晰覆盖四年规划，内容实用。但大一即学操作系统等核心课略显超前，竞赛专项指导稍弱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣四年规划，结构清晰，内容全面覆盖理论与竞赛。部分课程安排略显理想化，但整体极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰覆盖四年规划，但大一课程安排不合理，如操作系统通常在大二开设，且竞赛准备时间偏晚。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰覆盖四年规划，但部分竞赛名称有误（如WCCI），且大一即学分布式系统略显超前，实用性稍打折。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "结构清晰覆盖四年规划，但大一建议学 C++ 稍显滞后，且部分竞赛建议对普通学生门槛过高，实用性略打折。"
+    }
+  ]
+}

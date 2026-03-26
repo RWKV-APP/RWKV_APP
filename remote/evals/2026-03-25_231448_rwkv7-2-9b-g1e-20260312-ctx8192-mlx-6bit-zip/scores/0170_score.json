@@ -1,0 +1,63 @@
+{
+  "sample_index": 170,
+  "rendering_name": "想带父母做体检，体检套餐怎么选，哪些项目必须做哪些是过度检查？",
+  "prompt": "父母年纪大了，身体开始出现各种小毛病，我想带他们做一次全面体检，但不知道体检套餐该怎么选，哪些项目是必须做的，哪些是没必要的过度检查",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，涵盖了基础与针对性项目。建议实用，但缺乏针对高龄人群的具体筛查细节。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，项目建议准确实用，结构清晰流畅。若能补充胃肠镜等关键筛查会更完美。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣主题，结构清晰。但指出超声有辐射风险存在事实错误，且对肿瘤筛查建议略显保守，需修正。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，列举了核心必查项目，逻辑清晰。但缺乏针对男女差异及具体年龄的细化建议，实用性稍显不足。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，分类清晰，涵盖基础与针对性项目，并明确避坑建议。内容专业实用，结构流畅，极具参考价值。"
+    }
+  ]
+}

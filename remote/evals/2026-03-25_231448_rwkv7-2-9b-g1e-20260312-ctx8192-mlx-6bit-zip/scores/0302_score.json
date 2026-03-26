@@ -1,0 +1,63 @@
+{
+  "sample_index": 302,
+  "rendering_name": "帮我用面向对象思想设计一个银行账户类，包含存取款和线程安全",
+  "prompt": "请用面向对象编程思想设计一个银行账户类，包含存款、取款、查询余额等基本功能，并考虑线程安全。",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣需求，代码结构清晰且正确实现线程安全，逻辑严谨，注释详尽，极具实用价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "代码完整且线程安全，逻辑清晰。但文档中关于异常处理的描述与实际代码返回布尔值的逻辑不符，存在小瑕疵。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.25,
+      "brief_note": "回答紧扣需求且结构清晰，但代码存在严重逻辑错误：初始化中未定义_transaction_history字典，导致运行时报错，无法实际执行。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答紧扣需求，结构清晰。但代码存在严重逻辑错误：使用了未定义的 time 模块和 _transactions 列表，且转账逻辑未锁目标账户，导致实际无法运行。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，代码结构清晰且实现了线程安全。逻辑正确，注释详尽，仅示例线程演示略显简单，整体质量很高。"
+    }
+  ]
+}

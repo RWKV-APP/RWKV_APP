@@ -1,0 +1,63 @@
+{
+  "sample_index": 71,
+  "rendering_name": "每周太多低效会议，怎么比较自然地推掉或要求提前明确目标？",
+  "prompt": "我发现自己很多时间都死在各种没有结果的会议上，但如果我不去，又怕被说不配合。你帮我设计几个能比较自然地拒绝低效会议、或者要求会前明确目标的说法",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 2,
+        "fluency": 3,
+        "satisfaction": 2
+      },
+      "weighted_score": 3.55,
+      "brief_note": "前几条建议切题实用，但模型陷入严重重复循环，输出大量无效内容且未完整结束，体验极差。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 8,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答紧扣主题，提供了多种话术。但内容重复严重，第9、10条完全雷同，且部分话术拒绝力度不足，略显啰嗦。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 3,
+        "fluency": 5,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.9,
+      "brief_note": "回答切题但后半部分严重重复，大量条目内容雷同且机械堆砌，导致信息冗余，阅读体验极差，实用性大打折扣。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 8,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.9,
+      "brief_note": "回答紧扣主题，但内容严重重复，后五条与前几条高度雷同，缺乏多样性，浪费篇幅且显得机械。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，提供多种话术。但部分理由如“个人事务”在职场拒会中略显不妥，且数量过多略显冗余，实用性稍打折。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 59,
+  "rendering_name": "给导师写进度汇报邮件，怎么写得礼貌又不像流水账？",
+  "prompt": "导师让我给他发邮件汇报进度，但我总怕写得太啰嗦或者太像流水账。你帮我写一个通用模板，适合学生给导师汇报论文进展，用词礼貌但别太像机器人",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "模板结构清晰，涵盖进展、问题与计划，用词礼貌自然。附带的使用建议极具实操价值，能有效避免流水账。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "模板结构清晰、用词得体，既专业又自然。附带的小贴士极具实操性，有效解决了用户怕啰嗦的痛点，非常实用。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "模板结构清晰，涵盖关键汇报点，用词礼貌自然。虽略显正式，但提供了灵活调整空间，实用性强。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "模板结构清晰，涵盖进展、挑战与计划，用词礼貌自然。附带实用建议，有效避免流水账，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "模板结构清晰，涵盖关键要素，语气自然得体。附带的使用建议实用，有效解决了用户怕啰嗦的顾虑。"
+    }
+  ]
+}

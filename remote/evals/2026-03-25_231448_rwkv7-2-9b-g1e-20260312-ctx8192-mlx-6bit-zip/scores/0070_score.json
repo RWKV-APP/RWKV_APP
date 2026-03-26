@@ -1,0 +1,63 @@
+{
+  "sample_index": 70,
+  "rendering_name": "职场新人第一次部门汇报，怎么设计结构、开头怎么稳住场子？",
+  "prompt": "我刚进公司，领导让我下周做第一次部门汇报，我平时说话就容易紧张，一上台脑子就空白。你给我一个最适合职场新人的汇报结构，顺便教我怎么开头能稳住场子",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构清晰实用，涵盖汇报框架与开场技巧，针对性强。内容详实且具操作性，能有效缓解新人紧张，仅个别幽默示例需视场合慎用。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "结构清晰实用，但开头建议未针对紧张心理提供具体话术，略显通用，缺乏安抚技巧。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构清晰实用，涵盖五步汇报法与多种开场技巧，针对性强。建议具体可操作，能有效缓解新人紧张，助其稳住场子。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构清晰实用，开场话术具体。但建议控制语速而非快速讲述，且闲聊开场需视场合谨慎使用。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构清晰实用，STAR法则与话术具体，兼顾心理调节。内容全面且针对性强，能有效缓解新人焦虑，极具参考价值。"
+    }
+  ]
+}

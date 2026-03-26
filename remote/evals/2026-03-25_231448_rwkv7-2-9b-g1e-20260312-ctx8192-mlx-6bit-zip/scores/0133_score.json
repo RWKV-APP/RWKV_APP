@@ -1,0 +1,63 @@
+{
+  "sample_index": 133,
+  "rendering_name": "带娃快崩溃时，怎么稳住情绪不对孩子发火？",
+  "prompt": "我不想像我爸妈那样一着急就对孩子大声讲话，但现实是我自己带娃带到崩溃的时候，也会控制不住脾气。你帮我想几句在孩子顶嘴、磨蹭、不配合时还能勉强稳住情绪的话术",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣需求，结构清晰。但话术过于模板化，多教孩子而非安抚家长，缺乏针对崩溃瞬间的实操技巧。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣需求提供话术，但部分语句偏说教，缺乏家长崩溃时真正能脱口而出的简短有力金句。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十条实用话术及情绪调节建议，结构清晰且富有同理心，能有效缓解家长焦虑。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十条实用话术及情绪调节技巧，结构清晰。部分话术略显生硬，但整体极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣主题提供话术，但内容模板化严重，缺乏针对顶嘴、磨蹭等具体场景的差异化表达，实用性一般。"
+    }
+  ]
+}

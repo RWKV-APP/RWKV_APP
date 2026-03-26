@@ -1,0 +1,63 @@
+{
+  "sample_index": 122,
+  "rendering_name": "团队积极性不高执行力差，开会布置的任务经常拖延，有什么管理方法？",
+  "prompt": "我作为部门主管，最近发现团队成员积极性不高、执行力差，开会布置的任务经常拖延，年轻人也不好管，能不能帮我给出一套提升团队效率的管理方法和沟通技巧",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣主题，结构清晰流畅。但建议过于通用泛泛，缺乏针对年轻人管理和拖延症的具体实操技巧，深度不足。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣主题，结构清晰流畅。但内容偏通用理论，缺乏针对年轻人和拖延症的具体实操技巧，深度稍显不足。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣主题，结构清晰流畅。但建议较为通用泛泛，缺乏针对年轻人管理的具体实操技巧，深度稍显不足。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，结构清晰，涵盖目标、激励及年轻人管理，建议实用且全面，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，结构清晰，涵盖目标、激励及沟通等维度。内容实用全面，但针对年轻人管理的个性化技巧略显常规。"
+    }
+  ]
+}

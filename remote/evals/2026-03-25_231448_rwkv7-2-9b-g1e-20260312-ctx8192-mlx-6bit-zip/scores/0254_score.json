@@ -1,0 +1,63 @@
+{
+  "sample_index": 254,
+  "rendering_name": "地球磁场为什么会反转，上一次反转发生了什么？",
+  "prompt": "地球磁场为什么会发生反转？历史上已经反转过多少次？上一次反转的时候对地球上的生物有什么影响？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，科学解释准确且全面。虽提及辐射风险但结论客观，整体质量高，用户满意度好。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，科学事实准确。关于生物影响部分略显保守，未提及具体灭绝事件争议，整体质量很高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答紧扣问题，结构清晰。但将78万年前反转误称为“布莱克霍尔时期”（应为布容尼斯 - 松山反转），存在事实错误。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.7,
+      "brief_note": "回答结构清晰，但存在严重事实错误：将布容尼斯 - 松山反转误称为“布里斯托尔 - 安德森事件”，且“逆时针”描述不当，误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，涵盖成因与影响。但将太阳风列为反转主因不够准确，且未明确回答历史反转总次数。"
+    }
+  ]
+}

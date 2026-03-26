@@ -1,0 +1,63 @@
+{
+  "sample_index": 306,
+  "rendering_name": "解释 CSS 的盒模型，content-box 和 border-box 有什么区别？",
+  "prompt": "解释 CSS 的盒模型（Box Model）。说明 box-sizing: content-box 和 border-box 的区别。",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰，但存在严重事实错误：border-box 不包含 margin，且描述 padding 会调整，实际是内容区缩小。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "概念解释清晰，但代码示例存在逻辑错误：重复定义类且注释描述与代码实际效果不符，易误导初学者。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.25,
+      "brief_note": "结构清晰但存在严重事实错误：content-box 计算示例中误将 margin 计入总宽，且对 border-box 的计算逻辑描述完全错误，误导用户。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.25,
+      "brief_note": "结构清晰但存在严重事实错误：content-box 下总宽应为 114px 而非 105px，且计算逻辑描述完全相反，误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答准确解释了盒模型及两种模式区别，代码示例清晰。结尾关于布局变化的提示略显多余，但整体质量很高。"
+    }
+  ]
+}

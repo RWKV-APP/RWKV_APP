@@ -1,0 +1,63 @@
+{
+  "sample_index": 116,
+  "rendering_name": "毕业论文选题是短视频对大学生消费习惯的影响，文献综述和结构怎么搭？",
+  "prompt": "我正在写本科毕业论文，选题是关于短视频对大学生消费习惯的影响，但是不知道文献综述怎么写、研究框架怎么搭，能不能帮我列一个详细的论文结构和每部分大概要写什么内容",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣选题，结构完整且逻辑清晰，提供了具体的理论框架与写作要点，极具实用价值，能有效指导论文写作。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构完整清晰，紧扣选题，涵盖引言至附录各部分。内容实用，理论结合具体，对本科生极具指导价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构完整逻辑清晰，涵盖引言至参考文献全环节，内容具体实用。若补充具体写作技巧或理论模型会更完美。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣选题，结构完整且逻辑清晰，内容详实具体。虽主体章节编号与结论部分略有重复，但整体极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "结构完整逻辑清晰，涵盖摘要至结论全篇，提供具体假设与模型图。个别文献引用需核实，整体极具参考价值。"
+    }
+  ]
+}

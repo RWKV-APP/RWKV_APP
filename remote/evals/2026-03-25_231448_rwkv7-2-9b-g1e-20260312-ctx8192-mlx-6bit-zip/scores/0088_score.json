@@ -1,0 +1,63 @@
+{
+  "sample_index": 88,
+  "rendering_name": "30多岁上班族想重新捡起英语，每天不超过30分钟怎么安排？",
+  "prompt": "我想重新把英语捡起来，不是为了考试，而是工作里偶尔开会、看邮件别那么吃力。你帮我做一个适合 30 多岁上班族的学习方案，每天不要超过 30 分钟",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "方案结构清晰，紧扣职场场景与30分钟限制。但部分建议如“发邮件给同事求反馈”对初学者略显激进，实操性稍弱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案紧扣职场需求，时间分配合理，资源推荐精准。结构清晰，内容实用，能有效指导用户利用碎片时间提升英语。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "方案紧扣职场需求，结构清晰且资源实用。但时间表安排略显机械，未充分考虑上班族通勤等碎片场景，灵活性稍欠。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案紧扣职场需求，结构清晰且时间控制精准。资源推荐实用，兼顾听说读写，极具操作性，能有效帮助用户建立习惯。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案紧扣职场需求，时间分配合理，资源推荐精准。结构清晰，建议实用，能有效帮助用户利用碎片时间提升英语。"
+    }
+  ]
+}

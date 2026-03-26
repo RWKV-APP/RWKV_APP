@@ -1,0 +1,63 @@
+{
+  "sample_index": 57,
+  "rendering_name": "遇到职业裁员，中年人的简历该怎么改才有价值？",
+  "prompt": "如果哪天真的遇到职业性裁员，我这个年纪的人简历该怎么改，才不会显得自己只剩资历没有价值？你帮我从经历表述、优势提炼和面试说法三个方面给建议",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三点要求，结构清晰，建议具体且具实操性。数据量化与话术模板极具价值，能有效缓解年龄焦虑。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三点建议，结构清晰，案例具体实用。虽第四点略超范围，但整体极具参考价值，能有效缓解焦虑。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三点要求，结构清晰，建议实用且具操作性。内容准确流畅，能有效缓解用户焦虑，综合质量很高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.05,
+      "brief_note": "回答结构清晰紧扣三点，但内容过于泛泛，缺乏针对大龄求职的具体话术和实操案例，指导价值有限。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣三点建议，结构清晰且含模板，内容实用。结尾鼓励温暖，但针对特定年龄的差异化策略可更深入。"
+    }
+  ]
+}

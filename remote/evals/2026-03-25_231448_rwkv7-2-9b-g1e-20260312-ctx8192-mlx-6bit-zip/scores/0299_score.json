@@ -1,0 +1,63 @@
+{
+  "sample_index": 299,
+  "rendering_name": "什么是 CAP 定理，分布式系统为什么无法同时满足三个条件？",
+  "prompt": "什么是 CAP 定理？一致性、可用性和分区容错性分别是什么意思？为什么分布式系统无法同时满足这三个条件，现实中通常怎么取舍？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答结构清晰，概念解释准确。但一致性定义混淆了强一致与最终一致，且部分场景取舍描述略显绝对，整体仍具较高参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "结构清晰但存在严重事实错误：Paxos/Raft 是 CP 而非 AP，且总结中 CP 定义自相矛盾，误导用户。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答结构清晰，概念解释准确。但银行转账选CP更妥，且‘顺序CP>AP>C'表述有误，存在轻微事实瑕疵。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "结构清晰，解释详尽。但存在严重事实错误：将银行系统归为牺牲可用性且坚持最终一致性，与常识相悖；部分取舍案例逻辑混乱，误导用户。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰、解释通俗，但严重事实错误：CAP由Brewer提出，非Carlton等人；且CA组合在分布式系统中通常不可行。"
+    }
+  ]
+}

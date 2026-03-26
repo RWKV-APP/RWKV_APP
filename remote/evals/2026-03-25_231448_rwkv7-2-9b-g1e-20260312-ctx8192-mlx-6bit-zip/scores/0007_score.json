@@ -1,0 +1,63 @@
+{
+  "sample_index": 7,
+  "rendering_name": "和喜欢的人聊天总是聊着聊着就断了，怎么延展话题不查户口？",
+  "prompt": "我和喜欢的人聊天总是聊着聊着就没了，不是我嗯嗯哦哦，就是对方回得很短。你能不能给我几个延展话题的技巧，让聊天别那么容易断掉，还不要显得查户口",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，技巧全面且示例具体。但部分问题略显生硬，有轻微查户口嫌疑，需更自然些。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十种技巧及示例，结构清晰实用。部分假设场景需双方熟悉，整体质量很高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，技巧实用且示例丰富，结构清晰。唯独第六点涉及身体语言，在纯文字聊天中略显突兀，略有瑕疵。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，技巧丰富且结构清晰。但部分示例略显生硬，如“因为所以”句式稍显刻意，实用性略有折扣。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，技巧实用且示例丰富，结构清晰。部分例子略显刻意，但整体极具指导价值。"
+    }
+  ]
+}

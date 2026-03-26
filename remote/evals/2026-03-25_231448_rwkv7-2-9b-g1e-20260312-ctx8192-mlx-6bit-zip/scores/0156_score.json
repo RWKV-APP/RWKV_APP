@@ -1,0 +1,63 @@
+{
+  "sample_index": 156,
+  "rendering_name": "父母70岁，帮我列一份全面体检中必须包含的核心项目",
+  "prompt": "父母 70 岁，想带他们做一次全面的体检，请根据老年人常见病，帮我勾选体检套餐中必须包含的核心项目",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣老年人常见病，项目全面且实用，涵盖心脑血管、肿瘤及骨密度等核心检查，建议专业且结构清晰。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣主题，涵盖心脑血管、代谢及骨骼等核心项目，结构清晰。但缺少肿瘤标志物及胃肠镜等关键筛查，建议补充。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣老年人体检需求，项目全面且分类清晰，涵盖心脑血管及肿瘤筛查。建议补充颈动脉超声等针对性项目更佳。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，项目全面覆盖老年常见病。但部分项目如HIV、梅毒对普通老人非必须，略显冗余，建议精简。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣主题，涵盖心脑血管、肝肾及肿瘤等核心项目，结构清晰。但缺乏针对70岁老人的具体筛查手段（如胃肠镜），建议可更细化。"
+    }
+  ]
+}

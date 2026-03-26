@@ -1,0 +1,63 @@
+{
+  "sample_index": 43,
+  "rendering_name": "经常熬夜复习白天精神很差，怎么调整作息又不影响学习？",
+  "prompt": "我最近经常熬夜复习，白天精神很差，注意力不集中，脸上还长痘痘，能不能帮我制定一个不影响学习的作息调整方案，以及简单的饮食和护肤建议",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，作息、饮食、护肤建议全面实用。结构清晰，语气鼓励，能有效帮助用户改善现状。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，作息、饮食、护肤建议全面且实用，结构清晰流畅。若能结合复习场景细化时间管理会更完美。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，结构清晰涵盖作息、饮食与护肤。建议科学实用，但缺乏针对熬夜复习的具体时间表示例。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，作息、饮食、护肤建议全面且实用。结构清晰，语言流畅，能有效帮助用户改善状态。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣问题，结构清晰流畅。但作息建议过于理想化，缺乏针对熬夜复习的过渡策略，实用性稍显不足。"
+    }
+  ]
+}

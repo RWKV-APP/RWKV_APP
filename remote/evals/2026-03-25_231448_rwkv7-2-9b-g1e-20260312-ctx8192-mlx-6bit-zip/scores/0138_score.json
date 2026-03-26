@@ -1,0 +1,63 @@
+{
+  "sample_index": 138,
+  "rendering_name": "女儿谈了个条件一般但踏实的对象，怎么和她聊这件事？",
+  "prompt": "我女儿谈了个对象，家里条件一般，但人看起来挺踏实。我其实不想做那种一上来就看条件的父母，但也怕孩子以后真的会为现实发愁。你帮我想一个和女儿聊这件事的方式，既有边界又有判断",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供六条具体沟通策略，兼顾边界与判断。语言通顺温暖，极具实操性，能有效缓解家长焦虑。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，建议尊重且具引导性，但缺乏针对“条件一般”的具体话术，实操性稍弱。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，建议全面且具边界感。但列表过长略显说教，缺乏具体话术示例，实操性稍弱。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，结构清晰，建议全面且具建设性。但缺乏具体话术示例，实操性稍弱，若能提供对话范例更佳。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 8,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.85,
+      "brief_note": "回答切题但过于笼统，缺乏具体话术和实操步骤，未能有效解决用户关于“边界与判断”的深层焦虑。"
+    }
+  ]
+}

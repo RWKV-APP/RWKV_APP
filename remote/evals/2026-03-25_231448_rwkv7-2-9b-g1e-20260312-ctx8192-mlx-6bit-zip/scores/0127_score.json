@@ -1,0 +1,63 @@
+{
+  "sample_index": 127,
+  "rendering_name": "孩子对绘本没兴趣，怎么让他重新爱上阅读？",
+  "prompt": "孩子最近对绘本完全没兴趣，我每次拿书出来他就跑。我不太想硬逼着读。你帮我想几个把阅读变得没那么像任务的办法，最好是能顺着孩子兴趣来的",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "建议丰富且紧扣兴趣引导，但部分方法如国际象棋卡牌偏离绘本主题，略显堆砌，整体实用性强。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣兴趣导向，建议丰富多样。但部分方法如奖励计划略显说教，且“画标记”可能破坏绘本，实用性稍打折。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供七类创意方案，结构清晰且具实操性。部分建议如AR技术对低龄幼儿略显复杂，但整体极具价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十种创意玩法，结构清晰。内容极具实操性，但部分建议如 AR 应用可能增加家长负担。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供十种趣味方法，涵盖角色扮演、户外阅读等，实用性强且结构清晰，能有效缓解家长焦虑。"
+    }
+  ]
+}

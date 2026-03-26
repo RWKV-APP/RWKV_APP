@@ -1,0 +1,63 @@
+{
+  "sample_index": 121,
+  "rendering_name": "想换工作但市场不好怕裸辞，在职跳槽需要注意什么，简历怎么写？",
+  "prompt": "我想换一份工作，但又担心现在市场环境不好，裸辞风险太大，能不能帮我分析在职跳槽的注意事项，以及更新简历时如何突出工作亮点",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰。在职跳槽建议全面，简历技巧实用且含量化案例。内容详实专业，极具参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣在职跳槽与简历优化，结构清晰，建议实用。虽未深入分析具体行业，但整体价值高，逻辑流畅。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰。注意事项与简历技巧全面实用，STAR法则等建议专业，能有效指导用户行动。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，涵盖注意事项与简历优化。内容实用准确，逻辑流畅，能有效指导用户行动。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，涵盖注意事项与简历技巧。量化示例与行动计划极具实操性，结尾互动自然，质量很高。"
+    }
+  ]
+}

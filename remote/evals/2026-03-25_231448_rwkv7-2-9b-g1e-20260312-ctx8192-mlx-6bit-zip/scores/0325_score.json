@@ -1,0 +1,63 @@
+{
+  "sample_index": 325,
+  "rendering_name": "用积分计算 f(x)=x² 在 [0,3] 上的面积",
+  "prompt": "请用定积分计算函数 f(x)=x² 在区间 [0,3] 上与 x 轴围成的面积，写出完整计算步骤？",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 4,
+        "fluency": 6,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "计算结果正确且步骤完整，但中间出现自我怀疑和错误几何类比，随后又推翻重来，逻辑混乱，严重影响阅读体验。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣定积分求面积主题，步骤完整清晰，计算准确无误，排版规范，完美满足用户需求。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，步骤完整清晰，公式引用准确，计算无误，完美解决了用户关于定积分求面积的问题。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.2,
+      "brief_note": "计算步骤完整且结果正确，但几何描述存在明显错误，如称区域为扇形或三角形，易误导初学者。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣题意，步骤完整清晰，计算准确无误，逻辑严密，完美满足用户需求。"
+    }
+  ]
+}

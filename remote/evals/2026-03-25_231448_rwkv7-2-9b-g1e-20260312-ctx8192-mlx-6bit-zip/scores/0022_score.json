@@ -1,0 +1,63 @@
+{
+  "sample_index": 22,
+  "rendering_name": "月到手1.2万还有5000房贷，工资到卡里就没了，怎么做预算方案？",
+  "prompt": "我每个月到手大概 1.2 万，房贷 5000，孩子各种支出也不少，总觉得工资一到卡里就没了。你帮我做一个普通家庭可执行的月度预算方案，重点不是发财，而是别总处在快没钱的慌张状态",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "方案结构清晰，理念正确。但缺乏针对1.2万收入的具体数字分配，实操性稍弱，建议补充具体金额示例。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰、语气温暖，但建议严重脱离实际：月入1.2万却建议存15-30万备用金，且推荐大额分期消费，逻辑矛盾。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "方案结构清晰，共情到位。但预算总额超收入，且部分建议（如公积金贷）不切实际，需修正数据。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "结构清晰但严重脱离实际：房贷建议降至3000元违背事实，甘特图数据混乱，部分省钱建议（如代打字）不切实际，无法解决用户焦虑。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "方案结构清晰，针对性强，有效缓解焦虑。但部分消费项估算偏高，且推荐的健康App与理财关联度弱，略有瑕疵。"
+    }
+  ]
+}

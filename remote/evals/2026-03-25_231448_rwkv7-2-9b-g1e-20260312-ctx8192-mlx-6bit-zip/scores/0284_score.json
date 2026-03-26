@@ -1,0 +1,63 @@
+{
+  "sample_index": 284,
+  "rendering_name": "大二学计算机感觉跟不上，怎么制定零基础 Python 的三个月学习计划？",
+  "prompt": "我现在大二，专业是计算机，感觉上课内容跟不上，课后又不知道该重点学什么，能不能帮我制定一份适合零基础入门 Python 的三个月学习计划，每天大概学 1-2 小时就行",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "计划结构清晰，但严重违背用户每天1-2小时的约束，后期建议每日4-5小时，导致方案不可执行。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰、资源丰富，但时间规划严重错误：将12周内容拆分为16周，且阶段划分与周数完全对不上，导致计划不可执行。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "计划结构清晰，内容覆盖全面且含代码示例。但每日安排总时长超用户限定，且部分进阶内容对零基础略深，需微调。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "计划结构清晰，紧扣需求。但第二阶段进度过快，零基础难以掌握设计模式，且缺乏具体资源推荐，实用性稍欠。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答紧扣需求，结构清晰。但时间规划严重混乱，阶段周数相加远超三个月，且内容安排过于密集，缺乏可行性。"
+    }
+  ]
+}

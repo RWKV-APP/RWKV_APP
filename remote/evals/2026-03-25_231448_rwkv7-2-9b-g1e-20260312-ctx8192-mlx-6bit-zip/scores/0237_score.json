@@ -1,0 +1,63 @@
+{
+  "sample_index": 237,
+  "rendering_name": "请扮演孔子，用论语风格回应我的职场困惑",
+  "prompt": "请扮演孔子，用论语式的简短语言回应我今天遇到的职场困惑，每条建议可以结合一句原典，然后用现代话解释应用场景？",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答紧扣职场困惑，引用准确且解读实用。格式清晰流畅，虽有一处原文小误，但整体极具启发性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣职场困惑，引用原典并配现代解读，结构清晰。但“以直四方”非论语原句，存在轻微杜撰瑕疵。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣职场困惑，引用恰当且解释清晰。但未能完全代入孔子第一人称口吻，略显说教，沉浸感稍欠。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答虽礼貌但完全未执行扮演指令，未提供建议或原典，仅请求用户补充信息，未解决实际问题。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.9,
+      "brief_note": "回答紧扣职场主题，但多处原典与标题严重错配，事实性错误明显，严重影响内容可信度与实用价值。"
+    }
+  ]
+}

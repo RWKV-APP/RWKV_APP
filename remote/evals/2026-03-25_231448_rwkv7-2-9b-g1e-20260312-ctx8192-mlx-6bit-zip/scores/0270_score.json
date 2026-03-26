@@ -1,0 +1,63 @@
+{
+  "sample_index": 270,
+  "rendering_name": "科幻作品里，为什么即使有时间机器也无法改变过去？",
+  "prompt": "为什么在一些科幻作品中，即便拥有时间机器，时间旅行者仍然无法改变自己的过去？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣主题，结构清晰流畅。但部分理由如自然选择、心理认知偏离科幻设定逻辑，且混淆了虚构设定与现实障碍，降低了专业度。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，列举七大原因逻辑清晰，涵盖悖论与多重宇宙等核心概念，内容详实且表达流畅自然。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，涵盖悖论、多世界等核心设定，逻辑清晰。但部分物理规律描述略显笼统，整体质量很高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，逻辑清晰，涵盖因果律、剧情等多维度原因。内容详实准确，结构分明，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，逻辑清晰，涵盖悖论、物理限制及叙事需求。内容详实准确，结构分明，极具参考价值。"
+    }
+  ]
+}

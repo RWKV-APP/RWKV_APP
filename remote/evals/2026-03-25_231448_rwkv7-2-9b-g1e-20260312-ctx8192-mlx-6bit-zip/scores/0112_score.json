@@ -1,0 +1,63 @@
+{
+  "sample_index": 112,
+  "rendering_name": "做了15年销售总监想转型咨询顾问，过去的人脉资源怎么包装成产品？",
+  "prompt": "我在传统制造业做了 15 年销售总监，现在行业下行，想转型做咨询顾问，如何包装我过去的人脉资源作为我的核心课程产品？",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣转型痛点，结构清晰，将人脉转化为案例库和社群的策略极具实操性。个别营销术语略显生硬，但整体价值极高。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣转型痛点，策略系统且具实操性，将人脉转化为课程卖点思路清晰。结构严谨，语言专业流畅，极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣转型痛点，策略具体且具实操性，结构清晰。但将人脉直接包装为课程略显牵强，建议侧重案例转化。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣转型痛点，提供课程框架与执行路线图，逻辑清晰。但将人脉直接包装为课程略显牵强，建议侧重人脉带来的案例背书。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 3,
+        "quality": 1,
+        "fluency": 2,
+        "satisfaction": 1
+      },
+      "weighted_score": 1.55,
+      "brief_note": "开头切题但随后生成大量无意义重复内容，Mermaid 图表逻辑崩坏，完全丧失实用价值，属于严重模型故障。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 201,
+  "rendering_name": "帮我设计一段治愈系黄昏海边柔和光影风格的 AI 绘画详细关键词",
+  "prompt": "请帮我设计一个适合用于 AI 绘画的详细关键词描述，风格是治愈系黄昏、海边小镇、柔和光影，细节要足够具体",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，细节丰富且包含英文提示词。色彩代码略显冗余，但整体极具实用价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，元素丰富且具画面感。提供了多工具提示词，实用性强，仅部分描述略显冗长。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，细节丰富且极具画面感。虽部分感官描述无法直接转化为图像指令，但作为创意参考极具价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，氛围与元素描述具体。提供的英文Prompt实用性强，仅个别风格描述略显矛盾，整体质量很高。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，细节丰富且画面感强。虽非标准提示词格式，但内容极具参考价值，能有效辅助创作。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 100,
+  "rendering_name": "团建预算不高，怎么避免形式主义，有哪些不尴尬的团建方案？",
+  "prompt": "我负责做一次团队团建，预算不高，又怕大家觉得形式主义。你帮我想几个不尴尬、成本可控、又真的能让人放松一点的团建方案",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣需求，方案丰富多样且成本低。但部分活动如瑜伽、露营可能隐含额外成本，实用性略有欠缺。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案紧扣低成本与反形式主义，内容实用丰富。结构清晰，语气亲切，能有效缓解组织者焦虑，极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 8,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.85,
+      "brief_note": "回答紧扣主题，但部分方案如请讲师、潜水成本较高，未体现“预算不高”限制，实用性稍弱。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "方案丰富且紧扣低成本、反形式主义，结构清晰。但部分创意如“失败咖啡馆”执行难度大，略显理想化，实用性稍弱。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "方案紧扣低成本、反形式主义需求，涵盖户外与室内，实用性强。表达流畅清晰，但缺乏具体执行细节。"
+    }
+  ]
+}

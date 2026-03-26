@@ -1,0 +1,63 @@
+{
+  "sample_index": 82,
+  "rendering_name": "想做一个能长期坚持的周计划系统，兼顾工作家庭运动和留白",
+  "prompt": "我想做一套给自己用的周计划系统，不是那种一天排得满满的，而是真的能兼顾工作、家庭、运动和留白。你帮我设计一个简单版本，我可以每周重复用",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣主题，结构清晰。但时间分配逻辑有误（单日超24小时），且缺乏具体可复用的模板，实用性稍弱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，提供清晰模板与灵活建议，兼顾四大维度。结构完整，但具体时段划分略显刻板，可更强调留白。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，结构清晰涵盖四大板块。但时间线有逻辑错误（下午16点结束却列在17点后），且周末安排过满，留白不足。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "结构清晰涵盖四大维度，但表格设计未体现时间轴，且固定时段建议略显僵化，不够灵活。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但严重跑题，将“留白”系统做成了“排满”的日程表，且晚上安排工作违背用户初衷，实用性低。"
+    }
+  ]
+}

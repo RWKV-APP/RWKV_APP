@@ -1,0 +1,63 @@
+{
+  "sample_index": 259,
+  "rendering_name": "进化论里适者生存，弱小的物种为什么没被淘汰完？",
+  "prompt": "进化论里'适者生存'是什么意思？如果强者淘汰弱者，为什么现实中仍然有那么多体型微小或能力看起来很弱的生物存在？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，准确解释概念并列举五点原因，逻辑清晰。但第一点举例略显牵强，整体质量很高。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释概念并列举五点原因，逻辑清晰。内容详实且通俗易懂，有效消除了用户误解，质量很高。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释概念并多角度解析弱生物存在原因。结构清晰，逻辑严密，内容详实且极具价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释概念并多角度解答疑惑。逻辑清晰，内容详实，有效消除了用户对进化论的常见误解。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释概念并列举六点原因，逻辑清晰。内容专业实用，仅第一点举例略显牵强，整体质量很高。"
+    }
+  ]
+}

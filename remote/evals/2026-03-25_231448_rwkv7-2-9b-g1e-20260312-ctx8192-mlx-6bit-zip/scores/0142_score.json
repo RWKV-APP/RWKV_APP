@@ -1,0 +1,63 @@
+{
+  "sample_index": 142,
+  "rendering_name": "怎么跟父母解释我留在大城市不是虚荣，是职业机会真的差很多？",
+  "prompt": "我想给爸妈解释我为什么不想回老家发展，但每次一说就像我嫌弃家里。你帮我组织一下说法，让他们能理解我想留在一线城市，不是因为虚荣，是因为职业机会真的差很多",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，语气委婉体贴，有效化解误解。但具体职业机会对比略显笼统，若补充实例更具说服力。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，话术具体且实用，有效化解误解。示例对话生动，极具参考价值，能帮助用户温和沟通。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "结构清晰策略实用，但话术模板中“回老家试水”逻辑矛盾，削弱了留在一线城市的说服力。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，话术真诚且逻辑清晰，有效化解误解。建议具体实用，结构分明，能帮助用户温和沟通。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣需求，话术真诚且逻辑清晰，有效区分了职业选择与嫌弃家乡，极具实用价值。"
+    }
+  ]
+}

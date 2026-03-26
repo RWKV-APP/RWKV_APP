@@ -1,0 +1,63 @@
+{
+  "sample_index": 286,
+  "rendering_name": "TCP 三次握手和四次挥手是什么，为什么不能两次握手？",
+  "prompt": "TCP 三次握手和四次挥手的过程是什么？为什么连接建立需要三次，而不是两次就够了？挥手为什么要四次？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答结构清晰，准确描述了握手挥手流程。对三次握手原因解释到位，但四次挥手原因可更明确强调TCP全双工特性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.05,
+      "brief_note": "流程描述清晰流畅，但核心原理解释错误。未提及防止历史连接、半关闭状态等关键点，导致回答缺乏实质价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答结构清晰，准确描述了握手挥手流程及原因。对三次握手解释到位，但四次挥手原因未提及TCP全双工特性，略有瑕疵。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答结构清晰，流程描述准确。但解释三次握手原因时逻辑有误，未提及防止历史连接问题，四次挥手原因解释也略显牵强。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "流程描述清晰，但存在严重事实错误：握手序列号计算错误，挥手后状态描述为ESTABLISHED，且未解释半连接队列等核心原因。"
+    }
+  ]
+}

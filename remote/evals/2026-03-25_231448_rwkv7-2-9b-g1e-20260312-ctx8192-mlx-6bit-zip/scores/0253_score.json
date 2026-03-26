@@ -1,0 +1,63 @@
+{
+  "sample_index": 253,
+  "rendering_name": "安慰剂效应是真实存在的吗，它的机制是什么？",
+  "prompt": "安慰剂效应是真实存在的吗？吃了没有任何成分的药片真的能让人感觉好一点吗？它背后的作用机制是什么？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确阐述了存在性与机制。提及免疫激活略显宽泛，但整体专业且实用。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释机制与事实。结构清晰，涵盖心理生理因素，内容详实实用，表达流畅自然。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确阐述机制，涵盖心理与神经层面。结构清晰流畅，内容详实实用，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确阐述机制与事实，结构清晰流畅。内容详实且具科学依据，能很好满足用户求知需求。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确阐述真实性及心理、神经机制。结构清晰，内容详实，但部分机制重复提及，略有冗余。"
+    }
+  ]
+}

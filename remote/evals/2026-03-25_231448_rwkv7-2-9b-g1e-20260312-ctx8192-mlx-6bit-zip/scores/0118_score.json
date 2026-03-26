@@ -1,0 +1,63 @@
+{
+  "sample_index": 118,
+  "rendering_name": "想利用课余时间做副业，有哪些适合大学生的线上兼职，怎么开始？",
+  "prompt": "我想利用课余时间做一个简单的副业赚钱，不想投入太多成本，也不想做刷单、拉人头这类不靠谱的，能不能推荐几个适合大学生的线上兼职，并告诉我具体怎么开始",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "回答结构清晰但严重跑题，列举了大量大学生无法涉足的高门槛领域（如航天、量子计算），缺乏实用性和可操作性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰、建议全面，但部分平台推荐存疑（如腾讯翻译官无众包），NFT 门槛过高，实操准确性有待提升。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，推荐方向准确且避坑。但“具体怎么开始”指导较泛，缺乏国内平台推荐和实操步骤，实用性稍弱。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 5,
+        "satisfaction": 4
+      },
+      "weighted_score": 4.55,
+      "brief_note": "回答虽切题但严重冗余，罗列30项且大量重复（如教育、家政出现多次）。部分平台推荐不准（如千牛非问卷站），结尾语句中断，实用性差。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 7,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.75,
+      "brief_note": "回答紧扣主题，列举丰富但数量过多且部分平台不适合国内大学生。内容在结尾处突然截断，结构不完整，严重影响阅读体验。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 6,
+  "rendering_name": "刚开始自己做饭，每天不知道吃什么，怎么做7天晚餐计划？",
+  "prompt": "我刚开始自己做饭，最大的问题不是不会做，而是每天不知道吃什么，最后又点外卖。你给我做一个适合一个人生活的 7 天晚餐方案，要求便宜、简单、能重复利用食材",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但严重偏离“便宜、重复利用食材”的核心需求。方案中三文鱼、羊排等昂贵且食材不通用，对新手不实用。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "回答严重跑题，列出了早餐和午餐而非仅晚餐，且食材重复利用逻辑混乱，未解决用户痛点。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "方案结构清晰但严重违背“简单便宜”及“食材复用”要求。牛腩、鲈鱼成本高，且每日食材无关联，未解决剩菜利用痛点。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构清晰但严重偏离“便宜简单”和“食材复用”要求。第4天排骨与饺子、第7天三文鱼成本过高，且未体现跨天食材利用，实用性差。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "方案结构清晰，但食材重复利用逻辑弱，且红烧肉、蒸饺对新手难度过高，部分做法描述有误。"
+    }
+  ]
+}

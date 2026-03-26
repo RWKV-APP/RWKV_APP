@@ -1,0 +1,63 @@
+{
+  "sample_index": 197,
+  "rendering_name": "想开一家温馨简约的社区咖啡店，帮我起10个店名各配一句 slogan",
+  "prompt": "我想开一家小型社区咖啡店，名字还没想好，希望风格温馨简约、好记又有质感，能不能帮我起 10 个店名，并各配一句简短的 slogan",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，提供十个名字及标语，结构清晰。但部分名字如“茶室”“书屋”偏离纯咖啡店定位，略显通用。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.2,
+      "brief_note": "回答紧扣需求，结构清晰。但部分店名如“温馨居家”缺乏质感与创意，略显平淡，建议更具独特性。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答紧扣需求，提供十个店名及标语。部分名字略显普通，缺乏独特质感，但整体结构清晰，实用性强。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.0,
+      "brief_note": "回答紧扣需求，提供十个店名及标语，风格温馨。部分名字略显普通，缺乏独特质感，但整体实用流畅。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.55,
+      "brief_note": "回答紧扣需求，提供十个店名及标语，风格温馨。但部分名字略显普通，缺乏独特质感，创意可提升。"
+    }
+  ]
+}

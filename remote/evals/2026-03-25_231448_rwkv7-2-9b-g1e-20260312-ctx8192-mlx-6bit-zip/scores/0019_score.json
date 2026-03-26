@@ -1,0 +1,63 @@
+{
+  "sample_index": 19,
+  "rendering_name": "明明知道刷手机会焦虑但停不下来，怎么做7天调整方案？",
+  "prompt": "我最近总觉得刷手机一刷就是两三个小时，明明知道会焦虑，但停不下来。我不想听大道理，你给我一个适合大学生执行的 7 天手机使用调整方案，越具体越好",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案紧扣需求，七天规划具体可执行，无大道理。部分建议如“故意违反规则”略显反直觉，但整体结构清晰实用。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "方案紧扣大学生场景，七天任务具体可执行，避开了空洞说教。结构清晰，兼顾心理疏导与实操技巧，极具实用价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.5,
+      "brief_note": "回答紧扣七天方案，结构清晰。但部分建议如“写规则”略显常规，缺乏针对大学生场景的极致具体细节。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "结构清晰但内容空洞，多为“设定目标”等泛泛建议，缺乏大学生可执行的具体动作，未解决“停不下来”的痛点。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 7.05,
+      "brief_note": "方案结构清晰紧扣主题，但内容过于笼统，缺乏大学生可执行的具体工具或场景细节，实用性不足。"
+    }
+  ]
+}

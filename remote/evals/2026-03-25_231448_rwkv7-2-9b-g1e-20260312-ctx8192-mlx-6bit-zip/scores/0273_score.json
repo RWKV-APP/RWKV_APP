@@ -1,0 +1,63 @@
+{
+  "sample_index": 273,
+  "rendering_name": "植物能利用月夜里微弱的月光进行光合作用吗？",
+  "prompt": "植物如何利用月夜中的微弱月光进行光合作用？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 4,
+        "quality": 2,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.75,
+      "brief_note": "回答结构清晰流畅，但核心事实严重错误。月光强度远不足以驱动光合作用，模型编造了虚假机制，误导用户。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 4,
+        "quality": 2,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.75,
+      "brief_note": "回答紧扣问题但存在严重科学错误。植物无神经系统，月光能量远不足以驱动光合作用，内容完全违背生物学常识。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 4,
+        "quality": 2,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.75,
+      "brief_note": "回答结构清晰流畅，但核心科学事实错误。月光能量远不足以驱动光合作用，模型却编造了利用月光进行光合作用的机制，严重误导用户。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.25,
+      "brief_note": "回答结构清晰流畅，紧扣主题。但核心事实错误：月光强度远低于光补偿点，植物无法在月夜进行有效光合作用。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 6.25,
+      "brief_note": "回答紧扣主题且结构清晰，但存在严重事实错误：植物无法利用月光进行光合作用，文中提及的“次级光合作用”纯属虚构。"
+    }
+  ]
+}

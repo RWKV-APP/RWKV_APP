@@ -1,0 +1,63 @@
+{
+  "sample_index": 192,
+  "rendering_name": "帮我把这段描写夏天的文字，改成汪曾祺那种淡而有味的风格",
+  "prompt": "帮我把这段描写夏天的文字，改成汪曾祺那种淡而有味的风格，要带着童年老家后院的味道",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 8,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.2,
+      "brief_note": "紧扣夏日与童年，但汪曾祺“淡而有味”的白描神韵不足，结尾语句未写完，略显遗憾。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣改写要求，语言流畅自然。但汪曾祺特有的“淡而有味”与生活烟火气稍显不足，略显平铺直叙。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "回答虽紧扣夏天与后院，但未体现汪曾祺“淡而有味”的笔触，语言过于直白堆砌，缺乏神韵与童年质感。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 8,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.5,
+      "brief_note": "回答紧扣夏日与童年，但语言过于平铺直叙，缺乏汪曾祺特有的淡远韵味与生活细节，风格模仿不够到位。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 8,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.3,
+      "brief_note": "语言通顺但风格不符，未体现汪曾祺的淡味与童趣，用词过于华丽，缺乏生活烟火气。"
+    }
+  ]
+}

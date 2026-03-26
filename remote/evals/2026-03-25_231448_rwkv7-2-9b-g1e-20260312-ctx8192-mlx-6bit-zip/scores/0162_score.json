@@ -1,0 +1,63 @@
+{
+  "sample_index": 162,
+  "rendering_name": "高考选科物理和历史成绩差不多，结合 AI 对行业的冲击该怎么选？",
+  "prompt": "孩子马上高考选科，物理和历史成绩差不多，从未来 10 年的就业趋势看，该怎么选？请结合 AI 对行业的冲击分析一下",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣选科与AI冲击，结构清晰流畅。但内容较泛，缺乏对物理/历史具体就业数据及AI替代风险的深度对比分析。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣选科与AI冲击，结构清晰。但建议双主修不切实际，且对物理类AI替代风险描述略显保守，实用性稍欠。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣选科与AI冲击，结构清晰。但建议较泛，未深入分析AI对具体岗位的替代差异，缺乏针对性数据支撑。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰流畅，但内容空泛。未深入分析AI对理工与人文的具体冲击差异，缺乏针对选科决策的实质性建议。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答结构通顺但严重跑题，错误建议避开计算机等AI核心领域，未结合选科实际给出针对性分析，缺乏实用价值。"
+    }
+  ]
+}

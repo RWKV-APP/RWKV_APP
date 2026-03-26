@@ -1,0 +1,63 @@
+{
+  "sample_index": 90,
+  "rendering_name": "怎么让 AI 整理课堂录音和读书笔记，整理成能直接复习的版本？",
+  "prompt": "我打算用 AI 帮我整理课堂录音和读书笔记，但我不知道怎样提问才会让它整理得像人能直接复习的版本。你能不能给我几个高质量的提问模板，越适合学生越好",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答结构清晰，模板丰富且分类合理，实用性强。但部分模板侧重通用分析，针对录音转文字的具体指令可更精准。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，模板分类合理。但部分模板未体现“录音转文字”特性，且“5分钟完成”建议对AI无效，实用性略减。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，分类清晰提供多场景模板。但提示词较通用，缺乏针对录音转写和结构化输出的具体指令，实用性可提升。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，提供十类实用模板，结构清晰。但缺乏针对录音转文字的具体指令，若补充格式要求会更完美。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.8,
+      "brief_note": "回答紧扣需求，提供十类模板结构清晰。但部分模板如“预测未来”对复习帮助有限，且缺乏具体示例，实用性稍逊。"
+    }
+  ]
+}

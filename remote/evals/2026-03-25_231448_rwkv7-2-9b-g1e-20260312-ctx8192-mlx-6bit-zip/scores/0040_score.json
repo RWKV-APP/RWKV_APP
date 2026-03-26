@@ -1,0 +1,63 @@
+{
+  "sample_index": 40,
+  "rendering_name": "房贷还剩100万手里有30万闲钱，提前还贷还是留着做备用金？",
+  "prompt": "房贷还剩 100 万，现在手里有 30 万闲钱，提前还贷好还是留着做家庭备用金好？请帮我分析一下利弊",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "分析全面涵盖利率、风险及折中方案，逻辑清晰。但结尾数据计算略显突兀，未明确展示推导过程，稍影响专业感。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "结构清晰且切题，但逻辑有硬伤：将还贷列为缺点，且建议还50-60万与手中仅30万闲钱的事实严重矛盾。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.85,
+      "brief_note": "回答紧扣主题，结构清晰，利弊分析全面。但利息计算示例存在明显逻辑错误，影响专业度。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，利弊分析全面。但建议略显通用，未结合 30 万与 100 万的具体比例给出量化策略，实用性稍弱。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "结构清晰、逻辑全面，但方案C存在严重事实错误（误将房贷当首付），且部分数据计算存疑，影响专业可信度。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 211,
+  "rendering_name": "为新能源汽车未来发展趋势的演讲制作一个 PPT 大纲",
+  "prompt": "为一场关于“新能源汽车的未来发展趋势”的演讲制作一个PPT大纲，内容应涵盖技术革新（电池、自动驾驶）、市场格局、基础设施和政策影响等。",
+  "source_category": "creation",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "大纲结构完整，紧扣技术、市场、基建及政策四大维度，逻辑清晰。内容详实且具前瞻性，仅部分案例可更新以增强时效性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "大纲结构完整，紧扣技术、市场、基建及政策四大核心，逻辑清晰。内容详实且具前瞻性，仅个别数据需核实，整体极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "大纲结构严谨，完整覆盖电池、自动驾驶、市场及政策等核心要求。内容详实且逻辑清晰，极具实用价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "大纲结构完整，紧扣技术、市场、基建及政策四大维度，内容详实且逻辑清晰，极具实用价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰完整，涵盖所有要求维度。内容详实且具前瞻性，设计建议实用，极具参考价值。"
+    }
+  ]
+}

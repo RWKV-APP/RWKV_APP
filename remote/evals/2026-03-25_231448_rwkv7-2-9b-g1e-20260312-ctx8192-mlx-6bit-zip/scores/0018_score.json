@@ -1,0 +1,63 @@
+{
+  "sample_index": 18,
+  "rendering_name": "发现自己很多消费都是情绪性的，怎么设计一个防冲动下单的机制？",
+  "prompt": "我最近开始意识到自己很多消费其实是情绪性的，比如压力大就买东西，买完又后悔。你帮我设计一个让人没那么容易冲动下单的小机制，不要靠纯意志力",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣主题，结构清晰。但部分功能如弹窗文案过于理想化，缺乏个人实操性，更像产品方案而非个人工具。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，提供十种非意志力机制，结构清晰。部分建议如修改电商界面实操性较弱，但整体实用且具启发性。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣主题，提供七种非意志力机制，结构清晰。但部分建议如分期付款可能助长消费，实用性稍欠，整体质量良好。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰流畅，但方案依赖开发 APP，个人无法落地。且分阶段支付逻辑违背常理，实用性差，未提供可执行建议。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答切题且流畅，但建议偏常规，缺乏具体的“非意志力”机制设计，实用性稍显不足。"
+    }
+  ]
+}

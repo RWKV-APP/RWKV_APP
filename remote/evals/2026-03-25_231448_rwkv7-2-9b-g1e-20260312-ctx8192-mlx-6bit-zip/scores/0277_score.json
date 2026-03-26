@@ -1,0 +1,63 @@
+{
+  "sample_index": 277,
+  "rendering_name": "想自己搭一个家庭用 AI 助手，从哪一步开始比较合适？",
+  "prompt": "我想做一个家庭用的小型 AI 助手，不需要很酷炫，主要就是帮我查日程、记待办、整理购物清单、提醒重要日期。你帮我规划一下这个东西如果自己慢慢搭，最先该从哪一步开始",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答结构清晰，技术栈推荐合理。但建议过于复杂，对初学者门槛过高，未优先推荐现成工具或简化方案。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，技术栈推荐全面。但过度推荐商业云服务，对“自己慢慢搭”的本地化低成本方案涉及不足，略显复杂。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答紧扣需求，建议从基础功能入手并给出具体技术路径，实用性强。但缺乏后续步骤规划，略显单薄。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "回答结构清晰，步骤完整，覆盖了软硬件全流程。但针对“最先一步”建议不够聚焦，且对初学者而言直接部署AI模型略显复杂，实用性稍欠。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "回答结构清晰，分步规划合理。但技术选型有误，将语音识别库 SpeechRecognition 错称为 TTS，且 STT 与 TTS 概念混淆，需修正。"
+    }
+  ]
+}

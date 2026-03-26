@@ -1,0 +1,63 @@
+{
+  "sample_index": 166,
+  "rendering_name": "和婆婆住在一起带孩子，育儿观念不同经常矛盾，怎么沟通不伤和气？",
+  "prompt": "我和婆婆住在一起带孩子，经常因为育儿观念不一样产生矛盾，我不想吵架但又很委屈，能不能教我一些高情商沟通方式，既不伤和气又能坚持自己的育儿方式",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，提供了具体话术和策略，极具实操性。结尾引用谚语略显生硬，但不影响整体高价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供十五条具体话术与策略，极具实操性。结构清晰，语气温暖，能有效缓解用户焦虑。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，十条建议实用且具体，结构清晰。语气温暖共情，能有效缓解用户焦虑，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，提供非暴力沟通等实用技巧，结构清晰。内容详实且具操作性，能有效缓解用户焦虑，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣痛点，策略具体实用，表格对比清晰。语言温暖流畅，既有技巧又有情感支持，极具参考价值。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 234,
+  "rendering_name": "假如你是苏格拉底，用反问法帮我想清楚一个决定",
+  "prompt": "假如你是苏格拉底，请用苏格拉底式的连续追问帮我想清楚一个人生决定，不要直接给结论，只负责问问题，让我自己想清楚？",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣苏格拉底式追问要求，未直接给结论，仅以提问引导用户明确具体决定，语言自然流畅，互动性强。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣苏格拉底式追问要求，态度谦逊，成功引导用户提供具体情境，为后续深度对话奠定基础。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣苏格拉底式追问要求，未直接给结论，仅引导用户陈述决定，语言自然流畅，互动性强。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣要求，准确扮演苏格拉底并拒绝直接给结论。语言流畅自然，引导用户开启对话，互动性强。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣苏格拉底式追问要求，未直接给结论，语言自然流畅，成功开启对话引导用户思考。"
+    }
+  ]
+}

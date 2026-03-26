@@ -1,0 +1,63 @@
+{
+  "sample_index": 92,
+  "rendering_name": "普通文科毕业生想做副业多赚两三千，有哪些现实一点的方向？",
+  "prompt": "我最近想做一点副业，多赚两三千就行，但我不想做那种一看就很累、而且很容易半途放弃的。你按我这种普通文科毕业生的背景，给我推荐几个现实一点的方向，并说清楚优缺点",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 8,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.15,
+      "brief_note": "回答结构清晰，但推荐电子维修等不切实际，未结合文科背景，且月入目标与部分建议匹配度低。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 8,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 6
+      },
+      "weighted_score": 6.5,
+      "brief_note": "回答紧扣需求且结构清晰，但内容过于泛泛，缺乏针对文科生的具体落地路径和真实收入分析，实用性不足。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答结构清晰，紧扣文科背景。但部分建议如数据标注、游戏代练与文科关联弱，且未针对月入两三千给出具体路径，实用性稍欠。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答结构清晰但严重跑题，推荐的外卖骑手等选项违背用户“不想累”的核心诉求，且部分建议对文科生不切实际。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求，结构清晰。但部分建议如摄影、心理咨询门槛过高，未充分结合文科背景，且“不累”与“高门槛”存在逻辑矛盾。"
+    }
+  ]
+}

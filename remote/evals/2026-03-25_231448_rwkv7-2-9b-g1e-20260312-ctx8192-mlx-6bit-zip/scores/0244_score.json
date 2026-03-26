@@ -1,0 +1,63 @@
+{
+  "sample_index": 244,
+  "rendering_name": "请扮演科幻小说家，帮我构思'修正历史导致更糟结果'的大纲",
+  "prompt": "扮演科幻小说家。构思“修正历史导致更糟结果”的大纲。",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，大纲结构完整，角色与情节设计富有深度。语言流畅专业，提供了多种结局选择，极具参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，世界观设定新颖且逻辑自洽，人物动机深刻。结构清晰，结局富有哲学深度，极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，构思完整且逻辑自洽。大纲结构清晰，冲突设置深刻，提供了多种结局选择，极具参考价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，大纲结构完整，设定新颖且逻辑自洽。情节层层递进，深刻探讨伦理困境，极具创作参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，大纲结构完整，情节逻辑自洽且富有哲学深度。语言流畅自然，极具启发性，完美契合用户构思需求。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 264,
+  "rendering_name": "大脑的神经可塑性是什么，成年后大脑还能改变吗？",
+  "prompt": "大脑的神经可塑性是什么意思？成年之后大脑结构还能发生改变吗？什么样的行为或训练能真正改变大脑的连接方式？",
+  "source_category": "encyclopedia",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，定义准确且列举了十种有效训练方式，内容详实实用。结构清晰流畅，仅药物部分略显宽泛，整体质量很高。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释概念并列举六种有效训练，结构清晰流畅，内容详实实用，极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，科学准确。涵盖定义、成年可塑性证据及具体训练建议，实用性强，仅个别案例略显笼统。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释概念并列举有效方法。结构清晰，内容实用，但缺乏具体机制深度。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，准确解释概念并列举七种有效训练方式，内容详实实用，结构清晰流畅，极具参考价值。"
+    }
+  ]
+}

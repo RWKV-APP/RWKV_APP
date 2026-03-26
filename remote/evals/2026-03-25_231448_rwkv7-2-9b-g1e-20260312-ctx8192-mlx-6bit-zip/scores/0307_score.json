@@ -1,0 +1,63 @@
+{
+  "sample_index": 307,
+  "rendering_name": "解释 Trie 前缀树的原理和应用场景，用代码实现插入和前缀搜索",
+  "prompt": "解释 Trie（前缀树）数据结构的原理和应用场景。用代码实现一个 Trie，并提供插入单词和搜索前缀的方法。",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，原理清晰，代码完整可运行。但搜索方法返回完整单词列表而非布尔值，与常规搜索略有偏差。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣主题，原理清晰，应用场景准确。代码实现完整且可运行，注释详尽，逻辑结构分明，极具实用价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，原理清晰，代码完整可运行。虽未提供搜索单词方法，但已满足用户核心需求，整体质量很高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.5,
+      "brief_note": "回答结构清晰，原理与代码准确。但用户明确要求提供搜索前缀的方法，代码中缺失该功能，导致需求未完全满足。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，原理清晰，代码完整可运行。虽未实现题目要求的“搜索前缀”布尔方法，但提供了更实用的前缀匹配功能，整体质量很高。"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sample_index": 217,
+  "rendering_name": "能扮演雅思口语考官随机问我 Part 2 话题，然后给我打分吗？",
+  "prompt": "请扮演一个严格的雅思口语考官，随机问我一个 Part 2 话题，并在我回答后给我打分和改进建议",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答虽切题但未执行‘随机提问’指令，反而让用户选话题，违背了用户设定，缺乏主动性和实用性。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "回答切题但违背指令，未随机出题反而让用户自选，缺乏主动性和实用性，交互体验较差。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 4,
+        "quality": 2,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 3.75,
+      "brief_note": "回答未执行随机出题指令，反而让用户选话题，偏离了扮演考官的要求，缺乏实质互动价值。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 4,
+        "quality": 3,
+        "fluency": 9,
+        "satisfaction": 3
+      },
+      "weighted_score": 4.1,
+      "brief_note": "未实际提问话题，直接虚构回答并评分，完全无法交互，违背用户核心需求，虽语言流畅但无效。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣要求，成功扮演考官并抛出话题。格式清晰，但缺少对评分标准的简要说明，互动性稍弱。"
+    }
+  ]
+}

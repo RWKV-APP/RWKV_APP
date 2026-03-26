@@ -1,0 +1,63 @@
+{
+  "sample_index": 167,
+  "rendering_name": "结婚纪念日快到了，预算500元以内，有哪些有心意的浪漫小方案？",
+  "prompt": "结婚纪念日快到了，我想给另一半准备一个有心意又不铺张的惊喜，预算在 500 元以内，能不能帮我设计几个适合上班族的浪漫小方案",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "方案丰富且紧扣预算，但部分建议如租会议室、找邻居教授略显牵强，实操性稍弱，整体仍具参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣主题且结构清晰，但部分方案如DIY投影仪不切实际，专业咨询和AI报告严重超预算，实用性存疑。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "方案丰富且紧扣预算，但部分操作如自制按摩膏、定制亚克力刻字略显繁琐，实际落地难度稍高。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣主题且结构清晰，但方案二逻辑有误，租赁音响预算过低，部分建议实用性稍弱。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "方案丰富且紧扣预算，但部分建议如“隐藏求婚”偏离纪念日主题，且“旅行代币”买机票成本存疑，实用性略打折。"
+    }
+  ]
+}

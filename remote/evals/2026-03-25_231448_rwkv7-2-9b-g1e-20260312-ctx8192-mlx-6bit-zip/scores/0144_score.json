@@ -1,0 +1,63 @@
+{
+  "sample_index": 144,
+  "rendering_name": "爸爸血压高却特别爱吃咸菜腌肉，怎么劝他接受替代方案？",
+  "prompt": "我爸 68 岁，血压偏高，但特别爱吃咸菜、腌肉这类重口味的东西。直接让他别吃，他肯定不高兴，还觉得我管太多。你帮我想一个更能让老人接受的沟通和替代方案",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.2,
+      "brief_note": "回答紧扣沟通与替代方案，策略丰富且具实操性。部分建议如“倒空盐罐”略显激进，但整体逻辑清晰、语气温暖，极具参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣沟通与替代方案，建议具体实用且话术温和。结构清晰，兼顾心理技巧与医学警示，极具参考价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣沟通与替代方案，策略温和实用，食谱具体。但部分食谱搭配略显牵强，且 Mermaid 图表在部分场景可能无法渲染。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣沟通与替代方案，策略科学且具实操性。结构清晰，语气温暖，能有效缓解家庭矛盾，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "沟通策略贴心实用，但“喝汤吸钠”等建议存在严重医学常识错误，可能误导用户，拉低整体质量。"
+    }
+  ]
+}

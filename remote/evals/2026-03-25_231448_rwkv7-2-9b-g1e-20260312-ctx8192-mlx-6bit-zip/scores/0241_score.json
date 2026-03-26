@@ -1,0 +1,63 @@
+{
+  "sample_index": 241,
+  "rendering_name": "请扮演公司 CEO，面对产品召回危机，制定战略决策并安抚各方",
+  "prompt": "扮演公司 CEO。面对“产品召回危机”，制定战略决策并安抚利益相关者。",
+  "source_category": "role_play",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣 CEO 角色，策略全面且逻辑清晰，涵盖应急、沟通及长期改进。内容专业实用，结构分明，极具参考价值。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣危机处理，策略全面且逻辑清晰，涵盖召回、沟通及各方安抚。结构分明，语言专业流畅，极具实操价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣 CEO 角色，策略全面且逻辑清晰，涵盖责任承担与多方安抚。语言专业流畅，极具实操价值，仅缺乏具体危机细节模拟。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣危机处理，策略全面且逻辑清晰，涵盖召回、沟通及修复。虽缺乏具体话术，但作为战略框架极具实用价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣危机处理，步骤清晰全面，涵盖内外部沟通与长期预防。虽未模拟具体话术，但战略框架极具实用价值。"
+    }
+  ]
+}

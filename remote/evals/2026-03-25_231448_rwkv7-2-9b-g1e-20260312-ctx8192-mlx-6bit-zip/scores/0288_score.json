@@ -1,0 +1,63 @@
+{
+  "sample_index": 288,
+  "rendering_name": "什么是微服务架构，相比单体应用有什么优势和挑战？",
+  "prompt": "什么是微服务架构？它和单体应用相比有哪些优势？在实际落地时通常会遇到哪些挑战，比如服务通信、部署、监控等？",
+  "source_category": "code",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确概括了微服务的定义、优势及挑战，内容详实实用，逻辑流畅无瑕疵。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，准确阐述定义、优势及挑战。内容详实且具实操性，仅个别术语表述略显生硬，整体质量优秀。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，准确阐述了定义、优势及挑战，并列举了具体工具，内容实用且流畅。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣问题，结构清晰，对比表格直观。内容涵盖定义、优势及五大挑战与方案，专业且实用，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答紧扣问题，结构清晰。对比表格直观，挑战分析全面且含解决方案，建议实用，质量极高。"
+    }
+  ]
+}

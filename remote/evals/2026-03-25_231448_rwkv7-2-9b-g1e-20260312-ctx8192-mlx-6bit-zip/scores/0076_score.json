@@ -1,0 +1,63 @@
+{
+  "sample_index": 76,
+  "rendering_name": "准备作品集，怎么整理出风格和能力，而不是像模板拼出来的？",
+  "prompt": "我在准备作品集，但很怕最后做出来像网上模板拼起来的，没有自己的特色。你能帮我想一个整理作品的思路吗？重点是怎么让别人一眼看出我的风格和能力",
+  "source_category": "career",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 10,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.5,
+      "brief_note": "回答紧扣主题，结构清晰流畅。建议全面但略显通用，缺乏针对“如何提炼个人风格”的具体创意策略。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，建议全面且实用，结构清晰流畅。若能结合具体案例演示如何提炼个人风格，将更具指导价值。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，提供八条实用策略，结构清晰逻辑严密。内容全面且具操作性，能有效帮助用户打造个性化作品集。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，从主题、故事性到呈现细节提供实用建议，有效解决用户痛点，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣主题，结构清晰，从主题、过程到故事化呈现提供实用建议，有效解决用户痛点，内容详实且逻辑顺畅。"
+    }
+  ]
+}

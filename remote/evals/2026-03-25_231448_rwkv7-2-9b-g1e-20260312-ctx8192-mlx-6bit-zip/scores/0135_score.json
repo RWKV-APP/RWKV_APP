@@ -1,0 +1,63 @@
+{
+  "sample_index": 135,
+  "rendering_name": "结婚快20年只剩孩子家务可说，怎么安排一次不尴尬的破冰约会？",
+  "prompt": "我和爱人结婚快 20 年了，不是感情差，就是慢慢只剩下孩子、家务和工作在说。周末想安排一次不尴尬的破冰式约会，目标不是制造惊喜，而是让两个人重新愿意聊天。你帮我设计一下",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.0,
+      "brief_note": "回答紧扣需求，结构清晰。但建议较泛泛，缺乏针对二十年夫妻的深层话题引导，实用性稍弱。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答通顺但过于泛泛，未针对“不尴尬”和“促聊天”设计具体方案，缺乏针对二十年夫妻的实用建议。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "回答紧扣“不尴尬、重聊天”目标，流程设计层层递进且具实操性。部分环节如刻字纪念略显繁琐，但整体温暖实用。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答虽切题但过于泛泛，未针对“不尴尬”和“重新聊天”提供具体话术或互动设计，缺乏深度与实用性。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 9
+      },
+      "weighted_score": 8.65,
+      "brief_note": "方案紧扣破冰目标，建议丰富且具操作性。部分活动如布置卧室略显夸张，但整体真诚实用，能有效引导沟通。"
+    }
+  ]
+}

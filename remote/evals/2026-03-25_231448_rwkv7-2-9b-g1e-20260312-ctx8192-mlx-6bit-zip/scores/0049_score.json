@@ -1,0 +1,63 @@
+{
+  "sample_index": 49,
+  "rendering_name": "家里房贷孩子教育老人赡养开支都大，想做稳健理财，怎么配置资产？",
+  "prompt": "家里房贷、孩子教育、老人赡养开支都很大，想做稳健型理财，不想碰高风险产品，能不能帮我设计一个适合中年家庭的资产配置比例和理财组合",
+  "source_category": "life",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "回答紧扣稳健理财主题，结构清晰。但缺乏具体资产配置比例，且推荐房地产投资与稳健低风原则略有冲突，实用性稍欠。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "结构清晰切题，但存在严重事实错误：将ETF称为“零佣金P2P”，推荐“反向ETF”及“储蓄罐头”，误导用户且违背稳健原则。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 6,
+        "quality": 4,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.45,
+      "brief_note": "结构清晰但严重违背用户‘不碰高风险’的约束，建议配置50%股票指数且预期收益过高，缺乏稳健性，存在误导风险。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 9,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.35,
+      "brief_note": "回答紧扣稳健需求，结构清晰。但将股票纳入稳健方案且比例达10%，与用户“不想碰高风险”冲突，存在事实性偏差。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 6,
+        "quality": 5,
+        "fluency": 9,
+        "satisfaction": 5
+      },
+      "weighted_score": 5.8,
+      "brief_note": "回答虽切题但违背“不碰高风险”约束，推荐股票且未给具体比例，缺乏针对中年家庭压力的实操方案。"
+    }
+  ]
+}

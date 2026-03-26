@@ -1,0 +1,63 @@
+{
+  "sample_index": 337,
+  "rendering_name": "写出贝叶斯定理的公式，用医学诊断的例子解释怎么用？",
+  "prompt": "写出贝叶斯定理的公式，并用一个医学诊断的例子（已知检测准确率和患病率）来解释其应用。",
+  "source_category": "mathematics",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答精准给出公式，医学案例数据详实、计算无误，逻辑清晰，完美解释了低患病率下的假阳性现象。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "公式准确，案例步骤清晰。结尾将低患病率误写为高基线，存在事实性瑕疵，但不影响整体理解。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 10,
+        "quality": 6,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.55,
+      "brief_note": "回答结构清晰且紧扣主题，但医学案例计算存在严重逻辑错误，误将假阳性率当作真阳性率，导致结果偏差。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 10,
+        "fluency": 10,
+        "satisfaction": 10
+      },
+      "weighted_score": 10.0,
+      "brief_note": "回答精准给出公式，医学案例数据详实、计算步骤清晰，逻辑严密且解释透彻，完美满足需求。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 9,
+        "quality": 7,
+        "fluency": 9,
+        "satisfaction": 7
+      },
+      "weighted_score": 7.7,
+      "brief_note": "公式准确且结构清晰，但医学例子仅罗列变量未代入具体数值计算，导致解释不够直观，实用性稍弱。"
+    }
+  ]
+}

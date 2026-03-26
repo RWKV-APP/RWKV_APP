@@ -1,0 +1,63 @@
+{
+  "sample_index": 155,
+  "rendering_name": "孩子要出国留学，行前心理建设和文化适应需要准备哪些？",
+  "prompt": "孩子即将出国留学，请帮我列一份行前准备清单，重点放在心理建设和文化适应上，而非仅仅是物品清单",
+  "source_category": "family",
+  "attempt_evals": [
+    {
+      "attempt": 1,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣心理与文化主题，结构清晰建议实用。内容全面但部分条目略显宽泛，若增加具体案例会更生动。"
+    },
+    {
+      "attempt": 2,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣心理与文化主题，结构清晰建议实用。内容全面但略显常规，若增加具体案例会更生动。"
+    },
+    {
+      "attempt": 3,
+      "scores": {
+        "relevance": 9,
+        "quality": 8,
+        "fluency": 9,
+        "satisfaction": 8
+      },
+      "weighted_score": 8.35,
+      "brief_note": "紧扣心理与文化主题，结构清晰。但建议略显笼统，缺乏具体实操方法，深度有待加强。"
+    },
+    {
+      "attempt": 4,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣心理与文化主题，内容详实且具实操性。结构清晰，语气温暖，有效缓解家长焦虑，极具参考价值。"
+    },
+    {
+      "attempt": 5,
+      "scores": {
+        "relevance": 10,
+        "quality": 9,
+        "fluency": 10,
+        "satisfaction": 9
+      },
+      "weighted_score": 9.35,
+      "brief_note": "紧扣心理与文化主题，结构清晰，建议具体实用。内容全面且富有同理心，能有效缓解家长焦虑，极具参考价值。"
+    }
+  ]
+}
