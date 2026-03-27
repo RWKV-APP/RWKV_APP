@@ -918,11 +918,7 @@ extension _$Chat on _Chat {
     P.see.audioFileStreamController.stream.listen(_onNewFileReceived);
     focusNode.addListener(_onFocusNodeChanged);
     hasFocus.q = focusNode.hasFocus;
-    P.suggestion.loadSuggestions();
-
     P.app.lifecycleState.lb(_onLifecycleStateChanged);
-
-    P.preference.preferredLanguage.lv(P.suggestion.loadSuggestions);
 
     P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
 

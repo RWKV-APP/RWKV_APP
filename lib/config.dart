@@ -17,6 +17,8 @@ abstract class Config {
 
   static const domain = Args.domain;
   static const suggestionsUrl = "$domain/suggestions.json";
+  static const highScoreLanguagesUrl = "$domain/public-api/evals/high-score-languages";
+  static const highScoreSamplesUrl = "$domain/public-api/evals/high-score-samples";
 
   static const timeout = Duration(seconds: 60);
 

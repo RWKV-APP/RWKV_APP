@@ -151,7 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "advance_settings": MessageLookupByLibrary.simpleMessage("高级设置"),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "all_done": MessageLookupByLibrary.simpleMessage("全部完成"),
-    "all_prompt": MessageLookupByLibrary.simpleMessage("全部 Prompt"),
+    "all_prompt": MessageLookupByLibrary.simpleMessage("全部提示词"),
     "all_the_same": MessageLookupByLibrary.simpleMessage("全部相同"),
     "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
       "允许后台下载",
