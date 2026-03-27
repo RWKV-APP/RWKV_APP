@@ -696,5 +696,17 @@
   "api_server_open_dashboard": "Open Dashboard",
   "api_server_curl_hint": "Usage Example",
   "api_server_no_model": "No model loaded",
-  "api_server_logs": "Request Logs"
+  "api_server_logs": "Request Logs",
+  "api_server_active_request_yes": "Active Request: Yes",
+  "api_server_active_request_no": "Active Request: No",
+  "api_server_chat_test": "Chat Test",
+  "api_server_chat_empty_hint": "Send a message to test the API",
+  "api_server_chat_input_hint": "Type a message...",
+  "api_server_send": "Send",
+  "api_server_docs": "API Docs",
+  "api_server_chat_error": "Error: {error}",
+  "api_server_started_on_port": "API Server started on port {port}",
+  "api_server_failed_to_start": "Failed to start API Server: {error}",
+  "api_server_active_request_stopped": "Stopped active request",
+  "api_server_no_active_request": "No active request"
 }

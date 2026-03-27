@@ -68,6 +68,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
   }
 
   Future<void> _sendChatMessage() async {
+    final s = S.current;
     final text = _chatController.text.trim();
     if (text.isEmpty || _chatSending) return;
 
@@ -128,7 +129,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
       });
     } catch (e) {
       setState(() {
-        _chatMessages.add(_ChatMsg('assistant', 'Error: $e'));
+        _chatMessages.add(_ChatMsg('assistant', s.api_server_chat_error(e)));
         _streamingContent = '';
         _chatSending = false;
       });
@@ -138,6 +139,14 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
 
   Future<void> _stopChatMessage() async {
     await P.apiServer.stopActiveRequest(showAlert: false);
+  }
+
+  String _chatRoleLabel(S s, String role) {
+    return switch (role) {
+      'user' => s.user,
+      'assistant' => s.assistant,
+      _ => '$role:',
+    };
   }
 
   @override
@@ -266,7 +275,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
       BackendState.running => s.api_server_running,
       BackendState.stopped => s.api_server_stopped,
       BackendState.starting => s.api_server_starting,
-      BackendState.stopping => s.api_server_starting,
+      BackendState.stopping => s.stopping,
     };
 
     return _buildSectionCard(
@@ -319,9 +328,9 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
               icon: const Icon(Icons.copy, size: 18),
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: serverUrl));
-                Alert.success('Copied');
+                Alert.success(s.chat_copied_to_clipboard);
               },
-              tooltip: 'Copy',
+              tooltip: s.copy_text,
             ),
           ],
         ),
@@ -329,7 +338,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
         Text('${s.api_server_request_count}: $reqCount', style: const TextStyle(fontSize: 14, color: Colors.grey)),
         const SizedBox(height: 4),
         Text(
-          'Active Request: ${activeRequest ? 'Yes' : 'No'}',
+          activeRequest ? s.api_server_active_request_yes : s.api_server_active_request_no,
           style: const TextStyle(fontSize: 14, color: Colors.grey),
         ),
       ],
@@ -344,7 +353,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
 
     return _buildSectionCard(
       children: [
-        const Text('Chat Test', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(s.api_server_chat_test, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         const SizedBox(height: 12),
         Container(
           width: double.infinity,
@@ -356,7 +365,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
           child: allMessages.isEmpty
               ? Center(
                   child: Text(
-                    'Send a message to test the API',
+                    s.api_server_chat_empty_hint,
                     style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
                   ),
                 )
@@ -367,13 +376,14 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
                   itemBuilder: (context, index) {
                     final msg = allMessages[index];
                     final isUser = msg.role == 'user';
+                    final roleLabel = _chatRoleLabel(s, msg.role);
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${msg.role}: ',
+                            roleLabel,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
@@ -400,7 +410,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
                 controller: _chatController,
                 enabled: !_chatSending && !activeRequest,
                 decoration: InputDecoration(
-                  hintText: 'Type a message...',
+                  hintText: s.api_server_chat_input_hint,
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -411,13 +421,13 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
             const SizedBox(width: 8),
             FilledButton(
               onPressed: _chatSending || activeRequest ? null : _sendChatMessage,
-              child: const Text('Send'),
+              child: Text(s.api_server_send),
             ),
             const SizedBox(width: 8),
             FilledButton(
               onPressed: activeRequest ? _stopChatMessage : null,
               style: FilledButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Stop'),
+              child: Text(s.stop),
             ),
           ],
         ),
@@ -430,7 +440,10 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
         'curl $serverUrl/v1/chat/completions \\\n  -H "Content-Type: application/json" \\\n  -d \'{"model":"rwkv","messages":[{"role":"user","content":"Hello"}],"stream":true}\'';
     return _buildSectionCard(
       children: [
-        Text(s.api_server_curl_hint, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(
+          s.api_server_curl_hint,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
+        ),
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
@@ -452,8 +465,9 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
                   icon: const Icon(Icons.copy, size: 16, color: Colors.white54),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: curlCmd));
-                    Alert.success('Copied');
+                    Alert.success(s.code_copied_to_clipboard);
                   },
+                  tooltip: s.copy_code,
                 ),
               ),
             ],
@@ -480,7 +494,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
               child: OutlinedButton.icon(
                 onPressed: () => launchUrl(Uri.parse('$serverUrl/docs')),
                 icon: const Icon(Icons.description),
-                label: const Text('API Docs'),
+                label: Text(s.api_server_docs),
               ),
             ),
           ],
@@ -492,7 +506,20 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
   Widget _buildLogsSection(S s, List<String> logs) {
     return _buildSectionCard(
       children: [
-        Text(s.api_server_logs, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Row(
+          children: [
+            Text(
+              s.api_server_logs,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
+            ),
+            const Spacer(),
+            TextButton.icon(
+              onPressed: logs.isEmpty ? null : P.apiServer.clearLogs,
+              icon: const Icon(Icons.clear_all, size: 18),
+              label: Text(s.clear),
+            ),
+          ],
+        ),
         const SizedBox(height: 8),
         Container(
           width: double.infinity,

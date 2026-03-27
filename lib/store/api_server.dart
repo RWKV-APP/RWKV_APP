@@ -44,8 +44,24 @@ extension _$ApiServer on _ApiServer {
     qq;
   }
 
+  String _twoDigits(int value) {
+    return value.toString().padLeft(2, '0');
+  }
+
+  String _threeDigits(int value) {
+    return value.toString().padLeft(3, '0');
+  }
+
+  String _formatLogTime(DateTime time) {
+    final hour = _twoDigits(time.hour);
+    final minute = _twoDigits(time.minute);
+    final second = _twoDigits(time.second);
+    final millisecond = _threeDigits(time.millisecond);
+    return '$hour:$minute:$second.$millisecond';
+  }
+
   void _addLog(String message) {
-    final time = DateTime.now().toIso8601String().substring(11, 19);
+    final time = _formatLogTime(DateTime.now());
     final entry = '[$time] $message';
     final current = logs.q;
     logs.q = [...current.length > 200 ? current.sublist(current.length - 200) : current, entry];
@@ -1013,11 +1029,11 @@ extension $ApiServer on _ApiServer {
       logs.q = [];
       _addLog('Server started on port $p');
       qqr('API Server started at http://127.0.0.1:$p');
-      Alert.success('API Server started on port $p');
+      Alert.success(S.current.api_server_started_on_port(p));
     } catch (e) {
       qqe(e);
       state.q = BackendState.stopped;
-      Alert.error('Failed to start API Server: $e');
+      Alert.error(S.current.api_server_failed_to_start(e));
     }
   }
 
@@ -1047,16 +1063,20 @@ extension $ApiServer on _ApiServer {
     _startTime = null;
     _addLog('Server stopped');
     qqr('API Server stopped');
-    Alert.success('API Server stopped');
+    Alert.success(S.current.api_server_stopped);
   }
 
   Future<void> stopActiveRequest({bool showAlert = true}) async {
     final stopped = await _stopCurrentRequestInternal();
     if (!showAlert) return;
     if (stopped) {
-      Alert.success('Stopped active request');
+      Alert.success(S.current.api_server_active_request_stopped);
       return;
     }
-    Alert.warning('No active request');
+    Alert.warning(S.current.api_server_no_active_request);
+  }
+
+  void clearLogs() {
+    logs.q = [];
   }
 }
