@@ -76,3 +76,4 @@ android/.kotlin/sessions/
 # generated changes, preventing daily commits of version number images.
 
 samples/
+.claude/settings.local.json
