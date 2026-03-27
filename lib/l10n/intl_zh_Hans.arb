@@ -333,7 +333,7 @@
   "dump_see_files_subtitle": "协助我们改进算法",
   "dump_see_files_alert_message": "消息记录会存储在该文件夹下\n {path}",
   "all": "全部",
-  "all_prompt": "全部 Prompt",
+  "all_prompt": "全部提示词",
   "no_data": "无数据",
   "share_chat": "分享聊天",
   "quick_thinking": "快思考",

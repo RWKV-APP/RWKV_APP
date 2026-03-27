@@ -165,7 +165,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "all_done": MessageLookupByLibrary.simpleMessage("All Done"),
-    "all_prompt": MessageLookupByLibrary.simpleMessage("All Prompt"),
+    "all_prompt": MessageLookupByLibrary.simpleMessage("All Prompts"),
     "all_the_same": MessageLookupByLibrary.simpleMessage("All the same"),
     "allow_background_downloads": MessageLookupByLibrary.simpleMessage(
       "Allow background downloads",

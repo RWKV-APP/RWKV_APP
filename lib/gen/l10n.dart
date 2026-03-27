@@ -2613,9 +2613,9 @@ class S {
     return Intl.message('全部', name: 'all', desc: '', args: []);
   }
 
-  /// `全部 Prompt`
+  /// `全部提示词`
   String get all_prompt {
-    return Intl.message('全部 Prompt', name: 'all_prompt', desc: '', args: []);
+    return Intl.message('全部提示词', name: 'all_prompt', desc: '', args: []);
   }
 
   /// `无数据`

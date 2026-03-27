@@ -1,10 +1,14 @@
 part of 'p.dart';
 
+const String _suggestionCacheFileName = "suggestion.json";
+const String _highScoreSuggestionCacheFileName = "suggestion_high_score.json";
+
 class Suggestion {
   final String display;
   final String prompt;
+  final double? score;
 
-  Suggestion({required this.display, required this.prompt});
+  Suggestion({required this.display, required this.prompt, this.score});
 
   factory Suggestion.fromJson(dynamic json) {
     final display = json['display'] as String?;
@@ -12,6 +16,19 @@ class Suggestion {
     return Suggestion(
       display: display ?? prompt,
       prompt: prompt ?? display,
+    );
+  }
+
+  factory Suggestion.fromHighScoreJson(dynamic json) {
+    final title = json['title']?.toString().trim() ?? "";
+    final prompt = json['prompt']?.toString().trim() ?? "";
+    final score = (json['score'] as num?)?.toDouble();
+    final display = title.isNotEmpty ? title : prompt;
+    final resolvedPrompt = prompt.isNotEmpty ? prompt : display;
+    return Suggestion(
+      display: display,
+      prompt: resolvedPrompt,
+      score: score,
     );
   }
 }
@@ -82,6 +99,15 @@ class _Suggestion {
 
   final ttsTicker = qs(0);
 
+  /// Whether the high-score API is active for current language
+  final useHighScoreApi = qs(false);
+
+  /// All categories from the high-score API (for "more" dialog)
+  final highScoreCategories = qs<List<SuggestionCategory>>(const []);
+
+  /// Suggestions with score >= 9.0 (for empty page random display)
+  final highScoreTopSuggestions = qs<List<Suggestion>>(const []);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -108,11 +134,18 @@ class _Suggestion {
 
     switch (demoType) {
       case .chat:
-        final s = config.chat.map((e) => e.items).flattened.shuffled().toList();
-        if (s.length < 5) {
-          return s;
+        final useHighScore = ref.watch(P.suggestion.useHighScoreApi);
+        if (useHighScore) {
+          final topItems = ref.watch(P.suggestion.highScoreTopSuggestions);
+          if (topItems.isEmpty) return [];
+          final shuffled = topItems.shuffled;
+          if (shuffled.length < 5) return shuffled;
+          return shuffled.take(5).toList();
         }
-        return s.take(5).toList();
+        final items = config.chat.map((e) => e.items).flattened.toList();
+        final shuffled = items.shuffled;
+        if (shuffled.length < 5) return shuffled;
+        return shuffled.take(5).toList();
       case .see:
         switch (currentWorldType) {
           case WorldType.reasoningQA:
@@ -170,34 +203,140 @@ class _Suggestion {
     return _buildMixedTalkSuggestions(config.tts);
   });
 
-  Future<void> loadSuggestions() async {
-    final shouldUseEn = P.preference.preferredLanguage.q.resolved.locale.languageCode != "zh";
-    final lang = shouldUseEn ? "en" : "zh";
-    dynamic config;
+  Future<void> loadSuggestions({bool forceChatMode = false}) async {
+    final language = P.preference.preferredLanguage.q.resolved;
+    final lang = _suggestionLang(language);
+    final fallbackConfig = lang == "en" ? _DefaultSuggestion.en : _DefaultSuggestion.zh;
+    SuggestionConfig effectiveConfig = fallbackConfig;
+    dynamic remoteConfig;
+
     try {
-      config = await _get(Config.suggestionsUrl) as dynamic;
-      if (config == null) {
+      remoteConfig = await _get(Config.suggestionsUrl) as dynamic;
+      if (remoteConfig == null) {
         throw "empty response";
       }
-      final sConfig = SuggestionConfig.fromJson(config[lang]);
-      this.config.q = sConfig;
-      _persistConfig(config);
+      effectiveConfig = SuggestionConfig.fromJson(remoteConfig[lang]);
+      _persistConfig(remoteConfig, fileName: _suggestionCacheFileName);
     } catch (e) {
       qqe("load suggestions failed: $e");
-      this.config.q = shouldUseEn ? _DefaultSuggestion.en : _DefaultSuggestion.zh;
-      config = await _restoreConfig();
-      if (config != null) {
-        final sConfig = SuggestionConfig.fromJson(config[lang]);
-        this.config.q = sConfig;
+      remoteConfig = await _restoreConfig(fileName: _suggestionCacheFileName);
+      if (remoteConfig != null) {
+        effectiveConfig = SuggestionConfig.fromJson(remoteConfig[lang]);
         qqq('config restored');
       }
-      return;
+    }
+
+    config.q = effectiveConfig;
+
+    final isChatMode = forceChatMode || P.app.demoType.q == .chat;
+    if (isChatMode) {
+      await _tryLoadHighScoreSuggestions(language);
     }
   }
 
-  void _persistConfig(dynamic json) async {
+  Future<void> _tryLoadHighScoreSuggestions(Language language) async {
+    final categories = await _loadHighScoreChatSuggestions(language);
+    if (categories == null) {
+      useHighScoreApi.q = false;
+      highScoreCategories.q = const [];
+      highScoreTopSuggestions.q = const [];
+      return;
+    }
+    useHighScoreApi.q = true;
+    highScoreCategories.q = categories;
+    final allItems = categories.map((e) => e.items).flattened.toList();
+    highScoreTopSuggestions.q = allItems.where((e) => e.score != null && e.score! >= 9.0).toList();
+  }
+
+  String _suggestionLang(Language language) {
+    if (language.locale.languageCode == "zh") {
+      return "zh";
+    }
+    return "en";
+  }
+
+  String _languageToApiCode(Language language) {
+    final locale = language.locale;
+    final scriptCode = locale.scriptCode;
+    if (scriptCode != null && scriptCode.isNotEmpty) {
+      return "${locale.languageCode}-$scriptCode";
+    }
+    return locale.languageCode;
+  }
+
+  Future<List<SuggestionCategory>?> _loadHighScoreChatSuggestions(Language language) async {
+    try {
+      final supportedLanguagesResponse = await _get(
+        Config.highScoreLanguagesUrl,
+        ea: const [_EA.console],
+      );
+      if (supportedLanguagesResponse == null) {
+        throw "empty language response";
+      }
+
+      final supportedLanguages = _parseHighScoreLanguages(supportedLanguagesResponse);
+      final currentLanguageCode = _languageToApiCode(language);
+      if (!supportedLanguages.contains(currentLanguageCode)) {
+        return null;
+      }
+
+      final response = await _get(
+        Config.highScoreSamplesUrl,
+        ea: const [_EA.console],
+      );
+      if (response == null) {
+        throw "empty sample response";
+      }
+
+      final categories = _parseHighScoreCategories(response);
+      _persistConfig(
+        response,
+        fileName: _highScoreSuggestionCacheFileName,
+      );
+      return categories;
+    } catch (e) {
+      qqe("load high score suggestions failed: $e");
+      final cachedResponse = await _restoreConfig(fileName: _highScoreSuggestionCacheFileName);
+      if (cachedResponse == null) {
+        return null;
+      }
+      final categories = _parseHighScoreCategories(cachedResponse);
+      qqq("high score suggestions restored");
+      return categories;
+    }
+  }
+
+  List<String> _parseHighScoreLanguages(dynamic json) {
+    if (json is! Iterable) {
+      throw "invalid high score language response";
+    }
+    return json.map((e) => e.toString()).toList();
+  }
+
+  List<SuggestionCategory> _parseHighScoreCategories(dynamic json) {
+    if (json is! Map) {
+      throw "invalid high score sample response";
+    }
+    final categories = json["categories"];
+    if (categories is! Iterable) {
+      throw "invalid high score categories";
+    }
+    return categories.map((e) {
+      final name = e['categoryDisplayName']?.toString() ?? e['category']?.toString() ?? '';
+      final items = (e['items'] as Iterable?)
+          ?.map((item) => Suggestion.fromHighScoreJson(item))
+          .toList() ??
+          [];
+      return SuggestionCategory(name: name, items: items);
+    }).toList();
+  }
+
+  void _persistConfig(
+    dynamic json, {
+    required String fileName,
+  }) async {
     final dir = await getApplicationDocumentsDirectory();
-    final cache = File(join(dir.path, "suggestion.json"));
+    final cache = File(join(dir.path, fileName));
     if (cache.existsSync()) {
       await cache.delete();
     }
@@ -206,10 +345,12 @@ class _Suggestion {
     cache.writeAsString(string);
   }
 
-  Future<dynamic> _restoreConfig() async {
+  Future<dynamic> _restoreConfig({
+    required String fileName,
+  }) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final cache = File(join(dir.path, "suggestion.json"));
+      final cache = File(join(dir.path, fileName));
       if (!cache.existsSync()) {
         return null;
       }
@@ -227,7 +368,16 @@ class _Suggestion {
 /// Private methods
 extension _$Suggestion on _Suggestion {
   Future<void> _init() async {
-    qq;
+    await loadSuggestions();
+    P.app.pageKey.l(_onPageKeyChanged);
+    P.preference.preferredLanguage.lv(loadSuggestions);
+  }
+
+  void _onPageKeyChanged(PageKey pageKey) {
+    if (pageKey != .chat && pageKey != .neko) {
+      return;
+    }
+    unawaited(loadSuggestions(forceChatMode: true));
   }
 }
 

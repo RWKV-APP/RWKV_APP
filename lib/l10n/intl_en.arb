@@ -333,7 +333,7 @@
   "dump_see_files_subtitle": "Help us improve the algorithm",
   "dump_see_files_alert_message": "Message records will be stored in the following folder\n {path}",
   "all": "All",
-  "all_prompt": "All Prompt",
+  "all_prompt": "All Prompts",
   "no_data": "No Data",
   "share_chat": "Share Chat",
   "quick_thinking": "Quick Reasoning",

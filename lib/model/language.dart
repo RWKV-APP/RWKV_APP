@@ -23,7 +23,8 @@ enum Language {
   zh_Hans,
 
   /// generic traditional Chinese 'zh_Hant'
-  zh_Hant;
+  zh_Hant
+  ;
 
   String? get display => switch (this) {
     none => null,
