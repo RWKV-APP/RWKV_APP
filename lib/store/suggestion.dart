@@ -7,19 +7,32 @@ class Suggestion {
   final String display;
   final String prompt;
   final double? score;
+  final String? category;
 
-  Suggestion({required this.display, required this.prompt, this.score});
+  Suggestion({
+    required this.display,
+    required this.prompt,
+    this.score,
+    this.category,
+  });
 
-  factory Suggestion.fromJson(dynamic json) {
+  factory Suggestion.fromJson(
+    dynamic json, {
+    String? category,
+  }) {
     final display = json['display'] as String?;
     final prompt = json['prompt'];
     return Suggestion(
       display: display ?? prompt,
       prompt: prompt ?? display,
+      category: category ?? json['category']?.toString(),
     );
   }
 
-  factory Suggestion.fromHighScoreJson(dynamic json) {
+  factory Suggestion.fromHighScoreJson(
+    dynamic json, {
+    String? category,
+  }) {
     final title = json['title']?.toString().trim() ?? "";
     final prompt = json['prompt']?.toString().trim() ?? "";
     final score = (json['score'] as num?)?.toDouble();
@@ -29,20 +42,29 @@ class Suggestion {
       display: display,
       prompt: resolvedPrompt,
       score: score,
+      category: category ?? json['category']?.toString(),
     );
   }
 }
 
 class SuggestionCategory {
+  final String key;
   final String name;
   final List<Suggestion> items;
 
-  const SuggestionCategory({required this.name, required this.items});
+  const SuggestionCategory({
+    required this.key,
+    required this.name,
+    required this.items,
+  });
 
   factory SuggestionCategory.fromJson(dynamic json) {
+    final key = (json['category']?.toString() ?? json['name']?.toString() ?? '').trim();
+    final name = (json['name']?.toString() ?? key).trim();
     return SuggestionCategory(
-      name: json['name'] as String,
-      items: (json['items'] as Iterable).map((e) => Suggestion.fromJson(e)).toList(),
+      key: key,
+      name: name,
+      items: (json['items'] as Iterable).map((e) => Suggestion.fromJson(e, category: key)).toList(),
     );
   }
 }
@@ -322,12 +344,17 @@ class _Suggestion {
       throw "invalid high score categories";
     }
     return categories.map((e) {
-      final name = e['categoryDisplayName']?.toString() ?? e['category']?.toString() ?? '';
+      final key = e['category']?.toString().trim() ?? '';
+      final name = e['categoryDisplayName']?.toString().trim() ?? key;
       final items = (e['items'] as Iterable?)
-          ?.map((item) => Suggestion.fromHighScoreJson(item))
+          ?.map((item) => Suggestion.fromHighScoreJson(item, category: key))
           .toList() ??
           [];
-      return SuggestionCategory(name: name, items: items);
+      return SuggestionCategory(
+        key: key,
+        name: name,
+        items: items,
+      );
     }).toList();
   }
 
