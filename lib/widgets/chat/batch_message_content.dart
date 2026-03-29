@@ -21,8 +21,9 @@ class BatchMessageContent extends ConsumerStatefulWidget {
   final model.Message msg;
   final int index;
   final String finalContent;
+  final List<String>? perSlotQuestions;
 
-  const BatchMessageContent(this.msg, this.index, this.finalContent, {super.key});
+  const BatchMessageContent(this.msg, this.index, this.finalContent, {this.perSlotQuestions, super.key});
 
   @override
   ConsumerState<BatchMessageContent> createState() => _BatchMessageContentState();
@@ -113,9 +114,13 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                       border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
                       borderRadius: .circular(8),
                     ),
-                    child: _MarkdownBody(
+                    child: _SlotContent(
+                      question: widget.perSlotQuestions != null && i < widget.perSlotQuestions!.length
+                          ? widget.perSlotQuestions![i]
+                          : null,
                       data: batch[i],
                       decodeParam: parsedDecodeParams.isNotEmpty ? parsedDecodeParams[i] : null,
+                      qb: qb,
                     ),
                   ),
                 ),
@@ -175,6 +180,49 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _SlotContent extends ConsumerWidget {
+  final String? question;
+  final String data;
+  final SamplerAndPenaltyParam? decodeParam;
+  final Color qb;
+
+  const _SlotContent({
+    required this.question,
+    required this.data,
+    required this.decodeParam,
+    required this.qb,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
+    if (question == null || question!.trim().isEmpty) {
+      return _MarkdownBody(data: data, decodeParam: decodeParam);
+    }
+
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        Text(
+          question!,
+          style: TextStyle(
+            color: theme.colorScheme.primary,
+            fontSize: 13,
+            fontWeight: .w500,
+          ),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 6),
+        Container(height: 0.5, color: qb.q(.1)),
+        const SizedBox(height: 6),
+        _MarkdownBody(data: data, decodeParam: decodeParam),
       ],
     );
   }

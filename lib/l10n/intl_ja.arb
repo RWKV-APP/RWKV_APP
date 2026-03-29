@@ -706,5 +706,12 @@
   "api_server_started_on_port": "ポート {port} で API サーバーを起動しました",
   "api_server_failed_to_start": "API サーバーの起動に失敗しました: {error}",
   "api_server_active_request_stopped": "進行中のリクエストを停止しました",
-  "api_server_no_active_request": "進行中のリクエストはありません"
+  "api_server_no_active_request": "進行中のリクエストはありません",
+  "question": "質問",
+  "multi_question_title": "複数質問の並列処理",
+  "multi_question_entry_detail": "複数の質問を同時に送信し、並列で回答を取得",
+  "multi_question_input_hint": "質問を入力...",
+  "multi_question_no_answer": "まだ回答がありません",
+  "multi_question_continue": "会話を続ける",
+  "multi_question_send_all": "すべて送信"
 }

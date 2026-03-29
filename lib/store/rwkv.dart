@@ -558,6 +558,7 @@ extension $RWKV on _RWKV {
     int batchSize = 1,
     int? maxLength,
     bool forceChinese = false,
+    List<List<String>>? overrideBatchMessages,
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -604,9 +605,14 @@ extension $RWKV on _RWKV {
     final thinkingMode = _thinkingMode.q;
 
     final reasoning = thinkingMode.hasThinkTag;
-    List<List<String>> batchMessages = [];
-    for (var i = 0; i < batchSize; i++) {
-      batchMessages.add(messages);
+    List<List<String>> batchMessages;
+    if (overrideBatchMessages != null) {
+      batchMessages = overrideBatchMessages;
+    } else {
+      batchMessages = [];
+      for (var i = 0; i < batchSize; i++) {
+        batchMessages.add(messages);
+      }
     }
 
     /// ‘古今’ 模式

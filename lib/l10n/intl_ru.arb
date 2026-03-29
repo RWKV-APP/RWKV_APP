@@ -706,5 +706,12 @@
   "api_server_started_on_port": "API сервер запущен на порту {port}",
   "api_server_failed_to_start": "Не удалось запустить API сервер: {error}",
   "api_server_active_request_stopped": "Активный запрос остановлен",
-  "api_server_no_active_request": "Активных запросов нет"
+  "api_server_no_active_request": "Активных запросов нет",
+  "question": "Вопрос",
+  "multi_question_title": "Параллельные вопросы",
+  "multi_question_entry_detail": "Задайте несколько вопросов и получите ответы параллельно",
+  "multi_question_input_hint": "Введите вопрос...",
+  "multi_question_no_answer": "Ответа пока нет",
+  "multi_question_continue": "Продолжить",
+  "multi_question_send_all": "Отправить все"
 }

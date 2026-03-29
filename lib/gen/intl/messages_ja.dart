@@ -778,6 +778,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "more": MessageLookupByLibrary.simpleMessage("その他"),
     "more_questions": MessageLookupByLibrary.simpleMessage("その他の質問"),
     "moving_files": MessageLookupByLibrary.simpleMessage("ファイルを移動中..."),
+    "multi_question_continue": MessageLookupByLibrary.simpleMessage("会話を続ける"),
+    "multi_question_entry_detail": MessageLookupByLibrary.simpleMessage(
+      "複数の質問を同時に送信し、並列で回答を取得",
+    ),
+    "multi_question_input_hint": MessageLookupByLibrary.simpleMessage(
+      "質問を入力...",
+    ),
+    "multi_question_no_answer": MessageLookupByLibrary.simpleMessage(
+      "まだ回答がありません",
+    ),
+    "multi_question_send_all": MessageLookupByLibrary.simpleMessage("すべて送信"),
+    "multi_question_title": MessageLookupByLibrary.simpleMessage("複数質問の並列処理"),
     "multi_thread": MessageLookupByLibrary.simpleMessage("マルチスレッド"),
     "my_voice": MessageLookupByLibrary.simpleMessage("私の声"),
     "neko": MessageLookupByLibrary.simpleMessage("ネコ"),
@@ -985,6 +997,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("プロンプトテンプレート"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQグループ1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQグループ2"),
+    "question": MessageLookupByLibrary.simpleMessage("質問"),
     "question_generator": MessageLookupByLibrary.simpleMessage("質問ジェネレーター"),
     "question_generator_context_prefix_input_placeholder":
         MessageLookupByLibrary.simpleMessage(

@@ -714,6 +714,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_questions": MessageLookupByLibrary.simpleMessage("更多问题"),
     "moving_files": MessageLookupByLibrary.simpleMessage("正在移动文件..."),
+    "multi_question_continue": MessageLookupByLibrary.simpleMessage("继续对话"),
+    "multi_question_entry_detail": MessageLookupByLibrary.simpleMessage(
+      "同时提问多个问题，并行获取回答",
+    ),
+    "multi_question_input_hint": MessageLookupByLibrary.simpleMessage(
+      "输入你的问题...",
+    ),
+    "multi_question_no_answer": MessageLookupByLibrary.simpleMessage("暂无回答"),
+    "multi_question_send_all": MessageLookupByLibrary.simpleMessage("全部发送"),
+    "multi_question_title": MessageLookupByLibrary.simpleMessage("多问题并行"),
     "multi_thread": MessageLookupByLibrary.simpleMessage("多线程"),
     "my_voice": MessageLookupByLibrary.simpleMessage("我的声音"),
     "neko": MessageLookupByLibrary.simpleMessage("Neko"),
@@ -900,6 +910,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 模板"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 群 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 群 2"),
+    "question": MessageLookupByLibrary.simpleMessage("问题"),
     "question_generator": MessageLookupByLibrary.simpleMessage("RWKV 帮你问"),
     "question_generator_context_prefix_input_placeholder":
         MessageLookupByLibrary.simpleMessage("如果留空，RWKV 会根据上下文生成问题"),

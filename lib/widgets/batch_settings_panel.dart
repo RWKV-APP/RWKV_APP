@@ -19,6 +19,7 @@ import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/argument_value.dart';
 import 'package:zone/widgets/arguments_panel.dart';
+import 'package:zone/widgets/chat/multi_question_panel.dart';
 import 'package:zone/widgets/form_item.dart';
 
 class BatchSettingsPanel extends ConsumerWidget {
@@ -178,6 +179,19 @@ class BatchSettingsPanel extends ConsumerWidget {
                   ),
                 ),
                 bottom: const _DecodeParams(),
+              ),
+            ),
+            DimmedWhenInactive(
+              ignoring: !batchInference || batchCount < 2,
+              child: FormItem(
+                isSectionEnd: false,
+                title: s.multi_question_title,
+                subtitle: s.multi_question_entry_detail,
+                icon: const Icon(Icons.question_answer_outlined, size: 20),
+                onTap: () {
+                  pop();
+                  MultiQuestionPanel.show();
+                },
               ),
             ),
             DimmedWhenInactive(

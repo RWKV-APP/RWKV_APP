@@ -712,5 +712,12 @@
   "api_server_started_on_port": "API 服务器已在端口 {port} 启动",
   "api_server_failed_to_start": "API 服务器启动失败: {error}",
   "api_server_active_request_stopped": "已停止当前请求",
-  "api_server_no_active_request": "当前没有进行中的请求"
+  "api_server_no_active_request": "当前没有进行中的请求",
+  "question": "问题",
+  "multi_question_title": "多问题并行",
+  "multi_question_entry_detail": "同时提问多个问题，并行获取回答",
+  "multi_question_input_hint": "输入你的问题...",
+  "multi_question_no_answer": "暂无回答",
+  "multi_question_continue": "继续对话",
+  "multi_question_send_all": "全部发送"
 }

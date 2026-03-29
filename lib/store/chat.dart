@@ -733,6 +733,27 @@ extension $Chat on _Chat {
           final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
           final finalizedMsg = parentMsg.copyWith(content: finalizedContent);
           P.msg._syncMsg(parentMsg.id, finalizedMsg);
+
+          // Also finalize the paired user batch message if it exists
+          final userParentNode = P.msg.msgNode.q.findParentByMsgId(parentMsg.id);
+          if (userParentNode != null) {
+            final userParentMsg = P.msg.pool.q[userParentNode.id];
+            if (userParentMsg != null && userParentMsg.isMine) {
+              final userParts = userParentMsg.content.split(Config.userMsgModifierSep);
+              final userRawContent = userParts[0];
+              final userTail = userParts.length > 1 ? userParts.sublist(1).join(Config.userMsgModifierSep) : "";
+              if (getIsBatch(userRawContent)) {
+                final userBatch = userRawContent.split(Config.batchMarker);
+                if (selection < userBatch.length) {
+                  final selectedQuestion = userBatch[selection];
+                  final finalizedUserContent = userTail.isNotEmpty
+                      ? selectedQuestion + Config.userMsgModifierSep + userTail
+                      : selectedQuestion;
+                  P.msg._syncMsg(userParentMsg.id, userParentMsg.copyWith(content: finalizedUserContent));
+                }
+              }
+            }
+          }
         } else {
           Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
           return;

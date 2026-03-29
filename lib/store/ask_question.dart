@@ -122,6 +122,9 @@ class _AskQuestion {
   late final scheduledQuestionCount = qs(0);
   late final retainedQuestionCount = qs(0);
 
+  /// 当非 null 时，useQuestion 会将问题回填到多问题面板的对应 slot
+  late final multiQuestionTargetIndex = qs<int?>(null);
+
   late final prefixes = qp((ref) {
     final selectedLanguage = ref.watch(language);
     return _askQuestionPrefixes[selectedLanguage] ?? const <String>[];
@@ -1053,6 +1056,14 @@ extension $AskQuestion on _AskQuestion {
     prefixInput.q = "";
     selectedPrefix.q = null;
     _clearQuestionSelectionState();
+
+    final targetIndex = multiQuestionTargetIndex.q;
+    if (targetIndex != null) {
+      P.multiQuestion.updateQuestion(targetIndex, normalized);
+      multiQuestionTargetIndex.q = null;
+      await pop();
+      return;
+    }
 
     final controller = P.chat.textEditingController;
     controller.text = normalized;

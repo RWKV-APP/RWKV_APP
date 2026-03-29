@@ -5591,6 +5591,71 @@ class S {
       args: [],
     );
   }
+
+  /// `问题`
+  String get question {
+    return Intl.message('问题', name: 'question', desc: '', args: []);
+  }
+
+  /// `多问题并行`
+  String get multi_question_title {
+    return Intl.message(
+      '多问题并行',
+      name: 'multi_question_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `同时提问多个问题，并行获取回答`
+  String get multi_question_entry_detail {
+    return Intl.message(
+      '同时提问多个问题，并行获取回答',
+      name: 'multi_question_entry_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `输入你的问题...`
+  String get multi_question_input_hint {
+    return Intl.message(
+      '输入你的问题...',
+      name: 'multi_question_input_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无回答`
+  String get multi_question_no_answer {
+    return Intl.message(
+      '暂无回答',
+      name: 'multi_question_no_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `继续对话`
+  String get multi_question_continue {
+    return Intl.message(
+      '继续对话',
+      name: 'multi_question_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `全部发送`
+  String get multi_question_send_all {
+    return Intl.message(
+      '全部发送',
+      name: 'multi_question_send_all',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

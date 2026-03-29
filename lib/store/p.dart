@@ -149,6 +149,7 @@ part "font.dart";
 part "ui.dart";
 part "pth.dart";
 part "api_server.dart";
+part "multi_question.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -177,6 +178,7 @@ abstract class P {
   static final font = _Font();
   static final ui = _UI();
   static final apiServer = _ApiServer();
+  static final multiQuestion = _MultiQuestion();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();

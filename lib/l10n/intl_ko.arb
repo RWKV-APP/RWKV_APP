@@ -706,5 +706,12 @@
   "api_server_started_on_port": "포트 {port}에서 API 서버를 시작했습니다",
   "api_server_failed_to_start": "API 서버 시작에 실패했습니다: {error}",
   "api_server_active_request_stopped": "진행 중인 요청을 중지했습니다",
-  "api_server_no_active_request": "진행 중인 요청이 없습니다"
+  "api_server_no_active_request": "진행 중인 요청이 없습니다",
+  "question": "질문",
+  "multi_question_title": "다중 질문 병렬 처리",
+  "multi_question_entry_detail": "여러 질문을 동시에 보내고 병렬로 답변 받기",
+  "multi_question_input_hint": "질문을 입력하세요...",
+  "multi_question_no_answer": "아직 답변이 없습니다",
+  "multi_question_continue": "대화 계속하기",
+  "multi_question_send_all": "전체 전송"
 }

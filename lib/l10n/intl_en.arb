@@ -712,5 +712,12 @@
   "api_server_started_on_port": "API Server started on port {port}",
   "api_server_failed_to_start": "Failed to start API Server: {error}",
   "api_server_active_request_stopped": "Stopped active request",
-  "api_server_no_active_request": "No active request"
+  "api_server_no_active_request": "No active request",
+  "question": "Question",
+  "multi_question_title": "Multi-Question Parallel",
+  "multi_question_entry_detail": "Ask multiple questions and get answers in parallel",
+  "multi_question_input_hint": "Enter your question...",
+  "multi_question_no_answer": "No answer yet",
+  "multi_question_continue": "Continue",
+  "multi_question_send_all": "Send All"
 }
