@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:math';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -17,11 +14,21 @@ import 'package:zone/widgets/chat/all_suggestion_dialog.dart';
 import 'package:zone/widgets/dev_options_dialog.dart';
 import 'package:zone/widgets/model_selector.dart';
 
+const Color _lifeSuggestionColor = Color(0xFFD18B39);
+const Color _careerSuggestionColor = Color(0xFF2F80ED);
+const Color _familySuggestionColor = Color(0xFFDB6F8E);
+const Color _creationSuggestionColor = Color(0xFF9A60F5);
+const Color _rolePlaySuggestionColor = Color(0xFFB54ACB);
+const Color _encyclopediaSuggestionColor = Color(0xFF1E9E93);
+const Color _codeSuggestionColor = Color(0xFF4B5FD6);
+const Color _mathematicsSuggestionColor = Color(0xFF2F9D57);
+
 class Empty extends ConsumerWidget {
   const Empty({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final messages = ref.watch(P.msg.list);
     if (messages.isNotEmpty) return Positioned.fill(child: IgnorePointer(child: Container()));
@@ -34,7 +41,7 @@ class Empty extends ConsumerWidget {
 
     final hasSpecificEmpty = demoType == .see && currentWorldType != null;
 
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = theme.colorScheme.primary;
 
     final inputHeight = ref.watch(P.chat.inputHeight);
     final version = ref.watch(P.app.version);
@@ -154,8 +161,46 @@ class Empty extends ConsumerWidget {
 class _EmptyV2 extends ConsumerWidget {
   const _EmptyV2();
 
-  Color _rndColor() {
-    return HSLColor.fromAHSL(1, Random().nextDouble() * 360, .6, 0.7).toColor();
+  String _normalizeCategory(String? category) {
+    if (category == null) return "";
+    return category.trim().toLowerCase();
+  }
+
+  Color _suggestionColor(
+    ThemeData theme,
+    dynamic suggestion,
+  ) {
+    if (suggestion is! Suggestion) return theme.colorScheme.primary.q(.82);
+
+    switch (_normalizeCategory(suggestion.category)) {
+      case "life":
+      case "日常生活":
+      case "常识":
+        return _lifeSuggestionColor;
+      case "career":
+      case "职场学业":
+        return _careerSuggestionColor;
+      case "family":
+      case "家庭亲子":
+        return _familySuggestionColor;
+      case "creation":
+      case "创作":
+        return _creationSuggestionColor;
+      case "role_play":
+      case "roleplay":
+      case "角色扮演":
+        return _rolePlaySuggestionColor;
+      case "encyclopedia":
+      case "百科":
+        return _encyclopediaSuggestionColor;
+      case "code":
+      case "代码":
+        return _codeSuggestionColor;
+      case "mathematics":
+      case "数学":
+        return _mathematicsSuggestionColor;
+    }
+    return theme.colorScheme.primary.q(.82);
   }
 
   void _onTap(dynamic suggestion) {
@@ -166,6 +211,7 @@ class _EmptyV2 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final suggestions = ref.watch(P.suggestion.suggestion);
 
@@ -202,7 +248,7 @@ class _EmptyV2 extends ConsumerWidget {
                         height: 10,
                         width: 10,
                         decoration: BoxDecoration(
-                          color: _rndColor(),
+                          color: _suggestionColor(theme, item),
                           borderRadius: .circular(60),
                         ),
                       ),
