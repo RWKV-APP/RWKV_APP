@@ -17,7 +17,6 @@ import 'package:zone/widgets/chat/share_chat_sheet.dart';
 import 'package:zone/widgets/chat_app_bar.dart';
 import 'package:zone/widgets/input_bar.dart';
 import 'package:zone/widgets/message.dart';
-import 'package:zone/widgets/model_selector.dart';
 
 class PageChat extends StatefulWidget {
   const PageChat({super.key});
@@ -37,7 +36,7 @@ class _PageChatState extends State<PageChat> {
         final loaded = P.rwkv.latestModel.q != null;
         if (!loaded) {
           await 200.msLater;
-          ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+          P.chat.tryLoadLastChatModel();
         }
       });
     }

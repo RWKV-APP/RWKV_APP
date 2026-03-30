@@ -179,6 +179,11 @@ class ModelItem extends ConsumerWidget {
       }
     }
 
+    P.preference.saveLastChatModel({
+      "fileName": fileInfo.fileName,
+      "fileSize": fileInfo.fileSize,
+    });
+
     pop();
 
     for (var i = 0; i < 3; i++) {

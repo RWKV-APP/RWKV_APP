@@ -78,6 +78,8 @@ class _Preference {
 
   late final lastWorldModel = qs<Map<String, dynamic>?>(null);
 
+  late final lastChatModel = qs<Map<String, dynamic>?>(null);
+
   @Deprecated("This is not used anymore")
   late final latestRuntimeAddress = qs<int>(0);
 
@@ -216,6 +218,13 @@ extension _$Preference on _Preference {
     if (lastWorldModel != null) {
       try {
         this.lastWorldModel.q = jsonDecode(lastWorldModel);
+      } catch (_) {}
+    }
+
+    final lastChatModel = sp.getString("halo_state.lastChatModel");
+    if (lastChatModel != null) {
+      try {
+        this.lastChatModel.q = jsonDecode(lastChatModel);
       } catch (_) {}
     }
 
@@ -441,6 +450,12 @@ extension $Preference on _Preference {
     lastWorldModel.q = data;
     final sp = await SharedPreferences.getInstance();
     sp.setString("halo_state.lastWorldModel", jsonEncode(data));
+  }
+
+  void saveLastChatModel(Map<String, dynamic> data) async {
+    lastChatModel.q = data;
+    final sp = await SharedPreferences.getInstance();
+    sp.setString("halo_state.lastChatModel", jsonEncode(data));
   }
 
   void setCustomModelsDir(String? path, {String? bookmark}) async {

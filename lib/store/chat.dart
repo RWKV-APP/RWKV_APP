@@ -880,6 +880,83 @@ extension $Chat on _Chat {
     final batchCount = this.batchCount.q;
     P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: batchCount, modelID: modelID));
   }
+
+  Future<void> tryLoadLastChatModel() async {
+    await 500.msLater;
+
+    final last = P.preference.lastChatModel.q;
+    if (last == null) {
+      ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+      return;
+    }
+
+    try {
+      final String savedFileName = last["fileName"];
+      final int savedFileSize = last["fileSize"];
+
+      final fileInfo = P.remote.chatWeights.q.firstWhereOrNull(
+        (e) => e.fileName == savedFileName && e.fileSize == savedFileSize,
+      );
+
+      if (fileInfo == null) {
+        ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+        return;
+      }
+
+      final localFile = P.remote.locals(fileInfo).q;
+      if (!localFile.hasFile) {
+        ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+        return;
+      }
+
+      if (fileInfo.backend == null) {
+        ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+        return;
+      }
+
+      P.rwkv.clearStates();
+      await P.rwkv.loadChat(fileInfo: fileInfo);
+
+      final batchAllowed = fileInfo.tags.contains("batch");
+      if (!batchAllowed) batchEnabled.q = false;
+
+      final isTranslate = fileInfo.tags.contains("translate");
+      final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
+      if (modelID == null) return;
+
+      if (isTranslate) {
+        if (P.translator.enToZh.q) {
+          P.rwkv.send(to_rwkv.SetUserRole("English", modelID: modelID));
+          P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Chinese", modelID: modelID));
+        } else {
+          P.rwkv.send(to_rwkv.SetUserRole("Chinese", modelID: modelID));
+          P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
+        }
+        await P.rwkv.setModelConfig(thinkingMode: .none, prompt: "<EOD>", setPrompt: true);
+        P.backend.start();
+      } else {
+        P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
+        P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));
+      }
+
+      if (!isTranslate) {
+        if (P.rwkv.currentModelIsBefore20250922.q) {
+          P.rwkv.setModelConfig(thinkingMode: .lighting);
+        } else {
+          P.rwkv.setModelConfig(thinkingMode: .fast);
+        }
+      }
+
+      for (var i = 0; i < 3; i++) {
+        (500 * i).msLater.then((_) {
+          P.rwkv.send(to_rwkv.GetSupportedBatchSizes(modelID: modelID));
+        });
+      }
+    } catch (e) {
+      qqe("Failed to auto load chat model: $e");
+      ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+    }
+  }
 }
 
 /// Private methods

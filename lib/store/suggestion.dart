@@ -130,68 +130,54 @@ class _Suggestion {
   /// Suggestions with score >= 9.0 (for empty page random display)
   final highScoreTopSuggestions = qs<List<Suggestion>>(const []);
 
+  /// Cached shuffled chat suggestions (only refreshed explicitly)
+  final chatSuggestions = qs<List<Suggestion>>(const []);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
 
-  /// suggestion prompt list at top of the text input
-  /// item type: [String] or [Suggestion]
-  final suggestion = qp<List<dynamic>>((ref) {
-    final imagePath = ref.watch(P.see.imagePath);
+  /// Suggestion list for the empty-state UI.
+  /// Item type: [String] or [Suggestion].
+  late final suggestion = qp<List<dynamic>>((ref) {
     final demoType = ref.watch(P.app.demoType);
     final messages = ref.watch(P.msg.list);
-    final _ = ref.watch(P.suggestion.ttsTicker);
-    final _ = ref.watch(P.rwkv.latestModel);
-    final _ = ref.watch(P.msg.length);
-
-    final hideCases = [
-      demoType == .chat && messages.isNotEmpty,
-      demoType == .see && (imagePath == null || imagePath.isEmpty || messages.length != 1),
-    ];
-    if (hideCases.any((e) => e)) {
-      return [];
-    }
-    final config = ref.watch(P.suggestion.config);
-    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
 
     switch (demoType) {
       case .chat:
-        final useHighScore = ref.watch(P.suggestion.useHighScoreApi);
-        if (useHighScore) {
-          final topItems = ref.watch(P.suggestion.highScoreTopSuggestions);
-          if (topItems.isEmpty) return [];
-          final shuffled = topItems.shuffled;
-          if (shuffled.length < 5) return shuffled;
-          return shuffled.take(5).toList();
-        }
-        final items = config.chat.map((e) => e.items).flattened.toList();
-        final shuffled = items.shuffled;
-        if (shuffled.length < 5) return shuffled;
-        return shuffled.take(5).toList();
+        if (messages.isNotEmpty) return [];
+        return ref.watch(chatSuggestions);
       case .see:
-        switch (currentWorldType) {
-          case WorldType.reasoningQA:
-            return config.seeReasoningQa;
-          case WorldType.ocr:
-            final s2 = config.seeOcr.shuffled;
-            if (s2.length < 5) {
-              return s2;
-            }
-            return s2.take(5).toList();
-          case WorldType.modrwkvV2:
-          case WorldType.modrwkvV3:
-            return [...config.seeReasoningQa, ...config.seeOcr].shuffled.take(5).toList();
-          case null:
-            break;
-        }
-        break;
+        final imagePath = ref.watch(P.see.imagePath);
+        if (imagePath == null || imagePath.isEmpty || messages.length != 1) return [];
+        return _seeSuggestions(ref);
       case .tts:
+        final _ = ref.watch(ttsTicker);
+        final config = ref.watch(this.config);
         return _buildMixedTalkSuggestions(config.tts);
       default:
         return [];
     }
-    return [];
   });
+
+  List<dynamic> _seeSuggestions(Ref ref) {
+    final config = ref.watch(this.config);
+    final currentWorldType = ref.watch(P.rwkv.currentWorldType);
+
+    switch (currentWorldType) {
+      case WorldType.reasoningQA:
+        return config.seeReasoningQa;
+      case WorldType.ocr:
+        final shuffled = config.seeOcr.shuffled;
+        if (shuffled.length < 5) return shuffled;
+        return shuffled.take(5).toList();
+      case WorldType.modrwkvV2:
+      case WorldType.modrwkvV3:
+        return [...config.seeReasoningQa, ...config.seeOcr].shuffled.take(5).toList();
+      case null:
+        return [];
+    }
+  }
 
   final worldSuggestion = qp<List<String>>((ref) {
     final _ = ref.watch(P.suggestion.ttsTicker);
@@ -254,6 +240,8 @@ class _Suggestion {
     if (isChatMode) {
       await _tryLoadHighScoreSuggestions(language);
     }
+
+    refreshChatSuggestions();
   }
 
   Future<void> _tryLoadHighScoreSuggestions(Language language) async {
@@ -409,7 +397,24 @@ extension _$Suggestion on _Suggestion {
 }
 
 /// Public methods
-extension $Suggestion on _Suggestion {}
+extension $Suggestion on _Suggestion {
+  void refreshChatSuggestions() {
+    final useHighScore = useHighScoreApi.q;
+    if (useHighScore) {
+      final topItems = highScoreTopSuggestions.q;
+      if (topItems.isEmpty) {
+        chatSuggestions.q = const [];
+        return;
+      }
+      final shuffled = topItems.shuffled;
+      chatSuggestions.q = shuffled.length <= 5 ? shuffled : shuffled.take(5).toList();
+      return;
+    }
+    final items = config.q.chat.map((e) => e.items).flattened.toList();
+    final shuffled = items.shuffled;
+    chatSuggestions.q = shuffled.length <= 5 ? shuffled : shuffled.take(5).toList();
+  }
+}
 
 List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
   const totalCount = 5;
