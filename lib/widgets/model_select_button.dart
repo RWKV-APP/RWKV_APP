@@ -38,6 +38,7 @@ class ModelSelectButton extends ConsumerWidget {
     }
 
     final qb = ref.watch(P.app.qb);
+    final isAutoLoading = ref.watch(P.chat.isAutoLoadingModel);
 
     return C(
       decoration: BD(
@@ -60,7 +61,23 @@ class ModelSelectButton extends ConsumerWidget {
               },
               child: Padding(
                 padding: const .symmetric(horizontal: 8, vertical: 4),
-                child: Text(modelDisplay, style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500)),
+                child: Row(
+                  mainAxisSize: .min,
+                  children: [
+                    if (isAutoLoading) ...[
+                      SizedBox(
+                        width: 8,
+                        height: 8,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1.5,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                    Text(modelDisplay, style: const TextStyle(fontSize: 10, height: 1, fontWeight: .w500)),
+                  ],
+                ),
               ),
             ),
             if (!hasSelectedModel) ...[

@@ -389,9 +389,8 @@ extension _$Suggestion on _Suggestion {
   }
 
   void _onPageKeyChanged(PageKey pageKey) {
-    if (pageKey != .chat && pageKey != .neko) {
-      return;
-    }
+    if (pageKey != .chat && pageKey != .neko) return;
+    if (chatSuggestions.q.isNotEmpty) return;
     unawaited(loadSuggestions(forceChatMode: true));
   }
 }

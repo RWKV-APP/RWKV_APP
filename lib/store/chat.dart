@@ -71,6 +71,9 @@ class _Chat {
   /// 已经触发过 token 超限提示的会话集合（纯内存态）
   late final tokenReminderShownConversationIds = qs<Set<int>>({});
 
+  /// 正在后台自动加载上次使用的模型
+  late final isAutoLoadingModel = qs(false);
+
   // ===========================================================================
   // Provider
   // ===========================================================================
@@ -890,30 +893,22 @@ extension $Chat on _Chat {
       return;
     }
 
+    final String savedFileName = last["fileName"];
+    final int savedFileSize = last["fileSize"];
+
+    final fileInfo = P.remote.chatWeights.q.firstWhereOrNull(
+      (e) => e.fileName == savedFileName && e.fileSize == savedFileSize,
+    );
+    final localFile = fileInfo != null ? P.remote.locals(fileInfo).q : null;
+
+    if (fileInfo == null || localFile == null || !localFile.hasFile || fileInfo.backend == null) {
+      ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+      return;
+    }
+
+    // 以上校验通过，确认将要自动加载，开始显示加载动画
+    isAutoLoadingModel.q = true;
     try {
-      final String savedFileName = last["fileName"];
-      final int savedFileSize = last["fileSize"];
-
-      final fileInfo = P.remote.chatWeights.q.firstWhereOrNull(
-        (e) => e.fileName == savedFileName && e.fileSize == savedFileSize,
-      );
-
-      if (fileInfo == null) {
-        ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
-        return;
-      }
-
-      final localFile = P.remote.locals(fileInfo).q;
-      if (!localFile.hasFile) {
-        ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
-        return;
-      }
-
-      if (fileInfo.backend == null) {
-        ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
-        return;
-      }
-
       P.rwkv.clearStates();
       await P.rwkv.loadChat(fileInfo: fileInfo);
 
@@ -955,6 +950,8 @@ extension $Chat on _Chat {
     } catch (e) {
       qqe("Failed to auto load chat model: $e");
       ModelSelector.show(showNeko: P.app.pageKey.q == .neko);
+    } finally {
+      isAutoLoadingModel.q = false;
     }
   }
 }

@@ -269,24 +269,42 @@ class _EmptyV2 extends ConsumerWidget {
         ],
         if (suggestions.isNotEmpty) const SizedBox(height: 12),
         if (suggestions.isNotEmpty)
-          Material(
-            borderRadius: .circular(60),
-            color: bgColor,
-            child: InkWell(
-              borderRadius: .circular(60),
-              onTap: () async {
-                final suggestion = await AllSuggestionDialog.show(context);
-                if (suggestion != null) _onTap(suggestion);
-              },
-              child: Padding(
-                padding: const .symmetric(horizontal: 20, vertical: 12),
-                child: Text(
-                  S.current.more_questions,
-                  maxLines: 1,
-                  overflow: .ellipsis,
+          Row(
+            mainAxisSize: .min,
+            children: [
+              Material(
+                borderRadius: .circular(60),
+                color: bgColor,
+                child: InkWell(
+                  borderRadius: .circular(60),
+                  onTap: () async {
+                    final suggestion = await AllSuggestionDialog.show(context);
+                    if (suggestion != null) _onTap(suggestion);
+                  },
+                  child: Padding(
+                    padding: const .symmetric(horizontal: 20, vertical: 12),
+                    child: Text(
+                      S.current.more_questions,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(width: 8),
+              Material(
+                borderRadius: .circular(60),
+                color: bgColor,
+                child: InkWell(
+                  borderRadius: .circular(60),
+                  onTap: P.suggestion.refreshChatSuggestions,
+                  child: const Padding(
+                    padding: .symmetric(horizontal: 12, vertical: 12),
+                    child: Icon(Icons.refresh, size: 16),
+                  ),
+                ),
+              ),
+            ],
           ),
         const SizedBox(height: 16),
       ],
