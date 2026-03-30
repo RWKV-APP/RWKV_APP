@@ -170,6 +170,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_active_request_yes": MessageLookupByLibrary.simpleMessage(
       "目前請求: 有",
     ),
+    "api_server_android_foreground_hint": MessageLookupByLibrary.simpleMessage(
+      "請保持 App 在前景，並讓電腦與手機連接同一 Wi-Fi",
+    ),
+    "api_server_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
+    "api_server_api_key_hint": MessageLookupByLibrary.simpleMessage(
+      "在電腦端將它作為 OpenAI API Key / Bearer Token 使用",
+    ),
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "傳送一則訊息來測試 API",
     ),
@@ -187,6 +194,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_logs": MessageLookupByLibrary.simpleMessage("請求日誌"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "目前沒有進行中的請求",
+    ),
+    "api_server_no_lan_address": MessageLookupByLibrary.simpleMessage(
+      "未偵測到可供電腦存取的區域網路位址",
     ),
     "api_server_no_model": MessageLookupByLibrary.simpleMessage("未載入模型"),
     "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage("開啟控制面板"),

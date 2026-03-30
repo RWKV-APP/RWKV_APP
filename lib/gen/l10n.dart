@@ -5387,6 +5387,46 @@ class S {
     return Intl.message('服务器地址', name: 'api_server_url', desc: '', args: []);
   }
 
+  /// `请保持 App 在前台，并让电脑与手机连接同一 Wi-Fi`
+  String get api_server_android_foreground_hint {
+    return Intl.message(
+      '请保持 App 在前台，并让电脑与手机连接同一 Wi-Fi',
+      name: 'api_server_android_foreground_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未检测到可供电脑访问的局域网地址`
+  String get api_server_no_lan_address {
+    return Intl.message(
+      '未检测到可供电脑访问的局域网地址',
+      name: 'api_server_no_lan_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `API Key`
+  String get api_server_api_key {
+    return Intl.message(
+      'API Key',
+      name: 'api_server_api_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `在电脑端将它作为 OpenAI API Key / Bearer Token 使用`
+  String get api_server_api_key_hint {
+    return Intl.message(
+      '在电脑端将它作为 OpenAI API Key / Bearer Token 使用',
+      name: 'api_server_api_key_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `请先选择一个聊天模型`
   String get api_server_select_model_first {
     return Intl.message(

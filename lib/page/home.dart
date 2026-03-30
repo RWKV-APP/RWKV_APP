@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:io';
 import 'dart:math';
 
 // Flutter imports:
@@ -50,6 +51,7 @@ class PageHome extends ConsumerWidget {
     if (maxWidth < 0) maxWidth = .infinity;
 
     final isDesktop = ref.watch(P.app.isDesktop);
+    final showApiServer = isDesktop || Platform.isAndroid;
 
     final widgets = [
       const _ChatButton(),
@@ -60,7 +62,7 @@ class PageHome extends ConsumerWidget {
       const _TranslatorButton(),
       const _NekoButton(),
       const _BenchmarkButton(),
-      if (isDesktop) const _ApiServerButton(),
+      if (showApiServer) const _ApiServerButton(),
     ];
 
     return Scaffold(

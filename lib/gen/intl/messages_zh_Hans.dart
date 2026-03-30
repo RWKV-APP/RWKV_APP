@@ -170,6 +170,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_active_request_yes": MessageLookupByLibrary.simpleMessage(
       "当前请求: 有",
     ),
+    "api_server_android_foreground_hint": MessageLookupByLibrary.simpleMessage(
+      "请保持 App 在前台，并让电脑与手机连接同一 Wi-Fi",
+    ),
+    "api_server_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
+    "api_server_api_key_hint": MessageLookupByLibrary.simpleMessage(
+      "在电脑端将它作为 OpenAI API Key / Bearer Token 使用",
+    ),
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "发送一条消息来测试 API",
     ),
@@ -187,6 +194,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_logs": MessageLookupByLibrary.simpleMessage("请求日志"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "当前没有进行中的请求",
+    ),
+    "api_server_no_lan_address": MessageLookupByLibrary.simpleMessage(
+      "未检测到可供电脑访问的局域网地址",
     ),
     "api_server_no_model": MessageLookupByLibrary.simpleMessage("未加载模型"),
     "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage("打开控制面板"),

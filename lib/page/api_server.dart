@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:convert';
+import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -73,7 +74,8 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     if (text.isEmpty || _chatSending) return;
 
     final port = P.apiServer.port.q;
-    final url = 'http://localhost:$port/v1/chat/completions';
+    final apiKey = P.apiServer.authToken.q;
+    final url = 'http://127.0.0.1:$port/v1/chat/completions';
 
     setState(() {
       _chatMessages.add(_ChatMsg('user', text));
@@ -88,6 +90,9 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     try {
       final request = http.Request('POST', Uri.parse(url));
       request.headers['Content-Type'] = 'application/json';
+      if (apiKey.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $apiKey';
+      }
       request.body = jsonEncode({
         'model': 'rwkv',
         'messages': requestMessages,
@@ -95,6 +100,10 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
       });
 
       final response = await request.send();
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        final errorText = await response.stream.bytesToString();
+        throw Exception(errorText.isEmpty ? 'HTTP ${response.statusCode}' : 'HTTP ${response.statusCode}: $errorText');
+      }
       final stream = response.stream.transform(utf8.decoder);
       String buffer = '';
 
@@ -161,8 +170,12 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     final latestModel = ref.watch(P.rwkv.latestModel);
     final isRunning = serverState == BackendState.running;
     final logs = ref.watch(P.apiServer.logs);
+    final accessibleUrls = ref.watch(P.apiServer.accessibleUrls);
+    final apiKey = ref.watch(P.apiServer.authToken);
 
-    final serverUrl = 'http://localhost:$serverPort';
+    final loopbackUrl = 'http://127.0.0.1:$serverPort';
+    final lanUrl = accessibleUrls.isEmpty ? null : accessibleUrls.first;
+    final curlUrl = lanUrl ?? loopbackUrl;
 
     return Scaffold(
       backgroundColor: appTheme.settingBg,
@@ -181,13 +194,13 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
           _buildControlSection(s, serverState),
           const SizedBox(height: 16),
           if (isRunning) ...[
-            _buildStatusSection(s, serverUrl, reqCount, activeRequest),
+            _buildStatusSection(s, loopbackUrl, accessibleUrls, reqCount, activeRequest, apiKey),
             const SizedBox(height: 16),
             _buildChatSection(s, theme, activeRequest),
             const SizedBox(height: 16),
-            _buildCurlHint(s, serverUrl),
+            _buildCurlHint(s, curlUrl, apiKey),
             const SizedBox(height: 16),
-            _buildDashboardButton(s, serverUrl),
+            _buildDashboardButton(s, loopbackUrl),
             const SizedBox(height: 16),
           ],
           _buildLogsSection(s, logs),
@@ -311,29 +324,106 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     );
   }
 
-  Widget _buildStatusSection(S s, String serverUrl, int reqCount, bool activeRequest) {
+  Widget _buildStatusSection(
+    S s,
+    String loopbackUrl,
+    List<String> accessibleUrls,
+    int reqCount,
+    bool activeRequest,
+    String apiKey,
+  ) {
     return _buildSectionCard(
       children: [
+        if (Platform.isAndroid) ...[
+          Text(
+            s.api_server_android_foreground_hint,
+            style: const TextStyle(fontSize: 13, color: Colors.grey),
+          ),
+          const SizedBox(height: 12),
+        ],
         Row(
           children: [
             Text('${s.api_server_url}:', style: const TextStyle(fontSize: 14, color: Colors.grey)),
             const SizedBox(width: 8),
             Expanded(
               child: SelectableText(
-                serverUrl,
+                loopbackUrl,
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
             ),
             IconButton(
               icon: const Icon(Icons.copy, size: 18),
               onPressed: () {
-                Clipboard.setData(ClipboardData(text: serverUrl));
+                Clipboard.setData(ClipboardData(text: loopbackUrl));
                 Alert.success(s.chat_copied_to_clipboard);
               },
               tooltip: s.copy_text,
             ),
           ],
         ),
+        if (Platform.isAndroid) ...[
+          const SizedBox(height: 12),
+          Text(
+            '${s.lan_server}:',
+            style: const TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+          const SizedBox(height: 8),
+          if (accessibleUrls.isEmpty)
+            Text(
+              s.api_server_no_lan_address,
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
+            ),
+          for (final url in accessibleUrls)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SelectableText(
+                      url,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.copy, size: 18),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: url));
+                      Alert.success(s.chat_copied_to_clipboard);
+                    },
+                    tooltip: s.copy_text,
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Text(
+                '${s.api_server_api_key}:',
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: SelectableText(
+                  apiKey,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.copy, size: 18),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: apiKey));
+                  Alert.success(s.chat_copied_to_clipboard);
+                },
+                tooltip: s.copy_text,
+              ),
+            ],
+          ),
+          Text(
+            s.api_server_api_key_hint,
+            style: const TextStyle(fontSize: 13, color: Colors.grey),
+          ),
+        ],
         const SizedBox(height: 8),
         Text('${s.api_server_request_count}: $reqCount', style: const TextStyle(fontSize: 14, color: Colors.grey)),
         const SizedBox(height: 4),
@@ -435,9 +525,10 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     );
   }
 
-  Widget _buildCurlHint(S s, String serverUrl) {
+  Widget _buildCurlHint(S s, String serverUrl, String apiKey) {
+    final authHeader = apiKey.isEmpty ? '' : ' \\\n  -H "Authorization: Bearer $apiKey"';
     final curlCmd =
-        'curl $serverUrl/v1/chat/completions \\\n  -H "Content-Type: application/json" \\\n  -d \'{"model":"rwkv","messages":[{"role":"user","content":"Hello"}],"stream":true}\'';
+        'curl $serverUrl/v1/chat/completions \\\n  -H "Content-Type: application/json"$authHeader \\\n  -d \'{"model":"rwkv","messages":[{"role":"user","content":"Hello"}],"stream":true}\'';
     return _buildSectionCard(
       children: [
         Text(

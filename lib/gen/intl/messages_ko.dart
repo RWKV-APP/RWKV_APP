@@ -172,6 +172,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_active_request_yes": MessageLookupByLibrary.simpleMessage(
       "진행 중인 요청: 있음",
     ),
+    "api_server_android_foreground_hint": MessageLookupByLibrary.simpleMessage(
+      "앱을 전면에 유지하고 컴퓨터와 휴대폰을 같은 Wi-Fi에 연결하세요.",
+    ),
+    "api_server_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
+    "api_server_api_key_hint": MessageLookupByLibrary.simpleMessage(
+      "컴퓨터 쪽에서는 이것을 OpenAI API Key / Bearer token으로 사용하세요",
+    ),
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "API를 테스트하려면 메시지를 보내세요",
     ),
@@ -189,6 +196,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_logs": MessageLookupByLibrary.simpleMessage("요청 로그"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "진행 중인 요청이 없습니다",
+    ),
+    "api_server_no_lan_address": MessageLookupByLibrary.simpleMessage(
+      "컴퓨터에서 사용할 수 있는 LAN 주소를 찾지 못했습니다",
     ),
     "api_server_no_model": MessageLookupByLibrary.simpleMessage("모델 미로드"),
     "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage(

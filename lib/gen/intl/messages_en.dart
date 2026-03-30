@@ -186,6 +186,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_active_request_yes": MessageLookupByLibrary.simpleMessage(
       "Active Request: Yes",
     ),
+    "api_server_android_foreground_hint": MessageLookupByLibrary.simpleMessage(
+      "Keep the app in the foreground and connect the computer and phone to the same Wi-Fi.",
+    ),
+    "api_server_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
+    "api_server_api_key_hint": MessageLookupByLibrary.simpleMessage(
+      "Use this as the OpenAI API key / Bearer token on your computer",
+    ),
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "Send a message to test the API",
     ),
@@ -205,6 +212,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_logs": MessageLookupByLibrary.simpleMessage("Request Logs"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "No active request",
+    ),
+    "api_server_no_lan_address": MessageLookupByLibrary.simpleMessage(
+      "No LAN address detected for computer access",
     ),
     "api_server_no_model": MessageLookupByLibrary.simpleMessage(
       "No model loaded",
