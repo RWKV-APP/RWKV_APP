@@ -119,7 +119,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                           ? widget.perSlotQuestions![i]
                           : null,
                       data: batch[i],
-                      decodeParam: parsedDecodeParams.isNotEmpty ? parsedDecodeParams[i] : null,
+                      decodeParam: i < parsedDecodeParams.length ? parsedDecodeParams[i] : null,
                       qb: qb,
                     ),
                   ),

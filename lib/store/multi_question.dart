@@ -115,7 +115,8 @@ extension $MultiQuestion on _MultiQuestion {
     // _history() 会读取当前消息列表，此时 userMsg 已加入
     // history 最后一个元素是 batch 格式的用户消息，需要移除它并手动构建各 slot
     final List<String> history = P.chat._history();
-    final List<String> historyPrefix = history.length > 1 ? history.sublist(0, history.length - 1) : [];
+    // history 末尾是 [batchUserContent, emptyBotContent]，需要去掉这两个
+    final List<String> historyPrefix = history.length > 2 ? history.sublist(0, history.length - 2) : [];
 
     final List<List<String>> batchMessages = [];
     for (final question in effectiveQuestions) {
