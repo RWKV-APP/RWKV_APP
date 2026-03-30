@@ -169,9 +169,9 @@ enum _TabLabelKey {
 
 class _TabItem extends ConsumerWidget {
   final _TabLabelKey labelKey;
-  final IconData icon;
+  final FaIconData icon;
   final int index;
-  final IconData selectedIcon;
+  final FaIconData selectedIcon;
 
   const _TabItem({
     required this.labelKey,

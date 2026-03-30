@@ -475,7 +475,7 @@ class _RolePlayButton extends ConsumerWidget {
         push(.rolePlaying);
       },
       color: Colors.yellow,
-      icon: const FaIcon(Icons.emoji_emotions_outlined, color: Colors.white),
+      icon: const Icon(Icons.emoji_emotions_outlined, color: Colors.white),
       title: s.role_play,
       description: s.role_play_intro,
     );
