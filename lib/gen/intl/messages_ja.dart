@@ -172,6 +172,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_active_request_yes": MessageLookupByLibrary.simpleMessage(
       "進行中のリクエスト: あり",
     ),
+    "api_server_android_foreground_hint": MessageLookupByLibrary.simpleMessage(
+      "アプリを前面に保ち、PC とスマートフォンを同じ Wi-Fi に接続してください。",
+    ),
+    "api_server_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
+    "api_server_api_key_hint": MessageLookupByLibrary.simpleMessage(
+      "PC 側ではこれを OpenAI API Key / Bearer token として使ってください",
+    ),
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "API をテストするためにメッセージを送信",
     ),
@@ -189,6 +196,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_logs": MessageLookupByLibrary.simpleMessage("リクエストログ"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "進行中のリクエストはありません",
+    ),
+    "api_server_no_lan_address": MessageLookupByLibrary.simpleMessage(
+      "PC から使える LAN アドレスが見つかりません",
     ),
     "api_server_no_model": MessageLookupByLibrary.simpleMessage("モデル未読込"),
     "api_server_open_dashboard": MessageLookupByLibrary.simpleMessage(

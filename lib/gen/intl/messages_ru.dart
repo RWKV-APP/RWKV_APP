@@ -186,6 +186,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_active_request_yes": MessageLookupByLibrary.simpleMessage(
       "Активный запрос: Да",
     ),
+    "api_server_android_foreground_hint": MessageLookupByLibrary.simpleMessage(
+      "Держите приложение на переднем плане и подключите компьютер и телефон к одной сети Wi-Fi.",
+    ),
+    "api_server_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
+    "api_server_api_key_hint": MessageLookupByLibrary.simpleMessage(
+      "Используйте это значение как OpenAI API key / Bearer token на компьютере",
+    ),
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "Отправьте сообщение, чтобы проверить API",
     ),
@@ -205,6 +212,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_logs": MessageLookupByLibrary.simpleMessage("Журнал запросов"),
     "api_server_no_active_request": MessageLookupByLibrary.simpleMessage(
       "Активных запросов нет",
+    ),
+    "api_server_no_lan_address": MessageLookupByLibrary.simpleMessage(
+      "Не найден LAN-адрес, доступный с компьютера",
     ),
     "api_server_no_model": MessageLookupByLibrary.simpleMessage(
       "Модель не загружена",

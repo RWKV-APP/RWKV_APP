@@ -36,12 +36,23 @@ class _ApiServer {
   late final requestCount = qs(0);
   late final activeRequest = qs(false);
   late final logs = qs<List<String>>([]);
+  late final accessibleUrls = qs<List<String>>([]);
+  late final authToken = qs('');
 }
 
 extension _$ApiServer on _ApiServer {
   Future<void> _init() async {
-    if (!P.app.isDesktop.q) return;
+    if (!P.app.isDesktop.q && !Platform.isAndroid) return;
+    if (Platform.isAndroid && authToken.q.isEmpty) {
+      authToken.q = _generateAuthToken();
+    }
     qq;
+  }
+
+  String _generateAuthToken() {
+    final random = Random.secure();
+    final bytes = List<int>.generate(18, (_) => random.nextInt(256));
+    return base64UrlEncode(bytes).replaceAll('=', '');
   }
 
   String _twoDigits(int value) {
@@ -69,6 +80,68 @@ extension _$ApiServer on _ApiServer {
 
   String _modelId(FileInfo info) => info.fileName.replaceAll('.gguf', '');
 
+  bool _shouldProtectApiPath(String path) {
+    if (!Platform.isAndroid) return false;
+    if (authToken.q.isEmpty) return false;
+    return path == 'v1/models' || path == 'v1/chat/completions' || path == 'v1/completions';
+  }
+
+  bool _isAuthorized(shelf.Request request) {
+    final expected = authToken.q;
+    if (expected.isEmpty) return true;
+    final authorization = request.headers['authorization'];
+    if (authorization == null || !authorization.startsWith('Bearer ')) return false;
+    final actual = authorization.substring('Bearer '.length).trim();
+    return actual == expected;
+  }
+
+  bool _isPreferredLanIpv4(String host) {
+    if (host.startsWith('10.')) return true;
+    if (host.startsWith('192.168.')) return true;
+    if (!host.startsWith('172.')) return false;
+    final parts = host.split('.');
+    if (parts.length < 2) return false;
+    final second = int.tryParse(parts[1]);
+    if (second == null) return false;
+    return second >= 16 && second <= 31;
+  }
+
+  Future<void> _refreshAccessibleUrls({int? portOverride}) async {
+    if (!Platform.isAndroid) {
+      accessibleUrls.q = [];
+      return;
+    }
+
+    final portValue = portOverride ?? port.q;
+    final preferred = <String>{};
+    final fallback = <String>{};
+
+    try {
+      final interfaces = await NetworkInterface.list(
+        type: InternetAddressType.IPv4,
+        includeLoopback: false,
+        includeLinkLocal: false,
+      );
+      for (final interface in interfaces) {
+        for (final address in interface.addresses) {
+          final host = address.address;
+          if (host.isEmpty) continue;
+          final url = 'http://$host:$portValue';
+          if (_isPreferredLanIpv4(host)) {
+            preferred.add(url);
+          } else {
+            fallback.add(url);
+          }
+        }
+      }
+    } catch (e) {
+      qqe('Failed to refresh API server URLs: $e');
+    }
+
+    final urls = (preferred.isNotEmpty ? preferred : fallback).toList()..sort();
+    accessibleUrls.q = urls;
+  }
+
   Map<String, dynamic> _errorJson(String message, {String type = 'invalid_request_error'}) {
     return {
       'error': {
@@ -95,6 +168,13 @@ extension _$ApiServer on _ApiServer {
     }
 
     final path = request.url.path;
+
+    if (_shouldProtectApiPath(path) && !_isAuthorized(request)) {
+      return _jsonResponse(
+        _errorJson('Invalid or missing API key', type: 'invalid_api_key'),
+        status: 401,
+      );
+    }
 
     if (path == '' || path == 'dashboard' || path == 'docs') {
       return _serveDashboard(request);
@@ -149,6 +229,8 @@ extension _$ApiServer on _ApiServer {
       'request_count': requestCount.q,
       'active': activeRequest.q,
       'uptime_seconds': uptime,
+      'urls': accessibleUrls.q,
+      'requires_api_key': Platform.isAndroid && authToken.q.isNotEmpty,
     });
   }
 
@@ -994,7 +1076,7 @@ extension _$ApiServer on _ApiServer {
 
 extension $ApiServer on _ApiServer {
   Future<void> start() async {
-    if (!P.app.isDesktop.q) return;
+    if (!P.app.isDesktop.q && !Platform.isAndroid) return;
 
     if (state.q == BackendState.running) {
       Alert.warning(S.current.api_server_running);
@@ -1011,9 +1093,14 @@ extension $ApiServer on _ApiServer {
 
     state.q = BackendState.starting;
     final p = port.q;
+    final bindAddress = Platform.isAndroid ? InternetAddress.anyIPv4 : InternetAddress.loopbackIPv4;
+
+    if (Platform.isAndroid && authToken.q.isEmpty) {
+      authToken.q = _generateAuthToken();
+    }
 
     try {
-      final httpServer = await HttpServer.bind(InternetAddress.loopbackIPv4, p);
+      final httpServer = await HttpServer.bind(bindAddress, p);
       httpServer.autoCompress = false;
       httpServer.listen((HttpRequest request) {
         final isSSE = request.method == 'POST' && (request.uri.path.contains('completions'));
@@ -1027,18 +1114,28 @@ extension $ApiServer on _ApiServer {
       _startTime = DateTime.now();
       requestCount.q = 0;
       logs.q = [];
+      await _refreshAccessibleUrls(portOverride: p);
       _addLog('Server started on port $p');
-      qqr('API Server started at http://127.0.0.1:$p');
+      if (Platform.isAndroid) {
+        final urls = accessibleUrls.q;
+        final lanText = urls.isEmpty ? 'no LAN URL detected' : urls.join(', ');
+        _addLog('LAN URLs: $lanText');
+        qqr('API Server started on Android: $lanText');
+        await WakelockPlus.enable();
+      } else {
+        qqr('API Server started at http://127.0.0.1:$p');
+      }
       Alert.success(S.current.api_server_started_on_port(p));
     } catch (e) {
       qqe(e);
       state.q = BackendState.stopped;
+      accessibleUrls.q = [];
       Alert.error(S.current.api_server_failed_to_start(e));
     }
   }
 
   Future<void> stop() async {
-    if (!P.app.isDesktop.q) return;
+    if (!P.app.isDesktop.q && !Platform.isAndroid) return;
     final httpServer = server.q;
     if (httpServer == null) return;
 
@@ -1061,6 +1158,10 @@ extension $ApiServer on _ApiServer {
     server.q = null;
     state.q = BackendState.stopped;
     _startTime = null;
+    accessibleUrls.q = [];
+    if (Platform.isAndroid) {
+      await WakelockPlus.disable();
+    }
     _addLog('Server stopped');
     qqr('API Server stopped');
     Alert.success(S.current.api_server_stopped);
