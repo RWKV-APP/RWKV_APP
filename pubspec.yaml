@@ -19,18 +19,6 @@ dependencies:
   #      url: https://github.com/MollySophia/rwkv_mobile_flutter
   #      ref: dev
 
-  photo_viewer:
-    # Local development, fix some bugs
-    # path: ../photo_viewer
-    # Git development, for your company's project
-    git:
-      url: https://github.com/HaloWang/photo_viewer
-      ref: main
-    # Original repository
-    # git:
-    #   url: https://github.com/kumamotone/photo_viewer
-    #   ref: main
-
   vclibs:
     # Local development, fix some bugs
     # path: ../vclibs
@@ -123,6 +111,7 @@ dependencies:
   path:
   path_provider:
   permission_handler:
+  photo_viewer:
   pretty_qr_code:
   record:
   rxdart:
