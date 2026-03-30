@@ -80,6 +80,15 @@ const _askQuestionPrefixes = <Language, List<String>>{
   ],
 };
 
+const _askQuestionDefaultPrefixes = <Language, String>{
+  .zh_Hans: '请为',
+  .zh_Hant: '請為',
+  .en: 'Could you ',
+  .ja: '教えてください',
+  .ko: '설명해 주세요 ',
+  .ru: 'Объясни ',
+};
+
 class _AskQuestion {
   Timer? _getResponseTimer;
   DateTime? _lastRawQuestionsChangedAt;
@@ -593,12 +602,18 @@ extension _$AskQuestion on _AskQuestion {
   }
 
   void _applyPrefixStateForCurrentContext() {
-    if (prefixInput.q.trim().isEmpty) {
-      selectedPrefix.q = null;
-      prefixInput.q = "";
+    final normalized = prefixInput.q.trim();
+    if (normalized.isEmpty) {
+      _applyDefaultPrefixForLanguage(language.q);
       return;
     }
 
+    _syncSelectedPrefixFromInput();
+  }
+
+  void _applyDefaultPrefixForLanguage(Language language) {
+    final defaultPrefix = _askQuestionDefaultPrefixes[language] ?? "";
+    prefixInput.q = defaultPrefix;
     _syncSelectedPrefixFromInput();
   }
 
@@ -609,8 +624,7 @@ extension _$AskQuestion on _AskQuestion {
 
     language.q = nextLanguage;
     questions.q = [];
-    prefixInput.q = "";
-    selectedPrefix.q = null;
+    _applyDefaultPrefixForLanguage(nextLanguage);
     parallelCount.q = 1;
     scheduledQuestionCount.q = 0;
     retainedQuestionCount.q = 0;
