@@ -27,9 +27,6 @@ class MultiQuestionPanel extends ConsumerWidget {
       key: panelKey,
       initialChildSize: .78,
       maxChildSize: .94,
-      afterHide: (_) {
-        P.askQuestion.multiQuestionTargetIndex.q = null;
-      },
       builder: (scrollController) => MultiQuestionPanel(scrollController: scrollController),
     );
   }
@@ -47,6 +44,11 @@ class MultiQuestionPanel extends ConsumerWidget {
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final questions = ref.watch(P.multiQuestion.questions);
     final canSend = ref.watch(P.multiQuestion.canSend);
+    final batchCount = ref.watch(P.chat.batchCount);
+    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final int maxBatchSize = supportedBatchSizes.isNotEmpty ? supportedBatchSizes.reduce((a, b) => a > b ? a : b) : 4;
+    final bool canAdd = batchCount < maxBatchSize;
+    final bool canRemove = questions.length > 2;
 
     return ClipRRect(
       borderRadius: const .only(
@@ -60,6 +62,18 @@ class MultiQuestionPanel extends ConsumerWidget {
           automaticallyImplyLeading: false,
           backgroundColor: appTheme.settingBg,
           actions: [
+            Padding(
+              padding: const .only(right: 4),
+              child: IconButton(
+                onPressed: canAdd
+                    ? () {
+                        P.chat.batchCount.q += 1;
+                        P.multiQuestion.addQuestion();
+                      }
+                    : null,
+                icon: Icon(Icons.add, color: canAdd ? null : theme.colorScheme.onSurface.q(.3)),
+              ),
+            ),
             Padding(
               padding: const .only(right: 8),
               child: IconButton(
@@ -76,7 +90,7 @@ class MultiQuestionPanel extends ConsumerWidget {
                 controller: scrollController,
                 padding: .fromLTRB(12, 8, 12, 12 + paddingBottom),
                 children: [
-                  for (int i = 0; i < questions.length; i++) MultiQuestionInput(index: i),
+                  for (int i = 0; i < questions.length; i++) MultiQuestionInput(index: i, canRemove: canRemove),
                 ],
               ),
             ),
@@ -106,7 +120,7 @@ class _SendBar extends ConsumerWidget {
         height: 44,
         child: FilledButton.icon(
           onPressed: canSend ? P.multiQuestion.sendAll : null,
-          icon: Icon(Symbols.send, size: 18),
+          icon: const Icon(Symbols.send, size: 18),
           label: Text(s.multi_question_send_all),
           style: FilledButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,

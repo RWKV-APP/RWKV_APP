@@ -119,7 +119,9 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                           ? widget.perSlotQuestions![i]
                           : null,
                       data: batch[i],
-                      decodeParam: i < parsedDecodeParams.length ? parsedDecodeParams[i] : null,
+                      decodeParam: parsedDecodeParams.isNotEmpty
+                          ? parsedDecodeParams[i < parsedDecodeParams.length ? i : parsedDecodeParams.length - 1]
+                          : null,
                       qb: qb,
                     ),
                   ),
@@ -201,14 +203,22 @@ class _SlotContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final s = S.of(context);
+    final bool hasQuestion = question != null && question!.trim().isNotEmpty;
 
-    if (question == null || question!.trim().isEmpty) {
+    // 普通 batch inference（无 question）：保持现有行为
+    if (!hasQuestion) {
       return _MarkdownBody(data: data, decodeParam: decodeParam);
     }
 
+    // 多问题并行：decode param → user question → bot answer
     return Column(
       crossAxisAlignment: .start,
       children: [
+        if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
+        if (decodeParam != null) const SizedBox(height: 6),
+        Text(s.user, style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600)),
+        const SizedBox(height: 2),
         Text(
           question!,
           style: TextStyle(
@@ -222,8 +232,55 @@ class _SlotContent extends ConsumerWidget {
         const SizedBox(height: 6),
         Container(height: 0.5, color: qb.q(.1)),
         const SizedBox(height: 6),
-        _MarkdownBody(data: data, decodeParam: decodeParam),
+        Text(s.assistant, style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600)),
+        const SizedBox(height: 2),
+        _MarkdownBody(data: data),
       ],
+    );
+  }
+}
+
+class _DecodeParamBadge extends StatelessWidget {
+  final SamplerAndPenaltyParam decodeParam;
+
+  const _DecodeParamBadge({required this.decodeParam});
+
+  void _onTap() async {
+    final _ = await showOkAlertDialog(
+      context: getContext()!,
+      title: S.current.decode_param,
+      message:
+          """Decode Param: ${decodeParam.displayName}
+      Temperature: ${decodeParam.temperature.toStringAsFixed(1)}
+      TopP: ${decodeParam.topP.toStringAsFixed(2)}
+      Presence Penalty: ${decodeParam.presencePenalty.toStringAsFixed(1)}
+      Frequency Penalty: ${decodeParam.frequencyPenalty.toStringAsFixed(1)}
+      Penalty Decay: ${decodeParam.penaltyDecay.toStringAsFixed(3)}
+""",
+      okLabel: S.current.got_it,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ignore: unused_local_variable
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final displayText = s.decode_param + s.hyphen + decodeParam.displayName;
+
+    return Align(
+      alignment: .topLeft,
+      child: GD(
+        onTap: _onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            border: .all(color: kCG.q(.5)),
+            borderRadius: .circular(4),
+          ),
+          padding: const .symmetric(horizontal: 6, vertical: 2),
+          child: Text(displayText),
+        ),
+      ),
     );
   }
 }

@@ -10,12 +10,12 @@ import 'package:material_symbols_icons/symbols.dart';
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/chat/ask_question_panel.dart';
 
 class MultiQuestionInput extends ConsumerStatefulWidget {
   final int index;
+  final bool canRemove;
 
-  const MultiQuestionInput({super.key, required this.index});
+  const MultiQuestionInput({super.key, required this.index, required this.canRemove});
 
   @override
   ConsumerState<MultiQuestionInput> createState() => _MultiQuestionInputState();
@@ -82,10 +82,9 @@ class _MultiQuestionInputState extends ConsumerState<MultiQuestionInput> {
                     padding: .zero,
                     iconSize: 18,
                     onPressed: () {
-                      P.askQuestion.multiQuestionTargetIndex.q = widget.index;
-                      AskQuestionPanel.show();
+                      P.multiQuestion.refreshQuestion(widget.index);
                     },
-                    icon: Icon(Symbols.lightbulb, color: theme.colorScheme.primary),
+                    icon: Icon(Symbols.refresh, color: theme.colorScheme.primary),
                   ),
                 ),
                 SizedBox(
@@ -94,11 +93,13 @@ class _MultiQuestionInputState extends ConsumerState<MultiQuestionInput> {
                   child: IconButton(
                     padding: .zero,
                     iconSize: 18,
-                    onPressed: () {
-                      _controller.clear();
-                      P.multiQuestion.updateQuestion(widget.index, "");
-                    },
-                    icon: Icon(Icons.close, color: qb.q(.4)),
+                    onPressed: widget.canRemove
+                        ? () {
+                            P.chat.batchCount.q -= 1;
+                            P.multiQuestion.removeQuestion(widget.index);
+                          }
+                        : null,
+                    icon: Icon(Icons.remove_circle_outline, color: widget.canRemove ? qb.q(.4) : qb.q(.15)),
                   ),
                 ),
               ],

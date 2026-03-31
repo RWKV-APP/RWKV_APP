@@ -432,11 +432,26 @@ extension _$AskQuestion on _AskQuestion {
       final botMsg = i + 1 < scopedMessages.length ? scopedMessages[i + 1] : null;
       if (botMsg == null) continue;
 
-      final userContent = userMsg.getContentForHistoryWithRef(botMsg.reference).trim();
+      String userContent = userMsg.getContentForHistoryWithRef(botMsg.reference).trim();
       if (userContent.isEmpty) continue;
 
-      final botContent = botMsg.getHistoryContent().trim();
+      String botContent = botMsg.getHistoryContent().trim();
       if (botContent.isEmpty) continue;
+
+      // Strip batch markers from history to avoid contaminating question generation prompts
+      if (getIsBatch(userContent)) {
+        final (batch, _, _, _) = getBatchInfo(userContent);
+        userContent = batch.first.trim();
+      }
+      if (getIsBatch(botContent)) {
+        final (batch, _, _, selectedBatch) = getBatchInfo(botContent);
+        final int slot = selectedBatch != null && selectedBatch >= 0 && selectedBatch < batch.length
+            ? selectedBatch
+            : 0;
+        botContent = batch[slot].trim();
+      }
+
+      if (userContent.isEmpty || botContent.isEmpty) continue;
 
       messages.add(userContent);
       messages.add(botContent);

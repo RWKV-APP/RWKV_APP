@@ -96,6 +96,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final batchInference = ref.watch(P.chat.batchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
+
     return ClipRRect(
       borderRadius: const .only(
         topLeft: .circular(16),

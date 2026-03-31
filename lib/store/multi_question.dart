@@ -21,8 +21,44 @@ class _MultiQuestion {
 
 /// Public methods
 extension $MultiQuestion on _MultiQuestion {
+  List<String> _pickRandomSuggestions(int count, {List<String> exclude = const []}) {
+    final List<Suggestion> pool = P.suggestion.highScoreTopSuggestions.q.where((s) => !exclude.contains(s.prompt)).toList().shuffled;
+    final int take = count < pool.length ? count : pool.length;
+    return pool.sublist(0, take).map((s) => s.prompt).toList();
+  }
+
   void initQuestions(int count) {
-    questions.q = List<String>.filled(count, "");
+    final List<String> suggestions = _pickRandomSuggestions(count);
+    final int remaining = count - suggestions.length;
+    questions.q = [...suggestions, ...List<String>.filled(remaining < 0 ? 0 : remaining, "")];
+  }
+
+  void addQuestion() {
+    final List<String> current = questions.q;
+    final List<String> picked = _pickRandomSuggestions(1, exclude: current);
+    final String newQuestion = picked.isNotEmpty ? picked.first : "";
+    questions.q = [...current, newQuestion];
+  }
+
+  void removeQuestion(int index) {
+    final List<String> current = questions.q;
+    if (index < 0 || index >= current.length) return;
+    if (current.length <= 2) return;
+    questions.q = [...current]..removeAt(index);
+  }
+
+  void refreshQuestion(int index) {
+    final List<String> current = questions.q;
+    if (index < 0 || index >= current.length) return;
+    final List<String> exclude = [
+      for (int i = 0; i < current.length; i++)
+        if (i != index && current[i].trim().isNotEmpty) current[i],
+    ];
+    final List<String> picked = _pickRandomSuggestions(1, exclude: exclude);
+    if (picked.isEmpty) return;
+    final List<String> next = [...current];
+    next[index] = picked.first;
+    questions.q = next;
   }
 
   void updateQuestion(int index, String text) {
@@ -36,10 +72,44 @@ extension $MultiQuestion on _MultiQuestion {
     questions.q = [];
   }
 
+  Future<void> sendFromAskQuestion(List<String> allQuestions) async {
+    final List<String> nonEmpty = [
+      for (final q in allQuestions)
+        if (q.trim().isNotEmpty) q.trim(),
+    ];
+    if (nonEmpty.isEmpty) return;
+
+    // 检查模型是否支持 batch
+    final List<int> supported = P.rwkv.supportedBatchSizes.q;
+    if (supported.isEmpty) {
+      Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
+      return;
+    }
+
+    final int maxBatchSize = supported.reduce((a, b) => a > b ? a : b);
+    if (maxBatchSize < 2) {
+      Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
+      return;
+    }
+
+    // 截取至最大支持数量，且至少 2
+    final int clampedCount = nonEmpty.length.clamp(2, maxBatchSize);
+    final List<String> effectiveList = nonEmpty.length > clampedCount ? nonEmpty.sublist(0, clampedCount) : nonEmpty;
+
+    // 对齐 batchCount
+    P.chat.batchCount.q = effectiveList.length;
+    if (!P.chat.batchEnabled.q) P.chat.batchEnabled.q = true;
+
+    // 设置 questions 并发送
+    questions.q = effectiveList;
+    await sendAll();
+  }
+
   Future<void> sendAll() async {
     final questionList = questions.q;
     final List<String> effectiveQuestions = [
-      for (final q in questionList) if (q.trim().isNotEmpty) q.trim(),
+      for (final q in questionList)
+        if (q.trim().isNotEmpty) q.trim(),
     ];
     if (effectiveQuestions.isEmpty) return;
 
@@ -65,6 +135,13 @@ extension $MultiQuestion on _MultiQuestion {
       if (selection != null) {
         final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
         P.msg._syncMsg(parentMsg.id, parentMsg.copyWith(content: finalizedContent));
+        unawaited(
+          P.chat._refreshTokenCountsForMessage(
+            messageId: parentMsg.id,
+            overrideBotContent: finalizedContent,
+            persistToMessage: true,
+          ),
+        );
       } else {
         Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
         return;
@@ -107,9 +184,10 @@ extension $MultiQuestion on _MultiQuestion {
     P.chat.receivedTokens.q = "";
     P.rwkv.generating.q = true;
 
+    debugger();
+
     // 7. 关闭面板
     reset();
-    pop();
 
     // 8. 构建 batchMessages
     // _history() 会读取当前消息列表，此时 userMsg 已加入

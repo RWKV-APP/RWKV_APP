@@ -895,6 +895,8 @@ class _GeneratedQuestionsSectionState extends ConsumerState<_GeneratedQuestionsS
                                 ],
                               ],
                             ),
+                          if (resultItems.isNotEmpty && !generating)
+                            _AskAllAsBatchButton(questions: questions),
                         ],
                       ),
                     ),
@@ -1178,6 +1180,45 @@ class _PendingQuestionCard extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _AskAllAsBatchButton extends ConsumerWidget {
+  final List<String> questions;
+
+  const _AskAllAsBatchButton({required this.questions});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final generating = ref.watch(P.rwkv.generating);
+    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final bool supported = supportedBatchSizes.isNotEmpty && questions.length >= 2;
+
+    return Padding(
+      padding: const .only(top: 12),
+      child: SizedBox(
+        width: double.infinity,
+        height: 40,
+        child: FilledButton.icon(
+          onPressed: supported && !generating
+              ? () {
+                  pop();
+                  P.multiQuestion.sendFromAskQuestion(questions);
+                }
+              : null,
+          icon: const Icon(Symbols.send, size: 16),
+          label: Text(s.multi_question_send_all),
+          style: FilledButton.styleFrom(
+            backgroundColor: theme.colorScheme.primary,
+            foregroundColor: theme.colorScheme.onPrimary,
+            disabledBackgroundColor: theme.colorScheme.primary.q(.3),
+            shape: RoundedRectangleBorder(borderRadius: .circular(8)),
+          ),
+        ),
       ),
     );
   }

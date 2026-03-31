@@ -734,6 +734,13 @@ extension $Chat on _Chat {
           final finalizedMsg = parentMsg.copyWith(content: finalizedContent);
           P.msg._syncMsg(parentMsg.id, finalizedMsg);
 
+          // 重新计算 token count（从 batch 全量变为单 slot）
+          unawaited(_refreshTokenCountsForMessage(
+            messageId: parentMsg.id,
+            overrideBotContent: finalizedContent,
+            persistToMessage: true,
+          ));
+
           // Also finalize the paired user batch message if it exists
           final userParentNode = P.msg.msgNode.q.findParentByMsgId(parentMsg.id);
           if (userParentNode != null) {
@@ -1018,6 +1025,8 @@ extension _$Chat on _Chat {
     P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
 
     batchCount.l(_onBatchCountChanged);
+    batchVW.l(_onBatchVWChanged);
+    _loadBatchVW();
 
     scrollController.addListener(_onScroll);
     P.msg.ids.l(_onMessageIdsChangedForTokenCount);
@@ -1039,7 +1048,9 @@ extension _$Chat on _Chat {
     required int? conversationTokensCount,
   }) {
     if (conversationTokensCount == null) return;
-    if (conversationTokensCount < Config.newConversationTokenReminderThreshold) return;
+    final int effectiveBatchCount = batchEnabled.q ? batchCount.q : 1;
+    final int threshold = Config.newConversationTokenReminderThreshold * effectiveBatchCount;
+    if (conversationTokensCount < threshold) return;
 
     final conversationId = P.msg.msgNode.q.createAtInUS;
     final shownConversationIds = tokenReminderShownConversationIds.q;
@@ -1077,6 +1088,17 @@ extension _$Chat on _Chat {
       ),
     );
     P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value, modelID: modelID));
+  }
+
+  void _onBatchVWChanged(int value) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt("halo_state.batchVW", value);
+  }
+
+  void _loadBatchVW() async {
+    final sp = await SharedPreferences.getInstance();
+    final saved = sp.getInt("halo_state.batchVW");
+    if (saved != null) batchVW.q = saved;
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {

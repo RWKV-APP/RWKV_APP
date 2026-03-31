@@ -123,6 +123,11 @@ class _MessageState extends ConsumerState<Message> {
       finalContent: finalContent,
     );
 
+    // 多问题并行的用户消息不渲染，finalization 后 isBatch 为 false 会正常显示
+    if (isMine && batchData.isBatch) {
+      return const SizedBox.shrink();
+    }
+
     List<String>? perSlotQuestions;
     if (batchData.isBatch && !isMine) {
       perSlotQuestions = _resolvePerSlotQuestions(msg: msg);
