@@ -212,6 +212,7 @@ class _SlotContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final bool hasQuestion = question != null && question!.trim().isNotEmpty;
+    final s = S.of(context);
 
     // 普通 batch inference（无 question）：保持现有行为
     if (!hasQuestion) {
@@ -224,19 +225,70 @@ class _SlotContent extends ConsumerWidget {
       children: [
         if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
         if (decodeParam != null) const SizedBox(height: 6),
-        Text(
-          question!,
-          style: TextStyle(
-            color: theme.colorScheme.primary,
-          ),
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
+        _RoleTag("用户" + s.colon),
+        Row(
+          mainAxisAlignment: .spaceBetween,
+          crossAxisAlignment: .start,
+          children: [
+            Expanded(
+              child: Text(
+                question!,
+                style: TextStyle(
+                  color: theme.colorScheme.primary,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
         ),
         const SizedBox(height: 6),
         Container(height: 0.5, color: qb.q(.1)),
         const SizedBox(height: 6),
+        Row(
+          mainAxisAlignment: .start,
+          children: [
+            _RoleTag("RWKV" + s.colon),
+          ],
+        ),
+        const SizedBox(height: 4),
         _MarkdownBody(data: data),
       ],
+    );
+  }
+}
+
+class _RoleTag extends StatelessWidget {
+  final String text;
+
+  const _RoleTag(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const .symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.green.q(0.1),
+        borderRadius: .only(
+          topLeft: .circular(4),
+          bottomRight: .circular(4),
+          topRight: .circular(4),
+          bottomLeft: .circular(4),
+        ),
+        border: Border.all(
+          color: Colors.green.q(0.4),
+          // width: 0.5,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.green.q(1),
+          fontSize: 12,
+          fontWeight: .w500,
+        ),
+      ),
     );
   }
 }

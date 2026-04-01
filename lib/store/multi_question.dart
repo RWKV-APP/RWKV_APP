@@ -22,7 +22,15 @@ class _MultiQuestion {
 /// Public methods
 extension $MultiQuestion on _MultiQuestion {
   List<String> _pickRandomSuggestions(int count, {List<String> exclude = const []}) {
-    final List<Suggestion> pool = P.suggestion.highScoreTopSuggestions.q.where((s) => !exclude.contains(s.prompt)).toList().shuffled;
+    List<Suggestion> pool;
+
+    if (P.suggestion.useHighScoreApi.q && P.suggestion.highScoreTopSuggestions.q.isNotEmpty) {
+      pool = P.suggestion.highScoreTopSuggestions.q;
+    } else {
+      pool = P.suggestion.config.q.chat.expand((c) => c.items).toList();
+    }
+
+    pool = pool.where((s) => !exclude.contains(s.prompt)).toList().shuffled;
     final int take = count < pool.length ? count : pool.length;
     return pool.sublist(0, take).map((s) => s.prompt).toList();
   }

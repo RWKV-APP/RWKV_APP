@@ -21,8 +21,8 @@ class Debugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (!false) return const SizedBox.shrink();
     final theme = Theme.of(context);
-    // if (!false) return const SizedBox.shrink();
     if (!kDebugMode) return const SizedBox.shrink();
 
     final demoType = ref.watch(P.app.demoType);
