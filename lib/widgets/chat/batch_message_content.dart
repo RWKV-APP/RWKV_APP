@@ -212,7 +212,6 @@ class _SlotContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final bool hasQuestion = question != null && question!.trim().isNotEmpty;
-    final s = S.of(context);
 
     // 普通 batch inference（无 question）：保持现有行为
     if (!hasQuestion) {
@@ -225,70 +224,76 @@ class _SlotContent extends ConsumerWidget {
       children: [
         if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
         if (decodeParam != null) const SizedBox(height: 6),
-        _RoleTag("用户" + s.colon),
-        Row(
-          mainAxisAlignment: .spaceBetween,
-          crossAxisAlignment: .start,
-          children: [
-            Expanded(
-              child: Text(
-                question!,
-                style: TextStyle(
-                  color: theme.colorScheme.primary,
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 8),
-          ],
+        _UserQuestionCard(question: question!),
+        const SizedBox(height: 10),
+        _QuestionAnswerDivider(
+          qb: qb,
+          accentColor: theme.colorScheme.primary.q(.4),
         ),
-        const SizedBox(height: 6),
-        Container(height: 0.5, color: qb.q(.1)),
-        const SizedBox(height: 6),
-        Row(
-          mainAxisAlignment: .start,
-          children: [
-            _RoleTag("RWKV" + s.colon),
-          ],
-        ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 10),
         _MarkdownBody(data: data),
       ],
     );
   }
 }
 
-class _RoleTag extends StatelessWidget {
-  final String text;
+class _UserQuestionCard extends StatelessWidget {
+  final String question;
 
-  const _RoleTag(this.text);
+  const _UserQuestionCard({required this.question});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bool isDark = theme.brightness == Brightness.dark;
+    final borderColor = theme.colorScheme.primary.q(isDark ? .34 : .18);
+    final backgroundColor = theme.colorScheme.secondary.q(isDark ? .12 : .06);
+
     return Container(
+      width: double.infinity,
       padding: const .symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.green.q(0.1),
-        borderRadius: .only(
-          topLeft: .circular(4),
-          bottomRight: .circular(4),
-          topRight: .circular(4),
-          bottomLeft: .circular(4),
-        ),
+        color: backgroundColor,
+        borderRadius: .circular(4),
         border: Border.all(
-          color: Colors.green.q(0.4),
-          // width: 0.5,
+          color: borderColor,
         ),
       ),
       child: Text(
-        text,
+        question,
         style: TextStyle(
-          color: Colors.green.q(1),
-          fontSize: 12,
-          fontWeight: .w500,
+          color: theme.colorScheme.onSurface,
         ),
       ),
+    );
+  }
+}
+
+class _QuestionAnswerDivider extends StatelessWidget {
+  final Color qb;
+  final Color accentColor;
+
+  const _QuestionAnswerDivider({required this.qb, required this.accentColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 28,
+          height: 0.5,
+          color: accentColor,
+        ),
+        Container(
+          width: 8,
+        ),
+        Expanded(
+          child: Container(
+            height: 0.5,
+            color: qb.q(.16),
+          ),
+        ),
+      ],
     );
   }
 }
