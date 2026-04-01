@@ -1,9 +1,0 @@
-{
-  "theme": "GitHub",
-  "contextFileName": [".cursor/rules/all.mdc"],
-  "fileFiltering": {
-    "respectGitIgnore": true,
-    "enableRecursiveFileSearch": true
-  },
-  "autoAccept": true
-}

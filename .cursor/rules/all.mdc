@@ -1,83 +1,10 @@
 ---
-description: Project overview, architecture, state/routing/file conventions
+description: Always follow the core agent rules for this project
+globs: *
 alwaysApply: true
 ---
+# Core Rules
 
-## Project Overview
+This project has strict rules for Flutter UI, Dart style, state management (Riverpod), and i18n.
 
-- 这是一个 flutter / dart 项目
-- 我们会将这个项目部署到 iOS / Android / Windows / macOS / Linux 上
-- 这是一个在本地运行大语言模型的 App, 使用 NPU / GPU / CPU 来运行模型, 权重加载到显存或统一内存中
-
-## 架构解释
-
-### 状态管理
-
-- 整个项目在使用 riverpods 管理状态
-- 下面是对 riverpods 的封装, 用于原子化状态管理
-
-```dart
-/// Generates a [StateProvider] initialized to the specified value.
-StateProvider<V> qs<V>(V v) => StateProvider<V>((_) => v);
-
-/// Generates a [Provider] using the provided createFn.
-Provider<V> qp<V>(V Function(Ref<V> ref) createFn) => Provider<V>(createFn);
-
-StateProviderFamily<V, K> qsf<K, V>(V v) => StateProvider.family<V, K>((_, __) => v);
-
-StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn) => StateProvider.family<V, K>(createFn);
-
-extension HaloProviderListenable<V> on ProviderListenable<V> {
-  /// Reads the current value using shorthand `q`.
-  V get q => rc.read(this);
-}
-
-extension HaloStateProvider<V> on StateProvider<V> {
-  /// Reads the current state using shorthand `q`.
-  V get q => rc.read(this);
-
-  /// Sets the state to [value].
-  set q(V value) {
-    rc.read(notifier).state = value;
-  }
-}
-```
-
-### 状态管理最佳实践 (补充)
-
-- **在 `build` 方法中必须使用 `ref.watch`**: 当你需要 UI 随状态变化而刷新时，必须在 `build` 方法中使用 `ref.watch(provider)`。
-- **在逻辑/回调中使用 `.q`**: 当你只需要读取一次当前值（例如在 `onTap` 回调中，或 `initState` 中），或者在逻辑层中时，使用 `.q`。
-- **禁止在 `build` 中使用 `.q` 来构建依赖数据的 UI**: 这会导致状态更新时 UI 不刷新。
-
-```dart
-// Bad 😡
-Widget build(BuildContext context, WidgetRef ref) {
-  final value = provider.q; // ❌ UI won't update
-  return Text(value);
-}
-
-// Good ✅
-Widget build(BuildContext context, WidgetRef ref) {
-  final value = ref.watch(provider); // ✅ UI updates
-  return Text(value);
-}
-```
-
-### 文件
-
-- 绝大部分的全局状态都在 `lib/store` 文件夹中
-- 我们只在 `lib/store/p.dart` 中使用 import 来导入其他文件, 因为所有 `lib/store` 中的其他文件, 均通过 `part of 'p.dart';` 共享了这些引用, 所以你只用考虑在 `lib/store/p.dart` 中导入其他文件即可
-- 严禁使用相对路径, 必须以 "import 'package:.../..." 的形式导入其他文件和类库
-
-### 路由管理
-
-- `lib/router` 管理路由
-- 我们使用的是 go_router 这个 package
-
-### UI
-
-- 我们大量使用 `ConsumerWidget` 来构建 UI
-
-### LLM 服务提供方式
-
-- `rwkv_mobile_flutter` 是这个项目的 LLM inference 引擎
+Please ALWAYS read and strictly follow the rules defined in `AGENTS.md` at the root of the project whenever you write or modify code.

@@ -211,7 +211,6 @@ class _SlotContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final s = S.of(context);
     final bool hasQuestion = question != null && question!.trim().isNotEmpty;
 
     // 普通 batch inference（无 question）：保持现有行为
@@ -226,16 +225,9 @@ class _SlotContent extends ConsumerWidget {
         if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
         if (decodeParam != null) const SizedBox(height: 6),
         Text(
-          s.user,
-          style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600),
-        ),
-        const SizedBox(height: 2),
-        Text(
           question!,
           style: TextStyle(
             color: theme.colorScheme.primary,
-            fontSize: 13,
-            fontWeight: .w500,
           ),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
@@ -243,11 +235,6 @@ class _SlotContent extends ConsumerWidget {
         const SizedBox(height: 6),
         Container(height: 0.5, color: qb.q(.1)),
         const SizedBox(height: 6),
-        Text(
-          s.assistant,
-          style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600),
-        ),
-        const SizedBox(height: 2),
         _MarkdownBody(data: data),
       ],
     );

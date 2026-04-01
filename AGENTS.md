@@ -4,7 +4,7 @@
 
 ## 1. Metadata
 
-禁止为 `CLAUDE.md` 和 `AGENTS.md` 在每一行的末尾添加中文或英文句号
+禁止为 `CLAUDE.md`、`GEMINI.md` 和 `AGENTS.md` 在每一行的末尾添加中文或英文句号
 
 ## 2. 规则使用方式
 
@@ -256,7 +256,7 @@ final theme = Theme.of(context);
 
 开始提交结果前，按下面清单自查：
 
-- 如果修改了 `AGENTS.md`，是否同步修改了 `CLAUDE.md`。
+- 如果修改了 `AGENTS.md`，是否同步修改了 `CLAUDE.md` 和 `GEMINI.md`。
 - 如果修改了任意 `.arb`，是否同步更新了全部 6 个语言文件。
 - 如果修改了任意 `.arb`，是否运行了 `dart pub global run intl_utils:generate`。
 - 如果修改了 README 或 CONTRIBUTING，是否同步更新了所有语言版本。
