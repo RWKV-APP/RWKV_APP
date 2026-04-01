@@ -119,7 +119,12 @@ class _SendBar extends ConsumerWidget {
         width: double.infinity,
         height: 44,
         child: FilledButton.icon(
-          onPressed: canSend ? P.multiQuestion.sendAll : null,
+          onPressed: canSend
+              ? () {
+                  pop();
+                  P.multiQuestion.sendAll();
+                }
+              : null,
           icon: const Icon(Symbols.send, size: 18),
           label: Text(s.multi_question_send_all),
           style: FilledButton.styleFrom(
