@@ -204,8 +204,8 @@ class _MessageState extends ConsumerState<Message> {
             duration: 250.ms,
             child: Padding(
               padding: .only(
-                left: appTheme.msgListMarginLeft,
-                right: appTheme.msgListMarginRight,
+                left: batchData.isBatch ? 0 : appTheme.msgListMarginLeft,
+                right: batchData.isBatch ? 0 : appTheme.msgListMarginRight,
                 top: appTheme.msgListMarginTop,
                 bottom: appTheme.msgListMarginBottom,
               ),
@@ -402,6 +402,7 @@ class _BotMessageBubble extends ConsumerWidget {
     final debugColor = theme.colorScheme.error;
     final cotColor = qb.q(.55);
     final thoughtLabelColor = qb.q(.5);
+    final appTheme = ref.watch(P.app.theme);
 
     return Container(
       padding: bubbleStyleData.padding,
@@ -416,7 +417,11 @@ class _BotMessageBubble extends ConsumerWidget {
           if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
           if (isBatch)
             Padding(
-              padding: const .only(left: 0, right: 0, bottom: 8),
+              padding: .only(
+                left: appTheme.msgListMarginLeft,
+                right: appTheme.msgListMarginRight,
+                bottom: 8,
+              ),
               child: Wrap(
                 children: [
                   Text(

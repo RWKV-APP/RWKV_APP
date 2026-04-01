@@ -89,45 +89,53 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
 
     final parsedDecodeParams = widget.msg.parsedDecodeParams;
 
+    final appTheme = ref.watch(P.app.theme);
+
     return Stack(
       children: [
         SingleChildScrollView(
+          padding: .only(
+            left: appTheme.msgListMarginLeft,
+            right: appTheme.msgListMarginRight,
+          ),
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: .start,
             crossAxisAlignment: .start,
-            children: [
-              for (var i = 0; i < batchCount; i++)
-                GD(
-                  onTap: () {
-                    P.msg.batchSelection(widget.msg).q = i;
-                  },
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: screenWidth * (batchVW / 100),
-                      minWidth: screenWidth * (batchVW / 100),
+            children:
+                [
+                  for (var i = 0; i < batchCount; i++)
+                    GD(
+                      onTap: () {
+                        P.msg.batchSelection(widget.msg).q = i;
+                      },
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: screenWidth * (batchVW / 100),
+                          minWidth: screenWidth * (batchVW / 100),
+                        ),
+                        padding: const .all(8),
+                        decoration: BoxDecoration(
+                          color: qw,
+                          border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
+                          borderRadius: .circular(8),
+                        ),
+                        child: _SlotContent(
+                          question: widget.perSlotQuestions != null && i < widget.perSlotQuestions!.length
+                              ? widget.perSlotQuestions![i]
+                              : null,
+                          data: batch[i],
+                          decodeParam: parsedDecodeParams.isNotEmpty
+                              ? parsedDecodeParams[i < parsedDecodeParams.length ? i : parsedDecodeParams.length - 1]
+                              : null,
+                          qb: qb,
+                        ),
+                      ),
                     ),
-                    padding: const .all(8),
-                    decoration: BoxDecoration(
-                      color: qw,
-                      border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
-                      borderRadius: .circular(8),
-                    ),
-                    child: _SlotContent(
-                      question: widget.perSlotQuestions != null && i < widget.perSlotQuestions!.length
-                          ? widget.perSlotQuestions![i]
-                          : null,
-                      data: batch[i],
-                      decodeParam: parsedDecodeParams.isNotEmpty
-                          ? parsedDecodeParams[i < parsedDecodeParams.length ? i : parsedDecodeParams.length - 1]
-                          : null,
-                      qb: qb,
-                    ),
-                  ),
+                ].widgetJoin(
+                  (index) => const SizedBox(width: 8),
                 ),
-              const SizedBox(width: 4),
-            ].widgetJoin((index) => const SizedBox(width: 8)),
           ),
         ),
         AnimatedPositioned(
@@ -217,7 +225,10 @@ class _SlotContent extends ConsumerWidget {
       children: [
         if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
         if (decodeParam != null) const SizedBox(height: 6),
-        Text(s.user, style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600)),
+        Text(
+          s.user,
+          style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600),
+        ),
         const SizedBox(height: 2),
         Text(
           question!,
@@ -232,7 +243,10 @@ class _SlotContent extends ConsumerWidget {
         const SizedBox(height: 6),
         Container(height: 0.5, color: qb.q(.1)),
         const SizedBox(height: 6),
-        Text(s.assistant, style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600)),
+        Text(
+          s.assistant,
+          style: TextStyle(color: qb.q(.5), fontSize: 11, fontWeight: .w600),
+        ),
         const SizedBox(height: 2),
         _MarkdownBody(data: data),
       ],

@@ -477,9 +477,7 @@ extension _$AskQuestion on _AskQuestion {
   }) {
     final latestModel = P.rwkv.latestModel.q;
     final batchAllowed = latestModel?.tags.contains("batch") ?? false;
-    final batchEnabled = P.chat.batchEnabled.q;
     if (!batchAllowed) return 1;
-    if (!batchEnabled) return 1;
     if (targetQuestionCount <= 1) return 1;
     return targetQuestionCount;
   }

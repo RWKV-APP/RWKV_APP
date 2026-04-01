@@ -2,6 +2,8 @@ part of 'p.dart';
 
 const String _suggestionCacheFileName = "suggestion.json";
 const String _highScoreSuggestionCacheFileName = "suggestion_high_score.json";
+const int _chatSuggestionCount = 5;
+const double _chatSuggestionHighScoreThreshold = 9.0;
 
 class Suggestion {
   final String display;
@@ -255,7 +257,7 @@ class _Suggestion {
     useHighScoreApi.q = true;
     highScoreCategories.q = categories;
     final allItems = categories.map((e) => e.items).flattened.toList();
-    highScoreTopSuggestions.q = allItems.where((e) => e.score != null && e.score! >= 9.0).toList();
+    highScoreTopSuggestions.q = allItems.where((e) => e.score != null && e.score! >= _chatSuggestionHighScoreThreshold).toList();
   }
 
   String _suggestionLang(Language language) {
@@ -334,10 +336,7 @@ class _Suggestion {
     return categories.map((e) {
       final key = e['category']?.toString().trim() ?? '';
       final name = e['categoryDisplayName']?.toString().trim() ?? key;
-      final items = (e['items'] as Iterable?)
-          ?.map((item) => Suggestion.fromHighScoreJson(item, category: key))
-          .toList() ??
-          [];
+      final items = (e['items'] as Iterable?)?.map((item) => Suggestion.fromHighScoreJson(item, category: key)).toList() ?? [];
       return SuggestionCategory(
         key: key,
         name: name,
@@ -400,23 +399,52 @@ extension $Suggestion on _Suggestion {
   void refreshChatSuggestions() {
     final useHighScore = useHighScoreApi.q;
     if (useHighScore) {
-      final topItems = highScoreTopSuggestions.q;
-      if (topItems.isEmpty) {
-        chatSuggestions.q = const [];
-        return;
-      }
-      final shuffled = topItems.shuffled;
-      chatSuggestions.q = shuffled.length <= 5 ? shuffled : shuffled.take(5).toList();
+      final categories = _buildHighScoreChatSuggestionCategories(highScoreCategories.q);
+      chatSuggestions.q = _pickChatSuggestionsByCategory(categories);
       return;
     }
-    final items = config.q.chat.map((e) => e.items).flattened.toList();
-    final shuffled = items.shuffled;
-    chatSuggestions.q = shuffled.length <= 5 ? shuffled : shuffled.take(5).toList();
+    chatSuggestions.q = _pickChatSuggestionsByCategory(config.q.chat);
   }
 }
 
+List<SuggestionCategory> _buildHighScoreChatSuggestionCategories(
+  List<SuggestionCategory> categories,
+) {
+  final filtered = <SuggestionCategory>[];
+  for (final category in categories) {
+    final items = category.items.where((item) => item.score != null && item.score! >= _chatSuggestionHighScoreThreshold).toList();
+    if (items.isEmpty) continue;
+    filtered.add(
+      SuggestionCategory(
+        key: category.key,
+        name: category.name,
+        items: items,
+      ),
+    );
+  }
+  return filtered;
+}
+
+List<Suggestion> _pickChatSuggestionsByCategory(
+  List<SuggestionCategory> categories,
+) {
+  final availableCategories = categories.where((category) => category.items.isNotEmpty).toList();
+  if (availableCategories.isEmpty) return const [];
+
+  final selectedCategories = availableCategories.shuffled.take(min(_chatSuggestionCount, availableCategories.length)).toList();
+  final suggestions = <Suggestion>[];
+
+  for (final category in selectedCategories) {
+    final items = category.items.shuffled;
+    if (items.isEmpty) continue;
+    suggestions.add(items.first);
+  }
+
+  return suggestions;
+}
+
 List<String> _buildMixedTalkSuggestions(List<String> rawSuggestions) {
-  const totalCount = 5;
+  const totalCount = _chatSuggestionCount;
   const intonationCount = 1;
   const normalCount = totalCount - intonationCount;
 

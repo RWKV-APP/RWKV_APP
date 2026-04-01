@@ -184,8 +184,6 @@ extension $MultiQuestion on _MultiQuestion {
     P.chat.receivedTokens.q = "";
     P.rwkv.generating.q = true;
 
-    debugger();
-
     // 7. 关闭面板
     reset();
 
