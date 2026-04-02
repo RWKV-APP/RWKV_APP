@@ -5,7 +5,7 @@ run-name: ${{ github.ref_name }} Linux x64
 on:
   push:
     tags:
-      - "[0-9]*" # 仅在打 tag 时触发
+      - "[0-9]*"
   workflow_dispatch:
 
 concurrency:
@@ -16,9 +16,46 @@ permissions:
   contents: write
 
 jobs:
-  build-linux-x64:
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      build_number: ${{ steps.meta.outputs.build_number }}
+      archive_name: ${{ steps.meta.outputs.archive_name }}
+      should_publish: ${{ steps.meta.outputs.should_publish }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: pubspec.yaml
+          sparse-checkout-cone-mode: false
 
+      - name: Extract version metadata
+        id: meta
+        run: |
+          VERSION_LINE=$(grep "^version:" pubspec.yaml)
+          VERSION=$(echo "$VERSION_LINE" | sed 's/version: //' | sed 's/+.*//')
+          BUILD_NUMBER=$(echo "$VERSION_LINE" | sed 's/.*+//')
+          if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
+
+          ARCHIVE_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_linux-x64.tar.gz"
+
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            SHOULD_PUBLISH="true"
+          else
+            SHOULD_PUBLISH="false"
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
+          echo "should_publish=$SHOULD_PUBLISH" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build
+    needs: setup
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -58,12 +95,12 @@ jobs:
           echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
           echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
 
-      - name: 📝 Create .env file
+      - name: Create .env file
         uses: ./.github/actions/create-env
         with:
           x_api_key: ${{ secrets.X_API_KEY }}
 
-      - name: 🔐 Decrypt Sensitive Assets
+      - name: Decrypt sensitive assets
         uses: ./.github/actions/decrypt-assets
         with:
           filter_decrypt_pass: ${{ secrets.FILTER_DECRYPT_PASS }}
@@ -77,58 +114,33 @@ jobs:
       - name: Build Linux x64
         run: flutter build linux --release --target-platform linux-x64
 
-      - name: 🧹 Remove aarch64 libraries
+      - name: Remove aarch64 libraries
         run: |
-          echo "::group::🧹 Cleaning up aarch64 libraries"
           LIB_DIR="build/linux/x64/release/bundle/lib"
           if [ -d "$LIB_DIR" ]; then
-            # 删除 aarch64 相关的库文件
             REMOVED_COUNT=0
             for file in "$LIB_DIR"/*aarch64*.so "$LIB_DIR"/*arm64*.so; do
               if [ -f "$file" ]; then
-                echo "✅ Removing: $(basename "$file")"
+                echo "Removing: $(basename "$file")"
                 rm -f "$file"
                 REMOVED_COUNT=$((REMOVED_COUNT + 1))
               fi
             done
-            if [ $REMOVED_COUNT -eq 0 ]; then
-              echo "ℹ️ No aarch64 libraries found to remove"
-            else
-              echo "✅ Removed $REMOVED_COUNT aarch64 library file(s)"
-            fi
-          else
-            echo "🚧 Library directory not found: $LIB_DIR"
+            echo "Removed $REMOVED_COUNT aarch64 library file(s)"
           fi
-          echo "::endgroup::"
 
-      - name: 📦 Create Linux Archive
+      - name: Create archive
         id: create-archive
+        env:
+          ARCHIVE_NAME: ${{ needs.setup.outputs.archive_name }}
         run: |
-          echo "::group::📦 Creating Linux Archive"
-
-          VERSION=$(grep "^version:" pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
-          BUILD_NUMBER=$(grep "^version:" pubspec.yaml | sed 's/.*+//')
-
-          if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
-          if [ -z "$VERSION" ]; then echo "😡 Failed to extract version"; exit 1; fi
-
-          # 命名格式: rwkv_chat_1.0.0_1_linux-x64.tar.gz
-          ARCHIVE_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_linux-x64.tar.gz"
-
-          # 进入 bundle 目录打包，这样解压出来直接就是文件
           cd build/linux/x64/release/bundle
           tar -czf "$ARCHIVE_NAME" *
 
           ARCHIVE_FULL_PATH="$(pwd)/$ARCHIVE_NAME"
-
           echo "archive_path=$ARCHIVE_FULL_PATH" >> $GITHUB_OUTPUT
-          echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
-          echo "✅ Archive created: $ARCHIVE_NAME"
-          echo "::endgroup::"
-
-      - name: Upload workflow artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-x64-archive
@@ -136,38 +148,58 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
+  release:
+    name: GitHub Release
+    needs: [setup, build]
+    if: needs.setup.outputs.should_publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-x64-archive
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           generate_release_notes: false
-          # 👇 这里的 files 变干净了，只上传上面生成的那个压缩包
-          files: ${{ steps.create-archive.outputs.archive_path }}
+          files: "*.tar.gz"
 
-      - name: 🛠️ Setup Python
-        if: startsWith(github.ref, 'refs/tags/')
+  upload-hf:
+    name: Upload to HuggingFace
+    needs: [setup, build]
+    if: needs.setup.outputs.should_publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout upload script
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/upload_to_hf.py
+          sparse-checkout-cone-mode: false
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-x64-archive
+
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: 📦 Install dependencies
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          pip install huggingface_hub
+      - name: Install dependencies
+        run: pip install huggingface_hub
 
-      - name: 📤 Upload to HuggingFace
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Upload to HuggingFace
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
           HF_DATASETS_ID: ${{ secrets.HF_DATASETS_ID || 'HaloWang/rwkv-chat' }}
+          ARCHIVE_NAME: ${{ needs.setup.outputs.archive_name }}
         run: |
-          echo "::group::📤 Uploading to HuggingFace"
           python scripts/upload_to_hf.py \
             --repo-id "$HF_DATASETS_ID" \
-            --file "${{ steps.create-archive.outputs.archive_path }}" \
-            --path-in-repo "linux-x64/${{ steps.create-archive.outputs.archive_name }}" \
+            --file "$ARCHIVE_NAME" \
+            --path-in-repo "linux-x64/$ARCHIVE_NAME" \
             --hf-token "$HF_TOKEN" \
             --hf-endpoint "$HF_ENDPOINT"
-          echo "✅ Upload completed"
-          echo "::endgroup::"
