@@ -687,8 +687,6 @@
   "api_server_url": "서버 URL",
   "api_server_android_foreground_hint": "앱을 전면에 유지하고 컴퓨터와 휴대폰을 같은 Wi-Fi에 연결하세요.",
   "api_server_no_lan_address": "컴퓨터에서 사용할 수 있는 LAN 주소를 찾지 못했습니다",
-  "api_server_api_key": "API Key",
-  "api_server_api_key_hint": "컴퓨터 쪽에서는 이것을 OpenAI API Key / Bearer token으로 사용하세요",
   "api_server_select_model_first": "먼저 채팅 모델을 선택하세요",
   "api_server_request_count": "요청 수",
   "api_server_open_dashboard": "대시보드 열기",

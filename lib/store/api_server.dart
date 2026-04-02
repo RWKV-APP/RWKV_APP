@@ -37,22 +37,12 @@ class _ApiServer {
   late final activeRequest = qs(false);
   late final logs = qs<List<String>>([]);
   late final accessibleUrls = qs<List<String>>([]);
-  late final authToken = qs('');
 }
 
 extension _$ApiServer on _ApiServer {
   Future<void> _init() async {
     if (!P.app.isDesktop.q && !Platform.isAndroid) return;
-    if (Platform.isAndroid && authToken.q.isEmpty) {
-      authToken.q = _generateAuthToken();
-    }
     qq;
-  }
-
-  String _generateAuthToken() {
-    final random = Random.secure();
-    final bytes = List<int>.generate(18, (_) => random.nextInt(256));
-    return base64UrlEncode(bytes).replaceAll('=', '');
   }
 
   String _twoDigits(int value) {
@@ -80,21 +70,6 @@ extension _$ApiServer on _ApiServer {
 
   String _modelId(FileInfo info) => info.fileName.replaceAll('.gguf', '');
 
-  bool _shouldProtectApiPath(String path) {
-    if (!Platform.isAndroid) return false;
-    if (authToken.q.isEmpty) return false;
-    return path == 'v1/models' || path == 'v1/chat/completions' || path == 'v1/completions';
-  }
-
-  bool _isAuthorized(shelf.Request request) {
-    final expected = authToken.q;
-    if (expected.isEmpty) return true;
-    final authorization = request.headers['authorization'];
-    if (authorization == null || !authorization.startsWith('Bearer ')) return false;
-    final actual = authorization.substring('Bearer '.length).trim();
-    return actual == expected;
-  }
-
   bool _isPreferredLanIpv4(String host) {
     if (host.startsWith('10.')) return true;
     if (host.startsWith('192.168.')) return true;
@@ -104,6 +79,18 @@ extension _$ApiServer on _ApiServer {
     final second = int.tryParse(parts[1]);
     if (second == null) return false;
     return second >= 16 && second <= 31;
+  }
+
+  int _longestSuffixPrefixOverlap(String previous, String current) {
+    if (previous.isEmpty || current.isEmpty) return 0;
+    final maxOverlap = min(previous.length, current.length);
+    for (final overlap in List<int>.generate(maxOverlap, (index) => maxOverlap - index)) {
+      final suffix = previous.substring(previous.length - overlap);
+      if (current.startsWith(suffix)) {
+        return overlap;
+      }
+    }
+    return 0;
   }
 
   Future<void> _refreshAccessibleUrls({int? portOverride}) async {
@@ -169,13 +156,6 @@ extension _$ApiServer on _ApiServer {
 
     final path = request.url.path;
 
-    if (_shouldProtectApiPath(path) && !_isAuthorized(request)) {
-      return _jsonResponse(
-        _errorJson('Invalid or missing API key', type: 'invalid_api_key'),
-        status: 401,
-      );
-    }
-
     if (path == '' || path == 'dashboard' || path == 'docs') {
       return _serveDashboard(request);
     }
@@ -230,7 +210,6 @@ extension _$ApiServer on _ApiServer {
       'active': activeRequest.q,
       'uptime_seconds': uptime,
       'urls': accessibleUrls.q,
-      'requires_api_key': Platform.isAndroid && authToken.q.isNotEmpty,
     });
   }
 
@@ -434,7 +413,44 @@ extension _$ApiServer on _ApiServer {
               return;
             }
             if (!full.startsWith(previousContent)) {
-              _addLog('chat stream prefix mismatch, ignored snapshot');
+              final overlap = _longestSuffixPrefixOverlap(previousContent, full);
+              previousContent = full;
+              if (overlap > 0) {
+                final delta = full.substring(overlap);
+                if (delta.isNotEmpty) {
+                  sendSSE({
+                    'id': reqId,
+                    'object': 'chat.completion.chunk',
+                    'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                    'model': modelName,
+                    'choices': [
+                      {
+                        'index': 0,
+                        'delta': {'content': delta},
+                        'finish_reason': null,
+                      },
+                    ],
+                  });
+                }
+                _addLog('chat stream prefix mismatch, overlap resynced');
+                return;
+              }
+              if (full.isNotEmpty) {
+                sendSSE({
+                  'id': reqId,
+                  'object': 'chat.completion.chunk',
+                  'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                  'model': modelName,
+                  'choices': [
+                    {
+                      'index': 0,
+                      'delta': {'content': full},
+                      'finish_reason': null,
+                    },
+                  ],
+                });
+              }
+              _addLog('chat stream prefix mismatch, hard resynced');
               return;
             }
             if (full.length > previousContent.length) {
@@ -795,7 +811,36 @@ extension _$ApiServer on _ApiServer {
               return;
             }
             if (!full.startsWith(previousContent)) {
-              _addLog('completion stream prefix mismatch, ignored snapshot');
+              final overlap = _longestSuffixPrefixOverlap(previousContent, full);
+              previousContent = full;
+              if (overlap > 0) {
+                final delta = full.substring(overlap);
+                if (delta.isNotEmpty) {
+                  sendSSE({
+                    'id': reqId,
+                    'object': 'text_completion',
+                    'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                    'model': modelName,
+                    'choices': [
+                      {'index': 0, 'text': delta, 'finish_reason': null},
+                    ],
+                  });
+                }
+                _addLog('completion stream prefix mismatch, overlap resynced');
+                return;
+              }
+              if (full.isNotEmpty) {
+                sendSSE({
+                  'id': reqId,
+                  'object': 'text_completion',
+                  'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                  'model': modelName,
+                  'choices': [
+                    {'index': 0, 'text': full, 'finish_reason': null},
+                  ],
+                });
+              }
+              _addLog('completion stream prefix mismatch, hard resynced');
               return;
             }
             if (full.length > previousContent.length) {
@@ -1094,10 +1139,6 @@ extension $ApiServer on _ApiServer {
     state.q = BackendState.starting;
     final p = port.q;
     final bindAddress = Platform.isAndroid ? InternetAddress.anyIPv4 : InternetAddress.loopbackIPv4;
-
-    if (Platform.isAndroid && authToken.q.isEmpty) {
-      authToken.q = _generateAuthToken();
-    }
 
     try {
       final httpServer = await HttpServer.bind(bindAddress, p);

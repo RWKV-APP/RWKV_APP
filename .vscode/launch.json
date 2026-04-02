@@ -122,8 +122,8 @@
       "configurations": [
         // 同时启动, 方便同时 debug 多个平台
         "debug (halo) - macOS",
-        "debug (halo) - Android",
-        "debug (halo) - iOS"
+        "debug (halo) - Android"
+        // "debug (halo) - iOS"
       ]
     }
   ]

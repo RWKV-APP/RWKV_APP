@@ -175,10 +175,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "api_server_android_foreground_hint": MessageLookupByLibrary.simpleMessage(
       "アプリを前面に保ち、PC とスマートフォンを同じ Wi-Fi に接続してください。",
     ),
-    "api_server_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
-    "api_server_api_key_hint": MessageLookupByLibrary.simpleMessage(
-      "PC 側ではこれを OpenAI API Key / Bearer token として使ってください",
-    ),
     "api_server_chat_empty_hint": MessageLookupByLibrary.simpleMessage(
       "API をテストするためにメッセージを送信",
     ),

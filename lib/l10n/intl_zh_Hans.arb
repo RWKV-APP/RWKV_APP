@@ -693,8 +693,6 @@
   "api_server_url": "服务器地址",
   "api_server_android_foreground_hint": "请保持 App 在前台，并让电脑与手机连接同一 Wi-Fi",
   "api_server_no_lan_address": "未检测到可供电脑访问的局域网地址",
-  "api_server_api_key": "API Key",
-  "api_server_api_key_hint": "在电脑端将它作为 OpenAI API Key / Bearer Token 使用",
   "api_server_select_model_first": "请先选择一个聊天模型",
   "api_server_request_count": "请求数",
   "api_server_open_dashboard": "打开控制面板",

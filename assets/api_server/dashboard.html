@@ -508,6 +508,13 @@ async function sendChat() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: 'rwkv', messages: chatHistory, stream: true })
     });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || `HTTP ${res.status}`);
+    }
+    if (!res.body) {
+      throw new Error('No response body from server');
+    }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -534,7 +541,9 @@ async function sendChat() {
         } catch (e) {}
       }
     }
-    chatHistory.push({ role: 'assistant', content: fullContent });
+    if (fullContent) {
+      chatHistory.push({ role: 'assistant', content: fullContent });
+    }
   } catch (e) {
     assistantDiv.innerHTML = '<span class="msg-role">error:</span> ' + escapeHtml(e.message);
   } finally {

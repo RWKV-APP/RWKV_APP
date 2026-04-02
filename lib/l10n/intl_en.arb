@@ -693,8 +693,6 @@
   "api_server_url": "Server URL",
   "api_server_android_foreground_hint": "Keep the app in the foreground and connect the computer and phone to the same Wi-Fi.",
   "api_server_no_lan_address": "No LAN address detected for computer access",
-  "api_server_api_key": "API Key",
-  "api_server_api_key_hint": "Use this as the OpenAI API key / Bearer token on your computer",
   "api_server_select_model_first": "Please select a chat model first",
   "api_server_request_count": "Requests",
   "api_server_open_dashboard": "Open Dashboard",

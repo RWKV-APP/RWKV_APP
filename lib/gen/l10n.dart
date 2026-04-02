@@ -5407,26 +5407,6 @@ class S {
     );
   }
 
-  /// `API Key`
-  String get api_server_api_key {
-    return Intl.message(
-      'API Key',
-      name: 'api_server_api_key',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `在电脑端将它作为 OpenAI API Key / Bearer Token 使用`
-  String get api_server_api_key_hint {
-    return Intl.message(
-      '在电脑端将它作为 OpenAI API Key / Bearer Token 使用',
-      name: 'api_server_api_key_hint',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `请先选择一个聊天模型`
   String get api_server_select_model_first {
     return Intl.message(

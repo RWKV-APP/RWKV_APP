@@ -12,6 +12,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:halo_alert/halo_alert.dart';
 import 'package:halo_state/halo_state.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
@@ -74,7 +77,6 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     if (text.isEmpty || _chatSending) return;
 
     final port = P.apiServer.port.q;
-    final apiKey = P.apiServer.authToken.q;
     final url = 'http://127.0.0.1:$port/v1/chat/completions';
 
     setState(() {
@@ -90,9 +92,6 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     try {
       final request = http.Request('POST', Uri.parse(url));
       request.headers['Content-Type'] = 'application/json';
-      if (apiKey.isNotEmpty) {
-        request.headers['Authorization'] = 'Bearer $apiKey';
-      }
       request.body = jsonEncode({
         'model': 'rwkv',
         'messages': requestMessages,
@@ -150,6 +149,49 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     await P.apiServer.stopActiveRequest(showAlert: false);
   }
 
+  String _logsToText(List<String> logs) {
+    if (logs.isEmpty) return '';
+    return logs.join('\n');
+  }
+
+  Future<void> _copyAllLogs(S s, List<String> logs) async {
+    if (logs.isEmpty) {
+      Alert.warning(s.no_data);
+      return;
+    }
+    final text = _logsToText(logs);
+    await Clipboard.setData(ClipboardData(text: text));
+    Alert.success(s.code_copied_to_clipboard);
+  }
+
+  Future<void> _shareLogFile(S s, List<String> logs) async {
+    if (logs.isEmpty) {
+      Alert.warning(s.no_data);
+      return;
+    }
+
+    try {
+      final text = _logsToText(logs);
+      final dir = await getTemporaryDirectory();
+      final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+      final fileName = 'rwkv_api_server_logs_$timestamp.txt';
+      final filePath = path.join(dir.path, fileName);
+      final file = File(filePath);
+      await file.writeAsString(text);
+
+      final xFile = XFile(file.path, mimeType: 'text/plain');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [xFile],
+          text: 'RWKV API Server Logs',
+          subject: fileName,
+        ),
+      );
+    } catch (e) {
+      Alert.error(s.api_server_chat_error(e));
+    }
+  }
+
   String _chatRoleLabel(S s, String role) {
     return switch (role) {
       'user' => s.user,
@@ -171,7 +213,6 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     final isRunning = serverState == BackendState.running;
     final logs = ref.watch(P.apiServer.logs);
     final accessibleUrls = ref.watch(P.apiServer.accessibleUrls);
-    final apiKey = ref.watch(P.apiServer.authToken);
 
     final loopbackUrl = 'http://127.0.0.1:$serverPort';
     final lanUrl = accessibleUrls.isEmpty ? null : accessibleUrls.first;
@@ -194,11 +235,11 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
           _buildControlSection(s, serverState),
           const SizedBox(height: 16),
           if (isRunning) ...[
-            _buildStatusSection(s, loopbackUrl, accessibleUrls, reqCount, activeRequest, apiKey),
+            _buildStatusSection(s, loopbackUrl, accessibleUrls, reqCount, activeRequest),
             const SizedBox(height: 16),
             _buildChatSection(s, theme, activeRequest),
             const SizedBox(height: 16),
-            _buildCurlHint(s, curlUrl, apiKey),
+            _buildCurlHint(s, curlUrl),
             const SizedBox(height: 16),
             _buildDashboardButton(s, loopbackUrl),
             const SizedBox(height: 16),
@@ -330,7 +371,6 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     List<String> accessibleUrls,
     int reqCount,
     bool activeRequest,
-    String apiKey,
   ) {
     return _buildSectionCard(
       children: [
@@ -395,34 +435,6 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
                 ],
               ),
             ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Text(
-                '${s.api_server_api_key}:',
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: SelectableText(
-                  apiKey,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.copy, size: 18),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: apiKey));
-                  Alert.success(s.chat_copied_to_clipboard);
-                },
-                tooltip: s.copy_text,
-              ),
-            ],
-          ),
-          Text(
-            s.api_server_api_key_hint,
-            style: const TextStyle(fontSize: 13, color: Colors.grey),
-          ),
         ],
         const SizedBox(height: 8),
         Text('${s.api_server_request_count}: $reqCount', style: const TextStyle(fontSize: 14, color: Colors.grey)),
@@ -525,10 +537,9 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     );
   }
 
-  Widget _buildCurlHint(S s, String serverUrl, String apiKey) {
-    final authHeader = apiKey.isEmpty ? '' : ' \\\n  -H "Authorization: Bearer $apiKey"';
+  Widget _buildCurlHint(S s, String serverUrl) {
     final curlCmd =
-        'curl $serverUrl/v1/chat/completions \\\n  -H "Content-Type: application/json"$authHeader \\\n  -d \'{"model":"rwkv","messages":[{"role":"user","content":"Hello"}],"stream":true}\'';
+        'curl $serverUrl/v1/chat/completions \\\n  -H "Content-Type: application/json" \\\n  -d \'{"model":"rwkv","messages":[{"role":"user","content":"Hello"}],"stream":true}\'';
     return _buildSectionCard(
       children: [
         Text(
@@ -597,13 +608,26 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
   Widget _buildLogsSection(S s, List<String> logs) {
     return _buildSectionCard(
       children: [
-        Row(
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,
+          runSpacing: 8,
           children: [
             Text(
               s.api_server_logs,
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
             ),
-            const Spacer(),
+            TextButton.icon(
+              onPressed: logs.isEmpty ? null : () => _copyAllLogs(s, logs),
+              icon: const Icon(Icons.copy_all, size: 18),
+              label: Text(s.copy_text),
+            ),
+            TextButton.icon(
+              onPressed: logs.isEmpty ? null : () => _shareLogFile(s, logs),
+              icon: const Icon(Icons.ios_share, size: 18),
+              label: Text(s.share),
+            ),
             TextButton.icon(
               onPressed: logs.isEmpty ? null : P.apiServer.clearLogs,
               icon: const Icon(Icons.clear_all, size: 18),
