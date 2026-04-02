@@ -594,20 +594,20 @@ class S {
     );
   }
 
-  /// `并行推理中，同时生成 {count} 条消息`
+  /// `并行推理：{count} 条输出`
   String batch_inference_running(Object count) {
     return Intl.message(
-      '并行推理中，同时生成 $count 条消息',
+      '并行推理：$count 条输出',
       name: 'batch_inference_running',
       desc: '',
       args: [count],
     );
   }
 
-  /// `已选择第 {index} 条消息`
+  /// `已选择第 {index} 条输出`
   String batch_inference_selected(Object index) {
     return Intl.message(
-      '已选择第 $index 条消息',
+      '已选择第 $index 条输出',
       name: 'batch_inference_selected',
       desc: '',
       args: [index],
@@ -5567,6 +5567,71 @@ class S {
     return Intl.message(
       '当前没有进行中的请求',
       name: 'api_server_no_active_request',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `问题`
+  String get question {
+    return Intl.message('问题', name: 'question', desc: '', args: []);
+  }
+
+  /// `多问题并行`
+  String get multi_question_title {
+    return Intl.message(
+      '多问题并行',
+      name: 'multi_question_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `同时提问多个问题，并行获取回答`
+  String get multi_question_entry_detail {
+    return Intl.message(
+      '同时提问多个问题，并行获取回答',
+      name: 'multi_question_entry_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `输入你的问题...`
+  String get multi_question_input_hint {
+    return Intl.message(
+      '输入你的问题...',
+      name: 'multi_question_input_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无回答`
+  String get multi_question_no_answer {
+    return Intl.message(
+      '暂无回答',
+      name: 'multi_question_no_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `继续对话`
+  String get multi_question_continue {
+    return Intl.message(
+      '继续对话',
+      name: 'multi_question_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `全部发送`
+  String get multi_question_send_all {
+    return Intl.message(
+      '全部发送',
+      name: 'multi_question_send_all',
       desc: '',
       args: [],
     );

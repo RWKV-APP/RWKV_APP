@@ -64,8 +64,8 @@
   "tts_voice_source_file_title": "聲音檔案",
   "tts_voice_source_file_subtitle": "選擇一個 WAV 檔案讓 RWKV 模仿它",
   "tts_voice_source_file_panel_hint": "使用下方檔案的聲音來生成語音",
-  "batch_inference_running": "並行推理中，同時生成 {count} 則訊息",
-  "batch_inference_selected": "已選擇第 {index} 則訊息",
+  "batch_inference_running": "並行推理：{count} 則輸出",
+  "batch_inference_selected": "已選擇第 {index} 則輸出",
   "this_model_does_not_support_batch_inference": "此模型不支援並行推理，請選擇帶有 batch 標籤的模型",
   "enabled": "開啟",
   "disabled": "關閉",
@@ -704,5 +704,12 @@
   "api_server_started_on_port": "API 伺服器已在連接埠 {port} 啟動",
   "api_server_failed_to_start": "API 伺服器啟動失敗: {error}",
   "api_server_active_request_stopped": "已停止目前請求",
-  "api_server_no_active_request": "目前沒有進行中的請求"
+  "api_server_no_active_request": "目前沒有進行中的請求",
+  "question": "問題",
+  "multi_question_title": "多問題並行",
+  "multi_question_entry_detail": "同時提出多個問題，並行取得回答",
+  "multi_question_input_hint": "輸入你的問題...",
+  "multi_question_no_answer": "暫無回答",
+  "multi_question_continue": "繼續對話",
+  "multi_question_send_all": "全部傳送"
 }

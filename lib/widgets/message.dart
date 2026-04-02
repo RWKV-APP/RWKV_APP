@@ -123,6 +123,16 @@ class _MessageState extends ConsumerState<Message> {
       finalContent: finalContent,
     );
 
+    // 多问题并行的用户消息不渲染，finalization 后 isBatch 为 false 会正常显示
+    if (isMine && batchData.isBatch) {
+      return const SizedBox.shrink();
+    }
+
+    List<String>? perSlotQuestions;
+    if (batchData.isBatch && !isMine) {
+      perSlotQuestions = _resolvePerSlotQuestions(msg: msg);
+    }
+
     final bubbleStyleData = _resolveBubbleStyleData(
       msg: msg,
       isMine: isMine,
@@ -161,6 +171,8 @@ class _MessageState extends ConsumerState<Message> {
               userMessageStyle: userMessageStyle,
               rawMaxWidth: rawMaxWidth,
               bubbleStyleData: bubbleStyleData,
+              isBatch: batchData.isBatch,
+              batchCount: batchData.batchCount,
             )
           : _BotMessageBubble(
               msg: msg,
@@ -178,6 +190,7 @@ class _MessageState extends ConsumerState<Message> {
               batchCount: batchData.batchCount,
               batchSelection: batchSelection,
               thisMessageIsReceiving: thisMessageIsReceiving,
+              perSlotQuestions: perSlotQuestions,
             ),
     );
 
@@ -191,8 +204,8 @@ class _MessageState extends ConsumerState<Message> {
             duration: 250.ms,
             child: Padding(
               padding: .only(
-                left: appTheme.msgListMarginLeft,
-                right: appTheme.msgListMarginRight,
+                left: batchData.isBatch ? 0 : appTheme.msgListMarginLeft,
+                right: batchData.isBatch ? 0 : appTheme.msgListMarginRight,
                 top: appTheme.msgListMarginTop,
                 bottom: appTheme.msgListMarginBottom,
               ),
@@ -253,6 +266,8 @@ class _UserMessageBubble extends ConsumerWidget {
   final TS userMessageStyle;
   final double rawMaxWidth;
   final _BubbleStyleData bubbleStyleData;
+  final bool isBatch;
+  final int batchCount;
 
   const _UserMessageBubble({
     required this.msg,
@@ -265,6 +280,8 @@ class _UserMessageBubble extends ConsumerWidget {
     required this.userMessageStyle,
     required this.rawMaxWidth,
     required this.bubbleStyleData,
+    required this.isBatch,
+    required this.batchCount,
   });
 
   @override
@@ -294,7 +311,10 @@ class _UserMessageBubble extends ConsumerWidget {
               crossAxisAlignment: .end,
               children: [
                 if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
-                if (!isUserImage && finalContent.isNotEmpty) Text(finalContent, style: userMessageStyle),
+                if (!isUserImage && finalContent.isNotEmpty)
+                  isBatch
+                      ? Text("${S.of(context).multi_question_title} ($batchCount)", style: userMessageStyle)
+                      : Text(finalContent, style: userMessageStyle),
                 if (isUserImage)
                   ClipRRect(
                     clipBehavior: Clip.antiAlias,
@@ -344,6 +364,7 @@ class _BotMessageBubble extends ConsumerWidget {
   final int batchCount;
   final int? batchSelection;
   final bool thisMessageIsReceiving;
+  final List<String>? perSlotQuestions;
 
   const _BotMessageBubble({
     required this.msg,
@@ -361,6 +382,7 @@ class _BotMessageBubble extends ConsumerWidget {
     required this.batchCount,
     required this.batchSelection,
     required this.thisMessageIsReceiving,
+    this.perSlotQuestions,
   });
 
   void _toggleCotContent() {
@@ -380,6 +402,7 @@ class _BotMessageBubble extends ConsumerWidget {
     final debugColor = theme.colorScheme.error;
     final cotColor = qb.q(.55);
     final thoughtLabelColor = qb.q(.5);
+    final appTheme = ref.watch(P.app.theme);
 
     return Container(
       padding: bubbleStyleData.padding,
@@ -394,18 +417,22 @@ class _BotMessageBubble extends ConsumerWidget {
           if (kDebugMode && Args.debugMsgId) _MessageDebugId(msgId: msg.id, debugColor: debugColor),
           if (isBatch)
             Padding(
-              padding: const .only(left: 0, right: 0, bottom: 8),
+              padding: .only(
+                left: appTheme.msgListMarginLeft,
+                right: appTheme.msgListMarginRight,
+                bottom: 8,
+              ),
               child: Wrap(
                 children: [
                   Text(
                     s.batch_inference_running(batchCount),
-                    style: const TS(c: kCG),
+                    style: TS(c: appTheme.qb5),
                   ),
                   if (batchSelection != null) const SizedBox(width: 16),
                   if (batchSelection != null)
                     Text(
                       s.batch_inference_selected(batchSelection! + 1),
-                      style: const TS(c: kCG),
+                      style: TS(c: appTheme.qb5),
                     ),
                 ],
               ),
@@ -447,7 +474,7 @@ class _BotMessageBubble extends ConsumerWidget {
               raw: thinkingData.cotResult,
               useMessageLineHeight: true,
             ),
-          if (isBatch) BatchMessageContent(msg, index, finalContent),
+          if (isBatch) BatchMessageContent(msg, index, finalContent, perSlotQuestions: perSlotQuestions),
           if (demoType == .tts) BotTtsContent(msg, index),
           if (!selectMode && demoType != .tts)
             BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
@@ -611,18 +638,22 @@ _BatchData _resolveBatchData({
   required bool isMine,
   required String finalContent,
 }) {
-  if (isMine) {
-    return const _BatchData(
-      isBatch: false,
-      batchCount: 0,
-    );
-  }
-
   final (_, bool isBatch, int batchCount, _) = getBatchInfo(finalContent);
   return _BatchData(
     isBatch: isBatch,
     batchCount: batchCount,
   );
+}
+
+List<String>? _resolvePerSlotQuestions({required model.Message msg}) {
+  final parentNode = P.msg.msgNode.q.findParentByMsgId(msg.id);
+  if (parentNode == null) return null;
+  final parentMsg = P.msg.pool.q[parentNode.id];
+  if (parentMsg == null || !parentMsg.isMine) return null;
+  final parentContent = parentMsg.content.split(Config.userMsgModifierSep)[0];
+  final (batch, isBatch, batchCount, _) = getBatchInfo(parentContent);
+  if (!isBatch) return null;
+  return batch.sublist(0, batchCount);
 }
 
 _BubbleStyleData _resolveBubbleStyleData({

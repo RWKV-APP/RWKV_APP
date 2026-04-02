@@ -32,10 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "Each inference will generate %d result";
 
-  static String m6(count) =>
-      "Batch inference running, generating ${count} messages at the same time";
+  static String m6(count) => "Batch inference: ${count} outputs";
 
-  static String m7(index) => "Selected message ${index}";
+  static String m7(index) => "Selected output ${index}";
 
   static String m8(demoName) => "Welcome to ${demoName}";
 
@@ -901,6 +900,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "more_questions": MessageLookupByLibrary.simpleMessage("More Questions"),
     "moving_files": MessageLookupByLibrary.simpleMessage("Moving files..."),
+    "multi_question_continue": MessageLookupByLibrary.simpleMessage("Continue"),
+    "multi_question_entry_detail": MessageLookupByLibrary.simpleMessage(
+      "Ask multiple questions and get answers in parallel",
+    ),
+    "multi_question_input_hint": MessageLookupByLibrary.simpleMessage(
+      "Enter your question...",
+    ),
+    "multi_question_no_answer": MessageLookupByLibrary.simpleMessage(
+      "No answer yet",
+    ),
+    "multi_question_send_all": MessageLookupByLibrary.simpleMessage("Send All"),
+    "multi_question_title": MessageLookupByLibrary.simpleMessage(
+      "Multi-Question Parallel",
+    ),
     "multi_thread": MessageLookupByLibrary.simpleMessage("Multi-threaded"),
     "my_voice": MessageLookupByLibrary.simpleMessage("My Voice"),
     "neko": MessageLookupByLibrary.simpleMessage("Neko"),
@@ -1151,6 +1164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ Group 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ Group 2"),
+    "question": MessageLookupByLibrary.simpleMessage("Question"),
     "question_generator": MessageLookupByLibrary.simpleMessage(
       "Question Generator",
     ),

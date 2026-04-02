@@ -64,8 +64,8 @@
   "tts_voice_source_file_title": "声音文件",
   "tts_voice_source_file_subtitle": "选择一个 WAV 文件让 RWKV 模仿它",
   "tts_voice_source_file_panel_hint": "使用下方文件的声音来生成语音",
-  "batch_inference_running": "并行推理中，同时生成 {count} 条消息",
-  "batch_inference_selected": "已选择第 {index} 条消息",
+  "batch_inference_running": "并行推理：{count} 条输出",
+  "batch_inference_selected": "已选择第 {index} 条输出",
   "this_model_does_not_support_batch_inference": "这个模型不支持并行推理, 请选择带有 batch 标签的模型",
   "enabled": "开启",
   "disabled": "关闭",
@@ -710,5 +710,12 @@
   "api_server_started_on_port": "API 服务器已在端口 {port} 启动",
   "api_server_failed_to_start": "API 服务器启动失败: {error}",
   "api_server_active_request_stopped": "已停止当前请求",
-  "api_server_no_active_request": "当前没有进行中的请求"
+  "api_server_no_active_request": "当前没有进行中的请求",
+  "question": "问题",
+  "multi_question_title": "多问题并行",
+  "multi_question_entry_detail": "同时提问多个问题，并行获取回答",
+  "multi_question_input_hint": "输入你的问题...",
+  "multi_question_no_answer": "暂无回答",
+  "multi_question_continue": "继续对话",
+  "multi_question_send_all": "全部发送"
 }

@@ -10,61 +10,63 @@ import 'package:zone/router/page_key.dart';
 import 'package:zone/store/albatross.dart';
 import 'package:zone/store/p.dart';
 
-class WithDevOption extends StatefulWidget {
-  final Widget child;
+class DevOptionsPanel extends StatefulWidget {
+  static const String _panelKey = 'DevOptionsPanel';
+  final ScrollController scrollController;
 
-  const WithDevOption({super.key, required this.child});
+  const DevOptionsPanel({required this.scrollController});
+
+  static Future<void> show() async {
+    await P.ui.showPanel(
+      key: _panelKey,
+      isDismissible: false,
+      initialChildSize: .8,
+      maxChildSize: .92,
+      expand: false,
+      snap: true,
+      builder: (ScrollController scrollController) => DevOptionsPanel(scrollController: scrollController),
+    );
+  }
+
+  static Widget trigger({required Widget child}) => _DevOptionsTrigger(child: child);
 
   @override
-  State<WithDevOption> createState() => _WithDevOptionState();
+  State<DevOptionsPanel> createState() => _DevOptionsPanelState();
 }
 
-class _WithDevOptionState extends State<WithDevOption> {
-  int count = 0;
-  int firstTap = 0;
+class _DevOptionsTrigger extends StatefulWidget {
+  final Widget child;
+
+  const _DevOptionsTrigger({required this.child});
+
+  @override
+  State<_DevOptionsTrigger> createState() => _DevOptionsTriggerState();
+}
+
+class _DevOptionsTriggerState extends State<_DevOptionsTrigger> {
+  int _count = 0;
+  int _firstTap = 0;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if (count == 0) {
-          firstTap = DateTime.now().millisecondsSinceEpoch;
+        if (_count == 0) {
+          _firstTap = DateTime.now().millisecondsSinceEpoch;
         }
-        count++;
-        if (count < 6) return;
-        final span = DateTime.now().millisecondsSinceEpoch - firstTap;
-        count = 0;
+        _count++;
+        if (_count < 6) return;
+        final span = DateTime.now().millisecondsSinceEpoch - _firstTap;
+        _count = 0;
         if (span >= 1300) return;
-        await _DevOptionsDialog.show();
+        await DevOptionsPanel.show();
       },
       child: widget.child,
     );
   }
 }
 
-class _DevOptionsDialog extends StatefulWidget {
-  static const String panelKey = 'DevOptionsDialog';
-  final ScrollController scrollController;
-
-  const _DevOptionsDialog({required this.scrollController});
-
-  static Future<void> show() async {
-    await P.ui.showPanel(
-      key: panelKey,
-      isDismissible: false,
-      initialChildSize: .8,
-      maxChildSize: .92,
-      expand: false,
-      snap: true,
-      builder: (ScrollController scrollController) => _DevOptionsDialog(scrollController: scrollController),
-    );
-  }
-
-  @override
-  State<_DevOptionsDialog> createState() => _DevOptionsDialogState();
-}
-
-class _DevOptionsDialogState extends State<_DevOptionsDialog> {
+class _DevOptionsPanelState extends State<DevOptionsPanel> {
   final TextEditingController _controllerHost = TextEditingController(text: Albatross.instance.host);
 
   @override
@@ -79,9 +81,16 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
   }
 
   void _onWebSearchChanged(bool value) {
-    final nextFeatureRollout = P.app.featureRollout.q.copyWith(webSearch: value);
-    P.preference.setFeatureRollout(nextFeatureRollout);
-    P.app.featureRollout.q = nextFeatureRollout;
+    final next = P.app.featureRollout.q.copyWith(webSearch: value);
+    P.preference.setFeatureRollout(next);
+    P.app.featureRollout.q = next;
+    setState(() {});
+  }
+
+  void _onParallelAnsweringChanged(bool value) {
+    final next = P.app.featureRollout.q.copyWith(parallelAnswering: value);
+    P.preference.setFeatureRollout(next);
+    P.app.featureRollout.q = next;
     setState(() {});
   }
 
@@ -118,12 +127,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
             Expanded(
               child: ListView(
                 controller: widget.scrollController,
-                padding: .only(
-                  left: 16,
-                  top: 14,
-                  right: 16,
-                  bottom: 16 + bottomPadding,
-                ),
+                padding: const .only(left: 16, top: 14, right: 16, bottom: 16),
                 children: [
                   Container(
                     decoration: BoxDecoration(
@@ -138,6 +142,13 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
                           subtitle: 'Enable experimental web search.',
                           value: featureRollout.webSearch,
                           onChanged: _onWebSearchChanged,
+                        ),
+                        Container(height: .5, color: borderColor),
+                        _DevSwitchItem(
+                          title: 'Parallel Answering',
+                          subtitle: 'Show parallel answering buttons in batch and ask-question panels.',
+                          value: featureRollout.parallelAnswering,
+                          onChanged: _onParallelAnsweringChanged,
                         ),
                         Container(height: .5, color: borderColor),
                         _DevSwitchItem(
@@ -167,6 +178,7 @@ class _DevOptionsDialogState extends State<_DevOptionsDialog> {
                 ],
               ),
             ),
+            _DevApplyButton(bottomPadding: bottomPadding, borderColor: borderColor),
           ],
         ),
       ),
@@ -216,6 +228,36 @@ class _DevPanelHeader extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _DevApplyButton extends StatelessWidget {
+  final double bottomPadding;
+  final Color borderColor;
+
+  const _DevApplyButton({required this.bottomPadding, required this.borderColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: borderColor, width: .5)),
+      ),
+      padding: EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 12 + bottomPadding),
+      child: FilledButton(
+        onPressed: pop,
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(44),
+          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+        ),
+        child: Text(
+          'Apply All Changes',
+          style: theme.textTheme.labelLarge?.copyWith(fontWeight: .w600),
+        ),
       ),
     );
   }

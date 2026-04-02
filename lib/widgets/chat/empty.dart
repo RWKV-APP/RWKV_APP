@@ -11,7 +11,7 @@ import 'package:zone/func/check_model_selection.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/all_suggestion_dialog.dart';
-import 'package:zone/widgets/dev_options_dialog.dart';
+import 'package:zone/widgets/dev_options_panel.dart';
 import 'package:zone/widgets/model_selector.dart';
 
 const Color _lifeSuggestionColor = Color(0xFFD18B39);
@@ -92,7 +92,7 @@ class Empty extends ConsumerWidget {
                     crossAxisAlignment: .center,
                     children: [
                       const Spacer(),
-                      WithDevOption(child: Image.asset(logoPath, width: 140)),
+                      DevOptionsPanel.trigger(child: Image.asset(logoPath, width: 140)),
                       const SizedBox(height: 12),
                       Wrap(
                         spacing: 4,

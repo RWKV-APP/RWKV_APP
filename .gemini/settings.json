@@ -4,7 +4,8 @@
   },
   "context": {
     "fileName": [
-      ".cursor/rules/all.mdc", ".cursor/rules/code_style.mdc", ".cursor/rules/source_control.mdc", ".cursor/rules/tech_stack.mdc"],
+      "AGENTS.md"
+    ],
     "fileFiltering": {
       "respectGitIgnore": true,
       "enableRecursiveFileSearch": true

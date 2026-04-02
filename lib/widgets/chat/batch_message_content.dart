@@ -21,8 +21,9 @@ class BatchMessageContent extends ConsumerStatefulWidget {
   final model.Message msg;
   final int index;
   final String finalContent;
+  final List<String>? perSlotQuestions;
 
-  const BatchMessageContent(this.msg, this.index, this.finalContent, {super.key});
+  const BatchMessageContent(this.msg, this.index, this.finalContent, {this.perSlotQuestions, super.key});
 
   @override
   ConsumerState<BatchMessageContent> createState() => _BatchMessageContentState();
@@ -88,39 +89,53 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
 
     final parsedDecodeParams = widget.msg.parsedDecodeParams;
 
+    final appTheme = ref.watch(P.app.theme);
+
     return Stack(
       children: [
         SingleChildScrollView(
+          padding: .only(
+            left: appTheme.msgListMarginLeft,
+            right: appTheme.msgListMarginRight,
+          ),
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: .start,
             crossAxisAlignment: .start,
-            children: [
-              for (var i = 0; i < batchCount; i++)
-                GD(
-                  onTap: () {
-                    P.msg.batchSelection(widget.msg).q = i;
-                  },
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: screenWidth * (batchVW / 100),
-                      minWidth: screenWidth * (batchVW / 100),
+            children:
+                [
+                  for (var i = 0; i < batchCount; i++)
+                    GD(
+                      onTap: () {
+                        P.msg.batchSelection(widget.msg).q = i;
+                      },
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: screenWidth * (batchVW / 100),
+                          minWidth: screenWidth * (batchVW / 100),
+                        ),
+                        padding: const .all(8),
+                        decoration: BoxDecoration(
+                          color: qw,
+                          border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
+                          borderRadius: .circular(8),
+                        ),
+                        child: _SlotContent(
+                          question: widget.perSlotQuestions != null && i < widget.perSlotQuestions!.length
+                              ? widget.perSlotQuestions![i]
+                              : null,
+                          data: batch[i],
+                          decodeParam: parsedDecodeParams.isNotEmpty
+                              ? parsedDecodeParams[i < parsedDecodeParams.length ? i : parsedDecodeParams.length - 1]
+                              : null,
+                          qb: qb,
+                        ),
+                      ),
                     ),
-                    padding: const .all(8),
-                    decoration: BoxDecoration(
-                      color: qw,
-                      border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
-                      borderRadius: .circular(8),
-                    ),
-                    child: _MarkdownBody(
-                      data: batch[i],
-                      decodeParam: parsedDecodeParams.isNotEmpty ? parsedDecodeParams[i] : null,
-                    ),
-                  ),
+                ].widgetJoin(
+                  (index) => const SizedBox(width: 8),
                 ),
-              const SizedBox(width: 4),
-            ].widgetJoin((index) => const SizedBox(width: 8)),
           ),
         ),
         AnimatedPositioned(
@@ -176,6 +191,126 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SlotContent extends ConsumerWidget {
+  final String? question;
+  final String data;
+  final SamplerAndPenaltyParam? decodeParam;
+  final Color qb;
+
+  const _SlotContent({
+    required this.question,
+    required this.data,
+    required this.decodeParam,
+    required this.qb,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final bool hasQuestion = question != null && question!.trim().isNotEmpty;
+
+    // 普通 batch inference（无 question）：保持现有行为
+    if (!hasQuestion) {
+      return _MarkdownBody(data: data, decodeParam: decodeParam);
+    }
+
+    // 多问题并行：decode param → user question → bot answer
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
+        if (decodeParam != null) const SizedBox(height: 8),
+        _UserQuestionCard(question: question!),
+        const SizedBox(height: 8),
+        _MarkdownBody(data: data),
+      ],
+    );
+  }
+}
+
+class _UserQuestionCard extends ConsumerWidget {
+  final String question;
+
+  const _UserQuestionCard({required this.question});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final theme = Theme.of(context);
+    // final bool isDark = theme.brightness == Brightness.dark;
+    // final borderColor = theme.colorScheme.primary.q(isDark ? .34 : .18);
+    // final backgroundColor = theme.colorScheme.secondary.q(isDark ? .12 : .06);
+    final appTheme = ref.watch(P.app.theme);
+
+    return Container(
+      padding: const .symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: appTheme.g1,
+        borderRadius: .circular(4),
+        border: Border.all(
+          color: appTheme.qb12,
+        ),
+      ),
+      child: Text(
+        question,
+        style: TextStyle(
+          // color: theme.colorScheme.onSurface,
+        ),
+      ),
+    );
+  }
+}
+
+class _DecodeParamBadge extends ConsumerWidget {
+  final SamplerAndPenaltyParam decodeParam;
+
+  const _DecodeParamBadge({required this.decodeParam});
+
+  void _onTap() async {
+    final _ = await showOkAlertDialog(
+      context: getContext()!,
+      title: S.current.decode_param,
+      message:
+          """Decode Param: ${decodeParam.displayName}
+      Temperature: ${decodeParam.temperature.toStringAsFixed(1)}
+      TopP: ${decodeParam.topP.toStringAsFixed(2)}
+      Presence Penalty: ${decodeParam.presencePenalty.toStringAsFixed(1)}
+      Frequency Penalty: ${decodeParam.frequencyPenalty.toStringAsFixed(1)}
+      Penalty Decay: ${decodeParam.penaltyDecay.toStringAsFixed(3)}
+""",
+      okLabel: S.current.got_it,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ignore: unused_local_variable
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final displayText = s.decode_param + s.colon + decodeParam.decodeParamType.displayNameShort;
+    final appTheme = ref.watch(P.app.theme);
+
+    return Align(
+      alignment: .topLeft,
+      child: GD(
+        onTap: _onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            border: .all(
+              color: appTheme.qb12,
+            ),
+            borderRadius: .circular(4),
+          ),
+          padding: const .symmetric(
+            horizontal: 6,
+            vertical: 2,
+          ),
+          child: Text(displayText),
+        ),
+      ),
     );
   }
 }

@@ -89,14 +89,13 @@ class ConversationListItemData {
     );
 
     for (final partialPrefix in partialPrefixes) {
-      if (!processed.endsWith(partialPrefix)) {
-        continue;
+      if (processed.endsWith(partialPrefix)) {
+        processed = processed.substring(0, processed.length - partialPrefix.length).trimRight();
+        break;
       }
-      processed = processed.substring(0, processed.length - partialPrefix.length).trimRight();
-      return processed;
     }
 
-    return processed;
+    return processed.replaceAll(Config.batchMarker, ' | ');
   }
 
   static String getDisplayTime(int microsecondsSinceEpoch) {

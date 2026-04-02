@@ -122,6 +122,9 @@ class _AskQuestion {
   late final scheduledQuestionCount = qs(0);
   late final retainedQuestionCount = qs(0);
 
+  /// 当非 null 时，useQuestion 会将问题回填到多问题面板的对应 slot
+  late final multiQuestionTargetIndex = qs<int?>(null);
+
   late final prefixes = qp((ref) {
     final selectedLanguage = ref.watch(language);
     return _askQuestionPrefixes[selectedLanguage] ?? const <String>[];
@@ -429,11 +432,26 @@ extension _$AskQuestion on _AskQuestion {
       final botMsg = i + 1 < scopedMessages.length ? scopedMessages[i + 1] : null;
       if (botMsg == null) continue;
 
-      final userContent = userMsg.getContentForHistoryWithRef(botMsg.reference).trim();
+      String userContent = userMsg.getContentForHistoryWithRef(botMsg.reference).trim();
       if (userContent.isEmpty) continue;
 
-      final botContent = botMsg.getHistoryContent().trim();
+      String botContent = botMsg.getHistoryContent().trim();
       if (botContent.isEmpty) continue;
+
+      // Strip batch markers from history to avoid contaminating question generation prompts
+      if (getIsBatch(userContent)) {
+        final (batch, _, _, _) = getBatchInfo(userContent);
+        userContent = batch.first.trim();
+      }
+      if (getIsBatch(botContent)) {
+        final (batch, _, _, selectedBatch) = getBatchInfo(botContent);
+        final int slot = selectedBatch != null && selectedBatch >= 0 && selectedBatch < batch.length
+            ? selectedBatch
+            : 0;
+        botContent = batch[slot].trim();
+      }
+
+      if (userContent.isEmpty || botContent.isEmpty) continue;
 
       messages.add(userContent);
       messages.add(botContent);
@@ -459,9 +477,7 @@ extension _$AskQuestion on _AskQuestion {
   }) {
     final latestModel = P.rwkv.latestModel.q;
     final batchAllowed = latestModel?.tags.contains("batch") ?? false;
-    final batchEnabled = P.chat.batchEnabled.q;
     if (!batchAllowed) return 1;
-    if (!batchEnabled) return 1;
     if (targetQuestionCount <= 1) return 1;
     return targetQuestionCount;
   }
@@ -1053,6 +1069,14 @@ extension $AskQuestion on _AskQuestion {
     prefixInput.q = "";
     selectedPrefix.q = null;
     _clearQuestionSelectionState();
+
+    final targetIndex = multiQuestionTargetIndex.q;
+    if (targetIndex != null) {
+      P.multiQuestion.updateQuestion(targetIndex, normalized);
+      multiQuestionTargetIndex.q = null;
+      await pop();
+      return;
+    }
 
     final controller = P.chat.textEditingController;
     controller.text = normalized;

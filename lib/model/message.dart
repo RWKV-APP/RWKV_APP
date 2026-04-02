@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:equatable/equatable.dart';
-import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
@@ -250,7 +249,6 @@ extension MessageX on Message {
       return contentForHistory;
     }
     final ref = reference.enable ? reference.toLlmReferenceText() : null;
-    qqq("$contentForHistory, ${ref?.substring(0, 30)}");
     if (ref == null) {
       return contentForHistory;
     } else {

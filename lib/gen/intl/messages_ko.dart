@@ -32,9 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "각 추론에서 ${count}개의 결과를 생성";
 
-  static String m6(count) => "병렬 추론 실행 중, 동시에 ${count}개의 메시지 생성 중";
+  static String m6(count) => "병렬 추론: ${count}개 출력";
 
-  static String m7(index) => "${index}번 메시지 선택됨";
+  static String m7(index) => "${index}번 출력 선택됨";
 
   static String m8(demoName) => "${demoName}을(를) 탐험해 보세요";
 
@@ -770,6 +770,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "more": MessageLookupByLibrary.simpleMessage("더 보기"),
     "more_questions": MessageLookupByLibrary.simpleMessage("더 많은 질문"),
     "moving_files": MessageLookupByLibrary.simpleMessage("파일 이동 중..."),
+    "multi_question_continue": MessageLookupByLibrary.simpleMessage("대화 계속하기"),
+    "multi_question_entry_detail": MessageLookupByLibrary.simpleMessage(
+      "여러 질문을 동시에 보내고 병렬로 답변 받기",
+    ),
+    "multi_question_input_hint": MessageLookupByLibrary.simpleMessage(
+      "질문을 입력하세요...",
+    ),
+    "multi_question_no_answer": MessageLookupByLibrary.simpleMessage(
+      "아직 답변이 없습니다",
+    ),
+    "multi_question_send_all": MessageLookupByLibrary.simpleMessage("전체 전송"),
+    "multi_question_title": MessageLookupByLibrary.simpleMessage("다중 질문 병렬 처리"),
     "multi_thread": MessageLookupByLibrary.simpleMessage("다중 스레드"),
     "my_voice": MessageLookupByLibrary.simpleMessage("내 목소리"),
     "neko": MessageLookupByLibrary.simpleMessage("네코"),
@@ -971,6 +983,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("프롬프트 템플릿"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("QQ 그룹 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("QQ 그룹 2"),
+    "question": MessageLookupByLibrary.simpleMessage("질문"),
     "question_generator": MessageLookupByLibrary.simpleMessage("질문 생성기"),
     "question_generator_context_prefix_input_placeholder":
         MessageLookupByLibrary.simpleMessage(

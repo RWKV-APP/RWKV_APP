@@ -733,6 +733,34 @@ extension $Chat on _Chat {
           final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
           final finalizedMsg = parentMsg.copyWith(content: finalizedContent);
           P.msg._syncMsg(parentMsg.id, finalizedMsg);
+
+          // 重新计算 token count（从 batch 全量变为单 slot）
+          unawaited(_refreshTokenCountsForMessage(
+            messageId: parentMsg.id,
+            overrideBotContent: finalizedContent,
+            persistToMessage: true,
+          ));
+
+          // Also finalize the paired user batch message if it exists
+          final userParentNode = P.msg.msgNode.q.findParentByMsgId(parentMsg.id);
+          if (userParentNode != null) {
+            final userParentMsg = P.msg.pool.q[userParentNode.id];
+            if (userParentMsg != null && userParentMsg.isMine) {
+              final userParts = userParentMsg.content.split(Config.userMsgModifierSep);
+              final userRawContent = userParts[0];
+              final userTail = userParts.length > 1 ? userParts.sublist(1).join(Config.userMsgModifierSep) : "";
+              if (getIsBatch(userRawContent)) {
+                final userBatch = userRawContent.split(Config.batchMarker);
+                if (selection < userBatch.length) {
+                  final selectedQuestion = userBatch[selection];
+                  final finalizedUserContent = userTail.isNotEmpty
+                      ? selectedQuestion + Config.userMsgModifierSep + userTail
+                      : selectedQuestion;
+                  P.msg._syncMsg(userParentMsg.id, userParentMsg.copyWith(content: finalizedUserContent));
+                }
+              }
+            }
+          }
         } else {
           Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
           return;
@@ -997,6 +1025,8 @@ extension _$Chat on _Chat {
     P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
 
     batchCount.l(_onBatchCountChanged);
+    batchVW.l(_onBatchVWChanged);
+    _loadBatchVW();
 
     scrollController.addListener(_onScroll);
     P.msg.ids.l(_onMessageIdsChangedForTokenCount);
@@ -1018,7 +1048,9 @@ extension _$Chat on _Chat {
     required int? conversationTokensCount,
   }) {
     if (conversationTokensCount == null) return;
-    if (conversationTokensCount < Config.newConversationTokenReminderThreshold) return;
+    final int effectiveBatchCount = batchEnabled.q ? batchCount.q : 1;
+    final int threshold = Config.newConversationTokenReminderThreshold * effectiveBatchCount;
+    if (conversationTokensCount < threshold) return;
 
     final conversationId = P.msg.msgNode.q.createAtInUS;
     final shownConversationIds = tokenReminderShownConversationIds.q;
@@ -1056,6 +1088,17 @@ extension _$Chat on _Chat {
       ),
     );
     P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value, modelID: modelID));
+  }
+
+  void _onBatchVWChanged(int value) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt("halo_state.batchVW", value);
+  }
+
+  void _loadBatchVW() async {
+    final sp = await SharedPreferences.getInstance();
+    final saved = sp.getInt("halo_state.batchVW");
+    if (saved != null) batchVW.q = saved;
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {

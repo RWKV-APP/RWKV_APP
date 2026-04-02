@@ -32,10 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "Каждый вывод сгенерирует ${count} результата";
 
-  static String m6(count) =>
-      "Ветвление, генерируется ${count} сообщений одновременно";
+  static String m6(count) => "Параллельный инференс: ${count} выходов";
 
-  static String m7(index) => "Выбрано ${index} сообщение";
+  static String m7(index) => "Выбран выход ${index}";
 
   static String m8(demoName) => "Добро пожаловать в ${demoName}";
 
@@ -940,6 +939,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "moving_files": MessageLookupByLibrary.simpleMessage(
       "Перемещение файлов...",
     ),
+    "multi_question_continue": MessageLookupByLibrary.simpleMessage(
+      "Продолжить",
+    ),
+    "multi_question_entry_detail": MessageLookupByLibrary.simpleMessage(
+      "Задайте несколько вопросов и получите ответы параллельно",
+    ),
+    "multi_question_input_hint": MessageLookupByLibrary.simpleMessage(
+      "Введите вопрос...",
+    ),
+    "multi_question_no_answer": MessageLookupByLibrary.simpleMessage(
+      "Ответа пока нет",
+    ),
+    "multi_question_send_all": MessageLookupByLibrary.simpleMessage(
+      "Отправить все",
+    ),
+    "multi_question_title": MessageLookupByLibrary.simpleMessage(
+      "Параллельные вопросы",
+    ),
     "multi_thread": MessageLookupByLibrary.simpleMessage("Многопоточный"),
     "my_voice": MessageLookupByLibrary.simpleMessage("Мой голос"),
     "neko": MessageLookupByLibrary.simpleMessage("Неко"),
@@ -1187,6 +1204,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "prompt_template": MessageLookupByLibrary.simpleMessage("Шаблон промпта"),
     "qq_group_1": MessageLookupByLibrary.simpleMessage("Группа QQ 1"),
     "qq_group_2": MessageLookupByLibrary.simpleMessage("Группа QQ 2"),
+    "question": MessageLookupByLibrary.simpleMessage("Вопрос"),
     "question_generator": MessageLookupByLibrary.simpleMessage(
       "Генератор вопросов",
     ),

@@ -22,6 +22,7 @@ class Debugger extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!false) return const SizedBox.shrink();
+    final theme = Theme.of(context);
     if (!kDebugMode) return const SizedBox.shrink();
 
     final demoType = ref.watch(P.app.demoType);
@@ -68,6 +69,11 @@ class Debugger extends ConsumerWidget {
     final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
     final receivingTokens = ref.watch(P.rwkv.generating);
 
+    final batcbatchEnabledhCount = ref.watch(P.chat.batchEnabled);
+    final batchEnabled = ref.watch(P.chat.batchEnabled);
+    final batchVW = ref.watch(P.chat.batchVW);
+    final batchCount = ref.watch(P.chat.batchCount);
+
     final loadedModels = ref.watch(P.rwkv.loadedModels);
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
 
@@ -108,6 +114,8 @@ class Debugger extends ConsumerWidget {
 
     final questions = ref.watch(P.askQuestion.questions);
 
+    // final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+
     const showDrawerWidth = false;
     const showEditingBotMessage = false;
     const showAvailableModels = false;
@@ -131,7 +139,10 @@ class Debugger extends ConsumerWidget {
     const showCurrentModel = false;
     const showLoading = false;
     const showMsgNode = false;
-    const showSupportedBatchSizes = false;
+    const showSupportedBatchSizes = true;
+    const showBatchEnabled = true;
+    const showBatchVW = true;
+    const showBatchCount = true;
     const showLoadingProgress = false;
     const showMaxWidthAllowedForLayout = false;
     const showWidthRequiredForLayout = false;
@@ -162,6 +173,87 @@ class Debugger extends ConsumerWidget {
     const showQuestions = true;
     const showGenerating = true;
 
+    final children =
+        [
+          (max(paddingTop, 40)).h,
+          if (showLoadedModels) ...[
+            Text("loadedModels".codeToName),
+            Text(loadedModels.entries.map((e) => "${e.key.name} id: ${e.value}").join("\n")),
+          ],
+          if (showLoadingStatus) ...[
+            Text("loadingStatus".codeToName),
+            Text(
+              loadingStatus.entries.map((e) => "${e.key.name} ${e.value.toString().replaceAll("LoadingStatus", "")}").join("\n"),
+            ),
+          ],
+          if (showUnzipping) ...[Text("unzipping".codeToName), Text(unzipping.toString())],
+          if (showDemoType) ...[Text("demoType".codeToName), Text(demoType.toString())],
+          if (showCurrentGroupInfo) ...[Text("currentGroupInfo".codeToName), Text(currentGroupInfo?.displayName ?? "null")],
+          if (showLatestModel) ...[Text("latestModel".codeToName), Text(latestModel?.name ?? "null")],
+          if (showGeneratingId) ...[Text("generatingId".codeToName), Text(generatingId?.toString() ?? "null")],
+          if (showGenerating) ...[Text("generating".codeToName), Text(generating.toString())],
+          if (showHiddenPrefilling) ...[Text("hiddenPrefilling".codeToName), Text(hiddenPrefilling.toString())],
+          if (showSocName) ...[Text("socName".codeToName), Text(socName)],
+          if (showSocBrand) ...[Text("socBrand".codeToName), Text(socBrand.toString())],
+          if (showFrontendSocName) ...[Text("frontendSocName".codeToName), Text(frontendSocName ?? "null")],
+          if (showFrontendSocBrand) ...[Text("frontendSocBrand".codeToName), Text(frontendSocBrand.toString())],
+          if (showPreferredUIFont) ...[Text("preferredUIFont".codeToName), Text(preferredUIFont ?? "null")],
+          if (showPreferredMonospaceFont) ...[Text("preferredMonospaceFont".codeToName), Text(preferredMonospaceFont ?? "null")],
+          ...[
+            if (!isMobile) ...[
+              Text("pthFolderEntries".codeToName),
+              Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
+            ],
+            if (!isMobile) ...[
+              Text("pthFolders".codeToName),
+              Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
+            ],
+            if (!isMobile) ...[Text("effectiveModelsDir".codeToName), Text(effectiveModelsDir)],
+            if (!isMobile) ...[Text("defaultModelsDir".codeToName), Text(defaultModelsDir)],
+            if (!isMobile) ...[Text("usingCustomModelsDir".codeToName), Text(usingCustomModelsDir.toString())],
+            if (!isMobile) ...[Text("customModelsDir".codeToName), Text(customModelsDir ?? "null")],
+          ],
+          if (showLoadingProgress) ...[
+            Text("loadingProgress".codeToName),
+            Text(loadingProgress.entries.map((e) => "${e.key.name} ${e.value}").join("\n")),
+          ],
+          if (showMaxWidthAllowedForLayout) ...[Text("maxWidthAllowedForLayout".codeToName), Text(maxWidthAllowedForLayout.toString())],
+          if (showWidthRequiredForLayout) ...[Text("widthRequiredForLayout".codeToName), Text(widthRequiredForLayout.toString())],
+          if (showShouldUseWrapRatherThanRow) ...[
+            Text("shouldUseWrapRatherThanRow".codeToName),
+            Text(shouldUseWrapRatherThanRow.toString()),
+          ],
+          if (showMessageListLayoutKeys) ...[
+            Text("messageListLayoutKeys".codeToName),
+            Text(messageListLayoutKeys.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+          ],
+          if (showWidthRequiredForLayout) ...[Text("widthRequiredForLayout".codeToName), Text(widthRequiredForLayout.toString())],
+          if (showHomeItemTitleHeights) ...[
+            Text("homeItemTitleHeights".codeToName),
+            Text(homeItemTitleHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+          ],
+          if (showHomeItemDescriptionHeights) ...[
+            Text("homeItemDescriptionHeights".codeToName),
+            Text(homeItemDescriptionHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
+          ],
+          if (showMaxHeightsOfHomeItemTitle) ...[Text("maxHeightsOfHomeItemTitle".codeToName), Text(maxHeightsOfHomeItemTitle.toString())],
+          if (showMaxHeightsOfHomeItemDescription) ...[
+            Text("maxHeightsOfHomeItemDescription".codeToName),
+            Text(maxHeightsOfHomeItemDescription.toString()),
+          ],
+          if (showQuestions) ...[Text("questions".codeToName), Text(questions.join("\n"))],
+          if (showSupportedBatchSizes) ...[Text("supportedBatchSizes".codeToName), Text(supportedBatchSizes.join(", "))],
+          if (showBatchVW) ...[Text("batchVW".codeToName), Text(batchVW.toString())],
+          if (showBatchEnabled) ...[Text("batchEnabled".codeToName), Text(batchEnabled.toString())],
+          if (showBatchCount) ...[Text("batchCount".codeToName), Text(batchCount.toString())],
+        ].indexMap((index, e) {
+          return Container(
+            margin: .only(top: index % 2 == 0 ? 0 : 1),
+            decoration: BoxDecoration(color: qb.q(.55)),
+            child: e,
+          );
+        });
+
     return Positioned(
       left: 0,
       top: 0,
@@ -175,93 +267,10 @@ class Debugger extends ConsumerWidget {
             s: 8,
           ),
           color: Colors.transparent,
-          child: SizedBox(
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.transparent),
-              child: Column(
-                mainAxisAlignment: .start,
-                crossAxisAlignment: .end,
-                children:
-                    [
-                      (max(paddingTop, 40)).h,
-                      if (showLoadedModels) Text("loadedModels".codeToName),
-                      if (showLoadedModels) Text(loadedModels.entries.map((e) => "${e.key.name} id: ${e.value}").join("\n")),
-                      if (showLoadingStatus) Text("loadingStatus".codeToName),
-                      if (showLoadingStatus)
-                        Text(
-                          loadingStatus.entries
-                              .map((e) => "${e.key.name} ${e.value.toString().replaceAll("LoadingStatus", "")}")
-                              .join("\n"),
-                        ),
-                      if (showUnzipping) Text("unzipping".codeToName),
-                      if (showUnzipping) Text(unzipping.toString()),
-                      if (showDemoType) Text("demoType".codeToName),
-                      if (showDemoType) Text(demoType.toString()),
-                      if (showCurrentGroupInfo) Text("currentGroupInfo".codeToName),
-                      if (showCurrentGroupInfo) Text(currentGroupInfo?.displayName ?? "null"),
-                      if (showLatestModel) Text("latestModel".codeToName),
-                      if (showLatestModel) Text(latestModel?.name ?? "null"),
-                      if (showGeneratingId) Text("generatingId".codeToName),
-                      if (showGeneratingId) Text(generatingId?.toString() ?? "null"),
-                      if (showGenerating) Text("generating".codeToName),
-                      if (showGenerating) Text(generating.toString()),
-                      if (showHiddenPrefilling) Text("hiddenPrefilling".codeToName),
-                      if (showHiddenPrefilling) Text(hiddenPrefilling.toString()),
-                      if (showSocName) Text("socName".codeToName),
-                      if (showSocName) Text(socName),
-                      if (showSocBrand) Text("socBrand".codeToName),
-                      if (showSocBrand) Text(socBrand.toString()),
-                      if (showFrontendSocName) Text("frontendSocName".codeToName),
-                      if (showFrontendSocName) Text(frontendSocName ?? "null"),
-                      if (showFrontendSocBrand) Text("frontendSocBrand".codeToName),
-                      if (showFrontendSocBrand) Text(frontendSocBrand.toString()),
-                      if (showPreferredUIFont) Text("preferredUIFont".codeToName),
-                      if (showPreferredUIFont) Text(preferredUIFont ?? "null"),
-                      if (showPreferredMonospaceFont) Text("preferredMonospaceFont".codeToName),
-                      if (showPreferredMonospaceFont) Text(preferredMonospaceFont ?? "null"),
-                      if (!isMobile) Text("pthFolderEntries".codeToName),
-                      if (!isMobile) Text(pthFolderEntries.map((e) => e.path + (e.bookmark != null ? " [bookmark]" : "")).join("\n")),
-                      if (!isMobile) Text("pthFolders".codeToName),
-                      if (!isMobile) Text(pthFolders.map((e) => "${e.path} ${e.state.toString()} ${e.files.length}").join("\n")),
-                      if (!isMobile) Text("effectiveModelsDir".codeToName),
-                      if (!isMobile) Text(effectiveModelsDir),
-                      if (!isMobile) Text("defaultModelsDir".codeToName),
-                      if (!isMobile) Text(defaultModelsDir),
-                      if (!isMobile) Text("usingCustomModelsDir".codeToName),
-                      if (!isMobile) Text(usingCustomModelsDir.toString()),
-                      if (!isMobile) Text("customModelsDir".codeToName),
-                      if (!isMobile) Text(customModelsDir ?? "null"),
-                      if (showLoadingProgress) Text("loadingProgress".codeToName),
-                      if (showLoadingProgress) Text(loadingProgress.entries.map((e) => "${e.key.name} ${e.value}").join("\n")),
-                      if (showMaxWidthAllowedForLayout) Text("maxWidthAllowedForLayout".codeToName),
-                      if (showMaxWidthAllowedForLayout) Text(maxWidthAllowedForLayout.toString()),
-                      if (showWidthRequiredForLayout) Text("widthRequiredForLayout".codeToName),
-                      if (showWidthRequiredForLayout) Text(widthRequiredForLayout.toString()),
-                      if (showShouldUseWrapRatherThanRow) Text("shouldUseWrapRatherThanRow".codeToName),
-                      if (showShouldUseWrapRatherThanRow) Text(shouldUseWrapRatherThanRow.toString()),
-                      if (showMessageListLayoutKeys) Text("messageListLayoutKeys".codeToName),
-                      if (showMessageListLayoutKeys) Text(messageListLayoutKeys.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
-                      if (showWidthRequiredForLayout) Text(widthRequiredForLayout.toString()),
-                      if (showHomeItemTitleHeights) Text("homeItemTitleHeights".codeToName),
-                      if (showHomeItemTitleHeights) Text(homeItemTitleHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
-                      if (showHomeItemDescriptionHeights) Text("homeItemDescriptionHeights".codeToName),
-                      if (showHomeItemDescriptionHeights)
-                        Text(homeItemDescriptionHeights.entries.map((e) => "${e.key}: ${e.value}").join("\n")),
-                      if (showMaxHeightsOfHomeItemTitle) Text("maxHeightsOfHomeItemTitle".codeToName),
-                      if (showMaxHeightsOfHomeItemTitle) Text(maxHeightsOfHomeItemTitle.toString()),
-                      if (showMaxHeightsOfHomeItemDescription) Text("maxHeightsOfHomeItemDescription".codeToName),
-                      if (showMaxHeightsOfHomeItemDescription) Text(maxHeightsOfHomeItemDescription.toString()),
-                      if (showQuestions) Text("questions".codeToName),
-                      if (showQuestions) Text(questions.join("\n")),
-                    ].indexMap((index, e) {
-                      return Container(
-                        margin: .only(top: index % 2 == 0 ? 0 : 1),
-                        decoration: BoxDecoration(color: qb.q(.55)),
-                        child: e,
-                      );
-                    }),
-              ),
-            ),
+          child: Column(
+            mainAxisAlignment: .start,
+            crossAxisAlignment: .end,
+            children: children,
           ),
         ),
       ),
@@ -274,6 +283,7 @@ class _SudokuDebugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final paddingTop = ref.watch(P.app.paddingTop);
     final loaded = ref.watch(P.rwkv.loaded);
     final running = ref.watch(P.sudoku.running);
@@ -340,6 +350,7 @@ class _TTSDebugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final audioInteractorShown = ref.watch(P.talk.audioInteractorShown);
     final endTime = ref.watch(P.see.endTime);
     final interactingInstruction = ref.watch(P.talk.interactingInstruction);
