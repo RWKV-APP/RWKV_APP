@@ -14,7 +14,7 @@ class DevOptionsPanel extends StatefulWidget {
   static const String _panelKey = 'DevOptionsPanel';
   final ScrollController scrollController;
 
-  const DevOptionsPanel({required this.scrollController});
+  const DevOptionsPanel({super.key, required this.scrollController});
 
   static Future<void> show() async {
     await P.ui.showPanel(

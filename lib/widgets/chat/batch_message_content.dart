@@ -256,7 +256,7 @@ class _UserQuestionCard extends ConsumerWidget {
       ),
       child: Text(
         question,
-        style: TextStyle(
+        style: const TextStyle(
           // color: theme.colorScheme.onSurface,
         ),
       ),
