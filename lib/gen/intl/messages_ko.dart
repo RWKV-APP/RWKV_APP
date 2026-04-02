@@ -32,9 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "각 추론에서 ${count}개의 결과를 생성";
 
-  static String m6(count) => "병렬 추론 실행 중, 동시에 ${count}개의 메시지 생성 중";
+  static String m6(count) => "병렬 추론: ${count}개 출력";
 
-  static String m7(index) => "${index}번 메시지 선택됨";
+  static String m7(index) => "${index}번 출력 선택됨";
 
   static String m8(demoName) => "${demoName}을(를) 탐험해 보세요";
 

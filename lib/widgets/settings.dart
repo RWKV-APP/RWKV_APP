@@ -19,7 +19,7 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/page_key.dart';
 import 'package:zone/store/p.dart';
-import 'package:zone/widgets/dev_options_dialog.dart';
+import 'package:zone/widgets/dev_options_panel.dart';
 import 'package:zone/widgets/form_item.dart';
 
 class Settings extends ConsumerWidget {
@@ -59,7 +59,7 @@ class Settings extends ConsumerWidget {
       height: 64,
       child: ClipRRect(
         borderRadius: .circular(12),
-        child: WithDevOption(child: Image.asset(iconPath)),
+        child: DevOptionsPanel.trigger(child: Image.asset(iconPath)),
       ),
     );
 

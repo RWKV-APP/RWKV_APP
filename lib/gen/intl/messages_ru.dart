@@ -32,10 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "Каждый вывод сгенерирует ${count} результата";
 
-  static String m6(count) =>
-      "Ветвление, генерируется ${count} сообщений одновременно";
+  static String m6(count) => "Параллельный инференс: ${count} выходов";
 
-  static String m7(index) => "Выбрано ${index} сообщение";
+  static String m7(index) => "Выбран выход ${index}";
 
   static String m8(demoName) => "Добро пожаловать в ${demoName}";
 

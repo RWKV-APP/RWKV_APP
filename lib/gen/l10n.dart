@@ -594,20 +594,20 @@ class S {
     );
   }
 
-  /// `并行推理中，同时生成 {count} 条消息`
+  /// `并行推理：{count} 条输出`
   String batch_inference_running(Object count) {
     return Intl.message(
-      '并行推理中，同时生成 $count 条消息',
+      '并行推理：$count 条输出',
       name: 'batch_inference_running',
       desc: '',
       args: [count],
     );
   }
 
-  /// `已选择第 {index} 条消息`
+  /// `已选择第 {index} 条输出`
   String batch_inference_selected(Object index) {
     return Intl.message(
-      '已选择第 $index 条消息',
+      '已选择第 $index 条输出',
       name: 'batch_inference_selected',
       desc: '',
       args: [index],

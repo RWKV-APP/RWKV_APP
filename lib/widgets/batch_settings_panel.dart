@@ -96,6 +96,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     final appTheme = ref.watch(P.app.theme);
     final batchInference = ref.watch(P.chat.batchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
+    final featureRollout = ref.watch(P.app.featureRollout);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -182,19 +183,20 @@ class BatchSettingsPanel extends ConsumerWidget {
                 bottom: const _DecodeParams(),
               ),
             ),
-            DimmedWhenInactive(
-              ignoring: !batchInference || batchCount < 2,
-              child: FormItem(
-                isSectionEnd: false,
-                title: s.multi_question_title,
-                subtitle: s.multi_question_entry_detail,
-                icon: const Icon(Icons.question_answer_outlined, size: 20),
-                onTap: () {
-                  pop();
-                  MultiQuestionPanel.show();
-                },
+            if (featureRollout.parallelAnswering)
+              DimmedWhenInactive(
+                ignoring: !batchInference || batchCount < 2,
+                child: FormItem(
+                  isSectionEnd: false,
+                  title: s.multi_question_title,
+                  subtitle: s.multi_question_entry_detail,
+                  icon: const Icon(Icons.question_answer_outlined, size: 20),
+                  onTap: () {
+                    pop();
+                    MultiQuestionPanel.show();
+                  },
+                ),
               ),
-            ),
             DimmedWhenInactive(
               ignoring: !batchInference,
               child: FormItem(

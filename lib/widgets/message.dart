@@ -426,13 +426,13 @@ class _BotMessageBubble extends ConsumerWidget {
                 children: [
                   Text(
                     s.batch_inference_running(batchCount),
-                    style: const TS(c: kCG),
+                    style: TS(c: appTheme.qb5),
                   ),
                   if (batchSelection != null) const SizedBox(width: 16),
                   if (batchSelection != null)
                     Text(
                       s.batch_inference_selected(batchSelection! + 1),
-                      style: const TS(c: kCG),
+                      style: TS(c: appTheme.qb5),
                     ),
                 ],
               ),

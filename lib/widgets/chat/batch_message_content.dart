@@ -223,82 +223,48 @@ class _SlotContent extends ConsumerWidget {
       crossAxisAlignment: .start,
       children: [
         if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
-        if (decodeParam != null) const SizedBox(height: 6),
+        if (decodeParam != null) const SizedBox(height: 8),
         _UserQuestionCard(question: question!),
-        const SizedBox(height: 10),
-        _QuestionAnswerDivider(
-          qb: qb,
-          accentColor: theme.colorScheme.primary.q(.4),
-        ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
         _MarkdownBody(data: data),
       ],
     );
   }
 }
 
-class _UserQuestionCard extends StatelessWidget {
+class _UserQuestionCard extends ConsumerWidget {
   final String question;
 
   const _UserQuestionCard({required this.question});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final bool isDark = theme.brightness == Brightness.dark;
-    final borderColor = theme.colorScheme.primary.q(isDark ? .34 : .18);
-    final backgroundColor = theme.colorScheme.secondary.q(isDark ? .12 : .06);
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final theme = Theme.of(context);
+    // final bool isDark = theme.brightness == Brightness.dark;
+    // final borderColor = theme.colorScheme.primary.q(isDark ? .34 : .18);
+    // final backgroundColor = theme.colorScheme.secondary.q(isDark ? .12 : .06);
+    final appTheme = ref.watch(P.app.theme);
 
     return Container(
-      width: double.infinity,
       padding: const .symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: appTheme.g1,
         borderRadius: .circular(4),
         border: Border.all(
-          color: borderColor,
+          color: appTheme.qb12,
         ),
       ),
       child: Text(
         question,
         style: TextStyle(
-          color: theme.colorScheme.onSurface,
+          // color: theme.colorScheme.onSurface,
         ),
       ),
     );
   }
 }
 
-class _QuestionAnswerDivider extends StatelessWidget {
-  final Color qb;
-  final Color accentColor;
-
-  const _QuestionAnswerDivider({required this.qb, required this.accentColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 28,
-          height: 0.5,
-          color: accentColor,
-        ),
-        Container(
-          width: 8,
-        ),
-        Expanded(
-          child: Container(
-            height: 0.5,
-            color: qb.q(.16),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _DecodeParamBadge extends StatelessWidget {
+class _DecodeParamBadge extends ConsumerWidget {
   final SamplerAndPenaltyParam decodeParam;
 
   const _DecodeParamBadge({required this.decodeParam});
@@ -320,11 +286,12 @@ class _DecodeParamBadge extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // ignore: unused_local_variable
     final theme = Theme.of(context);
     final s = S.of(context);
-    final displayText = s.decode_param + s.hyphen + decodeParam.displayName;
+    final displayText = s.decode_param + s.colon + decodeParam.decodeParamType.displayNameShort;
+    final appTheme = ref.watch(P.app.theme);
 
     return Align(
       alignment: .topLeft,
@@ -332,10 +299,15 @@ class _DecodeParamBadge extends StatelessWidget {
         onTap: _onTap,
         child: Container(
           decoration: BoxDecoration(
-            border: .all(color: kCG.q(.5)),
+            border: .all(
+              color: appTheme.qb12,
+            ),
             borderRadius: .circular(4),
           ),
-          padding: const .symmetric(horizontal: 6, vertical: 2),
+          padding: const .symmetric(
+            horizontal: 6,
+            vertical: 2,
+          ),
           child: Text(displayText),
         ),
       ),

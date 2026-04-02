@@ -32,9 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "每次生成 ${count} 条结果";
 
-  static String m6(count) => "并行推理中，同时生成 ${count} 条消息";
+  static String m6(count) => "并行推理：${count} 条输出";
 
-  static String m7(index) => "已选择第 ${index} 条消息";
+  static String m7(index) => "已选择第 ${index} 条输出";
 
   static String m8(demoName) => "欢迎探索 ${demoName}";
 
