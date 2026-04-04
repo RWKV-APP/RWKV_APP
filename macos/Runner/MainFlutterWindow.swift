@@ -15,4 +15,19 @@ class MainFlutterWindow: NSWindow {
 
     super.awakeFromNib()
   }
+
+  override func performKeyEquivalent(with event: NSEvent) -> Bool {
+    let isCommandPressed = event.modifierFlags.intersection(.deviceIndependentFlagsMask).contains(.command)
+    if !isCommandPressed {
+      return super.performKeyEquivalent(with: event)
+    }
+
+    let key = event.charactersIgnoringModifiers?.lowercased()
+    if key != "q" {
+      return super.performKeyEquivalent(with: event)
+    }
+
+    NSApplication.shared.terminate(nil)
+    return true
+  }
 }
