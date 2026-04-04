@@ -24,7 +24,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-0.1b-20260129-ctx8192-q8_0.gguf",
         "fileSize": 212372928,
         "quantization": "Q8_0",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1769846091
@@ -35,7 +35,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1d-0.4b-20260210-ctx8192-q8_0.gguf",
         "fileSize": 501498016,
         "quantization": "Q8_0",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1770699426
@@ -46,7 +46,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1e-1.5b-20260309-ctx8192-q6_k.gguf",
         "fileSize": 1336082784,
         "quantization": "Q6_K",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1773068705
@@ -58,7 +58,7 @@
         "updatedAt": "250502",
         "fileSize": 1336081344,
         "quantization": "Q6_K",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1747374843
@@ -69,7 +69,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1e-2.9b-20260312-ctx8192-imatrix-q4_k_m.gguf",
         "fileSize": 1919047616,
         "quantization": "Q4_K_M",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1773848855
@@ -82,7 +82,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1e-7.2b-20260301-ctx8192-imatrix-q4_k_m.gguf",
         "fileSize": 4510365856,
         "quantization": "Q4_K_M",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1772442857
@@ -277,7 +277,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/demos/translate/RWKV_v7_G1_0.4B_Translate_ctx4096_20250721_latest-Q8_0.gguf",
         "fileSize": 501498016,
         "quantization": "Q8_0",
-        "platforms": ["macos", "linux", "android", "ios", "windows"],
+        "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
         "tags": ["cpu", "translate"],
         "date": 1754302471
@@ -384,7 +384,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/RWKV_v7_G1c_1.5B_Translate_ctx4096_20260118-q4_k_m.gguf",
         "fileSize": 990052736,
         "quantization": "q4_k_m",
-        "platforms": ["macos", "linux", "android", "ios", "windows"],
+        "platforms": ["macos", "linux", "android", "ios"],
         "backends": ["llamacpp"],
         "tags": ["cpu", "translate"],
         "date": 1768876099
@@ -1351,7 +1351,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-1.5B-MiSS-Roleplay-260116-ctx8192-q4_k_m.gguf",
         "fileSize": 990052512,
         "quantization": "Q6_K",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1768913699
@@ -1470,7 +1470,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1c-2.9B-MiSS-Roleplay-260115-ctx8192-q4_k_m.gguf",
         "fileSize": 1875793856,
         "quantization": "Q6_K",
-        "platforms": ["macos", "linux", "android", "windows"],
+        "platforms": ["macos", "linux", "android"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1768915123
@@ -1527,7 +1527,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/model/rwkv-vl/rwkv-vl-0.4b-251222-q8_0.gguf",
         "fileSize": 501497984,
         "quantization": "q8_0",
-        "platforms": ["macos", "linux", "android", "ios", "windows", "windows"],
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "cpu"],
         "date": 1769511207
@@ -1745,7 +1745,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.4B-g1-respark-voice-tunable_ipa-q8_0.gguf",
         "fileSize": 528865856,
         "quantization": "fp16",
-        "platforms": ["android", "ios", "macos", "windows", "linux", "windows"],
+        "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["llamacpp"],
         "tags": ["cpu", "core", "spark"],
         "date": 1755582128
@@ -1863,7 +1863,7 @@
         "url": "mollysama/rwkv-mobile-models/resolve/main/multimodal/sparktts/rwkv7-0.1B-g1-respark-voice-tunable-ipa-q8_0.gguf",
         "fileSize": 233002304,
         "quantization": "q8_0",
-        "platforms": ["android", "ios", "macos", "windows", "linux", "windows"],
+        "platforms": ["android", "ios", "macos", "windows", "linux"],
         "backends": ["llamacpp"],
         "tags": ["cpu", "core", "spark"],
         "date": 1756702874
