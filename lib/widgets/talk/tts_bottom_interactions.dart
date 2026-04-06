@@ -86,7 +86,7 @@ class _AudioInteractor extends ConsumerWidget {
   const _AudioInteractor();
 
   void _onUploadFilePressed() async {
-    final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['wav'],
       allowMultiple: false,

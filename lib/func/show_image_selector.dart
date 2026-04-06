@@ -59,7 +59,7 @@ Future<String?> showImageSelector() async {
       imagePath = image.path;
       break;
     case _Actions.selectFromFile:
-      final result = await FilePicker.platform.pickFiles(type: .image);
+      final result = await FilePicker.pickFiles(type: .image);
       if (result == null) return null;
       imagePath = result.files.first.path;
       break;

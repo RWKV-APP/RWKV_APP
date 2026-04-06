@@ -62,7 +62,7 @@ extension _$Pth on _Pth {
 /// Public methods
 extension $Pth on _Pth {
   Future<void> onAddFolderClicked() async {
-    final path = await file_picker.FilePicker.platform.getDirectoryPath();
+    final path = await file_picker.FilePicker.getDirectoryPath();
     if (path == null) return;
     if (folders.q.any((e) => e.path == path)) {
       Alert.warning(S.current.folder_already_added);

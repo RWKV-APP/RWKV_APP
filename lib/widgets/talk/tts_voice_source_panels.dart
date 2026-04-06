@@ -77,7 +77,7 @@ class TTSVoiceSourcePanels {
   }
 
   static Future<void> pickWavFile() async {
-    final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: <String>['wav'],
       allowMultiple: false,

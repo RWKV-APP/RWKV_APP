@@ -549,7 +549,7 @@ extension $Remote on _Remote {
   /// Only updates preference path; does not migrate files. Use [Alert.info] to prompt manual migration.
   Future<bool> pickAndSetCustomModelsDir({required BuildContext context}) async {
     try {
-      final selectedDir = await file_picker.FilePicker.platform.getDirectoryPath();
+      final selectedDir = await file_picker.FilePicker.getDirectoryPath();
       if (selectedDir == null) {
         return false; // User cancelled
       }
@@ -1268,7 +1268,7 @@ extension $Remote on _Remote {
     qq;
 
     // Pick files
-    final result = await file_picker.FilePicker.platform.pickFiles(
+    final result = await file_picker.FilePicker.pickFiles(
       type: file_picker.FileType.custom,
       allowMultiple: true,
       allowedExtensions: ['st', 'gguf', 'prefab', 'bin', 'rmpack', 'mnn', 'zip'],
@@ -1492,7 +1492,7 @@ extension $Remote on _Remote {
     }
 
     // Select target directory
-    final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+    final targetDirectory = await file_picker.FilePicker.getDirectoryPath();
     if (targetDirectory == null) {
       return false; // User cancelled
     }
@@ -1520,7 +1520,7 @@ extension $Remote on _Remote {
     qq;
 
     // Select target directory
-    final targetDirectory = await file_picker.FilePicker.platform.getDirectoryPath();
+    final targetDirectory = await file_picker.FilePicker.getDirectoryPath();
     if (targetDirectory == null) {
       return false; // User cancelled
     }
@@ -1760,7 +1760,7 @@ extension $Remote on _Remote {
         initialDirectory = downloadsDir.path;
       }
     } catch (_) {}
-    final result = await file_picker.FilePicker.platform.pickFiles(
+    final result = await file_picker.FilePicker.pickFiles(
       type: file_picker.FileType.custom,
       allowedExtensions: ['pth'],
       initialDirectory: initialDirectory,

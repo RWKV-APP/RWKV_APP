@@ -283,6 +283,29 @@
         "date": 1754302471
       },
       {
+        "name": "RWKV7-G1a 0.4B Translate Halo (WebRWKV)",
+        "modelSize": 0.4,
+        "url": "HaloWang/rwkv-mobile-models/resolve/main/RWKV_v7_G1d_0.4B_Translate_ctx4096_20260308_latest.st",
+        "fileSize": 901742584,
+        "quantization": "fp16",
+        "platforms": ["ios", "macos", "web", "windows"],
+        "backends": ["webRwkv"],
+        "unsupportedSocBrand": ["snapdragon"],
+        "tags": ["translate"],
+        "date": 1758108687
+      },
+      {
+        "name": "RWKV7 0.4B Translate Halo",
+        "modelSize": 0.4,
+        "url": "HaloWang/rwkv-mobile-models/resolve/main/RWKV_v7_G1d_0.4B_Translate_ctx4096_20260308_latest-f16.gguf",
+        "fileSize": 910442656,
+        "quantization": "fp16",
+        "platforms": ["macos", "linux", "android", "ios", "windows"],
+        "backends": ["llamacpp"],
+        "tags": ["cpu", "translate"],
+        "date": 910442656
+      },
+      {
         "name": "RWKV7-G1a 0.4B Translate",
         "modelSize": 0.4,
         "url": "mollysama/rwkv-mobile-models/resolve/main/qnn/2.42-260118/RWKV_v7_G1a_0.4B_Translate_ctx4096_20250915_latest-a16w8-8elite-batch.rmpack",
