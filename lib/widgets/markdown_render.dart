@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gpt_markdown/custom_widgets/markdown_config.dart';
+import 'package:gpt_markdown/custom_widgets/selectable_adapter.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:halo/halo.dart';
@@ -17,6 +19,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+
+// ignore: depend_on_referenced_packages
+
 
 class MarkdownRender extends ConsumerWidget {
   final String raw;
@@ -38,6 +43,9 @@ class MarkdownRender extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final normalizedRaw = P.mdRender.normalizeLatexForMarkdown(
+      raw.replaceAll("\n\n", "\n").trim(),
+    );
     final textScaler = MediaQuery.textScalerOf(context);
     final primary = theme.colorScheme.primary;
     const scale = Config.msgFontScale;
@@ -71,11 +79,17 @@ class MarkdownRender extends ConsumerWidget {
     ];
 
     final gptMarkdown = GptMarkdown(
-      raw.replaceAll("\n\n", "\n").trim(),
+      normalizedRaw,
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
       textScaler: .noScaling,
       inlineComponents: inlineComponents,
+      latexBuilder: (context, tex, textStyle, inline) => _LatexRender(
+        tex: tex,
+        textStyle: textStyle,
+        inline: inline,
+      ),
+      useDollarSignsForLatex: true,
       addNewLineAfterH1: false,
       orderedListBuilder: (context, no, child, config) => OrderedListView(
         no: "$no.",
@@ -113,6 +127,62 @@ class MarkdownRender extends ConsumerWidget {
             child: gptMarkdown,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _LatexRender extends StatelessWidget {
+  final String tex;
+  final TextStyle textStyle;
+  final bool inline;
+
+  const _LatexRender({
+    required this.tex,
+    required this.textStyle,
+    required this.inline,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final effectiveTextStyle = textStyle.copyWith(
+      color: textStyle.color ?? theme.colorScheme.onSurface,
+    );
+    final effectiveColor = effectiveTextStyle.color ?? theme.colorScheme.onSurface;
+    final mathStyle = inline ? MathStyle.text : MathStyle.display;
+
+    return SelectableAdapter(
+      selectedText: tex,
+      child: Math.tex(
+        tex,
+        textStyle: effectiveTextStyle,
+        mathStyle: mathStyle,
+        textScaleFactor: 1,
+        settings: const TexParserSettings(strict: Strict.ignore),
+        options: MathOptions(
+          sizeUnderTextStyle: MathSize.large,
+          color: effectiveColor,
+          fontSize: effectiveTextStyle.fontSize ?? theme.textTheme.bodyMedium?.fontSize,
+          mathFontOptions: FontOptions(
+            fontFamily: "Main",
+            fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
+            fontShape: FontStyle.normal,
+          ),
+          textFontOptions: FontOptions(
+            fontFamily: "Main",
+            fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
+            fontShape: FontStyle.normal,
+          ),
+          style: mathStyle,
+        ),
+        onErrorFallback: (err) {
+          return Text(
+            tex,
+            textDirection: Directionality.of(context),
+            style: effectiveTextStyle,
+          );
+        },
       ),
     );
   }
