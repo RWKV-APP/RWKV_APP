@@ -102,6 +102,7 @@ class _RWKV {
   // TODO: @wangce 改成 qsff 以便减少不必要的页面刷新
   /// 注意, 后端给的是 0-1 的 double, 且, 在模型加载完成时, progress 不一定为 1.0, 可能是, 0.1, 0.5, 0.999, 但是这不影响我们判断模型是否加载完成
   late final loadingProgress = qs<Map<FileInfo, double>>({});
+  late final activeLoadingFile = qs<FileInfo?>(null);
 
   /// 模型加载完成器, 用于等待模型加载完成
   late final modelLoadingCompleters = qs<Map<FileInfo, Completer<int?>>>({});
@@ -150,6 +151,13 @@ class _RWKV {
     return loadingStatus.values.any((e) {
       return e == LoadingStatus.loading || e == LoadingStatus.loadModelWithExtra || e == LoadingStatus.setQnnLibraryPath;
     });
+  });
+
+  late final activeLoadingProgress = qp<double?>((ref) {
+    final activeLoadingFile = ref.watch(this.activeLoadingFile);
+    if (activeLoadingFile == null) return null;
+    final loadingProgress = ref.watch(this.loadingProgress);
+    return loadingProgress[activeLoadingFile];
   });
 
   late final loadedModelsCount = qp((ref) {
@@ -1172,7 +1180,7 @@ extension $RWKV on _RWKV {
   }
 
   /// 加载指定 pth 权重并完成聊天用配置（角色、batch、thinkingMode、GetSupportedBatchSizes）。
-  /// 供 UI 在「Start to Chat」时调用；成功/失败在内部用 Alert.success / Alert.error 与 pop 处理。
+  /// 供 UI 在「Start to Chat」时调用；成功/失败在内部用 Alert.success / Alert.error 处理。
   Future<void> startPthForChat(FileInfo fileInfo) async {
     qq;
     if (fileInfo.backend == null) {
@@ -1225,7 +1233,6 @@ extension $RWKV on _RWKV {
       });
     }
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
-    pop();
   }
 
   int? findModelIDByWeightType({required WeightType weightType}) {
@@ -1306,6 +1313,7 @@ extension _$RWKV on _RWKV {
     required FileInfo fileInfo,
   }) async {
     final completer = Completer<int?>();
+    activeLoadingFile.q = fileInfo;
     modelLoadingCompleters.q = {...modelLoadingCompleters.q, fileInfo: completer};
     final req = to_rwkv.LoadRWKVModel(
       modelPath: modelPath,
@@ -1518,6 +1526,7 @@ extension _$RWKV on _RWKV {
     final req = response.req;
 
     late final FileInfo extra;
+    final isLoadRequest = req is to_rwkv.LoadRWKVModel;
 
     if (req is to_rwkv.LoadRWKVModel) {
       extra = req.extra as FileInfo;
@@ -1590,6 +1599,19 @@ extension _$RWKV on _RWKV {
       case .setQnnLibraryPath:
       case .loadModelWithExtra:
         break;
+    }
+    if (isLoadRequest) {
+      final stillLoading = switch (status) {
+        LoadingStatus.loading => true,
+        LoadingStatus.loadModelWithExtra => true,
+        LoadingStatus.setQnnLibraryPath => true,
+        _ => false,
+      };
+      if (stillLoading) {
+        activeLoadingFile.q = extra;
+      } else if (activeLoadingFile.q == extra) {
+        activeLoadingFile.q = null;
+      }
     }
     loadingStatus.q = {...loadingStatus.q, extra: status};
   }

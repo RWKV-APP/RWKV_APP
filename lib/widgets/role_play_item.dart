@@ -46,11 +46,17 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
     setState(() {
       currentStateFile = state;
     });
+    final file = widget.file;
+
+    if (P.remote.modelSelectorShown.q) {
+      Navigator.pop(context);
+    }
+
     final info = ModelInfo(
-      id: widget.file.fileName,
-      modelPath: P.remote.locals(widget.file).q.targetPath,
+      id: file.fileName,
+      modelPath: P.remote.locals(file).q.targetPath,
       statePath: state == null ? '' : P.remote.locals(state).q.targetPath,
-      backend: widget.file.backend!,
+      backend: file.backend!,
       topP: state?.decodeParam['topP'],
       temperature: state?.decodeParam['temperature']?.toDouble(),
       penaltyDecay: state?.decodeParam['penaltyDecay']?.toDouble(),
@@ -58,12 +64,8 @@ class _RolePlayItemState extends ConsumerState<RolePlayItem> {
       frequencyPenalty: state?.decodeParam['frequencyPenalty']?.toDouble(),
       modelType: RoleplayManageModelType.chat,
     );
-    final sp = await P.rwkv.loadChat(fileInfo: widget.file);
+    final sp = await P.rwkv.loadChat(fileInfo: file);
     RoleplayManage.onModelDownloadComplete(info, [sp.$1, sp.$2], P.rwkv.receivePort);
-    if (!mounted) {
-      return;
-    }
-    Navigator.pop(context);
   }
 
   @override

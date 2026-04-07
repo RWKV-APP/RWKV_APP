@@ -418,7 +418,7 @@ class _ModelLoadingDialog extends StatefulWidget {
   static Future<bool> show(BuildContext context, FileInfo file) async {
     final r = await showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (context) => _ModelLoadingDialog(file: file),
     );
     return r ?? false;
@@ -434,7 +434,7 @@ class _ModelLoadingDialogState extends State<_ModelLoadingDialog> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        await P.rwkv.loadChat(fileInfo: widget.file).timeout(const Duration(seconds: 10));
+        await P.rwkv.loadChat(fileInfo: widget.file);
         if (mounted) Navigator.pop(context, true);
       } catch (e) {
         qqe('load model failed: $e');

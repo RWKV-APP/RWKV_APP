@@ -116,8 +116,11 @@ extension $Pth on _Pth {
     await openFolder(folder.path);
   }
 
-  /// 加载指定 pth 文件并开始聊天；成功/失败与 pop 由 P.rwkv.startPthForChat 内部用 Alert 处理。
+  /// 加载指定 pth 文件并开始聊天；点击后立即收起模型选择面板，成功/失败在内部用 Alert 处理。
   Future<void> onStartPthFileForChat(FileInfo fileInfo) async {
+    if (P.remote.modelSelectorShown.q) {
+      await pop();
+    }
     await P.rwkv.startPthForChat(fileInfo);
   }
 

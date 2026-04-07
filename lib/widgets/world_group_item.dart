@@ -160,10 +160,12 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
       Alert.warning("Please wait for the model to load...");
       return;
     }
+    final worldType = widget.worldType;
+    final modelFileName = widget.socPair.$2;
     final availableModels = P.remote.seeWeights.q;
-    final fileInfos = availableModels.where((e) => e.worldType == widget.worldType).toList();
+    final fileInfos = availableModels.where((e) => e.worldType == worldType).toList();
     final encoderFileKey = fileInfos.firstWhereOrNull((e) => e.isEncoder);
-    final modelFileKey = fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == widget.socPair.$2);
+    final modelFileKey = fileInfos.firstWhereOrNull((e) => !e.isEncoder && e.fileName == modelFileName);
     final adapterFileKey = fileInfos.firstWhereOrNull((e) => e.isAdapter);
 
     if (encoderFileKey == null || modelFileKey == null) {
@@ -174,22 +176,26 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     final modelLocalFile = P.remote.locals(modelFileKey).q;
     final adapterLocalFile = adapterFileKey != null ? P.remote.locals(adapterFileKey).q : null;
 
-    P.rwkv.currentWorldType.q = widget.worldType;
+    if (P.remote.modelSelectorShown.q) {
+      Navigator.pop(context);
+    }
 
-    qqq("worldType: ${widget.worldType}");
+    P.rwkv.currentWorldType.q = worldType;
+
+    qqq("worldType: $worldType");
 
     P.rwkv.clearStates();
     P.chat.clearMessages();
 
     try {
-      switch (widget.worldType) {
+      switch (worldType) {
         case WorldType.reasoningQA:
         case WorldType.ocr:
           await P.rwkv.loadSee(
             modelPath: modelLocalFile.targetPath,
             encoderPath: encoderLocalFile.targetPath,
             backend: modelFileKey.backend!,
-            enableReasoning: widget.worldType.isReasoning,
+            enableReasoning: worldType.isReasoning,
             adapterPath: null,
             fileInfo: modelFileKey,
           );
@@ -199,14 +205,13 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
             modelPath: modelLocalFile.targetPath,
             encoderPath: encoderLocalFile.targetPath,
             backend: modelFileKey.backend!,
-            enableReasoning: widget.worldType.isReasoning,
+            enableReasoning: worldType.isReasoning,
             adapterPath: adapterLocalFile?.targetPath,
             fileInfo: modelFileKey,
           );
           if (modelID != null) P.rwkv.send(SetImageUniqueIdentifier("image"));
           if (modelID != null) P.rwkv.send(SetSpaceAfterRoles(false, modelID: modelID));
       }
-      Navigator.pop(getContext()!);
     } catch (e) {
       qqe("$e");
       Alert.error(e.toString());
@@ -215,7 +220,7 @@ class _WorldGroupItemState extends ConsumerState<WorldGroupItem> {
     }
 
     P.preference.saveLastWorldModel({
-      "worldType": widget.worldType.name,
+      "worldType": worldType.name,
       "modelFileName": modelFileKey.fileName,
     });
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);

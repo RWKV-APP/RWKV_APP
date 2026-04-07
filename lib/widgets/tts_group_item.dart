@@ -282,25 +282,29 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     final localWav2vec2File = P.remote.locals(wav2vec2FileKey).q;
     final localDetokenizeFile = P.remote.locals(detokenizeFileKey).q;
     final localTokenizeFile = P.remote.locals(bicodecTokenizeFileKey).q;
+    final fileInfo = widget.fileInfo;
+
+    if (P.remote.modelSelectorShown.q) {
+      Navigator.pop(context);
+    }
 
     if (P.app.pageKey.q == .rolePlaying) {
       final info = ModelInfo(
-        id: widget.fileInfo.fileName,
+        id: fileInfo.fileName,
         modelPath: modelLocalFile.targetPath,
         statePath: '',
-        backend: widget.fileInfo.backend!,
+        backend: fileInfo.backend!,
         modelType: RoleplayManageModelType.tts,
       );
       final sp = await P.rwkv.loadTTS(
         modelPath: modelLocalFile.targetPath,
-        backend: widget.fileInfo.backend!,
+        backend: fileInfo.backend!,
         wav2vec2Path: localWav2vec2File.targetPath,
         detokenizePath: localDetokenizeFile.targetPath,
         bicodecTokenzerPath: localTokenizeFile.targetPath,
-        fileInfo: widget.fileInfo,
+        fileInfo: fileInfo,
       );
       RoleplayManage.onModelDownloadComplete(info, [sp.$1, sp.$2], P.rwkv.receivePort);
-      Navigator.pop(getContext()!);
       return;
     }
 
@@ -310,14 +314,13 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
     try {
       await P.rwkv.loadTTS(
         modelPath: modelLocalFile.targetPath,
-        backend: widget.fileInfo.backend!,
+        backend: fileInfo.backend!,
         wav2vec2Path: localWav2vec2File.targetPath,
         detokenizePath: localDetokenizeFile.targetPath,
         bicodecTokenzerPath: localTokenizeFile.targetPath,
-        fileInfo: widget.fileInfo,
+        fileInfo: fileInfo,
       );
       P.talk.getTTSSpkNames();
-      Navigator.pop(getContext()!);
     } catch (e) {
       qqe("$e");
       Alert.error(e.toString());
@@ -325,7 +328,7 @@ class _TTSGroupItemState extends ConsumerState<TTSGroupItem> {
       return;
     }
 
-    P.rwkv.currentGroupInfo.q = GroupInfo(displayName: widget.fileInfo.name);
+    P.rwkv.currentGroupInfo.q = GroupInfo(displayName: fileInfo.name);
     Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
   }
 

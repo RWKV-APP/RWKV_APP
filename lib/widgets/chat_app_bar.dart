@@ -32,9 +32,10 @@ class ChatAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
-
     final DemoType demoType = preferredDemoType ?? ref.watch(P.app.demoType);
+    final activeLoadingFile = ref.watch(P.rwkv.activeLoadingFile);
     final currentModel = ref.watch(P.rwkv.latestModel);
     final currentGroupInfo = ref.watch(P.rwkv.currentGroupInfo);
     final selectMessageMode = ref.watch(P.chat.isSharing);
@@ -43,8 +44,7 @@ class ChatAppBar extends ConsumerWidget {
 
     if (currentGroupInfo != null) displayName = currentGroupInfo.displayName;
     if (currentModel != null) displayName = currentModel.name;
-
-    final theme = Theme.of(context);
+    if (activeLoadingFile != null) displayName = activeLoadingFile.name;
     final appTheme = ref.watch(P.app.theme);
 
     return ClipRRect(
@@ -98,6 +98,7 @@ class _ChatAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final completionMode = ref.watch(P.chat.completionMode);
     final qt = ref.watch(P.app.theme);
 
@@ -111,6 +112,7 @@ class _ChatAppBar extends ConsumerWidget {
     return Column(
       children: [
         AppBar(
+          toolbarHeight: theme.appBarTheme.toolbarHeight,
           centerTitle: true,
           backgroundColor: backgroundColor.q(listAtTop ? 1 : 0.5),
           systemOverlayStyle: qt.isLight ? P.app.systemOverlayStyleLight : P.app.systemOverlayStyleDark,
