@@ -8,46 +8,47 @@ import 'package:halo_state/halo_state.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
 
-class CompletionSuggestionDialog extends StatefulWidget {
+class CompletionSuggestionDialog extends StatelessWidget {
   final ScrollController scrollController;
+  final List<String> items;
 
-  const CompletionSuggestionDialog(this.scrollController, {super.key});
+  const CompletionSuggestionDialog({
+    super.key,
+    required this.scrollController,
+    required this.items,
+  });
 
   static Future<String?> show(BuildContext context) {
+    final theme = Theme.of(context);
+    final items = P.suggestion.config.q.completion;
+
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      builder: (c) => DraggableScrollableSheet(
-        maxChildSize: .9,
-        minChildSize: .25,
-        expand: false,
-        snap: false,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return CompletionSuggestionDialog(scrollController);
-        },
-      ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          maxChildSize: .9,
+          minChildSize: .25,
+          expand: false,
+          snap: false,
+          builder: (context, scrollController) {
+            return CompletionSuggestionDialog(
+              scrollController: scrollController,
+              items: items,
+            );
+          },
+        );
+      },
     );
   }
 
   @override
-  State<CompletionSuggestionDialog> createState() => _CompletionSuggestionDialogState();
-}
-
-class _CompletionSuggestionDialogState extends State<CompletionSuggestionDialog> {
-  List<String> items = [];
-
-  @override
-  void initState() {
-    super.initState();
-    items = P.suggestion.config.q.completion;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
     final theme = Theme.of(context);
+    final s = S.of(context);
+
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -55,37 +56,82 @@ class _CompletionSuggestionDialogState extends State<CompletionSuggestionDialog>
         crossAxisAlignment: .stretch,
         children: [
           Padding(
-            padding: const .symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               children: [
                 const SizedBox(width: 6),
-                Expanded(child: Text(s.suggest, style: theme.textTheme.titleMedium)),
+                Expanded(
+                  child: Text(
+                    s.suggest,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ),
                 const CloseButton(),
               ],
             ),
           ),
           Flexible(
             child: SingleChildScrollView(
-              controller: widget.scrollController,
+              controller: scrollController,
               child: Column(
                 mainAxisSize: .min,
                 crossAxisAlignment: .stretch,
                 children: [
-                  for (final item in items) ...[
-                    ListTile(
-                      title: Text(item, maxLines: 3, overflow: .ellipsis),
-                      onTap: () {
-                        Navigator.pop(context, item);
-                      },
+                  for (final (index, item) in items.indexed)
+                    _SuggestionItem(
+                      text: item,
+                      showDivider: index != items.length - 1,
                     ),
-                    const Divider(indent: 16, endIndent: 16, height: 6, thickness: 0.5),
-                  ],
                 ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SuggestionItem extends StatelessWidget {
+  final String text;
+  final bool showDivider;
+
+  const _SuggestionItem({
+    required this.text,
+    required this.showDivider,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      mainAxisSize: .min,
+      crossAxisAlignment: .stretch,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).pop(text);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: Text(
+                text,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ),
+        if (showDivider)
+          Container(
+            height: 0.5,
+            margin: const EdgeInsets.only(left: 16, right: 16),
+            color: theme.dividerColor,
+          ),
+      ],
     );
   }
 }
