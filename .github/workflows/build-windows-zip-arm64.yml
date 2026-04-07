@@ -74,6 +74,7 @@ jobs:
           flutter-version: "0f401eea04390dc08eb939b6c0fee17c7d15f6ec"
           channel: "master"
           cache: true
+          cache-path: 'C:/f'
 
       - name: Override dependency path
         run: |
