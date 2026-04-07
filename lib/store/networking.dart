@@ -325,10 +325,23 @@ Future<Object?> _delete(
 
 Map<String, String> _buildHeaders() {
   final header = <String, String>{};
+  final language = P.preference.preferredLanguage.q.resolved;
+  final locale = language.locale;
+  final scriptCode = locale.scriptCode;
+  final countryCode = locale.countryCode;
+  final languageTagParts = <String>[locale.languageCode];
+  if (scriptCode != null && scriptCode.isNotEmpty) {
+    languageTagParts.add(scriptCode);
+  }
+  if (countryCode != null && countryCode.isNotEmpty) {
+    languageTagParts.add(countryCode);
+  }
+  final languageTag = languageTagParts.join("-");
   header["Application-Build-Number"] = P.app.buildNumber.q;
   header["Application-Version"] = P.app.version.q;
   header["Operating-System"] = Platform.operatingSystem;
   header["Operating-System-Version"] = Platform.operatingSystemVersion;
+  header["Accept-Language"] = languageTag;
   header["x-api-key"] = Config.xApiKey;
   return header;
 }
