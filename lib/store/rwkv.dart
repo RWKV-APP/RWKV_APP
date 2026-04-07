@@ -1533,7 +1533,9 @@ extension _$RWKV on _RWKV {
     final info = response.info;
     final name = extra.name;
 
-    qqq("$name, modelID: $modelID, status: $status");
+    if (status != .loading) {
+      qqq("$name, modelID: $modelID, status: $status");
+    }
 
     final modelLoadingCompleter = modelLoadingCompleters.q[extra];
     final modelReleasingCompleter = modelReleasingCompleters.q[modelID];
