@@ -650,6 +650,17 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _batchSlotLabelsMeta = const VerificationMeta(
+    'batchSlotLabels',
+  );
+  @override
+  late final GeneratedColumn<String> batchSlotLabels = GeneratedColumn<String>(
+    'batch_slot_labels',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _prefillSpeedMeta = const VerificationMeta(
     'prefillSpeed',
   );
@@ -715,6 +726,7 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
     runningMode,
     build,
     rawDecodeParams,
+    batchSlotLabels,
     prefillSpeed,
     decodeSpeed,
     messageTokensCount,
@@ -888,6 +900,15 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         ),
       );
     }
+    if (data.containsKey('batch_slot_labels')) {
+      context.handle(
+        _batchSlotLabelsMeta,
+        batchSlotLabels.isAcceptableOrUnknown(
+          data['batch_slot_labels']!,
+          _batchSlotLabelsMeta,
+        ),
+      );
+    }
     if (data.containsKey('prefill_speed')) {
       context.handle(
         _prefillSpeedMeta,
@@ -1013,6 +1034,10 @@ class $_MsgTable extends _Msg with TableInfo<$_MsgTable, _MsgData> {
         DriftSqlType.string,
         data['${effectivePrefix}raw_decode_params'],
       ),
+      batchSlotLabels: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}batch_slot_labels'],
+      ),
       prefillSpeed: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}prefill_speed'],
@@ -1059,6 +1084,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
   final String? runningMode;
   final String build;
   final String? rawDecodeParams;
+  final String? batchSlotLabels;
   final double? prefillSpeed;
   final double? decodeSpeed;
   final int? messageTokensCount;
@@ -1084,6 +1110,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     this.runningMode,
     required this.build,
     this.rawDecodeParams,
+    this.batchSlotLabels,
     this.prefillSpeed,
     this.decodeSpeed,
     this.messageTokensCount,
@@ -1135,6 +1162,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     map['build'] = Variable<String>(build);
     if (!nullToAbsent || rawDecodeParams != null) {
       map['raw_decode_params'] = Variable<String>(rawDecodeParams);
+    }
+    if (!nullToAbsent || batchSlotLabels != null) {
+      map['batch_slot_labels'] = Variable<String>(batchSlotLabels);
     }
     if (!nullToAbsent || prefillSpeed != null) {
       map['prefill_speed'] = Variable<double>(prefillSpeed);
@@ -1197,6 +1227,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       rawDecodeParams: rawDecodeParams == null && nullToAbsent
           ? const Value.absent()
           : Value(rawDecodeParams),
+      batchSlotLabels: batchSlotLabels == null && nullToAbsent
+          ? const Value.absent()
+          : Value(batchSlotLabels),
       prefillSpeed: prefillSpeed == null && nullToAbsent
           ? const Value.absent()
           : Value(prefillSpeed),
@@ -1240,6 +1273,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       runningMode: serializer.fromJson<String?>(json['runningMode']),
       build: serializer.fromJson<String>(json['build']),
       rawDecodeParams: serializer.fromJson<String?>(json['rawDecodeParams']),
+      batchSlotLabels: serializer.fromJson<String?>(json['batchSlotLabels']),
       prefillSpeed: serializer.fromJson<double?>(json['prefillSpeed']),
       decodeSpeed: serializer.fromJson<double?>(json['decodeSpeed']),
       messageTokensCount: serializer.fromJson<int?>(json['messageTokensCount']),
@@ -1272,6 +1306,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       'runningMode': serializer.toJson<String?>(runningMode),
       'build': serializer.toJson<String>(build),
       'rawDecodeParams': serializer.toJson<String?>(rawDecodeParams),
+      'batchSlotLabels': serializer.toJson<String?>(batchSlotLabels),
       'prefillSpeed': serializer.toJson<double?>(prefillSpeed),
       'decodeSpeed': serializer.toJson<double?>(decodeSpeed),
       'messageTokensCount': serializer.toJson<int?>(messageTokensCount),
@@ -1302,6 +1337,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     Value<String?> runningMode = const Value.absent(),
     String? build,
     Value<String?> rawDecodeParams = const Value.absent(),
+    Value<String?> batchSlotLabels = const Value.absent(),
     Value<double?> prefillSpeed = const Value.absent(),
     Value<double?> decodeSpeed = const Value.absent(),
     Value<int?> messageTokensCount = const Value.absent(),
@@ -1335,6 +1371,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     rawDecodeParams: rawDecodeParams.present
         ? rawDecodeParams.value
         : this.rawDecodeParams,
+    batchSlotLabels: batchSlotLabels.present
+        ? batchSlotLabels.value
+        : this.batchSlotLabels,
     prefillSpeed: prefillSpeed.present ? prefillSpeed.value : this.prefillSpeed,
     decodeSpeed: decodeSpeed.present ? decodeSpeed.value : this.decodeSpeed,
     messageTokensCount: messageTokensCount.present
@@ -1384,6 +1423,9 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
       rawDecodeParams: data.rawDecodeParams.present
           ? data.rawDecodeParams.value
           : this.rawDecodeParams,
+      batchSlotLabels: data.batchSlotLabels.present
+          ? data.batchSlotLabels.value
+          : this.batchSlotLabels,
       prefillSpeed: data.prefillSpeed.present
           ? data.prefillSpeed.value
           : this.prefillSpeed,
@@ -1422,6 +1464,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           ..write('runningMode: $runningMode, ')
           ..write('build: $build, ')
           ..write('rawDecodeParams: $rawDecodeParams, ')
+          ..write('batchSlotLabels: $batchSlotLabels, ')
           ..write('prefillSpeed: $prefillSpeed, ')
           ..write('decodeSpeed: $decodeSpeed, ')
           ..write('messageTokensCount: $messageTokensCount, ')
@@ -1452,6 +1495,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
     runningMode,
     build,
     rawDecodeParams,
+    batchSlotLabels,
     prefillSpeed,
     decodeSpeed,
     messageTokensCount,
@@ -1481,6 +1525,7 @@ class _MsgData extends DataClass implements Insertable<_MsgData> {
           other.runningMode == this.runningMode &&
           other.build == this.build &&
           other.rawDecodeParams == this.rawDecodeParams &&
+          other.batchSlotLabels == this.batchSlotLabels &&
           other.prefillSpeed == this.prefillSpeed &&
           other.decodeSpeed == this.decodeSpeed &&
           other.messageTokensCount == this.messageTokensCount &&
@@ -1508,6 +1553,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
   final Value<String?> runningMode;
   final Value<String> build;
   final Value<String?> rawDecodeParams;
+  final Value<String?> batchSlotLabels;
   final Value<double?> prefillSpeed;
   final Value<double?> decodeSpeed;
   final Value<int?> messageTokensCount;
@@ -1533,6 +1579,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     this.runningMode = const Value.absent(),
     this.build = const Value.absent(),
     this.rawDecodeParams = const Value.absent(),
+    this.batchSlotLabels = const Value.absent(),
     this.prefillSpeed = const Value.absent(),
     this.decodeSpeed = const Value.absent(),
     this.messageTokensCount = const Value.absent(),
@@ -1559,6 +1606,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     this.runningMode = const Value.absent(),
     required String build,
     this.rawDecodeParams = const Value.absent(),
+    this.batchSlotLabels = const Value.absent(),
     this.prefillSpeed = const Value.absent(),
     this.decodeSpeed = const Value.absent(),
     this.messageTokensCount = const Value.absent(),
@@ -1590,6 +1638,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Expression<String>? runningMode,
     Expression<String>? build,
     Expression<String>? rawDecodeParams,
+    Expression<String>? batchSlotLabels,
     Expression<double>? prefillSpeed,
     Expression<double>? decodeSpeed,
     Expression<int>? messageTokensCount,
@@ -1617,6 +1666,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       if (runningMode != null) 'running_mode': runningMode,
       if (build != null) 'build': build,
       if (rawDecodeParams != null) 'raw_decode_params': rawDecodeParams,
+      if (batchSlotLabels != null) 'batch_slot_labels': batchSlotLabels,
       if (prefillSpeed != null) 'prefill_speed': prefillSpeed,
       if (decodeSpeed != null) 'decode_speed': decodeSpeed,
       if (messageTokensCount != null)
@@ -1647,6 +1697,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     Value<String?>? runningMode,
     Value<String>? build,
     Value<String?>? rawDecodeParams,
+    Value<String?>? batchSlotLabels,
     Value<double?>? prefillSpeed,
     Value<double?>? decodeSpeed,
     Value<int?>? messageTokensCount,
@@ -1673,6 +1724,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
       runningMode: runningMode ?? this.runningMode,
       build: build ?? this.build,
       rawDecodeParams: rawDecodeParams ?? this.rawDecodeParams,
+      batchSlotLabels: batchSlotLabels ?? this.batchSlotLabels,
       prefillSpeed: prefillSpeed ?? this.prefillSpeed,
       decodeSpeed: decodeSpeed ?? this.decodeSpeed,
       messageTokensCount: messageTokensCount ?? this.messageTokensCount,
@@ -1744,6 +1796,9 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
     if (rawDecodeParams.present) {
       map['raw_decode_params'] = Variable<String>(rawDecodeParams.value);
     }
+    if (batchSlotLabels.present) {
+      map['batch_slot_labels'] = Variable<String>(batchSlotLabels.value);
+    }
     if (prefillSpeed.present) {
       map['prefill_speed'] = Variable<double>(prefillSpeed.value);
     }
@@ -1784,6 +1839,7 @@ class _MsgCompanion extends UpdateCompanion<_MsgData> {
           ..write('runningMode: $runningMode, ')
           ..write('build: $build, ')
           ..write('rawDecodeParams: $rawDecodeParams, ')
+          ..write('batchSlotLabels: $batchSlotLabels, ')
           ..write('prefillSpeed: $prefillSpeed, ')
           ..write('decodeSpeed: $decodeSpeed, ')
           ..write('messageTokensCount: $messageTokensCount, ')
@@ -2050,6 +2106,7 @@ typedef $$_MsgTableCreateCompanionBuilder =
       Value<String?> runningMode,
       required String build,
       Value<String?> rawDecodeParams,
+      Value<String?> batchSlotLabels,
       Value<double?> prefillSpeed,
       Value<double?> decodeSpeed,
       Value<int?> messageTokensCount,
@@ -2077,6 +2134,7 @@ typedef $$_MsgTableUpdateCompanionBuilder =
       Value<String?> runningMode,
       Value<String> build,
       Value<String?> rawDecodeParams,
+      Value<String?> batchSlotLabels,
       Value<double?> prefillSpeed,
       Value<double?> decodeSpeed,
       Value<int?> messageTokensCount,
@@ -2188,6 +2246,11 @@ class $$_MsgTableFilterComposer extends Composer<_$AppDatabase, $_MsgTable> {
 
   ColumnFilters<String> get rawDecodeParams => $composableBuilder(
     column: $table.rawDecodeParams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get batchSlotLabels => $composableBuilder(
+    column: $table.batchSlotLabels,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2320,6 +2383,11 @@ class $$_MsgTableOrderingComposer extends Composer<_$AppDatabase, $_MsgTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get batchSlotLabels => $composableBuilder(
+    column: $table.batchSlotLabels,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get prefillSpeed => $composableBuilder(
     column: $table.prefillSpeed,
     builder: (column) => ColumnOrderings(column),
@@ -2428,6 +2496,11 @@ class $$_MsgTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get batchSlotLabels => $composableBuilder(
+    column: $table.batchSlotLabels,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<double> get prefillSpeed => $composableBuilder(
     column: $table.prefillSpeed,
     builder: (column) => column,
@@ -2497,6 +2570,7 @@ class $$_MsgTableTableManager
                 Value<String?> runningMode = const Value.absent(),
                 Value<String> build = const Value.absent(),
                 Value<String?> rawDecodeParams = const Value.absent(),
+                Value<String?> batchSlotLabels = const Value.absent(),
                 Value<double?> prefillSpeed = const Value.absent(),
                 Value<double?> decodeSpeed = const Value.absent(),
                 Value<int?> messageTokensCount = const Value.absent(),
@@ -2522,6 +2596,7 @@ class $$_MsgTableTableManager
                 runningMode: runningMode,
                 build: build,
                 rawDecodeParams: rawDecodeParams,
+                batchSlotLabels: batchSlotLabels,
                 prefillSpeed: prefillSpeed,
                 decodeSpeed: decodeSpeed,
                 messageTokensCount: messageTokensCount,
@@ -2549,6 +2624,7 @@ class $$_MsgTableTableManager
                 Value<String?> runningMode = const Value.absent(),
                 required String build,
                 Value<String?> rawDecodeParams = const Value.absent(),
+                Value<String?> batchSlotLabels = const Value.absent(),
                 Value<double?> prefillSpeed = const Value.absent(),
                 Value<double?> decodeSpeed = const Value.absent(),
                 Value<int?> messageTokensCount = const Value.absent(),
@@ -2574,6 +2650,7 @@ class $$_MsgTableTableManager
                 runningMode: runningMode,
                 build: build,
                 rawDecodeParams: rawDecodeParams,
+                batchSlotLabels: batchSlotLabels,
                 prefillSpeed: prefillSpeed,
                 decodeSpeed: decodeSpeed,
                 messageTokensCount: messageTokensCount,

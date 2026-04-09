@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -28,15 +27,14 @@ class BatchButton extends ConsumerWidget {
     final loaded = ref.watch(P.rwkv.loaded);
     final latestModel = ref.watch(P.rwkv.latestModel);
     final batchAllowed = latestModel?.tags.contains("batch") ?? false;
-    final batchEnabled = ref.watch(P.chat.batchEnabled);
-
-    final batchCount = ref.watch(P.chat.batchCount);
+    final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
+    final batchCount = ref.watch(P.chat.effectiveBatchCount);
     final canEnable = loaded && !loading && !generating && batchAllowed;
 
-    final InteractionVisualState interactionState = switch ((canEnable, batchEnabled)) {
-      (false, _) => .unavailable,
-      (true, true) => .enabled,
-      (true, false) => .available,
+    final InteractionVisualState interactionState = switch ((batchEnabled, canEnable)) {
+      (true, _) => .enabled,
+      (false, true) => .available,
+      (false, false) => .unavailable,
     };
 
     final colors = interactionVisualColors(appTheme: appTheme, state: interactionState);

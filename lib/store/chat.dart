@@ -6,6 +6,10 @@ enum _UserMessageMenuAction {
   deleteCurrentBranch,
 }
 
+const String _expressionModeGuSuffix = " 请用文言文回答。";
+const String _expressionModeMaoAssistantPrefix = "<think>喵";
+const String _expressionModeMaoUserSuffix = " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格。";
+
 class _Chat {
   // ===========================================================================
   // Instance
@@ -25,6 +29,16 @@ class _Chat {
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
   late final _liveTokenCountThrottler = Throttler(milliseconds: 997, trailing: true);
   int _refreshTokenCountEpoch = 0;
+  bool _expressionSequentialActive = false;
+  bool _expressionSequentialStopRequested = false;
+  int? _expressionSequentialMessageId;
+  int _expressionSequentialCurrentRouteIndex = 0;
+  bool _expressionSequentialForceChinese = false;
+  String _expressionSequentialCurrentOutput = "";
+  String? _expressionSequentialCurrentAssistantMessage;
+  List<ExpressionRoute> _expressionSequentialRoutes = const <ExpressionRoute>[];
+  List<String> _expressionSequentialBaseHistory = const <String>[];
+  List<String> _expressionSequentialCompletedOutputs = const <String>[];
 
   // ===========================================================================
   // StateProvider
@@ -58,8 +72,7 @@ class _Chat {
 
   late final webSearchMode = qs(WebSearchMode.off);
 
-  // 使用文言文
-  late final wenYanWen = qs(WenyanMode.off);
+  late final expressionMode = qs(const ExpressionModeState());
 
   late final batchEnabled = qs(Args.enableBatchInference);
   late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
@@ -81,6 +94,22 @@ class _Chat {
   late final inputHasContent = qp((ref) {
     final textInInput = ref.watch(this.textInInput);
     return textInInput.trim().isNotEmpty;
+  });
+
+  late final effectiveBatchEnabled = qp((ref) {
+    final expressionMode = ref.watch(this.expressionMode);
+    if (expressionMode.activeCount > 1) {
+      return true;
+    }
+    return ref.watch(batchEnabled);
+  });
+
+  late final effectiveBatchCount = qp((ref) {
+    final expressionMode = ref.watch(this.expressionMode);
+    if (expressionMode.activeCount > 1) {
+      return expressionMode.activeCount;
+    }
+    return ref.watch(batchCount);
   });
 }
 
@@ -210,9 +239,6 @@ extension $Chat on _Chat {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
-    if (mode != WebSearchMode.off) {
-      wenYanWen.q = WenyanMode.off;
-    }
     webSearchMode.q = mode;
   }
 
@@ -257,37 +283,7 @@ extension $Chat on _Chat {
     onSwitchWebSearchMode(selectedMode);
   }
 
-  void onSwitchWenYanWen(WenyanMode mode) async {
-    final receiving = P.rwkv.generating.q;
-    if (receiving) {
-      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
-      return;
-    }
-
-    switch (mode) {
-      case .off:
-      case .classic:
-        break;
-      case .mixed:
-        if (batchEnabled.q == false) batchEnabled.q = true;
-    }
-
-    if (mode != WenyanMode.off) {
-      webSearchMode.q = WebSearchMode.off;
-      if (mode == WenyanMode.mixed && P.rwkv.supportedBatchSizes.q.isNotEmpty) {
-        onBatchInferenceSwitchChanged(true);
-        batchCount.q = 2;
-      }
-    } else {
-      if (wenYanWen.q == WenyanMode.mixed && batchCount.q == 2) {
-        onBatchInferenceSwitchChanged(false);
-      }
-    }
-
-    wenYanWen.q = mode;
-  }
-
-  Future<void> onWenYanWenTapped() async {
+  Future<void> onExpressionModeTapped() async {
     final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
@@ -304,36 +300,549 @@ extension $Chat on _Chat {
     if (context == null) return;
 
     P.app.hapticLight();
+    await ExpressionModePanel.show();
+  }
 
-    final currentMode = wenYanWen.q;
-    final actionPairs = <({String label, WenyanMode key})>[
-      (label: "文言: 关", key: .off),
-      (label: "文言: 开", key: .classic),
-      (label: "古今", key: .mixed),
-    ];
-    final actions = actionPairs.map((entry) {
-      final isCurrent = entry.key == currentMode;
-      final label = isCurrent ? "☑ ${entry.label}" : entry.label;
-      final key = entry.key;
-      return SheetAction(label: label, key: key);
-    }).toList();
-
-    final selectedMode = await showModalActionSheet<WenyanMode>(
-      context: context,
-      title: "文言",
-      message: "请选择文言模式",
-      cancelLabel: S.current.cancel,
-      actions: actions,
-    );
-
-    if (selectedMode == null) return;
-
-    if (!model.tags.contains('batch') && selectedMode == WenyanMode.mixed) {
-      Alert.warning(S.current.this_model_does_not_support_batch_inference);
+  Future<void> onExpressionRouteChanged({
+    required ExpressionRoute route,
+    required bool enabled,
+  }) async {
+    final receiving = P.rwkv.generating.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
       return;
     }
 
-    onSwitchWenYanWen(selectedMode);
+    final ExpressionModeState currentState = expressionMode.q;
+    if (currentState.enabledFor(route) == enabled) {
+      return;
+    }
+    if (!currentState.canToggle(route, enabled)) {
+      resetExpressionMode();
+      Alert.info(S.current.expression_mode_auto_switched_to_jin);
+      return;
+    }
+
+    final ExpressionModeState nextState = currentState.copyWithRoute(route, enabled);
+    if (!_canUseExpressionRouteCount(nextState.activeCount)) {
+      final bool wantsToReplaceSingleRoute = enabled && currentState.activeCount == 1 && !currentState.enabledFor(route);
+      if (wantsToReplaceSingleRoute) {
+        final ExpressionModeState replacementState = ExpressionModeState(
+          jinEnabled: route == ExpressionRoute.jin,
+          guEnabled: route == ExpressionRoute.gu,
+          maoEnabled: route == ExpressionRoute.mao,
+        );
+        await _applyExpressionModeState(replacementState);
+        return;
+      }
+      Alert.warning(S.current.expression_mode_batch_not_supported(nextState.activeCount));
+      return;
+    }
+
+    await _applyExpressionModeState(nextState);
+  }
+
+  void resetExpressionMode() {
+    expressionMode.q = const ExpressionModeState();
+    batchEnabled.q = false;
+    batchCount.q = Argument.batchCount.defaults.toInt();
+  }
+
+  Future<void> _applyExpressionModeState(
+    ExpressionModeState state,
+  ) async {
+    await _syncBatchStateForExpressionMode(activeCount: state.activeCount);
+    expressionMode.q = state;
+  }
+
+  Future<void> _syncBatchStateForExpressionMode({
+    required int activeCount,
+  }) async {
+    if (activeCount <= 1) {
+      batchEnabled.q = false;
+      batchCount.q = Argument.batchCount.defaults.toInt();
+      return;
+    }
+    if (!batchEnabled.q) {
+      await onBatchInferenceSwitchChanged(true, triggeredByExpressionMode: true);
+    }
+    if (batchCount.q == activeCount) {
+      return;
+    }
+    batchCount.q = activeCount;
+  }
+
+  bool _canUseExpressionRouteCount(int activeCount) {
+    if (activeCount <= 0) {
+      return false;
+    }
+    final model = P.rwkv.latestModel.q;
+    if (model == null) {
+      return false;
+    }
+    if (activeCount <= 1) {
+      return true;
+    }
+    return _supportsExpressionBatchExecution(activeCount);
+  }
+
+  bool _supportsExpressionBatchExecution(int activeCount) {
+    if (activeCount <= 1) {
+      return false;
+    }
+    final model = P.rwkv.latestModel.q;
+    if (model == null) {
+      return false;
+    }
+    if (!model.tags.contains('batch')) {
+      return false;
+    }
+
+    final supportedBatchSizes = P.rwkv.supportedBatchSizes.q;
+    if (supportedBatchSizes.isEmpty) {
+      return true;
+    }
+
+    return supportedBatchSizes.max >= activeCount;
+  }
+
+  bool _shouldUseExpressionBatchExecution(int activeCount) {
+    return _supportsExpressionBatchExecution(activeCount);
+  }
+
+  List<String> _applySuffixToLatestUserMessage(
+    List<String> history,
+    String suffix,
+  ) {
+    final List<String> next = <String>[...history];
+    if (next.isEmpty) {
+      return next;
+    }
+    if (next.length.isEven) {
+      return next;
+    }
+    next[next.length - 1] = "${next.last}$suffix";
+    return next;
+  }
+
+  List<ExpressionRoute> _resolveExpressionRoutesForMessage(Message message) {
+    final List<String>? labels = message.batchSlotLabels;
+    if (labels == null || labels.isEmpty) {
+      return expressionMode.q.enabledRoutesInOrder;
+    }
+    final List<ExpressionRoute> routes = <ExpressionRoute>[];
+    for (final String label in labels) {
+      final ExpressionRoute? route = expressionRouteFromLabel(label);
+      if (route == null) {
+        continue;
+      }
+      routes.add(route);
+    }
+    if (routes.isEmpty) {
+      return expressionMode.q.enabledRoutesInOrder;
+    }
+    return routes;
+  }
+
+  List<String> _buildSingleRouteHistory({
+    required List<String> history,
+    required ExpressionRoute route,
+    String? assistantMessage,
+  }) {
+    late final List<String> nextHistory;
+    switch (route) {
+      case .jin:
+        nextHistory = <String>[...history];
+      case .gu:
+        nextHistory = _applySuffixToLatestUserMessage(history, _expressionModeGuSuffix);
+      case .mao:
+        nextHistory = _applySuffixToLatestUserMessage(history, _expressionModeMaoUserSuffix);
+    }
+
+    if (assistantMessage == null) {
+      return nextHistory;
+    }
+    return <String>[
+      ...nextHistory,
+      assistantMessage,
+    ];
+  }
+
+  List<to_rwkv.ChatBatchSlotConfig> _buildExpressionModeSlotConfigs({
+    required List<String> history,
+    required List<ExpressionRoute> routes,
+    Map<ExpressionRoute, String?>? assistantPrefixes,
+  }) {
+    final bool batchRequiresAssistantPrefixes =
+        routes.contains(ExpressionRoute.mao) || (assistantPrefixes?.values.any((String? prefix) => prefix != null) ?? false);
+
+    return <to_rwkv.ChatBatchSlotConfig>[
+      for (final ExpressionRoute route in routes)
+        to_rwkv.ChatBatchSlotConfig(
+          messages: _buildSingleRouteHistory(history: history, route: route),
+          assistantPrefix: switch (route) {
+            // 猫路使用 assistant prefix 时，整个 batch 都需要显式进入 assistant turn。
+            // 否则今/古两路会被 runtime 当成“继续用户最后一句”，表现为复读问题本身。
+            ExpressionRoute.jin => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
+            ExpressionRoute.gu => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
+            ExpressionRoute.mao => assistantPrefixes?[route] ?? _expressionModeMaoAssistantPrefix,
+          },
+        ),
+    ];
+  }
+
+  List<String> _buildRequestHistoryForExpressionRoute({
+    required List<String> history,
+    required ExpressionRoute route,
+    String? assistantMessage,
+  }) {
+    final String? resolvedAssistantMessage = switch (route) {
+      ExpressionRoute.jin => assistantMessage,
+      ExpressionRoute.gu => assistantMessage,
+      ExpressionRoute.mao => assistantMessage ?? _expressionModeMaoAssistantPrefix,
+    };
+    return _buildSingleRouteHistory(
+      history: history,
+      route: route,
+      assistantMessage: resolvedAssistantMessage,
+    );
+  }
+
+  ({List<String> messages, List<to_rwkv.ChatBatchSlotConfig>? slotConfigs})? _buildExpressionModeResumeRequest({
+    required int messageId,
+  }) {
+    if (P.app.pageKey.q != .chat) {
+      return null;
+    }
+
+    final Message? currentMessage = P.msg.pool.q[messageId];
+    if (currentMessage == null) {
+      return null;
+    }
+
+    final List<String>? baseHistory = _historyBeforeBotMessage(messageId: messageId);
+    if (baseHistory == null || baseHistory.isEmpty) {
+      return null;
+    }
+
+    final List<ExpressionRoute> routes = _resolveExpressionRoutesForMessage(currentMessage);
+    if (routes.isEmpty) {
+      return null;
+    }
+
+    if (routes.length == 1) {
+      final ExpressionRoute route = routes.first;
+      final String? assistantMessage;
+      if (currentMessage.content.isNotEmpty) {
+        assistantMessage = currentMessage.content;
+      } else if (route == ExpressionRoute.mao) {
+        assistantMessage = _expressionModeMaoAssistantPrefix;
+      } else {
+        assistantMessage = null;
+      }
+      return (
+        messages: _buildSingleRouteHistory(
+          history: baseHistory,
+          route: route,
+          assistantMessage: assistantMessage,
+        ),
+        slotConfigs: null,
+      );
+    }
+
+    final (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) = getBatchInfo(currentMessage.content);
+    if (!isBatch) {
+      return null;
+    }
+    if (batchCount < routes.length) {
+      return null;
+    }
+    if (selectedBatch != null) {
+      return null;
+    }
+
+    final Map<ExpressionRoute, String?> assistantPrefixes = <ExpressionRoute, String?>{};
+    for (int i = 0; i < routes.length; i++) {
+      final ExpressionRoute route = routes[i];
+      final String? rawValue = i < batch.length ? batch[i] : null;
+      if (route == ExpressionRoute.mao) {
+        assistantPrefixes[route] = rawValue == null || rawValue.isEmpty ? _expressionModeMaoAssistantPrefix : rawValue;
+        continue;
+      }
+      assistantPrefixes[route] = rawValue;
+    }
+
+    return (
+      messages: baseHistory,
+      slotConfigs: _buildExpressionModeSlotConfigs(
+        history: baseHistory,
+        routes: routes,
+        assistantPrefixes: assistantPrefixes,
+      ),
+    );
+  }
+
+  void _clearExpressionSequentialState() {
+    _expressionSequentialActive = false;
+    _expressionSequentialStopRequested = false;
+    _expressionSequentialMessageId = null;
+    _expressionSequentialCurrentRouteIndex = 0;
+    _expressionSequentialForceChinese = false;
+    _expressionSequentialCurrentOutput = "";
+    _expressionSequentialCurrentAssistantMessage = null;
+    _expressionSequentialRoutes = const <ExpressionRoute>[];
+    _expressionSequentialBaseHistory = const <String>[];
+    _expressionSequentialCompletedOutputs = const <String>[];
+  }
+
+  String _buildExpressionSequentialBatchContent({
+    required List<String> completedOutputs,
+    String? currentOutput,
+    required int totalCount,
+  }) {
+    final List<String> slotOutputs = List<String>.filled(totalCount, "");
+    final int completedCount = math.min(completedOutputs.length, totalCount);
+    for (int i = 0; i < completedCount; i++) {
+      slotOutputs[i] = completedOutputs[i];
+    }
+    if (currentOutput != null && completedCount < totalCount) {
+      slotOutputs[completedCount] = currentOutput;
+    }
+    return slotOutputs.join(Config.batchMarker) + Config.batchMarker + "-1";
+  }
+
+  Future<void> _sendCurrentExpressionSequentialRoute() async {
+    if (!_expressionSequentialActive) {
+      return;
+    }
+    if (_expressionSequentialCurrentRouteIndex >= _expressionSequentialRoutes.length) {
+      return;
+    }
+
+    final ExpressionRoute route = _expressionSequentialRoutes[_expressionSequentialCurrentRouteIndex];
+    final List<String> requestHistory = _buildRequestHistoryForExpressionRoute(
+      history: _expressionSequentialBaseHistory,
+      route: route,
+      assistantMessage: _expressionSequentialCurrentAssistantMessage,
+    );
+    _expressionSequentialCurrentAssistantMessage = null;
+    await P.rwkv.sendMessages(
+      requestHistory,
+      forceChinese: _expressionSequentialForceChinese,
+    );
+  }
+
+  Future<void> _startExpressionSequentialGeneration({
+    required int messageId,
+    required List<String> history,
+    required List<ExpressionRoute> routes,
+    required bool forceChinese,
+    List<String> completedOutputs = const <String>[],
+    int startRouteIndex = 0,
+    String? currentAssistantMessage,
+  }) async {
+    _expressionSequentialActive = true;
+    _expressionSequentialStopRequested = false;
+    _expressionSequentialMessageId = messageId;
+    _expressionSequentialCurrentRouteIndex = startRouteIndex;
+    _expressionSequentialForceChinese = forceChinese;
+    _expressionSequentialCurrentOutput = currentAssistantMessage ?? "";
+    _expressionSequentialCurrentAssistantMessage = currentAssistantMessage;
+    _expressionSequentialRoutes = <ExpressionRoute>[...routes];
+    _expressionSequentialBaseHistory = <String>[...history];
+    _expressionSequentialCompletedOutputs = <String>[...completedOutputs];
+    receivedTokens.q = _buildExpressionSequentialBatchContent(
+      completedOutputs: _expressionSequentialCompletedOutputs,
+      currentOutput: currentAssistantMessage,
+      totalCount: _expressionSequentialRoutes.length,
+    );
+    await _sendCurrentExpressionSequentialRoute();
+  }
+
+  Future<void> _advanceExpressionSequentialGenerationAfterStop() async {
+    if (!_expressionSequentialActive) {
+      return;
+    }
+
+    final int? messageId = _expressionSequentialMessageId;
+    if (messageId == null) {
+      _clearExpressionSequentialState();
+      return;
+    }
+
+    final String currentOutput = _expressionSequentialCurrentOutput;
+    final List<String> nextCompletedOutputs = <String>[
+      ..._expressionSequentialCompletedOutputs,
+      currentOutput,
+    ];
+    _expressionSequentialCompletedOutputs = nextCompletedOutputs;
+
+    final String finalizedContent = _buildExpressionSequentialBatchContent(
+      completedOutputs: nextCompletedOutputs,
+      totalCount: _expressionSequentialRoutes.length,
+    );
+    receivedTokens.q = finalizedContent;
+
+    if (_expressionSequentialStopRequested) {
+      _clearExpressionSequentialState();
+      return;
+    }
+
+    final int nextRouteIndex = _expressionSequentialCurrentRouteIndex + 1;
+    if (nextRouteIndex >= _expressionSequentialRoutes.length) {
+      _clearExpressionSequentialState();
+      _fullyReceived(callingFunction: "_advanceExpressionSequentialGenerationAfterStop");
+      return;
+    }
+
+    _expressionSequentialCurrentRouteIndex = nextRouteIndex;
+    _expressionSequentialCurrentOutput = "";
+    _expressionSequentialCurrentAssistantMessage = null;
+    _scheduleRefreshLiveTokenCounts(
+      messageId: messageId,
+      liveBotContent: finalizedContent,
+    );
+    await _sendCurrentExpressionSequentialRoute();
+  }
+
+  bool _handleExpressionSequentialEvent(from_rwkv.FromRWKV event) {
+    if (!_expressionSequentialActive) {
+      return false;
+    }
+
+    final int? messageId = _expressionSequentialMessageId;
+    if (messageId == null) {
+      _clearExpressionSequentialState();
+      return false;
+    }
+
+    switch (event) {
+      case from_rwkv.GenerateStart _:
+        P.rwkv.generating.q = true;
+        return true;
+
+      case from_rwkv.ResponseBufferContent res:
+        _expressionSequentialCurrentOutput = res.responseBufferContent;
+        final String liveContent = _buildExpressionSequentialBatchContent(
+          completedOutputs: _expressionSequentialCompletedOutputs,
+          currentOutput: res.responseBufferContent,
+          totalCount: _expressionSequentialRoutes.length,
+        );
+        receivedTokens.q = liveContent;
+        if (completionMode.q) {
+          return true;
+        }
+        _scheduleRefreshLiveTokenCounts(
+          messageId: messageId,
+          liveBotContent: liveContent,
+        );
+        _sensitiveThrottler.call(() {
+          _checkSensitive(liveContent);
+        });
+        return true;
+
+      case from_rwkv.GenerateStop _:
+        P.rwkv.generating.q = false;
+        unawaited(_advanceExpressionSequentialGenerationAfterStop());
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  List<String> _resolveExpressionSequentialSlotOutputs({
+    required Message message,
+    required int routeCount,
+  }) {
+    final (List<String> batch, bool isBatch, int _, int? _) = getBatchInfo(message.content);
+    if (isBatch) {
+      final List<String> outputs = batch.take(routeCount).toList();
+      while (outputs.length < routeCount) {
+        outputs.add("");
+      }
+      return outputs;
+    }
+
+    final List<String> outputs = List<String>.filled(routeCount, "");
+    if (message.content.isNotEmpty) {
+      outputs[0] = message.content;
+    }
+    return outputs;
+  }
+
+  ({List<String> completedOutputs, int startRouteIndex, String? currentAssistantMessage}) _buildExpressionSequentialResumeState({
+    required List<String> slotOutputs,
+  }) {
+    int lastNonEmptyIndex = -1;
+    for (int i = 0; i < slotOutputs.length; i++) {
+      if (slotOutputs[i].trim().isEmpty) {
+        continue;
+      }
+      lastNonEmptyIndex = i;
+    }
+
+    if (lastNonEmptyIndex < 0) {
+      return (
+        completedOutputs: const <String>[],
+        startRouteIndex: 0,
+        currentAssistantMessage: null,
+      );
+    }
+
+    final List<String> completedOutputs = <String>[];
+    for (int i = 0; i < lastNonEmptyIndex; i++) {
+      completedOutputs.add(slotOutputs[i]);
+    }
+    return (
+      completedOutputs: completedOutputs,
+      startRouteIndex: lastNonEmptyIndex,
+      currentAssistantMessage: slotOutputs[lastNonEmptyIndex],
+    );
+  }
+
+  Future<bool> _resumeExpressionSequentialMessage({
+    required int messageId,
+  }) async {
+    if (P.app.pageKey.q != .chat) {
+      return false;
+    }
+
+    final Message? currentMessage = P.msg.pool.q[messageId];
+    if (currentMessage == null) {
+      return false;
+    }
+
+    final List<ExpressionRoute> routes = _resolveExpressionRoutesForMessage(currentMessage);
+    if (routes.length <= 1) {
+      return false;
+    }
+    if (_shouldUseExpressionBatchExecution(routes.length)) {
+      return false;
+    }
+
+    final List<String>? baseHistory = _historyBeforeBotMessage(messageId: messageId);
+    if (baseHistory == null || baseHistory.isEmpty) {
+      return false;
+    }
+
+    final List<String> slotOutputs = _resolveExpressionSequentialSlotOutputs(
+      message: currentMessage,
+      routeCount: routes.length,
+    );
+    final resumeState = _buildExpressionSequentialResumeState(slotOutputs: slotOutputs);
+
+    await _startExpressionSequentialGeneration(
+      messageId: messageId,
+      history: baseHistory,
+      routes: routes,
+      forceChinese: false,
+      completedOutputs: resumeState.completedOutputs,
+      startRouteIndex: resumeState.startRouteIndex,
+      currentAssistantMessage: resumeState.currentAssistantMessage,
+    );
+    _scheduleRefreshLiveTokenCounts(messageId: messageId, liveBotContent: receivedTokens.q);
+    return true;
   }
 
   // TODO: 适时去掉 preferredDemoType
@@ -678,6 +1187,7 @@ extension $Chat on _Chat {
     String message = raw;
 
     if (!checkModelSelection(preferredDemoType: .chat)) return;
+    _clearExpressionSequentialState();
 
     final currentModel = P.rwkv.latestModel.q!;
 
@@ -731,15 +1241,20 @@ extension $Chat on _Chat {
         final selection = P.msg.batchSelection(parentMsg).q;
         if (selection != null) {
           final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
-          final finalizedMsg = parentMsg.copyWith(content: finalizedContent);
+          final finalizedMsg = parentMsg.copyWith(
+            content: finalizedContent,
+            clearBatchSlotLabels: true,
+          );
           P.msg._syncMsg(parentMsg.id, finalizedMsg);
 
           // 重新计算 token count（从 batch 全量变为单 slot）
-          unawaited(_refreshTokenCountsForMessage(
-            messageId: parentMsg.id,
-            overrideBotContent: finalizedContent,
-            persistToMessage: true,
-          ));
+          unawaited(
+            _refreshTokenCountsForMessage(
+              messageId: parentMsg.id,
+              overrideBotContent: finalizedContent,
+              persistToMessage: true,
+            ),
+          );
 
           // Also finalize the paired user batch message if it exists
           final userParentNode = P.msg.msgNode.q.findParentByMsgId(parentMsg.id);
@@ -817,6 +1332,7 @@ extension $Chat on _Chat {
       modelName: currentModel.name,
       runningMode: thinkingMode.toString(),
       rawDecodeParams: _resolveDecodeParamsSnapshotRaw(),
+      batchSlotLabels: P.app.pageKey.q == .chat && expressionMode.q.activeCount > 1 ? expressionMode.q.enabledLabelsInOrder : null,
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;
@@ -827,10 +1343,52 @@ extension $Chat on _Chat {
 
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
     final inSee = P.app.pageKey.q == .see;
-    final batchSize = inSee ? 1 : (batchEnabled.q ? batchCount.q : 1);
-
     final forceChinese = inSee && message.containsChinese;
 
+    if (!inSee) {
+      final List<ExpressionRoute> routes = expressionMode.q.enabledRoutesInOrder;
+      if (routes.length > 1) {
+        if (_shouldUseExpressionBatchExecution(routes.length)) {
+          final List<to_rwkv.ChatBatchSlotConfig> slotConfigs = _buildExpressionModeSlotConfigs(
+            history: history,
+            routes: routes,
+          );
+          P.rwkv.sendMessages(
+            history,
+            forceChinese: forceChinese,
+            overrideBatchSlotConfigs: slotConfigs,
+          );
+          _checkSensitive(raw);
+          return;
+        }
+        final int currentReceiveId = this.receiveId.q!;
+        unawaited(
+          _startExpressionSequentialGeneration(
+            messageId: currentReceiveId,
+            history: history,
+            routes: routes,
+            forceChinese: forceChinese,
+          ),
+        );
+        _checkSensitive(raw);
+        return;
+      }
+
+      final ExpressionRoute route = routes.first;
+      final List<String> singleRouteHistory = _buildRequestHistoryForExpressionRoute(
+        history: history,
+        route: route,
+      );
+      P.rwkv.sendMessages(
+        singleRouteHistory,
+        batchSize: batchEnabled.q ? batchCount.q : 1,
+        forceChinese: forceChinese,
+      );
+      _checkSensitive(raw);
+      return;
+    }
+
+    final batchSize = inSee ? 1 : (batchEnabled.q ? batchCount.q : 1);
     P.rwkv.sendMessages(history, batchSize: batchSize, forceChinese: forceChinese);
 
     _checkSensitive(raw);
@@ -854,6 +1412,7 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
+    _clearExpressionSequentialState();
     receiveId.q = id;
     _updateMessageById(
       id: id,
@@ -862,18 +1421,40 @@ extension $Chat on _Chat {
       callingFunction: "resumeMessageById",
     );
     _liveTokenCountThrottler.cancel();
+    final bool resumedSequentially = await _resumeExpressionSequentialMessage(messageId: id);
+    if (resumedSequentially) {
+      return;
+    }
+    final expressionResumeRequest = _buildExpressionModeResumeRequest(messageId: id);
+    if (expressionResumeRequest != null) {
+      P.rwkv.sendMessages(
+        expressionResumeRequest.messages,
+        batchSize: expressionResumeRequest.slotConfigs == null && batchEnabled.q ? batchCount.q : 1,
+        overrideBatchSlotConfigs: expressionResumeRequest.slotConfigs,
+      );
+      _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
+      return;
+    }
     P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
     _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
   }
 
-  Future<void> onBatchInferenceSwitchChanged(bool value) async {
-    P.app.hapticLight();
-    batchEnabled.q = value;
-    if (wenYanWen.q == WenyanMode.mixed && !value) {
-      wenYanWen.q = WenyanMode.off;
+  Future<void> onBatchInferenceSwitchChanged(
+    bool value, {
+    bool triggeredByExpressionMode = false,
+  }) async {
+    if (!triggeredByExpressionMode) {
+      P.app.hapticLight();
+      if (expressionMode.q.activeCount > 1) {
+        resetExpressionMode();
+        return;
+      }
     }
-
-    if (!value) return;
+    batchEnabled.q = value;
+    if (!value) {
+      batchCount.q = Argument.batchCount.defaults.toInt();
+      return;
+    }
 
     final temperature = P.rwkv.arguments(Argument.temperature).q;
     final topP = P.rwkv.arguments(Argument.topP).q;
@@ -908,8 +1489,18 @@ extension $Chat on _Chat {
         modelID: modelID,
       ),
     );
-    final batchCount = this.batchCount.q;
-    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: batchCount, modelID: modelID));
+    final currentBatchCount = batchCount.q;
+    P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: currentBatchCount, modelID: modelID));
+  }
+
+  void onManualBatchCountChanged(int value) {
+    if (batchCount.q == value) {
+      return;
+    }
+    batchCount.q = value;
+    if (expressionMode.q.activeCount > 1 && value != expressionMode.q.activeCount) {
+      resetExpressionMode();
+    }
   }
 
   Future<void> tryLoadLastChatModel() async {
@@ -941,7 +1532,16 @@ extension $Chat on _Chat {
       await P.rwkv.loadChat(fileInfo: fileInfo);
 
       final batchAllowed = fileInfo.tags.contains("batch");
-      if (!batchAllowed) batchEnabled.q = false;
+      if (!batchAllowed) {
+        if (expressionMode.q.activeCount > 1) {
+          resetExpressionMode();
+        } else {
+          batchEnabled.q = false;
+          batchCount.q = Argument.batchCount.defaults.toInt();
+        }
+      } else if (expressionMode.q.activeCount > 1) {
+        await _syncBatchStateForExpressionMode(activeCount: expressionMode.q.activeCount);
+      }
 
       final isTranslate = fileInfo.tags.contains("translate");
       final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
@@ -1048,8 +1648,8 @@ extension _$Chat on _Chat {
     required int? conversationTokensCount,
   }) {
     if (conversationTokensCount == null) return;
-    final int effectiveBatchCount = batchEnabled.q ? batchCount.q : 1;
-    final int threshold = Config.newConversationTokenReminderThreshold * effectiveBatchCount;
+    final int currentEffectiveBatchCount = effectiveBatchEnabled.q ? effectiveBatchCount.q : 1;
+    final int threshold = Config.newConversationTokenReminderThreshold * currentEffectiveBatchCount;
     if (conversationTokensCount < threshold) return;
 
     final conversationId = P.msg.msgNode.q.createAtInUS;
@@ -1065,6 +1665,10 @@ extension _$Chat on _Chat {
   }
 
   void _onBatchCountChanged(int value) async {
+    if (expressionMode.q.activeCount > 1 && value != expressionMode.q.activeCount) {
+      resetExpressionMode();
+    }
+
     late final List<SamplerAndPenaltyParam> newFrontendBatchParams;
     newFrontendBatchParams = [
       ...P.rwkv.frontendBatchParams.q,
@@ -1105,12 +1709,16 @@ extension _$Chat on _Chat {
     if (supportedBatchSizes.isEmpty) {
       batchEnabled.q = false;
       batchCount.q = Argument.batchCount.defaults.toInt();
-      if (wenYanWen.q == WenyanMode.mixed) {
-        wenYanWen.q = WenyanMode.off;
+      if (expressionMode.q.activeCount > 1) {
+        expressionMode.q = const ExpressionModeState();
       }
       return;
     }
     final max = supportedBatchSizes.max;
+    if (expressionMode.q.activeCount > 1 && max < expressionMode.q.activeCount) {
+      resetExpressionMode();
+      return;
+    }
     if (max < batchCount.q) batchCount.q = max;
   }
 
@@ -1168,10 +1776,7 @@ extension _$Chat on _Chat {
       final botMsg = i + 1 < messages.length ? messages[i + 1] : null;
 
       // 处理用户消息
-      String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
-      if (wenYanWen.q == WenyanMode.classic) {
-        userContent = '$userContent 请用文言文回答。';
-      }
+      final String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
       result.add(userContent);
 
       // 处理机器人消息（如果存在）
@@ -1182,6 +1787,59 @@ extension _$Chat on _Chat {
     }
 
     return result;
+  }
+
+  List<String>? _historyBeforeBotMessage({required int messageId}) {
+    final MsgNode? targetNode = P.msg.msgNode.q.findNodeByMsgId(messageId);
+    final MsgNode? parentNode = targetNode?.parent;
+    if (targetNode == null || parentNode == null) {
+      return null;
+    }
+
+    final List<int> idsFromTargetToRoot = P.msg.msgNode.q.msgIdsFrom(parentNode);
+    final List<int> orderedPathIds = idsFromTargetToRoot.reversed.where((int id) => id != 0).toList();
+    if (orderedPathIds.isEmpty) {
+      return null;
+    }
+
+    final List<Message> scopedMessages = <Message>[];
+    for (final int id in orderedPathIds) {
+      final Message? pathMessage = P.msg.pool.q[id];
+      if (pathMessage == null) {
+        continue;
+      }
+      if (pathMessage.type != MessageType.text) {
+        continue;
+      }
+      scopedMessages.add(pathMessage);
+    }
+    if (scopedMessages.isEmpty) {
+      return null;
+    }
+
+    final List<String> history = <String>[];
+    final bool isSingleTurnPath = scopedMessages.length == 1 && scopedMessages.first.isMine;
+    if (isSingleTurnPath) {
+      final String template = P.preference.promptTemplate.newChatTemplate.trim();
+      if (template.isNotEmpty) {
+        history.addAll(template.split("\n\n").where((String entry) => entry.isNotEmpty));
+      }
+    }
+
+    for (int i = 0; i < scopedMessages.length; i = i + 2) {
+      final Message userMsg = scopedMessages[i];
+      final Message? botMsg = i + 1 < scopedMessages.length ? scopedMessages[i + 1] : null;
+
+      final String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
+      history.add(userContent);
+
+      if (botMsg == null) {
+        continue;
+      }
+      history.add(botMsg.getHistoryContent());
+    }
+
+    return history;
   }
 
   Future<void> _pauseMessageById({required int id, bool isSensitive = false}) async {
@@ -1205,6 +1863,9 @@ extension _$Chat on _Chat {
     final finalizedContent = currentGeneratedContent.isNotEmpty ? currentGeneratedContent : msg.content;
 
     _liveTokenCountThrottler.cancel();
+    if (_expressionSequentialActive && _expressionSequentialMessageId == id) {
+      _expressionSequentialStopRequested = true;
+    }
     P.rwkv.stop();
 
     final newMsg = msg.copyWith(
@@ -1570,10 +2231,7 @@ extension _$Chat on _Chat {
       final Message userMsg = scopedMessages[i];
       final Message? botMsg = i + 1 < scopedMessages.length ? scopedMessages[i + 1] : null;
 
-      String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
-      if (wenYanWen.q == WenyanMode.classic) {
-        userContent = "$userContent 请用文言文回答。";
-      }
+      final String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
       history.add(userContent);
 
       if (botMsg == null) continue;
@@ -1629,6 +2287,7 @@ extension _$Chat on _Chat {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator) return;
     if (P.askQuestion.interceptingEvents.q) return;
+    if (_handleExpressionSequentialEvent(event)) return;
 
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
@@ -1682,6 +2341,7 @@ extension _$Chat on _Chat {
     if (pageKey == .translator) return;
     qq;
     _liveTokenCountThrottler.cancel();
+    _clearExpressionSequentialState();
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
     P.rwkv.generating.q = false;
@@ -1692,6 +2352,7 @@ extension _$Chat on _Chat {
     if (pageKey == .translator) return;
     qqe("error: $error");
     _liveTokenCountThrottler.cancel();
+    _clearExpressionSequentialState();
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;

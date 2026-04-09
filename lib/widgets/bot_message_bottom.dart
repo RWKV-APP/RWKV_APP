@@ -241,12 +241,10 @@ class BotMessageBottom extends ConsumerWidget {
     final messageTokenCountText = resolvedMessageTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
     final contextTokenCountText = resolvedConversationTokenCount?.toString() ?? (msg.changing ? s.generating : "--");
 
-    final int effectiveBatchCount = ref.watch(P.chat.batchEnabled) ? ref.watch(P.chat.batchCount) : 1;
+    final int effectiveBatchCount = ref.watch(P.chat.effectiveBatchEnabled) ? ref.watch(P.chat.effectiveBatchCount) : 1;
     final int tokenThreshold = Config.newConversationTokenReminderThreshold * effectiveBatchCount;
     final showConversationTokenLimitHint =
-        !msg.changing &&
-        resolvedConversationTokenCount != null &&
-        resolvedConversationTokenCount >= tokenThreshold;
+        !msg.changing && resolvedConversationTokenCount != null && resolvedConversationTokenCount >= tokenThreshold;
     final isInlineTokenGenerating = messageTokenCountText == s.generating || contextTokenCountText == s.generating;
 
     final inlineConversationTokenCoreText = isInlineTokenGenerating ? s.generating : "$messageTokenCountText/$contextTokenCountText tok";

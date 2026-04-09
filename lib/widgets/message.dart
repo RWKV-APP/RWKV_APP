@@ -191,6 +191,7 @@ class _MessageState extends ConsumerState<Message> {
               batchSelection: batchSelection,
               thisMessageIsReceiving: thisMessageIsReceiving,
               perSlotQuestions: perSlotQuestions,
+              slotLabels: msg.batchSlotLabels,
             ),
     );
 
@@ -365,6 +366,7 @@ class _BotMessageBubble extends ConsumerWidget {
   final int? batchSelection;
   final bool thisMessageIsReceiving;
   final List<String>? perSlotQuestions;
+  final List<String>? slotLabels;
 
   const _BotMessageBubble({
     required this.msg,
@@ -383,6 +385,7 @@ class _BotMessageBubble extends ConsumerWidget {
     required this.batchSelection,
     required this.thisMessageIsReceiving,
     this.perSlotQuestions,
+    this.slotLabels,
   });
 
   void _toggleCotContent() {
@@ -474,7 +477,7 @@ class _BotMessageBubble extends ConsumerWidget {
               raw: thinkingData.cotResult,
               useMessageLineHeight: true,
             ),
-          if (isBatch) BatchMessageContent(msg, index, finalContent, perSlotQuestions: perSlotQuestions),
+          if (isBatch) BatchMessageContent(msg, index, finalContent, perSlotQuestions: perSlotQuestions, slotLabels: slotLabels),
           if (demoType == .tts) BotTtsContent(msg, index),
           if (!selectMode && demoType != .tts)
             BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),

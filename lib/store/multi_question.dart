@@ -146,7 +146,13 @@ extension $MultiQuestion on _MultiQuestion {
       final selection = P.msg.batchSelection(parentMsg).q;
       if (selection != null) {
         final finalizedContent = parentMsg.content.split(Config.batchMarker)[selection];
-        P.msg._syncMsg(parentMsg.id, parentMsg.copyWith(content: finalizedContent));
+        P.msg._syncMsg(
+          parentMsg.id,
+          parentMsg.copyWith(
+            content: finalizedContent,
+            clearBatchSlotLabels: true,
+          ),
+        );
         unawaited(
           P.chat._refreshTokenCountsForMessage(
             messageId: parentMsg.id,

@@ -217,7 +217,7 @@ class _ThemePreviewPane extends StatelessWidget {
               "思考：不可用",
               "风格：不可用",
               "并行：不可用",
-              "文言：不可用",
+              "表达模式：不可用",
             ],
           ),
           const SizedBox(height: 10),
@@ -231,7 +231,7 @@ class _ThemePreviewPane extends StatelessWidget {
               "思考：关（状态2）",
               "风格：默认（视觉按状态3）",
               "并行：关闭",
-              "文言：关（状态2）",
+              "表达模式：今（状态2）",
             ],
           ),
           const SizedBox(height: 10),
@@ -245,7 +245,7 @@ class _ThemePreviewPane extends StatelessWidget {
               "思考：快（状态3）",
               "风格：默认（状态3）",
               "并行：关闭",
-              "文言：开（状态3）",
+              "表达模式：今（状态3）",
             ],
           ),
           const SizedBox(height: 10),
@@ -259,7 +259,7 @@ class _ThemePreviewPane extends StatelessWidget {
               "思考：高 / 英短 / 英长（状态4）",
               "风格：非默认参数（如创意），但视觉仍按状态3",
               "并行：开启 ×2",
-              "文言：古今（状态4）",
+              "表达模式：今 / 古 / 猫（状态4）",
             ],
           ),
           const SizedBox(height: 10),
@@ -273,7 +273,7 @@ class _ThemePreviewPane extends StatelessWidget {
               "思考：快（按状态3）",
               "风格：默认（按状态3）",
               "并行：关闭（按状态3）",
-              "文言：关闭（按状态2）",
+              "表达模式：今（按状态2）",
             ],
           ),
         ],
@@ -453,35 +453,35 @@ List<String> _modeLabelsForState(_PreviewInteractionState state) {
       "思考 不可用(S1)",
       "风格 不可用(S1)",
       "并行 不可用(S1)",
-      "文言 不可用(S1)",
+      "表达模式 不可用(S1)",
     ],
     _PreviewInteractionState.idleInteractive => [
       "联网 关(S2)",
       "思考 关(S2)",
       "风格 默认(S3)",
       "并行 关(S3)",
-      "文言 关(S2)",
+      "表达模式 今(S2)",
     ],
     _PreviewInteractionState.available => [
       "联网 开(S3)",
       "思考 快(S3)",
       "风格 默认(S3)",
       "并行 关(S3)",
-      "文言 开(S3)",
+      "表达模式 今(S3)",
     ],
     _PreviewInteractionState.enabled => [
       "联网 深度(S4)",
       "思考 高/英短/英长(S4)",
       "风格 创意(S3)",
       "并行 ×2(S4)",
-      "文言 古今(S4)",
+      "表达模式 今/古/猫(S4)",
     ],
     _PreviewInteractionState.defaultOnBatchModel => [
       "联网 关(S2)",
       "思考 快(S3)",
       "风格 默认(S3)",
       "并行 关(S3)",
-      "文言 关(S2)",
+      "表达模式 今(S2)",
     ],
   };
 }
@@ -704,7 +704,6 @@ class _WenyanPreviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final enabled = state == _PreviewInteractionState.enabled;
     final _PreviewInteractionState visualState = switch (state) {
       _PreviewInteractionState.unavailable => .unavailable,
       _PreviewInteractionState.idleInteractive => .idleInteractive,
@@ -717,7 +716,7 @@ class _WenyanPreviewButton extends StatelessWidget {
       previewTheme: previewTheme,
       state: visualState,
       child: Text(
-        enabled ? "古今" : "文言",
+        "表达模式",
         style: TS(s: theme.textTheme.bodyMedium?.fontSize ?? 14, height: 1, w: .w500),
       ),
     );

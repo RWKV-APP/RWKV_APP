@@ -38,6 +38,7 @@ final class Message extends Equatable {
   final String? modelName;
   final String? runningMode;
   final String? rawDecodeParams;
+  final List<String>? batchSlotLabels;
   final double? prefillSpeed;
   final double? decodeSpeed;
   final int? messageTokensCount;
@@ -63,6 +64,7 @@ final class Message extends Equatable {
     this.modelName,
     this.runningMode,
     this.rawDecodeParams,
+    this.batchSlotLabels,
     this.prefillSpeed,
     this.decodeSpeed,
     this.messageTokensCount,
@@ -90,6 +92,7 @@ final class Message extends Equatable {
     modelName,
     runningMode,
     rawDecodeParams,
+    batchSlotLabels,
     prefillSpeed,
     decodeSpeed,
     messageTokensCount,
@@ -116,6 +119,7 @@ final class Message extends Equatable {
       modelName: json["modelName"] as String?,
       runningMode: json["runningMode"] as String?,
       rawDecodeParams: json["rawDecodeParams"] as String?,
+      batchSlotLabels: (json["batchSlotLabels"] as Iterable?)?.map((dynamic e) => e.toString()).toList(),
       prefillSpeed: (json["prefillSpeed"] as num?)?.toDouble(),
       decodeSpeed: (json["decodeSpeed"] as num?)?.toDouble(),
       messageTokensCount: json["messageTokensCount"] as int?,
@@ -144,6 +148,7 @@ final class Message extends Equatable {
       "modelName": modelName,
       "runningMode": runningMode,
       "rawDecodeParams": rawDecodeParams,
+      "batchSlotLabels": batchSlotLabels,
       "prefillSpeed": prefillSpeed,
       "decodeSpeed": decodeSpeed,
       "messageTokensCount": messageTokensCount,
@@ -171,6 +176,8 @@ final class Message extends Equatable {
     String? modelName,
     String? runningMode,
     String? rawDecodeParams,
+    List<String>? batchSlotLabels,
+    bool clearBatchSlotLabels = false,
     double? prefillSpeed,
     double? decodeSpeed,
     int? messageTokensCount,
@@ -195,6 +202,7 @@ final class Message extends Equatable {
       modelName: modelName ?? this.modelName,
       runningMode: runningMode ?? this.runningMode,
       rawDecodeParams: rawDecodeParams ?? this.rawDecodeParams,
+      batchSlotLabels: clearBatchSlotLabels ? null : (batchSlotLabels ?? this.batchSlotLabels),
       prefillSpeed: prefillSpeed ?? this.prefillSpeed,
       decodeSpeed: decodeSpeed ?? this.decodeSpeed,
       messageTokensCount: messageTokensCount ?? this.messageTokensCount,
@@ -225,6 +233,7 @@ Message(
   modelName: $modelName,
   runningMode: $runningMode,
   rawDecodeParams: $rawDecodeParams,
+  batchSlotLabels: $batchSlotLabels,
   prefillSpeed: $prefillSpeed,
   decodeSpeed: $decodeSpeed,
   messageTokensCount: $messageTokensCount,

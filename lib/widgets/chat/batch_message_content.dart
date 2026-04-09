@@ -22,8 +22,16 @@ class BatchMessageContent extends ConsumerStatefulWidget {
   final int index;
   final String finalContent;
   final List<String>? perSlotQuestions;
+  final List<String>? slotLabels;
 
-  const BatchMessageContent(this.msg, this.index, this.finalContent, {this.perSlotQuestions, super.key});
+  const BatchMessageContent(
+    this.msg,
+    this.index,
+    this.finalContent, {
+    this.perSlotQuestions,
+    this.slotLabels,
+    super.key,
+  });
 
   @override
   ConsumerState<BatchMessageContent> createState() => _BatchMessageContentState();
@@ -122,6 +130,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
                           borderRadius: .circular(8),
                         ),
                         child: _SlotContent(
+                          slotLabel: widget.slotLabels != null && i < widget.slotLabels!.length ? widget.slotLabels![i] : null,
                           question: widget.perSlotQuestions != null && i < widget.perSlotQuestions!.length
                               ? widget.perSlotQuestions![i]
                               : null,
@@ -196,12 +205,14 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
 }
 
 class _SlotContent extends ConsumerWidget {
+  final String? slotLabel;
   final String? question;
   final String data;
   final SamplerAndPenaltyParam? decodeParam;
   final Color qb;
 
   const _SlotContent({
+    required this.slotLabel,
     required this.question,
     required this.data,
     required this.decodeParam,
@@ -210,22 +221,27 @@ class _SlotContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    final bool hasSlotLabel = slotLabel != null && slotLabel!.trim().isNotEmpty;
     final bool hasQuestion = question != null && question!.trim().isNotEmpty;
+    final bool hasMetaBadges = hasSlotLabel || decodeParam != null;
 
     // 普通 batch inference（无 question）：保持现有行为
-    if (!hasQuestion) {
+    if (!hasQuestion && !hasSlotLabel) {
       return _MarkdownBody(data: data, decodeParam: decodeParam);
     }
 
-    // 多问题并行：decode param → user question → bot answer
+    // 带标签或问题的 batch：第一行放 meta badges，之后是问题卡片和回答
     return Column(
       crossAxisAlignment: .start,
       children: [
-        if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
-        if (decodeParam != null) const SizedBox(height: 8),
-        _UserQuestionCard(question: question!),
-        const SizedBox(height: 8),
+        if (hasMetaBadges)
+          _MetaBadgeRow(
+            slotLabel: slotLabel,
+            decodeParam: decodeParam,
+          ),
+        if (hasMetaBadges) const SizedBox(height: 8),
+        if (hasQuestion) _UserQuestionCard(question: question!),
+        if (hasQuestion) const SizedBox(height: 8),
         _MarkdownBody(data: data),
       ],
     );
@@ -264,7 +280,92 @@ class _UserQuestionCard extends ConsumerWidget {
   }
 }
 
-class _DecodeParamBadge extends ConsumerWidget {
+class _MetaBadgeRow extends StatelessWidget {
+  final String? slotLabel;
+  final SamplerAndPenaltyParam? decodeParam;
+
+  const _MetaBadgeRow({
+    required this.slotLabel,
+    required this.decodeParam,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: .topLeft,
+      child: Wrap(
+        spacing: 6,
+        runSpacing: 6,
+        children: [
+          if (slotLabel != null && slotLabel!.trim().isNotEmpty) _SlotLabelBadge(label: slotLabel!),
+          if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetaBadge extends ConsumerWidget {
+  final String text;
+  final VoidCallback? onTap;
+
+  const _MetaBadge({
+    required this.text,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final appTheme = ref.watch(P.app.theme);
+    final fontSize = theme.textTheme.bodySmall?.fontSize ?? 12.0;
+
+    return GD(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: .all(
+            color: appTheme.qb12,
+          ),
+          borderRadius: .circular(4),
+        ),
+        padding: const .symmetric(
+          horizontal: 6,
+          vertical: 2,
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: appTheme.qb0,
+            fontSize: fontSize,
+            height: 1,
+            fontWeight: FontWeight.w500,
+          ),
+          strutStyle: StrutStyle(
+            fontSize: fontSize,
+            height: 1,
+            forceStrutHeight: true,
+            leadingDistribution: TextLeadingDistribution.even,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SlotLabelBadge extends StatelessWidget {
+  final String label;
+
+  const _SlotLabelBadge({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return _MetaBadge(text: label);
+  }
+}
+
+class _DecodeParamBadge extends StatelessWidget {
   final SamplerAndPenaltyParam decodeParam;
 
   const _DecodeParamBadge({required this.decodeParam});
@@ -286,31 +387,12 @@ class _DecodeParamBadge extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // ignore: unused_local_variable
-    final theme = Theme.of(context);
+  Widget build(BuildContext context) {
     final s = S.of(context);
     final displayText = s.decode_param + s.colon + decodeParam.decodeParamType.displayNameShort;
-    final appTheme = ref.watch(P.app.theme);
-
-    return Align(
-      alignment: .topLeft,
-      child: GD(
-        onTap: _onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            border: .all(
-              color: appTheme.qb12,
-            ),
-            borderRadius: .circular(4),
-          ),
-          padding: const .symmetric(
-            horizontal: 6,
-            vertical: 2,
-          ),
-          child: Text(displayText),
-        ),
-      ),
+    return _MetaBadge(
+      text: displayText,
+      onTap: _onTap,
     );
   }
 }

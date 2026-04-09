@@ -567,6 +567,7 @@ extension $RWKV on _RWKV {
     int? maxLength,
     bool forceChinese = false,
     List<List<String>>? overrideBatchMessages,
+    List<to_rwkv.ChatBatchSlotConfig>? overrideBatchSlotConfigs,
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
@@ -608,53 +609,53 @@ extension $RWKV on _RWKV {
       return;
     }
 
-    final isBatchInference = batchSize > 1;
-
     final thinkingMode = _thinkingMode.q;
+    final bool reasoning = thinkingMode.hasThinkTag;
+    final bool forceReasoning = thinkingMode.forceReasoning;
+    final bool hasOverrideBatchSlotConfigs = overrideBatchSlotConfigs != null && overrideBatchSlotConfigs.isNotEmpty;
+    final int effectiveBatchSize = hasOverrideBatchSlotConfigs ? overrideBatchSlotConfigs.length : batchSize;
+    final bool isBatchInference = effectiveBatchSize > 1;
+    final bool addGenerationPrompt = messages.length.isOdd;
 
-    final reasoning = thinkingMode.hasThinkTag;
-    List<List<String>> batchMessages;
-    if (overrideBatchMessages != null) {
-      batchMessages = overrideBatchMessages;
+    final to_rwkv.ToRWKV request;
+    if (hasOverrideBatchSlotConfigs) {
+      request = to_rwkv.ChatBatchAsync.withSlotConfigs(
+        overrideBatchSlotConfigs,
+        modelID: modelID,
+        maxLength: maxLength,
+        forceLang: forceChinese ? 1 : null,
+      );
+    } else if (isBatchInference) {
+      final List<List<String>> batchMessages;
+      if (overrideBatchMessages != null) {
+        batchMessages = overrideBatchMessages;
+      } else {
+        batchMessages = <List<String>>[];
+        for (int i = 0; i < effectiveBatchSize; i++) {
+          batchMessages.add(messages);
+        }
+      }
+      request = to_rwkv.ChatBatchAsync(
+        batchMessages,
+        enableReasoning: reasoning,
+        forceReasoning: forceReasoning,
+        addGenerationPrompt: addGenerationPrompt,
+        batchSize: effectiveBatchSize,
+        modelID: modelID,
+        maxLength: maxLength,
+        forceLang: forceChinese ? 1 : null,
+      );
     } else {
-      batchMessages = [];
-      for (var i = 0; i < batchSize; i++) {
-        batchMessages.add(messages);
-      }
+      request = to_rwkv.ChatAsync(
+        messages,
+        enableReasoning: reasoning,
+        forceReasoning: forceReasoning,
+        addGenerationPrompt: addGenerationPrompt,
+        modelID: modelID,
+        maxLength: maxLength,
+        forceLang: forceChinese ? 1 : null,
+      );
     }
-
-    /// ‘古今’ 模式
-    List<String> his = batchMessages[0];
-    if (his.length % 2 == 1 && batchSize == 2) {
-      if (P.chat.wenYanWen.q == WenyanMode.mixed) {
-        his = [...his];
-        his[his.length - 1] = his[his.length - 1] + " 请用文言文回答。";
-        batchMessages[0] = his;
-      }
-    }
-
-    final forceReasoning = thinkingMode.forceReasoning;
-    final addGenerationPrompt = messages.length.isOdd;
-    final request = isBatchInference
-        ? to_rwkv.ChatBatchAsync(
-            batchMessages,
-            enableReasoning: reasoning,
-            forceReasoning: forceReasoning,
-            addGenerationPrompt: addGenerationPrompt,
-            batchSize: batchSize,
-            modelID: modelID,
-            maxLength: maxLength,
-            forceLang: forceChinese ? 1 : null,
-          ) //
-        : to_rwkv.ChatAsync(
-            messages,
-            enableReasoning: reasoning,
-            forceReasoning: forceReasoning,
-            addGenerationPrompt: addGenerationPrompt,
-            modelID: modelID,
-            maxLength: maxLength,
-            forceLang: forceChinese ? 1 : null,
-          );
     send(request);
 
     generatingId.q = request.requestId;
@@ -1195,7 +1196,14 @@ extension $RWKV on _RWKV {
       return;
     }
     final batchAllowed = fileInfo.tags.contains("batch");
-    if (!batchAllowed) P.chat.batchEnabled.q = false;
+    if (!batchAllowed) {
+      if (P.chat.expressionMode.q.activeCount > 1) {
+        P.chat.resetExpressionMode();
+      } else {
+        P.chat.batchEnabled.q = false;
+        P.chat.batchCount.q = Argument.batchCount.defaults.toInt();
+      }
+    }
 
     final modelID = findModelIDByWeightType(weightType: .chat);
     if (modelID == null) {

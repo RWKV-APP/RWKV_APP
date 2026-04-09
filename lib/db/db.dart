@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:convert';
+
 // Package imports:
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -7,7 +10,6 @@ import 'package:path_provider/path_provider.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
-import 'package:zone/db/db.steps.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
 import 'package:zone/model/msg_node.dart';
@@ -85,6 +87,8 @@ class _Msg extends Table {
 
   TextColumn get rawDecodeParams => text().nullable()();
 
+  TextColumn get batchSlotLabels => text().nullable()();
+
   RealColumn get prefillSpeed => real().nullable()();
 
   RealColumn get decodeSpeed => real().nullable()();
@@ -113,34 +117,37 @@ class AppDatabase extends _$AppDatabase {
   bool _didRepairLegacyConversationTitles = false;
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
-      onUpgrade: stepByStep(
-        from1To2: (m, schema) async {
-          await m.addColumn(schema.msg, schema.msg.reference);
-        },
-        from2To3: (m, schema) async {
-          await m.addColumn(schema.conv, schema.conv.subtitle);
-        },
-        from3To4: (m, schema) async {
-          await m.addColumn(schema.msg, schema.msg.rawDecodeParams);
-        },
-        from4To5: (m, schema) async {
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 2) {
+          await m.addColumn(msg, msg.reference);
+        }
+        if (from < 3) {
+          await m.addColumn(conversation, conversation.subtitle);
+        }
+        if (from < 4) {
+          await m.addColumn(msg, msg.rawDecodeParams);
+        }
+        if (from < 5) {
           // ignore: experimental_member_use
-          await m.alterTable(TableMigration(schema.msg));
-        },
-        from5To6: (m, schema) async {
-          await m.addColumn(schema.msg, schema.msg.prefillSpeed);
-          await m.addColumn(schema.msg, schema.msg.decodeSpeed);
-        },
-        from6To7: (m, schema) async {
-          await m.addColumn(schema.msg, schema.msg.messageTokensCount);
-          await m.addColumn(schema.msg, schema.msg.conversationTokensCount);
-        },
-      ),
+          await m.alterTable(TableMigration(msg));
+        }
+        if (from < 6) {
+          await m.addColumn(msg, msg.prefillSpeed);
+          await m.addColumn(msg, msg.decodeSpeed);
+        }
+        if (from < 7) {
+          await m.addColumn(msg, msg.messageTokensCount);
+          await m.addColumn(msg, msg.conversationTokensCount);
+        }
+        if (from < 8) {
+          await m.addColumn(msg, msg.batchSlotLabels);
+        }
+      },
       beforeOpen: (details) async {
         if (!details.hadUpgrade) {
           return;
@@ -204,6 +211,7 @@ class AppDatabase extends _$AppDatabase {
       runningMode: Value(message.runningMode),
       build: P.app.buildNumber.q,
       rawDecodeParams: Value(message.rawDecodeParams),
+      batchSlotLabels: Value(message.batchSlotLabels == null ? null : jsonEncode(message.batchSlotLabels)),
       prefillSpeed: Value(message.prefillSpeed),
       decodeSpeed: Value(message.decodeSpeed),
       messageTokensCount: Value(message.messageTokensCount),
@@ -470,6 +478,7 @@ model.Message _msgDataToMessage(_MsgData msgData) {
     modelName: msgData.modelName,
     runningMode: msgData.runningMode,
     rawDecodeParams: msgData.rawDecodeParams,
+    batchSlotLabels: (jsonDecode(msgData.batchSlotLabels ?? "null") as Iterable?)?.map((dynamic e) => e.toString()).toList(),
     prefillSpeed: msgData.prefillSpeed,
     decodeSpeed: msgData.decodeSpeed,
     messageTokensCount: msgData.messageTokensCount,

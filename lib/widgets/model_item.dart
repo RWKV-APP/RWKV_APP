@@ -19,6 +19,7 @@ import 'package:sprintf/sprintf.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/model/argument.dart';
 import 'package:zone/model/file_info.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
@@ -150,7 +151,14 @@ class ModelItem extends ConsumerWidget {
     }
 
     final batchAllowed = fileInfo.tags.contains("batch");
-    if (!batchAllowed) P.chat.batchEnabled.q = false;
+    if (!batchAllowed) {
+      if (P.chat.expressionMode.q.activeCount > 1) {
+        P.chat.resetExpressionMode();
+      } else {
+        P.chat.batchEnabled.q = false;
+        P.chat.batchCount.q = Argument.batchCount.defaults.toInt();
+      }
+    }
 
     final tags = fileInfo.tags;
 

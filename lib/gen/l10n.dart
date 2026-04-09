@@ -864,6 +864,111 @@ class S {
     );
   }
 
+  /// `表达模式`
+  String get expression_mode {
+    return Intl.message('表达模式', name: 'expression_mode', desc: '', args: []);
+  }
+
+  /// `表达`
+  String get expression_mode_button {
+    return Intl.message(
+      '表达',
+      name: 'expression_mode_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `至少保留一个表达模式`
+  String get expression_mode_keep_one {
+    return Intl.message(
+      '至少保留一个表达模式',
+      name: 'expression_mode_keep_one',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已自动切换至今模式`
+  String get expression_mode_auto_switched_to_jin {
+    return Intl.message(
+      '已自动切换至今模式',
+      name: 'expression_mode_auto_switched_to_jin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前模型不支持 {count} 路表达模式`
+  String expression_mode_batch_not_supported(Object count) {
+    return Intl.message(
+      '当前模型不支持 $count 路表达模式',
+      name: 'expression_mode_batch_not_supported',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `今`
+  String get expression_mode_route_jin {
+    return Intl.message(
+      '今',
+      name: 'expression_mode_route_jin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正常回答`
+  String get expression_mode_route_jin_detail {
+    return Intl.message(
+      '正常回答',
+      name: 'expression_mode_route_jin_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `古`
+  String get expression_mode_route_gu {
+    return Intl.message(
+      '古',
+      name: 'expression_mode_route_gu',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文言回答`
+  String get expression_mode_route_gu_detail {
+    return Intl.message(
+      '文言回答',
+      name: 'expression_mode_route_gu_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `猫`
+  String get expression_mode_route_mao {
+    return Intl.message(
+      '猫',
+      name: 'expression_mode_route_mao',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `猫风回答`
+  String get expression_mode_route_mao_detail {
+    return Intl.message(
+      '猫风回答',
+      name: 'expression_mode_route_mao_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `推理{footer}-关`
   String thinking_mode_off(Object footer) {
     return Intl.message(

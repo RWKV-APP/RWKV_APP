@@ -29,7 +29,7 @@ class ModelSelectButton extends ConsumerWidget {
     final activeLoadingFile = ref.watch(P.rwkv.activeLoadingFile);
     final activeLoadingProgress = ref.watch(P.rwkv.activeLoadingProgress);
     final s = S.of(context);
-    final batchEnabled = ref.watch(P.chat.batchEnabled);
+    final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
     final pageKey = ref.watch(P.app.pageKey);
     final screenWidth = ref.watch(P.app.screenWidth);
 

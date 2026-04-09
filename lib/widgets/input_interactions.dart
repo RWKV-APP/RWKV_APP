@@ -11,10 +11,10 @@ import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/ask_question_button.dart';
 import 'package:zone/widgets/chat/batch_button.dart';
 import 'package:zone/widgets/chat/decode_param_button.dart';
+import 'package:zone/widgets/chat/expression_mode_button.dart';
 import 'package:zone/widgets/chat/secondary_options_button.dart';
 import 'package:zone/widgets/chat/thinking_mode_button.dart';
 import 'package:zone/widgets/chat/web_search_mode_button.dart';
-import 'package:zone/widgets/chat/wen_yan_wen_button.dart';
 
 class InputInteractions extends ConsumerWidget {
   final DemoType preferredDemoType;
@@ -57,7 +57,7 @@ class _ItemList extends ConsumerWidget {
         const SecondaryOptionsButton(),
       if (preferredDemoType == .chat) const ThinkingModeButton(),
       if (!isAlbatrossLoaded && preferredDemoType == .chat) const BatchButton(),
-      if (preferredDemoType == .chat && currentLangIsZh) const WenYanWenButton(),
+      if (preferredDemoType == .chat && currentLangIsZh) const ExpressionModeButton(),
       if (preferredDemoType == .chat) const AskQuestionButton(),
     ];
 

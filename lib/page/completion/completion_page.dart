@@ -168,6 +168,7 @@ class _BottomActions extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final decodeParamForegroundColor = isDark ? Colors.white : Colors.black;
     final decodeParamBackgroundColor = isDark ? Colors.transparent : Colors.white;
+
     final decodeParamButtonStyle = FilledButton.styleFrom(
       minimumSize: const Size(0, 50),
       padding: const EdgeInsets.symmetric(horizontal: 12),

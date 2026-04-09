@@ -13,7 +13,6 @@ import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/argument.dart';
 import 'package:zone/model/decode_param_type.dart';
 import 'package:zone/model/sampler_and_penalty_param.dart';
-import 'package:zone/model/wenyan_mode.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
@@ -70,8 +69,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     if (argument.enableGaimon) P.app.hapticLight();
     switch (argument) {
       case Argument.batchCount:
-        P.chat.batchCount.q = rawNewValue;
-        P.chat.wenYanWen.q = WenyanMode.off;
+        P.chat.onManualBatchCountChanged(rawNewValue);
       case Argument.batchVW:
         P.chat.batchVW.q = rawNewValue;
       default:
@@ -92,9 +90,9 @@ class BatchSettingsPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final batchCount = ref.watch(P.chat.batchCount);
+    final batchCount = ref.watch(P.chat.effectiveBatchCount);
     final appTheme = ref.watch(P.app.theme);
-    final batchInference = ref.watch(P.chat.batchEnabled);
+    final batchInference = ref.watch(P.chat.effectiveBatchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     final featureRollout = ref.watch(P.app.featureRollout);
 
@@ -133,7 +131,7 @@ class BatchSettingsPanel extends ConsumerWidget {
               infoText: batchInference ? s.enabled : s.disabled,
               showArrow: false,
               trailing: Switch.adaptive(
-                value: P.chat.batchEnabled.q,
+                value: batchInference,
                 onChanged: P.chat.onBatchInferenceSwitchChanged,
               ),
             ),
