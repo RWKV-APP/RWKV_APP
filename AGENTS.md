@@ -80,11 +80,12 @@ StateProviderFamily<V, K> qsff<K, V>(V Function(Ref<V> ref, K arg) createFn)
 
 - `rwkv_mobile_flutter` 是本项目使用的 LLM inference 引擎。
 
-### 4.6 双仓协作规则
+### 4.6 多仓协作规则
 
 - 本项目通常与两个强关联仓库一起工作：
   - Frontend：当前仓库 `rwkv_app`
   - Adapter / FFI：`../rwkv_mobile_flutter`
+  - 官方下载页面与后台管理系统：`../app_website` (rwkv.halowang.cloud)
 - 默认路径解析方式：
   - frontend 根目录 = 当前工作目录仓库根目录
   - adapter 根目录 = `../rwkv_mobile_flutter`

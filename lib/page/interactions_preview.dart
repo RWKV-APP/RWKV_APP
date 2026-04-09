@@ -678,7 +678,7 @@ class _BatchPreviewButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Symbols.playlist_play, size: previewTheme.inputBarInteractionsIconSize),
+          Icon(Icons.playlist_play, size: previewTheme.inputBarInteractionsIconSize),
           if (enabled) ...[
             const SizedBox(width: 4),
             Text(
