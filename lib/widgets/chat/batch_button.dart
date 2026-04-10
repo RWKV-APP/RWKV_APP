@@ -75,7 +75,7 @@ class BatchButton extends ConsumerWidget {
                 mainAxisAlignment: .center,
                 crossAxisAlignment: .center,
                 children: [
-                  Icon(Symbols.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
+                  Icon(Icons.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
                   if (batchEnabled) const SizedBox(width: 4),
                   if (batchEnabled)
                     Text(
