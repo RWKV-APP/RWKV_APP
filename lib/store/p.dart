@@ -151,6 +151,7 @@ part "ui.dart";
 part "pth.dart";
 part "api_server.dart";
 part "multi_question.dart";
+part "telemetry.dart";
 
 abstract class P {
   static final adapter = _Adapter();
@@ -180,6 +181,7 @@ abstract class P {
   static final ui = _UI();
   static final apiServer = _ApiServer();
   static final multiQuestion = _MultiQuestion();
+  static final telemetry = _Telemetry();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -226,6 +228,7 @@ abstract class P {
       _safeInit(() => ui._init(), mark: "ui"),
       _safeInit(() => pth._init(), mark: "pth"),
       _safeInit(() => apiServer._init(), mark: "apiServer"),
+      _safeInit(() => telemetry._init(), mark: "telemetry"),
     ]);
   }
 

@@ -1994,6 +1994,11 @@ extension _$Chat on _Chat {
     );
 
     _prefillAfterReply();
+
+    unawaited(P.telemetry.maybeReport(
+      prefillSpeed: finalPrefillSpeed,
+      decodeSpeed: finalDecodeSpeed,
+    ));
   }
 
   static final _thinkTagRegex = RegExp(r'<think>[\s\S]*?</think>');
