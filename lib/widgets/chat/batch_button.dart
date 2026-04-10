@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/store/p.dart';
@@ -74,7 +75,7 @@ class BatchButton extends ConsumerWidget {
                 mainAxisAlignment: .center,
                 crossAxisAlignment: .center,
                 children: [
-                  Icon(Icons.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
+                  Icon(Symbols.playlist_play, color: textColor, size: appTheme.inputBarInteractionsIconSize),
                   if (batchEnabled) const SizedBox(width: 4),
                   if (batchEnabled)
                     Text(

@@ -20,6 +20,7 @@ import 'package:zone/args.dart';
 import 'package:zone/config.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/gen/l10n.dart';
+import 'package:zone/material_symbols_keepalive.dart';
 import 'package:zone/model/language.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
@@ -29,6 +30,7 @@ import 'package:zone/widgets/input_bar_debugger.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  keepUsedMaterialSymbols();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await _loadEnv();
   HF.init();
