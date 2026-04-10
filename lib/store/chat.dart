@@ -1884,6 +1884,11 @@ extension _$Chat on _Chat {
         persistToMessage: true,
       ),
     );
+
+    unawaited(P.telemetry.maybeReport(
+      prefillSpeed: finalPrefillSpeed,
+      decodeSpeed: finalDecodeSpeed,
+    ));
   }
 
   Future<void> _onFocusNodeChanged() async {

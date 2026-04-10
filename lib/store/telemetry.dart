@@ -37,17 +37,20 @@ extension $Telemetry on _Telemetry {
     final FileInfo? model = P.rwkv.latestModel.q;
     if (model == null) return;
 
-    final String? sha256 = model.sha256;
-    if (sha256 == null || sha256.isEmpty) return;
+    // sha256 可能为空（部分权重没有），用 fileName 兜底
+    final String modelId = (model.sha256 != null && model.sha256!.isNotEmpty) ? model.sha256! : model.fileName;
+    if (modelId.isEmpty) return;
 
-    final String socName = P.rwkv.socName.q.isNotEmpty ? P.rwkv.socName.q : (P.rwkv.frontendSocName.q ?? "");
-    if (socName.isEmpty) return;
+    // socName: 优先 native → frontendSocName → deviceModel → platform
+    String socName = P.rwkv.socName.q.isNotEmpty ? P.rwkv.socName.q : (P.rwkv.frontendSocName.q ?? "");
+    if (socName.isEmpty) socName = _deviceModel.q;
+    if (socName.isEmpty) socName = Platform.operatingSystem;
 
     final String backendName = model.backend?.name ?? "";
     if (backendName.isEmpty) return;
 
     // 去重: 同一组合 24h 内只上传一次
-    final String dedupeKey = "${socName.toLowerCase()}|${sha256.toLowerCase()}|${backendName.toLowerCase()}";
+    final String dedupeKey = "${socName.toLowerCase()}|${modelId.toLowerCase()}|${backendName.toLowerCase()}";
     final int now = DateTime.now().millisecondsSinceEpoch;
     final Map<String, int> registry = Map.of(_registry.q);
     final int? lastUpload = registry[dedupeKey];
@@ -83,7 +86,7 @@ extension $Telemetry on _Telemetry {
       "model": {
         "name": model.name,
         "fileName": model.fileName,
-        "sha256": sha256,
+        "sha256": modelId,
         "sizeB": model.modelSize,
         "quantization": model.quantization,
         "backend": backendName,

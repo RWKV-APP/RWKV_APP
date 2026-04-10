@@ -15,7 +15,8 @@ abstract class Config {
   static const desktopModelsDirName = "models";
   static const mobileModelsDirName = "rwkv_chat_models";
 
-  static const domain = Args.domain;
+  // static const domain = Args.domain;
+  static const domain = "http://localhost:3001";
   static const suggestionsUrl = "$domain/suggestions.json";
   static const highScoreLanguagesUrl = "$domain/public-api/evals/high-score-languages";
   static const highScoreSamplesUrl = "$domain/public-api/evals/high-score-samples";
