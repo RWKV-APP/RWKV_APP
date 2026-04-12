@@ -7,13 +7,13 @@ import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/expression_mode.dart';
+import 'package:zone/model/response_style.dart';
 import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/form_item.dart';
 
-class ExpressionModePanel extends ConsumerWidget {
+class ResponseStylePanel extends ConsumerWidget {
   static final _shown = qs(false);
 
   static Future<void> show() async {
@@ -38,7 +38,7 @@ class ExpressionModePanel extends ConsumerWidget {
           expand: false,
           snap: false,
           builder: (context, scrollController) {
-            return ExpressionModePanel(scrollController: scrollController);
+            return ResponseStylePanel(scrollController: scrollController);
           },
         );
       },
@@ -48,7 +48,7 @@ class ExpressionModePanel extends ConsumerWidget {
 
   final ScrollController? scrollController;
 
-  const ExpressionModePanel({
+  const ResponseStylePanel({
     super.key,
     required this.scrollController,
   });
@@ -68,7 +68,7 @@ class ExpressionModePanel extends ConsumerWidget {
         backgroundColor: appTheme.settingBg,
         appBar: AppBar(
           title: Text(
-            s.expression_mode,
+            s.response_style,
             style: theme.textTheme.titleMedium,
           ),
           automaticallyImplyLeading: false,
@@ -89,21 +89,21 @@ class ExpressionModePanel extends ConsumerWidget {
           controller: scrollController,
           padding: const .only(left: 12, right: 12, bottom: 12),
           children: [
-            _ExpressionRouteItem(
-              route: ExpressionRoute.jin,
-              title: s.expression_mode_route_jin,
-              subtitle: s.expression_mode_route_jin_detail,
+            _ResponseStyleRouteItem(
+              route: ResponseStyleRoute.jin,
+              title: s.response_style_route_jin,
+              subtitle: s.response_style_route_jin_detail,
               isSectionStart: true,
             ),
-            _ExpressionRouteItem(
-              route: ExpressionRoute.gu,
-              title: s.expression_mode_route_gu,
-              subtitle: s.expression_mode_route_gu_detail,
+            _ResponseStyleRouteItem(
+              route: ResponseStyleRoute.gu,
+              title: s.response_style_route_gu,
+              subtitle: s.response_style_route_gu_detail,
             ),
-            _ExpressionRouteItem(
-              route: ExpressionRoute.mao,
-              title: s.expression_mode_route_mao,
-              subtitle: s.expression_mode_route_mao_detail,
+            _ResponseStyleRouteItem(
+              route: ResponseStyleRoute.mao,
+              title: s.response_style_route_mao,
+              subtitle: s.response_style_route_mao_detail,
               isSectionEnd: true,
             ),
           ],
@@ -113,14 +113,14 @@ class ExpressionModePanel extends ConsumerWidget {
   }
 }
 
-class _ExpressionRouteItem extends ConsumerWidget {
-  final ExpressionRoute route;
+class _ResponseStyleRouteItem extends ConsumerWidget {
+  final ResponseStyleRoute route;
   final String title;
   final String subtitle;
   final bool isSectionStart;
   final bool isSectionEnd;
 
-  const _ExpressionRouteItem({
+  const _ResponseStyleRouteItem({
     required this.route,
     required this.title,
     required this.subtitle,
@@ -132,9 +132,9 @@ class _ExpressionRouteItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final expressionMode = ref.watch(P.chat.expressionMode);
-    final enabled = expressionMode.enabledFor(route);
-    final bool disableToggle = route == ExpressionRoute.jin && expressionMode.isDefault;
+    final responseStyle = ref.watch(P.chat.responseStyle);
+    final enabled = responseStyle.enabledFor(route);
+    final bool disableToggle = route == ResponseStyleRoute.jin && responseStyle.isDefault;
 
     return FormItem(
       isSectionStart: isSectionStart,
@@ -147,7 +147,7 @@ class _ExpressionRouteItem extends ConsumerWidget {
         onChanged: disableToggle
             ? null
             : (bool value) {
-                P.chat.onExpressionRouteChanged(route: route, enabled: value);
+                P.chat.onResponseStyleRouteChanged(route: route, enabled: value);
               },
       ),
       infoWidget: Padding(

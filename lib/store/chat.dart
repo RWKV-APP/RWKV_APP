@@ -6,9 +6,9 @@ enum _UserMessageMenuAction {
   deleteCurrentBranch,
 }
 
-const String _expressionModeGuSuffix = " 请用文言文回答。";
-const String _expressionModeMaoAssistantPrefix = "<think>喵";
-const String _expressionModeMaoUserSuffix = " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格。";
+const String _responseStyleGuSuffix = " 请用文言文回答。";
+const String _responseStyleMaoAssistantPrefix = "<think>喵";
+const String _responseStyleMaoUserSuffix = " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格。";
 
 class _Chat {
   // ===========================================================================
@@ -29,16 +29,16 @@ class _Chat {
   late final _sensitiveThrottler = Throttler(milliseconds: 333, trailing: true);
   late final _liveTokenCountThrottler = Throttler(milliseconds: 997, trailing: true);
   int _refreshTokenCountEpoch = 0;
-  bool _expressionSequentialActive = false;
-  bool _expressionSequentialStopRequested = false;
-  int? _expressionSequentialMessageId;
-  int _expressionSequentialCurrentRouteIndex = 0;
-  bool _expressionSequentialForceChinese = false;
-  String _expressionSequentialCurrentOutput = "";
-  String? _expressionSequentialCurrentAssistantMessage;
-  List<ExpressionRoute> _expressionSequentialRoutes = const <ExpressionRoute>[];
-  List<String> _expressionSequentialBaseHistory = const <String>[];
-  List<String> _expressionSequentialCompletedOutputs = const <String>[];
+  bool _responseStyleSequentialActive = false;
+  bool _responseStyleSequentialStopRequested = false;
+  int? _responseStyleSequentialMessageId;
+  int _responseStyleSequentialCurrentRouteIndex = 0;
+  bool _responseStyleSequentialForceChinese = false;
+  String _responseStyleSequentialCurrentOutput = "";
+  String? _responseStyleSequentialCurrentAssistantMessage;
+  List<ResponseStyleRoute> _responseStyleSequentialRoutes = const <ResponseStyleRoute>[];
+  List<String> _responseStyleSequentialBaseHistory = const <String>[];
+  List<String> _responseStyleSequentialCompletedOutputs = const <String>[];
 
   // ===========================================================================
   // StateProvider
@@ -72,7 +72,7 @@ class _Chat {
 
   late final webSearchMode = qs(WebSearchMode.off);
 
-  late final expressionMode = qs(const ExpressionModeState());
+  late final responseStyle = qs(const ResponseStyleState());
 
   late final batchEnabled = qs(Args.enableBatchInference);
   late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
@@ -97,17 +97,17 @@ class _Chat {
   });
 
   late final effectiveBatchEnabled = qp((ref) {
-    final expressionMode = ref.watch(this.expressionMode);
-    if (expressionMode.activeCount > 1) {
+    final responseStyle = ref.watch(this.responseStyle);
+    if (responseStyle.activeCount > 1) {
       return true;
     }
     return ref.watch(batchEnabled);
   });
 
   late final effectiveBatchCount = qp((ref) {
-    final expressionMode = ref.watch(this.expressionMode);
-    if (expressionMode.activeCount > 1) {
-      return expressionMode.activeCount;
+    final responseStyle = ref.watch(this.responseStyle);
+    if (responseStyle.activeCount > 1) {
+      return responseStyle.activeCount;
     }
     return ref.watch(batchCount);
   });
@@ -283,7 +283,7 @@ extension $Chat on _Chat {
     onSwitchWebSearchMode(selectedMode);
   }
 
-  Future<void> onExpressionModeTapped() async {
+  Future<void> onResponseStyleTapped() async {
     final receiving = P.rwkv.generating.q;
     if (receiving) {
       Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
@@ -300,11 +300,11 @@ extension $Chat on _Chat {
     if (context == null) return;
 
     P.app.hapticLight();
-    await ExpressionModePanel.show();
+    await ResponseStylePanel.show();
   }
 
-  Future<void> onExpressionRouteChanged({
-    required ExpressionRoute route,
+  Future<void> onResponseStyleRouteChanged({
+    required ResponseStyleRoute route,
     required bool enabled,
   }) async {
     final receiving = P.rwkv.generating.q;
@@ -313,49 +313,49 @@ extension $Chat on _Chat {
       return;
     }
 
-    final ExpressionModeState currentState = expressionMode.q;
+    final ResponseStyleState currentState = responseStyle.q;
     if (currentState.enabledFor(route) == enabled) {
       return;
     }
     if (!currentState.canToggle(route, enabled)) {
-      resetExpressionMode();
-      Alert.info(S.current.expression_mode_auto_switched_to_jin);
+      resetResponseStyle();
+      Alert.info(S.current.response_style_auto_switched_to_jin);
       return;
     }
 
-    final ExpressionModeState nextState = currentState.copyWithRoute(route, enabled);
-    if (!_canUseExpressionRouteCount(nextState.activeCount)) {
+    final ResponseStyleState nextState = currentState.copyWithRoute(route, enabled);
+    if (!_canUseResponseStyleRouteCount(nextState.activeCount)) {
       final bool wantsToReplaceSingleRoute = enabled && currentState.activeCount == 1 && !currentState.enabledFor(route);
       if (wantsToReplaceSingleRoute) {
-        final ExpressionModeState replacementState = ExpressionModeState(
-          jinEnabled: route == ExpressionRoute.jin,
-          guEnabled: route == ExpressionRoute.gu,
-          maoEnabled: route == ExpressionRoute.mao,
+        final ResponseStyleState replacementState = ResponseStyleState(
+          jinEnabled: route == ResponseStyleRoute.jin,
+          guEnabled: route == ResponseStyleRoute.gu,
+          maoEnabled: route == ResponseStyleRoute.mao,
         );
-        await _applyExpressionModeState(replacementState);
+        await _applyResponseStyleState(replacementState);
         return;
       }
-      Alert.warning(S.current.expression_mode_batch_not_supported(nextState.activeCount));
+      Alert.warning(S.current.response_style_batch_not_supported(nextState.activeCount));
       return;
     }
 
-    await _applyExpressionModeState(nextState);
+    await _applyResponseStyleState(nextState);
   }
 
-  void resetExpressionMode() {
-    expressionMode.q = const ExpressionModeState();
+  void resetResponseStyle() {
+    responseStyle.q = const ResponseStyleState();
     batchEnabled.q = false;
     batchCount.q = Argument.batchCount.defaults.toInt();
   }
 
-  Future<void> _applyExpressionModeState(
-    ExpressionModeState state,
+  Future<void> _applyResponseStyleState(
+    ResponseStyleState state,
   ) async {
-    await _syncBatchStateForExpressionMode(activeCount: state.activeCount);
-    expressionMode.q = state;
+    await _syncBatchStateForResponseStyle(activeCount: state.activeCount);
+    responseStyle.q = state;
   }
 
-  Future<void> _syncBatchStateForExpressionMode({
+  Future<void> _syncBatchStateForResponseStyle({
     required int activeCount,
   }) async {
     if (activeCount <= 1) {
@@ -364,7 +364,7 @@ extension $Chat on _Chat {
       return;
     }
     if (!batchEnabled.q) {
-      await onBatchInferenceSwitchChanged(true, triggeredByExpressionMode: true);
+      await onBatchInferenceSwitchChanged(true, triggeredByResponseStyle: true);
     }
     if (batchCount.q == activeCount) {
       return;
@@ -372,7 +372,7 @@ extension $Chat on _Chat {
     batchCount.q = activeCount;
   }
 
-  bool _canUseExpressionRouteCount(int activeCount) {
+  bool _canUseResponseStyleRouteCount(int activeCount) {
     if (activeCount <= 0) {
       return false;
     }
@@ -383,10 +383,10 @@ extension $Chat on _Chat {
     if (activeCount <= 1) {
       return true;
     }
-    return _supportsExpressionBatchExecution(activeCount);
+    return _supportsResponseStyleBatchExecution(activeCount);
   }
 
-  bool _supportsExpressionBatchExecution(int activeCount) {
+  bool _supportsResponseStyleBatchExecution(int activeCount) {
     if (activeCount <= 1) {
       return false;
     }
@@ -406,8 +406,8 @@ extension $Chat on _Chat {
     return supportedBatchSizes.max >= activeCount;
   }
 
-  bool _shouldUseExpressionBatchExecution(int activeCount) {
-    return _supportsExpressionBatchExecution(activeCount);
+  bool _shouldUseResponseStyleBatchExecution(int activeCount) {
+    return _supportsResponseStyleBatchExecution(activeCount);
   }
 
   List<String> _applySuffixToLatestUserMessage(
@@ -425,28 +425,28 @@ extension $Chat on _Chat {
     return next;
   }
 
-  List<ExpressionRoute> _resolveExpressionRoutesForMessage(Message message) {
+  List<ResponseStyleRoute> _resolveResponseStyleRoutesForMessage(Message message) {
     final List<String>? labels = message.batchSlotLabels;
     if (labels == null || labels.isEmpty) {
-      return expressionMode.q.enabledRoutesInOrder;
+      return responseStyle.q.enabledRoutesInOrder;
     }
-    final List<ExpressionRoute> routes = <ExpressionRoute>[];
+    final List<ResponseStyleRoute> routes = <ResponseStyleRoute>[];
     for (final String label in labels) {
-      final ExpressionRoute? route = expressionRouteFromLabel(label);
+      final ResponseStyleRoute? route = responseStyleRouteFromLabel(label);
       if (route == null) {
         continue;
       }
       routes.add(route);
     }
     if (routes.isEmpty) {
-      return expressionMode.q.enabledRoutesInOrder;
+      return responseStyle.q.enabledRoutesInOrder;
     }
     return routes;
   }
 
   List<String> _buildSingleRouteHistory({
     required List<String> history,
-    required ExpressionRoute route,
+    required ResponseStyleRoute route,
     String? assistantMessage,
   }) {
     late final List<String> nextHistory;
@@ -454,9 +454,9 @@ extension $Chat on _Chat {
       case .jin:
         nextHistory = <String>[...history];
       case .gu:
-        nextHistory = _applySuffixToLatestUserMessage(history, _expressionModeGuSuffix);
+        nextHistory = _applySuffixToLatestUserMessage(history, _responseStyleGuSuffix);
       case .mao:
-        nextHistory = _applySuffixToLatestUserMessage(history, _expressionModeMaoUserSuffix);
+        nextHistory = _applySuffixToLatestUserMessage(history, _responseStyleMaoUserSuffix);
     }
 
     if (assistantMessage == null) {
@@ -468,38 +468,38 @@ extension $Chat on _Chat {
     ];
   }
 
-  List<to_rwkv.ChatBatchSlotConfig> _buildExpressionModeSlotConfigs({
+  List<to_rwkv.ChatBatchSlotConfig> _buildResponseStyleSlotConfigs({
     required List<String> history,
-    required List<ExpressionRoute> routes,
-    Map<ExpressionRoute, String?>? assistantPrefixes,
+    required List<ResponseStyleRoute> routes,
+    Map<ResponseStyleRoute, String?>? assistantPrefixes,
   }) {
     final bool batchRequiresAssistantPrefixes =
-        routes.contains(ExpressionRoute.mao) || (assistantPrefixes?.values.any((String? prefix) => prefix != null) ?? false);
+        routes.contains(ResponseStyleRoute.mao) || (assistantPrefixes?.values.any((String? prefix) => prefix != null) ?? false);
 
     return <to_rwkv.ChatBatchSlotConfig>[
-      for (final ExpressionRoute route in routes)
+      for (final ResponseStyleRoute route in routes)
         to_rwkv.ChatBatchSlotConfig(
           messages: _buildSingleRouteHistory(history: history, route: route),
           assistantPrefix: switch (route) {
             // 猫路使用 assistant prefix 时，整个 batch 都需要显式进入 assistant turn。
             // 否则今/古两路会被 runtime 当成“继续用户最后一句”，表现为复读问题本身。
-            ExpressionRoute.jin => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
-            ExpressionRoute.gu => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
-            ExpressionRoute.mao => assistantPrefixes?[route] ?? _expressionModeMaoAssistantPrefix,
+            ResponseStyleRoute.jin => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
+            ResponseStyleRoute.gu => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
+            ResponseStyleRoute.mao => assistantPrefixes?[route] ?? _responseStyleMaoAssistantPrefix,
           },
         ),
     ];
   }
 
-  List<String> _buildRequestHistoryForExpressionRoute({
+  List<String> _buildRequestHistoryForResponseStyleRoute({
     required List<String> history,
-    required ExpressionRoute route,
+    required ResponseStyleRoute route,
     String? assistantMessage,
   }) {
     final String? resolvedAssistantMessage = switch (route) {
-      ExpressionRoute.jin => assistantMessage,
-      ExpressionRoute.gu => assistantMessage,
-      ExpressionRoute.mao => assistantMessage ?? _expressionModeMaoAssistantPrefix,
+      ResponseStyleRoute.jin => assistantMessage,
+      ResponseStyleRoute.gu => assistantMessage,
+      ResponseStyleRoute.mao => assistantMessage ?? _responseStyleMaoAssistantPrefix,
     };
     return _buildSingleRouteHistory(
       history: history,
@@ -508,7 +508,7 @@ extension $Chat on _Chat {
     );
   }
 
-  ({List<String> messages, List<to_rwkv.ChatBatchSlotConfig>? slotConfigs})? _buildExpressionModeResumeRequest({
+  ({List<String> messages, List<to_rwkv.ChatBatchSlotConfig>? slotConfigs})? _buildResponseStyleResumeRequest({
     required int messageId,
   }) {
     if (P.app.pageKey.q != .chat) {
@@ -525,18 +525,18 @@ extension $Chat on _Chat {
       return null;
     }
 
-    final List<ExpressionRoute> routes = _resolveExpressionRoutesForMessage(currentMessage);
+    final List<ResponseStyleRoute> routes = _resolveResponseStyleRoutesForMessage(currentMessage);
     if (routes.isEmpty) {
       return null;
     }
 
     if (routes.length == 1) {
-      final ExpressionRoute route = routes.first;
+      final ResponseStyleRoute route = routes.first;
       final String? assistantMessage;
       if (currentMessage.content.isNotEmpty) {
         assistantMessage = currentMessage.content;
-      } else if (route == ExpressionRoute.mao) {
-        assistantMessage = _expressionModeMaoAssistantPrefix;
+      } else if (route == ResponseStyleRoute.mao) {
+        assistantMessage = _responseStyleMaoAssistantPrefix;
       } else {
         assistantMessage = null;
       }
@@ -561,12 +561,12 @@ extension $Chat on _Chat {
       return null;
     }
 
-    final Map<ExpressionRoute, String?> assistantPrefixes = <ExpressionRoute, String?>{};
+    final Map<ResponseStyleRoute, String?> assistantPrefixes = <ResponseStyleRoute, String?>{};
     for (int i = 0; i < routes.length; i++) {
-      final ExpressionRoute route = routes[i];
+      final ResponseStyleRoute route = routes[i];
       final String? rawValue = i < batch.length ? batch[i] : null;
-      if (route == ExpressionRoute.mao) {
-        assistantPrefixes[route] = rawValue == null || rawValue.isEmpty ? _expressionModeMaoAssistantPrefix : rawValue;
+      if (route == ResponseStyleRoute.mao) {
+        assistantPrefixes[route] = rawValue == null || rawValue.isEmpty ? _responseStyleMaoAssistantPrefix : rawValue;
         continue;
       }
       assistantPrefixes[route] = rawValue;
@@ -574,7 +574,7 @@ extension $Chat on _Chat {
 
     return (
       messages: baseHistory,
-      slotConfigs: _buildExpressionModeSlotConfigs(
+      slotConfigs: _buildResponseStyleSlotConfigs(
         history: baseHistory,
         routes: routes,
         assistantPrefixes: assistantPrefixes,
@@ -582,20 +582,20 @@ extension $Chat on _Chat {
     );
   }
 
-  void _clearExpressionSequentialState() {
-    _expressionSequentialActive = false;
-    _expressionSequentialStopRequested = false;
-    _expressionSequentialMessageId = null;
-    _expressionSequentialCurrentRouteIndex = 0;
-    _expressionSequentialForceChinese = false;
-    _expressionSequentialCurrentOutput = "";
-    _expressionSequentialCurrentAssistantMessage = null;
-    _expressionSequentialRoutes = const <ExpressionRoute>[];
-    _expressionSequentialBaseHistory = const <String>[];
-    _expressionSequentialCompletedOutputs = const <String>[];
+  void _clearResponseStyleSequentialState() {
+    _responseStyleSequentialActive = false;
+    _responseStyleSequentialStopRequested = false;
+    _responseStyleSequentialMessageId = null;
+    _responseStyleSequentialCurrentRouteIndex = 0;
+    _responseStyleSequentialForceChinese = false;
+    _responseStyleSequentialCurrentOutput = "";
+    _responseStyleSequentialCurrentAssistantMessage = null;
+    _responseStyleSequentialRoutes = const <ResponseStyleRoute>[];
+    _responseStyleSequentialBaseHistory = const <String>[];
+    _responseStyleSequentialCompletedOutputs = const <String>[];
   }
 
-  String _buildExpressionSequentialBatchContent({
+  String _buildResponseStyleSequentialBatchContent({
     required List<String> completedOutputs,
     String? currentOutput,
     required int totalCount,
@@ -611,108 +611,108 @@ extension $Chat on _Chat {
     return slotOutputs.join(Config.batchMarker) + Config.batchMarker + "-1";
   }
 
-  Future<void> _sendCurrentExpressionSequentialRoute() async {
-    if (!_expressionSequentialActive) {
+  Future<void> _sendCurrentResponseStyleSequentialRoute() async {
+    if (!_responseStyleSequentialActive) {
       return;
     }
-    if (_expressionSequentialCurrentRouteIndex >= _expressionSequentialRoutes.length) {
+    if (_responseStyleSequentialCurrentRouteIndex >= _responseStyleSequentialRoutes.length) {
       return;
     }
 
-    final ExpressionRoute route = _expressionSequentialRoutes[_expressionSequentialCurrentRouteIndex];
-    final List<String> requestHistory = _buildRequestHistoryForExpressionRoute(
-      history: _expressionSequentialBaseHistory,
+    final ResponseStyleRoute route = _responseStyleSequentialRoutes[_responseStyleSequentialCurrentRouteIndex];
+    final List<String> requestHistory = _buildRequestHistoryForResponseStyleRoute(
+      history: _responseStyleSequentialBaseHistory,
       route: route,
-      assistantMessage: _expressionSequentialCurrentAssistantMessage,
+      assistantMessage: _responseStyleSequentialCurrentAssistantMessage,
     );
-    _expressionSequentialCurrentAssistantMessage = null;
+    _responseStyleSequentialCurrentAssistantMessage = null;
     await P.rwkv.sendMessages(
       requestHistory,
-      forceChinese: _expressionSequentialForceChinese,
+      forceChinese: _responseStyleSequentialForceChinese,
     );
   }
 
-  Future<void> _startExpressionSequentialGeneration({
+  Future<void> _startResponseStyleSequentialGeneration({
     required int messageId,
     required List<String> history,
-    required List<ExpressionRoute> routes,
+    required List<ResponseStyleRoute> routes,
     required bool forceChinese,
     List<String> completedOutputs = const <String>[],
     int startRouteIndex = 0,
     String? currentAssistantMessage,
   }) async {
-    _expressionSequentialActive = true;
-    _expressionSequentialStopRequested = false;
-    _expressionSequentialMessageId = messageId;
-    _expressionSequentialCurrentRouteIndex = startRouteIndex;
-    _expressionSequentialForceChinese = forceChinese;
-    _expressionSequentialCurrentOutput = currentAssistantMessage ?? "";
-    _expressionSequentialCurrentAssistantMessage = currentAssistantMessage;
-    _expressionSequentialRoutes = <ExpressionRoute>[...routes];
-    _expressionSequentialBaseHistory = <String>[...history];
-    _expressionSequentialCompletedOutputs = <String>[...completedOutputs];
-    receivedTokens.q = _buildExpressionSequentialBatchContent(
-      completedOutputs: _expressionSequentialCompletedOutputs,
+    _responseStyleSequentialActive = true;
+    _responseStyleSequentialStopRequested = false;
+    _responseStyleSequentialMessageId = messageId;
+    _responseStyleSequentialCurrentRouteIndex = startRouteIndex;
+    _responseStyleSequentialForceChinese = forceChinese;
+    _responseStyleSequentialCurrentOutput = currentAssistantMessage ?? "";
+    _responseStyleSequentialCurrentAssistantMessage = currentAssistantMessage;
+    _responseStyleSequentialRoutes = <ResponseStyleRoute>[...routes];
+    _responseStyleSequentialBaseHistory = <String>[...history];
+    _responseStyleSequentialCompletedOutputs = <String>[...completedOutputs];
+    receivedTokens.q = _buildResponseStyleSequentialBatchContent(
+      completedOutputs: _responseStyleSequentialCompletedOutputs,
       currentOutput: currentAssistantMessage,
-      totalCount: _expressionSequentialRoutes.length,
+      totalCount: _responseStyleSequentialRoutes.length,
     );
-    await _sendCurrentExpressionSequentialRoute();
+    await _sendCurrentResponseStyleSequentialRoute();
   }
 
-  Future<void> _advanceExpressionSequentialGenerationAfterStop() async {
-    if (!_expressionSequentialActive) {
+  Future<void> _advanceResponseStyleSequentialGenerationAfterStop() async {
+    if (!_responseStyleSequentialActive) {
       return;
     }
 
-    final int? messageId = _expressionSequentialMessageId;
+    final int? messageId = _responseStyleSequentialMessageId;
     if (messageId == null) {
-      _clearExpressionSequentialState();
+      _clearResponseStyleSequentialState();
       return;
     }
 
-    final String currentOutput = _expressionSequentialCurrentOutput;
+    final String currentOutput = _responseStyleSequentialCurrentOutput;
     final List<String> nextCompletedOutputs = <String>[
-      ..._expressionSequentialCompletedOutputs,
+      ..._responseStyleSequentialCompletedOutputs,
       currentOutput,
     ];
-    _expressionSequentialCompletedOutputs = nextCompletedOutputs;
+    _responseStyleSequentialCompletedOutputs = nextCompletedOutputs;
 
-    final String finalizedContent = _buildExpressionSequentialBatchContent(
+    final String finalizedContent = _buildResponseStyleSequentialBatchContent(
       completedOutputs: nextCompletedOutputs,
-      totalCount: _expressionSequentialRoutes.length,
+      totalCount: _responseStyleSequentialRoutes.length,
     );
     receivedTokens.q = finalizedContent;
 
-    if (_expressionSequentialStopRequested) {
-      _clearExpressionSequentialState();
+    if (_responseStyleSequentialStopRequested) {
+      _clearResponseStyleSequentialState();
       return;
     }
 
-    final int nextRouteIndex = _expressionSequentialCurrentRouteIndex + 1;
-    if (nextRouteIndex >= _expressionSequentialRoutes.length) {
-      _clearExpressionSequentialState();
-      _fullyReceived(callingFunction: "_advanceExpressionSequentialGenerationAfterStop");
+    final int nextRouteIndex = _responseStyleSequentialCurrentRouteIndex + 1;
+    if (nextRouteIndex >= _responseStyleSequentialRoutes.length) {
+      _clearResponseStyleSequentialState();
+      _fullyReceived(callingFunction: "_advanceResponseStyleSequentialGenerationAfterStop");
       return;
     }
 
-    _expressionSequentialCurrentRouteIndex = nextRouteIndex;
-    _expressionSequentialCurrentOutput = "";
-    _expressionSequentialCurrentAssistantMessage = null;
+    _responseStyleSequentialCurrentRouteIndex = nextRouteIndex;
+    _responseStyleSequentialCurrentOutput = "";
+    _responseStyleSequentialCurrentAssistantMessage = null;
     _scheduleRefreshLiveTokenCounts(
       messageId: messageId,
       liveBotContent: finalizedContent,
     );
-    await _sendCurrentExpressionSequentialRoute();
+    await _sendCurrentResponseStyleSequentialRoute();
   }
 
-  bool _handleExpressionSequentialEvent(from_rwkv.FromRWKV event) {
-    if (!_expressionSequentialActive) {
+  bool _handleResponseStyleSequentialEvent(from_rwkv.FromRWKV event) {
+    if (!_responseStyleSequentialActive) {
       return false;
     }
 
-    final int? messageId = _expressionSequentialMessageId;
+    final int? messageId = _responseStyleSequentialMessageId;
     if (messageId == null) {
-      _clearExpressionSequentialState();
+      _clearResponseStyleSequentialState();
       return false;
     }
 
@@ -722,11 +722,11 @@ extension $Chat on _Chat {
         return true;
 
       case from_rwkv.ResponseBufferContent res:
-        _expressionSequentialCurrentOutput = res.responseBufferContent;
-        final String liveContent = _buildExpressionSequentialBatchContent(
-          completedOutputs: _expressionSequentialCompletedOutputs,
+        _responseStyleSequentialCurrentOutput = res.responseBufferContent;
+        final String liveContent = _buildResponseStyleSequentialBatchContent(
+          completedOutputs: _responseStyleSequentialCompletedOutputs,
           currentOutput: res.responseBufferContent,
-          totalCount: _expressionSequentialRoutes.length,
+          totalCount: _responseStyleSequentialRoutes.length,
         );
         receivedTokens.q = liveContent;
         if (completionMode.q) {
@@ -743,7 +743,7 @@ extension $Chat on _Chat {
 
       case from_rwkv.GenerateStop _:
         P.rwkv.generating.q = false;
-        unawaited(_advanceExpressionSequentialGenerationAfterStop());
+        unawaited(_advanceResponseStyleSequentialGenerationAfterStop());
         return true;
 
       default:
@@ -751,7 +751,7 @@ extension $Chat on _Chat {
     }
   }
 
-  List<String> _resolveExpressionSequentialSlotOutputs({
+  List<String> _resolveResponseStyleSequentialSlotOutputs({
     required Message message,
     required int routeCount,
   }) {
@@ -771,7 +771,7 @@ extension $Chat on _Chat {
     return outputs;
   }
 
-  ({List<String> completedOutputs, int startRouteIndex, String? currentAssistantMessage}) _buildExpressionSequentialResumeState({
+  ({List<String> completedOutputs, int startRouteIndex, String? currentAssistantMessage}) _buildResponseStyleSequentialResumeState({
     required List<String> slotOutputs,
   }) {
     int lastNonEmptyIndex = -1;
@@ -801,7 +801,7 @@ extension $Chat on _Chat {
     );
   }
 
-  Future<bool> _resumeExpressionSequentialMessage({
+  Future<bool> _resumeResponseStyleSequentialMessage({
     required int messageId,
   }) async {
     if (P.app.pageKey.q != .chat) {
@@ -813,11 +813,11 @@ extension $Chat on _Chat {
       return false;
     }
 
-    final List<ExpressionRoute> routes = _resolveExpressionRoutesForMessage(currentMessage);
+    final List<ResponseStyleRoute> routes = _resolveResponseStyleRoutesForMessage(currentMessage);
     if (routes.length <= 1) {
       return false;
     }
-    if (_shouldUseExpressionBatchExecution(routes.length)) {
+    if (_shouldUseResponseStyleBatchExecution(routes.length)) {
       return false;
     }
 
@@ -826,13 +826,13 @@ extension $Chat on _Chat {
       return false;
     }
 
-    final List<String> slotOutputs = _resolveExpressionSequentialSlotOutputs(
+    final List<String> slotOutputs = _resolveResponseStyleSequentialSlotOutputs(
       message: currentMessage,
       routeCount: routes.length,
     );
-    final resumeState = _buildExpressionSequentialResumeState(slotOutputs: slotOutputs);
+    final resumeState = _buildResponseStyleSequentialResumeState(slotOutputs: slotOutputs);
 
-    await _startExpressionSequentialGeneration(
+    await _startResponseStyleSequentialGeneration(
       messageId: messageId,
       history: baseHistory,
       routes: routes,
@@ -1187,7 +1187,7 @@ extension $Chat on _Chat {
     String message = raw;
 
     if (!checkModelSelection(preferredDemoType: .chat)) return;
-    _clearExpressionSequentialState();
+    _clearResponseStyleSequentialState();
 
     final currentModel = P.rwkv.latestModel.q!;
 
@@ -1332,7 +1332,7 @@ extension $Chat on _Chat {
       modelName: currentModel.name,
       runningMode: thinkingMode.toString(),
       rawDecodeParams: _resolveDecodeParamsSnapshotRaw(),
-      batchSlotLabels: P.app.pageKey.q == .chat && expressionMode.q.activeCount > 1 ? expressionMode.q.enabledLabelsInOrder : null,
+      batchSlotLabels: P.app.pageKey.q == .chat && responseStyle.q.activeCount > 1 ? responseStyle.q.enabledLabelsInOrder : null,
     );
 
     P.msg.pool.q[receiveId] = receiveMsg;
@@ -1346,10 +1346,10 @@ extension $Chat on _Chat {
     final forceChinese = inSee && message.containsChinese;
 
     if (!inSee) {
-      final List<ExpressionRoute> routes = expressionMode.q.enabledRoutesInOrder;
+      final List<ResponseStyleRoute> routes = responseStyle.q.enabledRoutesInOrder;
       if (routes.length > 1) {
-        if (_shouldUseExpressionBatchExecution(routes.length)) {
-          final List<to_rwkv.ChatBatchSlotConfig> slotConfigs = _buildExpressionModeSlotConfigs(
+        if (_shouldUseResponseStyleBatchExecution(routes.length)) {
+          final List<to_rwkv.ChatBatchSlotConfig> slotConfigs = _buildResponseStyleSlotConfigs(
             history: history,
             routes: routes,
           );
@@ -1363,7 +1363,7 @@ extension $Chat on _Chat {
         }
         final int currentReceiveId = this.receiveId.q!;
         unawaited(
-          _startExpressionSequentialGeneration(
+          _startResponseStyleSequentialGeneration(
             messageId: currentReceiveId,
             history: history,
             routes: routes,
@@ -1374,8 +1374,8 @@ extension $Chat on _Chat {
         return;
       }
 
-      final ExpressionRoute route = routes.first;
-      final List<String> singleRouteHistory = _buildRequestHistoryForExpressionRoute(
+      final ResponseStyleRoute route = routes.first;
+      final List<String> singleRouteHistory = _buildRequestHistoryForResponseStyleRoute(
         history: history,
         route: route,
       );
@@ -1412,7 +1412,7 @@ extension $Chat on _Chat {
   Future<void> resumeMessageById({required int id, bool withHaptic = true}) async {
     qq;
     if (withHaptic) P.app.hapticLight();
-    _clearExpressionSequentialState();
+    _clearResponseStyleSequentialState();
     receiveId.q = id;
     _updateMessageById(
       id: id,
@@ -1421,16 +1421,16 @@ extension $Chat on _Chat {
       callingFunction: "resumeMessageById",
     );
     _liveTokenCountThrottler.cancel();
-    final bool resumedSequentially = await _resumeExpressionSequentialMessage(messageId: id);
+    final bool resumedSequentially = await _resumeResponseStyleSequentialMessage(messageId: id);
     if (resumedSequentially) {
       return;
     }
-    final expressionResumeRequest = _buildExpressionModeResumeRequest(messageId: id);
-    if (expressionResumeRequest != null) {
+    final responseStyleResumeRequest = _buildResponseStyleResumeRequest(messageId: id);
+    if (responseStyleResumeRequest != null) {
       P.rwkv.sendMessages(
-        expressionResumeRequest.messages,
-        batchSize: expressionResumeRequest.slotConfigs == null && batchEnabled.q ? batchCount.q : 1,
-        overrideBatchSlotConfigs: expressionResumeRequest.slotConfigs,
+        responseStyleResumeRequest.messages,
+        batchSize: responseStyleResumeRequest.slotConfigs == null && batchEnabled.q ? batchCount.q : 1,
+        overrideBatchSlotConfigs: responseStyleResumeRequest.slotConfigs,
       );
       _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
       return;
@@ -1441,12 +1441,12 @@ extension $Chat on _Chat {
 
   Future<void> onBatchInferenceSwitchChanged(
     bool value, {
-    bool triggeredByExpressionMode = false,
+    bool triggeredByResponseStyle = false,
   }) async {
-    if (!triggeredByExpressionMode) {
+    if (!triggeredByResponseStyle) {
       P.app.hapticLight();
-      if (expressionMode.q.activeCount > 1) {
-        resetExpressionMode();
+      if (responseStyle.q.activeCount > 1) {
+        resetResponseStyle();
         return;
       }
     }
@@ -1498,8 +1498,8 @@ extension $Chat on _Chat {
       return;
     }
     batchCount.q = value;
-    if (expressionMode.q.activeCount > 1 && value != expressionMode.q.activeCount) {
-      resetExpressionMode();
+    if (responseStyle.q.activeCount > 1 && value != responseStyle.q.activeCount) {
+      resetResponseStyle();
     }
   }
 
@@ -1533,14 +1533,14 @@ extension $Chat on _Chat {
 
       final batchAllowed = fileInfo.tags.contains("batch");
       if (!batchAllowed) {
-        if (expressionMode.q.activeCount > 1) {
-          resetExpressionMode();
+        if (responseStyle.q.activeCount > 1) {
+          resetResponseStyle();
         } else {
           batchEnabled.q = false;
           batchCount.q = Argument.batchCount.defaults.toInt();
         }
-      } else if (expressionMode.q.activeCount > 1) {
-        await _syncBatchStateForExpressionMode(activeCount: expressionMode.q.activeCount);
+      } else if (responseStyle.q.activeCount > 1) {
+        await _syncBatchStateForResponseStyle(activeCount: responseStyle.q.activeCount);
       }
 
       final isTranslate = fileInfo.tags.contains("translate");
@@ -1665,8 +1665,8 @@ extension _$Chat on _Chat {
   }
 
   void _onBatchCountChanged(int value) async {
-    if (expressionMode.q.activeCount > 1 && value != expressionMode.q.activeCount) {
-      resetExpressionMode();
+    if (responseStyle.q.activeCount > 1 && value != responseStyle.q.activeCount) {
+      resetResponseStyle();
     }
 
     late final List<SamplerAndPenaltyParam> newFrontendBatchParams;
@@ -1709,14 +1709,14 @@ extension _$Chat on _Chat {
     if (supportedBatchSizes.isEmpty) {
       batchEnabled.q = false;
       batchCount.q = Argument.batchCount.defaults.toInt();
-      if (expressionMode.q.activeCount > 1) {
-        expressionMode.q = const ExpressionModeState();
+      if (responseStyle.q.activeCount > 1) {
+        responseStyle.q = const ResponseStyleState();
       }
       return;
     }
     final max = supportedBatchSizes.max;
-    if (expressionMode.q.activeCount > 1 && max < expressionMode.q.activeCount) {
-      resetExpressionMode();
+    if (responseStyle.q.activeCount > 1 && max < responseStyle.q.activeCount) {
+      resetResponseStyle();
       return;
     }
     if (max < batchCount.q) batchCount.q = max;
@@ -1864,8 +1864,8 @@ extension _$Chat on _Chat {
     final finalizedContent = currentGeneratedContent.isNotEmpty ? currentGeneratedContent : msg.content;
 
     _liveTokenCountThrottler.cancel();
-    if (_expressionSequentialActive && _expressionSequentialMessageId == id) {
-      _expressionSequentialStopRequested = true;
+    if (_responseStyleSequentialActive && _responseStyleSequentialMessageId == id) {
+      _responseStyleSequentialStopRequested = true;
     }
     P.rwkv.stop();
 
@@ -2302,7 +2302,7 @@ extension _$Chat on _Chat {
     final pageKey = P.app.pageKey.q;
     if (pageKey == .translator) return;
     if (P.askQuestion.interceptingEvents.q) return;
-    if (_handleExpressionSequentialEvent(event)) return;
+    if (_handleResponseStyleSequentialEvent(event)) return;
 
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
@@ -2356,7 +2356,7 @@ extension _$Chat on _Chat {
     if (pageKey == .translator) return;
     qq;
     _liveTokenCountThrottler.cancel();
-    _clearExpressionSequentialState();
+    _clearResponseStyleSequentialState();
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;
     P.rwkv.generating.q = false;
@@ -2367,7 +2367,7 @@ extension _$Chat on _Chat {
     if (pageKey == .translator) return;
     qqe("error: $error");
     _liveTokenCountThrottler.cancel();
-    _clearExpressionSequentialState();
+    _clearResponseStyleSequentialState();
     if (!kDebugMode) Sentry.captureException(error, stackTrace: stackTrace);
     final demoType = P.app.demoType.q;
     if (demoType != .chat && demoType != .see) return;

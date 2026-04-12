@@ -10,16 +10,16 @@ import 'package:halo/halo.dart';
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/expression_mode.dart';
+import 'package:zone/model/response_style.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/chat/interaction_visual_state.dart';
 import 'package:zone/widgets/input_interactions.dart';
 
-class ExpressionModeButton extends ConsumerWidget {
-  const ExpressionModeButton({super.key});
+class ResponseStyleButton extends ConsumerWidget {
+  const ResponseStyleButton({super.key});
 
   void _onTap() {
-    P.chat.onExpressionModeTapped();
+    P.chat.onResponseStyleTapped();
   }
 
   @override
@@ -28,20 +28,20 @@ class ExpressionModeButton extends ConsumerWidget {
     final s = S.of(context);
     final fontSize = theme.textTheme.bodyMedium?.fontSize ?? 14;
     final appTheme = ref.watch(P.app.theme);
-    final expressionMode = ref.watch(P.chat.expressionMode);
+    final responseStyle = ref.watch(P.chat.responseStyle);
     final model = ref.watch(P.rwkv.latestModel);
     final loading = ref.watch(P.rwkv.loading);
     final generating = ref.watch(P.rwkv.generating);
 
     final height = InputInteractions.calculateButtonHeight(context);
     final canEnable = model != null && !loading && !generating;
-    final buttonLabel = expressionMode.buttonLabel(
-      baseLabel: s.expression_mode_button,
-      jinLabel: s.expression_mode_route_jin,
-      guLabel: s.expression_mode_route_gu,
-      maoLabel: s.expression_mode_route_mao,
+    final buttonLabel = responseStyle.buttonLabel(
+      baseLabel: s.response_style_button,
+      jinLabel: s.response_style_route_jin,
+      guLabel: s.response_style_route_gu,
+      maoLabel: s.response_style_route_mao,
     );
-    final interactionState = switch ((canEnable, expressionMode.isDefault)) {
+    final interactionState = switch ((canEnable, responseStyle.isDefault)) {
       (false, _) => InteractionVisualState.unavailable,
       (true, true) => InteractionVisualState.idleInteractive,
       (true, false) => InteractionVisualState.enabled,

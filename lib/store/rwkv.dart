@@ -1199,8 +1199,8 @@ extension $RWKV on _RWKV {
     }
     final batchAllowed = fileInfo.tags.contains("batch");
     if (!batchAllowed) {
-      if (P.chat.expressionMode.q.activeCount > 1) {
-        P.chat.resetExpressionMode();
+      if (P.chat.responseStyle.q.activeCount > 1) {
+        P.chat.resetResponseStyle();
       } else {
         P.chat.batchEnabled.q = false;
         P.chat.batchCount.q = Argument.batchCount.defaults.toInt();

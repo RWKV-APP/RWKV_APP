@@ -50,55 +50,55 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m14(path) => "消息记录会存储在该文件夹下\n ${path}";
 
-  static String m15(count) => "当前模型不支持 ${count} 路表达模式";
+  static String m15(error) => "删除文件失败：${error}";
 
-  static String m16(error) => "删除文件失败：${error}";
-
-  static String m17(successCount, failCount) =>
+  static String m16(successCount, failCount) =>
       "${successCount} 个文件已移动，${failCount} 个失败";
 
-  static String m18(value) => "Frequency Penalty: ${value}";
+  static String m17(value) => "Frequency Penalty: ${value}";
 
-  static String m19(port) => "HTTP 服务 (端口: ${port})";
+  static String m18(port) => "HTTP 服务 (端口: ${port})";
 
-  static String m20(flag, nameCN, nameEN) =>
+  static String m19(flag, nameCN, nameEN) =>
       "模仿 ${flag} ${nameCN}(${nameEN}) 的声音";
 
-  static String m21(fileName) => "模仿 ${fileName}";
+  static String m20(fileName) => "模仿 ${fileName}";
 
-  static String m22(count) => "导入成功：已导入 ${count} 个文件";
+  static String m21(count) => "导入成功：已导入 ${count} 个文件";
 
-  static String m23(percent) => "加载${percent}%";
+  static String m22(percent) => "加载${percent}%";
 
-  static String m24(folderName) => "本地文件夹：${folderName}";
+  static String m23(folderName) => "本地文件夹：${folderName}";
 
-  static String m25(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
+  static String m24(memUsed, memFree) => "已用内存：${memUsed}，剩余内存：${memFree}";
 
-  static String m26(count) => "${count} 条消息正在队列中";
+  static String m25(count) => "${count} 条消息正在队列中";
 
-  static String m27(text) => "模型输出: ${text}";
+  static String m26(text) => "模型输出: ${text}";
 
-  static String m28(socName) => "暂未支持您的芯片 ${socName} 的 NPU 加速";
+  static String m27(socName) => "暂未支持您的芯片 ${socName} 的 NPU 加速";
 
-  static String m29(takePhoto) => "点击 ${takePhoto}。RWKV 将翻译图片中的文本。";
+  static String m28(takePhoto) => "点击 ${takePhoto}。RWKV 将翻译图片中的文本。";
 
-  static String m30(error) => "空文件夹创建失败：${error}";
+  static String m29(error) => "空文件夹创建失败：${error}";
 
-  static String m31(os) => "当前操作系统(${os})不支持打开文件夹的操作。";
+  static String m30(os) => "当前操作系统(${os})不支持打开文件夹的操作。";
 
-  static String m32(path) => "路径：${path}";
+  static String m31(path) => "路径：${path}";
 
-  static String m33(value) => "Penalty Decay: ${value}";
+  static String m32(value) => "Penalty Decay: ${value}";
 
-  static String m34(index) => "请选择要为第 ${index} 条消息设置的采样和惩罚参数";
+  static String m33(index) => "请选择要为第 ${index} 条消息设置的采样和惩罚参数";
 
-  static String m35(percent) => "预填充进度 ${percent}";
+  static String m34(percent) => "预填充进度 ${percent}";
 
-  static String m36(value) => "Presence Penalty: ${value}";
+  static String m35(value) => "Presence Penalty: ${value}";
 
-  static String m37(count) => "点一下生成，RWKV 会顺着你选好的开头，帮你想出最多 ${count} 个问题。";
+  static String m36(count) => "点一下生成，RWKV 会顺着你选好的开头，帮你想出最多 ${count} 个问题。";
 
-  static String m38(count) => "排队中: ${count}";
+  static String m37(count) => "排队中: ${count}";
+
+  static String m38(count) => "当前模型不支持 ${count} 种表达风格";
 
   static String m39(count) => "已选择 ${count}";
 
@@ -531,26 +531,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_success": MessageLookupByLibrary.simpleMessage("导出成功"),
     "export_title": MessageLookupByLibrary.simpleMessage("会话标题:"),
     "export_weight_file": MessageLookupByLibrary.simpleMessage("导出权重文件"),
-    "expression_mode": MessageLookupByLibrary.simpleMessage("表达模式"),
-    "expression_mode_auto_switched_to_jin":
-        MessageLookupByLibrary.simpleMessage("已自动切换至今模式"),
-    "expression_mode_batch_not_supported": m15,
-    "expression_mode_button": MessageLookupByLibrary.simpleMessage("表达"),
-    "expression_mode_keep_one": MessageLookupByLibrary.simpleMessage(
-      "至少保留一个表达模式",
-    ),
-    "expression_mode_route_gu": MessageLookupByLibrary.simpleMessage("古"),
-    "expression_mode_route_gu_detail": MessageLookupByLibrary.simpleMessage(
-      "文言回答",
-    ),
-    "expression_mode_route_jin": MessageLookupByLibrary.simpleMessage("今"),
-    "expression_mode_route_jin_detail": MessageLookupByLibrary.simpleMessage(
-      "正常回答",
-    ),
-    "expression_mode_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
-    "expression_mode_route_mao_detail": MessageLookupByLibrary.simpleMessage(
-      "猫风回答",
-    ),
     "extra_large": MessageLookupByLibrary.simpleMessage("特大 (130%)"),
     "failed_to_check_for_updates": MessageLookupByLibrary.simpleMessage(
       "检查更新失败",
@@ -558,7 +538,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "failed_to_create_directory": MessageLookupByLibrary.simpleMessage(
       "创建目录失败",
     ),
-    "failed_to_delete_file": m16,
+    "failed_to_delete_file": m15,
     "feedback": MessageLookupByLibrary.simpleMessage("反馈问题"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("文件已存在"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("文件未找到"),
@@ -567,7 +547,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "file_path_not_found": MessageLookupByLibrary.simpleMessage("文件路径未找到"),
     "files": MessageLookupByLibrary.simpleMessage("个文件"),
-    "files_moved_with_failures": m17,
+    "files_moved_with_failures": m16,
     "filter": MessageLookupByLibrary.simpleMessage(
       "你好，这个问题我暂时无法回答，让我们换个话题再聊聊吧。",
     ),
@@ -599,7 +579,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "found_new_version_available": MessageLookupByLibrary.simpleMessage(
       "发现新版本可用",
     ),
-    "frequency_penalty_with_value": m18,
+    "frequency_penalty_with_value": m17,
     "from_model": MessageLookupByLibrary.simpleMessage("来自模型: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("相册"),
     "game_over": MessageLookupByLibrary.simpleMessage("游戏结束！"),
@@ -630,19 +610,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "按住录音，松开发送",
     ),
     "home": MessageLookupByLibrary.simpleMessage("主页"),
-    "http_service_port": m19,
+    "http_service_port": m18,
     "human": MessageLookupByLibrary.simpleMessage("人类"),
     "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage("我想让 RWKV 说..."),
     "idle": MessageLookupByLibrary.simpleMessage("空闲"),
-    "imitate": m20,
-    "imitate_fle": m21,
+    "imitate": m19,
+    "imitate_fle": m20,
     "imitate_target": MessageLookupByLibrary.simpleMessage("使用"),
     "import_all_weight_files": MessageLookupByLibrary.simpleMessage("导入全部权重文件"),
     "import_all_weight_files_description": MessageLookupByLibrary.simpleMessage(
       "选择从此应用导出的 ZIP 文件。ZIP 文件中的所有权重文件将被导入。如果文件名相同，现有文件将被覆盖。",
     ),
-    "import_all_weight_files_success": m22,
+    "import_all_weight_files_success": m21,
     "import_failed": MessageLookupByLibrary.simpleMessage("导入失败"),
     "import_success": MessageLookupByLibrary.simpleMessage("导入成功"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage("导入权重文件"),
@@ -688,8 +668,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "load_data": MessageLookupByLibrary.simpleMessage("加载数据"),
     "loaded": MessageLookupByLibrary.simpleMessage("已加载"),
     "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
-    "loading_progress_percent": m23,
-    "local_folder_name": m24,
+    "loading_progress_percent": m22,
+    "local_folder_name": m23,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "本地 .pth 文件",
     ),
@@ -703,9 +683,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "你可以选择本地的 .pth 文件进行加载",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("中 (110%)"),
-    "memory_used": m25,
+    "memory_used": m24,
     "message_content": MessageLookupByLibrary.simpleMessage("消息内容"),
-    "message_in_queue": m26,
+    "message_in_queue": m25,
     "message_line_height": MessageLookupByLibrary.simpleMessage("消息行距"),
     "message_line_height_default_hint": MessageLookupByLibrary.simpleMessage(
       "默认会使用字体和渲染器本身的行高，不是固定 1.0x。这里的自定义范围是 1.0x 到 2.0x。",
@@ -724,7 +704,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "升级 iOS 18+ 可使用这款权重，更快更省电",
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("模型加载中..."),
-    "model_output": m27,
+    "model_output": m26,
     "model_settings": MessageLookupByLibrary.simpleMessage("模型设置"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage("模型大小增加，请打开一个新的对话, 以提升对话质量"),
@@ -788,10 +768,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "not_all_the_same": MessageLookupByLibrary.simpleMessage("不完全相同"),
     "not_syncing": MessageLookupByLibrary.simpleMessage("未同步"),
-    "npu_not_supported_title": m28,
+    "npu_not_supported_title": m27,
     "number": MessageLookupByLibrary.simpleMessage("数字"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
-    "ocr_guide_text": m29,
+    "ocr_guide_text": m28,
     "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("关闭"),
     "offline_translator": MessageLookupByLibrary.simpleMessage("离线翻译"),
@@ -804,7 +784,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_database_folder": MessageLookupByLibrary.simpleMessage("打开数据库文件夹"),
     "open_debug_log_panel": MessageLookupByLibrary.simpleMessage("打开调试日志面板"),
     "open_folder": MessageLookupByLibrary.simpleMessage("打开文件夹"),
-    "open_folder_create_failed": m30,
+    "open_folder_create_failed": m29,
     "open_folder_created_success": MessageLookupByLibrary.simpleMessage(
       "空文件夹创建成功。",
     ),
@@ -814,7 +794,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_folder_path_is_null": MessageLookupByLibrary.simpleMessage(
       "文件夹路径为空。",
     ),
-    "open_folder_unsupported_on_platform": m31,
+    "open_folder_unsupported_on_platform": m30,
     "open_official_download_page": MessageLookupByLibrary.simpleMessage(
       "打开官方下载页",
     ),
@@ -838,9 +818,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: 控制输出的随机性。较高的值（如 0.8）使输出更具创意和随机性；较低的值（如 0.2）使输出更集中和确定。\n\nTop P: 控制输出的多样性。模型仅考虑累积概率达到 Top P 的 token。较低的值（如 0.5）会忽略低概率的词，使输出更相关。\n\nPresence Penalty: 根据 token 是否已在文本中出现来惩罚它们。正值会增加模型谈论新主题的可能性。\n\nFrequency Penalty: 根据 token 在文本中出现的频率来惩罚它们。正值会减少模型逐字重复同一行的可能性。\n\nPenalty Decay: 控制惩罚随距离的衰减程度。",
     ),
-    "path_label": m32,
+    "path_label": m31,
     "pause": MessageLookupByLibrary.simpleMessage("暂停"),
-    "penalty_decay_with_value": m33,
+    "penalty_decay_with_value": m32,
     "performance_test": MessageLookupByLibrary.simpleMessage("性能测试"),
     "performance_test_description": MessageLookupByLibrary.simpleMessage(
       "测试速度和准确率",
@@ -894,7 +874,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "请选择难度",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m34,
+        m33,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage("请选择要为所有消息设置的采样和惩罚参数"),
     "please_wait_for_it_to_finish": MessageLookupByLibrary.simpleMessage(
@@ -916,13 +896,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "prefer": MessageLookupByLibrary.simpleMessage("使用"),
     "prefer_chinese": MessageLookupByLibrary.simpleMessage("使用中文推理"),
     "prefill": MessageLookupByLibrary.simpleMessage("预填充"),
-    "prefill_progress_percent": m35,
+    "prefill_progress_percent": m34,
     "prefill_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "预填充速度（tokens 每秒）",
     ),
     "prefix_bank": MessageLookupByLibrary.simpleMessage("前缀组"),
     "prefix_examples": MessageLookupByLibrary.simpleMessage("前缀示例"),
-    "presence_penalty_with_value": m36,
+    "presence_penalty_with_value": m35,
     "preview": MessageLookupByLibrary.simpleMessage("预览"),
     "prompt": MessageLookupByLibrary.simpleMessage("提示词"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt 模板"),
@@ -960,11 +940,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "question_generator_prefixes": MessageLookupByLibrary.simpleMessage("问题前缀"),
     "question_generator_question_action_guide":
         MessageLookupByLibrary.simpleMessage("点击已生成的问题，即可粘贴到对话输入框。"),
-    "question_generator_tap_generate_hint": m37,
+    "question_generator_tap_generate_hint": m36,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "我想让 RWKV 以这种语言提问...",
     ),
-    "queued_x": m38,
+    "queued_x": m37,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("快思考"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage("快思考已经开启"),
     "reached_bottom": MessageLookupByLibrary.simpleMessage("敬请期待"),
@@ -989,6 +969,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_to_default": MessageLookupByLibrary.simpleMessage("恢复默认"),
     "reset_to_default_directory": MessageLookupByLibrary.simpleMessage(
       "已恢复默认目录",
+    ),
+    "response_style": MessageLookupByLibrary.simpleMessage("表达风格"),
+    "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
+      "已自动切换为今风格",
+    ),
+    "response_style_batch_not_supported": m38,
+    "response_style_button": MessageLookupByLibrary.simpleMessage("风格"),
+    "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
+      "至少保留一种表达风格",
+    ),
+    "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
+    "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
+      "文言回答",
+    ),
+    "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
+    "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
+      "正常回答",
+    ),
+    "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
+    "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
+      "猫风回答",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("恢复默认"),
     "result": MessageLookupByLibrary.simpleMessage("结果"),
