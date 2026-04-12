@@ -571,6 +571,7 @@ extension $RWKV on _RWKV {
   }) async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+    P.telemetry.resetPeakDecodeSpeed();
 
     if (isAlbatrossLoaded.q) {
       final stream = Albatross.instance.chat(messages, batchSize: 1);
@@ -682,6 +683,7 @@ extension $RWKV on _RWKV {
   }) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+    P.telemetry.resetPeakDecodeSpeed();
 
     if (isAlbatrossLoaded.q) {
       return Albatross.instance.completion(prompt, batchSize: batchSize);
@@ -1197,8 +1199,8 @@ extension $RWKV on _RWKV {
     }
     final batchAllowed = fileInfo.tags.contains("batch");
     if (!batchAllowed) {
-      if (P.chat.expressionMode.q.activeCount > 1) {
-        P.chat.resetExpressionMode();
+      if (P.chat.responseStyle.q.activeCount > 1) {
+        P.chat.resetResponseStyle();
       } else {
         P.chat.batchEnabled.q = false;
         P.chat.batchCount.q = Argument.batchCount.defaults.toInt();
@@ -1522,6 +1524,7 @@ extension _$RWKV on _RWKV {
       }
       if (message["decodeSpeed"] != null && message["decodeSpeed"] != -1.0) {
         decodeSpeed.q = message["decodeSpeed"];
+        P.telemetry.trackDecodeSpeed(message["decodeSpeed"] as double);
       }
       return;
     }
@@ -1680,12 +1683,16 @@ extension _$RWKV on _RWKV {
       case from_rwkv.Speed response:
         prefillSpeed.q = response.prefillSpeed;
         decodeSpeed.q = response.decodeSpeed;
+        P.telemetry.trackDecodeSpeed(response.decodeSpeed);
         prefillProgress.q = response.prefillProgress.clamp(0, 1).toDouble();
 
       case from_rwkv.StreamResponse response:
         final decodeSpeed = response.decodeSpeed;
         final prefillSpeed = response.prefillSpeed;
-        if (decodeSpeed != -1.0) this.decodeSpeed.q = decodeSpeed;
+        if (decodeSpeed != -1.0) {
+          this.decodeSpeed.q = decodeSpeed;
+          P.telemetry.trackDecodeSpeed(decodeSpeed);
+        }
         if (prefillSpeed != -1.0) this.prefillSpeed.q = prefillSpeed;
 
       case from_rwkv.SupportedBatchSizes response:

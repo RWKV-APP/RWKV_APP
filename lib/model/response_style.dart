@@ -1,9 +1,9 @@
 // Package imports:
 import 'package:equatable/equatable.dart';
 
-enum ExpressionRoute { jin, gu, mao }
+enum ResponseStyleRoute { jin, gu, mao }
 
-ExpressionRoute? expressionRouteFromLabel(String label) {
+ResponseStyleRoute? responseStyleRouteFromLabel(String label) {
   switch (label) {
     case "今":
       return .jin;
@@ -16,7 +16,7 @@ ExpressionRoute? expressionRouteFromLabel(String label) {
   }
 }
 
-extension ExpressionRouteX on ExpressionRoute {
+extension ResponseStyleRouteX on ResponseStyleRoute {
   String get label {
     switch (this) {
       case .jin:
@@ -29,7 +29,7 @@ extension ExpressionRouteX on ExpressionRoute {
   }
 }
 
-extension ExpressionModeStateButtonLabelX on ExpressionModeState {
+extension ResponseStyleStateButtonLabelX on ResponseStyleState {
   String buttonLabel({
     required String baseLabel,
     required String jinLabel,
@@ -57,18 +57,18 @@ extension ExpressionModeStateButtonLabelX on ExpressionModeState {
   }
 }
 
-final class ExpressionModeState extends Equatable {
+final class ResponseStyleState extends Equatable {
   final bool jinEnabled;
   final bool guEnabled;
   final bool maoEnabled;
 
-  const ExpressionModeState({
+  const ResponseStyleState({
     this.jinEnabled = true,
     this.guEnabled = false,
     this.maoEnabled = false,
   });
 
-  bool enabledFor(ExpressionRoute route) {
+  bool enabledFor(ResponseStyleRoute route) {
     switch (route) {
       case .jin:
         return jinEnabled;
@@ -79,8 +79,8 @@ final class ExpressionModeState extends Equatable {
     }
   }
 
-  List<ExpressionRoute> get enabledRoutesInOrder {
-    return <ExpressionRoute>[
+  List<ResponseStyleRoute> get enabledRoutesInOrder {
+    return <ResponseStyleRoute>[
       if (jinEnabled) .jin,
       if (guEnabled) .gu,
       if (maoEnabled) .mao,
@@ -88,14 +88,14 @@ final class ExpressionModeState extends Equatable {
   }
 
   List<String> get enabledLabelsInOrder {
-    return enabledRoutesInOrder.map((ExpressionRoute route) => route.label).toList();
+    return enabledRoutesInOrder.map((ResponseStyleRoute route) => route.label).toList();
   }
 
   int get activeCount => enabledRoutesInOrder.length;
 
   bool get isDefault => jinEnabled && !guEnabled && !maoEnabled;
 
-  bool canToggle(ExpressionRoute route, bool enabled) {
+  bool canToggle(ResponseStyleRoute route, bool enabled) {
     if (enabled) {
       return true;
     }
@@ -105,19 +105,19 @@ final class ExpressionModeState extends Equatable {
     return activeCount > 1;
   }
 
-  ExpressionModeState copyWith({
+  ResponseStyleState copyWith({
     bool? jinEnabled,
     bool? guEnabled,
     bool? maoEnabled,
   }) {
-    return ExpressionModeState(
+    return ResponseStyleState(
       jinEnabled: jinEnabled ?? this.jinEnabled,
       guEnabled: guEnabled ?? this.guEnabled,
       maoEnabled: maoEnabled ?? this.maoEnabled,
     );
   }
 
-  ExpressionModeState copyWithRoute(ExpressionRoute route, bool enabled) {
+  ResponseStyleState copyWithRoute(ResponseStyleRoute route, bool enabled) {
     switch (route) {
       case .jin:
         return copyWith(jinEnabled: enabled);

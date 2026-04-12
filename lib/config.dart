@@ -1,4 +1,5 @@
 // Project imports:
+import 'package:flutter/foundation.dart';
 import 'package:zone/args.dart';
 import 'package:zone/router/page_key.dart';
 
@@ -15,7 +16,9 @@ abstract class Config {
   static const desktopModelsDirName = "models";
   static const mobileModelsDirName = "rwkv_chat_models";
 
-  static const domain = Args.domain;
+  // static const domain = Args.domain;
+  // static const domain = kReleaseMode ? Args.domain : "http://192.168.3.68:3001";
+  static const domain = kReleaseMode ? Args.domain : "http://192.168.3.68:3001";
   static const suggestionsUrl = "$domain/suggestions.json";
   static const highScoreLanguagesUrl = "$domain/public-api/evals/high-score-languages";
   static const highScoreSamplesUrl = "$domain/public-api/evals/high-score-samples";

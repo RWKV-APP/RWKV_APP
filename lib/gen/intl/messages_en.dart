@@ -53,62 +53,62 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m14(path) =>
       "Message records will be stored in the following folder\n ${path}";
 
-  static String m15(count) =>
-      "This model does not support ${count} expression routes";
+  static String m15(error) => "Failed to delete file: ${error}";
 
-  static String m16(error) => "Failed to delete file: ${error}";
-
-  static String m17(successCount, failCount) =>
+  static String m16(successCount, failCount) =>
       "${successCount} files moved, ${failCount} failed";
 
-  static String m18(value) => "Frequency Penalty: ${value}";
+  static String m17(value) => "Frequency Penalty: ${value}";
 
-  static String m19(port) => "HTTP Service (Port: ${port})";
+  static String m18(port) => "HTTP Service (Port: ${port})";
 
-  static String m20(flag, nameCN, nameEN) =>
+  static String m19(flag, nameCN, nameEN) =>
       "Imitate ${flag} ${nameCN}(${nameEN})\'s voice";
 
-  static String m21(fileName) => "Imitate ${fileName}";
+  static String m20(fileName) => "Imitate ${fileName}";
 
-  static String m22(count) => "Import successful: ${count} files imported";
+  static String m21(count) => "Import successful: ${count} files imported";
 
-  static String m23(percent) => "Loading ${percent}%";
+  static String m22(percent) => "Loading ${percent}%";
 
-  static String m24(folderName) => "Local folder: ${folderName}";
+  static String m23(folderName) => "Local folder: ${folderName}";
 
-  static String m25(memUsed, memFree) =>
+  static String m24(memUsed, memFree) =>
       "Memory Used: ${memUsed}, Memory Free: ${memFree}";
 
-  static String m26(count) => "${count} messages are in queue";
+  static String m25(count) => "${count} messages are in queue";
 
-  static String m27(text) => "Model output: ${text}";
+  static String m26(text) => "Model output: ${text}";
 
-  static String m28(socName) =>
+  static String m27(socName) =>
       "NPU support for your chip ${socName} not yet available";
 
-  static String m29(takePhoto) =>
+  static String m28(takePhoto) =>
       "Click ${takePhoto}. RWKV will translate the text in the image.";
 
-  static String m30(error) => "Failed to create empty folder: ${error}";
+  static String m29(error) => "Failed to create empty folder: ${error}";
 
-  static String m31(os) =>
+  static String m30(os) =>
       "Opening folder is not supported on the current OS (${os}).";
 
-  static String m32(path) => "Path: ${path}";
+  static String m31(path) => "Path: ${path}";
 
-  static String m33(value) => "Penalty Decay: ${value}";
+  static String m32(value) => "Penalty Decay: ${value}";
 
-  static String m34(index) =>
+  static String m33(index) =>
       "Please select the sampler and penalty parameters to set for message ${index}";
 
-  static String m35(percent) => "Prefill progress ${percent}";
+  static String m34(percent) => "Prefill progress ${percent}";
 
-  static String m36(value) => "Presence Penalty: ${value}";
+  static String m35(value) => "Presence Penalty: ${value}";
 
-  static String m37(count) =>
+  static String m36(count) =>
       "Tap Generate and let RWKV turn your chosen opening into up to ${count} question ideas.";
 
-  static String m38(count) => "Queued: ${count}";
+  static String m37(count) => "Queued: ${count}";
+
+  static String m38(count) =>
+      "This model does not support ${count} response styles";
 
   static String m39(count) => "Selected ${count}";
 
@@ -668,28 +668,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "export_weight_file": MessageLookupByLibrary.simpleMessage(
       "Export Weight File",
     ),
-    "expression_mode": MessageLookupByLibrary.simpleMessage("Expression Mode"),
-    "expression_mode_auto_switched_to_jin":
-        MessageLookupByLibrary.simpleMessage(
-          "Switched back to Jin mode automatically",
-        ),
-    "expression_mode_batch_not_supported": m15,
-    "expression_mode_button": MessageLookupByLibrary.simpleMessage("Express"),
-    "expression_mode_keep_one": MessageLookupByLibrary.simpleMessage(
-      "Keep at least one expression mode enabled",
-    ),
-    "expression_mode_route_gu": MessageLookupByLibrary.simpleMessage("古"),
-    "expression_mode_route_gu_detail": MessageLookupByLibrary.simpleMessage(
-      "Classical Chinese answer",
-    ),
-    "expression_mode_route_jin": MessageLookupByLibrary.simpleMessage("今"),
-    "expression_mode_route_jin_detail": MessageLookupByLibrary.simpleMessage(
-      "Normal answer",
-    ),
-    "expression_mode_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
-    "expression_mode_route_mao_detail": MessageLookupByLibrary.simpleMessage(
-      "Cat-style answer",
-    ),
     "extra_large": MessageLookupByLibrary.simpleMessage("Extra Large (130%)"),
     "failed_to_check_for_updates": MessageLookupByLibrary.simpleMessage(
       "Failed to check for updates",
@@ -697,7 +675,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "failed_to_create_directory": MessageLookupByLibrary.simpleMessage(
       "Failed to create directory",
     ),
-    "failed_to_delete_file": m16,
+    "failed_to_delete_file": m15,
     "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "File already exists",
@@ -710,7 +688,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "File path not found",
     ),
     "files": MessageLookupByLibrary.simpleMessage("files"),
-    "files_moved_with_failures": m17,
+    "files_moved_with_failures": m16,
     "filter": MessageLookupByLibrary.simpleMessage(
       "Hello, I can\'t answer this question right now. Let\'s talk about something else.",
     ),
@@ -754,7 +732,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "found_new_version_available": MessageLookupByLibrary.simpleMessage(
       "Found New Version Available",
     ),
-    "frequency_penalty_with_value": m18,
+    "frequency_penalty_with_value": m17,
     "from_model": MessageLookupByLibrary.simpleMessage("From Model: %s"),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
     "game_over": MessageLookupByLibrary.simpleMessage("Game Over!"),
@@ -793,15 +771,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hold to record, release to send",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "http_service_port": m19,
+    "http_service_port": m18,
     "human": MessageLookupByLibrary.simpleMessage("Human"),
     "hyphen": MessageLookupByLibrary.simpleMessage("-"),
     "i_want_rwkv_to_say": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to say...",
     ),
     "idle": MessageLookupByLibrary.simpleMessage("Idle"),
-    "imitate": m20,
-    "imitate_fle": m21,
+    "imitate": m19,
+    "imitate_fle": m20,
     "imitate_target": MessageLookupByLibrary.simpleMessage("Use"),
     "import_all_weight_files": MessageLookupByLibrary.simpleMessage(
       "Import All Weight Files",
@@ -809,7 +787,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "import_all_weight_files_description": MessageLookupByLibrary.simpleMessage(
       "Select a ZIP file exported from this app. All weight files in the ZIP will be imported. Existing files will be overwritten if they have the same name.",
     ),
-    "import_all_weight_files_success": m22,
+    "import_all_weight_files_success": m21,
     "import_failed": MessageLookupByLibrary.simpleMessage("Import failed"),
     "import_success": MessageLookupByLibrary.simpleMessage("Import successful"),
     "import_weight_file": MessageLookupByLibrary.simpleMessage(
@@ -875,8 +853,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "load_data": MessageLookupByLibrary.simpleMessage("Load Data"),
     "loaded": MessageLookupByLibrary.simpleMessage("Loaded"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
-    "loading_progress_percent": m23,
-    "local_folder_name": m24,
+    "loading_progress_percent": m22,
+    "local_folder_name": m23,
     "local_pth_files_section_title": MessageLookupByLibrary.simpleMessage(
       "Local .pth file",
     ),
@@ -890,9 +868,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "You can select and load a local .pth file",
     ),
     "medium": MessageLookupByLibrary.simpleMessage("Medium (110%)"),
-    "memory_used": m25,
+    "memory_used": m24,
     "message_content": MessageLookupByLibrary.simpleMessage("Message content"),
-    "message_in_queue": m26,
+    "message_in_queue": m25,
     "message_line_height": MessageLookupByLibrary.simpleMessage(
       "Message Line Height",
     ),
@@ -913,7 +891,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Upgrade to iOS 18+ to use this weight, faster and more power-efficient",
     ),
     "model_loading": MessageLookupByLibrary.simpleMessage("Model Loading..."),
-    "model_output": m27,
+    "model_output": m26,
     "model_settings": MessageLookupByLibrary.simpleMessage("Model Settings"),
     "model_size_increased_please_open_a_new_conversation":
         MessageLookupByLibrary.simpleMessage(
@@ -1009,10 +987,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Not all the same",
     ),
     "not_syncing": MessageLookupByLibrary.simpleMessage("Not syncing"),
-    "npu_not_supported_title": m28,
+    "npu_not_supported_title": m27,
     "number": MessageLookupByLibrary.simpleMessage("Number"),
     "nyan_nyan": MessageLookupByLibrary.simpleMessage("Nyan~~,Nyan~~"),
-    "ocr_guide_text": m29,
+    "ocr_guide_text": m28,
     "ocr_title": MessageLookupByLibrary.simpleMessage("OCR"),
     "off": MessageLookupByLibrary.simpleMessage("Off"),
     "offline_translator": MessageLookupByLibrary.simpleMessage(
@@ -1035,7 +1013,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Open Debug Log Panel",
     ),
     "open_folder": MessageLookupByLibrary.simpleMessage("Open folder"),
-    "open_folder_create_failed": m30,
+    "open_folder_create_failed": m29,
     "open_folder_created_success": MessageLookupByLibrary.simpleMessage(
       "Empty folder created successfully.",
     ),
@@ -1045,7 +1023,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_folder_path_is_null": MessageLookupByLibrary.simpleMessage(
       "Folder path is null.",
     ),
-    "open_folder_unsupported_on_platform": m31,
+    "open_folder_unsupported_on_platform": m30,
     "open_official_download_page": MessageLookupByLibrary.simpleMessage(
       "Open Official Download Page",
     ),
@@ -1075,9 +1053,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "parameter_description_detail": MessageLookupByLibrary.simpleMessage(
       "Temperature: Controls randomness. Higher values (e.g., 0.8) make output more creative/random; lower values (e.g., 0.2) make it more focused/deterministic.\n\nTop P: Controls diversity. The model considers only tokens with cumulative probability summing to Top P. Lower values (e.g., 0.5) ignore low-probability words, making output more relevant.\n\nPresence Penalty: Penalizes tokens based on whether they have appeared in the text. Positive values increase the likelihood of talking about new topics.\n\nFrequency Penalty: Penalizes tokens based on their frequency in the text. Positive values decrease the likelihood of repeating lines verbatim.\n\nPenalty Decay: Controls how the penalty decays over distance.",
     ),
-    "path_label": m32,
+    "path_label": m31,
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
-    "penalty_decay_with_value": m33,
+    "penalty_decay_with_value": m32,
     "performance_test": MessageLookupByLibrary.simpleMessage(
       "Performance Test",
     ),
@@ -1147,7 +1125,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please select the difficulty",
     ),
     "please_select_the_sampler_and_penalty_parameters_to_set_all_to_for_index":
-        m34,
+        m33,
     "please_select_the_sampler_and_penalty_parameters_to_set_for_all_messages":
         MessageLookupByLibrary.simpleMessage(
           "Please select the sampler and penalty parameters to set for all messages",
@@ -1177,13 +1155,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Prefer Chinese Inference",
     ),
     "prefill": MessageLookupByLibrary.simpleMessage("Prefill"),
-    "prefill_progress_percent": m35,
+    "prefill_progress_percent": m34,
     "prefill_speed_tokens_per_second": MessageLookupByLibrary.simpleMessage(
       "Prefill Speed (tokens per second)",
     ),
     "prefix_bank": MessageLookupByLibrary.simpleMessage("Prefix Bank"),
     "prefix_examples": MessageLookupByLibrary.simpleMessage("Prefix Examples"),
-    "presence_penalty_with_value": m36,
+    "presence_penalty_with_value": m35,
     "preview": MessageLookupByLibrary.simpleMessage("Preview"),
     "prompt": MessageLookupByLibrary.simpleMessage("Prompt"),
     "prompt_template": MessageLookupByLibrary.simpleMessage("Prompt Template"),
@@ -1233,11 +1211,11 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Tap any generated question to paste it into the chat input box.",
         ),
-    "question_generator_tap_generate_hint": m37,
+    "question_generator_tap_generate_hint": m36,
     "question_language": MessageLookupByLibrary.simpleMessage(
       "I want RWKV to ask in this language...",
     ),
-    "queued_x": m38,
+    "queued_x": m37,
     "quick_thinking": MessageLookupByLibrary.simpleMessage("Quick Reasoning"),
     "quick_thinking_enabled": MessageLookupByLibrary.simpleMessage(
       "Quick Reasoning Enabled",
@@ -1278,6 +1256,27 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "reset_to_default_directory": MessageLookupByLibrary.simpleMessage(
       "Reset to default directory",
+    ),
+    "response_style": MessageLookupByLibrary.simpleMessage("Response Style"),
+    "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
+      "Switched back to Jin style automatically",
+    ),
+    "response_style_batch_not_supported": m38,
+    "response_style_button": MessageLookupByLibrary.simpleMessage("Style"),
+    "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
+      "Keep at least one response style enabled",
+    ),
+    "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
+    "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
+      "Classical Chinese answer",
+    ),
+    "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
+    "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
+      "Normal answer",
+    ),
+    "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
+    "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
+      "Cat-style answer",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("Restore Default"),
     "result": MessageLookupByLibrary.simpleMessage("Result"),

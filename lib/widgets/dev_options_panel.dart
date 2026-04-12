@@ -99,6 +99,11 @@ class _DevOptionsPanelState extends State<DevOptionsPanel> {
     setState(() {});
   }
 
+  void _onTelemetryChanged(bool value) {
+    P.telemetry.setEnabled(value);
+    setState(() {});
+  }
+
   void _onOpenTest2Pressed() async {
     await pop();
     await push(PageKey.test2);
@@ -156,6 +161,13 @@ class _DevOptionsPanelState extends State<DevOptionsPanel> {
                           subtitle: 'Use Albatross bridge in RWKV runtime.',
                           value: P.rwkv.enableAlbatross.q,
                           onChanged: _onAlbatrossChanged,
+                        ),
+                        Container(height: .5, color: borderColor),
+                        _DevSwitchItem(
+                          title: 'Telemetry',
+                          subtitle: 'Upload anonymous inference speed after each reply.',
+                          value: P.telemetry.enabled.q,
+                          onChanged: _onTelemetryChanged,
                         ),
                       ],
                     ),
