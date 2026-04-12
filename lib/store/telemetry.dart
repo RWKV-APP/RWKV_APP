@@ -205,15 +205,30 @@ extension _$Telemetry on _Telemetry {
     if (!Platform.isWindows && !Platform.isLinux) return;
     try {
       if (Platform.isWindows) {
-        // PowerShell: 获取独立显卡名称（优先 NVIDIA / AMD）
-        final ProcessResult result = await Process.run("powershell", [
-          "-NoProfile",
-          "-Command",
-          "(Get-CimInstance Win32_VideoController | Where-Object { \$_.Name -notmatch 'Microsoft|Intel.*UHD|Intel.*Iris' } | Select-Object -First 1 -ExpandProperty Name) ?? (Get-CimInstance Win32_VideoController | Select-Object -First 1 -ExpandProperty Name)",
+        // wmic: 兼容 Windows 10 PowerShell 5.1，无需高版本语法
+        final ProcessResult result = await Process.run("cmd", [
+          "/c",
+          "wmic path win32_videocontroller get name /value",
         ]);
-        final String gpu = (result.stdout as String).trim();
-        if (gpu.isNotEmpty) {
-          _gpuName.q = gpu;
+        final String output = (result.stdout as String).trim();
+        // 输出格式: Name=NVIDIA GeForce RTX 3080\r\nName=Intel UHD ...
+        // 优先选独显（NVIDIA / AMD / Radeon），排除集显
+        String bestGpu = "";
+        for (final line in output.split(RegExp(r'[\r\n]+'))) {
+          final trimmed = line.trim();
+          if (!trimmed.startsWith("Name=")) continue;
+          final name = trimmed.substring(5).trim();
+          if (name.isEmpty) continue;
+          if (bestGpu.isEmpty) bestGpu = name;
+          final lower = name.toLowerCase();
+          if (lower.contains("nvidia") || lower.contains("radeon") || lower.contains("amd")) {
+            bestGpu = name;
+            break;
+          }
+        }
+        if (bestGpu.isNotEmpty) {
+          _gpuName.q = bestGpu;
+          if (kDebugMode) qqq("telemetry: detected GPU: $bestGpu");
         }
       } else if (Platform.isLinux) {
         // lspci: 找 VGA / 3D controller
@@ -224,6 +239,7 @@ extension _$Telemetry on _Telemetry {
         final String gpu = (result.stdout as String).trim();
         if (gpu.isNotEmpty) {
           _gpuName.q = gpu;
+          if (kDebugMode) qqq("telemetry: detected GPU: $gpu");
         }
       }
     } catch (e) {
