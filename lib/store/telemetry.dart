@@ -92,6 +92,17 @@ extension $Telemetry on _Telemetry {
       if (socBrandName == "unknown" && Platform.isMacOS) {
         socBrandName = "apple";
       }
+      // 从 GPU 名称推断 socBrand
+      if (socBrandName == "unknown" && _gpuName.q.isNotEmpty) {
+        final String gpuLower = _gpuName.q.toLowerCase();
+        if (gpuLower.contains("nvidia")) {
+          socBrandName = "nvidia";
+        } else if (gpuLower.contains("radeon") || gpuLower.contains("amd")) {
+          socBrandName = "amd";
+        } else if (gpuLower.contains("intel")) {
+          socBrandName = "intel";
+        }
+      }
 
       final int now = DateTime.now().millisecondsSinceEpoch;
 
@@ -232,8 +243,8 @@ extension _$Telemetry on _Telemetry {
           }
         }
         if (bestGpu.isNotEmpty) {
-          _gpuName.q = bestGpu;
-          if (kDebugMode) qqq("telemetry: detected GPU: $bestGpu");
+          _gpuName.q = _stripGpuPrefix(bestGpu);
+          if (kDebugMode) qqq("telemetry: detected GPU: ${_gpuName.q}");
         }
       } else if (Platform.isLinux) {
         // lspci: 找 VGA / 3D controller
@@ -243,13 +254,25 @@ extension _$Telemetry on _Telemetry {
         ]);
         final String gpu = (result.stdout as String).trim();
         if (gpu.isNotEmpty) {
-          _gpuName.q = gpu;
-          if (kDebugMode) qqq("telemetry: detected GPU: $gpu");
+          _gpuName.q = _stripGpuPrefix(gpu);
+          if (kDebugMode) qqq("telemetry: detected GPU: ${_gpuName.q}");
         }
       }
     } catch (e) {
       if (kDebugMode) qqw("telemetry: failed to get GPU name: $e");
     }
+  }
+
+  /// 去掉冗余品牌前缀：
+  /// "NVIDIA GeForce RTX 3080" → "RTX 3080"
+  /// "AMD Radeon RX 7900 XTX" → "RX 7900 XTX"
+  String _stripGpuPrefix(String name) {
+    String stripped = name;
+    // 依次移除品牌关键词
+    for (final String prefix in ["NVIDIA", "GeForce", "AMD", "Radeon"]) {
+      stripped = stripped.replaceFirst(RegExp('^$prefix\\s*', caseSensitive: false), '');
+    }
+    return stripped.trim().isEmpty ? name : stripped.trim();
   }
 
   Future<void> _initTotalMemory() async {
@@ -282,14 +305,27 @@ extension _$Telemetry on _Telemetry {
     // macOS 上内存统一共享，不区分 VRAM
     if (!Platform.isWindows && !Platform.isLinux) return;
     try {
+      // Windows 和 Linux 都优先用 nvidia-smi（wmic AdapterRAM 是 DWORD 32 位，>4GB 溢出）
+      final ProcessResult smiResult = Platform.isWindows
+          ? await Process.run("cmd", ["/c", "nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>nul"])
+          : await Process.run("bash", ["-c", "nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -1"]);
+      final String smiOutput = (smiResult.stdout as String).trim();
+      // nvidia-smi 可能返回多行（多 GPU），取第一行
+      final String firstLine = smiOutput.split(RegExp(r'[\r\n]+')).first.trim();
+      final int? vramMb = int.tryParse(firstLine);
+      if (vramMb != null && vramMb > 0) {
+        _totalVramMb.q = vramMb;
+        if (kDebugMode) qqq("telemetry: detected VRAM via nvidia-smi: $vramMb MB");
+        return;
+      }
+
+      // nvidia-smi 失败时 Windows 回退到 wmic（仅对 ≤4GB 显卡准确）
       if (Platform.isWindows) {
-        // wmic: AdapterRAM 返回字节数
-        final ProcessResult result = await Process.run("cmd", [
+        final ProcessResult wmicResult = await Process.run("cmd", [
           "/c",
           "wmic path win32_videocontroller get AdapterRAM,Name /value",
         ]);
-        final String output = (result.stdout as String).trim();
-        // 解析 AdapterRAM=... 和 Name=...，优先取独显
+        final String output = (wmicResult.stdout as String).trim();
         int bestVram = 0;
         int currentRam = 0;
         String currentName = "";
@@ -299,7 +335,6 @@ extension _$Telemetry on _Telemetry {
             currentRam = int.tryParse(trimmed.substring(11).trim()) ?? 0;
           } else if (trimmed.startsWith("Name=")) {
             currentName = trimmed.substring(5).trim();
-            // 当遇到完整的一对时判断
             if (currentRam > 0) {
               final lower = currentName.toLowerCase();
               if (lower.contains("nvidia") || lower.contains("radeon") || lower.contains("amd")) {
@@ -314,19 +349,7 @@ extension _$Telemetry on _Telemetry {
         }
         if (bestVram > 0) {
           _totalVramMb.q = bestVram ~/ (1024 * 1024);
-          if (kDebugMode) qqq("telemetry: detected VRAM: ${_totalVramMb.q} MB");
-        }
-      } else if (Platform.isLinux) {
-        // nvidia-smi 获取 NVIDIA 显存
-        final ProcessResult result = await Process.run("bash", [
-          "-c",
-          "nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -1",
-        ]);
-        final String output = (result.stdout as String).trim();
-        final int? vramMb = int.tryParse(output);
-        if (vramMb != null && vramMb > 0) {
-          _totalVramMb.q = vramMb;
-          if (kDebugMode) qqq("telemetry: detected VRAM: $vramMb MB");
+          if (kDebugMode) qqq("telemetry: detected VRAM via wmic (fallback): ${_totalVramMb.q} MB");
         }
       }
     } catch (e) {

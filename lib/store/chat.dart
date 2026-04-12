@@ -351,8 +351,8 @@ extension $Chat on _Chat {
   Future<void> _applyResponseStyleState(
     ResponseStyleState state,
   ) async {
-    await _syncBatchStateForResponseStyle(activeCount: state.activeCount);
     responseStyle.q = state;
+    await _syncBatchStateForResponseStyle(activeCount: state.activeCount);
   }
 
   Future<void> _syncBatchStateForResponseStyle({
