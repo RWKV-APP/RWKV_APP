@@ -12,6 +12,7 @@ class _Telemetry {
   late final _installId = qs<String>("");
   late final _deviceModel = qs<String>("");
   late final _macChipName = qs<String>("");
+  late final _gpuName = qs<String>("");
   late final _totalMemoryMb = qs<int>(0);
   late final _peakDecodeSpeed = qs<double>(0);
 }
@@ -60,6 +61,9 @@ extension $Telemetry on _Telemetry {
       }
       if (socName.isEmpty || socName.toLowerCase() == "unknown") {
         socName = _macChipName.q;
+      }
+      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
+        socName = _gpuName.q;
       }
       if (socName.isEmpty || socName.toLowerCase() == "unknown") {
         socName = _deviceModel.q;
@@ -154,6 +158,9 @@ extension _$Telemetry on _Telemetry {
     // macOS 芯片名称 (e.g. "Apple M4 Pro")
     await _initMacChipName();
 
+    // Windows / Linux GPU 名称 (e.g. "NVIDIA GeForce RTX 3080")
+    await _initGpuName();
+
     // 总物理内存
     await _initTotalMemory();
   }
@@ -191,6 +198,36 @@ extension _$Telemetry on _Telemetry {
       }
     } catch (e) {
       if (kDebugMode) qqw("telemetry: failed to get mac chip name: $e");
+    }
+  }
+
+  Future<void> _initGpuName() async {
+    if (!Platform.isWindows && !Platform.isLinux) return;
+    try {
+      if (Platform.isWindows) {
+        // PowerShell: 获取独立显卡名称（优先 NVIDIA / AMD）
+        final ProcessResult result = await Process.run("powershell", [
+          "-NoProfile",
+          "-Command",
+          "(Get-CimInstance Win32_VideoController | Where-Object { \$_.Name -notmatch 'Microsoft|Intel.*UHD|Intel.*Iris' } | Select-Object -First 1 -ExpandProperty Name) ?? (Get-CimInstance Win32_VideoController | Select-Object -First 1 -ExpandProperty Name)",
+        ]);
+        final String gpu = (result.stdout as String).trim();
+        if (gpu.isNotEmpty) {
+          _gpuName.q = gpu;
+        }
+      } else if (Platform.isLinux) {
+        // lspci: 找 VGA / 3D controller
+        final ProcessResult result = await Process.run("bash", [
+          "-c",
+          "lspci | grep -iE 'VGA|3D' | head -1 | sed 's/.*: //'",
+        ]);
+        final String gpu = (result.stdout as String).trim();
+        if (gpu.isNotEmpty) {
+          _gpuName.q = gpu;
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) qqw("telemetry: failed to get GPU name: $e");
     }
   }
 
