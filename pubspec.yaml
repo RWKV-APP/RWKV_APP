@@ -1,7 +1,7 @@
 name: zone
 description: "An app to show RWKV model in mobile app. Developed with Flutter."
 publish_to: "none"
-version: 4.3.5+706
+version: 4.3.6+707
 
 environment:
   sdk: ^3.11.0
