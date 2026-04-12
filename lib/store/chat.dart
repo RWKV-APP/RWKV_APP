@@ -1859,6 +1859,7 @@ extension _$Chat on _Chat {
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
     final finalPrefillSpeed = snapshotPrefillSpeed ?? msg.prefillSpeed;
     final finalDecodeSpeed = snapshotDecodeSpeed ?? msg.decodeSpeed;
+    final double snapshotPeak = P.telemetry._peakDecodeSpeed.q;
     final currentGeneratedContent = id == receiveId.q ? receivedTokens.q : msg.content;
     final finalizedContent = currentGeneratedContent.isNotEmpty ? currentGeneratedContent : msg.content;
 
@@ -1888,6 +1889,7 @@ extension _$Chat on _Chat {
     unawaited(P.telemetry.maybeReport(
       prefillSpeed: finalPrefillSpeed,
       decodeSpeed: finalDecodeSpeed,
+      snapshotPeakDecodeSpeed: snapshotPeak,
     ));
   }
 
@@ -1981,6 +1983,8 @@ extension _$Chat on _Chat {
     final (double? snapshotPrefillSpeed, double? snapshotDecodeSpeed) = _currentSpeedSnapshotForStore();
     final finalPrefillSpeed = snapshotPrefillSpeed ?? currentMessage.prefillSpeed;
     final finalDecodeSpeed = snapshotDecodeSpeed ?? currentMessage.decodeSpeed;
+    // 在 _prefillAfterReply 之前快照 peak，否则新推理会 resetPeakDecodeSpeed
+    final double snapshotPeak = P.telemetry._peakDecodeSpeed.q;
 
     _updateMessageById(
       id: id,
@@ -2003,6 +2007,7 @@ extension _$Chat on _Chat {
     unawaited(P.telemetry.maybeReport(
       prefillSpeed: finalPrefillSpeed,
       decodeSpeed: finalDecodeSpeed,
+      snapshotPeakDecodeSpeed: snapshotPeak,
     ));
   }
 

@@ -2,7 +2,6 @@ part of 'p.dart';
 
 const String _telemetryEnabledKey = "halo_state.telemetry.enabled";
 const String _telemetryInstallIdKey = "halo_state.telemetry.installId";
-const String _telemetryRegistryKey = "halo_state.telemetry.registry";
 
 class _Telemetry {
   // ===========================================================================
@@ -12,10 +11,9 @@ class _Telemetry {
   late final enabled = qs<bool>(true);
   late final _installId = qs<String>("");
   late final _deviceModel = qs<String>("");
+  late final _macChipName = qs<String>("");
   late final _totalMemoryMb = qs<int>(0);
-
-  /// 去重注册表: key = "socName|modelSha256|backend" → millisecondsSinceEpoch
-  late final _registry = qs<Map<String, int>>({});
+  late final _peakDecodeSpeed = qs<double>(0);
 }
 
 /// Public methods
@@ -26,79 +24,108 @@ extension $Telemetry on _Telemetry {
     await sp.setBool(_telemetryEnabledKey, value);
   }
 
+  void trackDecodeSpeed(double speed) {
+    if (speed > _peakDecodeSpeed.q) {
+      _peakDecodeSpeed.q = speed;
+    }
+  }
+
+  void resetPeakDecodeSpeed() {
+    _peakDecodeSpeed.q = 0;
+  }
+
+  /// [snapshotPeakDecodeSpeed] 必须在调用侧提前快照，避免被后续
+  /// _prefillAfterReply → resetPeakDecodeSpeed 清零
   Future<void> maybeReport({
     required double? prefillSpeed,
     required double? decodeSpeed,
+    required double snapshotPeakDecodeSpeed,
   }) async {
-    if (!enabled.q) return;
-    if (prefillSpeed == null || prefillSpeed <= 0) return;
-    if (decodeSpeed == null || decodeSpeed <= 0) return;
+    try {
+      if (!enabled.q) return;
+      if (prefillSpeed == null || prefillSpeed <= 0) return;
+      if (decodeSpeed == null || decodeSpeed <= 0) return;
 
-    final FileInfo? model = P.rwkv.latestModel.q;
-    if (model == null) return;
+      final FileInfo? model = P.rwkv.latestModel.q;
+      if (model == null) return;
 
-    // sha256 可能为空（部分权重没有），用 fileName 兜底
-    final String modelId = (model.sha256 != null && model.sha256!.isNotEmpty) ? model.sha256! : model.fileName;
-    if (modelId.isEmpty) return;
+      // sha256 可能为空（部分权重没有），用 fileName 兜底
+      final String modelId = (model.sha256 != null && model.sha256!.isNotEmpty) ? model.sha256! : model.fileName;
+      if (modelId.isEmpty) return;
 
-    // socName: 优先 native → frontendSocName → deviceModel → platform
-    String socName = P.rwkv.socName.q.isNotEmpty ? P.rwkv.socName.q : (P.rwkv.frontendSocName.q ?? "");
-    if (socName.isEmpty) socName = _deviceModel.q;
-    if (socName.isEmpty) socName = Platform.operatingSystem;
+      // socName: 优先 native → frontendSocName → macChipName → deviceModel → platform
+      String socName = P.rwkv.socName.q;
+      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
+        socName = P.rwkv.frontendSocName.q ?? "";
+      }
+      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
+        socName = _macChipName.q;
+      }
+      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
+        socName = _deviceModel.q;
+      }
+      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
+        socName = Platform.operatingSystem;
+      }
 
-    final String backendName = model.backend?.name ?? "";
-    if (backendName.isEmpty) return;
+      final String backendName = model.backend?.name ?? "";
+      if (backendName.isEmpty) return;
 
-    // 去重: 同一组合 24h 内只上传一次
-    final String dedupeKey = "${socName.toLowerCase()}|${modelId.toLowerCase()}|${backendName.toLowerCase()}";
-    final int now = DateTime.now().millisecondsSinceEpoch;
-    final Map<String, int> registry = Map.of(_registry.q);
-    final int? lastUpload = registry[dedupeKey];
-    if (lastUpload != null && (now - lastUpload) < 86400000) {
-      if (kDebugMode) qqq("telemetry: skipped (dedupe) key=$dedupeKey");
-      return;
+      final bool isBatch = P.chat.effectiveBatchEnabled.q;
+      final int batchCount = isBatch ? P.chat.effectiveBatchCount.q : 1;
+
+      // batch 模式使用整轮推理中的峰值 decode speed
+      final double effectiveDecodeSpeed = (batchCount > 1 && snapshotPeakDecodeSpeed > 0) ? snapshotPeakDecodeSpeed : decodeSpeed;
+      if (kDebugMode) {
+        qqq("telemetry: batchEnabled=$isBatch batchCount=$batchCount peak=$snapshotPeakDecodeSpeed passed=$decodeSpeed → effective=$effectiveDecodeSpeed");
+      }
+
+      // socBrand
+      String socBrandName = P.rwkv.socBrand.q != SocBrand.unknown
+          ? P.rwkv.socBrand.q.name
+          : (P.rwkv.frontendSocBrand.q?.name ?? "unknown");
+      if (socBrandName == "unknown" && Platform.isMacOS) {
+        socBrandName = "apple";
+      }
+
+      final int now = DateTime.now().millisecondsSinceEpoch;
+
+      final Map<String, dynamic> body = {
+        "schemaVersion": 1,
+        "installId": _installId.q,
+        "device": {
+          "socName": socName,
+          "socBrand": socBrandName,
+          "os": Platform.operatingSystem,
+          "osVersion": _stripOsVersion(P.app.osVersion.q),
+          "deviceModel": _deviceModel.q,
+          "totalMemoryMb": _totalMemoryMb.q > 0 ? _totalMemoryMb.q : null,
+        },
+        "app": {
+          "version": P.app.version.q,
+          "build": P.app.buildNumber.q,
+        },
+        "model": {
+          "name": model.name,
+          "fileName": model.fileName,
+          "sha256": modelId,
+          "sizeB": model.modelSize,
+          "quantization": model.quantization,
+          "backend": backendName,
+        },
+        "perf": {
+          "prefillSpeed": prefillSpeed,
+          "decodeSpeed": effectiveDecodeSpeed,
+          "isBatch": isBatch,
+          "batchCount": batchCount,
+        },
+        "clientTimestamp": now,
+      };
+
+      await _upload(body);
+    } catch (e) {
+      if (kDebugMode) qqw("telemetry.maybeReport error: $e");
     }
-
-    // 更新注册表
-    registry[dedupeKey] = now;
-    _registry.q = registry;
-    unawaited(_saveRegistry(registry));
-
-    final String socBrandName = P.rwkv.socBrand.q != SocBrand.unknown
-        ? P.rwkv.socBrand.q.name
-        : (P.rwkv.frontendSocBrand.q?.name ?? "unknown");
-
-    final Map<String, dynamic> body = {
-      "schemaVersion": 1,
-      "installId": _installId.q,
-      "device": {
-        "socName": socName,
-        "socBrand": socBrandName,
-        "os": Platform.operatingSystem,
-        "osVersion": _stripOsVersion(P.app.osVersion.q),
-        "deviceModel": _deviceModel.q,
-        "totalMemoryMb": _totalMemoryMb.q > 0 ? _totalMemoryMb.q : null,
-      },
-      "app": {
-        "version": P.app.version.q,
-        "build": P.app.buildNumber.q,
-      },
-      "model": {
-        "name": model.name,
-        "fileName": model.fileName,
-        "sha256": modelId,
-        "sizeB": model.modelSize,
-        "quantization": model.quantization,
-        "backend": backendName,
-      },
-      "perf": {
-        "prefillSpeed": prefillSpeed,
-        "decodeSpeed": decodeSpeed,
-      },
-      "clientTimestamp": now,
-    };
-
-    await _upload(body);
   }
 }
 
@@ -121,17 +148,11 @@ extension _$Telemetry on _Telemetry {
     }
     _installId.q = savedId;
 
-    // registry
-    final String? registryJson = sp.getString(_telemetryRegistryKey);
-    if (registryJson != null) {
-      try {
-        final Map<String, dynamic> decoded = jsonDecode(registryJson) as Map<String, dynamic>;
-        _registry.q = decoded.map((k, v) => MapEntry(k, (v as num).toInt()));
-      } catch (_) {}
-    }
-
     // 设备型号
     await _initDeviceModel();
+
+    // macOS 芯片名称 (e.g. "Apple M4 Pro")
+    await _initMacChipName();
 
     // 总物理内存
     await _initTotalMemory();
@@ -160,6 +181,19 @@ extension _$Telemetry on _Telemetry {
     }
   }
 
+  Future<void> _initMacChipName() async {
+    if (!Platform.isMacOS) return;
+    try {
+      final ProcessResult result = await Process.run("sysctl", ["-n", "machdep.cpu.brand_string"]);
+      final String chip = (result.stdout as String).trim();
+      if (chip.isNotEmpty) {
+        _macChipName.q = chip;
+      }
+    } catch (e) {
+      if (kDebugMode) qqw("telemetry: failed to get mac chip name: $e");
+    }
+  }
+
   Future<void> _initTotalMemory() async {
     try {
       if (Platform.isIOS) {
@@ -179,24 +213,22 @@ extension _$Telemetry on _Telemetry {
   }
 
   Future<void> _upload(Map<String, dynamic> body) async {
-    try {
-      if (kDebugMode) qqq("telemetry: uploading ${jsonEncode(body)}");
-      await _post(
-        "/public-api/telemetry/perf",
-        body: body,
-        ea: const [],
-        timeout: const Duration(seconds: 10),
-      );
-      if (kDebugMode) qqq("telemetry: upload done");
-    } catch (e) {
-      if (kDebugMode) qqw("telemetry: upload error: $e");
+    if (kDebugMode) qqq("telemetry: uploading to ${Config.domain}");
+    final Object? result = await _post(
+      "/public-api/telemetry/perf",
+      body: body,
+      ea: const [],
+      timeout: const Duration(seconds: 10),
+    );
+    if (kDebugMode) {
+      if (result != null) {
+        qqq("telemetry: upload ok → $result");
+      } else {
+        qqw("telemetry: upload returned null (request may have failed, check ${Config.domain})");
+      }
     }
   }
 
-  Future<void> _saveRegistry(Map<String, int> registry) async {
-    final sp = await SharedPreferences.getInstance();
-    await sp.setString(_telemetryRegistryKey, jsonEncode(registry));
-  }
 }
 
 String _stripOsVersion(String version) {
