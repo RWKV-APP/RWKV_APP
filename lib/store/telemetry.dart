@@ -14,6 +14,7 @@ class _Telemetry {
   late final _macChipName = qs<String>("");
   late final _gpuName = qs<String>("");
   late final _totalMemoryMb = qs<int>(0);
+  late final _totalVramMb = qs<int>(0);
   late final _peakDecodeSpeed = qs<double>(0);
 }
 
@@ -104,6 +105,7 @@ extension $Telemetry on _Telemetry {
           "osVersion": _stripOsVersion(P.app.osVersion.q),
           "deviceModel": _deviceModel.q,
           "totalMemoryMb": _totalMemoryMb.q > 0 ? _totalMemoryMb.q : null,
+          "totalVramMb": _totalVramMb.q > 0 ? _totalVramMb.q : null,
         },
         "app": {
           "version": P.app.version.q,
@@ -163,6 +165,9 @@ extension _$Telemetry on _Telemetry {
 
     // 总物理内存
     await _initTotalMemory();
+
+    // VRAM (Windows / Linux 独显显存)
+    await _initVram();
   }
 
   Future<void> _initDeviceModel() async {
@@ -256,12 +261,76 @@ extension _$Telemetry on _Telemetry {
           final int free = result[1];
           _totalMemoryMb.q = (used + free) ~/ (1024 * 1024);
         }
+      } else if (Platform.isMacOS) {
+        // sysctl hw.memsize 返回字节数，比 SysInfo 更可靠
+        final ProcessResult result = await Process.run("sysctl", ["-n", "hw.memsize"]);
+        final String output = (result.stdout as String).trim();
+        final int? bytes = int.tryParse(output);
+        if (bytes != null && bytes > 0) {
+          _totalMemoryMb.q = bytes ~/ (1024 * 1024);
+        }
       } else {
         final int total = SysInfo.getTotalPhysicalMemory();
         _totalMemoryMb.q = total ~/ (1024 * 1024);
       }
     } catch (e) {
       if (kDebugMode) qqw("telemetry: failed to get total memory: $e");
+    }
+  }
+
+  Future<void> _initVram() async {
+    // macOS 上内存统一共享，不区分 VRAM
+    if (!Platform.isWindows && !Platform.isLinux) return;
+    try {
+      if (Platform.isWindows) {
+        // wmic: AdapterRAM 返回字节数
+        final ProcessResult result = await Process.run("cmd", [
+          "/c",
+          "wmic path win32_videocontroller get AdapterRAM,Name /value",
+        ]);
+        final String output = (result.stdout as String).trim();
+        // 解析 AdapterRAM=... 和 Name=...，优先取独显
+        int bestVram = 0;
+        int currentRam = 0;
+        String currentName = "";
+        for (final line in output.split(RegExp(r'[\r\n]+'))) {
+          final trimmed = line.trim();
+          if (trimmed.startsWith("AdapterRAM=")) {
+            currentRam = int.tryParse(trimmed.substring(11).trim()) ?? 0;
+          } else if (trimmed.startsWith("Name=")) {
+            currentName = trimmed.substring(5).trim();
+            // 当遇到完整的一对时判断
+            if (currentRam > 0) {
+              final lower = currentName.toLowerCase();
+              if (lower.contains("nvidia") || lower.contains("radeon") || lower.contains("amd")) {
+                bestVram = currentRam;
+              } else if (bestVram == 0) {
+                bestVram = currentRam;
+              }
+            }
+            currentRam = 0;
+            currentName = "";
+          }
+        }
+        if (bestVram > 0) {
+          _totalVramMb.q = bestVram ~/ (1024 * 1024);
+          if (kDebugMode) qqq("telemetry: detected VRAM: ${_totalVramMb.q} MB");
+        }
+      } else if (Platform.isLinux) {
+        // nvidia-smi 获取 NVIDIA 显存
+        final ProcessResult result = await Process.run("bash", [
+          "-c",
+          "nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -1",
+        ]);
+        final String output = (result.stdout as String).trim();
+        final int? vramMb = int.tryParse(output);
+        if (vramMb != null && vramMb > 0) {
+          _totalVramMb.q = vramMb;
+          if (kDebugMode) qqq("telemetry: detected VRAM: $vramMb MB");
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) qqw("telemetry: failed to get VRAM: $e");
     }
   }
 
