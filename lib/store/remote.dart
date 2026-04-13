@@ -414,7 +414,7 @@ extension $Remote on _Remote {
   }
 
   Future<void> getFile({required FileInfo fileInfo}) async {
-    final url = downloadSource.q.prefix + fileInfo.raw + downloadSource.q.suffix;
+    final url = downloadSource.q.prefix + downloadSource.q.transformRaw(fileInfo.raw) + downloadSource.q.suffix;
     final path = _paths(fileInfo).q;
     if (path.isEmpty) {
       Alert.error(_modelsDirNotReadyMessage);
