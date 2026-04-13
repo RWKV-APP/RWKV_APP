@@ -1,3 +1,148 @@
+def fastlane_env_value(*keys)
+  keys.each do |key|
+    value = ENV[key]
+    next if value.nil?
+
+    stripped_value = value.strip
+    next if stripped_value.empty?
+
+    return stripped_value
+  end
+
+  nil
+end
+
+def fastlane_env_truthy?(*keys)
+  value = fastlane_env_value(*keys)
+  return false if value.nil?
+
+  %w[1 true yes on].include?(value.downcase)
+end
+
+def ios_testflight_groups(raw_groups)
+  return ['External'] if raw_groups.nil?
+
+  groups = raw_groups.is_a?(Array) ? raw_groups : raw_groups.to_s.split(',')
+  normalized_groups = groups.map { |item| item.to_s.strip }.reject { |item| item.empty? }
+  return ['External'] if normalized_groups.empty?
+
+  normalized_groups
+end
+
+def ios_release_notes
+  {
+    "default": {
+      whats_new: 'Bug fixes and UI improvements',
+    },
+    "zh-Hans": {
+      whats_new: '修复已知问题，提升用户体验',
+    },
+  }
+end
+
+def ios_upload_to_testflight_options(params, api_key)
+  groups = ios_testflight_groups(params[:groups])
+  upload_options = {
+    skip_submission: false,
+    distribute_external: groups.include?('External'),
+    notify_external_testers: true,
+    changelog: 'Bug fixes and UI improvements',
+    groups: groups,
+    localized_build_info: ios_release_notes,
+  }
+  upload_options[:api_key] = api_key unless api_key.nil?
+
+  upload_options
+end
+
+def ios_built_ipa_path
+  ipa_paths = Dir.glob(File.expand_path('../build/ios/ipa/*.ipa', __dir__))
+  if ipa_paths.empty?
+    UI.user_error!('未找到 flutter build ipa 生成的 IPA 文件')
+  end
+
+  ipa_paths.max_by { |path| File.mtime(path) }
+end
+
+def ios_resolve_app_store_connect_context
+  key_id = fastlane_env_value(
+    'APP_STORE_CONNECT_KEY_ID',
+    'APP_STORE_CONNECT_API_KEY_KEY_ID',
+    'ASC_KEY_ID',
+  )
+  issuer_id = fastlane_env_value(
+    'APP_STORE_CONNECT_ISSUER_ID',
+    'APP_STORE_CONNECT_API_KEY_ISSUER_ID',
+    'ASC_ISSUER_ID',
+  )
+  key_filepath = fastlane_env_value(
+    'APP_STORE_CONNECT_KEY_FILEPATH',
+    'APP_STORE_CONNECT_API_KEY_KEY_FILEPATH',
+    'ASC_KEY_FILEPATH',
+  )
+  key_content = fastlane_env_value(
+    'APP_STORE_CONNECT_PRIVATE_KEY',
+    'APP_STORE_CONNECT_API_KEY_KEY',
+    'APP_STORE_CONNECT_KEY_CONTENT',
+    'ASC_KEY_CONTENT',
+  )
+  return nil if key_id.nil? && issuer_id.nil? && key_filepath.nil? && key_content.nil?
+
+  if key_id.nil? || issuer_id.nil?
+    UI.user_error!('缺少 App Store Connect API key 的 key_id 或 issuer_id')
+  end
+
+  if key_filepath.nil? && key_content.nil?
+    UI.user_error!('缺少 App Store Connect API key 的 key 文件路径或 key 内容')
+  end
+
+  cleanup_dir = nil
+  resolved_key_filepath = key_filepath
+  if resolved_key_filepath.nil?
+    require 'tmpdir'
+
+    cleanup_dir = Dir.mktmpdir('asc_api_key')
+    resolved_key_filepath = File.join(cleanup_dir, "#{key_id}.p8")
+    File.write(resolved_key_filepath, key_content)
+    File.chmod(0o600, resolved_key_filepath)
+  else
+    resolved_key_filepath = File.expand_path(resolved_key_filepath)
+  end
+
+  unless File.exist?(resolved_key_filepath)
+    UI.user_error!("未找到 App Store Connect API key 文件: #{resolved_key_filepath}")
+  end
+
+  in_house = fastlane_env_truthy?(
+    'APP_STORE_CONNECT_IN_HOUSE',
+    'APP_STORE_CONNECT_API_KEY_IN_HOUSE',
+  )
+  api_key = app_store_connect_api_key(
+    key_id: key_id,
+    issuer_id: issuer_id,
+    key_filepath: resolved_key_filepath,
+    in_house: in_house,
+  )
+
+  {
+    api_key: api_key,
+    key_id: key_id,
+    issuer_id: issuer_id,
+    key_filepath: resolved_key_filepath,
+    cleanup_dir: cleanup_dir,
+  }
+end
+
+def ios_cleanup_app_store_connect_context(context)
+  return if context.nil?
+  return if context[:cleanup_dir].nil?
+  return unless Dir.exist?(context[:cleanup_dir])
+
+  require 'fileutils'
+
+  FileUtils.rm_rf(context[:cleanup_dir])
+end
+
 lane :all do |params|
   env = (params[:env] != 'chat' && params[:env] != nil && params[:env] != '') ? params[:env] : 'chat'
   increase_version = params[:increase_version] == false ? false : true
@@ -123,45 +268,40 @@ lane :all do |params|
 end
 
 lane :ios_upload do |params|
-  run_flutter_build_ipa()
-  build_app(
-    project: './ios/Runner.xcodeproj',
-    skip_build_archive: true,
-    archive_path: './build/ios/archive/Runner.xcarchive',
-  )
-  upload_to_testflight(
-    skip_submission: false,
-    distribute_external: params[:groups].include?('External'),
-    notify_external_testers: true,
-    changelog: 'Bug fixes and UI improvements',
-    groups: params[:groups],
-    localized_build_info: {
-      "default": {
-        whats_new: 'Bug fixes and UI improvements',
-      },
-      "zh-Hans": {
-        whats_new: '修复已知问题，提升用户体验',
-      },
-    },
-  )
+  app_store_connect_context = ios_resolve_app_store_connect_context()
+
+  if app_store_connect_context.nil?
+    UI.important('未检测到 App Store Connect API key，TestFlight 上传将依赖本机 fastlane 或 Xcode 登录状态')
+  else
+    UI.message('使用 App Store Connect API key 执行 TestFlight 上传')
+  end
+
+  begin
+    run_flutter_build_ipa()
+    ipa_path = ios_built_ipa_path()
+    upload_to_testflight(
+      ios_upload_to_testflight_options(params, app_store_connect_context&.[](:api_key)).merge(
+        ipa: ipa_path,
+      ),
+    )
+  ensure
+    ios_cleanup_app_store_connect_context(app_store_connect_context)
+  end
 end
 
 lane :ios_upload_to_testflight do |params|
-  upload_to_testflight(
-    skip_submission: false,
-    distribute_external: true,
-    notify_external_testers: true,
-    changelog: 'Bug fixes and UI improvements',
-    groups: ['External'],
-    localized_build_info: {
-      "default": {
-        whats_new: 'Bug fixes and UI improvements',
-      },
-      "zh-Hans": {
-        whats_new: '修复已知问题，提升用户体验',
-      },
-    },
-  )
+  app_store_connect_context = ios_resolve_app_store_connect_context()
+
+  begin
+    upload_to_testflight(
+      ios_upload_to_testflight_options(
+        { groups: params[:groups] || ['External'] },
+        app_store_connect_context&.[](:api_key),
+      ),
+    )
+  ensure
+    ios_cleanup_app_store_connect_context(app_store_connect_context)
+  end
 end
 
 lane :global_replace do |params|
