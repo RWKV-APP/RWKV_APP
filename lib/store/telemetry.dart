@@ -12,6 +12,7 @@ class _Telemetry {
   late final _installId = qs<String>("");
   late final _deviceModel = qs<String>("");
   late final _macChipName = qs<String>("");
+  late final _cpuName = qs<String>("");
   late final _gpuName = qs<String>("");
   late final _totalMemoryMb = qs<int>(0);
   late final _totalVramMb = qs<int>(0);
@@ -55,7 +56,7 @@ extension $Telemetry on _Telemetry {
       final String modelId = (model.sha256 != null && model.sha256!.isNotEmpty) ? model.sha256! : model.fileName;
       if (modelId.isEmpty) return;
 
-      // socName: 优先 native → frontendSocName → macChipName → deviceModel → platform
+      // socName: 优先 native → frontendSocName → macChipName → GPU → CPU → deviceModel → platform
       String socName = P.rwkv.socName.q;
       if (socName.isEmpty || socName.toLowerCase() == "unknown") {
         socName = P.rwkv.frontendSocName.q ?? "";
@@ -67,6 +68,9 @@ extension $Telemetry on _Telemetry {
         socName = _gpuName.q;
       }
       if (socName.isEmpty || socName.toLowerCase() == "unknown") {
+        socName = _cpuName.q;
+      }
+      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
         socName = _deviceModel.q;
       }
       if (socName.isEmpty || socName.toLowerCase() == "unknown") {
@@ -76,19 +80,32 @@ extension $Telemetry on _Telemetry {
       final String backendName = model.backend?.name ?? "";
       if (backendName.isEmpty) return;
 
+      final String lowerSocName = socName.toLowerCase();
+      final bool socNameLooksGeneric =
+          lowerSocName.isEmpty || lowerSocName == "unknown" || socName == _deviceModel.q || socName == Platform.operatingSystem;
+      if (backendName == "webrwkv" && _gpuName.q.isNotEmpty) {
+        if (socNameLooksGeneric || socName == _cpuName.q) {
+          socName = _gpuName.q;
+        }
+      } else if (_cpuName.q.isNotEmpty) {
+        if (socNameLooksGeneric || socName == _gpuName.q) {
+          socName = _cpuName.q;
+        }
+      }
+
       final bool isBatch = P.chat.effectiveBatchEnabled.q;
       final int batchCount = isBatch ? P.chat.effectiveBatchCount.q : 1;
 
       // batch 模式使用整轮推理中的峰值 decode speed
       final double effectiveDecodeSpeed = (batchCount > 1 && snapshotPeakDecodeSpeed > 0) ? snapshotPeakDecodeSpeed : decodeSpeed;
       if (kDebugMode) {
-        qqq("telemetry: batchEnabled=$isBatch batchCount=$batchCount peak=$snapshotPeakDecodeSpeed passed=$decodeSpeed → effective=$effectiveDecodeSpeed");
+        qqq(
+          "telemetry: batchEnabled=$isBatch batchCount=$batchCount peak=$snapshotPeakDecodeSpeed passed=$decodeSpeed → effective=$effectiveDecodeSpeed",
+        );
       }
 
       // socBrand
-      String socBrandName = P.rwkv.socBrand.q != SocBrand.unknown
-          ? P.rwkv.socBrand.q.name
-          : (P.rwkv.frontendSocBrand.q?.name ?? "unknown");
+      String socBrandName = P.rwkv.socBrand.q != SocBrand.unknown ? P.rwkv.socBrand.q.name : (P.rwkv.frontendSocBrand.q?.name ?? "unknown");
       if (socBrandName == "unknown" && Platform.isMacOS) {
         socBrandName = "apple";
       }
@@ -99,7 +116,17 @@ extension $Telemetry on _Telemetry {
           socBrandName = "nvidia";
         } else if (gpuLower.contains("radeon") || gpuLower.contains("amd")) {
           socBrandName = "amd";
-        } else if (gpuLower.contains("intel")) {
+        } else if (gpuLower.contains("intel") || gpuLower.contains("arc")) {
+          socBrandName = "intel";
+        }
+      }
+      if (socBrandName == "unknown" && _cpuName.q.isNotEmpty) {
+        final String cpuLower = _cpuName.q.toLowerCase();
+        if (cpuLower.contains("snapdragon") || cpuLower.contains("qualcomm")) {
+          socBrandName = "snapdragon";
+        } else if (cpuLower.contains("amd") || cpuLower.contains("ryzen")) {
+          socBrandName = "amd";
+        } else if (cpuLower.contains("intel")) {
           socBrandName = "intel";
         }
       }
@@ -115,6 +142,8 @@ extension $Telemetry on _Telemetry {
           "os": Platform.operatingSystem,
           "osVersion": _stripOsVersion(P.app.osVersion.q),
           "deviceModel": _deviceModel.q,
+          "cpuName": _cpuName.q.isNotEmpty ? _cpuName.q : null,
+          "gpuName": _gpuName.q.isNotEmpty ? _gpuName.q : null,
           "totalMemoryMb": _totalMemoryMb.q > 0 ? _totalMemoryMb.q : null,
           "totalVramMb": _totalVramMb.q > 0 ? _totalVramMb.q : null,
         },
@@ -171,6 +200,9 @@ extension _$Telemetry on _Telemetry {
     // macOS 芯片名称 (e.g. "Apple M4 Pro")
     await _initMacChipName();
 
+    // Windows / Linux / macOS CPU 名称
+    await _initCpuName();
+
     // Windows / Linux GPU 名称 (e.g. "NVIDIA GeForce RTX 3080")
     await _initGpuName();
 
@@ -208,12 +240,53 @@ extension _$Telemetry on _Telemetry {
     if (!Platform.isMacOS) return;
     try {
       final ProcessResult result = await Process.run("sysctl", ["-n", "machdep.cpu.brand_string"]);
-      final String chip = (result.stdout as String).trim();
+      final String chip = _normalizeHardwareName((result.stdout as String).trim());
       if (chip.isNotEmpty) {
         _macChipName.q = chip;
+        _cpuName.q = chip;
       }
     } catch (e) {
       if (kDebugMode) qqw("telemetry: failed to get mac chip name: $e");
+    }
+  }
+
+  Future<void> _initCpuName() async {
+    try {
+      if (Platform.isWindows) {
+        final ProcessResult powerShellResult = await Process.run("powershell", [
+          "-NoProfile",
+          "-Command",
+          "(Get-CimInstance Win32_Processor | Select-Object -First 1 -ExpandProperty Name)",
+        ]);
+        final String powerShellCpu = _firstNonEmptyLine(powerShellResult.stdout as String);
+        if (powerShellCpu.isNotEmpty) {
+          _cpuName.q = powerShellCpu;
+          if (kDebugMode) qqq("telemetry: detected CPU: ${_cpuName.q}");
+          return;
+        }
+
+        final ProcessResult wmicResult = await Process.run("cmd", [
+          "/c",
+          "wmic cpu get name /value",
+        ]);
+        final String cpu = _extractFirstWmicValue(wmicResult.stdout as String, "Name=");
+        if (cpu.isEmpty) return;
+        _cpuName.q = cpu;
+        if (kDebugMode) qqq("telemetry: detected CPU: ${_cpuName.q}");
+        return;
+      }
+
+      if (!Platform.isLinux) return;
+      final ProcessResult result = await Process.run("bash", [
+        "-c",
+        "lscpu | grep -i 'Model name:' | head -1 | sed 's/Model name:\\s*//'",
+      ]);
+      final String cpu = _firstNonEmptyLine(result.stdout as String);
+      if (cpu.isEmpty) return;
+      _cpuName.q = cpu;
+      if (kDebugMode) qqq("telemetry: detected CPU: ${_cpuName.q}");
+    } catch (e) {
+      if (kDebugMode) qqw("telemetry: failed to get CPU name: $e");
     }
   }
 
@@ -221,40 +294,45 @@ extension _$Telemetry on _Telemetry {
     if (!Platform.isWindows && !Platform.isLinux) return;
     try {
       if (Platform.isWindows) {
-        // wmic: 兼容 Windows 10 PowerShell 5.1，无需高版本语法
-        final ProcessResult result = await Process.run("cmd", [
+        final ProcessResult powerShellResult = await Process.run("powershell", [
+          "-NoProfile",
+          "-Command",
+          "Get-CimInstance Win32_VideoController | Select-Object -ExpandProperty Name",
+        ]);
+        final String powerShellGpu = _pickPreferredGpuName(
+          (powerShellResult.stdout as String).split(RegExp(r'[\r\n]+')),
+        );
+        if (powerShellGpu.isNotEmpty) {
+          _gpuName.q = powerShellGpu;
+          if (kDebugMode) qqq("telemetry: detected GPU: ${_gpuName.q}");
+          return;
+        }
+
+        final ProcessResult wmicResult = await Process.run("cmd", [
           "/c",
           "wmic path win32_videocontroller get name /value",
         ]);
-        final String output = (result.stdout as String).trim();
-        // 输出格式: Name=NVIDIA GeForce RTX 3080\r\nName=Intel UHD ...
-        // 优先选独显（NVIDIA / AMD / Radeon），排除集显
-        String bestGpu = "";
-        for (final line in output.split(RegExp(r'[\r\n]+'))) {
-          final trimmed = line.trim();
+        final List<String> candidates = [];
+        for (final String line in (wmicResult.stdout as String).split(RegExp(r'[\r\n]+'))) {
+          final String trimmed = line.trim();
           if (!trimmed.startsWith("Name=")) continue;
-          final name = trimmed.substring(5).trim();
+          final String name = _normalizeHardwareName(trimmed.substring(5));
           if (name.isEmpty) continue;
-          if (bestGpu.isEmpty) bestGpu = name;
-          final lower = name.toLowerCase();
-          if (lower.contains("nvidia") || lower.contains("radeon") || lower.contains("amd")) {
-            bestGpu = name;
-            break;
-          }
+          candidates.add(name);
         }
-        if (bestGpu.isNotEmpty) {
-          _gpuName.q = _stripGpuPrefix(bestGpu);
-          if (kDebugMode) qqq("telemetry: detected GPU: ${_gpuName.q}");
-        }
+        final String bestGpu = _pickPreferredGpuName(candidates);
+        if (bestGpu.isEmpty) return;
+        _gpuName.q = bestGpu;
+        if (kDebugMode) qqq("telemetry: detected GPU: ${_gpuName.q}");
       } else if (Platform.isLinux) {
         // lspci: 找 VGA / 3D controller
         final ProcessResult result = await Process.run("bash", [
           "-c",
           "lspci | grep -iE 'VGA|3D' | head -1 | sed 's/.*: //'",
         ]);
-        final String gpu = (result.stdout as String).trim();
+        final String gpu = _firstNonEmptyLine(result.stdout as String);
         if (gpu.isNotEmpty) {
-          _gpuName.q = _stripGpuPrefix(gpu);
+          _gpuName.q = gpu;
           if (kDebugMode) qqq("telemetry: detected GPU: ${_gpuName.q}");
         }
       }
@@ -263,16 +341,51 @@ extension _$Telemetry on _Telemetry {
     }
   }
 
-  /// 去掉冗余品牌前缀：
-  /// "NVIDIA GeForce RTX 3080" → "RTX 3080"
-  /// "AMD Radeon RX 7900 XTX" → "RX 7900 XTX"
-  String _stripGpuPrefix(String name) {
-    String stripped = name;
-    // 依次移除品牌关键词
-    for (final String prefix in ["NVIDIA", "GeForce", "AMD", "Radeon"]) {
-      stripped = stripped.replaceFirst(RegExp('^$prefix\\s*', caseSensitive: false), '');
+  String _normalizeHardwareName(String value) {
+    return value.replaceAll(RegExp(r'\s+'), ' ').replaceAll('"', '').trim();
+  }
+
+  String _firstNonEmptyLine(String output) {
+    for (final String line in output.split(RegExp(r'[\r\n]+'))) {
+      final String normalized = _normalizeHardwareName(line);
+      if (normalized.isEmpty) continue;
+      return normalized;
     }
-    return stripped.trim().isEmpty ? name : stripped.trim();
+    return "";
+  }
+
+  String _extractFirstWmicValue(String output, String prefix) {
+    for (final String line in output.split(RegExp(r'[\r\n]+'))) {
+      final String trimmed = line.trim();
+      if (!trimmed.startsWith(prefix)) continue;
+      final String normalized = _normalizeHardwareName(trimmed.substring(prefix.length));
+      if (normalized.isEmpty) continue;
+      return normalized;
+    }
+    return "";
+  }
+
+  bool _isPreferredGpuName(String lower) {
+    if (lower.contains("nvidia")) return true;
+    if (lower.contains("radeon") || lower.contains("amd")) return true;
+    if (lower.contains("intel") && lower.contains("arc")) return true;
+    return false;
+  }
+
+  String _pickPreferredGpuName(Iterable<String> candidates) {
+    String bestGpu = "";
+    for (final String candidate in candidates) {
+      final String normalized = _normalizeHardwareName(candidate);
+      if (normalized.isEmpty) continue;
+      if (bestGpu.isEmpty) {
+        bestGpu = normalized;
+      }
+      final String lower = normalized.toLowerCase();
+      if (_isPreferredGpuName(lower)) {
+        return normalized;
+      }
+    }
+    return bestGpu;
   }
 
   Future<void> _initTotalMemory() async {
@@ -319,8 +432,8 @@ extension _$Telemetry on _Telemetry {
         return;
       }
 
-      // nvidia-smi 失败时 Windows 回退到 wmic（仅对 ≤4GB 显卡准确）
-      if (Platform.isWindows) {
+      // nvidia-smi 失败时仅对 NVIDIA 保留 wmic 回退，避免 AMD / Intel 设备写入误导性的 2GB VRAM
+      if (Platform.isWindows && _gpuName.q.toLowerCase().contains("nvidia")) {
         final ProcessResult wmicResult = await Process.run("cmd", [
           "/c",
           "wmic path win32_videocontroller get AdapterRAM,Name /value",
@@ -373,7 +486,6 @@ extension _$Telemetry on _Telemetry {
       }
     }
   }
-
 }
 
 String _stripOsVersion(String version) {
