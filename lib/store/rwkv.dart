@@ -1096,7 +1096,7 @@ extension $RWKV on _RWKV {
 
     final currentModel = P.rwkv.latestModel.q;
 
-    final batchAllowed = currentModel!.tags.contains("batch");
+    final batchAllowed = currentModel!.supportsBatchInference;
 
     if (!batchAllowed) {
       Alert.info(S.current.this_model_does_not_support_batch_inference);
@@ -1197,7 +1197,7 @@ extension $RWKV on _RWKV {
       Alert.error(e.toString());
       return;
     }
-    final batchAllowed = fileInfo.tags.contains("batch");
+    final batchAllowed = fileInfo.supportsBatchInference;
     if (!batchAllowed) {
       if (P.chat.responseStyle.q.activeCount > 1) {
         P.chat.resetResponseStyle();

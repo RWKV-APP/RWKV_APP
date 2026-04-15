@@ -340,24 +340,24 @@ class _ModelsInConfigFile extends ConsumerWidget {
   ///
   /// 只要没用 CPU 就排前面
   int _compare(FileInfo a, FileInfo b) {
-    final aHasCoreML = a.tags.contains("coreml");
-    final bHasCoreML = b.tags.contains("coreml");
+    final aHasCoreML = a.hasEffectiveTag("coreml");
+    final bHasCoreML = b.hasEffectiveTag("coreml");
     if (aHasCoreML != bHasCoreML) return aHasCoreML ? -1 : 1;
 
-    final aHasMLX = a.tags.contains("mlx");
-    final bHasMLX = b.tags.contains("mlx");
+    final aHasMLX = a.hasEffectiveTag("mlx");
+    final bHasMLX = b.hasEffectiveTag("mlx");
     if (aHasMLX != bHasMLX) return aHasMLX ? -1 : 1;
 
-    final aHasNpu = a.tags.contains("npu");
-    final bHasNpu = b.tags.contains("npu");
+    final aHasNpu = a.hasEffectiveTag("npu");
+    final bHasNpu = b.hasEffectiveTag("npu");
     if (aHasNpu != bHasNpu) return aHasNpu ? -1 : 1;
 
-    final aHasGpu = a.tags.contains("gpu");
-    final bHasGpu = b.tags.contains("gpu");
+    final aHasGpu = a.hasEffectiveTag("gpu");
+    final bHasGpu = b.hasEffectiveTag("gpu");
     if (aHasGpu != bHasGpu) return aHasGpu ? -1 : 1;
 
-    final aHasWebRWKV = a.tags.contains("webRwkv");
-    final bHasWebRWKV = b.tags.contains("webRwkv");
+    final aHasWebRWKV = a.hasEffectiveTag("webRwkv");
+    final bHasWebRWKV = b.hasEffectiveTag("webRwkv");
     if (aHasWebRWKV != bHasWebRWKV) return aHasWebRWKV ? -1 : 1;
 
     return (b.modelSize ?? 0).compareTo(a.modelSize ?? 0);

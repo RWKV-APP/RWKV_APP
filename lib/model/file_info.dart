@@ -173,6 +173,66 @@ class FileInfo extends Equatable {
     return platformSupported && socSupported;
   }
 
+  bool hasTag(String tag) {
+    final normalizedTag = tag.toLowerCase();
+    return tags.any((e) => e.toLowerCase() == normalizedTag);
+  }
+
+  bool get _shouldTreatLlamacppGpuAsCpuOnAndroidPhone {
+    if (!Platform.isAndroid) return false;
+    if (backend != Backend.llamacpp) return false;
+    if (!hasTag("gpu")) return false;
+
+    final width = P.app.screenWidth.q;
+    final height = P.app.screenHeight.q;
+    if (width <= 0 || height <= 0) return true;
+
+    final shortestSide = width < height ? width : height;
+    return shortestSide < 600;
+  }
+
+  List<String> get effectiveTags {
+    if (!_shouldTreatLlamacppGpuAsCpuOnAndroidPhone) return tags;
+
+    final result = <String>[];
+    var insertedCpu = false;
+
+    for (final tag in tags) {
+      final lowerTag = tag.toLowerCase();
+
+      if (lowerTag == "gpu") {
+        if (!insertedCpu) {
+          result.add("cpu");
+          insertedCpu = true;
+        }
+        continue;
+      }
+
+      if (lowerTag == "batch") {
+        continue;
+      }
+
+      if (lowerTag == "cpu") {
+        insertedCpu = true;
+      }
+
+      result.add(tag);
+    }
+
+    if (!insertedCpu) {
+      result.add("cpu");
+    }
+
+    return result;
+  }
+
+  bool hasEffectiveTag(String tag) {
+    final normalizedTag = tag.toLowerCase();
+    return effectiveTags.any((e) => e.toLowerCase() == normalizedTag);
+  }
+
+  bool get supportsBatchInference => hasEffectiveTag("batch");
+
   bool get isReasoning => tags.contains(Config.reasonTag);
 
   WorldType? get worldType => switch (fileName) {

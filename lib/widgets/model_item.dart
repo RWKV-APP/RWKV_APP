@@ -150,7 +150,7 @@ class ModelItem extends ConsumerWidget {
       return;
     }
 
-    final batchAllowed = fileInfo.tags.contains("batch");
+    final batchAllowed = fileInfo.supportsBatchInference;
     if (!batchAllowed) {
       if (P.chat.responseStyle.q.activeCount > 1) {
         P.chat.resetResponseStyle();
@@ -160,7 +160,7 @@ class ModelItem extends ConsumerWidget {
       }
     }
 
-    final tags = fileInfo.tags;
+    final tags = fileInfo.effectiveTags;
 
     final isTranslate = tags.contains("translate");
     final modelID = P.rwkv.findModelIDByWeightType(weightType: .chat);
@@ -538,12 +538,13 @@ class _Tags extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final quantization = fileInfo.quantization?.toUpperCase();
-    final tags = fileInfo.tags.where((e) => !_blockedTags.contains(e.toLowerCase()));
+    final tags = fileInfo.effectiveTags.where((e) => !_blockedTags.contains(e.toLowerCase()));
     final date = fileInfo.dateDisplayString;
     List<String> hiddenTags = [];
 
-    if (Platform.isIOS || Platform.isMacOS) hiddenTags = ["gpu"];
+    if ((Platform.isIOS || Platform.isMacOS) && theme.platform != TargetPlatform.android) hiddenTags = ["gpu"];
 
     return Wrap(
       spacing: 4,

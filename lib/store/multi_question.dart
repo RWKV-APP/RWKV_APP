@@ -87,6 +87,12 @@ extension $MultiQuestion on _MultiQuestion {
     ];
     if (nonEmpty.isEmpty) return;
 
+    final currentModel = P.rwkv.latestModel.q;
+    if (currentModel == null || !currentModel.supportsBatchInference) {
+      Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
+      return;
+    }
+
     // 检查模型是否支持 batch
     final List<int> supported = P.rwkv.supportedBatchSizes.q;
     if (supported.isEmpty) {
@@ -125,6 +131,12 @@ extension $MultiQuestion on _MultiQuestion {
       return;
     }
 
+    final currentModel = P.rwkv.latestModel.q;
+    if (currentModel == null || !currentModel.supportsBatchInference) {
+      Alert.warning(S.current.this_model_does_not_support_batch_inference, position: AlertPosition.bottom);
+      return;
+    }
+
     if (!checkModelSelection(preferredDemoType: .chat)) return;
 
     if (P.rwkv.generating.q) {
@@ -133,8 +145,6 @@ extension $MultiQuestion on _MultiQuestion {
     }
 
     final thinkingMode = P.rwkv.thinkingMode.q;
-    final currentModel = P.rwkv.latestModel.q;
-
     // 1. 构建 batch 格式的用户消息 content
     final String userBatchContent = effectiveQuestions.join(Config.batchMarker) + Config.batchMarker + "-1";
     final String storedContent = userBatchContent + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
@@ -206,7 +216,7 @@ extension $MultiQuestion on _MultiQuestion {
       isMine: false,
       changing: true,
       paused: false,
-      modelName: currentModel?.name,
+      modelName: currentModel.name,
       runningMode: thinkingMode.toString(),
       rawDecodeParams: P.chat._resolveDecodeParamsSnapshotRaw(),
     );

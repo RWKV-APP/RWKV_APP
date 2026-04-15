@@ -132,7 +132,7 @@ class _AskQuestion {
 
   late final maxParallelCount = qp((ref) {
     final latestModel = ref.watch(P.rwkv.latestModel);
-    final batchAllowed = latestModel?.tags.contains("batch") ?? false;
+    final batchAllowed = latestModel?.supportsBatchInference ?? false;
     final batchEnabled = ref.watch(P.chat.batchEnabled);
     final targetQuestionCount = ref.watch(this.targetQuestionCount);
     if (!batchAllowed) return 1;
@@ -445,9 +445,7 @@ extension _$AskQuestion on _AskQuestion {
       }
       if (getIsBatch(botContent)) {
         final (batch, _, _, selectedBatch) = getBatchInfo(botContent);
-        final int slot = selectedBatch != null && selectedBatch >= 0 && selectedBatch < batch.length
-            ? selectedBatch
-            : 0;
+        final int slot = selectedBatch != null && selectedBatch >= 0 && selectedBatch < batch.length ? selectedBatch : 0;
         botContent = batch[slot].trim();
       }
 
@@ -476,7 +474,7 @@ extension _$AskQuestion on _AskQuestion {
     required int targetQuestionCount,
   }) {
     final latestModel = P.rwkv.latestModel.q;
-    final batchAllowed = latestModel?.tags.contains("batch") ?? false;
+    final batchAllowed = latestModel?.supportsBatchInference ?? false;
     if (!batchAllowed) return 1;
     if (targetQuestionCount <= 1) return 1;
     return targetQuestionCount;

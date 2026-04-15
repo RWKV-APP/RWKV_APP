@@ -26,7 +26,7 @@ class BatchButton extends ConsumerWidget {
     final generating = ref.watch(P.rwkv.generating);
     final loaded = ref.watch(P.rwkv.loaded);
     final latestModel = ref.watch(P.rwkv.latestModel);
-    final batchAllowed = latestModel?.tags.contains("batch") ?? false;
+    final batchAllowed = latestModel?.supportsBatchInference ?? false;
     final batchEnabled = ref.watch(P.chat.effectiveBatchEnabled);
     final batchCount = ref.watch(P.chat.effectiveBatchCount);
     final canEnable = loaded && !loading && !generating && batchAllowed;

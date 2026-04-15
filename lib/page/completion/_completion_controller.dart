@@ -197,7 +197,7 @@ class CompletionController {
   void onModelSelectTap() async {
     await ModelSelector.show();
     if (CompletionState.batchSettings.q.enabled) {
-      final batch = CompletionState.model.q?.tags.contains('batch') == true;
+      final batch = CompletionState.model.q?.supportsBatchInference == true;
       if (!batch) {
         CompletionState.batchSettings.q = CompletionState.batchSettings.q.copyWith(enabled: false);
       }
@@ -205,7 +205,7 @@ class CompletionController {
   }
 
   void onParallelTap(BuildContext ctx) async {
-    final batch = CompletionState.model.q?.tags.contains('batch') == true;
+    final batch = CompletionState.model.q?.supportsBatchInference == true;
     if (!batch) {
       Alert.warning(S.current.this_model_does_not_support_batch_inference);
       return;

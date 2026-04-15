@@ -26,7 +26,7 @@
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "cpu"],
         "date": 1769846091
       },
       {
@@ -37,7 +37,7 @@
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "cpu"],
         "date": 1770699426
       },
       {
@@ -48,7 +48,7 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "cpu"],
         "date": 1773068705
       },
       {
@@ -60,7 +60,7 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "cpu"],
         "date": 1747374843
       },
       {
@@ -71,7 +71,7 @@
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "cpu"],
         "date": 1773848855
       },
       {
@@ -84,7 +84,7 @@
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu", "batch"],
+        "tags": ["reason", "cpu"],
         "date": 1772442857
       },
       {
@@ -279,7 +279,7 @@
         "quantization": "Q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["gpu", "translate", "batch"],
+        "tags": ["cpu", "translate"],
         "date": 1754302471
       },
       {
@@ -302,7 +302,7 @@
         "quantization": "fp16",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["gpu", "translate", "batch"],
+        "tags": ["cpu", "translate"],
         "date": 910442656
       },
       {
@@ -409,7 +409,7 @@
         "quantization": "q4_k_m",
         "platforms": ["macos", "linux", "android", "ios", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["gpu", "translate", "batch"],
+        "tags": ["cpu", "translate"],
         "date": 1768876099
       },
       {
@@ -1376,7 +1376,7 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu"],
+        "tags": ["reason", "cpu"],
         "date": 1768913699
       },
       {
@@ -1495,7 +1495,7 @@
         "quantization": "Q6_K",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu"],
+        "tags": ["reason", "cpu"],
         "date": 1768915123
       },
       {
@@ -1552,7 +1552,7 @@
         "quantization": "q8_0",
         "platforms": ["macos", "linux", "android", "ios", "windows", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["reason", "gpu"],
+        "tags": ["reason", "cpu"],
         "date": 1769511207
       },
       {
@@ -1770,7 +1770,7 @@
         "quantization": "fp16",
         "platforms": ["android", "ios", "macos", "windows", "linux", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["gpu", "core", "spark"],
+        "tags": ["cpu", "core", "spark"],
         "date": 1755582128
       },
       {
@@ -1888,7 +1888,7 @@
         "quantization": "q8_0",
         "platforms": ["android", "ios", "macos", "windows", "linux", "windows"],
         "backends": ["llamacpp"],
-        "tags": ["gpu", "core", "spark"],
+        "tags": ["cpu", "core", "spark"],
         "date": 1756702874
       },
       {

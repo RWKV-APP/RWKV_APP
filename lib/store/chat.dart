@@ -97,6 +97,11 @@ class _Chat {
   });
 
   late final effectiveBatchEnabled = qp((ref) {
+    final currentModel = ref.watch(P.rwkv.latestModel);
+    if (!(currentModel?.supportsBatchInference ?? false)) {
+      return false;
+    }
+
     final responseStyle = ref.watch(this.responseStyle);
     if (responseStyle.activeCount > 1) {
       return true;
@@ -105,6 +110,11 @@ class _Chat {
   });
 
   late final effectiveBatchCount = qp((ref) {
+    final currentModel = ref.watch(P.rwkv.latestModel);
+    if (!(currentModel?.supportsBatchInference ?? false)) {
+      return 1;
+    }
+
     final responseStyle = ref.watch(this.responseStyle);
     if (responseStyle.activeCount > 1) {
       return responseStyle.activeCount;
@@ -394,7 +404,7 @@ extension $Chat on _Chat {
     if (model == null) {
       return false;
     }
-    if (!model.tags.contains('batch')) {
+    if (!model.supportsBatchInference) {
       return false;
     }
 
@@ -1381,14 +1391,14 @@ extension $Chat on _Chat {
       );
       P.rwkv.sendMessages(
         singleRouteHistory,
-        batchSize: batchEnabled.q ? batchCount.q : 1,
+        batchSize: effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
         forceChinese: forceChinese,
       );
       _checkSensitive(raw);
       return;
     }
 
-    final batchSize = inSee ? 1 : (batchEnabled.q ? batchCount.q : 1);
+    final batchSize = inSee ? 1 : (effectiveBatchEnabled.q ? effectiveBatchCount.q : 1);
     P.rwkv.sendMessages(history, batchSize: batchSize, forceChinese: forceChinese);
 
     _checkSensitive(raw);
@@ -1429,13 +1439,13 @@ extension $Chat on _Chat {
     if (responseStyleResumeRequest != null) {
       P.rwkv.sendMessages(
         responseStyleResumeRequest.messages,
-        batchSize: responseStyleResumeRequest.slotConfigs == null && batchEnabled.q ? batchCount.q : 1,
+        batchSize: responseStyleResumeRequest.slotConfigs == null && effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
         overrideBatchSlotConfigs: responseStyleResumeRequest.slotConfigs,
       );
       _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
       return;
     }
-    P.rwkv.sendMessages(_history(), batchSize: batchEnabled.q ? batchCount.q : 1);
+    P.rwkv.sendMessages(_history(), batchSize: effectiveBatchEnabled.q ? effectiveBatchCount.q : 1);
     _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
   }
 
@@ -1450,6 +1460,20 @@ extension $Chat on _Chat {
         return;
       }
     }
+
+    final currentModel = P.rwkv.latestModel.q;
+    if (value && !(currentModel?.supportsBatchInference ?? false)) {
+      batchEnabled.q = false;
+      batchCount.q = Argument.batchCount.defaults.toInt();
+      if (triggeredByResponseStyle && responseStyle.q.activeCount > 1) {
+        responseStyle.q = const ResponseStyleState();
+      }
+      if (!triggeredByResponseStyle) {
+        Alert.info(S.current.this_model_does_not_support_batch_inference);
+      }
+      return;
+    }
+
     batchEnabled.q = value;
     if (!value) {
       batchCount.q = Argument.batchCount.defaults.toInt();
@@ -1531,7 +1555,7 @@ extension $Chat on _Chat {
       P.rwkv.clearStates();
       await P.rwkv.loadChat(fileInfo: fileInfo);
 
-      final batchAllowed = fileInfo.tags.contains("batch");
+      final batchAllowed = fileInfo.supportsBatchInference;
       if (!batchAllowed) {
         if (responseStyle.q.activeCount > 1) {
           resetResponseStyle();
@@ -1706,6 +1730,16 @@ extension _$Chat on _Chat {
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {
+    final currentModel = P.rwkv.latestModel.q;
+    if (currentModel != null && !currentModel.supportsBatchInference) {
+      batchEnabled.q = false;
+      batchCount.q = Argument.batchCount.defaults.toInt();
+      if (responseStyle.q.activeCount > 1) {
+        responseStyle.q = const ResponseStyleState();
+      }
+      return;
+    }
+
     if (supportedBatchSizes.isEmpty) {
       batchEnabled.q = false;
       batchCount.q = Argument.batchCount.defaults.toInt();
@@ -1886,11 +1920,13 @@ extension _$Chat on _Chat {
       ),
     );
 
-    unawaited(P.telemetry.maybeReport(
-      prefillSpeed: finalPrefillSpeed,
-      decodeSpeed: finalDecodeSpeed,
-      snapshotPeakDecodeSpeed: snapshotPeak,
-    ));
+    unawaited(
+      P.telemetry.maybeReport(
+        prefillSpeed: finalPrefillSpeed,
+        decodeSpeed: finalDecodeSpeed,
+        snapshotPeakDecodeSpeed: snapshotPeak,
+      ),
+    );
   }
 
   Future<void> _onFocusNodeChanged() async {
@@ -2004,11 +2040,13 @@ extension _$Chat on _Chat {
 
     _prefillAfterReply();
 
-    unawaited(P.telemetry.maybeReport(
-      prefillSpeed: finalPrefillSpeed,
-      decodeSpeed: finalDecodeSpeed,
-      snapshotPeakDecodeSpeed: snapshotPeak,
-    ));
+    unawaited(
+      P.telemetry.maybeReport(
+        prefillSpeed: finalPrefillSpeed,
+        decodeSpeed: finalDecodeSpeed,
+        snapshotPeakDecodeSpeed: snapshotPeak,
+      ),
+    );
   }
 
   static final _thinkTagRegex = RegExp(r'<think>[\s\S]*?</think>');
