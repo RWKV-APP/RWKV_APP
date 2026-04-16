@@ -835,8 +835,7 @@ extension _$App on _App {
     // 构建查询参数，使用 List 来支持多个相同的 key
     // NestJS 的 @Query('key') 可以接受数组，格式为 ?key=value1&key=value2
     final queryParts = keys.map((key) => 'key=${Uri.encodeComponent(key)}').toList();
-    String queryString = queryParts.join('&');
-    queryString = Uri.encodeComponent(queryString);
+    final queryString = queryParts.join('&');
 
     // 构建完整的 URL，包含查询参数
     final baseUrl = "${Config.domain}/distributions/latest";
