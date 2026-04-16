@@ -728,5 +728,7 @@
   "multi_question_input_hint": "输入你的问题...",
   "multi_question_no_answer": "暂无回答",
   "multi_question_continue": "继续对话",
-  "multi_question_send_all": "全部发送"
+  "multi_question_send_all": "全部发送",
+  "enable_system_proxy": "启用系统代理",
+  "other_settings": "其他设置"
 }

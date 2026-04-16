@@ -889,10 +889,10 @@ class S {
     );
   }
 
-  /// `已自动切换为今风格`
+  /// `已自动切换为「今」风格`
   String get response_style_auto_switched_to_jin {
     return Intl.message(
-      '已自动切换为今风格',
+      '已自动切换为「今」风格',
       name: 'response_style_auto_switched_to_jin',
       desc: '',
       args: [],
@@ -5740,6 +5740,21 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `启用系统代理`
+  String get enable_system_proxy {
+    return Intl.message(
+      '启用系统代理',
+      name: 'enable_system_proxy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `其他设置`
+  String get other_settings {
+    return Intl.message('其他设置', name: 'other_settings', desc: '', args: []);
   }
 }
 
