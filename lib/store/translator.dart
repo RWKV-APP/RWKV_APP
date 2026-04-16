@@ -104,10 +104,8 @@ extension _$Translator on _Translator {
   void _checkTask() async {
     final model = P.rwkv.latestModel.q;
     if (model == null) return;
-    final wsRunning = P.backend.websocketState.q == BackendState.running;
-    if (!wsRunning) return;
-    final httpRunning = P.backend.httpState.q == BackendState.running;
-    if (!httpRunning) return;
+    final apiServerRunning = P.apiServer.state.q == BackendState.running;
+    if (!apiServerRunning) return;
 
     final isGenerating = this.isGenerating.q;
     if (isGenerating) return;

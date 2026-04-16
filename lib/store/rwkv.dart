@@ -1223,7 +1223,7 @@ extension $RWKV on _RWKV {
         send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
       }
       await setModelConfig(thinkingMode: .none, prompt: "<EOD>", setPrompt: true);
-      P.backend.start();
+      P.apiServer.start();
     } else {
       send(to_rwkv.SetUserRole("User", modelID: modelID));
       send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));

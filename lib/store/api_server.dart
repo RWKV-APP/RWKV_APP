@@ -1,7 +1,8 @@
 part of 'p.dart';
 
-const _apiServerDefaultPort = 8080;
+const _apiServerDefaultPort = 52345;
 const _apiServerStreamingFirstChunkDelay = Duration(milliseconds: 220);
+const _apiServerFinalBufferTimeout = Duration(milliseconds: 120);
 
 const _apiServerHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -91,6 +92,24 @@ extension _$ApiServer on _ApiServer {
       }
     }
     return 0;
+  }
+
+  Future<String?> _readLatestResponseBuffer({
+    required int modelID,
+    required List<String> messages,
+  }) async {
+    final request = to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
+    P.rwkv.send(request);
+
+    try {
+      final response = await P.rwkv.broadcastStream
+          .whereType<from_rwkv.ResponseBufferContent>()
+          .firstWhere((event) => event.req == request)
+          .timeout(_apiServerFinalBufferTimeout);
+      return response.responseBufferContent;
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<void> _refreshAccessibleUrls({int? portOverride}) async {
@@ -619,6 +638,14 @@ extension _$ApiServer on _ApiServer {
 
           await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
 
+          final finalContent = await _readLatestResponseBuffer(
+            modelID: modelID,
+            messages: messages,
+          );
+          if (finalContent != null) {
+            lastContent = finalContent;
+          }
+
           _pollingTimer?.cancel();
           _pollingTimer = null;
           _broadcastSub?.cancel();
@@ -994,6 +1021,14 @@ extension _$ApiServer on _ApiServer {
           });
 
           await completer.future.timeout(const Duration(minutes: 10), onTimeout: () {});
+
+          final finalContent = await _readLatestResponseBuffer(
+            modelID: modelID,
+            messages: const <String>[],
+          );
+          if (finalContent != null) {
+            lastContent = finalContent;
+          }
 
           _pollingTimer?.cancel();
           _pollingTimer = null;

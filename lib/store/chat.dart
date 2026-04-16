@@ -1580,7 +1580,7 @@ extension $Chat on _Chat {
           P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "English", modelID: modelID));
         }
         await P.rwkv.setModelConfig(thinkingMode: .none, prompt: "<EOD>", setPrompt: true);
-        P.backend.start();
+        P.apiServer.start();
       } else {
         P.rwkv.send(to_rwkv.SetUserRole("User", modelID: modelID));
         P.rwkv.send(to_rwkv.SetResponseRole(responseRole: "Assistant", modelID: modelID));

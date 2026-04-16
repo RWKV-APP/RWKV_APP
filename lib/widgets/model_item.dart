@@ -176,7 +176,7 @@ class ModelItem extends ConsumerWidget {
         P.rwkv.send(SetResponseRole(responseRole: "English", modelID: modelID));
       }
       await P.rwkv.setModelConfig(thinkingMode: .none, prompt: "<EOD>", setPrompt: true);
-      P.backend.start();
+      P.apiServer.start();
     } else {
       P.rwkv.send(SetUserRole("User", modelID: modelID));
       P.rwkv.send(SetResponseRole(responseRole: "Assistant", modelID: modelID));

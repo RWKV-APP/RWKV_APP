@@ -329,12 +329,12 @@ class _ServiceInfo extends ConsumerWidget {
 
   Future<void> _onPressed() async {
     qq;
-    final state = P.backend.httpState.q;
+    final state = P.apiServer.state.q;
     switch (state) {
       case BackendState.starting:
         return;
       case BackendState.running:
-        await P.backend.stop();
+        await P.apiServer.stop();
         return;
       case BackendState.stopping:
         return;
@@ -344,7 +344,7 @@ class _ServiceInfo extends ConsumerWidget {
           ModelSelector.show();
           return;
         }
-        await P.backend.start();
+        await P.apiServer.start();
         return;
     }
   }
@@ -353,18 +353,22 @@ class _ServiceInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    final backendState = ref.watch(P.backend.httpState);
-    final websocketState = ref.watch(P.backend.websocketState);
-    final httpPort = ref.watch(P.backend.httpPort);
-    final websocketPort = ref.watch(P.backend.websocketPort);
+    final apiServerState = ref.watch(P.apiServer.state);
+    final apiServerPort = ref.watch(P.apiServer.port);
 
-    final buttonText = switch (backendState) {
-      BackendState.starting => s.starting,
-      BackendState.running => s.stop_service,
+    final buttonText = switch (apiServerState) {
+      BackendState.starting => s.api_server_starting,
+      BackendState.running => s.api_server_stop,
       BackendState.stopping => s.stopping,
-      BackendState.stopped => s.start_service,
+      BackendState.stopped => s.api_server_start,
     };
-    final canPress = backendState == BackendState.running || backendState == BackendState.stopped;
+    final stateLabel = switch (apiServerState) {
+      BackendState.running => s.api_server_running,
+      BackendState.stopped => s.api_server_stopped,
+      BackendState.starting => s.api_server_starting,
+      BackendState.stopping => s.stopping,
+    };
+    final canPress = apiServerState == BackendState.running || apiServerState == BackendState.stopped;
 
     return Card(
       elevation: 0,
@@ -380,16 +384,9 @@ class _ServiceInfo extends ConsumerWidget {
               child: Text(s.lan_server, style: theme.textTheme.titleMedium),
             ),
             ListTile(
-              title: Text(s.http_service_port(httpPort)),
-              subtitle: Text(backendState.name),
-              trailing: backendState == BackendState.running
-                  ? const Icon(Icons.check_circle, color: Colors.green)
-                  : const Icon(Icons.cancel_outlined, color: Colors.red),
-            ),
-            ListTile(
-              title: Text(s.websocket_service_port(websocketPort)),
-              subtitle: Text(websocketState.name),
-              trailing: websocketState == BackendState.running
+              title: Text(s.http_service_port(apiServerPort)),
+              subtitle: Text(stateLabel),
+              trailing: apiServerState == BackendState.running
                   ? const Icon(Icons.check_circle, color: Colors.green)
                   : const Icon(Icons.cancel_outlined, color: Colors.red),
             ),
@@ -506,7 +503,6 @@ class _TranslatorDebugInfo extends ConsumerWidget {
 
   Future<void> _onPressClearCompleterPool() async {
     qq;
-    P.backend.runningTasks.q = {};
     P.translator.browserTabInnerSize.q = {};
     P.translator.browserTabOuterSize.q = {};
     P.translator.browserTabScrollRect.q = {};
