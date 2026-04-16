@@ -498,6 +498,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit": MessageLookupByLibrary.simpleMessage("编辑"),
     "editing": MessageLookupByLibrary.simpleMessage("编辑中"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("英->中"),
+    "enable_system_proxy": MessageLookupByLibrary.simpleMessage("启用系统代理"),
     "enabled": MessageLookupByLibrary.simpleMessage("开启"),
     "end": MessageLookupByLibrary.simpleMessage("完"),
     "english": MessageLookupByLibrary.simpleMessage("English"),
@@ -808,6 +809,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "other_files": MessageLookupByLibrary.simpleMessage(
       "其他文件 (这些文件可能是已经过期或不再支持的权重 RWKV Chat 无需再使用它们)",
     ),
+    "other_settings": MessageLookupByLibrary.simpleMessage("其他设置"),
     "output": MessageLookupByLibrary.simpleMessage("输出"),
     "overseas": MessageLookupByLibrary.simpleMessage("(境外)"),
     "overwrite": MessageLookupByLibrary.simpleMessage("覆盖"),
@@ -972,7 +974,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "response_style": MessageLookupByLibrary.simpleMessage("表达风格"),
     "response_style_auto_switched_to_jin": MessageLookupByLibrary.simpleMessage(
-      "已自动切换为今风格",
+      "已自动切换为「今」风格",
     ),
     "response_style_batch_not_supported": m38,
     "response_style_button": MessageLookupByLibrary.simpleMessage("风格"),

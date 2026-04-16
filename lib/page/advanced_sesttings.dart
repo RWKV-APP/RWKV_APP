@@ -74,8 +74,8 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
               },
             ),
             const SizedBox(height: 16),
-            // ...buildAppBehaviorGroup(),
-            // const SizedBox(height: 16),
+            ...buildAppBehaviorGroup(),
+            const SizedBox(height: 16),
             // ...buildRagGroup(),
           ],
         ),
@@ -85,38 +85,49 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
 
   List<Widget> buildAppBehaviorGroup() {
     return [
-      buildGroupTitle('App 行为'),
+      buildGroupTitle(S.current.other_settings),
       item(
-        title: '启动时自动加载上次模型',
-        child: SizedBox(
-          height: 56,
-          child: Switch(value: false, onChanged: (v) {}),
+        title: S.current.enable_system_proxy,
+        child: Switch(
+          value: P.preference.enableSystemProxy,
+          onChanged: (v) async {
+            await P.preference.setEnableSystemProxy(v);
+            P.remote.initDownloader();
+            setState(() {});
+          },
         ),
       ),
-      const SizedBox(height: 8),
-      item(
-        title: '回车键发送消息',
-        child: SizedBox(
-          height: 56,
-          child: Switch(value: false, onChanged: (v) {}),
-        ),
-      ),
-      const SizedBox(height: 8),
-      item(
-        title: '启动时检查更新',
-        child: SizedBox(
-          height: 56,
-          child: Switch(value: true, onChanged: (v) {}),
-        ),
-      ),
-      const SizedBox(height: 8),
-      item(
-        title: '打开模型列表时自动更新',
-        child: SizedBox(
-          height: 56,
-          child: Switch(value: true, onChanged: (v) {}),
-        ),
-      ),
+      // item(
+      //   title: '启动时自动加载上次模型',
+      //   child: SizedBox(
+      //     height: 56,
+      //     child: Switch(value: false, onChanged: (v) {}),
+      //   ),
+      // ),
+      // const SizedBox(height: 8),
+      // item(
+      //   title: '回车键发送消息',
+      //   child: SizedBox(
+      //     height: 56,
+      //     child: Switch(value: false, onChanged: (v) {}),
+      //   ),
+      // ),
+      // const SizedBox(height: 8),
+      // item(
+      //   title: '启动时检查更新',
+      //   child: SizedBox(
+      //     height: 56,
+      //     child: Switch(value: true, onChanged: (v) {}),
+      //   ),
+      // ),
+      // const SizedBox(height: 8),
+      // item(
+      //   title: '打开模型列表时自动更新',
+      //   child: SizedBox(
+      //     height: 56,
+      //     child: Switch(value: true, onChanged: (v) {}),
+      //   ),
+      // ),
     ];
   }
 

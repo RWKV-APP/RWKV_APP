@@ -19,6 +19,10 @@ class _Preference {
   // Instance
   // ===========================================================================
 
+  bool _enableSystemProxy = true;
+
+  bool get enableSystemProxy => _enableSystemProxy;
+
   bool _showBatteryOptimization = true;
 
   var featureRollout = const FeatureRollout();
@@ -138,6 +142,7 @@ extension _$Preference on _Preference {
     final sp = await SharedPreferences.getInstance();
 
     _showBatteryOptimization = sp.getBool("halo_state.showBatteryOptimizationDialog") ?? true;
+    _enableSystemProxy = sp.getBool("halo_state.enableSystemProxy") ?? true;
 
     final language = sp.getString("halo_state.language");
     if (language != null) {
@@ -596,5 +601,11 @@ extension $Preference on _Preference {
   Future<void> saveDebugShowPrefillLogOnly(bool value) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_debugShowPrefillLogOnlyPreferenceKey, value);
+  }
+
+  Future<void> setEnableSystemProxy(bool value) async {
+    _enableSystemProxy = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool("halo_state.enableSystemProxy", value);
   }
 }

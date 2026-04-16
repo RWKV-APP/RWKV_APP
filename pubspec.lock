@@ -409,6 +409,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.12"
+  detect_proxy_setting:
+    dependency: "direct main"
+    description:
+      name: detect_proxy_setting
+      sha256: "76169280962b1ef0c10d21edc62ef7838b4759831e0ad431603c81fa654e29f7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.9"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -1400,6 +1408,47 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
+  proxy_setting_android:
+    dependency: "direct overridden"
+    description:
+      path: "packages/proxy_setting_android"
+      ref: main
+      resolved-ref: f60d634d7b07c6b04944fa97380ddf3b46674ba7
+      url: "https://github.com/dengzii/proxy_setting.git"
+    source: git
+    version: "0.0.6"
+  proxy_setting_ios:
+    dependency: transitive
+    description:
+      name: proxy_setting_ios
+      sha256: "15cfa8235361e4dd5641cabf29d2dde569f7e451b97b3dc3806e4053979a7d07"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
+  proxy_setting_macos:
+    dependency: transitive
+    description:
+      name: proxy_setting_macos
+      sha256: f2caca614025aeef1d0331ebeba0bcfa850b25ced4e2a6be69e45b7ddfb65963
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
+  proxy_setting_platform_interface:
+    dependency: transitive
+    description:
+      name: proxy_setting_platform_interface
+      sha256: "5fb408abc6a036ca4ec704563d2b994bd2cb99d39a2fd962fec8c27b5b2791b8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
+  proxy_setting_windows:
+    dependency: transitive
+    description:
+      name: proxy_setting_windows
+      sha256: d34c16aa7a2100b16ee0515fae3a65150144feb46e342127be0626734b849fa3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   pub_semver:
     dependency: transitive
     description:
@@ -1508,8 +1557,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: efd82c49ea8a51980c62975d1c5eed8918b28a59
+      ref: v1
+      resolved-ref: "00777a4b362bced3e0393e4c0b7c49516e93dd51"
       url: "https://github.com/RWKV-APP/rwkv_downloader.git"
     source: git
     version: "0.0.1"
@@ -2136,5 +2185,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.11.0 <4.0.0"
+  dart: ">=3.11.1 <4.0.0"
   flutter: ">=3.38.4"

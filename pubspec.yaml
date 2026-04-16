@@ -126,8 +126,18 @@ dependencies:
   url_launcher:
   wakelock_plus:
   web_socket_channel:
+  detect_proxy_setting: ^0.0.9
 
 dependency_overrides:
+  proxy_setting_android:
+    git:
+      url: https://github.com/dengzii/proxy_setting.git
+      path: packages/proxy_setting_android
+      ref: main
+  rwkv_downloader:
+    git:
+      url: https://github.com/RWKV-APP/rwkv_downloader.git
+      ref: v1
   rwkv_mobile_flutter:
     path: ../rwkv_mobile_flutter
 

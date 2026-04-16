@@ -728,5 +728,7 @@
   "multi_question_input_hint": "Enter your question...",
   "multi_question_no_answer": "No answer yet",
   "multi_question_continue": "Continue",
-  "multi_question_send_all": "Send All"
+  "multi_question_send_all": "Send All",
+  "enable_system_proxy": "Enable system proxy",
+  "other_settings": "Other Settings"
 }

@@ -1812,6 +1812,22 @@ extension $Remote on _Remote {
     await calculateTotalSizeOfDir(readyModelsDir);
     syncingLocalFiles.q = false;
   }
+
+  void initDownloader() async {
+    if (!P.preference._enableSystemProxy) {
+      DownloadConfig.init(allowAllSsl: true);
+      return;
+    }
+    final ProxySetting? setting = await proxySetting();
+
+    if (setting?.mode == .proxy) {
+      final String proxy = setting!.proxy;
+      DownloadConfig.init(proxy: proxy, allowAllSsl: true);
+      qqq('downloader proxy enabled: $proxy');
+    } else {
+      DownloadConfig.init(allowAllSsl: true);
+    }
+  }
 }
 
 Set<String> _getCurrentConfigInPlaceCacheDirNames() {
@@ -1867,6 +1883,8 @@ extension _$Remote on _Remote {
 
     await _transferAllFilesFromOldModelsDirToNewModelsDirIfNeeded();
     sync();
+
+    initDownloader();
   }
 
   void _onHasActiveDownloadChanged(bool hasActiveDownload) {

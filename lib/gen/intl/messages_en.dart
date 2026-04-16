@@ -627,6 +627,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "editing": MessageLookupByLibrary.simpleMessage("Editing"),
     "en_to_zh": MessageLookupByLibrary.simpleMessage("EN->ZH"),
+    "enable_system_proxy": MessageLookupByLibrary.simpleMessage(
+      "Enable system proxy",
+    ),
     "enabled": MessageLookupByLibrary.simpleMessage("Enabled"),
     "end": MessageLookupByLibrary.simpleMessage("End"),
     "english": MessageLookupByLibrary.simpleMessage("English"),
@@ -1041,6 +1044,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "other_files": MessageLookupByLibrary.simpleMessage(
       "Other Files (These may be outdated or unsupported weights that RWKV Chat no longer needs)",
     ),
+    "other_settings": MessageLookupByLibrary.simpleMessage("Other Settings"),
     "output": MessageLookupByLibrary.simpleMessage("Output"),
     "overseas": MessageLookupByLibrary.simpleMessage("(Overseas)"),
     "overwrite": MessageLookupByLibrary.simpleMessage("Overwrite"),

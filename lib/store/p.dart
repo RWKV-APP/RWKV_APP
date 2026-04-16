@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'dart:math';
 
 // Flutter imports:
+import 'package:detect_proxy_setting/detect_proxy_setting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
