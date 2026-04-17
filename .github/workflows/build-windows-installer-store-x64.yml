@@ -80,8 +80,17 @@ jobs:
       - name: Override dependency path
         run: |
           echo "dependency_overrides:" > pubspec_overrides.yaml
-          echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
-          echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
+            echo "  proxy_setting_android:" >> pubspec_overrides.yaml
+            echo "    git:" >> pubspec_overrides.yaml
+            echo "      url: https://github.com/dengzii/proxy_setting.git" >> pubspec_overrides.yaml
+            echo "      path: packages/proxy_setting_android" >> pubspec_overrides.yaml
+            echo "      ref: main" >> pubspec_overrides.yaml
+            echo "  rwkv_downloader:" >> pubspec_overrides.yaml
+            echo "    git:" >> pubspec_overrides.yaml
+            echo "      url: https://github.com/RWKV-APP/rwkv_downloader.git" >> pubspec_overrides.yaml
+            echo "      ref: v1" >> pubspec_overrides.yaml
+            echo "  rwkv_mobile_flutter:" >> pubspec_overrides.yaml
+            echo "    path: ./rwkv_mobile_flutter" >> pubspec_overrides.yaml
 
       - name: Create .env file
         uses: ./.github/actions/create-env-windows

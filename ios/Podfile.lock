@@ -120,6 +120,8 @@ PODS:
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
+  - proxy_setting_ios (0.0.5):
+    - Flutter
   - record_ios (1.2.0):
     - Flutter
   - rwkv_mobile_flutter (0.0.1):
@@ -127,11 +129,11 @@ PODS:
   - SDWebImage (5.21.7):
     - SDWebImage/Core (= 5.21.7)
   - SDWebImage/Core (5.21.7)
-  - Sentry/HybridSDK (8.58.0)
-  - sentry_flutter (9.16.0):
+  - Sentry/HybridSDK (8.46.0)
+  - sentry_flutter (8.14.2):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.58.0)
+    - Sentry/HybridSDK (= 8.46.0)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -187,6 +189,7 @@ DEPENDENCIES:
   - mp_audio_stream (from `.symlinks/plugins/mp_audio_stream/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - proxy_setting_ios (from `.symlinks/plugins/proxy_setting_ios/ios`)
   - record_ios (from `.symlinks/plugins/record_ios/ios`)
   - rwkv_mobile_flutter (from `.symlinks/plugins/rwkv_mobile_flutter/ios`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
@@ -248,6 +251,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  proxy_setting_ios:
+    :path: ".symlinks/plugins/proxy_setting_ios/ios"
   record_ios:
     :path: ".symlinks/plugins/record_ios/ios"
   rwkv_mobile_flutter:
@@ -297,11 +302,12 @@ SPEC CHECKSUMS:
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  proxy_setting_ios: 1ed970991868db0df25d0cd150504a9d0f59a4b3
   record_ios: 412daca2350b228e698fffcd08f1f94ceb1e3844
   rwkv_mobile_flutter: 1ac221dbc3469b5cb1aab8248b34e1804e68aa98
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
-  Sentry: d587a8fe91ca13503ecd69a1905f3e8a0fcf61be
-  sentry_flutter: 31101687061fb85211ebab09ce6eb8db4e9ba74f
+  Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854
+  sentry_flutter: 27892878729f42701297c628eb90e7c6529f3684
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
