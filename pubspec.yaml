@@ -115,7 +115,7 @@ dependencies:
   pretty_qr_code:
   record:
   rxdart:
-  sentry_flutter:
+  sentry_flutter: ^9.18.0
   share_plus:
   shared_preferences:
   shelf:
