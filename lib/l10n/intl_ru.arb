@@ -722,5 +722,6 @@
   "multi_question_input_hint": "Введите вопрос...",
   "multi_question_no_answer": "Ответа пока нет",
   "multi_question_continue": "Продолжить",
-  "multi_question_send_all": "Отправить все"
+  "multi_question_send_all": "Отправить все",
+  "fake_batch_inference_benchmark": "UI benchmark batch inference"
 }

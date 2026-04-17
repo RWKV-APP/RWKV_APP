@@ -730,5 +730,6 @@
   "multi_question_continue": "Continue",
   "multi_question_send_all": "Send All",
   "enable_system_proxy": "Enable system proxy",
-  "other_settings": "Other Settings"
+  "other_settings": "Other Settings",
+  "fake_batch_inference_benchmark": "Fake batch inference benchmark"
 }

@@ -9,6 +9,8 @@ enum _UserMessageMenuAction {
 const String _responseStyleGuSuffix = " 请用文言文回答。";
 const String _responseStyleMaoAssistantPrefix = "<think>喵";
 const String _responseStyleMaoUserSuffix = " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格。";
+const String _fakeBatchInferenceBenchmarkCharacterPool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ     .,!?;:-";
+const Duration _visibleReceivedTokensInterval = Duration(milliseconds: 33);
 
 class _Chat {
   // ===========================================================================
@@ -39,6 +41,13 @@ class _Chat {
   List<ResponseStyleRoute> _responseStyleSequentialRoutes = const <ResponseStyleRoute>[];
   List<String> _responseStyleSequentialBaseHistory = const <String>[];
   List<String> _responseStyleSequentialCompletedOutputs = const <String>[];
+  Timer? _fakeBatchInferenceBenchmarkTimer;
+  Timer? _visibleReceivedTokensTimer;
+  int? _fakeBatchInferenceBenchmarkMessageId;
+  List<String> _fakeBatchInferenceBenchmarkSlotBuffers = const <String>[];
+  int _fakeBatchInferenceBenchmarkSlotIndex = 0;
+  String _latestVisibleReceivedTokens = "";
+  final math.Random _fakeBatchInferenceBenchmarkRandom = math.Random();
 
   // ===========================================================================
   // StateProvider
@@ -51,6 +60,7 @@ class _Chat {
 
   /// TODO: Should be moved to state/rwkv.dart
   late final receivedTokens = qs("");
+  late final visibleReceivedTokens = qs("");
 
   late final inputHeight = qs(77.0);
 
@@ -77,6 +87,7 @@ class _Chat {
   late final batchEnabled = qs(Args.enableBatchInference);
   late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
   late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
+  late final fakeBatchInferenceBenchmarkEnabled = qs(false);
 
   /// 当前需要在 AppBar 新对话按钮上展示引导的会话 id
   late final newConversationGuideConversationId = qs<int?>(null);
@@ -126,6 +137,7 @@ class _Chat {
 /// Public methods
 extension $Chat on _Chat {
   void clearMessages() {
+    _cancelFakeBatchInferenceBenchmark(updateGenerating: true);
     P.msg._clear();
   }
 
@@ -215,7 +227,7 @@ extension $Chat on _Chat {
     final currentReceiveId = receiveId.q;
     if (currentReceiveId != null && deletedIdSet.contains(currentReceiveId)) {
       receiveId.q = null;
-      receivedTokens.q = "";
+      _setReceivedTokens("", immediateUi: true);
     }
 
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
@@ -250,6 +262,15 @@ extension $Chat on _Chat {
       return;
     }
     webSearchMode.q = mode;
+  }
+
+  void onFakeBatchInferenceBenchmarkChanged(bool value) async {
+    if (P.rwkv.generating.q) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+    fakeBatchInferenceBenchmarkEnabled.q = value;
+    await P.preference.setFakeBatchInferenceBenchmarkEnabled(value);
   }
 
   Future<void> onWebSearchModeTapped() async {
@@ -661,10 +682,13 @@ extension $Chat on _Chat {
     _responseStyleSequentialRoutes = <ResponseStyleRoute>[...routes];
     _responseStyleSequentialBaseHistory = <String>[...history];
     _responseStyleSequentialCompletedOutputs = <String>[...completedOutputs];
-    receivedTokens.q = _buildResponseStyleSequentialBatchContent(
-      completedOutputs: _responseStyleSequentialCompletedOutputs,
-      currentOutput: currentAssistantMessage,
-      totalCount: _responseStyleSequentialRoutes.length,
+    _setReceivedTokens(
+      _buildResponseStyleSequentialBatchContent(
+        completedOutputs: _responseStyleSequentialCompletedOutputs,
+        currentOutput: currentAssistantMessage,
+        totalCount: _responseStyleSequentialRoutes.length,
+      ),
+      immediateUi: true,
     );
     await _sendCurrentResponseStyleSequentialRoute();
   }
@@ -691,7 +715,7 @@ extension $Chat on _Chat {
       completedOutputs: nextCompletedOutputs,
       totalCount: _responseStyleSequentialRoutes.length,
     );
-    receivedTokens.q = finalizedContent;
+    _setReceivedTokens(finalizedContent, immediateUi: true);
 
     if (_responseStyleSequentialStopRequested) {
       _clearResponseStyleSequentialState();
@@ -738,7 +762,7 @@ extension $Chat on _Chat {
           currentOutput: res.responseBufferContent,
           totalCount: _responseStyleSequentialRoutes.length,
         );
-        receivedTokens.q = liveContent;
+        _setReceivedTokens(liveContent);
         if (completionMode.q) {
           return true;
         }
@@ -1325,11 +1349,9 @@ extension $Chat on _Chat {
     final receiveId = HF.milliseconds + 1;
     this.receiveId.q = receiveId;
 
-    List<String> history = withHistory ? _history() : <String>[];
-
     P.msg.editingOrRegeneratingIndex.q = null;
 
-    receivedTokens.q = "";
+    _setReceivedTokens("", immediateUi: true);
     P.rwkv.generating.q = true;
     _liveTokenCountThrottler.cancel();
 
@@ -1349,8 +1371,17 @@ extension $Chat on _Chat {
     parentNode.add(MsgNode(receiveId));
     P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
     P.conversation._syncNode();
+    if (P.app.pageKey.q == .chat && fakeBatchInferenceBenchmarkEnabled.q) {
+      final benchmarkBatchSize = effectiveBatchEnabled.q ? effectiveBatchCount.q : 1;
+      _startFakeBatchInferenceBenchmark(
+        messageId: receiveId,
+        batchSize: benchmarkBatchSize,
+      );
+      return;
+    }
     _scheduleRefreshLiveTokenCounts(messageId: receiveId, liveBotContent: "");
 
+    List<String> history = withHistory ? _history() : <String>[];
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
     final inSee = P.app.pageKey.q == .see;
     final forceChinese = inSee && message.containsChinese;
@@ -1610,6 +1641,25 @@ extension $Chat on _Chat {
 
 /// Private methods
 extension _$Chat on _Chat {
+  void _setReceivedTokens(String value, {bool immediateUi = false}) {
+    receivedTokens.q = value;
+    _latestVisibleReceivedTokens = value;
+    if (immediateUi) {
+      _flushVisibleReceivedTokens();
+      return;
+    }
+    if (_visibleReceivedTokensTimer != null) return;
+    _visibleReceivedTokensTimer = Timer(_visibleReceivedTokensInterval, _flushVisibleReceivedTokens);
+  }
+
+  void _flushVisibleReceivedTokens() {
+    _visibleReceivedTokensTimer?.cancel();
+    _visibleReceivedTokensTimer = null;
+    final value = _latestVisibleReceivedTokens;
+    if (visibleReceivedTokens.q == value) return;
+    visibleReceivedTokens.q = value;
+  }
+
   Future<void> _init() async {
     switch (P.app.demoType.q) {
       case .fifthteenPuzzle:
@@ -1621,6 +1671,8 @@ extension _$Chat on _Chat {
       case .see:
     }
     qq;
+
+    fakeBatchInferenceBenchmarkEnabled.q = P.preference.fakeBatchInferenceBenchmarkEnabled;
 
     textEditingController.addListener(_onTextEditingControllerValueChanged);
     textInInput.l(_onTextChanged);
@@ -1756,6 +1808,107 @@ extension _$Chat on _Chat {
     if (max < batchCount.q) batchCount.q = max;
   }
 
+  void _startFakeBatchInferenceBenchmark({
+    required int messageId,
+    required int batchSize,
+  }) {
+    _cancelFakeBatchInferenceBenchmark();
+
+    final int effectiveBatchSize = math.max(1, batchSize);
+    final int updatesPerSecond = math.max(1, effectiveBatchSize * 20);
+    final int intervalInMilliseconds = math.max(1, 1000 ~/ updatesPerSecond);
+
+    _fakeBatchInferenceBenchmarkMessageId = messageId;
+    _fakeBatchInferenceBenchmarkSlotBuffers = List<String>.filled(effectiveBatchSize, "");
+    _fakeBatchInferenceBenchmarkSlotIndex = 0;
+    _setReceivedTokens(_buildFakeBatchInferenceBenchmarkContent(), immediateUi: true);
+
+    _fakeBatchInferenceBenchmarkTimer = Timer.periodic(
+      Duration(milliseconds: intervalInMilliseconds),
+      (Timer timer) {
+        final int? activeMessageId = _fakeBatchInferenceBenchmarkMessageId;
+        if (activeMessageId != messageId) {
+          timer.cancel();
+          return;
+        }
+
+        final message = P.msg.pool.q[messageId];
+        if (message == null || !message.changing || !P.rwkv.generating.q) {
+          _cancelFakeBatchInferenceBenchmark(updateGenerating: true);
+          return;
+        }
+
+        final int activeBatchSize = _fakeBatchInferenceBenchmarkSlotBuffers.length;
+        if (activeBatchSize <= 0) {
+          _cancelFakeBatchInferenceBenchmark(updateGenerating: true);
+          return;
+        }
+
+        final int slotIndex = _fakeBatchInferenceBenchmarkSlotIndex % activeBatchSize;
+        _fakeBatchInferenceBenchmarkSlotBuffers[slotIndex] =
+            _fakeBatchInferenceBenchmarkSlotBuffers[slotIndex] + _nextFakeBatchInferenceBenchmarkChunk();
+        _fakeBatchInferenceBenchmarkSlotIndex = (_fakeBatchInferenceBenchmarkSlotIndex + 1) % activeBatchSize;
+        _setReceivedTokens(_buildFakeBatchInferenceBenchmarkContent());
+      },
+    );
+  }
+
+  String _buildFakeBatchInferenceBenchmarkContent() {
+    if (_fakeBatchInferenceBenchmarkSlotBuffers.isEmpty) {
+      return "";
+    }
+    if (_fakeBatchInferenceBenchmarkSlotBuffers.length == 1) {
+      return _fakeBatchInferenceBenchmarkSlotBuffers.first;
+    }
+    return _fakeBatchInferenceBenchmarkSlotBuffers.join(Config.batchMarker) + Config.batchMarker + "-1";
+  }
+
+  String _nextFakeBatchInferenceBenchmarkChunk() {
+    final int length = 3 + _fakeBatchInferenceBenchmarkRandom.nextInt(3);
+    final buffer = StringBuffer();
+    for (int i = 0; i < length; i++) {
+      final int index = _fakeBatchInferenceBenchmarkRandom.nextInt(_fakeBatchInferenceBenchmarkCharacterPool.length);
+      buffer.write(_fakeBatchInferenceBenchmarkCharacterPool[index]);
+    }
+    return buffer.toString();
+  }
+
+  Future<bool> _pauseFakeBatchInferenceBenchmarkMessage({
+    required int id,
+    required Message msg,
+    required bool isSensitive,
+  }) async {
+    if (_fakeBatchInferenceBenchmarkMessageId != id) {
+      return false;
+    }
+
+    final currentGeneratedContent = receivedTokens.q;
+    final finalizedContent = currentGeneratedContent.isNotEmpty ? currentGeneratedContent : msg.content;
+    _cancelFakeBatchInferenceBenchmark(updateGenerating: true);
+
+    final newMsg = msg.copyWith(
+      content: finalizedContent,
+      paused: true,
+      changing: false,
+      isSensitive: isSensitive,
+    );
+    await P.msg._syncMsg(id, newMsg);
+    return true;
+  }
+
+  void _cancelFakeBatchInferenceBenchmark({bool updateGenerating = false}) {
+    final timer = _fakeBatchInferenceBenchmarkTimer;
+    final active = timer != null || _fakeBatchInferenceBenchmarkMessageId != null;
+    timer?.cancel();
+    _fakeBatchInferenceBenchmarkTimer = null;
+    _fakeBatchInferenceBenchmarkMessageId = null;
+    _fakeBatchInferenceBenchmarkSlotBuffers = const <String>[];
+    _fakeBatchInferenceBenchmarkSlotIndex = 0;
+    if (active && updateGenerating) {
+      P.rwkv.generating.q = false;
+    }
+  }
+
   Future<void> _checkSensitive(String content) async {
     final isSensitive = await P.guard.isSensitive(content);
     if (!isSensitive) return;
@@ -1887,6 +2040,15 @@ extension _$Chat on _Chat {
 
     if (msg.paused) {
       qqw("message already paused");
+      return;
+    }
+
+    final pausedFakeBenchmark = await _pauseFakeBatchInferenceBenchmarkMessage(
+      id: id,
+      msg: msg,
+      isSensitive: isSensitive,
+    );
+    if (pausedFakeBenchmark) {
       return;
     }
 
@@ -2327,7 +2489,7 @@ extension _$Chat on _Chat {
         break;
 
       case _RWKVMessageType.streamResponse:
-        receivedTokens.q = event.content;
+        _setReceivedTokens(event.content);
         P.rwkv.generating.q = true;
         break;
 
@@ -2344,7 +2506,7 @@ extension _$Chat on _Chat {
 
     switch (event) {
       case from_rwkv.ResponseBufferContent res:
-        receivedTokens.q = res.responseBufferContent;
+        _setReceivedTokens(res.responseBufferContent);
         if (completionMode.q) return;
         final currentReceiveId = receiveId.q;
         if (currentReceiveId != null) {
@@ -2360,7 +2522,7 @@ extension _$Chat on _Chat {
 
       case from_rwkv.ResponseBatchBufferContent res:
         final responseBufferContent = res.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
-        receivedTokens.q = responseBufferContent;
+        _setReceivedTokens(responseBufferContent);
         if (completionMode.q) return;
         final currentReceiveId = receiveId.q;
         if (currentReceiveId != null) {
@@ -2375,12 +2537,12 @@ extension _$Chat on _Chat {
         break;
 
       case from_rwkv.GenerateStop _:
-        receivedTokens.q = "";
+        _setReceivedTokens("", immediateUi: true);
         P.rwkv.generating.q = false;
         break;
 
       case from_rwkv.GenerateStart _:
-        receivedTokens.q = "";
+        _setReceivedTokens("", immediateUi: true);
         P.rwkv.generating.q = true;
         break;
 

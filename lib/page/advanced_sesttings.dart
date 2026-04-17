@@ -16,6 +16,8 @@ class PageAdvancedSettings extends StatefulWidget {
 class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -25,7 +27,7 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            buildGroupTitle(S.current.prompt_template),
+            buildGroupTitle(S.current.prompt_template, theme),
             item(
               title: S.current.system_prompt,
               child: const SizedBox(
@@ -74,7 +76,7 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
               },
             ),
             const SizedBox(height: 16),
-            ...buildAppBehaviorGroup(),
+            ...buildAppBehaviorGroup(theme),
             const SizedBox(height: 16),
             // ...buildRagGroup(),
           ],
@@ -83,9 +85,9 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
     );
   }
 
-  List<Widget> buildAppBehaviorGroup() {
+  List<Widget> buildAppBehaviorGroup(ThemeData theme) {
     return [
-      buildGroupTitle(S.current.other_settings),
+      buildGroupTitle(S.current.other_settings, theme),
       item(
         title: S.current.enable_system_proxy,
         child: Switch(
@@ -150,8 +152,8 @@ class _PageAdvancedSettingsState extends State<PageAdvancedSettings> {
     );
   }
 
-  Widget buildGroupTitle(String title) {
-    final surface = Theme.of(context).colorScheme.surface;
+  Widget buildGroupTitle(String title, ThemeData theme) {
+    final surface = theme.colorScheme.surface;
     return Container(
       margin: const .only(bottom: 16),
       padding: const .symmetric(horizontal: 16, vertical: 12),

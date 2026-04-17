@@ -577,6 +577,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "디렉토리 생성에 실패했습니다",
     ),
     "failed_to_delete_file": m15,
+    "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
+      "병렬 추론 UI Benchmark",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("문제 보고"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("파일이 이미 존재합니다"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("파일을 찾을 수 없습니다"),

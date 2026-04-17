@@ -5756,6 +5756,16 @@ class S {
   String get other_settings {
     return Intl.message('其他设置', name: 'other_settings', desc: '', args: []);
   }
+
+  /// `并行推理 UI Benchmark`
+  String get fake_batch_inference_benchmark {
+    return Intl.message(
+      '并行推理 UI Benchmark',
+      name: 'fake_batch_inference_benchmark',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

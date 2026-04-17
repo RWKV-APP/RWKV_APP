@@ -695,6 +695,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Не удалось создать каталог",
     ),
     "failed_to_delete_file": m15,
+    "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
+      "UI benchmark batch inference",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("Обратная связь"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "Файл уже существует",

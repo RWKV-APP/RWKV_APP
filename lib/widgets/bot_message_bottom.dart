@@ -133,6 +133,7 @@ class BotMessageBottom extends ConsumerWidget {
     if (msg.isMine) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
+    final appTheme = ref.watch(P.app.theme);
     final s = S.of(context);
 
     final demoType = preferredDemoType ?? ref.watch(P.app.demoType);
@@ -595,7 +596,10 @@ class BotMessageBottom extends ConsumerWidget {
         });
 
     return Padding(
-      padding: .only(top: isMobile ? .0 : 8.0),
+      padding: .only(
+        top: isMobile ? .0 : 8.0,
+        left: appTheme.msgListMarginLeft,
+      ),
       child: Column(
         crossAxisAlignment: .start,
         children: [

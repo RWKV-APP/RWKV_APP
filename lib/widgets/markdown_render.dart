@@ -22,6 +22,130 @@ import 'package:zone/store/p.dart';
 
 // ignore: depend_on_referenced_packages
 
+const int _softBreakStep = 12;
+const int _softBreakMinRunLength = 24;
+const int _markdownPreprocessCacheLimit = 96;
+const String _softBreak = "\u200B";
+final RegExp _markdownFenceLineExp = RegExp(r"^(```|~~~)");
+final _markdownPreprocessCache = <String, String>{};
+
+String _prepareMarkdownRaw(String raw) {
+  final compactRaw = raw.replaceAll("\n\n", "\n").trim();
+  final cached = _markdownPreprocessCache.remove(compactRaw);
+  if (cached != null) {
+    _markdownPreprocessCache[compactRaw] = cached;
+    return cached;
+  }
+
+  final normalizedRaw = P.mdRender.normalizeLatexForMarkdown(compactRaw);
+  final breakableRaw = _insertSoftBreaksInLongRuns(normalizedRaw);
+  if (_markdownPreprocessCache.length >= _markdownPreprocessCacheLimit) {
+    _markdownPreprocessCache.remove(_markdownPreprocessCache.keys.first);
+  }
+  _markdownPreprocessCache[compactRaw] = breakableRaw;
+  return breakableRaw;
+}
+
+String _insertSoftBreaksInLongRuns(String raw) {
+  final lines = raw.split("\n");
+  final output = <String>[];
+  bool insideFence = false;
+  bool insideDisplayLatex = false;
+
+  for (final String line in lines) {
+    final trimmedLine = line.trim();
+    if (_isMarkdownFenceLine(trimmedLine)) {
+      insideFence = !insideFence;
+      output.add(line);
+      continue;
+    }
+
+    if (insideFence) {
+      output.add(line);
+      continue;
+    }
+
+    final startsDisplayLatex = trimmedLine.startsWith(r"\[");
+    final endsDisplayLatex = trimmedLine.endsWith(r"\]");
+    if (insideDisplayLatex || startsDisplayLatex || _containsInlineLatexDelimiter(line)) {
+      output.add(line);
+      if (startsDisplayLatex && !endsDisplayLatex) {
+        insideDisplayLatex = true;
+      }
+      if (insideDisplayLatex && endsDisplayLatex) {
+        insideDisplayLatex = false;
+      }
+      continue;
+    }
+
+    output.add(_insertSoftBreaksInLine(line));
+  }
+
+  return output.join("\n");
+}
+
+String _insertSoftBreaksInLine(String line) {
+  if (line.length < _softBreakMinRunLength) return line;
+
+  final buffer = StringBuffer();
+  int runStart = 0;
+  bool insertedBreaks = false;
+
+  for (int i = 0; i < line.length; i++) {
+    final codeUnit = line.codeUnitAt(i);
+    if (!_isSoftBreakRunBoundary(codeUnit)) continue;
+    insertedBreaks = _writeSoftBreakRun(line.substring(runStart, i), buffer) || insertedBreaks;
+    buffer.writeCharCode(codeUnit);
+    runStart = i + 1;
+  }
+
+  insertedBreaks = _writeSoftBreakRun(line.substring(runStart), buffer) || insertedBreaks;
+  if (!insertedBreaks) return line;
+  return buffer.toString();
+}
+
+bool _writeSoftBreakRun(String value, StringBuffer buffer) {
+  if (value.length < _softBreakMinRunLength || value.contains("://")) {
+    buffer.write(value);
+    return false;
+  }
+
+  for (int i = 0; i < value.length; i++) {
+    if (i > 0 && i % _softBreakStep == 0) {
+      buffer.write(_softBreak);
+    }
+    buffer.write(value[i]);
+  }
+  return true;
+}
+
+bool _isSoftBreakRunBoundary(int codeUnit) {
+  if (codeUnit == 0x24) return true;
+  if (codeUnit == 0x5C) return true;
+  if (codeUnit == 0x60) return true;
+  if (codeUnit <= 0x20) return true;
+  if (codeUnit == 0x85) return true;
+  if (codeUnit == 0xA0) return true;
+  if (codeUnit == 0x1680) return true;
+  if (codeUnit >= 0x2000 && codeUnit <= 0x200A) return true;
+  if (codeUnit == 0x2028) return true;
+  if (codeUnit == 0x2029) return true;
+  if (codeUnit == 0x202F) return true;
+  if (codeUnit == 0x205F) return true;
+  return codeUnit == 0x3000;
+}
+
+bool _isMarkdownFenceLine(String line) {
+  if (line.isEmpty) return false;
+  return _markdownFenceLineExp.hasMatch(line);
+}
+
+bool _containsInlineLatexDelimiter(String line) {
+  if (line.contains(r"\(")) return true;
+  if (line.contains(r"\)")) return true;
+  if (line.contains(r"$$")) return true;
+  return line.contains(r"$");
+}
 
 class MarkdownRender extends ConsumerWidget {
   final String raw;
@@ -43,9 +167,7 @@ class MarkdownRender extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final normalizedRaw = P.mdRender.normalizeLatexForMarkdown(
-      raw.replaceAll("\n\n", "\n").trim(),
-    );
+    final breakableRaw = _prepareMarkdownRaw(raw);
     final textScaler = MediaQuery.textScalerOf(context);
     final primary = theme.colorScheme.primary;
     const scale = Config.msgFontScale;
@@ -79,7 +201,7 @@ class MarkdownRender extends ConsumerWidget {
     ];
 
     final gptMarkdown = GptMarkdown(
-      normalizedRaw,
+      breakableRaw,
       onLinkTap: _onTapLink,
       style: gptMarkdownStyle,
       textScaler: .noScaling,
@@ -154,33 +276,46 @@ class _LatexRender extends StatelessWidget {
 
     return SelectableAdapter(
       selectedText: tex,
-      child: Math.tex(
-        tex,
-        textStyle: effectiveTextStyle,
-        mathStyle: mathStyle,
-        textScaleFactor: 1,
-        settings: const TexParserSettings(strict: Strict.ignore),
-        options: MathOptions(
-          sizeUnderTextStyle: MathSize.large,
-          color: effectiveColor,
-          fontSize: effectiveTextStyle.fontSize ?? theme.textTheme.bodyMedium?.fontSize,
-          mathFontOptions: FontOptions(
-            fontFamily: "Main",
-            fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
-            fontShape: FontStyle.normal,
-          ),
-          textFontOptions: FontOptions(
-            fontFamily: "Main",
-            fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
-            fontShape: FontStyle.normal,
-          ),
-          style: mathStyle,
-        ),
-        onErrorFallback: (err) {
-          return Text(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final math = Math.tex(
             tex,
-            textDirection: Directionality.of(context),
-            style: effectiveTextStyle,
+            textStyle: effectiveTextStyle,
+            mathStyle: mathStyle,
+            textScaleFactor: 1,
+            settings: const TexParserSettings(strict: Strict.ignore),
+            options: MathOptions(
+              sizeUnderTextStyle: MathSize.large,
+              color: effectiveColor,
+              fontSize: effectiveTextStyle.fontSize ?? theme.textTheme.bodyMedium?.fontSize,
+              mathFontOptions: FontOptions(
+                fontFamily: "Main",
+                fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
+                fontShape: FontStyle.normal,
+              ),
+              textFontOptions: FontOptions(
+                fontFamily: "Main",
+                fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
+                fontShape: FontStyle.normal,
+              ),
+              style: mathStyle,
+            ),
+            onErrorFallback: (err) {
+              return Text(
+                _insertSoftBreaksInLongRuns(tex),
+                textDirection: Directionality.of(context),
+                style: effectiveTextStyle,
+              );
+            },
+          );
+          if (!constraints.hasBoundedWidth) {
+            return math;
+          }
+          return ClipRect(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: math,
+            ),
           );
         },
       ),

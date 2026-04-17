@@ -1,5 +1,18 @@
 part of 'p.dart';
 
+final RegExp _mdRenderCodeFenceLineExp = RegExp(r"^(```|~~~)");
+final RegExp _mdRenderDisplayOpenExp = RegExp(r'(?<!\\)\\\[');
+final RegExp _mdRenderDisplayCloseExp = RegExp(r'(?<!\\)\\\]');
+final RegExp _mdRenderInlineOpenExp = RegExp(r'(?<!\\)\\\(');
+final RegExp _mdRenderInlineCloseExp = RegExp(r'(?<!\\)\\\)');
+final RegExp _mdRenderDollarBlockExp = RegExp(r'(?<!\\)\$\$');
+final RegExp _mdRenderDollarInlineExp = RegExp(r'(?<!\\)\$');
+final RegExp _mdRenderChineseExp = RegExp(r"[\u3400-\u9FFF]");
+final RegExp _mdRenderLatexCommandExp = RegExp(r"\\[A-Za-z]+");
+final RegExp _mdRenderStrongEquationSignalExp = RegExp(r"[=+*/<>]|\s-\s");
+final RegExp _mdRenderGroupingExp = RegExp(r"[{}()\[\]]");
+final RegExp _mdRenderOrderedMarkdownLineExp = RegExp(r"^\d+\.\s");
+
 class _MDRender {
   static const supportedCodeLanguages = [
     "css",
@@ -65,6 +78,10 @@ extension $MDRender on _MDRender {
       qqw("Language $language is not supported");
       return false;
     }
+    final existingHighlighter = highlighters(language).q;
+    final existingDarkHighlighter = darkHighlighters(language).q;
+    if (existingHighlighter != null && existingDarkHighlighter != null) return true;
+
     final grammarFileContent = await rootBundle.loadString(
       "assets/config/code_highlights/$language.json",
     );
@@ -119,8 +136,8 @@ extension $MDRender on _MDRender {
       displayBalance = _nextLatexBalance(
         currentBalance: displayBalance,
         line: line,
-        openExp: RegExp(r'(?<!\\)\\\['),
-        closeExp: RegExp(r'(?<!\\)\\\]'),
+        openExp: _mdRenderDisplayOpenExp,
+        closeExp: _mdRenderDisplayCloseExp,
       );
 
       if (displayBalance > 0) continue;
@@ -128,8 +145,8 @@ extension $MDRender on _MDRender {
       inlineBalance = _nextLatexBalance(
         currentBalance: inlineBalance,
         line: line,
-        openExp: RegExp(r'(?<!\\)\\\('),
-        closeExp: RegExp(r'(?<!\\)\\\)'),
+        openExp: _mdRenderInlineOpenExp,
+        closeExp: _mdRenderInlineCloseExp,
       );
     }
 
@@ -159,6 +176,7 @@ extension $MDRender on _MDRender {
     required RegExp openExp,
     required RegExp closeExp,
   }) {
+    if (!line.contains("\\")) return currentBalance;
     final opens = openExp.allMatches(line).length;
     final closes = closeExp.allMatches(line).length;
     final nextBalance = currentBalance + opens - closes;
@@ -168,7 +186,7 @@ extension $MDRender on _MDRender {
 
   bool _isCodeFenceLine(String line) {
     if (line.isEmpty) return false;
-    return RegExp(r"^(```|~~~)").hasMatch(line);
+    return _mdRenderCodeFenceLineExp.hasMatch(line);
   }
 
   bool _shouldWrapBareLatexLine(String line) {
@@ -176,31 +194,32 @@ extension $MDRender on _MDRender {
     if (_isMarkdownLine(line)) return false;
     if (line.contains("`")) return false;
     if (_hasLatexDelimiter(line)) return false;
-    if (RegExp(r"[\u3400-\u9FFF]").hasMatch(line)) return false;
+    if (_mdRenderChineseExp.hasMatch(line)) return false;
 
-    final hasLatexCommand = RegExp(r"\\[A-Za-z]+").hasMatch(line);
+    final hasLatexCommand = _mdRenderLatexCommandExp.hasMatch(line);
     final hasSuperscriptOrSubscript = line.contains("^") || line.contains("_");
-    final hasEquationSignal = RegExp(r"[=+\-*/<>]").hasMatch(line);
-    final hasGrouping = RegExp(r"[{}()\[\]]").hasMatch(line);
+    final hasStrongEquationSignal = _mdRenderStrongEquationSignalExp.hasMatch(line);
+    final hasGrouping = _mdRenderGroupingExp.hasMatch(line);
     final score =
         (hasLatexCommand ? 2 : 0) +
         (hasSuperscriptOrSubscript ? 2 : 0) +
-        (hasEquationSignal ? 1 : 0) +
+        (hasStrongEquationSignal ? 1 : 0) +
         (hasGrouping ? 1 : 0) +
         (line.contains("&") ? 1 : 0);
 
-    if (!hasLatexCommand && !(hasSuperscriptOrSubscript && hasEquationSignal)) return false;
+    if (!hasLatexCommand && !(hasSuperscriptOrSubscript && hasStrongEquationSignal)) return false;
 
     return score >= 3;
   }
 
   bool _hasLatexDelimiter(String line) {
-    if (RegExp(r'(?<!\\)\\\[').hasMatch(line)) return true;
-    if (RegExp(r'(?<!\\)\\\]').hasMatch(line)) return true;
-    if (RegExp(r'(?<!\\)\\\(').hasMatch(line)) return true;
-    if (RegExp(r'(?<!\\)\\\)').hasMatch(line)) return true;
-    if (RegExp(r'(?<!\\)\$\$').hasMatch(line)) return true;
-    return RegExp(r'(?<!\\)\$').hasMatch(line);
+    if (!line.contains("\\") && !line.contains(r"$")) return false;
+    if (_mdRenderDisplayOpenExp.hasMatch(line)) return true;
+    if (_mdRenderDisplayCloseExp.hasMatch(line)) return true;
+    if (_mdRenderInlineOpenExp.hasMatch(line)) return true;
+    if (_mdRenderInlineCloseExp.hasMatch(line)) return true;
+    if (_mdRenderDollarBlockExp.hasMatch(line)) return true;
+    return _mdRenderDollarInlineExp.hasMatch(line);
   }
 
   bool _isMarkdownLine(String line) {
@@ -210,7 +229,7 @@ extension $MDRender on _MDRender {
     if (line.startsWith("- ")) return true;
     if (line.startsWith("* ")) return true;
     if (line.startsWith("+ ")) return true;
-    if (RegExp(r"^\d+\.\s").hasMatch(line)) return true;
+    if (_mdRenderOrderedMarkdownLineExp.hasMatch(line)) return true;
     return false;
   }
 }

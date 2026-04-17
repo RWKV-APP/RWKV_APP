@@ -6,6 +6,7 @@ const String _debugRenderSpaceSymbolPreferenceKey = "halo_state.debug.renderSpac
 const String _legacyDebugRenderSpaceSymbolPreferenceKey = "halo_state.debug.showSpaceSymbols";
 const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefillLogOnly";
 const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
+const String _fakeBatchInferenceBenchmarkPreferenceKey = "halo_state.fakeBatchInferenceBenchmarkEnabled";
 
 class _Preference {
   // ===========================================================================
@@ -26,6 +27,8 @@ class _Preference {
   bool _showBatteryOptimization = true;
 
   var featureRollout = const FeatureRollout();
+
+  bool fakeBatchInferenceBenchmarkEnabled = false;
 
   var promptTemplate = PromptTemplate.empty();
 
@@ -211,6 +214,8 @@ extension _$Preference on _Preference {
         featureRollout = FeatureRollout.fromMap(jsonDecode(ft));
       } catch (_) {}
     }
+
+    fakeBatchInferenceBenchmarkEnabled = sp.getBool(_fakeBatchInferenceBenchmarkPreferenceKey) ?? false;
 
     final tt = sp.getString('app.promptTemplate');
     if (tt != null && tt.isNotEmpty) {
@@ -443,6 +448,12 @@ extension $Preference on _Preference {
     this.featureRollout = featureRollout;
     final sp = await SharedPreferences.getInstance();
     sp.setString('app.dev.feat', jsonEncode(featureRollout.toMap()));
+  }
+
+  Future<void> setFakeBatchInferenceBenchmarkEnabled(bool value) async {
+    fakeBatchInferenceBenchmarkEnabled = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool(_fakeBatchInferenceBenchmarkPreferenceKey, value);
   }
 
   void setThinkingModeUserTemplate(PromptTemplate template) async {

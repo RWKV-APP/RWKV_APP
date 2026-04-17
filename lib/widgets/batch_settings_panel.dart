@@ -89,12 +89,14 @@ class BatchSettingsPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final batchCount = ref.watch(P.chat.effectiveBatchCount);
     final appTheme = ref.watch(P.app.theme);
     final batchInference = ref.watch(P.chat.effectiveBatchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     final featureRollout = ref.watch(P.app.featureRollout);
+    final fakeBatchInferenceBenchmarkEnabled = ref.watch(P.chat.fakeBatchInferenceBenchmarkEnabled);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -107,6 +109,7 @@ class BatchSettingsPanel extends ConsumerWidget {
           title: Text(s.batch_inference_settings),
           automaticallyImplyLeading: false,
           backgroundColor: appTheme.settingBg,
+          foregroundColor: theme.colorScheme.onSurface,
           actions: [
             Padding(
               padding: const .only(right: 8),
@@ -123,6 +126,10 @@ class BatchSettingsPanel extends ConsumerWidget {
           controller: scrollController,
           padding: const .only(left: 12, right: 12, bottom: 12),
           children: [
+            if (fakeBatchInferenceBenchmarkEnabled) ...[
+              const _FakeBatchInferenceBenchmarkNotice(),
+              const SizedBox(height: 8),
+            ],
             FormItem(
               isSectionStart: true,
               isSectionEnd: !batchInference,
@@ -216,6 +223,52 @@ class BatchSettingsPanel extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _FakeBatchInferenceBenchmarkNotice extends StatelessWidget {
+  const _FakeBatchInferenceBenchmarkNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final color = theme.colorScheme.error;
+
+    return Container(
+      padding: const .symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.q(.12),
+        borderRadius: .circular(10),
+        border: .all(color: color.q(.7), width: .5),
+      ),
+      child: Row(
+        crossAxisAlignment: .start,
+        children: [
+          Icon(Icons.warning_amber_rounded, color: color, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  "${s.fake_batch_inference_benchmark}: ${s.enabled}",
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: color,
+                    fontWeight: .w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  "Chat inference is currently replaced by UI-only benchmark output.",
+                  style: theme.textTheme.bodySmall?.copyWith(color: color),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

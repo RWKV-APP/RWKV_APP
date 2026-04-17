@@ -537,6 +537,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "建立目錄失敗",
     ),
     "failed_to_delete_file": m15,
+    "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
+      "並行推理 UI Benchmark",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("回饋問題"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("檔案已存在"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("檔案未找到"),

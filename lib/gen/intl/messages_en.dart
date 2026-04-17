@@ -679,6 +679,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Failed to create directory",
     ),
     "failed_to_delete_file": m15,
+    "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
+      "Fake batch inference benchmark",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage(
       "File already exists",

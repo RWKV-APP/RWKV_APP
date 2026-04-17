@@ -722,5 +722,6 @@
   "multi_question_input_hint": "質問を入力...",
   "multi_question_no_answer": "まだ回答がありません",
   "multi_question_continue": "会話を続ける",
-  "multi_question_send_all": "すべて送信"
+  "multi_question_send_all": "すべて送信",
+  "fake_batch_inference_benchmark": "並列推論 UI Benchmark"
 }

@@ -722,5 +722,6 @@
   "multi_question_input_hint": "輸入你的問題...",
   "multi_question_no_answer": "暫無回答",
   "multi_question_continue": "繼續對話",
-  "multi_question_send_all": "全部傳送"
+  "multi_question_send_all": "全部傳送",
+  "fake_batch_inference_benchmark": "並行推理 UI Benchmark"
 }

@@ -722,5 +722,6 @@
   "multi_question_input_hint": "질문을 입력하세요...",
   "multi_question_no_answer": "아직 답변이 없습니다",
   "multi_question_continue": "대화 계속하기",
-  "multi_question_send_all": "전체 전송"
+  "multi_question_send_all": "전체 전송",
+  "fake_batch_inference_benchmark": "병렬 추론 UI Benchmark"
 }

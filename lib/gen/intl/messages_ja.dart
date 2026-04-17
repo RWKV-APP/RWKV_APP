@@ -581,6 +581,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "ディレクトリの作成に失敗しました",
     ),
     "failed_to_delete_file": m15,
+    "fake_batch_inference_benchmark": MessageLookupByLibrary.simpleMessage(
+      "並列推論 UI Benchmark",
+    ),
     "feedback": MessageLookupByLibrary.simpleMessage("フィードバック"),
     "file_already_exists": MessageLookupByLibrary.simpleMessage("ファイルは既に存在します"),
     "file_not_found": MessageLookupByLibrary.simpleMessage("ファイルが見つかりません"),

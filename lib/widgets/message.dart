@@ -85,7 +85,7 @@ class _MessageState extends ConsumerState<Message> {
     final inSee = ref.watch(P.app.pageKey) == .see;
     final screenWidth = ref.watch(P.app.screenWidth);
     final screenHeight = ref.watch(P.app.screenHeight);
-    final received = ref.watch(P.chat.receivedTokens.select((String value) => msg.changing ? value : ""));
+    final received = ref.watch(P.chat.visibleReceivedTokens.select((String value) => msg.changing ? value : ""));
     final cotDisplayState = ref.watch(P.msg.cotDisplayState(msg.id));
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
     final messageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);

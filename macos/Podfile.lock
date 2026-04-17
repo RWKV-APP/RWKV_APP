@@ -26,6 +26,8 @@ PODS:
     - FlutterMacOS
   - package_info_plus (0.0.1):
     - FlutterMacOS
+  - proxy_setting_macos (0.0.6):
+    - FlutterMacOS
   - record_macos (1.2.0):
     - FlutterMacOS
   - rwkv_mobile_flutter (0.0.1):
@@ -87,6 +89,7 @@ DEPENDENCIES:
   - macos_window_utils (from `Flutter/ephemeral/.symlinks/plugins/macos_window_utils/macos`)
   - mp_audio_stream (from `Flutter/ephemeral/.symlinks/plugins/mp_audio_stream/macos`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
+  - proxy_setting_macos (from `Flutter/ephemeral/.symlinks/plugins/proxy_setting_macos/macos`)
   - record_macos (from `Flutter/ephemeral/.symlinks/plugins/record_macos/macos`)
   - rwkv_mobile_flutter (from `Flutter/ephemeral/.symlinks/plugins/rwkv_mobile_flutter/macos`)
   - sentry_flutter (from `Flutter/ephemeral/.symlinks/plugins/sentry_flutter/macos`)
@@ -129,6 +132,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/mp_audio_stream/macos
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
+  proxy_setting_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/proxy_setting_macos/macos
   record_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/record_macos/macos
   rwkv_mobile_flutter:
@@ -162,6 +167,7 @@ SPEC CHECKSUMS:
   macos_window_utils: 23f54331a0fd51eea9e0ed347253bf48fd379d1d
   mp_audio_stream: c140c6f5d79ea84f801878e5b89f05ab5f738bde
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
+  proxy_setting_macos: 38146ff7f48298b844111cc72138f2d047b9716d
   record_macos: 7f227161b93c49e7e34fe681c5891c8622c8cc8b
   rwkv_mobile_flutter: 8ca6e2136af1082006740e7a3072448fd0f210e7
   Sentry: d587a8fe91ca13503ecd69a1905f3e8a0fcf61be
