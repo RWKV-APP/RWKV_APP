@@ -598,7 +598,7 @@ class BotMessageBottom extends ConsumerWidget {
     return Padding(
       padding: .only(
         top: isMobile ? .0 : 8.0,
-        left: appTheme.msgListMarginLeft,
+        left: isMobile ? .0 : appTheme.msgListMarginLeft,
       ),
       child: Column(
         crossAxisAlignment: .start,
