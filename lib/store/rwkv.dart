@@ -79,7 +79,7 @@ class _RWKV {
   late final renderSpaceSymbol = qs(false);
   late final showPrefillLogOnly = qs(true);
 
-  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
+  late final _thinkingMode = qs<thinking_mode.ThinkingMode>(P.preference.preferredThinkingMode.q);
 
   /// 已经加载到内存中的模型，key 为 FuncType，value 为模型 ID
   late final loadedModels = qs<Map<FileInfo, int>>({});
@@ -311,7 +311,7 @@ extension $RWKVLoad on _RWKV {
       fileInfo: modelID,
     };
 
-    await setModelConfig(enableReasoning: enableReasoning);
+    await setModelConfig(thinkingMode: preferredThinkingModeForCurrentChatModel());
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
     // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
@@ -611,12 +611,13 @@ extension $RWKV on _RWKV {
     }
 
     final thinkingMode = _thinkingMode.q;
-    final bool reasoning = thinkingMode.hasThinkTag;
-    final bool forceReasoning = thinkingMode.forceReasoning;
-    final bool hasOverrideBatchSlotConfigs = overrideBatchSlotConfigs != null && overrideBatchSlotConfigs.isNotEmpty;
+
+    final reasoning = thinkingMode.hasThinkTag;
+    final forceReasoning = thinkingMode.forceReasoning;
+    final hasOverrideBatchSlotConfigs = overrideBatchSlotConfigs != null && overrideBatchSlotConfigs.isNotEmpty;
     final int effectiveBatchSize = hasOverrideBatchSlotConfigs ? overrideBatchSlotConfigs.length : batchSize;
-    final bool isBatchInference = effectiveBatchSize > 1;
-    final bool addGenerationPrompt = messages.length.isOdd;
+    final isBatchInference = effectiveBatchSize > 1;
+    final addGenerationPrompt = messages.length.isOdd;
 
     final to_rwkv.ToRWKV request;
     if (hasOverrideBatchSlotConfigs) {
@@ -664,7 +665,7 @@ extension $RWKV on _RWKV {
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
-    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 97), (_) {
       final getResponseCalling = isBatchInference
           ? to_rwkv.GetBatchResponseBufferContent(messages: messages, modelID: modelID) //
           : to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
@@ -897,9 +898,14 @@ extension $RWKV on _RWKV {
     @Deprecated("Use thinkingMode instead, 不能排除之后突然来个不支持 <think> 的模型, 所以先不删除") bool? preferPseudo,
     bool setPrompt = true,
     String? prompt,
+    bool rememberThinkingMode = false,
   }) async {
     qqr(thinkingMode);
-    _thinkingMode.q = thinkingMode ?? .fast;
+    final nextThinkingMode = thinkingMode ?? _thinkingMode.q;
+    _thinkingMode.q = nextThinkingMode;
+    if (rememberThinkingMode) {
+      unawaited(P.preference.saveThinkingMode(nextThinkingMode));
+    }
 
     if (setPrompt) {
       updateSystemPrompt(prompt: prompt);
@@ -912,6 +918,24 @@ extension $RWKV on _RWKV {
       final modelID = entry.value;
       send(to_rwkv.SetThinkingToken(thinkingToken, modelID: modelID));
     }
+  }
+
+  thinking_mode.ThinkingMode preferredThinkingModeForCurrentChatModel() {
+    final preferredThinkingMode = P.preference.preferredThinkingMode.q;
+    if (!currentModelIsBefore20250922.q) {
+      return switch (preferredThinkingMode) {
+        .lighting => .fast,
+        _ => preferredThinkingMode,
+      };
+    }
+
+    return switch (preferredThinkingMode) {
+      .none => .none,
+      .free => .free,
+      .preferChinese => .preferChinese,
+      .lighting => .lighting,
+      _ => .lighting,
+    };
   }
 
   Future<void> resetSamplerParams({required bool enableReasoning}) async {
@@ -1007,9 +1031,9 @@ extension $RWKV on _RWKV {
     if (isAlbatrossLoaded.q) {
       final current = thinkingMode.q;
       if (current != .none) {
-        setModelConfig(thinkingMode: .none);
+        setModelConfig(thinkingMode: .none, rememberThinkingMode: true);
       } else {
-        setModelConfig(thinkingMode: .free);
+        setModelConfig(thinkingMode: .free, rememberThinkingMode: true);
       }
       return;
     }
@@ -1020,16 +1044,16 @@ extension $RWKV on _RWKV {
       final current = thinkingMode.q;
       switch (current) {
         case .lighting:
-          setModelConfig(thinkingMode: .free);
+          setModelConfig(thinkingMode: .free, rememberThinkingMode: true);
           Alert.success(s.thinking_mode_high(s.thinking_mode_alert_footer));
         case .free:
-          setModelConfig(thinkingMode: .none);
+          setModelConfig(thinkingMode: .none, rememberThinkingMode: true);
           Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
         case .preferChinese:
-          setModelConfig(thinkingMode: .none);
+          setModelConfig(thinkingMode: .none, rememberThinkingMode: true);
           Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
         case .none:
-          setModelConfig(thinkingMode: .lighting);
+          setModelConfig(thinkingMode: .lighting, rememberThinkingMode: true);
           Alert.success(s.thinking_mode_auto(s.thinking_mode_alert_footer));
         default:
           break;
@@ -1066,7 +1090,7 @@ extension $RWKV on _RWKV {
 
     if (res == null) return;
 
-    setModelConfig(thinkingMode: res);
+    setModelConfig(thinkingMode: res, rememberThinkingMode: true);
     switch (res) {
       case .none:
         Alert.success(s.thinking_mode_off(s.thinking_mode_alert_footer));
@@ -1124,10 +1148,10 @@ extension $RWKV on _RWKV {
       case .none:
         break;
       case .free:
-        setModelConfig(thinkingMode: .preferChinese);
+        setModelConfig(thinkingMode: .preferChinese, rememberThinkingMode: true);
         Alert.success(S.current.prefer_chinese);
       case .preferChinese:
-        setModelConfig(thinkingMode: .free);
+        setModelConfig(thinkingMode: .free, rememberThinkingMode: true);
         Alert.success(S.current.thinking_mode_high(S.current.thinking_mode_alert_footer));
       default:
         break;
@@ -1230,11 +1254,7 @@ extension $RWKV on _RWKV {
     }
 
     if (!isTranslate) {
-      if (currentModelIsBefore20250922.q) {
-        setModelConfig(thinkingMode: .lighting);
-      } else {
-        setModelConfig(thinkingMode: .fast);
-      }
+      setModelConfig(thinkingMode: preferredThinkingModeForCurrentChatModel());
     }
 
     for (var i = 0; i < 3; i++) {

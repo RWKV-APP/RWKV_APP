@@ -925,6 +925,7 @@ extension $Chat on _Chat {
     if (!checkModelSelection(preferredDemoType: preferredDemoType)) return;
 
     final inSee = P.app.pageKey.q == .see;
+
     if (inSee) {
       final hasAtLeastOneImage = P.msg.hasAtLeastOneImage.q;
       final imagePath = P.see.imagePath.q;
@@ -1023,9 +1024,11 @@ extension $Chat on _Chat {
         final finalTextToSend = "<image>$imagePath</image>" + textToSend.trim();
         await send(finalTextToSend);
       }
-    } else {
-      await send(textToSend);
+
+      return;
     }
+
+    await send(textToSend);
   }
 
   Future<void> onEditingComplete() async {
@@ -1649,11 +1652,7 @@ extension $Chat on _Chat {
       }
 
       if (!isTranslate) {
-        if (P.rwkv.currentModelIsBefore20250922.q) {
-          P.rwkv.setModelConfig(thinkingMode: .lighting);
-        } else {
-          P.rwkv.setModelConfig(thinkingMode: .fast);
-        }
+        P.rwkv.setModelConfig(thinkingMode: P.rwkv.preferredThinkingModeForCurrentChatModel());
       }
 
       for (var i = 0; i < 3; i++) {

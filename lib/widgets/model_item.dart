@@ -186,14 +186,8 @@ class ModelItem extends ConsumerWidget {
       Alert.success(S.current.you_can_now_start_to_chat_with_rwkv);
     }
 
-    final currentModelIsBefore20250922 = P.rwkv.currentModelIsBefore20250922.q;
-
     if (!isTranslate) {
-      if (currentModelIsBefore20250922) {
-        P.rwkv.setModelConfig(thinkingMode: .lighting);
-      } else {
-        P.rwkv.setModelConfig(thinkingMode: .fast);
-      }
+      P.rwkv.setModelConfig(thinkingMode: P.rwkv.preferredThinkingModeForCurrentChatModel());
     }
 
     P.preference.saveLastChatModel({
