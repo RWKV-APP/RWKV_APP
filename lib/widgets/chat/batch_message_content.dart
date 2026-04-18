@@ -39,8 +39,8 @@ class BatchMessageContent extends ConsumerStatefulWidget {
 
 class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
   final ScrollController _scrollController = ScrollController();
-  bool _showLeft = false;
-  bool _showRight = false;
+  static final showLeft = qs(false);
+  static final showRight = qs(false);
 
   @override
   void initState() {
@@ -61,11 +61,11 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
     final position = _scrollController.position;
     final left = position.pixels > 0.5;
     final right = position.pixels < (position.maxScrollExtent - 0.5);
+    final bool _showLeft = showLeft.q;
+    final bool _showRight = showRight.q;
     if (left != _showLeft || right != _showRight) {
-      setState(() {
-        _showLeft = left;
-        _showRight = right;
-      });
+      showLeft.q = left;
+      showRight.q = right;
     }
   }
 
@@ -84,122 +84,218 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
 
   @override
   Widget build(BuildContext context) {
-    final ref = this.ref;
-    final (batch, isBatch, batchCount, selectedBatch) = getBatchInfo(widget.finalContent);
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final batchVW = ref.watch(P.chat.batchVW);
-    final qb = ref.watch(P.app.qb);
-    final batchSelection = ref.watch(P.msg.batchSelection(widget.msg));
-
-    final step = screenWidth * (batchVW / 100) * 0.9;
-
-    final qw = ref.watch(P.app.qw);
-
-    final parsedDecodeParams = widget.msg.parsedDecodeParams;
-
-    final appTheme = ref.watch(P.app.theme);
-
     return Stack(
       children: [
-        SingleChildScrollView(
-          padding: .only(
-            left: appTheme.msgListMarginLeft,
-            right: appTheme.msgListMarginRight,
-          ),
-          controller: _scrollController,
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: .start,
-            crossAxisAlignment: .start,
-            children:
-                [
-                  for (var i = 0; i < batchCount; i++)
-                    GD(
-                      onTap: () {
-                        P.msg.batchSelection(widget.msg).q = i;
-                      },
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: screenWidth * (batchVW / 100),
-                          minWidth: screenWidth * (batchVW / 100),
-                        ),
-                        padding: const .all(8),
-                        decoration: BoxDecoration(
-                          color: qw,
-                          border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
-                          borderRadius: .circular(8),
-                        ),
+        _BatchSlotsScrollView(
+          msg: widget.msg,
+          finalContent: widget.finalContent,
+          scrollController: _scrollController,
+          perSlotQuestions: widget.perSlotQuestions,
+          slotLabels: widget.slotLabels,
+        ),
+        _BatchScrollLeftButton(
+          scrollBy: _scrollBy,
+        ),
+        _BatchScrollRightButton(
+          scrollBy: _scrollBy,
+        ),
+      ],
+    );
+  }
+}
+
+class _BatchSlotsScrollView extends ConsumerWidget {
+  final model.Message msg;
+  final String finalContent;
+  final ScrollController scrollController;
+  final List<String>? perSlotQuestions;
+  final List<String>? slotLabels;
+
+  const _BatchSlotsScrollView({
+    required this.msg,
+    required this.finalContent,
+    required this.scrollController,
+    required this.perSlotQuestions,
+    required this.slotLabels,
+  });
+
+  String? _slotLabelAt(int index) {
+    final labels = slotLabels;
+    if (labels == null) return null;
+    if (index >= labels.length) return null;
+    return labels[index];
+  }
+
+  String? _questionAt(int index) {
+    final questions = perSlotQuestions;
+    if (questions == null) return null;
+    if (index >= questions.length) return null;
+    return questions[index];
+  }
+
+  SamplerAndPenaltyParam? _decodeParamAt(List<SamplerAndPenaltyParam> parsedDecodeParams, int index) {
+    if (parsedDecodeParams.isEmpty) return null;
+    if (index < parsedDecodeParams.length) return parsedDecodeParams[index];
+    return parsedDecodeParams.last;
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final (batch, _, batchCount, _) = getBatchInfo(finalContent);
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final batchVW = ref.watch(P.chat.batchVW);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final appTheme = ref.watch(P.app.theme);
+    final batchSelection = ref.watch(P.msg.batchSelection(msg));
+    final parsedDecodeParams = msg.parsedDecodeParams;
+    final slotWidth = screenWidth * (batchVW / 100);
+
+    return Theme(
+      data: theme,
+      child: SingleChildScrollView(
+        padding: .only(
+          left: appTheme.msgListMarginLeft,
+          right: appTheme.msgListMarginRight,
+        ),
+        controller: scrollController,
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: .start,
+          crossAxisAlignment: .start,
+          children:
+              [
+                for (final i in Iterable<int>.generate(batchCount))
+                  GD(
+                    onTap: () {
+                      P.msg.batchSelection(msg).q = i;
+                    },
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: slotWidth,
+                        minWidth: slotWidth,
+                      ),
+                      padding: const .all(8),
+                      decoration: BoxDecoration(
+                        color: qw,
+                        border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
+                        borderRadius: .circular(8),
+                      ),
+                      child: RepaintBoundary(
                         child: _SlotContent(
-                          slotLabel: widget.slotLabels != null && i < widget.slotLabels!.length ? widget.slotLabels![i] : null,
-                          question: widget.perSlotQuestions != null && i < widget.perSlotQuestions!.length
-                              ? widget.perSlotQuestions![i]
-                              : null,
+                          slotLabel: _slotLabelAt(i),
+                          question: _questionAt(i),
                           data: batch[i],
-                          decodeParam: parsedDecodeParams.isNotEmpty
-                              ? parsedDecodeParams[i < parsedDecodeParams.length ? i : parsedDecodeParams.length - 1]
-                              : null,
+                          decodeParam: _decodeParamAt(parsedDecodeParams, i),
                           qb: qb,
                         ),
                       ),
                     ),
-                ].widgetJoin(
-                  (index) => const SizedBox(width: 8),
-                ),
-          ),
+                  ),
+              ].widgetJoin(
+                (index) => const SizedBox(width: 8),
+              ),
         ),
-        AnimatedPositioned(
-          left: _showLeft ? 4 : -100,
-          top: 0,
+      ),
+    );
+  }
+}
+
+class _BatchScrollLeftButton extends ConsumerWidget {
+  final Future<void> Function(double delta) scrollBy;
+
+  const _BatchScrollLeftButton({
+    required this.scrollBy,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final batchVW = ref.watch(P.chat.batchVW);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final step = screenWidth * (batchVW / 100) * 0.9;
+    final bool show = ref.watch(_BatchMessageContentState.showLeft);
+
+    return Theme(
+      data: theme,
+      child: AnimatedPositioned(
+        left: show ? 4 : -100,
+        top: 0,
+        duration: 250.ms,
+        curve: Curves.easeOut,
+        bottom: 0,
+        child: AnimatedOpacity(
+          opacity: show ? 1 : 0,
           duration: 250.ms,
           curve: Curves.easeOut,
-          bottom: 0,
-          child: AnimatedOpacity(
-            opacity: _showLeft ? 1 : 0,
-            duration: 250.ms,
-            curve: Curves.easeOut,
-            child: Center(
-              child: GD(
-                onTap: () => _scrollBy(-step),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: qw,
-                    border: .all(color: qb.q(.1)),
-                    borderRadius: .circular(20),
-                  ),
-                  padding: const .all(6),
-                  child: Icon(Icons.chevron_left, color: qb.q(.7)),
+          child: Center(
+            child: GD(
+              onTap: () => scrollBy(-step),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: qw,
+                  border: .all(color: qb.q(.1)),
+                  borderRadius: .circular(20),
                 ),
+                padding: const .all(6),
+                child: Icon(Icons.chevron_left, color: qb.q(.7)),
               ),
             ),
           ),
         ),
-        AnimatedPositioned(
-          right: _showRight ? 4 : -100,
-          top: 0,
-          bottom: 0,
+      ),
+    );
+  }
+}
+
+class _BatchScrollRightButton extends ConsumerWidget {
+  final Future<void> Function(double delta) scrollBy;
+
+  const _BatchScrollRightButton({
+    required this.scrollBy,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final batchVW = ref.watch(P.chat.batchVW);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final step = screenWidth * (batchVW / 100) * 0.9;
+    final bool show = ref.watch(_BatchMessageContentState.showRight);
+
+    return Theme(
+      data: theme,
+      child: AnimatedPositioned(
+        right: show ? 4 : -100,
+        top: 0,
+        bottom: 0,
+        duration: 250.ms,
+        curve: Curves.easeOut,
+        child: AnimatedOpacity(
+          opacity: show ? 1 : 0,
           duration: 250.ms,
           curve: Curves.easeOut,
-          child: AnimatedOpacity(
-            opacity: _showRight ? 1 : 0,
-            duration: 250.ms,
-            curve: Curves.easeOut,
-            child: Center(
-              child: GD(
-                onTap: () => _scrollBy(step),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: qw,
-                    border: .all(color: qb.q(.1)),
-                    borderRadius: .circular(20),
-                  ),
-                  padding: const .all(6),
-                  child: Icon(Icons.chevron_right, color: qb.q(.7)),
+          child: Center(
+            child: GD(
+              onTap: () => scrollBy(step),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: qw,
+                  border: .all(color: qb.q(.1)),
+                  borderRadius: .circular(20),
                 ),
+                padding: const .all(6),
+                child: Icon(Icons.chevron_right, color: qb.q(.7)),
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

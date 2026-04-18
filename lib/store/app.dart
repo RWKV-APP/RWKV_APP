@@ -195,7 +195,6 @@ extension $App on _App {
   }
 
   void checkUpdates({bool manually = false}) async {
-    qr;
     checkingLatestVersion.q = true;
     releaseNotesContent.q = null;
     VersionInfo? latestVersionInfo;
@@ -823,8 +822,6 @@ extension _$App on _App {
 
   /// 获取最新的版本信息, 返回 false 代表无需更新
   Future<VersionInfo?> _getLatestVersionInfo() async {
-    qr;
-
     await 500.msLater;
 
     // 根据运行环境获取对应的 keys
@@ -891,8 +888,6 @@ extension _$App on _App {
 
   /// 从本地沙盒中加载配置, 如果本地沙盒中没有, 则从应用包中加载, 并存储到本地沙盒中
   Future<(Map<String, dynamic> json, SharedPreferences sp)> _loadConfigFromLocal() async {
-    qr;
-
     final startTime = HF.milliseconds;
 
     final sp = await SharedPreferences.getInstance();

@@ -492,8 +492,6 @@ extension _$Translator on _Translator {
   }
 
   void _handleBatchResponseBufferContent(from_rwkv.ResponseBatchBufferContent res) {
-    qr;
-
     final responseBufferContents = res.responseBufferContent;
     final batchLines = batchTaskLines.q;
 

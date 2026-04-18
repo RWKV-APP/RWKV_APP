@@ -99,9 +99,7 @@ class ThinkingModeButton extends ConsumerWidget {
                     padding: padding,
                     decoration: BoxDecoration(
                       color: color.q(
-                        useBackdropFilter
-                            ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier
-                            : 1,
+                        useBackdropFilter ? backdropFilterBgAlphaForInputOptions * backdropFilterBgAlphaForInputOptionsDarkModifier : 1,
                       ),
                       borderRadius: .circular(60),
                       border: border,

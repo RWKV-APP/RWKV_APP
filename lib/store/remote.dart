@@ -1794,8 +1794,6 @@ extension $Remote on _Remote {
   }
 
   Future<void> sync() async {
-    qr;
-
     syncingLocalFiles.q = true;
     await Future.wait([
       400.msLater,

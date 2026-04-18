@@ -682,8 +682,7 @@ class _MlxCacheItem extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
-              final message =
-                  "${S.current.delete_mlx_cache_confirmation} (${directory.directoryName})\n\n${S.current.mlx_cache_notice}";
+              final message = "${S.current.delete_mlx_cache_confirmation} (${directory.directoryName})\n\n${S.current.mlx_cache_notice}";
               final result = await showOkCancelAlertDialog(
                 context: context,
                 title: S.current.delete,

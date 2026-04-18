@@ -47,9 +47,7 @@ class _AllSuggestionDialogState extends ConsumerState<AllSuggestionDialog> with 
   @override
   void initState() {
     super.initState();
-    allCategories = P.suggestion.useHighScoreApi.q
-        ? P.suggestion.highScoreCategories.q
-        : P.suggestion.config.q.chat;
+    allCategories = P.suggestion.useHighScoreApi.q ? P.suggestion.highScoreCategories.q : P.suggestion.config.q.chat;
     tabController = TabController(length: allCategories.length, vsync: this);
     pageController = PageController();
     pageController.addListener(_onPageScroll);
@@ -75,9 +73,7 @@ class _AllSuggestionDialogState extends ConsumerState<AllSuggestionDialog> with 
   void _onTabTap(int index) {
     if (index == pageController.page?.round()) return;
     _isSyncingTab = true;
-    pageController
-        .animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.ease)
-        .then((_) => _isSyncingTab = false);
+    pageController.animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.ease).then((_) => _isSyncingTab = false);
   }
 
   void _onSuggestionTap(Suggestion suggestion) {

@@ -31,7 +31,6 @@ extension _$Dump on _Dump {
   }
 
   Future<void> _onMessagesChanged() async {
-    qr;
     final dumpping = P.preference.dumpping.q;
     if (!dumpping) return;
     final messages = P.msg.list.q;
@@ -54,8 +53,6 @@ extension _$Dump on _Dump {
       if (alertPermission) Alert.warning(msg);
       return;
     }
-
-    qr;
 
     final messages = P.msg.list.q;
 

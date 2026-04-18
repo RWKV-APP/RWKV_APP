@@ -26,7 +26,6 @@ class AudioInput extends ConsumerWidget {
   const AudioInput({super.key, required this.demoType});
 
   Future<void> _onPanStart(DragStartDetails details) async {
-    qr;
     final receiving = P.rwkv.generating.q;
     if (receiving) return;
     P.app.hapticLight();
@@ -35,7 +34,6 @@ class AudioInput extends ConsumerWidget {
   }
 
   Future<void> _onPanEnd(DragEndDetails details) async {
-    qr;
     final receiving = P.rwkv.generating.q;
     if (receiving) return;
     P.app.hapticMedium();
@@ -45,7 +43,6 @@ class AudioInput extends ConsumerWidget {
   }
 
   Future<void> _onPanCancel() async {
-    qr;
     final receiving = P.rwkv.generating.q;
     if (receiving) return;
     P.app.hapticLight();

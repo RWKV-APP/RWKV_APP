@@ -437,7 +437,6 @@ extension _$See on _See {
   }
 
   Future<void> _startStream() async {
-    qr;
     final hasPermission = await _recorder.hasPermission();
 
     qqq("hasPermission: $hasPermission");
