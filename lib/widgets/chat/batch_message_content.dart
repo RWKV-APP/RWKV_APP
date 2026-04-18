@@ -548,6 +548,7 @@ class _MarkdownBody extends ConsumerWidget {
         crossAxisAlignment: .stretch,
         children: [
           ?decodeParamWidget,
+          if (output.isNotEmpty) const SizedBox(height: 4),
           MarkdownRender(raw: output, useMessageLineHeight: true),
         ],
       );
