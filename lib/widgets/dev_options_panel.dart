@@ -106,6 +106,11 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
     setState(() {});
   }
 
+  void _onRenderMarkdownAndLatexChanged(bool value) {
+    P.preference.setRenderMarkdownAndLatexEnabled(value);
+    setState(() {});
+  }
+
   void _onOpenTest2Pressed() async {
     await pop();
     await push(PageKey.test2);
@@ -120,6 +125,7 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
     final borderColor = theme.colorScheme.outlineVariant;
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
     final fakeBatchInferenceBenchmarkEnabled = ref.watch(P.chat.fakeBatchInferenceBenchmarkEnabled);
+    final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -164,6 +170,13 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
                           subtitle: 'Replace real chat inference with random UI-only streaming output.',
                           value: fakeBatchInferenceBenchmarkEnabled,
                           onChanged: P.chat.onFakeBatchInferenceBenchmarkChanged,
+                        ),
+                        Container(height: .5, color: borderColor),
+                        _DevSwitchItem(
+                          title: 'Markdown + LaTeX',
+                          subtitle: 'Disable to render assistant output as plain text only.',
+                          value: renderMarkdownAndLatexEnabled,
+                          onChanged: _onRenderMarkdownAndLatexChanged,
                         ),
                         Container(height: .5, color: borderColor),
                         _DevSwitchItem(

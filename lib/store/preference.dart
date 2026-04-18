@@ -7,6 +7,7 @@ const String _legacyDebugRenderSpaceSymbolPreferenceKey = "halo_state.debug.show
 const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefillLogOnly";
 const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
 const String _fakeBatchInferenceBenchmarkPreferenceKey = "halo_state.fakeBatchInferenceBenchmarkEnabled";
+const String _renderMarkdownAndLatexPreferenceKey = "halo_state.renderMarkdownAndLatex";
 
 class _Preference {
   // ===========================================================================
@@ -29,6 +30,7 @@ class _Preference {
   var featureRollout = const FeatureRollout();
 
   bool fakeBatchInferenceBenchmarkEnabled = false;
+  bool renderMarkdownAndLatex = true;
 
   var promptTemplate = PromptTemplate.empty();
 
@@ -76,6 +78,7 @@ class _Preference {
 
   /// 偏好的消息气泡行距；0 表示使用默认行高
   late final preferredMessageLineHeight = qs<double>(0.0);
+  late final renderMarkdownAndLatexEnabled = qs(true);
 
   /// 偏好的主题模式设置，跟随系统、深色模式、浅色模式
   late final themeMode = qs<ThemeMode>(ThemeMode.system);
@@ -216,6 +219,8 @@ extension _$Preference on _Preference {
     }
 
     fakeBatchInferenceBenchmarkEnabled = sp.getBool(_fakeBatchInferenceBenchmarkPreferenceKey) ?? false;
+    renderMarkdownAndLatex = sp.getBool(_renderMarkdownAndLatexPreferenceKey) ?? true;
+    renderMarkdownAndLatexEnabled.q = renderMarkdownAndLatex;
 
     final tt = sp.getString('app.promptTemplate');
     if (tt != null && tt.isNotEmpty) {
@@ -454,6 +459,13 @@ extension $Preference on _Preference {
     fakeBatchInferenceBenchmarkEnabled = value;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_fakeBatchInferenceBenchmarkPreferenceKey, value);
+  }
+
+  Future<void> setRenderMarkdownAndLatexEnabled(bool value) async {
+    renderMarkdownAndLatex = value;
+    renderMarkdownAndLatexEnabled.q = value;
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool(_renderMarkdownAndLatexPreferenceKey, value);
   }
 
   void setThinkingModeUserTemplate(PromptTemplate template) async {

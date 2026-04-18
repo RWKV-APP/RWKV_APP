@@ -167,13 +167,13 @@ class MarkdownRender extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final breakableRaw = _prepareMarkdownRaw(raw);
     final textScaler = MediaQuery.textScalerOf(context);
     final primary = theme.colorScheme.primary;
     const scale = Config.msgFontScale;
     final textScaleFactor = textScaler.scale(1.0);
     final effectiveScale = scale * textScaleFactor;
     final qb = ref.watch(P.app.qb);
+    final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
     final effectiveMessageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);
     final messageLineHeight = useMessageLineHeight ? effectiveMessageLineHeight : null;
     final gptMarkdownStyle = TextStyle(
@@ -181,6 +181,16 @@ class MarkdownRender extends ConsumerWidget {
       fontSize: Config.markdownBodyFontSize * effectiveScale,
       height: messageLineHeight,
     );
+
+    if (!renderMarkdownAndLatexEnabled) {
+      return SelectableText(
+        raw,
+        style: gptMarkdownStyle,
+        textScaler: .noScaling,
+      );
+    }
+
+    final breakableRaw = _prepareMarkdownRaw(raw);
 
     final headerFontSizes = Config.markdownHeaderFontSizes.map((e) => e * effectiveScale).toList();
 

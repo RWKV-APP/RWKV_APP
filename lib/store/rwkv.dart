@@ -664,7 +664,7 @@ extension $RWKV on _RWKV {
 
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
-    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (_) {
+    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       final getResponseCalling = isBatchInference
           ? to_rwkv.GetBatchResponseBufferContent(messages: messages, modelID: modelID) //
           : to_rwkv.GetResponseBufferContent(messages: messages, modelID: modelID);
@@ -711,7 +711,7 @@ extension $RWKV on _RWKV {
     send(request);
     if (_getTokensTimer != null) _getTokensTimer!.cancel();
 
-    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
+    _getTokensTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) async {
       final getResponseCalling = batchSize > 1
           ? to_rwkv.GetBatchResponseBufferContent(messages: [], modelID: modelID) //
           : to_rwkv.GetResponseBufferContent(messages: [], modelID: modelID);

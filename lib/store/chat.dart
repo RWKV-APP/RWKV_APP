@@ -11,6 +11,35 @@ const String _responseStyleMaoAssistantPrefix = "<think>喵";
 const String _responseStyleMaoUserSuffix = " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格。";
 const String _fakeBatchInferenceBenchmarkCharacterPool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ     .,!?;:-";
 const Duration _visibleReceivedTokensInterval = Duration(milliseconds: 33);
+const List<int> _fakeBatchInferenceBenchmarkFixedTargetLengths = <int>[500, 1000, 1500];
+
+class _FakeBatchInferenceBenchmarkSlotState {
+  final String content;
+  final int targetLength;
+  final int intervalMultiplier;
+  final bool completed;
+
+  const _FakeBatchInferenceBenchmarkSlotState({
+    required this.content,
+    required this.targetLength,
+    required this.intervalMultiplier,
+    required this.completed,
+  });
+
+  _FakeBatchInferenceBenchmarkSlotState copyWith({
+    String? content,
+    int? targetLength,
+    int? intervalMultiplier,
+    bool? completed,
+  }) {
+    return _FakeBatchInferenceBenchmarkSlotState(
+      content: content ?? this.content,
+      targetLength: targetLength ?? this.targetLength,
+      intervalMultiplier: intervalMultiplier ?? this.intervalMultiplier,
+      completed: completed ?? this.completed,
+    );
+  }
+}
 
 class _Chat {
   // ===========================================================================
@@ -44,8 +73,10 @@ class _Chat {
   Timer? _fakeBatchInferenceBenchmarkTimer;
   Timer? _visibleReceivedTokensTimer;
   int? _fakeBatchInferenceBenchmarkMessageId;
-  List<String> _fakeBatchInferenceBenchmarkSlotBuffers = const <String>[];
+  List<_FakeBatchInferenceBenchmarkSlotState> _fakeBatchInferenceBenchmarkSlotStates = const <_FakeBatchInferenceBenchmarkSlotState>[];
   int _fakeBatchInferenceBenchmarkSlotIndex = 0;
+  int _fakeBatchInferenceBenchmarkTick = 0;
+  Map<int, int> _fakeBatchInferenceBenchmarkFixedTargetsBySlot = const <int, int>{};
   String _latestVisibleReceivedTokens = "";
   final math.Random _fakeBatchInferenceBenchmarkRandom = math.Random();
 
@@ -1819,8 +1850,15 @@ extension _$Chat on _Chat {
     final int intervalInMilliseconds = math.max(1, 1000 ~/ updatesPerSecond);
 
     _fakeBatchInferenceBenchmarkMessageId = messageId;
-    _fakeBatchInferenceBenchmarkSlotBuffers = List<String>.filled(effectiveBatchSize, "");
+    _fakeBatchInferenceBenchmarkFixedTargetsBySlot = _buildFakeBatchInferenceBenchmarkFixedTargets(
+      effectiveBatchSize,
+    );
+    _fakeBatchInferenceBenchmarkSlotStates = List<_FakeBatchInferenceBenchmarkSlotState>.generate(
+      effectiveBatchSize,
+      _createFakeBatchInferenceBenchmarkSlotState,
+    );
     _fakeBatchInferenceBenchmarkSlotIndex = 0;
+    _fakeBatchInferenceBenchmarkTick = 0;
     _setReceivedTokens(_buildFakeBatchInferenceBenchmarkContent(), immediateUi: true);
 
     _fakeBatchInferenceBenchmarkTimer = Timer.periodic(
@@ -1838,29 +1876,35 @@ extension _$Chat on _Chat {
           return;
         }
 
-        final int activeBatchSize = _fakeBatchInferenceBenchmarkSlotBuffers.length;
+        final int activeBatchSize = _fakeBatchInferenceBenchmarkSlotStates.length;
         if (activeBatchSize <= 0) {
           _cancelFakeBatchInferenceBenchmark(updateGenerating: true);
           return;
         }
 
-        final int slotIndex = _fakeBatchInferenceBenchmarkSlotIndex % activeBatchSize;
-        _fakeBatchInferenceBenchmarkSlotBuffers[slotIndex] =
-            _fakeBatchInferenceBenchmarkSlotBuffers[slotIndex] + _nextFakeBatchInferenceBenchmarkChunk();
-        _fakeBatchInferenceBenchmarkSlotIndex = (_fakeBatchInferenceBenchmarkSlotIndex + 1) % activeBatchSize;
+        final int slotIndex = _findNextFakeBatchInferenceBenchmarkSlotIndex(activeBatchSize);
+        if (slotIndex < 0) {
+          _cancelFakeBatchInferenceBenchmark(updateGenerating: true);
+          return;
+        }
+
+        _advanceFakeBatchInferenceBenchmarkSlot(slotIndex);
+        _fakeBatchInferenceBenchmarkTick++;
+        _fakeBatchInferenceBenchmarkSlotIndex = (slotIndex + 1) % activeBatchSize;
         _setReceivedTokens(_buildFakeBatchInferenceBenchmarkContent());
       },
     );
   }
 
   String _buildFakeBatchInferenceBenchmarkContent() {
-    if (_fakeBatchInferenceBenchmarkSlotBuffers.isEmpty) {
+    if (_fakeBatchInferenceBenchmarkSlotStates.isEmpty) {
       return "";
     }
-    if (_fakeBatchInferenceBenchmarkSlotBuffers.length == 1) {
-      return _fakeBatchInferenceBenchmarkSlotBuffers.first;
+    final List<String> slotOutputs = _fakeBatchInferenceBenchmarkSlotStates.map((e) => e.content).toList();
+    if (slotOutputs.length == 1) {
+      return slotOutputs.first;
     }
-    return _fakeBatchInferenceBenchmarkSlotBuffers.join(Config.batchMarker) + Config.batchMarker + "-1";
+    return slotOutputs.join(Config.batchMarker) + Config.batchMarker + "-1";
   }
 
   String _nextFakeBatchInferenceBenchmarkChunk() {
@@ -1871,6 +1915,78 @@ extension _$Chat on _Chat {
       buffer.write(_fakeBatchInferenceBenchmarkCharacterPool[index]);
     }
     return buffer.toString();
+  }
+
+  _FakeBatchInferenceBenchmarkSlotState _createFakeBatchInferenceBenchmarkSlotState(int index) {
+    final int targetLength = _fakeBatchInferenceBenchmarkFixedTargetsBySlot[index] ?? 1 << 30;
+    final int intervalMultiplier = 1 + _fakeBatchInferenceBenchmarkRandom.nextInt(4);
+    return _FakeBatchInferenceBenchmarkSlotState(
+      content: "",
+      targetLength: targetLength,
+      intervalMultiplier: intervalMultiplier,
+      completed: false,
+    );
+  }
+
+  Map<int, int> _buildFakeBatchInferenceBenchmarkFixedTargets(int batchSize) {
+    if (batchSize <= 0) {
+      return const <int, int>{};
+    }
+
+    final List<int> slotIndexes = List<int>.generate(batchSize, (index) => index);
+    slotIndexes.shuffle(_fakeBatchInferenceBenchmarkRandom);
+
+    final Map<int, int> result = <int, int>{};
+    final int fixedCount = math.min(batchSize, _fakeBatchInferenceBenchmarkFixedTargetLengths.length);
+    for (int i = 0; i < fixedCount; i++) {
+      result[slotIndexes[i]] = _fakeBatchInferenceBenchmarkFixedTargetLengths[i];
+    }
+    return result;
+  }
+
+  int _findNextFakeBatchInferenceBenchmarkSlotIndex(int activeBatchSize) {
+    for (int offset = 0; offset < activeBatchSize; offset++) {
+      final int candidate = (_fakeBatchInferenceBenchmarkSlotIndex + offset) % activeBatchSize;
+      final slotState = _fakeBatchInferenceBenchmarkSlotStates[candidate];
+      if (slotState.completed) {
+        continue;
+      }
+      if (_fakeBatchInferenceBenchmarkTick % slotState.intervalMultiplier != 0) {
+        continue;
+      }
+      return candidate;
+    }
+
+    for (int offset = 0; offset < activeBatchSize; offset++) {
+      final int candidate = (_fakeBatchInferenceBenchmarkSlotIndex + offset) % activeBatchSize;
+      final slotState = _fakeBatchInferenceBenchmarkSlotStates[candidate];
+      if (!slotState.completed) {
+        return candidate;
+      }
+    }
+    return -1;
+  }
+
+  void _advanceFakeBatchInferenceBenchmarkSlot(int slotIndex) {
+    final slotState = _fakeBatchInferenceBenchmarkSlotStates[slotIndex];
+    if (slotState.completed) {
+      return;
+    }
+
+    final String nextChunk = _nextFakeBatchInferenceBenchmarkChunk();
+    final int remaining = slotState.targetLength - slotState.content.length;
+    if (remaining <= 0) {
+      _fakeBatchInferenceBenchmarkSlotStates[slotIndex] = slotState.copyWith(completed: true);
+      return;
+    }
+
+    final String appended = nextChunk.length <= remaining ? nextChunk : nextChunk.substring(0, remaining);
+    final String newContent = slotState.content + appended;
+    final bool completed = newContent.length >= slotState.targetLength;
+    _fakeBatchInferenceBenchmarkSlotStates[slotIndex] = slotState.copyWith(
+      content: newContent,
+      completed: completed,
+    );
   }
 
   Future<bool> _pauseFakeBatchInferenceBenchmarkMessage({
@@ -1902,8 +2018,10 @@ extension _$Chat on _Chat {
     timer?.cancel();
     _fakeBatchInferenceBenchmarkTimer = null;
     _fakeBatchInferenceBenchmarkMessageId = null;
-    _fakeBatchInferenceBenchmarkSlotBuffers = const <String>[];
+    _fakeBatchInferenceBenchmarkSlotStates = const <_FakeBatchInferenceBenchmarkSlotState>[];
     _fakeBatchInferenceBenchmarkSlotIndex = 0;
+    _fakeBatchInferenceBenchmarkTick = 0;
+    _fakeBatchInferenceBenchmarkFixedTargetsBySlot = const <int, int>{};
     if (active && updateGenerating) {
       P.rwkv.generating.q = false;
     }
