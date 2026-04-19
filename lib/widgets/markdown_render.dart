@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
-// ignore: depend_on_referenced_packages
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gpt_markdown/custom_widgets/markdown_config.dart';
@@ -20,6 +19,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zone/config.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/store/p.dart';
+
+// ignore: depend_on_referenced_packages
 
 const int _softBreakStep = 12;
 const int _softBreakMinRunLength = 24;

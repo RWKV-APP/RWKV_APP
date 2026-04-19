@@ -1,6 +1,17 @@
 part of 'p.dart';
 
 class _UI {
+  final _batchHorizontalControllers = <int, ScrollController>{};
+  final _batchSlotVerticalControllers = <({int messageId, int slotIndex}), ScrollController>{};
+  final _batchHorizontalScrollListeners = <int, VoidCallback>{};
+  final _batchSlotMetrics = <int, ({int batchCount, double paddingLeft, double slotWidth, double viewportWidth})>{};
+  final _batchScheduledViewportSyncMessageIds = <int>{};
+  final _batchScheduledButtonSyncMessageIds = <int>{};
+  final _batchScheduledSlotContentKeys = <({int messageId, int slotIndex})>{};
+  final _batchSlotPendingData = <({int messageId, int slotIndex}), ({Message msg, String data})>{};
+  final _batchSlotData = <({int messageId, int slotIndex}), String>{};
+  bool _batchControllerProviderSyncScheduled = false;
+
   late final showingPanels = qs<Map<String, bool>>({});
 
   late final homeController = ScrollController(initialScrollOffset: 1);
@@ -71,6 +82,21 @@ class _UI {
     }
     return v;
   });
+
+  late final batchHorizontalScrollControllers = qs<Map<int, ScrollController>>({});
+  late final batchSlotVerticalScrollControllers = qs<Map<({int messageId, int slotIndex}), ScrollController>>({});
+  late final batchScrollButtonVisibility = qsf<int, ({bool left, bool right})>((left: false, right: false));
+  late final batchVisibleSlotIndexes = qsf<int, Set<int>>(const <int>{});
+  late final batchVisibleSlotIndexesSynced = qsf<int, bool>(false);
+  late final batchLastBatchCount = qsf<int, int>(0);
+  late final batchLastPaddingLeft = qsf<int, double>(0);
+  late final batchLastSlotWidth = qsf<int, double>(0);
+  late final batchLastViewportWidth = qsf<int, double>(0);
+  late final batchSlotBodyCanScroll = qsf<({int messageId, int slotIndex}), bool>(false);
+  late final batchSlotViewportVisible = qsff<({int messageId, int slotIndex}), bool>((ref, key) {
+    final visibleSlotIndexes = ref.watch(batchVisibleSlotIndexes(key.messageId));
+    return visibleSlotIndexes.contains(key.slotIndex);
+  });
 }
 
 /// Private methods
@@ -79,6 +105,7 @@ extension _$UI on _UI {
     P.app.screenWidth.l(_onScreenWidthChanged, fireImmediately: true);
     homeController.addListener(_onHomeScroll);
     P.app.pageKey.l(_onPageKeyChanged);
+    P.msg.ids.l(_onMessageIdsChangedForBatchUi, fireImmediately: true);
     backdropFilterBgAlphaForInputOptions.l(_onBackdropFilterBgAlphaForInputOptionsChanged, fireImmediately: true);
     sigmaForBackdropFilterForInputOptions.l(_onSigmaForBackdropFilterForInputOptionsChanged, fireImmediately: true);
     backdropFilterBgAlphaForInputTextFields.l(_onBackdropFilterBgAlphaForInputTextFieldsChanged, fireImmediately: true);
@@ -203,6 +230,393 @@ extension _$UI on _UI {
 
 /// Public methods
 extension $UI on _UI {
+  void _onMessageIdsChangedForBatchUi(List<int> ids) {
+    final activeIds = ids.toSet();
+    final messageIds = <int>{};
+
+    for (final messageId in _batchHorizontalControllers.keys) {
+      messageIds.add(messageId);
+    }
+    for (final messageId in _batchSlotMetrics.keys) {
+      messageIds.add(messageId);
+    }
+    for (final key in _batchSlotVerticalControllers.keys) {
+      messageIds.add(key.messageId);
+    }
+    for (final messageId in messageIds) {
+      if (activeIds.contains(messageId)) continue;
+      clearBatchMessageUi(messageId: messageId);
+    }
+  }
+
+  ScrollController batchMessageScrollController({required int messageId}) {
+    final existing = _batchHorizontalControllers[messageId];
+    if (existing != null) return existing;
+
+    final controller = ScrollController();
+    final VoidCallback listener = () {
+      syncBatchMessageScrollState(messageId: messageId);
+    };
+    controller.addListener(listener);
+    _batchHorizontalScrollListeners[messageId] = listener;
+    _batchHorizontalControllers[messageId] = controller;
+    _scheduleBatchControllerProviderSync();
+    scheduleBatchMessageScrollButtonSync(messageId: messageId);
+    return controller;
+  }
+
+  ScrollController batchSlotScrollController({
+    required int messageId,
+    required int slotIndex,
+  }) {
+    final key = (messageId: messageId, slotIndex: slotIndex);
+    final existing = _batchSlotVerticalControllers[key];
+    if (existing != null) return existing;
+
+    final controller = ScrollController();
+    _batchSlotVerticalControllers[key] = controller;
+    _scheduleBatchControllerProviderSync();
+    return controller;
+  }
+
+  void _scheduleBatchControllerProviderSync() {
+    if (_batchControllerProviderSyncScheduled) return;
+    _batchControllerProviderSyncScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _batchControllerProviderSyncScheduled = false;
+      _syncBatchControllerProviders();
+    });
+  }
+
+  void _syncBatchControllerProviders() {
+    batchHorizontalScrollControllers.q = {..._batchHorizontalControllers};
+    batchSlotVerticalScrollControllers.q = {..._batchSlotVerticalControllers};
+  }
+
+  void scheduleBatchMessageScrollButtonSync({required int messageId}) {
+    if (_batchScheduledButtonSyncMessageIds.contains(messageId)) return;
+    _batchScheduledButtonSyncMessageIds.add(messageId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _batchScheduledButtonSyncMessageIds.remove(messageId);
+      updateBatchScrollButtonVisibility(messageId: messageId);
+    });
+  }
+
+  void syncBatchMessageScrollState({required int messageId}) {
+    updateBatchScrollButtonVisibility(messageId: messageId);
+    _syncBatchVisibleSlotIndexesFromMetrics(messageId: messageId);
+  }
+
+  void updateBatchScrollButtonVisibility({required int messageId}) {
+    final controller = _batchHorizontalControllers[messageId];
+    if (controller == null || !controller.hasClients) {
+      _setBatchScrollButtonVisibility(
+        messageId: messageId,
+        left: false,
+        right: false,
+      );
+      return;
+    }
+
+    final position = controller.position;
+    final left = position.pixels > 0.5;
+    final right = position.pixels < (position.maxScrollExtent - 0.5);
+    _setBatchScrollButtonVisibility(
+      messageId: messageId,
+      left: left,
+      right: right,
+    );
+  }
+
+  void _setBatchScrollButtonVisibility({
+    required int messageId,
+    required bool left,
+    required bool right,
+  }) {
+    final current = batchScrollButtonVisibility(messageId).q;
+    if (current.left == left && current.right == right) return;
+    batchScrollButtonVisibility(messageId).q = (left: left, right: right);
+  }
+
+  Future<void> scrollBatchMessageBy({
+    required int messageId,
+    required double delta,
+  }) async {
+    final controller = _batchHorizontalControllers[messageId];
+    if (controller == null) return;
+    if (!controller.hasClients) return;
+
+    final position = controller.position;
+    final target = (position.pixels + delta).clamp(0.0, position.maxScrollExtent);
+    if ((target - position.pixels).abs() < 0.5) return;
+
+    await controller.animateTo(
+      target,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+    updateBatchScrollButtonVisibility(messageId: messageId);
+  }
+
+  Set<int> resolveBatchVisibleSlotIndexes({
+    required int messageId,
+    required int batchCount,
+    required double paddingLeft,
+    required double slotWidth,
+    required double viewportWidth,
+  }) {
+    final controller = _batchHorizontalControllers[messageId];
+    return _resolveBatchVisibleSlotIndexes(
+      controller: controller,
+      batchCount: batchCount,
+      paddingLeft: paddingLeft,
+      slotWidth: slotWidth,
+      viewportWidth: viewportWidth,
+    );
+  }
+
+  void scheduleBatchSlotsViewportSync({
+    required int messageId,
+    required int batchCount,
+    required double paddingLeft,
+    required double slotWidth,
+    required double viewportWidth,
+  }) {
+    _batchSlotMetrics[messageId] = (
+      batchCount: batchCount,
+      paddingLeft: paddingLeft,
+      slotWidth: slotWidth,
+      viewportWidth: viewportWidth,
+    );
+    if (_batchScheduledViewportSyncMessageIds.contains(messageId)) return;
+    _batchScheduledViewportSyncMessageIds.add(messageId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _batchScheduledViewportSyncMessageIds.remove(messageId);
+      _applyBatchSlotMetrics(messageId: messageId);
+      _syncBatchVisibleSlotIndexesFromMetrics(messageId: messageId);
+      updateBatchScrollButtonVisibility(messageId: messageId);
+    });
+  }
+
+  void _applyBatchSlotMetrics({required int messageId}) {
+    final metrics = _batchSlotMetrics[messageId];
+    if (metrics == null) return;
+    if (batchLastBatchCount(messageId).q != metrics.batchCount) batchLastBatchCount(messageId).q = metrics.batchCount;
+    if (batchLastPaddingLeft(messageId).q != metrics.paddingLeft) batchLastPaddingLeft(messageId).q = metrics.paddingLeft;
+    if (batchLastSlotWidth(messageId).q != metrics.slotWidth) batchLastSlotWidth(messageId).q = metrics.slotWidth;
+    if (batchLastViewportWidth(messageId).q != metrics.viewportWidth) batchLastViewportWidth(messageId).q = metrics.viewportWidth;
+  }
+
+  void _syncBatchVisibleSlotIndexesFromMetrics({required int messageId}) {
+    final metrics = _batchSlotMetrics[messageId];
+    if (metrics == null) return;
+    final indexes = resolveBatchVisibleSlotIndexes(
+      messageId: messageId,
+      batchCount: metrics.batchCount,
+      paddingLeft: metrics.paddingLeft,
+      slotWidth: metrics.slotWidth,
+      viewportWidth: metrics.viewportWidth,
+    );
+    _setBatchVisibleSlotIndexes(
+      messageId: messageId,
+      indexes: indexes,
+    );
+  }
+
+  void _setBatchVisibleSlotIndexes({
+    required int messageId,
+    required Set<int> indexes,
+  }) {
+    final normalized = Set<int>.unmodifiable(indexes);
+    final current = batchVisibleSlotIndexes(messageId).q;
+    if (!_sameIntSet(current, normalized)) {
+      batchVisibleSlotIndexes(messageId).q = normalized;
+    }
+    if (!batchVisibleSlotIndexesSynced(messageId).q) {
+      batchVisibleSlotIndexesSynced(messageId).q = true;
+    }
+    P.chat.updateBatchViewportSlotIndexes(
+      messageId: messageId,
+      indexes: normalized,
+    );
+  }
+
+  Set<int> _resolveBatchVisibleSlotIndexes({
+    required ScrollController? controller,
+    required int batchCount,
+    required double paddingLeft,
+    required double slotWidth,
+    required double viewportWidth,
+  }) {
+    if (batchCount <= 0) return const <int>{};
+    if (slotWidth <= 0) return const <int>{};
+
+    final double pixels = controller != null && controller.hasClients ? controller.position.pixels : 0;
+    final double effectiveViewportWidth = controller != null && controller.hasClients
+        ? controller.position.viewportDimension
+        : viewportWidth;
+    if (effectiveViewportWidth <= 0) return const <int>{0};
+
+    final slotExtent = slotWidth + 8.0;
+    final visibleStart = pixels;
+    final visibleEnd = pixels + effectiveViewportWidth;
+    final firstCandidate = _clampBatchSlotIndex(((visibleStart - paddingLeft) / slotExtent).floor() - 1, batchCount);
+    final lastCandidate = _clampBatchSlotIndex(((visibleEnd - paddingLeft) / slotExtent).ceil() + 1, batchCount);
+    final indexes = <int>{};
+    final count = math.max(0, lastCandidate - firstCandidate + 1);
+    for (final slotIndex in Iterable<int>.generate(count, (index) => firstCandidate + index)) {
+      final itemStart = paddingLeft + slotIndex * slotExtent;
+      final itemEnd = itemStart + slotWidth;
+      if (itemEnd < visibleStart) continue;
+      if (itemStart > visibleEnd) continue;
+      indexes.add(slotIndex);
+    }
+    if (indexes.isNotEmpty) return Set<int>.unmodifiable(indexes);
+    return Set<int>.unmodifiable({firstCandidate});
+  }
+
+  int _clampBatchSlotIndex(int value, int batchCount) {
+    if (value < 0) return 0;
+    final last = batchCount - 1;
+    if (value > last) return last;
+    return value;
+  }
+
+  bool _sameIntSet(Set<int> a, Set<int> b) {
+    if (a.length != b.length) return false;
+    for (final item in a) {
+      if (!b.contains(item)) return false;
+    }
+    return true;
+  }
+
+  void scheduleBatchSlotContentSync({
+    required Message msg,
+    required int slotIndex,
+    required String data,
+  }) {
+    final key = (messageId: msg.id, slotIndex: slotIndex);
+    _batchSlotPendingData[key] = (msg: msg, data: data);
+    if (_batchScheduledSlotContentKeys.contains(key)) return;
+    _batchScheduledSlotContentKeys.add(key);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _batchScheduledSlotContentKeys.remove(key);
+      final pending = _batchSlotPendingData.remove(key);
+      if (pending == null) return;
+      _syncBatchSlotContent(
+        key: key,
+        msg: pending.msg,
+        data: pending.data,
+      );
+    });
+  }
+
+  void _syncBatchSlotContent({
+    required ({int messageId, int slotIndex}) key,
+    required Message msg,
+    required String data,
+  }) {
+    final previous = _batchSlotData[key];
+    _batchSlotData[key] = data;
+    if (previous != null && previous != data) {
+      _maybeAutoScrollBatchSlotToBottom(
+        msg: msg,
+        slotIndex: key.slotIndex,
+      );
+    }
+    _syncBatchSlotBodyCanScroll(key: key);
+  }
+
+  void _maybeAutoScrollBatchSlotToBottom({
+    required Message msg,
+    required int slotIndex,
+  }) {
+    if (!msg.changing) return;
+
+    final key = (messageId: msg.id, slotIndex: slotIndex);
+    final controller = _batchSlotVerticalControllers[key];
+    if (controller == null) return;
+    if (!controller.hasClients) return;
+
+    final position = controller.position;
+    if (!position.hasContentDimensions) return;
+
+    final distanceToBottom = position.maxScrollExtent - position.pixels;
+    if (distanceToBottom >= 48.0) return;
+    controller.jumpTo(position.maxScrollExtent);
+  }
+
+  void _syncBatchSlotBodyCanScroll({required ({int messageId, int slotIndex}) key}) {
+    final controller = _batchSlotVerticalControllers[key];
+    if (controller == null) return;
+    if (!controller.hasClients) return;
+
+    final next = controller.position.maxScrollExtent > 0.5;
+    if (batchSlotBodyCanScroll(key).q == next) return;
+    batchSlotBodyCanScroll(key).q = next;
+  }
+
+  void onBatchSlotPreviewPressed({
+    required int messageId,
+    required int slotIndex,
+  }) {
+    P.chat.batchPreviewTarget.q = (messageId, slotIndex);
+    push(.batchSlotPreview);
+  }
+
+  bool onBatchSlotVerticalScrollNotification(ScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) return false;
+
+    final parent = P.chat.scrollController;
+    if (!parent.hasClients) return false;
+    if (notification is! OverscrollNotification) return false;
+
+    final parentPosition = parent.position;
+    final newOffset = (parentPosition.pixels - notification.overscroll).clamp(
+      parentPosition.minScrollExtent,
+      parentPosition.maxScrollExtent,
+    );
+    if (newOffset == parentPosition.pixels) return false;
+    parent.jumpTo(newOffset);
+    return false;
+  }
+
+  void clearBatchMessageUi({required int messageId}) {
+    final horizontalController = _batchHorizontalControllers.remove(messageId);
+    final horizontalListener = _batchHorizontalScrollListeners.remove(messageId);
+    if (horizontalController != null && horizontalListener != null) {
+      horizontalController.removeListener(horizontalListener);
+    }
+    horizontalController?.dispose();
+
+    final slotKeys = <({int messageId, int slotIndex})>[];
+    for (final key in _batchSlotVerticalControllers.keys) {
+      if (key.messageId != messageId) continue;
+      slotKeys.add(key);
+    }
+    for (final key in slotKeys) {
+      final controller = _batchSlotVerticalControllers.remove(key);
+      controller?.dispose();
+      batchSlotBodyCanScroll(key).q = false;
+      _batchSlotData.remove(key);
+      _batchSlotPendingData.remove(key);
+      _batchScheduledSlotContentKeys.remove(key);
+    }
+    _syncBatchControllerProviders();
+
+    _batchSlotMetrics.remove(messageId);
+    _batchScheduledViewportSyncMessageIds.remove(messageId);
+    _batchScheduledButtonSyncMessageIds.remove(messageId);
+    batchScrollButtonVisibility(messageId).q = (left: false, right: false);
+    batchVisibleSlotIndexes(messageId).q = const <int>{};
+    batchVisibleSlotIndexesSynced(messageId).q = false;
+    batchLastBatchCount(messageId).q = 0;
+    batchLastPaddingLeft(messageId).q = 0;
+    batchLastSlotWidth(messageId).q = 0;
+    batchLastViewportWidth(messageId).q = 0;
+    P.chat.clearBatchViewportSlotIndexes(messageId: messageId);
+  }
+
   Future<Res?> showPanel<Res>({
     required String key,
     required Widget Function(ScrollController scrollController) builder,
