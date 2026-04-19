@@ -171,22 +171,24 @@ class _BatchSlotsListView extends ConsumerWidget {
               decodeParam: _decodeParamAt(parsedDecodeParams, i),
             ),
           )
-        : ListView(
+        : SingleChildScrollView(
             controller: scrollController,
             scrollDirection: Axis.horizontal,
             padding: padding,
-            children: [
-              for (int i = 0; i < batchCount; i++)
-                _BatchSlotItem(
-                  msg: msg,
-                  slotIndex: i,
-                  isLast: i == batchCount - 1,
-                  slotLabel: _slotLabelAt(i),
-                  question: _questionAt(i),
-                  data: batch[i],
-                  decodeParam: _decodeParamAt(parsedDecodeParams, i),
-                ),
-            ],
+            child: Row(
+              children: [
+                for (int i = 0; i < batchCount; i++)
+                  _BatchSlotItem(
+                    msg: msg,
+                    slotIndex: i,
+                    isLast: i == batchCount - 1,
+                    slotLabel: _slotLabelAt(i),
+                    question: _questionAt(i),
+                    data: batch[i],
+                    decodeParam: _decodeParamAt(parsedDecodeParams, i),
+                  ),
+              ],
+            ),
           );
   }
 }
