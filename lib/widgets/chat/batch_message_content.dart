@@ -144,22 +144,86 @@ class _BatchSlotsListView extends ConsumerWidget {
     return parsedDecodeParams.last;
   }
 
-  Widget _buildSlotItem({
-    required int i,
-    required int batchCount,
-    required List<String> batch,
-    required List<SamplerAndPenaltyParam> parsedDecodeParams,
-    required double slotWidth,
-    required Color qb,
-    required Color qw,
-    required int? batchSelection,
-  }) {
-    final isLast = i == batchCount - 1;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final (batch, _, batchCount, _) = getBatchInfo(finalContent);
+    final appTheme = ref.watch(P.app.theme);
+    final useBuilder = ref.watch(P.preference.useBatchListViewBuilderEnabled);
+    final parsedDecodeParams = msg.parsedDecodeParams;
+    final EdgeInsets padding = .only(
+      left: appTheme.msgListMarginLeft,
+      right: appTheme.msgListMarginRight,
+    );
+
+    return useBuilder
+        ? ListView.builder(
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            padding: padding,
+            itemCount: batchCount,
+            itemBuilder: (context, i) => _BatchSlotItem(
+              msg: msg,
+              slotIndex: i,
+              isLast: i == batchCount - 1,
+              slotLabel: _slotLabelAt(i),
+              question: _questionAt(i),
+              data: batch[i],
+              decodeParam: _decodeParamAt(parsedDecodeParams, i),
+            ),
+          )
+        : ListView(
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            padding: padding,
+            children: [
+              for (int i = 0; i < batchCount; i++)
+                _BatchSlotItem(
+                  msg: msg,
+                  slotIndex: i,
+                  isLast: i == batchCount - 1,
+                  slotLabel: _slotLabelAt(i),
+                  question: _questionAt(i),
+                  data: batch[i],
+                  decodeParam: _decodeParamAt(parsedDecodeParams, i),
+                ),
+            ],
+          );
+  }
+}
+
+class _BatchSlotItem extends ConsumerWidget {
+  final model.Message msg;
+  final int slotIndex;
+  final bool isLast;
+  final String? slotLabel;
+  final String? question;
+  final String data;
+  final SamplerAndPenaltyParam? decodeParam;
+
+  const _BatchSlotItem({
+    required this.msg,
+    required this.slotIndex,
+    required this.isLast,
+    required this.slotLabel,
+    required this.question,
+    required this.data,
+    required this.decodeParam,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final screenWidth = ref.watch(P.app.screenWidth);
+    final batchVW = ref.watch(P.chat.batchVW);
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+    final batchSelection = ref.watch(P.msg.batchSelection(msg));
+    final slotWidth = screenWidth * (batchVW / 100);
+
     return Padding(
       padding: .only(right: isLast ? 0 : _kSlotGap),
       child: GD(
         onTap: () {
-          P.msg.batchSelection(msg).q = i;
+          P.msg.batchSelection(msg).q = slotIndex;
         },
         child: Container(
           constraints: BoxConstraints(
@@ -169,80 +233,21 @@ class _BatchSlotsListView extends ConsumerWidget {
           padding: const .all(8),
           decoration: BoxDecoration(
             color: qw,
-            border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
+            border: .all(color: batchSelection == slotIndex ? kCG : qb.q(.1)),
             borderRadius: .circular(8),
           ),
           child: RepaintBoundary(
             child: _SlotContent(
               msg: msg,
-              slotIndex: i,
-              slotLabel: _slotLabelAt(i),
-              question: _questionAt(i),
-              data: batch[i],
-              decodeParam: _decodeParamAt(parsedDecodeParams, i),
-              qb: qb,
+              slotIndex: slotIndex,
+              slotLabel: slotLabel,
+              question: question,
+              data: data,
+              decodeParam: decodeParam,
             ),
           ),
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final (batch, _, batchCount, _) = getBatchInfo(finalContent);
-    final screenWidth = ref.watch(P.app.screenWidth);
-    final batchVW = ref.watch(P.chat.batchVW);
-    final qb = ref.watch(P.app.qb);
-    final qw = ref.watch(P.app.qw);
-    final appTheme = ref.watch(P.app.theme);
-    final batchSelection = ref.watch(P.msg.batchSelection(msg));
-    final useBuilder = ref.watch(P.preference.useBatchListViewBuilderEnabled);
-    final parsedDecodeParams = msg.parsedDecodeParams;
-    final slotWidth = screenWidth * (batchVW / 100);
-    final EdgeInsets padding = .only(
-      left: appTheme.msgListMarginLeft,
-      right: appTheme.msgListMarginRight,
-    );
-
-    return Theme(
-      data: theme,
-      child: useBuilder
-          ? ListView.builder(
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              padding: padding,
-              itemCount: batchCount,
-              itemBuilder: (context, i) => _buildSlotItem(
-                i: i,
-                batchCount: batchCount,
-                batch: batch,
-                parsedDecodeParams: parsedDecodeParams,
-                slotWidth: slotWidth,
-                qb: qb,
-                qw: qw,
-                batchSelection: batchSelection,
-              ),
-            )
-          : ListView(
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              padding: padding,
-              children: [
-                for (int i = 0; i < batchCount; i++)
-                  _buildSlotItem(
-                    i: i,
-                    batchCount: batchCount,
-                    batch: batch,
-                    parsedDecodeParams: parsedDecodeParams,
-                    slotWidth: slotWidth,
-                    qb: qb,
-                    qw: qw,
-                    batchSelection: batchSelection,
-                  ),
-              ],
-            ),
     );
   }
 }
@@ -256,7 +261,6 @@ class _BatchScrollLeftButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final screenWidth = ref.watch(P.app.screenWidth);
     final batchVW = ref.watch(P.chat.batchVW);
     final qb = ref.watch(P.app.qb);
@@ -264,30 +268,27 @@ class _BatchScrollLeftButton extends ConsumerWidget {
     final step = screenWidth * (batchVW / 100) * 0.9;
     final bool show = ref.watch(_BatchMessageContentState.showLeft);
 
-    return Theme(
-      data: theme,
-      child: AnimatedPositioned(
-        left: show ? 4 : -100,
-        top: 0,
+    return AnimatedPositioned(
+      left: show ? 4 : -100,
+      top: 0,
+      duration: 250.ms,
+      curve: Curves.easeOut,
+      bottom: 0,
+      child: AnimatedOpacity(
+        opacity: show ? 1 : 0,
         duration: 250.ms,
         curve: Curves.easeOut,
-        bottom: 0,
-        child: AnimatedOpacity(
-          opacity: show ? 1 : 0,
-          duration: 250.ms,
-          curve: Curves.easeOut,
-          child: Center(
-            child: GD(
-              onTap: () => scrollBy(-step),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: qw,
-                  border: .all(color: qb.q(.1)),
-                  borderRadius: .circular(20),
-                ),
-                padding: const .all(6),
-                child: Icon(Icons.chevron_left, color: qb.q(.7)),
+        child: Center(
+          child: GD(
+            onTap: () => scrollBy(-step),
+            child: Container(
+              decoration: BoxDecoration(
+                color: qw,
+                border: .all(color: qb.q(.1)),
+                borderRadius: .circular(20),
               ),
+              padding: const .all(6),
+              child: Icon(Icons.chevron_left, color: qb.q(.7)),
             ),
           ),
         ),
@@ -305,7 +306,6 @@ class _BatchScrollRightButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final screenWidth = ref.watch(P.app.screenWidth);
     final batchVW = ref.watch(P.chat.batchVW);
     final qb = ref.watch(P.app.qb);
@@ -313,30 +313,27 @@ class _BatchScrollRightButton extends ConsumerWidget {
     final step = screenWidth * (batchVW / 100) * 0.9;
     final bool show = ref.watch(_BatchMessageContentState.showRight);
 
-    return Theme(
-      data: theme,
-      child: AnimatedPositioned(
-        right: show ? 4 : -100,
-        top: 0,
-        bottom: 0,
+    return AnimatedPositioned(
+      right: show ? 4 : -100,
+      top: 0,
+      bottom: 0,
+      duration: 250.ms,
+      curve: Curves.easeOut,
+      child: AnimatedOpacity(
+        opacity: show ? 1 : 0,
         duration: 250.ms,
         curve: Curves.easeOut,
-        child: AnimatedOpacity(
-          opacity: show ? 1 : 0,
-          duration: 250.ms,
-          curve: Curves.easeOut,
-          child: Center(
-            child: GD(
-              onTap: () => scrollBy(step),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: qw,
-                  border: .all(color: qb.q(.1)),
-                  borderRadius: .circular(20),
-                ),
-                padding: const .all(6),
-                child: Icon(Icons.chevron_right, color: qb.q(.7)),
+        child: Center(
+          child: GD(
+            onTap: () => scrollBy(step),
+            child: Container(
+              decoration: BoxDecoration(
+                color: qw,
+                border: .all(color: qb.q(.1)),
+                borderRadius: .circular(20),
               ),
+              padding: const .all(6),
+              child: Icon(Icons.chevron_right, color: qb.q(.7)),
             ),
           ),
         ),
@@ -352,7 +349,6 @@ class _SlotContent extends ConsumerStatefulWidget {
   final String? question;
   final String data;
   final SamplerAndPenaltyParam? decodeParam;
-  final Color qb;
 
   const _SlotContent({
     required this.msg,
@@ -361,7 +357,6 @@ class _SlotContent extends ConsumerStatefulWidget {
     required this.question,
     required this.data,
     required this.decodeParam,
-    required this.qb,
   });
 
   @override
@@ -434,7 +429,6 @@ class _SlotContentState extends ConsumerState<_SlotContent> {
           slotLabel: widget.slotLabel,
           decodeParam: widget.decodeParam,
           onPreviewPressed: _onPreviewPressed,
-          qb: widget.qb,
         ),
         if (hasHeader || hasQuestion) const SizedBox(height: 8),
         Expanded(
@@ -464,13 +458,11 @@ class _SlotHeaderRow extends StatelessWidget {
   final String? slotLabel;
   final SamplerAndPenaltyParam? decodeParam;
   final VoidCallback onPreviewPressed;
-  final Color qb;
 
   const _SlotHeaderRow({
     required this.slotLabel,
     required this.decodeParam,
     required this.onPreviewPressed,
-    required this.qb,
   });
 
   @override
@@ -483,20 +475,21 @@ class _SlotHeaderRow extends StatelessWidget {
         if (hasSlotLabel && decodeParam != null) const SizedBox(width: 6),
         if (decodeParam != null) Flexible(child: _DecodeParamBadge(decodeParam: decodeParam!)),
         const Spacer(),
-        _SlotPreviewButton(onTap: onPreviewPressed, qb: qb),
+        _SlotPreviewButton(onTap: onPreviewPressed),
       ],
     );
   }
 }
 
-class _SlotPreviewButton extends StatelessWidget {
+class _SlotPreviewButton extends ConsumerWidget {
   final VoidCallback onTap;
-  final Color qb;
 
-  const _SlotPreviewButton({required this.onTap, required this.qb});
+  const _SlotPreviewButton({required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qb = ref.watch(P.app.qb);
+
     return GD(
       onTap: onTap,
       child: Container(

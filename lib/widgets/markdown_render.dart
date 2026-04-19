@@ -321,19 +321,14 @@ class _ForwardingHorizontalScrollViewState extends State<_ForwardingHorizontalSc
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Theme(
-      data: theme,
-      child: Scrollbar(
-        controller: _scrollController,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: _onScrollNotification,
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            child: widget.child,
-          ),
+    return Scrollbar(
+      controller: _scrollController,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _onScrollNotification,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          scrollDirection: Axis.horizontal,
+          child: widget.child,
         ),
       ),
     );
