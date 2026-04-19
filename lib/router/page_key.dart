@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 // Project imports:
 import 'package:zone/page/advanced_sesttings.dart';
 import 'package:zone/page/api_server.dart';
+import 'package:zone/page/batch_slot_preview.dart';
 import 'package:zone/page/benchmark.dart';
 import 'package:zone/page/bot_message_bottom_preview.dart';
 import 'package:zone/page/chat.dart';
@@ -43,6 +44,7 @@ enum PageKey {
   benchmark,
   interactionsPreview,
   botMessageBottomPreview,
+  batchSlotPreview,
   othello,
   sudoku,
   rolePlaying,
@@ -77,6 +79,7 @@ enum PageKey {
     benchmark => const PageBenchmark(),
     interactionsPreview => const PageInteractionsPreview(),
     botMessageBottomPreview => const PageBotMessageBottomPreview(),
+    batchSlotPreview => const PageBatchSlotPreview(),
     lambada => const PageBenchmark(),
     advancedSettings => const PageAdvancedSettings(),
     fontSettings => const PageFontSettings(),

@@ -120,6 +120,9 @@ class _Chat {
   late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
   late final fakeBatchInferenceBenchmarkEnabled = qs(false);
 
+  /// (messageId, slotIndex) 指向当前预览页要展示的 batch slot
+  late final batchPreviewTarget = qs<(int, int)?>(null);
+
   /// 当前需要在 AppBar 新对话按钮上展示引导的会话 id
   late final newConversationGuideConversationId = qs<int?>(null);
 

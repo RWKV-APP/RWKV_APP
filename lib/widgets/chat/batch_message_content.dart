@@ -6,6 +6,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
 import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
@@ -13,9 +14,13 @@ import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/sampler_and_penalty_param.dart';
+import 'package:zone/router/method.dart';
 import 'package:zone/router/router.dart';
 import 'package:zone/store/p.dart';
 import 'package:zone/widgets/markdown_render.dart';
+
+const double _kSlotGap = 8.0;
+const double _kSlotAutoScrollStickThreshold = 48.0;
 
 class BatchMessageContent extends ConsumerStatefulWidget {
   final model.Message msg;
@@ -86,7 +91,7 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        _BatchSlotsScrollView(
+        _BatchSlotsListView(
           msg: widget.msg,
           finalContent: widget.finalContent,
           scrollController: _scrollController,
@@ -104,14 +109,14 @@ class _BatchMessageContentState extends ConsumerState<BatchMessageContent> {
   }
 }
 
-class _BatchSlotsScrollView extends ConsumerWidget {
+class _BatchSlotsListView extends ConsumerWidget {
   final model.Message msg;
   final String finalContent;
   final ScrollController scrollController;
   final List<String>? perSlotQuestions;
   final List<String>? slotLabels;
 
-  const _BatchSlotsScrollView({
+  const _BatchSlotsListView({
     required this.msg,
     required this.finalContent,
     required this.scrollController,
@@ -139,6 +144,50 @@ class _BatchSlotsScrollView extends ConsumerWidget {
     return parsedDecodeParams.last;
   }
 
+  Widget _buildSlotItem({
+    required int i,
+    required int batchCount,
+    required List<String> batch,
+    required List<SamplerAndPenaltyParam> parsedDecodeParams,
+    required double slotWidth,
+    required Color qb,
+    required Color qw,
+    required int? batchSelection,
+  }) {
+    final isLast = i == batchCount - 1;
+    return Padding(
+      padding: .only(right: isLast ? 0 : _kSlotGap),
+      child: GD(
+        onTap: () {
+          P.msg.batchSelection(msg).q = i;
+        },
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: slotWidth,
+            minWidth: slotWidth,
+          ),
+          padding: const .all(8),
+          decoration: BoxDecoration(
+            color: qw,
+            border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
+            borderRadius: .circular(8),
+          ),
+          child: RepaintBoundary(
+            child: _SlotContent(
+              msg: msg,
+              slotIndex: i,
+              slotLabel: _slotLabelAt(i),
+              question: _questionAt(i),
+              data: batch[i],
+              decodeParam: _decodeParamAt(parsedDecodeParams, i),
+              qb: qb,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -149,55 +198,51 @@ class _BatchSlotsScrollView extends ConsumerWidget {
     final qw = ref.watch(P.app.qw);
     final appTheme = ref.watch(P.app.theme);
     final batchSelection = ref.watch(P.msg.batchSelection(msg));
+    final useBuilder = ref.watch(P.preference.useBatchListViewBuilderEnabled);
     final parsedDecodeParams = msg.parsedDecodeParams;
     final slotWidth = screenWidth * (batchVW / 100);
+    final EdgeInsets padding = .only(
+      left: appTheme.msgListMarginLeft,
+      right: appTheme.msgListMarginRight,
+    );
 
     return Theme(
       data: theme,
-      child: SingleChildScrollView(
-        padding: .only(
-          left: appTheme.msgListMarginLeft,
-          right: appTheme.msgListMarginRight,
-        ),
-        controller: scrollController,
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: .start,
-          crossAxisAlignment: .start,
-          children:
-              [
-                for (final i in Iterable<int>.generate(batchCount))
-                  GD(
-                    onTap: () {
-                      P.msg.batchSelection(msg).q = i;
-                    },
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: slotWidth,
-                        minWidth: slotWidth,
-                      ),
-                      padding: const .all(8),
-                      decoration: BoxDecoration(
-                        color: qw,
-                        border: .all(color: batchSelection == i ? kCG : qb.q(.1)),
-                        borderRadius: .circular(8),
-                      ),
-                      child: RepaintBoundary(
-                        child: _SlotContent(
-                          slotLabel: _slotLabelAt(i),
-                          question: _questionAt(i),
-                          data: batch[i],
-                          decodeParam: _decodeParamAt(parsedDecodeParams, i),
-                          qb: qb,
-                        ),
-                      ),
-                    ),
-                  ),
-              ].widgetJoin(
-                (index) => const SizedBox(width: 8),
+      child: useBuilder
+          ? ListView.builder(
+              controller: scrollController,
+              scrollDirection: Axis.horizontal,
+              padding: padding,
+              itemCount: batchCount,
+              itemBuilder: (context, i) => _buildSlotItem(
+                i: i,
+                batchCount: batchCount,
+                batch: batch,
+                parsedDecodeParams: parsedDecodeParams,
+                slotWidth: slotWidth,
+                qb: qb,
+                qw: qw,
+                batchSelection: batchSelection,
               ),
-        ),
-      ),
+            )
+          : ListView(
+              controller: scrollController,
+              scrollDirection: Axis.horizontal,
+              padding: padding,
+              children: [
+                for (int i = 0; i < batchCount; i++)
+                  _buildSlotItem(
+                    i: i,
+                    batchCount: batchCount,
+                    batch: batch,
+                    parsedDecodeParams: parsedDecodeParams,
+                    slotWidth: slotWidth,
+                    qb: qb,
+                    qw: qw,
+                    batchSelection: batchSelection,
+                  ),
+              ],
+            ),
     );
   }
 }
@@ -300,7 +345,9 @@ class _BatchScrollRightButton extends ConsumerWidget {
   }
 }
 
-class _SlotContent extends ConsumerWidget {
+class _SlotContent extends ConsumerStatefulWidget {
+  final model.Message msg;
+  final int slotIndex;
   final String? slotLabel;
   final String? question;
   final String data;
@@ -308,6 +355,8 @@ class _SlotContent extends ConsumerWidget {
   final Color qb;
 
   const _SlotContent({
+    required this.msg,
+    required this.slotIndex,
     required this.slotLabel,
     required this.question,
     required this.data,
@@ -316,30 +365,152 @@ class _SlotContent extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final bool hasSlotLabel = slotLabel != null && slotLabel!.trim().isNotEmpty;
-    final bool hasQuestion = question != null && question!.trim().isNotEmpty;
-    final bool hasMetaBadges = hasSlotLabel || decodeParam != null;
+  ConsumerState<_SlotContent> createState() => _SlotContentState();
+}
 
-    // 普通 batch inference（无 question）：保持现有行为
-    if (!hasQuestion && !hasSlotLabel) {
-      return _MarkdownBody(data: data, decodeParam: decodeParam);
+class _SlotContentState extends ConsumerState<_SlotContent> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant _SlotContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.data != widget.data) {
+      _maybeAutoScrollToBottom();
     }
+  }
 
-    // 带标签或问题的 batch：第一行放 meta badges，之后是问题卡片和回答
+  void _maybeAutoScrollToBottom() {
+    if (!widget.msg.changing) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (!_scrollController.hasClients) return;
+      final position = _scrollController.position;
+      if (!position.hasContentDimensions) return;
+      final distanceToBottom = position.maxScrollExtent - position.pixels;
+      if (distanceToBottom < _kSlotAutoScrollStickThreshold) {
+        _scrollController.jumpTo(position.maxScrollExtent);
+      }
+    });
+  }
+
+  void _onPreviewPressed() {
+    P.chat.batchPreviewTarget.q = (widget.msg.id, widget.slotIndex);
+    push(.batchSlotPreview);
+  }
+
+  bool _onVerticalScrollNotification(ScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) return false;
+    final parent = P.chat.scrollController;
+    if (!parent.hasClients) return false;
+    if (notification is OverscrollNotification) {
+      final parentPosition = parent.position;
+      final newOffset = (parentPosition.pixels - notification.overscroll).clamp(
+        parentPosition.minScrollExtent,
+        parentPosition.maxScrollExtent,
+      );
+      if (newOffset != parentPosition.pixels) {
+        parent.jumpTo(newOffset);
+      }
+    }
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool hasSlotLabel = widget.slotLabel != null && widget.slotLabel!.trim().isNotEmpty;
+    final bool hasQuestion = widget.question != null && widget.question!.trim().isNotEmpty;
+    final bool hasHeader = hasSlotLabel || widget.decodeParam != null;
+
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: .stretch,
       children: [
-        if (hasMetaBadges)
-          _MetaBadgeRow(
-            slotLabel: slotLabel,
-            decodeParam: decodeParam,
+        _SlotHeaderRow(
+          slotLabel: widget.slotLabel,
+          decodeParam: widget.decodeParam,
+          onPreviewPressed: _onPreviewPressed,
+          qb: widget.qb,
+        ),
+        if (hasHeader || hasQuestion) const SizedBox(height: 8),
+        Expanded(
+          child: RepaintBoundary(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: _onVerticalScrollNotification,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    if (hasQuestion) _UserQuestionCard(question: widget.question!),
+                    if (hasQuestion) const SizedBox(height: 8),
+                    _MarkdownBody(data: widget.data),
+                  ],
+                ),
+              ),
+            ),
           ),
-        if (hasMetaBadges) const SizedBox(height: 8),
-        if (hasQuestion) _UserQuestionCard(question: question!),
-        if (hasQuestion) const SizedBox(height: 8),
-        _MarkdownBody(data: data),
+        ),
       ],
+    );
+  }
+}
+
+class _SlotHeaderRow extends StatelessWidget {
+  final String? slotLabel;
+  final SamplerAndPenaltyParam? decodeParam;
+  final VoidCallback onPreviewPressed;
+  final Color qb;
+
+  const _SlotHeaderRow({
+    required this.slotLabel,
+    required this.decodeParam,
+    required this.onPreviewPressed,
+    required this.qb,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bool hasSlotLabel = slotLabel != null && slotLabel!.trim().isNotEmpty;
+    return Row(
+      crossAxisAlignment: .center,
+      children: [
+        if (hasSlotLabel) _SlotLabelBadge(label: slotLabel!),
+        if (hasSlotLabel && decodeParam != null) const SizedBox(width: 6),
+        if (decodeParam != null) Flexible(child: _DecodeParamBadge(decodeParam: decodeParam!)),
+        const Spacer(),
+        _SlotPreviewButton(onTap: onPreviewPressed, qb: qb),
+      ],
+    );
+  }
+}
+
+class _SlotPreviewButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final Color qb;
+
+  const _SlotPreviewButton({required this.onTap, required this.qb});
+
+  @override
+  Widget build(BuildContext context) {
+    return GD(
+      onTap: onTap,
+      child: Container(
+        padding: const .all(4),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: .circular(4),
+        ),
+        child: Icon(
+          Symbols.open_in_full,
+          size: 16,
+          color: qb.q(.6),
+        ),
+      ),
     );
   }
 }
@@ -351,10 +522,6 @@ class _UserQuestionCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final theme = Theme.of(context);
-    // final bool isDark = theme.brightness == Brightness.dark;
-    // final borderColor = theme.colorScheme.primary.q(isDark ? .34 : .18);
-    // final backgroundColor = theme.colorScheme.secondary.q(isDark ? .12 : .06);
     final appTheme = ref.watch(P.app.theme);
 
     return Container(
@@ -368,34 +535,7 @@ class _UserQuestionCard extends ConsumerWidget {
       ),
       child: Text(
         question,
-        style: const TextStyle(
-          // color: theme.colorScheme.onSurface,
-        ),
-      ),
-    );
-  }
-}
-
-class _MetaBadgeRow extends StatelessWidget {
-  final String? slotLabel;
-  final SamplerAndPenaltyParam? decodeParam;
-
-  const _MetaBadgeRow({
-    required this.slotLabel,
-    required this.decodeParam,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: .topLeft,
-      child: Wrap(
-        spacing: 6,
-        runSpacing: 6,
-        children: [
-          if (slotLabel != null && slotLabel!.trim().isNotEmpty) _SlotLabelBadge(label: slotLabel!),
-          if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
-        ],
+        style: const TextStyle(),
       ),
     );
   }
@@ -496,25 +636,7 @@ class _DecodeParamBadge extends StatelessWidget {
 class _MarkdownBody extends ConsumerWidget {
   final String data;
 
-  final SamplerAndPenaltyParam? decodeParam;
-
-  const _MarkdownBody({required this.data, this.decodeParam});
-
-  void _onTapDecodeParam() async {
-    final _ = await showOkAlertDialog(
-      context: getContext()!,
-      title: S.current.decode_param,
-      message:
-          """Decode Param: ${decodeParam!.displayName}
-      Temperature: ${decodeParam!.temperature.toStringAsFixed(1)}
-      TopP: ${decodeParam!.topP.toStringAsFixed(2)}
-      Presence Penalty: ${decodeParam!.presencePenalty.toStringAsFixed(1)}
-      Frequency Penalty: ${decodeParam!.frequencyPenalty.toStringAsFixed(1)}
-      Penalty Decay: ${decodeParam!.penaltyDecay.toStringAsFixed(3)}
-""",
-      okLabel: S.current.got_it,
-    );
-  }
+  const _MarkdownBody({required this.data});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -522,33 +644,10 @@ class _MarkdownBody extends ConsumerWidget {
 
     final (thought, output) = extractThoughtAndOutputForBatchInference(data);
 
-    final s = S.of(context);
-
-    final displayText = s.decode_param + s.hyphen + (decodeParam?.displayName ?? "unknown");
-
-    final Widget? decodeParamWidget = decodeParam != null
-        ? Align(
-            alignment: .topLeft,
-            child: GD(
-              onTap: _onTapDecodeParam,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: .all(color: kCG.q(.5)),
-                  borderRadius: .circular(4),
-                ),
-                padding: const .symmetric(horizontal: 6, vertical: 2),
-                child: Text(displayText),
-              ),
-            ),
-          )
-        : null;
-
     if (thought.isEmpty) {
       return Column(
         crossAxisAlignment: .stretch,
         children: [
-          ?decodeParamWidget,
-          if (output.isNotEmpty) const SizedBox(height: 4),
           MarkdownRender(raw: output, useMessageLineHeight: true),
         ],
       );
@@ -557,7 +656,6 @@ class _MarkdownBody extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        ?decodeParamWidget,
         if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.55), useMessageLineHeight: true),
         if (output.isNotEmpty) const SizedBox(height: 4),
         if (output.isNotEmpty) MarkdownRender(raw: output, useMessageLineHeight: true),

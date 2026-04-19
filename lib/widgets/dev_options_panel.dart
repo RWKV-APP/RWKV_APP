@@ -111,6 +111,11 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
     setState(() {});
   }
 
+  void _onUseBatchListViewBuilderChanged(bool value) {
+    P.preference.setUseBatchListViewBuilderEnabled(value);
+    setState(() {});
+  }
+
   void _onOpenTest2Pressed() async {
     await pop();
     await push(PageKey.test2);
@@ -126,6 +131,7 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
     final fakeBatchInferenceBenchmarkEnabled = ref.watch(P.chat.fakeBatchInferenceBenchmarkEnabled);
     final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
+    final useBatchListViewBuilderEnabled = ref.watch(P.preference.useBatchListViewBuilderEnabled);
 
     return ClipRRect(
       borderRadius: const .only(
@@ -177,6 +183,13 @@ class _DevOptionsPanelState extends ConsumerState<DevOptionsPanel> {
                           subtitle: 'Disable to render assistant output as plain text only.',
                           value: renderMarkdownAndLatexEnabled,
                           onChanged: _onRenderMarkdownAndLatexChanged,
+                        ),
+                        Container(height: .5, color: borderColor),
+                        _DevSwitchItem(
+                          title: 'Batch ListView.builder',
+                          subtitle: 'On: lazy-render batch slots with ListView.builder. Off: render all slots statically.',
+                          value: useBatchListViewBuilderEnabled,
+                          onChanged: _onUseBatchListViewBuilderChanged,
                         ),
                         Container(height: .5, color: borderColor),
                         _DevSwitchItem(
