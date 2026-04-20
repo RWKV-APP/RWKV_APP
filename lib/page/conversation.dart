@@ -289,14 +289,23 @@ class _BatchActionBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
+    final appTheme = ref.watch(P.app.theme);
+    final paddingBottom = ref.watch(P.app.paddingBottom);
     final selectedConversations = ref.watch(P.conversation.selectedConversations);
     final selectedCount = selectedConversations.length;
     final hasSelection = selectedConversations.isNotEmpty;
-    final theme = Theme.of(context);
+
+    final bottomReserved = max(paddingBottom, 12) + appTheme.tabBarHeight + 24;
 
     return Container(
-      padding: const .symmetric(horizontal: 16, vertical: 12),
+      padding: .only(
+        left: 16,
+        right: 16,
+        top: 12,
+        bottom: bottomReserved,
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(
@@ -306,31 +315,29 @@ class _BatchActionBar extends ConsumerWidget {
           ),
         ),
       ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                s.selected_count(selectedCount),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: .w500,
-                  color: theme.colorScheme.onSurface,
-                ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              s.selected_count(selectedCount),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: .w500,
+                color: theme.colorScheme.onSurface,
               ),
             ),
-            const SizedBox(width: 16),
-            FilledButton.icon(
-              onPressed: hasSelection ? () => _handleDelete(context) : null,
-              icon: const FaIcon(FontAwesomeIcons.trashCan, size: 16),
-              label: Text(s.delete),
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
+          ),
+          const SizedBox(width: 16),
+          FilledButton.icon(
+            onPressed: hasSelection ? () => _handleDelete(context) : null,
+            icon: const FaIcon(FontAwesomeIcons.trashCan, size: 16),
+            label: Text(s.delete),
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

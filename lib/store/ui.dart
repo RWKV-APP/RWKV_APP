@@ -3,6 +3,7 @@ part of 'p.dart';
 class _UI {
   final _batchHorizontalControllers = <int, ScrollController>{};
   final _batchSlotVerticalControllers = <({int messageId, int slotIndex}), ScrollController>{};
+  final _batchSlotVerticalScrollListeners = <({int messageId, int slotIndex}), VoidCallback>{};
   final _batchHorizontalScrollListeners = <int, VoidCallback>{};
   final _batchSlotMetrics = <int, ({int batchCount, double paddingLeft, double slotWidth, double viewportWidth})>{};
   final _batchScheduledViewportSyncMessageIds = <int>{};
@@ -93,6 +94,9 @@ class _UI {
   late final batchLastSlotWidth = qsf<int, double>(0);
   late final batchLastViewportWidth = qsf<int, double>(0);
   late final batchSlotBodyCanScroll = qsf<({int messageId, int slotIndex}), bool>(false);
+  late final batchSlotAtBottom = qsf<({int messageId, int slotIndex}), bool>(true);
+  late final batchSlotAtTop = qsf<({int messageId, int slotIndex}), bool>(true);
+  late final batchSlotInferring = qsf<({int messageId, int slotIndex}), bool>(true);
   late final batchSlotViewportVisible = qsff<({int messageId, int slotIndex}), bool>((ref, key) {
     final visibleSlotIndexes = ref.watch(batchVisibleSlotIndexes(key.messageId));
     return visibleSlotIndexes.contains(key.slotIndex);
@@ -274,9 +278,59 @@ extension $UI on _UI {
     if (existing != null) return existing;
 
     final controller = ScrollController();
+    final VoidCallback listener = () {
+      _syncBatchSlotAtBottom(key: key);
+    };
+    controller.addListener(listener);
+    _batchSlotVerticalScrollListeners[key] = listener;
     _batchSlotVerticalControllers[key] = controller;
     _scheduleBatchControllerProviderSync();
     return controller;
+  }
+
+  void _syncBatchSlotAtBottom({required ({int messageId, int slotIndex}) key}) {
+    final controller = _batchSlotVerticalControllers[key];
+    if (controller == null || !controller.hasClients) return;
+    final position = controller.position;
+    if (!position.hasContentDimensions) return;
+    final atBottom = position.maxScrollExtent <= 0.5 || position.pixels >= position.maxScrollExtent - 1.0;
+    if (batchSlotAtBottom(key).q != atBottom) batchSlotAtBottom(key).q = atBottom;
+    final atTop = position.pixels <= 0.5;
+    if (batchSlotAtTop(key).q != atTop) batchSlotAtTop(key).q = atTop;
+  }
+
+  Future<void> scrollBatchSlotToBottom({
+    required int messageId,
+    required int slotIndex,
+  }) async {
+    final key = (messageId: messageId, slotIndex: slotIndex);
+    final controller = _batchSlotVerticalControllers[key];
+    if (controller == null || !controller.hasClients) return;
+    final position = controller.position;
+    if (!position.hasContentDimensions) return;
+    await controller.animateTo(
+      position.maxScrollExtent,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+    _syncBatchSlotAtBottom(key: key);
+  }
+
+  Future<void> scrollBatchSlotToTop({
+    required int messageId,
+    required int slotIndex,
+  }) async {
+    final key = (messageId: messageId, slotIndex: slotIndex);
+    final controller = _batchSlotVerticalControllers[key];
+    if (controller == null || !controller.hasClients) return;
+    final position = controller.position;
+    if (!position.hasContentDimensions) return;
+    await controller.animateTo(
+      position.minScrollExtent,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+    _syncBatchSlotAtBottom(key: key);
   }
 
   void _scheduleBatchControllerProviderSync() {
@@ -518,13 +572,21 @@ extension $UI on _UI {
   }) {
     final previous = _batchSlotData[key];
     _batchSlotData[key] = data;
-    if (previous != null && previous != data) {
+    final dataChanged = previous != null && previous != data;
+    if (dataChanged) {
       _maybeAutoScrollBatchSlotToBottom(
         msg: msg,
         slotIndex: key.slotIndex,
       );
     }
+    // Track per-slot inferring state: inferring=true while data keeps changing,
+    // inferring=false when consecutive syncs show the same data (this slot is done).
+    final inferring = previous == null || dataChanged;
+    if (batchSlotInferring(key).q != inferring) {
+      batchSlotInferring(key).q = inferring;
+    }
     _syncBatchSlotBodyCanScroll(key: key);
+    _syncBatchSlotAtBottom(key: key);
   }
 
   void _maybeAutoScrollBatchSlotToBottom({
@@ -596,8 +658,15 @@ extension $UI on _UI {
     }
     for (final key in slotKeys) {
       final controller = _batchSlotVerticalControllers.remove(key);
+      final listener = _batchSlotVerticalScrollListeners.remove(key);
+      if (controller != null && listener != null) {
+        controller.removeListener(listener);
+      }
       controller?.dispose();
       batchSlotBodyCanScroll(key).q = false;
+      batchSlotAtBottom(key).q = true;
+      batchSlotAtTop(key).q = true;
+      batchSlotInferring(key).q = true;
       _batchSlotData.remove(key);
       _batchSlotPendingData.remove(key);
       _batchScheduledSlotContentKeys.remove(key);

@@ -1,7 +1,9 @@
 // Dart imports:
 import 'dart:math' as math;
+import 'dart:ui';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +14,7 @@ import 'package:halo_state/halo_state.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // Project imports:
+import 'package:zone/config.dart';
 import 'package:zone/func/extract_thought_and_output_for_batch_inference.dart';
 import 'package:zone/func/get_batch_info.dart';
 import 'package:zone/gen/l10n.dart';
@@ -23,6 +26,15 @@ import 'package:zone/widgets/markdown_render.dart';
 
 const double _kSlotGap = 8.0;
 const double _kSlotScrollFadeHeight = 18.0;
+const int _kBatchMarkdownStableBlockTargetChars = 640;
+const bool _kDebugTintBatchStableMarkdown = true;
+const Color _kDebugBatchStableMarkdownTint = Color(0x224CAF50);
+const String _kMarkdownFenceBacktick = "```";
+const String _kMarkdownFenceTilde = "~~~";
+final RegExp _batchMarkdownFenceLineExp = RegExp(r"^(```|~~~)");
+final RegExp _batchStreamingTailFullMarkdownLineExp = RegExp(r"^\s{0,3}(#{1,6}(\s|$)|[-*+]\s+|\d+[.)]\s+|>\s+|\|)");
+final RegExp _batchStreamingTailInlineCodeExp = RegExp(r"`[^`]+`");
+final RegExp _batchStreamingTailLinkExp = RegExp(r"\[[^\]]+\]\([^)]+\)");
 
 class BatchMessageContent extends ConsumerWidget {
   final model.Message msg;
@@ -108,7 +120,6 @@ class _BatchSlotsListView extends ConsumerWidget {
     final _ = theme;
     final (batch, _, batchCount, _) = getBatchInfo(finalContent);
     final appTheme = ref.watch(P.app.theme);
-    final useBuilder = ref.watch(P.preference.useBatchListViewBuilderEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     final generating = ref.watch(P.rwkv.generating);
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -139,14 +150,14 @@ class _BatchSlotsListView extends ConsumerWidget {
 
     // return C();
 
-    return useBuilder
-        ? ListView.builder(
-            controller: scrollController,
-            scrollDirection: Axis.horizontal,
-            padding: padding,
-            cacheExtent: 0,
-            itemCount: batchCount,
-            itemBuilder: (context, i) => RepaintBoundary(
+    return SingleChildScrollView(
+      controller: scrollController,
+      scrollDirection: Axis.horizontal,
+      padding: padding,
+      child: Row(
+        children: [
+          for (int i = 0; i < batchCount; i++)
+            RepaintBoundary(
               child: _BatchSlotItem(
                 msg: msg,
                 slotIndex: i,
@@ -160,31 +171,9 @@ class _BatchSlotsListView extends ConsumerWidget {
                 decodeParam: _decodeParamAt(parsedDecodeParams, i),
               ),
             ),
-          )
-        : SingleChildScrollView(
-            controller: scrollController,
-            scrollDirection: Axis.horizontal,
-            padding: padding,
-            child: Row(
-              children: [
-                for (int i = 0; i < batchCount; i++)
-                  RepaintBoundary(
-                    child: _BatchSlotItem(
-                      msg: msg,
-                      slotIndex: i,
-                      slotWidth: slotWidth,
-                      isLast: i == batchCount - 1,
-                      shouldGateByViewport: shouldGateByViewport,
-                      initialViewportVisible: visibleSlotIndexes.contains(i),
-                      slotLabel: _slotLabelAt(i),
-                      question: _questionAt(i),
-                      data: batch[i],
-                      decodeParam: _decodeParamAt(parsedDecodeParams, i),
-                    ),
-                  ),
-              ],
-            ),
-          );
+        ],
+      ),
+    );
   }
 }
 
@@ -303,12 +292,10 @@ class _BatchScrollLeftButton extends ConsumerWidget {
         child: Center(
           child: GD(
             onTap: () => P.ui.scrollBatchMessageBy(messageId: messageId, delta: -step),
-            child: Container(
-              decoration: BoxDecoration(
-                color: qw,
-                border: .all(color: qb.q(.1)),
-                borderRadius: .circular(20),
-              ),
+            child: _BatchButtonBackdrop(
+              borderRadius: .circular(20),
+              background: qw,
+              border: .all(color: qb.q(.1)),
               padding: const .all(6),
               child: Icon(Icons.chevron_left, color: qb.q(.7)),
             ),
@@ -351,12 +338,10 @@ class _BatchScrollRightButton extends ConsumerWidget {
         child: Center(
           child: GD(
             onTap: () => P.ui.scrollBatchMessageBy(messageId: messageId, delta: step),
-            child: Container(
-              decoration: BoxDecoration(
-                color: qw,
-                border: .all(color: qb.q(.1)),
-                borderRadius: .circular(20),
-              ),
+            child: _BatchButtonBackdrop(
+              borderRadius: .circular(20),
+              background: qw,
+              border: .all(color: qb.q(.1)),
               padding: const .all(6),
               child: Icon(Icons.chevron_right, color: qb.q(.7)),
             ),
@@ -394,9 +379,9 @@ class _SlotContent extends ConsumerWidget {
       slotIndex: slotIndex,
     );
     final bodyCanScroll = ref.watch(P.ui.batchSlotBodyCanScroll(key));
-    final hasSlotLabel = slotLabel != null && slotLabel!.trim().isNotEmpty;
+    final streaming = msg.changing && ref.watch(P.rwkv.generating);
+    final inferring = ref.watch(P.ui.batchSlotInferring(key));
     final hasQuestion = question != null && question!.trim().isNotEmpty;
-    final hasHeader = hasSlotLabel || decodeParam != null;
 
     P.ui.scheduleBatchSlotContentSync(
       msg: msg,
@@ -412,36 +397,164 @@ class _SlotContent extends ConsumerWidget {
           child: _SlotHeaderRow(
             slotLabel: slotLabel,
             decodeParam: decodeParam,
+            inferring: streaming && inferring,
             onPreviewPressed: () => P.ui.onBatchSlotPreviewPressed(
               messageId: msg.id,
               slotIndex: slotIndex,
             ),
           ),
         ),
-        if (hasHeader || hasQuestion) const SizedBox(height: 8),
+        if (hasQuestion) const SizedBox(height: 8),
         Expanded(
           child: RepaintBoundary(
-            child: _SlotScrollFade(
-              enabled: bodyCanScroll,
-              child: NotificationListener<ScrollNotification>(
-                onNotification: P.ui.onBatchSlotVerticalScrollNotification,
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: .only(bottom: 16, top: 16),
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      if (hasQuestion) _UserQuestionCard(question: question!),
-                      if (hasQuestion) const SizedBox(height: 8),
-                      _MarkdownBody(data: data),
-                    ],
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: _SlotScrollFade(
+                    enabled: bodyCanScroll,
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: P.ui.onBatchSlotVerticalScrollNotification,
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        padding: .only(bottom: 16, top: 8),
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          children: [
+                            if (hasQuestion) _UserQuestionCard(question: question!),
+                            if (hasQuestion) const SizedBox(height: 8),
+                            _MarkdownBody(
+                              data: data,
+                              streaming: streaming,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  child: Center(
+                    child: _BatchSlotScrollToTopButton(
+                      messageId: msg.id,
+                      slotIndex: slotIndex,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 8,
+                  child: Center(
+                    child: _BatchSlotScrollToBottomButton(
+                      messageId: msg.id,
+                      slotIndex: slotIndex,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _BatchSlotScrollToBottomButton extends ConsumerWidget {
+  final int messageId;
+  final int slotIndex;
+
+  const _BatchSlotScrollToBottomButton({
+    required this.messageId,
+    required this.slotIndex,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+    final key = (messageId: messageId, slotIndex: slotIndex);
+    final canScroll = ref.watch(P.ui.batchSlotBodyCanScroll(key));
+    final atBottom = ref.watch(P.ui.batchSlotAtBottom(key));
+    final show = canScroll && !atBottom;
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+
+    return AnimatedOpacity(
+      opacity: show ? 1 : 0,
+      duration: 200.ms,
+      curve: Curves.easeOut,
+      child: IgnorePointer(
+        ignoring: !show,
+        child: GD(
+          onTap: () => P.ui.scrollBatchSlotToBottom(
+            messageId: messageId,
+            slotIndex: slotIndex,
+          ),
+          child: _BatchButtonBackdrop(
+            borderRadius: .circular(14),
+            background: qw,
+            border: .all(color: qb.q(.1)),
+            padding: EdgeInsets.zero,
+            child: SizedBox(
+              width: 48,
+              height: 24,
+              child: Icon(
+                Icons.keyboard_arrow_down,
+                color: qb.q(.7),
+                size: 18,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BatchButtonBackdrop extends ConsumerWidget {
+  final BorderRadius borderRadius;
+  final Color background;
+  final BoxBorder? border;
+  final EdgeInsetsGeometry padding;
+  final Widget child;
+
+  const _BatchButtonBackdrop({
+    required this.borderRadius,
+    required this.background,
+    required this.border,
+    required this.padding,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final useBackdropFilter = ref.watch(P.ui.useBackdropFilterForInputOptions);
+    final bgAlpha = ref.watch(P.ui.backdropFilterBgAlphaForInputOptions);
+    final darkModifier = ref.watch(P.ui.backdropFilterBgAlphaForInputOptionsDarkModifier);
+    final sigma = ref.watch(P.ui.sigmaForBackdropFilterForInputOptions);
+
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: sigma.toDouble(),
+          sigmaY: sigma.toDouble(),
+        ),
+        enabled: useBackdropFilter,
+        child: Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            color: background.q(useBackdropFilter ? bgAlpha * darkModifier : 1),
+            borderRadius: borderRadius,
+            border: border,
+          ),
+          child: child,
+        ),
+      ),
     );
   }
 }
@@ -488,11 +601,13 @@ class _SlotScrollFade extends StatelessWidget {
 class _SlotHeaderRow extends StatelessWidget {
   final String? slotLabel;
   final SamplerAndPenaltyParam? decodeParam;
+  final bool inferring;
   final VoidCallback onPreviewPressed;
 
   const _SlotHeaderRow({
     required this.slotLabel,
     required this.decodeParam,
+    required this.inferring,
     required this.onPreviewPressed,
   });
 
@@ -506,8 +621,79 @@ class _SlotHeaderRow extends StatelessWidget {
         if (hasSlotLabel && decodeParam != null) const SizedBox(width: 6),
         if (decodeParam != null) Flexible(child: _DecodeParamBadge(decodeParam: decodeParam!)),
         const Spacer(),
+        _SlotInferringIndicator(inferring: inferring),
+        const SizedBox(width: 6),
         _SlotPreviewButton(onTap: onPreviewPressed),
       ],
+    );
+  }
+}
+
+class _SlotInferringIndicator extends StatelessWidget {
+  final bool inferring;
+
+  const _SlotInferringIndicator({required this.inferring});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 12,
+      height: 12,
+      child: AnimatedOpacity(
+        opacity: inferring ? 1 : 0,
+        duration: const Duration(milliseconds: 200),
+        child: const CircularProgressIndicator(strokeWidth: 1.5),
+      ),
+    );
+  }
+}
+
+class _BatchSlotScrollToTopButton extends ConsumerWidget {
+  final int messageId;
+  final int slotIndex;
+
+  const _BatchSlotScrollToTopButton({
+    required this.messageId,
+    required this.slotIndex,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final key = (messageId: messageId, slotIndex: slotIndex);
+    final canScroll = ref.watch(P.ui.batchSlotBodyCanScroll(key));
+    final atTop = ref.watch(P.ui.batchSlotAtTop(key));
+    final show = canScroll && !atTop;
+    final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
+
+    return AnimatedOpacity(
+      opacity: show ? 1 : 0,
+      duration: 200.ms,
+      curve: Curves.easeOut,
+      child: IgnorePointer(
+        ignoring: !show,
+        child: GD(
+          onTap: () => P.ui.scrollBatchSlotToTop(
+            messageId: messageId,
+            slotIndex: slotIndex,
+          ),
+          child: _BatchButtonBackdrop(
+            borderRadius: .circular(14),
+            background: qw,
+            border: .all(color: qb.q(.1)),
+            padding: EdgeInsets.zero,
+            child: SizedBox(
+              width: 48,
+              height: 24,
+              child: Icon(
+                Icons.keyboard_arrow_up,
+                color: qb.q(.7),
+                size: 18,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -663,8 +849,12 @@ class _DecodeParamBadge extends StatelessWidget {
 
 class _MarkdownBody extends ConsumerWidget {
   final String data;
+  final bool streaming;
 
-  const _MarkdownBody({required this.data});
+  const _MarkdownBody({
+    required this.data,
+    required this.streaming,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -678,7 +868,12 @@ class _MarkdownBody extends ConsumerWidget {
       return Column(
         crossAxisAlignment: .stretch,
         children: [
-          MarkdownRender(raw: output, useMessageLineHeight: true),
+          _BatchIncrementalMarkdown(
+            key: const ValueKey("batch-output"),
+            raw: output,
+            streaming: streaming,
+            useMessageLineHeight: true,
+          ),
         ],
       );
     }
@@ -686,10 +881,582 @@ class _MarkdownBody extends ConsumerWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        if (thought.isNotEmpty) MarkdownRender(raw: thought, color: qb.q(.55), useMessageLineHeight: true),
+        if (thought.isNotEmpty)
+          _BatchIncrementalMarkdown(
+            key: const ValueKey("batch-thought"),
+            raw: thought,
+            color: qb.q(.55),
+            streaming: streaming,
+            useMessageLineHeight: true,
+          ),
         if (output.isNotEmpty) const SizedBox(height: 4),
-        if (output.isNotEmpty) MarkdownRender(raw: output, useMessageLineHeight: true),
+        if (output.isNotEmpty)
+          _BatchIncrementalMarkdown(
+            key: const ValueKey("batch-output"),
+            raw: output,
+            streaming: streaming,
+            useMessageLineHeight: true,
+          ),
       ],
     );
   }
+}
+
+class _BatchIncrementalMarkdown extends StatefulWidget {
+  final String raw;
+  final Color? color;
+  final bool streaming;
+  final bool useMessageLineHeight;
+
+  const _BatchIncrementalMarkdown({
+    required this.raw,
+    required this.streaming,
+    required this.useMessageLineHeight,
+    this.color,
+    super.key,
+  });
+
+  @override
+  State<_BatchIncrementalMarkdown> createState() => _BatchIncrementalMarkdownState();
+}
+
+class _BatchIncrementalMarkdownState extends State<_BatchIncrementalMarkdown> {
+  final _stableBlockCache = <_BatchMarkdownStableBlockCacheEntry>[];
+
+  @override
+  void didUpdateWidget(covariant _BatchIncrementalMarkdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.streaming == widget.streaming) return;
+    if (widget.streaming) return;
+    _clearStableCache();
+  }
+
+  void _clearStableCache() {
+    _stableBlockCache.clear();
+  }
+
+  List<Widget> _stableMarkdownBlockWidgets(List<String> rawBlocks) {
+    _trimStableBlockCache(rawBlocks.length);
+    final widgets = <Widget>[];
+    for (int i = 0; i < rawBlocks.length; i++) {
+      widgets.add(
+        _stableMarkdownBlockWidget(
+          index: i,
+          raw: rawBlocks[i],
+        ),
+      );
+    }
+    return widgets;
+  }
+
+  void _trimStableBlockCache(int count) {
+    if (_stableBlockCache.length <= count) return;
+    _stableBlockCache.removeRange(count, _stableBlockCache.length);
+  }
+
+  Widget _stableMarkdownBlockWidget({
+    required int index,
+    required String raw,
+  }) {
+    if (index < _stableBlockCache.length) {
+      final cached = _stableBlockCache[index];
+      if (cached.matches(
+        raw: raw,
+        color: widget.color,
+        useMessageLineHeight: widget.useMessageLineHeight,
+      )) {
+        return cached.widget;
+      }
+    }
+
+    final markdown = MarkdownRender(
+      raw: raw,
+      color: widget.color,
+      useMessageLineHeight: widget.useMessageLineHeight,
+    );
+
+    final cached = _BatchMarkdownStableBlockCacheEntry(
+      raw: raw,
+      color: widget.color,
+      useMessageLineHeight: widget.useMessageLineHeight,
+      widget: _debugTintStableMarkdown(markdown),
+    );
+    if (index < _stableBlockCache.length) {
+      _stableBlockCache[index] = cached;
+      return cached.widget;
+    }
+    _stableBlockCache.add(cached);
+    return cached.widget;
+  }
+
+  Widget _debugTintStableMarkdown(Widget child) {
+    if (!kDebugMode) return child;
+    if (!_kDebugTintBatchStableMarkdown) return child;
+    return ColoredBox(
+      color: _kDebugBatchStableMarkdownTint,
+      child: child,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.streaming) {
+      return MarkdownRender(
+        raw: widget.raw,
+        color: widget.color,
+        useMessageLineHeight: widget.useMessageLineHeight,
+      );
+    }
+
+    final split = _splitBatchStreamingMarkdown(widget.raw);
+    if (split.stableBlocks.isEmpty) {
+      return _BatchStreamingTailMarkdown(
+        raw: split.tail,
+        color: widget.color,
+        useMessageLineHeight: widget.useMessageLineHeight,
+      );
+    }
+
+    final children = _stableMarkdownBlockWidgets(split.stableBlocks);
+    if (split.tail.isNotEmpty) {
+      children.add(
+        _BatchStreamingTailMarkdown(
+          raw: split.tail,
+          color: widget.color,
+          useMessageLineHeight: widget.useMessageLineHeight,
+        ),
+      );
+    }
+
+    if (children.length == 1) return children.first;
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: children,
+    );
+  }
+}
+
+class _BatchMarkdownStableBlockCacheEntry {
+  final String raw;
+  final Color? color;
+  final bool useMessageLineHeight;
+  final Widget widget;
+
+  const _BatchMarkdownStableBlockCacheEntry({
+    required this.raw,
+    required this.color,
+    required this.useMessageLineHeight,
+    required this.widget,
+  });
+
+  bool matches({
+    required String raw,
+    required Color? color,
+    required bool useMessageLineHeight,
+  }) {
+    if (this.raw != raw) return false;
+    if (this.color != color) return false;
+    return this.useMessageLineHeight == useMessageLineHeight;
+  }
+}
+
+class _BatchStreamingTailMarkdown extends ConsumerWidget {
+  final String raw;
+  final Color? color;
+  final bool useMessageLineHeight;
+
+  const _BatchStreamingTailMarkdown({
+    required this.raw,
+    required this.color,
+    required this.useMessageLineHeight,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
+
+    if (raw.isEmpty) return const SizedBox.shrink();
+
+    final renderMarkdownAndLatexEnabled = ref.watch(P.preference.renderMarkdownAndLatexEnabled);
+    if (renderMarkdownAndLatexEnabled && _shouldRenderStreamingTailAsFullMarkdown(raw)) {
+      return MarkdownRender(
+        raw: raw,
+        color: color,
+        useMessageLineHeight: useMessageLineHeight,
+      );
+    }
+
+    final textScaler = MediaQuery.textScalerOf(context);
+    const scale = Config.msgFontScale;
+    final textScaleFactor = textScaler.scale(1.0);
+    final effectiveScale = scale * textScaleFactor;
+    final qb = ref.watch(P.app.qb);
+    final effectiveMessageLineHeight = ref.watch(P.preference.effectiveMessageLineHeight);
+    final messageLineHeight = useMessageLineHeight ? effectiveMessageLineHeight : null;
+
+    return Text(
+      raw,
+      style: TextStyle(
+        color: color ?? qb,
+        fontSize: Config.markdownBodyFontSize * effectiveScale,
+        height: messageLineHeight,
+      ),
+      textScaler: .noScaling,
+    );
+  }
+}
+
+({List<String> stableBlocks, String tail}) _splitBatchStreamingMarkdown(String raw) {
+  if (raw.isEmpty) return (stableBlocks: const <String>[], tail: "");
+
+  final boundaries = _stableBatchMarkdownBoundaries(raw);
+  if (boundaries.isEmpty) return (stableBlocks: const <String>[], tail: raw);
+
+  final stableEnd = boundaries.last.offset;
+  if (stableEnd <= 0) return (stableBlocks: const <String>[], tail: raw);
+  return (
+    stableBlocks: _stableBatchMarkdownBlocks(
+      raw: raw,
+      boundaries: boundaries,
+      stableEnd: stableEnd,
+    ),
+    tail: stableEnd >= raw.length ? "" : raw.substring(stableEnd),
+  );
+}
+
+List<String> _stableBatchMarkdownBlocks({
+  required String raw,
+  required List<({int offset, bool hard})> boundaries,
+  required int stableEnd,
+}) {
+  final blocks = <String>[];
+  int blockStart = 0;
+
+  for (final boundary in boundaries) {
+    if (boundary.offset > stableEnd) break;
+    if (boundary.offset <= blockStart) continue;
+
+    final shouldCloseBlock =
+        boundary.hard || boundary.offset - blockStart >= _kBatchMarkdownStableBlockTargetChars || boundary.offset >= stableEnd;
+    if (!shouldCloseBlock) continue;
+
+    blocks.add(raw.substring(blockStart, boundary.offset));
+    blockStart = boundary.offset;
+  }
+
+  if (blockStart < stableEnd) {
+    blocks.add(raw.substring(blockStart, stableEnd));
+  }
+  if (blocks.isNotEmpty) return blocks;
+  return <String>[raw.substring(0, stableEnd)];
+}
+
+List<({int offset, bool hard})> _stableBatchMarkdownBoundaries(String raw) {
+  final boundaries = <({int offset, bool hard})>[];
+  bool insideFence = false;
+  String fenceMarker = "";
+  bool insideDisplayLatex = false;
+  bool insideDollarLatex = false;
+  bool previousLineWasTable = false;
+  int lineStart = 0;
+
+  while (lineStart < raw.length) {
+    int lineEnd = raw.indexOf("\n", lineStart);
+    if (lineEnd == -1) lineEnd = raw.length;
+
+    final line = raw.substring(lineStart, lineEnd);
+    final trimmedLine = line.trim();
+    final hasTrailingNewline = lineEnd < raw.length;
+    final lineBoundary = lineEnd < raw.length ? lineEnd + 1 : lineEnd;
+
+    final fenceBoundary = _resolveFenceBoundary(
+      trimmedLine: trimmedLine,
+      lineBoundary: lineBoundary,
+      insideFence: insideFence,
+      fenceMarker: fenceMarker,
+    );
+    if (fenceBoundary != null) {
+      insideFence = fenceBoundary.insideFence;
+      fenceMarker = fenceBoundary.fenceMarker;
+      final lastSafeBoundary = fenceBoundary.lastSafeBoundary;
+      if (lastSafeBoundary != null) {
+        _addStableBatchMarkdownBoundary(
+          boundaries: boundaries,
+          offset: lastSafeBoundary,
+          hard: true,
+        );
+      }
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    if (insideFence) {
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    final latexBoundary = _resolveLatexBoundary(
+      trimmedLine: trimmedLine,
+      lineBoundary: lineBoundary,
+      insideDisplayLatex: insideDisplayLatex,
+      insideDollarLatex: insideDollarLatex,
+    );
+    insideDisplayLatex = latexBoundary.insideDisplayLatex;
+    insideDollarLatex = latexBoundary.insideDollarLatex;
+    if (latexBoundary.handled) {
+      final lastSafeBoundary = latexBoundary.lastSafeBoundary;
+      if (lastSafeBoundary != null) {
+        _addStableBatchMarkdownBoundary(
+          boundaries: boundaries,
+          offset: lastSafeBoundary,
+          hard: true,
+        );
+      }
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    if (trimmedLine.isEmpty) {
+      previousLineWasTable = false;
+      _addStableBatchMarkdownBoundary(
+        boundaries: boundaries,
+        offset: lineBoundary,
+        hard: true,
+      );
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    final isTableLine = _isBatchMarkdownTableLine(trimmedLine);
+    if (isTableLine) {
+      previousLineWasTable = true;
+      lineStart = lineBoundary;
+      continue;
+    }
+
+    if (previousLineWasTable) {
+      previousLineWasTable = false;
+      _addStableBatchMarkdownBoundary(
+        boundaries: boundaries,
+        offset: lineStart,
+        hard: true,
+      );
+    }
+
+    if (hasTrailingNewline) {
+      _addStableBatchMarkdownBoundary(
+        boundaries: boundaries,
+        offset: lineBoundary,
+        hard: false,
+      );
+    }
+    lineStart = lineBoundary;
+  }
+
+  return boundaries;
+}
+
+void _addStableBatchMarkdownBoundary({
+  required List<({int offset, bool hard})> boundaries,
+  required int offset,
+  required bool hard,
+}) {
+  if (offset <= 0) return;
+  if (boundaries.isEmpty) {
+    boundaries.add((offset: offset, hard: hard));
+    return;
+  }
+
+  final last = boundaries.last;
+  if (last.offset != offset) {
+    boundaries.add((offset: offset, hard: hard));
+    return;
+  }
+
+  if (!hard || last.hard) return;
+  boundaries[boundaries.length - 1] = (offset: offset, hard: true);
+}
+
+({bool insideFence, String fenceMarker, int? lastSafeBoundary})? _resolveFenceBoundary({
+  required String trimmedLine,
+  required int lineBoundary,
+  required bool insideFence,
+  required String fenceMarker,
+}) {
+  if (!_batchMarkdownFenceLineExp.hasMatch(trimmedLine)) return null;
+  if (!insideFence) {
+    final marker = trimmedLine.startsWith(_kMarkdownFenceTilde) ? _kMarkdownFenceTilde : _kMarkdownFenceBacktick;
+    return (insideFence: true, fenceMarker: marker, lastSafeBoundary: null);
+  }
+
+  if (!trimmedLine.startsWith(fenceMarker)) {
+    return (insideFence: insideFence, fenceMarker: fenceMarker, lastSafeBoundary: null);
+  }
+
+  return (insideFence: false, fenceMarker: "", lastSafeBoundary: lineBoundary);
+}
+
+({bool handled, bool insideDisplayLatex, bool insideDollarLatex, int? lastSafeBoundary}) _resolveLatexBoundary({
+  required String trimmedLine,
+  required int lineBoundary,
+  required bool insideDisplayLatex,
+  required bool insideDollarLatex,
+}) {
+  if (insideDisplayLatex) {
+    final closed = trimmedLine.endsWith(r"\]");
+    return (
+      handled: true,
+      insideDisplayLatex: !closed,
+      insideDollarLatex: insideDollarLatex,
+      lastSafeBoundary: closed ? lineBoundary : null,
+    );
+  }
+
+  if (insideDollarLatex) {
+    final closed = trimmedLine.endsWith(r"$$");
+    return (
+      handled: true,
+      insideDisplayLatex: insideDisplayLatex,
+      insideDollarLatex: !closed,
+      lastSafeBoundary: closed ? lineBoundary : null,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"\[") && !trimmedLine.endsWith(r"\]")) {
+    return (
+      handled: true,
+      insideDisplayLatex: true,
+      insideDollarLatex: false,
+      lastSafeBoundary: null,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"\[") && trimmedLine.endsWith(r"\]")) {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: false,
+      lastSafeBoundary: lineBoundary,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"$$") && !trimmedLine.endsWith(r"$$")) {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: true,
+      lastSafeBoundary: null,
+    );
+  }
+
+  if (trimmedLine == r"$$") {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: true,
+      lastSafeBoundary: null,
+    );
+  }
+
+  if (trimmedLine.startsWith(r"$$") && trimmedLine.endsWith(r"$$") && trimmedLine.length > 2) {
+    return (
+      handled: true,
+      insideDisplayLatex: false,
+      insideDollarLatex: false,
+      lastSafeBoundary: lineBoundary,
+    );
+  }
+
+  return (
+    handled: false,
+    insideDisplayLatex: false,
+    insideDollarLatex: false,
+    lastSafeBoundary: null,
+  );
+}
+
+bool _isBatchMarkdownTableLine(String line) {
+  if (!line.contains("|")) return false;
+  final cells = line.split("|");
+  if (cells.length < 3) return false;
+  return true;
+}
+
+bool _shouldRenderStreamingTailAsFullMarkdown(String raw) {
+  if (raw.isEmpty) return false;
+  if (_hasUnclosedBatchMarkdownFence(raw)) return false;
+  if (_hasUnclosedBatchDisplayLatex(raw)) return false;
+
+  final trimmed = raw.trimLeft();
+  if (trimmed.isEmpty) return false;
+  if (_batchStreamingTailFullMarkdownLineExp.hasMatch(trimmed)) return true;
+  if (_batchStreamingTailInlineCodeExp.hasMatch(trimmed)) return true;
+  if (_batchStreamingTailLinkExp.hasMatch(trimmed)) return true;
+  if (trimmed.contains(r"\(")) return true;
+  if (trimmed.contains(r"\)")) return true;
+  if (trimmed.contains(r"\[")) return true;
+  if (trimmed.contains(r"\]")) return true;
+  if (trimmed.contains("<br")) return true;
+  return trimmed.contains("<BR");
+}
+
+bool _hasUnclosedBatchMarkdownFence(String raw) {
+  bool insideFence = false;
+  String fenceMarker = "";
+  final lines = raw.split("\n");
+
+  for (final line in lines) {
+    final trimmedLine = line.trim();
+    if (!_batchMarkdownFenceLineExp.hasMatch(trimmedLine)) continue;
+
+    if (!insideFence) {
+      insideFence = true;
+      fenceMarker = trimmedLine.startsWith(_kMarkdownFenceTilde) ? _kMarkdownFenceTilde : _kMarkdownFenceBacktick;
+      continue;
+    }
+
+    if (!trimmedLine.startsWith(fenceMarker)) continue;
+    insideFence = false;
+    fenceMarker = "";
+  }
+
+  return insideFence;
+}
+
+bool _hasUnclosedBatchDisplayLatex(String raw) {
+  bool insideDisplayLatex = false;
+  bool insideDollarLatex = false;
+  final lines = raw.split("\n");
+
+  for (final line in lines) {
+    final trimmedLine = line.trim();
+
+    if (insideDisplayLatex) {
+      if (trimmedLine.endsWith(r"\]")) insideDisplayLatex = false;
+      continue;
+    }
+
+    if (insideDollarLatex) {
+      if (trimmedLine.endsWith(r"$$")) insideDollarLatex = false;
+      continue;
+    }
+
+    if (trimmedLine.startsWith(r"\[") && !trimmedLine.endsWith(r"\]")) {
+      insideDisplayLatex = true;
+      continue;
+    }
+
+    if (trimmedLine == r"$$") {
+      insideDollarLatex = true;
+      continue;
+    }
+
+    if (trimmedLine.startsWith(r"$$") && !trimmedLine.endsWith(r"$$")) {
+      insideDollarLatex = true;
+    }
+  }
+
+  return insideDisplayLatex || insideDollarLatex;
 }

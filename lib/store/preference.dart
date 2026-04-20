@@ -8,7 +8,6 @@ const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefi
 const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
 const String _fakeBatchInferenceBenchmarkPreferenceKey = "halo_state.fakeBatchInferenceBenchmarkEnabled";
 const String _renderMarkdownAndLatexPreferenceKey = "halo_state.renderMarkdownAndLatex";
-const String _useBatchListViewBuilderPreferenceKey = "halo_state.useBatchListViewBuilder";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
 
 class _Preference {
@@ -82,8 +81,6 @@ class _Preference {
   late final preferredMessageLineHeight = qs<double>(0.0);
   late final renderMarkdownAndLatexEnabled = qs(true);
 
-  /// 控制 BatchMessageContent 使用 ListView.builder（true，默认）或 ListView(children:[...])（false）
-  late final useBatchListViewBuilderEnabled = qs(false);
   late final preferredThinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
 
   /// 偏好的主题模式设置，跟随系统、深色模式、浅色模式
@@ -227,8 +224,6 @@ extension _$Preference on _Preference {
     fakeBatchInferenceBenchmarkEnabled = sp.getBool(_fakeBatchInferenceBenchmarkPreferenceKey) ?? false;
     renderMarkdownAndLatex = sp.getBool(_renderMarkdownAndLatexPreferenceKey) ?? true;
     renderMarkdownAndLatexEnabled.q = renderMarkdownAndLatex;
-
-    useBatchListViewBuilderEnabled.q = sp.getBool(_useBatchListViewBuilderPreferenceKey) ?? false;
 
     final thinkingMode = sp.getString(_thinkingModePreferenceKey);
     final validThinkingMode = thinking_mode.ThinkingMode.values.map((e) => e.toString()).contains(thinkingMode);
@@ -483,12 +478,6 @@ extension $Preference on _Preference {
     renderMarkdownAndLatexEnabled.q = value;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_renderMarkdownAndLatexPreferenceKey, value);
-  }
-
-  Future<void> setUseBatchListViewBuilderEnabled(bool value) async {
-    useBatchListViewBuilderEnabled.q = value;
-    final sp = await SharedPreferences.getInstance();
-    await sp.setBool(_useBatchListViewBuilderPreferenceKey, value);
   }
 
   Future<void> saveThinkingMode(thinking_mode.ThinkingMode value) async {
