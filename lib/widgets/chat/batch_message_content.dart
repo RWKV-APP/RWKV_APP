@@ -616,14 +616,16 @@ class _SlotHeaderRow extends StatelessWidget {
     final bool hasSlotLabel = slotLabel != null && slotLabel!.trim().isNotEmpty;
     return Row(
       crossAxisAlignment: .center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         if (hasSlotLabel) _SlotLabelBadge(label: slotLabel!),
         if (hasSlotLabel && decodeParam != null) const SizedBox(width: 6),
         if (decodeParam != null) Flexible(child: _DecodeParamBadge(decodeParam: decodeParam!)),
-        const Spacer(),
-        _SlotInferringIndicator(inferring: inferring),
-        const SizedBox(width: 6),
-        _SlotPreviewButton(onTap: onPreviewPressed),
+        Row(
+          children: [
+            _SlotPreviewButton(onTap: onPreviewPressed),
+          ],
+        ),
       ],
     );
   }
