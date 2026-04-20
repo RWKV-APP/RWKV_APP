@@ -236,10 +236,9 @@ extension $MultiQuestion on _MultiQuestion {
     reset();
 
     // 8. 构建 batchMessages
-    // _history() 会读取当前消息列表，此时 userMsg 已加入
-    // history 最后一个元素是 batch 格式的用户消息，需要移除它并手动构建各 slot
+    // _history() 会读到刚创建的 batch 用户消息和 bot 占位消息
+    // 这里需要去掉这两条临时消息，再为每个 slot 重新拼接对应问题
     final List<String> history = P.chat._history();
-    // history 末尾是 [batchUserContent, emptyBotContent]，需要去掉这两个
     final List<String> historyPrefix = history.length > 2 ? history.sublist(0, history.length - 2) : [];
 
     final List<List<String>> batchMessages = [];

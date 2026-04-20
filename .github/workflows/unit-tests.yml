@@ -1,0 +1,55 @@
+name: Unit Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chat-history:
+    name: Chat History
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout rwkv_mobile_flutter dependency
+        uses: actions/checkout@v4
+        with:
+          repository: MollySophia/rwkv_mobile_flutter
+          ref: dev
+          path: rwkv_mobile_flutter
+          fetch-depth: 1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.41.6"
+          channel: "stable"
+          cache: true
+
+      - name: Override dependency path
+        run: |
+          cat > pubspec_overrides.yaml <<'YAML'
+          dependency_overrides:
+            proxy_setting_android:
+              git:
+                url: https://github.com/dengzii/proxy_setting.git
+                path: packages/proxy_setting_android
+                ref: main
+            rwkv_downloader:
+              git:
+                url: https://github.com/RWKV-APP/rwkv_downloader.git
+                ref: v1
+            rwkv_mobile_flutter:
+              path: ./rwkv_mobile_flutter
+          YAML
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run chat history tests
+        run: flutter test test/chat_history_test.dart

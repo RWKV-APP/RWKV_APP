@@ -1446,7 +1446,7 @@ extension $Chat on _Chat {
     }
     _scheduleRefreshLiveTokenCounts(messageId: receiveId, liveBotContent: "");
 
-    List<String> history = withHistory ? _history() : <String>[];
+    List<String> history = withHistory ? _history(excludedMessageId: receiveId) : <String>[];
     history = withHistory ? await _historyWithWebSearch(receiveId, history) : [message];
     final inSee = P.app.pageKey.q == .see;
     final forceChinese = inSee && message.containsChinese;
@@ -2090,38 +2090,12 @@ extension _$Chat on _Chat {
   }
 
   /// 获取历史记录
-  List<String> _history() {
-    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text).toList();
-
-    if (messages.isEmpty) return [];
-
-    // 如果只有一条消息，使用模板
-    if (messages.length == 1) {
-      final template = P.preference.promptTemplate.newChatTemplate.trim();
-      if (template.isNotEmpty) {
-        return template.split("\n\n").where((e) => e.isNotEmpty).toList();
-      }
-    }
-
-    final result = <String>[];
-
-    // 按用户消息和机器人消息配对处理
-    for (int i = 0; i < messages.length; i += 2) {
-      final userMsg = messages[i];
-      final botMsg = i + 1 < messages.length ? messages[i + 1] : null;
-
-      // 处理用户消息
-      final String userContent = userMsg.getContentForHistoryWithRef(botMsg?.reference);
-      result.add(userContent);
-
-      // 处理机器人消息（如果存在）
-      if (botMsg != null) {
-        final botContent = botMsg.getHistoryContent();
-        result.add(botContent);
-      }
-    }
-
-    return result;
+  List<String> _history({int? excludedMessageId}) {
+    return buildChatHistory(
+      messages: P.msg.list.q,
+      newChatTemplate: P.preference.promptTemplate.newChatTemplate,
+      excludedMessageId: excludedMessageId,
+    );
   }
 
   List<String>? _historyBeforeBotMessage({required int messageId}) {
