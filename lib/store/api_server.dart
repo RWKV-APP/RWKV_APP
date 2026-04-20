@@ -82,6 +82,36 @@ extension _$ApiServer on _ApiServer {
     return second >= 16 && second <= 31;
   }
 
+  bool _isApiServerSupportedPlatform() {
+    if (Platform.isAndroid) return true;
+    return P.app.isDesktop.q;
+  }
+
+  int _lanIpv4Score(String interfaceName, String host) {
+    final name = interfaceName.toLowerCase();
+    int virtualPenalty = 0;
+    if (name.contains('docker') ||
+        name.contains('vbox') ||
+        name.contains('vmware') ||
+        name.contains('bridge') ||
+        name.contains('utun') ||
+        name.contains('tun') ||
+        name.contains('tap') ||
+        name.contains('vethernet')) {
+      virtualPenalty = 100;
+    }
+
+    if (host.startsWith('192.168.')) return virtualPenalty;
+    if (host.startsWith('10.')) return virtualPenalty + 10;
+    if (!host.startsWith('172.')) return virtualPenalty + 30;
+    final parts = host.split('.');
+    if (parts.length < 2) return virtualPenalty + 30;
+    final second = int.tryParse(parts[1]);
+    if (second == null) return virtualPenalty + 30;
+    if (second >= 16 && second <= 31) return virtualPenalty + 20;
+    return virtualPenalty + 30;
+  }
+
   int _longestSuffixPrefixOverlap(String previous, String current) {
     if (previous.isEmpty || current.isEmpty) return 0;
     final maxOverlap = min(previous.length, current.length);
@@ -113,14 +143,13 @@ extension _$ApiServer on _ApiServer {
   }
 
   Future<void> _refreshAccessibleUrls({int? portOverride}) async {
-    if (!Platform.isAndroid) {
+    if (!_isApiServerSupportedPlatform()) {
       accessibleUrls.q = [];
       return;
     }
 
     final portValue = portOverride ?? port.q;
-    final preferred = <String>{};
-    final fallback = <String>{};
+    final urlScores = <String, int>{};
 
     try {
       final interfaces = await NetworkInterface.list(
@@ -133,18 +162,23 @@ extension _$ApiServer on _ApiServer {
           final host = address.address;
           if (host.isEmpty) continue;
           final url = 'http://$host:$portValue';
-          if (_isPreferredLanIpv4(host)) {
-            preferred.add(url);
-          } else {
-            fallback.add(url);
-          }
+          final score = _isPreferredLanIpv4(host) ? _lanIpv4Score(interface.name, host) : _lanIpv4Score(interface.name, host) + 50;
+          final previousScore = urlScores[url];
+          if (previousScore != null && previousScore <= score) continue;
+          urlScores[url] = score;
         }
       }
     } catch (e) {
       qqe('Failed to refresh API server URLs: $e');
     }
 
-    final urls = (preferred.isNotEmpty ? preferred : fallback).toList()..sort();
+    final entries = urlScores.entries.toList()
+      ..sort((a, b) {
+        final scoreCompare = a.value.compareTo(b.value);
+        if (scoreCompare != 0) return scoreCompare;
+        return a.key.compareTo(b.key);
+      });
+    final urls = entries.map((e) => e.key).toList();
     accessibleUrls.q = urls;
   }
 
@@ -1156,7 +1190,7 @@ extension _$ApiServer on _ApiServer {
 
 extension $ApiServer on _ApiServer {
   Future<void> start() async {
-    if (!P.app.isDesktop.q && !Platform.isAndroid) return;
+    if (!_isApiServerSupportedPlatform()) return;
 
     if (state.q == BackendState.running) {
       Alert.warning(S.current.api_server_running);
@@ -1173,10 +1207,9 @@ extension $ApiServer on _ApiServer {
 
     state.q = BackendState.starting;
     final p = port.q;
-    final bindAddress = Platform.isAndroid ? InternetAddress.anyIPv4 : InternetAddress.loopbackIPv4;
 
     try {
-      final httpServer = await HttpServer.bind(bindAddress, p);
+      final httpServer = await HttpServer.bind(InternetAddress.anyIPv4, p);
       httpServer.autoCompress = false;
       httpServer.listen((HttpRequest request) {
         final isSSE = request.method == 'POST' && (request.uri.path.contains('completions'));
@@ -1192,14 +1225,14 @@ extension $ApiServer on _ApiServer {
       logs.q = [];
       await _refreshAccessibleUrls(portOverride: p);
       _addLog('Server started on port $p');
+      final urls = accessibleUrls.q;
+      final lanText = urls.isEmpty ? 'no LAN URL detected' : urls.join(', ');
+      _addLog('LAN URLs: $lanText');
       if (Platform.isAndroid) {
-        final urls = accessibleUrls.q;
-        final lanText = urls.isEmpty ? 'no LAN URL detected' : urls.join(', ');
-        _addLog('LAN URLs: $lanText');
         qqr('API Server started on Android: $lanText');
         await WakelockPlus.enable();
       } else {
-        qqr('API Server started at http://127.0.0.1:$p');
+        qqr('API Server started on LAN: $lanText');
       }
       Alert.success(S.current.api_server_started_on_port(p));
     } catch (e) {
@@ -1211,7 +1244,7 @@ extension $ApiServer on _ApiServer {
   }
 
   Future<void> stop() async {
-    if (!P.app.isDesktop.q && !Platform.isAndroid) return;
+    if (!_isApiServerSupportedPlatform()) return;
     final httpServer = server.q;
     if (httpServer == null) return;
 

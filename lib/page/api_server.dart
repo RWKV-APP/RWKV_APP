@@ -210,6 +210,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     final reqCount = ref.watch(P.apiServer.requestCount);
     final activeRequest = ref.watch(P.apiServer.activeRequest);
     final latestModel = ref.watch(P.rwkv.latestModel);
+    final isDesktop = ref.watch(P.app.isDesktop);
     final isRunning = serverState == BackendState.running;
     final logs = ref.watch(P.apiServer.logs);
     final accessibleUrls = ref.watch(P.apiServer.accessibleUrls);
@@ -217,6 +218,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     final loopbackUrl = 'http://127.0.0.1:$serverPort';
     final lanUrl = accessibleUrls.isEmpty ? null : accessibleUrls.first;
     final curlUrl = lanUrl ?? loopbackUrl;
+    final showLanAddresses = isDesktop || Platform.isAndroid;
 
     return Scaffold(
       backgroundColor: appTheme.settingBg,
@@ -235,7 +237,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
           _buildControlSection(s, serverState),
           const SizedBox(height: 16),
           if (isRunning) ...[
-            _buildStatusSection(s, loopbackUrl, accessibleUrls, reqCount, activeRequest),
+            _buildStatusSection(s, loopbackUrl, accessibleUrls, reqCount, activeRequest, showLanAddresses),
             const SizedBox(height: 16),
             _buildChatSection(s, theme, activeRequest),
             const SizedBox(height: 16),
@@ -371,6 +373,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
     List<String> accessibleUrls,
     int reqCount,
     bool activeRequest,
+    bool showLanAddresses,
   ) {
     return _buildSectionCard(
       children: [
@@ -401,7 +404,7 @@ class _PageApiServerState extends ConsumerState<PageApiServer> {
             ),
           ],
         ),
-        if (Platform.isAndroid) ...[
+        if (showLanAddresses) ...[
           const SizedBox(height: 12),
           Text(
             '${s.lan_server}:',
