@@ -21,9 +21,9 @@
         //
         // "--dart-define=autoShowTranslator=true",
         "--dart-define=disableRemoteConfig=true",
-        "--dart-define=logLevel=3",
-        "--dart-define=enableBatchInference=true",
-        "--dart-define=batchCount=8",
+        // "--dart-define=logLevel=3",
+        // "--dart-define=enableBatchInference=true",
+        // "--dart-define=batchCount=8",
         // "--dart-define=batchVW=50",
         // "--dart-define=debugMsgId=true",
         // "--dart-define=debuggingThemes=truefalse,

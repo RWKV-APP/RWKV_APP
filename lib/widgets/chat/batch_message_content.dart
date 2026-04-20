@@ -416,7 +416,7 @@ class _SlotContent extends ConsumerWidget {
                       onNotification: P.ui.onBatchSlotVerticalScrollNotification,
                       child: SingleChildScrollView(
                         controller: scrollController,
-                        padding: .only(bottom: 16, top: 8),
+                        padding: const .only(bottom: 16, top: 8),
                         child: Column(
                           crossAxisAlignment: .start,
                           children: [
@@ -618,34 +618,19 @@ class _SlotHeaderRow extends StatelessWidget {
       crossAxisAlignment: .center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (hasSlotLabel) _SlotLabelBadge(label: slotLabel!),
-        if (hasSlotLabel && decodeParam != null) const SizedBox(width: 6),
-        if (decodeParam != null) Flexible(child: _DecodeParamBadge(decodeParam: decodeParam!)),
+        Row(
+          children: [
+            if (hasSlotLabel) _SlotLabelBadge(label: slotLabel!),
+            if (hasSlotLabel && decodeParam != null) const SizedBox(width: 6),
+            if (decodeParam != null) _DecodeParamBadge(decodeParam: decodeParam!),
+          ],
+        ),
         Row(
           children: [
             _SlotPreviewButton(onTap: onPreviewPressed),
           ],
         ),
       ],
-    );
-  }
-}
-
-class _SlotInferringIndicator extends StatelessWidget {
-  final bool inferring;
-
-  const _SlotInferringIndicator({required this.inferring});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 12,
-      height: 12,
-      child: AnimatedOpacity(
-        opacity: inferring ? 1 : 0,
-        duration: const Duration(milliseconds: 200),
-        child: const CircularProgressIndicator(strokeWidth: 1.5),
-      ),
     );
   }
 }
