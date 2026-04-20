@@ -120,6 +120,10 @@ class _Chat {
   late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
   late final fakeBatchInferenceBenchmarkEnabled = qs(false);
 
+  /// (messageId, slotIndex) 指向当前预览页要展示的 batch slot
+  late final batchPreviewTarget = qs<(int, int)?>(null);
+  late final batchViewportSlotIndexes = qs<({int messageId, Set<int> indexes})?>(null);
+
   /// 当前需要在 AppBar 新对话按钮上展示引导的会话 id
   late final newConversationGuideConversationId = qs<int?>(null);
 
@@ -128,6 +132,33 @@ class _Chat {
 
   /// 正在后台自动加载上次使用的模型
   late final isAutoLoadingModel = qs(false);
+
+  void updateBatchViewportSlotIndexes({
+    required int messageId,
+    required Set<int> indexes,
+  }) {
+    final current = batchViewportSlotIndexes.q;
+    if (current != null && current.messageId == messageId && _sameIntSet(current.indexes, indexes)) return;
+    batchViewportSlotIndexes.q = (
+      messageId: messageId,
+      indexes: Set<int>.unmodifiable(indexes),
+    );
+  }
+
+  void clearBatchViewportSlotIndexes({required int messageId}) {
+    final current = batchViewportSlotIndexes.q;
+    if (current == null) return;
+    if (current.messageId != messageId) return;
+    batchViewportSlotIndexes.q = null;
+  }
+
+  bool _sameIntSet(Set<int> a, Set<int> b) {
+    if (a.length != b.length) return false;
+    for (final item in a) {
+      if (!b.contains(item)) return false;
+    }
+    return true;
+  }
 
   // ===========================================================================
   // Provider

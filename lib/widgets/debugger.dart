@@ -21,7 +21,7 @@ class Debugger extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!false) return const SizedBox.shrink();
+    // if (!false) return const SizedBox.shrink();
     final theme = Theme.of(context);
     if (!kDebugMode) return const SizedBox.shrink();
 
@@ -73,6 +73,7 @@ class Debugger extends ConsumerWidget {
     final batchEnabled = ref.watch(P.chat.batchEnabled);
     final batchVW = ref.watch(P.chat.batchVW);
     final batchCount = ref.watch(P.chat.batchCount);
+    final batchViewportSlotIndexes = ref.watch(P.chat.batchViewportSlotIndexes);
 
     final loadedModels = ref.watch(P.rwkv.loadedModels);
     final loadingStatus = ref.watch(P.rwkv.loadingStatus);
@@ -143,6 +144,7 @@ class Debugger extends ConsumerWidget {
     const showBatchEnabled = true;
     const showBatchVW = true;
     const showBatchCount = true;
+    const showBatchViewportSlotIndexes = true;
     const showLoadingProgress = false;
     const showMaxWidthAllowedForLayout = false;
     const showWidthRequiredForLayout = false;
@@ -246,6 +248,10 @@ class Debugger extends ConsumerWidget {
           if (showBatchVW) ...[Text("batchVW".codeToName), Text(batchVW.toString())],
           if (showBatchEnabled) ...[Text("batchEnabled".codeToName), Text(batchEnabled.toString())],
           if (showBatchCount) ...[Text("batchCount".codeToName), Text(batchCount.toString())],
+          if (showBatchViewportSlotIndexes) ...[
+            Text("batchViewportSlotIndexes".codeToName),
+            Text(_formatBatchViewportSlotIndexes(batchViewportSlotIndexes)),
+          ],
         ].indexMap((index, e) {
           return Container(
             margin: .only(top: index % 2 == 0 ? 0 : 1),
@@ -276,6 +282,12 @@ class Debugger extends ConsumerWidget {
       ),
     );
   }
+}
+
+String _formatBatchViewportSlotIndexes(({int messageId, Set<int> indexes})? value) {
+  if (value == null) return "null";
+  final indexes = value.indexes.toList()..sort();
+  return "msg ${value.messageId}: ${indexes.join(", ")}";
 }
 
 class _SudokuDebugger extends ConsumerWidget {

@@ -80,6 +80,7 @@ class _Preference {
   /// 偏好的消息气泡行距；0 表示使用默认行高
   late final preferredMessageLineHeight = qs<double>(0.0);
   late final renderMarkdownAndLatexEnabled = qs(true);
+
   late final preferredThinkingMode = qs<thinking_mode.ThinkingMode>(.fast);
 
   /// 偏好的主题模式设置，跟随系统、深色模式、浅色模式

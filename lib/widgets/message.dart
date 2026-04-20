@@ -407,7 +407,24 @@ class _BotMessageBubble extends ConsumerWidget {
     final thoughtLabelColor = qb.q(.5);
     final appTheme = ref.watch(P.app.theme);
 
-    return Container(
+    double? fixedBatchBubbleHeight;
+    if (isBatch) {
+      final screenHeight = ref.watch(P.app.screenHeight);
+      final paddingTop = ref.watch(P.app.paddingTop);
+      final inputHeight = ref.watch(P.chat.inputHeight);
+      final reserved =
+          paddingTop +
+          kToolbarHeight +
+          4 +
+          inputHeight +
+          appTheme.msgListMarginTop +
+          appTheme.msgListMarginBottom +
+          bubbleStyleData.padding.vertical;
+      final computed = screenHeight - reserved;
+      fixedBatchBubbleHeight = math.max(200.0, computed);
+    }
+
+    final Widget bubble = Container(
       padding: bubbleStyleData.padding,
       decoration: BoxDecoration(
         color: botMsgBg,
@@ -477,13 +494,21 @@ class _BotMessageBubble extends ConsumerWidget {
               raw: thinkingData.cotResult,
               useMessageLineHeight: true,
             ),
-          if (isBatch) BatchMessageContent(msg, index, finalContent, perSlotQuestions: perSlotQuestions, slotLabels: slotLabels),
+          if (isBatch)
+            Expanded(
+              child: BatchMessageContent(msg, index, finalContent, perSlotQuestions: perSlotQuestions, slotLabels: slotLabels),
+            ),
           if (demoType == .tts) BotTtsContent(msg, index),
           if (!selectMode && demoType != .tts)
             BotMessageBottom(msg, index, preferredDemoType: preferredDemoType, finalContent: finalContent),
         ],
       ),
     );
+
+    if (fixedBatchBubbleHeight != null) {
+      return SizedBox(height: fixedBatchBubbleHeight, child: bubble);
+    }
+    return bubble;
   }
 }
 

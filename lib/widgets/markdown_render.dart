@@ -239,6 +239,10 @@ class MarkdownRender extends ConsumerWidget {
         );
       },
       highlightBuilder: (context, text, style) => _Highlight(text: text, style: style),
+      tableBuilder: (context, tableRows, textStyle, config) => _MarkdownTable(
+        tableRows: tableRows,
+        config: config,
+      ),
     );
 
     return MediaQuery.withNoTextScaling(
@@ -259,6 +263,155 @@ class MarkdownRender extends ConsumerWidget {
             child: gptMarkdown,
           ),
         ),
+      ),
+    );
+  }
+}
+
+ScrollController? _findParentHorizontalScrollController(BuildContext context) {
+  ScrollController? parentController;
+  context.visitAncestorElements((element) {
+    final widget = element.widget;
+    if (widget is! Scrollable) return true;
+    final controller = widget.controller;
+    if (controller == null) return true;
+    if (!controller.hasClients) return true;
+    final position = controller.position;
+    if (position.axis != Axis.horizontal) return true;
+    parentController = controller;
+    return false;
+  });
+  return parentController;
+}
+
+class _ForwardingHorizontalScrollView extends StatefulWidget {
+  final Widget child;
+
+  const _ForwardingHorizontalScrollView({
+    required this.child,
+  });
+
+  @override
+  State<_ForwardingHorizontalScrollView> createState() => _ForwardingHorizontalScrollViewState();
+}
+
+class _ForwardingHorizontalScrollViewState extends State<_ForwardingHorizontalScrollView> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  bool _onScrollNotification(ScrollNotification notification) {
+    if (notification.metrics.axis != Axis.horizontal) return false;
+    if (notification is! OverscrollNotification) return false;
+    final parentController = _findParentHorizontalScrollController(context);
+    if (parentController == null) return false;
+    if (!parentController.hasClients) return false;
+    final parentPosition = parentController.position;
+    final newOffset = (parentPosition.pixels + notification.overscroll).clamp(
+      parentPosition.minScrollExtent,
+      parentPosition.maxScrollExtent,
+    );
+    if (newOffset == parentPosition.pixels) return false;
+    parentController.jumpTo(newOffset);
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scrollbar(
+      controller: _scrollController,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _onScrollNotification,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          scrollDirection: Axis.horizontal,
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+}
+
+class _MarkdownTable extends StatelessWidget {
+  final List<CustomTableRow> tableRows;
+  final GptMarkdownConfig config;
+
+  const _MarkdownTable({
+    required this.tableRows,
+    required this.config,
+  });
+
+  TableCellVerticalAlignment get _defaultVerticalAlignment {
+    return TableCellVerticalAlignment.middle;
+  }
+
+  Widget _buildCell(BuildContext context, CustomTableField field) {
+    Widget content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: MdWidget(
+        context,
+        field.data.trim(),
+        false,
+        config: config,
+      ),
+    );
+
+    switch (field.alignment) {
+      case TextAlign.center:
+        content = Center(child: content);
+        break;
+      case TextAlign.right:
+        content = Align(
+          alignment: Alignment.centerRight,
+          child: content,
+        );
+        break;
+      case TextAlign.left:
+      default:
+        content = Align(
+          alignment: Alignment.centerLeft,
+          child: content,
+        );
+        break;
+    }
+
+    return content;
+  }
+
+  TableRow _buildRow(BuildContext context, CustomTableRow row) {
+    final theme = Theme.of(context);
+    return TableRow(
+      decoration: row.isHeader
+          ? BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+            )
+          : null,
+      children: [
+        for (final field in row.fields) _buildCell(context, field),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return _ForwardingHorizontalScrollView(
+      child: Table(
+        textDirection: config.textDirection,
+        defaultColumnWidth: CustomTableColumnWidth(),
+        defaultVerticalAlignment: _defaultVerticalAlignment,
+        border: TableBorder.all(
+          width: 1,
+          color: theme.colorScheme.onSurface,
+        ),
+        children: [
+          for (final row in tableRows) _buildRow(context, row),
+        ],
       ),
     );
   }
