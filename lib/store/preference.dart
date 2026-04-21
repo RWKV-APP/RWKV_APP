@@ -7,6 +7,7 @@ const String _legacyDebugRenderSpaceSymbolPreferenceKey = "halo_state.debug.show
 const String _debugShowPrefillLogOnlyPreferenceKey = "halo_state.debug.showPrefillLogOnly";
 const String _messageLineHeightPreferenceKey = "halo_state.messageLineHeight";
 const String _fakeBatchInferenceBenchmarkPreferenceKey = "halo_state.fakeBatchInferenceBenchmarkEnabled";
+const String _batchViewportWidthPreferenceKey = "halo_state.batchViewportWidth";
 const String _renderMarkdownAndLatexPreferenceKey = "halo_state.renderMarkdownAndLatex";
 const String _thinkingModePreferenceKey = "halo_state.thinkingMode";
 
@@ -471,6 +472,16 @@ extension $Preference on _Preference {
     fakeBatchInferenceBenchmarkEnabled = value;
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_fakeBatchInferenceBenchmarkPreferenceKey, value);
+  }
+
+  Future<int?> loadBatchViewportWidth() async {
+    final sp = await SharedPreferences.getInstance();
+    return sp.getInt(_batchViewportWidthPreferenceKey);
+  }
+
+  Future<void> saveBatchViewportWidth(int value) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setInt(_batchViewportWidthPreferenceKey, value);
   }
 
   Future<void> setRenderMarkdownAndLatexEnabled(bool value) async {

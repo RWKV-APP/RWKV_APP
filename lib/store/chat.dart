@@ -117,7 +117,6 @@ class _Chat {
 
   late final batchEnabled = qs(Args.enableBatchInference);
   late final batchCount = qs<int>(Argument.batchCount.defaults.toInt());
-  late final batchVW = qs<int>(Argument.batchVW.defaults.toInt());
   late final fakeBatchInferenceBenchmarkEnabled = qs(false);
 
   /// (messageId, slotIndex) 指向当前预览页要展示的 batch slot
@@ -1762,8 +1761,6 @@ extension _$Chat on _Chat {
     P.rwkv.supportedBatchSizes.l(_onSupportedBatchSizesChanged);
 
     batchCount.l(_onBatchCountChanged);
-    batchVW.l(_onBatchVWChanged);
-    _loadBatchVW();
 
     scrollController.addListener(_onScroll);
     P.msg.ids.l(_onMessageIdsChangedForTokenCount);
@@ -1829,17 +1826,6 @@ extension _$Chat on _Chat {
       ),
     );
     P.rwkv.send(to_rwkv.GetSamplerAndPenaltyParams(batchSize: value, modelID: modelID));
-  }
-
-  void _onBatchVWChanged(int value) async {
-    final sp = await SharedPreferences.getInstance();
-    await sp.setInt("halo_state.batchVW", value);
-  }
-
-  void _loadBatchVW() async {
-    final sp = await SharedPreferences.getInstance();
-    final saved = sp.getInt("halo_state.batchVW");
-    if (saved != null) batchVW.q = saved;
   }
 
   void _onSupportedBatchSizesChanged(List<int> supportedBatchSizes) {

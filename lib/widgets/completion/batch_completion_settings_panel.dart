@@ -63,7 +63,6 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
     if (argument.step != null) rawNewValue = (rawNewValue / argument.step!).round() * argument.step!.toInt();
     final currentValue = switch (argument) {
       Argument.batchCount => settings.q.batchCount,
-      Argument.batchVW => settings.q.width,
       _ => 0,
     };
     if (currentValue == rawNewValue) return;
@@ -71,8 +70,6 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
     switch (argument) {
       case Argument.batchCount:
         settings.q = settings.q.copyWith(batchCount: rawNewValue);
-      case Argument.batchVW:
-        settings.q = settings.q.copyWith(width: rawNewValue);
       default:
         throw UnimplementedError();
     }
@@ -80,6 +77,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final appTheme = ref.watch(P.app.theme);
     final settings = ref.watch(BatchCompletionSettingsPanel.settings);
@@ -96,6 +94,7 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
           title: Text(s.batch_completion_settings),
           automaticallyImplyLeading: false,
           backgroundColor: appTheme.settingBg,
+          foregroundColor: theme.colorScheme.onSurface,
           actions: [
             Padding(
               padding: const .only(right: 8),
@@ -153,29 +152,6 @@ class BatchCompletionSettingsPanel extends ConsumerWidget {
                 ),
               ),
             ),
-            // IgnorePointer(
-            //   ignoring: !batchInference,
-            //   child: AnimatedOpacity(
-            //     opacity: batchInference ? 1 : 0.5,
-            //     duration: const Duration(milliseconds: 300),
-            //     child: FormItem(
-            //       showArrow: false,
-            //       isSectionEnd: true,
-            //       title: s.batch_inference_width_2,
-            //       subtitle: s.batch_inference_width_detail_2,
-            //       infoText: batchVW.toString() + "% " + s.screen_width,
-            //       onTap: () {},
-            //       bottom: ArgumentValue(
-            //         Argument.batchVW,
-            //         _onChanged,
-            //         defaultValue: batchVW,
-            //         showTitle: false,
-            //         showValue: false,
-            //         padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

@@ -93,6 +93,7 @@ class _UI {
   late final batchLastPaddingLeft = qsf<int, double>(0);
   late final batchLastSlotWidth = qsf<int, double>(0);
   late final batchLastViewportWidth = qsf<int, double>(0);
+  late final batchViewportWidth = qs<int>(_initialBatchViewportWidth);
   late final batchSlotBodyCanScroll = qsf<({int messageId, int slotIndex}), bool>(false);
   late final batchSlotAtBottom = qsf<({int messageId, int slotIndex}), bool>(true);
   late final batchSlotAtTop = qsf<({int messageId, int slotIndex}), bool>(true);
@@ -101,6 +102,36 @@ class _UI {
     final visibleSlotIndexes = ref.watch(batchVisibleSlotIndexes(key.messageId));
     return visibleSlotIndexes.contains(key.slotIndex);
   });
+
+  int get batchViewportWidthDefault => P.app.isMobile.q ? 80 : 45;
+
+  int get batchViewportWidthMin => P.app.isMobile.q ? 50 : 40;
+
+  int get batchViewportWidthMax => P.app.isMobile.q ? 90 : 80;
+
+  int get batchViewportWidthStep => 5;
+
+  int get _initialBatchViewportWidth {
+    final valueFromArgs = _batchViewportWidthFromArgs;
+    if (valueFromArgs != null) return valueFromArgs;
+    return batchViewportWidthDefault;
+  }
+
+  int? get _batchViewportWidthFromArgs {
+    final value = Args.batchVW;
+    if (value <= 0) return null;
+    return _normalizeBatchViewportWidth(value);
+  }
+
+  int _normalizeBatchViewportWidth(int value) {
+    return value.clamp(batchViewportWidthMin, batchViewportWidthMax).toInt();
+  }
+
+  int _snapBatchViewportWidth(int value) {
+    final normalized = _normalizeBatchViewportWidth(value);
+    final snapped = (normalized / batchViewportWidthStep).round() * batchViewportWidthStep;
+    return _normalizeBatchViewportWidth(snapped);
+  }
 }
 
 /// Private methods
@@ -116,6 +147,8 @@ extension _$UI on _UI {
     sigmaForBackdropFilterForInputTextFields.l(_onSigmaForBackdropFilterForInputTextFieldsChanged, fireImmediately: true);
     gradientStartForInputBar.l(_onGradientStartForInputBarChanged, fireImmediately: true);
     gradientForInputBar.l(_onGradientForInputBarChanged, fireImmediately: true);
+    await _loadBatchViewportWidth();
+    batchViewportWidth.l(_onBatchViewportWidthChanged);
     return;
   }
 
@@ -204,6 +237,34 @@ extension _$UI on _UI {
     gradientStartForInputBar.q = normalized;
   }
 
+  void _onBatchViewportWidthChanged(int value) async {
+    final normalized = _normalizeBatchViewportWidth(value);
+    if (normalized != value) {
+      batchViewportWidth.q = normalized;
+      return;
+    }
+    await P.preference.saveBatchViewportWidth(value);
+  }
+
+  Future<void> _loadBatchViewportWidth() async {
+    final valueFromArgs = _batchViewportWidthFromArgs;
+    if (valueFromArgs != null) {
+      batchViewportWidth.q = valueFromArgs;
+      return;
+    }
+
+    final saved = await P.preference.loadBatchViewportWidth();
+    if (saved == null) {
+      batchViewportWidth.q = batchViewportWidthDefault;
+      return;
+    }
+
+    final normalized = _normalizeBatchViewportWidth(saved);
+    batchViewportWidth.q = normalized;
+    if (normalized == saved) return;
+    await P.preference.saveBatchViewportWidth(normalized);
+  }
+
   void _syncUseBackdropFilterForInputOptions() {
     final shouldEnable = backdropFilterBgAlphaForInputOptions.q < 1 && sigmaForBackdropFilterForInputOptions.q > 0;
     if (useBackdropFilterForInputOptions.q == shouldEnable) return;
@@ -234,6 +295,13 @@ extension _$UI on _UI {
 
 /// Public methods
 extension $UI on _UI {
+  void setBatchViewportWidth(int value) {
+    final normalized = _snapBatchViewportWidth(value);
+    if (batchViewportWidth.q == normalized) return;
+    P.app.hapticLight();
+    batchViewportWidth.q = normalized;
+  }
+
   void _onMessageIdsChangedForBatchUi(List<int> ids) {
     final activeIds = ids.toSet();
     final messageIds = <int>{};

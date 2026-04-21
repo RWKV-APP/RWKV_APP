@@ -71,7 +71,7 @@ class Debugger extends ConsumerWidget {
 
     final batcbatchEnabledhCount = ref.watch(P.chat.batchEnabled);
     final batchEnabled = ref.watch(P.chat.batchEnabled);
-    final batchVW = ref.watch(P.chat.batchVW);
+    final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final batchCount = ref.watch(P.chat.batchCount);
     final batchViewportSlotIndexes = ref.watch(P.chat.batchViewportSlotIndexes);
 
@@ -142,7 +142,7 @@ class Debugger extends ConsumerWidget {
     const showMsgNode = false;
     const showSupportedBatchSizes = true;
     const showBatchEnabled = true;
-    const showBatchVW = true;
+    const showBatchViewportWidth = true;
     const showBatchCount = true;
     const showBatchViewportSlotIndexes = true;
     const showLoadingProgress = false;
@@ -245,7 +245,7 @@ class Debugger extends ConsumerWidget {
           ],
           if (showQuestions) ...[Text("questions".codeToName), Text(questions.join("\n"))],
           if (showSupportedBatchSizes) ...[Text("supportedBatchSizes".codeToName), Text(supportedBatchSizes.join(", "))],
-          if (showBatchVW) ...[Text("batchVW".codeToName), Text(batchVW.toString())],
+          if (showBatchViewportWidth) ...[Text("batchViewportWidth".codeToName), Text(batchViewportWidth.toString())],
           if (showBatchEnabled) ...[Text("batchEnabled".codeToName), Text(batchEnabled.toString())],
           if (showBatchCount) ...[Text("batchCount".codeToName), Text(batchCount.toString())],
           if (showBatchViewportSlotIndexes) ...[

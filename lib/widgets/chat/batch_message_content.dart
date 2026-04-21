@@ -120,11 +120,11 @@ class _BatchSlotsListView extends ConsumerWidget {
     final _ = theme;
     final (batch, _, batchCount, _) = getBatchInfo(finalContent);
     final appTheme = ref.watch(P.app.theme);
-    final batchVW = ref.watch(P.chat.batchVW);
+    final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final generating = ref.watch(P.rwkv.generating);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final parsedDecodeParams = msg.parsedDecodeParams;
-    final slotWidth = screenWidth * (batchVW / 100);
+    final slotWidth = screenWidth * (batchViewportWidth / 100);
     final shouldGateByViewport = msg.changing && generating;
 
     final EdgeInsets padding = .only(
@@ -272,10 +272,10 @@ class _BatchScrollLeftButton extends ConsumerWidget {
     final theme = Theme.of(context);
     final _ = theme;
     final screenWidth = ref.watch(P.app.screenWidth);
-    final batchVW = ref.watch(P.chat.batchVW);
+    final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
-    final step = screenWidth * (batchVW / 100) * 0.9;
+    final step = screenWidth * (batchViewportWidth / 100) * 0.9;
     final visibility = ref.watch(P.ui.batchScrollButtonVisibility(messageId));
     final show = visibility.left;
 
@@ -318,10 +318,10 @@ class _BatchScrollRightButton extends ConsumerWidget {
     final theme = Theme.of(context);
     final _ = theme;
     final screenWidth = ref.watch(P.app.screenWidth);
-    final batchVW = ref.watch(P.chat.batchVW);
+    final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final qb = ref.watch(P.app.qb);
     final qw = ref.watch(P.app.qw);
-    final step = screenWidth * (batchVW / 100) * 0.9;
+    final step = screenWidth * (batchViewportWidth / 100) * 0.9;
     final visibility = ref.watch(P.ui.batchScrollButtonVisibility(messageId));
     final show = visibility.right;
 

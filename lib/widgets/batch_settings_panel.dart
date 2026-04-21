@@ -62,7 +62,6 @@ class BatchSettingsPanel extends ConsumerWidget {
     if (argument.step != null) rawNewValue = (rawNewValue / argument.step!).round() * argument.step!.toInt();
     final currentValue = switch (argument) {
       Argument.batchCount => P.chat.batchCount.q,
-      Argument.batchVW => P.chat.batchVW.q,
       _ => 0,
     };
     if (currentValue == rawNewValue) return;
@@ -70,8 +69,6 @@ class BatchSettingsPanel extends ConsumerWidget {
     switch (argument) {
       case Argument.batchCount:
         P.chat.onManualBatchCountChanged(rawNewValue);
-      case Argument.batchVW:
-        P.chat.batchVW.q = rawNewValue;
       default:
         throw UnimplementedError();
     }
@@ -94,7 +91,7 @@ class BatchSettingsPanel extends ConsumerWidget {
     final batchCount = ref.watch(P.chat.effectiveBatchCount);
     final appTheme = ref.watch(P.app.theme);
     final batchInference = ref.watch(P.chat.effectiveBatchEnabled);
-    final batchVW = ref.watch(P.chat.batchVW);
+    final batchViewportWidth = ref.watch(P.ui.batchViewportWidth);
     final featureRollout = ref.watch(P.app.featureRollout);
     final fakeBatchInferenceBenchmarkEnabled = ref.watch(P.chat.fakeBatchInferenceBenchmarkEnabled);
 
@@ -209,14 +206,10 @@ class BatchSettingsPanel extends ConsumerWidget {
                 isSectionEnd: true,
                 title: s.batch_inference_width,
                 subtitle: s.batch_inference_width_detail,
-                infoText: batchVW.toString() + "% " + s.screen_width,
+                infoText: batchViewportWidth.toString() + "% " + s.screen_width,
                 onTap: () {},
-                bottom: ArgumentValue(
-                  Argument.batchVW,
+                bottom: _BatchViewportWidthSlider(
                   enabled: batchInference,
-                  _onChanged,
-                  showTitle: false,
-                  showValue: false,
                   padding: const .only(left: 4, top: 12, right: 4, bottom: 8),
                 ),
               ),
@@ -224,6 +217,61 @@ class BatchSettingsPanel extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _BatchViewportWidthSlider extends ConsumerWidget {
+  final bool enabled;
+  final EdgeInsets padding;
+
+  const _BatchViewportWidthSlider({
+    required this.enabled,
+    required this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final value = ref.watch(P.ui.batchViewportWidth);
+    final min = P.ui.batchViewportWidthMin;
+    final max = P.ui.batchViewportWidthMax;
+    final step = P.ui.batchViewportWidthStep;
+    final qb = ref.watch(P.app.qb);
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        padding.top.h,
+        Row(
+          children: [
+            padding.left.w,
+            Text(
+              min.toString(),
+              style: TS(s: 12, c: qb.q(.5)),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Slider(
+                activeColor: enabled ? null : theme.disabledColor,
+                divisions: (max - min) ~/ step,
+                padding: .zero,
+                value: value.toDouble(),
+                min: min.toDouble(),
+                max: max.toDouble(),
+                onChanged: enabled ? (value) => P.ui.setBatchViewportWidth(value.round()) : null,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Text(
+              max.toString(),
+              style: TS(s: 12, c: qb.q(.5)),
+            ),
+            padding.right.w,
+          ],
+        ),
+        padding.bottom.h,
+      ],
     );
   }
 }
