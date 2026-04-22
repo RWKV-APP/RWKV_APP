@@ -3693,6 +3693,355 @@ class S {
     return Intl.message('基准测试结果', name: 'benchmark_result', desc: '', args: []);
   }
 
+  /// `应用版本`
+  String get benchmark_info_app_version {
+    return Intl.message(
+      '应用版本',
+      name: 'benchmark_info_app_version',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `构建模式`
+  String get benchmark_info_build_mode {
+    return Intl.message(
+      '构建模式',
+      name: 'benchmark_info_build_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `操作系统`
+  String get benchmark_info_os {
+    return Intl.message('操作系统', name: 'benchmark_info_os', desc: '', args: []);
+  }
+
+  /// `系统版本`
+  String get benchmark_info_os_version {
+    return Intl.message(
+      '系统版本',
+      name: 'benchmark_info_os_version',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备型号`
+  String get benchmark_info_device_model {
+    return Intl.message(
+      '设备型号',
+      name: 'benchmark_info_device_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SoC 名称`
+  String get benchmark_info_soc_name {
+    return Intl.message(
+      'SoC 名称',
+      name: 'benchmark_info_soc_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SoC 品牌`
+  String get benchmark_info_soc_brand {
+    return Intl.message(
+      'SoC 品牌',
+      name: 'benchmark_info_soc_brand',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CPU`
+  String get benchmark_info_cpu_name {
+    return Intl.message(
+      'CPU',
+      name: 'benchmark_info_cpu_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GPU`
+  String get benchmark_info_gpu_name {
+    return Intl.message(
+      'GPU',
+      name: 'benchmark_info_gpu_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `总内存`
+  String get benchmark_info_total_memory {
+    return Intl.message(
+      '总内存',
+      name: 'benchmark_info_total_memory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `总显存`
+  String get benchmark_info_total_vram {
+    return Intl.message(
+      '总显存',
+      name: 'benchmark_info_total_vram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件大小`
+  String get benchmark_info_file_size {
+    return Intl.message(
+      '文件大小',
+      name: 'benchmark_info_file_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `后端`
+  String get benchmark_info_backend {
+    return Intl.message(
+      '后端',
+      name: 'benchmark_info_backend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `量化`
+  String get quantization {
+    return Intl.message('量化', name: 'quantization', desc: '', args: []);
+  }
+
+  /// `模型不支持`
+  String get benchmark_batch_not_supported_by_model {
+    return Intl.message(
+      '模型不支持',
+      name: 'benchmark_batch_not_supported_by_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `等待后端能力信息`
+  String get benchmark_batch_waiting_for_backend {
+    return Intl.message(
+      '等待后端能力信息',
+      name: 'benchmark_batch_waiting_for_backend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最高支持 Batch {count}`
+  String benchmark_batch_supported_up_to(Object count) {
+    return Intl.message(
+      '最高支持 Batch $count',
+      name: 'benchmark_batch_supported_up_to',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Batch 1`
+  String get benchmark_batch_plan_single {
+    return Intl.message(
+      'Batch 1',
+      name: 'benchmark_batch_plan_single',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Batch {first}-{last}（共 {count} 次）`
+  String benchmark_batch_plan_range(Object first, Object last, Object count) {
+    return Intl.message(
+      'Batch $first-$last（共 $count 次）',
+      name: 'benchmark_batch_plan_range',
+      desc: '',
+      args: [first, last, count],
+    );
+  }
+
+  /// `支持情况`
+  String get benchmark_support {
+    return Intl.message('支持情况', name: 'benchmark_support', desc: '', args: []);
+  }
+
+  /// `测试计划`
+  String get benchmark_plan {
+    return Intl.message('测试计划', name: 'benchmark_plan', desc: '', args: []);
+  }
+
+  /// `当前测试`
+  String get benchmark_current {
+    return Intl.message('当前测试', name: 'benchmark_current', desc: '', args: []);
+  }
+
+  /// `Batch {batch} · {current}/{total}`
+  String benchmark_current_batch(Object batch, Object current, Object total) {
+    return Intl.message(
+      'Batch $batch · $current/$total',
+      name: 'benchmark_current_batch',
+      desc: '',
+      args: [batch, current, total],
+    );
+  }
+
+  /// `基准测试进度`
+  String get benchmark_progress {
+    return Intl.message(
+      '基准测试进度',
+      name: 'benchmark_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Batch {batch}`
+  String benchmark_batch(Object batch) {
+    return Intl.message(
+      'Batch $batch',
+      name: 'benchmark_batch',
+      desc: '',
+      args: [batch],
+    );
+  }
+
+  /// `轮次`
+  String get benchmark_run {
+    return Intl.message('轮次', name: 'benchmark_run', desc: '', args: []);
+  }
+
+  /// `{current}/{total} · {phase}`
+  String benchmark_run_status(Object current, Object total, Object phase) {
+    return Intl.message(
+      '$current/$total · $phase',
+      name: 'benchmark_run_status',
+      desc: '',
+      args: [current, total, phase],
+    );
+  }
+
+  /// `Decode 峰值: {speed} t/s`
+  String benchmark_peak_decode(Object speed) {
+    return Intl.message(
+      'Decode 峰值: $speed t/s',
+      name: 'benchmark_peak_decode',
+      desc: '',
+      args: [speed],
+    );
+  }
+
+  /// `{progress}% · {speed} t/s`
+  String benchmark_progress_speed(Object progress, Object speed) {
+    return Intl.message(
+      '$progress% · $speed t/s',
+      name: 'benchmark_progress_speed',
+      desc: '',
+      args: [progress, speed],
+    );
+  }
+
+  /// `{current}/{total} · {speed} t/s`
+  String benchmark_decode_progress_speed(
+    Object current,
+    Object total,
+    Object speed,
+  ) {
+    return Intl.message(
+      '$current/$total · $speed t/s',
+      name: 'benchmark_decode_progress_speed',
+      desc: '',
+      args: [current, total, speed],
+    );
+  }
+
+  /// `Batch {batch}`
+  String benchmark_batch_result(Object batch) {
+    return Intl.message(
+      'Batch $batch',
+      name: 'benchmark_batch_result',
+      desc: '',
+      args: [batch],
+    );
+  }
+
+  /// `Prefill {prefillSpeed} t/s · Decode {decodeSpeed} t/s`
+  String benchmark_result_speed_line(Object prefillSpeed, Object decodeSpeed) {
+    return Intl.message(
+      'Prefill $prefillSpeed t/s · Decode $decodeSpeed t/s',
+      name: 'benchmark_result_speed_line',
+      desc: '',
+      args: [prefillSpeed, decodeSpeed],
+    );
+  }
+
+  /// `总 Decode`
+  String get benchmark_total_decode {
+    return Intl.message(
+      '总 Decode',
+      name: 'benchmark_total_decode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decode / Batch`
+  String get benchmark_decode_per_batch {
+    return Intl.message(
+      'Decode / Batch',
+      name: 'benchmark_decode_per_batch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最佳 Decode`
+  String get benchmark_best_decode {
+    return Intl.message(
+      '最佳 Decode',
+      name: 'benchmark_best_decode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最佳 Decode / Batch`
+  String get benchmark_best_decode_per_batch {
+    return Intl.message(
+      '最佳 Decode / Batch',
+      name: 'benchmark_best_decode_per_batch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最佳带宽`
+  String get benchmark_best_bw {
+    return Intl.message('最佳带宽', name: 'benchmark_best_bw', desc: '', args: []);
+  }
+
+  /// `最佳 FLOPS`
+  String get benchmark_best_flops {
+    return Intl.message(
+      '最佳 FLOPS',
+      name: 'benchmark_best_flops',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `性能测试`
   String get performance_test {
     return Intl.message('性能测试', name: 'performance_test', desc: '', args: []);

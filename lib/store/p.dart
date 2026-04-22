@@ -153,6 +153,7 @@ part "ui.dart";
 part "pth.dart";
 part "api_server.dart";
 part "multi_question.dart";
+part "benchmark.dart";
 part "telemetry.dart";
 
 abstract class P {
@@ -183,6 +184,7 @@ abstract class P {
   static final ui = _UI();
   static final apiServer = _ApiServer();
   static final multiQuestion = _MultiQuestion();
+  static final benchmark = _Benchmark();
   static final telemetry = _Telemetry();
 
   static Future<void> init() async {
@@ -231,6 +233,7 @@ abstract class P {
       _safeInit(() => pth._init(), mark: "pth"),
       _safeInit(() => apiServer._init(), mark: "apiServer"),
       _safeInit(() => telemetry._init(), mark: "telemetry"),
+      _safeInit(() => benchmark._init(), mark: "benchmark"),
     ]);
   }
 

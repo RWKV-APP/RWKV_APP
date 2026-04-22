@@ -1,25 +1,27 @@
 // Dart imports:
-import 'dart:async';
-import 'dart:io';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
 import 'package:halo_state/halo_state.dart';
-import 'package:rwkv_mobile_flutter/types.dart';
 
 // Project imports:
 import 'package:zone/func/format_bytes.dart';
 import 'package:zone/gen/l10n.dart';
-import 'package:zone/model/argument.dart';
+import 'package:zone/model/file_info.dart';
 import 'package:zone/model/lambada_test_item.dart';
 import 'package:zone/store/p.dart';
+import 'package:zone/widgets/loading_progress_button_content.dart';
 import 'package:zone/widgets/model_selector.dart';
+
+part 'benchmark/benchmark_controls.dart';
+part 'benchmark/benchmark_results.dart';
+part 'benchmark/benchmark_lambada.dart';
 
 class PageBenchmark extends ConsumerStatefulWidget {
   const PageBenchmark({super.key});
@@ -30,27 +32,27 @@ class PageBenchmark extends ConsumerStatefulWidget {
 
 class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  int _lastSettledTabIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_onTabChanged);
+    P.benchmark.onPageOpened();
   }
 
   void _onTabChanged() {
-    // 当标签页切换完成时（动画结束），停止所有测试
-    if (!_tabController.indexIsChanging) {
-      _stopAllTests();
-    }
+    if (mounted) setState(() {});
+    if (_tabController.indexIsChanging) return;
+    final index = _tabController.index;
+    if (index == _lastSettledTabIndex) return;
+    _lastSettledTabIndex = index;
+    _stopAllTests();
   }
 
   void _stopAllTests() {
-    // 停止性能测试
-    if (P.rwkv.generating.q) {
-      P.chat.stopCompletion();
-    }
-    // 停止 LAMBADA 测试
+    P.benchmark.stopBenchmark(report: true);
     if (P.lambada.autoStartNextTest.q) {
       P.lambada.stopTest();
     }
@@ -60,6 +62,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
   void dispose() {
     _tabController.removeListener(_onTabChanged);
     _stopAllTests();
+    P.benchmark.onPageClosed();
     _tabController.dispose();
     super.dispose();
   }
@@ -96,7 +99,7 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text(S.current.performance_test),
+            title: Text(s.performance_test),
             bottom: TabBar(
               controller: _tabController,
               tabs: [
@@ -107,19 +110,14 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
           ),
           body: TabBarView(
             controller: _tabController,
-            children: [
-              SingleChildScrollView(
-                padding: const .symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    const SizedBox(height: 12),
-                    _Test(),
-                  ],
-                ),
-              ),
-              const _LambadaTest(),
+            children: const [
+              _Test(),
+              _LambadaTest(),
             ],
+          ),
+          extendBody: true,
+          bottomNavigationBar: _BenchmarkScaffoldActionBar(
+            activeTabIndex: _tabController.index,
           ),
         ),
       ),
@@ -127,732 +125,90 @@ class _PageBenchmarkState extends ConsumerState<PageBenchmark> with SingleTicker
   }
 }
 
-class _Test extends ConsumerStatefulWidget {
-  @override
-  ConsumerState<_Test> createState() => _TestState();
-}
-
-class _TestState extends ConsumerState<_Test> {
-  double prefillSpeed = 0;
-  double decodeSpeed = 0;
-  double flops = 0;
-  double bw = 0;
-
-  bool generating = false;
-  int numberOfCore = -1;
-  Map<String, String> deviceInfo = {};
-
-  double oldMaxLength = 4000;
-
-  int selectedBatchSize = 1;
-
-  StreamSubscription? subscription;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final di = await getDeviceInfo();
-      setState(() {
-        deviceInfo = di;
-      });
-
-      oldMaxLength = P.rwkv.arguments(Argument.maxLength).q;
-      P.rwkv.syncMaxLength(maxLength: 200);
-    });
-  }
-
-  void onStartStopTap() async {
-    if (generating) {
-      P.chat.stopCompletion();
-      setState(() {
-        generating = false;
-      });
-    } else {
-      setState(() {
-        bw = 0;
-        flops = 0;
-        prefillSpeed = 0;
-        decodeSpeed = 0;
-      });
-      // Make it prefill exactly 512 tokens
-      final prompt =
-          "My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable. He taught us the language, we call a stroke of word painting, he wrote the word can be beautiful. Always happy with a smile on his face when the nest. She angry when we are afraid to look at her front, only dare to look at the blackboard. We do not always angry teacher, we have to study hard.My teacher is Mrs. teacher, he is a woman teacher. She was very young. High on the bridge of the nose has a pair of water Lingling big eyes, short hair, looked even younger. He knows everything very knowledgeable.";
-      P.rwkv.clearStates();
-      subscription?.cancel();
-      subscription = P.rwkv
-          .completion(prompt, batchSize: selectedBatchSize, disableCache: true)
-          .listen((e) {}, onError: (e) {}, onDone: () {});
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    subscription?.cancel();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      P.chat.stopCompletion();
-      P.rwkv.syncMaxLength(maxLength: oldMaxLength);
-    });
-  }
-
-  Future<Map<String, String>> getDeviceInfo() async {
-    // final mem = await SystemInfoPlus.physicalMemory ?? 0;
-    // socInfo += 'Memory: ${mem / 1024 / 1024 / 1024}GB\n';
-    DeviceInfoPlugin di = DeviceInfoPlugin();
-    final android = Platform.isAndroid ? await di.androidInfo : null;
-    final windows = Platform.isWindows ? await di.windowsInfo : null;
-
-    numberOfCore = windows?.numberOfCores ?? -1;
-
-    final lines = {
-      "AppVersion": P.app.version.q + " (${P.app.buildNumber.q})",
-      // "Kernel": SysInfo.kernelName + ' ' + SysInfo.rawKernelArchitecture + '',
-      ..._Utils.getMemInfo(),
-      if (android != null) 'DeviceName': android.name,
-      if (android != null) 'Hardware': "${android.hardware} ${P.rwkv.socBrand.q.name} ${P.rwkv.socName.q}".replaceAll('Unknown', ''),
-      if (windows != null) 'ProductName': windows.productName,
-    };
-    return lines;
-  }
-
-  void listen() {
-    ref.listen(P.rwkv.decodeSpeed, (p, r) {
-      decodeSpeed = r;
-      setState(() {});
-    });
-    ref.listen(P.rwkv.prefillSpeed, (p, r) {
-      prefillSpeed = max(r, prefillSpeed);
-      setState(() {});
-    });
-    ref.listen(P.rwkv.generating, (p, r) {
-      if (r != generating) {
-        setState(() {
-          generating = r;
-        });
-      }
-    });
-    ref.listen(P.chat.receivedTokens, (p, r) {
-      if (r.length > 1000) {
-        P.rwkv.stop();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    listen();
-    final theme = Theme.of(context);
-    final model = ref.watch(P.rwkv.latestModel);
-    final socName = ref.watch(P.rwkv.socName);
-    final socBrand = ref.watch(P.rwkv.socBrand);
-    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-    final socNameDisplay = socName.isEmpty ? "Unknown" : socName;
-    final neutralOutlinedStyle = OutlinedButton.styleFrom(
-      foregroundColor: qb,
-      backgroundColor: appTheme.settingItem,
-      side: BorderSide(color: qb.q(.2), width: .5),
-      textStyle: theme.textTheme.bodyMedium,
-    );
-    final neutralFilledStyle = FilledButton.styleFrom(
-      backgroundColor: qb.q(.15),
-      foregroundColor: qb,
-      disabledBackgroundColor: qb.q(.08),
-      disabledForegroundColor: qb.q(.4),
-      side: BorderSide(color: qb.q(.18), width: .5),
-      textStyle: theme.textTheme.bodyMedium,
-    );
-
-    if (model != null) {
-      final modelSizeGb = model.fileSize / 1024 / 1024 / 1024;
-      final _bw = modelSizeGb * decodeSpeed;
-      final _flops = 2 * modelSizeGb * prefillSpeed / 1000;
-      bw = max(_bw, bw);
-      flops = max(flops, _flops);
-    }
-
-    return Column(
-      crossAxisAlignment: .stretch,
-      mainAxisSize: .min,
-      children: [
-        _KeyValuePairs(
-          title: '',
-          pairs: {
-            ...deviceInfo.map((key, value) => MapEntry(key.codeToName, value)),
-            'SocName'.codeToName: socNameDisplay,
-            if (socBrand != SocBrand.unknown) 'SocBrand'.codeToName: socBrand.name,
-            if (model != null) '---': '',
-            if (model != null) 'Model'.codeToName: "${model.name} ${model.quantization}",
-            if (model != null) 'FileSize'.codeToName: formatBytes(model.fileSize),
-            if (model != null) 'Backend'.codeToName: model.backend?.asArgument ?? '-',
-          },
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                icon: null,
-                onPressed: () => ModelSelector.show(),
-                style: neutralOutlinedStyle.copyWith(
-                  visualDensity: VisualDensity.standard,
-                ),
-                label: Text(S.current.select_model),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: FilledButton.icon(
-                icon: generating
-                    ? SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(
-                          color: qb,
-                          strokeWidth: 2.2,
-                          backgroundColor: qb.q(.12),
-                        ),
-                      )
-                    : null,
-                onPressed: model == null ? null : () => onStartStopTap(),
-                style: neutralFilledStyle.copyWith(
-                  visualDensity: VisualDensity.standard,
-                ),
-                label: Text(generating ? S.current.stop : S.current.start),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        _BatchSizeSelector(
-          selectedBatchSize: selectedBatchSize,
-          supportedBatchSizes: supportedBatchSizes,
-          onChanged: (value) {
-            setState(() {
-              selectedBatchSize = value;
-            });
-          },
-        ),
-        const SizedBox(height: 16),
-        if (!generating && flops != 0)
-          _KeyValuePairs(
-            title: S.current.test_result,
-            pairs: {
-              'FLOPS': '${flops.toStringAsFixed(2)} T/s',
-              'BW': '${bw.toStringAsFixed(2)} GB/s',
-              'Prefill': '${prefillSpeed.toStringAsFixed(2)} t/s',
-              'Decode': '${decodeSpeed.toStringAsFixed(2)} t/s',
-            },
-          ),
-      ],
-    );
-  }
-}
-
-class _BatchSizeSelector extends ConsumerWidget {
-  final int selectedBatchSize;
-  final List<int> supportedBatchSizes;
-  final ValueChanged<int> onChanged;
-
-  const _BatchSizeSelector({
-    required this.selectedBatchSize,
-    required this.supportedBatchSizes,
-    required this.onChanged,
-  });
+class _Test extends ConsumerWidget {
+  const _Test();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final options = <int>{1, ...supportedBatchSizes}.toList()..sort();
     final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
+    final model = ref.watch(P.rwkv.latestModel);
+    final supportedBatchSizes = ref.watch(P.rwkv.supportedBatchSizes);
+    final maxSupportedBatchSize = benchmarkMaxSupportedBatchSize(model: model, supportedBatchSizes: supportedBatchSizes);
+    final generating = ref.watch(P.benchmark.generating);
+    final currentBatchSize = ref.watch(P.benchmark.currentBatchSize);
+    final currentBatchOrdinal = ref.watch(P.benchmark.currentBatchOrdinal);
+    final currentGeneratedLength = ref.watch(P.benchmark.currentGeneratedLength);
+    final currentPrefillProgress = ref.watch(P.benchmark.currentPrefillProgress);
+    final prefillSpeed = ref.watch(P.benchmark.prefillSpeed);
+    final decodeSpeed = ref.watch(P.benchmark.decodeSpeed);
+    final batchPlan = ref.watch(P.benchmark.batchPlan);
+    final batchResults = ref.watch(P.benchmark.results);
+    final visibleBatchPlan = generating ? batchPlan : benchmarkBatchPlanFor(model: model, supportedBatchSizes: supportedBatchSizes);
+    final modelSupportsBatch = model?.supportsBatchInference ?? false;
+    final backendSupportsBatch = maxSupportedBatchSize > 1;
+    final telemetryDeviceInfo = ref.watch(P.telemetry.benchmarkDeviceInfo);
+    final List<MapEntry<int, BenchmarkRunResult>> completedResults = batchResults.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
+    final BenchmarkRunResult? latestCompletedResult = completedResults.isEmpty ? null : completedResults.last.value;
+    final bool showBenchmarkProgress = generating || latestCompletedResult != null;
+    final int displayBatchSize = generating ? currentBatchSize : (latestCompletedResult?.batchSize ?? currentBatchSize);
+    final int displayBatchOrdinal = generating
+        ? currentBatchOrdinal
+        : (latestCompletedResult == null ? currentBatchOrdinal : completedResults.length);
+    final int displayBatchTotal = max(visibleBatchPlan.length, displayBatchOrdinal);
+    final double displayPrefillSpeed = generating ? prefillSpeed : (latestCompletedResult?.prefillSpeed ?? prefillSpeed);
+    final double displayDecodeSpeed = generating ? decodeSpeed : (latestCompletedResult?.decodeSpeed ?? decodeSpeed);
+    final double displayPrefillProgress = generating ? currentPrefillProgress : (latestCompletedResult == null ? 0 : 1);
+    final int generatedLength = generating
+        ? min(currentGeneratedLength, benchmarkDecodeTargetCharsPerBatch)
+        : (latestCompletedResult == null ? 0 : benchmarkDecodeTargetCharsPerBatch);
 
-    return Material(
-      color: appTheme.settingItem,
-      surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: qb.q(.14), width: .5),
-      ),
-      child: Padding(
-        padding: const .symmetric(horizontal: 12, vertical: 12),
+    return Theme(
+      data: theme,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 12, 16, 112 + MediaQuery.paddingOf(context).bottom),
         child: Column(
           crossAxisAlignment: .stretch,
+          mainAxisSize: .min,
           children: [
-            Text(
-              S.current.batch_inference_count,
-              style: const TextStyle(fontSize: 14, fontWeight: .w500),
-            ),
-            const SizedBox(height: 8),
-            DropdownButtonFormField<int>(
-              initialValue: selectedBatchSize,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: qb.q(.2), width: .5),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: qb.q(.2), width: .5),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: qb.q(.35), width: .8),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                filled: true,
-                fillColor: appTheme.settingBg,
-                contentPadding: const .symmetric(horizontal: 12, vertical: 8),
-              ),
-              style: theme.textTheme.bodyLarge,
-              items: options.map((size) {
-                final label = size == 1 ? '1 (${s.single_thread})' : '$size (${s.multi_thread})';
-                return DropdownMenuItem<int>(
-                  value: size,
-                  child: Text(label),
-                );
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  onChanged(value);
-                }
+            _KeyValuePairs(
+              title: '',
+              pairs: {
+                ...telemetryDeviceInfo.map((key, value) => MapEntry(_localizedBenchmarkInfoKey(s, key), value)),
+                if (model != null) '---': '',
+                if (model != null) s.model: model.name,
+                if (model != null) s.quantization: model.quantization ?? '-',
+                if (model != null) s.benchmark_info_file_size: formatBytes(model.fileSize),
+                if (model != null) s.benchmark_info_backend: model.backend?.asArgument ?? '-',
+                if (model != null)
+                  s.batch_inference: _batchSupportLabel(s, modelSupportsBatch, backendSupportsBatch, maxSupportedBatchSize),
               },
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _KeyValuePairs extends ConsumerWidget {
-  final Map<String, String> pairs;
-  final String title;
-
-  const _KeyValuePairs({required this.pairs, required this.title});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-
-    return Material(
-      color: appTheme.settingItem,
-      surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: qb.q(.14), width: .5),
-      ),
-      child: Padding(
-        padding: const .symmetric(horizontal: 12, vertical: 12),
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            if (title.isNotEmpty)
-              Text(
-                title,
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
-              ),
-            if (title.isNotEmpty) const SizedBox(height: 6),
-            for (final pair in pairs.entries) ...[
-              if (pair.key != '---')
-                Row(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Expanded(flex: 2, child: Text(pair.key)),
-                    Expanded(flex: 3, child: Text(pair.value)),
-                  ],
-                )
-              else
-                Container(
-                  margin: const .symmetric(vertical: 6),
-                  decoration: BoxDecoration(color: qb.q(.16)),
-                  height: .5,
-                ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Utils {
-  static Map<String, String> getMemInfo() {
-    final out = _exec('cat', ['/proc/meminfo']);
-    final lines = out?.replaceAll('\r\n', '\n').split('\n') ?? [];
-    final memInfo = <String, String>{};
-    for (final line in lines) {
-      final parts = line.split(' ').where((element) => element.isNotEmpty).toList();
-      if (parts.length < 2) {
-        continue;
-      }
-      try {
-        // /proc/meminfo values are in KB
-        final kb = int.tryParse(parts[1]);
-        final bytes = (kb ?? 0) * 1024;
-        if (line.contains("MemTotal")) {
-          memInfo['MemTotal'] = formatBytes(bytes);
-        }
-        if (Platform.isWindows) {
-          if (line.contains("MemFree")) {
-            memInfo['MemFree'] = formatBytes(bytes);
-          }
-        } else {
-          if (line.contains("MemAvailable")) {
-            memInfo['MemAvailable'] = formatBytes(bytes);
-          }
-        }
-      } catch (e) {
-        //
-      }
-    }
-    return memInfo;
-  }
-
-  static String? _exec(String executable, List<String> arguments, {bool runInShell = false}) {
-    try {
-      final result = Process.runSync(executable, arguments, runInShell: runInShell);
-      if (result.exitCode == 0) {
-        return result.stdout.toString();
-      }
-    } catch (e) {
-      //
-    }
-    return null;
-  }
-}
-
-class _LambadaTest extends ConsumerWidget {
-  const _LambadaTest();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final testItems = ref.watch(P.lambada.testItems);
-    final isRunning = ref.watch(P.lambada.autoStartNextTest);
-    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
-    final currentItem = ref.watch(P.lambada.currentItem);
-    final testResults = ref.watch(P.lambada.testResults);
-
-    // 计算列表项数量：1个当前项 + 历史项数量
-    final historyItemCount = testResults.length;
-
-    return ListView.builder(
-      padding: const .only(left: 12, right: 12, top: 12, bottom: 12),
-      itemCount: historyItemCount + 1 + 4,
-      itemBuilder: (context, index) {
-        // 第一个条目是当前正在测试的项
-        if (index == 0) {
-          return const Padding(
-            padding: .only(bottom: 8),
-            child: _LambadaTestControlButtons(),
-          );
-        }
-        if (index == 1) {
-          return const Padding(
-            padding: .only(bottom: 8),
-            child: _LambadaModelSelectionButton(),
-          );
-        }
-        if (index == 2) {
-          return const _LambadaTestDataCard();
-        }
-        if (index == 3) {
-          return const _LambadaTestResultsCard();
-        }
-        if (index == 4) {
-          return _LambadaTestListItem(
-            isCurrentItem: true,
-            testItems: testItems,
-            totalFinishCount: totalFinishCount - (isRunning ? 0 : 1),
-            currentItem: currentItem,
-            testResults: testResults,
-          );
-        }
-        // 后续条目是历史项（倒序）
-        final historyIndex = (index - (isRunning ? 1 : 0)) - 4;
-        final reversedIndex = historyItemCount - 1 - historyIndex;
-        if (reversedIndex >= 0 && reversedIndex < testResults.length) {
-          final result = testResults[reversedIndex];
-          final targetText = result['targetText'] ?? '';
-          final outputText = result['outputText'] ?? '';
-          final isCorrect = targetText == outputText;
-          return _LambadaTestListItem(
-            isCurrentItem: false,
-            index: reversedIndex + (isRunning ? 0 : 1),
-            sourceText: result['sourceText'] ?? '',
-            targetText: targetText,
-            outputText: outputText,
-            isCorrect: isCorrect,
-          );
-        }
-
-        return const SizedBox.shrink();
-      },
-    );
-  }
-}
-
-class _LambadaTestControlButtons extends ConsumerWidget {
-  const _LambadaTestControlButtons();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final isRunning = ref.watch(P.lambada.autoStartNextTest);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-    final neutralButtonStyle = ElevatedButton.styleFrom(
-      backgroundColor: appTheme.settingItem,
-      foregroundColor: qb,
-      surfaceTintColor: Colors.transparent,
-      side: BorderSide(color: qb.q(.18), width: .5),
-      elevation: 0,
-      textStyle: theme.textTheme.bodyMedium,
-    );
-
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: isRunning ? null : () => P.lambada.startTest(),
-            icon: isRunning
-                ? SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: qb,
-                    ),
-                  )
-                : const Icon(Icons.play_arrow),
-            label: Text(isRunning ? s.testing : s.start_test),
-            style: neutralButtonStyle,
-          ),
-        ),
-        const SizedBox(width: 8),
-        if (isRunning)
-          Expanded(
-            child: ElevatedButton.icon(
-              onPressed: () => P.lambada.stopTest(),
-              icon: const Icon(Icons.stop),
-              label: Text(s.stop_test),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: qb.q(.18),
-                foregroundColor: qb,
-                surfaceTintColor: Colors.transparent,
-                side: BorderSide(color: qb.q(.25), width: .5),
-                elevation: 0,
-              ),
+            const SizedBox(height: 12),
+            _BatchPlanCard(
+              modelSupportsBatch: modelSupportsBatch,
+              backendSupportsBatch: backendSupportsBatch,
+              maxSupportedBatchSize: maxSupportedBatchSize,
+              batchPlan: visibleBatchPlan,
+              running: generating,
+              currentBatchSize: currentBatchSize,
+              currentBatchOrdinal: currentBatchOrdinal,
             ),
-          )
-        else
-          ElevatedButton.icon(
-            onPressed: () => P.lambada.loadTestData(),
-            icon: const Icon(Icons.refresh),
-            label: Text(s.load_data),
-            style: neutralButtonStyle,
-          ),
-      ],
-    );
-  }
-}
-
-class _LambadaModelSelectionButton extends ConsumerWidget {
-  const _LambadaModelSelectionButton();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final isRunning = ref.watch(P.lambada.autoStartNextTest);
-    final currentModel = ref.watch(P.rwkv.latestModel);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-
-    return Row(
-      children: [
-        if (currentModel != null) Expanded(child: Text(s.current_model(currentModel.name))),
-        if (currentModel == null) Expanded(child: Text(s.please_select_model)),
-        ElevatedButton.icon(
-          onPressed: isRunning ? null : () => P.lambada.reselectModel(),
-          icon: const Icon(Icons.model_training),
-          label: currentModel == null ? Text(s.please_select_model) : Text(s.reselect_model),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: appTheme.settingItem,
-            foregroundColor: qb,
-            surfaceTintColor: Colors.transparent,
-            side: BorderSide(color: qb.q(.18), width: .5),
-            elevation: 0,
-            textStyle: theme.textTheme.bodyMedium,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _LambadaTestDataCard extends ConsumerWidget {
-  const _LambadaTestDataCard();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final testItems = ref.watch(P.lambada.testItems);
-    final isRunning = ref.watch(P.lambada.autoStartNextTest);
-    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
-    final progress = ((totalFinishCount / (testItems.isEmpty ? 1 : testItems.length)).toDouble()).clamp(0, 1.0).toDouble();
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-
-    return Card(
-      color: appTheme.settingItem,
-      surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: qb.q(.14), width: .5),
-      ),
-      child: Padding(
-        padding: const .all(16.0),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text(
-              s.test_data,
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(s.total_test_items(testItems.length)),
-            if (isRunning) ...[
-              const SizedBox(height: 8),
-              Text(s.current_progress(totalFinishCount, testItems.length)),
-              const SizedBox(height: 8),
-              LinearProgressIndicator(
-                value: progress,
-                color: qb.q(.62),
-                backgroundColor: qb.q(.1),
+            if (showBenchmarkProgress) ...[
+              const SizedBox(height: 12),
+              _BenchmarkProgressCard(
+                prefillSpeed: displayPrefillSpeed,
+                decodeSpeed: displayDecodeSpeed,
+                prefillProgress: displayPrefillProgress,
+                generatedLength: generatedLength,
+                targetLength: benchmarkDecodeTargetCharsPerBatch,
+                batchSize: displayBatchSize,
+                batchOrdinal: displayBatchOrdinal,
+                batchTotal: displayBatchTotal,
               ),
             ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _LambadaTestResultsCard extends ConsumerWidget {
-  const _LambadaTestResultsCard();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final isRunning = ref.watch(P.lambada.autoStartNextTest);
-    final ppl = ref.watch(P.lambada.ppl);
-    final acc = ref.watch(P.lambada.acc);
-    final totalFinishCount = ref.watch(P.lambada.totalFinishCount);
-    final correctCount = ref.watch(P.lambada.correctCount);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-
-    return Card(
-      color: appTheme.settingItem,
-      surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: qb.q(.14), width: .5),
-      ),
-      child: Padding(
-        padding: const .all(16.0),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  s.test_results,
-                  style: theme.textTheme.titleMedium,
-                ),
-                if (isRunning) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const .symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: qb.q(.16),
-                      borderRadius: .circular(12),
-                      border: .all(color: qb.q(.35)),
-                    ),
-                    child: Row(
-                      mainAxisSize: .min,
-                      children: [
-                        SizedBox(
-                          width: 12,
-                          height: 12,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: qb,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          s.real_time_update,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: qb.q(.75),
-                            fontWeight: .w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _LambadaResultCard(
-                    title: s.accuracy,
-                    value: '${(acc * 100).toStringAsFixed(2)}%',
-                    color: qb.q(.95),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _LambadaResultCard(
-                    title: s.perplexity,
-                    value: ppl.toStringAsFixed(2),
-                    color: qb.q(.85),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: _LambadaResultCard(
-                    title: s.correct_count,
-                    value: '$correctCount',
-                    color: qb.q(.75),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _LambadaResultCard(
-                    title: s.total_count,
-                    value: '$totalFinishCount',
-                    color: qb.q(.65),
-                  ),
-                ),
-              ],
-            ),
+            if (batchResults.isNotEmpty) _BenchmarkResultsCard(results: batchResults.values.toList()),
           ],
         ),
       ),
@@ -860,222 +216,30 @@ class _LambadaTestResultsCard extends ConsumerWidget {
   }
 }
 
-class _LambadaTestListItem extends ConsumerWidget {
-  final bool isCurrentItem;
-  final List<LambadaTestItem>? testItems;
-  final int? totalFinishCount;
-  final LambadaTestItem? currentItem;
-  final List<Map<String, String>>? testResults;
-  final int? index;
-  final String? sourceText;
-  final String? targetText;
-  final String? outputText;
-  final bool? isCorrect;
-
-  const _LambadaTestListItem({
-    required this.isCurrentItem,
-    this.testItems,
-    this.totalFinishCount,
-    this.currentItem,
-    this.testResults,
-    this.index,
-    this.sourceText,
-    this.targetText,
-    this.outputText,
-    this.isCorrect,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final qb = ref.watch(P.app.qb);
-    final appTheme = ref.watch(P.app.theme);
-
-    if (isCurrentItem) {
-      // 当前正在测试的项
-      if (testItems == null || totalFinishCount == null) {
-        return const SizedBox.shrink();
-      }
-
-      final currentIndex = totalFinishCount!;
-      if (testItems!.isEmpty || currentIndex >= testItems!.length) {
-        return const SizedBox.shrink();
-      }
-
-      // 查找当前测试项目的结果
-      Map<String, String>? currentResult;
-      if (currentItem != null && testResults != null) {
-        for (final result in testResults!) {
-          if (result['sourceText'] == currentItem!.sourceText && result['targetText'] == currentItem!.targetText) {
-            currentResult = result;
-            break;
-          }
-        }
-      }
-
-      final displayTargetText = currentItem?.targetText ?? testItems![currentIndex].targetText;
-      final displaySourceText = currentItem?.sourceText ?? testItems![currentIndex].sourceText;
-      final displayOutputText = currentResult?['outputText'] ?? '';
-      final displayIsCorrect = displayOutputText.isNotEmpty && displayTargetText == displayOutputText;
-
-      return Card(
-        color: appTheme.settingItem,
-        surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: qb.q(.14), width: .5),
-        ),
-        child: Padding(
-          padding: const .all(16.0),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(
-                s.current_test_item(currentIndex + 1, testItems!.length),
-                style: theme.textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                s.source_text(displaySourceText),
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 4),
-              if (displayOutputText.isEmpty)
-                Text(
-                  s.target_text(displayTargetText),
-                  style: TextStyle(fontSize: 12, color: qb.q(.78)),
-                )
-              else
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        s.target_text(displayTargetText),
-                        style: TextStyle(fontSize: 12, color: qb.q(.78)),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        s.model_output(displayOutputText),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: displayIsCorrect ? qb.q(.92) : qb.q(.62),
-                          fontWeight: displayIsCorrect ? FontWeight.w500 : FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      // 历史项
-      if (index == null || sourceText == null || targetText == null || outputText == null || isCorrect == null) {
-        return const SizedBox.shrink();
-      }
-
-      return Card(
-        color: appTheme.settingItem,
-        surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: qb.q(.14), width: .5),
-        ),
-        child: Padding(
-          padding: const .all(16.0),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(
-                '#$index',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: .w600,
-                  color: qb.q(.6),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                s.source_text(sourceText!),
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      s.target_text(targetText!),
-                      style: TextStyle(fontSize: 12, color: qb.q(.78)),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      s.model_output(outputText!),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isCorrect! ? qb.q(.92) : qb.q(.62),
-                        fontWeight: isCorrect! ? FontWeight.w500 : FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-  }
+String _batchSupportLabel(S s, bool modelSupportsBatch, bool backendSupportsBatch, int maxSupportedBatchSize) {
+  if (!modelSupportsBatch) return s.benchmark_batch_not_supported_by_model;
+  if (!backendSupportsBatch) return s.benchmark_batch_waiting_for_backend;
+  return s.benchmark_batch_supported_up_to(maxSupportedBatchSize);
 }
 
-class _LambadaResultCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final Color color;
+String _batchPlanText(S s, List<int> batchPlan) {
+  if (batchPlan.length == 1) return s.benchmark_batch_plan_single;
+  return s.benchmark_batch_plan_range(batchPlan.first, batchPlan.last, batchPlan.length);
+}
 
-  const _LambadaResultCard({
-    required this.title,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const .all(12),
-      decoration: BoxDecoration(
-        color: color.q(0.1),
-        borderRadius: .circular(8),
-        border: .all(color: color.q(0.3)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              color: color,
-              fontWeight: .w500,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: .bold,
-              color: color,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+String _localizedBenchmarkInfoKey(S s, String key) {
+  return switch (key) {
+    "AppVersion" => s.benchmark_info_app_version,
+    "BuildMode" => s.benchmark_info_build_mode,
+    "OS" => s.benchmark_info_os,
+    "OSVersion" => s.benchmark_info_os_version,
+    "DeviceModel" => s.benchmark_info_device_model,
+    "SocName" => s.benchmark_info_soc_name,
+    "SocBrand" => s.benchmark_info_soc_brand,
+    "CPUName" => s.benchmark_info_cpu_name,
+    "GPUName" => s.benchmark_info_gpu_name,
+    "TotalMemory" => s.benchmark_info_total_memory,
+    "TotalVRAM" => s.benchmark_info_total_vram,
+    _ => key.codeToName,
+  };
 }

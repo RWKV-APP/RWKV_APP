@@ -686,6 +686,7 @@ extension $RWKV on _RWKV {
   }) {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+    prefillProgress.q = 0;
     P.telemetry.resetPeakDecodeSpeed();
 
     if (isAlbatrossLoaded.q) {
@@ -769,6 +770,7 @@ extension $RWKV on _RWKV {
   Future<void> clearStates() async {
     prefillSpeed.q = 0;
     decodeSpeed.q = 0;
+    prefillProgress.q = 0;
     final sendPort = _sendPort;
     if (sendPort == null) {
       qqw("sendPort is null");
@@ -845,6 +847,13 @@ extension $RWKV on _RWKV {
       .chat => .chat,
       .fifthteenPuzzle => .chat,
     };
+  }
+
+  void requestGenerationMetrics({WeightType weightType = .chat}) {
+    final modelID = findModelIDByWeightType(weightType: weightType);
+    if (modelID == null) return;
+    send(to_rwkv.GetPrefillAndDecodeSpeed(modelID: modelID));
+    send(to_rwkv.GetIsGenerating(modelID: modelID));
   }
 
   void send(to_rwkv.ToRWKV toRwkv) {

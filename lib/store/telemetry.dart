@@ -17,10 +17,62 @@ class _Telemetry {
   late final _totalMemoryMb = qs<int>(0);
   late final _totalVramMb = qs<int>(0);
   late final _peakDecodeSpeed = qs<double>(0);
+
+  late final peakDecodeSpeed = qp<double>((ref) => ref.watch(_peakDecodeSpeed));
+
+  late final benchmarkDeviceInfo = qp<Map<String, String>>((ref) {
+    final String appVersion = ref.watch(P.app.version);
+    final String buildNumber = ref.watch(P.app.buildNumber);
+    final String osVersion = ref.watch(P.app.osVersion);
+    final String deviceModel = ref.watch(_deviceModel);
+    final String macChipName = ref.watch(_macChipName);
+    final String cpuName = ref.watch(_cpuName);
+    final String gpuName = ref.watch(_gpuName);
+    final int totalMemoryMb = ref.watch(_totalMemoryMb);
+    final int totalVramMb = ref.watch(_totalVramMb);
+    final String nativeSocName = ref.watch(P.rwkv.socName);
+    final String? frontendSocName = ref.watch(P.rwkv.frontendSocName);
+    final SocBrand nativeSocBrand = ref.watch(P.rwkv.socBrand);
+    final SocBrand? frontendSocBrand = ref.watch(P.rwkv.frontendSocBrand);
+    final FileInfo? model = ref.watch(P.rwkv.latestModel);
+
+    final String socName = _resolveSocName(
+      nativeSocName: nativeSocName,
+      frontendSocName: frontendSocName,
+      macChipName: macChipName,
+      gpuName: gpuName,
+      cpuName: cpuName,
+      deviceModel: deviceModel,
+      backendName: model?.backend?.name ?? "",
+    );
+    final String socBrandName = _resolveSocBrandName(
+      nativeSocBrand: nativeSocBrand,
+      frontendSocBrand: frontendSocBrand,
+      gpuName: gpuName,
+      cpuName: cpuName,
+    );
+    final bool socNameLooksGeneric = _isUnknownHardwareName(socName) || socName == deviceModel || socName == Platform.operatingSystem;
+
+    return {
+      "AppVersion": "$appVersion ($buildNumber)",
+      "BuildMode": _currentFlutterBuildMode(),
+      "OS": Platform.operatingSystem,
+      if (osVersion.isNotEmpty) "OSVersion": _stripOsVersion(osVersion),
+      if (deviceModel.isNotEmpty) "DeviceModel": deviceModel,
+      if (!socNameLooksGeneric) "SocName": socName,
+      if (socBrandName != "unknown") "SocBrand": socBrandName,
+      if (cpuName.isNotEmpty) "CPUName": cpuName,
+      if (gpuName.isNotEmpty) "GPUName": gpuName,
+      if (totalMemoryMb > 0) "TotalMemory": _formatMemoryMb(totalMemoryMb),
+      if (totalVramMb > 0) "TotalVRAM": _formatMemoryMb(totalVramMb),
+    };
+  });
 }
 
 /// Public methods
 extension $Telemetry on _Telemetry {
+  double snapshotPeakDecodeSpeed() => _peakDecodeSpeed.q;
+
   Future<void> setEnabled(bool value) async {
     enabled.q = value;
     final sp = await SharedPreferences.getInstance();
@@ -43,6 +95,8 @@ extension $Telemetry on _Telemetry {
     required double? prefillSpeed,
     required double? decodeSpeed,
     required double snapshotPeakDecodeSpeed,
+    int? batchCountOverride,
+    bool? isBatchOverride,
   }) async {
     try {
       if (!enabled.q) return;
@@ -56,80 +110,31 @@ extension $Telemetry on _Telemetry {
       final String modelId = (model.sha256 != null && model.sha256!.isNotEmpty) ? model.sha256! : model.fileName;
       if (modelId.isEmpty) return;
 
-      // socName: 优先 native → frontendSocName → macChipName → GPU → CPU → deviceModel → platform
-      String socName = P.rwkv.socName.q;
-      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
-        socName = P.rwkv.frontendSocName.q ?? "";
-      }
-      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
-        socName = _macChipName.q;
-      }
-      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
-        socName = _gpuName.q;
-      }
-      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
-        socName = _cpuName.q;
-      }
-      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
-        socName = _deviceModel.q;
-      }
-      if (socName.isEmpty || socName.toLowerCase() == "unknown") {
-        socName = Platform.operatingSystem;
-      }
-
       final String backendName = model.backend?.name ?? "";
       if (backendName.isEmpty) return;
 
-      final String lowerSocName = socName.toLowerCase();
-      final bool socNameLooksGeneric =
-          lowerSocName.isEmpty || lowerSocName == "unknown" || socName == _deviceModel.q || socName == Platform.operatingSystem;
-      if (backendName == "webrwkv" && _gpuName.q.isNotEmpty) {
-        if (socNameLooksGeneric || socName == _cpuName.q) {
-          socName = _gpuName.q;
-        }
-      } else if (_cpuName.q.isNotEmpty) {
-        if (socNameLooksGeneric || socName == _gpuName.q) {
-          socName = _cpuName.q;
-        }
-      }
+      final String socName = _resolveSocName(
+        nativeSocName: P.rwkv.socName.q,
+        frontendSocName: P.rwkv.frontendSocName.q,
+        macChipName: _macChipName.q,
+        gpuName: _gpuName.q,
+        cpuName: _cpuName.q,
+        deviceModel: _deviceModel.q,
+        backendName: backendName,
+      );
 
-      final bool isBatch = P.chat.effectiveBatchEnabled.q;
-      final int batchCount = isBatch ? P.chat.effectiveBatchCount.q : 1;
+      final bool isBatch = isBatchOverride ?? P.chat.effectiveBatchEnabled.q;
+      final int batchCount = isBatch ? max(1, batchCountOverride ?? P.chat.effectiveBatchCount.q) : 1;
 
       // batch 模式使用整轮推理中的峰值 decode speed
       final double effectiveDecodeSpeed = (batchCount > 1 && snapshotPeakDecodeSpeed > 0) ? snapshotPeakDecodeSpeed : decodeSpeed;
-      if (kDebugMode) {
-        qqq(
-          "telemetry: batchEnabled=$isBatch batchCount=$batchCount peak=$snapshotPeakDecodeSpeed passed=$decodeSpeed → effective=$effectiveDecodeSpeed",
-        );
-      }
 
-      // socBrand
-      String socBrandName = P.rwkv.socBrand.q != SocBrand.unknown ? P.rwkv.socBrand.q.name : (P.rwkv.frontendSocBrand.q?.name ?? "unknown");
-      if (socBrandName == "unknown" && Platform.isMacOS) {
-        socBrandName = "apple";
-      }
-      // 从 GPU 名称推断 socBrand
-      if (socBrandName == "unknown" && _gpuName.q.isNotEmpty) {
-        final String gpuLower = _gpuName.q.toLowerCase();
-        if (gpuLower.contains("nvidia")) {
-          socBrandName = "nvidia";
-        } else if (gpuLower.contains("radeon") || gpuLower.contains("amd")) {
-          socBrandName = "amd";
-        } else if (gpuLower.contains("intel") || gpuLower.contains("arc")) {
-          socBrandName = "intel";
-        }
-      }
-      if (socBrandName == "unknown" && _cpuName.q.isNotEmpty) {
-        final String cpuLower = _cpuName.q.toLowerCase();
-        if (cpuLower.contains("snapdragon") || cpuLower.contains("qualcomm")) {
-          socBrandName = "snapdragon";
-        } else if (cpuLower.contains("amd") || cpuLower.contains("ryzen")) {
-          socBrandName = "amd";
-        } else if (cpuLower.contains("intel")) {
-          socBrandName = "intel";
-        }
-      }
+      final String socBrandName = _resolveSocBrandName(
+        nativeSocBrand: P.rwkv.socBrand.q,
+        frontendSocBrand: P.rwkv.frontendSocBrand.q,
+        gpuName: _gpuName.q,
+        cpuName: _cpuName.q,
+      );
 
       final int now = DateTime.now().millisecondsSinceEpoch;
 
@@ -481,12 +486,103 @@ extension _$Telemetry on _Telemetry {
     );
     if (kDebugMode) {
       if (result != null) {
-        qqq("telemetry: upload ok → $result");
       } else {
         qqw("telemetry: upload returned null (request may have failed, check ${Config.domain})");
       }
     }
   }
+}
+
+bool _isUnknownHardwareName(String value) {
+  final String lower = value.toLowerCase();
+  return lower.isEmpty || lower == "unknown";
+}
+
+String _resolveSocName({
+  required String nativeSocName,
+  required String? frontendSocName,
+  required String macChipName,
+  required String gpuName,
+  required String cpuName,
+  required String deviceModel,
+  required String backendName,
+}) {
+  String socName = nativeSocName;
+  if (_isUnknownHardwareName(socName)) {
+    socName = frontendSocName ?? "";
+  }
+  if (_isUnknownHardwareName(socName)) {
+    socName = macChipName;
+  }
+  if (_isUnknownHardwareName(socName)) {
+    socName = gpuName;
+  }
+  if (_isUnknownHardwareName(socName)) {
+    socName = cpuName;
+  }
+  if (_isUnknownHardwareName(socName)) {
+    socName = deviceModel;
+  }
+  if (_isUnknownHardwareName(socName)) {
+    socName = Platform.operatingSystem;
+  }
+
+  final String lowerSocName = socName.toLowerCase();
+  final bool socNameLooksGeneric =
+      lowerSocName.isEmpty || lowerSocName == "unknown" || socName == deviceModel || socName == Platform.operatingSystem;
+  if (backendName == "webrwkv" && gpuName.isNotEmpty) {
+    if (socNameLooksGeneric || socName == cpuName) {
+      socName = gpuName;
+    }
+  } else if (cpuName.isNotEmpty) {
+    if (socNameLooksGeneric || socName == gpuName) {
+      socName = cpuName;
+    }
+  }
+
+  return socName;
+}
+
+String _resolveSocBrandName({
+  required SocBrand nativeSocBrand,
+  required SocBrand? frontendSocBrand,
+  required String gpuName,
+  required String cpuName,
+}) {
+  String socBrandName = nativeSocBrand != SocBrand.unknown ? nativeSocBrand.name : (frontendSocBrand?.name ?? "unknown");
+  if (socBrandName == "unknown" && Platform.isMacOS) {
+    socBrandName = "apple";
+  }
+  if (socBrandName == "unknown" && gpuName.isNotEmpty) {
+    final String gpuLower = gpuName.toLowerCase();
+    if (gpuLower.contains("nvidia")) {
+      socBrandName = "nvidia";
+    } else if (gpuLower.contains("radeon") || gpuLower.contains("amd")) {
+      socBrandName = "amd";
+    } else if (gpuLower.contains("intel") || gpuLower.contains("arc")) {
+      socBrandName = "intel";
+    }
+  }
+  if (socBrandName == "unknown" && cpuName.isNotEmpty) {
+    final String cpuLower = cpuName.toLowerCase();
+    if (cpuLower.contains("snapdragon") || cpuLower.contains("qualcomm")) {
+      socBrandName = "snapdragon";
+    } else if (cpuLower.contains("amd") || cpuLower.contains("ryzen")) {
+      socBrandName = "amd";
+    } else if (cpuLower.contains("intel")) {
+      socBrandName = "intel";
+    }
+  }
+  return socBrandName;
+}
+
+String _formatMemoryMb(int mb) {
+  if (mb >= 1024) {
+    final double gb = mb / 1024;
+    final String value = gb >= 10 ? gb.toStringAsFixed(0) : gb.toStringAsFixed(1);
+    return "$value GB";
+  }
+  return "$mb MB";
 }
 
 String _currentFlutterBuildMode() {
