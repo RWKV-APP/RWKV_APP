@@ -695,19 +695,19 @@ class _SlotPreviewButton extends ConsumerWidget {
     final theme = Theme.of(context);
     final _ = theme;
     final qb = ref.watch(P.app.qb);
+    final qw = ref.watch(P.app.qw);
 
     return GD(
       onTap: onTap,
-      child: Container(
+      child: _BatchButtonBackdrop(
+        borderRadius: .circular(6),
+        background: qw,
+        border: .all(color: qb.q(.1)),
         padding: const .all(4),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: .circular(4),
-        ),
         child: Icon(
           Symbols.open_in_full,
           size: 16,
-          color: qb.q(.6),
+          color: qb.q(.72),
         ),
       ),
     );
