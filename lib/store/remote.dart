@@ -20,7 +20,7 @@ class _Remote {
   // StateProvider
   // ===========================================================================
 
-  late final downloadSource = qs<FileDownloadSource>(P.preference.currentLangIsZh.q ? .aifasthub : .huggingface);
+  late final downloadSource = qs<FileDownloadSource>(P.preference.currentLangIsZh.q ? .modelscope : .huggingface);
 
   late final modelSelectorShown = qs(false);
 

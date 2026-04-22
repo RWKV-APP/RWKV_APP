@@ -40,6 +40,15 @@ enum FileDownloadSource {
     _ => false,
   };
 
+  int get displayOrder => switch (this) {
+    modelscope => 0,
+    aifasthub => 1,
+    hfmirror => 2,
+    huggingface => 3,
+    github => 4,
+    googleapis => 5,
+  };
+
   String transformRaw(String raw) => switch (this) {
     modelscope => raw.replaceFirst('mollysama/rwkv-mobile-models/resolve/main/', 'models/RWKV/rwkv-mobile-models/resolve/master/'),
     _ => raw,

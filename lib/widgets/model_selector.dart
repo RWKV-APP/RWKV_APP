@@ -539,11 +539,10 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
         Wrap(
           runSpacing: 4,
           spacing: 4,
-          children: FileDownloadSource.values
-              .where((e) {
+          children:
+              (FileDownloadSource.values.where((e) {
                 return (kDebugMode || !e.isDebug) && !e.hidden;
-              })
-              .map((e) {
+              }).toList()..sort((a, b) => a.displayOrder.compareTo(b.displayOrder))).map((e) {
                 String downloadSourceName = e.name;
                 if (currentLangIsZh) {
                   downloadSourceName += (e == FileDownloadSource.huggingface ? S.current.overseas : "");
@@ -572,8 +571,7 @@ class _ModelsInConfigDownloadSource extends ConsumerWidget {
                     ),
                   ),
                 );
-              })
-              .toList(),
+              }).toList(),
         ),
       ],
     );
