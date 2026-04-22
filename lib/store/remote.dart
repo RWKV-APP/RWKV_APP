@@ -1007,6 +1007,74 @@ extension $Remote on _Remote {
     return successCount;
   }
 
+  Future<void> _copyFileForExport({
+    required File sourceFile,
+    required File targetFile,
+  }) async {
+    try {
+      await sourceFile.copy(targetFile.path);
+      return;
+    } catch (copyError) {
+      qqw("Direct copy failed, trying streamed copy: $copyError");
+    }
+
+    await sourceFile.openRead().pipe(targetFile.openWrite());
+  }
+
+  bool _isAndroidDocumentTreeTarget(String targetDirectory) {
+    if (!Platform.isAndroid) {
+      return false;
+    }
+
+    return targetDirectory.startsWith("content://");
+  }
+
+  Future<(String, String)?> _pickExportDirectory() async {
+    if (!Platform.isAndroid) {
+      final targetDirectory = await file_picker.FilePicker.getDirectoryPath();
+      if (targetDirectory == null) {
+        return null;
+      }
+      return (targetDirectory, targetDirectory);
+    }
+
+    final result = await P.adapter.callStrict<Map<dynamic, dynamic>>(ToNative.pickExportDirectory);
+    if (result == null) {
+      return null;
+    }
+
+    final targetDirectory = result["uri"]?.toString() ?? "";
+    if (targetDirectory.isEmpty) {
+      return null;
+    }
+
+    final displayName = result["displayName"]?.toString() ?? targetDirectory;
+    return (targetDirectory, displayName);
+  }
+
+  Future<String> _exportFileToAndroidDocumentTree({
+    required File sourceFile,
+    required String targetDirectory,
+    required String fileName,
+    bool overwrite = false,
+  }) async {
+    final result = await P.adapter.callStrict<Map<dynamic, dynamic>>(
+      ToNative.exportFileToPickedDirectory,
+      {
+        "sourcePath": sourceFile.path,
+        "treeUri": targetDirectory,
+        "fileName": fileName,
+        "overwrite": overwrite,
+      },
+    );
+
+    final status = result?["status"]?.toString() ?? "";
+    if (status.isEmpty) {
+      throw Exception("Failed to export file");
+    }
+    return status;
+  }
+
   /// Export a single weight file to a user-selected directory
   /// Returns true if export was successful, false otherwise
   Future<bool> exportWeightFile({
@@ -1026,22 +1094,27 @@ extension $Remote on _Remote {
       throw Exception("Source file does not exist");
     }
 
-    final targetFile = File("$targetDirectory/${fileInfo.fileName}");
+    final useAndroidDocumentTree = _isAndroidDocumentTreeTarget(targetDirectory);
+    File? targetFile;
 
-    // Check if target file already exists
-    if (await targetFile.exists()) {
-      qqw("Target file already exists: ${targetFile.path}");
-      throw Exception("Target file already exists");
-    }
+    if (!useAndroidDocumentTree) {
+      targetFile = File("$targetDirectory/${fileInfo.fileName}");
 
-    // Ensure target directory exists
-    final targetDir = Directory(targetDirectory);
-    if (!await targetDir.exists()) {
-      try {
-        await targetDir.create(recursive: true);
-      } catch (e) {
-        qqe("Failed to create target directory: $e");
-        throw Exception("Failed to create target directory");
+      // Check if target file already exists
+      if (await targetFile.exists()) {
+        qqw("Target file already exists: ${targetFile.path}");
+        throw Exception("Target file already exists");
+      }
+
+      // Ensure target directory exists
+      final targetDir = Directory(targetDirectory);
+      if (!await targetDir.exists()) {
+        try {
+          await targetDir.create(recursive: true);
+        } catch (e) {
+          qqe("Failed to create target directory: $e");
+          throw Exception("Failed to create target directory");
+        }
       }
     }
 
@@ -1062,35 +1135,36 @@ extension $Remote on _Remote {
     }
 
     try {
-      // Try direct copy first (faster for large files)
       try {
-        await sourceFile.copy(targetFile.path);
-        qqq("Successfully exported file: ${fileInfo.fileName} to ${targetFile.path}");
-        return true;
-      } catch (copyError) {
-        // If direct copy fails (e.g., iOS permission issue), read and write bytes
-        qqw("Direct copy failed, trying read-write method: $copyError");
-        try {
-          final fileBytes = await sourceFile.readAsBytes();
-          await targetFile.writeAsBytes(fileBytes);
-          qqq("Successfully exported file (via bytes): ${fileInfo.fileName} to ${targetFile.path}");
-          return true;
-        } catch (writeError) {
-          // If both methods fail, check if it's an iOS permission issue
-          final errorStr = writeError.toString();
-          if (Platform.isIOS && (errorStr.contains("Operation not permitted") || errorStr.contains("errno: 1"))) {
-            qqe("iOS permission error: Cannot access selected directory. The selected directory may require special permissions.");
-            throw Exception(
-              "Permission denied: The selected directory cannot be accessed. Please try selecting a different location, such as Files app or iCloud Drive.",
-            );
+        if (useAndroidDocumentTree) {
+          final status = await _exportFileToAndroidDocumentTree(
+            sourceFile: sourceFile,
+            targetDirectory: targetDirectory,
+            fileName: fileInfo.fileName,
+          );
+          if (status == "exists") {
+            throw Exception("Target file already exists");
           }
-          rethrow;
+        } else {
+          await _copyFileForExport(sourceFile: sourceFile, targetFile: targetFile!);
         }
+        final exportedTarget = useAndroidDocumentTree ? targetDirectory : targetFile!.path;
+        qqq("Successfully exported file: ${fileInfo.fileName} to $exportedTarget");
+        return true;
+      } catch (writeError) {
+        final errorStr = writeError.toString();
+        if (Platform.isIOS && (errorStr.contains("Operation not permitted") || errorStr.contains("errno: 1"))) {
+          qqe("iOS permission error: Cannot access selected directory. The selected directory may require special permissions.");
+          throw Exception(
+            "Permission denied: The selected directory cannot be accessed. Please try selecting a different location, such as Files app or iCloud Drive.",
+          );
+        }
+        rethrow;
       }
     } catch (e) {
       qqe("Failed to export file: $e");
       // Clean up if file was partially written
-      if (await targetFile.exists()) {
+      if (targetFile != null && await targetFile.exists()) {
         try {
           await targetFile.delete();
         } catch (deleteError) {
@@ -1149,15 +1223,18 @@ extension $Remote on _Remote {
     final total = filesToExport.length;
     int completed = 0;
     int successCount = 0;
+    final useAndroidDocumentTree = _isAndroidDocumentTreeTarget(targetDirectory);
 
-    // Ensure target directory exists
-    final targetDir = Directory(targetDirectory);
-    if (!await targetDir.exists()) {
-      try {
-        await targetDir.create(recursive: true);
-      } catch (e) {
-        qqe("Failed to create target directory: $e");
-        throw Exception("Failed to create target directory");
+    if (!useAndroidDocumentTree) {
+      // Ensure target directory exists
+      final targetDir = Directory(targetDirectory);
+      if (!await targetDir.exists()) {
+        try {
+          await targetDir.create(recursive: true);
+        } catch (e) {
+          qqe("Failed to create target directory: $e");
+          throw Exception("Failed to create target directory");
+        }
       }
     }
 
@@ -1197,31 +1274,34 @@ extension $Remote on _Remote {
             continue;
           }
 
-          final targetFile = File("$targetDirectory/${fileInfo.fileName}");
-
-          // Check if target file already exists
-          if (await targetFile.exists()) {
-            qqw("Target file already exists, skipping: ${fileInfo.fileName}");
-            completed++;
-            continue;
-          }
-
-          // Try direct copy first (faster for large files)
           try {
-            await sourceFile.copy(targetFile.path);
+            if (useAndroidDocumentTree) {
+              final status = await _exportFileToAndroidDocumentTree(
+                sourceFile: sourceFile,
+                targetDirectory: targetDirectory,
+                fileName: fileInfo.fileName,
+              );
+              if (status == "exists") {
+                qqw("Target file already exists, skipping: ${fileInfo.fileName}");
+                completed++;
+                continue;
+              }
+            } else {
+              final targetFile = File("$targetDirectory/${fileInfo.fileName}");
+
+              // Check if target file already exists
+              if (await targetFile.exists()) {
+                qqw("Target file already exists, skipping: ${fileInfo.fileName}");
+                completed++;
+                continue;
+              }
+
+              await _copyFileForExport(sourceFile: sourceFile, targetFile: targetFile);
+            }
             qqq("Exported: ${fileInfo.fileName}");
             successCount++;
-          } catch (copyError) {
-            // If direct copy fails (e.g., iOS permission issue), read and write bytes
-            qqw("Direct copy failed, trying read-write method: $copyError");
-            try {
-              final fileBytes = await sourceFile.readAsBytes();
-              await targetFile.writeAsBytes(fileBytes);
-              qqq("Exported (via bytes): ${fileInfo.fileName}");
-              successCount++;
-            } catch (writeError) {
-              qqe("Failed to export ${fileInfo.fileName}: $writeError");
-            }
+          } catch (writeError) {
+            qqe("Failed to export ${fileInfo.fileName}: $writeError");
           }
 
           completed++;
@@ -1491,20 +1571,20 @@ extension $Remote on _Remote {
       return false; // User cancelled
     }
 
-    // Select target directory
-    final targetDirectory = await file_picker.FilePicker.getDirectoryPath();
-    if (targetDirectory == null) {
+    final exportDirectoryInfo = await _pickExportDirectory();
+    if (exportDirectoryInfo == null) {
       return false; // User cancelled
     }
+    final (targetDirectory, displayDirectory) = exportDirectoryInfo;
 
     // Export all files
     try {
-      final exportDirectory = await exportAllWeightFiles(
+      await exportAllWeightFiles(
         targetDirectory: targetDirectory,
         onProgress: onProgress,
       );
 
-      Alert.success("${S.current.export_success}\n\nDirectory: $exportDirectory");
+      Alert.success("${S.current.export_success}\n\nDirectory: $displayDirectory");
       return true;
     } catch (e) {
       Alert.error("${S.current.export_failed}: $e");
@@ -1519,11 +1599,11 @@ extension $Remote on _Remote {
   }) async {
     qq;
 
-    // Select target directory
-    final targetDirectory = await file_picker.FilePicker.getDirectoryPath();
-    if (targetDirectory == null) {
+    final exportDirectoryInfo = await _pickExportDirectory();
+    if (exportDirectoryInfo == null) {
       return false; // User cancelled
     }
+    final (targetDirectory, _) = exportDirectoryInfo;
 
     // Export the file
     try {

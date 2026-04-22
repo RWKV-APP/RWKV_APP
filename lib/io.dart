@@ -8,4 +8,6 @@ enum ToNative {
   stopAccessingSecurityScopedResource,
   detectSocInfo,
   getSystemFonts,
+  pickExportDirectory,
+  exportFileToPickedDirectory,
 }

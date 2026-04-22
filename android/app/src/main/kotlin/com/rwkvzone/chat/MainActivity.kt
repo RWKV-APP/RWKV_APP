@@ -4,9 +4,11 @@ import android.content.Intent
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.fonts.SystemFonts
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.provider.DocumentsContract
 import android.util.Log
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
@@ -18,10 +20,12 @@ import java.util.concurrent.Executors
 class MainActivity : FlutterActivity() {
     private val channelName = "utils"
     private val adapterChannelName = "channel"
+    private val pickExportDirectoryRequestCode = 4157
 
     // 使用单线程池来处理后台任务，避免阻塞主线程
     private val executor = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler(Looper.getMainLooper())
+    private var pendingPickExportDirectoryResult: MethodChannel.Result? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -89,11 +93,63 @@ class MainActivity : FlutterActivity() {
                     }
                 }
 
+                "pickExportDirectory" -> {
+                    pickExportDirectory(result)
+                }
+
+                "exportFileToPickedDirectory" -> {
+                    exportFileToPickedDirectory(call, result)
+                }
+
                 else -> {
                     result.notImplemented()
                 }
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode != pickExportDirectoryRequestCode) {
+            return
+        }
+
+        val pendingResult = pendingPickExportDirectoryResult ?: return
+        pendingPickExportDirectoryResult = null
+
+        if (resultCode != RESULT_OK) {
+            pendingResult.success(null)
+            return
+        }
+
+        val uri = data?.data
+        if (uri == null) {
+            pendingResult.success(null)
+            return
+        }
+
+        try {
+            val grantedFlags = data.flags and (
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            val persistFlags = if (grantedFlags == 0) {
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            } else {
+                grantedFlags
+            }
+            contentResolver.takePersistableUriPermission(uri, persistFlags)
+        } catch (e: SecurityException) {
+            Log.w("EXPORT_DIR", "Failed to persist uri permission: $uri", e)
+        }
+
+        val displayName = getTreeDisplayName(uri)
+        pendingResult.success(
+            mapOf(
+                "uri" to uri.toString(),
+                "displayName" to displayName,
+            )
+        )
     }
 
     private fun installApk(filePath: String) {
@@ -118,6 +174,162 @@ class MainActivity : FlutterActivity() {
         } catch (e: Exception) {
             Log.e("APK_INSTALL", "Error installing APK", e)
         }
+    }
+
+    private fun pickExportDirectory(result: MethodChannel.Result) {
+        if (pendingPickExportDirectoryResult != null) {
+            result.error("PICK_EXPORT_DIRECTORY_BUSY", "Directory picker is already active", null)
+            return
+        }
+
+        pendingPickExportDirectoryResult = result
+        try {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+            }
+            startActivityForResult(intent, pickExportDirectoryRequestCode)
+        } catch (e: Exception) {
+            pendingPickExportDirectoryResult = null
+            result.error("PICK_EXPORT_DIRECTORY_FAILED", e.message, null)
+        }
+    }
+
+    private fun exportFileToPickedDirectory(call: io.flutter.plugin.common.MethodCall, result: MethodChannel.Result) {
+        val sourcePath = call.argument<String>("sourcePath")
+        val treeUri = call.argument<String>("treeUri")
+        val fileName = call.argument<String>("fileName")
+        val overwrite = call.argument<Boolean>("overwrite") ?: false
+
+        if (sourcePath.isNullOrBlank() || treeUri.isNullOrBlank() || fileName.isNullOrBlank()) {
+            result.error("INVALID_ARGUMENTS", "sourcePath, treeUri, and fileName are required", null)
+            return
+        }
+
+        executor.execute {
+            try {
+                val status = exportFileToDocumentTree(
+                    sourcePath = sourcePath,
+                    treeUri = treeUri,
+                    fileName = fileName,
+                    overwrite = overwrite,
+                )
+                mainHandler.post {
+                    result.success(mapOf("status" to status))
+                }
+            } catch (e: Exception) {
+                Log.e("EXPORT_FILE", "Failed to export $fileName", e)
+                mainHandler.post {
+                    result.error("EXPORT_FAILED", e.message, null)
+                }
+            }
+        }
+    }
+
+    private fun exportFileToDocumentTree(
+        sourcePath: String,
+        treeUri: String,
+        fileName: String,
+        overwrite: Boolean,
+    ): String {
+        val sourceFile = File(sourcePath)
+        if (!sourceFile.exists()) {
+            throw IllegalArgumentException("Source file does not exist")
+        }
+
+        val tree = Uri.parse(treeUri)
+        val treeDocumentId = DocumentsContract.getTreeDocumentId(tree)
+        val parentDocumentUri = DocumentsContract.buildDocumentUriUsingTree(tree, treeDocumentId)
+
+        val existingFileUri = findDocumentUri(parentDocumentUri, fileName)
+        if (existingFileUri != null) {
+            if (!overwrite) {
+                return "exists"
+            }
+            if (!DocumentsContract.deleteDocument(contentResolver, existingFileUri)) {
+                throw IllegalStateException("Failed to delete existing file")
+            }
+        }
+
+        val targetFile = DocumentsContract.createDocument(
+            contentResolver,
+            parentDocumentUri,
+            "application/octet-stream",
+            fileName,
+        )
+            ?: throw IllegalStateException("Failed to create target file")
+
+        sourceFile.inputStream().use { input ->
+            contentResolver.openOutputStream(targetFile, "w")?.use { output ->
+                input.copyTo(output)
+            } ?: throw IllegalStateException("Failed to open target file")
+        }
+
+        return "exported"
+    }
+
+    private fun findDocumentUri(parentDocumentUri: Uri, fileName: String): Uri? {
+        val parentDocumentId = DocumentsContract.getDocumentId(parentDocumentUri)
+        val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(parentDocumentUri, parentDocumentId)
+
+        contentResolver.query(
+            childrenUri,
+            arrayOf(
+                DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+                DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+            ),
+            null,
+            null,
+            null,
+        )?.use { cursor ->
+            val documentIdIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
+            val displayNameIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+            if (documentIdIndex == -1 || displayNameIndex == -1) {
+                return null
+            }
+
+            while (cursor.moveToNext()) {
+                val displayName = cursor.getString(displayNameIndex)
+                if (displayName != fileName) {
+                    continue
+                }
+
+                val documentId = cursor.getString(documentIdIndex)
+                return DocumentsContract.buildDocumentUriUsingTree(parentDocumentUri, documentId)
+            }
+        }
+
+        return null
+    }
+
+    private fun getTreeDisplayName(treeUri: Uri): String {
+        val treeDocumentId = DocumentsContract.getTreeDocumentId(treeUri)
+        val documentUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, treeDocumentId)
+
+        contentResolver.query(
+            documentUri,
+            arrayOf(DocumentsContract.Document.COLUMN_DISPLAY_NAME),
+            null,
+            null,
+            null,
+        )?.use { cursor ->
+            val displayNameIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+            if (displayNameIndex != -1 && cursor.moveToFirst()) {
+                val displayName = cursor.getString(displayNameIndex)
+                if (!displayName.isNullOrBlank()) {
+                    return displayName
+                }
+            }
+        }
+
+        val fallback = treeDocumentId.substringAfter(':', treeDocumentId)
+        if (fallback.isNotBlank()) {
+            return fallback
+        }
+
+        return treeUri.toString()
     }
 
     private fun detectSocInfo(): Pair<String, String> {

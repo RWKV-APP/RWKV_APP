@@ -21,6 +21,17 @@ extension $Adapter on _Adapter {
     }
   }
 
+  Future<ResultT?> callStrict<ResultT>(ToNative toNative, [dynamic arguments]) async {
+    try {
+      return await _channel.invokeMethod<ResultT>(toNative.name, arguments);
+    } catch (e, st) {
+      if (!kDebugMode) {
+        Sentry.captureException(e, stackTrace: st);
+      }
+      rethrow;
+    }
+  }
+
   /// Android SoC 检测
   ///
   /// - 仅在 Android 上生效，其它平台直接返回 null
