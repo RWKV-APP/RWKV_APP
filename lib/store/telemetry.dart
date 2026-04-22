@@ -150,6 +150,7 @@ extension $Telemetry on _Telemetry {
         "app": {
           "version": P.app.version.q,
           "build": P.app.buildNumber.q,
+          "buildMode": _currentFlutterBuildMode(),
         },
         "model": {
           "name": model.name,
@@ -486,6 +487,12 @@ extension _$Telemetry on _Telemetry {
       }
     }
   }
+}
+
+String _currentFlutterBuildMode() {
+  if (kReleaseMode) return "release";
+  if (kProfileMode) return "profile";
+  return "debug";
 }
 
 String _stripOsVersion(String version) {
