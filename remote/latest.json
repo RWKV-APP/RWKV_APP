@@ -122,7 +122,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "batch"],
-        "date": 1770884182
+        "date": 1776773972
       },
       {
         "name": "RWKV7-G1f 2.9B (WebRWKV)",
@@ -134,7 +134,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "batch"],
-        "date": 1770013840
+        "date": 1776774554
       },
       {
         "name": "RWKV7-G1d 0.1B (MLX)",
@@ -245,7 +245,7 @@
         "backends": ["webRwkv"],
         "unsupportedSocBrand": ["snapdragon"],
         "tags": ["reason", "batch"],
-        "date": 1776267824
+        "date": 1776270123
       },
       {
         "name": "RWKV7-G1 1.5B Neko (WebRWKV)",
@@ -543,7 +543,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1770110041
+        "date": 1770109220
       },
       {
         "name": "RWKV7-G1d 0.1B (X Elite)",
@@ -555,7 +555,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite"],
-        "date": 1770110041
+        "date": 1770109346
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Elite Gen5)",
@@ -567,7 +567,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1770110041
+        "date": 1770109296
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Gen 5)",
@@ -579,7 +579,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1770110041
+        "date": 1774395767
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Gen 3)",
@@ -591,7 +591,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1770110095
+        "date": 1770109259
       },
       {
         "name": "RWKV7-G1d 0.1B (8s Gen 3)",
@@ -603,7 +603,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1770110095
+        "date": 1770109360
       },
       {
         "name": "RWKV7-G1d 0.1B (7+ Gen 3)",
@@ -615,7 +615,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1770110095
+        "date": 1770109360
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Gen 2)",
@@ -627,7 +627,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1770110095
+        "date": 1770109190
       },
       {
         "name": "RWKV7-G1d 0.1B (8+ Gen 1)",
@@ -639,7 +639,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1770014071
+        "date": 1769753798
       },
       {
         "name": "RWKV7-G1d 0.1B (888)",
@@ -651,7 +651,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1770014071,
+        "date": 1770214977,
         "isDebug": true
       },
       {
@@ -664,7 +664,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Elite"],
-        "date": 1770110041
+        "date": 1771041241
       },
       {
         "name": "RWKV7a-G1d 0.1B (8 Elite Gen5)",
@@ -676,7 +676,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1770110041
+        "date": 1771041354
       },
       {
         "name": "RWKV7a-G1d 0.1B (8 Gen 5)",
@@ -688,7 +688,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1770110041
+        "date": 1774395954
       },
       {
         "name": "RWKV7a-G1d 0.1B (8 Gen 3)",
@@ -700,7 +700,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1770110095
+        "date": 1771041340
       },
       {
         "name": "RWKV7a-G1d 0.1B (8s Gen 3)",
@@ -712,7 +712,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1770110095
+        "date": 1771041248
       },
       {
         "name": "RWKV7a-G1d 0.1B (7+ Gen 3)",
@@ -724,7 +724,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1770110095
+        "date": 1771041248
       },
       {
         "name": "RWKV7a-G1d 0.1B (8 Gen 2)",
@@ -736,7 +736,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1770110095
+        "date": 1771041255
       },
       {
         "name": "RWKV7a-G1d 0.1B (8+ Gen 1)",
@@ -748,7 +748,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1770014071
+        "date": 1771041332
       },
       {
         "name": "RWKV7a-G1d 0.1B (888)",
@@ -760,7 +760,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "DeepEmbedding"],
         "socLimitations": ["888"],
-        "date": 1770014071,
+        "date": 1771041163,
         "isDebug": true
       },
       {
@@ -773,7 +773,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1770704539
+        "date": 1770702916
       },
       {
         "name": "RWKV7-G1d 0.4B (8 Gen 5)",
@@ -785,7 +785,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1770704539
+        "date": 1774395288
       },
       {
         "name": "RWKV7-G1d 0.4B (8 Elite)",
@@ -797,7 +797,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1770704539
+        "date": 1770702868
       },
       {
         "name": "RWKV7-G1d 0.4B (X Elite)",
@@ -809,7 +809,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite"],
-        "date": 1770704539
+        "date": 1770702846
       },
       {
         "name": "RWKV7-G1d 0.4B (8 Gen 3)",
@@ -821,7 +821,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1770704539
+        "date": 1770702797
       },
       {
         "name": "RWKV7-G1d 0.4B (8s Gen 3)",
@@ -833,7 +833,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1770704539
+        "date": 1770702740
       },
       {
         "name": "RWKV7-G1d 0.4B (7+ Gen 3)",
@@ -845,7 +845,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1770704539
+        "date": 1770702740
       },
       {
         "name": "RWKV7-G1d 0.4B (8 Gen 2)",
@@ -857,7 +857,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1770704540
+        "date": 1770703095
       },
       {
         "name": "RWKV7-G1d 0.4B (8+ Gen 1)",
@@ -869,7 +869,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1770704540
+        "date": 1770703084
       },
       {
         "name": "RWKV7-G1d 0.4B (888)",
@@ -881,7 +881,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1770704540,
+        "date": 1770703102,
         "isDebug": true
       },
       {
@@ -894,7 +894,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1770884152
+        "date": 1776787672
       },
       {
         "name": "RWKV7-G1f 1.5B (X Elite)",
@@ -906,7 +906,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite"],
-        "date": 1770884152
+        "date": 1776790237
       },
       {
         "name": "RWKV7-G1f 1.5B (8 Elite Gen5)",
@@ -918,7 +918,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1770884152
+        "date": 1776789980
       },
       {
         "name": "RWKV7-G1f 1.5B (8 Gen 5)",
@@ -930,7 +930,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1770884152
+        "date": 1776787758
       },
       {
         "name": "RWKV7-G1f 1.5B (8 Gen 3)",
@@ -942,7 +942,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1770884152
+        "date": 1776787719
       },
       {
         "name": "RWKV7-G1f 1.5B (8s Gen 3)",
@@ -954,7 +954,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1770884153
+        "date": 1776787643
       },
       {
         "name": "RWKV7-G1f 1.5B (7+ Gen 3)",
@@ -966,7 +966,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1770884153
+        "date": 1776787643
       },
       {
         "name": "RWKV7-G1f 1.5B (8 Gen 2)",
@@ -978,7 +978,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1770884152
+        "date": 1776789935
       },
       {
         "name": "RWKV7-G1f 1.5B (8+ Gen 1)",
@@ -990,7 +990,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1770884152
+        "date": 1776788773
       },
       {
         "name": "RWKV7-G1f 1.5B (888)",
@@ -1002,7 +1002,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1770884152
+        "date": 1776789908
       },
       {
         "name": "RWKV7-G1f 1.5B (778)",
@@ -1014,7 +1014,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["778"],
-        "date": 1770884152
+        "date": 1776860160
       },
       {
         "name": "RWKV7-G1e 2.9B (8 Elite)",
@@ -1026,7 +1026,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite"],
-        "date": 1770013845
+        "date": 1773840539
       },
       {
         "name": "RWKV7-G1e 2.9B (X Elite)",
@@ -1038,7 +1038,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["X Elite"],
-        "date": 1770041611
+        "date": 1773840658
       },
       {
         "name": "RWKV7-G1e 2.9B (8 Elite Gen5)",
@@ -1050,7 +1050,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1770013845
+        "date": 1773841659
       },
       {
         "name": "RWKV7-G1e 2.9B (8 Gen 5)",
@@ -1062,7 +1062,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1770013845
+        "date": 1774395155
       },
       {
         "name": "RWKV7-G1e 2.9B (8 Gen 3)",
@@ -1074,7 +1074,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1770013845
+        "date": 1773841171
       },
       {
         "name": "RWKV7-G1e 2.9B (8s Gen 3)",
@@ -1086,7 +1086,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1770013845
+        "date": 1773841148
       },
       {
         "name": "RWKV7-G1e 2.9B (7+ Gen 3)",
@@ -1098,7 +1098,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1770013845
+        "date": 1773841148
       },
       {
         "name": "RWKV7-G1e 2.9B (8 Gen 2)",
@@ -1110,7 +1110,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1770013845
+        "date": 1773841615
       },
       {
         "name": "RWKV7-G1e 2.9B (8+ Gen 1)",
@@ -1122,7 +1122,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8+ Gen 1"],
-        "date": 1770013846
+        "date": 1773841123
       },
       {
         "name": "RWKV7-G1e 2.9B (888)",
@@ -1134,7 +1134,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["888"],
-        "date": 1770013846,
+        "date": 1773841597,
         "isDebug": true
       },
       {
@@ -1283,7 +1283,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite"],
-        "date": 1768913774
+        "date": 1768909125
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B (X Elite)",
@@ -1295,7 +1295,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["X Elite"],
-        "date": 1770118796
+        "date": 1770118583
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B (8 Elite Gen5)",
@@ -1307,7 +1307,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1768913774
+        "date": 1768909136
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B (8 Gen 5)",
@@ -1319,7 +1319,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1768913774
+        "date": 1774395247
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B (8 Gen 2)",
@@ -1331,7 +1331,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1768913774
+        "date": 1768909113
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B (8 Gen 3)",
@@ -1343,7 +1343,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1768913774
+        "date": 1768909617
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B (8s Gen 3)",
@@ -1355,7 +1355,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1768913775
+        "date": 1768909607
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B (7+ Gen 3)",
@@ -1367,7 +1367,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1768913775
+        "date": 1768909607
       },
       {
         "name": "RWKV7-G1c-Roleplay 1.5B",
@@ -1402,7 +1402,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite"],
-        "date": 1768914361
+        "date": 1768802690
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B (X Elite)",
@@ -1414,7 +1414,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["X Elite"],
-        "date": 1770041612
+        "date": 1769780697
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B (8 Elite Gen5)",
@@ -1426,7 +1426,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1768914361
+        "date": 1768802060
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B (8 Gen 5)",
@@ -1438,7 +1438,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 5"],
-        "date": 1768914361
+        "date": 1774396049
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B (8 Gen 2)",
@@ -1450,7 +1450,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 2"],
-        "date": 1768914361
+        "date": 1768800102
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B (8 Gen 3)",
@@ -1462,7 +1462,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8 Gen 3"],
-        "date": 1768914362
+        "date": 1768802845
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B (8s Gen 3)",
@@ -1474,7 +1474,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["8s Gen 3"],
-        "date": 1768914362
+        "date": 1768802671
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B (7+ Gen 3)",
@@ -1486,7 +1486,7 @@
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
         "socLimitations": ["7+ Gen 3"],
-        "date": 1768914362
+        "date": 1768802671
       },
       {
         "name": "RWKV7-G1c-Roleplay 2.9B",

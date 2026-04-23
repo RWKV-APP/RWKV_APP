@@ -19,6 +19,9 @@ from urllib.parse import quote
 print_lock = Lock()
 cache_lock = Lock()
 tree_cache: Dict[Tuple[str, str, str], List[Dict[str, Any]]] = {}
+repo_commits_cache: Dict[Tuple[str, str], List[Dict[str, Any]]] = {}
+
+HF_HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
 
 
 def safe_print(*args, **kwargs):
@@ -56,6 +59,21 @@ def normalize_tree_entry_name(file_name: str) -> str:
     normalized_file_name = file_name.lower()
     normalized_file_name = normalized_file_name.replace(".ggufs", ".gguf")
     return normalized_file_name
+
+
+def extract_uploaded_path_from_commit_title(title: str) -> str:
+    if not title:
+        return ""
+
+    patterns = [
+        r"^Upload /(.+?) with huggingface_hub$",
+        r"^Upload /(.+)$",
+    ]
+    for pattern in patterns:
+        match = re.match(pattern, title)
+        if match:
+            return match.group(1)
+    return ""
 
 
 def find_matching_tree_entry(entries: List[Dict[str, Any]], file_path: str) -> Tuple[Dict[str, Any] | None, str]:
@@ -100,24 +118,84 @@ def get_model_tree_entries(repo_id: str, revision: str, dir_path: str) -> List[D
 
     encoded_dir = quote(dir_path, safe="/")
     if encoded_dir:
-        api_url = f"https://huggingface.co/api/models/{repo_id}/tree/{revision}/{encoded_dir}?recursive=false&expand=true"
+        api_url = f"https://huggingface.co/api/models/{repo_id}/tree/{revision}/{encoded_dir}?recursive=false&expand=true&limit=100"
     else:
-        api_url = f"https://huggingface.co/api/models/{repo_id}/tree/{revision}?recursive=false&expand=true"
+        api_url = f"https://huggingface.co/api/models/{repo_id}/tree/{revision}?recursive=false&expand=true&limit=100"
 
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-    response = requests.get(api_url, headers=headers, timeout=30)
-    if response.status_code != 200:
-        safe_print(f"\033[91m  HF tree API 请求失败: {response.status_code} - {api_url}\033[0m")
-        return []
+    entries: List[Dict[str, Any]] = []
+    next_url = api_url
 
-    entries = response.json()
-    if not isinstance(entries, list):
-        safe_print(f"\033[91m  HF tree API 响应格式异常: {api_url}\033[0m")
-        return []
+    while next_url:
+        response = requests.get(next_url, headers=HF_HEADERS, timeout=30)
+        if response.status_code != 200:
+            safe_print(f"\033[91m  HF tree API 请求失败: {response.status_code} - {next_url}\033[0m")
+            return []
+
+        page_entries = response.json()
+        if not isinstance(page_entries, list):
+            safe_print(f"\033[91m  HF tree API 响应格式异常: {next_url}\033[0m")
+            return []
+
+        entries.extend(page_entries)
+        next_url = response.links.get("next", {}).get("url")
 
     with cache_lock:
         tree_cache[cache_key] = entries
     return entries
+
+
+def get_repo_commits(repo_id: str, revision: str) -> List[Dict[str, Any]]:
+    cache_key = (repo_id, revision)
+    with cache_lock:
+        if cache_key in repo_commits_cache:
+            return repo_commits_cache[cache_key]
+
+    commits: List[Dict[str, Any]] = []
+    page = 0
+
+    while True:
+        api_url = f"https://huggingface.co/api/models/{repo_id}/commits/{revision}?p={page}&limit=50"
+        response = requests.get(api_url, headers=HF_HEADERS, timeout=30)
+        if response.status_code != 200:
+            safe_print(f"\033[91m  HF commits API 请求失败: {response.status_code} - {api_url}\033[0m")
+            break
+
+        page_commits = response.json()
+        if not isinstance(page_commits, list) or not page_commits:
+            break
+
+        commits.extend(page_commits)
+        link_header = response.headers.get("link", "")
+        if 'rel="next"' not in link_header:
+            break
+
+        page += 1
+
+    with cache_lock:
+        repo_commits_cache[cache_key] = commits
+    return commits
+
+
+def find_upload_commit_for_file(repo_id: str, revision: str, file_path: str) -> Tuple[str, int]:
+    normalized_file_path = normalize_tree_entry_name(file_path)
+
+    for commit in get_repo_commits(repo_id, revision):
+        if not isinstance(commit, dict):
+            continue
+
+        title = commit.get("title", "")
+        uploaded_path = extract_uploaded_path_from_commit_title(title)
+        if normalize_tree_entry_name(uploaded_path) != normalized_file_path:
+            continue
+
+        commit_id = commit.get("id", "")
+        if not isinstance(commit_id, str) or not commit_id:
+            continue
+
+        timestamp = parse_hf_iso_datetime_to_timestamp(commit.get("date", ""))
+        return commit_id, timestamp
+
+    return "", 0
 
 
 def get_file_size_from_huggingface(url: str) -> Tuple[str, int, int, str]:
@@ -162,10 +240,29 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int, int, str]:
             if size > 0:
                 return url, size, timestamp, resolved_url
 
+        upload_commit_id, upload_timestamp = find_upload_commit_for_file(repo_id, revision, resolved_path)
+        if upload_commit_id:
+            safe_print(f"\033[93m  当前 revision 未找到文件，回退到上传提交: {upload_commit_id}\033[0m")
+            historical_entries = get_model_tree_entries(repo_id, upload_commit_id, dir_path)
+            historical_entry, _ = find_matching_tree_entry(historical_entries, resolved_path)
+            if historical_entry:
+                size = historical_entry.get("size", 0)
+                if not isinstance(size, int):
+                    size = 0
+
+                if upload_timestamp == 0:
+                    last_commit = historical_entry.get("lastCommit", {})
+                    last_commit_date = ""
+                    if isinstance(last_commit, dict):
+                        last_commit_date = last_commit.get("date", "")
+                    upload_timestamp = parse_hf_iso_datetime_to_timestamp(last_commit_date)
+
+                if size > 0:
+                    return url, size, upload_timestamp, resolved_url
+
         # Fallback: 使用 resolve 响应头兜底大小（时间不作为最后提交时间）
         api_url = f"https://huggingface.co/{repo_id}/resolve/{revision}/{quote(resolved_path, safe='/')}"
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-        response = requests.head(api_url, headers=headers, timeout=30, allow_redirects=True)
+        response = requests.head(api_url, headers=HF_HEADERS, timeout=30, allow_redirects=True)
         if response.status_code == 200:
             content_length = response.headers.get("Content-Length")
             if content_length:
