@@ -1356,12 +1356,23 @@ extension _$RWKV on _RWKV {
     final completer = Completer<int?>();
     activeLoadingFile.q = fileInfo;
     modelLoadingCompleters.q = {...modelLoadingCompleters.q, fileInfo: completer};
-    final req = to_rwkv.LoadRWKVModel(
-      modelPath: modelPath,
+    final shouldForceLlamaCppNGpuLayersToZero = _shouldForceLlamaCppNGpuLayersToZero(
       backend: backend,
-      tokenizerPath: tokenizerPath,
-      extra: fileInfo,
     );
+    final req = shouldForceLlamaCppNGpuLayersToZero
+        ? to_rwkv.LoadRWKVModel(
+            modelPath: modelPath,
+            backend: backend,
+            tokenizerPath: tokenizerPath,
+            llamaCppNGpuLayers: 0,
+            extra: fileInfo,
+          )
+        : to_rwkv.LoadRWKVModel(
+            modelPath: modelPath,
+            backend: backend,
+            tokenizerPath: tokenizerPath,
+            extra: fileInfo,
+          );
     send(req);
     loadingStatus.q = {...loadingStatus.q, fileInfo: .loading};
     loadingProgress.q = {...loadingProgress.q, fileInfo: 0.0};
@@ -1369,6 +1380,27 @@ extension _$RWKV on _RWKV {
     modelLoadingCompleters.q = {...modelLoadingCompleters.q..remove(fileInfo)};
     // 如果我们得到的 modelID 为 null, 则表示加载失败
     return modelID;
+  }
+
+  bool _shouldForceLlamaCppNGpuLayersToZero({required Backend backend}) {
+    if (backend != Backend.llamacpp) {
+      return false;
+    }
+    if (!Platform.isWindows) {
+      return false;
+    }
+    if (socBrand.q == SocBrand.snapdragon) {
+      return true;
+    }
+
+    final lowerCpuName = P.telemetry._cpuName.q.toLowerCase();
+    if (lowerCpuName.contains('snapdragon')) {
+      return true;
+    }
+    if (lowerCpuName.contains('qualcomm')) {
+      return true;
+    }
+    return false;
   }
 
   Future<void> _releaseModelById({required int modelID}) async {
