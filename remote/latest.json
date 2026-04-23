@@ -1244,32 +1244,7 @@
     ]
   },
   "albatross": {
-    "model_config": [
-      {
-        "name": "RWKV7-G1a 0.1B",
-        "fileSize": 382223868,
-        "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g1a-0.1b-20250728-ctx4096.pth",
-        "platforms": ["windows", "linux"],
-        "tags": ["batch", "albatross"],
-        "date": 1753660800
-      },
-      {
-        "name": "RWKV7-G0a4 13.3B",
-        "fileSize": 26540871429,
-        "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g0a4-13.3b-20251114-ctx8192.pth",
-        "platforms": ["windows", "linux"],
-        "tags": ["batch", "albatross"],
-        "date": 1763078400
-      },
-      {
-        "name": "RWKV7-G0a3 7.2B",
-        "fileSize": 14400009405,
-        "url": "BlinkDL/rwkv7-g1/resolve/main/rwkv7-g0a3-7.2b-20251029-ctx8192.pth",
-        "platforms": ["windows", "linux"],
-        "tags": ["batch", "albatross"],
-        "date": 1761696000
-      }
-    ]
+    "model_config": []
   },
   "roleplay": {
     "model_config": [
@@ -1930,18 +1905,6 @@
         "backends": ["qnn"],
         "tags": ["npu"],
         "socLimitations": ["8 Elite Gen5"],
-        "date": 1761295426
-      },
-      {
-        "name": "RWKV7 Sudoku (8 Gen 5)",
-        "modelSize": 0.013,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/demos/sudoku/qnn2.39-251016/sudoku_rwkv-v7-20241120-fp16-8gen5.bin",
-        "fileSize": 32358400,
-        "quantization": "fp16",
-        "platforms": ["android"],
-        "backends": ["qnn"],
-        "tags": ["npu"],
-        "socLimitations": ["8 Gen 5"],
         "date": 1761295426
       },
       {
