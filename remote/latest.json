@@ -54,13 +54,13 @@
       {
         "name": "RWKV7-G1f 2.9B",
         "modelSize": 2.9,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1f-2.9b-20260420-ctx8192-Q4_K_M.ggufs",
-        "fileSize": 1919047616,
+        "url": "mollysama/rwkv-mobile-models/resolve/main/gguf/rwkv7-g1f-2.9b-20260420-ctx8192-Q4_K_M.gguf",
+        "fileSize": 1919047872,
         "quantization": "Q4_K_M",
         "platforms": ["macos", "linux", "android", "windows"],
         "backends": ["llamacpp"],
         "tags": ["reason", "gpu", "batch"],
-        "date": 1773848855
+        "date": 1776757968
       },
       {
         "name": "RWKV7-G1f 7.2B",

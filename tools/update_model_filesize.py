@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 import argparse
 from datetime import datetime
+import subprocess
 from urllib.parse import quote
 
 # 全局锁用于线程安全的打印
@@ -51,6 +52,46 @@ def parse_hf_resolve_url(url: str) -> Tuple[str, str, str]:
     return match.group(1), match.group(2), match.group(3)
 
 
+def normalize_tree_entry_name(file_name: str) -> str:
+    normalized_file_name = file_name.lower()
+    normalized_file_name = normalized_file_name.replace(".ggufs", ".gguf")
+    return normalized_file_name
+
+
+def find_matching_tree_entry(entries: List[Dict[str, Any]], file_path: str) -> Tuple[Dict[str, Any] | None, str]:
+    for entry in entries:
+        if entry.get("path") == file_path and entry.get("type") == "file":
+            return entry, file_path
+
+    file_name = file_path.rsplit("/", 1)[-1]
+    normalized_file_name = normalize_tree_entry_name(file_name)
+    candidates: List[Dict[str, Any]] = []
+
+    for entry in entries:
+        if entry.get("type") != "file":
+            continue
+
+        entry_path = entry.get("path", "")
+        if not isinstance(entry_path, str) or not entry_path:
+            continue
+
+        entry_name = entry_path.rsplit("/", 1)[-1]
+        if normalize_tree_entry_name(entry_name) == normalized_file_name:
+            candidates.append(entry)
+
+    if len(candidates) != 1:
+        return None, file_path
+
+    matched_entry = candidates[0]
+    matched_path = matched_entry.get("path", "")
+    if not isinstance(matched_path, str) or not matched_path:
+        return None, file_path
+
+    safe_print(f"\033[93m  HF tree API 未找到精确文件: {file_path}\033[0m")
+    safe_print(f"\033[93m  自动使用唯一匹配文件: {matched_path}\033[0m")
+    return matched_entry, matched_path
+
+
 def get_model_tree_entries(repo_id: str, revision: str, dir_path: str) -> List[Dict[str, Any]]:
     cache_key = (repo_id, revision, dir_path)
     with cache_lock:
@@ -79,21 +120,21 @@ def get_model_tree_entries(repo_id: str, revision: str, dir_path: str) -> List[D
     return entries
 
 
-def get_file_size_from_huggingface(url: str) -> Tuple[str, int, int]:
+def get_file_size_from_huggingface(url: str) -> Tuple[str, int, int, str]:
     """
-    从HuggingFace URL获取文件大小
+    从HuggingFace URL获取文件大小和文件时间
 
     Args:
         url: HuggingFace文件URL
 
     Returns:
-        (模型名称, 文件大小字节数)
+        (原始URL, 文件大小字节数, 文件时间戳, 修正后的URL)
     """
     try:
         repo_id, revision, file_path = parse_hf_resolve_url(url)
         if not repo_id or not revision or not file_path:
             safe_print(f"\033[91m不支持的URL格式: {url}\033[0m")
-            return url, 0, 0
+            return url, 0, 0, url
 
         safe_print(f"  查询HF tree API: {repo_id}@{revision}/{file_path}")
 
@@ -102,11 +143,10 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int, int]:
             dir_path = file_path.rsplit("/", 1)[0]
 
         entries = get_model_tree_entries(repo_id, revision, dir_path)
-        matched_entry = None
-        for entry in entries:
-            if entry.get("path") == file_path and entry.get("type") == "file":
-                matched_entry = entry
-                break
+        matched_entry, resolved_path = find_matching_tree_entry(entries, file_path)
+        resolved_url = url
+        if resolved_path != file_path:
+            resolved_url = f"{repo_id}/resolve/{revision}/{resolved_path}"
 
         if matched_entry:
             size = matched_entry.get("size", 0)
@@ -120,23 +160,23 @@ def get_file_size_from_huggingface(url: str) -> Tuple[str, int, int]:
             timestamp = parse_hf_iso_datetime_to_timestamp(last_commit_date)
 
             if size > 0:
-                return url, size, timestamp
+                return url, size, timestamp, resolved_url
 
         # Fallback: 使用 resolve 响应头兜底大小（时间不作为最后提交时间）
-        api_url = f"https://huggingface.co/{repo_id}/resolve/{revision}/{quote(file_path, safe='/')}"
+        api_url = f"https://huggingface.co/{repo_id}/resolve/{revision}/{quote(resolved_path, safe='/')}"
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         response = requests.head(api_url, headers=headers, timeout=30, allow_redirects=True)
         if response.status_code == 200:
             content_length = response.headers.get("Content-Length")
             if content_length:
-                return url, int(content_length), 0
+                return url, int(content_length), 0, resolved_url
 
         safe_print(f"\033[91m  无法获取文件信息，状态码: {response.status_code}\033[0m")
-        return url, 0, 0
+        return url, 0, 0, resolved_url
 
     except Exception as e:
         safe_print(f"\033[91m  获取文件大小时出错: {e}\033[0m")
-        return url, 0, 0
+        return url, 0, 0, url
 
 
 def find_models(config: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -191,8 +231,8 @@ def update_filesizes(config_file: str, max_workers: int = 5):
         for future in as_completed(future_to_url):
             url = future_to_url[future]
             try:
-                url_key, file_size, timestamp = future.result()
-                results[url_key] = (file_size, timestamp)
+                url_key, file_size, timestamp, resolved_url = future.result()
+                results[url_key] = (file_size, timestamp, resolved_url)
 
                 # 显示进度
                 completed = len(results)
@@ -215,24 +255,44 @@ def update_filesizes(config_file: str, max_workers: int = 5):
             file_size_info = results[model["url"]]
             # 兼容旧代码，如果results只存了size（理论上不会，但为了健壮性）
             if isinstance(file_size_info, tuple):
-                new_size, new_timestamp = file_size_info
+                if len(file_size_info) == 3:
+                    new_size, new_timestamp, resolved_url = file_size_info
+                elif len(file_size_info) == 2:
+                    new_size, new_timestamp = file_size_info
+                    resolved_url = model["url"]
+                else:
+                    new_size = 0
+                    new_timestamp = 0
+                    resolved_url = model["url"]
             else:
                 new_size = file_size_info
                 new_timestamp = 0
+                resolved_url = model["url"]
 
             old_size = model.get("fileSize", 0)
             old_timestamp = model.get("date", 0)
+            old_url = model["url"]
 
             if new_size > 0:
                 changed = False
-                if old_size != new_size:
-                    model["fileSize"] = new_size
+                if resolved_url != old_url:
+                    model["url"] = resolved_url
                     safe_print(f"  更新: {model_name}")
+                    safe_print(f"    URL: {old_url} -> {resolved_url}")
+                    changed = True
+
+                if old_size != new_size:
+                    if not changed:
+                        safe_print(f"  更新: {model_name}")
+                    model["fileSize"] = new_size
                     safe_print(f"    文件大小: {old_size:,} -> {new_size:,} 字节 ({new_size / 1024 / 1024:.2f} MB)")
                     changed = True
 
                 if new_timestamp > 0 and old_timestamp != new_timestamp:
+                    if not changed:
+                        safe_print(f"  更新: {model_name}")
                     model["date"] = new_timestamp
+                    safe_print(f"    时间: {old_timestamp} -> {new_timestamp}")
                     changed = True
 
                 if changed:
@@ -252,17 +312,18 @@ def update_filesizes(config_file: str, max_workers: int = 5):
     safe_print(f"成功更新了 {updated_count}/{len(models)} 个模型")
 
 
-def format_json_with_prettier(file_path: str, print_width: int = 200) -> bool:
+def format_json_with_prettier(file_path: str, print_width: int = 200, timeout_seconds: int = 120) -> bool:
     try:
-        import subprocess
-
-        cmd = ["npx", "prettier", "--parser", "json", f"--print-width={print_width}", "--write", file_path]
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        cmd = ["npx", "--yes", "prettier", "--parser", "json", f"--print-width={print_width}", "--write", file_path]
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=timeout_seconds)
         if result.returncode != 0:
             safe_print(f"\033[91mPrettier 格式化失败: {result.stderr.strip()}\033[0m")
             return False
         safe_print("使用 Prettier 完成 JSON 格式化")
         return True
+    except subprocess.TimeoutExpired:
+        safe_print(f"\033[93mPrettier 格式化超时（>{timeout_seconds} 秒），跳过\033[0m")
+        return False
     except FileNotFoundError:
         safe_print("\033[93m未找到 npx 或 prettier，跳过 Prettier 格式化\033[0m")
         return False
