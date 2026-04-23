@@ -10,7 +10,6 @@ const _headers = {
   'Access-Control-Allow-Headers': 'X-Requested-With,content-type,Authorization',
 };
 
-
 class _Backend {
   // ===========================================================================
   // Instance

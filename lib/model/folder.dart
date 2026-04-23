@@ -14,9 +14,9 @@ class PthFolderEntry {
   Map<String, dynamic> toJson() => {'path': path, if (bookmark != null) 'bookmark': bookmark};
 
   static PthFolderEntry fromJson(Map<String, dynamic> json) => PthFolderEntry(
-        path: json['path']! as String,
-        bookmark: json['bookmark'] as String?,
-      );
+    path: json['path']! as String,
+    bookmark: json['bookmark'] as String?,
+  );
 }
 
 enum FolderState {

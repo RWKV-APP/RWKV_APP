@@ -268,7 +268,6 @@ extension _$Ocr on _Ocr {
     });
   }
 
-
   void _sendRequest() {
     // 生成中则跳过
     final isGenerating = this.isGenerating.q;
