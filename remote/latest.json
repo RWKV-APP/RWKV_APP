@@ -162,34 +162,34 @@
         "name": "RWKV7-G1f 1.5B (MLX)",
         "modelSize": 1.5,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-1.5B-g1f-20260419-ctx8192-mlx-6bit.zip",
-        "fileSize": 1292989816,
+        "fileSize": 1274033080,
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1776788602
+        "date": 1777038345
       },
       {
         "name": "RWKV7-G1f 2.9B (MLX)",
         "modelSize": 2.9,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-2.9B-g1f-20260420-ctx8192-mlx-6bit.zip",
-        "fileSize": 2467616350,
+        "fileSize": 2454977306,
         "quantization": "INT6",
         "platforms": ["macos", "ios"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1776790254
+        "date": 1777038419
       },
       {
         "name": "RWKV7-G1f 7.2B (MLX)",
         "modelSize": 7.2,
         "url": "mollysama/rwkv-mobile-models/resolve/main/mlx/rwkv7-7.2B-g1f-20260414-ctx8192-mlx-6bit.zip",
-        "fileSize": 6019268134,
+        "fileSize": 5983580523,
         "quantization": "INT6",
         "platforms": ["macos"],
         "backends": ["mlx"],
         "tags": ["reason", "mlx", "gpu"],
-        "date": 1776792461
+        "date": 1777038540
       },
       {
         "name": "RWKV7-G1d 0.1B (CoreML)",
@@ -522,16 +522,16 @@
         "date": 1770707306
       },
       {
-        "name": "RWKV7-G1e 1.5B (Dimensity 9300)",
+        "name": "RWKV7-G1f 1.5B (Dimensity 9300)",
         "modelSize": 1.5,
-        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1e-1.5b-20260309-ctx8192-MT6989.rmpack",
+        "url": "mollysama/rwkv-mobile-models/resolve/main/mtk_np7/251218/rwkv7-g1f-1.5b-20260419-ctx8192-MT6989.rmpack",
         "fileSize": 1676341248,
         "quantization": "w8a16",
         "platforms": ["android"],
         "backends": ["mtk_np7"],
         "tags": ["reason", "npu"],
         "socLimitations": ["Dimensity 9300"],
-        "date": 1773202201
+        "date": 1776991897
       },
       {
         "name": "RWKV7-G1d 0.1B (8 Elite)",
