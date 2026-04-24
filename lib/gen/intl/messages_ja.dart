@@ -1159,9 +1159,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "少なくとも 1 つの応答スタイルを有効にしてください",
     ),
+    "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
+      "英語で回答",
+    ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
       "文言で回答",
+    ),
+    "response_style_route_ja_detail": MessageLookupByLibrary.simpleMessage(
+      "日本語で回答",
     ),
     "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
     "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
@@ -1170,6 +1176,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
     "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
       "猫口調で回答",
+    ),
+    "response_style_route_yue_detail": MessageLookupByLibrary.simpleMessage(
+      "広東語で回答",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("デフォルトに戻す"),
     "result": MessageLookupByLibrary.simpleMessage("結果"),

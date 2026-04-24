@@ -6,9 +6,6 @@ enum _UserMessageMenuAction {
   deleteCurrentBranch,
 }
 
-const String _responseStyleGuSuffix = " 请用文言文回答。";
-const String _responseStyleMaoAssistantPrefix = "<think>喵";
-const String _responseStyleMaoUserSuffix = " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格。";
 const String _fakeBatchInferenceBenchmarkCharacterPool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ     .,!?;:-";
 const Duration _visibleReceivedTokensInterval = Duration(milliseconds: 33);
 const List<int> _fakeBatchInferenceBenchmarkFixedTargetLengths = <int>[500, 1000, 1500];
@@ -419,11 +416,7 @@ extension $Chat on _Chat {
     if (!_canUseResponseStyleRouteCount(nextState.activeCount)) {
       final bool wantsToReplaceSingleRoute = enabled && currentState.activeCount == 1 && !currentState.enabledFor(route);
       if (wantsToReplaceSingleRoute) {
-        final ResponseStyleState replacementState = ResponseStyleState(
-          jinEnabled: route == ResponseStyleRoute.jin,
-          guEnabled: route == ResponseStyleRoute.gu,
-          maoEnabled: route == ResponseStyleRoute.mao,
-        );
+        final ResponseStyleState replacementState = ResponseStyleState.only(route);
         await _applyResponseStyleState(replacementState);
         return;
       }
@@ -502,21 +495,6 @@ extension $Chat on _Chat {
     return _supportsResponseStyleBatchExecution(activeCount);
   }
 
-  List<String> _applySuffixToLatestUserMessage(
-    List<String> history,
-    String suffix,
-  ) {
-    final List<String> next = <String>[...history];
-    if (next.isEmpty) {
-      return next;
-    }
-    if (next.length.isEven) {
-      return next;
-    }
-    next[next.length - 1] = "${next.last}$suffix";
-    return next;
-  }
-
   List<ResponseStyleRoute> _resolveResponseStyleRoutesForMessage(Message message) {
     final List<String>? labels = message.batchSlotLabels;
     if (labels == null || labels.isEmpty) {
@@ -541,23 +519,10 @@ extension $Chat on _Chat {
     required ResponseStyleRoute route,
     String? assistantMessage,
   }) {
-    late final List<String> nextHistory;
-    switch (route) {
-      case .jin:
-        nextHistory = <String>[...history];
-      case .gu:
-        nextHistory = _applySuffixToLatestUserMessage(history, _responseStyleGuSuffix);
-      case .mao:
-        nextHistory = _applySuffixToLatestUserMessage(history, _responseStyleMaoUserSuffix);
-    }
-
-    if (assistantMessage == null) {
-      return nextHistory;
-    }
-    return <String>[
-      ...nextHistory,
-      assistantMessage,
-    ];
+    return route.buildHistory(
+      history: history,
+      assistantMessage: assistantMessage,
+    );
   }
 
   List<to_rwkv.ChatBatchSlotConfig> _buildResponseStyleSlotConfigs({
@@ -565,20 +530,19 @@ extension $Chat on _Chat {
     required List<ResponseStyleRoute> routes,
     Map<ResponseStyleRoute, String?>? assistantPrefixes,
   }) {
-    final bool batchRequiresAssistantPrefixes =
-        routes.contains(ResponseStyleRoute.mao) || (assistantPrefixes?.values.any((String? prefix) => prefix != null) ?? false);
+    final bool batchRequiresAssistantPrefixes = responseStyleBatchRequiresAssistantPrefixes(
+      routes: routes,
+      assistantPrefixes: assistantPrefixes,
+    );
 
     return <to_rwkv.ChatBatchSlotConfig>[
       for (final ResponseStyleRoute route in routes)
         to_rwkv.ChatBatchSlotConfig(
           messages: _buildSingleRouteHistory(history: history, route: route),
-          assistantPrefix: switch (route) {
-            // 猫路使用 assistant prefix 时，整个 batch 都需要显式进入 assistant turn。
-            // 否则今/古两路会被 runtime 当成“继续用户最后一句”，表现为复读问题本身。
-            ResponseStyleRoute.jin => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
-            ResponseStyleRoute.gu => assistantPrefixes?[route] ?? (batchRequiresAssistantPrefixes ? "" : null),
-            ResponseStyleRoute.mao => assistantPrefixes?[route] ?? _responseStyleMaoAssistantPrefix,
-          },
+          assistantPrefix: route.batchAssistantPrefix(
+            batchRequiresAssistantPrefixes: batchRequiresAssistantPrefixes,
+            assistantPrefix: assistantPrefixes?[route],
+          ),
         ),
     ];
   }
@@ -588,15 +552,9 @@ extension $Chat on _Chat {
     required ResponseStyleRoute route,
     String? assistantMessage,
   }) {
-    final String? resolvedAssistantMessage = switch (route) {
-      ResponseStyleRoute.jin => assistantMessage,
-      ResponseStyleRoute.gu => assistantMessage,
-      ResponseStyleRoute.mao => assistantMessage ?? _responseStyleMaoAssistantPrefix,
-    };
-    return _buildSingleRouteHistory(
+    return route.buildHistory(
       history: history,
-      route: route,
-      assistantMessage: resolvedAssistantMessage,
+      assistantMessage: assistantMessage,
     );
   }
 
@@ -624,14 +582,7 @@ extension $Chat on _Chat {
 
     if (routes.length == 1) {
       final ResponseStyleRoute route = routes.first;
-      final String? assistantMessage;
-      if (currentMessage.content.isNotEmpty) {
-        assistantMessage = currentMessage.content;
-      } else if (route == ResponseStyleRoute.mao) {
-        assistantMessage = _responseStyleMaoAssistantPrefix;
-      } else {
-        assistantMessage = null;
-      }
+      final String? assistantMessage = currentMessage.content.isNotEmpty ? currentMessage.content : route.resolveAssistantMessage(null);
       return (
         messages: _buildSingleRouteHistory(
           history: baseHistory,
@@ -657,11 +608,7 @@ extension $Chat on _Chat {
     for (int i = 0; i < routes.length; i++) {
       final ResponseStyleRoute route = routes[i];
       final String? rawValue = i < batch.length ? batch[i] : null;
-      if (route == ResponseStyleRoute.mao) {
-        assistantPrefixes[route] = rawValue == null || rawValue.isEmpty ? _responseStyleMaoAssistantPrefix : rawValue;
-        continue;
-      }
-      assistantPrefixes[route] = rawValue;
+      assistantPrefixes[route] = route.restoreAssistantPrefix(rawValue);
     }
 
     return (

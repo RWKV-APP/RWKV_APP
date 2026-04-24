@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
@@ -28,6 +29,7 @@ const int _markdownPreprocessCacheLimit = 96;
 const String _softBreak = "\u200B";
 final RegExp _markdownFenceLineExp = RegExp(r"^(```|~~~)");
 final _markdownPreprocessCache = <String, String>{};
+const double _kInlineLatexDownwardShift = 1.5;
 
 String _prepareMarkdownRaw(String raw) {
   final compactRaw = raw.replaceAll("\n\n", "\n").trim();
@@ -151,12 +153,14 @@ class MarkdownRender extends ConsumerWidget {
   final String raw;
   final Color? color;
   final bool useMessageLineHeight;
+  final double inlineLatexVerticalPaddingFactor;
 
   const MarkdownRender({
     super.key,
     required this.raw,
     this.color,
     this.useMessageLineHeight = false,
+    this.inlineLatexVerticalPaddingFactor = 0,
   });
 
   void _onTapLink(String? href, String title) async {
@@ -220,6 +224,7 @@ class MarkdownRender extends ConsumerWidget {
         tex: tex,
         textStyle: textStyle,
         inline: inline,
+        inlineLatexVerticalPaddingFactor: inlineLatexVerticalPaddingFactor,
       ),
       useDollarSignsForLatex: true,
       addNewLineAfterH1: false,
@@ -421,12 +426,53 @@ class _LatexRender extends StatelessWidget {
   final String tex;
   final TextStyle textStyle;
   final bool inline;
+  final double inlineLatexVerticalPaddingFactor;
 
   const _LatexRender({
     required this.tex,
     required this.textStyle,
     required this.inline,
+    required this.inlineLatexVerticalPaddingFactor,
   });
+
+  double _resolveInlineVerticalPadding(BuildContext context, TextStyle effectiveTextStyle) {
+    if (!inline) return 0;
+    if (inlineLatexVerticalPaddingFactor <= 0) return 0;
+
+    final theme = Theme.of(context);
+    final fontSize = effectiveTextStyle.fontSize ?? theme.textTheme.bodyMedium?.fontSize ?? Config.markdownBodyFontSize;
+    final padding = fontSize * inlineLatexVerticalPaddingFactor;
+
+    if (padding < 1) return 1;
+    if (padding > 4) return 4;
+    return padding;
+  }
+
+  double _resolveAlphabeticBaseline(BuildContext context, TextStyle effectiveTextStyle, double inlineVerticalPadding) {
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: "x",
+        style: effectiveTextStyle,
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: TextScaler.noScaling,
+      maxLines: 1,
+    )..layout();
+
+    final theme = Theme.of(context);
+    final fallbackFontSize = effectiveTextStyle.fontSize ?? theme.textTheme.bodyMedium?.fontSize ?? Config.markdownBodyFontSize;
+    final textBaseline = textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final downwardShift = inlineLatexVerticalPaddingFactor > 0 ? _kInlineLatexDownwardShift : 0.0;
+    if (textBaseline <= 0) {
+      final fallbackBaseline = fallbackFontSize * .8 + inlineVerticalPadding - downwardShift;
+      if (fallbackBaseline < 1) return 1;
+      return fallbackBaseline;
+    }
+
+    final shiftedBaseline = textBaseline + inlineVerticalPadding - downwardShift;
+    if (shiftedBaseline < 1) return 1;
+    return shiftedBaseline;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -436,6 +482,12 @@ class _LatexRender extends StatelessWidget {
     );
     final effectiveColor = effectiveTextStyle.color ?? theme.colorScheme.onSurface;
     final mathStyle = inline ? MathStyle.text : MathStyle.display;
+    final inlineVerticalPadding = _resolveInlineVerticalPadding(context, effectiveTextStyle);
+    final alphabeticBaseline = _resolveAlphabeticBaseline(
+      context,
+      effectiveTextStyle,
+      inlineVerticalPadding,
+    );
 
     return SelectableAdapter(
       selectedText: tex,
@@ -453,12 +505,12 @@ class _LatexRender extends StatelessWidget {
               fontSize: effectiveTextStyle.fontSize ?? theme.textTheme.bodyMedium?.fontSize,
               mathFontOptions: FontOptions(
                 fontFamily: "Main",
-                fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
+                fontWeight: effectiveTextStyle.fontWeight ?? .normal,
                 fontShape: FontStyle.normal,
               ),
               textFontOptions: FontOptions(
                 fontFamily: "Main",
-                fontWeight: effectiveTextStyle.fontWeight ?? FontWeight.normal,
+                fontWeight: effectiveTextStyle.fontWeight ?? .normal,
                 fontShape: FontStyle.normal,
               ),
               style: mathStyle,
@@ -471,18 +523,86 @@ class _LatexRender extends StatelessWidget {
               );
             },
           );
+
+          final Widget scrollChild;
           if (!constraints.hasBoundedWidth) {
-            return math;
-          }
-          return ClipRect(
-            child: SingleChildScrollView(
+            scrollChild = math;
+          } else {
+            scrollChild = SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: math,
-            ),
+            );
+          }
+
+          Widget child = scrollChild;
+          if (inlineVerticalPadding > 0) {
+            child = Padding(
+              padding: EdgeInsets.symmetric(vertical: inlineVerticalPadding),
+              child: child,
+            );
+          }
+
+          if (!inline) {
+            return child;
+          }
+
+          return _InlineLatexBaselineProxy(
+            baseline: alphabeticBaseline,
+            child: child,
           );
         },
       ),
     );
+  }
+}
+
+class _InlineLatexBaselineProxy extends SingleChildRenderObjectWidget {
+  final double baseline;
+
+  const _InlineLatexBaselineProxy({
+    required this.baseline,
+    required super.child,
+  });
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _RenderInlineLatexBaselineProxy(baseline: baseline);
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, RenderObject renderObject) {
+    final proxy = renderObject as _RenderInlineLatexBaselineProxy;
+    proxy.baseline = baseline;
+  }
+}
+
+class _RenderInlineLatexBaselineProxy extends RenderProxyBox {
+  _RenderInlineLatexBaselineProxy({
+    required double baseline,
+  }) : _baseline = baseline;
+
+  double _baseline;
+
+  set baseline(double value) {
+    if (_baseline == value) return;
+    _baseline = value;
+    markNeedsLayout();
+  }
+
+  @override
+  double? computeDistanceToActualBaseline(TextBaseline baseline) {
+    if (baseline != TextBaseline.alphabetic) {
+      return super.computeDistanceToActualBaseline(baseline);
+    }
+    return _baseline;
+  }
+
+  @override
+  double? computeDryBaseline(covariant BoxConstraints constraints, TextBaseline baseline) {
+    if (baseline != TextBaseline.alphabetic) {
+      return super.computeDryBaseline(constraints, baseline);
+    }
+    return _baseline;
   }
 }
 

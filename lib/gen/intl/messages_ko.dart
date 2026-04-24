@@ -1147,9 +1147,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "응답 스타일을 최소 하나는 켜 두어야 합니다",
     ),
+    "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
+      "영어 답변",
+    ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
       "문어체 답변",
+    ),
+    "response_style_route_ja_detail": MessageLookupByLibrary.simpleMessage(
+      "일본어 답변",
     ),
     "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
     "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
@@ -1158,6 +1164,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
     "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
       "고양이 말투 답변",
+    ),
+    "response_style_route_yue_detail": MessageLookupByLibrary.simpleMessage(
+      "광둥어 답변",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("기본값으로 복원"),
     "result": MessageLookupByLibrary.simpleMessage("결과"),

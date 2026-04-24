@@ -1366,9 +1366,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "Keep at least one response style enabled",
     ),
+    "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
+      "English answer",
+    ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
       "Classical Chinese answer",
+    ),
+    "response_style_route_ja_detail": MessageLookupByLibrary.simpleMessage(
+      "Japanese answer",
     ),
     "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
     "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
@@ -1377,6 +1383,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
     "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
       "Cat-style answer",
+    ),
+    "response_style_route_yue_detail": MessageLookupByLibrary.simpleMessage(
+      "Cantonese answer",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("Restore Default"),
     "result": MessageLookupByLibrary.simpleMessage("Result"),

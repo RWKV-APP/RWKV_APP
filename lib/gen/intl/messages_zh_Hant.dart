@@ -1048,9 +1048,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "至少保留一種表達風格",
     ),
+    "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
+      "英文回答",
+    ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
       "文言回答",
+    ),
+    "response_style_route_ja_detail": MessageLookupByLibrary.simpleMessage(
+      "日語回答",
     ),
     "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
     "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
@@ -1059,6 +1065,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
     "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
       "貓風回答",
+    ),
+    "response_style_route_yue_detail": MessageLookupByLibrary.simpleMessage(
+      "粵語回答",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("恢復預設"),
     "result": MessageLookupByLibrary.simpleMessage("結果"),

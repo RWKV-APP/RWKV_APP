@@ -969,6 +969,36 @@ class S {
     );
   }
 
+  /// `英文回答`
+  String get response_style_route_en_detail {
+    return Intl.message(
+      '英文回答',
+      name: 'response_style_route_en_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `日语回答`
+  String get response_style_route_ja_detail {
+    return Intl.message(
+      '日语回答',
+      name: 'response_style_route_ja_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `粤语回答`
+  String get response_style_route_yue_detail {
+    return Intl.message(
+      '粤语回答',
+      name: 'response_style_route_yue_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `推理{footer}-关`
   String thinking_mode_off(Object footer) {
     return Intl.message(

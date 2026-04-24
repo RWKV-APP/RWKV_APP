@@ -1412,9 +1412,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "Нужно оставить включённым хотя бы один стиль ответа",
     ),
+    "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
+      "Ответ на английском",
+    ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
       "Ответ на вэньянь",
+    ),
+    "response_style_route_ja_detail": MessageLookupByLibrary.simpleMessage(
+      "Ответ на японском",
     ),
     "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
     "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
@@ -1423,6 +1429,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
     "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
       "Ответ в кошачьем стиле",
+    ),
+    "response_style_route_yue_detail": MessageLookupByLibrary.simpleMessage(
+      "Ответ на кантонском",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage(
       "Восстановить по умолчанию",

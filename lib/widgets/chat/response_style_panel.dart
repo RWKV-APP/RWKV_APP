@@ -89,23 +89,12 @@ class ResponseStylePanel extends ConsumerWidget {
           controller: scrollController,
           padding: const .only(left: 12, right: 12, bottom: 12),
           children: [
-            _ResponseStyleRouteItem(
-              route: ResponseStyleRoute.jin,
-              title: s.response_style_route_jin,
-              subtitle: s.response_style_route_jin_detail,
-              isSectionStart: true,
-            ),
-            _ResponseStyleRouteItem(
-              route: ResponseStyleRoute.gu,
-              title: s.response_style_route_gu,
-              subtitle: s.response_style_route_gu_detail,
-            ),
-            _ResponseStyleRouteItem(
-              route: ResponseStyleRoute.mao,
-              title: s.response_style_route_mao,
-              subtitle: s.response_style_route_mao_detail,
-              isSectionEnd: true,
-            ),
+            for (int index = 0; index < ResponseStyleRoute.values.length; index++)
+              _ResponseStyleRouteItem(
+                route: ResponseStyleRoute.values[index],
+                isSectionStart: index == 0,
+                isSectionEnd: index == ResponseStyleRoute.values.length - 1,
+              ),
           ],
         ),
       ),
@@ -115,15 +104,11 @@ class ResponseStylePanel extends ConsumerWidget {
 
 class _ResponseStyleRouteItem extends ConsumerWidget {
   final ResponseStyleRoute route;
-  final String title;
-  final String subtitle;
   final bool isSectionStart;
   final bool isSectionEnd;
 
   const _ResponseStyleRouteItem({
     required this.route,
-    required this.title,
-    required this.subtitle,
     this.isSectionStart = false,
     this.isSectionEnd = false,
   });
@@ -134,13 +119,13 @@ class _ResponseStyleRouteItem extends ConsumerWidget {
     final s = S.of(context);
     final responseStyle = ref.watch(P.chat.responseStyle);
     final enabled = responseStyle.enabledFor(route);
-    final bool disableToggle = route == ResponseStyleRoute.jin && responseStyle.isDefault;
+    final bool disableToggle = route.isDefaultRoute && responseStyle.isDefault;
 
     return FormItem(
       isSectionStart: isSectionStart,
       isSectionEnd: isSectionEnd,
-      title: title,
-      subtitle: subtitle,
+      title: route.label,
+      subtitle: route.detail(s),
       showArrow: false,
       trailing: Switch.adaptive(
         value: enabled,

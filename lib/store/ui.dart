@@ -105,7 +105,7 @@ class _UI {
 
   int get batchViewportWidthDefault => P.app.isMobile.q ? 80 : 45;
 
-  int get batchViewportWidthMin => P.app.isMobile.q ? 50 : 40;
+  int get batchViewportWidthMin => P.app.isMobile.q ? 50 : 30;
 
   int get batchViewportWidthMax => P.app.isMobile.q ? 90 : 80;
 

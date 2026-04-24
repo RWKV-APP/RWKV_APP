@@ -26,6 +26,7 @@ import 'package:zone/widgets/markdown_render.dart';
 
 const double _kSlotGap = 8.0;
 const double _kSlotScrollFadeHeight = 18.0;
+const double _kBatchInlineLatexVerticalPaddingFactor = 0.12;
 const int _kBatchMarkdownStableBlockTargetChars = 640;
 const bool _kDebugTintBatchStableMarkdown = true;
 const Color _kDebugBatchStableMarkdownTint = Color(0x224CAF50);
@@ -960,6 +961,7 @@ class _BatchIncrementalMarkdownState extends State<_BatchIncrementalMarkdown> {
       raw: raw,
       color: widget.color,
       useMessageLineHeight: widget.useMessageLineHeight,
+      inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
     );
 
     final cached = _BatchMarkdownStableBlockCacheEntry(
@@ -992,6 +994,7 @@ class _BatchIncrementalMarkdownState extends State<_BatchIncrementalMarkdown> {
         raw: widget.raw,
         color: widget.color,
         useMessageLineHeight: widget.useMessageLineHeight,
+        inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
       );
     }
 
@@ -1072,6 +1075,7 @@ class _BatchStreamingTailMarkdown extends ConsumerWidget {
         raw: raw,
         color: color,
         useMessageLineHeight: useMessageLineHeight,
+        inlineLatexVerticalPaddingFactor: _kBatchInlineLatexVerticalPaddingFactor,
       );
     }
 
