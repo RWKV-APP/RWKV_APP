@@ -706,7 +706,7 @@ class _SlotPreviewButton extends ConsumerWidget {
         border: .all(color: qb.q(.1)),
         padding: const .all(4),
         child: Icon(
-          Symbols.open_in_full,
+          Icons.open_in_full,
           size: 16,
           color: qb.q(.72),
         ),
