@@ -456,6 +456,7 @@
   "copy_text": "テキストをコピー",
   "copy_code": "コードをコピー",
   "inference_engine": "推論エンジン",
+  "inference_engine_version": "推論エンジンバージョン: {commitId}",
   "model": "モデル",
   "no_model_selected": "モデルが選択されていません",
   "change": "変更",

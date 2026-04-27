@@ -456,6 +456,7 @@
   "copy_text": "Copy text",
   "copy_code": "Copy code",
   "inference_engine": "Inference Engine",
+  "inference_engine_version": "Inference engine version: {commitId}",
   "model": "Model",
   "no_model_selected": "No model selected",
   "change": "Change",

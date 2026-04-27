@@ -456,6 +456,7 @@
   "copy_text": "텍스트 복사",
   "copy_code": "코드 복사",
   "inference_engine": "추론 엔진",
+  "inference_engine_version": "추론 엔진 버전: {commitId}",
   "model": "모델",
   "no_model_selected": "선택된 모델 없음",
   "change": "변경",

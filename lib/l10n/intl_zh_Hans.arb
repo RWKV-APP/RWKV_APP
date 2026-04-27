@@ -456,6 +456,7 @@
   "copy_text": "复制文本",
   "copy_code": "复制代码",
   "inference_engine": "推理引擎",
+  "inference_engine_version": "推理引擎版本：{commitId}",
   "model": "模型",
   "no_model_selected": "未选择模型",
   "change": "更改",

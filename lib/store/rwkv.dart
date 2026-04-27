@@ -119,6 +119,7 @@ class _RWKV {
 
   late final socName = qs("");
   late final socBrand = qs(SocBrand.unknown);
+  late final commitId = qs<String>("");
 
   late final frontendSocName = qs<String?>(null);
   late final frontendSocBrand = qs<SocBrand?>(null);
@@ -1298,11 +1299,13 @@ extension _$RWKV on _RWKV {
     final r = await compute((_) {
       final socName = RWKVMobile.getSocName();
       final platformName = RWKVMobile.getPlatformName();
+      final commitId = RWKVMobile.getRWKVMobileCommitHash();
       final socBrand = SocBrand.fromString(platformName);
-      return (socName, socBrand);
+      return (socName, socBrand, commitId);
     }, []);
     socName.q = r.$1;
     socBrand.q = r.$2;
+    commitId.q = r.$3;
 
     if (Platform.isAndroid) {
       final detected = await P.adapter.detectSocInfo();

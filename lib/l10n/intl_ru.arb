@@ -456,6 +456,7 @@
   "copy_text": "Копировать текст",
   "copy_code": "Копировать код",
   "inference_engine": "ИИ-Движок",
+  "inference_engine_version": "Версия ИИ-движка: {commitId}",
   "model": "Модель",
   "no_model_selected": "Модель не выбрана",
   "change": "Изменить",

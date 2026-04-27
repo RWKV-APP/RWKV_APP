@@ -35,12 +35,16 @@ class Settings extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final s = S.of(context);
     final paddingBottom = ref.watch(P.app.quantizedIntPaddingBottom);
     final paddingTop = ref.watch(P.app.paddingTop);
     final iconPath = "assets/img/chat/icon.png";
     final version = ref.watch(P.app.version);
     final buildNumber = ref.watch(P.app.buildNumber);
+    final commitId = ref.watch(P.rwkv.commitId);
+    final normalizedCommitId = commitId.trim();
+    final shortCommitId = normalizedCommitId.length > 7 ? normalizedCommitId.substring(0, 7) : normalizedCommitId;
     final preferredTextScaleFactor = ref.watch(P.preference.preferredTextScaleFactor);
     final userType = ref.watch(P.preference.userType);
     final preferredLanguage = ref.watch(P.preference.preferredLanguage);
@@ -86,6 +90,7 @@ class Settings extends ConsumerWidget {
                       onPressed: () {
                         pop();
                       },
+                      style: theme.iconButtonTheme.style,
                       icon: const Icon(Icons.close),
                     ),
                   ),
@@ -120,11 +125,37 @@ class Settings extends ConsumerWidget {
             const SizedBox(height: 4),
             Opacity(
               opacity: appTheme.settingVersionOpacity,
-              child: Row(
-                mainAxisAlignment: .center,
+              child: Column(
                 children: [
-                  Text(version, style: const TS(s: 12)),
-                  Text(" ($buildNumber)", style: const TS(s: 12)),
+                  Row(
+                    mainAxisAlignment: .center,
+                    children: [
+                      Text(version, style: const TS(s: 12)),
+                      Text(" ($buildNumber)", style: const TS(s: 12)),
+                    ],
+                  ),
+                  if (shortCommitId.isNotEmpty)
+                    Tooltip(
+                      message: normalizedCommitId,
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => _openRWKVMobileCommit(normalizedCommitId),
+                          child: Container(
+                            decoration: BD(
+                              color: kC,
+                            ),
+                            padding: EI.a(4),
+                            child: Text(
+                              s.inference_engine_version(shortCommitId),
+                              style: const TS(s: 12),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -333,6 +364,14 @@ class Settings extends ConsumerWidget {
 
   void _openFeedback() {
     launchUrlString("https://community.rwkv.cn/", mode: LaunchMode.externalApplication);
+  }
+
+  void _openRWKVMobileCommit(String commitId) {
+    if (commitId.isEmpty) return;
+    launchUrlString(
+      "https://github.com/MollySophia/rwkv-mobile/commit/$commitId".replaceAll("-dirty", ""),
+      mode: LaunchMode.externalApplication,
+    );
   }
 
   Future<void> _showLicensePage(

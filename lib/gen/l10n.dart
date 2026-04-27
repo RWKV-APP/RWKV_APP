@@ -3468,6 +3468,16 @@ class S {
     return Intl.message('推理引擎', name: 'inference_engine', desc: '', args: []);
   }
 
+  /// `推理引擎版本：{commitId}`
+  String inference_engine_version(Object commitId) {
+    return Intl.message(
+      '推理引擎版本：$commitId',
+      name: 'inference_engine_version',
+      desc: '',
+      args: [commitId],
+    );
+  }
+
   /// `模型`
   String get model {
     return Intl.message('模型', name: 'model', desc: '', args: []);
