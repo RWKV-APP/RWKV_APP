@@ -1150,26 +1150,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "응답 스타일을 최소 하나는 켜 두어야 합니다",
     ),
+    "response_style_many": MessageLookupByLibrary.simpleMessage("여러 스타일"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
-      "영어 답변",
+      "English only",
     ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
-      "문어체 답변",
+      "한문체 톤",
     ),
     "response_style_route_ja_detail": MessageLookupByLibrary.simpleMessage(
-      "일본어 답변",
+      "일본어만",
     ),
     "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
     "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
-      "일반 답변",
+      "자연스럽고 직접",
     ),
     "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
     "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
-      "고양이 말투 답변",
+      "귀여운 고양이 말투",
     ),
     "response_style_route_yue_detail": MessageLookupByLibrary.simpleMessage(
-      "광둥어 답변",
+      "광둥어 문어체",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("기본값으로 복원"),
     "result": MessageLookupByLibrary.simpleMessage("결과"),

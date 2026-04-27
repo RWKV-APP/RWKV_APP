@@ -1058,26 +1058,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "response_style_keep_one": MessageLookupByLibrary.simpleMessage(
       "至少保留一种表达风格",
     ),
+    "response_style_many": MessageLookupByLibrary.simpleMessage("多种风格"),
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
-      "英文回答",
+      "使用英文回答",
     ),
     "response_style_route_gu": MessageLookupByLibrary.simpleMessage("古"),
     "response_style_route_gu_detail": MessageLookupByLibrary.simpleMessage(
-      "文言回答",
+      "使用文言文回答",
     ),
     "response_style_route_ja_detail": MessageLookupByLibrary.simpleMessage(
-      "日语回答",
+      "用日语直接回答",
     ),
     "response_style_route_jin": MessageLookupByLibrary.simpleMessage("今"),
     "response_style_route_jin_detail": MessageLookupByLibrary.simpleMessage(
-      "正常回答",
+      "自然、直接",
     ),
     "response_style_route_mao": MessageLookupByLibrary.simpleMessage("猫"),
     "response_style_route_mao_detail": MessageLookupByLibrary.simpleMessage(
-      "猫风回答",
+      "模仿猫猫的预期回答",
     ),
     "response_style_route_yue_detail": MessageLookupByLibrary.simpleMessage(
-      "粤语回答",
+      "使用粤语回答",
     ),
     "restore_default": MessageLookupByLibrary.simpleMessage("恢复默认"),
     "result": MessageLookupByLibrary.simpleMessage("结果"),

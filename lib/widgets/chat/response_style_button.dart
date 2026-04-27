@@ -37,6 +37,7 @@ class ResponseStyleButton extends ConsumerWidget {
     final canEnable = model != null && !loading && !generating;
     final buttonLabel = responseStyle.buttonLabel(
       baseLabel: s.response_style_button,
+      manyLabel: s.response_style_many,
     );
     final interactionState = switch ((canEnable, responseStyle.isDefault)) {
       (false, _) => InteractionVisualState.unavailable,

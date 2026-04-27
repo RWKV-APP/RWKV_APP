@@ -567,6 +567,7 @@ extension $RWKV on _RWKV {
     int batchSize = 1,
     int? maxLength,
     bool forceChinese = false,
+    int? forceLang,
     List<List<String>>? overrideBatchMessages,
     List<to_rwkv.ChatBatchSlotConfig>? overrideBatchSlotConfigs,
   }) async {
@@ -619,6 +620,7 @@ extension $RWKV on _RWKV {
     final int effectiveBatchSize = hasOverrideBatchSlotConfigs ? overrideBatchSlotConfigs.length : batchSize;
     final isBatchInference = effectiveBatchSize > 1;
     final addGenerationPrompt = messages.length.isOdd;
+    final resolvedForceLang = forceLang ?? (forceChinese ? FORCE_LANG_CHN : null);
 
     final to_rwkv.ToRWKV request;
     if (hasOverrideBatchSlotConfigs) {
@@ -626,7 +628,7 @@ extension $RWKV on _RWKV {
         overrideBatchSlotConfigs,
         modelID: modelID,
         maxLength: maxLength,
-        forceLang: forceChinese ? 1 : null,
+        forceLang: resolvedForceLang,
       );
     } else if (isBatchInference) {
       final List<List<String>> batchMessages;
@@ -646,7 +648,7 @@ extension $RWKV on _RWKV {
         batchSize: effectiveBatchSize,
         modelID: modelID,
         maxLength: maxLength,
-        forceLang: forceChinese ? 1 : null,
+        forceLang: resolvedForceLang,
       );
     } else {
       request = to_rwkv.ChatAsync(
@@ -656,7 +658,7 @@ extension $RWKV on _RWKV {
         addGenerationPrompt: addGenerationPrompt,
         modelID: modelID,
         maxLength: maxLength,
-        forceLang: forceChinese ? 1 : null,
+        forceLang: resolvedForceLang,
       );
     }
     send(request);

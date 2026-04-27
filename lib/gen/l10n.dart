@@ -879,6 +879,16 @@ class S {
     );
   }
 
+  /// `多种风格`
+  String get response_style_many {
+    return Intl.message(
+      '多种风格',
+      name: 'response_style_many',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `至少保留一种表达风格`
   String get response_style_keep_one {
     return Intl.message(
@@ -919,10 +929,10 @@ class S {
     );
   }
 
-  /// `正常回答`
+  /// `自然、直接`
   String get response_style_route_jin_detail {
     return Intl.message(
-      '正常回答',
+      '自然、直接',
       name: 'response_style_route_jin_detail',
       desc: '',
       args: [],
@@ -939,10 +949,10 @@ class S {
     );
   }
 
-  /// `文言回答`
+  /// `使用文言文回答`
   String get response_style_route_gu_detail {
     return Intl.message(
-      '文言回答',
+      '使用文言文回答',
       name: 'response_style_route_gu_detail',
       desc: '',
       args: [],
@@ -959,40 +969,40 @@ class S {
     );
   }
 
-  /// `猫风回答`
+  /// `模仿猫猫的预期回答`
   String get response_style_route_mao_detail {
     return Intl.message(
-      '猫风回答',
+      '模仿猫猫的预期回答',
       name: 'response_style_route_mao_detail',
       desc: '',
       args: [],
     );
   }
 
-  /// `英文回答`
+  /// `使用英文回答`
   String get response_style_route_en_detail {
     return Intl.message(
-      '英文回答',
+      '使用英文回答',
       name: 'response_style_route_en_detail',
       desc: '',
       args: [],
     );
   }
 
-  /// `日语回答`
+  /// `用日语直接回答`
   String get response_style_route_ja_detail {
     return Intl.message(
-      '日语回答',
+      '用日语直接回答',
       name: 'response_style_route_ja_detail',
       desc: '',
       args: [],
     );
   }
 
-  /// `粤语回答`
+  /// `使用粤语回答`
   String get response_style_route_yue_detail {
     return Intl.message(
-      '粤语回答',
+      '使用粤语回答',
       name: 'response_style_route_yue_detail',
       desc: '',
       args: [],

@@ -427,6 +427,27 @@ extension $Chat on _Chat {
     await _applyResponseStyleState(nextState);
   }
 
+  Future<void> onAllResponseStyleRoutesSelected() async {
+    final receiving = P.rwkv.generating.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    final ResponseStyleState currentState = responseStyle.q;
+    if (currentState.hasAllRoutes) {
+      return;
+    }
+
+    final ResponseStyleState nextState = ResponseStyleState.all();
+    if (!_canUseResponseStyleRouteCount(nextState.activeCount)) {
+      Alert.warning(S.current.response_style_batch_not_supported(nextState.activeCount));
+      return;
+    }
+
+    await _applyResponseStyleState(nextState);
+  }
+
   void resetResponseStyle() {
     responseStyle.q = const ResponseStyleState();
     batchEnabled.q = false;
@@ -543,6 +564,7 @@ extension $Chat on _Chat {
             batchRequiresAssistantPrefixes: batchRequiresAssistantPrefixes,
             assistantPrefix: assistantPrefixes?[route],
           ),
+          forceLang: route.forceLang,
         ),
     ];
   }
@@ -558,7 +580,7 @@ extension $Chat on _Chat {
     );
   }
 
-  ({List<String> messages, List<to_rwkv.ChatBatchSlotConfig>? slotConfigs})? _buildResponseStyleResumeRequest({
+  ({List<String> messages, List<to_rwkv.ChatBatchSlotConfig>? slotConfigs, int? forceLang})? _buildResponseStyleResumeRequest({
     required int messageId,
   }) {
     if (P.app.pageKey.q != .chat) {
@@ -590,6 +612,7 @@ extension $Chat on _Chat {
           assistantMessage: assistantMessage,
         ),
         slotConfigs: null,
+        forceLang: route.forceLang,
       );
     }
 
@@ -618,6 +641,7 @@ extension $Chat on _Chat {
         routes: routes,
         assistantPrefixes: assistantPrefixes,
       ),
+      forceLang: null,
     );
   }
 
@@ -668,6 +692,7 @@ extension $Chat on _Chat {
     await P.rwkv.sendMessages(
       requestHistory,
       forceChinese: _responseStyleSequentialForceChinese,
+      forceLang: route.forceLang,
     );
   }
 
@@ -1435,6 +1460,7 @@ extension $Chat on _Chat {
         singleRouteHistory,
         batchSize: effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
         forceChinese: forceChinese,
+        forceLang: route.forceLang,
       );
       _checkSensitive(raw);
       return;
@@ -1483,6 +1509,7 @@ extension $Chat on _Chat {
         responseStyleResumeRequest.messages,
         batchSize: responseStyleResumeRequest.slotConfigs == null && effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
         overrideBatchSlotConfigs: responseStyleResumeRequest.slotConfigs,
+        forceLang: responseStyleResumeRequest.forceLang,
       );
       _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
       return;

@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:equatable/equatable.dart';
+import 'package:rwkv_mobile_flutter/rwkv_mobile_ffi.dart' as rwkv;
 
 // Project imports:
 import 'package:zone/gen/l10n.dart';
@@ -75,15 +76,28 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
       case .jin:
         return null;
       case .gu:
-        return " 请用文言文回答。";
+        return " 请用文言文回答";
       case .mao:
-        return " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格。";
+        return " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格";
       case .en:
-        return " Use English only. Direct answer. No preface. Never speak in Chinese. Do not use any Chinese characters.";
+        return " Use English only. Direct answer. No preface. Never speak in Chinese. Do not use any Chinese characters";
       case .ja:
         return " 日本語のみ。前置きなしで直接回答。";
       case .yue:
         return " 全程香港書面粵語。唔好開場白，直接答。";
+    }
+  }
+
+  int get forceLang {
+    switch (this) {
+      case .en:
+        return rwkv.FORCE_LANG_EN;
+      case .jin:
+      case .gu:
+      case .mao:
+      case .ja:
+      case .yue:
+        return rwkv.FORCE_LANG_NONE;
     }
   }
 
@@ -173,10 +187,14 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
 extension ResponseStyleStateButtonLabelX on ResponseStyleState {
   String buttonLabel({
     required String baseLabel,
+    required String manyLabel,
   }) {
     final routes = enabledRoutesInOrder;
     if (routes.length == 1 && routes.first.isDefaultRoute) {
       return baseLabel;
+    }
+    if (routes.length >= 4) {
+      return manyLabel;
     }
 
     final joinedLabels = routes.map((route) => route.label).join("|");
@@ -201,6 +219,10 @@ final class ResponseStyleState extends Equatable {
     return ResponseStyleState(enabledRoutes: <ResponseStyleRoute>[route]);
   }
 
+  factory ResponseStyleState.all() {
+    return ResponseStyleState(enabledRoutes: ResponseStyleRoute.values);
+  }
+
   bool enabledFor(ResponseStyleRoute route) {
     return enabledRoutesInOrder.contains(route);
   }
@@ -214,6 +236,8 @@ final class ResponseStyleState extends Equatable {
   }
 
   int get activeCount => enabledRoutesInOrder.length;
+
+  bool get hasAllRoutes => activeCount == ResponseStyleRoute.values.length;
 
   bool get isDefault {
     final routes = enabledRoutesInOrder;
