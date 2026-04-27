@@ -130,7 +130,7 @@ PODS:
     - SDWebImage/Core (= 5.21.7)
   - SDWebImage/Core (5.21.7)
   - Sentry/HybridSDK (8.58.1)
-  - sentry_flutter (9.18.0):
+  - sentry_flutter (9.19.0):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.58.1)
@@ -281,7 +281,7 @@ SPEC CHECKSUMS:
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
-  gaimon: ce0b5c042363ed957bb92ee755c361903d3ce0ef
+  gaimon: 1979ed07cdcfd0bf0d208f255f550936a196cf5a
   gal: baecd024ebfd13c441269ca7404792a7152fde89
   google_mlkit_commons: a5e4ffae5bc59ea4c7b9025dc72cb6cb79dc1166
   google_mlkit_text_recognition: b3de5adb786ad7a0fe8e13618387b8d2df0f3c70
@@ -307,7 +307,7 @@ SPEC CHECKSUMS:
   rwkv_mobile_flutter: 1ac221dbc3469b5cb1aab8248b34e1804e68aa98
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   Sentry: 958d9619ceccf6abb8c4736003fa336dac1a80a7
-  sentry_flutter: 8c688f0657eef5c6faf4985c57ca0f48ffb2b7b5
+  sentry_flutter: bdfd7a7b8931c4ecefa37fde9e44a15cd0af30b1
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0

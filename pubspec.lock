@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: animations
-      sha256: a120785be876b24177e8af387929e786e7761d6574e63cad6c2ca28545b30186
+      sha256: "9cb469212ea51be27097f23b519d594c01171721347b55df9334fff653659e7f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.2"
+    version: "2.2.0"
   ansicolor:
     dependency: transitive
     description:
@@ -181,10 +181,10 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "521daf8d189deb79ba474e43a696b41c49fb3987818dbacf3308f1e03673a75e"
+      sha256: "22fdcc3cfeb9d974d7408718c4be15ec5e9b1b350088f3a6c88f154e74dd700d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.13.1"
+    version: "2.14.1"
   built_collection:
     dependency: transitive
     description:
@@ -289,14 +289,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  code_builder:
-    dependency: transitive
-    description:
-      name: code_builder
-      sha256: "6a6cab2ba4680d6423f34a9b972a4c9a94ebe1b62ecec4e1a1f2cba91fd1319d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.11.1"
   collection:
     dependency: "direct main"
     description:
@@ -413,10 +405,10 @@ packages:
     dependency: "direct main"
     description:
       name: detect_proxy_setting
-      sha256: "76169280962b1ef0c10d21edc62ef7838b4759831e0ad431603c81fa654e29f7"
+      sha256: eb055b9762df78bceb5e6309312fef50258e039a46ad12677dcadf83d4f45853
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.9"
+    version: "0.0.10"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -587,26 +579,26 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_dotenv
-      sha256: d4130c4a43e0b13fefc593bc3961f2cb46e30cb79e253d4a526b1b5d24ae1ce4
+      sha256: d41da11fb497314fbf89811ec30af02d1d898b47980a129f0a8c0a1720460ba2
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "6.0.1"
   flutter_gen_core:
     dependency: transitive
     description:
       name: flutter_gen_core
-      sha256: "22b3198a4cb1255841a3662b41adad35d36d9037fcd9d129858240030417e0b1"
+      sha256: "1413fbd0b67f76ac17800989013438caec3b64564c9ffd1eea6cd7e170d9b0e5"
       url: "https://pub.dev"
     source: hosted
-    version: "5.13.0+1"
+    version: "5.14.1"
   flutter_gen_runner:
     dependency: "direct dev"
     description:
       name: flutter_gen_runner
-      sha256: "83fd55f5472a955725c5912819847e9770c4f295cd0ae4bdd26d99853f8a6546"
+      sha256: db00922dd5f4c1aa33aeab7f74117f1cd224e7a1e8bea1e312b8d09b8101a909
       url: "https://pub.dev"
     source: hosted
-    version: "5.13.0+1"
+    version: "5.14.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -723,10 +715,10 @@ packages:
     dependency: "direct main"
     description:
       name: gaimon
-      sha256: "30633697e071b5fab1b33f1f03e1497156ebd5b92b721f3603c88046339a4af5"
+      sha256: "2024da7b9642dc295ad7bcc69ff0be4ba4b0c9ab4134338ae95c3bd58dd16fb0"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.2"
+    version: "1.4.3"
   gal:
     dependency: "direct main"
     description:
@@ -763,10 +755,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "5540e4a3f416dd4a93458257b908eb88353cbd0fb5b0a3d1bd7d849ba1e88735"
+      sha256: "08b742eef4f71c9df5af543751cd0b7f1c679c4088488f4223ecaddc1a813b79"
       url: "https://pub.dev"
     source: hosted
-    version: "17.2.1"
+    version: "17.2.2"
   google_mlkit_commons:
     dependency: transitive
     description:
@@ -844,10 +836,10 @@ packages:
     dependency: transitive
     description:
       name: hooks
-      sha256: e79ed1e8e1929bc6ecb6ec85f0cb519c887aa5b423705ded0d0f2d9226def388
+      sha256: "025f060e86d2d4c3c47b56e33caf7f93bf9283340f26d23424ebcfccf34f621e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   html:
     dependency: transitive
     description:
@@ -1529,6 +1521,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  record_use:
+    dependency: transitive
+    description:
+      name: record_use
+      sha256: "2551bd8eecfe95d14ae75f6021ad0248be5c27f138c2ec12fcb52b500b3ba1ed"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   record_web:
     dependency: transitive
     description:
@@ -1581,26 +1581,26 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "8c07a413ce5691db5b299024498f1ad6376e015f61b6d8fc8819b042f65df6c7"
+      sha256: "1f78300740739ff4b4920802687879231554350eab73eb229778f463aabda440"
       url: "https://pub.dev"
     source: hosted
-    version: "9.18.0"
+    version: "9.19.0"
   sentry_dart_plugin:
     dependency: "direct dev"
     description:
       name: sentry_dart_plugin
-      sha256: "514cd5cc5c022bed9c232d08dc126a081b8a965dbad78b819ae91bf3a06e622c"
+      sha256: "2c5f263f8d5aea3cf387a7e03f77e355d35c71bd9a429474d633fbc085b86ceb"
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.1"
+    version: "3.3.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "0c98ca79261325806c4eccc47274910306e2d914dfefc598650819677ce2b484"
+      sha256: "168bbb120f7684dee6c0e100817f56ee1925bc2eb7fa55a71253337640c7e241"
       url: "https://pub.dev"
     source: hosted
-    version: "9.18.0"
+    version: "9.19.0"
   share_plus:
     dependency: "direct main"
     description:
@@ -1762,10 +1762,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite
-      sha256: e2297b1da52f127bc7a3da11439985d9b536f75070f3325e62ada69a5c585d03
+      sha256: "564cfed0746fe53140c23b70b308e045c3b31f17778f2f326ccb7d804ea0250a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.2+1"
   sqflite_android:
     dependency: transitive
     description:
@@ -1778,10 +1778,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: "6ef422a4525ecc601db6c0a2233ff448c731307906e92cabc9ba292afaae16a6"
+      sha256: "5e8377564d95166761a968ed96104e0569b6b6cc611faac92a36ab8a169112c3"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.6"
+    version: "2.5.6+1"
   sqflite_common_ffi:
     dependency: "direct main"
     description:
@@ -1874,10 +1874,10 @@ packages:
     dependency: transitive
     description:
       name: synchronized
-      sha256: c254ade258ec8282947a0acbbc90b9575b4f19673533ee46f2f6e9b3aeefd7c0
+      sha256: "63896c27e81b28f8cb4e69ead0d3e8f03f1d1e5fc531a3e579cabed6a2c7c9e5"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.0"
+    version: "3.4.0+1"
   syntax_highlight:
     dependency: "direct main"
     description:
