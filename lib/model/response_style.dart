@@ -220,7 +220,7 @@ final class ResponseStyleState extends Equatable {
   }
 
   factory ResponseStyleState.all() {
-    return ResponseStyleState(enabledRoutes: ResponseStyleRoute.values);
+    return const ResponseStyleState(enabledRoutes: ResponseStyleRoute.values);
   }
 
   bool enabledFor(ResponseStyleRoute route) {

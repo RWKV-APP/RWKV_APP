@@ -143,10 +143,10 @@ class Settings extends ConsumerWidget {
                           behavior: HitTestBehavior.opaque,
                           onTap: () => _openRWKVMobileCommit(normalizedCommitId),
                           child: Container(
-                            decoration: BD(
+                            decoration: const BD(
                               color: kC,
                             ),
-                            padding: EI.a(4),
+                            padding: const EI.a(4),
                             child: Text(
                               s.inference_engine_version(shortCommitId),
                               style: const TS(s: 12),
