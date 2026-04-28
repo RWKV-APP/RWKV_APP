@@ -327,7 +327,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["npu", "translate"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1769780125
       },
       {
@@ -434,7 +434,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["npu", "translate"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1770118629
       },
       {
@@ -554,7 +554,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1770109346
       },
       {
@@ -808,7 +808,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1770702846
       },
       {
@@ -905,7 +905,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1776790237
       },
       {
@@ -1037,7 +1037,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu", "batch"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1776956002
       },
       {
@@ -1160,7 +1160,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1770113047
       },
       {
@@ -1269,7 +1269,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1770118583
       },
       {
@@ -1388,7 +1388,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["reason", "npu"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1769780697
       },
       {
@@ -1552,7 +1552,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["npu", "core"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1769780369
       },
       {
@@ -1676,7 +1676,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1769780396
       },
       {
@@ -1794,7 +1794,7 @@
         "platforms": ["windows"],
         "backends": ["qnn"],
         "tags": ["npu", "core", "spark"],
-        "socLimitations": ["X Elite"],
+        "socLimitations": ["X Elite", "X Plus", "X1"],
         "date": 1769780063
       },
       {
