@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halo/halo.dart';
-import 'package:halo_state/halo_state.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
@@ -231,7 +230,7 @@ class _BatchSlotItem extends ConsumerWidget {
       padding: .only(right: isLast ? 0 : _kSlotGap),
       child: GD(
         onTap: () {
-          P.msg.batchSelection(msg).q = slotIndex;
+          P.chat.onBatchSlotSelected(msg: msg, slotIndex: slotIndex, slotContent: data);
         },
         child: Container(
           constraints: BoxConstraints(
@@ -405,6 +404,8 @@ class _SlotContent extends ConsumerWidget {
           ),
         ),
         if (hasQuestion) const SizedBox(height: 8),
+        if (hasQuestion) _UserQuestionCard(question: question!),
+        if (hasQuestion) const SizedBox(height: 8),
         Expanded(
           child: RepaintBoundary(
             child: Stack(
@@ -417,16 +418,9 @@ class _SlotContent extends ConsumerWidget {
                       child: SingleChildScrollView(
                         controller: scrollController,
                         padding: const .only(bottom: 16, top: 8),
-                        child: Column(
-                          crossAxisAlignment: .start,
-                          children: [
-                            if (hasQuestion) _UserQuestionCard(question: question!),
-                            if (hasQuestion) const SizedBox(height: 8),
-                            _MarkdownBody(
-                              data: data,
-                              streaming: streaming,
-                            ),
-                          ],
+                        child: _MarkdownBody(
+                          data: data,
+                          streaming: streaming,
                         ),
                       ),
                     ),

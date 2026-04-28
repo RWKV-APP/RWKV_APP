@@ -117,11 +117,51 @@ class ResponseStylePanel extends ConsumerWidget {
                 ),
                 Padding(
                   padding: .only(left: 12, right: 12, bottom: 12 + bottomPadding),
-                  child: const _ResponseStyleSelectAllButton(),
+                  child: const Column(
+                    mainAxisSize: .min,
+                    children: [
+                      _ResponseStyleRandomQuestionsButton(),
+                      SizedBox(height: 8),
+                      _ResponseStyleSelectAllButton(),
+                    ],
+                  ),
                 ),
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _ResponseStyleRandomQuestionsButton extends ConsumerWidget {
+  const _ResponseStyleRandomQuestionsButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final s = S.of(context);
+    final responseStyle = ref.watch(P.chat.responseStyle);
+    final count = responseStyle.activeCount;
+
+    return SizedBox(
+      width: double.infinity,
+      height: 42,
+      child: FilledButton.icon(
+        onPressed: P.chat.onResponseStyleRandomQuestionsTapped,
+        icon: const Icon(Icons.shuffle),
+        label: Text(
+          s.response_style_random_questions(count),
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: theme.colorScheme.onPrimary,
+            fontWeight: .w700,
+          ),
+        ),
+        style: FilledButton.styleFrom(
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: theme.colorScheme.onPrimary,
+          shape: RoundedRectangleBorder(borderRadius: .circular(8)),
         ),
       ),
     );

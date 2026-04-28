@@ -199,6 +199,19 @@ extension $Chat on _Chat {
     P.msg._clear();
   }
 
+  void onBatchSlotSelected({
+    required Message msg,
+    required int slotIndex,
+    String? slotContent,
+  }) {
+    P.msg.batchSelection(msg).q = slotIndex;
+    P.conversation.updateCurrentConvSubtitleFromMessage(
+      msg,
+      selectedBatch: slotIndex,
+      contentOverride: slotContent,
+    );
+  }
+
   Future<void> onDeleteBranchPressed({
     required Message msg,
   }) async {
@@ -448,6 +461,43 @@ extension $Chat on _Chat {
     await _applyResponseStyleState(nextState);
   }
 
+  Future<void> onResponseStyleRandomQuestionsTapped() async {
+    final receiving = P.rwkv.generating.q;
+    if (receiving) {
+      Alert.info(S.current.please_wait_for_the_model_to_finish_generating);
+      return;
+    }
+
+    if (!checkModelSelection(preferredDemoType: .chat)) return;
+
+    final model = P.rwkv.latestModel.q;
+    if (model == null) {
+      ModelSelector.show();
+      return;
+    }
+
+    final routes = responseStyle.q.enabledRoutesInOrder;
+    final routeCount = routes.length;
+    if (!_canUseResponseStyleRouteCount(routeCount)) {
+      Alert.warning(S.current.response_style_batch_not_supported(routeCount));
+      return;
+    }
+
+    final questions = P.suggestion.pickRandomChatPrompts(routeCount);
+    if (questions.length < routeCount) {
+      Alert.warning(S.current.response_style_random_questions_not_enough(routeCount), position: AlertPosition.bottom);
+      return;
+    }
+
+    _clearResponseStyleSequentialState();
+    final sent = await _sendResponseStyleRandomQuestions(
+      routes: routes,
+      questions: questions,
+    );
+    if (!sent) return;
+    pop();
+  }
+
   void resetResponseStyle() {
     responseStyle.q = const ResponseStyleState();
     batchEnabled.q = false;
@@ -519,6 +569,66 @@ extension $Chat on _Chat {
     return _supportsResponseStyleBatchExecution(activeCount);
   }
 
+  MsgNode? _prepareParentNodeForNewChatMessage() {
+    final parentNode = P.msg.msgNode.q.wholeLatestNode;
+    final parentMsg = P.msg.pool.q[parentNode.id];
+    if (parentMsg == null) return parentNode;
+    if (parentMsg.type != MessageType.text) return parentNode;
+    if (parentMsg.isMine) return parentNode;
+    if (!getIsBatch(parentMsg.content)) return parentNode;
+
+    final selection = P.msg.batchSelection(parentMsg).q;
+    if (selection == null) {
+      Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+      return null;
+    }
+
+    final batch = parentMsg.content.split(Config.batchMarker);
+    if (selection < 0 || selection >= batch.length) {
+      Alert.info(S.current.please_select_a_branch_to_continue_the_conversation, position: AlertPosition.bottom);
+      return null;
+    }
+
+    final finalizedContent = batch[selection];
+    P.msg._syncMsg(
+      parentMsg.id,
+      parentMsg.copyWith(
+        content: finalizedContent,
+        clearBatchSlotLabels: true,
+      ),
+    );
+    unawaited(
+      _refreshTokenCountsForMessage(
+        messageId: parentMsg.id,
+        overrideBotContent: finalizedContent,
+        persistToMessage: true,
+      ),
+    );
+
+    final userParentNode = P.msg.msgNode.q.findParentByMsgId(parentMsg.id);
+    if (userParentNode == null) return parentNode;
+    final userParentMsg = P.msg.pool.q[userParentNode.id];
+    if (userParentMsg == null) return parentNode;
+    if (!userParentMsg.isMine) return parentNode;
+
+    final userParts = userParentMsg.content.split(Config.userMsgModifierSep);
+    final userRawContent = userParts[0];
+    final userTail = userParts.length > 1 ? userParts.sublist(1).join(Config.userMsgModifierSep) : "";
+    if (!getIsBatch(userRawContent)) return parentNode;
+
+    final userBatch = userRawContent.split(Config.batchMarker);
+    if (selection >= userBatch.length) return parentNode;
+
+    final selectedQuestion = userBatch[selection];
+    final finalizedUserContent = userTail.isNotEmpty ? selectedQuestion + Config.userMsgModifierSep + userTail : selectedQuestion;
+    P.msg._syncMsg(
+      userParentMsg.id,
+      userParentMsg.copyWith(content: finalizedUserContent),
+    );
+
+    return parentNode;
+  }
+
   List<ResponseStyleRoute> _resolveResponseStyleRoutesForMessage(Message message) {
     final List<String>? labels = message.batchSlotLabels;
     if (labels == null || labels.isEmpty) {
@@ -549,16 +659,166 @@ extension $Chat on _Chat {
     );
   }
 
+  List<String> _replaceLatestHistoryMessage({
+    required List<String> history,
+    required String message,
+  }) {
+    final next = <String>[...history];
+    if (next.isEmpty) {
+      return <String>[message];
+    }
+    next[next.length - 1] = message;
+    return next;
+  }
+
+  List<String>? _resolveResponseStylePerSlotUserMessages({
+    required int messageId,
+    required int routeCount,
+  }) {
+    final targetNode = P.msg.msgNode.q.findNodeByMsgId(messageId);
+    final userNode = targetNode?.parent;
+    if (userNode == null) return null;
+
+    final userMessage = P.msg.pool.q[userNode.id];
+    if (userMessage == null) return null;
+    if (!userMessage.isMine) return null;
+
+    final userParts = userMessage.content.split(Config.userMsgModifierSep);
+    final userRawContent = userParts[0];
+    if (!getIsBatch(userRawContent)) return null;
+
+    final (batch, isBatch, batchCount, _) = getBatchInfo(userRawContent);
+    if (!isBatch) return null;
+    if (batchCount < routeCount) return null;
+
+    final userTail = userParts.length > 1 ? userParts.sublist(1).join(Config.userMsgModifierSep) : "";
+    return <String>[
+      for (int i = 0; i < routeCount; i++) userTail.isNotEmpty ? batch[i] + userTail : batch[i],
+    ];
+  }
+
+  Future<bool> _sendResponseStyleRandomQuestions({
+    required List<ResponseStyleRoute> routes,
+    required List<String> questions,
+  }) async {
+    if (routes.length != questions.length) {
+      return false;
+    }
+
+    if (routes.length == 1) {
+      cancelEditing(clearInput: true);
+      focusNode.unfocus();
+      await _applyResponseStyleState(ResponseStyleState(enabledRoutes: routes));
+      await send(questions.first);
+      return true;
+    }
+
+    final parentNode = _prepareParentNodeForNewChatMessage();
+    if (parentNode == null) {
+      return false;
+    }
+
+    final currentModel = P.rwkv.latestModel.q;
+    if (currentModel == null) {
+      ModelSelector.show();
+      return false;
+    }
+
+    cancelEditing(clearInput: true);
+    focusNode.unfocus();
+    P.msg.clearBottomDetailsStateInScope(scope: "chat_bot_message_bottom");
+
+    final historyPrefix = _history();
+    await _applyResponseStyleState(ResponseStyleState(enabledRoutes: routes));
+    final thinkingMode = P.rwkv.thinkingMode.q;
+    final userBatchContent = questions.join(Config.batchMarker) + Config.batchMarker + "-1";
+    final storedContent = userBatchContent + Config.userMsgModifierSep + thinkingMode.userMsgFooter;
+    final userMsgId = HF.milliseconds;
+    final userMsg = Message(
+      id: userMsgId,
+      content: storedContent,
+      isMine: true,
+      type: MessageType.text,
+      paused: false,
+    );
+    await P.msg._syncMsg(userMsgId, userMsg);
+    final botParentNode = parentNode.add(MsgNode(userMsgId));
+
+    final botMsgId = HF.milliseconds + 1;
+    final botMsg = Message(
+      id: botMsgId,
+      content: "",
+      isMine: false,
+      changing: true,
+      paused: false,
+      modelName: currentModel.name,
+      runningMode: thinkingMode.toString(),
+      rawDecodeParams: _resolveDecodeParamsSnapshotRaw(),
+      batchSlotLabels: routes.map((route) => route.label).toList(growable: false),
+    );
+    await P.msg._syncMsg(botMsgId, botMsg);
+    botParentNode.add(MsgNode(botMsgId));
+
+    P.msg.ids.q = P.msg.msgNode.q.latestMsgIdsWithoutRoot;
+    P.conversation._syncNode();
+    receiveId.q = botMsgId;
+    _setReceivedTokens("", immediateUi: true);
+    P.rwkv.generating.q = true;
+    _liveTokenCountThrottler.cancel();
+    _scheduleRefreshLiveTokenCounts(messageId: botMsgId, liveBotContent: "");
+
+    final slotConfigs = <to_rwkv.ChatBatchSlotConfig>[];
+    for (int i = 0; i < routes.length; i++) {
+      final route = routes[i];
+      String userContent = questions[i];
+      if (thinkingMode.userMsgFooter.isNotEmpty) {
+        userContent = userContent + thinkingMode.userMsgFooter;
+      }
+      slotConfigs.add(
+        to_rwkv.ChatBatchSlotConfig(
+          messages: _buildSingleRouteHistory(
+            history: <String>[...historyPrefix, userContent],
+            route: route,
+          ),
+          enableReasoning: true,
+          forceReasoning: false,
+          forceLang: route.forceLang,
+        ),
+      );
+    }
+
+    P.rwkv.sendMessages(
+      slotConfigs.first.messages,
+      overrideBatchSlotConfigs: slotConfigs,
+    );
+    _checkSensitive(userBatchContent);
+
+    34.msLater.then((_) {
+      scrollToBottom();
+    });
+    return true;
+  }
+
   List<to_rwkv.ChatBatchSlotConfig> _buildResponseStyleSlotConfigs({
     required List<String> history,
     required List<ResponseStyleRoute> routes,
     Map<ResponseStyleRoute, String?>? assistantMessages,
+    List<String>? perSlotUserMessages,
   }) {
-    return <to_rwkv.ChatBatchSlotConfig>[
-      for (final ResponseStyleRoute route in routes)
+    final slotConfigs = <to_rwkv.ChatBatchSlotConfig>[];
+    for (int i = 0; i < routes.length; i++) {
+      final route = routes[i];
+      final perSlotUserMessage = perSlotUserMessages != null && i < perSlotUserMessages.length ? perSlotUserMessages[i] : null;
+      final routeHistory = perSlotUserMessage == null
+          ? history
+          : _replaceLatestHistoryMessage(
+              history: history,
+              message: perSlotUserMessage,
+            );
+      slotConfigs.add(
         to_rwkv.ChatBatchSlotConfig(
           messages: _buildSingleRouteHistory(
-            history: history,
+            history: routeHistory,
             route: route,
             assistantMessage: assistantMessages?[route],
           ),
@@ -566,7 +826,9 @@ extension $Chat on _Chat {
           forceReasoning: false,
           forceLang: route.forceLang,
         ),
-    ];
+      );
+    }
+    return slotConfigs;
   }
 
   Future<void> _setFastThinkingModeForResponseStyleBatch() async {
@@ -647,6 +909,10 @@ extension $Chat on _Chat {
         history: baseHistory,
         routes: routes,
         assistantMessages: assistantMessages,
+        perSlotUserMessages: _resolveResponseStylePerSlotUserMessages(
+          messageId: messageId,
+          routeCount: routes.length,
+        ),
       ),
       forceLang: null,
     );
@@ -1735,8 +2001,15 @@ extension _$Chat on _Chat {
         .where((e) => P.msg.list.q.length <= 2)
         .throttleTime(const Duration(milliseconds: 500), trailing: true, leading: true)
         .listen((e) {
-          final r = e.responseBufferContent.replaceAll('\n', '').replaceAll('</think>', '').replaceAll('<think>', '');
-          P.conversation.updateCurrentConvSubtitle(r);
+          P.conversation.updateCurrentConvSubtitleFromResponseContent(e.responseBufferContent);
+        });
+    event
+        .whereType<from_rwkv.ResponseBatchBufferContent>()
+        .where((e) => P.msg.list.q.length <= 2)
+        .throttleTime(const Duration(milliseconds: 500), trailing: true, leading: true)
+        .listen((e) {
+          final content = e.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
+          P.conversation.updateCurrentConvSubtitleFromResponseContent(content);
         });
 
     P.see.audioFileStreamController.stream.listen(_onNewFileReceived);

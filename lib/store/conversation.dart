@@ -66,6 +66,18 @@ extension _$Conversation on _Conversation {
     final ids = msgNode.allMsgIdsFromRoot;
     return ids;
   }
+
+  bool _shouldUseMessageForCurrentConvSubtitle(Message message) {
+    if (message.isMine) return false;
+    if (message.type != MessageType.text) return false;
+
+    final messages = P.msg.list.q.where((msg) => msg.type == MessageType.text).toList();
+    if (messages.length < 2) return false;
+    if (messages.length > 2) return false;
+
+    final botMessage = messages[1];
+    return botMessage.id == message.id;
+  }
 }
 
 /// Public methods
@@ -165,7 +177,7 @@ extension $Conversation on _Conversation {
     await P.conversation.load();
   }
 
-  void updateCurrentConvSubtitle(String subtitle) async {
+  void updateCurrentConvSubtitle(String subtitle, {bool force = false}) async {
     if (P.rwkv.inTTSTranslateOrSee.q) return;
     final id = P.conversation.currentCreatedAtUS.q;
     if (id == null) {
@@ -173,11 +185,27 @@ extension $Conversation on _Conversation {
     }
     final c = P.conversation.conversations.q.firstWhereOrNull((e) => e.createdAtUS == id);
     if (c == null) return;
-    if (c.subtitle != null && c.subtitle!.length > 100) {
+    if (!force && c.subtitle != null && c.subtitle!.length > 100) {
       return;
     }
-    P.app._db.updateConv(id, subtitle: subtitle);
+    if (c.subtitle == subtitle) {
+      return;
+    }
+    await P.app._db.updateConv(id, subtitle: subtitle);
     await P.conversation.load();
+  }
+
+  void updateCurrentConvSubtitleFromResponseContent(String content, {int? selectedBatch, bool force = false}) {
+    final subtitle = buildConversationSubtitleFromResponseContent(content, selectedBatch: selectedBatch);
+    if (subtitle.isEmpty) return;
+    updateCurrentConvSubtitle(subtitle, force: force);
+  }
+
+  void updateCurrentConvSubtitleFromMessage(Message message, {int? selectedBatch, String? contentOverride}) {
+    if (!_shouldUseMessageForCurrentConvSubtitle(message)) return;
+
+    final content = contentOverride != null && contentOverride.isNotEmpty ? contentOverride : message.content;
+    updateCurrentConvSubtitleFromResponseContent(content, selectedBatch: selectedBatch, force: true);
   }
 
   /// 将 conversation 导出为 .txt 文件

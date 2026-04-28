@@ -136,45 +136,50 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m49(count) =>
       "Эта модель не поддерживает ${count} стилей ответа";
 
-  static String m50(count) => "Выбрано ${count}";
+  static String m50(count) => "${count} случайных вопросов";
 
-  static String m51(text) => "Исходный текст: ${text}";
+  static String m51(count) =>
+      "Недостаточно готовых подсказок для ${count} случайных вопросов";
 
-  static String m52(text) => "Целевой текст: ${text}";
+  static String m52(count) => "Выбрано ${count}";
 
-  static String m53(value) => "Temperature: ${value}";
+  static String m53(text) => "Исходный текст: ${text}";
 
-  static String m54(footer) => "Мышление${footer}-Англ";
+  static String m54(text) => "Целевой текст: ${text}";
 
-  static String m55(footer) => "Мышление${footer}-Англ Длинно";
+  static String m55(value) => "Temperature: ${value}";
 
-  static String m56(footer) => "Мышление${footer}-Англ Коротко";
+  static String m56(footer) => "Мышление${footer}-Англ";
 
-  static String m57(footer) => "Мышление${footer}-Быстро";
+  static String m57(footer) => "Мышление${footer}-Англ Длинно";
 
-  static String m58(footer) => "Мышление${footer}-Авто";
+  static String m58(footer) => "Мышление${footer}-Англ Коротко";
 
-  static String m59(footer) => "Мышление${footer}-Вкл";
+  static String m59(footer) => "Мышление${footer}-Быстро";
 
-  static String m60(footer) => "Мышление${footer}-Выкл";
+  static String m60(footer) => "Мышление${footer}-Авто";
 
-  static String m61(value) => "Top P: ${value}";
+  static String m61(footer) => "Мышление${footer}-Вкл";
 
-  static String m62(count) => "Всего тестовых элементов: ${count}";
+  static String m62(footer) => "Мышление${footer}-Выкл";
 
-  static String m63(port) => "WebSocket-сервис (Порт: ${port})";
+  static String m63(value) => "Top P: ${value}";
 
-  static String m64(id) => "Окно ${id}";
+  static String m64(count) => "Всего тестовых элементов: ${count}";
 
-  static String m65(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m65(port) => "WebSocket-сервис (Порт: ${port})";
+
+  static String m66(id) => "Окно ${id}";
+
+  static String m67(buildArchitecture, operatingSystemArchitecture, url) =>
       "Приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}.\n\nПерейдите на официальную страницу загрузки и скачайте подходящий исполняемый файл:\n${url}";
 
-  static String m66(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m68(buildArchitecture, operatingSystemArchitecture, url) =>
       "Обнаружено несоответствие архитектуры: приложение собрано для ${buildArchitecture}, а архитектура Windows — ${operatingSystemArchitecture}. Скачайте подходящую версию с официальной страницы: ${url}";
 
-  static String m67(count) => "${count} вкладок";
+  static String m69(count) => "${count} вкладок";
 
-  static String m68(modelName) => "Вы сейчас используете ${modelName}";
+  static String m70(modelName) => "Вы сейчас используете ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1416,6 +1421,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Нужно оставить включённым хотя бы один стиль ответа",
     ),
     "response_style_many": MessageLookupByLibrary.simpleMessage("Много стилей"),
+    "response_style_random_questions": m50,
+    "response_style_random_questions_not_enough": m51,
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
       "Только английский",
     ),
@@ -1491,7 +1498,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "Выберите веса из конфигурации или локальный .pth файл",
     ),
-    "selected_count": m50,
+    "selected_count": m52,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage(
       "Отправить сообщение в RWKV",
     ),
@@ -1532,7 +1539,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "small": MessageLookupByLibrary.simpleMessage("Маленький (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("Исходный код"),
-    "source_text": m51,
+    "source_text": m53,
     "space_rendered": MessageLookupByLibrary.simpleMessage(
       "Пробелы отображены",
     ),
@@ -1605,11 +1612,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "system_mode": MessageLookupByLibrary.simpleMessage("Как в системе"),
     "system_prompt": MessageLookupByLibrary.simpleMessage("Системный промпт"),
     "take_photo": MessageLookupByLibrary.simpleMessage("Сделать фото"),
-    "target_text": m52,
+    "target_text": m54,
     "technical_research_group": MessageLookupByLibrary.simpleMessage(
       "Группа технических исследований",
     ),
-    "temperature_with_value": m53,
+    "temperature_with_value": m55,
     "test_data": MessageLookupByLibrary.simpleMessage("Тестовые данные"),
     "test_result": MessageLookupByLibrary.simpleMessage("Результат теста"),
     "test_results": MessageLookupByLibrary.simpleMessage("Результаты тестов"),
@@ -1629,10 +1636,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Затем вы можете начать общаться с RWKV",
         ),
-    "think_button_mode_en": m54,
-    "think_button_mode_en_long": m55,
-    "think_button_mode_en_short": m56,
-    "think_button_mode_fast": m57,
+    "think_button_mode_en": m56,
+    "think_button_mode_en_long": m57,
+    "think_button_mode_en_short": m58,
+    "think_button_mode_fast": m59,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "Режим мышления влияет на производительность модели при рассуждениях",
     ),
@@ -1644,9 +1651,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("Думаю..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("Режим"),
-    "thinking_mode_auto": m58,
-    "thinking_mode_high": m59,
-    "thinking_mode_off": m60,
+    "thinking_mode_auto": m60,
+    "thinking_mode_high": m61,
+    "thinking_mode_off": m62,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон режима мышления",
     ),
@@ -1659,12 +1666,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "thought_result": MessageLookupByLibrary.simpleMessage(
       "Результат размышлений",
     ),
-    "top_p_with_value": m61,
+    "top_p_with_value": m63,
     "total_count": MessageLookupByLibrary.simpleMessage("Общее количество"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage(
       "Использование места хранения",
     ),
-    "total_test_items": m62,
+    "total_test_items": m64,
     "translate": MessageLookupByLibrary.simpleMessage("Перевод"),
     "translating": MessageLookupByLibrary.simpleMessage("Перевод..."),
     "translation": MessageLookupByLibrary.simpleMessage("Перевод"),
@@ -1758,7 +1765,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "web_search_template": MessageLookupByLibrary.simpleMessage(
       "Шаблон веб-поиска",
     ),
-    "websocket_service_port": m63,
+    "websocket_service_port": m65,
     "weights_mangement": MessageLookupByLibrary.simpleMessage(
       "Управление файлами весов",
     ),
@@ -1780,18 +1787,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("Белые"),
     "white_score": MessageLookupByLibrary.simpleMessage("Счет белых"),
     "white_wins": MessageLookupByLibrary.simpleMessage("Белые победили!"),
-    "window_id": m64,
-    "windows_architecture_mismatch_dialog_message": m65,
+    "window_id": m66,
+    "windows_architecture_mismatch_dialog_message": m67,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("Несоответствие архитектуры"),
-    "windows_architecture_mismatch_warning": m66,
+    "windows_architecture_mismatch_warning": m68,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage(
       "Выбрано %d сообщений",
     ),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("Найдено %d страниц"),
-    "x_tabs": m67,
-    "you_are_now_using": m68,
+    "x_tabs": m69,
+    "you_are_now_using": m70,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "Теперь вы можете начать общаться с RWKV",
     ),

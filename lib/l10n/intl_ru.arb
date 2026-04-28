@@ -100,6 +100,8 @@
   "response_style_keep_one": "Нужно оставить включённым хотя бы один стиль ответа",
   "response_style_auto_switched_to_jin": "Автоматически переключено на стиль 今",
   "response_style_batch_not_supported": "Эта модель не поддерживает {count} стилей ответа",
+  "response_style_random_questions": "{count} случайных вопросов",
+  "response_style_random_questions_not_enough": "Недостаточно готовых подсказок для {count} случайных вопросов",
   "response_style_route_jin": "今",
   "response_style_route_jin_detail": "Естественно и прямо",
   "response_style_route_gu": "古",

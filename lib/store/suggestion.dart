@@ -395,6 +395,32 @@ extension _$Suggestion on _Suggestion {
 
 /// Public methods
 extension $Suggestion on _Suggestion {
+  List<String> pickRandomChatPrompts(
+    int count, {
+    List<String> exclude = const <String>[],
+  }) {
+    final excludeSet = exclude.map(_normalizePromptDedupeKey).where((item) => item.isNotEmpty).toSet();
+    final seen = <String>{};
+    final prompts = <String>[];
+    final pool = <Suggestion>[
+      if (useHighScoreApi.q && highScoreTopSuggestions.q.isNotEmpty) ...highScoreTopSuggestions.q,
+      ...config.q.chat.expand((category) => category.items),
+    ].shuffled;
+
+    for (final suggestion in pool) {
+      final prompt = suggestion.prompt.trim();
+      if (prompt.isEmpty) continue;
+      final dedupeKey = _normalizePromptDedupeKey(prompt);
+      if (excludeSet.contains(dedupeKey)) continue;
+      if (seen.contains(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      prompts.add(prompt);
+      if (prompts.length >= count) return prompts;
+    }
+
+    return prompts;
+  }
+
   void refreshChatSuggestions() {
     final useHighScore = useHighScoreApi.q;
     if (useHighScore) {
@@ -404,6 +430,10 @@ extension $Suggestion on _Suggestion {
     }
     chatSuggestions.q = _pickChatSuggestionsByCategory(config.q.chat);
   }
+}
+
+String _normalizePromptDedupeKey(String value) {
+  return value.trim().replaceAll(RegExp(r'\s+'), ' ');
 }
 
 List<SuggestionCategory> _buildHighScoreChatSuggestionCategories(

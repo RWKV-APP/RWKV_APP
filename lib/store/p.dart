@@ -63,6 +63,7 @@ import 'package:zone/db/db.dart';
 import 'package:zone/func/build_chat_history.dart';
 import 'package:zone/func/calculate_total_size_of_dir.dart';
 import 'package:zone/func/check_model_selection.dart';
+import 'package:zone/func/conversation_subtitle.dart';
 import 'package:zone/func/extensions/num.dart';
 import 'package:zone/func/extensions/string.dart';
 import 'package:zone/func/from_assets_to_temp.dart';

@@ -126,45 +126,49 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m49(count) => "当前模型不支持 ${count} 种表达风格";
 
-  static String m50(count) => "已选择 ${count}";
+  static String m50(count) => "${count} 个随机问题";
 
-  static String m51(text) => "源文本: ${text}";
+  static String m51(count) => "预制问题不足，无法发起 ${count} 个随机问题";
 
-  static String m52(text) => "目标文本: ${text}";
+  static String m52(count) => "已选择 ${count}";
 
-  static String m53(value) => "Temperature: ${value}";
+  static String m53(text) => "源文本: ${text}";
 
-  static String m54(footer) => "推理${footer}-英";
+  static String m54(text) => "目标文本: ${text}";
 
-  static String m55(footer) => "推理${footer}-英长";
+  static String m55(value) => "Temperature: ${value}";
 
-  static String m56(footer) => "推理${footer}-英短";
+  static String m56(footer) => "推理${footer}-英";
 
-  static String m57(footer) => "推理${footer}-快";
+  static String m57(footer) => "推理${footer}-英长";
 
-  static String m58(footer) => "推理${footer}-中";
+  static String m58(footer) => "推理${footer}-英短";
 
-  static String m59(footer) => "推理${footer}-高";
+  static String m59(footer) => "推理${footer}-快";
 
-  static String m60(footer) => "推理${footer}-关";
+  static String m60(footer) => "推理${footer}-中";
 
-  static String m61(value) => "Top P: ${value}";
+  static String m61(footer) => "推理${footer}-高";
 
-  static String m62(count) => "总测试项: ${count}";
+  static String m62(footer) => "推理${footer}-关";
 
-  static String m63(port) => "WebSocket 服务 (端口: ${port})";
+  static String m63(value) => "Top P: ${value}";
 
-  static String m64(id) => "窗口 ${id}";
+  static String m64(count) => "总测试项: ${count}";
 
-  static String m65(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m65(port) => "WebSocket 服务 (端口: ${port})";
+
+  static String m66(id) => "窗口 ${id}";
+
+  static String m67(buildArchitecture, operatingSystemArchitecture, url) =>
       "当前应用 Build Architecture 为 ${buildArchitecture}，但 Windows Operating System 为 ${operatingSystemArchitecture}。\n\n请前往官方下载页下载匹配架构的可执行文件：\n${url}";
 
-  static String m66(buildArchitecture, operatingSystemArchitecture, url) =>
+  static String m68(buildArchitecture, operatingSystemArchitecture, url) =>
       "检测到架构不匹配：当前应用 Build Architecture 为 ${buildArchitecture}，但 Windows Operating System 为 ${operatingSystemArchitecture}。请前往官方下载页下载匹配版本：${url}";
 
-  static String m67(count) => "${count} 个标签页";
+  static String m69(count) => "${count} 个标签页";
 
-  static String m68(modelName) => "您当前正在使用 ${modelName}";
+  static String m70(modelName) => "您当前正在使用 ${modelName}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1059,6 +1063,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "至少保留一种表达风格",
     ),
     "response_style_many": MessageLookupByLibrary.simpleMessage("多种风格"),
+    "response_style_random_questions": m50,
+    "response_style_random_questions_not_enough": m51,
     "response_style_route_en_detail": MessageLookupByLibrary.simpleMessage(
       "使用英文回答",
     ),
@@ -1118,7 +1124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_weights_or_local_pth_hint": MessageLookupByLibrary.simpleMessage(
       "选择配置文件中的权重或者本地 .pth 文件",
     ),
-    "selected_count": m50,
+    "selected_count": m52,
     "send_message_to_rwkv": MessageLookupByLibrary.simpleMessage("发送消息给 RWKV"),
     "server_error": MessageLookupByLibrary.simpleMessage("服务器错误"),
     "session_configuration": MessageLookupByLibrary.simpleMessage("会话配置"),
@@ -1143,7 +1149,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip_this_version": MessageLookupByLibrary.simpleMessage("跳过此版本"),
     "small": MessageLookupByLibrary.simpleMessage("小 (90%)"),
     "source_code": MessageLookupByLibrary.simpleMessage("源代码"),
-    "source_text": m51,
+    "source_text": m53,
     "space_rendered": MessageLookupByLibrary.simpleMessage("已渲染空格"),
     "space_symbol_settings": MessageLookupByLibrary.simpleMessage("空格符设置"),
     "space_symbol_style": MessageLookupByLibrary.simpleMessage("空格符样式"),
@@ -1203,9 +1209,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_day_of_week": MessageLookupByLibrary.simpleMessage("星期"),
     "tag_time": MessageLookupByLibrary.simpleMessage("时间"),
     "take_photo": MessageLookupByLibrary.simpleMessage("拍照"),
-    "target_text": m52,
+    "target_text": m54,
     "technical_research_group": MessageLookupByLibrary.simpleMessage("技术研发群"),
-    "temperature_with_value": m53,
+    "temperature_with_value": m55,
     "test_data": MessageLookupByLibrary.simpleMessage("测试数据"),
     "test_result": MessageLookupByLibrary.simpleMessage("测试结果"),
     "test_results": MessageLookupByLibrary.simpleMessage("测试结果"),
@@ -1219,10 +1225,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "theme_lights_out": MessageLookupByLibrary.simpleMessage("黑色"),
     "then_you_can_start_to_chat_with_rwkv":
         MessageLookupByLibrary.simpleMessage("然后您就可以开始与 RWKV 对话了"),
-    "think_button_mode_en": m54,
-    "think_button_mode_en_long": m55,
-    "think_button_mode_en_short": m56,
-    "think_button_mode_fast": m57,
+    "think_button_mode_en": m56,
+    "think_button_mode_en_long": m57,
+    "think_button_mode_en_short": m58,
+    "think_button_mode_fast": m59,
     "think_mode_selector_message": MessageLookupByLibrary.simpleMessage(
       "推理模式会影响模型在推理时的表现",
     ),
@@ -1234,19 +1240,19 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "thinking": MessageLookupByLibrary.simpleMessage("思考中..."),
     "thinking_mode_alert_footer": MessageLookupByLibrary.simpleMessage("模式"),
-    "thinking_mode_auto": m58,
-    "thinking_mode_high": m59,
-    "thinking_mode_off": m60,
+    "thinking_mode_auto": m60,
+    "thinking_mode_high": m61,
+    "thinking_mode_off": m62,
     "thinking_mode_template": MessageLookupByLibrary.simpleMessage("思考模式模板"),
     "this_is_the_hardest_sudoku_in_the_world":
         MessageLookupByLibrary.simpleMessage("这是世界上最难的数独"),
     "this_model_does_not_support_batch_inference":
         MessageLookupByLibrary.simpleMessage("这个模型不支持并行推理, 请选择带有 batch 标签的模型"),
     "thought_result": MessageLookupByLibrary.simpleMessage("思考结果"),
-    "top_p_with_value": m61,
+    "top_p_with_value": m63,
     "total_count": MessageLookupByLibrary.simpleMessage("总数"),
     "total_disk_usage": MessageLookupByLibrary.simpleMessage("存储空间占用量"),
-    "total_test_items": m62,
+    "total_test_items": m64,
     "translate": MessageLookupByLibrary.simpleMessage("翻译"),
     "translating": MessageLookupByLibrary.simpleMessage("翻译中..."),
     "translation": MessageLookupByLibrary.simpleMessage("翻译结果"),
@@ -1320,7 +1326,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "web_search": MessageLookupByLibrary.simpleMessage("联网"),
     "web_search_template": MessageLookupByLibrary.simpleMessage("联网搜索模板"),
-    "websocket_service_port": m63,
+    "websocket_service_port": m65,
     "weights_mangement": MessageLookupByLibrary.simpleMessage("权重文件管理"),
     "weights_saving_directory": MessageLookupByLibrary.simpleMessage(
       "权重文件保存目录",
@@ -1338,16 +1344,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "white": MessageLookupByLibrary.simpleMessage("白方"),
     "white_score": MessageLookupByLibrary.simpleMessage("白方得分"),
     "white_wins": MessageLookupByLibrary.simpleMessage("白方获胜！"),
-    "window_id": m64,
-    "windows_architecture_mismatch_dialog_message": m65,
+    "window_id": m66,
+    "windows_architecture_mismatch_dialog_message": m67,
     "windows_architecture_mismatch_dialog_title":
         MessageLookupByLibrary.simpleMessage("架构不匹配"),
-    "windows_architecture_mismatch_warning": m66,
+    "windows_architecture_mismatch_warning": m68,
     "world": MessageLookupByLibrary.simpleMessage("See"),
     "x_message_selected": MessageLookupByLibrary.simpleMessage("已选 %d 条消息"),
     "x_pages_found": MessageLookupByLibrary.simpleMessage("已找到 %d 个相关网页"),
-    "x_tabs": m67,
-    "you_are_now_using": m68,
+    "x_tabs": m69,
+    "you_are_now_using": m70,
     "you_can_now_start_to_chat_with_rwkv": MessageLookupByLibrary.simpleMessage(
       "现在可以开始与 RWKV 聊天了",
     ),

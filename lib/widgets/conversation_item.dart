@@ -214,6 +214,8 @@ class ConversationItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final _ = theme;
     final qb = ref.watch(P.app.qb);
     final color = P.conversation.getConversationColor(conversation.id);
     final isBatchMode = ref.watch(P.conversation.isBatchMode);
@@ -273,7 +275,7 @@ class ConversationItem extends ConsumerWidget {
                     conversation.subtitle,
                     style: const TS(s: 12, c: Colors.grey),
                     overflow: .ellipsis,
-                    maxLines: 2,
+                    maxLines: 1,
                   ),
                 ],
               ),

@@ -681,7 +681,15 @@ List<String>? _resolvePerSlotQuestions({required model.Message msg}) {
   final parentContent = parentMsg.content.split(Config.userMsgModifierSep)[0];
   final (batch, isBatch, batchCount, _) = getBatchInfo(parentContent);
   if (!isBatch) return null;
-  return batch.sublist(0, batchCount);
+  final questions = batch.sublist(0, batchCount);
+  if (questions.isEmpty) return null;
+
+  final firstQuestion = questions.first.trim();
+  for (final question in questions) {
+    if (question.trim() != firstQuestion) return questions;
+  }
+
+  return null;
 }
 
 _BubbleStyleData _resolveBubbleStyleData({

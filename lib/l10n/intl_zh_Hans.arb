@@ -100,6 +100,8 @@
   "response_style_keep_one": "至少保留一种表达风格",
   "response_style_auto_switched_to_jin": "已自动切换为「今」风格",
   "response_style_batch_not_supported": "当前模型不支持 {count} 种表达风格",
+  "response_style_random_questions": "{count} 个随机问题",
+  "response_style_random_questions_not_enough": "预制问题不足，无法发起 {count} 个随机问题",
   "response_style_route_jin": "今",
   "response_style_route_jin_detail": "自然、直接",
   "response_style_route_gu": "古",

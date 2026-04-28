@@ -919,6 +919,26 @@ class S {
     );
   }
 
+  /// `{count} 个随机问题`
+  String response_style_random_questions(Object count) {
+    return Intl.message(
+      '$count 个随机问题',
+      name: 'response_style_random_questions',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `预制问题不足，无法发起 {count} 个随机问题`
+  String response_style_random_questions_not_enough(Object count) {
+    return Intl.message(
+      '预制问题不足，无法发起 $count 个随机问题',
+      name: 'response_style_random_questions_not_enough',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `今`
   String get response_style_route_jin {
     return Intl.message(
