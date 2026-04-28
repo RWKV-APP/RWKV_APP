@@ -71,6 +71,7 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
     }
   }
 
+  /// User message 后缀
   String? get userPromptSuffix {
     switch (this) {
       case .jin:
@@ -88,19 +89,7 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
     }
   }
 
-  int get forceLang {
-    switch (this) {
-      case .en:
-        return rwkv.FORCE_LANG_EN;
-      case .jin:
-      case .gu:
-      case .mao:
-      case .ja:
-      case .yue:
-        return rwkv.FORCE_LANG_NONE;
-    }
-  }
-
+  /// Assistant 输出前缀
   String? get defaultAssistantPrefix {
     switch (this) {
       case .jin:
@@ -111,6 +100,19 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
         return null;
       case .mao:
         return "<think>喵";
+    }
+  }
+
+  int get forceLang {
+    switch (this) {
+      case .en:
+        return rwkv.FORCE_LANG_EN;
+      case .jin:
+      case .gu:
+      case .mao:
+      case .ja:
+      case .yue:
+        return rwkv.FORCE_LANG_NONE;
     }
   }
 
