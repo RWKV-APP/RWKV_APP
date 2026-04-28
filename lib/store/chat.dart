@@ -458,6 +458,9 @@ extension $Chat on _Chat {
     ResponseStyleState state,
   ) async {
     responseStyle.q = state;
+    if (state.activeCount > 1) {
+      await _setFastThinkingModeForResponseStyleBatch();
+    }
     await _syncBatchStateForResponseStyle(activeCount: state.activeCount);
   }
 
@@ -549,24 +552,28 @@ extension $Chat on _Chat {
   List<to_rwkv.ChatBatchSlotConfig> _buildResponseStyleSlotConfigs({
     required List<String> history,
     required List<ResponseStyleRoute> routes,
-    Map<ResponseStyleRoute, String?>? assistantPrefixes,
+    Map<ResponseStyleRoute, String?>? assistantMessages,
   }) {
-    final bool batchRequiresAssistantPrefixes = responseStyleBatchRequiresAssistantPrefixes(
-      routes: routes,
-      assistantPrefixes: assistantPrefixes,
-    );
-
     return <to_rwkv.ChatBatchSlotConfig>[
       for (final ResponseStyleRoute route in routes)
         to_rwkv.ChatBatchSlotConfig(
-          messages: _buildSingleRouteHistory(history: history, route: route),
-          assistantPrefix: route.batchAssistantPrefix(
-            batchRequiresAssistantPrefixes: batchRequiresAssistantPrefixes,
-            assistantPrefix: assistantPrefixes?[route],
+          messages: _buildSingleRouteHistory(
+            history: history,
+            route: route,
+            assistantMessage: assistantMessages?[route],
           ),
+          enableReasoning: true,
+          forceReasoning: false,
           forceLang: route.forceLang,
         ),
     ];
+  }
+
+  Future<void> _setFastThinkingModeForResponseStyleBatch() async {
+    if (P.rwkv.thinkingMode.q == .fast) {
+      return;
+    }
+    await P.rwkv.setModelConfig(thinkingMode: .fast);
   }
 
   List<String> _buildRequestHistoryForResponseStyleRoute({
@@ -604,7 +611,7 @@ extension $Chat on _Chat {
 
     if (routes.length == 1) {
       final ResponseStyleRoute route = routes.first;
-      final String? assistantMessage = currentMessage.content.isNotEmpty ? currentMessage.content : route.resolveAssistantMessage(null);
+      final String? assistantMessage = currentMessage.content.isNotEmpty ? currentMessage.content : null;
       return (
         messages: _buildSingleRouteHistory(
           history: baseHistory,
@@ -627,11 +634,11 @@ extension $Chat on _Chat {
       return null;
     }
 
-    final Map<ResponseStyleRoute, String?> assistantPrefixes = <ResponseStyleRoute, String?>{};
+    final Map<ResponseStyleRoute, String?> assistantMessages = <ResponseStyleRoute, String?>{};
     for (int i = 0; i < routes.length; i++) {
       final ResponseStyleRoute route = routes[i];
-      final String? rawValue = i < batch.length ? batch[i] : null;
-      assistantPrefixes[route] = route.restoreAssistantPrefix(rawValue);
+      final String rawValue = i < batch.length ? batch[i] : "";
+      assistantMessages[route] = rawValue;
     }
 
     return (
@@ -639,7 +646,7 @@ extension $Chat on _Chat {
       slotConfigs: _buildResponseStyleSlotConfigs(
         history: baseHistory,
         routes: routes,
-        assistantPrefixes: assistantPrefixes,
+        assistantMessages: assistantMessages,
       ),
       forceLang: null,
     );
@@ -705,6 +712,7 @@ extension $Chat on _Chat {
     int startRouteIndex = 0,
     String? currentAssistantMessage,
   }) async {
+    await _setFastThinkingModeForResponseStyleBatch();
     _responseStyleSequentialActive = true;
     _responseStyleSequentialStopRequested = false;
     _responseStyleSequentialMessageId = messageId;
@@ -1425,6 +1433,7 @@ extension $Chat on _Chat {
     if (!inSee) {
       final List<ResponseStyleRoute> routes = responseStyle.q.enabledRoutesInOrder;
       if (routes.length > 1) {
+        await _setFastThinkingModeForResponseStyleBatch();
         if (_shouldUseResponseStyleBatchExecution(routes.length)) {
           final List<to_rwkv.ChatBatchSlotConfig> slotConfigs = _buildResponseStyleSlotConfigs(
             history: history,
@@ -1505,6 +1514,9 @@ extension $Chat on _Chat {
     }
     final responseStyleResumeRequest = _buildResponseStyleResumeRequest(messageId: id);
     if (responseStyleResumeRequest != null) {
+      if (responseStyleResumeRequest.slotConfigs != null) {
+        await _setFastThinkingModeForResponseStyleBatch();
+      }
       P.rwkv.sendMessages(
         responseStyleResumeRequest.messages,
         batchSize: responseStyleResumeRequest.slotConfigs == null && effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
@@ -1656,7 +1668,7 @@ extension $Chat on _Chat {
       }
 
       if (!isTranslate) {
-        P.rwkv.setModelConfig(thinkingMode: P.rwkv.preferredThinkingModeForCurrentChatModel());
+        P.rwkv.setModelConfig(thinkingMode: P.rwkv.thinkingModeForCurrentChatConfig());
       }
 
       for (var i = 0; i < 3; i++) {

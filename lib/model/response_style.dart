@@ -5,54 +5,23 @@ import 'package:rwkv_mobile_flutter/rwkv_mobile_ffi.dart' as rwkv;
 // Project imports:
 import 'package:zone/gen/l10n.dart';
 
-enum ResponseStyleRoute { jin, gu, mao, en, ja, yue }
+enum ResponseStyleRoute {
+  jin,
+  gu,
+  mao,
+  en,
+  ja,
+  yue
+  ;
 
-List<ResponseStyleRoute> normalizeResponseStyleRoutes(
-  Iterable<ResponseStyleRoute> routes,
-) {
-  final routeSet = routes.toSet();
-  return ResponseStyleRoute.values.where(routeSet.contains).toList(growable: false);
-}
-
-ResponseStyleRoute? responseStyleRouteFromLabel(String label) {
-  final normalizedLabel = label.trim();
-  for (final route in ResponseStyleRoute.values) {
-    if (route.label == normalizedLabel) {
-      return route;
-    }
-  }
-  return null;
-}
-
-bool responseStyleBatchRequiresAssistantPrefixes({
-  required Iterable<ResponseStyleRoute> routes,
-  Map<ResponseStyleRoute, String?>? assistantPrefixes,
-}) {
-  for (final route in routes) {
-    if (route.defaultAssistantPrefix != null) {
-      return true;
-    }
-  }
-
-  if (assistantPrefixes == null) {
-    return false;
-  }
-
-  for (final prefix in assistantPrefixes.values) {
-    if (prefix != null) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-extension ResponseStyleRouteX on ResponseStyleRoute {
-  static const ResponseStyleRoute defaultRoute = ResponseStyleRoute.jin;
-
-  bool get isDefaultRoute {
-    return this == defaultRoute;
-  }
+  String? get userPromptSuffix => switch (this) {
+    jin => null,
+    gu => " 请用文言文回答",
+    mao => " 请扮演猫娘回答",
+    en => " 请用英语回答",
+    ja => " 请用日语回答",
+    yue => " 请用香港粵語回答",
+  };
 
   String get label {
     switch (this) {
@@ -71,38 +40,6 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
     }
   }
 
-  /// User message 后缀
-  String? get userPromptSuffix {
-    switch (this) {
-      case .jin:
-        return null;
-      case .gu:
-        return " 请用文言文回答";
-      case .mao:
-        return " 请用可爱的猫咪口吻回答，多使用“喵”，保持猫风格";
-      case .en:
-        return " Use English only. Direct answer. No preface. Never speak in Chinese. Do not use any Chinese characters";
-      case .ja:
-        return " 日本語のみ。前置きなしで直接回答。";
-      case .yue:
-        return " 全程香港書面粵語。唔好開場白，直接答。";
-    }
-  }
-
-  /// Assistant 输出前缀
-  String? get defaultAssistantPrefix {
-    switch (this) {
-      case .jin:
-      case .gu:
-      case .en:
-      case .ja:
-      case .yue:
-        return null;
-      case .mao:
-        return "<think>喵";
-    }
-  }
-
   int get forceLang {
     switch (this) {
       case .en:
@@ -114,6 +51,31 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
       case .yue:
         return rwkv.FORCE_LANG_NONE;
     }
+  }
+}
+
+List<ResponseStyleRoute> normalizeResponseStyleRoutes(
+  Iterable<ResponseStyleRoute> routes,
+) {
+  final routeSet = routes.toSet();
+  return ResponseStyleRoute.values.where(routeSet.contains).toList(growable: false);
+}
+
+ResponseStyleRoute? responseStyleRouteFromLabel(String label) {
+  final normalizedLabel = label.trim();
+  for (final route in ResponseStyleRoute.values) {
+    if (route.label == normalizedLabel) {
+      return route;
+    }
+  }
+  return null;
+}
+
+extension ResponseStyleRouteX on ResponseStyleRoute {
+  static const ResponseStyleRoute defaultRoute = ResponseStyleRoute.jin;
+
+  bool get isDefaultRoute {
+    return this == defaultRoute;
   }
 
   String detail(S s) {
@@ -141,48 +103,14 @@ extension ResponseStyleRouteX on ResponseStyleRoute {
       history,
       userPromptSuffix,
     );
-    final resolvedAssistantMessage = resolveAssistantMessage(assistantMessage);
-    if (resolvedAssistantMessage == null) {
+    if (assistantMessage == null) {
       return nextHistory;
     }
 
     return <String>[
       ...nextHistory,
-      resolvedAssistantMessage,
+      assistantMessage,
     ];
-  }
-
-  String? resolveAssistantMessage(String? assistantMessage) {
-    return assistantMessage ?? defaultAssistantPrefix;
-  }
-
-  String? batchAssistantPrefix({
-    required bool batchRequiresAssistantPrefixes,
-    String? assistantPrefix,
-  }) {
-    if (assistantPrefix != null) {
-      return assistantPrefix;
-    }
-
-    final defaultAssistantPrefix = this.defaultAssistantPrefix;
-    if (defaultAssistantPrefix != null) {
-      return defaultAssistantPrefix;
-    }
-    if (batchRequiresAssistantPrefixes) {
-      return "";
-    }
-    return null;
-  }
-
-  String? restoreAssistantPrefix(String? rawValue) {
-    final defaultAssistantPrefix = this.defaultAssistantPrefix;
-    if (defaultAssistantPrefix == null) {
-      return rawValue;
-    }
-    if (rawValue == null || rawValue.isEmpty) {
-      return defaultAssistantPrefix;
-    }
-    return rawValue;
   }
 }
 

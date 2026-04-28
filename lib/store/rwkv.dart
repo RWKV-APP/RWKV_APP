@@ -312,7 +312,7 @@ extension $RWKVLoad on _RWKV {
       fileInfo: modelID,
     };
 
-    await setModelConfig(thinkingMode: preferredThinkingModeForCurrentChatModel());
+    await setModelConfig(thinkingMode: thinkingModeForCurrentChatConfig());
     await resetSamplerParams(enableReasoning: enableReasoning);
     await resetMaxLength(enableReasoning: enableReasoning);
     // send(to_rwkv.GetSamplerParams()); NOTE: already get in resetSamplerParams, so no need here
@@ -916,6 +916,9 @@ extension $RWKV on _RWKV {
   }) async {
     qqr(thinkingMode);
     final nextThinkingMode = thinkingMode ?? _thinkingMode.q;
+    if (nextThinkingMode != .fast && P.chat.responseStyle.q.activeCount > 1) {
+      P.chat.resetResponseStyle();
+    }
     _thinkingMode.q = nextThinkingMode;
     if (rememberThinkingMode) {
       unawaited(P.preference.saveThinkingMode(nextThinkingMode));
@@ -950,6 +953,13 @@ extension $RWKV on _RWKV {
       .lighting => .lighting,
       _ => .lighting,
     };
+  }
+
+  thinking_mode.ThinkingMode thinkingModeForCurrentChatConfig() {
+    if (P.chat.responseStyle.q.activeCount > 1) {
+      return .fast;
+    }
+    return preferredThinkingModeForCurrentChatModel();
   }
 
   Future<void> resetSamplerParams({required bool enableReasoning}) async {
@@ -1268,7 +1278,7 @@ extension $RWKV on _RWKV {
     }
 
     if (!isTranslate) {
-      setModelConfig(thinkingMode: preferredThinkingModeForCurrentChatModel());
+      setModelConfig(thinkingMode: thinkingModeForCurrentChatConfig());
     }
 
     for (var i = 0; i < 3; i++) {

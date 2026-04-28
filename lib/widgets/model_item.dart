@@ -187,7 +187,7 @@ class ModelItem extends ConsumerWidget {
     }
 
     if (!isTranslate) {
-      P.rwkv.setModelConfig(thinkingMode: P.rwkv.preferredThinkingModeForCurrentChatModel());
+      P.rwkv.setModelConfig(thinkingMode: P.rwkv.thinkingModeForCurrentChatConfig());
     }
 
     P.preference.saveLastChatModel({
