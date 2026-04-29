@@ -127,7 +127,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m49(count) => "このモデルは ${count} 種の応答スタイルに対応していません";
 
-  static String m50(count) => "${count} 件のランダム質問";
+  static String m50(count) => "同時に ${count} 件のランダム質問に回答";
 
   static String m51(count) => "${count} 件のランダム質問に使えるプリセットが足りません";
 

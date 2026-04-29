@@ -919,10 +919,10 @@ class S {
     );
   }
 
-  /// `{count} 个随机问题`
+  /// `同时回答 {count} 个随机问题`
   String response_style_random_questions(Object count) {
     return Intl.message(
-      '$count 个随机问题',
+      '同时回答 $count 个随机问题',
       name: 'response_style_random_questions',
       desc: '',
       args: [count],

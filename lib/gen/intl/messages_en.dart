@@ -136,7 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m49(count) =>
       "This model does not support ${count} response styles";
 
-  static String m50(count) => "${count} Random Questions";
+  static String m50(count) => "Answer ${count} Random Questions at Once";
 
   static String m51(count) =>
       "Not enough preset prompts for ${count} random questions";

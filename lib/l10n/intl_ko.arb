@@ -100,7 +100,7 @@
   "response_style_keep_one": "응답 스타일을 최소 하나는 켜 두어야 합니다",
   "response_style_auto_switched_to_jin": "자동으로 今 스타일로 전환했습니다",
   "response_style_batch_not_supported": "이 모델은 {count}개의 응답 스타일을 지원하지 않습니다",
-  "response_style_random_questions": "무작위 질문 {count}개",
+  "response_style_random_questions": "동시에 무작위 질문 {count}개에 답변",
   "response_style_random_questions_not_enough": "무작위 질문 {count}개를 만들 프리셋이 부족합니다",
   "response_style_route_jin": "今",
   "response_style_route_jin_detail": "자연스럽고 직접",

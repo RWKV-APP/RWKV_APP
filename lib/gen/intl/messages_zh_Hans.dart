@@ -126,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m49(count) => "当前模型不支持 ${count} 种表达风格";
 
-  static String m50(count) => "${count} 个随机问题";
+  static String m50(count) => "同时回答 ${count} 个随机问题";
 
   static String m51(count) => "预制问题不足，无法发起 ${count} 个随机问题";
 

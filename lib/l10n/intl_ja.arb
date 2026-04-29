@@ -100,7 +100,7 @@
   "response_style_keep_one": "少なくとも 1 つの応答スタイルを有効にしてください",
   "response_style_auto_switched_to_jin": "自動的に今スタイルへ切り替えました",
   "response_style_batch_not_supported": "このモデルは {count} 種の応答スタイルに対応していません",
-  "response_style_random_questions": "{count} 件のランダム質問",
+  "response_style_random_questions": "同時に {count} 件のランダム質問に回答",
   "response_style_random_questions_not_enough": "{count} 件のランダム質問に使えるプリセットが足りません",
   "response_style_route_jin": "今",
   "response_style_route_jin_detail": "自然に直接回答",

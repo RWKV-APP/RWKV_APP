@@ -136,7 +136,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m49(count) =>
       "Эта модель не поддерживает ${count} стилей ответа";
 
-  static String m50(count) => "${count} случайных вопросов";
+  static String m50(count) =>
+      "Одновременно ответить на случайные вопросы (${count})";
 
   static String m51(count) =>
       "Недостаточно готовых подсказок для ${count} случайных вопросов";

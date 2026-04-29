@@ -100,7 +100,7 @@
   "response_style_keep_one": "至少保留一種表達風格",
   "response_style_auto_switched_to_jin": "已自動切換為今風格",
   "response_style_batch_not_supported": "當前模型不支援 {count} 種表達風格",
-  "response_style_random_questions": "{count} 個隨機問題",
+  "response_style_random_questions": "同時回答 {count} 個隨機問題",
   "response_style_random_questions_not_enough": "預製問題不足，無法發起 {count} 個隨機問題",
   "response_style_route_jin": "今",
   "response_style_route_jin_detail": "自然、直接",
