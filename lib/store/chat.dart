@@ -677,6 +677,16 @@ extension $Chat on _Chat {
     required int messageId,
     required int routeCount,
   }) {
+    return _resolvePerSlotUserMessagesForBatch(
+      messageId: messageId,
+      batchCount: routeCount,
+    );
+  }
+
+  List<String>? _resolvePerSlotUserMessagesForBatch({
+    required int messageId,
+    required int batchCount,
+  }) {
     final targetNode = P.msg.msgNode.q.findNodeByMsgId(messageId);
     final userNode = targetNode?.parent;
     if (userNode == null) return null;
@@ -689,13 +699,13 @@ extension $Chat on _Chat {
     final userRawContent = userParts[0];
     if (!getIsBatch(userRawContent)) return null;
 
-    final (batch, isBatch, batchCount, _) = getBatchInfo(userRawContent);
+    final (batch, isBatch, resolvedBatchCount, _) = getBatchInfo(userRawContent);
     if (!isBatch) return null;
-    if (batchCount < routeCount) return null;
+    if (resolvedBatchCount < batchCount) return null;
 
     final userTail = userParts.length > 1 ? userParts.sublist(1).join(Config.userMsgModifierSep) : "";
     return <String>[
-      for (int i = 0; i < routeCount; i++) userTail.isNotEmpty ? batch[i] + userTail : batch[i],
+      for (int i = 0; i < batchCount; i++) userTail.isNotEmpty ? batch[i] + userTail : batch[i],
     ];
   }
 
@@ -917,6 +927,64 @@ extension $Chat on _Chat {
         ),
       ),
       forceLang: null,
+    );
+  }
+
+  ({List<String> messages, List<List<String>> batchMessages})? _buildBatchResumeRequest({
+    required int messageId,
+  }) {
+    if (P.app.pageKey.q != .chat) {
+      return null;
+    }
+
+    final Message? currentMessage = P.msg.pool.q[messageId];
+    if (currentMessage == null) {
+      return null;
+    }
+
+    final (List<String> batch, bool isBatch, int batchCount, int? selectedBatch) = getBatchInfo(currentMessage.content);
+    if (!isBatch) {
+      return null;
+    }
+    if (batchCount <= 1) {
+      return null;
+    }
+    if (selectedBatch != null) {
+      return null;
+    }
+
+    final List<String>? baseHistory = _historyBeforeBotMessage(messageId: messageId);
+    if (baseHistory == null || baseHistory.isEmpty) {
+      return null;
+    }
+
+    final List<String>? perSlotUserMessages = _resolvePerSlotUserMessagesForBatch(
+      messageId: messageId,
+      batchCount: batchCount,
+    );
+    final batchMessages = <List<String>>[];
+    for (int i = 0; i < batchCount; i++) {
+      final String partialAssistantMessage = i < batch.length ? batch[i] : "";
+      final String? perSlotUserMessage = perSlotUserMessages != null && i < perSlotUserMessages.length ? perSlotUserMessages[i] : null;
+      final List<String> slotHistory = perSlotUserMessage == null
+          ? <String>[...baseHistory]
+          : _replaceLatestHistoryMessage(
+              history: baseHistory,
+              message: perSlotUserMessage,
+            );
+      batchMessages.add(<String>[
+        ...slotHistory,
+        partialAssistantMessage,
+      ]);
+    }
+
+    if (batchMessages.isEmpty) {
+      return null;
+    }
+
+    return (
+      messages: batchMessages.first,
+      batchMessages: batchMessages,
     );
   }
 
@@ -1790,6 +1858,16 @@ extension $Chat on _Chat {
         batchSize: responseStyleResumeRequest.slotConfigs == null && effectiveBatchEnabled.q ? effectiveBatchCount.q : 1,
         overrideBatchSlotConfigs: responseStyleResumeRequest.slotConfigs,
         forceLang: responseStyleResumeRequest.forceLang,
+      );
+      _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
+      return;
+    }
+    final batchResumeRequest = _buildBatchResumeRequest(messageId: id);
+    if (batchResumeRequest != null) {
+      P.rwkv.sendMessages(
+        batchResumeRequest.messages,
+        batchSize: batchResumeRequest.batchMessages.length,
+        overrideBatchMessages: batchResumeRequest.batchMessages,
       );
       _scheduleRefreshLiveTokenCounts(messageId: id, liveBotContent: receivedTokens.q);
       return;

@@ -220,7 +220,7 @@ class BotMessageBottom extends ConsumerWidget {
     const actionAnimDuration = Duration(milliseconds: 200);
     const Curve actionAnimCurve = Curves.easeOutCubic;
     final resumeMatched = disableDefaultActions ? true : receiveId == msg.id;
-    final showResumeAction = showResumeButton && paused && resumeMatched && !isBatch;
+    final showResumeAction = showResumeButton && paused && resumeMatched;
     final showEditAction = showEditButton && !changing;
     ref.watch(P.msg.msgNode);
 
@@ -545,24 +545,27 @@ class BotMessageBottom extends ConsumerWidget {
               ),
             ),
           if (showResumeAction)
-            KeyedSubtree(
-              key: const ValueKey<String>("resume"),
-              child: Tooltip(
-                message: s.chat_resume,
-                child: GestureDetector(
-                  onTap: _onResumePressed,
-                  child: Container(
-                    padding: .zero,
+            Padding(
+              padding: .only(right: isBatch ? 8 : 0),
+              child: KeyedSubtree(
+                key: const ValueKey<String>("resume"),
+                child: Tooltip(
+                  message: s.chat_resume,
+                  child: GestureDetector(
+                    onTap: _onResumePressed,
                     child: Container(
-                      padding: const .symmetric(horizontal: 4, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: .all(color: primaryColor.q(.67)),
-                        borderRadius: .circular(4),
-                      ),
-                      child: Text(
-                        s.chat_resume,
-                        style: TS(c: primaryColor, w: .w600, s: 16),
+                      padding: .zero,
+                      child: Container(
+                        padding: const .symmetric(horizontal: 4, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: .all(color: primaryColor.q(.67)),
+                          borderRadius: .circular(4),
+                        ),
+                        child: Text(
+                          s.chat_resume,
+                          style: TS(c: primaryColor, w: .w600, s: 16),
+                        ),
                       ),
                     ),
                   ),

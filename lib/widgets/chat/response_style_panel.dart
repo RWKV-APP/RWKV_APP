@@ -32,9 +32,9 @@ class ResponseStylePanel extends ConsumerWidget {
       isScrollControlled: true,
       builder: (context) {
         return DraggableScrollableSheet(
-          initialChildSize: isMobile ? .5 : .56,
-          maxChildSize: isMobile ? .7 : .72,
-          minChildSize: isMobile ? .36 : .42,
+          initialChildSize: isMobile ? .7 : .62,
+          maxChildSize: isMobile ? .8 : .72,
+          minChildSize: isMobile ? .6 : .52,
           expand: false,
           snap: false,
           builder: (context, scrollController) {
