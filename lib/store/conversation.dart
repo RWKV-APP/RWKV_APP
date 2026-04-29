@@ -182,7 +182,7 @@ extension _$Conversation on _Conversation {
     final tempDir = await getTemporaryDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final safeTitle = conversation.title.replaceAll(_Conversation._invalidExportFileNameChars, '_');
-    final file = File('${tempDir.path}/$safeTitle\_$timestamp.txt');
+    final file = File('${tempDir.path}/${safeTitle}_$timestamp.txt');
     await file.writeAsString(content, encoding: utf8);
     return file;
   }
