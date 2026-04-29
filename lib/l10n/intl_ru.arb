@@ -139,6 +139,8 @@
   "conversation_name_cannot_be_longer_than_30_characters": "Название диалога не может превышать {maxLength} символов",
   "delete_conversation": "Удалить диалог",
   "delete_conversation_message": "Вы уверены, что хотите удалить этот диалог?",
+  "delete_conversations_message": "Вы уверены, что хотите удалить {count} диалогов?",
+  "delete_conversations_failed": "Не удалось удалить диалоги",
   "export_data": "Экспорт данных",
   "chat_title": "RWKV Чат",
   "othello_title": "RWKV Отелло",

@@ -139,6 +139,8 @@
   "conversation_name_cannot_be_longer_than_30_characters": "会話名は{maxLength}文字を超えることはできません",
   "delete_conversation": "会話を削除",
   "delete_conversation_message": "会話を削除してもよろしいですか？",
+  "delete_conversations_message": "{count} 件の会話を削除してもよろしいですか？",
+  "delete_conversations_failed": "会話の削除に失敗しました",
   "export_data": "データのエクスポート",
   "chat_title": "RWKVチャット",
   "othello_title": "RWKV オセロ",

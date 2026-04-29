@@ -139,6 +139,8 @@
   "conversation_name_cannot_be_longer_than_30_characters": "会话名称不能超过 {maxLength} 个字符",
   "delete_conversation": "删除会话",
   "delete_conversation_message": "确定要删除会话吗？",
+  "delete_conversations_message": "确定要删除 {count} 个会话吗？",
+  "delete_conversations_failed": "删除会话失败",
   "export_data": "导出数据",
   "chat_title": "RWKV Chat",
   "othello_title": "RWKV 黑白棋",

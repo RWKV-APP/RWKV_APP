@@ -1251,6 +1251,26 @@ class S {
     );
   }
 
+  /// `确定要删除 {count} 个会话吗？`
+  String delete_conversations_message(Object count) {
+    return Intl.message(
+      '确定要删除 $count 个会话吗？',
+      name: 'delete_conversations_message',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `删除会话失败`
+  String get delete_conversations_failed {
+    return Intl.message(
+      '删除会话失败',
+      name: 'delete_conversations_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `导出数据`
   String get export_data {
     return Intl.message('导出数据', name: 'export_data', desc: '', args: []);

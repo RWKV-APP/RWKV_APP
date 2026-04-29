@@ -139,6 +139,8 @@
   "conversation_name_cannot_be_longer_than_30_characters": "Conversation name cannot be longer than {maxLength} characters",
   "delete_conversation": "Delete Conversation",
   "delete_conversation_message": "Are you sure you want to delete this conversation?",
+  "delete_conversations_message": "Are you sure you want to delete {count} conversations?",
+  "delete_conversations_failed": "Failed to delete conversations",
   "export_data": "Export Data",
   "chat_title": "RWKV Chat",
   "othello_title": "RWKV Othello",

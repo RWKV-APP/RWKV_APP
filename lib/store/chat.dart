@@ -205,10 +205,12 @@ extension $Chat on _Chat {
     String? slotContent,
   }) {
     P.msg.batchSelection(msg).q = slotIndex;
-    P.conversation.updateCurrentConvSubtitleFromMessage(
-      msg,
-      selectedBatch: slotIndex,
-      contentOverride: slotContent,
+    unawaited(
+      P.conversation.updateCurrentConvSubtitleFromMessage(
+        msg,
+        selectedBatch: slotIndex,
+        contentOverride: slotContent,
+      ),
     );
   }
 
@@ -2001,7 +2003,7 @@ extension _$Chat on _Chat {
         .where((e) => P.msg.list.q.length <= 2)
         .throttleTime(const Duration(milliseconds: 500), trailing: true, leading: true)
         .listen((e) {
-          P.conversation.updateCurrentConvSubtitleFromResponseContent(e.responseBufferContent);
+          unawaited(P.conversation.updateCurrentConvSubtitleFromResponseContent(e.responseBufferContent));
         });
     event
         .whereType<from_rwkv.ResponseBatchBufferContent>()
@@ -2009,7 +2011,7 @@ extension _$Chat on _Chat {
         .throttleTime(const Duration(milliseconds: 500), trailing: true, leading: true)
         .listen((e) {
           final content = e.responseBufferContent.join(Config.batchMarker) + Config.batchMarker + "-1";
-          P.conversation.updateCurrentConvSubtitleFromResponseContent(content);
+          unawaited(P.conversation.updateCurrentConvSubtitleFromResponseContent(content));
         });
 
     P.see.audioFileStreamController.stream.listen(_onNewFileReceived);
