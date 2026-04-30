@@ -8,6 +8,8 @@ import 'generated/schema.dart';
 
 import 'generated/schema_v1.dart' as v1;
 import 'generated/schema_v2.dart' as v2;
+import 'generated/schema_v4.dart' as v4;
+import 'generated/schema_v8.dart' as v8;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -59,6 +61,89 @@ void main() {
       newVersion: 2,
       createOld: v1.DatabaseAtV1.new,
       createNew: v2.DatabaseAtV2.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insertAll(oldDb.conv, oldConvData);
+        batch.insertAll(oldDb.msg, oldMsgData);
+      },
+      validateItems: (newDb) async {
+        expect(expectedNewConvData, await newDb.select(newDb.conv).get());
+        expect(expectedNewMsgData, await newDb.select(newDb.msg).get());
+      },
+    );
+  });
+
+  test('migration from v4 to v8 preserves legacy messages', () async {
+    const oldConvData = <v4.ConvData>[
+      v4.ConvData(
+        createdAtUS: 100,
+        title: 'Legacy conversation',
+        subtitle: 'Legacy subtitle',
+        data: '{"id":0,"children":[{"id":42,"children":[]}]}',
+        appBuildNumber: '100',
+      ),
+    ];
+    const expectedNewConvData = <v8.ConvData>[
+      v8.ConvData(
+        createdAtUS: 100,
+        title: 'Legacy conversation',
+        subtitle: 'Legacy subtitle',
+        data: '{"id":0,"children":[{"id":42,"children":[]}]}',
+        appBuildNumber: '100',
+      ),
+    ];
+
+    const oldMsgData = <v4.MsgData>[
+      v4.MsgData(
+        id: 42,
+        content: 'hello',
+        reference: '{"enable":false}',
+        isMine: true,
+        type: 'text',
+        isReasoning: false,
+        paused: false,
+        isSensitive: false,
+        ttsCFMSteps: 16,
+        ttsTarget: 'target',
+        ttsSpeakerName: 'speaker',
+        ttsSourceAudioPath: 'source.wav',
+        ttsInstruction: 'say it',
+        ttsOverallProgress: 0.5,
+        ttsPerWavProgress: '{}',
+        ttsFilePaths: '[]',
+        modelName: 'model',
+        runningMode: 'cpu',
+        build: '100',
+        rawDecodeParams: '{"temp":1}',
+      ),
+    ];
+    const expectedNewMsgData = <v8.MsgData>[
+      v8.MsgData(
+        id: 42,
+        content: 'hello',
+        reference: '{"enable":false}',
+        isMine: 1,
+        type: 'text',
+        isReasoning: 0,
+        paused: 0,
+        isSensitive: 0,
+        ttsCFMSteps: 16,
+        ttsTarget: 'target',
+        ttsSpeakerName: 'speaker',
+        ttsSourceAudioPath: 'source.wav',
+        ttsInstruction: 'say it',
+        modelName: 'model',
+        runningMode: 'cpu',
+        build: '100',
+        rawDecodeParams: '{"temp":1}',
+      ),
+    ];
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 4,
+      newVersion: 8,
+      createOld: v4.DatabaseAtV4.new,
+      createNew: v8.DatabaseAtV8.new,
       openTestedDatabase: AppDatabase.new,
       createItems: (batch, oldDb) {
         batch.insertAll(oldDb.conv, oldConvData);

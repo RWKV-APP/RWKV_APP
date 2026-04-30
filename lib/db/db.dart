@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 // Project imports:
 import 'package:zone/config.dart';
+import 'package:zone/db/db.steps.dart';
 import 'package:zone/func/conversation_subtitle.dart';
 import 'package:zone/model/message.dart' as model;
 import 'package:zone/model/message_type.dart' as model;
@@ -133,32 +134,32 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
-      onUpgrade: (Migrator m, int from, int to) async {
-        if (from < 2) {
-          await m.addColumn(msg, msg.reference);
-        }
-        if (from < 3) {
-          await m.addColumn(conversation, conversation.subtitle);
-        }
-        if (from < 4) {
-          await m.addColumn(msg, msg.rawDecodeParams);
-        }
-        if (from < 5) {
+      onUpgrade: stepByStep(
+        from1To2: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.reference);
+        },
+        from2To3: (m, schema) async {
+          await m.addColumn(schema.conv, schema.conv.subtitle);
+        },
+        from3To4: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.rawDecodeParams);
+        },
+        from4To5: (m, schema) async {
           // ignore: experimental_member_use
-          await m.alterTable(TableMigration(msg));
-        }
-        if (from < 6) {
-          await m.addColumn(msg, msg.prefillSpeed);
-          await m.addColumn(msg, msg.decodeSpeed);
-        }
-        if (from < 7) {
-          await m.addColumn(msg, msg.messageTokensCount);
-          await m.addColumn(msg, msg.conversationTokensCount);
-        }
-        if (from < 8) {
-          await m.addColumn(msg, msg.batchSlotLabels);
-        }
-      },
+          await m.alterTable(TableMigration(schema.msg));
+        },
+        from5To6: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.prefillSpeed);
+          await m.addColumn(schema.msg, schema.msg.decodeSpeed);
+        },
+        from6To7: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.messageTokensCount);
+          await m.addColumn(schema.msg, schema.msg.conversationTokensCount);
+        },
+        from7To8: (m, schema) async {
+          await m.addColumn(schema.msg, schema.msg.batchSlotLabels);
+        },
+      ),
       beforeOpen: (details) async {
         if (!details.hadUpgrade) {
           return;
