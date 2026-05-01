@@ -23,6 +23,7 @@ jobs:
       version: ${{ steps.meta.outputs.version }}
       build_number: ${{ steps.meta.outputs.build_number }}
       archive_name: ${{ steps.meta.outputs.archive_name }}
+      appimage_name: ${{ steps.meta.outputs.appimage_name }}
       should_publish: ${{ steps.meta.outputs.should_publish }}
     steps:
       - name: Checkout repository
@@ -40,6 +41,7 @@ jobs:
           if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
 
           ARCHIVE_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_linux-x64.tar.gz"
+          APPIMAGE_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_linux-x64.AppImage"
 
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             SHOULD_PUBLISH="true"
@@ -50,6 +52,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
           echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
+          echo "appimage_name=$APPIMAGE_NAME" >> $GITHUB_OUTPUT
           echo "should_publish=$SHOULD_PUBLISH" >> $GITHUB_OUTPUT
 
   build:
@@ -87,7 +90,8 @@ jobs:
             liblzma-dev \
             libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev \
-            libcurl4-openssl-dev
+            libcurl4-openssl-dev \
+            desktop-file-utils
 
       - name: Override dependency path
         run: |
@@ -138,6 +142,45 @@ jobs:
             echo "Removed $REMOVED_COUNT aarch64 library file(s)"
           fi
 
+      - name: Create AppImage
+        id: create-appimage
+        env:
+          APPIMAGE_NAME: ${{ needs.setup.outputs.appimage_name }}
+          VERSION: ${{ needs.setup.outputs.version }}
+        run: |
+          BUNDLE_DIR="$GITHUB_WORKSPACE/build/linux/x64/release/bundle"
+          APPDIR="$GITHUB_WORKSPACE/build/appimage/RWKVChat.AppDir"
+          TOOL_DIR="$GITHUB_WORKSPACE/build/appimage-tools"
+          APPIMAGETOOL="$TOOL_DIR/appimagetool-x86_64.AppImage"
+
+          rm -rf "$APPDIR" "$TOOL_DIR"
+          mkdir -p "$APPDIR" "$TOOL_DIR"
+          cp -a "$BUNDLE_DIR"/. "$APPDIR"/
+          ln -s rwkv_chat "$APPDIR/AppRun"
+
+          cat > "$APPDIR/com.rwkvzone.chat.desktop" <<'EOF'
+          [Desktop Entry]
+          Type=Application
+          Name=RWKV Chat
+          Comment=Run RWKV models locally
+          Exec=rwkv_chat
+          Icon=com.rwkvzone.chat
+          Categories=Utility;
+          Terminal=false
+          EOF
+
+          cp assets/img/chat/logo.square.png "$APPDIR/com.rwkvzone.chat.png"
+          desktop-file-validate "$APPDIR/com.rwkvzone.chat.desktop"
+
+          wget -q -O "$APPIMAGETOOL" "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage"
+          chmod +x "$APPIMAGETOOL"
+
+          APPIMAGE_EXTRACT_AND_RUN=1 ARCH=x86_64 VERSION="$VERSION" \
+            "$APPIMAGETOOL" "$APPDIR" "$GITHUB_WORKSPACE/$APPIMAGE_NAME"
+          chmod +x "$GITHUB_WORKSPACE/$APPIMAGE_NAME"
+
+          echo "appimage_path=$GITHUB_WORKSPACE/$APPIMAGE_NAME" >> $GITHUB_OUTPUT
+
       - name: Create archive
         id: create-archive
         env:
@@ -152,8 +195,10 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: linux-x64-archive
-          path: ${{ steps.create-archive.outputs.archive_path }}
+          name: linux-x64-artifacts
+          path: |
+            ${{ steps.create-archive.outputs.archive_path }}
+            ${{ steps.create-appimage.outputs.appimage_path }}
           retention-days: 7
           if-no-files-found: error
 
@@ -166,13 +211,15 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: linux-x64-archive
+          name: linux-x64-artifacts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: false
-          files: "*.tar.gz"
+          files: |
+            *.tar.gz
+            *.AppImage
 
   upload-hf:
     name: Upload to HuggingFace
@@ -189,7 +236,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: linux-x64-archive
+          name: linux-x64-artifacts
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -205,10 +252,18 @@ jobs:
           HF_ENDPOINT: ${{ secrets.HF_ENDPOINT || 'https://huggingface.co' }}
           HF_DATASETS_ID: ${{ secrets.HF_DATASETS_ID || 'HaloWang/rwkv-chat' }}
           ARCHIVE_NAME: ${{ needs.setup.outputs.archive_name }}
+          APPIMAGE_NAME: ${{ needs.setup.outputs.appimage_name }}
         run: |
           python scripts/upload_to_hf.py \
             --repo-id "$HF_DATASETS_ID" \
             --file "$ARCHIVE_NAME" \
             --path-in-repo "linux-x64/$ARCHIVE_NAME" \
+            --hf-token "$HF_TOKEN" \
+            --hf-endpoint "$HF_ENDPOINT"
+
+          python scripts/upload_to_hf.py \
+            --repo-id "$HF_DATASETS_ID" \
+            --file "$APPIMAGE_NAME" \
+            --path-in-repo "linux-x64/$APPIMAGE_NAME" \
             --hf-token "$HF_TOKEN" \
             --hf-endpoint "$HF_ENDPOINT"
