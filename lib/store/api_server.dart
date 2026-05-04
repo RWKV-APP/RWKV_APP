@@ -3,6 +3,9 @@ part of 'p.dart';
 const _apiServerDefaultPort = 52345;
 const _apiServerStreamingFirstChunkDelay = Duration(milliseconds: 220);
 const _apiServerFinalBufferTimeout = Duration(milliseconds: 500);
+const _apiServerToolCallStartTag = '<tool_call>';
+const _apiServerToolCallEndTag = '</tool_call>';
+const _apiServerToolStreamDecisionChars = 48;
 
 const _apiServerHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -227,6 +230,168 @@ extension _$ApiServer on _ApiServer {
     };
   }
 
+  List<Map<String, dynamic>> _normalizeToolsFromRequest(Map<String, dynamic> json) {
+    final tools = <Map<String, dynamic>>[];
+
+    // Modern OpenAI: tools: [{ type: "function", function: { name, description, parameters } }]
+    final toolsValue = json['tools'];
+    if (toolsValue is List) {
+      for (final t in toolsValue) {
+        if (t is! Map) continue;
+        final type = t['type'];
+        final fn = t['function'];
+        if (type != 'function' || fn is! Map) continue;
+        final name = fn['name'];
+        if (name is! String || name.isEmpty) continue;
+        tools.add(Map<String, dynamic>.from(t));
+      }
+    }
+
+    // Legacy OpenAI: functions: [{ name, description, parameters }]
+    final functionsValue = json['functions'];
+    if (functionsValue is List) {
+      for (final f in functionsValue) {
+        if (f is! Map) continue;
+        final name = f['name'];
+        if (name is! String || name.isEmpty) continue;
+        tools.add({
+          'type': 'function',
+          'function': Map<String, dynamic>.from(f),
+        });
+      }
+    }
+
+    return tools;
+  }
+
+  Object? _normalizeToolChoiceFromRequest(Map<String, dynamic> json) {
+    // Prefer modern tool_choice; fallback to legacy function_call.
+    final toolChoice = json['tool_choice'];
+    if (toolChoice != null) return toolChoice;
+
+    final functionCall = json['function_call'];
+    if (functionCall == null) return null;
+
+    // Map legacy function_call to modern-ish shape for prompting.
+    if (functionCall is String) {
+      // "auto" | "none"
+      return functionCall;
+    }
+    if (functionCall is Map) {
+      final name = functionCall['name'];
+      if (name is String && name.isNotEmpty) {
+        return {
+          'type': 'function',
+          'function': {'name': name},
+        };
+      }
+    }
+    return null;
+  }
+
+  String _buildToolSystemPrompt({
+    required List<Map<String, dynamic>> tools,
+    required Object? toolChoice,
+  }) {
+    // We use an explicit tag-wrapped JSON payload so we can reliably parse tool calls
+    // from RWKV output (and detect tool-call mode early for streaming).
+    final toolsJson = jsonEncode(tools);
+    final choiceJson = toolChoice == null ? 'null' : jsonEncode(toolChoice);
+    String choiceInstruction = '';
+    if (toolChoice is String) {
+      if (toolChoice == 'none') {
+        choiceInstruction = 'You MUST NOT call any tools.';
+      } else if (toolChoice == 'required') {
+        choiceInstruction = 'You MUST call at least one tool.';
+      }
+    } else if (toolChoice is Map) {
+      final fn = toolChoice['function'];
+      final name = fn is Map ? fn['name'] : null;
+      if (name is String && name.isNotEmpty) {
+        choiceInstruction = 'You MUST call the tool named "$name" next.';
+      }
+    }
+    return '''
+You can call external tools.
+
+TOOLS (JSON):
+$toolsJson
+
+TOOL_CHOICE (JSON, may be null):
+$choiceJson
+
+$choiceInstruction
+
+If you decide to call a tool, you MUST respond with exactly one tag-wrapped JSON payload and NOTHING else:
+$_apiServerToolCallStartTag{"tool_calls":[{"name":"tool_name","arguments":{}}]}$_apiServerToolCallEndTag
+
+- "tool_calls" may include multiple calls.
+- "arguments" MUST be a JSON object (not a string).
+- Do not add any extra text before/after the tag.
+
+If no tool is needed, respond normally (plain text), and DO NOT output $_apiServerToolCallStartTag.
+''';
+  }
+
+  List<Map<String, dynamic>>? _tryParseToolCallsFromText(String text) {
+    final start = text.indexOf(_apiServerToolCallStartTag);
+    if (start < 0) return null;
+    final end = text.indexOf(_apiServerToolCallEndTag, start + _apiServerToolCallStartTag.length);
+    if (end < 0) return null;
+
+    final inner = text.substring(start + _apiServerToolCallStartTag.length, end).trim();
+    if (inner.isEmpty) return null;
+
+    try {
+      final decoded = jsonDecode(inner);
+      final calls = <Map<String, dynamic>>[];
+
+      if (decoded is Map && decoded['tool_calls'] is List) {
+        for (final c in (decoded['tool_calls'] as List)) {
+          if (c is! Map) continue;
+          final name = c['name'];
+          final args = c['arguments'];
+          if (name is! String || name.isEmpty) continue;
+          calls.add({
+            'name': name,
+            'arguments': args is Map ? Map<String, dynamic>.from(args) : <String, dynamic>{},
+          });
+        }
+        return calls.isEmpty ? null : calls;
+      }
+
+      if (decoded is Map && decoded['name'] is String) {
+        final name = decoded['name'] as String;
+        final args = decoded['arguments'];
+        calls.add({
+          'name': name,
+          'arguments': args is Map ? Map<String, dynamic>.from(args) : <String, dynamic>{},
+        });
+        return calls;
+      }
+    } catch (_) {
+      return null;
+    }
+
+    return null;
+  }
+
+  List<Map<String, dynamic>> _toOpenAIToolCalls(List<Map<String, dynamic>> parsed) {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return [
+      for (int i = 0; i < parsed.length; i++)
+        {
+          'id': 'call_${now}_$i',
+          'type': 'function',
+          'function': {
+            'name': parsed[i]['name'],
+            // OpenAI expects "arguments" as a JSON string.
+            'arguments': jsonEncode(parsed[i]['arguments'] ?? <String, dynamic>{}),
+          },
+        },
+    ];
+  }
+
   shelf.Response _jsonResponse(Object body, {int status = 200}) {
     return shelf.Response(
       status,
@@ -336,24 +501,70 @@ extension _$ApiServer on _ApiServer {
     final stream = json['stream'] == true;
     final maxTokens = json['max_tokens'] as int?;
 
-    final messages = <String>[];
+    final normalizedTools = _normalizeToolsFromRequest(json);
+    final toolChoice = _normalizeToolChoiceFromRequest(json);
+
+    // Build a single system prompt (OpenAI allows multiple system messages; we merge).
+    String systemPrompt = '';
+    final conversation = <String>[];
     for (final m in messagesRaw) {
       if (m is! Map) {
         return _jsonResponse(_errorJson('each message must be an object'), status: 400);
       }
       final role = m['role'] as String? ?? '';
       final content = m['content'] as String? ?? '';
+
       if (role == 'system') {
-        if (messages.isEmpty) {
-          messages.add(content);
-          messages.add('OK.');
+        systemPrompt = systemPrompt.isEmpty ? content : '$systemPrompt\n$content';
+        continue;
+      }
+
+      if (role == 'user') {
+        conversation.add(content);
+        continue;
+      }
+
+      if (role == 'assistant') {
+        // If the client included tool_calls (modern), preserve them as a tool-call tag so the model can "see" them.
+        final toolCalls = m['tool_calls'];
+        if (toolCalls is List && toolCalls.isNotEmpty) {
+          conversation.add('$_apiServerToolCallStartTag${jsonEncode({'tool_calls': toolCalls})}$_apiServerToolCallEndTag');
+        } else {
+          conversation.add(content);
         }
-      } else if (role == 'user') {
-        messages.add(content);
-      } else if (role == 'assistant') {
-        messages.add(content);
+        continue;
+      }
+
+      // Tool result messages (modern OpenAI): { role:"tool", tool_call_id:"...", content:"..." }
+      if (role == 'tool') {
+        final toolCallId = m['tool_call_id'] as String? ?? '';
+        final name = m['name'] as String? ?? '';
+        final header = name.isNotEmpty ? 'name=$name' : (toolCallId.isNotEmpty ? 'tool_call_id=$toolCallId' : '');
+        conversation.add('<tool_result $header>\n$content\n</tool_result>');
+        continue;
+      }
+
+      // Legacy function result messages (some clients): { role:"function", name:"...", content:"..." }
+      if (role == 'function') {
+        final name = m['name'] as String? ?? '';
+        final header = name.isNotEmpty ? 'name=$name' : '';
+        conversation.add('<tool_result $header>\n$content\n</tool_result>');
+        continue;
       }
     }
+
+    // If tools are provided, inject tool instructions into the system prompt.
+    if (normalizedTools.isNotEmpty) {
+      final toolPrompt = _buildToolSystemPrompt(tools: normalizedTools, toolChoice: toolChoice);
+      systemPrompt = systemPrompt.isEmpty ? toolPrompt : '$systemPrompt\n\n$toolPrompt';
+    }
+
+    final messages = <String>[];
+    if (systemPrompt.isNotEmpty) {
+      messages.add(systemPrompt);
+      messages.add('OK.');
+    }
+    messages.addAll(conversation);
 
     if (messages.length.isEven) {
       messages.add('');
@@ -362,13 +573,31 @@ extension _$ApiServer on _ApiServer {
     final reqId = 'chatcmpl-${DateTime.now().millisecondsSinceEpoch}';
     final modelName = P.rwkv.latestModel.q != null ? _modelId(P.rwkv.latestModel.q!) : 'rwkv';
 
-    _addLog('POST /v1/chat/completions (stream=$stream, messages=${messagesRaw.length})');
+    _addLog(
+      'POST /v1/chat/completions (stream=$stream, messages=${messagesRaw.length}, tools=${normalizedTools.isEmpty ? 0 : normalizedTools.length})',
+    );
     requestCount.q++;
 
     if (stream) {
-      return _streamingChatCompletion(messages, reqId, modelName, modelID, maxTokens);
+      return _streamingChatCompletion(
+        messages,
+        reqId,
+        modelName,
+        modelID,
+        maxTokens,
+        toolsEnabled: normalizedTools.isNotEmpty,
+        legacyFunctionCall: json['functions'] != null || json['function_call'] != null,
+      );
     } else {
-      return _blockingChatCompletion(messages, reqId, modelName, modelID, maxTokens);
+      return _blockingChatCompletion(
+        messages,
+        reqId,
+        modelName,
+        modelID,
+        maxTokens,
+        toolsEnabled: normalizedTools.isNotEmpty,
+        legacyFunctionCall: json['functions'] != null || json['function_call'] != null,
+      );
     }
   }
 
@@ -378,6 +607,7 @@ extension _$ApiServer on _ApiServer {
     String modelName,
     int modelID,
     int? maxTokens,
+    {required bool toolsEnabled, required bool legacyFunctionCall}
   ) async {
     final controller = StreamController<List<int>>();
 
@@ -385,8 +615,7 @@ extension _$ApiServer on _ApiServer {
       controller.add(utf8.encode('data: ${jsonEncode(data)}\n\n'));
     }
 
-    void sendDelta(String delta) {
-      if (delta.isEmpty) return;
+    void sendChunkDelta(Map<String, dynamic> delta, {String? finishReason}) {
       sendSSE({
         'id': reqId,
         'object': 'chat.completion.chunk',
@@ -395,11 +624,16 @@ extension _$ApiServer on _ApiServer {
         'choices': [
           {
             'index': 0,
-            'delta': {'content': delta},
-            'finish_reason': null,
+            'delta': delta,
+            'finish_reason': finishReason,
           },
         ],
       });
+    }
+
+    void sendTextDelta(String delta) {
+      if (delta.isEmpty) return;
+      sendChunkDelta({'content': delta});
     }
 
     unawaited(
@@ -428,6 +662,9 @@ extension _$ApiServer on _ApiServer {
           DateTime? pendingSince;
           bool generationStarted = false;
           bool firstChunkSent = false;
+          bool streamModeDecided = !toolsEnabled;
+          bool toolMode = false;
+          bool toolCallSent = false;
           final completer = Completer<void>();
           _activeInferenceCompleter = completer;
 
@@ -514,7 +751,19 @@ extension _$ApiServer on _ApiServer {
 
               previousContent = full;
               firstChunkSent = true;
-              sendDelta(full);
+              if (!streamModeDecided && toolsEnabled) {
+                final prefix = full.trimLeft();
+                if (prefix.startsWith(_apiServerToolCallStartTag)) {
+                  toolMode = true;
+                  streamModeDecided = true;
+                } else if (prefix.length >= _apiServerToolStreamDecisionChars && !_apiServerToolCallStartTag.startsWith(prefix)) {
+                  toolMode = false;
+                  streamModeDecided = true;
+                }
+              }
+              if (!toolMode) {
+                sendTextDelta(full);
+              }
               return;
             }
             if (!full.startsWith(previousContent)) {
@@ -522,18 +771,28 @@ extension _$ApiServer on _ApiServer {
               previousContent = full;
               if (overlap > 0) {
                 final delta = full.substring(overlap);
-                sendDelta(delta);
+                if (!toolMode) sendTextDelta(delta);
                 _addLog('chat stream prefix mismatch, overlap resynced');
                 return;
               }
-              sendDelta(full);
+              if (!toolMode) sendTextDelta(full);
               _addLog('chat stream prefix mismatch, hard resynced');
               return;
             }
             if (full.length > previousContent.length) {
               final delta = full.substring(previousContent.length);
               previousContent = full;
-              sendDelta(delta);
+              if (!streamModeDecided && toolsEnabled) {
+                final prefix = previousContent.trimLeft();
+                if (prefix.startsWith(_apiServerToolCallStartTag)) {
+                  toolMode = true;
+                  streamModeDecided = true;
+                } else if (prefix.length >= _apiServerToolStreamDecisionChars) {
+                  toolMode = false;
+                  streamModeDecided = true;
+                }
+              }
+              if (!toolMode) sendTextDelta(delta);
             }
           });
           P.rwkv.send(request);
@@ -555,21 +814,31 @@ extension _$ApiServer on _ApiServer {
             if (!firstChunkSent) {
               previousContent = freshFinalContent;
               firstChunkSent = true;
-              sendDelta(freshFinalContent);
+              if (!streamModeDecided && toolsEnabled) {
+                final prefix = freshFinalContent.trimLeft();
+                if (prefix.startsWith(_apiServerToolCallStartTag)) {
+                  toolMode = true;
+                  streamModeDecided = true;
+                } else if (prefix.length >= _apiServerToolStreamDecisionChars && !_apiServerToolCallStartTag.startsWith(prefix)) {
+                  toolMode = false;
+                  streamModeDecided = true;
+                }
+              }
+              if (!toolMode) sendTextDelta(freshFinalContent);
               _addLog('chat stream recovered final buffer');
             } else if (freshFinalContent.startsWith(previousContent) && freshFinalContent.length > previousContent.length) {
               final delta = freshFinalContent.substring(previousContent.length);
               previousContent = freshFinalContent;
-              sendDelta(delta);
+              if (!toolMode) sendTextDelta(delta);
               _addLog('chat stream appended final buffer delta');
             } else if (freshFinalContent != previousContent) {
               final overlap = _longestSuffixPrefixOverlap(previousContent, freshFinalContent);
               previousContent = freshFinalContent;
               if (overlap > 0) {
-                sendDelta(freshFinalContent.substring(overlap));
+                if (!toolMode) sendTextDelta(freshFinalContent.substring(overlap));
                 _addLog('chat stream recovered final buffer with overlap');
               } else {
-                sendDelta(freshFinalContent);
+                if (!toolMode) sendTextDelta(freshFinalContent);
                 _addLog('chat stream recovered final buffer with hard resync');
               }
             }
@@ -577,19 +846,21 @@ extension _$ApiServer on _ApiServer {
           _broadcastSub?.cancel();
           _broadcastSub = null;
 
-          sendSSE({
-            'id': reqId,
-            'object': 'chat.completion.chunk',
-            'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-            'model': modelName,
-            'choices': [
-              {
-                'index': 0,
-                'delta': {},
-                'finish_reason': 'stop',
-              },
-            ],
-          });
+          if (toolsEnabled) {
+            final parsed = _tryParseToolCallsFromText(previousContent);
+            if (parsed != null && parsed.isNotEmpty) {
+              final toolCalls = _toOpenAIToolCalls(parsed);
+              if (!toolCallSent) {
+                sendChunkDelta({'tool_calls': toolCalls}, finishReason: 'tool_calls');
+                toolCallSent = true;
+              }
+              controller.add(utf8.encode('data: [DONE]\n\n'));
+              await controller.close();
+              return;
+            }
+          }
+
+          sendChunkDelta({}, finishReason: 'stop');
           controller.add(utf8.encode('data: [DONE]\n\n'));
           await controller.close();
         },
@@ -598,19 +869,7 @@ extension _$ApiServer on _ApiServer {
         if (error is! _ApiServerStoppingException) {
           qqe(error);
         }
-        sendSSE({
-          'id': reqId,
-          'object': 'chat.completion.chunk',
-          'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
-          'model': modelName,
-          'choices': [
-            {
-              'index': 0,
-              'delta': {},
-              'finish_reason': 'stop',
-            },
-          ],
-        });
+        sendChunkDelta({}, finishReason: 'stop');
         controller.add(utf8.encode('data: [DONE]\n\n'));
         await controller.close();
       }),
@@ -634,6 +893,7 @@ extension _$ApiServer on _ApiServer {
     String modelName,
     int modelID,
     int? maxTokens,
+    {required bool toolsEnabled, required bool legacyFunctionCall}
   ) async {
     final resultCompleter = Completer<String>();
 
@@ -743,6 +1003,44 @@ extension _$ApiServer on _ApiServer {
     }
 
     final content = await resultCompleter.future;
+
+    if (toolsEnabled) {
+      final parsed = _tryParseToolCallsFromText(content);
+      if (parsed != null && parsed.isNotEmpty) {
+        final toolCalls = _toOpenAIToolCalls(parsed);
+        final first = toolCalls.first;
+        final legacy = legacyFunctionCall
+            ? {
+                'name': first['function']?['name'],
+                'arguments': first['function']?['arguments'],
+              }
+            : null;
+
+        return _jsonResponse({
+          'id': reqId,
+          'object': 'chat.completion',
+          'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          'model': modelName,
+          'choices': [
+            {
+              'index': 0,
+              'message': {
+                'role': 'assistant',
+                'content': null,
+                'tool_calls': toolCalls,
+                if (legacy != null) 'function_call': legacy,
+              },
+              'finish_reason': 'tool_calls',
+            },
+          ],
+          'usage': {
+            'prompt_tokens': 0,
+            'completion_tokens': 0,
+            'total_tokens': 0,
+          },
+        });
+      }
+    }
 
     return _jsonResponse({
       'id': reqId,
