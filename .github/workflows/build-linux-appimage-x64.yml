@@ -7,6 +7,11 @@ on:
     tags:
       - "[0-9]*"
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Tag to build and publish, for example 4.4.7"
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,11 +27,13 @@ jobs:
     outputs:
       version: ${{ steps.meta.outputs.version }}
       appimage_name: ${{ steps.meta.outputs.appimage_name }}
+      release_tag: ${{ steps.meta.outputs.release_tag }}
       should_publish: ${{ steps.meta.outputs.should_publish }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.release_tag || github.ref }}
           sparse-checkout: pubspec.yaml
           sparse-checkout-cone-mode: false
 
@@ -39,15 +46,22 @@ jobs:
           if [ -z "$BUILD_NUMBER" ]; then BUILD_NUMBER="1"; fi
 
           APPIMAGE_NAME="rwkv_chat_${VERSION}_${BUILD_NUMBER}_linux-x64.AppImage"
+          MANUAL_RELEASE_TAG="${{ inputs.release_tag }}"
 
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            RELEASE_TAG="$GITHUB_REF_NAME"
+            SHOULD_PUBLISH="true"
+          elif [ -n "$MANUAL_RELEASE_TAG" ]; then
+            RELEASE_TAG="$MANUAL_RELEASE_TAG"
             SHOULD_PUBLISH="true"
           else
+            RELEASE_TAG=""
             SHOULD_PUBLISH="false"
           fi
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "appimage_name=$APPIMAGE_NAME" >> $GITHUB_OUTPUT
+          echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
           echo "should_publish=$SHOULD_PUBLISH" >> $GITHUB_OUTPUT
 
   build:
@@ -57,6 +71,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag || github.ref }}
 
       - name: Checkout rwkv_mobile_flutter dependency
         uses: actions/checkout@v4
@@ -198,6 +214,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.setup.outputs.release_tag }}
           generate_release_notes: false
           files: "*.AppImage"
 
