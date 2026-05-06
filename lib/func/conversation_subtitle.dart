@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:zone/func/get_batch_info.dart';
 
 const int conversationSubtitleMaxLength = 200;
