@@ -10,6 +10,10 @@ class _Conversation {
   ];
 
   static final _invalidExportFileNameChars = RegExp(r'[<>:"/\\|?*]');
+  static final _blankExportFileNameChars = RegExp(r'\s+');
+  static final _trailingExportFileNameChars = RegExp(r'[. ]+$');
+  static const _maxExportFileNameBaseBytes = 120;
+  static const _fallbackExportFileNameBase = 'conversation';
 
   // ===========================================================================
   // StateProvider
@@ -175,14 +179,82 @@ extension _$Conversation on _Conversation {
     return buffer.toString().replaceAll(Config.batchMarker + "<", Config.batchMarker + "\n<").replaceAll(Config.batchMarker, "");
   }
 
+  String _stripUserMessageTail(String content) {
+    return content.split(Config.userMsgModifierSep).first.trim();
+  }
+
+  String _firstBatchUserPrompt(List<Message> orderedMessages) {
+    for (final message in orderedMessages) {
+      if (!message.isMine) continue;
+      if (message.type != MessageType.text) continue;
+
+      final content = _stripUserMessageTail(message.content);
+      if (!getIsBatch(content)) continue;
+
+      final prompt = content.split(Config.batchMarker).first.trim();
+      if (prompt.isEmpty) continue;
+      return prompt;
+    }
+    return "";
+  }
+
+  String _truncateExportFileNameBase(String value) {
+    if (utf8.encode(value).length <= _Conversation._maxExportFileNameBaseBytes) {
+      return value;
+    }
+
+    final buffer = StringBuffer();
+    int bytes = 0;
+    for (final rune in value.runes) {
+      final char = String.fromCharCode(rune);
+      final charBytes = utf8.encode(char).length;
+      if (bytes + charBytes > _Conversation._maxExportFileNameBaseBytes) break;
+      buffer.write(char);
+      bytes += charBytes;
+    }
+
+    final truncated = buffer.toString().trimRight();
+    if (truncated.isEmpty) {
+      return _Conversation._fallbackExportFileNameBase;
+    }
+    return truncated;
+  }
+
+  String _sanitizeConversationExportFileNameBase(String value) {
+    final sanitized = value
+        .replaceAll(_Conversation._invalidExportFileNameChars, '_')
+        .replaceAll(_Conversation._blankExportFileNameChars, ' ')
+        .replaceAll(_Conversation._trailingExportFileNameChars, '')
+        .trim();
+    if (sanitized.isEmpty) {
+      return _Conversation._fallbackExportFileNameBase;
+    }
+    return _truncateExportFileNameBase(sanitized);
+  }
+
+  String _buildConversationExportFileNameBase({
+    required ConversationData conversation,
+    required List<Message> orderedMessages,
+  }) {
+    final firstBatchUserPrompt = _firstBatchUserPrompt(orderedMessages);
+    if (firstBatchUserPrompt.isNotEmpty) {
+      return _sanitizeConversationExportFileNameBase(firstBatchUserPrompt);
+    }
+    return _sanitizeConversationExportFileNameBase(conversation.title);
+  }
+
   Future<File> _writeConversationExportFile({
     required ConversationData conversation,
+    required List<Message> orderedMessages,
     required String content,
   }) async {
     final tempDir = await getTemporaryDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final safeTitle = conversation.title.replaceAll(_Conversation._invalidExportFileNameChars, '_');
-    final file = File('${tempDir.path}/${safeTitle}_$timestamp.txt');
+    final fileNameBase = _buildConversationExportFileNameBase(
+      conversation: conversation,
+      orderedMessages: orderedMessages,
+    );
+    final file = File(join(tempDir.path, '${fileNameBase}_$timestamp.txt'));
     await file.writeAsString(content, encoding: utf8);
     return file;
   }
@@ -376,6 +448,7 @@ extension $Conversation on _Conversation {
       );
       final file = await _writeConversationExportFile(
         conversation: conversation,
+        orderedMessages: orderedMessages,
         content: content,
       );
       final xFile = XFile(file.path, mimeType: 'text/plain');
