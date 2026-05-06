@@ -338,9 +338,19 @@ extension $Remote on _Remote {
         final fileSizeNotCorrect = expectFileSize != fileSize;
         final shouldDelete = isNotDebug && fileSizeNotCorrect;
 
-        if (shouldDelete) File(path).delete();
+        if (shouldDelete) await File(path).delete();
       }
-      local.q = local.q.copyWith(hasFile: fileSizeVerified);
+      final currentLocal = local.q;
+      if (!fileSizeVerified && currentLocal.state == TaskState.completed) {
+        local.q = currentLocal.copyWith(
+          hasFile: false,
+          progress: 0,
+          state: TaskState.idle,
+        );
+        continue;
+      }
+
+      local.q = currentLocal.copyWith(hasFile: fileSizeVerified);
     }
     await _initModelDownloadTaskState();
     if (readyModelsDir == null) {
