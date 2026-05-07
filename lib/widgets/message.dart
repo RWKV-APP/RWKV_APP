@@ -301,7 +301,7 @@ class _UserMessageBubble extends ConsumerWidget {
         crossAxisAlignment: .end,
         children: [
           Container(
-            padding: bubbleStyleData.padding,
+            padding: isUserImage ? .zero : bubbleStyleData.padding,
             decoration: BoxDecoration(
               color: userMsgBg,
               border: bubbleStyleData.border,
